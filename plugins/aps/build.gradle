@@ -16,16 +16,18 @@ android {
 }
 
 dependencies {
-    implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
     implementation project(':database:impl')
     implementation project(':core:core-main')
-    implementation project(':core:fabric')
+    implementation project(':core:interfaces')
+    implementation project(':core:utils')
     implementation project(':core:ui')
-    implementation project(':interfaces')
+    implementation project(':core:validators')
 
     api "androidx.appcompat:appcompat:$appcompat_version"
+    api "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_version"
+    api "androidx.gridlayout:gridlayout:$gridlayout_version"
 
     // APS
     api 'org.mozilla:rhino:1.7.14'

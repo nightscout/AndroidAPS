@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">רענן</string>
     <string name="error">שגיאה</string>
@@ -16,8 +15,6 @@
     <string name="connecting">מתחבר</string>
     <string name="disconnected">מנותק</string>
     <string name="androidaps_start">הופעל AndroidAPS</string>
-    <string name="formatinsulinunits1">%1$.1f יח\'</string>
-    <string name="formatinsulinunits">%1$.2f יח\'</string>
     <string name="formatsignedinsulinunits">%1$+.2f יח\'</string>
     <string name="format_carbs">%1$d גר\'</string>
     <string name="reservoirvalue">%1$.0f / %2$d יח\'</string>
@@ -27,11 +24,9 @@
     <string name="pumpbusy">המשאבה אינה פנויה</string>
     <string name="connectionerror">שגיאה בחיבור המשאבה</string>
     <string name="objectives">משימות</string>
-    <string name="close">סגור</string>
     <string name="please_wait">נא להמתין…</string>
     <string name="mute">השתק</string>
     <string name="reload">טען מחדש</string>
-    <string name="stoppressed">עצור נלחץ!</string>
     <string name="stop">עצור</string>
     <string name="carbs">פחמימות</string>
     <string name="active"><![CDATA[<פועל>]]></string>
@@ -48,10 +43,10 @@
     <string name="basal_long_label">מינון בזאלי</string>
     <string name="target_long_label">ערך מטרה</string>
     <string name="initializing">מאתחל...</string>
-    <string name="serialnumber">מספר סידורי</string>
+    <string name="serial_number">מספר סידורי</string>
     <string name="battery_label">סוללה</string>
-    <string name="lastconnection_label">התחברות אחרונה</string>
-    <string name="lastbolus_label">בולוס אחרון</string>
+    <string name="last_connection_label">התחברות אחרונה</string>
+    <string name="last_bolus_label">בולוס אחרון</string>
     <string name="dailyunits">יחידות יומיות</string>
     <string name="base_basal_rate_label">בזאלי בסיסי</string>
     <string name="tempbasal_label">בזאלי זמני</string>
@@ -440,11 +435,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">בזאלי</string>
     <string name="basalpct">בזאלי %</string>
-    <string name="count_selected">%1$d נבחרו</string>
-    <string name="sort_label">מיין</string>
-    <string name="remove_items">פריטים שהוסרו</string>
-    <string name="sort_items">מיין פריטים</string>
-    <string name="remove_selected_items">הסר פריטים נבחרים</string>
     <string name="a11y_file">קובץ</string>
     <string name="a11y_user">משתמש</string>
     <!-- Autotune -->
@@ -521,6 +511,7 @@
     <string name="wizard_explain_tt">ע\' מטרה זמני: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s ל-%2$s</string>
     <string name="wizard_pump_not_available">המשאבה אינה זמינה!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>

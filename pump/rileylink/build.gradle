@@ -16,11 +16,9 @@ android {
 }
 
 dependencies {
-    implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
-    implementation project(':core:core-main')
+    implementation project(':core:interfaces')
     implementation project(':core:ui')
     implementation project(':pump:pump-common')
     implementation project(':pump:pump-core')
-    implementation project(':interfaces')
 }

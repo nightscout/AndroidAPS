@@ -1,9 +1,11 @@
 package info.nightscout.automation.di
 
+import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.automation.AutomationEvent
+import info.nightscout.automation.AutomationEventObject
 import info.nightscout.automation.AutomationFragment
+import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.actions.ActionAlarm
 import info.nightscout.automation.actions.ActionCarePortalEvent
@@ -45,8 +47,13 @@ import info.nightscout.automation.triggers.TriggerTempTargetValue
 import info.nightscout.automation.triggers.TriggerTime
 import info.nightscout.automation.triggers.TriggerTimeRange
 import info.nightscout.automation.triggers.TriggerWifiSsid
+import info.nightscout.interfaces.automation.Automation
 
-@Module
+@Module(
+    includes = [
+        AutomationModule.Bindings::class
+    ]
+)
 @Suppress("unused")
 abstract class AutomationModule {
 
@@ -57,7 +64,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun contributesEditActionDialog(): EditActionDialog
     @ContributesAndroidInjector abstract fun contributesEditEventDialog(): EditEventDialog
     @ContributesAndroidInjector abstract fun contributesEditTriggerDialog(): EditTriggerDialog
-    @ContributesAndroidInjector abstract fun automationEventInjector(): AutomationEvent
+    @ContributesAndroidInjector abstract fun automationEventInjector(): AutomationEventObject
 
     @ContributesAndroidInjector abstract fun triggerInjector(): Trigger
     @ContributesAndroidInjector abstract fun triggerAutosensValueInjector(): TriggerAutosensValue
@@ -95,4 +102,10 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun actionStartTempTargetInjector(): ActionStartTempTarget
     @ContributesAndroidInjector abstract fun actionStopTempTargetInjector(): ActionStopTempTarget
     @ContributesAndroidInjector abstract fun actionDummyInjector(): ActionDummy
+
+    @Module
+    interface Bindings {
+
+        @Binds fun bindAutomation(automationPlugin: AutomationPlugin): Automation
+    }
 }

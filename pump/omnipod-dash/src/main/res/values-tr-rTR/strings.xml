@@ -37,4 +37,6 @@
     <string name="omnipod_dash_connection_lost">Pod ile bağlantı koptu</string>
     <string name="omnipod_dash_bolus_already_in_progress">Diğer bolus iletiliyor</string>
     <string name="omnipod_dash_not_enough_insulin">Rezervuarda yeterli insülin kalmamış</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Onaylanmamış komut</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Kullanıcı talebi</string>
 </resources>

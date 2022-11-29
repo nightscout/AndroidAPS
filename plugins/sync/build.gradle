@@ -1,0 +1,42 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-allopen'
+    id 'com.hiya.jacoco-android'
+}
+
+apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/allopen_dependencies.gradle"
+apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
+android {
+    namespace 'info.nightscout.plugins.sync'
+}
+
+dependencies {
+    implementation project(':app-wear-shared:shared')
+    implementation project(':database:entities')
+    implementation project(':database:impl')
+    implementation project(':core:core-main')
+    implementation project(':core:interfaces')
+    implementation project(':core:ns-sdk')
+    implementation project(':core:ui')
+    implementation project(':core:utils')
+    implementation project(':core:validators')
+
+
+    // NSClient, Tidepool
+    api("io.socket:socket.io-client:1.0.0") {
+        // excluding org.json which is provided by Android
+        exclude group: "org.json", module: "json"
+    }
+    api "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    api "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
+    //api "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    api "com.squareup.retrofit2:adapter-rxjava3:$retrofit2_version"
+    api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
+
+    api "com.google.code.gson:gson:$gson_version"
+}

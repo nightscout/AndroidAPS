@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Følsomhed Oref1</string>
+    <string name="sensitivity_aaps">Følsomhed AAPS</string>
+    <string name="sensitivity_weighted_average">Følsomhed Vægtet Gennemsnit</string>
+    <string name="description_sensitivity_aaps">Sensitiviteten er beregnet på samme måde som Oref0, men du kan angive tidsramme for fortiden. Minimal optagelse af kulhydrater beregnes fra maks. kulhydrat optagelse fra præferencer.</string>
+    <string name="description_sensitivity_oref1">Sensitiviteten beregnes fra 8t-eller 24t-data i fortiden (Ved hjælp af den der er mest sensitiv). Kulhydrater (hvis ikke optaget) er opdelt, efter den tid der er angivet i Indstillinger. Pluginnet beregner også UAM.</string>
+    <string name="description_sensitivity_weighted_average">Sensitiviteten er beregnet som et vægtet gennemsnit fra afvigelser. Nyere afvigelser har større vægt. Minimal kulhydratoptagelse beregnes fra maks. kulhydrats optagelsestid fra Indstillinger. Denne algoritme er den hurtigste til at følge følsomhedsændringer.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM deaktiveret, fordi det er afhængig af Oref1 følsomheds pluginnet</string>
+    <string name="absorption_settings_title">Indstillinger for absorbering</string>
+    <string name="absorption_max_time_title">Måltid max absorptionstid [h]</string>
+    <string name="absorption_max_time_summary">Tid i timer, hvor det forventes at alle kulhydrater fra måltidet vil blive absorberet</string>
+    <string name="openapsama_autosens_period">Interval for autosens [h]</string>
+    <string name="openapsama_autosens_period_summary">Antal af tidligere timer for sensitivitets opdagelse (Kulhydraters abosorberingstid er ekskluderet)</string>
+    <string name="openapsama_autosens_max_summary">Standardværdi: 1.2\nDette er en multiplikator top for autosens (og snart autotune) for at angive en 20%% maks. grænse for, hvor høj autosens kan være, hvilket til gengæld bestemmer, hvor høj autosens kan tilpasse sig, hvor lav den kan justere ISF, og hvor lav den kan angive BG-målet.</string>
+    <string name="openapsama_autosens_min_summary">Standardværdi: 0,7\nDen anden side af autosens sikkerhedsgrænser, idet den sætter en begrænsning på, hvor lavt autosen kan justere basalerne, og hvor høj den kan justere ISF-og BG-målene.</string>
+    <string name="openapsama_autosens_max">Maks. autosens rate</string>
+    <string name="openapsama_autosens_min">Min. autosens rate</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Standardværdi: 3.0 (AMA) eller 8.0 (SMB). Dette er en indstilling for standardindvirkningen af kulhydrater pr. 5 minutter. Standardværdien er en forventet 3mg/dl/5min. Det påvirker, hvor hurtigt COB er faldet, og hvor meget kulhydrat absorbering forudsættes ved beregning af forudsagt BG, når BG falder mere end forventet, eller ikke stiger så meget som forventet.</string>
+    <string name="absorption_cutoff_title">Måltid max absorptionstid [h]</string>
+    <string name="absorption_cutoff_summary">Tid hvor ethvert måltid betragtes som absorberet. Resterende kulhydrater vil blive afskåret.</string>
+</resources>

@@ -5,11 +5,11 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.AutosensDataStoreObject
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.receivers.ReceiverStatusStore
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.services.LastLocationDataContainer
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -25,17 +25,15 @@ open class TriggerTestBase : TestBaseWithProfile() {
     @Mock lateinit var locationDataContainer: LastLocationDataContainer
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var iobCobCalculator: IobCobCalculator
-    @Mock lateinit var autosensDataStore: AutosensDataStoreObject
+    @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var context: Context
     @Mock lateinit var automationPlugin: AutomationPlugin
-
-    lateinit var receiverStatusStore: ReceiverStatusStore
+    @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     private val pluginDescription = PluginDescription()
     lateinit var testPumpPlugin: TestPumpPlugin
 
     @Before
     fun prepareMock1() {
-        receiverStatusStore = ReceiverStatusStore(context, rxBus)
         testPumpPlugin = TestPumpPlugin(pluginDescription, aapsLogger, rh, injector)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)

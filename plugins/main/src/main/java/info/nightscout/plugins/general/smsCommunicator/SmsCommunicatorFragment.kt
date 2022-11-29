@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.smsCommunicator.Sms
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.interfaces.utils.HtmlHelper

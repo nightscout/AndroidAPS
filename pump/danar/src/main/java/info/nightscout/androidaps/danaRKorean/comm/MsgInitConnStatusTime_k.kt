@@ -3,7 +3,6 @@ package info.nightscout.androidaps.danaRKorean.comm
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.rx.events.EventRebuildTabs
@@ -20,8 +19,7 @@ class MsgInitConnStatusTime_k(
 
     override fun handleMessage(bytes: ByteArray) {
         if (bytes.size - 10 < 10) {
-            val notification = Notification(Notification.WRONG_DRIVER, rh.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
-            rxBus.send(EventNewNotification(notification))
+            uiInteraction.addNotification(Notification.WRONG_DRIVER, rh.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
             danaRKoreanPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to export DanaR")
             danaRKoreanPlugin.setPluginEnabled(PluginType.PUMP, false)

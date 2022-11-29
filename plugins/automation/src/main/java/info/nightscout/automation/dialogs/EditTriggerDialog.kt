@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
 import info.nightscout.automation.databinding.AutomationDialogEditTriggerBinding
 import info.nightscout.automation.events.EventAutomationUpdateTrigger
 import info.nightscout.automation.events.EventTriggerChanged
@@ -14,7 +13,7 @@ import info.nightscout.automation.events.EventTriggerRemove
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.automation.triggers.TriggerDummy
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -22,7 +21,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
 import javax.inject.Inject
 
-class EditTriggerDialog : DialogFragmentWithDate() {
+class EditTriggerDialog : BaseDialog() {
 
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus

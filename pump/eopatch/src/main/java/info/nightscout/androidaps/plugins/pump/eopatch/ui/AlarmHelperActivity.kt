@@ -2,13 +2,13 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AlertDialog
-import info.nightscout.androidaps.activities.DialogAppCompatActivity
-import info.nightscout.core.main.R
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventProgressDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.AlarmDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ProgressDialogHelper
+import info.nightscout.core.ui.R
+import info.nightscout.core.ui.activities.DialogAppCompatActivity
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP

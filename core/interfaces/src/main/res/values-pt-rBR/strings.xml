@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Formato do arquivo</string>
+    <string name="metadata_label_created_at">Criado em</string>
+    <string name="metadata_label_aaps_version">Versão AAPS</string>
+    <string name="metadata_label_aaps_flavour">Variante de Compilação</string>
+    <string name="metadata_label_device_name">Exportando nome do paciente do dispositivo</string>
+    <string name="metadata_label_device_model">Exportando modelo do dispositivo</string>
+    <string name="metadata_label_encryption">Criptografia do arquivo</string>
+    <string name="metadata_format_new">Novo formato de encriptação</string>
+    <string name="metadata_format_debug">Novo formato de depuração (não encriptado)</string>
+    <string name="metadata_format_other">Formato de exportação desconhecido</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Somente valores discretos nos intervalos são suportados como granularidade para basal/bolus na bomba virtual.</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Driver da bomba alterado.</string>
+    <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+</resources>

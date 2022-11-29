@@ -149,5 +149,6 @@ class ObjectivesPlugin @Inject constructor(
         return value
     }
 
-    override fun isAccomplished(index: Int) = objectives[Objectives.MAXIOB_OBJECTIVE].isAccomplished
+    override fun isAccomplished(index: Int) = objectives[index].isAccomplished
+    override fun isStarted(index: Int): Boolean = objectives[index].isStarted
 }

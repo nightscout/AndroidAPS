@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Eliminar Emparejamiento</string>
-    <string name="diaconn_nodeviceavailable">Ningún dispositivo disponible</string>
+    <string name="diaconn_no_device_available">Ningún dispositivo disponible</string>
     <string name="diaconn_pairing">Emparejamiento de Bomba Diaconn</string>
     <string name="pumperror">Error de bomba</string>
     <string name="diaconn_g8_history_alarm">Alarmas</string>
@@ -49,7 +49,7 @@
     <string name="bolus_step">Incremento de bolo</string>
     <string name="basal_step">Paso Basal</string>
     <string name="pump_firmware_label">Firmware</string>
-    <string name="diagonn_g8_useroptions">OPCIONES DE USUARIO</string>
+    <string name="diaconn_g8_user_options">OPCIONES DE USUARIO</string>
     <string name="pairfirst">Por favor, ¡empareja tu bomba con el teléfono!</string>
     <string name="processinghistory">"Procesando evento "</string>
     <string name="apslastLogNum">aps_last_log_num</string>

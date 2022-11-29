@@ -12,17 +12,17 @@ import android.widget.ArrayAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.core.ui.UIRunnable
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.Food
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InvalidateFoodTransaction
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.logging.UserEntryLogger
+import info.nightscout.interfaces.protection.ProtectionCheck
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.FoodFragmentBinding
 import info.nightscout.plugins.databinding.FoodItemBinding
@@ -49,7 +49,7 @@ class FoodFragment : DaggerFragment() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private val disposable = CompositeDisposable()
     private var unfiltered: List<Food> = arrayListOf()
@@ -224,7 +224,7 @@ class FoodFragment : DaggerFragment() {
                     val food = v.tag as Food
                     activity?.let { activity ->
                         protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
-                            if (isAdded) activityNames.runWizard(childFragmentManager, food.carbs, food.name)
+                            if (isAdded) uiInteraction.runWizardDialog(childFragmentManager, food.carbs, food.name)
                         })
                     }
                 }

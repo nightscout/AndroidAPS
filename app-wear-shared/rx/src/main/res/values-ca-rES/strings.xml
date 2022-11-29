@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="handshaking">Establint comunicació</string>
-    <string name="connected">Connectat</string>
-    <string name="disconnecting">Desconnectant</string>
-    <string name="waiting_for_disconnection">S\'està esperant la desconnexió</string>
-</resources>

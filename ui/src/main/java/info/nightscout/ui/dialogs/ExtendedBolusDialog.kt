@@ -6,20 +6,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
-import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
@@ -40,7 +39,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var queryingProtection = false
     private var _binding: DialogExtendedbolusBinding? = null
@@ -96,7 +95,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         val durationInMinutes = binding.duration.value.toInt()
         val actions: LinkedList<String> = LinkedList()
         val insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(Constraint(insulin)).value()
-        actions.add(rh.gs(R.string.formatinsulinunits, insulinAfterConstraint))
+        actions.add(rh.gs(R.string.format_insulin_units, insulinAfterConstraint))
         actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
         if (abs(insulinAfterConstraint - insulin) > 0.01)
             actions.add(rh.gs(R.string.constraint_applied).formatColor(context, rh, R.attr.warningColor))
@@ -111,7 +110,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
                 commandQueue.extendedBolus(insulinAfterConstraint, durationInMinutes, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                            uiInteraction.runAlarm(result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                         }
                     }
                 })

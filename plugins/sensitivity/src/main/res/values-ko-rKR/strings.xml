@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">민감도</string>
+    <string name="sensitivity_oref1">민감도 Oref1</string>
+    <string name="sensitivity_aaps">민감도 AAPS</string>
+    <string name="sensitivity_weighted_average">민감도 가중평균</string>
+    <string name="description_sensitivity_aaps">Oref0와 동일한 방법으로 민감도가 계산되지만, 과거 시간을 지정할 수 있습니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다.</string>
+    <string name="description_sensitivity_oref1">민감도가 과거 8시간의 데이터로 부터 계산됩니다. (흡수되지 않은 경우) 탄수화물은 설정에서 설정된 시간이 지나면 없어집니다. UAM(알리지 않은 음식)도 계산합니다.</string>
+    <string name="description_sensitivity_weighted_average">민감도가 편차의 가중평균으로 계산됩니다. 최근의 편차가 더 가중됩니다. 최소 탄수화물 흡수는 설정에서 최대 탄수화물 흡수 시간으로 부터 계산됩니다. 이 알고리즘의 민감도가 가장 빠릅니다.</string>
+    <string name="uam_disabled_oref1_not_selected">Oref1 민감도 플러그인이 필요하므로 UAM이 비활성화 되었습니다.</string>
+    <string name="absorption_settings_title">흡수 설정</string>
+    <string name="absorption_max_time_title">식사 최대 흡수 시간 [h]</string>
+    <string name="absorption_max_time_summary">식사로 섭취한 탄수화물이 모두 흡수될기까지 예상되는 시간</string>
+    <string name="openapsama_autosens_period">autosens 시간 [h]</string>
+    <string name="openapsama_autosens_period_summary">민감도를 감지하기 위해 계산될 총 시간 (탄수화물 흡수 시간은 제외됩니다.)</string>
+    <string name="openapsama_autosens_max_summary">기본값: 1.2\n이 옵션은 autosens의 최대 한계 값을 20%%로 제한하기 위해 autosens(곧 autotune)이 이용하는 승수값입니다. 이 값이 autosens에 대한 Basal의 최대 값, 인슐린 민감도(ISF)의 최소값 및 혈당 목표의 최소값을 결정케 합니다.</string>
+    <string name="openapsama_autosens_min_summary">기본값: 0.7\nautosens 안전 제한의 나머지 부분입니다. 이는 Basal을 얼마나 낮게 조절할 수 있는지, ISF와 혈당 목표범위를 얼마나 높게 설정할 수 있는지를 결정합니다.</string>
+    <string name="openapsama_autosens_max">최대 autosens 비율</string>
+    <string name="openapsama_autosens_min">최저 autosens 비율</string>
+    <string name="openapsama_min_5m_carb_impact_summary">기본값: 3.0 (AMA) 또는 8.0 (SMB). 5분당 탄수화물이 얼만큼 흡수되었는지에 대한 기본값 설정입니다. 기본값은 3mg/dl / 5분 입니다. 이는 혈당이 예상보다 빨리 떨어지거나 혹은 예상보다 오르지 않을때, COB가 얼마나 빨리 사라지게 되는지에 영향을 주게 되고, 추정된 탄수화물 흡수량이 미래 혈당 예측 계산시에도 영향을 주게 됩니다.</string>
+    <string name="absorption_cutoff_title">식사 최대 흡수 시간 [h]</string>
+    <string name="absorption_cutoff_summary">식사가 모두 흡수되었다고 간주되는 시간. 나머지 탄수화물은 모두 없어집니다.</string>
+</resources>

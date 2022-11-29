@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">동기화</string>
-    <string name="danars_nodeviceavailable">현재까지 발견된 기기가 없습니다.</string>
+    <string name="danars_no_device_available">현재까지 발견된 기기가 없습니다.</string>
     <string name="danars_pairingok">연동완료</string>
     <string name="danars_pairingtimedout">연동시간초과</string>
     <string name="danars_waitingforpairing">펌프연동 대기중</string>
@@ -63,20 +63,20 @@
     <string name="danar_history_refill">교체</string>
     <string name="danar_history_syspend">중지</string>
     <string name="danar_history_prime">교체</string>
-    <string name="danar_useroptions">사용자 옵션</string>
-    <string name="danar_timedisplay">시간형식</string>
-    <string name="danar_buttonscroll">버튼 스크롤</string>
+    <string name="danar_user_options">사용자 옵션</string>
+    <string name="danar_time_display">시간형식</string>
+    <string name="danar_button_scroll">버튼 스크롤</string>
     <string name="danar_beep">버튼 누르면 소리가 납니다.</string>
-    <string name="danar_pumpalarm">알람</string>
-    <string name="danar_pumpalarm_sound">소리</string>
-    <string name="danar_pumpalarm_vibrate">진동</string>
-    <string name="danar_pumpalarm_both">모두</string>
-    <string name="danar_screentimeout">LCD 시간 [seconds]</string>
+    <string name="danar_pump_alarm">알람</string>
+    <string name="danar_pump_alarm_sound">소리</string>
+    <string name="danar_pump_alarm_vibrate">진동</string>
+    <string name="danar_pump_alarm_both">모두</string>
+    <string name="danar_screen_timeout">LCD 시간 [seconds]</string>
     <string name="danar_backlight">화면조명 시간 [seconds]</string>
-    <string name="danar_glucoseunits">혈당 단위</string>
+    <string name="danar_glucose_units">혈당 단위</string>
     <string name="danar_shutdown">종료 [hours]</string>
-    <string name="danar_lowreservoir">낮은 주사기량 [Units]</string>
-    <string name="danar_saveuseroptions">펌프로 옵션 저장</string>
+    <string name="danar_low_reservoir">낮은 주사기량 [Units]</string>
+    <string name="danar_save_user_options">펌프로 옵션 저장</string>
     <string name="description_pump_dana_r">다나R 펌프와 연동(다나 RN)</string>
     <string name="description_pump_dana_r_korean">내수용 다나R 펌프와 연동(다나 R)</string>
     <string name="description_pump_dana_r_v2">업그레이드 펌웨어가 설치된 다나R 펌프와 연동</string>
@@ -92,10 +92,10 @@
     <string name="profile_set_failed">Basal 프로파일 설정이 실패하였습니다</string>
     <string name="danar_bluetooth_status">블루투스 상태</string>
     <string name="danar_iob_label">펌프 IOB</string>
-    <string name="virtualpump_firmware_label">펌웨어</string>
+    <string name="firmware_label">펌웨어</string>
     <string name="danar_pump_settings">다나 펌프 설정</string>
-    <string name="timeformat12h">12h</string>
-    <string name="timeformat24h">24h</string>
+    <string name="time_format_12h">12h</string>
+    <string name="time_format_24h">24h</string>
     <string name="option_on">켜짐</string>
     <string name="option_off">꺼짐</string>
     <string name="danar_bt_name_title">다나R 블루투스</string>

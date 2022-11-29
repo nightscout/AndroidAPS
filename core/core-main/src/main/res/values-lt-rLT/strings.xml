@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Atnaujinti</string>
     <string name="error">Klaida</string>
@@ -15,8 +14,6 @@
     <string name="bolusdelivering">Leidžiama %1$.2f vv</string>
     <string name="connecting">Jungiamasi</string>
     <string name="disconnected">Atsijungta</string>
-    <string name="formatinsulinunits1">%1$.1f vv</string>
-    <string name="formatinsulinunits">%1$.2f vv</string>
     <string name="formatsignedinsulinunits">%1$+.2f vv</string>
     <string name="format_carbs">%1$dg</string>
     <string name="reservoirvalue">%1$.0f / %2$d vv</string>
@@ -26,11 +23,9 @@
     <string name="pumpbusy">Pompa šiuo metu veikia</string>
     <string name="connectionerror">Pompos prisijungimo klaida</string>
     <string name="objectives">Tikslai</string>
-    <string name="close">Uždaryti</string>
     <string name="please_wait">Palaukite…</string>
     <string name="mute">Nutildyti</string>
     <string name="reload">Atnaujinti</string>
-    <string name="stoppressed">Paspausta STOP</string>
     <string name="stop">Stop</string>
     <string name="carbs">AV</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -45,10 +40,10 @@
     <string name="ic_long_label">Insulino į angliavandenius santykis</string>
     <string name="basal_long_label">Valandinė bazė</string>
     <string name="initializing">Inicijuojama ...</string>
-    <string name="serialnumber">Serijos numeris</string>
+    <string name="serial_number">Serijos numeris</string>
     <string name="battery_label">Baterija</string>
-    <string name="lastconnection_label">Paskutinis prisijungimas</string>
-    <string name="lastbolus_label">Paskutinis bolusas</string>
+    <string name="last_connection_label">Paskutinis prisijungimas</string>
+    <string name="last_bolus_label">Paskutinis bolusas</string>
     <string name="dailyunits">Paros insulinas</string>
     <string name="base_basal_rate_label">Pagrindinis bazės dydis</string>
     <string name="tempbasal_label">Laikina bazė</string>
@@ -419,7 +414,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Valandinė bazė</string>
     <string name="basalpct">Valandinė bazė %</string>
-    <string name="sort_label">Rūšiuoti</string>
     <string name="a11y_user">vartotojas</string>
     <!-- Autotune -->
     <string name="autotune_result">Rezultatas: %1$s</string>
@@ -439,6 +433,7 @@
     <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks</string>
     <string name="wizard_no_actual_bg">Nėra naujausių cukraus duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>

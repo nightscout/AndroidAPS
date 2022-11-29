@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="5dp"
-    tools:context="info.nightscout.androidaps.plugins.pump.combo.ComboFragment">
+    tools:context=".ComboFragment">
 
     <ScrollView
         android:id="@+id/scrollView"
@@ -221,7 +221,7 @@
                     android:layout_weight="1.5"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/lastconnection_label"
+                    android:text="@string/last_connection_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -269,7 +269,7 @@
                     android:layout_weight="1.5"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/lastbolus_label"
+                    android:text="@string/last_bolus_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -558,7 +558,7 @@
                     android:layout_weight="1.5"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/serialnumber"
+                    android:text="@string/serial_number"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 

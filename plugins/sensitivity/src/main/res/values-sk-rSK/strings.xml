@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">SENZ</string>
+    <string name="sensitivity_oref1">Senzitivita Oref1</string>
+    <string name="sensitivity_aaps">Senzitivita AAPS</string>
+    <string name="sensitivity_weighted_average">Citlivosť vážený priemer</string>
+    <string name="description_sensitivity_aaps">Citlivosť je počítaná tým istým spôsobom ako v Oref0, ale je možné špecifikovať časové okno do minulosti. Minimálne vstrebávanie sacharidov je počítané dynamicky z maximálnej doby vstrebávania, definovanej v nastaveniach.</string>
+    <string name="description_sensitivity_oref1">Citlivosť je počítaná za posledných 8h, alebo 24h (použiť to, ktoré je citlivejšie) a sacharidy (pokiaľ nie sú vstrebané), sú orezané po čase definovanom v nastaveniach. Modul tiež počíta s UAM (neoznámené jedlo).</string>
+    <string name="description_sensitivity_weighted_average">Citlivosť je počítaná ako vážený priemer z odchýlok. Novšie majú vyššiu prioritu. Minimálna vstrebateľnosť sacharidov je počítaná dynamicky z maximálnej doby vstrebateľnosti definovanej v nastaveniach. Tento algoritmus je najrýchlejší v sledovaní zmien citlivosti.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM zakázané, pretože nie je povolený plug-in Oref1</string>
+    <string name="absorption_settings_title">Nastavenie vstrebávania sacharidov</string>
+    <string name="absorption_max_time_title">Max. doba vstrebávania sacharidov [h]</string>
+    <string name="absorption_max_time_summary">Čas v hodinách, počas ktorého predpokladáme, že všetky sacharidy budú vstrebané</string>
+    <string name="openapsama_autosens_period">Interval pre automatickú detekciu citlivosti [h]</string>
+    <string name="openapsama_autosens_period_summary">Počet uplynutých hodín použitých na automatickú detekciu citlivosti (čas vstrebávania sacharidov sa nezohľadňuje)</string>
+    <string name="openapsama_autosens_max_summary">Štandardná hodnota: 1.2\nToto je bezpečnostné nastavenie pre detekciu citlivosti (a čoskoro autotune). Hovorí, že autosens môže zvýšiť bazály, znížiť ISF (citlivosť na inzulín) a znížiť cieľovú hodnotu glykémie o 20%%.</string>
+    <string name="openapsama_autosens_min_summary">Štandardná hodnota: 0.7\nToto je bezpečnostné nastavenie pre automatickú detekciu citlivosti. Hovorí, že automatická detekcia citlivosti môže znížiť bazály, zvýšiť ISF (citlivosť na inzulín) a zvýšiť cieľovú hodnotu glykémie na 70%.</string>
+    <string name="openapsama_autosens_max">Max hodnota detekcie citlivosti</string>
+    <string name="openapsama_autosens_min">Min hodnota detekcie citlivosti</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Štandardná hodnota: 3.0 (AMA), alebo 8.0 (SMB) mg/dl/5min. Táto hodnota definuje minimálnu časť vstrebaných sacharidov za každých 5min. Táto hodnota ovplyvňuje výpočet COB.</string>
+    <string name="absorption_cutoff_title">Maximálna doba vstrebávania sacharidov [h]</string>
+    <string name="absorption_cutoff_summary">Doba, po ktorej sú všetky sacharidy považované za vstrebané. Zvyšné budú orezané.</string>
+</resources>

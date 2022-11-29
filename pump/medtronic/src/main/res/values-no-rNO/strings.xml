@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Ugyldige data for pumpehistorikken er oppdaget. Rapporter hendelsen til APPS og legg ved logg.</string>
     <string name="riley_statistics">RL statistikk</string>
     <string name="medtronic_history_type">Type:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Trykket på oppdater</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planlagt statusoppdatering</string>
 </resources>

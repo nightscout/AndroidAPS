@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Utilização insegura: A bomba utiliza uma perfil de basal diferente do primeiro. O loop foi desactivado. Seleccionar o primeiro perfil da bomba e reinicie.</string>
     <string name="bolus_frequency_exceeded">Um bolus com o mesmo valor foi introduzido nos 2 últimos minutos. Para evitar introduções acidentais e segurança contra bugs existentes o bolus foi cancelado.</string>
     <string name="combo_pump_connected_now">Agora</string>
-    <string name="combo_activity_reading_pump_history">A ler histórico bomba</string>
     <string name="combo_activity_setting_basal_profile">A definir perfil basal</string>
     <string name="combo_pump_cartridge_low_warrning">Nível cartucho da bomba está baixo</string>
     <string name="combo_pump_battery_low_warrning">Bateria da bomba está fraca</string>
@@ -52,4 +51,5 @@
     <string name="bolusstopped">O bolus parou</string>
     <string name="bolusstopping">A parar o bolus</string>
     <string name="combo_error_display_never">Nunca</string>
+    <string name="unsafeusage">uso não seguro</string>
 </resources>

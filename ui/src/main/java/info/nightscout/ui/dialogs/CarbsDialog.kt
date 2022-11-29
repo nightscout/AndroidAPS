@@ -8,17 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
-import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.androidaps.utils.protection.ProtectionCheck.Protection.BOLUS
-import info.nightscout.core.profile.toMgdl
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -27,16 +20,24 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.interfaces.BolusTimer
 import info.nightscout.interfaces.CarbTimer
+import info.nightscout.interfaces.Constants.CARBS_FAV1_DEFAULT
+import info.nightscout.interfaces.Constants.CARBS_FAV2_DEFAULT
+import info.nightscout.interfaces.Constants.CARBS_FAV3_DEFAULT
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.logging.UserEntryLogger
+import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.protection.ProtectionCheck
+import info.nightscout.interfaces.protection.ProtectionCheck.Protection.BOLUS
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -66,14 +67,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var protectionCheck: ProtectionCheck
-    @Inject lateinit var activityNames: ActivityNames
-
-    companion object {
-
-        const val FAV1_DEFAULT = 5
-        const val FAV2_DEFAULT = 10
-        const val FAV3_DEFAULT = 20
-    }
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -155,36 +149,36 @@ class CarbsDialog : DialogFragmentWithDate() {
             savedInstanceState?.getDouble("carbs")
                 ?: 0.0, 0.0, maxCarbs, 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
-        val plus1text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT))
+        val plus1text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_1, CARBS_FAV1_DEFAULT))
         binding.plus1.text = plus1text
         binding.plus1.contentDescription = rh.gs(R.string.carbs) + " " + plus1text
         binding.plus1.setOnClickListener {
             binding.carbs.value = max(
                 0.0, binding.carbs.value
-                    + sp.getInt(R.string.key_carbs_button_increment_1, FAV1_DEFAULT)
+                    + sp.getInt(R.string.key_carbs_button_increment_1, CARBS_FAV1_DEFAULT)
             )
             validateInputs()
             binding.carbs.announceValue()
         }
 
-        val plus2text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT))
+        val plus2text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_2, CARBS_FAV2_DEFAULT))
         binding.plus2.text = plus2text
         binding.plus2.contentDescription = rh.gs(R.string.carbs) + " " + plus2text
         binding.plus2.setOnClickListener {
             binding.carbs.value = max(
                 0.0, binding.carbs.value
-                    + sp.getInt(R.string.key_carbs_button_increment_2, FAV2_DEFAULT)
+                    + sp.getInt(R.string.key_carbs_button_increment_2, CARBS_FAV2_DEFAULT)
             )
             validateInputs()
             binding.carbs.announceValue()
         }
-        val plus3text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT))
+        val plus3text = toSignedString(sp.getInt(R.string.key_carbs_button_increment_3, CARBS_FAV3_DEFAULT))
         binding.plus3.text = plus3text
         binding.plus2.contentDescription = rh.gs(R.string.carbs) + " " + plus3text
         binding.plus3.setOnClickListener {
             binding.carbs.value = max(
                 0.0, binding.carbs.value
-                    + sp.getInt(R.string.key_carbs_button_increment_3, FAV3_DEFAULT)
+                    + sp.getInt(R.string.key_carbs_button_increment_3, CARBS_FAV3_DEFAULT)
             )
             validateInputs()
             binding.carbs.announceValue()
@@ -380,7 +374,7 @@ class CarbsDialog : DialogFragmentWithDate() {
                             override fun run() {
                                 carbTimer.removeAutomationEventEatReminder()
                                 if (!result.success) {
-                                    activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                 } else if (sp.getBoolean(R.string.key_usebolusreminder, false) && remindBolus)
                                     bolusTimer.scheduleAutomationEventBolusReminder()
                             }

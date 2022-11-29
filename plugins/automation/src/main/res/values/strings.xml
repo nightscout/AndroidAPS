@@ -44,7 +44,6 @@
     <string name="temptargetcomparedmmol">Temp Target %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profile pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
-    <string name="and">And</string>
     <string name="or">Or</string>
     <string name="xor">Exclusive or</string>
     <string name="atspecifiedtime">At %1$s</string>
@@ -118,7 +117,6 @@
     <string name="remove_selected_items">Remove selected items</string>
     <string name="count_selected">%1$d selected</string>
     <string name="confirm_remove_multiple_items">Are you sure you want to remove %1$d items</string>
-    <string name="sort_label">Sort</string>
     <string name="system_automation">System automation</string>
     <string name="run_automations">Run automations</string>
     <string name="add_automation">Add rule</string>

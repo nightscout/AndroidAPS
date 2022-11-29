@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">Objetivo Temporal %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Porcentaje de basal en perfil %1$s %2$d</string>
     <string name="iobcompared">IOB (Insulina a Bordo) %1$s %2$.1f</string>
-    <string name="and">Y</string>
     <string name="or">O</string>
     <string name="xor">Xor (O exclusiva)</string>
     <string name="atspecifiedtime">A las %1$s</string>
@@ -115,7 +114,6 @@
     <string name="remove_selected_items">Eliminar elementos seleccionados</string>
     <string name="count_selected">%1$d seleccionados</string>
     <string name="confirm_remove_multiple_items">¿Estás seguro de que quieres eliminar %1$d elementos?</string>
-    <string name="sort_label">Ordenar</string>
     <string name="system_automation">Automatización del sistema</string>
     <string name="run_automations">Ejecutar automatizaciones</string>
     <string name="add_automation">Añadir regla</string>

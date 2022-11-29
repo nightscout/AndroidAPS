@@ -7,10 +7,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.danar.comm.MessageBase;
 import info.nightscout.androidaps.danar.comm.MessageHashTableBase;
 import info.nightscout.androidaps.utils.CRC;
+import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
 

@@ -22,8 +22,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpConfigurationChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.events.EventMedtronicPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.WarnColors
@@ -313,7 +313,7 @@ class MedtronicFragment : DaggerFragment() {
 
         // base basal rate
         binding.baseBasalRate.text = ("(" + medtronicPumpStatus.activeProfileName + ")  "
-            + rh.gs(R.string.pump_basebasalrate, medtronicPumpPlugin.baseBasalRate))
+            + rh.gs(R.string.pump_base_basal_rate, medtronicPumpPlugin.baseBasalRate))
 
         // TBR
         var tbrStr = ""
@@ -334,7 +334,7 @@ class MedtronicFragment : DaggerFragment() {
         warnColors.setColorInverse(binding.pumpStateBattery, medtronicPumpStatus.batteryRemaining.toDouble(), 25.0, 10.0)
 
         // reservoir
-        binding.reservoir.text = rh.gs(R.string.reservoirvalue, medtronicPumpStatus.reservoirRemainingUnits, medtronicPumpStatus.reservoirFullUnits)
+        binding.reservoir.text = rh.gs(R.string.reservoir_value, medtronicPumpStatus.reservoirRemainingUnits, medtronicPumpStatus.reservoirFullUnits)
         warnColors.setColorInverse(binding.reservoir, medtronicPumpStatus.reservoirRemainingUnits, 50.0, 20.0)
 
         medtronicPumpPlugin.rileyLinkService?.verifyConfiguration()

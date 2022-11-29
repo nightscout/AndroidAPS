@@ -8,26 +8,24 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
-import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.core.pumpExtensions.insertBolusTransaction
-import info.nightscout.core.pumpExtensions.insertCarbsTransaction
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.db.PersistenceLayer
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
@@ -35,7 +33,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogTreatmentBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
 import java.util.LinkedList
 import javax.inject.Inject
@@ -52,7 +49,8 @@ class TreatmentDialog : DialogFragmentWithDate() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var protectionCheck: ProtectionCheck
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -168,17 +166,9 @@ class TreatmentDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
                                 ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
                         if (detailedBolusInfo.insulin > 0)
-                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
-                                .subscribe(
-                                    { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
-                                )
+                            persistenceLayer.insertOrUpdateBolus(detailedBolusInfo.createBolus())
                         if (detailedBolusInfo.carbs > 0)
-                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
-                                .subscribe(
-                                    { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") } },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
-                                )
+                            persistenceLayer.insertOrUpdateCarbs(detailedBolusInfo.createCarbs())
                     } else {
                         if (detailedBolusInfo.insulin > 0) {
                             uel.log(action, UserEntry.Sources.TreatmentDialog,
@@ -187,20 +177,15 @@ class TreatmentDialog : DialogFragmentWithDate() {
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                        uiInteraction.runAlarm(result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                     }
                                 }
                             })
                         } else {
                             uel.log(action, UserEntry.Sources.TreatmentDialog,
                                     ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
-                            if (detailedBolusInfo.carbs > 0) {
-                                disposable += repository.runTransactionForResult(detailedBolusInfo.insertCarbsTransaction())
-                                    .subscribe(
-                                        { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted carbs $it") } },
-                                        { aapsLogger.error(LTag.DATABASE, "Error while saving carbs", it) }
-                                    )
-                            }
+                            if (detailedBolusInfo.carbs > 0)
+                                persistenceLayer.insertOrUpdateCarbs(detailedBolusInfo.createCarbs())
                         }
                     }
                 })

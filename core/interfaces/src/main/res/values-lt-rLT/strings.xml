@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Failo formatas</string>
+    <string name="metadata_label_created_at">Sukurta</string>
+    <string name="metadata_label_aaps_version">AAPS versija</string>
+    <string name="metadata_label_aaps_flavour">Versijos variantas</string>
+    <string name="metadata_label_device_name">Eksportuojamas paciento vardas</string>
+    <string name="metadata_label_device_model">Eksportuojamas prietaiso modelis</string>
+    <string name="metadata_label_encryption">Failo šifravimas</string>
+    <string name="metadata_format_new">Naujas šifruotas formatas</string>
+    <string name="metadata_format_debug">Naujas derinimo formatas (nešifruotas)</string>
+    <string name="metadata_format_other">Nežinomas eksporto formatas</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Virtualioje pompoje palaikomos tik atskiros vertės, o ne diapazonas detalumui užtikrinti.</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pompos valdik. pakeistas.</string>
+    <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f vv</string>
+    <string name="format_insulin_units">%1$.2f V</string>
+</resources>

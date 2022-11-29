@@ -18,4 +18,10 @@
     <string name="unit_weeks">semanas</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <!-- Rx -->
+    <string name="connecting_for">A ligar durante %1$d s</string>
+    <string name="handshaking">Cumprimento</string>
+    <string name="connected">Ligado</string>
+    <string name="disconnecting">A desconectar</string>
+    <string name="waiting_for_disconnection">A aguardar a desconexão</string>
 </resources>

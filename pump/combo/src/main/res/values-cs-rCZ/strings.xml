@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Nebezpečné použití: pumpa má nastavený jiný bazální profil než první. Smyčka byla zakázána. Nastavte první profil a znovu načtěte.</string>
     <string name="bolus_frequency_exceeded">Během posledních dvou minut již byl požadován bolus o stejné velikosti. Jako preventivní ochrana před zdvojeným bolusem a chybám byla operace zakázána.</string>
     <string name="combo_pump_connected_now">Teď</string>
-    <string name="combo_activity_reading_pump_history">Načítání historie pumpy</string>
     <string name="combo_activity_setting_basal_profile">Nastavení bazálního profilu</string>
     <string name="combo_pump_cartridge_low_warrning">V zásobníku je málo inzulínu</string>
     <string name="combo_pump_battery_low_warrning">Slabá baterie v pumpě</string>
@@ -57,4 +56,5 @@
     <string name="combo_error_display_never">Nikdy</string>
     <string name="combo_error_display_error">Když dojde k chybě</string>
     <string name="combo_error_display_always">Vždy</string>
+    <string name="unsafeusage">nebezpečné použití</string>
 </resources>

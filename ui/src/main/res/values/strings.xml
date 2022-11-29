@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Constraint applied!</string>
     <string name="bolus_constraint_applied">Bolus constraint applied</string>
     <string name="carbs_constraint_applied">Carbs constraint applied</string>
     <string name="temp_target_short">TT</string>
@@ -42,15 +41,10 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Total</string>
 
     <!-- FillDialog -->
     <string name="fill_warning">Please make sure the amount matches the specification of your infusion set!</string>
-    <string name="fill_bolus_title">Fill/Prime standard insulin amounts</string>
-    <string name="button1">Button 1</string>
-    <string name="button2">Button 2</string>
-    <string name="button3">Button 3</string>
     <string name="record_pump_site_change">Record pump site change</string>
     <string name="record_insulin_cartridge_change">Record insulin cartridge change</string>
 
@@ -110,8 +104,6 @@
     <string name="tempbasals_netratio_label_string">Ratio:</string>
     <string name="tempbasals_netinsulin_label_string">Ins:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
-    <string name="treatments_wizard_tt_label">TT</string>
     <string name="treatments_wizard_correction_label">Corr</string>
     <string name="meal_bolus">Meal</string>
     <string name="prime">Prime</string>
@@ -143,13 +135,16 @@
     <string name="motol_default_profile">Default profile</string>
     <string name="current_profile">Current profile</string>
     <string name="available_profile">Available profile</string>
-    <string name="format_with_tdd">Age: %1$.0f TDD: %2$.0f U</string>
-    <string name="format_with_tdd_and_pct">Age: %1$.0f TDD: %2$.0f U %3$d%%</string>
-    <string name="format_with_weight">Age: %1$.0f Weight: %2$.0f kg</string>
+    <string name="format_with_tdd">Age: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Age: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Age: %1$d Weight: %2$.0f kg</string>
     <string name="dpv_default_profile">DPV Default profile</string>
     <string name="invalid_pct">Invalid % entry</string>
 
     <!-- Other dialogs -->
     <string name="basal_rate">Basal rate</string>
+
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">STOP PRESSED</string>
 
 </resources>

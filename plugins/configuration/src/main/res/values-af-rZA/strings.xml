@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">Eenhede</string>
+    <string name="next_button">Volgende</string>
+    <string name="previous_button">Vorige</string>
+    <string name="nav_setupwizard">Opstel Ghoeroe</string>
+    <string name="setupwizard_finish">EINDIG</string>
+    <string name="welcometosetupwizard">Welkom by opstelling-Ghoeroe. Dit sal jou lei deur die opstelling proses\n</string>
+    <string name="end_user_license_agreement">Eindverbruiker Lisensie Ooreenkoms</string>
+    <string name="end_user_license_agreement_text">MOET NIE GEBRUIK WORD OM MEDIESE BESLUITE TE MAAK NIE. DAAR IS GEEN WAARBORG DAT DIE PROGRAM, ONDERWORPE AAN TOEPASSELIKE WETTE EN WETGEWING. TENSY ANDERS GEMELD IN TEKS VOORSIEN DIE KOPIEREG-HOUERS EN / OF ANDER PARTYE DIE PROGRAM \"AS IS\" SONDER ËNIGE WAARBORG VAN ENIGE ORDE, UITDRUKKELIK OF IMPLISIET, INKLUSIEF, MAAR NIE BEPERK TOT DIE IMPLISIETE WAARBORG VAN TOEPAASBAARHEID OF NUT VIR EEN SPESIFIEKE DOEL. DIE TOTALE EN ALLE RISIKOVIR DIE KWALITEIT EN PRESTASIE VAN DIE PROGRAM RUS MET JOUSELF. VIR ENIGE PROGRAM DEFEKTIEWE OF FALINGS MOET JY PERSOONLIK DIE KOSTE EN REGSAANSPREEKLIKHEID DRA VAN ALLE NODIGE AKSIES, DIENS, REPARASIES OF KORREKSIES VIR USELF OF ENIGE DERDE PARTYE EN/OF AKSIES, DIENS, REPARASIES OF KORREKSIES WAT DEUR DIE PROGRAM GEDOEN WAS.</string>
+    <string name="end_user_license_agreement_i_understand">EK VERSTAAN en STEM IN</string>
+    <string name="display_settings">Vertooninstellings</string>
+    <string name="low_mark">LAE merk</string>
+    <string name="high_mark">HOË punt</string>
+    <string name="permission">Toestemming</string>
+    <string name="askforpermission">Vra vir toestemming</string>
+    <string name="storedsettingsfound">Gestoorde instellings gevind</string>
+    <string name="status">Status:</string>
+    <string name="diawarning">Onthou asseblief: dat nuwe insulien profiele vereis DIA van minstens 5h. DIA 5 – 6h op nuwe profiel is gelyk aan DIA 3h op ou insulien profiele.</string>
+    <string name="profile">Profiel</string>
+    <string name="exitwizard">Slaan opstelling-Ghoeroe oor</string>
+    <string name="setupwizard_sensitivity_description">Sensitiwiteit plugin vir sensitiwiteit opsporing en KAB berekening. Vir meer inligting besoek:</string>
+    <string name="setupwizard_aps_description">Kies een van beskikbare algoritmes. Hulle is gesorteer vanaf oudste tot jongste. Nuwer algoritmes is gewoonlik kragtiger en meer aggressief. Dus as jy nuut is met jou lus, sal jy waarskynlik begin met AMA en nie met jongste een. Moenie vergeet om die OpenAPS dokumentasie te lees en te konfigureer voor gebruik.</string>
+    <string name="startobjective">Begin jou eerste doelwit</string>
+    <string name="readstatus">Lees status</string>
+    <string name="data_choices">Data keuses</string>
+    <string name="fabric_upload">Fabric Upload</string>
+    <string name="allow_automated_crash_reporting">Laat outomatiese Foutverslagdoening en kenmerk data stuur na die ontwikkelaars via die fabric.io diens.</string>
+    <string name="request">Versoek</string>
+    <string name="apsmode_title">APS modus</string>
+    <string name="setupwizard_preferred_aps_mode">Verkose APS modus</string>
+    <!--    ConfigBuilder-->
+    <string name="config_builder">Konfigurasie bouer</string>
+    <string name="configbuilder_pump">Pomp</string>
+    <string name="configbuilder_profile">Profiel</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_aps_description">Watter APS algoritme moet terapie aanpassings maak?</string>
+    <string name="configbuilder_general">Algemene</string>
+    <string name="configbuilder_general_description">Hier is \'n paar algemene invoegtoepassings wat jy dalk nuttig sal vind.</string>
+    <string name="configbuilder_constraints_description">Watter beperkings word toegepas?</string>
+    <string name="configbuilder_loop">Lus</string>
+    <string name="configbuilder_insulin_description">Watter tipe insulien gebruik jy?</string>
+    <string name="configbuilder_bgsource">BG bron</string>
+    <string name="configbuilder_sensitivity">Sensitiwiteit opsporing</string>
+    <string name="configbuilder_sensitivity_description">Watter sensitiwiteit algoritme moet gebruik word?</string>
+    <string name="config_builder_shortname">CONF</string>
+    <string name="description_config_builder">Gebruik vir die aktiewe plugins te konfigureer</string>
+    <!--ImportExport-->
+    <string name="nav_preferences">Voorkeure</string>
+    <string name="import_setting">Voer instellings in</string>
+    <string name="nav_export">Voer instellings uit na</string>
+    <string name="export_to">Uitvoer instellings na</string>
+    <string name="import_from">Voer instellings in vanaf</string>
+    <string name="setting_imported">Instellings ingevoer</string>
+    <string name="exported">Voorkeure uitgevoer</string>
+    <string name="filenotfound">Lêer nie gevind nie</string>
+    <string name="restartingapp">Begin toepassing weer om instellings toe te pas.</string>
+    <!--    Maintenance-->
+    <string name="maintenance">Onderhoud</string>
+    <string name="maintenance_shortname">MAINT</string>
+    <string name="description_maintenance">Bied verskeie funksies vir onderhoud (bv. log stuur, log skrapping).</string>
+    <string name="reset_db_confirm">Wil jy regtig die databasis herstel?</string>
+    <string name="maintenance_settings">Onderhoud instellings</string>
+    <string name="maintenance_email">E-pos</string>
+    <string name="maintenance_amount">Hoeveel Logs om te stuur</string>
+    <string name="send_all_logs">Stuur Logs per Epos</string>
+    <string name="delete_logs">Skrap joernaal</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout-weergawe:</string>
+    <string name="engineering_mode_enabled">Ingenieurswese modus geaktiveer</string>
+    <string name="nav_logsettings">Logboekinstellings</string>
+    <string name="nav_resetdb">Herstel databasis</string>
+    <string name="resettodefaults">Herstel na verstek</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
+</resources>

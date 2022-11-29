@@ -13,8 +13,15 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.device.Or
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusGeneralFragment
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusHistoryFragment
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkBluetoothStateReceiver
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkBroadcastReceiver
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkService
-import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.*
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.DiscoverGattServicesTask
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.InitializePumpManagerTask
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.PumpTask
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ResetRileyLinkConfigurationTask
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.ServiceTask
+import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
 
 @Module
 @Suppress("unused")
@@ -40,4 +47,6 @@ abstract class RileyLinkModule {
     @ContributesAndroidInjector abstract fun contributesRileyLinkBLEConfigActivity(): RileyLinkBLEConfigActivity
 
     @ContributesAndroidInjector abstract fun contributesRileyLinkService(): RileyLinkService
+    @ContributesAndroidInjector abstract fun contributesRileyLinkBroadcastReceiver(): RileyLinkBroadcastReceiver
+    @ContributesAndroidInjector abstract fun contributesRileyLinkBluetoothStateReceiver(): RileyLinkBluetoothStateReceiver
 }

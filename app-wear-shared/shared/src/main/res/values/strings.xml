@@ -31,4 +31,12 @@
     <string name="tomorrow">Tomorrow</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
+
+    <!-- Rx -->
+    <string name="connecting_for">Connecting for %1$d s</string>
+    <string name="handshaking">Handshaking</string>
+    <string name="connected">Connected</string>
+    <string name="disconnecting">Disconnecting</string>
+    <string name="waiting_for_disconnection">Waiting for disconnection</string>
+
 </resources>

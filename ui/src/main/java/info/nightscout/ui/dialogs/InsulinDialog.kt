@@ -8,17 +8,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.androidaps.dialogs.DialogFragmentWithDate
-import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.ui.extensions.toSignedString
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.core.profile.toMgdl
-import info.nightscout.core.pumpExtensions.insertBolusTransaction
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
@@ -26,16 +18,24 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.interfaces.BolusTimer
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.Constants.INSULIN_PLUS1_DEFAULT
+import info.nightscout.interfaces.Constants.INSULIN_PLUS2_DEFAULT
+import info.nightscout.interfaces.Constants.INSULIN_PLUS3_DEFAULT
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.db.PersistenceLayer
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
@@ -44,6 +44,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogInsulinBinding
+import info.nightscout.ui.extensions.toSignedString
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
@@ -67,14 +68,8 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var bolusTimer: BolusTimer
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
-    @Inject lateinit var activityNames: ActivityNames
-
-    companion object {
-
-        const val PLUS1_DEFAULT = 0.5
-        const val PLUS2_DEFAULT = 1.0
-        const val PLUS3_DEFAULT = 2.0
-    }
+    @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -137,35 +132,35 @@ class InsulinDialog : DialogFragmentWithDate() {
                 ?: 0.0, 0.0, maxInsulin, activePlugin.activePump.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher
         )
 
-        val plus05Text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT).toSignedString(activePlugin.activePump)
+        val plus05Text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT).toSignedString(activePlugin.activePump)
         binding.plus05.text = plus05Text
         binding.plus05.contentDescription = rh.gs(R.string.overview_insulin_label) + " " + plus05Text
         binding.plus05.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(R.string.key_insulin_button_increment_1), PLUS1_DEFAULT)
+                    + sp.getDouble(rh.gs(R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT)
             )
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus10Text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT).toSignedString(activePlugin.activePump)
+        val plus10Text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT).toSignedString(activePlugin.activePump)
         binding.plus10.text = plus10Text
         binding.plus10.contentDescription = rh.gs(R.string.overview_insulin_label) + " " + plus10Text
         binding.plus10.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(R.string.key_insulin_button_increment_2), PLUS2_DEFAULT)
+                    + sp.getDouble(rh.gs(R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT)
             )
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus20Text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT).toSignedString(activePlugin.activePump)
+        val plus20Text = sp.getDouble(rh.gs(R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT).toSignedString(activePlugin.activePump)
         binding.plus20.text = plus20Text
         binding.plus20.contentDescription = rh.gs(R.string.overview_insulin_label) + " " + plus20Text
         binding.plus20.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(R.string.key_insulin_button_increment_3), PLUS3_DEFAULT)
+                    + sp.getDouble(rh.gs(R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT)
             )
             validateInputs()
             binding.amount.announceValue()
@@ -259,11 +254,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.record)),
                                     ValueWithUnit.Insulin(insulinAfterConstraints),
                                     ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 })
-                            disposable += repository.runTransactionForResult(detailedBolusInfo.insertBolusTransaction())
-                                .subscribe(
-                                    { result -> result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bolus $it") } },
-                                    { aapsLogger.error(LTag.DATABASE, "Error while saving bolus", it) }
-                                )
+                            persistenceLayer.insertOrUpdateBolus(detailedBolusInfo.createBolus())
                             if (timeOffset == 0)
                                 bolusTimer.removeAutomationEventBolusReminder()
                         } else {
@@ -275,7 +266,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                        uiInteraction.runAlarm(result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                     } else {
                                         bolusTimer.removeAutomationEventBolusReminder()
                                     }

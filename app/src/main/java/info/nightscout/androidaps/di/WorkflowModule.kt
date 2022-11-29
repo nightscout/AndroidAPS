@@ -2,8 +2,19 @@ package info.nightscout.androidaps.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.*
-import info.nightscout.androidaps.workflow.*
+import info.nightscout.androidaps.workflow.InvokeLoopWorker
+import info.nightscout.androidaps.workflow.LoadBgDataWorker
+import info.nightscout.androidaps.workflow.PrepareBasalDataWorker
+import info.nightscout.androidaps.workflow.PrepareBgDataWorker
+import info.nightscout.androidaps.workflow.PrepareBucketedDataWorker
+import info.nightscout.androidaps.workflow.PrepareIobAutosensGraphDataWorker
+import info.nightscout.androidaps.workflow.PreparePredictionsWorker
+import info.nightscout.androidaps.workflow.PrepareTemporaryTargetDataWorker
+import info.nightscout.androidaps.workflow.PrepareTreatmentsDataWorker
+import info.nightscout.androidaps.workflow.UpdateGraphWorker
+import info.nightscout.androidaps.workflow.UpdateIobCobSensWorker
+import info.nightscout.plugins.iob.iobCobCalculator.IobCobOref1Worker
+import info.nightscout.plugins.iob.iobCobCalculator.IobCobOrefWorker
 
 @Module
 @Suppress("unused")

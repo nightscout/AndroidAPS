@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">새로고침</string>
     <string name="error">에러</string>
@@ -15,8 +14,6 @@
     <string name="bolusdelivering">%1$.2f U 주입 중</string>
     <string name="connecting">연결중</string>
     <string name="disconnected">연결 끊김</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -26,11 +23,9 @@
     <string name="pumpbusy">펌프가 바쁩니다</string>
     <string name="connectionerror">펌프 연결 에러</string>
     <string name="objectives">목표</string>
-    <string name="close">닫기</string>
     <string name="please_wait">잠시 기다려 주세요...</string>
     <string name="mute">음소거</string>
     <string name="reload">새로고침</string>
-    <string name="stoppressed">정지 누름</string>
     <string name="stop">정지</string>
     <string name="carbs">탄수화물</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -43,10 +38,10 @@
     <string name="target_label">목표:</string>
     <string name="basal_long_label">Basal양</string>
     <string name="initializing">초기화중 ...</string>
-    <string name="serialnumber">시리얼번호</string>
+    <string name="serial_number">시리얼번호</string>
     <string name="battery_label">배터리</string>
-    <string name="lastconnection_label">마지막 접속</string>
-    <string name="lastbolus_label">최근 Bolus:</string>
+    <string name="last_connection_label">마지막 접속</string>
+    <string name="last_bolus_label">최근 Bolus:</string>
     <string name="dailyunits">일 인슐린 총량</string>
     <string name="base_basal_rate_label">기본 Basal양</string>
     <string name="tempbasal_label">임시Basal</string>
@@ -396,6 +391,7 @@
     <string name="partialboluswizard">Bolus 마법사 결과의 이 부분 주입[%]</string>
     <string name="advisoralarm">식사 시간이 되면 알람을 울리기</string>
     <string name="no_action_selected">선택한 실행이 없습니다. 아무런 실행이 되지 않습니다.</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
     </plurals>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NSClient -->
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="connection_settings_title">Verbindinginstellings</string>
+    <string name="ns_wifi_allowed_ssids">Toegelate SSID\'s (kommapunt geskei)</string>
+    <string name="ns_allow_roaming">Laat verbindings toe terwyl swerf</string>
+    <string name="ns_create_announcements_from_errors_title">Skep aankondigings vanaf foute</string>
+    <string name="ns_create_announcements_from_errors_summary">Skep Nightscout aankondiging vir foutdialoë en plaaslike waarskuwings (ook vertoonbaar in Careportal onder behandelings)</string>
+    <string name="description_ns_client">Sinkroniseer jou data met Nightscout</string>
+    <string name="unsupported_ns_version">Weergawe van Nightscout nie ondersteun</string>
+    <string name="openaps_short">OAPS</string>
+    <string name="uploader_short">UPLD</string>
+    <string name="ns_malfunction">NSClient onklaar. Oorweeg om NS en NSClient te herlaai.</string>
+    <!-- NSClient -->
+    <string name="no_write_permission">NSCLIENT het geen skryfregte. Dalk verkeerde API secret?</string>
+    <string name="ns_client">NSClient</string>
+    <string name="ns_client_short_name">NSCI</string>
+    <string name="ns_client_url">URL:</string>
+    <string name="ns_client_autoscroll">Autoscroll</string>
+    <string name="restart">Herbegin</string>
+    <string name="ns_client_internal_title">NSClient</string>
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="ns_client_url_dialog_message">Tik jou Nightscout URL</string>
+    <string name="ns_client_secret_title">NS API geheim</string>
+    <string name="ns_client_secret_dialog_title">NS API geheim</string>
+    <string name="ns_client_secret_dialog_message">Tik NS API geheim (min 12 karakters)</string>
+    <string name="deliver_now">Lewer nou</string>
+    <string name="clear_queue">Vee tou uit</string>
+    <string name="show_queue">Wys tou</string>
+    <string name="queue">Tou:</string>
+    <string name="status">Status:</string>
+    <string name="clear_log">Maak log skoon</string>
+    <string name="ns_alarm_options">Alarm Opsies</string>
+    <string name="ns_alarm_stale_data_value_label">Ou data drumpel [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Nood ou data drumpel [min]</string>
+    <string name="ns_log_app_started_event">Log app begin na NS</string>
+    <string name="ns_local_broadcasts_title">Aktiveer plaaslike Uitsaai.</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">JouTidepool login gebruiker, normaallweg \'n email adres</string>
+    <string name="title_tidepool_username">Login Gebruiker Naam</string>
+    <string name="summary_tidepool_password">Jou Tidepool login kode</string>
+    <string name="title_tidepool_password">Login wagwoord</string>
+    <string name="title_tidepool_test_login">Toets Tidepool Login</string>
+    <string name="summary_tidepool_dev_servers">As ge-aktiveer sal data oplaai na https://int-app.tidepool.org instede van die gewone https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Gebruik Integrasie (toets) bedieners</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Laai data op na Tidepool</string>
+    <string name="tidepool_upload_cgm">Laai CGM data op</string>
+    <string name="tidepool_upload_bolus">Laai behandelings op (insulien, karbs)</string>
+    <string name="tidepool_upload_tbr">Laai tydelike basale op</string>
+    <string name="tidepool_upload_profile">Laai profiel veranderings, tydelike teikens op</string>
+    <string name="tidepool_upload_bg">Laai BG toetse op</string>
+</resources>

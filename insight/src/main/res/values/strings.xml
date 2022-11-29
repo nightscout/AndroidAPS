@@ -51,7 +51,6 @@
     <string name="timeout_during_handshake">Timeout during handshake - reset bluetooth</string>
     <string name="pump_stopped">Pump stopped</string>
     <string name="pump_started">Pump started</string>
-    <string name="pump_paused">Pump paused</string>
     <string name="short_status_last_connected">Last conn: %1$d min ago</string>
     <string name="short_status_tbr">TBR: %1$d%% for %2$d / %3$d min</string>
     <string name="short_status_extended">Extended: %1$.2f / %2$.2f U for %3$d min</string>
@@ -59,7 +58,6 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2f U</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
-    <string name="mute_alert">Mute</string>
     <string name="release_software_version">Release software version</string>
     <string name="ui_processor_software_version">UI processor software version</string>
     <string name="pc_processor_software_version">PC processor software version</string>

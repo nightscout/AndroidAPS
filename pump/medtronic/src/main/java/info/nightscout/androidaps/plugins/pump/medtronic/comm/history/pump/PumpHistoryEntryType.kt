@@ -1,8 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump
 
-import info.nightscout.androidaps.plugins.pump.common.defs.PumpHistoryEntryGroup
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
-import java.util.*
+import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
 
 /**
  * This file was taken from GGC - GNU Gluco Control (ggc.sourceforge.net), application for diabetes

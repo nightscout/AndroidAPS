@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">Falten lectures de glucèmia</string>
     <string name="time_to_bolus">Hora d’aplicar bolus!\nExecuteu l\'assistent de bolus i torneu a fer els càlculs.</string>
     <string name="permission">Permís</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Sembla que aquest dispositiu no permet optimitzar la bateria amb llistes blanques, això pot provocar problemes de rendiment.</string>
     <!--       Stats -->
+    <string name="low" comment="3.1-3.9">Baix</string>
+    <string name="high" comment="10.0-13.9">Alt</string>
 </resources>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Odśwież</string>
     <string name="error">Błąd</string>
@@ -15,8 +14,6 @@
     <string name="bolusdelivering">Podaję %1$.2f U</string>
     <string name="connecting">Łączę</string>
     <string name="disconnected">Rozłączono</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -26,11 +23,9 @@
     <string name="pumpbusy">Pompa jest zajęta</string>
     <string name="connectionerror">Błąd połączenia z pompą</string>
     <string name="objectives">Zadania</string>
-    <string name="close">Zamknij</string>
     <string name="please_wait">Proszę czekać…</string>
     <string name="mute">Wycisz</string>
     <string name="reload">Załaduj ponownie</string>
-    <string name="stoppressed">NACIŚNIĘTY STOP</string>
     <string name="stop">Stop</string>
     <string name="carbs">Węglowodany</string>
     <string name="active"><![CDATA[<Aktywny>]]></string>
@@ -43,10 +38,10 @@
     <string name="target_label">Cel</string>
     <string name="basal_long_label">Dawka bazowa</string>
     <string name="initializing">Inicjuje ...</string>
-    <string name="serialnumber">Numer seryjny</string>
+    <string name="serial_number">Numer seryjny</string>
     <string name="battery_label">Bateria</string>
-    <string name="lastconnection_label">Ostatnie połączenie</string>
-    <string name="lastbolus_label">Ostatni bolus</string>
+    <string name="last_connection_label">Ostatnie połączenie</string>
+    <string name="last_bolus_label">Ostatni bolus</string>
     <string name="dailyunits">Jednostki dzienne</string>
     <string name="base_basal_rate_label">Podstawowa dawka bazowa</string>
     <string name="tempbasal_label">Baza tymczasowa</string>
@@ -419,8 +414,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Baza</string>
     <string name="basalpct">Baza %</string>
-    <string name="count_selected">Wybrany %1$d</string>
-    <string name="sort_label">Sortuj</string>
     <string name="a11y_user">użytkownik</string>
     <!-- Autotune -->
     <string name="autotune_result">Wynik: %1$s</string>
@@ -438,6 +431,7 @@
     <string name="partialboluswizard">Dostarcz tą część dawki insuliny z wyniku kalkulatora bolusa [%]</string>
     <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
     <string name="no_action_selected">Nie wybrano żadnej akcji, zdarzenie nie będzie wprowadzone</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dzień</item>
         <item quantity="few">%1$d dni</item>

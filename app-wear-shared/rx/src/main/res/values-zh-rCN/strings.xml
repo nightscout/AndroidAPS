@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="handshaking">握手</string>
-    <string name="connected">已连接</string>
-    <string name="disconnecting">正在断开连接</string>
-    <string name="waiting_for_disconnection">正在等待连接</string>
-</resources>

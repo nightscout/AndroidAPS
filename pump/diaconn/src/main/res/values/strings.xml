@@ -12,9 +12,10 @@
     <string name="key_diaconn_g8_logneedlechange" translatable="false">diaconn_g8_logneedlechange</string>
     <string name="key_diaconn_g8_cloudsend" translatable="false">diaconn_g8_cloudsend</string>
     <string name="key_diaconn_g8_appuid" translatable="false">diaconn_g8_appuid</string>
+    <string name="key_diaconn_g8_is_bolus_speed_sync" translatable="false">diaconn_g8_isbolusspeedsync</string>
 
     <string name="resetpairing" >Reset Pairing</string>
-    <string name="diaconn_nodeviceavailable" >No Device available</string>
+    <string name="diaconn_no_device_available">No Device available</string>
     <string name="diaconn_pairing" >Diaconn Pump Pairing</string>
     <string name="pumperror" >Pump Error</string>
     <string name="diaconn_g8_history_alarm" >Alarms</string>
@@ -64,7 +65,7 @@
     <string name="bolus_step">Bolus Step</string>
     <string name="basal_step">Basal Step</string>
     <string name="pump_firmware_label">Firmware</string>
-    <string name="diagonn_g8_useroptions">USER OPTIONS</string>
+    <string name="diaconn_g8_user_options">USER OPTIONS</string>
     <string name="pairfirst">Please pair your pump with your phone!</string>
     <string name="processinghistory">"Processing Event "</string>
     <string name="apslastLogNum">aps_last_log_num</string>

@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolusdelivered">בולוס %1$.2f יח\' ניתן בהצלחה</string>
+    <string name="category_alerts">התראות</string>
+    <string name="bolus_delivered">בולוס %1$.2f יח\' ניתן בהצלחה</string>
+    <string name="eopatch_status">סטטוס</string>
+    <string name="eopatch_base_basal_rate">ערך בזאלי בסיסי</string>
+    <string name="eopatch_temp_basal_rate">מינון בזאלי זמני</string>
+    <string name="eopatch_total_delivered">סה\"כ שהוזרק</string>
+    <string name="patch_finish">סיום</string>
+    <string name="patch_step_desc_1">1.</string>
+    <string name="patch_step_desc_2">2.</string>
+    <string name="symbol_days">ימים</string>
+    <string name="string_resume">חידוש</string>
+    <string name="string_suspend">השהיה</string>
+    <string name="string_suspended">מושהה</string>
+    <string name="string_running">פועל</string>
+    <string name="string_suspended_insulin_delivery_message">הזרקת האינסולין מופסקת.</string>
 </resources>

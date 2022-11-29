@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
-import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Ids
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt.EnDecrypt
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotParseResponseException
@@ -14,6 +13,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding.Companion.parseKeys
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
+import info.nightscout.core.utils.toHex
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 

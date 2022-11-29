@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">灵敏度</string>
+    <string name="sensitivity_oref1">灵敏度 Oref1</string>
+    <string name="sensitivity_aaps">灵敏度 AAPS</string>
+    <string name="sensitivity_weighted_average">灵敏度 WeightedAverage</string>
+    <string name="description_sensitivity_aaps">灵敏度的计算方式与 Oref0 相同, 但可以指定过去的时间范围。碳水化合物吸收最小值是根据参数选项里的碳水化合物吸收时间最大值计算得来的</string>
+    <string name="description_sensitivity_oref1">根据过去的8小时或24小时数据计算胰岛素灵敏度（使用更敏感的数据）。碳水化合物（如果没有被吸收）则在首选项中指定的时间后被核减。插件还计算UAM。</string>
+    <string name="description_sensitivity_weighted_average">灵敏度计算根据偏差的加权平均值。新的偏差有更高的权重。碳水化合物吸收最小值是根据参数选项里的碳水化合物吸收时间最大值计算得来的好。此算法在敏感度变化后最快。</string>
+    <string name="uam_disabled_oref1_not_selected">UAM被禁用, 因为它依赖于 Oref1 敏感都插件</string>
+    <string name="absorption_settings_title">食物吸收设置</string>
+    <string name="absorption_max_time_title">膳食最大吸收时间 [h]</string>
+    <string name="absorption_max_time_summary">预计膳食中所有的碳水化合物被吸收的时间，以小时为单位</string>
+    <string name="openapsama_autosens_period">Autosens间隔的 [h]</string>
+    <string name="openapsama_autosens_period_summary">灵敏度检测过去的小时数 (排除碳水化合物吸收时间)</string>
+    <string name="openapsama_autosens_max_summary">默认值: 1.2 \n 这是 autosens 的安全阀值 对 autosens ( 很快autotune) 比率的高值设置最大增加20%% 最大限制, 这反过来决定了 autosens 可以调整的基础率的上限值, 可以调整的胰岛素敏感系数的下限值, 以及它可以设置血糖目标的下限值。</string>
+    <string name="openapsama_autosens_min_summary">默认值: 0.7 \n 　这是autosens 的另一个安全阈值, 。这个值决定了 autosens 可以调整的基础率的下限值, 可以调整的胰岛素敏感系数的上限值, 以及它可以设置血糖目标的上限值。</string>
+    <string name="openapsama_autosens_max">最大 autosens 比率</string>
+    <string name="openapsama_autosens_min">最小 autosens 比率</string>
+    <string name="openapsama_min_5m_carb_impact_summary">默认值: 3.0  (AMA) 或者 8.0 (SMB)。这是默认的每5分钟碳水化合物吸收量。默认值为3毫克/dl/5 分钟。 当血糖的下降超过预期时, 或者不像预期的上升的那么多时，这个值就影响了活性碳水化合物的衰减速度, 以及在计算预测未来血糖时假设的碳水化合物吸收量,</string>
+    <string name="absorption_cutoff_title">膳食最大吸收时间 [h]</string>
+    <string name="absorption_cutoff_summary">任何膳食被认为完全吸收的时间。 剩余的碳水化合物将被忽略</string>
+</resources>

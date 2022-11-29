@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Eliminar emparelhamento</string>
-    <string name="diaconn_nodeviceavailable">Sem dispositivos disponíveis</string>
+    <string name="diaconn_no_device_available">Sem dispositivos disponíveis</string>
     <string name="diaconn_pairing">Emparelhamento de bombas Diaconn</string>
     <string name="pumperror">Erro Bomba</string>
     <string name="diaconn_g8_history_alarm">Alarmes</string>
@@ -49,7 +49,7 @@
     <string name="bolus_step">Incremento Bólus</string>
     <string name="basal_step">Incremento Basal</string>
     <string name="pump_firmware_label">Firmware</string>
-    <string name="diagonn_g8_useroptions">OPÇÕES DO UTILIZADOR</string>
+    <string name="diaconn_g8_user_options">OPÇÕES DO UTILIZADOR</string>
     <string name="pairfirst">Emparelhe a sua bomba com o seu telefone!</string>
     <string name="processinghistory">"A processar acção "</string>
     <string name="apslastLogNum">aps_last_log_num</string>

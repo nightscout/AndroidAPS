@@ -14,21 +14,21 @@ import com.google.common.util.concurrent.ListenableFuture
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.configuration.maintenance.MaintenancePlugin
+import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.plugins.configBuilder.RunningConfiguration
-import info.nightscout.plugins.sync.nsclient.extensions.buildDeviceStatus
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.logging.AAPSLogger
@@ -167,7 +167,7 @@ class KeepAliveWorker(
         else if (dateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
         if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
             lastIobUpload = dateUtil.now()
-            buildDeviceStatus(
+            loop.buildDeviceStatus(
                 dateUtil, loop, iobCobCalculator, profileFunction,
                 activePlugin.activePump, receiverStatusStore, runningConfiguration,
                 BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION

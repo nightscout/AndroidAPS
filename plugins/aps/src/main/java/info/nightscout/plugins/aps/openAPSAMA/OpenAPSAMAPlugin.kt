@@ -3,12 +3,12 @@ package info.nightscout.plugins.aps.openAPSAMA
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.extensions.target
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.core.profile.secondsFromMidnight
+import info.nightscout.core.extensions.target
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.utils.MidnightUtils
+import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.aps.APS
 import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.DetermineBasalAdapter
@@ -159,7 +159,7 @@ class OpenAPSAMAPlugin @Inject constructor(
                 )
         }
         if (!hardLimits.checkHardLimits(profile.dia, R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return
-        if (!hardLimits.checkHardLimits(profile.getIcTimeFromMidnight(Profile.secondsFromMidnight()), R.string.profile_carbs_ratio_value, hardLimits.minIC(), hardLimits.maxIC())) return
+        if (!hardLimits.checkHardLimits(profile.getIcTimeFromMidnight(MidnightUtils.secondsFromMidnight()), R.string.profile_carbs_ratio_value, hardLimits.minIC(), hardLimits.maxIC())) return
         if (!hardLimits.checkHardLimits(profile.getIsfMgdl(), R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
         if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
         if (!hardLimits.checkHardLimits(pump.baseBasalRate, R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
@@ -214,8 +214,8 @@ class OpenAPSAMAPlugin @Inject constructor(
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (isEnabled()) {
             val maxIobPref: Double = sp.getDouble(R.string.key_openapsma_max_iob, 1.5)
-            maxIob.setIfSmaller(aapsLogger, maxIobPref, rh.gs(R.string.limitingiob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
-            maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobAMA(), rh.gs(R.string.limitingiob, hardLimits.maxIobAMA(), rh.gs(R.string.hardlimit)), this)
+            maxIob.setIfSmaller(aapsLogger, maxIobPref, rh.gs(R.string.limiting_iob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
+            maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobAMA(), rh.gs(R.string.limiting_iob, hardLimits.maxIobAMA(), rh.gs(R.string.hardlimit)), this)
         }
         return maxIob
     }

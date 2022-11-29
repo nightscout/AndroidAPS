@@ -2,13 +2,12 @@ package info.nightscout.androidaps
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.core.profile.ProfileStoreObject
+import info.nightscout.core.extensions.pureProfileFromJson
+import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileStore

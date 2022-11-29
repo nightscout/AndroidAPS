@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Actualiser</string>
     <string name="error">Erreur</string>
@@ -16,8 +15,6 @@
     <string name="connecting">Connexion en cours</string>
     <string name="disconnected">Déconnectée</string>
     <string name="androidaps_start">AAPS démarré</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -27,11 +24,9 @@
     <string name="pumpbusy">Pompe occupée</string>
     <string name="connectionerror">Erreur connection pompe</string>
     <string name="objectives">Objectifs</string>
-    <string name="close">Fermer</string>
     <string name="please_wait">Merci de patienter...</string>
     <string name="mute">Muet</string>
     <string name="reload">Actualiser</string>
-    <string name="stoppressed">ARRÊT APPUYÉ</string>
     <string name="stop">Arrêt</string>
     <string name="carbs">Glucides</string>
     <string name="invalid_profile">Profil incorrect!</string>
@@ -50,10 +45,10 @@
     <string name="basal_long_label">Débit de Basal</string>
     <string name="target_long_label">Glycémie cible</string>
     <string name="initializing">En cours d\'initialisation...</string>
-    <string name="serialnumber">Numéro de série</string>
+    <string name="serial_number">Numéro de série</string>
     <string name="battery_label">Niveau batterie</string>
-    <string name="lastconnection_label">Dernière connexion</string>
-    <string name="lastbolus_label">Dernier bolus</string>
+    <string name="last_connection_label">Dernière connexion</string>
+    <string name="last_bolus_label">Dernier bolus</string>
     <string name="dailyunits">Unités quotidiennes</string>
     <string name="base_basal_rate_label">Débit de Basal</string>
     <string name="tempbasal_label">Basal temporaire</string>
@@ -452,11 +447,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
-    <string name="count_selected">%1$d séléctionné(s)</string>
-    <string name="sort_label">Trier</string>
-    <string name="remove_items">Supprimer les éléments</string>
-    <string name="sort_items">Trier les éléments</string>
-    <string name="remove_selected_items">Supprimer les éléments sélectionnés</string>
     <string name="a11y_file">fichier</string>
     <string name="a11y_user">utilisateur</string>
     <!-- Autotune -->
@@ -539,6 +529,7 @@
     <string name="wizard_explain_tt">Cible Temp: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s vers %2$s</string>
     <string name="wizard_pump_not_available">Aucune pompe disponible!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

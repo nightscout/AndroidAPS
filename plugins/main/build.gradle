@@ -16,42 +16,34 @@ android {
 }
 
 dependencies {
-    implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
     implementation project(':database:impl')
-    implementation project(':graphview')
     implementation project(':core:core-main')
-    implementation project(':core:fabric')
+    implementation project(':core:graph')
+    implementation project(':core:graphview')
+    implementation project(':core:interfaces')
+    implementation project(':core:ns-sdk')
     implementation project(':core:ui')
-    implementation project(':interfaces')
-    implementation project(':ns-sdk')
+    implementation project(':core:utils')
+    implementation project(':core:validators')
 
     api "androidx.appcompat:appcompat:$appcompat_version"
     api "com.google.android.material:material:$material_version"
 
     // Actions
-    api 'androidx.gridlayout:gridlayout:1.0.0'
-
-    // NSClient, Tidepool
-    api("io.socket:socket.io-client:1.0.0") {
-        // excluding org.json which is provided by Android
-        exclude group: "org.json", module: "json"
-    }
-    api "com.squareup.okhttp3:okhttp:$okhttp3_version"
-    api "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
-    //api "com.squareup.retrofit2:retrofit:$retrofit2_version"
-    api "com.squareup.retrofit2:adapter-rxjava3:$retrofit2_version"
-    api "com.squareup.retrofit2:converter-gson:$retrofit2_version"
-
-
-    // Phone checker
-    api 'com.scottyab:rootbeer-lib:0.1.0'
+    api "androidx.gridlayout:gridlayout:$gridlayout_version"
 
     //SmsCommunicator
-    api 'com.eatthepath:java-otp:0.3.1'
-    api 'com.github.kenglxn.QRGen:android:2.6.0'
+    api 'com.eatthepath:java-otp:0.4.0'
+    api 'com.github.kenglxn.QRGen:android:2.7.0'
 
     // Overview
     api 'com.google.android.flexbox:flexbox:3.0.0'
+
+    // Food
+    api "androidx.work:work-runtime-ktx:$work_version"
+
+    // DataLayerListenerService
+    api "com.google.android.gms:play-services-wearable:$play_services_wearable_version"
 }

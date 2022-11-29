@@ -12,27 +12,29 @@ import android.view.View
 import android.view.WindowManager
 import com.google.common.primitives.Ints.min
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.core.fabric.FabricPrivacy
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.smsCommunicator.SmsCommunicator
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.SmscommunicatorActivityOtpBinding
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
+import info.nightscout.shared.interfaces.ResourceHelper
 import net.glxn.qrgen.android.QRCode
 import javax.inject.Inject
 
-class SmsCommunicatorOtpActivity : NoSplashAppCompatActivity() {
+class SmsCommunicatorOtpActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var smsCommunicator: SmsCommunicator
     @Inject lateinit var otp: OneTimePassword
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var rh: ResourceHelper
 
     private lateinit var binding: SmscommunicatorActivityOtpBinding
 

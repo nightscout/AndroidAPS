@@ -1,7 +1,7 @@
 package info.nightscout.plugins.aps.openAPSSMB
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.aps.loop.APSResultObject
+import info.nightscout.core.aps.APSResultObject
 import info.nightscout.interfaces.aps.VariableSensitivityResult
 import info.nightscout.rx.logging.LTag
 import org.json.JSONException

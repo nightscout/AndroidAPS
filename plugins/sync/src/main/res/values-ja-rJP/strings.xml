@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NSClient -->
+    <!-- NSClient -->
+    <string name="ns_alarm_options">アラームオプション</string>
+    <string name="ns_alarms">NSアラームから通知を作成する</string>
+    <string name="ns_announcements">NSからのお知らせを通知する</string>
+    <string name="ns_alarm_stale_data_value_label">古いデータしきい値 [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Urgent stale data threshold [min]</string>
+    <!-- Tidepool -->
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod Eros - Description -->
+    <!-- Omnipod Eros - Keys -->
+    <!-- Omnipod Eros - Overview -->
+    <!-- Omnipod Eros - Preferences -->
+    <!-- Omnipod Eros - History -->
+    <string name="omnipod_eros_history_item_date">日時</string>
+    <string name="omnipod_eros_history_bolus_value">%1$.2f U</string>
+    <!-- Omnipod Eros - Short Status -->
+    <!-- Omnipod Eros - Error -->
+    <!-- Omnipod Eros - Pod Management -->
+    <!-- Omnipod Eros - Pod Activation Wizard -->
+    <!-- Omnipod Eros - Other -->
+</resources>

@@ -264,7 +264,7 @@
                     android:layout_weight="1.5"
                     android:textAlignment="viewEnd"
                     android:paddingEnd="5dp"
-                    android:text="@string/lastconnection_label"
+                    android:text="@string/last_connection_label"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -312,7 +312,7 @@
                     android:layout_weight="1.5"
                     android:textAlignment="viewEnd"
                     android:paddingEnd="5dp"
-                    android:text="@string/lastbolus_label"
+                    android:text="@string/last_bolus_label"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
 
@@ -578,7 +578,7 @@
             android:drawableTop="@drawable/ic_pump_history"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
-            android:text="@string/pumphistory" />
+            android:text="@string/pump_history" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/stats"
@@ -586,7 +586,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_danarstats"
+            android:drawableTop="@drawable/ic_stats"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
             android:text="@string/riley_statistics" />

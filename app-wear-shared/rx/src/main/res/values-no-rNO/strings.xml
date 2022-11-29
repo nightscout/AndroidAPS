@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="connecting_for">Tilkobler i %1$d sek</string>
-    <string name="handshaking">Tilkobling verifiseres</string>
-    <string name="connected">Tilkoblet</string>
-    <string name="disconnecting">Frakobler</string>
-    <string name="waiting_for_disconnection">Venter på frakobling</string>
-</resources>

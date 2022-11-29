@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Emparejando</string>
-    <string name="danars_nodeviceavailable">Aparato no encontrado</string>
+    <string name="danars_no_device_available">Ningún dispositivo encontrado por el momento</string>
     <string name="danars_pairingok">Conexión OK</string>
     <string name="danars_pairingtimedout">Tiempo de Vinculación agotado</string>
     <string name="danars_waitingforpairing">Esperando para conectar con bomba</string>
@@ -65,20 +65,20 @@
     <string name="danar_history_refill">Llenar</string>
     <string name="danar_history_syspend">Suspender</string>
     <string name="danar_history_prime">Cebado</string>
-    <string name="danar_useroptions">Opciones de usuario</string>
-    <string name="danar_timedisplay">Mostrar formato de tiempo</string>
-    <string name="danar_buttonscroll">Botones de desplazamiento</string>
+    <string name="danar_user_options">Opciones de usuario</string>
+    <string name="danar_time_display">Formato de la fecha y hora</string>
+    <string name="danar_button_scroll">Botón de desplazamiento</string>
     <string name="danar_beep">Señal sonora de pulsación</string>
-    <string name="danar_pumpalarm">Alarma</string>
-    <string name="danar_pumpalarm_sound">Sonido</string>
-    <string name="danar_pumpalarm_vibrate">Vibrar</string>
-    <string name="danar_pumpalarm_both">Ambos</string>
-    <string name="danar_screentimeout">Tiempo de encendido de LCD [seconds]</string>
+    <string name="danar_pump_alarm">Alarma</string>
+    <string name="danar_pump_alarm_sound">Sonido</string>
+    <string name="danar_pump_alarm_vibrate">Vibración</string>
+    <string name="danar_pump_alarm_both">Ambos</string>
+    <string name="danar_screen_timeout">Tiempo encendido del LCD [seconds]</string>
     <string name="danar_backlight">Tiempo de luz fondo encendida [seconds]</string>
-    <string name="danar_glucoseunits">Unidades de glucosa</string>
+    <string name="danar_glucose_units">Unidades de glucosa</string>
     <string name="danar_shutdown">Apagar [hours]</string>
-    <string name="danar_lowreservoir">Reservorio bajo [Units]</string>
-    <string name="danar_saveuseroptions">Guardar las opciones en la bomba</string>
+    <string name="danar_low_reservoir">Reservorio bajo [Units]</string>
+    <string name="danar_save_user_options">Guardar las opciones en la bomba</string>
     <string name="description_pump_dana_r">Integración de bombas de insulina DANA Diabecare R</string>
     <string name="description_pump_dana_r_korean">Integración de bombas de insulina domésticas DANA Diabecare R</string>
     <string name="description_pump_dana_r_v2">Integración de bombas de insulina DANA Diabecare R con el firmware actualizado</string>
@@ -94,10 +94,10 @@
     <string name="profile_set_failed">Error al activar perfil basal</string>
     <string name="danar_bluetooth_status">Estado de bluetooth</string>
     <string name="danar_iob_label">Bomba IOB</string>
-    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Ajustes de la bomba Dana</string>
-    <string name="timeformat12h">12 h</string>
-    <string name="timeformat24h">24 h</string>
+    <string name="time_format_12h">12 horas</string>
+    <string name="time_format_24h">24 horas</string>
     <string name="option_on">Activado</string>
     <string name="option_off">Desactivado</string>
     <string name="danar_bt_name_title">Dispositivo Bluetooth DanaR</string>

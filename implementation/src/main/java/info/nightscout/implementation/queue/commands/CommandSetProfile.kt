@@ -1,8 +1,8 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin

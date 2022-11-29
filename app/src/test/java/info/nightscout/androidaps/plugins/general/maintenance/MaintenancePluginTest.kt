@@ -3,10 +3,11 @@ package info.nightscout.androidaps.plugins.general.maintenance
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.logging.LoggerUtils
-import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
+import info.nightscout.interfaces.maintenance.PrefFileListProvider
+import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
@@ -23,16 +24,15 @@ class MaintenancePluginTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
     @Mock lateinit var nsSettingsStatus: NSSettingsStatus
-    @Mock lateinit var buildHelper: BuildHelper
+    @Mock lateinit var config: Config
     @Mock lateinit var loggerUtils: LoggerUtils
     @Mock lateinit var fileListProvider: PrefFileListProvider
-    @Mock lateinit var config: Config
 
     private lateinit var sut: MaintenancePlugin
 
     @Before
     fun mock() {
-        sut = MaintenancePlugin(injector, context, rh, sp, nsSettingsStatus, aapsLogger, buildHelper, config, fileListProvider, loggerUtils)
+        sut = MaintenancePlugin(injector, context, rh, sp, nsSettingsStatus, aapsLogger, config, fileListProvider, loggerUtils)
         `when`(loggerUtils.suffix).thenReturn(".log.zip")
         `when`(loggerUtils.logDirectory).thenReturn("src/test/res/logger")
         `when`(fileListProvider.ensureTempDirExists()).thenReturn(File("src/test/res/logger"))

@@ -320,7 +320,7 @@ public class InsightAlertService extends DaggerService implements InsightConnect
             case ACTIVE:
                 Intent muteIntent = new Intent(this, InsightAlertService.class).putExtra("command", "mute");
                 PendingIntent mutePendingIntent = PendingIntent.getService(this, 1, muteIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
-                notificationBuilder.addAction(0, rh.gs(R.string.mute_alert), mutePendingIntent);
+                notificationBuilder.addAction(0, rh.gs(R.string.mute), mutePendingIntent);
             case SNOOZED:
                 Intent confirmIntent = new Intent(this, InsightAlertService.class).putExtra("command", "confirm");
                 PendingIntent confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);

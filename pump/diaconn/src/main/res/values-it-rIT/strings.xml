@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Resetta associazione</string>
-    <string name="diaconn_nodeviceavailable">Nessun dispositivo disponibile</string>
+    <string name="diaconn_no_device_available">Nessun dispositivo disponibile</string>
     <string name="diaconn_pairing">Associazione micro Diaconn</string>
     <string name="pumperror">Errore micro</string>
     <string name="diaconn_g8_history_alarm">Allarmi</string>
@@ -49,7 +49,7 @@
     <string name="bolus_step">Incremento bolo</string>
     <string name="basal_step">Incremento basale</string>
     <string name="pump_firmware_label">Firmware</string>
-    <string name="diagonn_g8_useroptions">OPZIONI UTENTE</string>
+    <string name="diaconn_g8_user_options">OPZIONI UTENTE</string>
     <string name="pairfirst">Associa il micro col tuo telefono!</string>
     <string name="processinghistory">"Elaborazione "</string>
     <string name="apslastLogNum">aps_last_log_num</string>

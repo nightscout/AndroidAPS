@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Oppdater</string>
     <string name="error">Feil</string>
@@ -16,8 +15,6 @@
     <string name="connecting">Tilkobler</string>
     <string name="disconnected">Frakoblet</string>
     <string name="androidaps_start">AAPS startet</string>
-    <string name="formatinsulinunits1">%1$.1f E</string>
-    <string name="formatinsulinunits">%1$.2f E</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d E</string>
@@ -27,11 +24,9 @@
     <string name="pumpbusy">Pumpen er opptatt</string>
     <string name="connectionerror">Tilkoblingsfeil til pumpe</string>
     <string name="objectives">Opplæringsmål</string>
-    <string name="close">Lukk</string>
     <string name="please_wait">Vennligst vent…</string>
     <string name="mute">Lyd av</string>
     <string name="reload">Last på nytt</string>
-    <string name="stoppressed">STOPP trykket</string>
     <string name="stop">Stopp</string>
     <string name="carbs">Karbohydrater</string>
     <string name="invalid_profile">Ugyldig profil!</string>
@@ -50,10 +45,10 @@
     <string name="basal_long_label">Basalrate</string>
     <string name="target_long_label">Blodsukkermål</string>
     <string name="initializing">Starter opp...</string>
-    <string name="serialnumber">Serienummer</string>
+    <string name="serial_number">Serienummer</string>
     <string name="battery_label">Batteri</string>
-    <string name="lastconnection_label">Siste tilkobling</string>
-    <string name="lastbolus_label">Siste bolus</string>
+    <string name="last_connection_label">Siste tilkobling</string>
+    <string name="last_bolus_label">Siste bolus</string>
     <string name="dailyunits">Daglige enheter</string>
     <string name="base_basal_rate_label">Profilens basaldose</string>
     <string name="tempbasal_label">Temp basal</string>
@@ -452,11 +447,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
-    <string name="count_selected">%1$d valgt</string>
-    <string name="sort_label">Sorter</string>
-    <string name="remove_items">Slett elementer</string>
-    <string name="sort_items">Sorter elementer</string>
-    <string name="remove_selected_items">Slett valgte elementer</string>
     <string name="a11y_file">fil</string>
     <string name="a11y_user">bruker</string>
     <!-- Autotune -->
@@ -539,6 +529,16 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s til %2$s</string>
     <string name="wizard_pump_not_available">Ingen pumpe tilgjengelig!</string>
+    <!--    Preferences-->
+    <string name="child">Barn</string>
+    <string name="teenage">Tenåring</string>
+    <string name="adult">Voksen</string>
+    <string name="resistant_adult">Insulinresistent voksen</string>
+    <string name="pregnant">Graviditet</string>
+    <string name="patient_age_summary">Velg pasienttype for oppsett av sikkerhetsgrenser</string>
+    <string name="max_bolus_title">Maks tillat bolus [U]</string>
+    <string name="max_carbs_title">Maks tillat karbo [g]</string>
+    <string name="patient_type">Pasienttype</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dager</item>

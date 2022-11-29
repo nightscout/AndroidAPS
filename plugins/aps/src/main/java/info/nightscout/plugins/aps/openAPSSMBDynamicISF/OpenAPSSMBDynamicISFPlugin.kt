@@ -3,9 +3,9 @@ package info.nightscout.plugins.aps.openAPSSMBDynamicISF
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.DetermineBasalAdapter
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator
@@ -42,7 +42,7 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     dateUtil: DateUtil,
     repository: AppRepository,
     glucoseStatusProvider: GlucoseStatusProvider,
-    private val buildHelper: BuildHelper
+    private val config: Config
 ) : OpenAPSSMBPlugin(
     injector,
     aapsLogger,
@@ -68,10 +68,10 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
             .shortName(R.string.dynisf_shortname)
             .preferencesId(R.xml.pref_openapssmbdynamicisf)
             .setDefault(false)
-            .showInList(buildHelper.isEngineeringMode() && buildHelper.isDev())
+            .showInList(config.isEngineeringMode() && config.isDev())
     }
 
-    override fun specialEnableCondition(): Boolean = buildHelper.isEngineeringMode() && buildHelper.isDev()
+    override fun specialEnableCondition(): Boolean = config.isEngineeringMode() && config.isDev()
 
     override fun provideDetermineBasalAdapter(): DetermineBasalAdapter = DetermineBasalAdapterSMBDynamicISFJS(ScriptReader(context), injector)
 }

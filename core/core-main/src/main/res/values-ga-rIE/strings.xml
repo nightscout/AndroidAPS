@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Athnuachan</string>
     <string name="error">Earráid</string>
@@ -9,15 +8,12 @@
     <string name="bolusdelivering">Ag seachadadh %1$.2f A</string>
     <string name="connecting">Ag nascadh</string>
     <string name="disconnected">Dínasctha</string>
-    <string name="formatinsulinunits1">%1$.1f A</string>
-    <string name="formatinsulinunits">%1$.2f A</string>
     <string name="formatsignedinsulinunits">%1$+.2f A</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d A</string>
     <string name="pump_basebasalrate">%1$.2f A/u</string>
     <string name="format_hours">%1$.2f u</string>
     <string name="format_mins">%1$d nóim</string>
-    <string name="close">Dún</string>
     <string name="mute">Balbh</string>
     <string name="reload">Athlódáil</string>
     <string name="stop">Stad</string>
@@ -31,10 +27,10 @@
     <string name="target_label">Cuspóir</string>
     <string name="basal_long_label">Bunaidh ráta</string>
     <string name="initializing">Tosaithe ...</string>
-    <string name="serialnumber">Sraithuimhir</string>
+    <string name="serial_number">Sraithuimhir</string>
     <string name="battery_label">Ceallraí</string>
-    <string name="lastconnection_label">Nasc deiridh</string>
-    <string name="lastbolus_label">Bólas deiridh</string>
+    <string name="last_connection_label">Nasc deiridh</string>
+    <string name="last_bolus_label">Bólas deiridh</string>
     <string name="dailyunits">Aonaid lá</string>
     <string name="base_basal_rate_label">Bunaidh ráta bonn</string>
     <string name="reservoir_label">Taiscumar</string>
@@ -141,6 +137,7 @@
     <!-- Alerts -->
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d lá</item>
         <item quantity="two">%1$d lá</item>

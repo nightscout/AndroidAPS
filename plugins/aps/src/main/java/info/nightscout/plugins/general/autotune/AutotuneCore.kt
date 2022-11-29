@@ -2,7 +2,7 @@ package info.nightscout.plugins.general.autotune
 
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.aps.R
-import info.nightscout.plugins.aps.utils.Percentile
+import info.nightscout.core.utils.Percentile
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.LocalInsulin
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Actualizează</string>
     <string name="error">Eroare</string>
@@ -15,8 +14,6 @@
     <string name="bolusdelivering">Livrare %1$.2f U</string>
     <string name="connecting">Se conectează</string>
     <string name="disconnected">Deconectat</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -26,11 +23,9 @@
     <string name="pumpbusy">Pompa face altă acțiune</string>
     <string name="connectionerror">Eroare de conexiune cu pompa</string>
     <string name="objectives">Obiective</string>
-    <string name="close">Închide</string>
     <string name="please_wait">Așteptați…</string>
     <string name="mute">Liniște</string>
     <string name="reload">Reîncărcare</string>
-    <string name="stoppressed">STOP APĂSAT</string>
     <string name="stop">Stop</string>
     <string name="carbs">Carbohidrați</string>
     <string name="active"><![CDATA[<Activ>]]></string>
@@ -43,10 +38,10 @@
     <string name="target_label">Țintă</string>
     <string name="basal_long_label">Rată bazală</string>
     <string name="initializing">Inițializare...</string>
-    <string name="serialnumber">Număr serial</string>
+    <string name="serial_number">Număr serial</string>
     <string name="battery_label">Baterie</string>
-    <string name="lastconnection_label">Ultima conexiune</string>
-    <string name="lastbolus_label">Ultimul bolus</string>
+    <string name="last_connection_label">Ultima conexiune</string>
+    <string name="last_bolus_label">Ultimul bolus</string>
     <string name="dailyunits">Unități zilnic</string>
     <string name="base_basal_rate_label">Rată bazală normală</string>
     <string name="tempbasal_label">Bazală temporară</string>
@@ -418,7 +413,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Rate bazale</string>
     <string name="basalpct">Bazală %</string>
-    <string name="sort_label">Sortează</string>
     <string name="a11y_user">utilizator</string>
     <!-- Autotune -->
     <string name="autotune_result">Rezultat: %1$s</string>
@@ -436,6 +430,7 @@
     <string name="partialboluswizard">Livrați doar partea aceasta din rezultatul sugerat de wizard [%]</string>
     <string name="advisoralarm">Rulează alarma când este timpul să mănânci</string>
     <string name="no_action_selected">Nicio acțiune selectată, nu se va întâmpla nimic</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>

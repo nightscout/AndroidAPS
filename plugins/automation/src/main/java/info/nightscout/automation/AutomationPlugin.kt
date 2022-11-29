@@ -39,9 +39,11 @@ import info.nightscout.automation.triggers.TriggerTempTargetValue
 import info.nightscout.automation.triggers.TriggerTime
 import info.nightscout.automation.triggers.TriggerTimeRange
 import info.nightscout.automation.triggers.TriggerWifiSsid
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.automation.Automation
+import info.nightscout.interfaces.automation.AutomationEvent
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
@@ -98,13 +100,13 @@ class AutomationPlugin @Inject constructor(
         .preferencesId(R.xml.pref_automation)
         .description(R.string.automation_description),
     aapsLogger, rh, injector
-) {
+), Automation {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
     private val keyAutomationEvents = "AUTOMATION_EVENTS"
 
-    private val automationEvents = ArrayList<AutomationEvent>()
+    private val automationEvents = ArrayList<AutomationEventObject>()
     var executionLog: MutableList<String> = ArrayList()
     var btConnects: MutableList<EventBTChange> = ArrayList()
 
@@ -202,14 +204,14 @@ class AutomationPlugin @Inject constructor(
                 val array = JSONArray(data)
                 for (i in 0 until array.length()) {
                     val o = array.getJSONObject(i)
-                    val event = AutomationEvent(injector).fromJSON(o.toString(), i)
+                    val event = AutomationEventObject(injector).fromJSON(o.toString(), i)
                     automationEvents.add(event)
                 }
             } catch (e: JSONException) {
                 e.printStackTrace()
             }
         else
-            automationEvents.add(AutomationEvent(injector).fromJSON(event, 0))
+            automationEvents.add(AutomationEventObject(injector).fromJSON(event, 0))
     }
 
     internal fun processActions() {
@@ -259,8 +261,9 @@ class AutomationPlugin @Inject constructor(
         storeToSP() // save last run time
     }
 
-    fun processEvent(event: AutomationEvent) {
-        if (event.trigger.shouldRun() && event.getPreconditions().shouldRun()) {
+    override fun processEvent(someEvent: AutomationEvent) {
+        val event = someEvent as AutomationEventObject
+        if (event.canRun() && event.preconditionCanRun()) {
             val actions = event.actions
             for (action in actions) {
                 action.title = event.title
@@ -296,14 +299,14 @@ class AutomationPlugin @Inject constructor(
     }
 
     @Synchronized
-    fun add(event: AutomationEvent) {
+    fun add(event: AutomationEventObject) {
         automationEvents.add(event)
         event.position = automationEvents.size - 1
         rxBus.send(EventAutomationDataChanged())
     }
 
     @Synchronized
-    fun addIfNotExists(event: AutomationEvent) {
+    fun addIfNotExists(event: AutomationEventObject) {
         for (e in automationEvents) {
             if (event.title == e.title) return
         }
@@ -322,7 +325,7 @@ class AutomationPlugin @Inject constructor(
     }
 
     @Synchronized
-    fun set(event: AutomationEvent, index: Int) {
+    fun set(event: AutomationEventObject, index: Int) {
         automationEvents[index] = event
         rxBus.send(EventAutomationDataChanged())
     }
@@ -349,7 +352,7 @@ class AutomationPlugin @Inject constructor(
         Collections.swap(automationEvents, fromPosition, toPosition)
     }
 
-    fun userEvents(): List<AutomationEvent> {
+    override fun userEvents(): List<AutomationEvent> {
         val list = mutableListOf<AutomationEvent>()
         val iterator = synchronized(this) { automationEvents.toMutableList().iterator() }
         while (iterator.hasNext()) {

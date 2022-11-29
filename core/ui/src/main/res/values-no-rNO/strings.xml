@@ -1,5 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Oppdater</string>
+    <string name="error">Feil</string>
+    <string name="profile_set_ok">Basalprofil i pumpen er oppdatert</string>
+    <string name="invalid_input">Ugyldig verdier</string>
+    <string name="bolus_delivering">Leverer %1$.2f E</string>
+    <string name="constraint_applied">Begrensning benyttet!</string>
+    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
+    <string name="tt_label">TT</string>
+    <string name="pump_unreachable">Pumpe er utilgjengelig</string>
+    <string name="insulin_unit_shortname">E</string>
+    <string name="pump_base_basal_rate">%1$.2f E/t</string>
+    <string name="pump_not_initialized_profile_not_set">Pumpen ikke initialisert, ingen profil valgt!</string>
+    <string name="failed_update_basal_profile">Klarte ikke å oppdatere basalprofil</string>
+    <string name="bolus_delivered">Bolus %1$.2f E ble levert vellykket</string>
+    <string name="no_valid_basal_rate">Ingen gyldige basaldoser ble lest fra pumpen</string>
+    <string name="limiting_iob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
+    <string name="loop_disabled">LOOP DEAKTIVERT PGA BEGRENSNINGER</string>
+    <string name="event_type">Hendelsestype</string>
+    <string name="reload">Last på nytt</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Lagre</string>
+    <string name="snooze">Slumre</string>
+    <string name="virtual_pump">Virtuell pumpe</string>
+    <string name="constraints">Begrensninger</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pumpen pauset</string>
+    <string name="and">Og</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Bruker</string>
+    <string name="result">Resultat</string>
+    <string name="settings">Innstillinger</string>
+    <string name="statuslights">Statuslys</string>
+    <string name="do_ns_upload_title">Last opp BS data til NS</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="master_password">Hoved passord</string>
+    <string name="ue_export_to_csv">Eksporter brukeroppføringer til Excel (csv)</string>
+    <string name="confirm">Bekreft</string>
+    <string name="pump">Pumpe</string>
+    <string name="missed_bg_readings">Mangler BS-målinger</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Demp i 5 minutter</string>
+    <string name="mute">Lyd av</string>
+    <string name="success">Suksess</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Lås opp innstillinger</string>
+    <!--    Pumps -->
+    <string name="battery_label">Batteri</string>
+    <string name="reservoir_label">Reservoar</string>
+    <string name="last_connection_label">Siste tilkobling</string>
+    <string name="last_bolus_label">Siste bolus</string>
+    <string name="base_basal_rate_label">Profilens basaldose</string>
+    <string name="tempbasal_label">Temp basal</string>
+    <string name="extended_bolus_label">Forlenget bolus</string>
+    <string name="serial_number">Serienummer</string>
+    <string name="disconnected">Frakoblet</string>
+    <string name="connecting">Tilkobler</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Trykket på koble til pumpen</string>
+    <string name="reservoir_value">%1$.0f / %2$d E</string>
+    <string name="daily_units">Daglige enheter</string>
+    <string name="pump_icon">Pumpe ikon</string>
+    <string name="view_profile">Vis profil</string>
+    <string name="pump_history">Pumpe historikk</string>
+    <string name="stats">Statistikk</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Endre pumpedriver.</string>
+    <string name="device_changed" comment="26 characters max for translation">Enheten er endret</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="temp_basal_delivery_error">Feil ved levering av Temp Basal</string>
+    <string name="not_set_short">Ikke angitt</string>
+    <string name="pump_busy">Pumpen er opptatt</string>
+    <string name="connection_error">Tilkoblingsfeil til pumpe</string>
+    <string name="reading_pump_history">Leser pumpehistorikk</string>
+    <string name="password_cleared">Passordet er fjernet!</string>
+    <string name="pairing">Kobler sammen</string>
+    <string name="initializing">Initialiserer ...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
+    <string name="pumplimit">pumpebegrensning</string>
+    <string name="limitingpercentrate">Begrenser maks prosentsats til %1$d%% på grunn av %2$s</string>
+    <string name="itmustbepositivevalue">det på være positiv verdi</string>
+    <string name="limitingbolus">Begrenser bolus til %1$.1f E på grunn av %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Bekreftelse</string>
     <string name="message">Melding</string>
@@ -8,10 +91,41 @@
     <string name="dismiss">Avvis</string>
     <string name="yes">Ja</string>
     <string name="no">Nei</string>
+    <string name="close">Lukk</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Du må angi et hovedpassord som vil bli brukt for å lese inn og dekryptere innstillinger.</string>
     <!-- NumberPicker -->
+    <string name="a11y_min_button_description">reduser %1$s med %2$s</string>
     <string name="a11y_plus_button_description">øk %1$s med %2$s</string>
+    <string name="you_are_on_allowed_limit">Tillatt grense nådd</string>
     <string name="format_hour_minute">%1$dt %2$dm</string>
     <!-- datetime layout -->
+    <string name="event_time_label">Tidspunkt for hendelse</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">Appen trenger bluetooth tillatelse</string>
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Brukerforespørsel</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Lavenergi Bluetooth er ikke støttet.</string>
+    <string name="ble_not_supported_or_not_paired">Lavenergi Bluetooth er ikke støttet eller enheten er ikke sammenkoblet.</string>
+    <string name="ble_not_enabled">Bluetooth er ikke aktivert.</string>
+    <string name="location_not_found_title">Stedstjeneste er ikke aktivert</string>
+    <string name="location_not_found_message">Bluetooth søk på nye mobiler virker bare når posisjonstjeneste er aktivert. AAPS lagrer ikke dine posisjonsdata og den kan derfor slås av etter vellykket sammenkobling.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Plugin innstillinger</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Mangler SMS-tillatelse</string>
+    <plurals name="days">
+        <item quantity="one">%1$d dag</item>
+        <item quantity="other">%1$d dager</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d time</item>
+        <item quantity="other">%1$d timer</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minutt</item>
+        <item quantity="other">%1$d minutter</item>
+    </plurals>
 </resources>

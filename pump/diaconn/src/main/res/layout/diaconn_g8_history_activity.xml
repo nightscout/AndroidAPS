@@ -29,7 +29,7 @@
             android:layout_gravity="center"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:text="@string/pumphistory"
+            android:text="@string/pump_history"
             android:textAlignment="center"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -51,7 +51,7 @@
         android:layout_below="@+id/spacer"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
-        android:hint="@string/eventtype">
+        android:hint="@string/event_type">
 
         <com.google.android.material.textfield.MaterialAutoCompleteTextView
             android:id="@+id/typeList"

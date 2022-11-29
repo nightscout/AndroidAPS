@@ -1,5 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="constraint_applied">Sınırlaması uygulanır!</string>
+    <string name="event_type">Etkinlik tipi</string>
+    <string name="reload">Yeniden yükle</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Kaydet</string>
+    <string name="snooze">Ertele</string>
+    <string name="virtual_pump">Sanal pompa</string>
+    <string name="constraints">Kısıtlamalar</string>
+    <string name="superbolus">Süperbolus</string>
+    <string name="pump_paused">Pompa duraklatıldı</string>
+    <string name="and">Ve</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Kullanıcı</string>
+    <string name="result">Sonuç</string>
+    <string name="settings">Ayarlar</string>
+    <string name="statuslights">Durum ışıkları</string>
+    <string name="do_ns_upload_title">KŞ verilerini NighScout\'a yükle</string>
+    <string name="configbuilder_insulin">İnsülin</string>
+    <string name="value_unavailable_short">yok</string>
+    <string name="master_password">Ana parola</string>
+    <string name="ue_export_to_csv">Kullanıcı Girişlerini Excel\'e Aktar (csv)</string>
+    <string name="confirm">Onayla</string>
+    <string name="pump">Pompa</string>
+    <string name="missed_bg_readings">Kaçırılan KŞ Okumaları</string>
+    <string name="treatments_iob_label_string">AİNS:</string>
+    <string name="mute5min">5 dakika sessize al</string>
+    <string name="mute">Sessiz</string>
+    <string name="success">Başarılı</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Kilit açma ayarları</string>
+    <!--    Pumps -->
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Pompaya bağlan tıklandı</string>
+    <string name="reservoir_value">%1$.0f / %2$d Ü</string>
+    <string name="daily_units">Günlük ünite</string>
+    <string name="pump_icon">Pompa simgesi</string>
+    <string name="view_profile">Profili görüntüle</string>
+    <string name="pump_history">Pompa geçmişi</string>
+    <string name="stats">İstatistikler</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pompa sürücüsü değişimi.</string>
+    <string name="device_changed" comment="26 characters max for translation">Cihaz değişti</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus Tmm</string>
+    <string name="temp_basal_delivery_error">Geçici Bazal teslimat hatası</string>
+    <string name="initializing">Başlatılıyor ...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">%2$s nedeniyle max bazal oranı %1$.2f Ü/s ile sınırlı</string>
+    <string name="pumplimit">pompa sınırı</string>
+    <string name="limitingpercentrate">%2$s\'den dolayı max yüzde oranı %1$d%% ile sınırlandırılıyor</string>
+    <string name="itmustbepositivevalue">pozitif bir değer olmalıdır</string>
+    <string name="limitingbolus">%2$s\'den dolayı bolus %1$.1f Ü ile sınırlandırılıyor</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Onay</string>
     <string name="message">İleti</string>
@@ -14,4 +65,22 @@
     <string name="format_hour_minute">%1$dsa %2$ddk</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Eklenti tercihleri</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">SMS izni eksik</string>
+    <plurals name="days">
+        <item quantity="one">%1$d gün</item>
+        <item quantity="other">%1$d gün</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d saat</item>
+        <item quantity="other">%1$d saat</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d dakika</item>
+        <item quantity="other">%1$d dakika</item>
+    </plurals>
 </resources>

@@ -3,8 +3,8 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.friendlyDescription
-import info.nightscout.androidaps.logging.UserEntryLogger
+import info.nightscout.core.extensions.friendlyDescription
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.ComparatorExists
 import info.nightscout.automation.elements.InputDuration
@@ -12,7 +12,6 @@ import info.nightscout.automation.elements.InputTempTarget
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.triggers.TriggerTempTarget
-import info.nightscout.core.profile.toMgdl
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources

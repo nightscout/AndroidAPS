@@ -1,8 +1,8 @@
 package info.nightscout.core.iob
 
-import info.nightscout.androidaps.utils.DecimalFormatter
 import info.nightscout.core.main.R
 import info.nightscout.interfaces.iob.CobInfo
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 

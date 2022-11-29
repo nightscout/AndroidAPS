@@ -7,6 +7,8 @@ plugins {
     id 'kotlinx-serialization'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'com.vanniktech.dependency.graph.generator'
+
 }
 
 apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
@@ -56,7 +58,8 @@ def generateGitRemote = { ->
 
 def generateDate = { ->
     StringBuilder stringBuilder = new StringBuilder()
-    stringBuilder.append((new Date()).format('yyyy.MM.dd-HH:mm'))
+    // showing only date prevents app to rebuild everytime
+    stringBuilder.append((new Date()).format('yyyy.MM.dd'))
     return stringBuilder.toString()
 }
 
@@ -108,7 +111,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "3.1.0.3-dev-c-nscv3"
+        version "3.1.0.3-dev-d"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -180,25 +183,31 @@ dependencies {
     // in order to use internet's versions you'd need to enable Jetifier again
     // https://github.com/nightscout/graphview.git
     // https://github.com/nightscout/iconify.git
-    implementation project(':graphview')
-    implementation project(':libraries')
-    implementation project(':ns-sdk')
-    implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
     implementation project(':app-wear-shared:shared-impl')
     implementation project(':core:core-main')
-    implementation project(':core:fabric')
+    implementation project(':core:graph')
+    implementation project(':core:graphview')
+    implementation project(':core:interfaces')
+    implementation project(':core:libraries')
+    implementation project(':core:ns-sdk')
+    implementation project(':core:utils')
     implementation project(':core:ui')
-    implementation project(':interfaces')
+    implementation project(':core:validators')
     implementation project(':ui')
     implementation project(':plugins:aps')
     implementation project(':plugins:automation')
+    implementation project(':plugins:configuration')
     implementation project(':plugins:main')
     implementation project(':plugins:openhumans')
+    implementation project(':plugins:sensitivity')
+    implementation project(':plugins:support')
+    implementation project(':plugins:sync')
     implementation project(':implementation')
     implementation project(':database:entities')
     implementation project(':database:impl')
     implementation project(':pump:combo')
+    implementation project(':pump:combov2')
     implementation project(':pump:dana')
     implementation project(':pump:danars')
     implementation project(':pump:danar')

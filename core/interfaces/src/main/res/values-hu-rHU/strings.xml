@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Fájlformátum</string>
+    <string name="metadata_label_created_at">Létrehozva</string>
+    <string name="metadata_label_aaps_version">AAPS verzió</string>
+    <string name="metadata_label_aaps_flavour">Build variant</string>
+    <!--    PumpType-->
+    <!-- PumpPluginBase -->
+    <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f E</string>
+    <string name="format_insulin_units">%1$.2f E</string>
+</resources>

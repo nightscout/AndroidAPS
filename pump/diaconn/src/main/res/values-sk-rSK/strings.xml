@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Zrušiť párovanie</string>
-    <string name="diaconn_nodeviceavailable">Nie sú k dispozícii žiadne zariadenia</string>
+    <string name="diaconn_no_device_available">Nie sú k dispozícii žiadne zariadenia</string>
     <string name="diaconn_pairing">Párovanie pumpy Diaconn</string>
     <string name="pumperror">Chyba pumpy</string>
     <string name="diaconn_g8_history_alarm">Alarmy</string>
@@ -49,7 +49,7 @@
     <string name="bolus_step">Krok bolusu</string>
     <string name="basal_step">Krok bazálu</string>
     <string name="pump_firmware_label">Firmware</string>
-    <string name="diagonn_g8_useroptions">UŽIVATEĽSKÉ NASTAVENIA</string>
+    <string name="diaconn_g8_user_options">UŽIVATEĽSKÉ NASTAVENIA</string>
     <string name="pairfirst">Prosím spárujte pumpu s telefónom!</string>
     <string name="processinghistory">"Spracúvam udalosť "</string>
     <string name="apslastLogNum">aps_last_log_num</string>

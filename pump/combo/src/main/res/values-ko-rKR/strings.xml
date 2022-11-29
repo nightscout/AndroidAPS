@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">위험한 사용: 펌프의 Basal양 프로파일이 펌프의 첫번째 Basal양 프로파일과 다릅니다. Loop가 비활성화되었습니다. 첫 번째 프로파일을 설정하고 새로 고침하십시오.</string>
     <string name="bolus_frequency_exceeded">2개의 동일한 양의 Bolus 주입이 요청되었습니다. 이중으로 Bolus가 주입 되는 사고를 막고 버그로부터 보호하기 위하여 이는 금지됩니다.</string>
     <string name="combo_pump_connected_now">현재</string>
-    <string name="combo_activity_reading_pump_history">펌프 이력 읽기</string>
     <string name="combo_activity_setting_basal_profile">Basal 프로파일 설정</string>
     <string name="combo_pump_cartridge_low_warrning">펌프 카트리지 레벨이 낮습니다.</string>
     <string name="combo_pump_battery_low_warrning">펌프배터리가 부족합니다.</string>
@@ -51,4 +50,5 @@
     <string name="bolusstopped">Bolus 중지됨</string>
     <string name="bolusstopping">Bolus 중지중</string>
     <string name="combo_error_display_never">절대</string>
+    <string name="unsafeusage">위험한 사용</string>
 </resources>

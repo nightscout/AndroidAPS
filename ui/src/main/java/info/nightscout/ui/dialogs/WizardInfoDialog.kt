@@ -7,10 +7,8 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.extensions.bolusCalculatorResultFromJson
-import info.nightscout.androidaps.extensions.toJson
-import info.nightscout.core.profile.toUnits
-import info.nightscout.core.profile.toUnitsString
+import info.nightscout.core.extensions.bolusCalculatorResultFromJson
+import info.nightscout.core.extensions.toJson
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.profile.Profile
@@ -74,31 +72,31 @@ class WizardInfoDialog : DaggerDialogFragment() {
         val trend = Profile.toUnitsString(data.glucoseTrend * 3, data.glucoseTrend * 3 * Constants.MGDL_TO_MMOLL, units)
         // BG
         binding.bg.text = rh.gs(R.string.format_bg_isf, bgString, isf)
-        binding.bgInsulin.text = rh.gs(R.string.formatinsulinunits, data.glucoseInsulin)
+        binding.bgInsulin.text = rh.gs(R.string.format_insulin_units, data.glucoseInsulin)
         binding.bgCheckbox.isChecked = data.wasGlucoseUsed
         binding.ttCheckbox.isChecked = data.wasTempTargetUsed
         // Trend
         binding.bgTrend.text = trend
-        binding.bgTrendInsulin.text = rh.gs(R.string.formatinsulinunits, data.trendInsulin)
+        binding.bgTrendInsulin.text = rh.gs(R.string.format_insulin_units, data.trendInsulin)
         binding.bgTrendCheckbox.isChecked = data.wasTrendUsed
         // COB
         binding.cob.text = rh.gs(R.string.format_cob_ic, data.cob, data.ic)
-        binding.cobInsulin.text = rh.gs(R.string.formatinsulinunits, data.cobInsulin)
+        binding.cobInsulin.text = rh.gs(R.string.format_insulin_units, data.cobInsulin)
         binding.cobCheckbox.isChecked = data.wasCOBUsed
         // Bolus IOB
-        binding.bolusIobInsulin.text = rh.gs(R.string.formatinsulinunits, data.bolusIOB)
+        binding.bolusIobInsulin.text = rh.gs(R.string.format_insulin_units, data.bolusIOB)
         binding.bolusIobCheckbox.isChecked = data.wasBolusIOBUsed
         // Basal IOB
-        binding.basalIobInsulin.text = rh.gs(R.string.formatinsulinunits, data.basalIOB)
+        binding.basalIobInsulin.text = rh.gs(R.string.format_insulin_units, data.basalIOB)
         binding.basalIobCheckbox.isChecked = data.wasBasalIOBUsed
         // Superbolus
-        binding.sbInsulin.text = rh.gs(R.string.formatinsulinunits, data.superbolusInsulin)
+        binding.sbInsulin.text = rh.gs(R.string.format_insulin_units, data.superbolusInsulin)
         binding.sbCheckbox.isChecked = data.wasSuperbolusUsed
         // Carbs
         binding.carbs.text = rh.gs(R.string.format_carbs_ic, data.carbs, data.ic)
-        binding.carbsInsulin.text = rh.gs(R.string.formatinsulinunits, data.carbsInsulin)
+        binding.carbsInsulin.text = rh.gs(R.string.format_insulin_units, data.carbsInsulin)
         // Correction
-        binding.correctionInsulin.text = rh.gs(R.string.formatinsulinunits, data.otherCorrection)
+        binding.correctionInsulin.text = rh.gs(R.string.format_insulin_units, data.otherCorrection)
         // Profile
         binding.profile.text = data.profileName
         // Notes
@@ -106,7 +104,7 @@ class WizardInfoDialog : DaggerDialogFragment() {
         // Percentage
         binding.percentUsed.text = rh.gs(R.string.format_percent, data.percentageCorrection)
         // Total
-        binding.totalInsulin.text = rh.gs(R.string.formatinsulinunits, data.totalInsulin)
+        binding.totalInsulin.text = rh.gs(R.string.format_insulin_units, data.totalInsulin)
     }
 
     override fun onStart() {

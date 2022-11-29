@@ -1,7 +1,7 @@
 package info.nightscout.plugins.source.activities
 
 import android.os.Bundle
-import info.nightscout.androidaps.activities.DialogAppCompatActivity
+import info.nightscout.core.ui.activities.DialogAppCompatActivity
 import info.nightscout.plugins.source.DexcomPlugin
 
 class RequestDexcomPermissionActivity : DialogAppCompatActivity() {

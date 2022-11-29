@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Atualizar</string>
     <string name="error">Erro</string>
@@ -16,8 +15,6 @@
     <string name="connecting">Conectando</string>
     <string name="disconnected">Desconectado</string>
     <string name="androidaps_start">AAPS iniciado</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -27,11 +24,9 @@
     <string name="pumpbusy">A bomba está ocupada</string>
     <string name="connectionerror">Erro de conexão com a bomba</string>
     <string name="objectives">Objetivos</string>
-    <string name="close">Fechar</string>
     <string name="please_wait">Por favor aguarde…</string>
     <string name="mute">Silêncio</string>
     <string name="reload">Recarregar</string>
-    <string name="stoppressed">STOP PRESSIONADO</string>
     <string name="stop">Parar</string>
     <string name="carbs">Carbos</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -48,10 +43,10 @@
     <string name="basal_long_label">Taxa basal</string>
     <string name="target_long_label">Alvo de glicemia</string>
     <string name="initializing">Inicializando...</string>
-    <string name="serialnumber">Número de série</string>
+    <string name="serial_number">Número de série</string>
     <string name="battery_label">Bateria</string>
-    <string name="lastconnection_label">Última ligação</string>
-    <string name="lastbolus_label">Último Bolus</string>
+    <string name="last_connection_label">Última ligação</string>
+    <string name="last_bolus_label">Último Bolus</string>
     <string name="dailyunits">Unidades diárias</string>
     <string name="base_basal_rate_label">Taxa Basal de base</string>
     <string name="tempbasal_label">Basal temporaria</string>
@@ -443,11 +438,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
-    <string name="count_selected">Selecionado %1$d</string>
-    <string name="sort_label">Ordenar</string>
-    <string name="remove_items">Remover itens</string>
-    <string name="sort_items">Ordenar Itens</string>
-    <string name="remove_selected_items">Remover itens selecionados</string>
     <string name="a11y_file">arquivo</string>
     <string name="a11y_user">usuário</string>
     <!-- Autotune -->
@@ -526,6 +516,7 @@
     <string name="wizard_explain_tt">AlvoTemporário: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s para %2$s</string>
     <string name="wizard_pump_not_available">Nenhuma bomba disponível!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

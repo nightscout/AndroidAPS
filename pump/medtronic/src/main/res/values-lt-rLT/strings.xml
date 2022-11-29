@@ -93,4 +93,6 @@
     <string name="invalid_history_data">Aptikti neteisingi pompos istorijos duomenys. Sukurkite naują problemos įrašą ir pateikite žurnalus.</string>
     <string name="riley_statistics">RL statistika</string>
     <string name="medtronic_history_type">Tipas:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Paspausta atnaujinti</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planuotas būklės naujinimas</string>
 </resources>

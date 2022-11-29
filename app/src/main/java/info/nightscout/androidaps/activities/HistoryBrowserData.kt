@@ -1,14 +1,15 @@
 package info.nightscout.androidaps.activities
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.general.overview.OverviewData
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
-import info.nightscout.androidaps.utils.DefaultValueHelper
-import info.nightscout.androidaps.workflow.CalculationWorkflow
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.graph.OverviewData
+import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.impl.AppRepository
+import info.nightscout.implementation.overview.OverviewDataImpl
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -41,7 +42,7 @@ class HistoryBrowserData @Inject constructor(
     init {
         // We don't want to use injected singletons but own instance working on top of different data
         overviewData =
-            OverviewData(
+            OverviewDataImpl(
                 aapsLogger,
                 rh,
                 dateUtil,

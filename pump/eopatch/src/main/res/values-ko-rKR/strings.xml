@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolusdelivered">Bolus %1$.2f U이 성공적으로 주입되었습니다.</string>
+    <string name="category_alerts">경고</string>
+    <string name="bolus_delivered">Bolus %1$.2f U이 성공적으로 주입되었습니다.</string>
+    <string name="eopatch_status">상태</string>
+    <string name="eopatch_base_basal_rate">기본 basal 양</string>
+    <string name="eopatch_temp_basal_rate">임시 basal 양</string>
+    <string name="eopatch_total_delivered">모두 주입됨</string>
+    <string name="symbol_day">일</string>
+    <string name="patch_finish">종료</string>
+    <string name="patch_step_desc_1">1.</string>
+    <string name="patch_step_desc_2">2.</string>
+    <string name="symbol_days">일</string>
+    <string name="string_resume">재실행</string>
+    <string name="string_suspend">중지</string>
+    <string name="string_suspended">중지됨</string>
+    <string name="string_running">실행중</string>
     <string name="cancel">취소</string>
     <string name="confirm">확인</string>
+    <string name="string_alarm">알람</string>
+    <string name="string_connecting">연결중</string>
+    <string name="retry">재시도</string>
+    <string name="finish">종료</string>
+    <string name="next">다음</string>
 </resources>

@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">Geçici Hedef %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil yüzdesi %1$s %2$d</string>
     <string name="iobcompared">Aktif insülin %1$s %2$.1f</string>
-    <string name="and">Ve</string>
     <string name="or">Veya</string>
     <string name="xor">Özel veya</string>
     <string name="atspecifiedtime">%1$s\'de</string>
@@ -115,7 +114,6 @@
     <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
     <string name="count_selected">%1$d seçildi</string>
     <string name="confirm_remove_multiple_items">%1$d öğeyi kaldırmak istediğinizden emin misiniz</string>
-    <string name="sort_label">Sırala</string>
     <string name="system_automation">Sistem otomasyonu</string>
     <string name="run_automations">Otomasyonları çalıştır</string>
     <string name="add_automation">Kural ekle</string>

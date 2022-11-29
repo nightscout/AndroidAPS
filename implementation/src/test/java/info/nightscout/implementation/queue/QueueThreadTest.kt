@@ -10,14 +10,14 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.R
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.interfaces.AndroidPermission
-import info.nightscout.interfaces.BuildHelper
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Command
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.Before
@@ -33,9 +33,9 @@ class QueueThreadTest : TestBaseWithProfile() {
     @Mock lateinit var sp: SP
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
-    @Mock lateinit var buildHelper: BuildHelper
     @Mock lateinit var androidPermission: AndroidPermission
-    @Mock lateinit var activityNames: ActivityNames
+    @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var persistenceLayer: PersistenceLayer
 
     val injector = HasAndroidInjector {
         AndroidInjector {
@@ -60,7 +60,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
             profileFunction, activePlugin, context, sp,
-            buildHelper, dateUtil, repository, fabricPrivacy, config, androidPermission, activityNames
+            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer
         )
 
         val pumpDescription = PumpDescription()

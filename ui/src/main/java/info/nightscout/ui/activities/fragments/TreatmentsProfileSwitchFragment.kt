@@ -16,27 +16,27 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.events.EventEffectiveProfileSwitchChanged
-import info.nightscout.androidaps.events.EventNewHistoryData
-import info.nightscout.androidaps.extensions.getCustomizedName
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.ActionModeHelper
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.extensions.getCustomizedName
+import info.nightscout.interfaces.logging.UserEntryLogger
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.ActionModeHelper
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InvalidateProfileSwitchTransaction
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.rx.events.EventLocalProfileChanged
 import info.nightscout.rx.events.EventNSClientRestart
+import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -65,7 +65,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
@@ -262,7 +262,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also { args ->
                             args.putLong("time", (it.tag as ProfileSealed).timestamp)
-                            args.putInt("mode", ActivityNames.Mode.RUNNING_PROFILE.ordinal)
+                            args.putInt("mode", UiInteraction.Mode.RUNNING_PROFILE.ordinal)
                         }
                         pvd.show(childFragmentManager, "ProfileViewDialog")
                     }
@@ -271,7 +271,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also { args ->
                             args.putLong("time", (it.tag as ProfileSealed).timestamp)
-                            args.putInt("mode", ActivityNames.Mode.RUNNING_PROFILE.ordinal)
+                            args.putInt("mode", UiInteraction.Mode.RUNNING_PROFILE.ordinal)
                         }
                         pvd.show(childFragmentManager, "ProfileViewDialog")
                     }
@@ -284,7 +284,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_profile_switch, menu)
         updateMenuVisibility()
-        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || !buildHelper.isEngineeringMode()
+        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || !config.isEngineeringMode()
         menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
     }
 

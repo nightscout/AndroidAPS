@@ -21,17 +21,17 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation project(':pump:eopatch-core')
-    implementation project(':libraries')
-    implementation project(':app-wear-shared:rx')
+    implementation project(':core:libraries')
     implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
     implementation project(':database:impl')
-    implementation project(':core:core-main')
-    implementation project(':core:fabric')
+    implementation project(':core:interfaces')
+    implementation project(':core:utils')
     implementation project(':core:ui')
-    implementation project(':interfaces')
+
+    api 'com.google.guava:guava:31.1-jre'
 
     //RxAndroidBle
-    implementation "com.polidea.rxandroidble3:rxandroidble:1.17.0"
+    implementation "com.polidea.rxandroidble3:rxandroidble:1.17.2"
     implementation "com.jakewharton.rx3:replaying-share:3.0.0"
 }

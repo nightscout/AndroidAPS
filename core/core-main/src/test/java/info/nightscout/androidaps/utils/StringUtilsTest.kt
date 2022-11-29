@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.utils
 
-import info.nightscout.interfaces.utils.StringUtils
+import info.nightscout.core.utils.receivers.StringUtils
 import org.junit.Assert
 import org.junit.Test
 

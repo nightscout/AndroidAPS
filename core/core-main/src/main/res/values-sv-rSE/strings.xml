@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Uppdatera</string>
     <string name="error">Fel</string>
@@ -15,8 +14,6 @@
     <string name="bolusdelivering">Levererar %1$.2f enheter</string>
     <string name="connecting">Ansluter</string>
     <string name="disconnected">Frånkopplad</string>
-    <string name="formatinsulinunits1">%1$.1fU</string>
-    <string name="formatinsulinunits">%1$.2fU</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$dg</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -26,11 +23,9 @@
     <string name="pumpbusy">Pump upptagen</string>
     <string name="connectionerror">Anslutningsfel</string>
     <string name="objectives">Mål</string>
-    <string name="close">Stäng</string>
     <string name="please_wait">Var god vänta…</string>
     <string name="mute">Tysta</string>
     <string name="reload">Hämta</string>
-    <string name="stoppressed">Stopp nedtryckt</string>
     <string name="stop">Stopp</string>
     <string name="carbs">Kolhydrater</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
@@ -47,10 +42,10 @@
     <string name="basal_long_label">Basaldos</string>
     <string name="target_long_label">Mål-BG</string>
     <string name="initializing">Startar...</string>
-    <string name="serialnumber">Serienummer</string>
+    <string name="serial_number">Serienummer</string>
     <string name="battery_label">Batterinivå</string>
-    <string name="lastconnection_label">Senast ansluten</string>
-    <string name="lastbolus_label">Senaste bolus</string>
+    <string name="last_connection_label">Senast ansluten</string>
+    <string name="last_bolus_label">Senaste bolus</string>
     <string name="dailyunits">Enheter per dag</string>
     <string name="base_basal_rate_label">Profilens basaldos</string>
     <string name="tempbasal_label">Temp basal</string>
@@ -462,6 +457,7 @@
     <string name="wizard_explain_tt">TempM: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s till %2$s</string>
     <string name="wizard_pump_not_available">Ingen pump tillgänglig!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

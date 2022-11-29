@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Vernieuwen</string>
     <string name="error">Fout</string>
@@ -16,8 +15,6 @@
     <string name="connecting">Verbining maken</string>
     <string name="disconnected">Verbinding verbroken</string>
     <string name="androidaps_start">AAPS gestart</string>
-    <string name="formatinsulinunits1">%1$.1f E</string>
-    <string name="formatinsulinunits">%1$.2f E</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d E</string>
@@ -27,11 +24,9 @@
     <string name="pumpbusy">Pomp is bezig</string>
     <string name="connectionerror">Pomp verbindingsstoring</string>
     <string name="objectives">Doelen</string>
-    <string name="close">Sluiten</string>
     <string name="please_wait">Even geduld a.u.b.…</string>
     <string name="mute">Geluid dempen</string>
     <string name="reload">Vernieuw</string>
-    <string name="stoppressed">STOP INGEDRUKT</string>
     <string name="stop">Stop</string>
     <string name="carbs">Koolhydraten</string>
     <string name="invalid_profile">Ongeldig profiel!</string>
@@ -50,10 +45,10 @@
     <string name="basal_long_label">Basaalstand</string>
     <string name="target_long_label">Bloedglucose doelwaarde</string>
     <string name="initializing">Initialiseren...</string>
-    <string name="serialnumber">Serie nummer</string>
+    <string name="serial_number">Serie nummer</string>
     <string name="battery_label">Batterij</string>
-    <string name="lastconnection_label">Laatste verbinding</string>
-    <string name="lastbolus_label">Laatste bolus</string>
+    <string name="last_connection_label">Laatste verbinding</string>
+    <string name="last_bolus_label">Laatste bolus</string>
     <string name="dailyunits">Dag totaal</string>
     <string name="base_basal_rate_label">Basis basaalstand</string>
     <string name="tempbasal_label">Tijdelijk basaal</string>
@@ -450,11 +445,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basaal</string>
     <string name="basalpct">Basaal %</string>
-    <string name="count_selected">%1$d geselecteerd</string>
-    <string name="sort_label">Sorteren</string>
-    <string name="remove_items">Items verwijderen</string>
-    <string name="sort_items">Sorteer items</string>
-    <string name="remove_selected_items">Verwijder geselecteerde items</string>
     <string name="a11y_file">bestand</string>
     <string name="a11y_user">gebruiker</string>
     <!-- Autotune -->
@@ -537,6 +527,7 @@
     <string name="wizard_explain_tt">Tijdelijk Doel: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s tot %2$s</string>
     <string name="wizard_pump_not_available">Geen pomp beschikbaar!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>

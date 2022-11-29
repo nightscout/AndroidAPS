@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="save">Sačuvaj</string>
     <string name="goingtodeliver">Isporučujem %1$.2f U</string>
@@ -54,4 +53,5 @@
     <!-- Alerts -->
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <!--    Preferences-->
 </resources>

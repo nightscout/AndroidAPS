@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="@string/key_wear_settings"
+        android:title="@string/wear_settings"
+        app:initialExpandedChildrenCount="0">
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_wear_control"
+            android:summary="@string/wearcontrol_summary"
+            android:title="@string/wearcontrol_title" />
+
+        <PreferenceCategory
+            android:dependency="@string/key_wear_control"
+            android:summary="@string/wear_wizard_settings_summary"
+            android:title="@string/wear_wizard_settings">
+
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:dependency="@string/key_wear_control"
+                android:key="@string/key_wearwizard_bg"
+                android:title="@string/bg_label" />
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:dependency="@string/key_wearwizard_bg"
+                android:key="@string/key_wearwizard_tt"
+                android:title="@string/tt_label" />
+
+            <CheckBoxPreference
+                android:defaultValue="false"
+                android:dependency="@string/key_wear_control"
+                android:key="@string/key_wearwizard_trend"
+                android:title="@string/bg_trend_label" />
+
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:dependency="@string/key_wear_control"
+                android:key="@string/key_wearwizard_cob"
+                android:title="@string/treatments_wizard_cob_label" />
+
+            <CheckBoxPreference
+                android:defaultValue="true"
+                android:dependency="@string/key_wear_control"
+                android:key="@string/key_wearwizard_iob"
+                android:title="@string/iob_label" />
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            android:title="@string/wear_display_settings">
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_wear_detailediob"
+                android:summary="@string/xdrip_status_detailed_iob_summary"
+                android:title="@string/xdrip_status_detailed_iob_title" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_wear_detailed_delta"
+                android:summary="@string/wear_detailed_delta_summary"
+                android:title="@string/wear_detailed_delta_title" />
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_wear_showbgi"
+                android:summary="@string/xdrip_status_show_bgi_summary"
+                android:title="@string/xdrip_status_show_bgi_title" />
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="wear_predictions"
+                android:summary="@string/wear_predictions_summary"
+                android:title="@string/wear_predictions_title" />
+
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            android:title="@string/wear_general_settings">
+
+            <SwitchPreference
+                android:defaultValue="true"
+                android:key="wear_notifySMB"
+                android:summary="@string/wear_notifysmb_summary"
+                android:title="@string/wear_notifysmb_title" />
+
+        </PreferenceCategory>
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

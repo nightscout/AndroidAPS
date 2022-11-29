@@ -5,21 +5,16 @@
     <string name="settings_protection">Skydd för inställningar</string>
     <string name="application_protection">Skydd för app</string>
     <string name="bolus_protection">Bolusskydd</string>
-    <string name="master_password">Huvudlösenord</string>
     <string name="settings_password">Lösenord för inställningar</string>
     <string name="application_password">Lösenord för app</string>
     <string name="bolus_password">Lösenord för bolus</string>
-    <string name="unlock_settings">Lås upp inställningar</string>
     <string name="biometric">Biometri</string>
     <string name="custom_password">Eget lösenord</string>
     <string name="noprotection">Inget skydd</string>
-    <string name="protection">Skydd</string>
-    <string name="master_password_missing">Huvudlösenord har inte angetts.\n\nAnge huvudlösenord i Inställningar (%1$s &#8594; %2$s)</string>
     <string name="unsecure_fallback_biometric">Osäker alternativ autentisering</string>
     <string name="unsecure_fallback_descriotion_biometric">Biometrisk verifiering kräver att huvudlösenordet är inställt (som reservlösning).\n\nVänligen sätt ett huvudlösenord!</string>
     <string name="password_set">Lösenord sparat!</string>
     <string name="password_not_set">Lösenord inte inställt</string>
     <string name="password_not_changed">Lösenordet har inte ändrats</string>
-    <string name="password_cleared">Lösenordet togs bort!</string>
     <string name="password_hint">Ange lösenord här</string>
 </resources>

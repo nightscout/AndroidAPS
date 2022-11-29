@@ -17,15 +17,15 @@ android {
 }
 
 dependencies {
-    implementation project(':graphview')
+    implementation project(':core:graphview')
     implementation project(':core:core-main')
-    implementation project(':core:fabric')
+    implementation project(':core:utils')
     implementation project(':core:ui')
     implementation project(':database:entities')
     implementation project(':database:impl')
-    implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
-    implementation project(':interfaces')
+    implementation project(':core:interfaces')
 
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
+    api "com.google.android.gms:play-services-location:$play_services_location_version"
 }

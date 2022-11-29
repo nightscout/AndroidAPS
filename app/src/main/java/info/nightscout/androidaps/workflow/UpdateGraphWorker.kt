@@ -4,9 +4,10 @@ import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.general.overview.OverviewPlugin
-import info.nightscout.androidaps.plugins.general.overview.events.EventUpdateOverviewGraph
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
+import info.nightscout.core.workflow.CalculationWorkflow
+import info.nightscout.plugins.general.overview.OverviewPlugin
+import info.nightscout.plugins.general.overview.events.EventUpdateOverviewGraph
+import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.rx.bus.RxBus
 import javax.inject.Inject
 

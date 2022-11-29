@@ -30,14 +30,12 @@
     <string name="timeout_during_handshake">Afsnytyd gedurende handskud - terugstel bluetooth</string>
     <string name="pump_stopped">Pomp gestop</string>
     <string name="pump_started">Pomp is begin</string>
-    <string name="pump_paused">Pomp wag</string>
     <string name="short_status_last_connected">Laaste kon: %1$d min gelede</string>
     <string name="short_status_tbr">TBR: %1$d%% vir %2$d / %3$d min</string>
     <string name="short_status_extended">Verleng: %1$.2f / %2$.2f U vir %3$d min</string>
     <string name="short_status_multiwave">Multigolf: %1$.2f / %2$.2f U vir %3$d min</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
-    <string name="mute_alert">Demp</string>
     <string name="release_software_version">Vrygestelde sagteware weergawe</string>
     <string name="ui_processor_software_version">UI verwerker sagteware weergawe</string>
     <string name="pc_processor_software_version">PC verwerker sagteware weergawe</string>

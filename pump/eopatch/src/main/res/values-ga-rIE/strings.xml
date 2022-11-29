@@ -1,4 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="category_alerts">Aláraim</string>
+    <string name="eopatch_status">Stádas</string>
+    <string name="symbol_day">lá</string>
+    <string name="symbol_days">lá</string>
+    <string name="string_resume">Atosú</string>
+    <string name="string_suspend">Fionraí</string>
+    <string name="string_suspended">Ar fionraí</string>
+    <string name="string_running">Ag reáchtáil</string>
     <string name="cancel">Cuir ar ceal</string>
+    <string name="string_alarm">Aláram</string>
+    <string name="string_connecting">Ag nascadh</string>
+    <string name="next">Ar Aghaidh</string>
 </resources>

@@ -1,6 +1,7 @@
 package info.nightscout.androidaps.utils
 
 import info.nightscout.androidaps.TestBase
+import info.nightscout.core.utils.CryptoUtil
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.not
 import org.junit.Assert

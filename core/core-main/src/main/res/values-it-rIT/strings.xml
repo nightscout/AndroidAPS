@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Aggiorna</string>
     <string name="error">Errore</string>
@@ -16,8 +15,6 @@
     <string name="connecting">Connessione</string>
     <string name="disconnected">Disconnesso</string>
     <string name="androidaps_start">AAPS avviato</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -27,11 +24,9 @@
     <string name="pumpbusy">Il micro è occupato</string>
     <string name="connectionerror">Errore connessione micro</string>
     <string name="objectives">Obiettivi</string>
-    <string name="close">Chiudi</string>
     <string name="please_wait">Attendi…</string>
     <string name="mute">Muto</string>
     <string name="reload">Ricarica</string>
-    <string name="stoppressed">STOP PREMUTO</string>
     <string name="stop">Stop</string>
     <string name="carbs">CHO</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -48,10 +43,10 @@
     <string name="basal_long_label">Velocità basale</string>
     <string name="target_long_label">Target glicemia</string>
     <string name="initializing">Inizializzazione...</string>
-    <string name="serialnumber">Numero seriale</string>
+    <string name="serial_number">Numero seriale</string>
     <string name="battery_label">Batteria</string>
-    <string name="lastconnection_label">Ultima connessione</string>
-    <string name="lastbolus_label">Ultimo bolo</string>
+    <string name="last_connection_label">Ultima connessione</string>
+    <string name="last_bolus_label">Ultimo bolo</string>
     <string name="dailyunits">Unità giornaliere</string>
     <string name="base_basal_rate_label">Velocità basale originale</string>
     <string name="tempbasal_label">Basale temporanea</string>
@@ -443,11 +438,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basale</string>
     <string name="basalpct">% basale</string>
-    <string name="count_selected">%1$d selezionato</string>
-    <string name="sort_label">Ordina</string>
-    <string name="remove_items">Rimuovi elementi</string>
-    <string name="sort_items">Ordina elementi</string>
-    <string name="remove_selected_items">Rimuovi elementi selezionati</string>
     <string name="a11y_file">file</string>
     <string name="a11y_user">utente</string>
     <!-- Autotune -->
@@ -526,6 +516,7 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">Nessun micro disponibile!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>

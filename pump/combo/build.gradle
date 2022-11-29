@@ -12,15 +12,17 @@ apply from: "${project.rootDir}/core/core-main/allopen_dependencies.gradle"
 apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 android {
-    namespace 'info.nightscout.androidaps.combo'
+    namespace 'info.nightscout.pump.combo'
 }
 
 dependencies {
-    implementation project(':libraries')
-    implementation project(':core:core-main')
+    implementation project(':core:libraries')
+    implementation project(':core:interfaces')
     implementation project(':core:ui')
-    implementation project(':core:fabric')
-    implementation project(':app-wear-shared:rx')
+    implementation project(':core:utils')
     implementation project(':app-wear-shared:shared')
-    implementation project(':interfaces')
+
+    // RuffyScripter
+    api 'com.google.guava:guava:31.1-jre'
+
 }

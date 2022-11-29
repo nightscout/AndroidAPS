@@ -3,8 +3,8 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.plugins.pump.common.defs.TempBasalPair
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
@@ -12,7 +12,8 @@ import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.pump.common.defs.TempBasalPair
 import info.nightscout.rx.TestAapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -34,10 +35,11 @@ class OmnipodErosPumpPluginTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock(answer = Answers.RETURNS_DEEP_STUBS) lateinit var activePlugin: ActivePlugin
     @Mock lateinit var aapsOmnipodErosManager: AapsOmnipodErosManager
-    @Mock lateinit var activityNames: ActivityNames
+    @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var rileyLinkUtil: RileyLinkUtil
     @Mock lateinit var pumpSync: PumpSync
+    @Mock lateinit var erosHistoryDatabase: ErosHistoryDatabase
 
     private var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
 
@@ -52,9 +54,9 @@ class OmnipodErosPumpPluginTest : TestBase() {
         // mock all the things
         val plugin = OmnipodErosPumpPlugin(
             injector, aapsLogger, TestAapsSchedulers(), rxBusWrapper, null,
-            rh, activePlugin, null, null, aapsOmnipodErosManager, commandQueue,
+            rh, null, null, aapsOmnipodErosManager, commandQueue,
             null, null, null, null,
-            rileyLinkUtil, null, null, pumpSync, activityNames
+            rileyLinkUtil, null, null, pumpSync, uiInteraction, erosHistoryDatabase
         )
         val pumpState = PumpSync.PumpState(null, null, null, null, "")
         `when`(pumpSync.expectedPumpState()).thenReturn(pumpState)

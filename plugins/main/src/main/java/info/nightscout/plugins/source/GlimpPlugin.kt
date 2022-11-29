@@ -9,6 +9,7 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
+import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -61,8 +62,8 @@ class GlimpPlugin @Inject constructor(
 
             if (!glimpPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             aapsLogger.debug(LTag.BGSOURCE, "Received Glimp Data: $inputData}")
-            val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
-            glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+            val glucoseValues = mutableListOf<TransactionGlucoseValue>()
+            glucoseValues += TransactionGlucoseValue(
                 timestamp = inputData.getLong("myTimestamp", 0),
                 value = inputData.getDouble("mySGV", 0.0),
                 raw = inputData.getDouble("mySGV", 0.0),

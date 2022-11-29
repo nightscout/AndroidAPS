@@ -3,7 +3,7 @@ package info.nightscout.androidaps.receivers
 import android.content.Context
 import android.content.Intent
 import dagger.android.DaggerBroadcastReceiver
-import info.nightscout.androidaps.plugins.general.persistentNotification.DummyServiceHelper
+import info.nightscout.plugins.general.persistentNotification.DummyServiceHelper
 import javax.inject.Inject
 
 class AutoStartReceiver : DaggerBroadcastReceiver() {

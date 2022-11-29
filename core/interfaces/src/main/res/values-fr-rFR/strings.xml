@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Format de fichier</string>
+    <string name="metadata_label_created_at">Créé le</string>
+    <string name="metadata_label_aaps_version">Version d\'AAPS</string>
+    <string name="metadata_label_aaps_flavour">Variante de Build</string>
+    <string name="metadata_label_device_name">Export du nom du patient de l\'appareil</string>
+    <string name="metadata_label_device_model">Export du modèle de l\'appareil</string>
+    <string name="metadata_label_encryption">Cryptage du fichier</string>
+    <string name="metadata_format_new">Nouveau format crypté</string>
+    <string name="metadata_format_debug">Nouveau format de débug (non crypté)</string>
+    <string name="metadata_format_other">Format d\'export inconnu</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Uniquement les valeurs unitaires sont acceptées. Les plages pour les basal/bolus ne sont pas supportées par les pompes virtuelles.</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pilote pompe changé.</string>
+    <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+</resources>

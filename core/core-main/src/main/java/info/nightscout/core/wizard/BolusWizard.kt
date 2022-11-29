@@ -4,32 +4,29 @@ import android.content.Context
 import android.text.Spanned
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.extensions.highValueToUnitsToString
-import info.nightscout.androidaps.extensions.lowValueToUnitsToString
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.extensions.highValueToUnitsToString
+import info.nightscout.core.extensions.lowValueToUnitsToString
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.main.R
-import info.nightscout.core.profile.fromMgdlToUnits
-import info.nightscout.core.profile.toMgdl
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.extensions.formatColor
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.transactions.InsertOrUpdateBolusCalculatorResultTransaction
 import info.nightscout.interfaces.BolusTimer
 import info.nightscout.interfaces.CarbTimer
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatus
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
@@ -39,7 +36,7 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
@@ -50,8 +47,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.LinkedList
 import javax.inject.Inject
 import kotlin.math.abs
@@ -78,10 +73,9 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var carbTimer: CarbTimer
     @Inject lateinit var bolusTimer: BolusTimer
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
-    @Inject lateinit var repository: AppRepository
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var persistenceLayer: PersistenceLayer
 
-    private val disposable = CompositeDisposable()
 
     var timeStamp : Long
 
@@ -327,7 +321,7 @@ class BolusWizard @Inject constructor(
         val actions: LinkedList<String> = LinkedList()
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
-            actions.add(rh.gs(R.string.bolus) + ": " + rh.gs(R.string.formatinsulinunits, insulinAfterConstraints).formatColor(context, rh, R.attr.bolusColor) + pct)
+            actions.add(rh.gs(R.string.bolus) + ": " + rh.gs(R.string.format_insulin_units, insulinAfterConstraints).formatColor(context, rh, R.attr.bolusColor) + pct)
         }
         if (carbs > 0 && !advisor) {
             var timeShift = ""
@@ -406,7 +400,7 @@ class BolusWizard @Inject constructor(
                     commandQueue.bolus(this, object : Callback() {
                         override fun run() {
                             if (!result.success) {
-                                activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                uiInteraction.runAlarm(result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                             } else
                                 carbTimer.scheduleAutomationEventEatReminder()
                         }
@@ -453,7 +447,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.tempBasalAbsolute(0.0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                                 }
                             }
                         })
@@ -461,7 +455,7 @@ class BolusWizard @Inject constructor(
                         commandQueue.tempBasalPercent(0, 120, true, profile, PumpSync.TemporaryBasalType.NORMAL, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                                 }
                             }
                         })
@@ -492,17 +486,12 @@ class BolusWizard @Inject constructor(
                         commandQueue.bolus(this, object : Callback() {
                             override fun run() {
                                 if (!result.success) {
-                                    activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
                                 }
                             }
                         })
                     }
-                    disposable += repository.runTransactionForResult(InsertOrUpdateBolusCalculatorResultTransaction(bolusCalculatorResult!!))
-                        .subscribe(
-                            { result -> result.inserted.forEach { inserted -> aapsLogger.debug(LTag.DATABASE, "Inserted bolusCalculatorResult $inserted") } },
-                            { aapsLogger.error(LTag.DATABASE, "Error while saving bolusCalculatorResult", it) }
-                        )
-
+                    bolusCalculatorResult?.let { persistenceLayer.insertOrUpdate(it) }
                 }
                 if (useAlarm && carbs > 0 && carbTime > 0) {
                     carbTimer.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="handshaking">통신 확인</string>
-    <string name="connected">연결됨</string>
-    <string name="disconnecting">연결끊기중</string>
-</resources>

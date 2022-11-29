@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Nesaugu: pompoje nustatytas ne pirmasis bazės profilis. Ciklo režimas išjungtas. Pasirinkite pirmąjį bazės profilį pompoje ir spauskite atnaujinti.</string>
     <string name="bolus_frequency_exceeded">Tokio paties dydžio bolusas buvo nustatytas per paskutines dvi minutes. Siekiant išvengti atsitiktinio perdozavimo ir programos klaidų, veiksmas neleidžiamas.</string>
     <string name="combo_pump_connected_now">Dabar</string>
-    <string name="combo_activity_reading_pump_history">Skaitoma pompos istorija</string>
     <string name="combo_activity_setting_basal_profile">Nustatyti bazės profilį</string>
     <string name="combo_pump_cartridge_low_warrning">Pompos rezervuaras beveik tuščias</string>
     <string name="combo_pump_battery_low_warrning">Pompos baterija baigia išsikrauti</string>
@@ -57,4 +56,5 @@
     <string name="combo_error_display_never">Niekada</string>
     <string name="combo_error_display_error">Kai klaida</string>
     <string name="combo_error_display_always">Visada</string>
+    <string name="unsafeusage">Nesaugus naudojimas</string>
 </resources>

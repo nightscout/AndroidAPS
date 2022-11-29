@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">Leituras Glicose perdidas</string>
     <string name="time_to_bolus">Hora de fazer o bólus!\nExecute o assistente de bólus e faça o cálculo novamente.</string>
-    <string name="request">Pedido</string>
     <string name="permission">Permissão</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo parece não suportar a otimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <!--       Stats -->
+    <string name="low" comment="3.1-3.9">Baixo</string>
+    <string name="high" comment="10.0-13.9">Alto</string>
 </resources>

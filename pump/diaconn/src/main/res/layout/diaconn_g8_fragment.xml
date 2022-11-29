@@ -1,9 +1,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="5dp"
-    tools:context="info.nightscout.androidaps.diaconn.DiaconnG8Fragment">
+    tools:context=".DiaconnG8Fragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -50,7 +51,7 @@
                     android:layout_weight="1"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/serialnumber"
+                    android:text="@string/serial_number"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -204,7 +205,7 @@
                     android:layout_weight="1"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/lastconnection_label"
+                    android:text="@string/last_connection_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -252,7 +253,7 @@
                     android:layout_weight="1"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/lastbolus_label"
+                    android:text="@string/last_bolus_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -300,7 +301,7 @@
                     android:layout_weight="1"
                     android:paddingStart="0dp"
                     android:paddingEnd="5dp"
-                    android:text="@string/dailyunits"
+                    android:text="@string/daily_units"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp" />
 
@@ -676,8 +677,8 @@
                 android:layout_width="150dp"
                 android:layout_height="100dp"
                 android:layout_gravity="center"
-                android:drawableTop="@drawable/ic_diaconn_g8"
-                android:paddingTop="10dp" />
+                android:paddingTop="10dp"
+                app:drawableTopCompat="@drawable/ic_diaconn_g8" />
 
         </LinearLayout>
 
@@ -699,7 +700,7 @@
             android:drawableTop="@drawable/ic_pump_history"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
-            android:text="@string/pumphistory" />
+            android:text="@string/pump_history" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/stats"
@@ -707,7 +708,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_danarstats"
+            android:drawableTop="@drawable/ic_stats"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
             android:text="@string/stats" />
@@ -718,10 +719,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_danar_useropt"
+            android:drawableTop="@drawable/ic_user_options"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
-            android:text="@string/diagonn_g8_useroptions" />
+            android:text="@string/diaconn_g8_user_options" />
 
     </LinearLayout>
 

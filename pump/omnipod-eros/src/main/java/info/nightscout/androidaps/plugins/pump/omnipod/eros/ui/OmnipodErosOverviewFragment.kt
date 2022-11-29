@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkTargetDevice
@@ -34,18 +33,18 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandGetPodStatus
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.core.ui.UIRunnable
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventQueueChanged
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -81,7 +80,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     @Inject lateinit var omnipodManager: AapsOmnipodErosManager
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var disposables: CompositeDisposable = CompositeDisposable()
 
@@ -321,7 +320,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
 
             // base basal rate
             podInfoBinding.baseBasalRate.text = if (podStateManager.isPodActivationCompleted) {
-                rh.gs(R.string.pump_basebasalrate, omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
+                rh.gs(R.string.pump_base_basal_rate, omnipodErosPumpPlugin.model().determineCorrectBasalSize(podStateManager.basalSchedule.rateAt(TimeUtil.toDuration(DateTime.now()))))
             } else {
                 PLACEHOLDER
             }
@@ -591,9 +590,7 @@ class OmnipodErosOverviewFragment : DaggerFragment() {
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
-        context?.let {
-            activityNames.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)
-        }
+        uiInteraction.runAlarm(message, title, if (withSound) R.raw.boluserror else 0)
     }
 
     private fun displayOkDialog(title: String, message: String) {

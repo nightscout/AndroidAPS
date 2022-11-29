@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">Tinta temporara %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
-    <string name="and">Și</string>
     <string name="or">Sau</string>
     <string name="xor">Sau exclusiv</string>
     <string name="atspecifiedtime">La %1$s</string>
@@ -113,7 +112,6 @@
     <string name="remove_automation">Elimină automatizarea</string>
     <string name="sort_automation">Sortează automatizarea</string>
     <string name="confirm_remove_multiple_items">Sigur vrei să elimini %1$d element(e)</string>
-    <string name="sort_label">Sortează</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">L</string>
     <string name="tuesday_short">Ma</string>

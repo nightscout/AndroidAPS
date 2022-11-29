@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
@@ -24,16 +24,17 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodE
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.queue.command.CommandReadPulseLog
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activation.ErosPodActivationWizardActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.deactivation.ErosPodDeactivationWizardActivity
-import info.nightscout.core.ui.UIRunnable
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventQueueChanged
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -41,7 +42,7 @@ import javax.inject.Inject
 /**
  * Created by andy on 30/08/2019
  */
-class ErosPodManagementActivity : NoSplashAppCompatActivity() {
+class ErosPodManagementActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var commandQueue: CommandQueue
@@ -53,8 +54,10 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var omnipodErosPumpPlugin: OmnipodErosPumpPlugin
     @Inject lateinit var serviceTaskExecutor: ServiceTaskExecutor
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var buildHelper: BuildHelper
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var config: Config
+    @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var rxBus: RxBus
 
     private var disposables: CompositeDisposable = CompositeDisposable()
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -172,7 +175,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
         // Otherwise, users should use the Deactivate Pod Wizard. In case proper deactivation fails,
         // they will get an option to discard the Pod state there
         // Milos Kozak: allow to show button by activating engineering mode
-        val discardButtonEnabled = podStateManager.hasPodState() && (!podStateManager.isPodInitialized || buildHelper.isEngineeringMode())
+        val discardButtonEnabled = podStateManager.hasPodState() && (!podStateManager.isPodInitialized || config.isEngineeringMode())
         binding.buttonDiscardPod.visibility = discardButtonEnabled.toVisibility()
 
         val pulseLogButtonEnabled = aapsOmnipodManager.isPulseLogButtonEnabled
@@ -232,9 +235,7 @@ class ErosPodManagementActivity : NoSplashAppCompatActivity() {
     }
 
     private fun displayErrorDialog(title: String, message: String, @Suppress("SameParameterValue") withSound: Boolean) {
-        context.let {
-            activityNames.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)
-        }
+        uiInteraction.runAlarm(message, title, if (withSound) R.raw.boluserror else 0)
     }
 
     private fun displayNotConfiguredDialog() {

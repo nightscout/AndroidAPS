@@ -22,8 +22,6 @@ import javax.inject.Inject;
 
 import dagger.android.DaggerService;
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.dana.DanaPump;
-import info.nightscout.androidaps.dana.comm.RecordTypes;
 import info.nightscout.androidaps.danar.R;
 import info.nightscout.androidaps.danar.SerialIOThread;
 import info.nightscout.androidaps.danar.comm.MessageBase;
@@ -39,14 +37,16 @@ import info.nightscout.androidaps.danar.comm.MsgHistoryRefill;
 import info.nightscout.androidaps.danar.comm.MsgHistorySuspend;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStart;
 import info.nightscout.androidaps.danar.comm.MsgPCCommStop;
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification;
-import info.nightscout.core.fabric.FabricPrivacy;
 import info.nightscout.core.ui.toast.ToastUtils;
+import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.pump.PumpEnactResult;
 import info.nightscout.interfaces.pump.PumpSync;
+import info.nightscout.interfaces.ui.UiInteraction;
+import info.nightscout.pump.dana.DanaPump;
+import info.nightscout.pump.dana.comm.RecordTypes;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventAppExit;
@@ -77,6 +77,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     @Inject AapsSchedulers aapsSchedulers;
     @Inject PumpSync pumpSync;
     @Inject ActivePlugin activePlugin;
+    @Inject UiInteraction uiInteraction;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -221,7 +222,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                 ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), R.string.devicenotfound);
             }
         } else {
-            ToastUtils.INSTANCE.errorToast(context, R.string.needconnectpermission);
+            ToastUtils.INSTANCE.errorToast(context, R.string.need_connect_permission);
         }
     }
 
@@ -306,8 +307,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                 if (pumpState.getTemporaryBasal().getRate() != danaPump.getTempBasalPercent()
                         || Math.abs(pumpState.getTemporaryBasal().getTimestamp() - danaPump.getTempBasalStart()) > 10000
                 ) { // Close current temp basal
-                    Notification notification = new Notification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
-                    rxBus.send(new EventNewNotification(notification));
+                    uiInteraction.addNotification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
                     aapsLogger.error(LTag.PUMP, "Different temporary basal found running AAPS: " + (pumpState.getTemporaryBasal() + " DanaPump " + danaPump.temporaryBasalToString()));
                     pumpSync.syncTemporaryBasalWithPumpId(
                             danaPump.getTempBasalStart(),
@@ -326,8 +326,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                         activePlugin.getActivePump().model(),
                         activePlugin.getActivePump().serialNumber()
                 );
-                Notification notification = new Notification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
-                rxBus.send(new EventNewNotification(notification));
+                uiInteraction.addNotification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
                 aapsLogger.error(LTag.PUMP, "Temporary basal should not be running. Sending stop to AAPS");
             }
         } else {
@@ -341,8 +340,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                         activePlugin.getActivePump().model(),
                         activePlugin.getActivePump().serialNumber()
                 );
-                Notification notification = new Notification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
-                rxBus.send(new EventNewNotification(notification));
+                uiInteraction.addNotification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
                 aapsLogger.error(LTag.PUMP, "Temporary basal should be running: DanaPump " + danaPump.temporaryBasalToString());
             }
         }
@@ -352,8 +350,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                 if (pumpState.getExtendedBolus().getRate() != danaPump.getExtendedBolusAbsoluteRate()
                         || Math.abs(pumpState.getExtendedBolus().getTimestamp() - danaPump.getExtendedBolusStart()) > 10000
                 ) { // Close current extended
-                    Notification notification = new Notification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
-                    rxBus.send(new EventNewNotification(notification));
+                    uiInteraction.addNotification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
                     aapsLogger.error(LTag.PUMP, "Different extended bolus found running AAPS: " + (pumpState.getExtendedBolus() + " DanaPump " + danaPump.extendedBolusToString()));
                     pumpSync.syncExtendedBolusWithPumpId(
                             danaPump.getExtendedBolusStart(),
@@ -372,14 +369,12 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                         activePlugin.getActivePump().model(),
                         activePlugin.getActivePump().serialNumber()
                 );
-                Notification notification = new Notification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
-                rxBus.send(new EventNewNotification(notification));
+                uiInteraction.addNotification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
                 aapsLogger.error(LTag.PUMP, "Extended bolus should not be running. Sending stop to AAPS");
             }
         } else {
             if (danaPump.isExtendedInProgress()) { // Create new
-                Notification notification = new Notification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
-                rxBus.send(new EventNewNotification(notification));
+                uiInteraction.addNotification(Notification.UNSUPPORTED_ACTION_IN_PUMP, rh.gs(R.string.unsupported_action_in_pump), Notification.URGENT);
                 aapsLogger.error(LTag.PUMP, "Extended bolus should not be running:  DanaPump " + danaPump.extendedBolusToString());
                 pumpSync.syncExtendedBolusWithPumpId(
                         danaPump.getExtendedBolusStart(),

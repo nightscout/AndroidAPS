@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.eopatch
 
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
@@ -10,7 +9,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.code.BolusExDuration
 import info.nightscout.androidaps.plugins.pump.eopatch.code.SettingKeys
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.EopatchOverviewFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -27,6 +26,7 @@ import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -60,7 +60,8 @@ class EopatchPumpPlugin @Inject constructor(
     private val pumpSync: PumpSync,
     private val patchManager: IPatchManager,
     private val alarmManager: IAlarmManager,
-    private val preferenceManager: IPreferenceManager
+    private val preferenceManager: IPreferenceManager,
+    private val uiInteraction: UiInteraction
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -203,7 +204,7 @@ class EopatchPumpPlugin @Inject constructor(
                 disposable.dispose()
                 aapsLogger.info(LTag.PUMP, "Basal Profile was set: ${isSuccess ?: false}")
                 if (isSuccess == true) {
-                    rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)))
+                    uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
                     return PumpEnactResult(injector).success(true).enacted(true)
                 } else {
                     return PumpEnactResult(injector)
@@ -212,7 +213,7 @@ class EopatchPumpPlugin @Inject constructor(
         } else {
             preferenceManager.getNormalBasalManager().setNormalBasal(profile)
             preferenceManager.flushNormalBasalManager()
-            rxBus.send(EventNewNotification(Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)))
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
             return PumpEnactResult(injector).success(true).enacted(true)
         }
     }
@@ -264,7 +265,7 @@ class EopatchPumpPlugin @Inject constructor(
             // neither carbs nor bolus requested
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment")
             return PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0).carbsDelivered(0.0)
-                .comment(rh.gs(R.string.invalidinput))
+                .comment(rh.gs(R.string.invalid_input))
         } else if (detailedBolusInfo.insulin > 0.0) {
             var isSuccess = true
             val result = BehaviorSubject.createDefault(true)
@@ -292,7 +293,7 @@ class EopatchPumpPlugin @Inject constructor(
                 if (patchManager.patchConnectionState.isConnected) {
                     val delivering = patchManager.bolusCurrent.nowBolus.injected
                     rxBus.send(EventOverviewBolusProgress.apply {
-                        status = rh.gs(R.string.bolusdelivering, delivering)
+                        status = rh.gs(R.string.bolus_delivering, delivering)
                         percent = min((delivering / detailedBolusInfo.insulin * 100).toInt(), 100)
                         t = tr
                     })
@@ -300,7 +301,7 @@ class EopatchPumpPlugin @Inject constructor(
             } while (!patchManager.bolusCurrent.nowBolus.endTimeSynced && isSuccess)
 
             rxBus.send(EventOverviewBolusProgress.apply {
-                status = rh.gs(R.string.bolusdelivered, detailedBolusInfo.insulin)
+                status = rh.gs(R.string.bolus_delivered, detailedBolusInfo.insulin)
                 percent = 100
             })
 
@@ -319,7 +320,7 @@ class EopatchPumpPlugin @Inject constructor(
             patchManager.addBolusToHistory(detailedBolusInfo)
 
             return PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(0.0)
-                .carbsDelivered(detailedBolusInfo.carbs).comment(rh.gs(info.nightscout.core.main.R.string.ok))
+                .carbsDelivered(detailedBolusInfo.carbs).comment(rh.gs(R.string.ok))
         }
     }
 
@@ -329,7 +330,7 @@ class EopatchPumpPlugin @Inject constructor(
                              .observeOn(aapsSchedulers.main)
                              .subscribe { it ->
                                  rxBus.send(EventOverviewBolusProgress.apply {
-                                     status = rh.gs(R.string.bolusdelivered, (it.injectedBolusAmount * 0.05f))
+                                     status = rh.gs(R.string.bolus_delivered, (it.injectedBolusAmount * 0.05f))
                                  })
                              }
         )
@@ -420,7 +421,7 @@ class EopatchPumpPlugin @Inject constructor(
             .map { PumpEnactResult(injector).success(true).enacted(true) }
             .onErrorReturnItem(
                 PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0)
-                    .comment(rh.gs(info.nightscout.core.main.R.string.error))
+                    .comment(rh.gs(R.string.error))
             )
             .blockingGet()
     }
@@ -457,7 +458,7 @@ class EopatchPumpPlugin @Inject constructor(
             .map { PumpEnactResult(injector).success(true).enacted(true).isTempCancel(true) }
             .onErrorReturnItem(
                 PumpEnactResult(injector).success(false).enacted(false)
-                    .comment(rh.gs(info.nightscout.core.main.R.string.error))
+                    .comment(rh.gs(R.string.error))
             )
             .blockingGet()
     }
@@ -478,7 +479,7 @@ class EopatchPumpPlugin @Inject constructor(
                 .map { PumpEnactResult(injector).success(true).enacted(true).isTempCancel(true) }
                 .onErrorReturnItem(
                     PumpEnactResult(injector).success(false).enacted(false)
-                        .comment(rh.gs(info.nightscout.core.main.R.string.error))
+                        .comment(rh.gs(R.string.error))
                 )
                 .blockingGet()
         } else {

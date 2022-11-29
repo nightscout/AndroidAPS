@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Actualitzar</string>
     <string name="error">Error</string>
@@ -15,8 +14,6 @@
     <string name="bolusdelivering">Lliurant %1$.2f U</string>
     <string name="connecting">Connectant</string>
     <string name="disconnected">Desconnectat</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -26,11 +23,9 @@
     <string name="pumpbusy">Bomba ocupada</string>
     <string name="connectionerror">Error de connexió de la bomba</string>
     <string name="objectives">Objectius</string>
-    <string name="close">Tancar</string>
     <string name="please_wait">Espereu si us plau…</string>
     <string name="mute">Silenciar</string>
     <string name="reload">Actualitzar</string>
-    <string name="stoppressed">STOP polsat</string>
     <string name="stop">Stop</string>
     <string name="carbs">Carbs</string>
     <string name="active"><![CDATA[<Actiu>]]></string>
@@ -43,10 +38,10 @@
     <string name="target_label">Objectiu</string>
     <string name="basal_long_label">Ràtio de basal</string>
     <string name="initializing">Inicialitzant...</string>
-    <string name="serialnumber">Nr. de sèrie</string>
+    <string name="serial_number">Nr. de sèrie</string>
     <string name="battery_label">Bateria</string>
-    <string name="lastconnection_label">Última connexió</string>
-    <string name="lastbolus_label">Darrer bolus</string>
+    <string name="last_connection_label">Última connexió</string>
+    <string name="last_bolus_label">Darrer bolus</string>
     <string name="dailyunits">Unitats diàries</string>
     <string name="base_basal_rate_label">Ràtio de basal base</string>
     <string name="tempbasal_label">Basal temporal</string>
@@ -412,6 +407,7 @@
     <string name="partialboluswizard">Lliurar aquesta part del resultat del càlcul [%]</string>
     <string name="advisoralarm">Executar alarma quan sigui hora de menjar</string>
     <string name="no_action_selected">Cap acció sel·leccionada, no passarà res</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dies</item>

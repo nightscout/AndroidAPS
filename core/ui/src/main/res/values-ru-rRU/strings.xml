@@ -1,5 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Обновить</string>
+    <string name="error">Ошибка</string>
+    <string name="profile_set_ok">базальный профиль помпы обновлен</string>
+    <string name="invalid_input">введенные данные неверны</string>
+    <string name="bolus_delivering">Подается болюс %1$.2f ед</string>
+    <string name="constraint_applied">применено ограничение!</string>
+    <string name="tempbasals_iobtotal_label_string">Общий IOB:</string>
+    <string name="tt_label">Врем цель (TT)</string>
+    <string name="pump_unreachable">Помпа недоступна</string>
+    <string name="insulin_unit_shortname">Ед</string>
+    <string name="pump_base_basal_rate">%1$.2f ед/ч</string>
+    <string name="pump_not_initialized_profile_not_set">помпа не инициализирована, профиль не установлен</string>
+    <string name="failed_update_basal_profile">не удалось обновить базальный профиль</string>
+    <string name="bolus_delivered">Болюс %1$.2f ед. подан успешно</string>
+    <string name="no_valid_basal_rate">На помпе не найдены валидные записи о базалe</string>
+    <string name="limiting_iob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
+    <string name="loop_disabled">ЗЦ ОТМЕНЕН ОГРАНИЧЕНИЯМИ</string>
+    <string name="event_type">тип события</string>
+    <string name="reload">Перезагрузка истории</string>
+    <string name="mgdl">мг/дл</string>
+    <string name="mmol">ммоль/л</string>
+    <string name="save">Сохранить</string>
+    <string name="snooze">Отложить</string>
+    <string name="virtual_pump">Виртуальная помпа</string>
+    <string name="constraints">ограничения</string>
+    <string name="superbolus">Суперболюс</string>
+    <string name="pump_paused">Помпа приостановлена</string>
+    <string name="and">И</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Пользователь</string>
+    <string name="result">результат</string>
+    <string name="settings">Настройки</string>
+    <string name="statuslights">Индикаторы состояния</string>
+    <string name="do_ns_upload_title">Выгружать (передавать данные) ГК в Nightscout</string>
+    <string name="configbuilder_insulin">Инсулин</string>
+    <string name="value_unavailable_short">н/д</string>
+    <string name="master_password">Главный пароль</string>
+    <string name="ue_export_to_csv">Экспорт пользовательских записей в Excel (csv)</string>
+    <string name="confirm">Подтверждаю</string>
+    <string name="pump">Помпа</string>
+    <string name="missed_bg_readings">Пропущенные данные СК</string>
+    <string name="treatments_iob_label_string">IOB акт инс:</string>
+    <string name="mute5min">Отключить уведомления на 5 минут</string>
+    <string name="mute">Отключить звук</string>
+    <string name="success">Успешно</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Разблокировать настройки</string>
+    <!--    Pumps -->
+    <string name="battery_label">батарея</string>
+    <string name="reservoir_label">Резервуар</string>
+    <string name="last_connection_label">прошлое соединение</string>
+    <string name="last_bolus_label">предыдущий болюс</string>
+    <string name="base_basal_rate_label">базовая величина базала</string>
+    <string name="tempbasal_label">врем базал</string>
+    <string name="extended_bolus_label">Пролонгированный болюс</string>
+    <string name="serial_number">Серийный номер</string>
+    <string name="disconnected">Разъединено</string>
+    <string name="connecting">соединение устанавливается</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Нажато подключ к помпе</string>
+    <string name="reservoir_value">%1$.0f/%2$d ед</string>
+    <string name="daily_units">суточные единицы</string>
+    <string name="pump_icon">Пиктограмма помпы</string>
+    <string name="view_profile">просмотр профиля</string>
+    <string name="pump_history">Журнал помпы</string>
+    <string name="stats">Статистика</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Замена драйвера помпы.</string>
+    <string name="device_changed" comment="26 characters max for translation">Устройство изменено</string>
+    <string name="bolus_ok" comment="26 characters max for translation">болюс ОК</string>
+    <string name="temp_basal_delivery_error">Ошибка подачи врем базала</string>
+    <string name="not_set_short">Не выбрано</string>
+    <string name="pump_busy">помпа занята</string>
+    <string name="connection_error">ошибка соединения</string>
+    <string name="reading_pump_history">Чтение истории помпы</string>
+    <string name="password_cleared">Пароль сброшен!</string>
+    <string name="pairing">Сопряжение</string>
+    <string name="initializing">инициализация...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Макс базальный уровень ограничен до %1$.2f ед/ч вследствие %2$s</string>
+    <string name="pumplimit">лимит помпы</string>
+    <string name="limitingpercentrate">Макс процент базала ограничен до %1$d%% ед/ч вследствие %2$s</string>
+    <string name="itmustbepositivevalue">величина должна быть положительной</string>
+    <string name="limitingbolus">Макс уровень болюса ограничен до %1$.1f ед вследствие %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Подтверждение</string>
     <string name="message">Сообщение</string>
@@ -8,10 +91,47 @@
     <string name="dismiss">ОТКЛОНИТЬ</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
+    <string name="close">Закрыть</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Вам будет предложено ввести главный пароль, необходимый для расшифровки импортированных настроек.</string>
     <!-- NumberPicker -->
+    <string name="a11y_min_button_description">снижение %1$s на %2$s</string>
     <string name="a11y_plus_button_description">увеличение %1$s на %2$s</string>
+    <string name="you_are_on_allowed_limit">Разрешенный предел достигнут</string>
     <string name="format_hour_minute">%1$dч %2$dмин</string>
     <!-- datetime layout -->
+    <string name="event_time_label">время события</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">Приложению требуется разрешение Bluetooth</string>
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Запрос пользователя</string>
+    <string name="pump_paired" comment="26 characters max for translation">Помпа сопряжена</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth с низким энергопотреблением не поддерживается.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy не поддерживается или устройство не сопряжено.</string>
+    <string name="ble_not_enabled">Bluetooth не включен.</string>
+    <string name="location_not_found_title">Геолокация не включена</string>
+    <string name="location_not_found_message">Для обнаружения Bluetooth на новых устройствах необходимо включить геолокацию. AAPS не отслеживает ваше местоположение и может быть отключен после успешного сопряжения.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Настройки расширений</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Отсутствует смс разрешение</string>
+    <plurals name="days">
+        <item quantity="one">%1$d день</item>
+        <item quantity="few">%1$d дня</item>
+        <item quantity="many">%1$d дней</item>
+        <item quantity="other">%1$d д</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d час</item>
+        <item quantity="few">%1$d часа</item>
+        <item quantity="many">%1$d часов</item>
+        <item quantity="other">%1$d ч</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d минута</item>
+        <item quantity="few">%1$d минуты</item>
+        <item quantity="many">%1$d минут</item>
+        <item quantity="other">%1$d мин</item>
+    </plurals>
 </resources>

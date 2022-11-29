@@ -15,14 +15,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.extensions.iobCalc
-import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.androidaps.extensions.toTemporaryBasal
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.ActionModeHelper
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.extensions.iobCalc
+import info.nightscout.core.extensions.toStringFull
+import info.nightscout.core.extensions.toTemporaryBasal
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.ActionModeHelper
+import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.UserEntry.Action
@@ -30,10 +30,10 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.database.impl.transactions.InvalidateExtendedBolusTransaction
 import info.nightscout.database.impl.transactions.InvalidateTemporaryBasalTransaction
 import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.AapsSchedulers
@@ -188,13 +188,13 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
                 holder.binding.time.setTextColor(holder.binding.duration.currentTextColor)
             }
             holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(tempBasal.duration).mins())
-            if (tempBasal.isAbsolute) holder.binding.rate.text = rh.gs(R.string.pump_basebasalrate, tempBasal.rate)
+            if (tempBasal.isAbsolute) holder.binding.rate.text = rh.gs(R.string.pump_base_basal_rate, tempBasal.rate)
             else holder.binding.rate.text = rh.gs(R.string.format_percent, tempBasal.rate.toInt())
             val now = dateUtil.now()
             var iob = IobTotal(now)
             val profile = profileFunction.getProfile(now)
             if (profile != null) iob = tempBasal.iobCalc(now, profile, activePlugin.activeInsulin)
-            holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.basaliob)
+            holder.binding.iob.text = rh.gs(R.string.format_insulin_units, iob.basaliob)
             holder.binding.extendedFlag.visibility = (tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED).toVisibility()
             holder.binding.suspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.PUMP_SUSPEND).toVisibility()
             holder.binding.emulatedSuspendFlag.visibility = (tempBasal.type == TemporaryBasal.Type.EMULATED_PUMP_SUSPEND).toVisibility()

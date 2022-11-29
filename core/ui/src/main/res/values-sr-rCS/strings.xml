@@ -1,8 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="constraint_applied">Primenjeno ograničenje!</string>
+    <string name="tempbasals_iobtotal_label_string">Ukupno IOB:</string>
+    <string name="tt_label">TT</string>
+    <string name="bolus_delivered">Bolus %1$.2f U je uspešno isporučen</string>
+    <string name="save">Sačuvaj</string>
+    <string name="virtual_pump">Virtuelna Pumpa</string>
+    <string name="constraints">Ograničenja</string>
+    <string name="result">Rezultat</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="pump">Pumpa</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <!--    Protection-->
+    <!--    Pumps -->
+    <!--    Constraints-->
+    <!-- Locale -->
     <!--    Dialogs-->
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Bit ćete upitani za glavnu lozinku, koja će se koristiti za dešifriranje uvezenih postavki.</string>
     <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
+    <!-- SmsCommunicator -->
 </resources>

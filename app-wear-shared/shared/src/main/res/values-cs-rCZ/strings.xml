@@ -27,4 +27,10 @@
     <string name="tomorrow">Zítra</string>
     <string name="today">Dnes</string>
     <string name="yesterday">Včera</string>
+    <!-- Rx -->
+    <string name="connecting_for">Připojování %1$d sec</string>
+    <string name="handshaking">Navazování spojení</string>
+    <string name="connected">Připojeno</string>
+    <string name="disconnecting">Odpojuji</string>
+    <string name="waiting_for_disconnection">Čekám na odpojení</string>
 </resources>

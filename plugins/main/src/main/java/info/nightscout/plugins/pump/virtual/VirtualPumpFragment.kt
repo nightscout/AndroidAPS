@@ -7,8 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.extensions.toStringFull
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.extensions.toStringFull
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.plugins.R
@@ -90,13 +90,13 @@ class VirtualPumpFragment : DaggerFragment() {
     private fun updateGui() {
         if (_binding == null) return
         val profile = profileFunction.getProfile() ?: return
-        binding.baseBasalRate.text = rh.gs(R.string.pump_basebasalrate, virtualPumpPlugin.baseBasalRate)
+        binding.baseBasalRate.text = rh.gs(R.string.pump_base_basal_rate, virtualPumpPlugin.baseBasalRate)
         binding.tempbasal.text = iobCobCalculator.getTempBasal(dateUtil.now())?.toStringFull(profile, dateUtil)
             ?: ""
         binding.extendedbolus.text = iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil)
             ?: ""
         binding.battery.text = rh.gs(R.string.format_percent, virtualPumpPlugin.batteryPercent)
-        binding.reservoir.text = rh.gs(R.string.formatinsulinunits, virtualPumpPlugin.reservoirInUnits.toDouble())
+        binding.reservoir.text = rh.gs(R.string.format_insulin_units, virtualPumpPlugin.reservoirInUnits.toDouble())
 
         virtualPumpPlugin.refreshConfiguration()
         val pumpType = virtualPumpPlugin.pumpType

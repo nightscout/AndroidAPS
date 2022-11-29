@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">配对中</string>
-    <string name="danars_nodeviceavailable">迄今未找到任何设备</string>
+    <string name="danars_no_device_available">迄今未找到任何设备</string>
     <string name="danars_pairingok">配对成功</string>
     <string name="danars_pairingtimedout">配对超时</string>
     <string name="danars_waitingforpairing">等待泵配对</string>
@@ -65,20 +65,20 @@
     <string name="danar_history_refill">充盈</string>
     <string name="danar_history_syspend">暂停</string>
     <string name="danar_history_prime">输注Prime</string>
-    <string name="danar_useroptions">用户选项</string>
-    <string name="danar_timedisplay">时间显示的格式</string>
-    <string name="danar_buttonscroll">按钮滚动</string>
+    <string name="danar_user_options">用户选项</string>
+    <string name="danar_time_display">时间显示的格式</string>
+    <string name="danar_button_scroll">按钮滚动</string>
     <string name="danar_beep">按下按钮时发出提示音</string>
-    <string name="danar_pumpalarm">报警</string>
-    <string name="danar_pumpalarm_sound">声音</string>
-    <string name="danar_pumpalarm_vibrate">振动</string>
-    <string name="danar_pumpalarm_both">两者都</string>
-    <string name="danar_screentimeout">LCD屏幕亮的时间[seconds]</string>
+    <string name="danar_pump_alarm">报警</string>
+    <string name="danar_pump_alarm_sound">声音</string>
+    <string name="danar_pump_alarm_vibrate">振动</string>
+    <string name="danar_pump_alarm_both">两者都</string>
+    <string name="danar_screen_timeout">LCD屏幕亮的时间[秒]</string>
     <string name="danar_backlight">背景光开启的时间[seconds]</string>
-    <string name="danar_glucoseunits">血糖单位</string>
+    <string name="danar_glucose_units">血糖单位</string>
     <string name="danar_shutdown">关机 [hours]</string>
-    <string name="danar_lowreservoir">储药器药量低 [Units]</string>
-    <string name="danar_saveuseroptions">保存选项到泵上</string>
+    <string name="danar_low_reservoir">储药器药量低 [Units]</string>
+    <string name="danar_save_user_options">保存选项到泵上</string>
     <string name="description_pump_dana_r">与丹纳R泵集成</string>
     <string name="description_pump_dana_r_korean">与韩版丹纳R泵集成</string>
     <string name="description_pump_dana_r_v2">与升级了固件的丹纳Rv2泵集成</string>
@@ -94,10 +94,10 @@
     <string name="profile_set_failed">设定基础率配置文件失败</string>
     <string name="danar_bluetooth_status">蓝牙状态</string>
     <string name="danar_iob_label">泵 IOB</string>
-    <string name="virtualpump_firmware_label">固件</string>
+    <string name="firmware_label">固件</string>
     <string name="danar_pump_settings">DanaR 泵设置</string>
-    <string name="timeformat12h">12小时制</string>
-    <string name="timeformat24h">24小时制</string>
+    <string name="time_format_12h">12小时制</string>
+    <string name="time_format_24h">24小时制</string>
     <string name="option_on">开启</string>
     <string name="option_off">关闭</string>
     <string name="danar_bt_name_title">丹纳R 蓝牙设备</string>

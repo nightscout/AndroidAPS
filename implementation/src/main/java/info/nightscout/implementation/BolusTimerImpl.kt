@@ -1,10 +1,7 @@
 package info.nightscout.implementation
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.BolusTimer
-import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.automation.AutomationEvent
+import info.nightscout.automation.AutomationEventObject
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.actions.ActionAlarm
 import info.nightscout.automation.elements.Comparator
@@ -12,6 +9,9 @@ import info.nightscout.automation.elements.InputDelta
 import info.nightscout.automation.triggers.TriggerBg
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.automation.triggers.TriggerDelta
+import info.nightscout.interfaces.BolusTimer
+import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.shared.interfaces.ResourceHelper
 import java.text.DecimalFormat
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -24,7 +24,7 @@ class BolusTimerImpl @Inject constructor(
 ) : BolusTimer {
 
     override fun scheduleAutomationEventBolusReminder() {
-        val event = AutomationEvent(injector).apply {
+        val event = AutomationEventObject(injector).apply {
             title = rh.gs(R.string.bolus_reminder)
             readOnly = true
             systemAction = true
@@ -47,7 +47,7 @@ class BolusTimerImpl @Inject constructor(
     }
 
     override fun removeAutomationEventBolusReminder() {
-        val event = AutomationEvent(injector).apply {
+        val event = AutomationEventObject(injector).apply {
             title = rh.gs(R.string.bolus_reminder)
         }
         automationPlugin.removeIfExists(event)

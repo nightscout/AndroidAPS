@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="info.nightscout.androidaps.dana.DanaFragment">
+    tools:context="info.nightscout.pump.dana.DanaFragment">
 
     <ScrollView
         android:id="@+id/scrollview"
@@ -29,7 +29,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingEnd="5dp"
-                    android:text="@string/serialnumber"
+                    android:text="@string/serial_number"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
@@ -176,7 +176,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingEnd="5dp"
-                    android:text="@string/lastconnection_label"
+                    android:text="@string/last_connection_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
@@ -193,7 +193,7 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/lastconnection"
+                    android:id="@+id/last_connection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -224,7 +224,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingEnd="5dp"
-                    android:text="@string/lastbolus_label"
+                    android:text="@string/last_bolus_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
@@ -241,7 +241,7 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/lastbolus"
+                    android:id="@+id/last_bolus"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -272,7 +272,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingEnd="5dp"
-                    android:text="@string/dailyunits"
+                    android:text="@string/daily_units"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
@@ -289,7 +289,7 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/dailyunits"
+                    android:id="@+id/daily_units"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -337,7 +337,7 @@
                     tools:ignore="HardcodedText" />
 
                 <TextView
-                    android:id="@+id/basabasalrate"
+                    android:id="@+id/base_basal_rate"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -560,7 +560,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingEnd="5dp"
-                    android:text="@string/virtualpump_firmware_label"
+                    android:text="@string/firmware_label"
                     android:textAlignment="viewEnd"
                     android:textSize="14sp"
                     tools:ignore="RtlSymmetry" />
@@ -667,10 +667,10 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="-2dp"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_danarprofile"
+            android:drawableTop="@drawable/ic_dana_profile"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="@string/viewprofile"
+            android:text="@string/view_profile"
             app:iconPadding="-4dp" />
 
         <info.nightscout.core.ui.elements.SingleClickButton
@@ -683,7 +683,7 @@
             android:drawableTop="@drawable/ic_pump_history"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="@string/pumphistory"
+            android:text="@string/pump_history"
             app:iconPadding="-4dp"
             tools:ignore="TooManyViews" />
 
@@ -694,7 +694,7 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="-2dp"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_danarstats"
+            android:drawableTop="@drawable/ic_stats"
             android:ellipsize="end"
             android:maxLines="2"
             android:text="@string/stats"
@@ -707,10 +707,10 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="-2dp"
             android:layout_weight="1"
-            android:drawableTop="@drawable/ic_danar_useropt"
+            android:drawableTop="@drawable/ic_user_options"
             android:ellipsize="end"
             android:maxLines="2"
-            android:text="@string/danar_useroptions"
+            android:text="@string/danar_user_options"
             app:iconPadding="-4dp" />
 
     </LinearLayout>

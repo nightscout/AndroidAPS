@@ -5,19 +5,14 @@
     <string name="settings_protection">Definições Proteção</string>
     <string name="application_protection">Proteção Aplicação</string>
     <string name="bolus_protection">Proteção Bólus</string>
-    <string name="master_password">Senha mestra</string>
     <string name="settings_password">Definições de senha</string>
     <string name="application_password">Senha da aplicação</string>
     <string name="bolus_password">Senha do bólus</string>
-    <string name="unlock_settings">Definições de desbloqueio</string>
     <string name="biometric">Biometria</string>
     <string name="custom_password">Senha personalizada</string>
     <string name="noprotection">Sem proteção</string>
-    <string name="protection">Proteção</string>
-    <string name="master_password_missing">A senha mestre não está definida!\n\nPor favor, configure a senha mestre em Preferências (%1$s &#8594; %2$s)</string>
     <string name="password_set">Senha foi definida!</string>
     <string name="password_not_set">Senha não foi definida</string>
     <string name="password_not_changed">Senha não foi alterada</string>
-    <string name="password_cleared">Senha apagada!</string>
     <string name="password_hint">Insira a senha aqui</string>
 </resources>

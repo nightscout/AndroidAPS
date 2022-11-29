@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Opdatér</string>
     <string name="error">Fejl</string>
@@ -16,8 +15,6 @@
     <string name="connecting">Forbinder</string>
     <string name="disconnected">Forbindelse afbrudt</string>
     <string name="androidaps_start">AAPS startet</string>
-    <string name="formatinsulinunits1">%1$.1f IE</string>
-    <string name="formatinsulinunits">%1$.2f IE</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d IE</string>
@@ -27,11 +24,9 @@
     <string name="pumpbusy">Pumpe er optaget</string>
     <string name="connectionerror">Forbindelsesfejl til pumpe</string>
     <string name="objectives">Mål</string>
-    <string name="close">Luk</string>
     <string name="please_wait">Vent venligst…</string>
     <string name="mute">Lydløs</string>
     <string name="reload">Genindlæs</string>
-    <string name="stoppressed">STOP TRYKKET</string>
     <string name="stop">Stop</string>
     <string name="carbs">Kulhydrater</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -48,10 +43,10 @@
     <string name="basal_long_label">Basalrate</string>
     <string name="target_long_label">Blodsukker mål</string>
     <string name="initializing">Initialiserer ...</string>
-    <string name="serialnumber">Serienummer</string>
+    <string name="serial_number">Serienummer</string>
     <string name="battery_label">Batteri</string>
-    <string name="lastconnection_label">Seneste forbindelse</string>
-    <string name="lastbolus_label">Seneste Bolus</string>
+    <string name="last_connection_label">Seneste forbindelse</string>
+    <string name="last_bolus_label">Seneste Bolus</string>
     <string name="dailyunits">Daglige enheder</string>
     <string name="base_basal_rate_label">Standard basal rate</string>
     <string name="tempbasal_label">Midlertidig basal</string>
@@ -442,11 +437,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
-    <string name="count_selected">%1$d valgt</string>
-    <string name="sort_label">Sortér</string>
-    <string name="remove_items">Fjern Emner</string>
-    <string name="sort_items">Sortér Emner</string>
-    <string name="remove_selected_items">Fjern valgte emner</string>
     <string name="a11y_file">fil</string>
     <string name="a11y_user">bruger</string>
     <!-- Autotune -->
@@ -523,6 +513,7 @@
     <string name="wizard_explain_tt">Midl: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s til %2$s</string>
     <string name="wizard_pump_not_available">Ingen pumpe tilgængelig!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dage</item>

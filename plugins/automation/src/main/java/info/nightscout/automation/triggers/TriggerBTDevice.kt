@@ -81,7 +81,7 @@ class TriggerBTDevice(injector: HasAndroidInjector) : Trigger(injector) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
             (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter?.bondedDevices?.forEach { s.add(it.name) }
         } else {
-            ToastUtils.errorToast(context, context.getString(R.string.needconnectpermission))
+            ToastUtils.errorToast(context, context.getString(R.string.need_connect_permission))
         }
         return s
     }

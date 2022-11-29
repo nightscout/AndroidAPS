@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Sensitiwiteit Oref1</string>
+    <string name="sensitivity_aaps">Sensitiwiteit AAPS</string>
+    <string name="sensitivity_weighted_average">Sensitiwiteit GeweegdeGemiddelde</string>
+    <string name="description_sensitivity_aaps">Sensitiwiteit word bereken op dieselfde manier as Oref0, maar jy kan die tydsraamwerk spesifiseer in die verlede. Minimale karb absorpsie is bereken uit maks karb absorpsie tyd vanaf voorkeure.</string>
+    <string name="description_sensitivity_oref1">Sensitiwiteit word bereken uit 8h data in die verlede en koolhidrate (indien nie geabsorbeer) is na die tyd vermeld in voorkeure gesny. Plugin bereken ook UAM.</string>
+    <string name="description_sensitivity_weighted_average">Sensitiwiteit word bereken as \'n geweegde gemiddelde van dwalinge. Nuwer dwalinge het hoër gewig. Minimale karb absorpsie is bereken uit max karb absorpsie tyd vanaf voorkeure. Hierdie algoritme is die vinnigste om sensitiwiteit veranderinge te volg.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM versper omdat dit staatmaak op Oref1 sensitiwiteit plugin</string>
+    <string name="absorption_settings_title">Absorpsie instellings</string>
+    <string name="absorption_max_time_title">Maaltyd max\ks absorpsie tyd [h]</string>
+    <string name="absorption_max_time_summary">Tyd in ure waarna verwag word dat alle koolhidrate uit maaltyd geabsorbeer sal wees</string>
+    <string name="openapsama_autosens_period">Interval vir autosens [h]</string>
+    <string name="openapsama_autosens_period_summary">Hoeveelheid ure in die verlede vir sensitiwiteit opsporing (karbohidrate opname tyd is uitgesluit)</string>
+    <string name="openapsama_autosens_max_summary">Verstek waarde: 1.2\nThis is \'n vermenigvuldiger plafon vir autosens (en gou autotune) stel \'n 20%% max limiet op hoe hoog die autosens verhouding kan wees, wat op sy beurt bepaal hoe hoog autosens basale kan aanpas, hoe laag dit ISF kan aanpas, en hoe laag dit die BG teiken kan stel.</string>
+    <string name="openapsama_autosens_min_summary">Verstek waarde: 0.7\nDie ander kant van die autosens veiligheidsperke, sit \'n limiet op hoe laag autosens basals kan aanpas, en hoe hoog dit ISF en BG teikens kan verstel.</string>
+    <string name="openapsama_autosens_max">Max autosens ratio</string>
+    <string name="openapsama_autosens_min">Min autosens ratio</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Verstek waarde: 3.0 (AMA) of 8.0 (SMB). Dit is \'n instelling vir verstek karb absorpsie impak per 5 minute. Die verstek is \'n verwagte 3mg/dl / 5min. Dit beïnvloed hoe vinnig KOB opgeneem word, en hoeveel karb absorpsie word aanvaar sodat in die berekening van toekomstige BG, voorspel wanneer BG val meer as verwagte, of nie soveel styg as verwag.</string>
+    <string name="absorption_cutoff_title">Maaltyd maks absorpsie tyd [h]</string>
+    <string name="absorption_cutoff_summary">Tyd waarteen enige maaltyd as geabsorbeer beskou word. Oorblywende koolhidrate sal afgesny word.</string>
+</resources>

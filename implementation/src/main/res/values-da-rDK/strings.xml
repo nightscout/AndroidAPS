@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">Manglende BS målinger </string>
     <string name="time_to_bolus">Tid til bolus!\nKør Bolus-guiden og lav beregningen igen.</string>
-    <string name="request">Anmod</string>
     <string name="permission">Tilladelse</string>
-    <string name="error_asking_for_permissions">Fejl under forespørgsel af tilladelser</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">Denne enhed synes ikke at understøtte batterioptimering whitelisting - du kan opleve problemer med ydeevnen.</string>
     <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Meget lav</string>
     <string name="low" comment="3.1-3.9">Lav</string>
     <string name="high" comment="10.0-13.9">Høj</string>
     <string name="veryHigh" comment="above 13.9">Meget høj</string>
+    <string name="below" comment="below &quot;in range&quot;">Under</string>
     <string name="in_range">Inden for området</string>
+    <string name="above" comment="above &quot;in range&quot;">Over</string>
     <string name="hba1c">HbA1c: </string>
     <string name="std_deviation">SD: %1$s</string>
     <string name="detailed_14_days">Detaljerede 14 dage</string>

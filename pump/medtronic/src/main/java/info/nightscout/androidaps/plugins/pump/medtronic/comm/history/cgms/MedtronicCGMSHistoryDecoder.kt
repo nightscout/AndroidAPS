@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms
 
-import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.MedtronicHistoryDecoder
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RecordDecodeStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.cgms.CGMSHistoryEntryType.Companion.getByCode
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
+import info.nightscout.core.utils.DateTimeUtil
 import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -173,7 +173,7 @@ class MedtronicCGMSHistoryDecoder constructor(
         val data = entry.datetime
         return if (entry.entryType.dateType === CGMSHistoryEntryType.DateType.MinuteSpecific) {
             val atechDateTime = DateTimeUtil.toATechDate(parseYear(data[3].toInt()), parseMonths(data[0].toInt(), data[1].toInt()),
-                parseDay(data[2].toInt()), parseHours(data[0].toInt()), parseMinutes(data[1].toInt()), 0)
+                                                                                                       parseDay(data[2].toInt()), parseHours(data[0].toInt()), parseMinutes(data[1].toInt()), 0)
             entry.atechDateTime = atechDateTime
             atechDateTime
         } else if (entry.entryType.dateType === CGMSHistoryEntryType.DateType.SecondSpecific) {

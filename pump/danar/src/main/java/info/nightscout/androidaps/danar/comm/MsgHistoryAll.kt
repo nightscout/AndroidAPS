@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dana.comm.RecordTypes
-import info.nightscout.androidaps.dana.database.DanaHistoryRecord
-import info.nightscout.shared.utils.T
+import info.nightscout.pump.dana.comm.RecordTypes
+import info.nightscout.pump.dana.database.DanaHistoryRecord
 import info.nightscout.rx.events.EventDanaRSyncStatus
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.utils.T
 
 open class MsgHistoryAll(
     injector: HasAndroidInjector

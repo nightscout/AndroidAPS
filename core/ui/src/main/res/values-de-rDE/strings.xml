@@ -1,5 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Aktualisieren</string>
+    <string name="error">Fehler</string>
+    <string name="profile_set_ok">Basal-Profil in der Pumpe aktualisiert</string>
+    <string name="invalid_input">Ungültige Eingabedaten</string>
+    <string name="bolus_delivering">Gebe %1$.2f IE ab</string>
+    <string name="constraint_applied">Beschränkung angewendet!</string>
+    <string name="tempbasals_iobtotal_label_string">Gesamt IOB:</string>
+    <string name="tt_label">TT</string>
+    <string name="pump_unreachable">Pumpe nicht erreichbar</string>
+    <string name="insulin_unit_shortname">IE</string>
+    <string name="pump_base_basal_rate">%1$.2f IE/h</string>
+    <string name="pump_not_initialized_profile_not_set">Pumpe nicht initialisiert, Profil nicht gesetzt!</string>
+    <string name="failed_update_basal_profile">Fehler beim Aktualisieren des Basalprofils</string>
+    <string name="bolus_delivered">Bolus %1$.2f IE erfolgreich abgegeben</string>
+    <string name="no_valid_basal_rate">Von der Pumpe konnte keine gültige Basalrate eingelesen werden.</string>
+    <string name="limiting_iob">Begrenze IOB auf %1$.1f IE wegen %2$s</string>
+    <string name="loop_disabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
+    <string name="event_type">Ereignistyp</string>
+    <string name="reload">Neu laden</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Speichern</string>
+    <string name="snooze">Schlummern</string>
+    <string name="virtual_pump">Virtuelle Pumpe</string>
+    <string name="constraints">Beschränkungen</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pumpe pausiert</string>
+    <string name="and">Und</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Nutzer</string>
+    <string name="result">Ergebnis</string>
+    <string name="settings">Einstellungen</string>
+    <string name="statuslights">Statusanzeige</string>
+    <string name="do_ns_upload_title">Speichere BZ-Werte in Nightscout</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="value_unavailable_short">N/A</string>
+    <string name="master_password">Master-Passwort</string>
+    <string name="ue_export_to_csv">Benutzereinträge nach Excel exportieren (csv)</string>
+    <string name="confirm">Bestätigen</string>
+    <string name="pump">Pumpe</string>
+    <string name="missed_bg_readings">BZ-Werte fehlen</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Stumm schalten für 5 Minuten</string>
+    <string name="mute">Alarm stoppen</string>
+    <string name="success">Erfolgreich</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Einstellungen freischalten</string>
+    <!--    Pumps -->
+    <string name="battery_label">Batterie</string>
+    <string name="reservoir_label">Reservoir</string>
+    <string name="last_connection_label">Letzte Verbindung</string>
+    <string name="last_bolus_label">Letzter Bolus:</string>
+    <string name="base_basal_rate_label">Basis-Basalrate</string>
+    <string name="tempbasal_label">TBR</string>
+    <string name="extended_bolus_label">Verzögerter Bolus</string>
+    <string name="serial_number">Seriennummer</string>
+    <string name="disconnected">Getrennt</string>
+    <string name="connecting">Verbinden</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Verbindung zur Pumpe geklickt</string>
+    <string name="reservoir_value">%1$.0f / %2$d IE</string>
+    <string name="daily_units">Tägliche Einheiten</string>
+    <string name="pump_icon">Pumpen-Symbol</string>
+    <string name="view_profile">Profil anzeigen</string>
+    <string name="pump_history">Pumpen-Historie</string>
+    <string name="stats">Statistik</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pumpentreiber ändern.</string>
+    <string name="device_changed" comment="26 characters max for translation">Gerät gewechselt</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="temp_basal_delivery_error">TBR Abgabe-Fehler</string>
+    <string name="not_set_short">Nicht angegeben</string>
+    <string name="pump_busy">Pumpe ist beschäftigt</string>
+    <string name="connection_error">Pumpen-Verbindungsfehler</string>
+    <string name="reading_pump_history">Pumpen-Historie wird gelesen</string>
+    <string name="password_cleared">Passwort gelöscht!</string>
+    <string name="pairing">Koppeln</string>
+    <string name="initializing">Initialisierung...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Begrenzung der max. Basalrate auf %1$.2f IE/h wegen %2$s</string>
+    <string name="pumplimit">Limit der Pumpe</string>
+    <string name="limitingpercentrate">Begrenzung des max. Prozentsatzes auf %1$d%% wegen %2$s</string>
+    <string name="itmustbepositivevalue">Es muss ein positiver Wert sein.</string>
+    <string name="limitingbolus">Begrenze Bolusmenge auf %1$.1f IE wegen %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Bestätigung</string>
     <string name="message">Nachricht</string>
@@ -8,10 +91,41 @@
     <string name="dismiss">VERWERFEN</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
+    <string name="close">Schließen</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Du wirst nach dem Master-Passwort gefragt. Mit diesem werden die importierten Einstellungen entschlüsselt.</string>
     <!-- NumberPicker -->
+    <string name="a11y_min_button_description">abnehmend %1$s mit %2$s</string>
     <string name="a11y_plus_button_description">zunehmend %1$s mit %2$s</string>
+    <string name="you_are_on_allowed_limit">Erlaubtes Limit erreicht</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
+    <string name="event_time_label">Ereignis-Zeit</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">App benötigt Bluetooth-Berechtigung</string>
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Benutzeranfrage</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pumpe gekoppelt</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth-Low-Energy nicht unterstützt.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nicht unterstützt oder Gerät nicht verbunden.</string>
+    <string name="ble_not_enabled">Bluetooth nicht aktiviert.</string>
+    <string name="location_not_found_title">Standortdienst ist nicht aktiviert</string>
+    <string name="location_not_found_message">Auf neueren Geräten muss für die Bluetooth-Erkennung der Standortdienst aktiviert sein. AAPS speichert keine Standortdaten und der Dienst kann nach erfolgreichem Pairing wieder deaktiviert werden.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Plugin-Einstellungen</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">SMS-Steuerung nicht erlaubt</string>
+    <plurals name="days">
+        <item quantity="one">%1$d Tag</item>
+        <item quantity="other">%1$d Tage</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d Stunde</item>
+        <item quantity="other">%1$d Stunden</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d Minute</item>
+        <item quantity="other">%1$d Minuten</item>
+    </plurals>
 </resources>

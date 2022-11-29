@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bolus_delivered">Bolus %1$.2fU δόθηκε επιτυχώς</string>
+    <string name="eopatch_status">Κατάσταση</string>
+    <string name="symbol_day">ημέρα</string>
+    <string name="patch_step_desc_1">1.</string>
+    <string name="patch_step_desc_2">2.</string>
+    <string name="symbol_days">ημέρες</string>
+    <string name="string_resume">Επαναφορά</string>
+    <string name="string_suspend">Αναστολή</string>
+    <string name="string_running">Εκτελείτε</string>
     <string name="cancel">Ακύρωση</string>
     <string name="confirm">Επιβεβαίωση</string>
+    <string name="string_alarm">Συναγερμός</string>
+    <string name="string_connecting">Συνδέεται</string>
+    <string name="next">Επόμενο</string>
 </resources>

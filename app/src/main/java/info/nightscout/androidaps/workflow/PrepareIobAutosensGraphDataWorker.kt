@@ -10,26 +10,28 @@ import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.LineGraphSeries
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
-import info.nightscout.androidaps.plugins.general.overview.OverviewData
-import info.nightscout.androidaps.plugins.general.overview.OverviewMenus
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DataPointWithLabelInterface
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.DeviationDataPoint
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.FixedLineGraphSeries
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.PointsWithLabelGraphSeries
-import info.nightscout.androidaps.plugins.general.overview.graphExtensions.ScaledDataPoint
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.data.AutosensDataObject
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
-import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DecimalFormatter
+import info.nightscout.core.iob.iobCobCalculator.data.AutosensDataObject
+import info.nightscout.core.graph.OverviewData
+import info.nightscout.core.graph.data.DataPointWithLabelInterface
+import info.nightscout.core.graph.data.DeviationDataPoint
+import info.nightscout.core.graph.data.FixedLineGraphSeries
+import info.nightscout.core.graph.data.PointsWithLabelGraphSeries
+import info.nightscout.core.graph.data.Scale
+import info.nightscout.core.graph.data.ScaledDataPoint
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy
+import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.workflow.CalculationWorkflow
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.utils.DecimalFormatter
+import info.nightscout.plugins.general.overview.OverviewMenus
+import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -53,7 +55,7 @@ class PrepareIobAutosensGraphDataWorker(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var rxBus: RxBus
-    var ctx: Context
+    private var ctx: Context
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -93,6 +95,25 @@ class PrepareIobAutosensGraphDataWorker(
         fun setColor(color: Int): IobTotalDataPoint {
             this.color = color
             return this
+        }
+    }
+
+    class AutosensDataPoint(
+        private val ad: AutosensDataObject,
+        private val scale: Scale,
+        private val chartTime: Long,
+        private val rh: ResourceHelper
+    ) : DataPointWithLabelInterface {
+
+        override fun getX(): Double = chartTime.toDouble()
+        override fun getY(): Double = scale.transform(ad.cob)
+        override fun setY(y: Double) {}
+        override val label: String = ""
+        override val duration = 0L
+        override val shape = PointsWithLabelGraphSeries.Shape.COB_FAIL_OVER
+        override val size = 0.5f
+        override fun color(context: Context?): Int {
+            return rh.gac(context, R.attr.cobColor)
         }
     }
 
@@ -171,9 +192,7 @@ class PrepareIobAutosensGraphDataWorker(
                     lastCob = cob
                 }
                 if (autosensData.failOverToMinAbsorptionRate) {
-                    autosensData.scale = data.overviewData.cobScale
-                    autosensData.chartTime = time
-                    minFailOverActiveList.add(autosensData)
+                    minFailOverActiveList.add(AutosensDataPoint(autosensData, data.overviewData.cobScale, time, rh))
                 }
             }
 

@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">Cible Temp. %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Pourcentage profil %1$s %2$d%%</string>
     <string name="iobcompared">IA %1$s %2$.1f</string>
-    <string name="and">Et</string>
     <string name="or">Ou</string>
     <string name="xor">Exclusif ou</string>
     <string name="atspecifiedtime">À %1$s</string>
@@ -115,7 +114,6 @@
     <string name="remove_selected_items">Supprimer les entrées sélectionnées</string>
     <string name="count_selected">%1$d sélectionnée(s)</string>
     <string name="confirm_remove_multiple_items">Êtes-vous sûr de vouloir supprimer %1$d entrée(s)</string>
-    <string name="sort_label">Trier</string>
     <string name="system_automation">Système d\'automatisation</string>
     <string name="run_automations">Exécuter les automatisations</string>
     <string name="add_automation">Ajouter une règle</string>

@@ -69,7 +69,7 @@
                     android:importantForAccessibility="no"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
-                    android:src="@drawable/ic_danar_useropt" />
+                    android:src="@drawable/ic_user_options" />
 
                 <CheckBox
                     android:id="@+id/user_action"

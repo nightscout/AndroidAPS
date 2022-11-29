@@ -3,16 +3,17 @@ package info.nightscout.ui.activities
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.widget.TextView
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.interfaces.stats.DexcomTirCalculator
-import info.nightscout.androidaps.interfaces.stats.TddCalculator
-import info.nightscout.androidaps.interfaces.stats.TirCalculator
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.core.fabric.FabricPrivacy
+import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
+import info.nightscout.interfaces.logging.UserEntryLogger
+import info.nightscout.interfaces.stats.DexcomTirCalculator
+import info.nightscout.interfaces.stats.TddCalculator
+import info.nightscout.interfaces.stats.TirCalculator
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.ui.R
 import info.nightscout.ui.activityMonitor.ActivityMonitor
 import info.nightscout.ui.databinding.ActivityStatsBinding
@@ -21,7 +22,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class StatsActivity : NoSplashAppCompatActivity() {
+class StatsActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var tirCalculator: TirCalculator
@@ -30,6 +31,7 @@ class StatsActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var rh: ResourceHelper
 
     private lateinit var binding: ActivityStatsBinding
     private val disposable = CompositeDisposable()

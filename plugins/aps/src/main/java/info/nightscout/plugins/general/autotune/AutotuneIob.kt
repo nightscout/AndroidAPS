@@ -1,11 +1,11 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.androidaps.extensions.convertedToAbsolute
-import info.nightscout.androidaps.extensions.durationInMinutes
-import info.nightscout.androidaps.extensions.toJson
-import info.nightscout.androidaps.extensions.toTemporaryBasal
+import info.nightscout.core.extensions.convertedToAbsolute
+import info.nightscout.core.extensions.durationInMinutes
+import info.nightscout.core.extensions.toJson
+import info.nightscout.core.extensions.toTemporaryBasal
 import info.nightscout.core.iob.round
-import info.nightscout.core.profile.milliSecFromMidnight
+import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.ExtendedBolus
@@ -207,7 +207,7 @@ open class AutotuneIob @Inject constructor(
         if (tb.isValid && tb.durationInMinutes > 0) {
             val endTimestamp = splittedTimestamp + splittedDuration
             while (splittedDuration > 0) {
-                if (Profile.milliSecFromMidnight(splittedTimestamp) / cutInMilliSec == Profile.milliSecFromMidnight(endTimestamp) / cutInMilliSec) {
+                if (MidnightUtils.milliSecFromMidnight(splittedTimestamp) / cutInMilliSec == MidnightUtils.milliSecFromMidnight(endTimestamp) / cutInMilliSec) {
                     val newTb = TemporaryBasal(
                         isValid = true,
                         isAbsolute = tb.isAbsolute,
@@ -224,7 +224,7 @@ open class AutotuneIob @Inject constructor(
                     boluses.addAll(convertToBoluses(newTb, profile, tunedProfile.profile))           //
                     // required for correct iob calculation with oref0 algo
                 } else {
-                    val durationFilled = (cutInMilliSec - Profile.milliSecFromMidnight(splittedTimestamp) % cutInMilliSec)
+                    val durationFilled = (cutInMilliSec - MidnightUtils.milliSecFromMidnight(splittedTimestamp) % cutInMilliSec)
                     val newTb = TemporaryBasal(
                         isValid = true,
                         isAbsolute = tb.isAbsolute,

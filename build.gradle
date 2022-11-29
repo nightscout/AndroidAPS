@@ -18,6 +18,7 @@ buildscript {
         nav_version = '2.5.3'
         appcompat_version = '1.5.1'
         material_version = '1.7.0'
+        gridlayout_version = '1.0.0'
         constraintlayout_version = '2.1.4'
         preferencektx_version = '1.2.0'
         commonslang3_version = '3.12.0'
@@ -28,6 +29,7 @@ buildscript {
         json_version = '20220320'
         serialization_version = '1.4.1'
         joda_version = '2.12.1'
+        swipe_version = '1.1.0'
 
         junit_version = '4.13.2'
         mockito_version = '4.4.0'
@@ -45,6 +47,9 @@ buildscript {
         wearable_version = '2.9.0'
         play_services_wearable_version = '17.1.0'
         play_services_location_version = '21.0.1'
+
+        kotlinx_datetime_version = '0.4.0'
+        kotlinx_serialization_core_version = '1.4.1'
     }
     repositories {
         google()
@@ -63,6 +68,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
         classpath 'com.hiya:jacoco-android:0.2'
+        classpath "com.vanniktech:gradle-dependency-graph-generator-plugin:0.8.0"
     }
 }
 

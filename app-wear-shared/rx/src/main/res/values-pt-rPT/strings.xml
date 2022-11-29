@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="handshaking">Cumprimento</string>
-    <string name="connected">Ligado</string>
-    <string name="disconnecting">A desconectar</string>
-    <string name="waiting_for_disconnection">A aguardar a desconexão</string>
-</resources>

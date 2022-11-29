@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolusdelivered">Болус от %1$.2fЕ доставен успешно</string>
+    <string name="category_alerts">Известия</string>
+    <string name="bolus_delivered">Болус от %1$.2fЕ доставен успешно</string>
+    <string name="eopatch_status">Статус</string>
+    <string name="eopatch_base_basal_rate">Базова базална стойност</string>
+    <string name="eopatch_temp_basal_rate">Временна базална стойност</string>
+    <string name="eopatch_total_delivered">Общо доставени</string>
+    <string name="symbol_day">ден</string>
+    <string name="patch_finish">Край</string>
+    <string name="symbol_days">дни</string>
+    <string name="string_resume">Възстанови</string>
+    <string name="string_suspend">Спиране</string>
+    <string name="string_suspended">Прекратено</string>
+    <string name="string_running">Изпълнява</string>
     <string name="cancel">Откажи</string>
     <string name="confirm">Потвърди</string>
+    <string name="string_alarm">Тип аларма</string>
+    <string name="string_connecting">Свързване</string>
+    <string name="retry">Повтори</string>
+    <string name="finish">Край</string>
     <string name="next">Следващ</string>
 </resources>

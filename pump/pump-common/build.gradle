@@ -12,15 +12,13 @@ apply from: "${project.rootDir}/core/core-main/allopen_dependencies.gradle"
 apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 android {
-    namespace 'info.nightscout.androidaps.plugins.pump.common'
+    namespace 'info.nightscout.pump.common'
 }
 
 dependencies {
-    implementation project(':core:core-main')
-    implementation project(':core:fabric')
-    implementation project(':app-wear-shared:rx')
+    implementation project(':core:interfaces')
+    implementation project(':core:utils')
     implementation project(':app-wear-shared:shared')
-    implementation project(':interfaces')
 
     implementation('com.thoughtworks.xstream:xstream:1.4.19') {
         exclude group: 'xmlpull', module: 'xmlpull'

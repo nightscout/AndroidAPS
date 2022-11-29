@@ -1,32 +1,13 @@
 package info.nightscout.database.impl.transactions
 
 import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.UserEntry.Action
-import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.database.entities.ValueWithUnit
 
-class UserEntryTransaction(private val entries: List<Entry>) : Transaction<List<UserEntryTransaction.Entry>>() {
+class UserEntryTransaction(private val entries: List<UserEntry>) : Transaction<List<UserEntry>>() {
 
-    data class Entry(
-        val timestamp: Long,
-        val action: Action,
-        val source: Sources,
-        val note: String,
-        val values: List<ValueWithUnit?> = listOf()
-    )
-
-    override fun run(): List<Entry> {
+    override fun run(): List<UserEntry> {
 
         for (entry in entries)
-            database.userEntryDao.insert(
-                UserEntry(
-                    timestamp = entry.timestamp,
-                    action = entry.action,
-                    source = entry.source,
-                    note = entry.note,
-                    values = entry.values
-                )
-            )
+            database.userEntryDao.insert(entry)
         return entries
     }
 }

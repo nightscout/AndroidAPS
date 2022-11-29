@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="handshaking">Overovanie</string>
-    <string name="connected">Pripojené</string>
-    <string name="disconnecting">Odpájanie</string>
-    <string name="waiting_for_disconnection">Čakám na odpojenie</string>
-</resources>

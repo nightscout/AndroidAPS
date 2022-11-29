@@ -18,19 +18,15 @@ import android.widget.CompoundButton
 import androidx.fragment.app.FragmentManager
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.extensions.formatColor
-import info.nightscout.androidaps.extensions.valueToUnits
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.extensions.valueToUnits
 import info.nightscout.core.iob.round
-import info.nightscout.core.profile.toMgdl
-import info.nightscout.core.profile.toUnitsString
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.extensions.formatColor
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.wizard.BolusWizard
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.constraints.Constraint
@@ -39,6 +35,8 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.protection.ProtectionCheck
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.AapsSchedulers
@@ -383,7 +381,7 @@ class WizardDialog : DaggerDialogFragment() {
 
             binding.ttCheckbox.isEnabled = tempTarget is ValueWrapper.Existing
             binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
-            binding.iobInsulin.text = rh.gs(R.string.formatinsulinunits, -bolusIob.iob - basalIob.basaliob)
+            binding.iobInsulin.text = rh.gs(R.string.format_insulin_units, -bolusIob.iob - basalIob.basaliob)
 
             calculateInsulin()
         }
@@ -458,18 +456,18 @@ class WizardDialog : DaggerDialogFragment() {
 
         wizard?.let { wizard ->
             binding.bg.text = rh.gs(R.string.format_bg_isf, valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
-            binding.bgInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBG)
+            binding.bgInsulin.text = rh.gs(R.string.format_insulin_units, wizard.insulinFromBG)
 
             binding.carbs.text = rh.gs(R.string.format_carbs_ic, carbs.toDouble(), wizard.ic)
-            binding.carbsInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCarbs)
+            binding.carbsInsulin.text = rh.gs(R.string.format_insulin_units, wizard.insulinFromCarbs)
 
-            binding.iobInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromBolusIOB + wizard.insulinFromBasalIOB)
+            binding.iobInsulin.text = rh.gs(R.string.format_insulin_units, wizard.insulinFromBolusIOB + wizard.insulinFromBasalIOB)
 
-            binding.correctionInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCorrection)
+            binding.correctionInsulin.text = rh.gs(R.string.format_insulin_units, wizard.insulinFromCorrection)
 
             // Superbolus
             binding.sb.text = if (binding.sbCheckbox.isChecked) rh.gs(R.string.two_hours) else ""
-            binding.sbInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromSuperBolus)
+            binding.sbInsulin.text = rh.gs(R.string.format_insulin_units, wizard.insulinFromSuperBolus)
 
             // Trend
             if (binding.bgTrendCheckbox.isChecked && wizard.glucoseStatus != null) {
@@ -479,19 +477,19 @@ class WizardDialog : DaggerDialogFragment() {
             } else {
                 binding.bgTrend.text = ""
             }
-            binding.bgTrendInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromTrend)
+            binding.bgTrendInsulin.text = rh.gs(R.string.format_insulin_units, wizard.insulinFromTrend)
 
             // COB
             if (binding.cobCheckbox.isChecked) {
                 binding.cob.text = rh.gs(R.string.format_cob_ic, cob, wizard.ic)
-                binding.cobInsulin.text = rh.gs(R.string.formatinsulinunits, wizard.insulinFromCOB)
+                binding.cobInsulin.text = rh.gs(R.string.format_insulin_units, wizard.insulinFromCOB)
             } else {
                 binding.cob.text = ""
                 binding.cobInsulin.text = ""
             }
 
             if (wizard.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0.0) {
-                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) rh.gs(R.string.formatinsulinunits, wizard.calculatedTotalInsulin).formatColor(context, rh, R.attr.bolusColor) else ""
+                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) rh.gs(R.string.format_insulin_units, wizard.calculatedTotalInsulin).formatColor(context, rh, R.attr.bolusColor) else ""
                 val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(R.string.format_carbs, carbsAfterConstraint).formatColor(context, rh, R.attr.carbsColor) else ""
                 binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.result_insulin_carbs, insulinText, carbsText))
                 binding.okcancel.ok.visibility = View.VISIBLE

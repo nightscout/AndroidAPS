@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.endecrypt
 
-import info.nightscout.androidaps.extensions.toHex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessagePacket
+import info.nightscout.core.utils.toHex
 import info.nightscout.rx.logging.AAPSLoggerTest
 import org.junit.Assert
 import org.junit.Test

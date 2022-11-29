@@ -1,5 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">רענן</string>
+    <string name="error">שגיאה</string>
+    <string name="profile_set_ok">הפרופיל הבזאלי עודכן במשאבה</string>
+    <string name="invalid_input">קלט לא חוקי</string>
+    <string name="bolus_delivering">מזריק %1$.2f יח\'</string>
+    <string name="constraint_applied">מגבלה הוחלה!</string>
+    <string name="tempbasals_iobtotal_label_string">IBO כולל:</string>
+    <string name="tt_label">TT</string>
+    <string name="pump_unreachable">המשאבה אינה זמינה</string>
+    <string name="insulin_unit_shortname">יחידות</string>
+    <string name="pump_base_basal_rate">%1$.2f יח\' לשעה</string>
+    <string name="pump_not_initialized_profile_not_set">משאבה לא אותחלה! לא נקבע פרופיל!</string>
+    <string name="failed_update_basal_profile">עדכון הפרופיל הבזאלי נכשל</string>
+    <string name="bolus_delivered">בולוס %1$.2f יח\' ניתן בהצלחה</string>
+    <string name="no_valid_basal_rate">לא התקבל מינון בזאלי תקף מהמשאבה</string>
+    <string name="limiting_iob">הגבלת IOB ל-%1$.1f יח\' בגלל %2$s</string>
+    <string name="loop_disabled">הלולאה הופסקה עקב המגבלות שבתוקף</string>
+    <string name="event_type">סוג האירוע</string>
+    <string name="reload">טען מחדש</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/L</string>
+    <string name="save">שמירה</string>
+    <string name="snooze">נודניק</string>
+    <string name="virtual_pump">משאבה וירטואלית</string>
+    <string name="constraints">מגבלות</string>
+    <string name="superbolus">סופר בולוס</string>
+    <string name="pump_paused">המשאבה הושהתה</string>
+    <string name="and">וגם</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">משתמש</string>
+    <string name="result">תוצאה</string>
+    <string name="settings">הגדרות</string>
+    <string name="statuslights">אורות חיווי</string>
+    <string name="do_ns_upload_title">טוען נתוני סוכר ל-Nightscout</string>
+    <string name="configbuilder_insulin">אינסולין</string>
+    <string name="value_unavailable_short">לא זמין</string>
+    <string name="master_password">סיסמה ראשית</string>
+    <string name="ue_export_to_csv">יצוא ערכי משתמש לאקסל (csv)</string>
+    <string name="confirm">אישור</string>
+    <string name="pump">משאבה</string>
+    <string name="missed_bg_readings">לא התקבלו קריאות סוכר</string>
+    <string name="treatments_iob_label_string">אינסולין פעיל:</string>
+    <string name="mute5min">השתקה ל-5 דקות</string>
+    <string name="mute">השתק</string>
+    <string name="success">הצלחה</string>
+    <!--    Protection-->
+    <string name="unlock_settings">שחרור נעילת הגדרות</string>
+    <!--    Pumps -->
+    <string name="battery_label">סוללה</string>
+    <string name="reservoir_label">מכל</string>
+    <string name="last_connection_label">התחברות אחרונה</string>
+    <string name="last_bolus_label">בולוס אחרון</string>
+    <string name="base_basal_rate_label">בזאלי בסיסי</string>
+    <string name="tempbasal_label">בזאלי זמני</string>
+    <string name="extended_bolus_label">בולוס ממושך</string>
+    <string name="serial_number">מספר סידורי</string>
+    <string name="disconnected">מנותק</string>
+    <string name="connecting">מתחבר</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">התחבר למשאבה נלחץ</string>
+    <string name="reservoir_value">%1$.0f / %2$d יח\'</string>
+    <string name="daily_units">יחידות יומיות</string>
+    <string name="pump_icon">צלמית משאבה</string>
+    <string name="view_profile">הצג פרופיל</string>
+    <string name="pump_history">היסטוריית המשאבה</string>
+    <string name="stats">סטטיסטיקה</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">שינוי במנהל התקן המשאבה.</string>
+    <string name="device_changed" comment="26 characters max for translation">התקן שונה</string>
+    <string name="bolus_ok" comment="26 characters max for translation">בולוס OK</string>
+    <string name="temp_basal_delivery_error">שגיאת אספקה של בזאלי זמני</string>
+    <string name="initializing">מאתחל...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">מגביל את הקצב הבזאלי המרבי ל-%1$.2f יח\' לשעה בגלל %2$s</string>
+    <string name="pumplimit">מגבלת משאבה</string>
+    <string name="limitingpercentrate">מגביל את אחוז הקצב הבזאלי המרבי ל-%1$d%% בגלל %2$s</string>
+    <string name="itmustbepositivevalue">זה חייב להיות ערך חיובי</string>
+    <string name="limitingbolus">מגביל בולוס ל-%1$.1f יח\' בגלל %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">אישור</string>
     <string name="message">הודעה</string>
@@ -8,10 +85,42 @@
     <string name="dismiss">בטל</string>
     <string name="yes">כן</string>
     <string name="no">לא</string>
+    <string name="close">סגור</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש לפיענוח ההעדפות המיובאות.</string>
     <!-- NumberPicker -->
+    <string name="a11y_min_button_description">הפחתת %1$s ב-%2$s</string>
     <string name="a11y_plus_button_description">תוספת %1$s ב-%2$s</string>
+    <string name="you_are_on_allowed_limit">הגעתם לגבול המותר</string>
     <string name="format_hour_minute">%1$d ש\' %2$d דק\'</string>
     <!-- datetime layout -->
+    <string name="event_time_label">שעת אירוע</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">האפליקציה צריכה הרשאה לבלוטות\'</string>
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">בקשת משתמש</string>
+    <string name="pump_paired" comment="26 characters max for translation">המשאבה צומדה</string>
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">העדפות תוסף</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">הרשאות SMS חסרות</string>
+    <plurals name="days">
+        <item quantity="one">%1$d יום</item>
+        <item quantity="two">%1$d ימים</item>
+        <item quantity="many">%1$d ימים</item>
+        <item quantity="other">%1$d ימים</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d שעה</item>
+        <item quantity="two">%1$d שעות</item>
+        <item quantity="many">%1$d שעות</item>
+        <item quantity="other">%1$d שעות</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d דקה</item>
+        <item quantity="two">%1$d דקות</item>
+        <item quantity="many">%1$d דקות</item>
+        <item quantity="other">%1$d דקות</item>
+    </plurals>
 </resources>

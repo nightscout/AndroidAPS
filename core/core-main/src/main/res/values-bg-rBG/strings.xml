@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Обнови</string>
     <string name="error">Грешка</string>
@@ -15,8 +14,6 @@
     <string name="bolusdelivering">Пускам %1$.2fЕ</string>
     <string name="connecting">Свързване</string>
     <string name="disconnected">Не е сврзана</string>
-    <string name="formatinsulinunits1">%1$.1fЕ</string>
-    <string name="formatinsulinunits">%1$.2fЕ</string>
     <string name="formatsignedinsulinunits">%1$+.2fЕ</string>
     <string name="format_carbs">%1$d гр</string>
     <string name="reservoirvalue">%1$.0f / %2$d Е</string>
@@ -26,11 +23,9 @@
     <string name="pumpbusy">Помпата е заета</string>
     <string name="connectionerror">Грешка при връзка с помпата</string>
     <string name="objectives">Цели</string>
-    <string name="close">Затвори</string>
     <string name="please_wait">Моля изчакайте...</string>
     <string name="mute">Заглушаване</string>
     <string name="reload">Презареди</string>
-    <string name="stoppressed">Натиснат е СТОП!</string>
     <string name="stop">Стоп</string>
     <string name="carbs">въглехидрати</string>
     <string name="active"><![CDATA[<Активно>]]></string>
@@ -43,10 +38,10 @@
     <string name="target_label">Целeва КЗ:</string>
     <string name="basal_long_label">Базал</string>
     <string name="initializing">Инициализация ...</string>
-    <string name="serialnumber">Сериен номер</string>
+    <string name="serial_number">Сериен номер</string>
     <string name="battery_label">Батерия</string>
-    <string name="lastconnection_label">Последна връзка</string>
-    <string name="lastbolus_label">Последен болус:</string>
+    <string name="last_connection_label">Последна връзка</string>
+    <string name="last_bolus_label">Последен болус:</string>
     <string name="dailyunits">Инсулин за деня</string>
     <string name="base_basal_rate_label">Базова базална стойност</string>
     <string name="tempbasal_label">Временен базал</string>
@@ -305,6 +300,7 @@
     <string name="partialboluswizard">Стартирай част от резултата в калкулатора [%]</string>
     <string name="advisoralarm">Алармата, когато е време за хранене.</string>
     <string name="no_action_selected">Няма избрано действие, нищо няма да се изпълни</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>

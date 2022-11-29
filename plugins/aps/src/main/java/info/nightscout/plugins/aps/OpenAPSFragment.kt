@@ -13,7 +13,7 @@ import android.view.ViewGroup
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.aps.databinding.OpenapsFragmentBinding
 import info.nightscout.plugins.aps.events.EventOpenAPSUpdateGui

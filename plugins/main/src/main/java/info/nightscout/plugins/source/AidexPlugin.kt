@@ -5,17 +5,17 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.receivers.Intents
+import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.interfaces.source.BgSource
 import info.nightscout.plugins.R
 import info.nightscout.rx.logging.AAPSLogger
@@ -29,7 +29,6 @@ class AidexPlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val buildHelper: BuildHelper,
     private val config: Config
 ) : PluginBase(
     PluginDescription()
@@ -55,7 +54,7 @@ class AidexPlugin @Inject constructor(
 
     // Allow only for pumpcontrol or dev & engineering_mode
     override fun specialEnableCondition(): Boolean {
-        return config.APS.not() || buildHelper.isDev() && buildHelper.isEngineeringMode()
+        return config.APS.not() || config.isDev() && config.isEngineeringMode()
     }
 
     // cannot be inner class because of needed injection
@@ -85,7 +84,7 @@ class AidexPlugin @Inject constructor(
             if (bundle.containsKey(Intents.AIDEX_TRANSMITTER_SN)) aapsLogger.debug(LTag.BGSOURCE, "transmitterSerialNumber: " + bundle.getString(Intents.AIDEX_TRANSMITTER_SN))
             if (bundle.containsKey(Intents.AIDEX_SENSOR_ID)) aapsLogger.debug(LTag.BGSOURCE, "sensorId: " + bundle.getString(Intents.AIDEX_SENSOR_ID))
 
-            val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
+            val glucoseValues = mutableListOf<TransactionGlucoseValue>()
 
             val timestamp = bundle.getLong(Intents.AIDEX_TIMESTAMP, 0)
             val bgType = bundle.getString(Intents.AIDEX_BG_TYPE, "mg/dl")
@@ -95,7 +94,7 @@ class AidexPlugin @Inject constructor(
 
             aapsLogger.debug(LTag.BGSOURCE, "Received Aidex broadcast [time=$timestamp, bgType=$bgType, value=$bgValue, targetValue=$bgValueTarget")
 
-            glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+            glucoseValues += TransactionGlucoseValue(
                 timestamp = timestamp,
                 value = bgValueTarget,
                 raw = null,

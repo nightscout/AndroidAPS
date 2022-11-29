@@ -1,12 +1,11 @@
 package info.nightscout.androidaps.danaRv2.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.pump.dana.DanaPump
 import info.nightscout.rx.events.EventRebuildTabs
 import info.nightscout.rx.logging.LTag
 
@@ -26,8 +25,7 @@ class MsgCheckValue_v2(
         danaPump.protocol = intFromBuff(bytes, 1, 1)
         danaPump.productCode = intFromBuff(bytes, 2, 1)
         if (danaPump.hwModel != DanaPump.EXPORT_MODEL) {
-            val notification = Notification(Notification.WRONG_DRIVER, rh.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
-            rxBus.send(EventNewNotification(notification))
+            uiInteraction.addNotification(Notification.WRONG_DRIVER, rh.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
             danaRPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to Korean DanaR")
             danaRKoreanPlugin.setPluginEnabled(PluginType.PUMP, true)
@@ -43,8 +41,7 @@ class MsgCheckValue_v2(
             return
         }
         if (danaPump.protocol != 2) {
-            val notification = Notification(Notification.WRONG_DRIVER, rh.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
-            rxBus.send(EventNewNotification(notification))
+            uiInteraction.addNotification(Notification.WRONG_DRIVER, rh.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
             danaRKoreanPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to non APS DanaR")
             danaRv2Plugin.setPluginEnabled(PluginType.PUMP, false)

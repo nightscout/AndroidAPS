@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="handshaking">Bağlandı</string>
-    <string name="connected">Bağlanıldı</string>
-    <string name="disconnecting">Bağlantı kesiliyor</string>
-    <string name="waiting_for_disconnection">Bağlantının kesilmesi bekleniyor</string>
-</resources>

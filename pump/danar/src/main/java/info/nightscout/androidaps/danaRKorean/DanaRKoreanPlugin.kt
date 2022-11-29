@@ -6,11 +6,10 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dana.DanaPump
 import info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionService
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin
 import info.nightscout.androidaps.danar.R
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -21,7 +20,10 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.PumpSync.TemporaryBasalType
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.Round
+import info.nightscout.pump.dana.DanaPump
+import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
@@ -53,8 +55,10 @@ class DanaRKoreanPlugin @Inject constructor(
     danaPump: DanaPump,
     dateUtil: DateUtil,
     private val fabricPrivacy: FabricPrivacy,
-    pumpSync: PumpSync
-) : AbstractDanaRPlugin(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync) {
+    pumpSync: PumpSync,
+    uiInteraction: UiInteraction,
+    danaHistoryDatabase: DanaHistoryDatabase
+) : AbstractDanaRPlugin(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase) {
 
     init {
         pluginDescription.description(R.string.description_pump_dana_r_korean)
@@ -151,7 +155,7 @@ class DanaRKoreanPlugin @Inject constructor(
             result
         } else {
             val result = PumpEnactResult(injector)
-            result.success(false).bolusDelivered(0.0).carbsDelivered(0.0).comment(R.string.invalidinput)
+            result.success(false).bolusDelivered(0.0).carbsDelivered(0.0).comment(R.string.invalid_input)
             aapsLogger.error("deliverTreatment: Invalid input")
             result
         }

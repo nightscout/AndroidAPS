@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Frissítés</string>
     <string name="error">Hiba</string>
     <string name="not_set_short">Nincs beállítva</string>
     <string name="waitingforpump">Várakozás pumpára</string>
-    <string name="formatinsulinunits1">%1$.1f E</string>
-    <string name="formatinsulinunits">%1$.2f E</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="please_wait">Kérem várjon…</string>
     <string name="mute">Némít</string>
@@ -18,7 +15,7 @@
     <string name="target_label">Cél</string>
     <string name="basal_long_label">Bázisütem</string>
     <string name="initializing">Inicializálás ...</string>
-    <string name="serialnumber">Sorozatszám</string>
+    <string name="serial_number">Sorozatszám</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
@@ -117,6 +114,7 @@
     <string name="info">INFO</string>
     <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d nap</item>
         <item quantity="other">%1$d nap</item>

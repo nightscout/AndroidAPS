@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Actualizar</string>
     <string name="error">Error</string>
@@ -16,8 +15,6 @@
     <string name="connecting">Conectando</string>
     <string name="disconnected">Desconectado</string>
     <string name="androidaps_start">AAPS iniciado</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f/%2$dU</string>
@@ -27,11 +24,9 @@
     <string name="pumpbusy">Bomba ocupada</string>
     <string name="connectionerror">Error de conexión de la bomba</string>
     <string name="objectives">Objetivos</string>
-    <string name="close">Cerrar</string>
     <string name="please_wait">Por favor, espere…</string>
     <string name="mute">Silenciar</string>
     <string name="reload">Recargar</string>
-    <string name="stoppressed">STOP pulsado</string>
     <string name="stop">Detener</string>
     <string name="carbs">Carbohidratos [g]</string>
     <string name="invalid_profile">Perfil inválido</string>
@@ -50,10 +45,10 @@
     <string name="basal_long_label">Tasa basal</string>
     <string name="target_long_label">Objetivo de glucosa en sangre</string>
     <string name="initializing">Iniciando...</string>
-    <string name="serialnumber">Número de serie</string>
+    <string name="serial_number">Número de serie</string>
     <string name="battery_label">Batería</string>
-    <string name="lastconnection_label">Última conexión</string>
-    <string name="lastbolus_label">Último bolo</string>
+    <string name="last_connection_label">Última conexión</string>
+    <string name="last_bolus_label">Último bolo</string>
     <string name="dailyunits">Unidades diarias</string>
     <string name="base_basal_rate_label">Dosis Basal Base</string>
     <string name="tempbasal_label">Basal temporal</string>
@@ -452,11 +447,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
-    <string name="count_selected">%1$d seleccionados</string>
-    <string name="sort_label">Ordenar</string>
-    <string name="remove_items">Eliminar elementos</string>
-    <string name="sort_items">Ordenar elementos</string>
-    <string name="remove_selected_items">Eliminar los elementos seleccionados</string>
     <string name="a11y_file">Archivo</string>
     <string name="a11y_user">Usuario</string>
     <!-- Autotune -->
@@ -539,6 +529,16 @@
     <string name="wizard_explain_tt">BasalT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">¡No hay bomba disponible!</string>
+    <!--    Preferences-->
+    <string name="child">Menor de edad</string>
+    <string name="teenage">Adolescente</string>
+    <string name="adult">Adulto</string>
+    <string name="resistant_adult">Adulto resistente a la insulina</string>
+    <string name="pregnant">Embarazada</string>
+    <string name="patient_age_summary">Por favor, selecciona el tipo de paciente para establecer los límites de seguridad</string>
+    <string name="max_bolus_title">Máximo bolo permitido [U]</string>
+    <string name="max_carbs_title">Máximos carbohidratos permitidos [g]</string>
+    <string name="patient_type">Tipo de paciente</string>
     <plurals name="days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

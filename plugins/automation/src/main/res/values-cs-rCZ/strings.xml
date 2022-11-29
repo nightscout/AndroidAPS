@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">Dočasný cíl %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
-    <string name="and">A</string>
     <string name="or">Nebo</string>
     <string name="xor">Exkluzivní nebo</string>
     <string name="atspecifiedtime">Ve %1$s</string>
@@ -115,7 +114,6 @@
     <string name="remove_selected_items">Odstranit zvolené položky</string>
     <string name="count_selected">Vybráno: %1$d</string>
     <string name="confirm_remove_multiple_items">Opravdu chcete odstranit %1$d položek</string>
-    <string name="sort_label">Seřadit</string>
     <string name="system_automation">Automatizace systému</string>
     <string name="run_automations">Spustit automatizace</string>
     <string name="add_automation">Přidat pravidlo</string>

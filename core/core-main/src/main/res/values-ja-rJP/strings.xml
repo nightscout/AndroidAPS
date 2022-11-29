@@ -2,19 +2,28 @@
 <resources>
     <!--    General-->
     <!--    Constraints-->
-    <!--    Dialogs-->
     <!--    BlePreCheck-->
-    <!--    DateUtil-->
+    <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
-    <!--    PumpType-->
     <!--    APSResult-->
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
-    <!--    TDD-->
     <!--    Translator-->
     <!--    Command-->
     <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <!--    Ntp-->
+    <!-- Maintenance -->
+    <!-- VersionChecker -->
+    <!-- Permissions -->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
+    <!-- Alerts -->
+    <!-- SmsCommunicator -->
+    <!-- BolusWizard -->
+    <!--    Preferences-->
 </resources>

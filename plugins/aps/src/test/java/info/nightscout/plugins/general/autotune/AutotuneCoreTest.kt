@@ -2,7 +2,7 @@ package info.nightscout.plugins.general.autotune
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.data.ProfileSealed
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.data.Block
 import info.nightscout.database.entities.data.TargetBlock
 import info.nightscout.interfaces.GlucoseUnit

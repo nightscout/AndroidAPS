@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Aktualisieren</string>
     <string name="error">Fehler</string>
@@ -15,8 +14,6 @@
     <string name="bolusdelivering">Gebe %1$.2fIE ab</string>
     <string name="connecting">Verbinden</string>
     <string name="disconnected">Getrennt</string>
-    <string name="formatinsulinunits1">%1$.1f IE</string>
-    <string name="formatinsulinunits">%1$.2f IE</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d IE</string>
@@ -26,11 +23,9 @@
     <string name="pumpbusy">Pumpe ist beschäftigt</string>
     <string name="connectionerror">Pumpen-Verbindungsfehler</string>
     <string name="objectives">Objectives (Ziele)</string>
-    <string name="close">Schließen</string>
     <string name="please_wait">Bitte warten…</string>
     <string name="mute">Alarm stoppen</string>
     <string name="reload">Neu laden</string>
-    <string name="stoppressed">STOPP GEDRÜCKT</string>
     <string name="stop">Stopp</string>
     <string name="carbs">Kohlenhydrate</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
@@ -47,10 +42,10 @@
     <string name="basal_long_label">Basalrate</string>
     <string name="target_long_label">BZ Ziel</string>
     <string name="initializing">Initialisierung...</string>
-    <string name="serialnumber">Seriennummer</string>
+    <string name="serial_number">Seriennummer</string>
     <string name="battery_label">Batterie</string>
-    <string name="lastconnection_label">Letzte Verbindung</string>
-    <string name="lastbolus_label">Letzter Bolus</string>
+    <string name="last_connection_label">Letzte Verbindung</string>
+    <string name="last_bolus_label">Letzter Bolus</string>
     <string name="dailyunits">Tägliche Einheiten</string>
     <string name="base_basal_rate_label">Basis-Basalrate</string>
     <string name="tempbasal_label">TBR</string>
@@ -439,11 +434,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>
     <string name="basalpct">Basal %</string>
-    <string name="count_selected">%1$d ausgewählt</string>
-    <string name="sort_label">Sortieren</string>
-    <string name="remove_items">Entferne Elemente</string>
-    <string name="sort_items">Sortiere Elemente</string>
-    <string name="remove_selected_items">lösche ausgewählte Elemente</string>
     <string name="a11y_file">Datei</string>
     <string name="a11y_user">Nutzer</string>
     <!-- Autotune -->
@@ -520,6 +510,7 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s zu %2$s</string>
     <string name="wizard_pump_not_available">Keine Pumpe verfügbar!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

@@ -8,7 +8,7 @@ import info.nightscout.automation.elements.InputTime
 import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
-import info.nightscout.core.profile.secondsFromMidnight
+import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.MidnightTime
@@ -92,7 +92,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
 
     private fun toMills(minutesSinceMidnight: Int): Long = MidnightTime.calcPlusMinutes(minutesSinceMidnight)
 
-    private fun getMinSinceMidnight(time: Long): Int = Profile.secondsFromMidnight(time) / 60
+    private fun getMinSinceMidnight(time: Long): Int = MidnightUtils.secondsFromMidnight(time) / 60
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()

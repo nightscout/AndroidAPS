@@ -14,7 +14,15 @@
     <string name="open_humans_notifications">Aviseringar från Open Humans</string>
     <string name="you_have_been_signed_out_of_open_humans">Du har loggats ut från Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicka här om du vill logga in igen.</string>
+    <string name="next">Nästa</string>
     <string name="terms_of_use">Användarvillkor</string>
+    <string name="info_openhumans">Detta är ett open source-verktyg som kommer att ladda upp dina data till Open Humans. Vi förbehåller oss inga rättigheter att dela dina uppgifter med tredje part utan ditt uttryckliga tillstånd. De data som projektet och appen tar emot identifieras via ett slumpmässigt användar-ID och kommer endast att överföras på ett säkert sätt till ett Open Humans-konto om du tillåter det. Du kan när som helst sluta ladda upp och radera dina uppladdningsdata via www.openhumans.org.</string>
+    <string name="boluses">Bolusar</string>
+    <string name="carbohydrates">Kolhydrater</string>
+    <string name="settings">Inställningar</string>
+    <string name="device_model">Modell</string>
+    <string name="nightscout_url">Nightscout-URL</string>
+    <string name="agree">Jag förstår och instämmer.</string>
     <string name="cancel">Avbryt</string>
     <string name="close">Stäng</string>
     <string name="upload_now">Ladda upp nu</string>

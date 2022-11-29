@@ -24,7 +24,6 @@
     <string name="description_smb_dynamic_isf">Dinamik/otomatik İDF ile ileri düzey kullanıcılar için en yeni algoritma</string>
     <string name="openapsma_run">Şimdi Çalıştır</string>
     <string name="openapsma_profile_label">Profil</string>
-    <string name="result">Sonuç</string>
     <string name="openapsma_request_label">İstek</string>
     <string name="constraints">Kısıtlamalar</string>
     <string name="openapsma_autosensdata_label">Otoduyarlılık verileri</string>
@@ -32,8 +31,6 @@
     <string name="openapsama_current_basal_safety_multiplier_summary">Varsayılan ayar: 4 Bu, OpenAPS güvenlik ayarlarının diğer yarısı ve \"3x max günlük, 4x akım\" güvenlik korumasının diğer yarısıdır. Bu, başlangıç değerinizin, pompada ayarlanan taban maksimum değerinizden bağımsız olarak, mevcut bazal seviyenin bu sayısından daha yüksek olamayacağı anlamına gelir. Bu, insanların, algoritmanın nasıl çalıştığını anlamadan temel çizgiyi büyük ölçüde artırarak kendilerini tehlikeli durumlarda bulmalarını engellemektir. Varsayılan ayar 4x\'dir; Çoğu insan bu ayarları asla değiştirmek zorunda kalmayacak, ancak bu güvenlik sınırına yakınsa diğer terapi ayarlarını ayarlamalıdırlar.</string>
     <string name="openapsama_max_daily_safety_multiplier">Maks günlük güvenlik çarpanı</string>
     <string name="openapsama_current_basal_safety_multiplier">Mevcut bazal güvenlik çarpanı</string>
-    <string name="openapsama_autosens_max_summary">Varsayılan değer: 1.2\nOtoduyarlılık (yakında otoayar) çarpanı. Varsayılan değere %20 maksimum limit atamak, otoduyarlılığın bazalları ne kadar yüksek ayarlayabileceğini, ISF ve KŞ hedefini de ne kadar düşük ayarlayabileceğini belirler.</string>
-    <string name="openapsama_autosens_min_summary">Varsayılan değer: 0.7\nBu otoduyarlılık için diğer güvenlik önlemidir. Otoduyarlılığın bazal oranlarını ne kadar düşürebileceğini ve İnsülin Duyarlılık Faktörü ve KŞ hedeflerini ne kadar yüksek tutabileceğini gösterir.</string>
     <!--    Verify if needed in safety-->
     <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
     <string name="hardlimit">sert sınır</string>

@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Athnuachan</string>
+    <string name="error">Earráid</string>
+    <string name="bolus_delivering">Ag seachadadh %1$.2f A</string>
+    <string name="tempbasals_iobtotal_label_string">Lomlán IOB:</string>
+    <string name="tt_label">TT</string>
+    <string name="insulin_unit_shortname">A</string>
+    <string name="pump_base_basal_rate">%1$.2f A/u</string>
+    <string name="loop_disabled">LÚB DÍCHUMASAITHE LE SRIANTA</string>
+    <string name="reload">Athlódáil</string>
+    <string name="mgdl">mg/dL</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Sábháil</string>
+    <string name="constraints">Srianta</string>
+    <string name="pump_paused">Caidéil ar sos</string>
+    <string name="and">Agus</string>
+    <string name="result">Toradh</string>
+    <string name="configbuilder_insulin">Inslin</string>
+    <string name="pump">Caidéil</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute">Balbh</string>
+    <string name="success">Rathúlacht</string>
+    <!--    Protection-->
+    <!--    Pumps -->
+    <string name="battery_label">Ceallraí</string>
+    <string name="reservoir_label">Taiscumar</string>
+    <string name="last_connection_label">Nasc deiridh</string>
+    <string name="last_bolus_label">Bólas deiridh</string>
+    <string name="base_basal_rate_label">Bunaidh ráta bonn</string>
+    <string name="serial_number">Sraithuimhir</string>
+    <string name="disconnected">Dínasctha</string>
+    <string name="connecting">Ag nascadh</string>
+    <string name="reservoir_value">%1$.0f / %2$d A</string>
+    <string name="daily_units">Aonaid lá</string>
+    <string name="pump_history">Stair caidéil</string>
+    <string name="reading_pump_history">Léigh stair caidéil</string>
+    <string name="initializing">Tosaithe ...</string>
+    <!--    Constraints-->
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Deimhniú</string>
     <string name="message">Teachtaireacht</string>
@@ -7,9 +46,35 @@
     <string name="cancel">Cuir ar ceal</string>
     <string name="yes">Tá</string>
     <string name="no">Níl</string>
+    <string name="close">Dún</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$du %2$dn</string>
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
+    <!-- SmsCommunicator -->
+    <plurals name="days">
+        <item quantity="one">%1$d lá</item>
+        <item quantity="two">%1$d lá</item>
+        <item quantity="few">%1$d lá</item>
+        <item quantity="many">%1$d lá</item>
+        <item quantity="other">%1$d lá</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d uair</item>
+        <item quantity="two">%1$d uair</item>
+        <item quantity="few">%1$d uair</item>
+        <item quantity="many">%1$d uair</item>
+        <item quantity="other">%1$d uair</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d nóiméad</item>
+        <item quantity="two">%1$d nóiméad</item>
+        <item quantity="few">%1$d nóiméad</item>
+        <item quantity="many">%1$d nóiméad</item>
+        <item quantity="other">%1$d nóiméad</item>
+    </plurals>
 </resources>

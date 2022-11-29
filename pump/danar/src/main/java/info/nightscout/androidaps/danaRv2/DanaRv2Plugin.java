@@ -12,23 +12,25 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.dana.DanaPump;
 import info.nightscout.androidaps.danaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin;
 import info.nightscout.androidaps.danar.R;
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage;
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage;
-import info.nightscout.core.fabric.FabricPrivacy;
+import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.interfaces.constraints.Constraint;
 import info.nightscout.interfaces.constraints.Constraints;
 import info.nightscout.interfaces.plugin.ActivePlugin;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.pump.DetailedBolusInfo;
+import info.nightscout.interfaces.pump.DetailedBolusInfoStorage;
 import info.nightscout.interfaces.pump.PumpEnactResult;
 import info.nightscout.interfaces.pump.PumpSync;
+import info.nightscout.interfaces.pump.TemporaryBasalStorage;
 import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.interfaces.queue.CommandQueue;
+import info.nightscout.interfaces.ui.UiInteraction;
 import info.nightscout.interfaces.utils.Round;
+import info.nightscout.pump.dana.DanaPump;
+import info.nightscout.pump.dana.database.DanaHistoryDatabase;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.bus.RxBus;
 import info.nightscout.rx.events.EventAppExit;
@@ -72,9 +74,11 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             TemporaryBasalStorage temporaryBasalStorage,
             DateUtil dateUtil,
             FabricPrivacy fabricPrivacy,
-            PumpSync pumpSync
+            PumpSync pumpSync,
+            UiInteraction uiInteraction,
+            DanaHistoryDatabase danaHistoryDatabase
     ) {
-        super(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync);
+        super(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.rh = rh;
@@ -203,7 +207,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(false).bolusDelivered(0d).carbsDelivered(0d).comment(R.string.invalidinput);
+            result.success(false).bolusDelivered(0d).carbsDelivered(0d).comment(R.string.invalid_input);
             aapsLogger.error("deliverTreatment: Invalid input");
             return result;
         }
@@ -292,7 +296,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         percent = constraintChecker.applyBasalPercentConstraints(new Constraint<>(percent), profile).value();
         if (percent < 0) {
-            result.isTempCancel(false).enacted(false).success(false).comment(R.string.invalidinput);
+            result.isTempCancel(false).enacted(false).success(false).comment(R.string.invalid_input);
             aapsLogger.error("setTempBasalPercent: Invalid input");
             return result;
         }
@@ -316,7 +320,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             aapsLogger.debug(LTag.PUMP, "setTempBasalPercent: OK");
             return result;
         }
-        result.enacted(false).success(false).comment(R.string.tempbasaldeliveryerror);
+        result.enacted(false).success(false).comment(R.string.temp_basal_delivery_error);
         aapsLogger.error("setTempBasalPercent: Failed to set temp basal");
         return result;
     }

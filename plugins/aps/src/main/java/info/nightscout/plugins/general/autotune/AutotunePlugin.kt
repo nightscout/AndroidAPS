@@ -2,22 +2,24 @@ package info.nightscout.plugins.general.autotune
 
 import android.view.View
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.extensions.pureProfileFromJson
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.elements.InputWeekDay
+import info.nightscout.core.extensions.pureProfileFromJson
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.autotune.Autotune
 import info.nightscout.interfaces.insulin.Insulin
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.profile.ProfileInstantiator
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.plugins.aps.R
@@ -59,9 +61,10 @@ class AutotunePlugin @Inject constructor(
     private val autotuneIob: AutotuneIob,
     private val autotunePrep: AutotunePrep,
     private val autotuneCore: AutotuneCore,
-    private val buildHelper: BuildHelper,
+    private val config: Config,
     private val uel: UserEntryLogger,
-    aapsLogger: AAPSLogger
+    aapsLogger: AAPSLogger,
+    private val profileInstantiator: ProfileInstantiator
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -70,7 +73,7 @@ class AutotunePlugin @Inject constructor(
         .pluginName(R.string.autotune)
         .shortName(R.string.autotune_shortname)
         .preferencesId(R.xml.pref_autotune)
-        .showInList(buildHelper.isEngineeringMode() && buildHelper.isDev())
+        .showInList(config.isEngineeringMode() && config.isDev())
         .description(R.string.autotune_description),
     aapsLogger, resourceHelper, injector
 ), Autotune {
@@ -354,7 +357,7 @@ class AutotunePlugin @Inject constructor(
         if (newProfile == null) return
         val profilePlugin = activePlugin.activeProfileSource
         val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
-        val profileStore = activePlugin.activeProfileSource.profile ?: ProfileStoreObject(injector, JSONObject(), dateUtil)
+        val profileStore = activePlugin.activeProfileSource.profile ?: profileInstantiator.storeInstance(JSONObject())
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         var indexLocalProfile = -1
         for (p in profileList.indices)
@@ -453,7 +456,7 @@ class AutotunePlugin @Inject constructor(
         atLog("[Plugin] $message")
     }
 
-    override fun specialEnableCondition(): Boolean = buildHelper.isEngineeringMode() && buildHelper.isDev()
+    override fun specialEnableCondition(): Boolean = config.isEngineeringMode() && config.isDev()
 
     override fun atLog(message: String) {
         autotuneFS.atLog(message)

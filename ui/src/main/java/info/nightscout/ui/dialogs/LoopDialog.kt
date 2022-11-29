@@ -11,11 +11,9 @@ import android.view.Window
 import android.view.WindowManager
 import androidx.fragment.app.FragmentManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
@@ -27,14 +25,16 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.constraints.Objectives
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRefreshOverview
@@ -70,7 +70,7 @@ class LoopDialog : DaggerDialogFragment() {
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var protectionCheck: ProtectionCheck
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
 
     private var queryingProtection = false
     private var showOkCancel: Boolean = true
@@ -310,7 +310,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            ToastUtils.errorToast(ctx, rh.gs(R.string.tempbasaldeliveryerror))
+                            ToastUtils.errorToast(ctx, rh.gs(R.string.temp_basal_delivery_error))
                         }
                     }
                 })
@@ -351,7 +351,7 @@ class LoopDialog : DaggerDialogFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            activityNames.runAlarm(ctx, result.comment, rh.gs(R.string.tempbasaldeliveryerror), R.raw.boluserror)
+                            uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
                         }
                     }
                 })

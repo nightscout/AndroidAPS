@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Oref1</string>
+    <string name="sensitivity_aaps">AAPS</string>
+    <string name="sensitivity_weighted_average">WeightedAverage</string>
+    <string name="description_sensitivity_aaps">Känsligheten beräknas på samma sätt som i Oref0, men du kan specificera hur mycket av historiken som ska tas med i beräkningen. Minimalt upptag av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i Inställningar.</string>
+    <string name="description_sensitivity_oref1">Känsligheten beräknas både från 8 och 24 timmars data från historiken och väljer det resultat som har högst insulinkänslighet. Kolhydrater som ännu inte räknats av ignoreras efter tiden som ställts in i inställningarna. Insticksprogrammet beräknar också icke inmatade måltider, UAM.</string>
+    <string name="description_sensitivity_weighted_average">Känsligheten beräknas som ett viktat medelvärde av avvikelserna. Senare avvikelser får en högre vikt. Minimal upptagning av kolhydrater beräknas utifrån maximal upptagstid för kolhydrater som angetts i inställningarna. Den här algoritmen är den snabbaste att justera förändringar i känsligheten.</string>
+    <string name="uam_disabled_oref1_not_selected">UAM är inaktiverat eftersom det kräver Oref1 känslighetsplugin</string>
+    <string name="absorption_settings_title">Absorptionsinställningar</string>
+    <string name="absorption_max_time_title">Max absorptionstid för en måltid [tim]</string>
+    <string name="absorption_max_time_summary">Tid i timmar när alla kolhydrater förväntas vara absorberade</string>
+    <string name="openapsama_autosens_period">Intervall för autosens [tim]</string>
+    <string name="openapsama_autosens_period_summary">Antal timmar för beräkning av känslighet (absorptionstid för KH är exkluderad)</string>
+    <string name="openapsama_autosens_max_summary">Standardvärde: 1.2\nDetta är en multiplikatorbegränsare för autosens/autotune som gör att automatiken kan justera upp basaler, sänka insulinkänslighet (ISF) och/eller målvärde med upp till 20%.</string>
+    <string name="openapsama_autosens_min_summary">Standardvärde: 0.7\nDetta är en multiplikatorbegränsare för autosens/autotune som gör att automatiken kan justera ner basaler, höja insulinkänslighet (ISF) och/eller målvärde med upp till 30%% för att kompensera för t ex tillfällig hög insulinkänslighet.</string>
+    <string name="openapsama_autosens_max">Max autosens ratio</string>
+    <string name="openapsama_autosens_min">Min autosens ratio</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Standardvärde: 3.0 (AMA) eller 8.0 (SMB). Detta är grundinställning för KH-absorption per 5 min. Detta styr hur snabbt COB minskar, dvs hur snabbt programmet kalkylerar att KH tagits upp, och påverkar BG framöver när BG faller mer än väntat, eller inte stiger som väntat.</string>
+    <string name="absorption_cutoff_title">Max absorptionstid för kolhydrater [tim]</string>
+    <string name="absorption_cutoff_summary">Efter denna tid anses alla kolhydrater vara absorberade. Om det fortfarande finns COB, kommer dessa att tas bort ur beräkningen.</string>
+</resources>

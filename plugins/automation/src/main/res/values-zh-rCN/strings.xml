@@ -42,7 +42,6 @@
     <string name="temptargetcomparedmmol">临时目标 %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">配置文件pct %1$s %2$d</string>
     <string name="iobcompared">IOB %1$s %2$.1f</string>
-    <string name="and">而且</string>
     <string name="or">或</string>
     <string name="xor">唯一的</string>
     <string name="atspecifiedtime">在 %1$s</string>
@@ -115,7 +114,6 @@
     <string name="remove_selected_items">删除选中项？</string>
     <string name="count_selected">已选中 %1$d</string>
     <string name="confirm_remove_multiple_items">你确定要删除 %1$d 吗？</string>
-    <string name="sort_label">排序</string>
     <string name="system_automation">系统自动化</string>
     <string name="run_automations">运行自动化</string>
     <string name="add_automation">添加规则</string>

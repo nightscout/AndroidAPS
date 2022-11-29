@@ -1,5 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Actualizează</string>
+    <string name="error">Eroare</string>
+    <string name="profile_set_ok">Profilul bazalei a fost modificat în pompă</string>
+    <string name="invalid_input">Date de intrare incorecte</string>
+    <string name="bolus_delivering">Se livrează %1$.2f U</string>
+    <string name="constraint_applied">Limitare aplicată!</string>
+    <string name="tempbasals_iobtotal_label_string">IOB totală:</string>
+    <string name="tt_label">TT</string>
+    <string name="pump_unreachable">Pompă indisponibilă</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Pompa nu este inițializată, profilul nu este setat!</string>
+    <string name="failed_update_basal_profile">Actualizarea profilului bazalei a eșuat</string>
+    <string name="bolus_delivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
+    <string name="no_valid_basal_rate">Nu s-a citit o rată bazală validă din pompă</string>
+    <string name="limiting_iob">Se limitează IOB la %1$.1f U datorită %2$s</string>
+    <string name="loop_disabled">BUCLĂ DEZACTIVATĂ DATORITĂ CONSTRÂNGERILOR</string>
+    <string name="event_type">Tip eveniment</string>
+    <string name="reload">Reîncărcare</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Salvează</string>
+    <string name="snooze">Amână</string>
+    <string name="virtual_pump">Pompă virtuală</string>
+    <string name="constraints">Constrângeri</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pompă în pauză</string>
+    <string name="and">Și</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Utilizator</string>
+    <string name="result">Rezultat</string>
+    <string name="settings">Setări</string>
+    <string name="statuslights">Lumini de stare</string>
+    <string name="do_ns_upload_title">Încarcă date glicemie în NS</string>
+    <string name="configbuilder_insulin">Insulină</string>
+    <string name="value_unavailable_short">indisponibil</string>
+    <string name="master_password">Parola principală</string>
+    <string name="ue_export_to_csv">Exportă înregistrările utilizatorului în Excel (csv)</string>
+    <string name="confirm">Confirmă</string>
+    <string name="pump">Pompă</string>
+    <string name="missed_bg_readings">Lipsesc date glicemie</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Dezactivează pentru 5 minute</string>
+    <string name="mute">Liniște</string>
+    <string name="success">Succes</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Deblochează setările</string>
+    <!--    Pumps -->
+    <string name="battery_label">Baterie</string>
+    <string name="reservoir_label">Rezervor</string>
+    <string name="last_connection_label">Ultima conexiune</string>
+    <string name="last_bolus_label">Ultimul bolus</string>
+    <string name="base_basal_rate_label">Rată bazală normală</string>
+    <string name="tempbasal_label">Bazală temporară</string>
+    <string name="extended_bolus_label">Bolus extins</string>
+    <string name="serial_number">Număr serial</string>
+    <string name="disconnected">Deconectat</string>
+    <string name="connecting">Se conectează</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Conectare la pompă apăsat</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">Unități zilnic</string>
+    <string name="pump_icon">Pictogramă pompă</string>
+    <string name="view_profile">Afișează profilul</string>
+    <string name="pump_history">Istoric pompă</string>
+    <string name="stats">Statistici</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Schimbare driver pompa.</string>
+    <string name="device_changed" comment="26 characters max for translation">Dispozitiv modificat</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="temp_basal_delivery_error">Eroare la livrare bazală temporară</string>
+    <string name="not_set_short">Nesetată</string>
+    <string name="pump_busy">Pompa face altă acțiune</string>
+    <string name="connection_error">Eroare de conexiune cu pompa</string>
+    <string name="reading_pump_history">Se citește istoricul din pompă</string>
+    <string name="password_cleared">Parolă ștearsă!</string>
+    <string name="pairing">Împerechere</string>
+    <string name="initializing">Inițializare...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Se limitează maximul ratei bazale la %1$.2f U/o datorită %2$s</string>
+    <string name="pumplimit">limită pompă</string>
+    <string name="limitingpercentrate">Se limitează procentul ratei maxime la %1$d%% datorită %2$s</string>
+    <string name="itmustbepositivevalue">trebuie să fie o valoare pozitivă</string>
+    <string name="limitingbolus">Se limitează bolusul la %1$.1f U datorită %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmare</string>
     <string name="message">Mesaj</string>
@@ -8,9 +91,41 @@
     <string name="dismiss">RENUNȚĂ</string>
     <string name="yes">Da</string>
     <string name="no">Nu</string>
+    <string name="close">Închide</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Vi se va solicita parola principală, care este necesară pentru a decripta setările importate.</string>
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
+    <string name="event_time_label">Ora evenimentului</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">Aplicația are nevoie de permisiune Bluetooth</string>
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Cerere utilizator</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pompă împerecheată</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">BLE nu este suportat.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nu este acceptat sau dispozitivul nu este asociat.</string>
+    <string name="ble_not_enabled">Bluetooth-ul este dezactivat.</string>
+    <string name="location_not_found_title">Localizarea este dezactivată</string>
+    <string name="location_not_found_message">Pentru a putea căuta dispozitive Bluetooth noi, trebuie să activați localizarea. AAPS nu folosește datele dumneavoastră de localizare și acestea pot fi dezactivate după stabilirea conexiunii cu pompa.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Preferințe plugin</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Lipsesc permisiunile de SMS</string>
+    <plurals name="days">
+        <item quantity="one">%1$d zi</item>
+        <item quantity="few">%1$d zile</item>
+        <item quantity="other">%1$d zile</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d oră</item>
+        <item quantity="few">%1$d ore</item>
+        <item quantity="other">%1$d ore</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minut</item>
+        <item quantity="few">%1$d minute</item>
+        <item quantity="other">%1$d minute</item>
+    </plurals>
 </resources>

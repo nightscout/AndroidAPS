@@ -56,9 +56,9 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
-            android:paddingStart="2dp"
-            android:textSize="14sp"
-            tools:ignore="RtlSymmetry" />
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
+            android:textSize="14sp" />
 
     </TableRow>
 
@@ -128,9 +128,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
-            android:paddingStart="2dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
             android:textSize="14sp"
-            tools:ignore="RtlSymmetry" />
+            tools:text="15U" />
 
     </TableRow>
 
@@ -186,23 +187,25 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/cannula_placeholder"
+            android:id="@+id/cannula_usage_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:paddingStart="0dp"
             android:paddingEnd="0dp"
+            android:text="@string/cannula_usage"
             android:textSize="14sp" />
 
         <TextView
+            android:id="@+id/cannula_usage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
-            android:paddingStart="2dp"
-            android:text=""
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
             android:textSize="14sp"
-            tools:ignore="RtlSymmetry" />
+            tools:text="..." />
 
     </TableRow>
 
@@ -274,9 +277,10 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:gravity="center_vertical"
-            android:paddingStart="2dp"
+            android:paddingStart="4dp"
+            android:paddingEnd="0dp"
             android:textSize="14sp"
-            tools:ignore="RtlSymmetry" />
+            tools:text="70%" />
 
     </TableRow>
 

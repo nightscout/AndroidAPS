@@ -191,7 +191,7 @@
             android:layout_marginBottom="-4dp"
             android:visibility="gone"
             app:srcCompat="@drawable/ic_loop_closed"
-            android:contentDescription="@string/apsmode_title" />
+            android:contentDescription="@string/aps_mode_title" />
 
         <TextView
             android:id="@+id/aps_mode_text"

@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolusdelivered">%1$.2f vv bolusas sėkmingai suleistas</string>
+    <string name="category_alerts">Perspėjimai</string>
+    <string name="bolus_delivered">%1$.2f vv bolusas sėkmingai suleistas</string>
+    <string name="eopatch_status">Būsena</string>
+    <string name="eopatch_base_basal_rate">Pagrindinė valandinė bazė</string>
+    <string name="eopatch_temp_basal_rate">Laikina valandinė bazė</string>
+    <string name="eopatch_total_delivered">Iš viso suleista</string>
+    <string name="symbol_day">d.</string>
+    <string name="patch_finish">Užbaigti</string>
+    <string name="patch_step_desc_1">1.</string>
+    <string name="patch_step_desc_2">2.</string>
+    <string name="symbol_days">d.</string>
+    <string name="string_resume">Atnaujinti</string>
+    <string name="string_suspend">Sustabdyti</string>
+    <string name="string_suspended">Sustabdyta</string>
+    <string name="string_running">Vykdoma</string>
     <string name="cancel">Atšaukti</string>
     <string name="confirm">Patvirtinti</string>
+    <string name="string_alarm">Aliarmas</string>
+    <string name="string_connecting">Jungiamasi</string>
+    <string name="retry">Bandyti dar kartą</string>
+    <string name="string_suspended_insulin_delivery_message">Insulino leidimas sustabdytas.</string>
+    <string name="finish">Užbaigti</string>
+    <string name="next">Kitas</string>
 </resources>

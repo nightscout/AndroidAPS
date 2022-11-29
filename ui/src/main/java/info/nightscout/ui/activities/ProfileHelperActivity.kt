@@ -8,21 +8,23 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.google.android.material.tabs.TabLayout
 import com.google.common.collect.Lists
-import info.nightscout.androidaps.activities.NoSplashAppCompatActivity
-import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.interfaces.stats.TddCalculator
-import info.nightscout.core.fabric.FabricPrivacy
+import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.PureProfile
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.stats.TddCalculator
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventLocalProfileChanged
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
@@ -36,7 +38,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
 import javax.inject.Inject
 
-class ProfileHelperActivity : NoSplashAppCompatActivity() {
+class ProfileHelperActivity : DaggerAppCompatActivity() {
 
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var profileFunction: ProfileFunction
@@ -47,6 +49,8 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var fabricPrivacy: FabricPrivacy
+    @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var rxBus: RxBus
 
     enum class ProfileType {
         MOTOL_DEFAULT,
@@ -59,7 +63,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
     private var tabSelected = 0
     private val typeSelected = arrayOf(ProfileType.MOTOL_DEFAULT, ProfileType.CURRENT)
 
-    private val ageUsed = arrayOf(15.0, 15.0)
+    private val ageUsed = arrayOf(15, 15)
     private val weightUsed = arrayOf(0.0, 0.0)
     private val tddUsed = arrayOf(0.0, 0.0)
     private val pctUsed = arrayOf(32.0, 32.0)
@@ -216,7 +220,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                     ProfileViewerDialog().also { pvd ->
                         pvd.arguments = Bundle().also {
                             it.putLong("time", dateUtil.now())
-                            it.putInt("mode", ActivityNames.Mode.PROFILE_COMPARE.ordinal)
+                            it.putInt("mode", UiInteraction.Mode.PROFILE_COMPARE.ordinal)
                             it.putString("customProfile", profile0.jsonObject.toString())
                             it.putString("customProfile2", profile1.jsonObject.toString())
                             it.putString(
@@ -234,7 +238,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
                     return@setOnClickListener
                 }
             }
-            ToastUtils.warnToast(this, R.string.invalidinput)
+            ToastUtils.warnToast(this, R.string.invalid_input)
         }
         binding.ageLabel.labelFor = binding.age.editTextId
         binding.tddLabel.labelFor = binding.tdd.editTextId
@@ -244,7 +248,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         switchTab(0, typeSelected[0], false)
     }
 
-    private fun getProfile(age: Double, tdd: Double, weight: Double, basalPct: Double, tab: Int): PureProfile? =
+    private fun getProfile(age: Int, tdd: Double, weight: Double, basalPct: Double, tab: Int): PureProfile? =
         try { // Profile must not exist
             when (typeSelected[tab]) {
                 ProfileType.MOTOL_DEFAULT     -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
@@ -257,7 +261,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
             null
         }
 
-    private fun getProfileName(age: Double, tdd: Double, weight: Double, basalSumPct: Double, tab: Int): String =
+    private fun getProfileName(age: Int, tdd: Double, weight: Double, basalSumPct: Double, tab: Int): String =
         when (typeSelected[tab]) {
             ProfileType.MOTOL_DEFAULT     -> if (tdd > 0) rh.gs(R.string.format_with_tdd, age, tdd) else rh.gs(R.string.format_with_weight, age, weight)
             ProfileType.DPV_DEFAULT       -> rh.gs(R.string.format_with_tdd_and_pct, age, tdd, (basalSumPct * 100).toInt())
@@ -267,7 +271,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         }
 
     private fun storeValues() {
-        ageUsed[tabSelected] = binding.age.value
+        ageUsed[tabSelected] = binding.age.value.toInt()
         weightUsed[tabSelected] = binding.weight.value
         tddUsed[tabSelected] = binding.tdd.value
         pctUsed[tabSelected] = binding.basalPctFromTdd.value
@@ -297,7 +301,7 @@ class ProfileHelperActivity : NoSplashAppCompatActivity() {
         binding.profileSwitch.visibility = (newContent == ProfileType.PROFILE_SWITCH).toVisibility()
 
         // Restore selected values
-        binding.age.value = ageUsed[tabSelected]
+        binding.age.value = ageUsed[tabSelected].toDouble()
         binding.weight.value = weightUsed[tabSelected]
         binding.tdd.value = tddUsed[tabSelected]
         binding.basalPctFromTdd.value = pctUsed[tabSelected]

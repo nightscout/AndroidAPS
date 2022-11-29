@@ -3,8 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm
 import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothManager
 import android.content.Context
-import info.nightscout.androidaps.extensions.toHex
-import info.nightscout.interfaces.Config
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.BusyException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.ConnectException
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.exceptions.CouldNotSendCommandException
@@ -30,6 +28,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.event.PodEven
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command.base.Command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.Response
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
+import info.nightscout.core.utils.toHex
+import info.nightscout.interfaces.Config
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import io.reactivex.rxjava3.core.Observable

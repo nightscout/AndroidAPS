@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Obnovit</string>
     <string name="error">Chyba</string>
@@ -16,8 +15,6 @@
     <string name="connecting">Připojuji</string>
     <string name="disconnected">Odpojeno</string>
     <string name="androidaps_start">AAPS spuštěno</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -27,11 +24,9 @@
     <string name="pumpbusy">Pumpa je zaneprázdněna</string>
     <string name="connectionerror">Chyba připojování pumpy</string>
     <string name="objectives">Cíle</string>
-    <string name="close">Zavřít</string>
     <string name="please_wait">Počkejte prosím…</string>
     <string name="mute">Ztlumit</string>
     <string name="reload">Znovu načíst</string>
-    <string name="stoppressed">STISKNUTO STOP</string>
     <string name="stop">Stop</string>
     <string name="carbs">Sacharidy</string>
     <string name="invalid_profile">Neplatný profil!</string>
@@ -50,10 +45,10 @@
     <string name="basal_long_label">Bazál</string>
     <string name="target_long_label">Cílová glykémie</string>
     <string name="initializing">Inicializuji ...</string>
-    <string name="serialnumber">Sériové číslo</string>
+    <string name="serial_number">Sériové číslo</string>
     <string name="battery_label">Baterie</string>
-    <string name="lastconnection_label">Poslední spojení</string>
-    <string name="lastbolus_label">Poslední bolus</string>
+    <string name="last_connection_label">Poslední spojení</string>
+    <string name="last_bolus_label">Poslední bolus</string>
     <string name="dailyunits">Jednotek za den</string>
     <string name="base_basal_rate_label">Základní hodnota bazálu</string>
     <string name="tempbasal_label">Dočasný bazál</string>
@@ -452,11 +447,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bazál</string>
     <string name="basalpct">Bazál %</string>
-    <string name="count_selected">Vybráno: %1$d</string>
-    <string name="sort_label">Seřadit</string>
-    <string name="remove_items">Odebrat položky</string>
-    <string name="sort_items">Seřadit položky</string>
-    <string name="remove_selected_items">Odebrat vybrané položky</string>
     <string name="a11y_file">soubor</string>
     <string name="a11y_user">uživatel</string>
     <!-- Autotune -->
@@ -539,6 +529,16 @@
     <string name="wizard_explain_tt">Doč. cíl: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s – %2$s</string>
     <string name="wizard_pump_not_available">Pumpa není k dispozici!</string>
+    <!--    Preferences-->
+    <string name="child">Dítě</string>
+    <string name="teenage">Dospívající</string>
+    <string name="adult">Dospělý</string>
+    <string name="resistant_adult">Dospělý s nízkou citlivostí</string>
+    <string name="pregnant">Těhotenství</string>
+    <string name="patient_age_summary">Prosím vyberte typ pacienta pro nastavení bezpečnostních limitů</string>
+    <string name="max_bolus_title">Maximální povolený bolus [U]</string>
+    <string name="max_carbs_title">Maximální počet sacharidů [g]</string>
+    <string name="patient_type">Typ pacienta</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>

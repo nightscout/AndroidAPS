@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Επικίνδυνη χρήση: η αντλία χρησιμοποιεί διαφορετικό προφίλ βασικού από το πρώτο. Το κύκλωμα έχει σταματήσει. Επιλέξτε το πρώτο προφίλ στην αντλία και ανανεώστε.</string>
     <string name="bolus_frequency_exceeded">Ένα bolus με την ίδια ποσότητα ζητήθηκε τα τελευταία 2 λεπτά. Για την αποφυγή κατά λάθους διπλών bolus και για ασφάλεια από λάθος του προγράμματος αυτό απαγορεύεται.</string>
     <string name="combo_pump_connected_now">Τώρα</string>
-    <string name="combo_activity_reading_pump_history">Ανάγνωση ιστορικού αντλίας</string>
     <string name="combo_activity_setting_basal_profile">Ρύθμιση βασικού προφίλ</string>
     <string name="combo_pump_cartridge_low_warrning">Η στάθμη της αμπούλας της αντλίας είναι χαμηλά</string>
     <string name="combo_pump_battery_low_warrning">Η μπαταρία της αντλίας είναι χαμηλά</string>
@@ -51,4 +50,5 @@
     <string name="bolusstopped">Το bolus σταμάτησε</string>
     <string name="bolusstopping">Το bolus σταματάει</string>
     <string name="combo_error_display_never">Ποτέ</string>
+    <string name="unsafeusage">μη ασφαλής χρήση</string>
 </resources>

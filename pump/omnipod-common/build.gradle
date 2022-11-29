@@ -17,11 +17,15 @@ android {
 }
 
 dependencies {
-    implementation project(':libraries')
-    implementation project(':core:core-main')
-    implementation project(':app-wear-shared:rx')
+    implementation project(':core:libraries')
+    implementation project(':core:interfaces')
+    implementation project(':core:ui')
+    implementation project(':core:utils')
     implementation project(':app-wear-shared:shared')
-    implementation project(':interfaces')
 
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
+    api "androidx.fragment:fragment-ktx:$fragmentktx_version"
+    api "androidx.navigation:navigation-fragment-ktx:$nav_version"
+
+    api "com.google.android.material:material:$material_version"
 }

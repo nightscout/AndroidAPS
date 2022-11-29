@@ -1,20 +1,21 @@
 package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.comm.MessageOriginalNames.getName
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.TemporaryBasalStorage
 import info.nightscout.androidaps.utils.CRC.getCrc16
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.pump.dana.DanaPump
+import info.nightscout.pump.dana.database.DanaHistoryRecordDao
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -50,6 +51,7 @@ open class MessageBase(injector: HasAndroidInjector) {
     @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
+    @Inject lateinit var uiInteraction: UiInteraction
 
     var injector: HasAndroidInjector
     var buffer = ByteArray(512)

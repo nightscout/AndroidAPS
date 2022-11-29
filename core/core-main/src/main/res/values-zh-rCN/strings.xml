@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">刷新</string>
     <string name="error">错误</string>
@@ -15,8 +14,6 @@
     <string name="bolusdelivering">正在输注 %1$.2f U</string>
     <string name="connecting">正在连接</string>
     <string name="disconnected">已断开连接</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d 克</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -26,11 +23,9 @@
     <string name="pumpbusy">胰岛素泵忙碌中</string>
     <string name="connectionerror">泵连接错误</string>
     <string name="objectives">目标</string>
-    <string name="close">关闭</string>
     <string name="please_wait">请稍等...</string>
     <string name="mute">静音</string>
     <string name="reload">重新加载</string>
-    <string name="stoppressed">停止键按下了</string>
     <string name="stop">停止</string>
     <string name="carbs">碳水化合物</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -47,10 +42,10 @@
     <string name="basal_long_label">基础率</string>
     <string name="target_long_label">血糖目标</string>
     <string name="initializing">正在初始化</string>
-    <string name="serialnumber">序列号</string>
+    <string name="serial_number">序列号</string>
     <string name="battery_label">电池</string>
-    <string name="lastconnection_label">上次连接</string>
-    <string name="lastbolus_label">上次大剂量</string>
+    <string name="last_connection_label">上次连接</string>
+    <string name="last_bolus_label">上次大剂量</string>
     <string name="dailyunits">每日单位数</string>
     <string name="base_basal_rate_label">基础率</string>
     <string name="tempbasal_label">临时基础率</string>
@@ -436,11 +431,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">基础率</string>
     <string name="basalpct">基础率 %</string>
-    <string name="count_selected">已选中 %1$d 项</string>
-    <string name="sort_label">排序</string>
-    <string name="remove_items">删除项目</string>
-    <string name="sort_items">项目排序</string>
-    <string name="remove_selected_items">删除选中项</string>
     <string name="a11y_file">文件</string>
     <string name="a11y_user">用户</string>
     <!-- Autotune -->
@@ -517,6 +507,7 @@
     <string name="wizard_explain_tt">临时目标：%1$s</string>
     <string name="wizard_explain_tt_to">%1$s 至 %2$s</string>
     <string name="wizard_pump_not_available">没有可用的泵！</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="other">%1$d　天</item>
     </plurals>

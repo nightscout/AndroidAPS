@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- NSClient -->
+    <string name="ns_cellular">Koristite mobilnu vezu</string>
+    <string name="ns_wifi">Koristite WiFi vezu</string>
+    <string name="ns_charging">Tijekom punjenja</string>
+    <string name="ns_battery">Na bateriji</string>
+    <string name="description_ns_client">Sinkroniziraj svoje podatke sa Nightscout</string>
+    <string name="blocked_by_charging">Blokirano opcijama punjenja</string>
+    <string name="blocked_by_connectivity">Blokirano opcijama povezivanja</string>
+    <!-- NSClient -->
+    <string name="ns_client_url_title">Nightscout URL</string>
+    <string name="ns_upload_summary">Profili, bolusi, ugljikohidrati, privremeni bazali učitavaju se u NS</string>
+    <string name="ns_upload">Upload podataka u NS</string>
+    <string name="ns_receive_profile_store">Primite pohranu profila</string>
+    <string name="ns_receive_profile_store_summary">Sinkronizirajte profile iz NS uređivača profila</string>
+    <string name="ns_receive_temp_target">Primanje privremenih ciljeva</string>
+    <string name="ns_receive_temp_target_summary">Prihvatite privremene ciljeve unesene putem NS ili NSClient</string>
+    <string name="ns_receive_profile_switch">Primite promjene profila</string>
+    <string name="ns_receive_profile_switch_summary">Prihvatite promjene profila unesene putem NS ili NSClient</string>
+    <string name="ns_receive_offline_event">Primajte izvanmrežne APS događaje</string>
+    <string name="ns_receive_offline_event_summary">Prihvatite APS Offline događaje unesene putem NS ili NSClient</string>
+    <string name="ns_receive_tbr_eb">Primi TBR i EB</string>
+    <string name="ns_receive_tbr_eb_summary">Prihvatite TBR i EB unesene kroz drugu instancu</string>
+    <string name="ns_receive_insulin">Primiti inzulin</string>
+    <string name="ns_receive_insulin_summary">Prihvatite inzulin unesen putem NS ili NSClijenta (ne isporučuje se, samo se obračunava prema IOB-u)</string>
+    <string name="ns_receive_carbs">Primajte ugljikohidrate</string>
+    <string name="ns_receive_carbs_summary">Prihvatite ugljikohidrate unesene putem NS ili NSClijenta</string>
+    <string name="ns_receive_therapy_events">Primajte terapijske događaje</string>
+    <string name="ns_receive_therapy_events_summary">Prihvati terapijske događaje (kanila, inzulin, promjena baterije itd.) unesene putem NS ili NSClijenta</string>
+    <string name="ns_receive_cgm">Primanje/ispunjavanje CGM podataka</string>
+    <string name="ns_receive_cgm_summary">Prihvati CGM podatke iz NS-a</string>
+    <string name="ns_sync_slow">Usporite prijenose</string>
+    <string name="ns_alarm_options">Mogućnosti alarma</string>
+    <string name="ns_alarms">Kreirajte obavijesti iz NS alarma</string>
+    <string name="ns_announcements">Kreirajte obavijesti iz NS najava</string>
+    <string name="ns_alarm_stale_data_value_label">Prag zastarjelih podataka [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Hitan prag zastarjelih podataka [min]</string>
+    <string name="ns_log_app_started_event">Prijavite pokretanje aplikacije u NS</string>
+    <string name="ns_local_broadcasts">Omogućite emitiranje u druge aplikacije (kao što je xDrip+). Nemojte omogućiti ako imate instalirano više od jedne instance AAPS ili AAPSClient!</string>
+    <string name="ns_local_broadcasts_title">Omogući lokalne emisije.</string>
+    <!-- Tidepool -->
+    <string name="summary_tidepool_username">Vaše korisničko ime za prijavu na Tidepool, obično vaša adresa e-pošte</string>
+    <string name="title_tidepool_username">Korisničko ime za prijavu</string>
+    <string name="summary_tidepool_password">Vaša lozinka za prijavu na Tidepool</string>
+    <string name="title_tidepool_password">Vaša lozinka za prijavu</string>
+    <string name="title_tidepool_test_login">Testirajte Tidepool prijavu</string>
+    <string name="summary_tidepool_dev_servers">Ako je omogućeno, prijenosi će ići na https://int-app.tidepool.org umjesto na uobičajeni https://app.tidepool.org/</string>
+    <string name="title_tidepool_dev_servers">Koristite integracijske (testne) poslužitelje</string>
+    <string name="tidepool">Tidepool</string>
+    <string name="tidepool_shortname">TDP</string>
+    <string name="description_tidepool">Učitava podatke u Tidepool</string>
+    <string name="tidepool_upload_cgm">Učitajte CGM podatke</string>
+    <string name="tidepool_upload_bolus">Prijenos tretmana (inzulin, ugljikohidrati)</string>
+    <string name="tidepool_upload_tbr">Učitajte privremene bazale</string>
+    <string name="tidepool_upload_profile">Učitajte prekidače profila, privremene ciljeve</string>
+    <string name="tidepool_upload_bg">Učitajte testove glukoze u krvi</string>
+    <string name="remove_all">Ukloniti sve</string>
+    <string name="reset_start">Poništi početak</string>
+    <string name="upload_now">Pošalji sada</string>
+</resources>

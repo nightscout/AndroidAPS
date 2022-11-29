@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.logging.UserEntryLogger;
+import info.nightscout.interfaces.logging.UserEntryLogger;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.GetInternalSuspendTime;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchInternalSuspendTimeResponse;
 import info.nightscout.interfaces.pump.PumpSync;

@@ -35,17 +35,17 @@
     </RelativeLayout>
 
     <ListView
-        android:id="@+id/blescanner_listview"
+        android:id="@+id/ble_scanner_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
     <TextView
-        android:id="@+id/blescanner_nodevice"
+        android:id="@+id/ble_scanner_no_device"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:gravity="center"
-        android:text="@string/danars_nodeviceavailable"
+        android:text="@string/danars_no_device_available"
         android:textColor="#FF7F8288" />
 
 </LinearLayout>

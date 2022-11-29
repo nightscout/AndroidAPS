@@ -4,19 +4,21 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.androidaps.dana.DanaPump
-import info.nightscout.androidaps.dana.database.DanaHistoryRecordDao
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.comm.MessageBase
-import info.nightscout.androidaps.plugins.pump.common.bolusInfo.DetailedBolusInfoStorage
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.profile.ProfileInstantiator
+import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.pump.dana.DanaPump
+import info.nightscout.pump.dana.database.DanaHistoryRecordDao
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -44,12 +46,14 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
+    @Mock lateinit var profileInstantiator: ProfileInstantiator
+    @Mock lateinit var uiInteraction: UiInteraction
 
     private lateinit var testPumpPlugin: TestPumpPlugin
 
     @Before
     fun setup() {
-        danaPump = DanaPump(aapsLogger, sp, dateUtil, injector)
+        danaPump = DanaPump(aapsLogger, sp, dateUtil, profileInstantiator)
         testPumpPlugin = TestPumpPlugin(injector)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         doNothing().`when`(danaRKoreanPlugin).setPluginEnabled(anyObject(), anyBoolean())
@@ -75,6 +79,7 @@ open class DanaRTestBase : TestBase() {
                 it.commandQueue = commandQueue
                 it.pumpSync = pumpSync
                 it.danaHistoryRecordDao = danaHistoryRecordDao
+                it.uiInteraction = uiInteraction
             }
         }
     }

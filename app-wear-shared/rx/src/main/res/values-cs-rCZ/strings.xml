@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="connecting_for">Připojování %1$d sec</string>
-    <string name="handshaking">Navazování spojení</string>
-    <string name="connected">Připojeno</string>
-    <string name="disconnecting">Odpojuji</string>
-    <string name="waiting_for_disconnection">Čekám na odpojení</string>
-</resources>

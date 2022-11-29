@@ -219,7 +219,7 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
 
-                <info.nightscout.androidaps.utils.ui.IcProfileGraph
+                <info.nightscout.core.graph.IcProfileGraph
                     android:id="@+id/ic_graph"
                     android:layout_width="match_parent"
                     android:layout_height="100dip"
@@ -240,7 +240,7 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
 
-                <info.nightscout.androidaps.utils.ui.IsfProfileGraph
+                <info.nightscout.core.graph.IsfProfileGraph
                     android:id="@+id/isf_graph"
                     android:layout_width="match_parent"
                     android:layout_height="100dip"
@@ -261,7 +261,7 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
 
-                <info.nightscout.androidaps.utils.ui.BasalProfileGraph
+                <info.nightscout.core.graph.BasalProfileGraph
                     android:id="@+id/basal_graph"
                     android:layout_width="match_parent"
                     android:layout_height="100dip"
@@ -282,7 +282,7 @@
                     android:layout_marginBottom="10dp"
                     android:orientation="vertical" />
 
-                <info.nightscout.androidaps.utils.ui.TargetBgProfileGraph
+                <info.nightscout.core.graph.TargetBgProfileGraph
                     android:id="@+id/target_graph"
                     android:layout_width="match_parent"
                     android:layout_height="100dip"

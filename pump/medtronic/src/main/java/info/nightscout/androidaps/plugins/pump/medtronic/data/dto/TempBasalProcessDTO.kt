@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto
 
-import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntryType
+import info.nightscout.core.utils.DateTimeUtil
 import info.nightscout.rx.logging.AAPSLogger
 
 class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
@@ -48,17 +48,17 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
                         return 0
                     }
                 } else if (itemTwoRewind!=null) {
-                    val secondsDiff = DateTimeUtil.getATechDateDiferenceAsSeconds(itemOne.atechDateTime, DateTimeUtil.getATDWithAddedSeconds(itemTwo!!.atechDateTime, -2))
+                    val secondsDiff = DateTimeUtil.getATechDateDifferenceAsSeconds(itemOne.atechDateTime, DateTimeUtil.getATDWithAddedSeconds(itemTwo!!.atechDateTime, -2))
                     return secondsDiff
                 } else {
                     //aapsLogger.debug(LTag.PUMP, "Found 2 items for duration: itemOne=$itemOne, itemTwo=$itemTwo")
-                    val secondsDiff = DateTimeUtil.getATechDateDiferenceAsSeconds(itemOne.atechDateTime, itemTwo!!.atechDateTime)
+                    val secondsDiff = DateTimeUtil.getATechDateDifferenceAsSeconds(itemOne.atechDateTime, itemTwo!!.atechDateTime)
                     //aapsLogger.debug(LTag.PUMP, "Difference in seconds: $secondsDiff")
                     return secondsDiff
                 }
             } else {
                 //aapsLogger.debug(LTag.PUMP, "Found 2 items for duration (in SuspendMode): itemOne=$itemOne, itemTwo=$itemTwo")
-                val secondsDiff = DateTimeUtil.getATechDateDiferenceAsSeconds(itemOne.atechDateTime, itemTwo!!.atechDateTime)
+                val secondsDiff = DateTimeUtil.getATechDateDifferenceAsSeconds(itemOne.atechDateTime, itemTwo!!.atechDateTime)
                 //aapsLogger.debug(LTag.PUMP, "Difference in seconds: $secondsDiff")
                 return secondsDiff
             }

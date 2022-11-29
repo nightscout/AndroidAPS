@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Ús no segur: la bomba utilitza un perfil de basal diferent del primer. El llaç ha estat desactivat. Seleccioneu el primer perfil a la bomba i refresqueu.</string>
     <string name="bolus_frequency_exceeded">Fa menys de 2 minuts s\'ha sol·licitat un altre bolus de la mateixa mida. Això no està permès per evitar dobles bolus accidentals i possibles errors de funcionament.</string>
     <string name="combo_pump_connected_now">Ara</string>
-    <string name="combo_activity_reading_pump_history">Llegint històric bomba</string>
     <string name="combo_activity_setting_basal_profile">Establint perfil basal</string>
     <string name="combo_pump_cartridge_low_warrning">Dipòsit d\'insulina bastant buit</string>
     <string name="combo_pump_battery_low_warrning">Bateria baixa</string>
@@ -52,4 +51,5 @@
     <string name="bolusstopped">Bolus aturat</string>
     <string name="bolusstopping">Aturant bolus</string>
     <string name="combo_error_display_never">Mai</string>
+    <string name="unsafeusage">ús no segur</string>
 </resources>

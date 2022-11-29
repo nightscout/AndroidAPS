@@ -3,7 +3,7 @@ package info.nightscout.androidaps.pump.common.utils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil;
+import info.nightscout.core.utils.DateTimeUtil;
 
 public class DateTimeUtilUTest {
 
@@ -13,7 +13,7 @@ public class DateTimeUtilUTest {
         long dt1 = 20191001182301L;
         long dt2 = 20191001192805L;
 
-        int aTechDateDifferenceAsMinutes = DateTimeUtil.getATechDateDiferenceAsMinutes(dt1, dt2);
+        int aTechDateDifferenceAsMinutes = DateTimeUtil.getATechDateDifferenceAsMinutes(dt1, dt2);
 
         Assert.assertEquals(65, aTechDateDifferenceAsMinutes);
 

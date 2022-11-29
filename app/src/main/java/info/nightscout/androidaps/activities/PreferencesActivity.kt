@@ -9,9 +9,10 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityPreferencesBinding
-import info.nightscout.interfaces.locale.LocaleHelper
+import info.nightscout.configuration.activities.DaggerAppCompatActivityWithResult
+import info.nightscout.core.ui.locale.LocaleHelper
 
-class PreferencesActivity : NoSplashAppCompatActivity(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
+class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
     private var preferenceId = 0
     private var myPreferenceFragment: MyPreferenceFragment? = null

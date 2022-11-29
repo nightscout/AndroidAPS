@@ -2,17 +2,16 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.task
 
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkTargetFrequency
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkError
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.defs.RileyLinkServiceState
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.RileyLinkServiceData
+import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.utils.Round.isSame
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import kotlin.math.roundToLong

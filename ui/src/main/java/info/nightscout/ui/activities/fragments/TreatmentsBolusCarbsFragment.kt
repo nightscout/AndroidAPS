@@ -16,13 +16,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.events.EventNewHistoryData
-import info.nightscout.androidaps.extensions.iobCalc
-import info.nightscout.androidaps.logging.UserEntryLogger
-import info.nightscout.androidaps.utils.ActionModeHelper
-import info.nightscout.core.fabric.FabricPrivacy
+import info.nightscout.core.extensions.iobCalc
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.ActionModeHelper
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
@@ -34,12 +33,13 @@ import info.nightscout.database.impl.transactions.CutCarbsTransaction
 import info.nightscout.database.impl.transactions.InvalidateBolusCalculatorResultTransaction
 import info.nightscout.database.impl.transactions.InvalidateBolusTransaction
 import info.nightscout.database.impl.transactions.InvalidateCarbsTransaction
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientRestart
+import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventTreatmentChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -68,7 +68,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var config: Config
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
@@ -216,18 +216,18 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             holder.binding.bolusLayout.visibility = (ml.bolus != null && (ml.bolus.isValid || showInvalidated)).toVisibility()
             ml.bolus?.let { bolus ->
                 holder.binding.bolusTime.text = dateUtil.timeString(bolus.timestamp)
-                holder.binding.insulin.text = rh.gs(R.string.formatinsulinunits, bolus.amount)
+                holder.binding.insulin.text = rh.gs(R.string.format_insulin_units, bolus.amount)
                 holder.binding.bolusNs.visibility = (bolus.interfaceIDs.nightscoutId != null).toVisibility()
                 holder.binding.bolusPump.visibility = (bolus.interfaceIDs.pumpId != null).toVisibility()
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
                 if (iob.iobContrib > 0.01) {
                     holder.binding.iob.setTextColor(rh.gac(context, R.attr.activeColor))
-                    holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, iob.iobContrib)
+                    holder.binding.iob.text = rh.gs(R.string.format_insulin_units, iob.iobContrib)
                     holder.binding.iobLabel.visibility = View.VISIBLE
                     holder.binding.iob.visibility = View.VISIBLE
                 } else {
-                    holder.binding.iob.text = rh.gs(R.string.formatinsulinunits, 0.0)
+                    holder.binding.iob.text = rh.gs(R.string.format_insulin_units, 0.0)
                     holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
                     holder.binding.iobLabel.visibility = View.GONE
                     holder.binding.iob.visibility = View.GONE
@@ -306,7 +306,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_carbs_bolus, menu)
         updateMenuVisibility()
-        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_insulin, false) || !sp.getBoolean(R.string.key_ns_receive_carbs, false) || !buildHelper.isEngineeringMode()
+        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_insulin, false) || !sp.getBoolean(R.string.key_ns_receive_carbs, false) || !config.isEngineeringMode()
         menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
         val hasItems = (binding.recyclerview.adapter?.itemCount ?: 0) > 0
         menu.findItem(R.id.nav_delete_future)?.isVisible = hasItems
@@ -434,7 +434,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
             val mealLink = selectedItems.valueAt(0)
             val bolus = mealLink.bolus
             if (bolus != null)
-                return rh.gs(R.string.configbuilder_insulin) + ": " + rh.gs(R.string.formatinsulinunits, bolus.amount) + "\n" +
+                return rh.gs(R.string.configbuilder_insulin) + ": " + rh.gs(R.string.format_insulin_units, bolus.amount) + "\n" +
                     rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(bolus.timestamp)
             val carbs = mealLink.carbs
             if (carbs != null)

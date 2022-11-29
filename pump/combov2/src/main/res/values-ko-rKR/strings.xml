@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="combov2_plugin_name">아큐-첵 콤보</string>
+    <string name="combov2_error_2">배터리 방전됨</string>
+    <string name="combov2_error_4">막힘</string>
+    <string name="combov2_error_6">기계적인 오류</string>
+    <string name="bluetooth_address">블루투스 주소</string>
+    <string name="combov2_suspended">중지됨</string>
+    <string name="combov2_setting_basal_profile_cmddesc">Basal 프로파일 설정</string>
+    <string name="combov2_bolus_cancelled">Bolus 취소</string>
+    <string name="combov2_bolus_delivery_failed">Bolus 주입이 실패하였습니다. 주입된 Bolus가 없는 것으로 보입니다. 이중으로 Bolus가 주입되는 것을 방지하기 위해 펌프를 확인한 다음 다시 Bolus를 주입하세요. 버그를 방지하기 위해 Bolus 주입이 자동으로 재시도되지 않습니다.</string>
+    <string name="combov2_current_tbr">%1$d%% (%2$d분 남음)</string>
+    <string name="combov2_battery_low_warning">펌프배터리가 부족합니다.</string>
+    <string name="combov2_short_status_last_connection">마지막 연결: %1$d 분 전</string>
+    <string name="combov2_short_status_temp_basal">임시: %s</string>
+    <string name="combov2_short_status_reservoir">잔여 인슐린 양: %d U</string>
+    <string name="combov2_short_status_battery_state_empty">비어 있음</string>
+    <string name="combov2_short_status_battery_state_low">소</string>
+</resources>

@@ -19,7 +19,6 @@
     <string name="combo_force_disabled_notification">Usikker anvendelse: Pumpen bruger en anden basalrate profil end den første. Loop er blevet deaktiveret. Vælg den første profil på pumpen og opdater.</string>
     <string name="bolus_frequency_exceeded">Der blev anmodet om en bolus med samme dosis inden for de sidste to minutter. For at forhindre utilsigtet dobbelt bolusser og at beskytte mod fejl er dette ikke tilladt.</string>
     <string name="combo_pump_connected_now">Nu</string>
-    <string name="combo_activity_reading_pump_history">Læser pumpehistorik</string>
     <string name="combo_activity_setting_basal_profile">Indstiller basal profil</string>
     <string name="combo_pump_cartridge_low_warrning">Pumpe insulinampul niveau er lavt</string>
     <string name="combo_pump_battery_low_warrning">Pumpebatteri er lavt</string>
@@ -57,4 +56,5 @@
     <string name="combo_error_display_never">Aldrig</string>
     <string name="combo_error_display_error">Ved Fejl</string>
     <string name="combo_error_display_always">Altid</string>
+    <string name="unsafeusage">usikker brug</string>
 </resources>

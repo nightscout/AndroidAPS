@@ -14,68 +14,25 @@ apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
 
 dependencies {
-    implementation project(':graphview')
-    implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
-    implementation project(':database:impl')
-    implementation project(':interfaces')
+    implementation project(':core:graph')
+    implementation project(':core:interfaces')
     implementation project(':core:ui')
+    implementation project(':core:utils')
 
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
-    api "org.jetbrains.kotlin:kotlin-reflect:$kotlin_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-guava:$coroutines_version"
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutines_version"
+
+    api 'com.google.guava:guava:31.1-jre'
 
     api "androidx.activity:activity-ktx:$activity_version"
     api "androidx.appcompat:appcompat:$appcompat_version"
 
-    api 'androidx.biometric:biometric:1.1.0'
-
-    api 'androidx.cardview:cardview:1.0.0'
-    api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
-    api "androidx.core:core-ktx:$core_version"
-    api "androidx.fragment:fragment-ktx:$fragmentktx_version"
-    api 'androidx.legacy:legacy-support-v13:1.0.0'
-    api 'androidx.legacy:legacy-support-v4:1.0.0'
-    api "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
-    api "androidx.lifecycle:lifecycle-process:$lifecycle_version"
-    api "androidx.navigation:navigation-fragment-ktx:$nav_version"
-    api "androidx.navigation:navigation-runtime-ktx:$nav_version"
-    api "androidx.navigation:navigation-ui-ktx:$nav_version"
-    api 'androidx.percentlayout:percentlayout:1.0.0'
-    api 'androidx.recyclerview:recyclerview:1.2.1'
-
-    api 'androidx.gridlayout:gridlayout:1.0.0'
-
-    api "com.google.android.material:material:$material_version"
-
     api "com.google.dagger:dagger-android:$dagger_version"
     api "com.google.dagger:dagger-android-support:$dagger_version"
 
-    api "com.google.android.gms:play-services-wearable:$play_services_wearable_version"
-    api "com.google.android.gms:play-services-location:$play_services_location_version"
-
-    api 'com.google.guava:guava:31.1-jre'
-
-    api "androidx.work:work-rxjava3:$work_version"
-
-
-    //CryptoUtil
-    api 'com.madgag.spongycastle:core:1.58.0.0'
-    api "com.google.crypto.tink:tink-android:$tink_version"
-
     //WorkManager
-    api "androidx.work:work-runtime:$work_version"
-    api "androidx.work:work-runtime-ktx:$work_version"
-    //api "androidx.work:work-rxjava3:$work_version"
-    //api 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
-
-
-    api "commons-codec:commons-codec:$commonscodec_version"
-
+    api "androidx.work:work-runtime-ktx:$work_version" // DataWorkerStorage
 }
 
 android {

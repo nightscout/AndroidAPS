@@ -2,6 +2,7 @@ package info.nightscout.androidaps.plugins.iob.iobCobCalculator
 
 import android.content.Context
 import info.nightscout.androidaps.TestBase
+import info.nightscout.core.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T

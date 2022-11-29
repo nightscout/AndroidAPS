@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="constraint_applied">Aplikované obmedzenie!</string>
     <string name="bolus_constraint_applied">Aplikované obmedzenie bolusu</string>
     <string name="carbs_constraint_applied">Aplikované obmedzenie sacharidov</string>
     <string name="temp_target_short">TT</string>
@@ -36,17 +35,19 @@
     <string name="format_bg_isf">%1$s ISF: %2$.1f</string>
     <string name="format_cob_ic">%1$.1fg IC: %2$.1f</string>
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
-    <string name="superbolus">Superbolus</string>
     <string name="treatments_wizard_total_label">Spolu</string>
     <!-- FillDialog -->
-    <string name="button1">Tlačidlo 1</string>
-    <string name="button2">Tlačidlo 2</string>
-    <string name="button3">Tlačidlo 3</string>
+    <string name="fill_warning">Prosím uistite sa, že hodnota zodpovedá špecifikácií Vášho setu!</string>
     <string name="record_pump_site_change">Zaznamenať výmenu setu</string>
     <string name="record_insulin_cartridge_change">Zaznamenať výmenu inzulínu</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Nepodať bolus, iba zaznamenať</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Znovu použiť %1$d%% %2$dh</string>
+    <string name="timeshift_label">Posun času</string>
+    <string name="percentage_label">% zmena</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Pozastaviť uzavretý okruh na 1 h</string>
     <string name="suspendloopfor2h">Pozastaviť uzavretý okruh na 2 h</string>
     <string name="suspendloopfor3h">Pozastaviť uzavretý okruh na 3 h</string>
     <string name="suspendloopfor10h">Pozastaviť uzavretý okruh na 10 h</string>
@@ -67,6 +68,7 @@
     <!-- WizardDialog -->
     <string name="a11_correction_percentage">správny výsledok v %</string>
     <string name="a11_correction_units">správny výsledok s jednotkami</string>
+    <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Výsledok: %1$s %2$s</string>
     <string name="missing_carbs">Chýba %1$d g</string>
     <string name="a11y_current_bg">aktuálna glykémia</string>
@@ -85,8 +87,6 @@
     <string name="tempbasals_netratio_label_string">Pomer:</string>
     <string name="tempbasals_netinsulin_label_string">Inz:</string>
     <string name="tempbasals_iob_label_string">IOB:</string>
-    <string name="tempbasals_iobtotal_label_string">Celkový IOB:</string>
-    <string name="treatments_wizard_tt_label">DC</string>
     <string name="treatments_wizard_correction_label">Korekcia</string>
     <string name="meal_bolus">Jedlo</string>
     <string name="prime">Plnenie</string>
@@ -107,7 +107,20 @@
     <string name="show_loop_records">Zobraziť záznamy uzavretého okruhu</string>
     <string name="show_hide_records">Skryť záznamy uzavretého okruhu</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Profil 1</string>
     <string name="profile2">Profil 2</string>
+    <string name="profile_type">Typ profilu</string>
+    <string name="basal_pct_from_tdd_label">% bazálu</string>
     <string name="selected_profile">Vybrané:</string>
+    <string name="compare_profile">Porovnať profily</string>
+    <string name="nav_profile_helper">Pomocník s profilom</string>
+    <string name="motol_default_profile">Predvolený profil</string>
+    <string name="current_profile">Aktuálny profil</string>
+    <string name="available_profile">Dostupný profil</string>
+    <string name="dpv_default_profile">Predvolený DPV profil</string>
+    <string name="invalid_pct">Neplatný vstup %</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Bazál</string>
+    <!--    BolusProgressDialog-->
+    <string name="stop_pressed">STLAČENÝ STOP</string>
 </resources>

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="missed_bg_readings">혈당 읽기가 누락되었습니다.</string>
-    <string name="request">요청</string>
     <string name="permission">권한</string>
-    <string name="alert_dialog_permission_battery_optimization_failed">이 장치는 배터리 최적화 화이트리스트를 지원하지 않습니다 - 성능 문제가 발생할 수 있습니다.</string>
     <!--       Stats -->
+    <string name="low" comment="3.1-3.9">저혈당</string>
+    <string name="high" comment="10.0-13.9">고혈당</string>
 </resources>

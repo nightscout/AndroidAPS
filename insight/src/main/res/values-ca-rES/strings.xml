@@ -6,7 +6,6 @@
     <string name="disable_vibration_summary">Per bolus i bolus estès (només disponible amb Insight firmware 3.x)</string>
     <string name="pump_stopped">Bomba aturada</string>
     <string name="pump_started">Bomba iniciada</string>
-    <string name="pump_paused">Bomba en pausa</string>
     <string name="short_status_extended">Estès: %1$.2f / %2$.2f U durant %3$d min</string>
     <string name="enable_tbr_emulation_summary">Feu servir bolus estès enlloc de TBR per sobrepassar el límit de 250%%</string>
 </resources>

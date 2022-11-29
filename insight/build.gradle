@@ -27,10 +27,9 @@ android {
 
 dependencies {
 
+    implementation project(':core:interfaces')
     implementation project(':core:core-main')
-    implementation project(':core:fabric')
-    implementation project(':interfaces')
-    implementation project(':app-wear-shared:rx')
+    implementation project(':core:utils')
     implementation project(':app-wear-shared:shared')
     implementation project(':pump:pump-common')
 
@@ -38,4 +37,6 @@ dependencies {
     api "androidx.room:room-runtime:$room_version"
     api "androidx.room:room-rxjava3:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
+
+    api "com.google.android.material:material:$material_version"
 }

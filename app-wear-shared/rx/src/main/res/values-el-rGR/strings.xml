@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="handshaking">Δημιουργία σύνδεσης</string>
-    <string name="connected">Συνδέθηκε</string>
-    <string name="disconnecting">Αποσυνδέεται</string>
-</resources>

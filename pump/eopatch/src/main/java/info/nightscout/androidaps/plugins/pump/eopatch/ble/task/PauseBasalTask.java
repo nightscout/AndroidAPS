@@ -9,13 +9,13 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.logging.UserEntryLogger;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode;
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmRegistry;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.api.BasalPause;
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
+import info.nightscout.interfaces.logging.UserEntryLogger;
 import info.nightscout.interfaces.pump.PumpSync;
 import info.nightscout.interfaces.queue.Callback;
 import info.nightscout.interfaces.queue.Command;

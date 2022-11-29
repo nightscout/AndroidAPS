@@ -1,5 +1,6 @@
 package info.nightscout.database.impl
 
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.annotations.DbOpenForTesting
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
@@ -949,7 +950,3 @@ inline fun <reified T : Any> Maybe<T>.toWrappedSingle(): Single<ValueWrapper<T>>
         .switchIfEmpty(Maybe.just(ValueWrapper.Absent()))
         .toSingle()
 
-sealed class ValueWrapper<T> {
-    data class Existing<T>(val value: T) : ValueWrapper<T>()
-    class Absent<T> : ValueWrapper<T>()
-}

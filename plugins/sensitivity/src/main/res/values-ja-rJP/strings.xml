@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="description_sensitivity_aaps">Sensitivity（感度）はOref0と同じ方法で計算されますが、過去の参照時間を指定することができます。 最小炭水化物吸収は環境設置の最大炭水化物吸収時間から計算されます。</string>
+</resources>

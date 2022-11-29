@@ -6,6 +6,12 @@ import android.provider.Telephony
 import androidx.work.Data
 import androidx.work.OneTimeWorkRequest
 import dagger.android.DaggerBroadcastReceiver
+import info.nightscout.core.utils.extensions.copyDouble
+import info.nightscout.core.utils.extensions.copyLong
+import info.nightscout.core.utils.extensions.copyString
+import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.interfaces.receivers.Intents
+import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.source.AidexPlugin
 import info.nightscout.plugins.source.DexcomPlugin
 import info.nightscout.plugins.source.EversensePlugin
@@ -14,10 +20,6 @@ import info.nightscout.plugins.source.MM640gPlugin
 import info.nightscout.plugins.source.PoctechPlugin
 import info.nightscout.plugins.source.TomatoPlugin
 import info.nightscout.plugins.source.XdripPlugin
-import info.nightscout.androidaps.utils.extensions.copyDouble
-import info.nightscout.androidaps.utils.extensions.copyLong
-import info.nightscout.androidaps.utils.extensions.copyString
-import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.BundleLogger
 import info.nightscout.rx.logging.LTag

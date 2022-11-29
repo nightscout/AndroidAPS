@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Împerechere</string>
-    <string name="danars_nodeviceavailable">Niciun dispozitiv găsit până acum</string>
+    <string name="danars_no_device_available">Niciun dispozitiv găsit până acum</string>
     <string name="danars_pairingok">Conectare OK</string>
     <string name="danars_pairingtimedout">Conectare nereușită</string>
     <string name="danars_waitingforpairing">Se așteaptă conectarea la pompă</string>
@@ -65,20 +65,20 @@
     <string name="danar_history_refill">Reumplere</string>
     <string name="danar_history_syspend">Suspendare</string>
     <string name="danar_history_prime">Amorsare</string>
-    <string name="danar_useroptions">Opțiunile utilizatorului</string>
-    <string name="danar_timedisplay">Formatul de afișare a timpului</string>
-    <string name="danar_buttonscroll">Buton derulare</string>
+    <string name="danar_user_options">Opțiunile utilizatorului</string>
+    <string name="danar_time_display">Formatul de afișare a timpului</string>
+    <string name="danar_button_scroll">Buton derulare</string>
     <string name="danar_beep">Sunet la apăsarea butonului</string>
-    <string name="danar_pumpalarm">Alarmă</string>
-    <string name="danar_pumpalarm_sound">Sunet</string>
-    <string name="danar_pumpalarm_vibrate">Vibrație</string>
-    <string name="danar_pumpalarm_both">Ambele</string>
-    <string name="danar_screentimeout">Timp stingere ecran [seconds]</string>
+    <string name="danar_pump_alarm">Alarmă</string>
+    <string name="danar_pump_alarm_sound">Sunet</string>
+    <string name="danar_pump_alarm_vibrate">Vibrație</string>
+    <string name="danar_pump_alarm_both">Ambele</string>
+    <string name="danar_screen_timeout">Timp stingere ecran [seconds]</string>
     <string name="danar_backlight">Timp lumină de fundal [seconds]</string>
-    <string name="danar_glucoseunits">Unități glicemie</string>
+    <string name="danar_glucose_units">Unități glicemie</string>
     <string name="danar_shutdown">Oprire [hours]</string>
-    <string name="danar_lowreservoir">Rezervor aproape gol [Units]</string>
-    <string name="danar_saveuseroptions">Salvați opțiunile în pompă</string>
+    <string name="danar_low_reservoir">Rezervor aproape gol [Units]</string>
+    <string name="danar_save_user_options">Salvați opțiunile în pompă</string>
     <string name="description_pump_dana_r">Integrare cu pompele DANA Diabcare R</string>
     <string name="description_pump_dana_r_korean">Integrare cu pompele DANA Diabcare R coreene</string>
     <string name="description_pump_dana_r_v2">Integrare cu pompele DANA Diabcare R cu firmware upgradat</string>
@@ -94,10 +94,10 @@
     <string name="profile_set_failed">Setarea profilului bazalei a eșuat</string>
     <string name="danar_bluetooth_status">Status Bluetooth</string>
     <string name="danar_iob_label">IOB din pompă</string>
-    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Setări pompă Dana</string>
-    <string name="timeformat12h">12h</string>
-    <string name="timeformat24h">24h</string>
+    <string name="time_format_12h">12h</string>
+    <string name="time_format_24h">24h</string>
     <string name="option_on">Pornit</string>
     <string name="option_off">Oprit</string>
     <string name="danar_bt_name_title">Dispozitive bluetooth DanaR</string>

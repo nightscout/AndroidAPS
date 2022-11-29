@@ -5,8 +5,6 @@ import android.app.AlarmManager.AlarmClockInfo
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
-import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.androidaps.plugins.pump.eopatch.EoPatchRxBus
 import info.nightscout.androidaps.plugins.pump.eopatch.OsAlarmReceiver
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.Companion.getUri
@@ -14,8 +12,10 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.PatchLifecycle
 import info.nightscout.androidaps.plugins.pump.eopatch.core.code.PatchAeCode
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
+import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.logging.AAPSLogger
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable

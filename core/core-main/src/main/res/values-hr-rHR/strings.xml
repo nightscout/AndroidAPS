@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Osvježi</string>
     <string name="error">Greška</string>
@@ -16,8 +15,6 @@
     <string name="connecting">Povezivanje</string>
     <string name="disconnected">Odspojen</string>
     <string name="androidaps_start">AAPS je počeo</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -27,11 +24,9 @@
     <string name="pumpbusy">Pumpa je zauzeta</string>
     <string name="connectionerror">Greška u spajanju pumpe</string>
     <string name="objectives">Ciljevi</string>
-    <string name="close">Zatvori</string>
     <string name="please_wait">Molimo pričekajte…</string>
     <string name="mute">Isključi zvuk</string>
     <string name="reload">Ponovno učitaj</string>
-    <string name="stoppressed">STOP PRITISNUT</string>
     <string name="stop">Zaustavi</string>
     <string name="carbs">UH</string>
     <string name="active"><![CDATA[<Active>]]></string>
@@ -48,10 +43,10 @@
     <string name="basal_long_label">Bazalna stopa</string>
     <string name="target_long_label">Ciljana razina glukoze u krvi</string>
     <string name="initializing">Pokretanje...</string>
-    <string name="serialnumber">Serijski broj</string>
+    <string name="serial_number">Serijski broj</string>
     <string name="battery_label">Baterija</string>
-    <string name="lastconnection_label">Zadnja uspostava veze</string>
-    <string name="lastbolus_label">Zadnji bolus</string>
+    <string name="last_connection_label">Zadnja uspostava veze</string>
+    <string name="last_bolus_label">Zadnji bolus</string>
     <string name="shortgram">g</string>
     <string name="pump_unreachable">Pumpa nedostupna</string>
     <string name="exit">Izlaz</string>
@@ -315,6 +310,7 @@
     <string name="no_action_selected">Nije odabrana radnja, ništa se neće dogoditi</string>
     <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dan</item>
         <item quantity="few">%1$d dana</item>

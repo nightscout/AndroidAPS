@@ -1,6 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolusdelivered">Bolus %1$.2f U lliurat correctament</string>
+    <string name="category_alerts">Alertes</string>
+    <string name="bolus_delivered">Bolus %1$.2f U llliurat correctament</string>
+    <string name="eopatch_status">Estat</string>
+    <string name="eopatch_base_basal_rate">Basal base</string>
+    <string name="eopatch_temp_basal_rate">Basal temporal</string>
+    <string name="eopatch_total_delivered">Total lliurat</string>
+    <string name="symbol_day">dia</string>
+    <string name="patch_finish">Finalitzar</string>
+    <string name="symbol_days">dies</string>
+    <string name="string_resume">Reprendre</string>
+    <string name="string_suspend">Suspendre</string>
+    <string name="string_suspended">En pausa</string>
+    <string name="string_running">Funcionant</string>
     <string name="cancel">Cancel·lar</string>
     <string name="confirm">Confirmar</string>
+    <string name="string_alarm">Alarma</string>
+    <string name="string_connecting">Connectant</string>
+    <string name="retry">Reintentar</string>
+    <string name="finish">Finalitzar</string>
+    <string name="next">Següent</string>
 </resources>

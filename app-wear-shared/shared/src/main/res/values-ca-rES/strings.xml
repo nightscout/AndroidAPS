@@ -18,4 +18,10 @@
     <string name="unit_weeks">setmanes</string>
     <string name="shortminute">m</string>
     <string name="shortday">d</string>
+    <!-- Rx -->
+    <string name="connecting_for">Connectant %1$d s</string>
+    <string name="handshaking">Establint comunicació</string>
+    <string name="connected">Connectat</string>
+    <string name="disconnecting">Desconnectant</string>
+    <string name="waiting_for_disconnection">S\'està esperant la desconnexió</string>
 </resources>

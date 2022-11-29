@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Parring</string>
-    <string name="danars_nodeviceavailable">Ingen enhed fundet indtil videre</string>
+    <string name="danars_no_device_available">Ingen enhed fundet indtil videre</string>
     <string name="danars_pairingok">Parring OK</string>
     <string name="danars_pairingtimedout">Parring fik timeout</string>
     <string name="danars_waitingforpairing">Venter på parring på pumpen</string>
@@ -65,20 +65,20 @@
     <string name="danar_history_refill">Genopfyld</string>
     <string name="danar_history_syspend">Suspendér</string>
     <string name="danar_history_prime">Klargør</string>
-    <string name="danar_useroptions">Brugerindstillinger</string>
-    <string name="danar_timedisplay">Visning af tidsformat</string>
-    <string name="danar_buttonscroll">Knap rulning</string>
+    <string name="danar_user_options">Brugerindstillinger</string>
+    <string name="danar_time_display">Visning af tidsformat</string>
+    <string name="danar_button_scroll">Knap rulning</string>
     <string name="danar_beep">Bip ved tryk på knap</string>
-    <string name="danar_pumpalarm">Alarm</string>
-    <string name="danar_pumpalarm_sound">Lyd</string>
-    <string name="danar_pumpalarm_vibrate">Vibrér</string>
-    <string name="danar_pumpalarm_both">Begge</string>
-    <string name="danar_screentimeout">LCD tændt tid [seconds]</string>
+    <string name="danar_pump_alarm">Alarm</string>
+    <string name="danar_pump_alarm_sound">Lyd</string>
+    <string name="danar_pump_alarm_vibrate">Vibrér</string>
+    <string name="danar_pump_alarm_both">Begge</string>
+    <string name="danar_screen_timeout">LCD tændt tid [seconds]</string>
     <string name="danar_backlight">Bagbelysning tændt tid [seconds]</string>
-    <string name="danar_glucoseunits">Glukose enheder</string>
+    <string name="danar_glucose_units">Glukose enheder</string>
     <string name="danar_shutdown">Nedlukning [hours]</string>
-    <string name="danar_lowreservoir">Lavt reservoir [Units]</string>
-    <string name="danar_saveuseroptions">Gem indstillinger på pumpen</string>
+    <string name="danar_low_reservoir">Lavt reservoir [Units]</string>
+    <string name="danar_save_user_options">Gem indstillinger på pumpen</string>
     <string name="description_pump_dana_r">Pumpeintegration til DANA Diabecare R pumper</string>
     <string name="description_pump_dana_r_korean">Pumpeintegration til DANA Diabecare R pumper, koreansk version</string>
     <string name="description_pump_dana_r_v2">Pumpeintegration til DANA Diabecare R pumper med opgraderet firmware (v2)</string>
@@ -94,10 +94,10 @@
     <string name="profile_set_failed">Indstilling af basal profil mislykkedes</string>
     <string name="danar_bluetooth_status">Bluetooth Status</string>
     <string name="danar_iob_label">Pumpe IOB</string>
-    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="firmware_label">Firmware</string>
     <string name="danar_pump_settings">Dana pumpe indstillinger</string>
-    <string name="timeformat12h">12t</string>
-    <string name="timeformat24h">24t</string>
+    <string name="time_format_12h">12t</string>
+    <string name="time_format_24h">24t</string>
     <string name="option_on">Tændt</string>
     <string name="option_off">Slukket</string>
     <string name="danar_bt_name_title">DanaR Bluetooth enhed</string>

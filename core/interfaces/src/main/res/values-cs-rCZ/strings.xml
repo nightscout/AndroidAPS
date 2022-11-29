@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Formát souboru</string>
+    <string name="metadata_label_created_at">Vytvořeno</string>
+    <string name="metadata_label_aaps_version">Verze AAPS</string>
+    <string name="metadata_label_aaps_flavour">Varianta sestavení</string>
+    <string name="metadata_label_device_name">Jméno pacienta použité při exportu</string>
+    <string name="metadata_label_device_model">Model zaříení použitý při exportu</string>
+    <string name="metadata_label_encryption">Šifrování souboru</string>
+    <string name="metadata_format_new">Nový zašifrovaný formát</string>
+    <string name="metadata_format_debug">Nový formát pro ladění (nešifrovaný)</string>
+    <string name="metadata_format_other">Neznámý formát souboru</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Pouze diskrétní hodnoty a ne rozsahy jsou podporovány pro bazál/bolus ve virtuální pumpě.</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Změněn ovladač pumpy.</string>
+    <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
+</resources>

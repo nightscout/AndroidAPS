@@ -1,5 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Refresh</string>
+    <string name="error">Error</string>
+    <string name="profile_set_ok">Basal profile in pump updated</string>
+    <string name="invalid_input">Invalid input data</string>
+    <string name="bolus_delivering">Delivering %1$.2f U</string>
+    <string name="constraint_applied">Constraint applied!</string>
+    <string name="tempbasals_iobtotal_label_string">Total IOB:</string>
+    <string name="tt_label">TT</string>
+    <string name="pump_unreachable">Pump unreachable</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Pump not initialized, profile not set!</string>
+    <string name="failed_update_basal_profile">Failed to update basal profile</string>
+    <string name="bolus_delivered">Bolus %1$.2f U delivered successfully</string>
+    <string name="no_valid_basal_rate">No valid basal rate read from pump</string>
+    <string name="limiting_iob">Limiting IOB to %1$.1f U because of %2$s</string>
+    <string name="loop_disabled">LOOP DISABLED BY CONSTRAINTS</string>
+    <string name="event_type">Event type</string>
+    <string name="reload">Reload</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Save</string>
+    <string name="snooze">Snooze</string>
+    <string name="virtual_pump">Virtual Pump</string>
+    <string name="constraints">Constraints</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pump paused</string>
+    <string name="and">And</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">User</string>
+    <string name="result">Result</string>
+    <string name="settings">Settings</string>
+    <string name="statuslights">Status lights</string>
+    <string name="do_ns_upload_title">Upload BG data to NS</string>
+    <string name="configbuilder_insulin">Insulin</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="master_password">Master password</string>
+    <string name="ue_export_to_csv">Export User Entries to Excel (csv)</string>
+    <string name="confirm">Confirm</string>
+    <string name="pump">Pump</string>
+    <string name="missed_bg_readings">Missed BG readings</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Mute for 5 minutes</string>
+    <string name="mute">Mute</string>
+    <string name="success">Success</string>
+    <string name="advancedsettings_title">Advanced Settings</string>
+
+    <!--    Protection-->
+    <string name="unlock_settings">Unlock settings</string>
+
+    <!--    Pumps -->
+    <string name="battery_label">Battery</string>
+    <string name="reservoir_label">Reservoir</string>
+    <string name="last_connection_label">Last connection</string>
+    <string name="last_bolus_label">Last bolus</string>
+    <string name="base_basal_rate_label">Base basal rate</string>
+    <string name="tempbasal_label">Temp basal</string>
+    <string name="extended_bolus_label">Extended bolus</string>
+    <string name="serial_number">Serial number</string>
+    <string name="disconnected">Disconnected</string>
+    <string name="connecting">Connecting</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Clicked connect to pump</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">Daily units</string>
+    <string name="pump_icon">Pump icon</string>
+    <string name="view_profile">View profile</string>
+    <string name="pump_history">Pump history</string>
+    <string name="stats">Stats</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pump driver change.</string>
+    <string name="device_changed" comment="26 characters max for translation">Device changed</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
+    <string name="temp_basal_delivery_error">Tempbasal delivery error</string>
+    <string name="not_set_short">Not set</string>
+    <string name="pump_busy">Pump is busy</string>
+    <string name="connection_error">Pump connection error</string>
+    <string name="reading_pump_history">Reading pump history</string>
+    <string name="password_cleared">Password cleared!</string>
+    <string name="pairing">Pairing</string>
+    <string name="initializing">Initializing ...</string>
+
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Limiting max basal rate to %1$.2f U/h because of %2$s</string>
+    <string name="pumplimit">pump limit</string>
+    <string name="limitingpercentrate">Limiting max percent rate to %1$d%% because of %2$s</string>
+    <string name="itmustbepositivevalue">it must be positive value</string>
+    <string name="limitingbolus">Limiting bolus to %1$.1f U because of %2$s</string>
+
+    <!-- Locale -->
+    <string name="key_language" translatable="false">language</string>
+
     <!--    Dialogs-->
     <string name="confirmation">Confirmation</string>
     <string name="message">Message</string>
@@ -8,6 +98,7 @@
     <string name="dismiss">DISMISS</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="close">Close</string>
 
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">You will be asked for master password, which is needed to decrypt imported preferences.</string>
@@ -22,6 +113,36 @@
     <string name="event_time_label">Event time</string>
 
     <!-- BluetoothDevicePreference -->
-    <string name="needconnectpermission">Application needs bluetooth permission</string>
+    <string name="need_connect_permission">Application needs bluetooth permission</string>
+
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">User request</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pump paired</string>
+
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy not supported.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy not supported or device not paired.</string>
+    <string name="ble_not_enabled">Bluetooth not enabled.</string>
+    <string name="location_not_found_title">Location Is Not Enabled</string>
+    <string name="location_not_found_message">For Bluetooth discovery to work on newer devices, location must be enabled. AAPS does not track your location and it can be disabled after pairing is successful.</string>
+
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Plugin preferences</string>
+
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Missing SMS permission</string>
+
+    <plurals name="days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hour</item>
+        <item quantity="other">%1$d hours</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minute</item>
+        <item quantity="other">%1$d minutes</item>
+    </plurals>
 
 </resources>

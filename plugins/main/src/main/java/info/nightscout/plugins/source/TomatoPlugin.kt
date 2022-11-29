@@ -8,6 +8,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
+import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -61,8 +62,8 @@ class TomatoPlugin @Inject constructor(
             var ret = Result.success()
 
             if (!tomatoPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
-            val glucoseValues = mutableListOf<CgmSourceTransaction.TransactionGlucoseValue>()
-            glucoseValues += CgmSourceTransaction.TransactionGlucoseValue(
+            val glucoseValues = mutableListOf<TransactionGlucoseValue>()
+            glucoseValues += TransactionGlucoseValue(
                 timestamp = inputData.getLong("com.fanqies.tomatofn.Extras.Time", 0),
                 value = inputData.getDouble("com.fanqies.tomatofn.Extras.BgEstimate", 0.0),
                 raw = 0.0,

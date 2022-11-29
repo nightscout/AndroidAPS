@@ -6,9 +6,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.main.R
-import info.nightscout.core.main.databinding.DialogBolusprogressBinding
+import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.plugins.databinding.DialogNtpProgressBinding
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNtpStatus
@@ -32,7 +32,7 @@ class NtpProgressDialog : DaggerDialogFragment() {
     private var state: String? = null
     private var percent = 0
 
-    private var _binding: DialogBolusprogressBinding? = null
+    private var _binding: DialogNtpProgressBinding? = null
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -45,7 +45,7 @@ class NtpProgressDialog : DaggerDialogFragment() {
         state = savedInstanceState?.getString("state", null)
         percent = savedInstanceState?.getInt("percent", 0) ?: 0
 
-        _binding = DialogBolusprogressBinding.inflate(inflater, container, false)
+        _binding = DialogNtpProgressBinding.inflate(inflater, container, false)
         return binding.root
     }
 

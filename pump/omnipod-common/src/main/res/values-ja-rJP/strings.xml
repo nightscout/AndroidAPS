@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Omnipod - Keys -->
+    <!-- Omnipod - Pod Management -->
+    <!-- Omnipod - Error -->
+    <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation">確認</string>
+    <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
+    <string name="omnipod_common_overview_reservoir">リザーバ</string>
+    <!-- Omnipod - Wizard Base -->
+    <string name="omnipod_common_wizard_button_cancel">キャンセル</string>
+    <string name="omnipod_common_wizard_exit_confirmation_title">終了</string>
+    <!-- Omnipod - Pod Activation Wizard -->
+    <!-- Omnipod - Pod Deactivation Wizard -->
+    <!-- Omnipod - Preferences -->
+    <!-- Omnipod - Pod Status -->
+    <!-- Omnipod - Commands -->
+    <!-- Omnipod - Alerts -->
+    <!-- Omnipod - Short status -->
+    <!-- Omnipod - Other -->
+    <string name="omnipod_common_yes">Yes</string>
+    <string name="omnipod_common_no">No</string>
+    <string name="omnipod_common_ok">OK</string>
+    <string name="omnipod_common_cancel">キャンセル</string>
+    <!-- Omnipod - Times -->
+</resources>

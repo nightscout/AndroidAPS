@@ -12,10 +12,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.NotificationCompat
 import androidx.recyclerview.widget.RecyclerView
-import info.nightscout.androidaps.services.AlarmSoundServiceHelper
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.OverviewNotificationItemBinding
@@ -36,7 +36,7 @@ class NotificationStore @Inject constructor(
     private val rh: ResourceHelper,
     private val context: Context,
     private val iconsProvider: IconsProvider,
-    private val alarmSoundServiceHelper: AlarmSoundServiceHelper,
+    private val uiInteraction: UiInteraction,
     private val dateUtil: DateUtil,
     private val notificationHolder: NotificationHolder,
     private val activePlugin: ActivePlugin
@@ -69,7 +69,7 @@ class NotificationStore @Inject constructor(
         store.add(n)
         if (sp.getBoolean(R.string.key_raise_notifications_as_android_notifications, true) && n !is NotificationWithAction)
             raiseSystemNotification(n)
-        if (n.soundId != null && n.soundId != 0) alarmSoundServiceHelper.startAlarm(context, n.soundId!!, n.text)
+        if (n.soundId != null && n.soundId != 0) uiInteraction.startAlarm(n.soundId!!, n.text)
         Collections.sort(store, NotificationComparator())
         return true
     }
@@ -78,7 +78,7 @@ class NotificationStore @Inject constructor(
     fun remove(id: Int): Boolean {
         for (i in store.indices) {
             if (store[i].id == id) {
-                if (store[i].soundId != null) alarmSoundServiceHelper.stopService(context, "Removed " + store[i].text)
+                if (store[i].soundId != null) uiInteraction.stopAlarm("Removed " + store[i].text)
                 aapsLogger.debug(LTag.NOTIFICATION, "Notification removed: " + store[i].text)
                 store.removeAt(i)
                 return true
@@ -93,7 +93,7 @@ class NotificationStore @Inject constructor(
         while (i < store.size) {
             val n = store[i]
             if (n.validTo != 0L && n.validTo < System.currentTimeMillis()) {
-                if (store[i].soundId != null) alarmSoundServiceHelper.stopService(context, "Expired " + store[i].text)
+                if (store[i].soundId != null) uiInteraction.stopAlarm("Expired " + store[i].text)
                 aapsLogger.debug(LTag.NOTIFICATION, "Notification expired: " + store[i].text)
                 store.removeAt(i)
                 i--

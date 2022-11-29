@@ -19,6 +19,5 @@ android {
 }
 
 dependencies {
-    implementation project(':app-wear-shared:rx')
     implementation project(':app-wear-shared:shared')
 }

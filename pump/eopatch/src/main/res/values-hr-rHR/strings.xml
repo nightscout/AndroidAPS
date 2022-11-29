@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bolus_delivered">Bolus %1$.2f U uspješno isporučen</string>
+    <string name="patch_start_pairing">Pokreni uparivanje</string>
+    <string name="patch_cancel_pairing">Otkaži uparivanje</string>
+    <string name="string_suspended">Suspendiran</string>
     <string name="cancel">Otkaži</string>
+    <string name="confirm">Potvrdi</string>
+    <string name="string_connecting">Povezivanje</string>
     <string name="next">Sljedeći</string>
 </resources>

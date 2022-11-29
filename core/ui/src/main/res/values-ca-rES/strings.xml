@@ -1,15 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Actualitzar</string>
+    <string name="error">Error</string>
+    <string name="profile_set_ok">Perfil de basal actualitzat a la bomba</string>
+    <string name="invalid_input">Dades no vàlides</string>
+    <string name="bolus_delivering">Lliurant %1$.2f U</string>
+    <string name="constraint_applied">Restricció aplicada!</string>
+    <string name="tempbasals_iobtotal_label_string">IOB total:</string>
+    <string name="tt_label">OT</string>
+    <string name="pump_unreachable">Bomba no accessible</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Bomba no iniciada, perfil no establert!</string>
+    <string name="failed_update_basal_profile">Error en actualitzar el perfil de basal</string>
+    <string name="bolus_delivered">Bolus %1$.2f U llliurat correctament</string>
+    <string name="no_valid_basal_rate">No s\'ha pogut llegir de la bomba cap ràtio vàlida de basal</string>
+    <string name="limiting_iob">Limitant IOB a %1$.1f U a causa de %2$s</string>
+    <string name="loop_disabled">LLAÇ DESACTIVAT PER RESTRICCIONS</string>
+    <string name="event_type">Tipus d\'esdeveniment</string>
+    <string name="reload">Actualitzar</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Desar</string>
+    <string name="snooze">Postposar</string>
+    <string name="virtual_pump">Bomba virtual</string>
+    <string name="constraints">Restriccions</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Bomba en pausa</string>
+    <string name="and">I</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Usuari</string>
+    <string name="result">Resultat</string>
+    <string name="settings">Configuració</string>
+    <string name="statuslights">Llums d\'estat</string>
+    <string name="do_ns_upload_title">Enviar dades de glucèmia a NS</string>
+    <string name="configbuilder_insulin">Insulina</string>
+    <string name="value_unavailable_short">n/d</string>
+    <string name="ue_export_to_csv">Exportar entrades d\'usuari a Excel (csv)</string>
+    <string name="confirm">Confirmar</string>
+    <string name="pump">Bomba</string>
+    <string name="missed_bg_readings">Falten lectures de glucèmia</string>
+    <string name="treatments_iob_label_string">IOB:</string>
+    <string name="mute5min">Silenciar 5 minuts</string>
+    <string name="mute">Silenciar</string>
+    <string name="success">Correcte</string>
+    <!--    Protection-->
+    <!--    Pumps -->
+    <string name="battery_label">Bateria</string>
+    <string name="reservoir_label">Reservori</string>
+    <string name="last_connection_label">Última connexió</string>
+    <string name="last_bolus_label">Darrer bolus</string>
+    <string name="base_basal_rate_label">Ràtio de basal base</string>
+    <string name="tempbasal_label">Basal temporal</string>
+    <string name="extended_bolus_label">Bolus estès</string>
+    <string name="serial_number">Nr. de sèrie</string>
+    <string name="disconnected">Desconnectat</string>
+    <string name="connecting">Connectant</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">Unitats diàries</string>
+    <string name="pump_icon">Icona de la bomba</string>
+    <string name="view_profile">Veure perfil</string>
+    <string name="pump_history">Historial de la bomba</string>
+    <string name="stats">Estadístiques</string>
+    <string name="temp_basal_delivery_error">Error en lliurar basal temporal</string>
+    <string name="not_set_short">No configurat</string>
+    <string name="pump_busy">Bomba ocupada</string>
+    <string name="connection_error">Error de connexió de la bomba</string>
+    <string name="reading_pump_history">Llegint històric bomba</string>
+    <string name="pairing">Sincronitzant</string>
+    <string name="initializing">Inicialitzant...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Limitant màx ràtio basal a %1$.2f U a causa de %2$s</string>
+    <string name="pumplimit">límit de la bomba</string>
+    <string name="limitingpercentrate">Limitant percentatge màx a %1$d%% a causa de %2$s</string>
+    <string name="itmustbepositivevalue">ha de ser un valor positiu</string>
+    <string name="limitingbolus">Limitant bolus a %1$.1f U a causa de %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Confirmació</string>
     <string name="message">Missatge</string>
+    <string name="ok">OK</string>
     <string name="cancel">Cancel·lar</string>
     <string name="dismiss">DESCARTAR</string>
     <string name="yes">Sí</string>
     <string name="no">No</string>
+    <string name="close">Tancar</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Se us demanarà una clau mestra, es necessita per desencriptar la configuració importada.</string>
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
+    <string name="event_time_label">Hora de l\'esdeveniment</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">L\'aplicació necessita el permís del bluethoot</string>
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth de baixa energia no compatible.</string>
+    <string name="ble_not_supported_or_not_paired">Bluetooth de baixa energia no compatible o dispositiu no sincronitzat.</string>
+    <string name="ble_not_enabled">Bluetooth no activat.</string>
+    <string name="location_not_found_title">Ubicació no habilitada</string>
+    <string name="location_not_found_message">Per a que el descobriment de nous dispositius en Bluetooth funcioni, la ubicació ha d\'estar habilitada. AAPS no fa un seguiment de la vostra localització. A més, pot ser deshabilitada un cop la sincronització s\'ha produït.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Configuració plugin</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Falta permís SMS</string>
+    <plurals name="days">
+        <item quantity="one">%1$d dia</item>
+        <item quantity="other">%1$d dies</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d hora</item>
+        <item quantity="other">%1$d hores</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minut</item>
+        <item quantity="other">%1$d minuts</item>
+    </plurals>
 </resources>

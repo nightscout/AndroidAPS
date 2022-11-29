@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Eşleştirme</string>
-    <string name="danars_nodeviceavailable">Şu ana kadar hiçbir cihaz bulunamadı</string>
     <string name="danars_pairingok">Eşleştirme tamam</string>
     <string name="danars_pairingtimedout">Eşleştirme zaman aşımı</string>
     <string name="danars_waitingforpairing">Pompa ile eşleşme bekleniyor</string>
@@ -65,20 +64,20 @@
     <string name="danar_history_refill">Doldur</string>
     <string name="danar_history_syspend">Askıya al</string>
     <string name="danar_history_prime">Doldur</string>
-    <string name="danar_useroptions">Kullanıcı seçenekleri</string>
-    <string name="danar_timedisplay">Saat formatı</string>
-    <string name="danar_buttonscroll">Düğme kaydırma</string>
+    <string name="danar_user_options">Kullanıcı seçenekleri</string>
+    <string name="danar_time_display">Saat formatı</string>
+    <string name="danar_button_scroll">Buton kaydırma</string>
     <string name="danar_beep">Tuşa basıldığında bip sesi çıkar</string>
-    <string name="danar_pumpalarm">Alarm</string>
-    <string name="danar_pumpalarm_sound">Ses</string>
-    <string name="danar_pumpalarm_vibrate">Titreşim</string>
-    <string name="danar_pumpalarm_both">İkisi de</string>
-    <string name="danar_screentimeout">LCD açık kalma süresi [seconds]</string>
+    <string name="danar_pump_alarm">Alarm</string>
+    <string name="danar_pump_alarm_sound">Ses</string>
+    <string name="danar_pump_alarm_vibrate">Titreşim</string>
+    <string name="danar_pump_alarm_both">İkisi de</string>
+    <string name="danar_screen_timeout">LCD açık kalma süresi [seconds]</string>
     <string name="danar_backlight">Arka ışık süresi [seconds]</string>
-    <string name="danar_glucoseunits">Glikoz birimleri</string>
+    <string name="danar_glucose_units">Glikoz birimi</string>
     <string name="danar_shutdown">Kapatma [hours]</string>
-    <string name="danar_lowreservoir">Düşük rezervuar [Units]</string>
-    <string name="danar_saveuseroptions">Seçenekleri pompaya kaydet</string>
+    <string name="danar_low_reservoir">Düşük rezervuar [Units]</string>
+    <string name="danar_save_user_options">Seçenekleri pompaya kaydet</string>
     <string name="description_pump_dana_r">DANA Diabecare R pompaları için pompa entegrasyonu</string>
     <string name="description_pump_dana_r_korean">DANA Diabecare R yerli Kore pompaları için pompa entegrasyonu</string>
     <string name="description_pump_dana_r_v2">Güncellenmiş ürün yazılımlı DANA Diabecare R pompaları için pompa entegrasyonu</string>
@@ -94,10 +93,10 @@
     <string name="profile_set_failed">Bazal profil ayarı başarısız oldu</string>
     <string name="danar_bluetooth_status">Bluetooth durumu</string>
     <string name="danar_iob_label">Pompa AİNS</string>
-    <string name="virtualpump_firmware_label">Firmware</string>
+    <string name="firmware_label">Aygıt Yazılımı</string>
     <string name="danar_pump_settings">Dana pompa ayarları</string>
-    <string name="timeformat12h">12sa</string>
-    <string name="timeformat24h">24sa</string>
+    <string name="time_format_12h">12sa</string>
+    <string name="time_format_24h">24sa</string>
     <string name="option_on">Aç</string>
     <string name="option_off">Kapa</string>
     <string name="danar_bt_name_title">DanaR Bluetooth aygıtı</string>

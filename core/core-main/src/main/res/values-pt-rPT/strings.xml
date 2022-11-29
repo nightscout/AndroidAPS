@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Actualizar</string>
     <string name="error">Erro</string>
@@ -15,8 +14,6 @@
     <string name="bolusdelivering">A administrar %1$.2f U</string>
     <string name="connecting">A ligar</string>
     <string name="disconnected">Desconectada</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
@@ -26,11 +23,9 @@
     <string name="pumpbusy">A bomba está ocupada</string>
     <string name="connectionerror">Erro de ligação da bomba</string>
     <string name="objectives">Objectivos</string>
-    <string name="close">Fechar</string>
     <string name="please_wait">Por favor aguarde…</string>
     <string name="mute">Silêncio</string>
     <string name="reload">Recarregar</string>
-    <string name="stoppressed">PARAR PRESSIONADO</string>
     <string name="stop">Parar</string>
     <string name="carbs">Hidratos</string>
     <string name="active"><![CDATA[<Activo>]]></string>
@@ -43,10 +38,10 @@
     <string name="target_label">Alvo</string>
     <string name="basal_long_label">Taxa da Basal</string>
     <string name="initializing">A inicializar ...</string>
-    <string name="serialnumber">Número de série</string>
+    <string name="serial_number">Número de série</string>
     <string name="battery_label">Bateria</string>
-    <string name="lastconnection_label">Última ligação</string>
-    <string name="lastbolus_label">Último bólus</string>
+    <string name="last_connection_label">Última ligação</string>
+    <string name="last_bolus_label">Último bólus</string>
     <string name="dailyunits">Unidades diárias</string>
     <string name="base_basal_rate_label">Taxa Basal de base</string>
     <string name="tempbasal_label">Basal temp</string>
@@ -417,6 +412,7 @@
     <string name="advisoralarm">Executar alarme quando for tempo de comer</string>
     <string name="no_action_selected">Nenhuma ação seleccionada, nada irá acontecer</string>
     <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>

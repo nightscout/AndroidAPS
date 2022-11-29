@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="end_user_license_agreement">Ugovor o licenci sa krajnjim korisnikom</string>
+    <string name="end_user_license_agreement_text">NE SME SE KORISTITI ZA DONOŠENJE MEDICINSKIH ODLUKA. NE POSTOJI GARANCIJA ZA PROGRAM, U MERI DOPUŠTENOJ PRIMJENJIVIM ZAKONOM. OSIM KADA JE DRUGAČE NAVEDENO U PISANJU NOSILACA AUTORSKOG PRAVA I/ILI DRUGE STRANE OBEZBEĐUJU PROGRAM „KAKAV JESTE“ BEZ BILO KOJE GARANCIJE, BILO IZRIČENE ILI PODRAZUMEVANE, UKLJUČUJUĆI, ALI NE OGRANIČAVAJUĆI SE NA, PODRAZUMEVANE GARANCIJE O PRODAJNOSTI I PRIKLADNOSTI ZA ODREĐENU NAMENU. CEO RIZIK PO KVALITETU I PERFORMANSE PROGRAMA JE NA VAMA. AKO SE POKAŽE NEISPRAVAN PROGRAM, VI PREUZIMATE TROŠKOVE SVIH NEOPHODNIH SERVISIRANJA, POPRAVKE ILI KOREKCIJE.</string>
+    <string name="end_user_license_agreement_i_understand">RAZUMEM I SLAŽEM SE</string>
+    <string name="profile">Profil</string>
+    <string name="request">Zahtev</string>
+    <string name="apsmode_title">APS režim</string>
+    <string name="alert_dialog_permission_battery_optimization_failed">Čini se da ovaj uređaj ne podržava stavljanje na belu listu za optimizaciju baterije – mogli biste imati problema s performansama.</string>
+    <!--    ConfigBuilder-->
+    <string name="config_builder">Graditelj Konfiguracije</string>
+    <string name="configbuilder_pump">Pumpa</string>
+    <string name="configbuilder_pump_description">Koju pumpu želite da koristite sa AAPS-om?</string>
+    <string name="configbuilder_profile">Profil</string>
+    <string name="configbuilder_profile_description">Koji profil treba da koristi AAPS?</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_aps_description">Koji APS algoritam treba da izvrši prilagođavanja terapije?</string>
+    <string name="configbuilder_general">Uopšteno</string>
+    <string name="configbuilder_general_description">Ovo su neki opšti dodaci koji bi vam mogli biti korisni.</string>
+    <string name="configbuilder_constraints_description">Koja ograničenja se primenjuju?</string>
+    <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_loop_description">Koristite ovo da aktivirate integraciju AAPS-ovog loop-a.</string>
+    <string name="configbuilder_bgsource">GUK Izvor</string>
+    <string name="configbuilder_bgsource_description">Odakle AAPS treba da dobija svoje podatke?</string>
+    <string name="description_config_builder">Koristi se za konfiguriranje aktivnih dodataka</string>
+    <!--ImportExport-->
+    <string name="nav_preferences">Postavke</string>
+    <string name="password_preferences_encrypt_prompt">Bit ćete upitani za glavnu lozinku, koja će se koristiti za šifrovanje izvezenih postavki.</string>
+    <string name="preferences_export_canceled">Izvoz je otkazan! Postavke NISU izvezene!</string>
+    <string name="preferences_import_canceled">Izvoz je otkazan! Postavke NISU uvezene!</string>
+    <string name="preferences_import_impossible">Nije moguće uvesti postavke!</string>
+    <string name="check_preferences_details_btn">Objasnite probleme sa uvozom…</string>
+    <string name="check_preferences_details_title">Detalji o problemima sa uvozom</string>
+    <string name="check_preferences_import_btn">Uvoz</string>
+    <string name="check_preferences_import_anyway_btn">Uvezi svejedno (OPASNO!)</string>
+    <string name="import_setting">Uvezi podešavanja</string>
+    <string name="check_preferences_before_import">Proverite postavke pre uvoza:</string>
+    <string name="check_preferences_cannot_import">Postavke se ne mogu uvesti!</string>
+    <string name="check_preferences_dangerous_import">Postavke ne treba da se uvoze!</string>
+    <string name="nav_export">Izvezi podešavanja</string>
+    <string name="export_to">Izvezi podešavanja u</string>
+    <string name="import_from">Uvezi podešavanja iz</string>
+    <string name="setting_imported">Podešavanja su uvezena</string>
+    <string name="old_master_password">Stara glavna lozinka</string>
+    <string name="different_password_used">Ova datoteka je izvezena i šifrovana drugom glavnom lozinkom. Navedite staru glavnu lozinku za dešifrovanje datoteke.</string>
+    <string name="master_password_will_be_replaced">Kao rezultat uspešnog uvoza, trenutna glavna lozinka BIĆE ZAMENJENA sa starom glavnom lozinkom!</string>
+    <string name="exported">Postavke su izvezene</string>
+    <string name="filenotfound">Datoteka nije pronađena</string>
+    <string name="goto_main_try_again">Vrati se na glavni ekran i pokušaj ponovo.</string>
+    <string name="ue_exported">Korisnički unosi su izvezeni</string>
+    <!--    Maintenance-->
+    <string name="reset_db_confirm">Da li zaista želite da poništite baze podataka?</string>
+    <string name="configbuilder_nightscoutversion_label">Nightscout verzija:</string>
+    <string name="nav_resetdb">Poništite baze podataka</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
+</resources>

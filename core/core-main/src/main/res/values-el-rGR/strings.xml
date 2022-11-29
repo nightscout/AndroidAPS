@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Ανανέωση</string>
     <string name="save">Αποθήκευση</string>
@@ -13,8 +12,6 @@
     <string name="waitingforpump">Αναμονή για αντλία</string>
     <string name="connecting">Συνδέεται</string>
     <string name="disconnected">Αποσυνδέθηκε</string>
-    <string name="formatinsulinunits1">%1$.1f U</string>
-    <string name="formatinsulinunits">%1$.2f U</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="reservoirvalue">%1$.0f / %2$d U</string>
     <string name="pump_basebasalrate">%1$.2f U/h</string>
@@ -22,11 +19,9 @@
     <string name="pumpbusy">Αντλία απασχολημένη</string>
     <string name="connectionerror">Λάθος σύνδεσης αντλίας</string>
     <string name="objectives">Βήματα</string>
-    <string name="close">Κλείσιμο</string>
     <string name="please_wait">Περιμένετε…</string>
     <string name="mute">Σίγαση</string>
     <string name="reload">Γέμισμα</string>
-    <string name="stoppressed">Πιέστε STOP</string>
     <string name="stop">Stop</string>
     <string name="carbs">Υδατάνθρακες</string>
     <string name="active"><![CDATA[<Ενεργή>]]></string>
@@ -39,10 +34,10 @@
     <string name="target_label">Στόχος</string>
     <string name="basal_long_label">Βασικός Ρυθμός</string>
     <string name="initializing">Παραμετροποίηση...</string>
-    <string name="serialnumber">Serial number</string>
+    <string name="serial_number">Serial number</string>
     <string name="battery_label">Μπαταρία</string>
-    <string name="lastconnection_label">Τελευταία σύνδεση</string>
-    <string name="lastbolus_label">Τελευταίο Bolus:</string>
+    <string name="last_connection_label">Τελευταία σύνδεση</string>
+    <string name="last_bolus_label">Τελευταίο Bolus:</string>
     <string name="dailyunits">Μονάδες ανά ημέρα </string>
     <string name="base_basal_rate_label">Βάση Βασικού Ρυθμού</string>
     <string name="tempbasal_label">Προσωρινός Ρυθμός</string>
@@ -238,6 +233,7 @@
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Μικρή απορρόφηση υδατανθράκων ανιχνεύτηκε: %2$d%% της ώρας. Τσεκάρετε τους υπολογισμούς σας. COB μπορεί να υπερεκτιμήθηκε και να δόθηκε περισσότερη ινσουλίνη!!!!!</font>]]></string>
     <string name="partialboluswizard">Χορήγηση του αποτελέσματος αυτού του μέρους του υπολογισμού bolus [%]</string>
     <string name="no_action_selected">Δεν έχει επιλεγεί καμία ενέργεια, δεν υπάρχει τίποτα να κάνει</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d ημέρες</item>
         <item quantity="other">%1$d ημέρες</item>

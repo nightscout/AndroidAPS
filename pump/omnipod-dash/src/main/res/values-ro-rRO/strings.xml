@@ -38,4 +38,6 @@
     <string name="omnipod_dash_connection_lost">S-a pierdut conexiunea la pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">Un alt bolus este în curs de livrare</string>
     <string name="omnipod_dash_not_enough_insulin">Nu a rămas suficientă insulină în rezervor</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Comandă neconfirmată</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Solicitat de utilizator</string>
 </resources>

@@ -13,7 +13,7 @@
             android:key="@string/key_danar_bt_name"
             android:title="@string/danar_bt_name_title" />
 
-        <info.nightscout.androidaps.utils.textValidator.ValidatingEditTextPreference
+        <info.nightscout.core.validators.ValidatingEditTextPreference
             android:inputType="numberPassword"
             android:key="@string/key_danar_password"
             android:title="@string/danar_password_title"

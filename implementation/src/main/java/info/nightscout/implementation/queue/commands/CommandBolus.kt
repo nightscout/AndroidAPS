@@ -1,15 +1,15 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.dialogs.BolusProgressDialog
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissBolusProgressIfRunning
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.pump.BolusProgressData
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissBolusProgressIfRunning
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
@@ -27,8 +27,8 @@ class CommandBolus(
     override fun execute() {
         val r = activePlugin.activePump.deliverTreatment(detailedBolusInfo)
         if (r.success) carbsRunnable.run()
-        BolusProgressDialog.bolusEnded = true
-        rxBus.send(EventDismissBolusProgressIfRunning(r, detailedBolusInfo.id))
+        BolusProgressData.bolusEnded = true
+        rxBus.send(EventDismissBolusProgressIfRunning(r.success, detailedBolusInfo.id))
         aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
         callback?.result(r)?.run()
     }
@@ -39,7 +39,7 @@ class CommandBolus(
     }
 
     override fun log(): String {
-        return (if (detailedBolusInfo.insulin > 0) "BOLUS " + rh.gs(R.string.formatinsulinunits, detailedBolusInfo.insulin) else "") +
+        return (if (detailedBolusInfo.insulin > 0) "BOLUS " + rh.gs(R.string.format_insulin_units, detailedBolusInfo.insulin) else "") +
             if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
     }
 

@@ -7,15 +7,12 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.data.ProfileSealed
-import info.nightscout.androidaps.extensions.blockFromJsonArray
-import info.nightscout.androidaps.extensions.pureProfileFromJson
-import info.nightscout.androidaps.receivers.DataWorkerStorage
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.core.profile.ProfileStoreObject
-import info.nightscout.core.profile.toMgdl
+import info.nightscout.core.extensions.blockFromJsonArray
+import info.nightscout.core.extensions.pureProfileFromJson
+import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
@@ -27,9 +24,11 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.profile.ProfileInstantiator
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.profile.PureProfile
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.R
@@ -60,7 +59,8 @@ class ProfilePlugin @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
     private val dateUtil: DateUtil,
-    private val config: Config
+    private val config: Config,
+    private val profileInstantiator: ProfileInstantiator
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.PROFILE)
@@ -74,7 +74,7 @@ class ProfilePlugin @Inject constructor(
     aapsLogger, rh, injector
 ), ProfileSource {
 
-    private var rawProfile: ProfileStoreObject? = null
+    private var rawProfile: ProfileStore? = null
 
     private val defaultArray = "[{\"time\":\"00:00\",\"timeAsSeconds\":0,\"value\":0}]"
 
@@ -390,7 +390,7 @@ class ProfilePlugin @Inject constructor(
         isEdited = false
     }
 
-    fun createProfileStore(): ProfileStoreObject {
+    fun createProfileStore(): ProfileStore {
         val json = JSONObject()
         val store = JSONObject()
 
@@ -419,7 +419,7 @@ class ProfilePlugin @Inject constructor(
             aapsLogger.error("Unhandled exception", e)
         }
 
-        return ProfileStoreObject(injector, json, dateUtil)
+        return profileInstantiator.storeInstance(json)
     }
 
     override val profile: ProfileStore?
@@ -445,6 +445,7 @@ class ProfilePlugin @Inject constructor(
         @Inject lateinit var config: Config
         @Inject lateinit var profilePlugin: ProfilePlugin
         @Inject lateinit var xDripBroadcast: XDripBroadcast
+        @Inject lateinit var profileInstantiator: ProfileInstantiator
 
         init {
             (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -455,7 +456,7 @@ class ProfilePlugin @Inject constructor(
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             xDripBroadcast.sendProfile(profileJson)
             if (sp.getBoolean(R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
-                val store = ProfileStoreObject(injector, profileJson, dateUtil)
+                val store = profileInstantiator.storeInstance(profileJson)
                 val createdAt = store.getStartDate()
                 val lastLocalChange = sp.getLong(R.string.key_local_profile_last_change, 0)
                 aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")

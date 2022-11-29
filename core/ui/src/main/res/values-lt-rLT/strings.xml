@@ -1,5 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Atnaujinti</string>
+    <string name="error">Klaida</string>
+    <string name="profile_set_ok">Bazės profilis pompoje atnaujintas</string>
+    <string name="invalid_input">Neteisingai įvesti duomenys</string>
+    <string name="bolus_delivering">Leidžiama %1$.2f vv</string>
+    <string name="constraint_applied">Taikomas ribojimas!</string>
+    <string name="tempbasals_iobtotal_label_string">Visas AIO:</string>
+    <string name="tt_label">LT</string>
+    <string name="pump_unreachable">Pompa nepasiekiama</string>
+    <string name="insulin_unit_shortname">vv</string>
+    <string name="pump_base_basal_rate">%1$.2f vv/val</string>
+    <string name="pump_not_initialized_profile_not_set">Pompa neprijungta, profilis nepasirinktas!</string>
+    <string name="failed_update_basal_profile">Nepavyko atnaujinti bazės profilio</string>
+    <string name="bolus_delivered">%1$.2f vv bolusas sėkmingai suleistas</string>
+    <string name="no_valid_basal_rate">Jokio tinkamo bazės kiekio nenuskaityta iš pompos</string>
+    <string name="limiting_iob">Ribojamas AIO iki %1$.1f V dėl %2$s</string>
+    <string name="loop_disabled">CIKLAS NEAKTYVUS DĖL APRIBOJIMŲ</string>
+    <string name="event_type">Įvykio tipas</string>
+    <string name="reload">Atnaujinti</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Išsaugoti</string>
+    <string name="snooze">Snausti</string>
+    <string name="virtual_pump">Virtuali pompa</string>
+    <string name="constraints">Apribojimai</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pompa pristabdyta</string>
+    <string name="and">Ir</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Vartotojas</string>
+    <string name="result">Rezultatas</string>
+    <string name="settings">Parametrai</string>
+    <string name="statuslights">Būklės indikatoriai</string>
+    <string name="do_ns_upload_title">Perduoti KG duomenis į NS</string>
+    <string name="configbuilder_insulin">Insulinas</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="master_password">Pagrindinis slaptažodis</string>
+    <string name="ue_export_to_csv">Eksportuoti vartotojo įrašus į Excel (csv)</string>
+    <string name="confirm">Patvirtinti</string>
+    <string name="pump">Pompa</string>
+    <string name="missed_bg_readings">Negauti KG duomenys</string>
+    <string name="treatments_iob_label_string">AIO:</string>
+    <string name="mute5min">Nutildyti 5 minutėms</string>
+    <string name="mute">Nutildyti</string>
+    <string name="success">Atlikta</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Atrakinti nustatymus</string>
+    <!--    Pumps -->
+    <string name="battery_label">Baterija</string>
+    <string name="reservoir_label">Rezervuaras</string>
+    <string name="last_connection_label">Paskutinis prisijungimas</string>
+    <string name="last_bolus_label">Paskutinis bolusas</string>
+    <string name="base_basal_rate_label">Pagrindinis bazės dydis</string>
+    <string name="tempbasal_label">Laikina bazė</string>
+    <string name="extended_bolus_label">Ištęstas bolusas</string>
+    <string name="serial_number">Serijos numeris</string>
+    <string name="disconnected">Atsijungta</string>
+    <string name="connecting">Jungiamasi</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Spausta \"jungtis su pompa\"</string>
+    <string name="reservoir_value">%1$.0f / %2$d vv</string>
+    <string name="daily_units">Paros insulinas</string>
+    <string name="pump_icon">Pompos ikonėlė</string>
+    <string name="view_profile">Peržiūrėti profilį</string>
+    <string name="pump_history">Pompos istorija</string>
+    <string name="stats">Statistika</string>
+    <string name="pump_driver_change" comment="26 characters max for translation">Pompos valdiklio keitimas.</string>
+    <string name="device_changed" comment="26 characters max for translation">Įrenginys pakeistas</string>
+    <string name="bolus_ok" comment="26 characters max for translation">Bolusas OK</string>
+    <string name="temp_basal_delivery_error">Laikinos bazės suleidimo klaida</string>
+    <string name="not_set_short">Nenustatyta</string>
+    <string name="pump_busy">Pompa šiuo metu veikia</string>
+    <string name="connection_error">Pompos prisijungimo klaida</string>
+    <string name="reading_pump_history">Skaitoma pompos istorija</string>
+    <string name="password_cleared">Slaptažodis išvalytas!</string>
+    <string name="pairing">Sujungiama</string>
+    <string name="initializing">Inicijuojama ...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
+    <string name="pumplimit">pompos limitas</string>
+    <string name="limitingpercentrate">Ribojamas maks procentų skaičius %1$d%%, nes %2$s</string>
+    <string name="itmustbepositivevalue">reikšmė turi būti teigiama</string>
+    <string name="limitingbolus">Bolusas ribojamas iki %1$.1f vv dėl %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
     <string name="confirmation">Patvirtinimas</string>
     <string name="message">Pranešimas</string>
@@ -8,9 +91,44 @@
     <string name="dismiss">ATMESTI</string>
     <string name="yes">Taip</string>
     <string name="no">Ne</string>
+    <string name="close">Uždaryti</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas atšifruojant importuotus nustatymus.</string>
     <!-- NumberPicker -->
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
+    <string name="event_time_label">Įvykio laikas</string>
     <!-- BluetoothDevicePreference -->
+    <string name="need_connect_permission">Programai reikalinga Bluetooth prieigos teisė</string>
+    <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Vartotojo užklausa</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pompa suporuota</string>
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy nepalaikoma.</string>
+    <string name="ble_not_supported_or_not_paired">Nepalaikomas Bluetooth Low Energy arba įrenginys nesuporuotas.</string>
+    <string name="ble_not_enabled">Bluetooth neįjungta.</string>
+    <string name="location_not_found_title">Vietovės nustatymas neįjungtas</string>
+    <string name="location_not_found_message">Vietos nustatymo paslauga turi būti įjungta, kad Bluetooth aptikimas veiktų naujesniuose įrenginiuose. AAPS neseka Jūsų lokacijos, o vietos nustatymo paslauga gali būti išjungta po sėkmingo įrenginių suporavimo.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Įskiepių nustatymai</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Trūksta leidimo SMS</string>
+    <plurals name="days">
+        <item quantity="one">%1$d d.</item>
+        <item quantity="few">%1$d d.</item>
+        <item quantity="many">%1$d d.</item>
+        <item quantity="other">%1$d d.</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d val.</item>
+        <item quantity="few">%1$d val.</item>
+        <item quantity="many">%1$d val.</item>
+        <item quantity="other">%1$d val.</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d min.</item>
+        <item quantity="few">%1$d min.</item>
+        <item quantity="many">%1$d min.</item>
+        <item quantity="other">%1$d min.</item>
+    </plurals>
 </resources>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Maintenance -->
+    <string name="metadata_label_format">Dateiformat</string>
+    <string name="metadata_label_created_at">Erstellt am</string>
+    <string name="metadata_label_aaps_version">AAPS-Version</string>
+    <string name="metadata_label_aaps_flavour">Build-Variante</string>
+    <string name="metadata_label_device_name">Patientenname des exportierenden Geräts</string>
+    <string name="metadata_label_device_model">Modell des exportierenden Geräts</string>
+    <string name="metadata_label_encryption">Dateiverschlüsselung</string>
+    <string name="metadata_format_new">Neues verschlüsseltes Format</string>
+    <string name="metadata_format_debug">Neues Debugformat (unverschlüsselt)</string>
+    <string name="metadata_format_other">Unbekanntes Export-Format</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Bei der virtuellen Pumpe können nur einzelne Werte und keine Bereiche zur Festlegung der Basal/Bolus-Granularität gewählt werden.</string>
+    <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Pumpentreiber geändert.</string>
+    <!--    DecimalFormatter-->
+    <string name="format_insulin_units1">%1$.1f IE</string>
+    <string name="format_insulin_units">%1$.2f IE</string>
+</resources>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">重新配对</string>
-    <string name="diaconn_nodeviceavailable">没有可用设备</string>
+    <string name="diaconn_no_device_available">没有可用设备</string>
     <string name="diaconn_pairing">断开泵配对</string>
     <string name="pumperror">泵错误</string>
     <string name="diaconn_g8_history_alarm">报警</string>
@@ -49,7 +49,7 @@
     <string name="bolus_step">大剂量步值</string>
     <string name="basal_step">基础率步值</string>
     <string name="pump_firmware_label">固件</string>
-    <string name="diagonn_g8_useroptions">用户选项</string>
+    <string name="diaconn_g8_user_options">用户选项</string>
     <string name="pairfirst">请将您的泵与您的手机配对!</string>
     <string name="processinghistory">"正在处理事件 "</string>
     <string name="apslastLogNum">aps_last_log_num</string>

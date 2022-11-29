@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="resetpairing">Сбросить сопряжение</string>
-    <string name="diaconn_nodeviceavailable">Нет доступных устройств</string>
+    <string name="diaconn_no_device_available">Нет доступных устройств</string>
     <string name="diaconn_pairing">Сопражение с помпой Diaconn</string>
     <string name="pumperror">Ошибка помпы</string>
     <string name="diaconn_g8_history_alarm">Оповещения</string>
@@ -49,7 +49,7 @@
     <string name="bolus_step">Шаг болюса</string>
     <string name="basal_step">Шаг базала</string>
     <string name="pump_firmware_label">Прошивка</string>
-    <string name="diagonn_g8_useroptions">НАСТРОЙКИ ПОЛЬЗОВАТЕЛЯ</string>
+    <string name="diaconn_g8_user_options">НАСТРОЙКИ ПОЛЬЗОВАТЕЛЯ</string>
     <string name="pairfirst">Пожалуйста, выполните сопряжение помпы с телефоном!</string>
     <string name="processinghistory">"Обработка события "</string>
     <string name="apslastLogNum">aps_last_log_num</string>

@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm
 
 import android.os.SystemClock
-import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkCommunicationManager
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkConst
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.RileyLinkCommunicationException
@@ -9,7 +8,6 @@ import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.Radi
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.data.RadioResponse
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RLMessageType
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.service.tasks.WakeAndTuneTask
-import info.nightscout.androidaps.plugins.pump.common.utils.DateTimeUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.RawHistoryPage
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.MedtronicPumpHistoryDecoder
@@ -34,6 +32,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpSta
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.Companion.createByteArray
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil.Companion.getByteArrayFromUnsignedShort
+import info.nightscout.core.utils.DateTimeUtil
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.pump.core.defs.PumpDeviceState
 import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.logging.LTag

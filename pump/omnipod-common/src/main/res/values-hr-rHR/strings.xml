@@ -4,7 +4,9 @@
     <!-- Omnipod - Pod Management -->
     <!-- Omnipod - Error -->
     <!-- Omnipod - Confirmation -->
+    <string name="omnipod_common_confirmation">Potvrda</string>
     <!-- Omnipod - Overview -->
+    <string name="omnipod_common_overview_total_delivered_value">%1$.2f U</string>
     <string name="omnipod_common_overview_errors">Greške</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Otkaži</string>
@@ -20,6 +22,7 @@
     <!-- Omnipod - Alerts -->
     <!-- Omnipod - Short status -->
     <!-- Omnipod - Other -->
+    <string name="omnipod_common_ok">U redu</string>
     <string name="omnipod_common_cancel">Otkaži</string>
     <!-- Omnipod - Times -->
 </resources>

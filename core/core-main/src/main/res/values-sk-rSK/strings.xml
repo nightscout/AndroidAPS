@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Obnoviť</string>
     <string name="error">Chyba</string>
@@ -16,8 +15,6 @@
     <string name="connecting">Pripájanie</string>
     <string name="disconnected">Odpojené</string>
     <string name="androidaps_start">AAPS spustený</string>
-    <string name="formatinsulinunits1">%1$.1f JI</string>
-    <string name="formatinsulinunits">%1$.2f JI</string>
     <string name="formatsignedinsulinunits">%1$+.2f JI</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d JI</string>
@@ -27,13 +24,13 @@
     <string name="pumpbusy">Pumpa je zaneprázdnená</string>
     <string name="connectionerror">Chyba pripájania pumpy</string>
     <string name="objectives">Ciele</string>
-    <string name="close">Zavrieť</string>
     <string name="please_wait">Čakajte prosím...</string>
     <string name="mute">Stíšiť</string>
     <string name="reload">Znova načítať</string>
-    <string name="stoppressed">STLAČENÝ STOP</string>
     <string name="stop">Stop</string>
     <string name="carbs">Sacharidy</string>
+    <string name="invalid_profile">Neplatný profil!</string>
+    <string name="no_profile_set">NENASTAVENÝ ŽIADNY PROFIL</string>
     <string name="active"><![CDATA[<Aktívny>]]></string>
     <string name="date">Dátum</string>
     <string name="units_label">Jednotky</string>
@@ -48,10 +45,10 @@
     <string name="basal_long_label">Bazál</string>
     <string name="target_long_label">Cieľová glykémia</string>
     <string name="initializing">Inicializácia ...</string>
-    <string name="serialnumber">Sériové číslo</string>
+    <string name="serial_number">Sériové číslo</string>
     <string name="battery_label">Batéria</string>
-    <string name="lastconnection_label">Posledné spojenie</string>
-    <string name="lastbolus_label">Posledný bolus</string>
+    <string name="last_connection_label">Posledné spojenie</string>
+    <string name="last_bolus_label">Posledný bolus</string>
     <string name="dailyunits">Jednotiek za deň</string>
     <string name="base_basal_rate_label">Základná hodnota bazálu</string>
     <string name="tempbasal_label">Dočasný bazál</string>
@@ -150,6 +147,7 @@
     <string name="paused">Pozastavené</string>
     <string name="invalid">NEPLATNÝ</string>
     <string name="login">Prihlásenie</string>
+    <string name="prime_fill">Plnenie/doplňovanie</string>
     <string name="overview_insulin_label">Inzulín</string>
     <string name="stoptemptarget">Koniec dočasného cieľa</string>
     <string name="closedloop">Uzavretý okruh</string>
@@ -187,6 +185,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Spustiť profil %1$d%% na %2$d min</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Zrušiť dočasný bazál</string>
     <string name="let_temp_basal_run">Nechať bežať aktuálny dočasný bazál</string>
     <string name="rate">Hodnota</string>
     <string name="duration">Trvanie</string>
@@ -208,9 +207,12 @@
     <string name="careportal_note_message">Poznámka : %1$s</string>
     <string name="careportal_question_message">Otázka: %1$s</string>
     <string name="careportal_exercise_message">Cvičenie : %1$s</string>
+    <string name="careportal_pump_site_change">Výmena setu</string>
+    <string name="cgm_sensor_insert">Výmena senzora</string>
     <string name="careportal_cgmsensorstart">Spustenie senzora</string>
     <string name="careportal_cgm_sensor_stop">Zastavenie senzora</string>
     <string name="careportal_dad_alert">Hlásenie strážneho psa</string>
+    <string name="careportal_insulin_cartridge_change">Výmena inzulínu</string>
     <string name="careportal_profileswitch">Prepnutie profilu</string>
     <string name="careportal_snackbolus">Bolus na desiatu/olovrant</string>
     <string name="careportal_mealbolus">Bolus na jedlo</string>
@@ -220,6 +222,8 @@
     <string name="careportal_tempbasalend">Koniec dočasného bazálu</string>
     <string name="careportal_carbscorrection">Prídavok sacharidov</string>
     <string name="careportal_openapsoffline">OpenAPS vypnuté</string>
+    <string name="pump_battery_change">Výmena batérie v pumpe</string>
+    <string name="temporary_target">Dočasný cieľ</string>
     <string name="careportal_temporarytargetvalue">Hodnota dočasného cieľa</string>
     <string name="careportal_temporarytargetcancel">Zrušiť dočasný cieľ</string>
     <string name="boluswizard">Bolusová kalkulačka</string>
@@ -443,11 +447,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bazál</string>
     <string name="basalpct">Bazál %</string>
-    <string name="count_selected">%1$d vybraných</string>
-    <string name="sort_label">Zoradiť</string>
-    <string name="remove_items">Odstrániť položky</string>
-    <string name="sort_items">Zoradiť položky</string>
-    <string name="remove_selected_items">Odstrániť vybrané položky</string>
     <string name="a11y_file">súbor</string>
     <string name="a11y_user">používateľ</string>
     <!-- Autotune -->
@@ -510,6 +509,8 @@
     <string name="cobvsiob">COB vs. IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekovaná pomalá absorbcia sacharidov: %2$d%% času. Prekontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</font>]]></string>
     <string name="partialboluswizard">Podaj túto časť z výsledku kalkulácie [%]</string>
+    <string name="bolus_constraint_applied_warn">Použité obmedzenie bolusu: %1$.2f JI na %2$.2f JI</string>
+    <string name="bolus_recorded_only">Bolus bude iba zaznamenaný (nie pumpou vydaný)</string>
     <string name="advisoralarm">Spustiť výstrahu, keď je čas na jedlo</string>
     <string name="no_action_selected">Žiadna akcia nevybraná, nič sa neudeje</string>
     <string name="wizard_no_actual_bg">Žiadna aktuálna glykémia k základnému výpočtu!</string>
@@ -528,6 +529,7 @@
     <string name="wizard_explain_tt">DC: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s do %2$s</string>
     <string name="wizard_pump_not_available">Pumpa nedostupná!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

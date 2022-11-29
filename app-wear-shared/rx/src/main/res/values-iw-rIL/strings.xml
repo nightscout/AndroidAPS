@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string name="handshaking">לוחץ יד</string>
-    <string name="connected">מחובר</string>
-    <string name="disconnecting">מתנתק</string>
-    <string name="waiting_for_disconnection">ממתין לניתוק</string>
-</resources>

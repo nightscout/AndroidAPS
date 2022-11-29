@@ -1,10 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Frissítés</string>
+    <string name="error">Hiba</string>
+    <string name="tt_label">ÁC</string>
+    <string name="pump_unreachable">Pumpa nem elérhető</string>
+    <string name="insulin_unit_shortname">Е</string>
+    <string name="reload">Újratölt</string>
+    <string name="snooze">Szundi</string>
+    <string name="superbolus">Szuperbólus</string>
+    <string name="and">És</string>
+    <string name="settings">Beállítások</string>
+    <string name="configbuilder_insulin">Inzulin</string>
+    <string name="value_unavailable_short">n/a</string>
+    <string name="pump">Pumpa</string>
+    <string name="mute">Némít</string>
+    <!--    Protection-->
+    <!--    Pumps -->
+    <string name="serial_number">Sorozatszám</string>
+    <string name="pump_icon">Pumpa ikon</string>
+    <string name="not_set_short">Nincs beállítva</string>
+    <string name="reading_pump_history">Pumpa előzmények lekérése</string>
+    <string name="pairing">Párosítás</string>
+    <string name="initializing">Inicializálás ...</string>
+    <!--    Constraints-->
+    <!-- Locale -->
     <!--    Dialogs-->
+    <string name="ok">OK</string>
+    <string name="cancel">Mégse</string>
     <string name="yes">Igen</string>
     <string name="no">Nem</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <!-- datetime layout -->
     <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <!--    Preferences -->
+    <!-- SmsCommunicator -->
+    <plurals name="days">
+        <item quantity="one">%1$d nap</item>
+        <item quantity="other">%1$d nap</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d óra</item>
+        <item quantity="other">%1$d óra</item>
+    </plurals>
 </resources>

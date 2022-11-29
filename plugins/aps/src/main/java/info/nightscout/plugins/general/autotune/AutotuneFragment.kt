@@ -19,22 +19,25 @@ import android.widget.TableRow
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.data.ProfileSealed
 import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.core.profile.fromMgdlToUnits
+import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.profile.ProfileInstantiator
 import info.nightscout.interfaces.profile.ProfileStore
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.aps.R
@@ -71,7 +74,8 @@ class AutotuneFragment : DaggerFragment() {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var activityNames: ActivityNames
+    @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var profileInstantiator: ProfileInstantiator
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
@@ -101,7 +105,7 @@ class AutotuneFragment : DaggerFragment() {
         if (autotunePlugin.lastNbDays.isEmpty())
             autotunePlugin.lastNbDays = sp.getInt(R.string.key_autotune_default_tune_days, 5).toString()
         val defaultValue = sp.getInt(R.string.key_autotune_default_tune_days, 5).toDouble()
-        profileStore = activePlugin.activeProfileSource.profile ?: ProfileStoreObject(injector, JSONObject(), dateUtil)
+        profileStore = activePlugin.activeProfileSource.profile ?: profileInstantiator.storeInstance(JSONObject())
         profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
             profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector)
@@ -220,10 +224,10 @@ class AutotuneFragment : DaggerFragment() {
                     }
             }
             pumpProfile?.let {
-                activityNames.runProfileViewerDialog(
+                uiInteraction.runProfileViewerDialog(
                     fragmentManager = childFragmentManager,
                     time = dateUtil.now(),
-                    mode = ActivityNames.Mode.CUSTOM_PROFILE,
+                    mode = UiInteraction.Mode.CUSTOM_PROFILE,
                     customProfile = pumpProfile.profile.toPureNsJson(dateUtil).toString(),
                     customProfileName = pumpProfile.profilename
                 )
@@ -234,10 +238,10 @@ class AutotuneFragment : DaggerFragment() {
             val pumpProfile = autotunePlugin.pumpProfile
             val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
             val tunedProfile = if (circadian) autotunePlugin.tunedProfile?.circadianProfile else autotunePlugin.tunedProfile?.profile
-            activityNames.runProfileViewerDialog(
+            uiInteraction.runProfileViewerDialog(
                 fragmentManager = childFragmentManager,
                 time = dateUtil.now(),
-                mode = ActivityNames.Mode.PROFILE_COMPARE,
+                mode = UiInteraction.Mode.PROFILE_COMPARE,
                 customProfile = pumpProfile.profile.toPureNsJson(dateUtil).toString(),
                 customProfileName = pumpProfile.profilename + "\n" + rh.gs(R.string.autotune_tunedprofile_name),
                 customProfile2 = tunedProfile?.toPureNsJson(dateUtil).toString()
@@ -316,7 +320,7 @@ class AutotuneFragment : DaggerFragment() {
     @Synchronized
     private fun updateGui() {
         _binding ?: return
-        profileStore = activePlugin.activeProfileSource.profile ?: ProfileStoreObject(injector, JSONObject(), dateUtil)
+        profileStore = activePlugin.activeProfileSource.profile ?: profileInstantiator.storeInstance(JSONObject())
         profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
             profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector)

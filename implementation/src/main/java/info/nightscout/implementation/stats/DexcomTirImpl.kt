@@ -6,13 +6,11 @@ import android.graphics.Typeface
 import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.androidaps.interfaces.stats.DexcomTIR
-import info.nightscout.core.profile.toCurrentUnitsString
-import info.nightscout.core.profile.toUnitsString
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.stats.DexcomTIR
 import java.util.Calendar
 import kotlin.math.pow
 import kotlin.math.roundToInt

@@ -2,15 +2,15 @@ package info.nightscout.core.wizard
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.androidaps.extensions.valueToUnits
-import info.nightscout.androidaps.plugins.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.extensions.valueToUnits
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.main.R
-import info.nightscout.core.profile.secondsFromMidnight
+import info.nightscout.core.utils.MidnightUtils
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.database.impl.ValueWrapper
 import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
@@ -32,14 +32,14 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var loop: Loop
     @Inject lateinit var iobCobCalculator: IobCobCalculator
-    @Inject lateinit var repository: AppRepository
+    @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
 
     // for mock
     @OpenForTesting
     class Time {
-        fun secondsFromMidnight(): Int = Profile.secondsFromMidnight()
+        fun secondsFromMidnight(): Int = MidnightUtils.secondsFromMidnight()
 
     }
     var time = Time()
@@ -109,7 +109,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     fun isActive(): Boolean = time.secondsFromMidnight() >= validFrom() && time.secondsFromMidnight() <= validTo() && forDevice(DEVICE_PHONE)
 
     fun doCalc(profile: Profile, profileName: String, lastBG: GlucoseValue, _synchronized: Boolean): BolusWizard {
-        val dbRecord = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
+        val dbRecord = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
         //BG
         var bg = 0.0

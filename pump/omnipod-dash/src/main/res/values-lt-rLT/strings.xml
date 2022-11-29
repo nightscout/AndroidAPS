@@ -37,4 +37,6 @@
     <string name="omnipod_dash_connection_lost">Ryšys su Pod prarastas</string>
     <string name="omnipod_dash_bolus_already_in_progress">Kitas bolusas yra jau leidžiamas</string>
     <string name="omnipod_dash_not_enough_insulin">Rezervuare nėra pakankamai insulino</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Nepatvirtinta komanda</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Užklausta vartotojo</string>
 </resources>

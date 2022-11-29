@@ -76,7 +76,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:width="30dp"
-                android:text="@string/treatments_wizard_tt_label"
+                android:text="@string/tt_label"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <TextView

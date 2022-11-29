@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--    Keys-->
     <!--    General-->
     <string name="refresh">Yenile</string>
     <string name="error">Hata</string>
@@ -16,8 +15,6 @@
     <string name="connecting">Bağlanıyor</string>
     <string name="disconnected">Bağlantı kesildi</string>
     <string name="androidaps_start">AAPS başladı</string>
-    <string name="formatinsulinunits1">%1$.1f Ü</string>
-    <string name="formatinsulinunits">%1$.2f Ü</string>
     <string name="formatsignedinsulinunits">%1$+.2f Ü</string>
     <string name="format_carbs">%1$d g</string>
     <string name="reservoirvalue">%1$.0f / %2$d Ü</string>
@@ -27,11 +24,9 @@
     <string name="pumpbusy">Pompa meşgul</string>
     <string name="connectionerror">Pompa bağlantı hatası</string>
     <string name="objectives">Görevler</string>
-    <string name="close">Kapat</string>
     <string name="please_wait">Lütfen bekleyin…</string>
     <string name="mute">Sessiz</string>
     <string name="reload">Yeniden yükle</string>
-    <string name="stoppressed">DURDUR BASILI</string>
     <string name="stop">Dur</string>
     <string name="carbs">Karbonhidrat</string>
     <string name="invalid_profile">Geçersiz profil!</string>
@@ -50,10 +45,10 @@
     <string name="basal_long_label">Bazal oranı</string>
     <string name="target_long_label">Kan Şekeri Hedefi</string>
     <string name="initializing">Başlatılıyor ...</string>
-    <string name="serialnumber">Seri numarası</string>
+    <string name="serial_number">Seri numarası</string>
     <string name="battery_label">Pil</string>
-    <string name="lastconnection_label">Son bağlantı</string>
-    <string name="lastbolus_label">Son bolus</string>
+    <string name="last_connection_label">Son bağlantı</string>
+    <string name="last_bolus_label">Son bolus</string>
     <string name="dailyunits">Günlük ünite</string>
     <string name="base_basal_rate_label">Temel bazal oranı</string>
     <string name="tempbasal_label">Geçici Bazal</string>
@@ -452,11 +447,6 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bazal</string>
     <string name="basalpct">Bazal %</string>
-    <string name="count_selected">%1$d seçildi</string>
-    <string name="sort_label">Sırala</string>
-    <string name="remove_items">Öğeleri kaldır</string>
-    <string name="sort_items">Öğeleri Sırala</string>
-    <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
     <string name="a11y_file">dosya</string>
     <string name="a11y_user">kullanıcı</string>
     <!-- Autotune -->
@@ -539,6 +529,7 @@
     <string name="wizard_explain_tt">GeçiciH: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s - %2$s</string>
     <string name="wizard_pump_not_available">Pompa mevcut değil!</string>
+    <!--    Preferences-->
     <plurals name="days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>

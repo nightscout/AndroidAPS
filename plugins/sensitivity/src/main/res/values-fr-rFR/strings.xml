@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Sensibilité Oref1</string>
+    <string name="sensitivity_aaps">Sensibilité AAPS</string>
+    <string name="sensitivity_weighted_average">Sensibilité avec moyenne pondérée</string>
+    <string name="description_sensitivity_aaps">La sensibilité est calculée de la même manière que Oref0, mais vous pouvez spécifier la période concernée. L\'absorption minimale des glucides est calculée à partir des temps d’absorption max des glucides du menu préférences.</string>
+    <string name="description_sensitivity_oref1">La sensibilité est calculée à partir des données des dernières 8 heures et les glucides (si non absorbés) ne sont plus pris en compte après le temps spécifié dans les préférences. Le plugin calcule également les RNS (UAM).</string>
+    <string name="description_sensitivity_weighted_average">La sensibilité est calculée comme une moyenne pondérée des écarts. Les écarts les plus récents ont un poids plus élevé. L\'absorption minimale des glucides est calculée à partir des temps d’absorption des glucides max du menu préférences. Cet algorithme est le plus rapide pour s\'adapter aux changements de sensibilité.</string>
+    <string name="uam_disabled_oref1_not_selected">Repas Non Signalé (UAM) désactivé car il utilise le plugin Sensibilité de Oref1</string>
+    <string name="absorption_settings_title">Paramètres d’absorption</string>
+    <string name="absorption_max_time_title">Durée maximale d’absorption d\'un repas [h]</string>
+    <string name="absorption_max_time_summary">Durée estimé en heures pour une absorbption totale des glucides d’un repas</string>
+    <string name="openapsama_autosens_period">Plage pour Autosens [h]</string>
+    <string name="openapsama_autosens_period_summary">Le nombre d’heures écoulées pour l\'estimation de Sensibilité (le temps d’absorption des glucides est exclu)</string>
+    <string name="openapsama_autosens_max_summary">Valeur par défaut: 1.2\nCeci est la limite du multiplicateur utilisé par Autosens (et bientôt Autotune) pour définir +20% en limite maximale du ratio Autosens. En consequence, ceci va définir la valeur maximale du Basal pour Autosens, la valeur minimale de la Sensibilité à l\'Insuline (SI), et la valeur minimale de la cible glycémique.</string>
+    <string name="openapsama_autosens_min_summary">Valeur par défaut: 0,7\nL\'autre volet des limites de sécurité de l\'autosens, c\'est de définir une limite basse sur l\'ajustement des débits de basal et une limite haute sur l\'ajustement de la SI et des cibles GLY effectués par l\'autosens.</string>
+    <string name="openapsama_autosens_max">Maximum Ratio Autosens</string>
+    <string name="openapsama_autosens_min">Minimum Ratio Autosens</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Valeur par défaut : 3.0 (AMA) ou 8.0 (SMB). Il s’agit d’un paramètre décrivant l’absorption des glucides par 5 minutes. La valeur par défaut est de 3mg/dl/5min. Cela influe sur la vitesse calculée de disparition des Glucides Actifs (GA), et comment sera estimée la consommation des glucides pour calculer les valeurs futures de glycémies, lorsque la glycémie chute plus que prévu ou n\'augmente pas autant que calculé.</string>
+    <string name="absorption_cutoff_title">Durée maximale d’absorption pour un repas [h]</string>
+    <string name="absorption_cutoff_summary">Durée où n’importe quel repas est considéré absorbé. Les glucides restants ne seront pas pris en compte.</string>
+</resources>

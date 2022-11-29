@@ -1,15 +1,13 @@
 package info.nightscout.plugins.constraints.safety
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.extensions.putDouble
-import info.nightscout.androidaps.extensions.putInt
-import info.nightscout.androidaps.extensions.putString
-import info.nightscout.androidaps.extensions.storeDouble
-import info.nightscout.androidaps.extensions.storeInt
-import info.nightscout.androidaps.extensions.storeString
-import info.nightscout.androidaps.plugins.general.overview.events.EventNewNotification
-import info.nightscout.androidaps.utils.DecimalFormatter
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.core.extensions.putDouble
+import info.nightscout.core.extensions.putInt
+import info.nightscout.core.extensions.putString
+import info.nightscout.core.extensions.storeDouble
+import info.nightscout.core.extensions.storeInt
+import info.nightscout.core.extensions.storeString
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -22,6 +20,7 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.R
@@ -44,9 +43,8 @@ class SafetyPlugin @Inject constructor(
     private val constraintChecker: Constraints,
     private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
-    private val buildHelper: BuildHelper,
-    private val iobCobCalculator: IobCobCalculator,
     private val config: Config,
+    private val iobCobCalculator: IobCobCalculator,
     private val dateUtil: DateUtil
 ) : PluginBase(
     PluginDescription()
@@ -70,7 +68,7 @@ class SafetyPlugin @Inject constructor(
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
         val mode = sp.getString(R.string.key_aps_mode, "open")
         if (mode == "open") value.set(aapsLogger, false, rh.gs(R.string.closedmodedisabledinpreferences), this)
-        if (!buildHelper.isEngineeringModeOrRelease()) {
+        if (!config.isEngineeringModeOrRelease()) {
             if (value.value()) {
                 val n = Notification(Notification.TOAST_ALARM, rh.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL)
                 rxBus.send(EventNewNotification(n))
@@ -162,7 +160,7 @@ class SafetyPlugin @Inject constructor(
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         val apsMode = sp.getString(R.string.key_aps_mode, "open")
-        if (apsMode == "lgs") maxIob.setIfSmaller(aapsLogger, HardLimits.MAX_IOB_LGS, rh.gs(R.string.limitingiob, HardLimits.MAX_IOB_LGS, rh.gs(R.string.lowglucosesuspend)), this)
+        if (apsMode == "lgs") maxIob.setIfSmaller(aapsLogger, HardLimits.MAX_IOB_LGS, rh.gs(R.string.limiting_iob, HardLimits.MAX_IOB_LGS, rh.gs(R.string.lowglucosesuspend)), this)
         return maxIob
     }
 

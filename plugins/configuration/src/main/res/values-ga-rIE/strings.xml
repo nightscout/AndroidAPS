@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="units">Aonaid</string>
+    <string name="next_button">Ar Aghaidh</string>
+    <string name="previous_button">Roimhe seo</string>
+    <string name="status">Stádas:</string>
+    <string name="patient_name">Ainm cineál</string>
+    <string name="profile">Próifíl</string>
+    <string name="apsmode_title">APS mód</string>
+    <!--    ConfigBuilder-->
+    <string name="configbuilder_pump">Caidéil</string>
+    <string name="configbuilder_profile">Próifíl</string>
+    <string name="configbuilder_aps">APS</string>
+    <string name="configbuilder_general">Ginearálta</string>
+    <string name="configbuilder_loop">Lúb</string>
+    <string name="configbuilder_bgsource">Foinse BG</string>
+    <!--ImportExport-->
+    <string name="nav_preferences">Sainroghanna</string>
+    <string name="check_preferences_import_btn">Iompórtáil</string>
+    <string name="import_setting">Socruithe Iompórtáil</string>
+    <string name="nav_export">Socruithe Easpórtáil</string>
+    <string name="export_to">Socruithe Easpórtáil chun</string>
+    <string name="exported">Easpórtáil Socruithe</string>
+    <!--    Maintenance-->
+    <string name="reset_db_confirm">An bhfuil tú cinnte gur mian leat an bhunachair sonraí a athshocrú?</string>
+    <!-- Maintenance -->
+    <!-- Permissions -->
+</resources>

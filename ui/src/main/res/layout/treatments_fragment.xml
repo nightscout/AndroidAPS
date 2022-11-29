@@ -56,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:contentDescription="@string/user_entry"
-            android:icon="@drawable/ic_danar_useropt" />
+            android:icon="@drawable/ic_user_options" />
 
     </com.google.android.material.tabs.TabLayout>
 

@@ -1,13 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--    General-->
+    <string name="refresh">Verfris</string>
+    <string name="profile_set_ok">Basale profiel in pomp bygewerk</string>
+    <string name="invalid_input">Ongeldige invoer</string>
+    <string name="constraint_applied">Beperking toegepas!</string>
+    <string name="tempbasals_iobtotal_label_string">Totale IOB:</string>
+    <string name="tt_label">TT</string>
+    <string name="pump_unreachable">Pomp onbereikbaar</string>
+    <string name="insulin_unit_shortname">U</string>
+    <string name="pump_base_basal_rate">%1$.2f U/h</string>
+    <string name="pump_not_initialized_profile_not_set">Pomp nie geïnisialiseer, profiel nie opgestel nie!</string>
+    <string name="failed_update_basal_profile">Kon nie die basale profiel bywerk nie</string>
+    <string name="no_valid_basal_rate">Geen geldige basale tempo gelees van pomp</string>
+    <string name="limiting_iob">Beperk IAB tot %1$.1f U agv %2$s</string>
+    <string name="loop_disabled">LOOP UIT AKSIE GESTEL DEUR BEPERKINGS</string>
+    <string name="event_type">Gebeurtenis tipe</string>
+    <string name="reload">Herlaai</string>
+    <string name="mgdl">mg/dl</string>
+    <string name="mmol">mmol/l</string>
+    <string name="save">Stoor</string>
+    <string name="snooze">Sluimer</string>
+    <string name="virtual_pump">Virtuele Pomp</string>
+    <string name="constraints">Beperkings</string>
+    <string name="superbolus">Superbolus</string>
+    <string name="pump_paused">Pomp wag</string>
+    <string name="and">En</string>
+    <string name="result">Uitslag</string>
+    <string name="settings">Instellings</string>
+    <string name="do_ns_upload_title">BG data oplaai na NS</string>
+    <string name="configbuilder_insulin">Insulien</string>
+    <string name="value_unavailable_short">nvt</string>
+    <string name="confirm">Bevestig</string>
+    <string name="pump">Pomp</string>
+    <string name="missed_bg_readings">Gemiste BG lesings</string>
+    <string name="treatments_iob_label_string">IAB:</string>
+    <string name="mute">Demp</string>
+    <string name="success">Sukses</string>
+    <!--    Protection-->
+    <string name="unlock_settings">Ontsluit instellings</string>
+    <!--    Pumps -->
+    <string name="battery_label">Battery</string>
+    <string name="reservoir_label">Stoor</string>
+    <string name="last_connection_label">Laaste verbinding</string>
+    <string name="last_bolus_label">Laaste bolus</string>
+    <string name="base_basal_rate_label">Basis basale tempo</string>
+    <string name="tempbasal_label">Tydelike basaal</string>
+    <string name="extended_bolus_label">Verlengde Bolus</string>
+    <string name="serial_number">Reeksnommer</string>
+    <string name="disconnected">Ontkoppel</string>
+    <string name="connecting">Koppel</string>
+    <string name="reservoir_value">%1$.0f / %2$d U</string>
+    <string name="daily_units">Daaglikse eenhede</string>
+    <string name="view_profile">Bekyk profiel</string>
+    <string name="temp_basal_delivery_error">Tempbasal aflewering fout</string>
+    <string name="not_set_short">Nie gestel nie</string>
+    <string name="pump_busy">Pomp is besig</string>
+    <string name="connection_error">Pomp verbindingsfout</string>
+    <string name="reading_pump_history">Lees pomp geskiedenis</string>
+    <string name="pairing">Paring</string>
+    <string name="initializing">Inisialiseer tans...</string>
+    <!--    Constraints-->
+    <string name="limitingbasalratio">Max basale koers beperk tot %1$.2f U/h as gevolg van %2$s</string>
+    <string name="pumplimit">pomp limiet</string>
+    <string name="limitingpercentrate">Beperk maks persentasie koers tot %1$d%% agv %2$s</string>
+    <string name="itmustbepositivevalue">dit moet \'n positiewe waarde wees</string>
+    <string name="limitingbolus">Beperk bolus %1$.1f U as gevolg van %2$s</string>
+    <!-- Locale -->
     <!--    Dialogs-->
+    <string name="confirmation">Bevestiging</string>
     <string name="ok">OK</string>
     <string name="cancel">Kanselleer</string>
     <string name="dismiss">DISMISS</string>
     <string name="yes">Ja</string>
     <string name="no">Nee</string>
+    <string name="close">Maak toe</string>
     <!-- TwoMessagesDialog -->
     <!-- NumberPicker -->
     <!-- datetime layout -->
+    <string name="event_time_label">Gebeurtenis tyd</string>
     <!-- BluetoothDevicePreference -->
+    <!--    Combo-->
+    <!--    BlePreCheck-->
+    <string name="ble_not_supported">Bluetooth Low Energy word nie ondersteun.</string>
+    <string name="ble_not_enabled">Bluetooth nie aan.</string>
+    <string name="location_not_found_title">Location nie aan</string>
+    <string name="location_not_found_message">Vir Bluetooth ontdek om te werk op nuwer toestelle, lokaliteit moet aan wees. AAPS speur nie jou lokaliteit en kan afgeskakel na paring.</string>
+    <!--    Preferences -->
+    <string name="nav_plugin_preferences">Plugin voorkeure</string>
+    <!-- SmsCommunicator -->
+    <string name="smscommunicator_missingsmspermission">Vermiste SMS toestemming</string>
+    <plurals name="days">
+        <item quantity="one">%1$d dae</item>
+        <item quantity="other">%1$d dae</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="one">%1$d uur</item>
+        <item quantity="other">%1$d ure</item>
+    </plurals>
+    <plurals name="minutes">
+        <item quantity="one">%1$d minuut</item>
+        <item quantity="other">%1$d minute</item>
+    </plurals>
 </resources>

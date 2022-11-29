@@ -1,9 +1,9 @@
 package info.nightscout.androidaps.plugins.pump.eopatch.ui
 
 import android.os.Bundle
-import info.nightscout.androidaps.activities.DialogAppCompatActivity
-import info.nightscout.core.main.R
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ActivationNotCompleteDialog
+import info.nightscout.core.ui.R
+import info.nightscout.core.ui.activities.DialogAppCompatActivity
 
 class DialogHelperActivity : DialogAppCompatActivity() {
     @Override

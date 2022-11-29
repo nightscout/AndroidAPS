@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="unlock_settings">שחרור נעילת הגדרות</string>
+    <string name="settings_protection">Settings protection (הגנה על הגדרות)</string>
+    <string name="application_protection">Application protection (הגנת האפליקציה)</string>
+    <string name="bolus_protection">Bolus protection (הגנת בולוס)</string>
 </resources>

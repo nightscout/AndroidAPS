@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.plugins.general.overview.events.EventDismissNotification
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewButtonsBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.databinding.OmnipodCommonOverviewPodInfoBinding
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandHandleTimeChange
@@ -25,18 +24,19 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.AlertType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
-import info.nightscout.androidaps.utils.protection.ProtectionCheck
 import info.nightscout.core.ui.UIRunnable
-import info.nightscout.core.fabric.FabricPrivacy
 import info.nightscout.core.ui.dialogs.OKDialog
-import info.nightscout.interfaces.BuildHelper
+import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.ui.ActivityNames
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.events.EventQueueChanged
@@ -66,8 +66,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var activityNames: ActivityNames
-    @Inject lateinit var buildHelper: BuildHelper
+    @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var config: Config
 
     companion object {
 
@@ -175,7 +175,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     .messageOnSuccess(rh.gs(R.string.omnipod_common_confirmation_time_on_pod_updated))
             )
         }
-        if (buildHelper.isEngineeringMode()) {
+        if (config.isEngineeringMode()) {
             bluetoothStatusBinding.deliveryStatus.visibility = View.VISIBLE
             bluetoothStatusBinding.connectionQuality.visibility = View.VISIBLE
         }
@@ -384,7 +384,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.baseBasalRate.text =
                 if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
                     rh.gs(
-                        R.string.pump_basebasalrate,
+                        R.string.pump_base_basal_rate,
                         omnipodDashPumpPlugin.model()
                             .determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))
                     )
@@ -676,9 +676,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
-        context?.let {
-            activityNames.runAlarm(it, message, title, if (withSound) R.raw.boluserror else 0)
-        }
+            uiInteraction.runAlarm(message, title, if (withSound) R.raw.boluserror else 0)
     }
 
     private fun displayOkDialog(title: String, message: String) {

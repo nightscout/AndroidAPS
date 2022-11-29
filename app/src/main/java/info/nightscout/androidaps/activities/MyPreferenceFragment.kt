@@ -20,34 +20,32 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
-import info.nightscout.androidaps.danars.DanaRSPlugin
-import info.nightscout.androidaps.diaconn.DiaconnG8Plugin
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploaderPlugin
-import info.nightscout.androidaps.plugins.aps.loop.LoopPlugin
-import info.nightscout.androidaps.plugins.configBuilder.PluginStore
-import info.nightscout.androidaps.plugins.general.maintenance.MaintenancePlugin
-import info.nightscout.androidaps.plugins.general.wear.WearPlugin
-import info.nightscout.androidaps.plugins.pump.combo.ComboPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityAAPSPlugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityOref1Plugin
-import info.nightscout.androidaps.plugins.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.androidaps.utils.protection.PasswordCheck
-import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.BIOMETRIC
-import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.CUSTOM_PASSWORD
-import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.CUSTOM_PIN
-import info.nightscout.androidaps.utils.protection.ProtectionCheck.ProtectionType.NONE
 import info.nightscout.automation.AutomationPlugin
-import info.nightscout.core.profile.toCurrentUnits
+import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.implementation.plugin.PluginStore
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.protection.PasswordCheck
+import info.nightscout.interfaces.protection.ProtectionCheck.ProtectionType.BIOMETRIC
+import info.nightscout.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PASSWORD
+import info.nightscout.interfaces.protection.ProtectionCheck.ProtectionType.CUSTOM_PIN
+import info.nightscout.interfaces.protection.ProtectionCheck.ProtectionType.NONE
+import info.nightscout.plugins.aps.loop.LoopPlugin
+import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
+import info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
+import info.nightscout.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
 import info.nightscout.plugins.constraints.safety.SafetyPlugin
+import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
+import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.plugins.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
@@ -60,12 +58,17 @@ import info.nightscout.plugins.source.IntelligoPlugin
 import info.nightscout.plugins.source.PoctechPlugin
 import info.nightscout.plugins.source.TomatoPlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
-import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatus
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
+import info.nightscout.pump.combo.ComboPlugin
+import info.nightscout.pump.combov2.ComboV2Plugin
+import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRebuildTabs
+import info.nightscout.sensitivity.SensitivityAAPSPlugin
+import info.nightscout.sensitivity.SensitivityOref1Plugin
+import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -84,21 +87,22 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var config: Config
 
     @Inject lateinit var automationPlugin: AutomationPlugin
-    @Inject lateinit var autotunePlugin: info.nightscout.plugins.general.autotune.AutotunePlugin
+    @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var danaRPlugin: DanaRPlugin
     @Inject lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Inject lateinit var danaRv2Plugin: DanaRv2Plugin
-    @Inject lateinit var danaRSPlugin: DanaRSPlugin
+    @Inject lateinit var danaRSPlugin: info.nightscout.pump.danars.DanaRSPlugin
     @Inject lateinit var comboPlugin: ComboPlugin
+    @Inject lateinit var combov2Plugin: ComboV2Plugin
     @Inject lateinit var insulinOrefFreePeakPlugin: InsulinOrefFreePeakPlugin
     @Inject lateinit var loopPlugin: LoopPlugin
     @Inject lateinit var localInsightPlugin: LocalInsightPlugin
     @Inject lateinit var medtronicPumpPlugin: MedtronicPumpPlugin
     @Inject lateinit var nsClientPlugin: NSClientPlugin
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
-    @Inject lateinit var openAPSAMAPlugin: info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
-    @Inject lateinit var openAPSSMBPlugin: info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
-    @Inject lateinit var openAPSSMBDynamicISFPlugin: info.nightscout.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
+    @Inject lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
+    @Inject lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
+    @Inject lateinit var openAPSSMBDynamicISFPlugin: OpenAPSSMBDynamicISFPlugin
     @Inject lateinit var safetyPlugin: SafetyPlugin
     @Inject lateinit var sensitivityAAPSPlugin: SensitivityAAPSPlugin
     @Inject lateinit var sensitivityOref1Plugin: SensitivityOref1Plugin
@@ -204,6 +208,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(danaRSPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(localInsightPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(comboPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(combov2Plugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(diaconnG8Plugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(eopatchPumpPlugin, rootKey, config.PUMPDRIVERS)

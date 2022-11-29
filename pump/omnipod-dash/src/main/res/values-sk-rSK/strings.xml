@@ -37,4 +37,6 @@
     <string name="omnipod_dash_connection_lost">Stratilo sa spojenie s Podom</string>
     <string name="omnipod_dash_bolus_already_in_progress">Už sa podáva iný bolus</string>
     <string name="omnipod_dash_not_enough_insulin">Nedostatok inzulínu v zásobníku</string>
+    <string name="unconfirmed_command" comment="26 characters max for translation">Nepotvrdený príkaz</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Požadované používateľom</string>
 </resources>

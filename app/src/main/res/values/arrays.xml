@@ -1,26 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string-array name="aps_modeArray">
-        <item>@string/closedloop</item>
-        <item>@string/openloop</item>
-        <item>@string/lowglucosesuspend</item>
-    </string-array>
-    <string-array name="aps_modeValues" translatable="false">
-        <item>closed</item>
-        <item>open</item>
-        <item>lgs</item>
-    </string-array>
-
-    <string-array name="unitsArray">
-        <item>mg/dL</item>
-        <item>mmol/L</item>
-    </string-array>
-    <string-array name="unitsValues" translatable="false">
-        <item>mg/dl</item>
-        <item>mmol</item>
-    </string-array>
-
     <string-array name="languagesArray">
         <item>@string/default_lang</item>
         <item>@string/en_lang</item>
