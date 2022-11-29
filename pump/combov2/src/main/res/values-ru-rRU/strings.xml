@@ -77,8 +77,17 @@
     <string name="combov2_verbose_logging">Включить подробное журналирование Combo</string>
     <string name="combov2_getting_basal_profile">Получение базового профиля; %1$d фактор(ов) прочитано</string>
     <string name="combov2_setting_basal_profile">Получение базового профиля; %1$d фактор(ов) прочитано</string>
+    <string name="combov2_delivering_bolus">Подача болюса (введено %1$.1f из %2$.1f ед.)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">Болюс не подан - помпа остановлена</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Недостаточно инсулина в резервуаре</string>
     <string name="combov2_bolus_cancelled">Болюс отменен</string>
     <string name="combov2_bolus_delivery_failed">Подача болюса не состоялась. Чтобы удостовериться, проверьте помпу во избежание двойного болюса и повторите подачу. Для защиты от ложных срабатываний болюсы не повторяются автоматически.</string>
+    <string name="combov2_bolus_not_delivered">Болюс не подан</string>
+    <string name="combov2_cannot_access_pump_data">Не удается получить данные с помпы; следует заново выполнить сопряжение</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Обнаружены неучтенные подачи болюса. Отмена болюса по соображениям безопасности.</string>
+    <string name="combov2_incorrect_active_basal_profile">Некорректный активный базальный профиль; должен быть активным профиль 1, а не %1$d</string>
+    <string name="combov2_unrecognized_alert">Неопознанное оповещение Combo</string>
+    <string name="combov2_combo_alert">Оповещение Combo</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d мин осталось)</string>
     <string name="combov2_battery_low_warning">Низкий заряд батареи помпы</string>
     <string name="combov2_short_status_last_connection">Предыдущее соединение: %1$d мин. назад</string>
