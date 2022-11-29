@@ -2,11 +2,9 @@ package info.nightscout.plugins.general.autotune
 
 import android.view.View
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
-import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Config

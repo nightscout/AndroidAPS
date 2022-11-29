@@ -19,12 +19,8 @@ import android.widget.TableRow
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.logging.UserEntryLogger
 import info.nightscout.automation.elements.InputWeekDay
-import info.nightscout.core.fabric.FabricPrivacy
-import info.nightscout.core.profile.fromMgdlToUnits
 import info.nightscout.core.profile.ProfileSealed
-import info.nightscout.core.profile.ProfileStoreObject
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry
