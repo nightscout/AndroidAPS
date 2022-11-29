@@ -6,6 +6,7 @@ import info.nightscout.androidaps.HardLimitsMock
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -95,7 +96,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test
     fun disabledEngineeringModeShouldLimitClosedLoop() {
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         `when`(config.isEngineeringModeOrRelease()).thenReturn(false)
         var c = Constraint(true)
         c = safetyPlugin.isClosedLoopAllowed(c)
@@ -105,7 +106,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test
     fun setOpenLoopInPreferencesShouldLimitClosedLoop() {
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
         var c = Constraint(true)
         c = safetyPlugin.isClosedLoopAllowed(c)
         Assert.assertTrue(c.getReasons(aapsLogger).contains("Closed loop mode disabled in preferences"))
@@ -275,7 +276,7 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         //`when`(openAPSSMBPlugin.isEnabled()).thenReturn(true)
         //`when`(openAPSAMAPlugin.isEnabled()).thenReturn(false)
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("lgs")
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.LGS.name)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
         `when`(sp.getString(R.string.key_age, "")).thenReturn("teenage")

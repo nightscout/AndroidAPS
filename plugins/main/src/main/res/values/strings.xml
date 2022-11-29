@@ -95,6 +95,9 @@
     <string name="smscommunicator_message_body">Invalid message body</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Send SMS if unreachable pump event is triggered</string>
     <string name="smscommunicator_pump_unreachable">Report pump unreachable</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">In order to switch Loop mode to LGS (Low Glucose Suspend) reply with code %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">In order to switch Loop mode to Closed loop reply with code %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Current loop mode: %1$s</string>
     <string name="wrong_format">Wrong format</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">Last BG:</string>

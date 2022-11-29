@@ -21,6 +21,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import info.nightscout.interfaces.ConfigBuilder
+import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -161,7 +162,7 @@ class LoopDialog : DaggerDialogFragment() {
         val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(Constraint(true))
         val closedLoopAllowed2 = activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) ?: false
         val lgsEnabled = constraintChecker.isLgsAllowed(Constraint(true))
-        val apsMode = sp.getString(R.string.key_aps_mode, "open")
+        val apsMode = sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)
         val pump = activePlugin.activePump
 
         binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()
@@ -282,21 +283,21 @@ class LoopDialog : DaggerDialogFragment() {
         when (v.id) {
             R.id.overview_closeloop                       -> {
                 uel.log(UserEntry.Action.CLOSED_LOOP_MODE, UserEntry.Sources.LoopDialog)
-                sp.putString(R.string.key_aps_mode, "closed")
+                sp.putString(R.string.key_aps_mode, ApsMode.CLOSED.name)
                 rxBus.send(EventPreferenceChange(rh.gs(R.string.closedloop)))
                 return true
             }
 
             R.id.overview_lgsloop                         -> {
                 uel.log(UserEntry.Action.LGS_LOOP_MODE, UserEntry.Sources.LoopDialog)
-                sp.putString(R.string.key_aps_mode, "lgs")
+                sp.putString(R.string.key_aps_mode, ApsMode.LGS.name)
                 rxBus.send(EventPreferenceChange(rh.gs(R.string.lowglucosesuspend)))
                 return true
             }
 
             R.id.overview_openloop                        -> {
                 uel.log(UserEntry.Action.OPEN_LOOP_MODE, UserEntry.Sources.LoopDialog)
-                sp.putString(R.string.key_aps_mode, "open")
+                sp.putString(R.string.key_aps_mode, ApsMode.OPEN.name)
                 rxBus.send(EventPreferenceChange(rh.gs(R.string.lowglucosesuspend)))
                 return true
             }
@@ -449,7 +450,7 @@ class LoopDialog : DaggerDialogFragment() {
 
     override fun onResume() {
         super.onResume()
-        if(!queryingProtection) {
+        if (!queryingProtection) {
             queryingProtection = true
             activity?.let { activity ->
                 val cancelFail = {

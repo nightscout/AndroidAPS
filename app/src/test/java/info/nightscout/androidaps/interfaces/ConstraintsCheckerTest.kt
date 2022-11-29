@@ -14,6 +14,7 @@ import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.constraints.ConstraintsImpl
+import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.constraints.Objectives
@@ -266,13 +267,13 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     // 2x Safety & Objectives
     @Test
     fun isClosedLoopAllowedTest() {
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         objectivesPlugin.objectives[Objectives.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
         var c: Constraint<Boolean> = constraintChecker.isClosedLoopAllowed()
         aapsLogger.debug("Reason list: " + c.reasonList.toString())
 //        Assert.assertTrue(c.reasonList[0].toString().contains("Closed loop is disabled")) // Safety & Objectives
         Assert.assertEquals(false, c.value())
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
         c = constraintChecker.isClosedLoopAllowed()
         Assert.assertTrue(c.reasonList[0].contains("Closed loop mode disabled in preferences")) // Safety & Objectives
 //        Assert.assertEquals(3, c.reasonList.size) // 2x Safety & Objectives
@@ -315,7 +316,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
         `when`(sp.getBoolean(R.string.key_use_smb, false)).thenReturn(false)
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
 //        `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(Constraint(true))
         val c = constraintChecker.isSMBModeEnabled()
         Assert.assertEquals(true, c.reasonList.size == 3) // 2x Safety & Objectives
@@ -422,7 +423,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Test
     fun iobAMAShouldBeLimited() {
         // No limit by default
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         `when`(sp.getDouble(R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
         `when`(sp.getString(R.string.key_age, "")).thenReturn("teenage")
         openAPSAMAPlugin.setPluginEnabled(PluginType.APS, true)
@@ -438,7 +439,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Test
     fun iobSMBShouldBeLimited() {
         // No limit by default
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         `when`(sp.getDouble(R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
         `when`(sp.getString(R.string.key_age, "")).thenReturn("teenage")
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
