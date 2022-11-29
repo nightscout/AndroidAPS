@@ -12,6 +12,7 @@ import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAny
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.database.impl.transactions.Transaction
+import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.XDripBroadcast
@@ -333,12 +334,14 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         //LOOP STATUS : enabled
         `when`(loop.enabled).thenReturn(true)
         `when`(loop.isSuspended).thenReturn(false)
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
+        `when`(rh.gs(R.string.closedloop)).thenReturn(ApsMode.CLOSED.name)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertFalse(sms.ignored)
         Assert.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertEquals("Loop is enabled", smsCommunicatorPlugin.messages[1].text)
+        Assert.assertEquals("Loop is enabled - CLOSED", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP : wrong format
         `when`(loop.enabled).thenReturn(true)
