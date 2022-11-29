@@ -71,7 +71,7 @@ abstract class PluginBase(
      * So far plugin can have it's main type + ConstraintInterface
      * ConstraintInterface is enabled if main plugin is enabled
      */
-    fun setPluginEnabled(type: PluginType, newState: Boolean) {
+    open fun setPluginEnabled(type: PluginType, newState: Boolean) {
         if (type == pluginDescription.mainType) {
             if (newState) { // enabling plugin
                 if (state != State.ENABLED) {
@@ -91,7 +91,7 @@ abstract class PluginBase(
         }
     }
 
-    fun setFragmentVisible(type: PluginType, fragmentVisible: Boolean) {
+    open fun setFragmentVisible(type: PluginType, fragmentVisible: Boolean) {
         if (type == pluginDescription.mainType) {
             this.fragmentVisible = fragmentVisible && specialEnableCondition()
         }

@@ -6,7 +6,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.pump.danars.DanaRSTestBase
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`

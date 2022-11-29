@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.danaR.comm
 
 import info.nightscout.androidaps.danar.comm.MsgHistoryDailyInsulin
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class MsgHistoryDailyInsulinTest : DanaRTestBase() {
 

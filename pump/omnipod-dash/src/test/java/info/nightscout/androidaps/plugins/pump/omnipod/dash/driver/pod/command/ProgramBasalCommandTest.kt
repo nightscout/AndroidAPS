@@ -5,8 +5,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
 import org.junit.Assert
-import org.junit.Test
-import java.util.*
+import org.junit.jupiter.api.Test
+import java.util.Date
 
 @Suppress("DEPRECATION")
 class ProgramBasalCommandTest {

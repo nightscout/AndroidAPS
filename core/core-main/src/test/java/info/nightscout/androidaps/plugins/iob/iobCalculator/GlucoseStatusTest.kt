@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.plugins.iob.iobCalculator
 
 import info.nightscout.androidaps.TestBase
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.asRounded
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.log
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.aps.AutosensDataStore
@@ -11,8 +11,8 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
@@ -26,7 +26,7 @@ class GlucoseStatusTest : TestBase() {
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculator
     @Mock lateinit var autosensDataStore: AutosensDataStore
 
-    @Before
+    @BeforeEach
     fun prepare() {
         `when`(iobCobCalculatorPlugin.ads).thenReturn(autosensDataStore)
     }
@@ -103,7 +103,7 @@ class GlucoseStatusTest : TestBase() {
         Assert.assertEquals(1514766900000L, glucoseStatus.date) // latest date
     }
 
-    @Before
+    @BeforeEach
     fun initMocking() {
         `when`(dateUtil.now()).thenReturn(1514766900000L + T.mins(1).msecs())
         `when`(iobCobCalculatorPlugin.ads).thenReturn(autosensDataStore)

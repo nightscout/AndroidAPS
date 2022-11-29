@@ -5,17 +5,17 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.services.LastLocationDataContainer
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
@@ -32,7 +32,7 @@ open class TriggerTestBase : TestBaseWithProfile() {
     private val pluginDescription = PluginDescription()
     lateinit var testPumpPlugin: TestPumpPlugin
 
-    @Before
+    @BeforeEach
     fun prepareMock1() {
         testPumpPlugin = TestPumpPlugin(pluginDescription, aapsLogger, rh, injector)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)

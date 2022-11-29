@@ -4,8 +4,8 @@ import info.nightscout.automation.R
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.queue.Callback
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
@@ -14,7 +14,7 @@ class ActionLoopDisableTest : ActionsTestBase() {
 
     lateinit var sut: ActionLoopDisable
 
-    @Before
+    @BeforeEach
     fun setup() {
 
         testPumpPlugin.pumpDescription.isTempBasalCapable = true

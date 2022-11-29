@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase
 import org.joda.time.DateTime
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class DanaRsPacketOptionSetPumpTimeTest : DanaRSTestBase() {
 

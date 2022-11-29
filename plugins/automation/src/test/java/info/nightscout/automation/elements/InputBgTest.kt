@@ -1,10 +1,10 @@
 package info.nightscout.automation.elements
 
-import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.automation.triggers.TriggerTestBase
+import info.nightscout.interfaces.GlucoseUnit
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 
 class InputBgTest : TriggerTestBase() {
@@ -20,7 +20,7 @@ class InputBgTest : TriggerTestBase() {
         Assert.assertEquals(GlucoseUnit.MGDL, i.units)
     }
 
-    @Before
+    @BeforeEach
     fun prepare() {
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
     }

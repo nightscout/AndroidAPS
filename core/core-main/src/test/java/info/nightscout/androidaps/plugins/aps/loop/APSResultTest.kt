@@ -12,8 +12,8 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -329,7 +329,7 @@ class APSResultTest : TestBaseWithProfile() {
         Assert.assertEquals(false, apsResult.json()?.has("rate"))
     }
 
-    @Before
+    @BeforeEach
     fun prepare() {
         `when`(constraints.isClosedLoopAllowed(anyObject())).thenReturn(closedLoopEnabled)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)

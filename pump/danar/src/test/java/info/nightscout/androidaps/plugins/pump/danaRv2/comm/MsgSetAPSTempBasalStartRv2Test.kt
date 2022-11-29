@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 import info.nightscout.androidaps.danaRv2.comm.MsgSetAPSTempBasalStart_v2
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class MsgSetAPSTempBasalStartRv2Test : DanaRTestBase() {
 

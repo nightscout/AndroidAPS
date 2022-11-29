@@ -13,8 +13,8 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
@@ -38,7 +38,7 @@ class ObjectivesPluginTest : TestBase() {
         }
     }
 
-    @Before fun prepareMock() {
+    @BeforeEach fun prepareMock() {
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
         objectivesPlugin.onStart()
         `when`(rh.gs(R.string.objectivenotstarted, 9)).thenReturn("Objective 9 not started")

@@ -5,7 +5,7 @@ import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpTempBasalType
 import info.nightscout.interfaces.pump.defs.PumpType
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class PumpDescriptionTest {
 

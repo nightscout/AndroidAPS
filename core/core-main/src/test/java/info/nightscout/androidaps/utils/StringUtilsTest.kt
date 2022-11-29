@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils
 
 import info.nightscout.core.utils.receivers.StringUtils
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class StringUtilsTest {
 

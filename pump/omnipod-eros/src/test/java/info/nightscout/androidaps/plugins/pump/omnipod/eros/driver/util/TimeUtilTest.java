@@ -1,16 +1,16 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.util;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.junit.Before;
-import org.junit.Test;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 public class TimeUtilTest {
 
-    @Before
+    @BeforeEach
     public void setUp() {
         DateTimeZone.setDefault(DateTimeZone.forID("Europe/Amsterdam"));
     }

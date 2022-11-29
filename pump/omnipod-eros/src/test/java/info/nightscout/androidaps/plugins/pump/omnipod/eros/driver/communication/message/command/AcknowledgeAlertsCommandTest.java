@@ -1,14 +1,14 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
-import org.junit.Test;
+import static org.junit.Assert.assertArrayEquals;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
-
-import static org.junit.Assert.assertArrayEquals;
 
 public class AcknowledgeAlertsCommandTest {
 

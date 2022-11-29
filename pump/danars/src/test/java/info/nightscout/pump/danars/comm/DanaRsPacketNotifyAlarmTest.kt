@@ -5,7 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.danars.DanaRSTestBase
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
 class DanaRsPacketNotifyAlarmTest : DanaRSTestBase() {

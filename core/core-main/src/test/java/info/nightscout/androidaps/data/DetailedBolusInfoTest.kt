@@ -9,7 +9,7 @@ import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import org.apache.commons.lang3.builder.EqualsBuilder
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
 class DetailedBolusInfoTest : TestBase() {

@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.interaction.utils
 
+import android.os.SystemClock
 import info.nightscout.androidaps.BuildConfig
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-
+import info.nightscout.shared.utils.DateUtil
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -52,7 +52,7 @@ class Inevitable @Inject internal constructor() {
                     var running = true
                     // wait for task to be due or killed
                     while (running) {
-                        wearUtil.threadSleep(500)
+                        SystemClock.sleep(500)
                         val thisTask = tasks[id]
                         running = thisTask != null && !thisTask.poll()
                     }

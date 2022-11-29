@@ -4,7 +4,7 @@ import info.nightscout.androidaps.danaRKorean.comm.MessageHashTableRKorean
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
 import info.nightscout.interfaces.constraints.Constraint
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 
 class MessageHashTableRKoreanTest : DanaRTestBase() {

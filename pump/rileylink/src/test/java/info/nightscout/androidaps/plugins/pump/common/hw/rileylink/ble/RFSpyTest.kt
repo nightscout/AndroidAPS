@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble.defs.RileyLinkFirmwareVersion
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class RFSpyTest : TestBase() {
 

@@ -6,7 +6,7 @@ import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
 import info.nightscout.interfaces.constraints.Constraint
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 
 class MessageHashTableRv2Test : DanaRTestBase() {

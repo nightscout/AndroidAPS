@@ -17,8 +17,8 @@ import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
@@ -40,7 +40,7 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
         AndroidInjector { }
     }
 
-    @Before
+    @BeforeEach
     fun prepareMocks() {
         `when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")
         `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")

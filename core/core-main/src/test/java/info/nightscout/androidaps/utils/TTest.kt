@@ -2,7 +2,7 @@ package info.nightscout.androidaps.utils
 
 import info.nightscout.shared.utils.T
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import kotlin.math.abs
 
 @Suppress("SpellCheckingInspection")

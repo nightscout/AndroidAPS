@@ -3,25 +3,21 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.history
 import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.definition.PodHistoryEntryType
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordDao
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordEntity
-import org.junit.After
 import org.junit.Assert.assertNotNull
-import org.junit.Before
-import org.junit.Test
-import org.junit.runner.RunWith
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 
-@RunWith(AndroidJUnit4::class)
 class ErosHistoryTest {
 
     private lateinit var dao: ErosHistoryRecordDao
     private lateinit var database: ErosHistoryDatabase
     private lateinit var erosHistory: ErosHistory
 
-    @Before
+    @BeforeEach
     fun setUp() {
         val context = ApplicationProvider.getApplicationContext<Context>()
         database = Room.inMemoryDatabaseBuilder(
@@ -51,7 +47,7 @@ class ErosHistoryTest {
         assert(type == returnedEntity?.podEntryTypeCode)
     }
 
-    @After
+    @AfterEach
     fun tearDown() {
         database.close()
     }

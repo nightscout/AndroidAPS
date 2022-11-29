@@ -4,8 +4,8 @@ import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.interfaces.queue.Callback
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
@@ -14,7 +14,7 @@ class ActionLoopSuspendTest : ActionsTestBase() {
 
     lateinit var sut: ActionLoopSuspend
 
-    @Before
+    @BeforeEach
     fun setup() {
 
         `when`(context.getString(info.nightscout.core.main.R.string.suspendloop)).thenReturn("Suspend loop")

@@ -14,8 +14,8 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -25,10 +25,10 @@ class ActionAlarmTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var rxBus: RxBus
     @Mock lateinit var context: Context
-    @Mock lateinit var timerUtil: TimerUtil
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var config: Config
 
+    private lateinit var timerUtil: TimerUtil
     private lateinit var sut: ActionAlarm
     var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -46,12 +46,12 @@ class ActionAlarmTest : TestBase() {
         }
     }
 
-    @Before
+    @BeforeEach
     fun setup() {
         `when`(context.getString(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
         `when`(context.getString(info.nightscout.core.main.R.string.alarm)).thenReturn("Alarm")
         `when`(rh.gs(ArgumentMatchers.eq(R.string.alarm_message), ArgumentMatchers.anyString())).thenReturn("Alarm: %s")
-
+        timerUtil = TimerUtil(context)
         sut = ActionAlarm(injector)
     }
 
@@ -69,6 +69,7 @@ class ActionAlarmTest : TestBase() {
     }
 
     @Test fun doActionTest() {
+        sut.text = InputString("Asd")
         sut.doAction(object : Callback() {
             override fun run() {
                 Assert.assertTrue(result.success)

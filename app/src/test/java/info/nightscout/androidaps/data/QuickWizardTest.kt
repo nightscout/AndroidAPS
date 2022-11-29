@@ -11,8 +11,8 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
@@ -47,7 +47,7 @@ class QuickWizardTest : TestBase() {
 
     private lateinit var quickWizard: QuickWizard
 
-    @Before
+    @BeforeEach
     fun mock() {
 
         `when`(sp.getString(R.string.key_quickwizard, "[]")).thenReturn("[]")

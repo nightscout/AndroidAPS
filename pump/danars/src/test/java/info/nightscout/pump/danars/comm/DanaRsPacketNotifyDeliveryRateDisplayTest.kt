@@ -12,8 +12,8 @@ import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.pump.danars.DanaRSTestBase
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
@@ -57,7 +57,7 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
         Assert.assertEquals("NOTIFY__DELIVERY_RATE_DISPLAY", packet.friendlyName)
     }
 
-    @Before
+    @BeforeEach
     fun mock() {
         danaRSPlugin =
             info.nightscout.pump.danars.DanaRSPlugin(

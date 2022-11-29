@@ -19,8 +19,8 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.`when`
@@ -52,7 +52,7 @@ class BolusTimerImplTest : TestBase() {
     private lateinit var automationPlugin: AutomationPlugin
     private lateinit var sut: BolusTimerImpl
 
-    @Before
+    @BeforeEach
     fun init() {
         `when`(rh.gs(anyInt())).thenReturn("")
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)

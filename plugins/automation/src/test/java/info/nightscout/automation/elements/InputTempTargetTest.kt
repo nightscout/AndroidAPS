@@ -1,9 +1,9 @@
 package info.nightscout.automation.elements
 
-import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.automation.triggers.TriggerTestBase
+import info.nightscout.interfaces.GlucoseUnit
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class InputTempTargetTest : TriggerTestBase() {
 

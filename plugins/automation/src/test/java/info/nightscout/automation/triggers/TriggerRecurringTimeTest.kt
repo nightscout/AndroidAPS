@@ -4,15 +4,15 @@ import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.shared.utils.T
 import org.json.JSONObject
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 
 class TriggerRecurringTimeTest : TriggerTestBase() {
 
     var now: Long = 0L
 
-    @Before fun mock() {
+    @BeforeEach fun mock() {
         now = MidnightTime.calc() + T.mins(95).msecs() // 95 min from midnight
         `when`(dateUtil.now()).thenReturn(now)
     }

@@ -1,16 +1,13 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.data.dto;
 
-import org.junit.Ignore;
-
-import info.nightscout.androidaps.plugins.pump.medtronic.driver.MedtronicPumpStatus;
-import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil;
+import org.junit.jupiter.api.Disabled;
 
 /**
  * Created by andy on 6/16/18.
  */
 //@RunWith(PowerMockRunner.class)
 //@PrepareForTest({ DatabaseHelper.class, DateUtil.class, SP.class })
-@Ignore
+@Disabled
 public class BasalProfileUTest {
 /*
     @Before

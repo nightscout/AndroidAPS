@@ -17,15 +17,18 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLoggerTest
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import org.junit.Before
-import org.junit.Rule
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Answers
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoRule
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.quality.Strictness
 import java.util.Locale
 
+@ExtendWith(MockitoExtension::class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 open class TestBase {
 
     val aapsLogger = AAPSLoggerTest()
@@ -50,15 +53,7 @@ open class TestBase {
         }
     }
 
-
-
-
-    // Add a JUnit rule that will setup the @Mock annotated vars and log.
-    // Another possibility would be to add `MockitoAnnotations.initMocks(this) to the setup method.
-    @get:Rule
-    val mockitoRule: MockitoRule = MockitoJUnit.rule()
-
-    @Before
+    @BeforeEach
     fun setupLocale() {
         Locale.setDefault(Locale.ENGLISH)
         System.setProperty("disableFirebase", "true")

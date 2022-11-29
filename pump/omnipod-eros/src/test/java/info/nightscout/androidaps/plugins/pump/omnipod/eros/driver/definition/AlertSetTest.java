@@ -1,12 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 public class AlertSetTest {
     @Test

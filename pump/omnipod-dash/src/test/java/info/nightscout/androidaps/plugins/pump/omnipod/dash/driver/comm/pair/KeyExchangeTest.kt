@@ -7,7 +7,7 @@ import info.nightscout.core.utils.toHex
 import info.nightscout.interfaces.Config
 import info.nightscout.rx.logging.AAPSLoggerTest
 import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.Mockito

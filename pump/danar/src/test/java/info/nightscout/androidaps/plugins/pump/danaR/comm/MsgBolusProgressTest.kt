@@ -4,7 +4,7 @@ import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MsgBolusProgress
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
 

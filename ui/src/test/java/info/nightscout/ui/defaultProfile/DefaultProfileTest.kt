@@ -4,7 +4,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.interfaces.GlucoseUnit
 import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class DefaultProfileTest : TestBaseWithProfile() {
 

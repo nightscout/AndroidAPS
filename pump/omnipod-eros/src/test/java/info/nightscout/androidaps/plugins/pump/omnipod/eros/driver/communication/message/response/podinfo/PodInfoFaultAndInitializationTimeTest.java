@@ -6,7 +6,7 @@ import static org.junit.Assert.assertTrue;
 import org.joda.time.DateTime;
 import org.joda.time.Duration;
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.FaultEventCode;
 import info.nightscout.pump.core.utils.ByteUtil;

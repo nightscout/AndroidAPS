@@ -3,7 +3,7 @@ package info.nightscout.androidaps.interfaces
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.interfaces.profile.PureProfile
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 internal class ProfileStoreTest : TestBaseWithProfile() {
 
