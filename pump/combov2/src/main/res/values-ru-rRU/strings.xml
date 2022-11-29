@@ -101,9 +101,27 @@
     <string name="combov2_reservoir_low_warning">Низкий уровень инсулина в картридже помпы</string>
     <string name="combov2_setting_tbr_succeeded">Настройки TBR выполнены</string>
     <string name="combov2_setting_tbr_failed">Не удалось установить TBR</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Непредвиденный предел, встретившийся при настройке TBR: целевой процент составил %1$d%%, а достиг предела %1$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Невозможно установить абсолютный TBR, если базовая скорость равна нулю</string>
+    <string name="combov2_pair_with_pump_summary">Выполнить сопряжение AndroidAPS и Android с помпой Accu-Chek Combo</string>
+    <string name="combov2_unpair_pump_summary">Отключить AndroidAPS и AndroidAPS от помпы Accu-Chek Combo</string>
+    <string name="combov2_unknown_tbr_detected">Обнаружена и остановлена неизвестная временная базальная скоростьTBR; в процентах: %1$d%%; оставшаяся продолжительность: %2$s</string>
+    <string name="combov2_connection_error">Ошибка соединения: %1$s</string>
     <string name="combov2_short_status_last_connection">Предыдущее соединение: %1$d мин. назад</string>
+    <string name="combov2_short_status_alert">Предупреждение: %s</string>
+    <string name="combov2_short_status_last_bolus">Предыдущий болюс: %1$s ед. @ %2$s</string>
     <string name="combov2_short_status_temp_basal">Временн %s</string>
     <string name="combov2_short_status_reservoir">Резервуар: %dед</string>
     <string name="combov2_short_status_battery_state_empty">пусто</string>
     <string name="combov2_short_status_battery_state_low">низкая</string>
+    <string name="combov2_short_status_battery_state_full">заряжена полностью</string>
+    <string name="combov2_short_status_battery_state">Батарея: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Автоматически определять и вносить запись о замене резервуара инсулина</string>
+    <string name="combov2_automatic_battery_entry">Автоматически определять и вносить запись о замене батареи</string>
+    <string name="combov2_note_reservoir_change">Запись о замене резервуара инсулина автоматически вносится драйвером combov2</string>
+    <string name="combov2_note_battery_change">Запись о замене батареи автоматически вносится драйвером combov2</string>
+    <string name="combov2_timezone_changed">Часовой пояс изменен</string>
+    <string name="combov2_datetime_changed">Дата и/или время изменены</string>
+    <string name="combov2_dst_started">Начато летнее/зимнее время (ДСТ)</string>
+    <string name="combov2_dst_ended">Летнее/зимнее время окончено (ДСТ)</string>
 </resources>
