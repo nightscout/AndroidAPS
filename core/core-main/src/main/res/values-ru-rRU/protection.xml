@@ -6,8 +6,12 @@
     <string name="application_protection">Защита приложения</string>
     <string name="bolus_protection">Защита болюсов</string>
     <string name="settings_password">Пароль параметров</string>
+    <string name="settings_pin">ПИН-код настроек</string>
     <string name="application_password">Пароль приложения</string>
+    <string name="application_pin">PIN-код приложения</string>
     <string name="bolus_password">Пароль болюсов</string>
+    <string name="bolus_pin">Пин-код болюса</string>
+    <string name="protection_timeout_title">Тайм-аут удержания пароля и пин-кода [s]</string>
     <string name="biometric">Биометрия</string>
     <string name="custom_password">Настраиваемый пароль</string>
     <string name="noprotection">Без защиты</string>
