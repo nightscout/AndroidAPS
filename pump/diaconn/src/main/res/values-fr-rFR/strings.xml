@@ -45,7 +45,7 @@
     <string name="diaconn_g8_useextended_title">Utiliser les bolus étendus pour &gt; 200%%</string>
     <string name="diaconn_g8_visualizeextendedaspercentage_title">Afficher le bolus étendu en %%</string>
     <string name="diaconn_g8_bluetooth_status">État Bluetooth</string>
-    <string name="diagonn_g8_tdd_label">DTI</string>
+    <string name="diagonn_g8_tdd_label">DTQ</string>
     <string name="bolus_step">Incrément Bolus</string>
     <string name="basal_step">Incrément Basal</string>
     <string name="pump_firmware_label">Firmware</string>
