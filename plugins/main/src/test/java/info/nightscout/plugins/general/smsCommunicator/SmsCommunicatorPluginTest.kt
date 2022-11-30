@@ -331,17 +331,48 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Suspended (10 m)", smsCommunicatorPlugin.messages[1].text)
 
-        //LOOP STATUS : enabled
+        //LOOP STATUS : enabled - APS mode - Closed
+        val modeClosed = "Closed Loop"
         `when`(loop.enabled).thenReturn(true)
         `when`(loop.isSuspended).thenReturn(false)
         `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
-        `when`(rh.gs(R.string.closedloop)).thenReturn(ApsMode.CLOSED.name)
+        `when`(rh.gs(R.string.closedloop)).thenReturn(modeClosed)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertFalse(sms.ignored)
         Assert.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
-        Assert.assertEquals("Loop is enabled - CLOSED", smsCommunicatorPlugin.messages[1].text)
+        Assert.assertEquals("Loop is enabled - $modeClosed", smsCommunicatorPlugin.messages[1].text)
+
+        //LOOP STATUS : enabled - APS mode - Open
+        val modeOpen = "Open Loop"
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
+        `when`(rh.gs(R.string.openloop)).thenReturn(modeOpen)
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(sms)
+        Assert.assertFalse(sms.ignored)
+        Assert.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
+        Assert.assertEquals("Loop is enabled - $modeOpen", smsCommunicatorPlugin.messages[1].text)
+
+        //LOOP STATUS : enabled - APS mode - LGS
+        val modeLgs = "Low Glucose Suspend"
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.LGS.name)
+        `when`(rh.gs(R.string.lowglucosesuspend)).thenReturn(modeLgs)
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(sms)
+        Assert.assertFalse(sms.ignored)
+        Assert.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
+        Assert.assertEquals("Loop is enabled - $modeLgs", smsCommunicatorPlugin.messages[1].text)
+
+        //LOOP STATUS : enabled - APS mode - unknown
+        val modeUnknown = "unknown"
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn("some wrong value")
+        `when`(rh.gs(R.string.unknown)).thenReturn(modeUnknown)
+        smsCommunicatorPlugin.messages = ArrayList()
+        smsCommunicatorPlugin.processSms(sms)
+        Assert.assertFalse(sms.ignored)
+        Assert.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
+        Assert.assertEquals("Loop is enabled - $modeUnknown", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP : wrong format
         `when`(loop.enabled).thenReturn(true)
