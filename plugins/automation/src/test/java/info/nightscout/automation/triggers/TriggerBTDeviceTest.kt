@@ -4,7 +4,7 @@ import com.google.common.base.Optional
 import info.nightscout.automation.elements.ComparatorConnect
 import org.json.JSONObject
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")
 class TriggerBTDeviceTest : TriggerTestBase() {

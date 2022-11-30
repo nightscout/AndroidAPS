@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 
 import static org.junit.Assert.assertArrayEquals;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
 

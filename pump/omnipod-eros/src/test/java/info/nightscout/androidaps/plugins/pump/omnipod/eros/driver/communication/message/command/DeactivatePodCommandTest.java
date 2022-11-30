@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
-import org.junit.Test;
+import static org.junit.Assert.assertArrayEquals;
+
+import org.junit.jupiter.api.Test;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.MessageBlockType;
-
-import static org.junit.Assert.assertArrayEquals;
 
 public class DeactivatePodCommandTest {
 

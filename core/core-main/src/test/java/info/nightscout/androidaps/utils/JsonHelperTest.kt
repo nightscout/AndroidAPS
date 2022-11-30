@@ -3,7 +3,7 @@ package info.nightscout.androidaps.utils
 import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")
 class JsonHelperTest {

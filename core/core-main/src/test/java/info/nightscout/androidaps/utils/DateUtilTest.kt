@@ -7,10 +7,10 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import java.util.*
+import java.util.Date
 
 class DateUtilTest : TestBase() {
 

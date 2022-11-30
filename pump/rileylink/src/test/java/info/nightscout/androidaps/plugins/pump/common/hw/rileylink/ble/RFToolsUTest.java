@@ -1,6 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Created by andy on 11/21/18.

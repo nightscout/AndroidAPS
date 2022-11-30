@@ -5,15 +5,15 @@ import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import org.json.JSONObject
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 
 class TriggerProfilePercentTest : TriggerTestBase() {
 
     private val now = 1514766900000L
 
-    @Before fun mock() {
+    @BeforeEach fun mock() {
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
         `when`(dateUtil.now()).thenReturn(now)
     }

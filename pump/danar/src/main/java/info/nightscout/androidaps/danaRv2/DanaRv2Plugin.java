@@ -12,6 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
+import info.nightscout.androidaps.annotations.OpenForTesting;
 import info.nightscout.androidaps.danaRv2.services.DanaRv2ExecutionService;
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin;
 import info.nightscout.androidaps.danar.R;
@@ -44,6 +45,7 @@ import info.nightscout.shared.utils.T;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 @Singleton
+@OpenForTesting
 public class DanaRv2Plugin extends AbstractDanaRPlugin {
     private final CompositeDisposable disposable = new CompositeDisposable();
 

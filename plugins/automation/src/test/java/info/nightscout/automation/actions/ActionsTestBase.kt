@@ -5,7 +5,6 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.database.entities.OfflineEvent
@@ -15,9 +14,11 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
+import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileSource
@@ -30,7 +31,7 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
@@ -74,6 +75,7 @@ ActionsTestBase : TestBaseWithProfile() {
             runningConfiguration: RunningConfiguration,
             version: String
         ): DeviceStatus? = null
+        override fun setPluginEnabled(type: PluginType, newState: Boolean) {}
     }
 
     @Mock lateinit var sp: SP
@@ -191,7 +193,7 @@ ActionsTestBase : TestBaseWithProfile() {
         }
     }
 
-    @Before
+    @BeforeEach
     fun mock() {
         testPumpPlugin = TestPumpPlugin(pluginDescription, aapsLogger, rh, injector)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)

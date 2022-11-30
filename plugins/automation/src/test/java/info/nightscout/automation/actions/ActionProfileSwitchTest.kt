@@ -4,8 +4,8 @@ import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputProfileName
 import info.nightscout.interfaces.queue.Callback
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mockito
@@ -19,7 +19,7 @@ class ActionProfileSwitchTest : ActionsTestBase() {
 
     private val stringJson = "{\"data\":{\"profileToSwitchTo\":\"Test\"},\"type\":\"ActionProfileSwitch\"}"
 
-    @Before fun setUp() {
+    @BeforeEach fun setUp() {
         `when`(rh.gs(R.string.profilename)).thenReturn("Change profile to")
         `when`(rh.gs(ArgumentMatchers.eq(R.string.changengetoprofilename), ArgumentMatchers.anyString())).thenReturn("Change profile to %s")
         `when`(context.getString(R.string.alreadyset)).thenReturn("Already set")

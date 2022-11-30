@@ -4,7 +4,7 @@ import info.nightscout.plugins.sync.tidepool.messages.AuthReplyMessage
 import info.nightscout.plugins.sync.tidepool.messages.DatasetReplyMessage
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class SessionTest {
 

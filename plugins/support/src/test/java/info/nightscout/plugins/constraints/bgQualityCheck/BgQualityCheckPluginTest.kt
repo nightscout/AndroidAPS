@@ -14,8 +14,8 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
 import org.mockito.Mock
 import org.mockito.Mockito.anyInt
@@ -34,7 +34,7 @@ class BgQualityCheckPluginTest : TestBase() {
     val injector = HasAndroidInjector { AndroidInjector { } }
     //private val autosensDataStore = AutosensDataStoreObject()
 
-    @Before
+    @BeforeEach
     fun mock() {
         plugin =
             BgQualityCheckPlugin(

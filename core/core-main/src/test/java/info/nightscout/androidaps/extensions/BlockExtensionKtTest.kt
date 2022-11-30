@@ -12,7 +12,7 @@ import info.nightscout.database.entities.data.checkSanity
 import info.nightscout.shared.utils.T
 import org.junit.Assert
 
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class BlockExtensionKtTest {
 

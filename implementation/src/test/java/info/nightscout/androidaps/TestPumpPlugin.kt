@@ -1,6 +1,7 @@
 package info.nightscout.androidaps
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.Pump
@@ -13,6 +14,7 @@ import info.nightscout.interfaces.utils.TimeChangeType
 import org.json.JSONObject
 
 @Suppress("MemberVisibilityCanBePrivate")
+@OpenForTesting
 class TestPumpPlugin(val injector: HasAndroidInjector) : Pump {
 
     var connected = false

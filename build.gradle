@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.7.21'
+        kotlin_version = '1.7.22'
         core_version = '1.9.0'
         rxjava_version = '3.1.5'
         rxandroid_version = '3.0.2'
@@ -32,20 +32,21 @@ buildscript {
         swipe_version = '1.1.0'
 
         junit_version = '4.13.2'
-        mockito_version = '4.4.0'
+        junit_jupiter_version = '5.7.0'
+        mockito_version = '4.6.1'
         dexmaker_version = '1.2'
         retrofit2_version = '2.9.0'
         okhttp3_version = '4.10.0'
         byteBuddy_version = '1.12.8'
 
-        androidx_junit_version = '1.1.3'
-        androidx_rules_version = '1.4.0'
+        androidx_junit_version = '1.1.4'
+        androidx_rules_version = '1.5.0'
 
         rxandroidble_version = '1.12.1'
         replayshare_version = '2.2.0'
 
         wearable_version = '2.9.0'
-        play_services_wearable_version = '17.1.0'
+        play_services_wearable_version = '18.0.0'
         play_services_location_version = '21.0.1'
 
         kotlinx_datetime_version = '0.4.0'

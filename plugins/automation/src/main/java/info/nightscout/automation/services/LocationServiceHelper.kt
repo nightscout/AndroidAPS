@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.interfaces.NotificationHolder
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -19,6 +20,7 @@ import javax.inject.Singleton
 
  */
 @Singleton
+@OpenForTesting
 class LocationServiceHelper @Inject constructor(
     private val notificationHolder: NotificationHolder
 ) {

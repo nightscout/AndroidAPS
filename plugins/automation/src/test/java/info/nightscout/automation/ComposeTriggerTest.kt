@@ -7,7 +7,7 @@ import info.nightscout.automation.triggers.Trigger
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.automation.triggers.TriggerDummy
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ComposeTriggerTest : TestBase() {
 

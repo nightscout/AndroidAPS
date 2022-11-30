@@ -6,34 +6,41 @@ import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
 import info.nightscout.androidaps.testing.mockers.WearUtilMocker
 import info.nightscout.androidaps.testing.mocks.SharedPreferencesMock
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.rx.logging.AAPSLoggerTest
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import org.junit.Before
-import org.junit.Rule
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoRule
+import org.mockito.Mockito.`when`
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.quality.Strictness
 import java.util.Locale
 
+@ExtendWith(MockitoExtension::class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 open class TestBase {
 
     @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
     @Mock lateinit var dateUtil: DateUtil
+    @Mock lateinit var wearUtil: WearUtil
 
     val aapsLogger = AAPSLoggerTest()
 
-    val wearUtil: WearUtil = Mockito.spy(WearUtil())
-    val wearUtilMocker = WearUtilMocker(wearUtil)
+    //val wearUtil: WearUtil = Mockito.mock(WearUtil::class.java)
+    lateinit var wearUtilMocker: WearUtilMocker
     lateinit var persistence: Persistence
 
     private val mockedSharedPrefs: HashMap<String, SharedPreferences> = HashMap()
 
-    @Before
+    @BeforeEach
     fun setup() {
+        wearUtilMocker = WearUtilMocker(wearUtil)
         Mockito.doAnswer { invocation ->
             val key = invocation.getArgument<String>(0)
             if (mockedSharedPrefs.containsKey(key)) {
@@ -46,16 +53,13 @@ open class TestBase {
         }.`when`(context).getSharedPreferences(ArgumentMatchers.anyString(), ArgumentMatchers.anyInt())
 
         wearUtilMocker.prepareMockNoReal()
-        wearUtil.aapsLogger = aapsLogger
-        wearUtil.context = context
+        `when`(wearUtil.aapsLogger).thenReturn(aapsLogger)
+        `when`(wearUtil.context).thenReturn(context)
+        val rateLimits: MutableMap<String, Long> = HashMap()
+        `when`(wearUtil.rateLimits).thenReturn(rateLimits)
         persistence = Mockito.spy(Persistence(aapsLogger, dateUtil, sp))
 
     }
-
-    // Add a JUnit rule that will setup the @Mock annotated vars and log.
-    // Another possibility would be to add `MockitoAnnotations.initMocks(this) to the setup method.
-    @get:Rule
-    val mockitoRule: MockitoRule = MockitoJUnit.rule()
 
     @Before
     fun setupLocale() {

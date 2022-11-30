@@ -1,12 +1,12 @@
 package info.nightscout.automation.triggers
 
 import com.google.common.base.Optional
-import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.automation.R
+import info.nightscout.interfaces.utils.MidnightTime
 import org.json.JSONObject
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 
 class TriggerTimeRangeTest : TriggerTestBase() {
@@ -14,7 +14,7 @@ class TriggerTimeRangeTest : TriggerTestBase() {
     var now = 754 // in minutes from midnight
     private var timeJson = "{\"data\":{\"start\":753,\"end\":784},\"type\":\"TriggerTimeRange\"}"
 
-    @Before
+    @BeforeEach
     fun mock() {
         val nowMills = MidnightTime.calcPlusMinutes(now)
         `when`(dateUtil.now()).thenReturn(nowMills)

@@ -1,16 +1,16 @@
 package info.nightscout.automation.actions
 
+import info.nightscout.automation.elements.InputCarePortalMenu
+import info.nightscout.automation.elements.InputDuration
+import info.nightscout.automation.elements.InputString
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.automation.elements.InputCarePortalMenu
-import info.nightscout.automation.elements.InputDuration
-import info.nightscout.automation.elements.InputString
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.`when`
 
@@ -18,7 +18,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
 
     private lateinit var sut: ActionCarePortalEvent
 
-    @Before
+    @BeforeEach
     fun setup() {
         `when`(sp.getString(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn("AAPS")
         `when`(

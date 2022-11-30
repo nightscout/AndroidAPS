@@ -2,6 +2,7 @@ package info.nightscout.androidaps.interaction.utils
 
 import android.content.Context
 import android.os.PowerManager
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 
@@ -13,18 +14,19 @@ import javax.inject.Singleton
  * Adapted by dlvoy on 2019-11-06 using code from jamorham JoH class
  */
 @Singleton
-class WearUtil @Inject constructor() {
-
-    @Inject lateinit var context: Context
-    @Inject lateinit var aapsLogger: AAPSLogger
+@OpenForTesting
+open class WearUtil @Inject constructor(
+    open val context: Context,
+    open val aapsLogger: AAPSLogger
+) {
 
     private val debugWakelocks = false
-    private val rateLimits: MutableMap<String, Long> = HashMap()
+    open val rateLimits: MutableMap<String, Long> = HashMap()
 
     //==============================================================================================
     // Time related util methods
     //==============================================================================================
-    fun timestamp(): Long {
+    open fun timestamp(): Long {
         return System.currentTimeMillis()
     }
 
@@ -51,7 +53,7 @@ class WearUtil @Inject constructor() {
         return true
     }
 
-    fun getWakeLock(name: String, millis: Int): PowerManager.WakeLock {
+    open fun getWakeLock(name: String, millis: Int): PowerManager.WakeLock {
         val pm = context.getSystemService(Context.POWER_SERVICE) as PowerManager
         val wl = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "AAPS::$name")
         wl.acquire(millis.toLong())
@@ -59,16 +61,8 @@ class WearUtil @Inject constructor() {
         return wl
     }
 
-    fun releaseWakeLock(wl: PowerManager.WakeLock?) {
+    open fun releaseWakeLock(wl: PowerManager.WakeLock?) {
         if (debugWakelocks) aapsLogger.debug(LTag.WEAR, "releaseWakeLock: " + wl.toString())
         if (wl?.isHeld == true) wl.release()
-    }
-
-    fun threadSleep(millis: Long) {
-        try {
-            Thread.sleep(millis)
-        } catch (e: InterruptedException) {
-            // we simply ignore if sleep was interrupted
-        }
     }
 }

@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communicatio
 import static org.junit.Assert.assertArrayEquals;
 
 import org.joda.time.Duration;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;

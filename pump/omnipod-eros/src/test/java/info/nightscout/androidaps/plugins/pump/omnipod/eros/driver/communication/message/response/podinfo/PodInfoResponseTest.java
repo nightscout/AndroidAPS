@@ -5,7 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.PodInfoType;
 import info.nightscout.pump.core.utils.ByteUtil;

@@ -3,11 +3,13 @@ package info.nightscout.interfaces.utils
 import android.content.Context
 import android.content.Intent
 import android.provider.AlarmClock
+import info.nightscout.androidaps.annotations.OpenForTesting
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
-class TimerUtil @Inject constructor(
+open class TimerUtil @Inject constructor(
     private val context: Context
 ) {
 

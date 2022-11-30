@@ -7,8 +7,8 @@ import info.nightscout.plugins.source.GlimpPlugin
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
 class GlimpPluginTest : TestBase() {
@@ -18,7 +18,7 @@ class GlimpPluginTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var sp: SP
 
-    @Before
+    @BeforeEach
     fun setup() {
         glimpPlugin = GlimpPlugin(HasAndroidInjector { AndroidInjector { } }, rh, aapsLogger, sp)
     }

@@ -10,8 +10,8 @@ import info.nightscout.rx.events.EventNetworkChange
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
@@ -26,7 +26,7 @@ class NsClientReceiverDelegateTest : TestBase() {
     private lateinit var sut: NsClientReceiverDelegate
 
 
-    @Before
+    @BeforeEach
     fun prepare() {
         //receiverStatusStore = ReceiverStatusStore(context, rxBus)
         sut = NsClientReceiverDelegate(rxBus, rh, sp, receiverStatusStore)

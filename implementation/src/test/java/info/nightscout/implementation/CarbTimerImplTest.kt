@@ -20,10 +20,11 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.any
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.`when`
 
@@ -40,7 +41,6 @@ class CarbTimerImplTest : TestBase() {
     @Mock lateinit var locationServiceHelper: LocationServiceHelper
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var profileFunction: ProfileFunction
-    @Mock lateinit var timerUtil: TimerUtil
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
@@ -51,15 +51,17 @@ class CarbTimerImplTest : TestBase() {
         }
     }
     private lateinit var dateUtil: DateUtil
+    private lateinit var timerUtil: TimerUtil
 
     private lateinit var automationPlugin: AutomationPlugin
     private lateinit var sut: CarbTimerImpl
 
-    @Before
+    @BeforeEach
     fun init() {
         `when`(rh.gs(anyInt())).thenReturn("")
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtil(context)
+        timerUtil = TimerUtil(context)
         automationPlugin = AutomationPlugin(injector, rh, context, sp, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin)
         sut = CarbTimerImpl(injector, rh, automationPlugin, timerUtil)
     }
@@ -73,6 +75,6 @@ class CarbTimerImplTest : TestBase() {
         Assert.assertEquals(0, automationPlugin.size())
 
         sut.scheduleTimeToEatReminder(1)
-        Mockito.verify(timerUtil, Mockito.times(1)).scheduleReminder(1, "")
+        Mockito.verify(context, Mockito.times(1)).startActivity(any())
     }
 }

@@ -9,8 +9,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.core.utils.ByteUtil
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
 /**
@@ -31,7 +31,7 @@ class MedtronicPumpHistoryDecoderUTest : TestBase() {
     //private var medtronicUtil: MedtronicUtil? = null
     //private var decoder: MedtronicPumpHistoryDecoder? = null
 
-    @Before fun setup() {
+    @BeforeEach fun setup() {
         medtronicPumpStatus =
             MedtronicPumpStatus(rh, sp, rxBus, rileyLinkUtil)
         medtronicUtil =

@@ -4,8 +4,8 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class DetailedBolusInfoStorageTest : TestBase() {
 
@@ -24,7 +24,7 @@ class DetailedBolusInfoStorageTest : TestBase() {
         info3.insulin = 5.0
     }
 
-    @Before
+    @BeforeEach
     fun prepare() {
         detailedBolusInfoStorage = DetailedBolusInfoStorageImpl(aapsLogger)
     }

@@ -4,7 +4,7 @@ import info.nightscout.androidaps.danaRv2.comm.MsgCheckValue_v2
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
 import info.nightscout.pump.dana.DanaPump
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class MsgCheckValueRv2Test : DanaRTestBase() {
 

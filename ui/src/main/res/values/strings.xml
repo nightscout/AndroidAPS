@@ -20,6 +20,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Activity monitor</string>
     <string name="do_you_want_reset_stats">Do you want to reset activity stats?</string>
+    <string name="do_you_want_reset_tdd_stats">Do you want to reset TDD stats?</string>
     <string name="statistics">Statistics</string>
     <string name="calculation_in_progress">Calculation in progress</string>
     <string name="invalid_age">Invalid age entry</string>

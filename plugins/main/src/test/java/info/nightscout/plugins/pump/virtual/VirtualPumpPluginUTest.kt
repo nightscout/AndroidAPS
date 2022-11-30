@@ -15,8 +15,8 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
@@ -35,7 +35,7 @@ class VirtualPumpPluginUTest : TestBase() {
 
     lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
-    @Before
+    @BeforeEach
     fun prepareMocks() {
         virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, rh, aapsSchedulers, sp, profileFunction, iobCobCalculator, commandQueue, pumpSync, config, dateUtil)
     }

@@ -15,8 +15,8 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.core.Completable
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -43,7 +43,7 @@ class ActionNotificationTest : TestBase() {
         }
     }
 
-    @Before
+    @BeforeEach
     fun setup() {
         `when`(context.getString(info.nightscout.core.main.R.string.ok)).thenReturn("OK")
         `when`(rh.gs(info.nightscout.core.main.R.string.notification)).thenReturn("Notification")

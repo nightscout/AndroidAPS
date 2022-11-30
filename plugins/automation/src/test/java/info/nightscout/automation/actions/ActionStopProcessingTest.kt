@@ -1,17 +1,17 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.R
+import info.nightscout.interfaces.queue.Callback
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 
 class ActionStopProcessingTest : ActionsTestBase() {
 
     lateinit var sut: ActionStopProcessing
 
-    @Before
+    @BeforeEach
     fun setup() {
 
         `when`(rh.gs(R.string.stop_processing)).thenReturn("Stop processing")

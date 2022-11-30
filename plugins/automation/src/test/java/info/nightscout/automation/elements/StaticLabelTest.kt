@@ -3,7 +3,7 @@ package info.nightscout.automation.elements
 import info.nightscout.automation.triggers.TriggerDummy
 import info.nightscout.automation.triggers.TriggerTestBase
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 
 class StaticLabelTest : TriggerTestBase() {

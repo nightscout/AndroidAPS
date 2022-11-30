@@ -16,9 +16,11 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.nsclient.NSAlarm
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.source.DoingOwnUploadSource
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
@@ -61,7 +63,8 @@ class NSClientPlugin @Inject constructor(
     private val nsClientReceiverDelegate: NsClientReceiverDelegate,
     private val config: Config,
     private val dataSyncSelector: DataSyncSelector,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val activePlugin: ActivePlugin
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -141,6 +144,9 @@ class NSClientPlugin @Inject constructor(
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
         }
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = config.isEngineeringMode()
+        if (activePlugin.activeBgSource is DoingOwnUploadSource) {
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_do_ns_upload))?.isVisible = false
+        }
     }
 
     override val hasWritePermission: Boolean get() = nsClientService?.hasWriteAuth ?: false

@@ -11,8 +11,8 @@ import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import java.io.File
@@ -30,7 +30,7 @@ class MaintenancePluginTest : TestBase() {
 
     private lateinit var sut: MaintenancePlugin
 
-    @Before
+    @BeforeEach
     fun mock() {
         sut = MaintenancePlugin(injector, context, rh, sp, nsSettingsStatus, aapsLogger, config, fileListProvider, loggerUtils)
         `when`(loggerUtils.suffix).thenReturn(".log.zip")

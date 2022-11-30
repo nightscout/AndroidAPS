@@ -3,8 +3,8 @@ package info.nightscout.androidaps.data
 import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.constraints.Constraint
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 /**
  * Created by mike on 19.03.2018.
@@ -49,7 +49,7 @@ class ConstraintTest : TestBase() {
         Assert.assertEquals(10.0, d.originalValue(), 0.01)
     }
 
-    @Before
+    @BeforeEach
     fun prepareMock() {
     }
 }

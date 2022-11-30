@@ -1,12 +1,11 @@
 package info.nightscout.implementation.pump
 
 import info.nightscout.androidaps.TestBase
-import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.pump.PumpSync
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 
 class TemporaryBasalStorageTest : TestBase() {
 
@@ -16,7 +15,7 @@ class TemporaryBasalStorageTest : TestBase() {
 
     private lateinit var temporaryBasalStorage: TemporaryBasalStorageImpl
 
-    @Before
+    @BeforeEach
     fun prepare() {
         temporaryBasalStorage = TemporaryBasalStorageImpl(aapsLogger)
     }

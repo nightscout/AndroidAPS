@@ -8,7 +8,7 @@ import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.danars.comm.DanaRSPacket
 import info.nightscout.shared.sharedPreferences.SP
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -23,7 +23,7 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     lateinit var danaPump: DanaPump
 
-    @Before
+    @BeforeEach
     fun prepare() {
         Mockito.`when`(rh.gs(ArgumentMatchers.anyInt())).thenReturn("AnyString")
     }
@@ -56,7 +56,7 @@ open class DanaRSTestBase : TestBaseWithProfile() {
         return array
     }
 
-    @Before
+    @BeforeEach
     fun setup() {
         danaPump = DanaPump(aapsLogger, sp, dateUtil, profileInstantiator)
     }

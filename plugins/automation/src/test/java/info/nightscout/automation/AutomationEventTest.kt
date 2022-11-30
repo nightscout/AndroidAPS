@@ -15,7 +15,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONObject
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
 class AutomationEventTest : TestBase() {

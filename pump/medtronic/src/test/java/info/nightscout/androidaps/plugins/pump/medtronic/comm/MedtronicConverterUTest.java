@@ -1,11 +1,11 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.comm;
 
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 
 /**
  * Created by andy on 1/30/19.
  */
-@Ignore
+@Disabled
 public class MedtronicConverterUTest {
 /*
     MedtronicConverter converter = new MedtronicConverter();

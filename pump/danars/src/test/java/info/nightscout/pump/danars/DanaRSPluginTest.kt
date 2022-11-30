@@ -12,8 +12,8 @@ import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -55,7 +55,7 @@ class DanaRSPluginTest : DanaRSTestBase() {
         Assert.assertEquals("DanaRS: limitingpercentrate", c.getMostLimitedReasons(aapsLogger))
     }
 
-    @Before
+    @BeforeEach
     fun prepareMocks() {
         Mockito.`when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")
         Mockito.`when`(rh.gs(eq(R.string.limitingbasalratio), anyObject(), anyObject())).thenReturn("limitingbasalratio")

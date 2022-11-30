@@ -4,7 +4,7 @@ import android.telephony.SmsMessage
 import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.smsCommunicator.Sms
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 

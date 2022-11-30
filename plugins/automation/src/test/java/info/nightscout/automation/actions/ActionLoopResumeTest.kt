@@ -7,15 +7,15 @@ import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.interfaces.queue.Callback
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 
 class ActionLoopResumeTest : ActionsTestBase() {
 
     lateinit var sut: ActionLoopResume
 
-    @Before
+    @BeforeEach
     fun setup() {
 
         `when`(rh.gs(info.nightscout.core.main.R.string.resumeloop)).thenReturn("Resume loop")

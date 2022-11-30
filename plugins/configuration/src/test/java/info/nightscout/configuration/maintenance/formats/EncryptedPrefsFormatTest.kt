@@ -13,14 +13,15 @@ import org.hamcrest.CoreMatchers
 import org.junit.Assert
 import org.junit.Assume
 import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito
 import java.io.File
 
 @Suppress("SpellCheckingInspection")
-class EncryptedPrefsFormatTest : TestBase() {
+open class EncryptedPrefsFormatTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var file: MockedFile
@@ -37,7 +38,7 @@ class EncryptedPrefsFormatTest : TestBase() {
         }
     }
 
-    @Before
+    @BeforeEach
     fun mock() {
         Mockito.`when`(rh.gs(ArgumentMatchers.anyInt())).thenReturn("mock translation")
     }
@@ -206,35 +207,39 @@ class EncryptedPrefsFormatTest : TestBase() {
         Assert.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, PrefsStatus.ERROR)
     }
 
-    @Test(expected = PrefFormatError::class)
+    @Test
     fun garbageInputTest() {
-        val frozenPrefs = "whatever man, i duno care"
+        Assert.assertThrows(PrefFormatError::class.java) {
+            val frozenPrefs = "whatever man, i duno care"
 
-        val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
-        encryptedFormat.loadPreferences(getMockedFile(), "sikret")
+            val storage = SingleStringStorage(frozenPrefs)
+            val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
+            encryptedFormat.loadPreferences(getMockedFile(), "sikret")
+        }
     }
 
-    @Test(expected = PrefFormatError::class)
+    @Test
     fun unknownFormatTest() {
-        val frozenPrefs = "{\n" +
-            "  \"metadata\": {},\n" +
-            "  \"security\": {\n" +
-            "    \"salt\": \"9581d7a9e56d8127ad6b74a876fa60b192b1c6f4343d857bc07e3874589f2fc9\",\n" +
-            "    \"file_hash\": \"9122fd04a4938030b62f6b9d6dda63a11c265e673c4aecbcb6dcd62327c025bb\",\n" +
-            "    \"content_hash\": \"23f999f6e6d325f649b61871fe046a94e110bf1587ff070fb66a0f8085b2760c\",\n" +
-            "    \"algorithm\": \"v1\"\n" +
-            "  },\n" +
-            "  \"format\": \"aaps_9000_new_format\",\n" +
-            "  \"content\": \"DJ5+HP/gq7icRQhbG9PEBJCMuNwBssIytfEQPCNkzn7PHMfMZuc09vYQg3qzFkmULLiotg==\"\n" +
-            "}"
+        Assert.assertThrows(PrefFormatError::class.java) {
+            val frozenPrefs = "{\n" +
+                "  \"metadata\": {},\n" +
+                "  \"security\": {\n" +
+                "    \"salt\": \"9581d7a9e56d8127ad6b74a876fa60b192b1c6f4343d857bc07e3874589f2fc9\",\n" +
+                "    \"file_hash\": \"9122fd04a4938030b62f6b9d6dda63a11c265e673c4aecbcb6dcd62327c025bb\",\n" +
+                "    \"content_hash\": \"23f999f6e6d325f649b61871fe046a94e110bf1587ff070fb66a0f8085b2760c\",\n" +
+                "    \"algorithm\": \"v1\"\n" +
+                "  },\n" +
+                "  \"format\": \"aaps_9000_new_format\",\n" +
+                "  \"content\": \"DJ5+HP/gq7icRQhbG9PEBJCMuNwBssIytfEQPCNkzn7PHMfMZuc09vYQg3qzFkmULLiotg==\"\n" +
+                "}"
 
-        val storage = SingleStringStorage(frozenPrefs)
-        val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
-        encryptedFormat.loadPreferences(getMockedFile(), "sikret")
+            val storage = SingleStringStorage(frozenPrefs)
+            val encryptedFormat = EncryptedPrefsFormat(rh, cryptoUtil, storage)
+            encryptedFormat.loadPreferences(getMockedFile(), "sikret")
+        }
     }
 
-    class MockedFile(s: String) : File(s)
+    open class MockedFile(s: String) : File(s)
 
     private fun getMockedFile(): File {
         Mockito.`when`(file.exists()).thenReturn(true)

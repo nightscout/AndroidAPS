@@ -8,8 +8,8 @@ import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.anyInt
 import org.mockito.Mockito.anyLong
@@ -22,7 +22,7 @@ class StorageConstraintPluginTest : TestBase() {
 
     private lateinit var storageConstraintPlugin: StorageConstraintPlugin
 
-    @Before fun prepareMock() {
+    @BeforeEach fun prepareMock() {
         storageConstraintPlugin = StorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, rh, uiInteraction)
         `when`(rh.gs(anyInt(), anyLong())).thenReturn("")
     }

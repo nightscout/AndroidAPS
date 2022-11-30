@@ -6,30 +6,30 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.aps.loop.LoopFragment
 import info.nightscout.plugins.aps.loop.LoopPlugin
-import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
@@ -58,7 +58,7 @@ class LoopPluginTest : TestBase() {
     private lateinit var loopPlugin: LoopPlugin
 
     val injector = HasAndroidInjector { AndroidInjector { } }
-    @Before fun prepareMock() {
+    @BeforeEach fun prepareMock() {
 
         loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, config,
                                 constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel,

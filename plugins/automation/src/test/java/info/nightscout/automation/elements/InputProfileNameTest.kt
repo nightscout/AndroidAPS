@@ -2,7 +2,7 @@ package info.nightscout.automation.elements
 
 import info.nightscout.automation.triggers.TriggerTestBase
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class InputProfileNameTest : TriggerTestBase() {
 

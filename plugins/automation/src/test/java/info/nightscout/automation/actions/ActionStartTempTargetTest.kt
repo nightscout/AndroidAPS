@@ -1,17 +1,17 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
-import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputTempTarget
 import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.queue.Callback
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
@@ -19,7 +19,7 @@ class ActionStartTempTargetTest : ActionsTestBase() {
 
     private lateinit var sut: ActionStartTempTarget
 
-    @Before
+    @BeforeEach
     fun setup() {
         `when`(rh.gs(R.string.starttemptarget)).thenReturn("Start temp target")
 
