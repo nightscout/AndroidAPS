@@ -87,6 +87,10 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     private lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     private var hasBeenRun = false
+    private val modeClosed = "Closed Loop"
+    private val modeOpen = "Open Loop"
+    private val modeLgs = "Low Glucose Suspend"
+    private val modeUnknown = "unknown"
 
     @BeforeEach fun prepareTests() {
         val reading = GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = 1514766900000, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT)
@@ -250,7 +254,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(rh.gsNotLocalised(R.string.smscommunicator_tempbasal_canceled)).thenReturn("Temp basal canceled")
         `when`(rh.gsNotLocalised(R.string.smscommunicator_calibration_sent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip+.")
         `when`(rh.gsNotLocalised(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully")
-
+        `when`(rh.gs(R.string.closedloop)).thenReturn(modeClosed)
+        `when`(rh.gs(R.string.openloop)).thenReturn(modeOpen)
+        `when`(rh.gs(R.string.lowglucosesuspend)).thenReturn(modeLgs)
+        `when`(rh.gs(R.string.unknown)).thenReturn(modeUnknown)
+        `when`(rh.gs(R.string.smscommunicator_set_closed_loop_reply_with_code)).thenReturn("In order to switch Loop mode to Closed loop reply with code %1\$s")
+        `when`(rh.gs(R.string.smscommunicator_current_loop_mode)).thenReturn("Current loop mode: %1\$s")
+        `when`(rh.gs(R.string.smscommunicator_set_lgs_reply_with_code)).thenReturn("In order to switch Loop mode to LGS (Low Glucose Suspend) reply with code %1\$s")
     }
 
     @Test
@@ -332,11 +342,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Suspended (10 m)", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP STATUS : enabled - APS mode - Closed
-        val modeClosed = "Closed Loop"
         `when`(loop.enabled).thenReturn(true)
         `when`(loop.isSuspended).thenReturn(false)
         `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
-        `when`(rh.gs(R.string.closedloop)).thenReturn(modeClosed)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
@@ -345,9 +353,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Loop is enabled - $modeClosed", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP STATUS : enabled - APS mode - Open
-        val modeOpen = "Open Loop"
         `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
-        `when`(rh.gs(R.string.openloop)).thenReturn(modeOpen)
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertFalse(sms.ignored)
@@ -355,9 +361,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Loop is enabled - $modeOpen", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP STATUS : enabled - APS mode - LGS
-        val modeLgs = "Low Glucose Suspend"
         `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.LGS.name)
-        `when`(rh.gs(R.string.lowglucosesuspend)).thenReturn(modeLgs)
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertFalse(sms.ignored)
@@ -365,9 +369,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Loop is enabled - $modeLgs", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP STATUS : enabled - APS mode - unknown
-        val modeUnknown = "unknown"
         `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn("some wrong value")
-        `when`(rh.gs(R.string.unknown)).thenReturn(modeUnknown)
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertFalse(sms.ignored)
@@ -514,6 +516,37 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertFalse(sms.ignored)
         Assert.assertEquals("LOOP BLABLA", smsCommunicatorPlugin.messages[0].text)
         Assert.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+
+        //LOOP CLOSED
+        var smsCommand = "LOOP CLOSED"
+        val replyClosed = "In order to switch Loop mode to Closed loop reply with code "
+        `when`(loop.enabled).thenReturn(true)
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", smsCommand)
+        smsCommunicatorPlugin.processSms(sms)
+        Assert.assertFalse(sms.ignored)
+        Assert.assertEquals(smsCommand, smsCommunicatorPlugin.messages[0].text)
+        Assert.assertTrue(smsCommunicatorPlugin.messages[1].text.contains(replyClosed))
+        passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
+        Assert.assertEquals("Current loop mode: $modeClosed", smsCommunicatorPlugin.messages[3].text)
+
+        //LOOP LGS
+        smsCommand = "LOOP LGS"
+        val replyLgs = "In order to switch Loop mode to LGS (Low Glucose Suspend) reply with code "
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.LGS.name)
+        smsCommunicatorPlugin.messages = ArrayList()
+        sms = Sms("1234", smsCommand)
+        smsCommunicatorPlugin.processSms(sms)
+        Assert.assertFalse(sms.ignored)
+        Assert.assertEquals(smsCommand, smsCommunicatorPlugin.messages[0].text)
+        Assert.assertTrue(smsCommunicatorPlugin.messages[1].text.contains(replyLgs))
+        passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
+        smsCommunicatorPlugin.processSms(Sms("1234", passCode))
+        Assert.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
+        Assert.assertEquals("Current loop mode: $modeLgs", smsCommunicatorPlugin.messages[3].text)
 
         //NSCLIENT RESTART
         `when`(loop.isEnabled()).thenReturn(true)
