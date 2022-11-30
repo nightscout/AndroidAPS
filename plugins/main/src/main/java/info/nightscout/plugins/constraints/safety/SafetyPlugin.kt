@@ -67,7 +67,7 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        val mode = ApsMode.secureValueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name))
+        val mode = ApsMode.secureValueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase))
         if (mode == ApsMode.OPEN) value.set(aapsLogger, false, rh.gs(R.string.closedmodedisabledinpreferences), this)
         if (!config.isEngineeringModeOrRelease()) {
             if (value.value()) {
@@ -160,7 +160,7 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
-        val apsMode = ApsMode.secureValueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name))
+        val apsMode = ApsMode.secureValueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase))
         if (apsMode == ApsMode.LGS) maxIob.setIfSmaller(aapsLogger, HardLimits.MAX_IOB_LGS, rh.gs(R.string.limiting_iob, HardLimits.MAX_IOB_LGS, rh.gs(R.string.lowglucosesuspend)), this)
         return maxIob
     }

@@ -72,7 +72,7 @@ class LoopPluginTest : TestBase() {
     fun testPluginInterface() {
         `when`(rh.gs(R.string.loop)).thenReturn("Loop")
         `when`(rh.gs(R.string.loop_shortname)).thenReturn("LOOP")
-        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
+        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.CLOSED.lowercase)
         val pumpDescription = PumpDescription()
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         Assert.assertEquals(LoopFragment::class.java.name, loopPlugin.pluginDescription.fragmentClass)

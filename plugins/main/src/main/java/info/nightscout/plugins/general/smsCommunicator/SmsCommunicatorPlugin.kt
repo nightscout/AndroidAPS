@@ -514,7 +514,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                     override fun run() {
                         uel.log(Action.LGS_LOOP_MODE, Sources.SMS)
-                        sp.putString(R.string.key_aps_mode, ApsMode.LGS.name)
+                        sp.putString(R.string.key_aps_mode, ApsMode.LGS.lowercase)
                         rxBus.send(EventPreferenceChange(rh.gs(R.string.lowglucosesuspend)))
                         val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -529,7 +529,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                     override fun run() {
                         uel.log(Action.CLOSED_LOOP_MODE, Sources.SMS)
-                        sp.putString(R.string.key_aps_mode, ApsMode.CLOSED.name)
+                        sp.putString(R.string.key_aps_mode, ApsMode.CLOSED.lowercase)
                         rxBus.send(EventPreferenceChange(rh.gs(R.string.closedloop)))
                         val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
@@ -1288,7 +1288,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun getApsModeText(): String =
-        when (ApsMode.secureValueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name))) {
+        when (ApsMode.secureValueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase))) {
             ApsMode.OPEN   -> rh.gs(R.string.openloop)
             ApsMode.CLOSED -> rh.gs(R.string.closedloop)
             ApsMode.LGS    -> rh.gs(R.string.lowglucosesuspend)

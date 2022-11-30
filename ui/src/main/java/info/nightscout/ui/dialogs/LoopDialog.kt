@@ -162,7 +162,7 @@ class LoopDialog : DaggerDialogFragment() {
         val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(Constraint(true))
         val closedLoopAllowed2 = activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) ?: false
         val lgsEnabled = constraintChecker.isLgsAllowed(Constraint(true))
-        val apsMode = ApsMode.secureValueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name))
+        val apsMode = ApsMode.secureValueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase))
         val pump = activePlugin.activePump
 
         binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()
@@ -283,21 +283,21 @@ class LoopDialog : DaggerDialogFragment() {
         when (v.id) {
             R.id.overview_closeloop                       -> {
                 uel.log(UserEntry.Action.CLOSED_LOOP_MODE, UserEntry.Sources.LoopDialog)
-                sp.putString(R.string.key_aps_mode, ApsMode.CLOSED.name)
+                sp.putString(R.string.key_aps_mode, ApsMode.CLOSED.lowercase)
                 rxBus.send(EventPreferenceChange(rh.gs(R.string.closedloop)))
                 return true
             }
 
             R.id.overview_lgsloop                         -> {
                 uel.log(UserEntry.Action.LGS_LOOP_MODE, UserEntry.Sources.LoopDialog)
-                sp.putString(R.string.key_aps_mode, ApsMode.LGS.name)
+                sp.putString(R.string.key_aps_mode, ApsMode.LGS.lowercase)
                 rxBus.send(EventPreferenceChange(rh.gs(R.string.lowglucosesuspend)))
                 return true
             }
 
             R.id.overview_openloop                        -> {
                 uel.log(UserEntry.Action.OPEN_LOOP_MODE, UserEntry.Sources.LoopDialog)
-                sp.putString(R.string.key_aps_mode, ApsMode.OPEN.name)
+                sp.putString(R.string.key_aps_mode, ApsMode.OPEN.lowercase)
                 rxBus.send(EventPreferenceChange(rh.gs(R.string.lowglucosesuspend)))
                 return true
             }
