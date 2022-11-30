@@ -44,7 +44,7 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
     /**
      * paint to do drawing on canvas
      */
-    private Paint mPaint;
+    private final Paint mPaint;
 
     /**
      * spacing between the bars in percentage.
@@ -83,7 +83,7 @@ public class BarGraphSeries<E extends DataPointInterface> extends BaseSeries<E> 
      * stores the coordinates of the bars to
      * trigger tap on series events.
      */
-    private Map<RectF, E> mDataPoints = new HashMap<RectF, E>();
+    private final Map<RectF, E> mDataPoints = new HashMap<RectF, E>();
 
     /**
      * creates bar series without any data

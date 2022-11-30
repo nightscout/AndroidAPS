@@ -79,9 +79,7 @@ class MedtronicUITask {
 
             MedtronicCommandType.SetTemporaryBasal                           -> {
                 val tbr = getTbrSettings()
-                if (tbr != null) {
-                    result = communicationManager.setTemporaryBasal(tbr)
-                }
+                result = communicationManager.setTemporaryBasal(tbr)
             }
 
             MedtronicCommandType.ReadTemporaryBasal                          -> {
@@ -128,7 +126,7 @@ class MedtronicUITask {
         }
     }
 
-    private fun getTbrSettings(): TempBasalPair? {
+    private fun getTbrSettings(): TempBasalPair {
         return TempBasalPair(getDoubleFromParameters(0)!!,  //
             false,  //
             getIntegerFromParameters(1))

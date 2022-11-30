@@ -25,6 +25,7 @@ import android.util.Log;
 import com.jjoe64.graphview.GraphView;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -61,7 +62,7 @@ public abstract class BaseSeries<E extends DataPointInterface> implements Series
      *
      * will be filled while drawing via {@link #registerDataPoint(float, float, DataPointInterface)}
      */
-    private Map<PointF, E> mDataPoints = new HashMap<PointF, E>();
+    private final Map<PointF, E> mDataPoints = new HashMap<PointF, E>();
 
     /**
      * title for this series that can be displayed
@@ -84,7 +85,7 @@ public abstract class BaseSeries<E extends DataPointInterface> implements Series
      * stores the graphviews where this series is used.
      * Can be more than one.
      */
-    private List<GraphView> mGraphViews;
+    private final List<GraphView> mGraphViews;
 
     /**
      * creates series without data
@@ -101,9 +102,7 @@ public abstract class BaseSeries<E extends DataPointInterface> implements Series
      */
     public BaseSeries(E[] data) {
         mGraphViews = new ArrayList<GraphView>();
-        for (E d : data) {
-            mData.add(d);
-        }
+        Collections.addAll(mData, data);
     }
 
     /**
@@ -168,7 +167,7 @@ public abstract class BaseSeries<E extends DataPointInterface> implements Series
             return mData.iterator();
         } else {
             return new Iterator<E>() {
-                Iterator<E> org = mData.iterator();
+                final Iterator<E> org = mData.iterator();
                 E nextValue = null;
                 E nextNextValue = null;
                 boolean plusOne = true;
@@ -350,9 +349,7 @@ public abstract class BaseSeries<E extends DataPointInterface> implements Series
      */
     public void resetData(E[] data) {
         mData.clear();
-        for (E d : data) {
-            mData.add(d);
-        }
+        Collections.addAll(mData, data);
         checkValueOrder(null);
 
         // update graphview

@@ -77,7 +77,7 @@ data class PumpDbEntryCarbs(var date: Long,
                             var pumpId: Long? = null) {
 
     constructor(detailedBolusInfo: DetailedBolusInfo,
-                creator: info.nightscout.pump.common.sync.PumpSyncEntriesCreator
+                creator: PumpSyncEntriesCreator
     ) : this(detailedBolusInfo.timestamp,
              detailedBolusInfo.carbs,
              creator.model(),

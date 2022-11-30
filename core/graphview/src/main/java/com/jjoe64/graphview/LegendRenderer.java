@@ -78,7 +78,7 @@ public class LegendRenderer {
     /**
      * wrapped styles
      */
-    private Styles mStyles;
+    private final Styles mStyles;
 
     /**
      * reference to the graphview
@@ -94,7 +94,7 @@ public class LegendRenderer {
     /**
      * paint for the drawing
      */
-    private Paint mPaint;
+    private final Paint mPaint;
 
     /**
      * cached legend width

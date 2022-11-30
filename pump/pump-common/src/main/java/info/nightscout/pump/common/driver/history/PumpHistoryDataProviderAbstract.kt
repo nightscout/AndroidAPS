@@ -7,7 +7,7 @@ import java.util.GregorianCalendar
 abstract class PumpHistoryDataProviderAbstract : PumpHistoryDataProvider {
 
     override fun getInitialData(): List<PumpHistoryEntry> {
-        return getData(getInitialPeriod());
+        return getData(getInitialPeriod())
     }
 
     override fun getSpinnerWidthInPixels(): Int {

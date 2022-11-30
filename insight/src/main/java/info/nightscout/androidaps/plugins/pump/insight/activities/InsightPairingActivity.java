@@ -68,7 +68,8 @@ public class InsightPairingActivity extends DaggerAppCompatActivity implements I
         @Override
         public void onServiceConnected(ComponentName name, IBinder binder) {
             service = ((InsightConnectionService.LocalBinder) binder).getService();
-            if (service.isPaired()) return;
+            if (service.isPaired()) {
+            }
             else {
                 service.requestConnection(InsightPairingActivity.this);
                 service.registerStateCallback(InsightPairingActivity.this);
