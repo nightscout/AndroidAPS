@@ -1288,7 +1288,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun getApsModeText(): String =
-        when (ApsMode.valueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name))) {
+        when (ApsMode.secureValueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name))) {
             ApsMode.OPEN   -> rh.gs(R.string.openloop)
             ApsMode.CLOSED -> rh.gs(R.string.closedloop)
             ApsMode.LGS    -> rh.gs(R.string.lowglucosesuspend)

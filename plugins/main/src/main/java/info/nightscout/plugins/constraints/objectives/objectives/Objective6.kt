@@ -16,7 +16,7 @@ class Objective6(injector: HasAndroidInjector) : Objective(injector, "maxiob", R
         tasks.add(MinimumDurationTask(this, T.days(1).msecs()))
         tasks.add(
             object : Task(this, R.string.closedmodeenabled) {
-                override fun isCompleted(): Boolean = ApsMode.valueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)) == ApsMode.CLOSED
+                override fun isCompleted(): Boolean = ApsMode.secureValueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)) == ApsMode.CLOSED
             })
         tasks.add(
             object : Task(this, R.string.maxiobset) {

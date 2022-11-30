@@ -162,7 +162,7 @@ class LoopDialog : DaggerDialogFragment() {
         val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(Constraint(true))
         val closedLoopAllowed2 = activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) ?: false
         val lgsEnabled = constraintChecker.isLgsAllowed(Constraint(true))
-        val apsMode = sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name)
+        val apsMode = ApsMode.secureValueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.name))
         val pump = activePlugin.activePump
 
         binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()
@@ -212,19 +212,19 @@ class LoopDialog : DaggerDialogFragment() {
                 binding.overviewLoop.visibility = View.VISIBLE
                 binding.overviewEnable.visibility = View.GONE
                 when {
-                    apsMode == "closed" -> {
+                    apsMode == ApsMode.CLOSED -> {
                         binding.overviewCloseloop.visibility = View.GONE
                         binding.overviewLgsloop.visibility = View.VISIBLE
                         binding.overviewOpenloop.visibility = View.VISIBLE
                     }
 
-                    apsMode == "lgs"    -> {
+                    apsMode == ApsMode.LGS    -> {
                         binding.overviewCloseloop.visibility = closedLoopAllowed.value().toVisibility()   //show Close loop button only if Close loop allowed
                         binding.overviewLgsloop.visibility = View.GONE
                         binding.overviewOpenloop.visibility = View.VISIBLE
                     }
 
-                    apsMode == "open"   -> {
+                    apsMode == ApsMode.OPEN   -> {
                         binding.overviewCloseloop.visibility =
                             closedLoopAllowed2.toVisibility()          //show CloseLoop button only if Objective 6 is completed (closedLoopAllowed always false in open loop mode)
                         binding.overviewLgsloop.visibility = lgsEnabled.value().toVisibility()
