@@ -396,7 +396,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                 {
                     synchronized(this) {
                         aapsLogger.debug(LTag.AUTOSENS, "Running newHistoryData")
-                        repository.clearCachedData(MidnightTime.calc(event.oldDataTimestamp))
+                        repository.clearCachedTddData(MidnightTime.calc(event.oldDataTimestamp))
                         newHistoryData(
                             event.oldDataTimestamp,
                             event.reloadBgData,
