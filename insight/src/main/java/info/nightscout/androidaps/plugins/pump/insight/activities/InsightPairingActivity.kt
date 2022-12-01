@@ -50,9 +50,7 @@ class InsightPairingActivity : DaggerAppCompatActivity(), InsightConnectionServi
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
             service = (binder as InsightConnectionService.LocalBinder).service
             service?.let {
-                if (it.isPaired)
-                    return
-                else {
+                if (!it.isPaired) {
                     it.requestConnection(this@InsightPairingActivity)
                     it.registerStateCallback(this@InsightPairingActivity)
                     it.registerExceptionCallback(this@InsightPairingActivity)
