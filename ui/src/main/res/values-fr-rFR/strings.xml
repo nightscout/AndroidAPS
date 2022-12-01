@@ -17,6 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Moniteur d\'activité</string>
     <string name="do_you_want_reset_stats">Voulez-vous réinitialiser les statistiques d\'activité ?</string>
+    <string name="do_you_want_reset_tdd_stats">Voulez-vous réinitialiser les statistiques de DTQ ?</string>
     <string name="statistics">Statistiques</string>
     <string name="calculation_in_progress">Calcul en cours</string>
     <string name="invalid_age">Âge invalide</string>
