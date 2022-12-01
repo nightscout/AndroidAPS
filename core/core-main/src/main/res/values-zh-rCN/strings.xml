@@ -1,33 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">刷新</string>
-    <string name="error">错误</string>
-    <string name="save">保存</string>
-    <string name="not_set_short">未设置</string>
-    <string name="failedupdatebasalprofile">更新基础率配置文件失败</string>
-    <string name="profile_set_ok">泵基础率配置文件更新了</string>
-    <string name="invalidinput">无效的输入数据</string>
-    <string name="tempbasaldeliveryerror">临时基础输注错误</string>
     <string name="goingtodeliver">将要输注 %1$.2f U</string>
     <string name="waitingforpump">正在等待泵</string>
-    <string name="bolusdelivering">正在输注 %1$.2f U</string>
-    <string name="connecting">正在连接</string>
-    <string name="disconnected">已断开连接</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d 克</string>
-    <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f 小时</string>
     <string name="format_mins">%1$d 分钟</string>
-    <string name="pumpbusy">胰岛素泵忙碌中</string>
-    <string name="connectionerror">泵连接错误</string>
     <string name="objectives">目标</string>
     <string name="please_wait">请稍等...</string>
-    <string name="mute">静音</string>
-    <string name="reload">重新加载</string>
     <string name="stop">停止</string>
     <string name="carbs">碳水化合物</string>
+    <string name="no_profile_set">没有设置配置文件</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">日期</string>
     <string name="units_label">单位</string>
@@ -41,35 +25,12 @@
     <string name="isf_long_label">胰岛素敏感系数ISF</string>
     <string name="basal_long_label">基础率</string>
     <string name="target_long_label">血糖目标</string>
-    <string name="initializing">正在初始化</string>
-    <string name="serial_number">序列号</string>
-    <string name="battery_label">电池</string>
-    <string name="last_connection_label">上次连接</string>
-    <string name="last_bolus_label">上次大剂量</string>
-    <string name="dailyunits">每日单位数</string>
-    <string name="base_basal_rate_label">基础率</string>
-    <string name="tempbasal_label">临时基础率</string>
-    <string name="extended_bolus_label">扩展大剂量(方波)</string>
-    <string name="reservoir_label">储药器</string>
-    <string name="pumphistory">泵历史记录</string>
-    <string name="viewprofile">查看配置文件</string>
-    <string name="eventtype">事件类型</string>
-    <string name="mgdl">mg/dl</string>
-    <string name="mmol">mmol/l</string>
     <string name="shortgram">克</string>
     <string name="shortpercent">%</string>
-    <string name="advancedsettings_title">高级设置</string>
     <string name="bluetooth">蓝牙</string>
     <string name="btwatchdog_title">蓝牙看门狗</string>
     <string name="btwatchdog_summary">如果无法与泵连接，将关闭手机的蓝牙一秒钟后再自动打开。在一些蓝牙堆栈僵死的手机上是有帮助的。</string>
-    <string name="pairing">配对中</string>
-    <string name="loopdisabled">按约束条件禁用循环</string>
-    <string name="bolusdelivered">成功输注大剂量 %1$.2f U</string>
     <string name="virtualpump_resultok">确定</string>
-    <string name="novalidbasalrate">从泵中无法读取有效的基础率</string>
-    <string name="limitingmaxiob">由于 %2$s 将最大 IOB活性胰岛素限制为 %1$.1f U</string>
-    <string name="unsafeusage">不安全的用法</string>
-    <string name="pump_unreachable">泵无法连接</string>
     <string name="extended_bolus">扩展大剂量(方波)</string>
     <string name="pump_time_updated">泵时间已经更新</string>
     <string name="exit">退出</string>
@@ -94,7 +55,6 @@
     <string name="loading">正在加载…</string>
     <string name="notes_label">备注</string>
     <string name="remove_button">删除</string>
-    <string name="addnew">添加新条目</string>
     <string name="addnew_above">在顶部新增</string>
     <string name="wrong_pump_data">数据来自不同的胰岛素泵，修改泵的驱动配置用来重置泵的状态。</string>
     <string name="bg_label">血糖</string>
@@ -109,7 +69,6 @@
     <string name="loopsuspended">闭环暂停了</string>
     <string name="trend_arrow">趋势箭头</string>
     <string name="a11y_autosens_label">自动敏感度</string>
-    <string name="value_unavailable_short">无可用</string>
     <string name="required">要</string>
     <string name="a11y_arrow_double_down">迅速下降</string>
     <string name="a11y_arrow_single_down">下降</string>
@@ -144,28 +103,15 @@
     <string name="paused">已暂停</string>
     <string name="invalid">无效</string>
     <string name="login">登录</string>
+    <string name="prime_fill">充盈</string>
     <string name="overview_insulin_label">胰岛素</string>
     <string name="stoptemptarget">停止临时目标</string>
     <string name="closedloop">闭环</string>
     <string name="openloop">开环</string>
     <string name="lowglucosesuspend">低血糖维持模式</string>
-    <string name="confirm">确认</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <!--    Constraints-->
-    <string name="limitingbasalratio">最大基础率被限定为 %1$.2f U/h 由于 %2$s</string>
-    <string name="pumplimit">泵限制</string>
-    <string name="limitingpercentrate">由于 %2$s, 将最大百分比限制为 %1$d%%</string>
-    <string name="itmustbepositivevalue">它必须是正数</string>
-    <string name="limitingbolus">由于 %2$s, 将大剂量限制为 %1$.1f U</string>
-    <string name="pumpNotInitializedProfileNotSet">泵未初始化, 配置文件未设置!</string>
-    <!--    BlePreCheck-->
-    <string name="ble_not_supported">不支持蓝牙低能量。</string>
-    <string name="ble_not_supported_or_not_paired">蓝牙低电量或设备未配对。</string>
-    <string name="ble_not_enabled">蓝牙未启用</string>
-    <string name="location_not_found_title">未启用位置</string>
-    <string name="location_not_found_message">为了蓝牙能发现新的设备，手机定位功能必须启用， AAPS 不会追踪你的位置，你可以在配对成功后禁用定位。</string>
     <!--    Protection-->
     <string name="wrongpassword">密码错误</string>
     <string name="wrongpin">PIN 码错误</string>
@@ -180,6 +126,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">启动配置文件 %1$d%%在 %2$d 分钟</string>
     <!--    APSResult-->
+    <string name="cancel_temp">取消临时基础率</string>
     <string name="let_temp_basal_run">让临时基础率运行</string>
     <string name="rate">比率</string>
     <string name="duration">持续时间</string>
@@ -201,9 +148,12 @@
     <string name="careportal_note_message">备注： %1$s</string>
     <string name="careportal_question_message">问题 : %1$s</string>
     <string name="careportal_exercise_message">运动 : %1$s</string>
+    <string name="careportal_pump_site_change">泵更换管路</string>
+    <string name="cgm_sensor_insert">CGM 传感器插入</string>
     <string name="careportal_cgmsensorstart">CGM 传感器启动</string>
     <string name="careportal_cgm_sensor_stop">CGM 传感器停止</string>
     <string name="careportal_dad_alert">D.A.D. 警告</string>
+    <string name="careportal_insulin_cartridge_change">更换储药器</string>
     <string name="careportal_profileswitch">配置文件切换</string>
     <string name="careportal_snackbolus">零食大剂量</string>
     <string name="careportal_mealbolus">餐时大剂量</string>
@@ -213,6 +163,8 @@
     <string name="careportal_tempbasalend">临时基础率结束</string>
     <string name="careportal_carbscorrection">碳水化合物校正</string>
     <string name="careportal_openapsoffline">OpenAPS 离线</string>
+    <string name="pump_battery_change">更换泵电池</string>
+    <string name="temporary_target">临时目标</string>
     <string name="careportal_temporarytargetvalue">临时目标值</string>
     <string name="careportal_temporarytargetcancel">临时目标取消</string>
     <string name="boluswizard">大剂量向导</string>
@@ -226,27 +178,20 @@
     <string name="wear">手表</string>
     <string name="automation">自动操作</string>
     <string name="custom">自定义</string>
-    <string name="pump">胰岛素泵</string>
     <string name="loop">闭环</string>
     <string name="ns">NS</string>
     <string name="record">记录</string>
-    <string name="reading_pump_history">读取泵历史记录</string>
-    <string name="pump_icon">泵图标</string>
     <!--    Command-->
     <string name="connectiontimedout">连接超时</string>
     <!--    PumpEnactResult-->
     <string name="enacted">设定</string>
     <string name="comment">评论</string>
-    <string name="success">成功</string>
     <string name="percent">百分比</string>
     <string name="absolute">绝对值</string>
-    <string name="configbuilder_insulin">胰岛素</string>
-    <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">正在等待结果</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
-    <string name="stats">统计信息</string>
     <string name="cumulative_tdd">累积的每日胰岛素输注的总量</string>
     <string name="expweight">日输注总量指数加权</string>
     <string name="basalrate">基础率</string>
@@ -260,36 +205,6 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">时间检测</string>
-    <string name="mute5min">静音 5 分钟</string>
-    <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">已导出 %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">导出 %1$s</string>
-    <string name="exported_less_than_hour_ago">不到 1 小时前更新过</string>
-    <string name="in_directory" comment="placeholder is for exported file path">目录: %1$s</string>
-    <string name="preferences_import_list_title">选择要导入的文件</string>
-    <string name="metadata_warning_different_flavour">使用 AAPS 的不同版本创建首选项 (%1$s) 而你有 %2$s\n\n某些设置可能缺失或无效 - 导入后，请检查并更新首选项。</string>
-    <string name="metadata_warning_different_device">首选项是在不同的设备上创建的。 如果要从较旧/不同的电话导入，但确保导入的首选项正确 !</string>
-    <string name="metadata_warning_outdated_format">您正在使用旧版本的 AAPS 中过时的旧格式，这不安全 ! 仅当您没有当前的 JSON 格式的导出时，才将其用作最后的手段。</string>
-    <string name="metadata_warning_old_export">导入的首选项已存在 %1$s 天 ! 您可能有更多最新的首选项，还是选择了错误的文件? 请记住定期导出首选项 !</string>
-    <string name="metadata_warning_date_format">日期-时间格式无效 !</string>
-    <string name="metadata_warning_different_version">来自应用程序的不同次版本的首选项。 升级后输入正常，但如果首选项仍然正确，请在导入后进行检查 !</string>
-    <string name="metadata_urgent_different_version">来自不同主要应用程序版本的首选项。 主要版本差别很大，可能有不兼容的首选项 ! 请确保导入后首选项仍然正确!</string>
-    <string name="prefdecrypt_settings_tampered">设置文件已更改</string>
-    <string name="prefdecrypt_settings_secure">设置文件是安全</string>
-    <string name="prefdecrypt_settings_unencrypted">使用不安全且未加密的设置格式</string>
-    <string name="prefdecrypt_wrong_json">JSON 格式错误，缺少必填字段 (格式，内容，元数据或安全性)</string>
-    <string name="prefdecrypt_wrong_password">解密错误，该密码无法解密文件</string>
-    <string name="prefdecrypt_issue_missing_file_hash">缺少文件校验码（哈希值），无法验证设置的真实性！</string>
-    <string name="prefdecrypt_issue_modified">导出后文件已修改 !</string>
-    <string name="prefdecrypt_issue_parsing">解密错误，解析首选项失败!</string>
-    <string name="prefdecrypt_issue_wrong_pass">解密错误，提供的密码无效或设置文件已修改! 导入的文件可能是使用其他主密码导出的。</string>
-    <string name="prefdecrypt_issue_wrong_format">缺少加密配置，设置格式无效!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">不支持或未指定加密算法!</string>
-    <!-- VersionChecker -->
-    <string name="running_invalid_version">我们检测到您运行的版本无效。 已禁用循环!</string>
-    <string name="versionavailable">版本 %1$s 可用</string>
-    <string name="version_expire">版本 %1$s 将在 %2$s 过期</string>
-    <!-- Permissions -->
     <!-- User Entry -->
     <string name="uel_bolus">大剂量</string>
     <string name="uel_bolus_calculator">大剂量向导</string>
@@ -379,7 +294,6 @@
     <string name="ue_action">操作</string>
     <string name="ue_timestamp">时间戳</string>
     <string name="ue_none">无单位</string>
-    <string name="ue_export_to_csv">导出用户条目到 Excel (csv)</string>
     <string name="uel_loop_change">闭环更改</string>
     <string name="uel_loop_removed">闭环删除</string>
     <string name="uel_other">其他</string>
@@ -417,16 +331,6 @@
     <string name="keepalive_status_outdated" comment="26 characters max for translation">状态保持超时</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">状态保持. 基础率超时</string>
     <string name="sms" comment="26 characters max for translation">手机SMS</string>
-    <string name="clicked_connect_to_pump" comment="26 characters max for translation">单击连接到泵</string>
-    <string name="pump_driver_change" comment="26 characters max for translation">泵驱动程序变更</string>
-    <string name="device_changed" comment="26 characters max for translation">设备已更改</string>
-    <string name="clicked_refresh" comment="26 characters max for translation">点击刷新</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">计划状态刷新</string>
-    <string name="unconfirmed_command" comment="26 characters max for translation">未确认命令</string>
-    <string name="requested_by_user" comment="26 characters max for translation">用户请求</string>
-    <string name="user_request" comment="26 characters max for translation">用户请求</string>
-    <string name="bolus_ok" comment="26 characters max for translation">大剂量完成</string>
-    <string name="pump_paired" comment="26 characters max for translation">泵已配对</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight刷新按钮</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">基础率</string>
@@ -483,12 +387,14 @@
     <string name="raise_notifications_as_android_notifications">对警报和通知使用系统通知音</string>
     <string name="urgent_alarm">紧急报警</string>
     <string name="info">信息</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">缺少 SMS 短信权限</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">大剂量向导</string>
+    <string name="bolus_advisor_message">你现在血糖值高，请等待血糖值改善后再吃饭。你是否需要输注胰岛素进行纠正并提醒你吃饭？在这种情况下，不会记录碳水，当我们提醒你吃饭时，您必须再次使用大剂量向导。</string>
     <string name="cobvsiob">活性碳水vs活性胰岛素</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! 检测到碳水化合物吸收缓慢：%2$d%%的时间。再次检查你的计算。COB可能被高估，因此可以给予更多胰岛素!!!!!</font>]]></string>
     <string name="partialboluswizard">输注大剂量向导结果的一部分[%]</string>
+    <string name="bolus_constraint_applied_warn">大剂量约束应用为： %1$.2f U 到 %2$.2f U</string>
+    <string name="bolus_recorded_only">仅记录大剂量数值(泵不会输注)</string>
     <string name="advisoralarm">在应当吃饭时提醒</string>
     <string name="no_action_selected">没有选择任何行动，不会做出任何改变</string>
     <string name="wizard_no_actual_bg">最近没有血糖数据可供计算！</string>
@@ -508,13 +414,13 @@
     <string name="wizard_explain_tt_to">%1$s 至 %2$s</string>
     <string name="wizard_pump_not_available">没有可用的泵！</string>
     <!--    Preferences-->
-    <plurals name="days">
-        <item quantity="other">%1$d　天</item>
-    </plurals>
-    <plurals name="hours">
-        <item quantity="other">%1$d 小时</item>
-    </plurals>
-    <plurals name="minutes">
-        <item quantity="other">%1$d 分钟</item>
-    </plurals>
+    <string name="child">儿童</string>
+    <string name="teenage">青少年</string>
+    <string name="adult">成人</string>
+    <string name="resistant_adult">胰岛素抵抗成人</string>
+    <string name="pregnant">孕妇</string>
+    <string name="patient_age_summary">请选择患者类型，以设置安全限制</string>
+    <string name="max_bolus_title">允许的最大大剂量值[U]</string>
+    <string name="max_carbs_title">最大允许碳水化合物 [g]</string>
+    <string name="patient_type">患者类型</string>
 </resources>
