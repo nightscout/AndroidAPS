@@ -45,6 +45,7 @@
     <string name="mute5min">Stíšiť na 5 minút</string>
     <string name="mute">Stíšiť</string>
     <string name="success">Úspešne</string>
+    <string name="advancedsettings_title">Rozšírené nastavenia</string>
     <!--    Protection-->
     <string name="unlock_settings">Odomknúť nastavenia</string>
     <!--    Pumps -->
