@@ -1,8 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <!--    Constraints-->
-    <!--    BlePreCheck-->
+    <string name="virtualpump_resultok">OK</string>
+    <string name="extended_bolus">追加ボーラス</string>
+    <string name="exit">終了</string>
+    <string name="shortgramm">g</string>
+    <string name="profile">プロファイル</string>
+    <string name="invalid">無効</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">導入コスト</string>
+    <string name="isf_short">ISF</string>
     <!--    Protection-->
     <!--    Profile-->
     <!--    ProfileFunction-->
@@ -10,20 +17,19 @@
     <!--    ProfileSwitch-->
     <!--    Temptarget-->
     <!--    Translator-->
+    <string name="wear">ウェア</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
+    <string name="basalrate">ベーサル</string>
     <!--    Ntp-->
-    <!-- Maintenance -->
-    <!-- VersionChecker -->
-    <!-- Permissions -->
     <!-- User Entry -->
     <!-- HardLimits -->
     <!-- Command Queue + readStatus reasons -->
+    <string name="basal">ベーサル</string>
     <!-- Autotune -->
     <!-- Alerts -->
-    <!-- SmsCommunicator -->
     <!-- BolusWizard -->
     <!--    Preferences-->
 </resources>
