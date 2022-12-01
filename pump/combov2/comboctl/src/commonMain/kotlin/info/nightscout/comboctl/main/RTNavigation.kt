@@ -953,7 +953,7 @@ suspend fun navigateToRTScreen(
         null
     }
 
-    if (path?.isEmpty() ?: false)
+    if (path?.isEmpty() == true)
         return currentParsedScreen
 
     if (path == null) {

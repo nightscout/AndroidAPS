@@ -58,10 +58,6 @@ class DataLayerListenerServiceWear : WearableListenerService() {
             }
     }
 
-    override fun onPeerConnected(p0: Node) {
-        super.onPeerConnected(p0)
-    }
-
     override fun onCapabilityChanged(p0: CapabilityInfo) {
         super.onCapabilityChanged(p0)
         handler.post { updateTranscriptionCapability() }

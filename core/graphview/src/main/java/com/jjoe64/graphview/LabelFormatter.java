@@ -37,7 +37,7 @@ public interface LabelFormatter {
      *                  false if it is a value for the y axis
      * @return the formatted number as string
      */
-    public String formatLabel(double value, boolean isValueX);
+    String formatLabel(double value, boolean isValueX);
 
     /**
      * will be called in order to have a
@@ -50,5 +50,5 @@ public interface LabelFormatter {
      *
      * @param viewport the used viewport
      */
-    public void setViewport(Viewport viewport);
+    void setViewport(Viewport viewport);
 }

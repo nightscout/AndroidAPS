@@ -97,9 +97,7 @@ public class GraphView extends View {
                     lastDown = 0;
                 }
             } else if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (System.currentTimeMillis() - lastDown < 400) {
-                    return true;
-                }
+                return System.currentTimeMillis() - lastDown < 400;
             }
             return false;
         }

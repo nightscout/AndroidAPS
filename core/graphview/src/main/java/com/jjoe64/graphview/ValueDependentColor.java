@@ -37,5 +37,5 @@ public interface ValueDependentColor<T extends DataPointInterface> {
      * @return  the color that the bar should be drawn with
      *          Generate the int via the android.graphics.Color class.
      */
-    public int get(T data);
+    int get(T data);
 }

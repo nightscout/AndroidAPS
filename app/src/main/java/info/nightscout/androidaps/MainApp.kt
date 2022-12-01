@@ -213,6 +213,8 @@ class MainApp : DaggerApplication() {
         }
         if (!sp.contains(R.string.key_ns_log_app_started_event))
             sp.putBoolean(R.string.key_ns_log_app_started_event, config.APS)
+        if (sp.getString(R.string.key_maintenance_logs_email, "") == "logs@androidaps.org")
+            sp.putString(R.string.key_maintenance_logs_email, "logs@aaps.app")
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

@@ -33,8 +33,8 @@ import java.util.Date;
 public class DataPoint implements DataPointInterface, Serializable {
     private static final long serialVersionUID=1428263322645L;
 
-    private double x;
-    private double y;
+    private final double x;
+    private final double y;
 
     public DataPoint(double x, double y) {
         this.x=x;

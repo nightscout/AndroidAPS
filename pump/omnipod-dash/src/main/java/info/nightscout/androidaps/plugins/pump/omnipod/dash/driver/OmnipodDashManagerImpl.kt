@@ -309,7 +309,7 @@ class OmnipodDashManagerImpl @Inject constructor(
                             .setUniqueId(podStateManager.uniqueId!!.toInt())
                             .setSequenceNumber(podStateManager.messageSequenceNumber)
                             .setNonce(NONCE)
-                            .setNumberOfUnits(Round.roundTo(podStateManager.firstPrimeBolusVolume!! * PodConstants.POD_PULSE_BOLUS_UNITS, POD_PULSE_BOLUS_UNITS))
+                            .setNumberOfUnits(Round.roundTo(podStateManager.firstPrimeBolusVolume!! * POD_PULSE_BOLUS_UNITS, POD_PULSE_BOLUS_UNITS))
                             .setDelayBetweenPulsesInEighthSeconds(podStateManager.primePulseRate!!.toByte())
                             .setProgramReminder(ProgramReminder(atStart = false, atEnd = false, atInterval = 0))
                             .build(),
@@ -412,7 +412,7 @@ class OmnipodDashManagerImpl @Inject constructor(
             )
             observables.add(
                 observeSendProgramBolusCommand(
-                    Round.roundTo(podStateManager.secondPrimeBolusVolume!! * PodConstants.POD_PULSE_BOLUS_UNITS, PodConstants.POD_PULSE_BOLUS_UNITS),
+                    Round.roundTo(podStateManager.secondPrimeBolusVolume!! * POD_PULSE_BOLUS_UNITS, POD_PULSE_BOLUS_UNITS),
                     podStateManager.primePulseRate!!.toByte(),
                     confirmationBeeps = false,
                     completionBeeps = false

@@ -159,8 +159,8 @@ object TransportLayer {
 
     // Utility function to be able to throw an exception in case of
     // an invalid command ID in the Packet constructor below.
-    private fun checkedGetCommand(value: Int, bytes: List<Byte>): TransportLayer.Command =
-        TransportLayer.Command.fromInt(value) ?: throw TransportLayer.InvalidCommandIDException(value, bytes)
+    private fun checkedGetCommand(value: Int, bytes: List<Byte>): Command =
+        Command.fromInt(value) ?: throw InvalidCommandIDException(value, bytes)
 
     /**
      * Class containing Combo transport layer packet data.
@@ -835,7 +835,7 @@ object TransportLayer {
          * @throws IncorrectPacketException if expectedCommand is non-null and
          *         the received packet's command does not match expectedCommand.
          */
-        suspend fun receive(expectedCommand: Command? = null): TransportLayer.Packet {
+        suspend fun receive(expectedCommand: Command? = null): Packet {
             // In here, we mainly listen to the packetReceiverChannel
             // for incoming packets from the packet receiver coroutine.
             // The actual reception takes place there. startInternal()

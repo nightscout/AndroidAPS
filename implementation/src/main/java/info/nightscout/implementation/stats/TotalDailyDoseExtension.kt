@@ -5,8 +5,8 @@ import android.content.Context
 import android.view.Gravity
 import android.widget.TableRow
 import android.widget.TextView
-import info.nightscout.core.main.R
 import info.nightscout.database.entities.TotalDailyDose
+import info.nightscout.implementation.R
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 
@@ -27,7 +27,7 @@ fun TotalDailyDose.Companion.toTableRowHeader(context: Context, rh: ResourceHelp
         header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3; weight = 1f }; text = rh.gs(R.string.basal) })
         header.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 4; weight = 1f }; text = rh.gs(R.string.basalpct) })
         if (includeCarbs)
-            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 5; weight = 1f }; text = rh.gs(R.string.carbs) })
+            header.addView(TextView(context).apply { layoutParams = lp.apply { column = 5; weight = 1f }; text = rh.gs(R.string.carbs_short) })
     }
 
 fun TotalDailyDose.toTableRow(context: Context, rh: ResourceHelper, dateUtil: DateUtil, includeCarbs: Boolean): TableRow =

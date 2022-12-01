@@ -101,7 +101,7 @@ public class SyncBasalHistoryTask extends TaskBase {
     }
 
     public synchronized int updateInjected(float[] normal, float[] temp, int start, int end) {
-        if (pm.getPatchState().isPatchInternalSuspended() && pm.getPatchConfig().isInBasalPausedTime() == false) {
+        if (pm.getPatchState().isPatchInternalSuspended() && !pm.getPatchConfig().isInBasalPausedTime()) {
             return -1;
         }
 

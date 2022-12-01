@@ -157,7 +157,7 @@ public abstract class RileyLinkCommunicationManager<T extends RLMessage> {
 
             // FIXME wakeUp successful !!!!!!!!!!!!!!!!!!
 
-            nextWakeUpRequired = System.currentTimeMillis() + (receiverDeviceAwakeForMinutes * 60 * 1000);
+            nextWakeUpRequired = System.currentTimeMillis() + ((long) receiverDeviceAwakeForMinutes * 60 * 1000);
         } else {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Last pump communication was recent, not waking pump.");
         }

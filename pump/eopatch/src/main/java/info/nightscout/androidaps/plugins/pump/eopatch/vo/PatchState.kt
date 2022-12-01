@@ -22,8 +22,7 @@ class PatchState: IPreference<PatchState> {
     private val stateBytes: ByteArray
     var updatedTimestamp: Long = 0
 
-    constructor(): this(ByteArray(SIZE), 0) {
-    }
+    constructor(): this(ByteArray(SIZE), 0)
 
     constructor(stateBytes: ByteArray, updatedTimestamp: Long) {
         this.stateBytes = stateBytes

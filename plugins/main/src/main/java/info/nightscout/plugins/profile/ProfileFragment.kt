@@ -10,7 +10,6 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.google.android.material.tabs.TabLayout
 import dagger.android.support.DaggerFragment
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -18,6 +17,7 @@ import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -134,6 +134,8 @@ class ProfileFragment : DaggerFragment() {
         binding.name.removeTextChangedListener(textWatch)
         binding.name.setText(currentProfile.name)
         binding.name.addTextChangedListener(textWatch)
+        binding.profileList.filters = arrayOf()
+        binding.profileList.setText(currentProfile.name)
         binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
         binding.dia.tag = "LP_DIA"
         TimeListEdit(

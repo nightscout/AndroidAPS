@@ -53,7 +53,7 @@ public class SecondScale {
      * For the current version this is always
      * true.
      */
-    private boolean mYAxisBoundsManual = true;
+    private final boolean mYAxisBoundsManual = true;
 
     /**
      * min y value for the y axis bounds
