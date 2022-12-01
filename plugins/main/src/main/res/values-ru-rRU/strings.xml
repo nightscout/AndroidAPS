@@ -1,7 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS коммуникатор</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Выполнить дистанционное управление AAPS при помощи команд SMS.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">из приложения Authenticator для %1$s и дополните пином в конце</string>
+    <string name="smscommunicator_otp_pin">Дополнительный обязательный пин-код в конце маркера</string>
+    <string name="smscommunicator_otp_pin_summary">Дополнительные цифры, которые должны запоминаться и добавляться в конце каждого сгенерированного одноразового пароля</string>
+    <string name="smscommunicator_tab_otp_label">Настройка аутентификации</string>
+    <string name="smscommunicator_code_verify_label">Код для проверки:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + ПИН-код</string>
+    <string name="smscommunicator_code_verify_info">Проверочный код состоит из 6 цифр, отображаемых приложением Authenticator (известным как OTP), за которым следует 3 или более цифр обязательного PIN-кода.</string>
+    <string name="smscommunicator_otp_reset_btn">Сбросить аутентификаторы</string>
+    <string name="smscommunicator_otp_reset_title">Сбросить ключ идентификации</string>
+    <string name="smscommunicator_otp_reset_prompt">Вы действительно хотите сбросить ключ аутентификации? Все сконфигурированные в настоящее время ключи станут недопустимы, и придется их настроить заново.</string>
+    <string name="smscommunicator_otp_reset_successful">Создан новый ключ аутентификации! Для идентификации используйте обновленный QRCode.</string>
+    <string name="smscommunicator_otp_export_title">Экспорт секретного кода OTP</string>
+    <string name="smscommunicator_otp_export_prompt">Вы действительно хотите скопировать пароль OTP в буфер обмена?\n\nЭто может потребоваться только в том случае, если у вашего приложения идентификации проблемы при сканировании QR кода, вы хотите ввести его вручную или настроить аппаратный маркер OTP с помощью специального приложения.</string>
+    <string name="smscommunicator_otp_export_successful">Секретный одноразовый код OTP (в формате Base32) экспортирован и скопирован в буфер обмена. Вставьте его в систему идентификации или аппаратный маркер OTP!</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Установить Аутентификатор</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Сканируйте код для настройки OTP кодов AAPS</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Проверьте одноразовый пароль</string>
+    <string name="smscommunicator_otp_reset_header">Сбросить авторизацию</string>
+    <string name="smscommunicator_otp_install_info">На каждом отслеживающем телефоне установите приложение Authenticator, поддерживающее маркеры TOTP RFC 6238. Популярные бесплатные приложения: \n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">После сброса аутентификатора вы делаете все созданные идентификаторы недействительными. Вам нужно будет снова создать их!</string>
+    <string name="sms_wrong_code">Неверный код. Команда отменена.</string>
+    <string name="sms_timeout_while_waiting">Время ожидания окончания предыдущего соединения с помпой истекло</string>
+    <string name="smscommunicator_allowednumbers">разрешенные телефонные номера</string>
+    <string name="smscommunicator_allowednumbers_summary">+ XXXXXXXXXX; + YYYYYYYYYY</string>
+    <string name="smscommunicator_bolus_reply_with_code">Для подачи болюса %1$.2fед ответьте кодом %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">Для подачи болюса %1$.2fед ответьте кодом %2$s</string>
     <string name="smscommunicator_temptarget_with_code">Чтобы установить временную цель %1$s ответьте кодом %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Чтобы отменить временную цель ответьте кодом %1$s</string>
     <string name="smscommunicator_stops_ns_with_code">Чтобы отключить службу удаленных SMS-сообщений ответьте кодом %1$s.\n\n Имейте в виду, что вы сможете вновь активировать ее только с основного телефона AAPS.</string>
@@ -14,6 +42,8 @@
     <string name="smscommunicator_bolus_delivered">Болюс %1$.2f ед. подан успешно</string>
     <string name="smscommunicator_meal_bolus_delivered">Болюс на еду %1$.2f ед. подан успешно</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Цель %1$s на %2$d минут</string>
+    <string name="smscommunicator_tt_set">Цель %1$s на %2$d минут установлена успешно</string>
+    <string name="smscommunicator_tt_canceled">Временная цель успешно отменена</string>
     <string name="smscommunicator_remote_commands_allowed">Разрешить команды через смс</string>
     <string name="smscommunicator_loop_has_been_disabled">Зцикл остановлен</string>
     <string name="smscommunicator_loop_has_been_enabled">Зцикл активирован</string>
@@ -22,6 +52,7 @@
     <string name="smscommunicator_pump_connect_fail">Ошибка подключения к помпе</string>
     <string name="smscommunicator_pump_disconnect_with_code">Для разъединения с помпой на %1$d мин ответьте кодом %2$s</string>
     <string name="smscommunicator_pump_disconnected">Связь с помпой отключена</string>
+    <string name="smscommunicator_reconnect">Связь с помпой возобновлена</string>
     <string name="smscommunicator_remote_command_not_allowed">Удаленная команда не разрешена</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Удаленный болюс недоступен, повторите попытку позже.</string>
     <string name="smscommunicator_basal_reply_with_code">Для начала подачи базала %1$.2f ед./ч на %2$d мин. ответьте кодом %3$s</string>
@@ -47,24 +78,51 @@
     <string name="smscommunicator_tempbasal_cancel_failed">Отмена врем базала не состоялась</string>
     <string name="smscommunicator_extended_cancel_failed">Сбой отмены пролонгированного болюса</string>
     <string name="smscommunicator_unknown_command">Неизвестная команда или неверный ответ</string>
+    <string name="smscommunicator_another_bolus_in_queue">В очереди есть еще один болюс. Повторите попытку позже.</string>
     <string name="smscommunicator_wrong_duration">Неверное значение длительности</string>
     <string name="smscommunicator_loop_suspended">ЗЦикл остановлен</string>
     <string name="smscommunicator_loop_resumed">ЗЦикл возобновлен</string>
     <string name="smscommunicator_invalid_phone_number">Неверный номер телефона для смс</string>
+    <string name="smscommunicator_calibration_sent">Калибровка отправлена. В xDrip+ должна быть включена возможность приема.</string>
     <string name="smscommunicator_calibration_failed">xDrip + не получает калибровки</string>
     <string name="smscommunicator_message_body">Недопустимое тело сообщения</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Отправить SMS, если инициируется запись о недоступности помпы</string>
     <string name="smscommunicator_pump_unreachable">Сообщить о недоступности помпы</string>
+    <string name="wrong_format">Неверный формат</string>
+    <string name="sms_actual_bg">ГК:</string>
+    <string name="sms_last_bg">Предыдущая ГК:</string>
+    <string name="sms_delta">дельта:</string>
+    <string name="sms_iob">IOB: активный инсулин</string>
+    <string name="sms_bolus">болюс:</string>
+    <string name="sms_basal">базал: </string>
+    <string name="sms_min_ago">%1$dмин. назад</string>
+    <string name="sms_loop_suspended_for">Остановлен (на %1$d мин)</string>
+    <string name="sms_read_status_failed">Статус чтения: неудача</string>
+    <string name="sms_profile_switch_created">Переключатель профиля создан</string>
+    <string name="sms_wrong_tbr_duration">Длительность временного базала TBR должна быть кратной %1$d минутам и больше 0.</string>
+    <string name="a11y_otp_qr_code">QR код для создания одноразового пароля</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Предустановки для Humalog и Novorapid / Novolog</string>
+    <string name="description_insulin_ultra_rapid">Предустановки для Fiasp</string>
+    <string name="description_insulin_lyumjev">Предустановки для Lyumjev</string>
+    <string name="description_insulin_free_peak">Позволяет самостоятельно задавать пик активности инсулина - только для опытных пользователей</string>
+    <string name="insulin_shortname">ИНС</string>
+    <string name="insulin_oref_peak">Время пика активного инс IOB</string>
+    <string name="insulin_peak_time">Время пика [min]</string>
+    <string name="free_peak_oref">Свободный от пиков Oref</string>
+    <string name="rapid_acting_oref">Быстро действующий Oref</string>
     <string name="ultra_rapid_oref">Сверхбыстрый Oref</string>
+    <string name="dia_too_short">Значение времени действия инс %1$f слишком мало - применено %2$f!</string>
     <string name="fast_acting_insulin_comment">Новорапид, Хумалог</string>
     <string name="ultra_fast_acting_insulin_comment">Фиасп</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">Cтрока состояния xDrip (часы)</string>
     <string name="xdrip_status_shortname">Статус xDrip</string>
+    <string name="description_xdrip_status_line">Показать информацию о работе алгоритма ИПЖ на экране смарт-часов xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Показать IOB подробно</string>
+    <string name="xdrip_status_detailed_iob_summary">Показать разбивку IOB на болюсный и базальный IOB на часах</string>
     <string name="disabled_loop">Зцикл не работает</string>
     <string name="xdrip_status_show_bgi_title">Показать BGI</string>
     <string name="xdrip_status_show_bgi_summary">Добавить BGI в строку состояния</string>
@@ -72,21 +130,51 @@
     <!-- Food-->
     <string name="food_short">Еда</string>
     <string name="description_food">Показывает заданные в Nightscout настройки для приема пищи</string>
+    <string name="filter">Фильтр</string>
+    <string name="food">Еда</string>
     <string name="short_kilo_joul">кДж</string>
     <string name="short_energy">Энергия</string>
     <string name="short_protein">Белки</string>
     <string name="short_fat">Жиры</string>
+    <string name="category">Категория</string>
+    <string name="subcategory">Подкатегория</string>
     <string name="calculator_label">Калькулятор</string>
     <!-- Theme switcher dark and light mode-->
     <string name="theme_switcher_summary">Выберите темную, светлую или системную тему</string>
+    <string name="app_color_scheme">Цветовая схема приложения</string>
+    <string name="dark_theme">Тёмная тема</string>
+    <string name="light_theme">Светлая тема</string>
+    <string name="follow_system_theme">Использовать тему устройства</string>
     <!-- Profile -->
     <string name="localprofile">Профиль</string>
+    <string name="localprofile_shortname">ЛП</string>
+    <string name="description_profile_local">Задайте профиль, доступный в автономном режиме.</string>
+    <string name="a11y_add_new_to_list">добавить новый в список</string>
     <string name="do_you_want_switch_profile">Хотите переключить профиль и сбросить изменения, внесенные в текущий профиль?</string>
     <string name="save_or_reset_changes_first">Сначала сохраните или сбросьте текущие изменения</string>
     <string name="delete_current_profile">Удалить текущий профиль?</string>
+    <string name="units_colon">Единицы:</string>
+    <string name="missing_profile_name">Отсутствует название профиля</string>
+    <string name="error_in_ic_values">Ошибка в значении углеводного коэффициента IC</string>
+    <string name="error_in_basal_values">Ошибка в величине базала</string>
+    <string name="error_in_target_values">Ошибка в целевых значениях</string>
+    <string name="error_in_isf_values">Ошибка в значении фактора чувствительности к инсулину ISF</string>
     <string name="profile_name_contains_dot">Имя профиля содержит точки.\nЭто не поддерживается NS.\nПрофиль не выгружен в NS.</string>
+    <string name="invalid_profile_not_accepted">Неверный профиль %1$s не принят из NS</string>
+    <string name="view">Смотреть</string>
+    <string name="errors">Ошибки</string>
+    <string name="select_profile">Выберите профиль для изменения</string>
+    <string name="profile_name">Название профиля:</string>
+    <string name="a11y_add_new_profile">добавить новый профиль</string>
+    <string name="a11y_clone_profile">клонировать текущий профиль</string>
+    <string name="a11y_delete_current_profile">удалить текущий профиль</string>
+    <string name="dia_short">Время действия инсулина DIA</string>
+    <string name="target_short">ЦЕЛЬ</string>
+    <string name="basal_short">БАЗАЛ</string>
     <!-- Objectives -->
     <string name="completed_well_done">Завершено, отлично!</string>
+    <string name="not_completed_yet">Не завершено</string>
+    <string name="time_elapsed">Прошло времени</string>
     <string name="maxiobset">Максимум активного инсулина IOB установлен правильно</string>
     <string name="hasbgdata">ГК доступна из выбранного источника</string>
     <string name="synchaswritepermission">Служба синхронизации имеет разрешение на запись</string>
@@ -245,6 +333,7 @@
     <string name="overview_show_sensitivity">Чувствительность</string>
     <string name="overview_show_deviations">Отклонение</string>
     <string name="overview_show_cob">Активные углеводы COB</string>
+    <string name="overview_show_iob">Активный инсулин IOB</string>
     <string name="overview_show_basals">Базал</string>
     <string name="overview_show_abs_insulin">Абсолютный инсулин</string>
     <string name="prediction_shortname">ОЖИД</string>

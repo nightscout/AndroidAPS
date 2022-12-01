@@ -14,8 +14,8 @@
     <string name="operating_mode">Mode de fonctionnement</string>
     <string name="description_pump_insight_local">Intégration des pompes Accu-Chek Insight</string>
     <string name="not_inserted">Non inséré</string>
-    <string name="tdd_bolus">DTI Bolus</string>
-    <string name="tdd_basal">DTI Basale</string>
+    <string name="tdd_bolus">DTQ Bolus</string>
+    <string name="tdd_basal">DTQ Basale</string>
     <string name="tbr_formatter">%1$d%% pour %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bolus mixte</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U pour %3$d min</string>
@@ -40,7 +40,7 @@
     <string name="short_status_tbr">DBT : %1$d%% pour %2$d / %3$d min</string>
     <string name="short_status_extended">Étendue : %1$.2f / %2$.2f U pour %3$d min</string>
     <string name="short_status_multiwave">Mixte : %1$.2f / %2$.2f U pour %3$d min</string>
-    <string name="short_status_tdd">DTI : %1$.2f</string>
+    <string name="short_status_tdd">DTQ : %1$.2f</string>
     <string name="short_status_reservoir">Réserv.: %1$.2f U</string>
     <string name="short_status_battery">Batt.: %1$d%%</string>
     <string name="release_software_version">Version du logiciel</string>

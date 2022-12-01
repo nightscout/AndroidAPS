@@ -24,4 +24,5 @@
     <string name="detailed_14_days">Détail de 14 jours</string>
     <string name="day_tir">TIR Jour</string>
     <string name="night_tir">TIR Nuit</string>
+    <string name="carbs_short" comment="max 6 characters">Gluc.</string>
 </resources>

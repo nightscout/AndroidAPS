@@ -113,7 +113,7 @@
     <string name="status_pump">Pompe</string>
     <string name="status_loop">Boucle</string>
     <string name="status_profile_switch">Changement de profil</string>
-    <string name="status_tdd">DTI</string>
+    <string name="status_tdd">DTQ</string>
     <string name="activity_carb">GA</string>
     <string name="activity_IOB">IA</string>
     <string name="activity_no_status">aucun statut</string>
