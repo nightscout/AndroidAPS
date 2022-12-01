@@ -12,7 +12,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">Nastavenie bazálneho profilu</string>
     <string name="combov2_bolus_cancelled">Bolus zrušený</string>
     <string name="combov2_bolus_delivery_failed">Podávanie inzulínu zlyhalo. Zdá sa, že nebol podaný žiadny bolus. Aby ste si boli istí, skontrolujte pumpu a prípadne pošlite bolus znovu. Aby sa zabránilo nechcenému dvojitému bolusu, podanie bolusu nie je automaticky opakované.</string>
-    <string name="combov2_last_bolus">%1$.1f %2$s (%3$s)</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min zostáva)</string>
     <string name="combov2_battery_low_warning">Batéria v pumpe je takmer vybitá</string>
     <string name="combov2_short_status_last_connection">Posledné spoj: pred %1$d min</string>
