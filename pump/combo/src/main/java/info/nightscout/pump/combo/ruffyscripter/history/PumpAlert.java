@@ -1,6 +1,7 @@
 package info.nightscout.pump.combo.ruffyscripter.history;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class PumpAlert extends HistoryRecord {
     public final Integer warningCode;
@@ -23,11 +24,11 @@ public class PumpAlert extends HistoryRecord {
         PumpAlert pumpAlert = (PumpAlert) o;
 
         if (timestamp != pumpAlert.timestamp) return false;
-        if (warningCode != null ? !warningCode.equals(pumpAlert.warningCode) : pumpAlert.warningCode != null)
+        if (!Objects.equals(warningCode, pumpAlert.warningCode))
             return false;
-        if (errorCode != null ? !errorCode.equals(pumpAlert.errorCode) : pumpAlert.errorCode != null)
+        if (!Objects.equals(errorCode, pumpAlert.errorCode))
             return false;
-        return message != null ? message.equals(pumpAlert.message) : pumpAlert.message == null;
+        return Objects.equals(message, pumpAlert.message);
     }
 
     @Override

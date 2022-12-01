@@ -134,7 +134,7 @@ class PumpIO(
     // and [List<Byte>.toComboFrame] for details).
     private val framedComboIO = FramedComboIO(bluetoothDevice)
 
-    private var initialMode: PumpIO.Mode? = null
+    private var initialMode: Mode? = null
 
     private var transportLayerIO = TransportLayer.IO(
         pumpStateStore, bluetoothDevice.address, framedComboIO

@@ -1,4 +1,4 @@
-package info.nightscout.plugins.iob.iobCobCalculator
+package info.nightscout.workflow.iob
 
 import android.content.Context
 import android.os.SystemClock
@@ -6,8 +6,8 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.iob.iobCobCalculator.data.AutosensDataObject
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.workflow.CalculationWorkflow
@@ -17,13 +17,11 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.aps.AutosensData
 import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.plugins.R
-import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
+import info.nightscout.plugins.iob.iobCobCalculator.fromCarbs
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAutosensCalculationFinished
@@ -33,6 +31,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import info.nightscout.workflow.R
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -150,19 +149,19 @@ class IobCobOrefWorker @Inject internal constructor(
                         val initialIndex = autosensDataTable.indexOfKey(hourAgoData.time)
                         aapsLogger.debug(LTag.AUTOSENS, ">>>>> bucketed_data.size()=" + bucketedData.size + " i=" + i + " hourAgoData=" + hourAgoData.toString())
                         var past = 1
-                        try {
+                        // try {
                             while (past < 12) {
                                 val ad = autosensDataTable.valueAt(initialIndex + past)
                                 aapsLogger.debug(LTag.AUTOSENS, ">>>>> past=" + past + " ad=" + ad?.toString())
-                                if (ad == null) {
-                                    aapsLogger.debug(LTag.AUTOSENS, autosensDataTable.toString())
-                                    aapsLogger.debug(LTag.AUTOSENS, bucketedData.toString())
-                                    //aapsLogger.debug(LTag.AUTOSENS, data.iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
-                                    val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.send_logfiles), Notification.LOW)
-                                    rxBus.send(EventNewNotification(notification))
-                                    sp.putBoolean("log_AUTOSENS", true)
-                                    break
-                                }
+                                // if (ad == null) {
+                                //     aapsLogger.debug(LTag.AUTOSENS, autosensDataTable.toString())
+                                //     aapsLogger.debug(LTag.AUTOSENS, bucketedData.toString())
+                                //     //aapsLogger.debug(LTag.AUTOSENS, data.iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
+                                //     val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.send_logfiles), Notification.LOW)
+                                //     rxBus.send(EventNewNotification(notification))
+                                //     sp.putBoolean("log_AUTOSENS", true)
+                                //     break
+                                // }
                                 // let it here crash on NPE to get more data as i cannot reproduce this bug
                                 val deviationSlope = (ad.avgDeviation - avgDeviation) / (ad.time - bgTime) * 1000 * 60 * 5
                                 if (ad.avgDeviation > maxDeviation) {
@@ -175,17 +174,17 @@ class IobCobOrefWorker @Inject internal constructor(
                                 }
                                 past++
                             }
-                        } catch (e: Exception) {
-                            aapsLogger.error("Unhandled exception", e)
-                            fabricPrivacy.logException(e)
-                            aapsLogger.debug(autosensDataTable.toString())
-                            aapsLogger.debug(bucketedData.toString())
-                            //aapsLogger.debug(data.iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
-                            val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.send_logfiles), Notification.LOW)
-                            rxBus.send(EventNewNotification(notification))
-                            sp.putBoolean("log_AUTOSENS", true)
-                            break
-                        }
+                        // } catch (e: Exception) {
+                        //     aapsLogger.error("Unhandled exception", e)
+                        //     fabricPrivacy.logException(e)
+                        //     aapsLogger.debug(autosensDataTable.toString())
+                        //     aapsLogger.debug(bucketedData.toString())
+                        //     //aapsLogger.debug(data.iobCobCalculatorPlugin.getBgReadingsDataTable().toString())
+                        //     val notification = Notification(Notification.SEND_LOGFILES, rh.gs(R.string.send_logfiles), Notification.LOW)
+                        //     rxBus.send(EventNewNotification(notification))
+                        //     sp.putBoolean("log_AUTOSENS", true)
+                        //     break
+                        // }
                     } else {
                         aapsLogger.debug(LTag.AUTOSENS, ">>>>> bucketed_data.size()=" + bucketedData.size + " i=" + i + " hourAgoData=" + "null")
                     }

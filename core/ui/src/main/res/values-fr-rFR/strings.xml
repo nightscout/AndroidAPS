@@ -29,6 +29,10 @@
     <string name="superbolus">Superbolus</string>
     <string name="pump_paused">Pompe suspendue</string>
     <string name="and">Et</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Patient</string>
+    <string name="result">Résultat</string>
+    <string name="settings">Paramètres</string>
+    <string name="statuslights">Voyants d\'état</string>
     <string name="do_ns_upload_title">Remonter les Gly vers NS</string>
     <string name="configbuilder_insulin">Insuline</string>
     <string name="value_unavailable_short">n/d</string>
@@ -41,6 +45,7 @@
     <string name="mute5min">Muet pendant 5 minutes</string>
     <string name="mute">Muet</string>
     <string name="success">Succès</string>
+    <string name="advancedsettings_title">Paramètres Avancés</string>
     <!--    Protection-->
     <string name="unlock_settings">Déverrouiller les paramètres</string>
     <!--    Pumps -->
@@ -109,6 +114,7 @@
     <string name="location_not_found_title">Localisation désactivée</string>
     <string name="location_not_found_message">Afin que la recherche par Bluetooth puisse marcher sur les nouveaux appareils, la localisation doit être activée. AAPS ne trace pas votre position, sauf lorsque vous activez l\'option Message d\'Urgence.</string>
     <!--    Preferences -->
+    <string name="nav_plugin_preferences">Préférences du plugin</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
     <plurals name="days">

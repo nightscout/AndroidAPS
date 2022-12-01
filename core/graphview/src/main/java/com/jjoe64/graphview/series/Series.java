@@ -42,22 +42,22 @@ public interface Series<E extends DataPointInterface> {
     /**
      * @return the lowest x-value of the data
      */
-    public double getLowestValueX();
+    double getLowestValueX();
 
     /**
      * @return the highest x-value of the data
      */
-    public double getHighestValueX();
+    double getHighestValueX();
 
     /**
      * @return the lowest y-value of the data
      */
-    public double getLowestValueY();
+    double getLowestValueY();
 
     /**
      * @return the highest y-value of the data
      */
-    public double getHighestValueY();
+    double getHighestValueY();
 
     /**
      * get the values for a specific range. It is
@@ -69,7 +69,7 @@ public interface Series<E extends DataPointInterface> {
      * @return  all datapoints between the from and until x-value
      *          including the from and until data points.
      */
-    public Iterator<E> getValues(double from, double until);
+    Iterator<E> getValues(double from, double until);
 
     /**
      * Plots the series to the viewport.
@@ -82,25 +82,25 @@ public interface Series<E extends DataPointInterface> {
      * @param canvas canvas to draw on
      * @param isSecondScale true if the drawing is for the second scale
      */
-    public void draw(GraphView graphView, Canvas canvas, boolean isSecondScale);
+    void draw(GraphView graphView, Canvas canvas, boolean isSecondScale);
 
     /**
      * @return the title of the series. Used in the legend
      */
-    public String getTitle();
+    String getTitle();
 
     /**
      * @return  the color of the series. Used in the legend and should
      *          be used for the plotted points or lines.
      */
-    public int getColor();
+    int getColor();
 
     /**
      * set a listener for tap on a data point.
      *
      * @param l listener
      */
-    public void setOnDataPointTapListener(OnDataPointTapListener l);
+    void setOnDataPointTapListener(OnDataPointTapListener l);
 
     /**
      * called by the tap detector in order to trigger

@@ -54,7 +54,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.StopComboBolusTa
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.StopExtBolusTask;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.StopNowBolusTask;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.StopTempBasalTask;
-import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.SyncBasalHistoryTask;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.TaskBase;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.TaskFunc;
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.task.UpdateConnectionTask;
@@ -91,8 +90,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchConfig;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
 import info.nightscout.interfaces.pump.DetailedBolusInfo;
-import info.nightscout.interfaces.pump.PumpSync;
-import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
@@ -111,7 +108,6 @@ public class PatchManagerImpl {
     @Inject SP sp;
     @Inject AAPSLogger aapsLogger;
     @Inject AapsSchedulers aapsSchedulers;
-    @Inject PumpSync pumpSync;
 
     @Inject StartBondTask START_BOND;
     @Inject GetPatchInfoTask GET_PATCH_INFO;
@@ -561,9 +557,6 @@ public class PatchManagerImpl {
 
     @Inject
     PatchStateManager patchStateManager;
-
-    @Inject
-    SyncBasalHistoryTask syncBasalHistoryTask;
 
     void onAlarmNotification(AlarmNotification notification) throws Throwable {
         patchStateManager.updatePatchState(PatchState.create(notification.patchState, System.currentTimeMillis()));

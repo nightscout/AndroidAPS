@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.workflow
+package info.nightscout.workflow
 
 import android.content.Context
 import androidx.work.Worker

@@ -34,7 +34,7 @@ class ProfileElement(ps: EffectiveProfileSwitch, serialNumber: String, dateUtil:
 
     init {
         type = "pumpSettings"
-        val profile: Profile? = ProfileSealed.EPS(ps)
+        val profile: Profile = ProfileSealed.EPS(ps)
         checkNotNull(profile)
         for (br in profile.getBasalValues())
             basalSchedules.Normal.add(BasalRate(br.timeAsSeconds * 1000, br.value))

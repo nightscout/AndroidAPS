@@ -1,14 +1,14 @@
-package info.nightscout.androidaps.workflow
+package info.nightscout.workflow
 
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.workflow.CalculationWorkflow
-import info.nightscout.plugins.general.overview.OverviewPlugin
-import info.nightscout.plugins.general.overview.events.EventUpdateOverviewGraph
-import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventUpdateOverviewGraph
 import javax.inject.Inject
 
 class UpdateGraphWorker(
@@ -17,7 +17,7 @@ class UpdateGraphWorker(
 ) : Worker(context, params) {
 
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var overviewPlugin: OverviewPlugin
+    @Inject lateinit var activePlugin: ActivePlugin
 
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -25,7 +25,7 @@ class UpdateGraphWorker(
 
     override fun doWork(): Result {
         if (inputData.getString(CalculationWorkflow.JOB) == CalculationWorkflow.MAIN_CALCULATION)
-            overviewPlugin.overviewBus.send(EventUpdateOverviewGraph("UpdateGraphWorker"))
+            activePlugin.activeOverview.overviewBus.send(EventUpdateOverviewGraph("UpdateGraphWorker"))
         else
             rxBus.send(EventUpdateOverviewGraph("UpdateGraphWorker"))
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.DRAW, 100, null))

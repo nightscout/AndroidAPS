@@ -110,7 +110,7 @@ class PumpSyncStorage @Inject constructor(
         return pumpSyncStorageTBR
     }
 
-    fun addBolusWithTempId(detailedBolusInfo: DetailedBolusInfo, writeToInternalHistory: Boolean, creator: info.nightscout.pump.common.sync.PumpSyncEntriesCreator): Boolean {
+    fun addBolusWithTempId(detailedBolusInfo: DetailedBolusInfo, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator): Boolean {
         val temporaryId = creator.generateTempId(detailedBolusInfo.timestamp)
         val result = pumpSync.addBolusWithTempId(
             detailedBolusInfo.timestamp,
@@ -157,7 +157,7 @@ class PumpSyncStorage @Inject constructor(
             "carbs=${carbsDto.carbs}, pumpSerial=${carbsDto.serialNumber}] - Result: $result")
     }
 
-    fun addTemporaryBasalRateWithTempId(temporaryBasal: PumpDbEntryTBR, writeToInternalHistory: Boolean, creator: info.nightscout.pump.common.sync.PumpSyncEntriesCreator): Boolean {
+    fun addTemporaryBasalRateWithTempId(temporaryBasal: PumpDbEntryTBR, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator): Boolean {
         val timeNow: Long = System.currentTimeMillis()
         val temporaryId = creator.generateTempId(timeNow)
 

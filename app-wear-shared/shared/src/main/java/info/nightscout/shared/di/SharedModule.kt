@@ -6,5 +6,4 @@ import dagger.Module
     includes = [
     ]
 )
-open class SharedModule {
-}
+open class SharedModule

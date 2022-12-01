@@ -102,6 +102,10 @@
     <string name="careportal_remove_started_events">Удалить записи о начале работы AAPS</string>
     <string name="hide_loop">Скрыть цикл</string>
     <string name="show_loop">Показать цикл</string>
+    <string name="user_entry">Запись пользователя</string>
+    <string name="clone_label">Клонировать</string>
+    <string name="show_loop_records">Показать записи цикла</string>
+    <string name="show_hide_records">Скрыть записи цикла</string>
     <!-- ProfileHelperActivity -->
     <string name="profile1">Профиль 1</string>
     <string name="profile2">Профиль 2</string>

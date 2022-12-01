@@ -28,22 +28,21 @@ enum class PumpUpdateFragmentType {
     Custom_8
     ;
 
-    final var children: List<PumpUpdateFragmentType>? = null
+    var children: List<PumpUpdateFragmentType>? = null
 
-    constructor() {
-    }
+    constructor()
 
     constructor(children: List<PumpUpdateFragmentType>) {
-        this.children = children;
+        this.children = children
     }
 
     fun isOptionIncluded(type: PumpUpdateFragmentType): Boolean {
         if (this == type)
             return true
         else if (this.children != null && this.children!!.contains(type))
-            return true;
+            return true
 
-        return false;
+        return false
     }
 
 }

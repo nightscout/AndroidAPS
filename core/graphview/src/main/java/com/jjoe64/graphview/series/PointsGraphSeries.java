@@ -41,7 +41,7 @@ public class PointsGraphSeries<E extends DataPointInterface> extends BaseSeries<
      * interface to implement a custom
      * drawing for the data points.
      */
-    public static interface CustomShape {
+    public interface CustomShape {
         /**
          * called when drawing a single data point.
          * use the x and y coordinates to render your
@@ -201,10 +201,8 @@ public class PointsGraphSeries<E extends DataPointInterface> extends BaseSeries<
             double orgY = y;
 
             // overdraw
-            boolean overdraw = false;
-            if (x > graphWidth) { // end right
-                overdraw = true;
-            }
+            boolean overdraw = x > graphWidth;
+            // end right
             if (y < 0) { // end bottom
                 overdraw = true;
             }

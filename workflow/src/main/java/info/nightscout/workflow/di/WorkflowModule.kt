@@ -1,20 +1,20 @@
-package info.nightscout.androidaps.di
+package info.nightscout.workflow.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
-import info.nightscout.androidaps.workflow.InvokeLoopWorker
-import info.nightscout.androidaps.workflow.LoadBgDataWorker
-import info.nightscout.androidaps.workflow.PrepareBasalDataWorker
-import info.nightscout.androidaps.workflow.PrepareBgDataWorker
-import info.nightscout.androidaps.workflow.PrepareBucketedDataWorker
-import info.nightscout.androidaps.workflow.PrepareIobAutosensGraphDataWorker
-import info.nightscout.androidaps.workflow.PreparePredictionsWorker
-import info.nightscout.androidaps.workflow.PrepareTemporaryTargetDataWorker
-import info.nightscout.androidaps.workflow.PrepareTreatmentsDataWorker
-import info.nightscout.androidaps.workflow.UpdateGraphWorker
-import info.nightscout.androidaps.workflow.UpdateIobCobSensWorker
-import info.nightscout.plugins.iob.iobCobCalculator.IobCobOref1Worker
-import info.nightscout.plugins.iob.iobCobCalculator.IobCobOrefWorker
+import info.nightscout.workflow.InvokeLoopWorker
+import info.nightscout.workflow.LoadBgDataWorker
+import info.nightscout.workflow.PrepareBasalDataWorker
+import info.nightscout.workflow.PrepareBgDataWorker
+import info.nightscout.workflow.PrepareBucketedDataWorker
+import info.nightscout.workflow.PrepareIobAutosensGraphDataWorker
+import info.nightscout.workflow.PreparePredictionsWorker
+import info.nightscout.workflow.PrepareTemporaryTargetDataWorker
+import info.nightscout.workflow.PrepareTreatmentsDataWorker
+import info.nightscout.workflow.UpdateGraphWorker
+import info.nightscout.workflow.UpdateIobCobSensWorker
+import info.nightscout.workflow.iob.IobCobOref1Worker
+import info.nightscout.workflow.iob.IobCobOrefWorker
 
 @Module
 @Suppress("unused")

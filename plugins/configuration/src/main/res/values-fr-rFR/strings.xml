@@ -112,8 +112,22 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="maintenance">Maintenance</string>
     <string name="maintenance_shortname">MAINT</string>
     <string name="description_maintenance">Fournir différentes fonctions de maintenance (ex : envoyer, supprimer le journal).</string>
+    <string name="database_cleanup">Nettoyer la base de données</string>
     <string name="cleanup_db_confirm">Voulez-vous nettoyer la base de données ?\nCela supprimera les modifications suivies et les données historiques de plus de 3 mois.</string>
     <string name="cleared_entries">Entrées effacées</string>
+    <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
+    <string name="maintenance_settings">Paramètres de maintenance</string>
+    <string name="maintenance_email">Destinataire de l\'email</string>
+    <string name="maintenance_amount">Nombre de journaux à envoyer</string>
+    <string name="send_all_logs">Envoyer les journaux par e-mail</string>
+    <string name="delete_logs">Supprimer les journaux</string>
+    <string name="configbuilder_nightscoutversion_label">Version Nightscout :</string>
+    <string name="engineering_mode_enabled">Mode ingénierie actif</string>
+    <string name="log_files">Fichiers journaux</string>
+    <string name="nav_logsettings">Paramètres journal</string>
+    <string name="miscellaneous">Divers</string>
+    <string name="nav_resetdb">Réinitialiser les Bases de Données</string>
+    <string name="resettodefaults">Rétablir les valeurs par défaut</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exporté il y a %1$s</string>
     <string name="exported_at" comment="at placeholder we add export date">exporté à %1$s</string>

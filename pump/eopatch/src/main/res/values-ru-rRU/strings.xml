@@ -92,6 +92,7 @@
     <string name="patch_communication_succeed_message">Подключено к Patch.</string>
     <string name="patch_cancel_pairing">Отменить сопряжение</string>
     <string name="symbol_days">дней</string>
+    <string name="all_dose_unit">&#160; ед</string>
     <string name="insulin_suspend_msg1">После приостановки текущий болюс &amp; Временный базал будет отменен. \n\nСкорость базала: %1$s ед/ч\nОсталось времени: %2$s\n&amp; инсулина: %3$.2f U</string>
     <string name="insulin_suspend_msg2">После приостановки текущий болюс будет отменен. \n\n Осталось инсулина: %1$.2f U</string>
     <string name="insulin_suspend_msg3">После приостановки текущий Временный базал будет отменен.\n\n Скорость базала: %1$s ед/ч\n Осталось времени: %2$s</string>

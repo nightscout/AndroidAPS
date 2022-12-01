@@ -14,6 +14,7 @@ import com.google.gson.Gson
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.overview.OverviewMenus
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRefreshOverview
@@ -25,7 +26,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class OverviewMenus @Inject constructor(
+class OverviewMenusImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
     private val sp: SP,
@@ -33,9 +34,9 @@ class OverviewMenus @Inject constructor(
     private val config: Config,
     private val loop: Loop,
     private val fabricPrivacy: FabricPrivacy
-) {
+) : OverviewMenus {
 
-    enum class CharType(@StringRes val nameId: Int, @AttrRes val attrId: Int, @AttrRes val attrTextId: Int, val primary: Boolean, val secondary: Boolean, @StringRes val shortnameId: Int) {
+    enum class CharTypeData(@StringRes val nameId: Int, @AttrRes val attrId: Int, @AttrRes val attrTextId: Int, val primary: Boolean, val secondary: Boolean, @StringRes val shortnameId: Int) {
         PRE(R.string.overview_show_predictions, R.attr.predictionColor, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.prediction_shortname),
         TREAT(R.string.overview_show_treatments, R.attr.cobColor, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.treatments_shortname),
         BAS(R.string.overview_show_basals, R.attr.basal, R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.basal_shortname),
@@ -55,9 +56,9 @@ class OverviewMenus @Inject constructor(
         const val SCALE_ID = 1001
     }
 
-    fun enabledTypes(graph: Int): String {
+    override fun enabledTypes(graph: Int): String {
         val r = StringBuilder()
-        for (type in CharType.values()) if (_setting[graph][type.ordinal]) {
+        for (type in CharTypeData.values()) if (_setting[graph][type.ordinal]) {
             r.append(rh.gs(type.shortnameId))
             r.append(" ")
         }
@@ -66,7 +67,7 @@ class OverviewMenus @Inject constructor(
 
     private var _setting: MutableList<Array<Boolean>> = ArrayList()
 
-    val setting: List<Array<Boolean>>
+    override val setting: List<Array<Boolean>>
         @Synchronized get() = _setting.toMutableList() // implicitly does a list copy
 
     @Synchronized
@@ -77,23 +78,23 @@ class OverviewMenus @Inject constructor(
     }
 
     @Synchronized
-    fun loadGraphConfig() {
+    override fun loadGraphConfig() {
         val sts = sp.getString(R.string.key_graph_config, "")
         if (sts.isNotEmpty()) {
             _setting = Gson().fromJson(sts, Array<Array<Boolean>>::class.java).toMutableList()
             // reset when new CharType added
             for (s in _setting)
-                if (s.size != CharType.values().size) {
+                if (s.size != OverviewMenus.CharType.values().size) {
                     _setting = ArrayList()
-                    _setting.add(Array(CharType.values().size) { true })
+                    _setting.add(Array(OverviewMenus.CharType.values().size) { true })
                 }
         } else {
             _setting = ArrayList()
-            _setting.add(Array(CharType.values().size) { true })
+            _setting.add(Array(OverviewMenus.CharType.values().size) { true })
         }
     }
 
-    fun setupChartMenu(context: Context, chartButton: ImageButton) {
+    override fun setupChartMenu(context: Context, chartButton: ImageButton) {
         val settingsCopy = setting
         val numOfGraphs = settingsCopy.size // 1 main + x secondary
 
@@ -120,12 +121,12 @@ class OverviewMenus @Inject constructor(
                     dividerItem.isCheckable = true
                     dividerItem.isChecked = true
                 }
-                CharType.values().forEach { m ->
+                CharTypeData.values().forEach { m ->
                     if (g == 0 && !m.primary) return@forEach
                     if (g > 0 && !m.secondary) return@forEach
                     var insert = true
-                    if (m == CharType.PRE) insert = predictionsAvailable
-                    if (m == CharType.DEVSLOPE) insert = config.isDev()
+                    if (m == CharTypeData.PRE) insert = predictionsAvailable
+                    if (m == CharTypeData.DEVSLOPE) insert = config.isDev()
                     if (used.contains(m.ordinal)) insert = false
                     for (g2 in g + 1 until numOfGraphs) {
                         if (settingsCopy[g2][m.ordinal]) insert = false
@@ -165,7 +166,7 @@ class OverviewMenus @Inject constructor(
 
                             it.itemId == numOfGraphs                           -> {
                                 // add new empty
-                                _setting.add(Array(CharType.values().size) { false })
+                                _setting.add(Array(CharTypeData.values().size) { false })
                             }
 
                             it.itemId < 100                                    -> {
@@ -194,7 +195,7 @@ class OverviewMenus @Inject constructor(
         }
     }
 
-    fun isEnabledIn(type: CharType): Int {
+    override fun isEnabledIn(type: OverviewMenus.CharType): Int {
         val settingsCopy = setting
         val numOfGraphs = settingsCopy.size // 1 main + x secondary
         for (g in 0 until numOfGraphs) if (settingsCopy[g][type.ordinal]) return g

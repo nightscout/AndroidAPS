@@ -221,6 +221,7 @@ dependencies {
     implementation project(':pump:omnipod-common')
     implementation project(':pump:omnipod-eros')
     implementation project(':pump:omnipod-dash')
+    implementation project(':workflow')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
