@@ -50,18 +50,18 @@ import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.plugins.R
+import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui
-import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
-import info.nightscout.plugins.aps.loop.events.EventNewOpenLoopNotification
+import info.nightscout.rx.events.EventLoopUpdateGui
+import info.nightscout.rx.events.EventNewOpenLoopNotification
 import info.nightscout.plugins.aps.loop.extensions.json
-import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAcceptOpenLoopChange
@@ -97,7 +97,7 @@ class LoopPlugin @Inject constructor(
     private val context: Context,
     private val commandQueue: CommandQueue,
     private val activePlugin: ActivePlugin,
-    private val virtualPumpPlugin: VirtualPumpPlugin,
+    private val virtualPump: VirtualPump,
     private val iobCobCalculator: IobCobCalculator,
     private val receiverStatusStore: ReceiverStatusStore,
     private val fabricPrivacy: FabricPrivacy,
@@ -668,7 +668,7 @@ class LoopPlugin @Inject constructor(
     }
 
     private fun allowPercentage(): Boolean {
-        return virtualPumpPlugin.isEnabled()
+        return virtualPump.isEnabled()
     }
 
     override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason) {

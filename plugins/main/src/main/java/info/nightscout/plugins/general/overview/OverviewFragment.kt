@@ -68,7 +68,6 @@ import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.plugins.R
-import info.nightscout.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.plugins.databinding.OverviewFragmentBinding
 import info.nightscout.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.plugins.general.overview.graphData.GraphData
@@ -85,6 +84,7 @@ import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.rx.events.EventExtendedBolusChange
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventNewBG
+import info.nightscout.rx.events.EventNewOpenLoopNotification
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.events.EventRefreshOverview

@@ -17,10 +17,10 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.utils.HtmlHelper
-import info.nightscout.plugins.R
+import info.nightscout.plugins.aps.R
+import info.nightscout.plugins.aps.databinding.LoopFragmentBinding
 import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui
-import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
-import info.nightscout.plugins.databinding.LoopFragmentBinding
+import info.nightscout.rx.events.EventLoopUpdateGui
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

@@ -46,6 +46,8 @@
     <string name="mute">Mute</string>
     <string name="success">Success</string>
     <string name="advancedsettings_title">Advanced Settings</string>
+    <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
+    <string name="aps_mode_title">APS Mode</string>
 
     <!--    Protection-->
     <string name="unlock_settings">Unlock settings</string>

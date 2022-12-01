@@ -7,13 +7,13 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.plugins.R
-import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.plugins.general.wear.wearintegration.DataHandlerMobile
 import info.nightscout.plugins.general.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAutosensCalculationFinished
 import info.nightscout.rx.events.EventDismissBolusProgressIfRunning
+import info.nightscout.rx.events.EventLoopUpdateGui
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventPreferenceChange
