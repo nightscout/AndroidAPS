@@ -44,6 +44,7 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.TimeChangeType
+import info.nightscout.pump.combov2.activities.ComboV2PairingActivity
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventInitializationChanged
@@ -325,6 +326,8 @@ class ComboV2Plugin @Inject constructor (
                 lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     val pairPref: Preference? = findPreference(rh.gs(R.string.key_combov2_pair_with_pump))
                     val unpairPref: Preference? = findPreference(rh.gs(R.string.key_combov2_unpair_pump))
+
+                    pairPref?.intent = Intent(activity, ComboV2PairingActivity::class.java)
 
                     val isInitiallyPaired = pairedStateUIFlow.value
                     pairPref?.isEnabled = !isInitiallyPaired
