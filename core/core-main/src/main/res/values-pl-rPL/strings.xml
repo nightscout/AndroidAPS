@@ -1,33 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Odśwież</string>
-    <string name="error">Błąd</string>
-    <string name="save">ZACHOWAJ</string>
-    <string name="not_set_short">Nie ustawiono</string>
-    <string name="failedupdatebasalprofile">Nieudane uaktualnienie profilu bazy</string>
-    <string name="profile_set_ok">Profil bazowy w pompie uaktualniony</string>
-    <string name="invalidinput">Błędne dane wejściowe</string>
-    <string name="tempbasaldeliveryerror">Błąd podania bazy tymczasowej</string>
     <string name="goingtodeliver">Zamierzam podać %1$.2f U</string>
     <string name="waitingforpump">Czekam na pompę</string>
-    <string name="bolusdelivering">Podaję %1$.2f U</string>
-    <string name="connecting">Łączę</string>
-    <string name="disconnected">Rozłączono</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
-    <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min.</string>
-    <string name="pumpbusy">Pompa jest zajęta</string>
-    <string name="connectionerror">Błąd połączenia z pompą</string>
     <string name="objectives">Zadania</string>
     <string name="please_wait">Proszę czekać…</string>
-    <string name="mute">Wycisz</string>
-    <string name="reload">Załaduj ponownie</string>
     <string name="stop">Stop</string>
     <string name="carbs">Węglowodany</string>
+    <string name="no_profile_set">NIE USTAWIONO PROFILU</string>
     <string name="active"><![CDATA[<Aktywny>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Jednostki</string>
@@ -37,35 +21,12 @@
     <string name="basal_label">Baza</string>
     <string name="target_label">Cel</string>
     <string name="basal_long_label">Dawka bazowa</string>
-    <string name="initializing">Inicjuje ...</string>
-    <string name="serial_number">Numer seryjny</string>
-    <string name="battery_label">Bateria</string>
-    <string name="last_connection_label">Ostatnie połączenie</string>
-    <string name="last_bolus_label">Ostatni bolus</string>
-    <string name="dailyunits">Jednostki dzienne</string>
-    <string name="base_basal_rate_label">Podstawowa dawka bazowa</string>
-    <string name="tempbasal_label">Baza tymczasowa</string>
-    <string name="extended_bolus_label">Bolus Przedłużony</string>
-    <string name="reservoir_label">Zbiornik</string>
-    <string name="pumphistory">Historia pompy</string>
-    <string name="viewprofile">Zobacz profil</string>
-    <string name="eventtype">Typ zdarzenia</string>
-    <string name="mgdl">mg/dl</string>
-    <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="advancedsettings_title">Ustawienia zaawansowane</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Wyłącza bluetooth telefonu na jedną sekundę, jeśli nie jest możliwe połączenie z pompą. Może to pomóc w niektórych telefonach, w których blokuje się bluetooth.</string>
-    <string name="pairing">Parowanie</string>
-    <string name="loopdisabled">PĘTLA WYLĄCZONA Z UWAGI NA OGRANICZENIA</string>
-    <string name="bolusdelivered">Bolus %1$.2f U podany prawidłowo</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="novalidbasalrate">Brak prawidłowej dawki bazowej odczytanej z pompy</string>
-    <string name="limitingmaxiob">Ograniczam max IOB do %1$.1f U z uwagi na %2$s</string>
-    <string name="unsafeusage">niebezpieczne użycie</string>
-    <string name="pump_unreachable">Pompa nieosiągalna</string>
     <string name="extended_bolus">Bolus Przedłużony</string>
     <string name="pump_time_updated">Czas pompy uaktualniony</string>
     <string name="exit">Wyjście</string>
@@ -90,7 +51,6 @@
     <string name="loading">Ładowanie…</string>
     <string name="notes_label">Notatki</string>
     <string name="remove_button">Usuń</string>
-    <string name="addnew">Dodaj nowy</string>
     <string name="wrong_pump_data">Dane pochodzą z innej pompy. Zmień sterownik pompy, aby zresetować stan pompy.</string>
     <string name="bg_label">BG</string>
     <string name="calibration">Kalibracja</string>
@@ -104,7 +64,6 @@
     <string name="loopsuspended">Pętla wstrzymana</string>
     <string name="trend_arrow">Strzałka trendu</string>
     <string name="a11y_autosens_label">Auto sens</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="required">wym</string>
     <string name="a11y_arrow_none">brak</string>
     <string name="a11y_arrow_unknown">nieznany</string>
@@ -130,28 +89,15 @@
     <string name="paused">Wstrzymano</string>
     <string name="invalid">NIEPRAWIDŁOWY</string>
     <string name="login">Zaloguj się</string>
+    <string name="prime_fill">Rozpocznij/Wypełnij</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Zatrzymaj cel tymczasowy</string>
     <string name="closedloop">Zamknięta pętla</string>
     <string name="openloop">Otwarta pętla</string>
     <string name="lowglucosesuspend">Zawieszenie przy niskiej glikemii</string>
-    <string name="confirm">Potwierdź</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <!--    Constraints-->
-    <string name="limitingbasalratio">Ograniczam maks. dawkę bazową do %1$.2f U/h z uwagi na %2$s</string>
-    <string name="pumplimit">ograniczenie pompy</string>
-    <string name="limitingpercentrate">Ograniczam maksymalną wartość w procentach do %1$d%% z uwagi na %2$s</string>
-    <string name="itmustbepositivevalue">wartość musi być dodatnia</string>
-    <string name="limitingbolus">Ograniczam bolus do %1$.1f U z uwagi na %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Pompa nie zainicjowana, profil nie ustawiony!</string>
-    <!--    BlePreCheck-->
-    <string name="ble_not_supported">Bluetooth Low Energy nie jest obsługiwany.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nie jest obsługiwany lub urządzenie nie jest sparowane.</string>
-    <string name="ble_not_enabled">Bluetooth nie jest włączony.</string>
-    <string name="location_not_found_title">Lokalizacja nie jest włączona</string>
-    <string name="location_not_found_message">Aby uruchomić odnajdywanie Bluetooth na nowszych urządzeniach, lokalizacja musi być uruchomiona. AAPS nie śledzi twojej lokalizacji więc po udanym parowaniu urządzenia Bluetooth można wyłączyć lokalizację.</string>
     <!--    Protection-->
     <string name="wrongpassword">Złe hasło</string>
     <string name="passwords_dont_match">Hasła się nie zgadzają</string>
@@ -164,6 +110,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Uruchom profil %1$d%% na %2$d min</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Wyłącz bazę tymczasową</string>
     <string name="let_temp_basal_run">Pozwól na działanie bazy tymczasowej</string>
     <string name="rate">Wartość</string>
     <string name="duration">Czas trwania</string>
@@ -185,9 +132,12 @@
     <string name="careportal_note_message">Wskazówka: %1$s</string>
     <string name="careportal_question_message">Pytanie : %1$s</string>
     <string name="careportal_exercise_message">Ćwiczenie: %1$s</string>
+    <string name="careportal_pump_site_change">Zmiana wkłucia</string>
+    <string name="cgm_sensor_insert">Założenie sensora CGM</string>
     <string name="careportal_cgmsensorstart">Uruchomienie sensora CGM</string>
     <string name="careportal_cgm_sensor_stop">Zatrzymanie sensora CGM</string>
     <string name="careportal_dad_alert">Alarm D.A.D.</string>
+    <string name="careportal_insulin_cartridge_change">Zmiana zasobnika insuliny</string>
     <string name="careportal_profileswitch">Zmiana profilu</string>
     <string name="careportal_snackbolus">Bolus na przekąskę</string>
     <string name="careportal_mealbolus">Bolus na posiłek</string>
@@ -197,6 +147,8 @@
     <string name="careportal_tempbasalend">Dawka Tymczasowa Koniec</string>
     <string name="careportal_carbscorrection">Węglow. korekcyjne</string>
     <string name="careportal_openapsoffline">OpenAPS Rozłączony (Offline)</string>
+    <string name="pump_battery_change">Zmiana baterii pompy</string>
+    <string name="temporary_target">Cel tymczasowy (TT)</string>
     <string name="careportal_temporarytargetvalue">Wartość celu tymczasowego</string>
     <string name="careportal_temporarytargetcancel">Odrzuć Cel tymczasowy</string>
     <string name="boluswizard">Kalkulator bolusa</string>
@@ -210,27 +162,20 @@
     <string name="wear">Oprogramowanie Wear (Smartwatch)</string>
     <string name="automation">Automatyzacja</string>
     <string name="custom">Niestandardowe</string>
-    <string name="pump">Pompa</string>
     <string name="loop">Pętla</string>
     <string name="ns">NS</string>
     <string name="record">Wpis</string>
-    <string name="reading_pump_history">Wczytywanie historii pompy</string>
-    <string name="pump_icon">Ikona pompy</string>
     <!--    Command-->
     <string name="connectiontimedout">Przekroczono limit czasu połączenia</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Wykonane</string>
     <string name="comment">Komentarz</string>
-    <string name="success">Sukces</string>
     <string name="percent">Procent</string>
     <string name="absolute">Całkowity</string>
-    <string name="configbuilder_insulin">Insulina</string>
-    <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">Oczekiwanie na wynik</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
-    <string name="stats">Statystyki</string>
     <string name="cumulative_tdd">Kumulatywna TDD (dawka dzienna)</string>
     <string name="expweight">Ważona wykładniczo TDD</string>
     <string name="basalrate">Baza</string>
@@ -244,36 +189,6 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Wykrywanie czasu</string>
-    <string name="mute5min">Wycisz na 5 minut</string>
-    <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">wyeksportowano %1$s temu</string>
-    <string name="exported_at" comment="at placeholder we add export date">wyeksportowano w dniu %1$s</string>
-    <string name="exported_less_than_hour_ago">wyeksportowano mniej niż godzinę temu</string>
-    <string name="in_directory" comment="placeholder is for exported file path">w katalogu: %1$s</string>
-    <string name="preferences_import_list_title">Wybierz plik do zaimportowania</string>
-    <string name="metadata_warning_different_flavour">Ustawienia zostały utworzone z innym wariantem AAPS (%1$s) gdy masz %2$s.\n\nNiektóre ustawienia mogą być brakujące lub nieprawidłowe - po zaimportowaniu proszę sprawdzić i zaktualizować swoje ustawienia.</string>
-    <string name="metadata_warning_different_device">Preferencje zostały utworzone na innym urządzeniu. Import ze starszego/innego telefonu jest OK, ale upewnij się, że importowane preferencje są poprawne!</string>
-    <string name="metadata_warning_outdated_format">Używasz przestarzałego formatu ze starych wersji AAPS, który nie jest bezpieczny! Używaj go tylko w ostateczności, jeśli nie masz eksportu w aktualnym formacie JSON.</string>
-    <string name="metadata_warning_old_export">Zaimportowane ustawienia mają już %1$s dni! Może masz bardziej aktualne ustawienia lub wybierzesz niewłaściwy plik? Pamiętaj o regularnym eksporcie ustawień!</string>
-    <string name="metadata_warning_date_format">Niepoprawny format daty i czasu!</string>
-    <string name="metadata_warning_different_version">Importujesz ustawienia z innej, nieco starszej wersji aplikacji. Prawdopodobnie to jest OK bo np.: importujesz ustawienia po aktualizacji do nowej wersji, ale sprawdź po zaimportowaniu, czy ustawienia są nadal poprawne!</string>
-    <string name="metadata_urgent_different_version">Importujesz ustawienia ze znacząco innej wersji aplikacji. Zmiana głównego numeru wersji aplikacji oznacza znaczące zmiany, i może oznaczać niekompatybilność niektórych ustawień. Upewnij się po imporcie, że ustawienia są nadal poprawne!</string>
-    <string name="prefdecrypt_settings_tampered">Plik ustawień został zmieniony</string>
-    <string name="prefdecrypt_settings_secure">Plik ustawień jest bezpieczny</string>
-    <string name="prefdecrypt_settings_unencrypted">Używanie niebezpieczne, niezaszyfrowany format ustawień</string>
-    <string name="prefdecrypt_wrong_json">Błąd w formacie JSON, brak wymaganego pola (format, zawartość, metadane lub zabezpieczenia)</string>
-    <string name="prefdecrypt_wrong_password">Błąd odszyfrowania, podane hasło nie może odszyfrować pliku</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Brak sumy kontrolnej pliku (hash), nie można zweryfikować autentyczności ustawień!</string>
-    <string name="prefdecrypt_issue_modified">Plik został zmodyfikowany po eksporcie!</string>
-    <string name="prefdecrypt_issue_parsing">Błąd odszyfrowania, nie udało się przetworzyć ustawień!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Błąd deszyfrowania, podane hasło jest niepoprawne lub plik ustawień został zmodyfikowany! Może się zdarzyć, że zaimportowany plik został wyeksportowany z innym hasłem głównym.</string>
-    <string name="prefdecrypt_issue_wrong_format">Brak konfiguracji szyfrowania, format ustawień jest nieprawidłowy!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Nieobsługiwany lub nieokreślony algorytm szyfrowania!</string>
-    <!-- VersionChecker -->
-    <string name="running_invalid_version">Wykryliśmy, że używasz nieprawidlowej wersji. Pętla wyłączona!</string>
-    <string name="versionavailable">Wersja %1$s dostępna</string>
-    <string name="version_expire">Wersja %1$s wygasa %2$s</string>
-    <!-- Permissions -->
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
     <string name="uel_bolus_calculator">KALKULATOR BOLUSA</string>
@@ -362,7 +277,6 @@
     <string name="ue_action">Działanie</string>
     <string name="ue_timestamp">Sygnatura czasowa</string>
     <string name="ue_none">Brak jednostki</string>
-    <string name="ue_export_to_csv">Eksportuj wpisy użytkownika do Excel-a (csv)</string>
     <string name="uel_loop_change">PĘTLA ZMIENIONA</string>
     <string name="uel_loop_removed">PĘTLA USUNIĘTA</string>
     <string name="uel_other">INNE</string>
@@ -400,16 +314,6 @@
     <string name="keepalive_status_outdated" comment="26 characters max for translation">Podtrzym. Stan nieaktualny.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Podtrzym. Baza nieaktualna</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
-    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Kliknięto połącz z pompą</string>
-    <string name="pump_driver_change" comment="26 characters max for translation">Zmiana ster. pompy.</string>
-    <string name="device_changed" comment="26 characters max for translation">Urządzenie zmieniono</string>
-    <string name="clicked_refresh" comment="26 characters max for translation">Naciśnięto odśwież</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planowe odświeżenie statusu</string>
-    <string name="unconfirmed_command" comment="26 characters max for translation">Niepotwierdzone polecenie</string>
-    <string name="requested_by_user" comment="26 characters max for translation">Na życzenie użytkownika</string>
-    <string name="user_request" comment="26 characters max for translation">Żądanie użytkownika</string>
-    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
-    <string name="pump_paired" comment="26 characters max for translation">Pompa sparowana</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Przycisk Odświeżania Insight</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Baza</string>
@@ -423,31 +327,24 @@
     <string name="raise_notifications_as_android_notifications">Użyj powiadomień systemowych dla alertów i powiadomień</string>
     <string name="urgent_alarm">Pilny alarm</string>
     <string name="info">INFO</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Brak uprawnień SMS</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Doradca bolusa</string>
+    <string name="bolus_advisor_message">Masz wysoki poziom. Zamiast jeść teraz, zaleca się poczekać na wyrównanie poziomu cukru. Czy chcesz teraz wykonać korekcyjny bolus i otrzymać przypomnienie, kiedy nadejdzie czas na posiłek? W tym przypadku żadne węglowodany nie zostaną zarejestrowane i należy ponownie użyć kreatora, gdy zostanie otrzymane przypomnienie.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Wykryto powolne wchłanianie węglowodanów: %2$d%% czasu. Sprawdź ponownie swoje obliczenia. COB mogły być przeszacowane przez co mogło być podane zbyt dużo insuliny !!!!!</font>]]></string>
     <string name="partialboluswizard">Dostarcz tą część dawki insuliny z wyniku kalkulatora bolusa [%]</string>
+    <string name="bolus_constraint_applied_warn">Zastosowano ograniczenie bolusa: %1$.2f U do %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolus zostanie jedynie odnotowany (nie będzie podany przez pompę)</string>
     <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>
     <string name="no_action_selected">Nie wybrano żadnej akcji, zdarzenie nie będzie wprowadzone</string>
     <!--    Preferences-->
-    <plurals name="days">
-        <item quantity="one">%1$d dzień</item>
-        <item quantity="few">%1$d dni</item>
-        <item quantity="many">%1$d dni</item>
-        <item quantity="other">%1$d dni</item>
-    </plurals>
-    <plurals name="hours">
-        <item quantity="one">%1$d godzina</item>
-        <item quantity="few">%1$d godziny</item>
-        <item quantity="many">%1$d godzin</item>
-        <item quantity="other">%1$d godzin</item>
-    </plurals>
-    <plurals name="minutes">
-        <item quantity="one">%1$d minuta</item>
-        <item quantity="few">%1$d minuty</item>
-        <item quantity="many">%1$d minuty</item>
-        <item quantity="other">%1$d minuty</item>
-    </plurals>
+    <string name="child">Dziecko</string>
+    <string name="teenage">Nastolatek</string>
+    <string name="adult">Osoba dorosła</string>
+    <string name="resistant_adult">Osoba dorosła insulinooporna</string>
+    <string name="pregnant">Ciąża</string>
+    <string name="patient_age_summary">Wybierz typ pacjenta, aby ustawić limity bezpieczeństwa</string>
+    <string name="max_bolus_title">Maks. dopuszczalny bolus [U]</string>
+    <string name="max_carbs_title">Maks. dopuszczalne węglowodany [g]</string>
+    <string name="patient_type">Typ pacjenta</string>
 </resources>
