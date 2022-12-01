@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.workflow
+package info.nightscout.workflow
 
 import android.content.Context
 import android.graphics.DashPathEffect
@@ -9,8 +9,7 @@ import androidx.work.workDataOf
 import com.jjoe64.graphview.series.BarGraphSeries
 import com.jjoe64.graphview.series.LineGraphSeries
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
-import info.nightscout.core.iob.iobCobCalculator.data.AutosensDataObject
+import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.graph.data.DataPointWithLabelInterface
 import info.nightscout.core.graph.data.DeviationDataPoint
@@ -20,6 +19,7 @@ import info.nightscout.core.graph.data.Scale
 import info.nightscout.core.graph.data.ScaledDataPoint
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy
+import info.nightscout.core.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.ValueWrapper
@@ -28,10 +28,9 @@ import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.iob.IobTotal
+import info.nightscout.interfaces.overview.OverviewMenus
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.plugins.general.overview.OverviewMenus
-import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

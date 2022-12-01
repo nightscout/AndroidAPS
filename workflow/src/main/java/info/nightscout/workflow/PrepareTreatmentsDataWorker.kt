@@ -1,10 +1,11 @@
-package info.nightscout.androidaps.workflow
+package info.nightscout.workflow
 
 import android.content.Context
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.graph.data.BolusDataPoint
 import info.nightscout.core.graph.data.CarbsDataPoint
@@ -25,7 +26,6 @@ import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.T

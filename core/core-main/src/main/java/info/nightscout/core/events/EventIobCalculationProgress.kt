@@ -1,4 +1,4 @@
-package info.nightscout.plugins.iob.iobCobCalculator.events
+package info.nightscout.core.events
 
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.rx.events.Event

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.workflow
+package info.nightscout.workflow
 
 import android.content.Context
 import androidx.work.Worker
@@ -7,7 +7,7 @@ import androidx.work.workDataOf
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
+import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.extensions.target
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.utils.receivers.DataWorkerStorage
@@ -17,7 +17,6 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
@@ -34,7 +33,7 @@ class PrepareTemporaryTargetDataWorker(
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var loop: Loop
     @Inject lateinit var rxBus: RxBus
-    var ctx: Context
+    private var ctx: Context
     init {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         ctx =  rh.getThemedCtx(context)

@@ -35,6 +35,7 @@ import info.nightscout.rx.di.RxModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.shared.impl.di.SharedImplModule
 import info.nightscout.ui.di.UiModule
+import info.nightscout.workflow.di.WorkflowModule
 import javax.inject.Singleton
 
 @Singleton
