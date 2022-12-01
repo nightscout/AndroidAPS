@@ -92,7 +92,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState;
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.TempBasal;
 import info.nightscout.interfaces.pump.DetailedBolusInfo;
 import info.nightscout.interfaces.pump.PumpSync;
-import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.rx.AapsSchedulers;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
