@@ -24,4 +24,5 @@
     <string name="detailed_14_days">Ayrıntılı 14 gün</string>
     <string name="day_tir">Gündüz TIR</string>
     <string name="night_tir">Gece TIR</string>
+    <string name="carbs_short" comment="max 6 characters">Karbonhidrat</string>
 </resources>
