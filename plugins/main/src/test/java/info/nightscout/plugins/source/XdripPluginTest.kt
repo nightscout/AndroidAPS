@@ -6,8 +6,8 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.plugins.source.XdripPlugin
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
 class XdripPluginTest : TestBase() {
@@ -16,7 +16,7 @@ class XdripPluginTest : TestBase() {
 
     @Mock lateinit var rh: ResourceHelper
 
-    @Before
+    @BeforeEach
     fun setup() {
         xdripPlugin = XdripPlugin(HasAndroidInjector { AndroidInjector { } }, rh, aapsLogger)
     }

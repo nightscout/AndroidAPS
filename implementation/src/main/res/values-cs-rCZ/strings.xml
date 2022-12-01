@@ -24,4 +24,5 @@
     <string name="detailed_14_days">Podrobně 14 dní</string>
     <string name="day_tir">Denní TIR</string>
     <string name="night_tir">Noční TIR</string>
+    <string name="carbs_short" comment="max 6 characters">Sach</string>
 </resources>

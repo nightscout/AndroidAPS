@@ -12,9 +12,6 @@
             android:title="@string/combov2_pair_with_pump_title"
             android:summary="@string/combov2_pair_with_pump_summary"
             android:shouldDisableView="true">
-            <intent
-                android:targetClass="info.nightscout.pump.combov2.activities.ComboV2PairingActivity"
-                android:targetPackage="info.nightscout.androidaps" />
         </Preference>
 
         <Preference

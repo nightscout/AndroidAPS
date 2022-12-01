@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.interaction.utils
 
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class PairTest {
 

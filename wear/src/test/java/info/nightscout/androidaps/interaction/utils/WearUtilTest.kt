@@ -1,11 +1,9 @@
 package info.nightscout.androidaps.interaction.utils
 
-import com.google.android.gms.wearable.DataMap
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.testing.mockers.WearUtilMocker
-import info.nightscout.androidaps.testing.mocks.BundleMock
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 /**
  * Created by dlvoy on 22.11.2019.

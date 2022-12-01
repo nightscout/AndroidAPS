@@ -23,12 +23,12 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import org.junit.Before
+import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.Mockito.anyBoolean
-import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.`when`
+import org.mockito.kotlin.doNothing
 
 open class DanaRTestBase : TestBase() {
 
@@ -51,13 +51,15 @@ open class DanaRTestBase : TestBase() {
 
     private lateinit var testPumpPlugin: TestPumpPlugin
 
-    @Before
+    @BeforeEach
     fun setup() {
         danaPump = DanaPump(aapsLogger, sp, dateUtil, profileInstantiator)
         testPumpPlugin = TestPumpPlugin(injector)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         doNothing().`when`(danaRKoreanPlugin).setPluginEnabled(anyObject(), anyBoolean())
         doNothing().`when`(danaRPlugin).setPluginEnabled(anyObject(), anyBoolean())
+        doNothing().`when`(danaRKoreanPlugin).setFragmentVisible(anyObject(), anyBoolean())
+        doNothing().`when`(danaRPlugin).setFragmentVisible(anyObject(), anyBoolean())
         `when`(rh.gs(ArgumentMatchers.anyInt())).thenReturn("")
     }
 

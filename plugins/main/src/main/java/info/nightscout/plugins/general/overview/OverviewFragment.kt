@@ -29,9 +29,9 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.extensions.directionToIcon
 import info.nightscout.core.extensions.valueToUnitsString
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.displayText
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -56,6 +56,7 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
+import info.nightscout.interfaces.overview.OverviewMenus
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.DefaultValueHelper
@@ -70,10 +71,6 @@ import info.nightscout.plugins.R
 import info.nightscout.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.plugins.databinding.OverviewFragmentBinding
 import info.nightscout.plugins.general.overview.activities.QuickWizardListActivity
-import info.nightscout.plugins.general.overview.events.EventUpdateOverviewCalcProgress
-import info.nightscout.plugins.general.overview.events.EventUpdateOverviewGraph
-import info.nightscout.plugins.general.overview.events.EventUpdateOverviewIobCob
-import info.nightscout.plugins.general.overview.events.EventUpdateOverviewSensitivity
 import info.nightscout.plugins.general.overview.graphData.GraphData
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
@@ -94,6 +91,10 @@ import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.events.EventScale
 import info.nightscout.rx.events.EventTempBasalChange
 import info.nightscout.rx.events.EventTempTargetChange
+import info.nightscout.rx.events.EventUpdateOverviewCalcProgress
+import info.nightscout.rx.events.EventUpdateOverviewGraph
+import info.nightscout.rx.events.EventUpdateOverviewIobCob
+import info.nightscout.rx.events.EventUpdateOverviewSensitivity
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.extensions.runOnUiThread

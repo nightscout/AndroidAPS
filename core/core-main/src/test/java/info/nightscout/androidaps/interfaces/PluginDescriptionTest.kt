@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class PluginDescriptionTest {
 

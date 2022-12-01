@@ -3,7 +3,7 @@ package info.nightscout.plugins.constraints.objectives
 import info.nightscout.androidaps.TestBase
 import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import kotlin.math.abs
 

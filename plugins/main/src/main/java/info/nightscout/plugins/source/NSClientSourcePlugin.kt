@@ -19,6 +19,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.source.BgSource
+import info.nightscout.interfaces.source.DoingOwnUploadSource
 import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
@@ -50,7 +51,7 @@ class NSClientSourcePlugin @Inject constructor(
         .shortName(R.string.ns_client_bg_short)
         .description(R.string.description_source_ns_client),
     aapsLogger, rh, injector
-), BgSource, NSClientSource {
+), BgSource, NSClientSource, DoingOwnUploadSource {
 
     private var lastBGTimeStamp: Long = 0
     private var isAdvancedFilteringEnabled = false

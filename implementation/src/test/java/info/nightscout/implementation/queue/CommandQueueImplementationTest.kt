@@ -39,8 +39,8 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.anyLong
 import org.mockito.Mockito.mock
@@ -118,7 +118,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
     private lateinit var commandQueue: CommandQueueImplementation
     private lateinit var testPumpPlugin: TestPumpPlugin
 
-    @Before
+    @BeforeEach
     fun prepare() {
         commandQueue = CommandQueueMocked(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,

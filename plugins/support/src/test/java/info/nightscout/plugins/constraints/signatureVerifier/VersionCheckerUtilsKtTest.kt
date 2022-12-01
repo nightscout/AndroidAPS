@@ -2,8 +2,8 @@ package info.nightscout.plugins.constraints.signatureVerifier
 
 import dagger.Lazy
 import info.nightscout.androidaps.TestBase
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.plugins.constraints.versionChecker.VersionCheckerUtilsImpl
@@ -13,8 +13,8 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.Mockito.anyString
@@ -33,7 +33,7 @@ import org.mockito.Mockito.`when`
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var uiInteraction: UiInteraction
 
-    @Before fun setup() {
+    @BeforeEach fun setup() {
         versionCheckerUtils = VersionCheckerUtilsImpl(aapsLogger, sp, rh, config, receiverStatusStore, dateUtil, uiInteraction)
     }
 
@@ -371,7 +371,7 @@ import org.mockito.Mockito.`when`
        verify(uiInteraction, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
-    @Before
+    @BeforeEach
     fun `set time`() {
         `when`(dateUtil.now()).thenReturn(10000000000L)
         assertEquals(10000000000L, dateUtil.now())

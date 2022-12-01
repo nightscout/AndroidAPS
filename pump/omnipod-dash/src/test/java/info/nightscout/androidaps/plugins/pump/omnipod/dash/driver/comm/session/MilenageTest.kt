@@ -5,7 +5,7 @@ import info.nightscout.core.utils.toHex
 import info.nightscout.interfaces.Config
 import info.nightscout.rx.logging.AAPSLoggerTest
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.spongycastle.util.encoders.Hex
 

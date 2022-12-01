@@ -1,12 +1,12 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputPercent
+import info.nightscout.interfaces.queue.Callback
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
@@ -14,7 +14,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
 
     private lateinit var sut: ActionProfileSwitchPercent
 
-    @Before
+    @BeforeEach
     fun setup() {
 
         `when`(rh.gs(R.string.startprofileforever)).thenReturn("Start profile %d%%")

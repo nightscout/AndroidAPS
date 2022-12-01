@@ -127,7 +127,7 @@ import kotlin.math.roundToInt
         return ret.toString()
     }
 
-    fun clearCachedData(from: Long) {
+    fun clearCachedTddData(from: Long) {
         database.totalDailyDoseDao.deleteNewerThan(from, InterfaceIDs.PumpType.CACHE)
     }
 
@@ -863,7 +863,7 @@ import kotlin.math.roundToInt
             .subscribeOn(Schedulers.io())
             .toWrappedSingle()
 
-    fun createTotalDailyDose(tdd: TotalDailyDose) {
+    fun insertTotalDailyDose(tdd: TotalDailyDose) {
         database.totalDailyDoseDao.insert(tdd)
     }
 

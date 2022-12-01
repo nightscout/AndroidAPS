@@ -45,6 +45,7 @@
     <string name="mute5min">Отключить уведомления на 5 минут</string>
     <string name="mute">Отключить звук</string>
     <string name="success">Успешно</string>
+    <string name="advancedsettings_title">Дополнительные настройки</string>
     <!--    Protection-->
     <string name="unlock_settings">Разблокировать настройки</string>
     <!--    Pumps -->

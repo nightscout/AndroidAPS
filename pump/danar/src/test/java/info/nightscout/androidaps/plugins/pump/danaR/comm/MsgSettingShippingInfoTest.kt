@@ -4,7 +4,7 @@ import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.androidaps.danar.comm.MsgSettingShippingInfo
 import info.nightscout.pump.dana.DanaPump
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class MsgSettingShippingInfoTest : DanaRTestBase() {
 

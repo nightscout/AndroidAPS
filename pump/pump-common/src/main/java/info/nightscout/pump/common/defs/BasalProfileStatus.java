@@ -9,6 +9,5 @@ public enum BasalProfileStatus {
     NotInitialized, //
     ProfileOK, //
     ProfileChanged, //
-    ;
 
 }

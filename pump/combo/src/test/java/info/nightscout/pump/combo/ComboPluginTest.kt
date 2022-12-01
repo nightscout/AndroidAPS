@@ -18,8 +18,8 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
@@ -45,7 +45,7 @@ class ComboPluginTest : TestBase() {
 
     private lateinit var comboPlugin: ComboPlugin
 
-    @Before
+    @BeforeEach
     fun prepareMocks() {
         `when`(rh.gs(R.string.no_valid_basal_rate)).thenReturn("No valid basal rate read from pump")
         `when`(context.getString(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")

@@ -1,14 +1,14 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
-import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.automation.R
 import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
+import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.interfaces.queue.Callback
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
@@ -16,7 +16,7 @@ class ActionStopTempTargetTest : ActionsTestBase() {
 
     private lateinit var sut: ActionStopTempTarget
 
-    @Before
+    @BeforeEach
     fun setup() {
         `when`(rh.gs(R.string.stoptemptarget)).thenReturn("Stop temp target")
 

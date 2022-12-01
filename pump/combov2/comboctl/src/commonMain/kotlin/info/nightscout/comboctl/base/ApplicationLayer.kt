@@ -719,8 +719,7 @@ object ApplicationLayer {
             command = extractAppLayerPacketCommand(tpLayerPacket),
             version = tpLayerPacket.payload[VERSION_BYTE_OFFSET],
             payload = ArrayList<Byte>(tpLayerPacket.payload.subList(PAYLOAD_BYTES_OFFSET, tpLayerPacket.payload.size))
-        ) {
-        }
+        )
 
         /**
          * Produces transport layer DATA packet info containing this application layer
@@ -1680,10 +1679,10 @@ object ApplicationLayer {
      * This is preferred over directly using the [Packet] constructor.
      */
     fun checkAndParseTransportLayerDataPacket(tpLayerPacket: TransportLayer.Packet):
-            ApplicationLayer.Packet {
+            Packet {
         try {
             logger(LogLevel.VERBOSE) { "Parsing DATA packet as application layer packet" }
-            val appLayerPacket = ApplicationLayer.Packet(tpLayerPacket)
+            val appLayerPacket = Packet(tpLayerPacket)
             logger(LogLevel.VERBOSE) {
                 "This is an application layer packet with command ${appLayerPacket.command} and payload ${appLayerPacket.payload.toHexString()}"
             }
@@ -1709,7 +1708,7 @@ object ApplicationLayer {
             }
 
             return appLayerPacket
-        } catch (e: ApplicationLayer.InvalidCommandIDException) {
+        } catch (e: InvalidCommandIDException) {
             logger(LogLevel.WARN) {
                 "Got an application layer packet with invalid/unknown command ID 0x${e.commandID.toString(16)} " +
                         "service ID ${e.serviceID.name} and payload (with ${e.payload.size} byte(s)) ${e.payload.toHexString()}" +
@@ -1719,7 +1718,7 @@ object ApplicationLayer {
         } catch (e: ErrorCodeException) {
             // We already logged the error code, so just pass through the exception
             throw e
-        } catch (e: ApplicationLayer.ExceptionBase) {
+        } catch (e: ExceptionBase) {
             logger(LogLevel.ERROR) { "Could not parse DATA packet as application layer packet: $e" }
             throw e
         }

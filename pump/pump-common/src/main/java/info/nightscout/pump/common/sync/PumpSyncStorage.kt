@@ -2,6 +2,7 @@ package info.nightscout.pump.common.sync
 
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.rx.logging.AAPSLogger
@@ -15,6 +16,7 @@ import javax.inject.Singleton
  * This class is intended for Pump Drivers that use temporaryId and need way to pair records
  */
 @Singleton
+@OpenForTesting
 class PumpSyncStorage @Inject constructor(
     val pumpSync: PumpSync,
     val sp: SP,
@@ -108,7 +110,7 @@ class PumpSyncStorage @Inject constructor(
         return pumpSyncStorageTBR
     }
 
-    fun addBolusWithTempId(detailedBolusInfo: DetailedBolusInfo, writeToInternalHistory: Boolean, creator: info.nightscout.pump.common.sync.PumpSyncEntriesCreator): Boolean {
+    fun addBolusWithTempId(detailedBolusInfo: DetailedBolusInfo, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator): Boolean {
         val temporaryId = creator.generateTempId(detailedBolusInfo.timestamp)
         val result = pumpSync.addBolusWithTempId(
             detailedBolusInfo.timestamp,
@@ -155,7 +157,7 @@ class PumpSyncStorage @Inject constructor(
             "carbs=${carbsDto.carbs}, pumpSerial=${carbsDto.serialNumber}] - Result: $result")
     }
 
-    fun addTemporaryBasalRateWithTempId(temporaryBasal: PumpDbEntryTBR, writeToInternalHistory: Boolean, creator: info.nightscout.pump.common.sync.PumpSyncEntriesCreator): Boolean {
+    fun addTemporaryBasalRateWithTempId(temporaryBasal: PumpDbEntryTBR, writeToInternalHistory: Boolean, creator: PumpSyncEntriesCreator): Boolean {
         val timeNow: Long = System.currentTimeMillis()
         val temporaryId = creator.generateTempId(timeNow)
 

@@ -72,14 +72,6 @@ class PumpHistoryActivity : DaggerAppCompatActivity() {
 
     }
 
-    override fun onResume() {
-        super.onResume()
-        //filterHistory(selectedGroup)
-        //setHistoryTypeSpinner()
-        //aapsLogger.info(LTag.PUMP, "onResume")
-        //binding.pumpHistoryRoot.requestLayout()
-    }
-
     private fun setHistoryTypeSpinner() {
         manualChange = true
         for (i in typeListFull!!.indices) {
@@ -119,12 +111,12 @@ class PumpHistoryActivity : DaggerAppCompatActivity() {
         binding.pumpHistoryText.text = historyDataProvider.getText(PumpHistoryText.PUMP_HISTORY)
 
         binding.pumpHistoryType.adapter = spinnerAdapter
-        binding.pumpHistoryType.getLayoutParams().width = fromDpToSize(historyDataProvider.getSpinnerWidthInPixels())
-        binding.pumpHistoryType.requestLayout();
-        binding.pumpHistoryType.setOnItemSelectedListener(object : AdapterView.OnItemSelectedListener {
+        binding.pumpHistoryType.layoutParams.width = fromDpToSize(historyDataProvider.getSpinnerWidthInPixels())
+        binding.pumpHistoryType.requestLayout()
+        binding.pumpHistoryType.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View, position: Int, id: Long) {
                 if (manualChange) return
-                val selected = binding.pumpHistoryType.getSelectedItem() as TypeList
+                val selected = binding.pumpHistoryType.selectedItem as TypeList
                 showingType = selected
                 selectedGroup = selected.entryGroup
                 filterHistory(selectedGroup)
@@ -138,7 +130,7 @@ class PumpHistoryActivity : DaggerAppCompatActivity() {
                 if (manualChange) return
                 filterHistory(PumpHistoryEntryGroup.All)
             }
-        })
+        }
         binding.pumpHistoryTypeText.requestLayout()
     }
 

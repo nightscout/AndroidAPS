@@ -13,14 +13,17 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONObject
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Rule
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
-import org.mockito.junit.MockitoJUnit
-import org.mockito.junit.MockitoRule
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.quality.Strictness
 
+@ExtendWith(MockitoExtension::class)
+@MockitoSettings(strictness = Strictness.LENIENT)
 class InsulinOrefBasePluginTest {
 
     var testPeak = 0
@@ -54,9 +57,6 @@ class InsulinOrefBasePluginTest {
         override fun applyConfiguration(configuration: JSONObject) {}
     }
 
-    @get:Rule
-    val mockitoRule: MockitoRule = MockitoJUnit.rule()
-
     private lateinit var sut: InsulinBaseTest
 
     @Mock lateinit var rh: ResourceHelper
@@ -71,7 +71,7 @@ class InsulinOrefBasePluginTest {
         }
     }
 
-    @Before
+    @BeforeEach
     fun setUp() {
         sut = InsulinBaseTest(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits)
         `when`(hardLimits.minDia()).thenReturn(5.0)

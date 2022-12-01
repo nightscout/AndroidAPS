@@ -29,7 +29,7 @@ abstract class SourceModule {
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
 
     @ContributesAndroidInjector abstract fun contributesNSProfileWorker(): ProfilePlugin.NSProfileWorker
-    @ContributesAndroidInjector abstract fun contributesNSClientSourceWorker(): info.nightscout.plugins.source.NSClientSourcePlugin.NSClientSourceWorker
+    @ContributesAndroidInjector abstract fun contributesNSClientSourceWorker(): NSClientSourcePlugin.NSClientSourceWorker
     @ContributesAndroidInjector abstract fun contributesXdripWorker(): XdripPlugin.XdripWorker
     @ContributesAndroidInjector abstract fun contributesDexcomWorker(): DexcomPlugin.DexcomWorker
     @ContributesAndroidInjector abstract fun contributesMM640gWorker(): MM640gPlugin.MM640gWorker
@@ -43,6 +43,6 @@ abstract class SourceModule {
 
     @Module
     interface Bindings {
-        @Binds fun bindNSClientSource(nsClientSourcePlugin: info.nightscout.plugins.source.NSClientSourcePlugin): NSClientSource
+        @Binds fun bindNSClientSource(nsClientSourcePlugin: NSClientSourcePlugin): NSClientSource
     }
 }

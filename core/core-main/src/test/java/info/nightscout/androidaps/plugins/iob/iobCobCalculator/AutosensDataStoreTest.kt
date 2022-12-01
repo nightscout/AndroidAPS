@@ -7,8 +7,8 @@ import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
 class AutosensDataStoreTest : TestBase() {
@@ -19,7 +19,7 @@ class AutosensDataStoreTest : TestBase() {
 
     private val autosensDataStore = AutosensDataStoreObject()
 
-    @Before
+    @BeforeEach
     fun mock() {
         dateUtil = DateUtil(context)
     }

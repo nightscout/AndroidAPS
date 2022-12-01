@@ -22,8 +22,8 @@ import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.plugins.source.GlimpPlugin
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
@@ -46,7 +46,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
     private val injector = HasAndroidInjector { AndroidInjector { } }
     private val pumpDescription = PumpDescription()
 
-    @Before
+    @BeforeEach
     fun prepare() {
         `when`(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
         `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")

@@ -1,7 +1,7 @@
 package info.nightscout.androidaps.pump.common.utils;
 
 import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import info.nightscout.core.utils.DateTimeUtil;
 

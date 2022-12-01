@@ -1,6 +1,7 @@
 package info.nightscout.core.iob.iobCobCalculator
 
 import dagger.Reusable
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.core.iob.asRounded
 import info.nightscout.core.iob.log
 import info.nightscout.interfaces.iob.GlucoseStatus
@@ -12,6 +13,7 @@ import javax.inject.Inject
 import kotlin.math.roundToLong
 
 @Reusable
+@OpenForTesting
 class GlucoseStatusProvider @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val iobCobCalculator: IobCobCalculator,

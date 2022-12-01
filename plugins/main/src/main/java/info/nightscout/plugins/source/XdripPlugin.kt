@@ -15,6 +15,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.source.BgSource
+import info.nightscout.interfaces.source.DoingOwnUploadSource
 import info.nightscout.plugins.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -35,7 +36,7 @@ class XdripPlugin @Inject constructor(
     .pluginName(R.string.xdrip)
     .description(R.string.description_source_xdrip),
     aapsLogger, rh, injector
-), BgSource {
+), BgSource, DoingOwnUploadSource {
 
     private var advancedFiltering = false
     override var sensorBatteryLevel = -1

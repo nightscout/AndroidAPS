@@ -1,11 +1,11 @@
 package info.nightscout.automation.actions
 
-import info.nightscout.interfaces.queue.Callback
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
+import info.nightscout.interfaces.queue.Callback
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mockito.`when`
@@ -14,7 +14,7 @@ class ActionSendSMSTest : ActionsTestBase() {
 
     private lateinit var sut: ActionSendSMS
 
-    @Before
+    @BeforeEach
     fun setup() {
 
         `when`(rh.gs(eq(R.string.sendsmsactionlabel), anyString())).thenReturn("Send SMS: %s")

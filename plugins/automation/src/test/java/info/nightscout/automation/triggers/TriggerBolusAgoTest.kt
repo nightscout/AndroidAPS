@@ -8,15 +8,15 @@ import io.reactivex.rxjava3.core.Single
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
 
 class TriggerBolusAgoTest : TriggerTestBase() {
 
     var now = 1514766900000L
 
-    @Before
+    @BeforeEach
     fun mock() {
         `when`(dateUtil.now()).thenReturn(now)
     }

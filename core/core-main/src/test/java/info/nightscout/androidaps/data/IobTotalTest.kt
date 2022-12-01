@@ -11,8 +11,8 @@ import info.nightscout.core.iob.round
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.shared.utils.DateUtil
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
 @Suppress("SpellCheckingInspection")
@@ -23,7 +23,7 @@ class IobTotalTest : TestBase() {
     private lateinit var dateUtil: DateUtil
     private var now = 0L
 
-    @Before
+    @BeforeEach
     fun prepare() {
         dateUtil = DateUtil(context)
         now = dateUtil.now()

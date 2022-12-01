@@ -16,7 +16,7 @@ import io.reactivex.rxjava3.core.Single;
 public class UpdateConnectionTask extends TaskBase {
     @Inject PatchStateManager patchStateManager;
 
-    private UpdateConnection UPDATE_CONNECTION;
+    private final UpdateConnection UPDATE_CONNECTION;
 
     @Inject
     public UpdateConnectionTask() {

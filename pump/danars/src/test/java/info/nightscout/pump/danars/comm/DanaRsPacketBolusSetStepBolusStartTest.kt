@@ -12,8 +12,8 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.pump.danars.DanaRSTestBase
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 
@@ -53,7 +53,7 @@ class DanaRsPacketBolusSetStepBolusStartTest : DanaRSTestBase() {
         Assert.assertEquals("BOLUS__SET_STEP_BOLUS_START", packet.friendlyName)
     }
 
-    @Before
+    @BeforeEach
     fun mock() {
         danaRSPlugin =
             info.nightscout.pump.danars.DanaRSPlugin(

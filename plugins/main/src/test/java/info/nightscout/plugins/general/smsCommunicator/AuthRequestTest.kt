@@ -13,8 +13,8 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.doAnswer
 import org.mockito.Mockito.`when`
@@ -43,7 +43,7 @@ class AuthRequestTest : TestBase() {
     private var sentSms: Sms? = null
     private var actionCalled = false
 
-    @Before fun prepareTests() {
+    @BeforeEach fun prepareTests() {
         `when`(rh.gs(R.string.sms_wrong_code)).thenReturn("Wrong code. Command cancelled.")
         doAnswer(Answer { invocation: InvocationOnMock ->
             sentSms = invocation.getArgument(0)

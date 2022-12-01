@@ -36,7 +36,7 @@ dependencies {
 
     //SmsCommunicator
     api 'com.eatthepath:java-otp:0.4.0'
-    api 'com.github.kenglxn.QRGen:android:2.7.0'
+    api 'com.github.kenglxn.QRGen:android:3.0.1'
 
     // Overview
     api 'com.google.android.flexbox:flexbox:3.0.0'

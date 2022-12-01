@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.danaRv2.comm
 import info.nightscout.androidaps.danaRv2.comm.MsgStatusAPS_v2
 import info.nightscout.androidaps.plugins.pump.danaR.comm.DanaRTestBase
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class MsgStatusAPSRv2Test : DanaRTestBase() {
 

@@ -39,8 +39,8 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.core.Single
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
@@ -87,7 +87,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     private lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
     private var hasBeenRun = false
 
-    @Before fun prepareTests() {
+    @BeforeEach fun prepareTests() {
         val reading = GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = 1514766900000, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT)
         val bgList: MutableList<GlucoseValue> = ArrayList()
         bgList.add(reading)

@@ -21,7 +21,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
  * BolusCurrent : 현재 패치에서 진행 중인 '볼루스의 정보'를 표현한 클래스.
  */
 
-class BolusCurrent(): IPreference<BolusCurrent> {
+class BolusCurrent : IPreference<BolusCurrent> {
     @Transient
     private val subject: BehaviorSubject<BolusCurrent> = BehaviorSubject.create()
 

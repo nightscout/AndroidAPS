@@ -65,11 +65,11 @@ enum class PumpHistoryEntryGroup(val resourceId: Int, val pumpTypeGroupConfig: P
             if (pumpTypeGroupConfig == PumpTypeGroupConfig.All) {
                 outList = translatedList!!.stream()
                     .filter { pre -> pre.pumpTypeGroupConfig == PumpTypeGroupConfig.All }
-                    .toList();
+                    .toList()
             } else {
                 outList = translatedList!!.stream()
                     .filter { pre -> (pre.pumpTypeGroupConfig == PumpTypeGroupConfig.All || pre.pumpTypeGroupConfig == pumpTypeGroupConfig) }
-                    .toList();
+                    .toList()
             }
 
             return outList

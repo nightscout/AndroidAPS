@@ -16,8 +16,8 @@ import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.TestAapsSchedulers
 import info.nightscout.rx.bus.RxBus
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
 //import uk.org.lidalia.slf4jtest.TestLogger;
@@ -38,7 +38,7 @@ class MedtronicHistoryDataUTest : TestBase() {
     lateinit var medtronicHistoryData: MedtronicHistoryData
     lateinit var medtronicPumpStatus: MedtronicPumpStatus
 
-    @Before
+    @BeforeEach
     fun setup() {
         rxBus = RxBus(TestAapsSchedulers(), aapsLogger)
 

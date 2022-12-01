@@ -20,8 +20,8 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import org.joda.time.DateTimeZone
 import org.joda.time.tz.UTCProvider
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Answers
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
@@ -43,7 +43,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
 
     private var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
 
-    @Before fun prepare() {
+    @BeforeEach fun prepare() {
         `when`(rh.gs(ArgumentMatchers.anyInt(), ArgumentMatchers.anyLong()))
             .thenReturn("")
     }

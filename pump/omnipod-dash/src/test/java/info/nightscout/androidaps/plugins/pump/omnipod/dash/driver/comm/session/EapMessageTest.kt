@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 import info.nightscout.core.utils.toHex
 import info.nightscout.rx.logging.AAPSLoggerTest
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.spongycastle.util.encoders.Hex
 
 class EapMessageTest {

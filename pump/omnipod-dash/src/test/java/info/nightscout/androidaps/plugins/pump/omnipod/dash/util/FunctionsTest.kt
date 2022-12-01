@@ -5,7 +5,7 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.Profile.ProfileValue
 import org.junit.Assert
 import org.junit.Assert.assertEquals
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 

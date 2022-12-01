@@ -8,7 +8,7 @@ import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.danars.DanaRSTestBase
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 

@@ -41,7 +41,7 @@ class TddCalculatorImpl @Inject constructor(
     override fun calculate(days: Long): LongSparseArray<TotalDailyDose> {
         var startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
         val endTime = MidnightTime.calc(dateUtil.now())
-        val stepSize = T.hours(24).msecs()
+        //val stepSize = T.hours(24).msecs() // this is not true on DST change
 
         val result = LongSparseArray<TotalDailyDose>()
         // Try to load cached values
@@ -49,21 +49,24 @@ class TddCalculatorImpl @Inject constructor(
             val tdd = repository.getCalculatedTotalDailyDose(startTime).blockingGet()
             if (tdd is ValueWrapper.Existing) result.put(startTime, tdd.value)
             else break
-            startTime += stepSize
+            //startTime += stepSize
+            startTime = MidnightTime.calc(startTime + T.hours(27).msecs()) // be sure we find correct midnight
         }
 
         if (endTime > startTime) {
-            for (midnight in startTime until endTime step stepSize) {
-                val tdd = calculate(midnight, midnight + stepSize)
+            var midnight = startTime
+            while (midnight < endTime) {
+                val tdd = calculate(midnight, midnight + T.hours(24).msecs())
                 result.put(midnight, tdd)
+                midnight = MidnightTime.calc(midnight + T.hours(27).msecs()) // be sure we find correct midnight
             }
         }
         for (i in 0 until result.size()) {
             val tdd = result.valueAt(i)
             if (tdd.interfaceIDs.pumpType != InterfaceIDs.PumpType.CACHE) {
                 tdd.interfaceIDs.pumpType = InterfaceIDs.PumpType.CACHE
-                aapsLogger.debug(LTag.CORE, "Storing TDD $tdd")
-                repository.createTotalDailyDose(tdd)
+                aapsLogger.debug(LTag.CORE, "Storing TDD ${tdd.timestamp}")
+                repository.insertTotalDailyDose(tdd)
             }
         }
         return result

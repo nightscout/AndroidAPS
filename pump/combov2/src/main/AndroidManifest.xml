@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="info.nightscout.androidaps.plugins.pump.combov2">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
 
     <application>
         <activity
-            android:name="info.nightscout.pump.combov2.activities.ComboV2PairingActivity"
+            android:name=".activities.ComboV2PairingActivity"
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
     </application>

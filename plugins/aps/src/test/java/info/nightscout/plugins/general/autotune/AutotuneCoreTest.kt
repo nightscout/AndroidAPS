@@ -16,8 +16,8 @@ import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import java.io.File
@@ -33,7 +33,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
     private var autotuneMin = 0.0
     private var autotuneMax = 0.0
 
-    @Before
+    @BeforeEach
     fun initData() {
         autotuneCore = AutotuneCore(sp, autotuneFS)
         TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"))

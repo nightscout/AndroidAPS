@@ -32,7 +32,7 @@ object ProfileUtil {
         return if (stringBuilder.length > 3) stringBuilder.substring(0, stringBuilder.length - 2) else stringBuilder.toString()
     }
 
-    fun getBasalProfilesDisplayableAsStringOfArray(profile: Profile, pumpType: PumpType): String? {
+    fun getBasalProfilesDisplayableAsStringOfArray(profile: Profile, pumpType: PumpType): String {
         val stringBuilder = java.lang.StringBuilder()
         // for (basalValue in profiles) {
         //     val basalValueValue = pumpType.determineCorrectBasalSize(basalValue.value)

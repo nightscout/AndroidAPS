@@ -3,12 +3,11 @@ package info.nightscout.androidaps.plugins.source
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.Config
-import info.nightscout.plugins.source.NSClientSourcePlugin
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
-import org.junit.Before
-import org.junit.Test
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
 class NSClientPluginTest : TestBase() {
@@ -19,7 +18,7 @@ class NSClientPluginTest : TestBase() {
     @Mock lateinit var sp: SP
     @Mock lateinit var config: Config
 
-    @Before
+    @BeforeEach
     fun setup() {
         nsClientSourcePlugin = info.nightscout.plugins.source.NSClientSourcePlugin({ AndroidInjector { } }, rh, aapsLogger, config)
     }

@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context=".plugins.pump.combov2.activities.ComboV2PairingActivity">
+        tools:context=".activities.ComboV2PairingActivity">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/header"

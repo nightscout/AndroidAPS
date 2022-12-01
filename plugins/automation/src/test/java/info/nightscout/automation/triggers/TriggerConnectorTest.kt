@@ -3,7 +3,7 @@ package info.nightscout.automation.triggers
 import org.json.JSONException
 import org.json.JSONObject
 import org.junit.Assert
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class TriggerConnectorTest : TriggerTestBase() {
 

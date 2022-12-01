@@ -80,10 +80,10 @@ public class PatchStateManager {
                 // Resume --> onBasalResume
                 onBasalResumeState();
 
-            } else if (oldState.isNormalBasalAct() == false) {
+            } else if (!oldState.isNormalBasalAct()) {
                 // Start --> onBasalStarted
             }
-        } else if (oldState.isNormalBasalPaused() == false && newState.isNormalBasalPaused()) {
+        } else if (!oldState.isNormalBasalPaused() && newState.isNormalBasalPaused()) {
             if (newState.isTempBasalAct()) {
             } else {
                 // pause
@@ -93,25 +93,21 @@ public class PatchStateManager {
 
         /* Temp Basal ------------------------------------------------------------------------------------------- */
         if (newState.isTempBasalAct()) {
-            if (oldState.isTempBasalAct() == false) {
+            if (!oldState.isTempBasalAct()) {
                 // Start
                 onTempBasalStartState();
             }
         }
 
         boolean tempBasalStopped = false;
-        boolean tempBasalFinished = false;
+        boolean tempBasalFinished = newState.isTempBasalDone() && !newState.isPatchInternalSuspended();
 
-        if (newState.isTempBasalDone() && !newState.isPatchInternalSuspended()) {
-            tempBasalFinished = true;
-        }
-
-        if (oldState.isTempBasalDone() == false) {
+        if (!oldState.isTempBasalDone()) {
             if (newState.isTempBasalDone()) {
                 tempBasalStopped = true;
 
                 onTempBasalDoneState();
-            } else if (oldState.isTempBasalAct() && newState.isTempBasalAct() == false) {
+            } else if (oldState.isTempBasalAct() && !newState.isTempBasalAct()) {
                 tempBasalStopped = true;
 
                 onTempBasalCancelState();
@@ -126,15 +122,15 @@ public class PatchStateManager {
             }
         }
 
-        if (newState.isTempBasalAct() == false && pm.getTempBasalManager().getStartedBasal() != null) {
+        if (!newState.isTempBasalAct() && pm.getTempBasalManager().getStartedBasal() != null) {
             pm.getTempBasalManager().updateBasalStopped();
         }
 
         /* Now Bolus -------------------------------------------------------------------------------------------- */
-        if (oldState.isNowBolusRegAct() == false && newState.isNowBolusRegAct() == true) {
+        if (!oldState.isNowBolusRegAct() && newState.isNowBolusRegAct()) {
             // Start
-        } else if (oldState.isNowBolusDone() == false) {
-            if (oldState.isNowBolusRegAct() && newState.isNowBolusRegAct() == false) {
+        } else if (!oldState.isNowBolusDone()) {
+            if (oldState.isNowBolusRegAct() && !newState.isNowBolusRegAct()) {
                 // Cancel
             } else if (newState.isNowBolusDone()) {
                 // Done
@@ -143,23 +139,23 @@ public class PatchStateManager {
 
         BolusCurrent bolusCurrent = pm.getBolusCurrent();
 
-        if (newState.isNowBolusRegAct() == false && bolusCurrent.historyId(BolusType.NOW) > 0
+        if (!newState.isNowBolusRegAct() && bolusCurrent.historyId(BolusType.NOW) > 0
                 && bolusCurrent.endTimeSynced(BolusType.NOW)) {
             bolusCurrent.clearBolus(BolusType.NOW);
         }
 
         /* Extended Bolus --------------------------------------------------------------------------------------- */
-        if (oldState.isExtBolusRegAct() == false && newState.isExtBolusRegAct() == true) {
+        if (!oldState.isExtBolusRegAct() && newState.isExtBolusRegAct()) {
             // Start
-        } else if (oldState.isExtBolusDone() == false) {
-            if (oldState.isExtBolusRegAct() && newState.isExtBolusRegAct() == false) {
+        } else if (!oldState.isExtBolusDone()) {
+            if (oldState.isExtBolusRegAct() && !newState.isExtBolusRegAct()) {
                 // Cancel
             } else if (newState.isExtBolusDone()) {
                 // Done
             }
         }
 
-        if (newState.isExtBolusRegAct() == false && bolusCurrent.historyId(BolusType.EXT) > 0
+        if (!newState.isExtBolusRegAct() && bolusCurrent.historyId(BolusType.EXT) > 0
                 && bolusCurrent.endTimeSynced(BolusType.EXT)) {
             bolusCurrent.clearBolus(BolusType.EXT);
         }
@@ -243,7 +239,7 @@ public class PatchStateManager {
         if (normalBasal != null) {
             pm.getNormalBasalManager().updateBasalStarted();
             normalBasal.updateNormalBasalIndex();
-            pm.flushNormalBasalManager();;
+            pm.flushNormalBasalManager();
         }
     }
 
