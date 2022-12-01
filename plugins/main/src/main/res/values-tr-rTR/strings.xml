@@ -5,11 +5,14 @@
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">%1$.2fÜ Bolus gönderilecek, kod ile cevap ver %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">%1$.2fÜ Yemek bolusu göndermek için %2$s koduyla yanıt verin</string>
     <string name="smscommunicator_temptarget_with_code">Geçici Hedefi %1$s yapmak için %2$s koduyla yanıt verin</string>
     <string name="smscommunicator_temptarget_cancel">Geçici Hedefi iptal etmek için %1$s koduyla yanıt verin</string>
     <string name="smscommunicator_stops_ns_with_code">SMS Uzak Hizmet desteğini devre dışı bırakmak için %1$s koduyla yanıt verin.\n\nBu hizmeti yalnızca AAPS yüklü ana telefondan yeniden etkinleştirebileceğinizi unutmayın.</string>
+    <string name="smscommunicator_stopped_sms">SMS Uzak Hizmeti durduruldu. Yeniden etkinleştirmek için ana telefondaki AAPS\'i kullanın.</string>
     <string name="smscommunicator_calibration_reply_with_code">Kalibrasyon için %1$.2f gönderilecek, kod ile cevap ver %2$s</string>
     <string name="smscommunicator_bolus_failed">Bolus başarısız</string>
+    <string name="smscommunicator_remote_bolus_min_distance_summary">Bir sms bolusu ile bir sonraki bolus arasında geçmesi gereken minimum süre (dk)</string>
     <string name="smscommunicator_remote_bolus_min_distance">Bir sms bolus gönderimi ile bir sonraki bolus arasında en az kaç dakika geçsin?</string>
     <string name="smscommunicator_remote_bolus_min_distance_caveat">Güvenliğiniz için en az 2 telefon numarası eklemeniz gerekir.</string>
     <string name="smscommunicator_bolus_delivered">%1$.2f Ü bolus başarıyla gönderildi</string>
