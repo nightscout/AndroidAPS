@@ -5,6 +5,7 @@
     <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
     <string name="dst_loop_disabled_warning">Изменение сезонного времени произошло меньше 3 часов назад-Закрытый цикл выключен</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Освободите по крайней мере %1$d MB из внутренней памяти! Цикл остановлен!</string>
     <!-- Version Checker -->
     <string name="old_version">старая версия</string>
     <string name="very_old_version">очень старая версия</string>
