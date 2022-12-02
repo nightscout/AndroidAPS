@@ -2,8 +2,15 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">24시간 미만의 썸머타임 변경</string>
+    <string name="dst_loop_disabled_warning">썸머타임 변경이 3시간 미만입니다 - Closed Loop 비활성됨</string>
     <!-- Storage constraint -->
     <!-- Version Checker -->
+    <string name="old_version">오래된 버전</string>
+    <string name="very_old_version">아주 오래된 버전</string>
+    <string name="new_version_warning">최소 %1$d일 새버전이 가능합니다! %2$d일 후엔 LGS(저혈당주입중지)으로 복귀되며, %3$d일이후엔 Loop가 비활성화 될 것입니다</string>
+    <string name="running_invalid_version">유효하지 않은 버전을 이용 중입니다. Loop가 비활성화 되었습니다!</string>
+    <string name="versionavailable">%1$s 버전이 사용 가능합니다.</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
 </resources>
