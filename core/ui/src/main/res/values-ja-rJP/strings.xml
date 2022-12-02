@@ -15,6 +15,7 @@
     <string name="save">保存</string>
     <string name="pump">ポンプ</string>
     <string name="mute">消音</string>
+    <string name="advancedsettings_title">詳細設定</string>
     <!--    Protection-->
     <!--    Pumps -->
     <string name="battery_label">バッテリー</string>
