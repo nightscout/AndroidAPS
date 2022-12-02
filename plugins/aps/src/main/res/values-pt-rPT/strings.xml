@@ -80,4 +80,13 @@
     <string name="maxvalueinpreferences">valor máx nas preferências</string>
     <string name="hardlimit">limite rígido</string>
     <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">Um bólus foi administrado nos últimos 3 minutos, a ignorar SMB</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="description_loop">Ativar ou desativar a aplicação que desencadeia o loop.</string>
+    <string name="ignore5m">Ignorar 5m</string>
+    <string name="ignore15m">Ignorar 15m</string>
+    <string name="ignore30m">Ignorar 30m</string>
+    <string name="basal_set_correctly">Basal correctamente definida</string>
+    <string name="loop_aps_label">APS</string>
 </resources>
