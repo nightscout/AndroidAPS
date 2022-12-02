@@ -73,4 +73,5 @@
     <string name="hardlimit">max limiet (SC)</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Piek</string>
+    <!--    Loop -->
 </resources>
