@@ -117,7 +117,6 @@
     <string name="nav_history_browser">Ιστορικό περιήγησης</string>
     <string name="sensor_label">Αισθητήρας</string>
     <string name="insulin_label">Ινσουλίνη</string>
-    <string name="extendedbolusdeliveryerror">Σφάλμα έγχυσης εκτεταμένου bolus</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Περιορίζεται το εκτεταμένο bolus σε %1$.1f U λόγω %2$s</string>
     <string name="limitingcarbs">Περιορίζονται οι υδατάνθρακες σε %1$d g λόγω %2$s</string>
@@ -143,7 +142,6 @@
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
     <string name="a11y_insulin_label">ινσουλίνη</string>
     <string name="a11y_blood_glucose">γλυκόζη αίματος</string>
-    <string name="aps_mode_title">Λειτουργία APS</string>
     <string name="set_basal_question">Αποδοχή νέου Προσ Ρυθμού:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Γρήγορος Οδηγός</string>
@@ -254,25 +252,6 @@
     <string name="bgsource_upload">Ανέβασμα ρυθμίσεων BG</string>
     <string name="dexcom_log_ns_sensor_change_title">Αλλαγή αρχείου αισθητήρα σε NS</string>
     <!-- Skins -->
-    <!--    Loop -->
-    <string name="executing">Εκτελείτε</string>
-    <string name="run_now">Έναρξη τώρα</string>
-    <string name="smb_frequency_exceeded">Ένα bolus παραδόθηκε μέσα στα τελευταία 3 λεπτά, παράκαμψη SMB</string>
-    <string name="pump_not_initialized">Η αντλία δεν έχει ρυθμιστεί!</string>
-    <string name="loop_shortname">ΚΥΚΛΩΜΑ</string>
-    <string name="description_loop">Ενεργοποιήστε ή απενεργοποιήστε την εφαρμογή που ενεργοποιεί το κύκλωμα.</string>
-    <string name="no_aps_selected">ΔΕΝ ΕΠΙΛΕΧΘΗΚΕ APS Ή ΒΡΕΘΗΚΕ ΑΠΟΤΕΛΕΣΜΑ</string>
-    <string name="carbs_suggestion">Προτεινόμενοι Υδατάνθρακες</string>
-    <string name="open_loop_new_suggestion">Νέα πρόταση διαθέσιμη</string>
-    <string name="basal_set_correctly">Ο βασικός ρυθμός ορίστηκε σωστά</string>
-    <string name="last_run_label">Τελευταίος Υπολογισμός</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Αίτημα</string>
-    <string name="loop_constraints_processed_label">Μετά από επεξεργασία περιορισμών</string>
-    <string name="loop_tbr_set_by_pump_label">Προσωρινός Ρυθμός ορίστηκε από την αντλία</string>
-    <string name="loop_smb_set_by_pump_label">Το SMB ρυθμίστηκε από την αντλία</string>
-    <string name="loop_open_mode_min_change">Ελάχιστο αίτημα για αλλαγή [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Το Ανοιχτό κύκλωμα θα εμφανίσει νέο μήνυμα αλλαγής μόνο αν η αλλαγή είναι μεγαλύτερη από αυτήν τη τιμή %. Προεπιλεγμένη τιμή 20%</string>
     <!--    DataBroadcast-->
     <string name="cannula_usage">χρήσιμες συμβουλές:</string>
     <!--    Iob-->
