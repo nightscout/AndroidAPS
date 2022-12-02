@@ -72,4 +72,10 @@
     <string name="maxvalueinpreferences">μέγιστη τιμή στις Επιλογές</string>
     <string name="hardlimit">σταθερό όριο</string>
     <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">Ένα bolus παραδόθηκε μέσα στα τελευταία 3 λεπτά, παράκαμψη SMB</string>
+    <string name="loop_shortname">ΚΥΚΛΩΜΑ</string>
+    <string name="description_loop">Ενεργοποιήστε ή απενεργοποιήστε την εφαρμογή που ενεργοποιεί το κύκλωμα.</string>
+    <string name="basal_set_correctly">Ο βασικός ρυθμός ορίστηκε σωστά</string>
+    <string name="loop_aps_label">APS</string>
 </resources>
