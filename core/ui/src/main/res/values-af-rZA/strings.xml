@@ -37,6 +37,26 @@
     <string name="treatments_iob_label_string">IAB:</string>
     <string name="mute">Demp</string>
     <string name="success">Sukses</string>
+    <string name="advancedsettings_title">Gevorderde instellings</string>
+    <!--    Protection-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    APSResult-->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
+    <!-- Alerts -->
+    <!-- BolusWizard -->
+    <!--    Preferences-->
     <!--    Protection-->
     <string name="unlock_settings">Ontsluit instellings</string>
     <!--    Pumps -->
