@@ -89,4 +89,5 @@
     <string name="hardlimit">festem Grenzwert</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Gipfel</string>
+    <!--    Loop -->
 </resources>
