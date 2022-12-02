@@ -44,6 +44,7 @@
     <string name="mute5min">Lydløs i 5 minutter</string>
     <string name="mute">Lydløs</string>
     <string name="success">Succes</string>
+    <string name="advancedsettings_title">Avancerede indstillinger</string>
     <!--    Protection-->
     <!--    Pumps -->
     <string name="battery_label">Batteri</string>
