@@ -89,4 +89,5 @@
     <string name="hardlimit">pevný limit</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Vrchol</string>
+    <!--    Loop -->
 </resources>
