@@ -61,7 +61,6 @@
     <string name="treatmentssafety_title">Sigurnost tretmana</string>
     <!-- Overview -->
     <string name="a11y_insulin_label">insulin</string>
-    <string name="aps_mode_title">APS režim</string>
     <string name="set_basal_question">Prihvatite novi privremeni bazal:</string>
     <string name="quickwizard">Brzi Čarobnjak</string>
     <string name="overview">Pregled</string>
@@ -89,17 +88,6 @@
     <string name="description_source_mm640g">Preuzimajte vrednosti GUK od 600SeriesAndroidUploader-a.</string>
     <string name="random_bg_short">GUK</string>
     <!-- Skins -->
-    <!--    Loop -->
-    <string name="run_now">Pokreni sada</string>
-    <string name="description_loop">Aktivirajte ili deaktivirajte implementaciju koja pokreće petlju.</string>
-    <string name="no_aps_selected">NIJE IZABRAN APS NITI PRUŽEN REZULTAT</string>
-    <string name="carbs_suggestion">Predlog za ugljene hidrate</string>
-    <string name="open_loop_new_suggestion">Novi predlog je dostupan</string>
-    <string name="last_run_label">Poslednje pokretanje</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Zahtev</string>
-    <string name="loop_constraints_processed_label">Nakon obrađenih ograničenja</string>
-    <string name="loop_tbr_set_by_pump_label">TBR postavljen pumpom</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->
