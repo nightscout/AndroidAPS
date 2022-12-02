@@ -2,8 +2,22 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Mudança do horário de verão em 24h ou menos</string>
+    <string name="dst_loop_disabled_warning">Alteração do horário de verão há menos de 3 horas. Circuito fechado desativado</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Libere pelo menos %1$d MB do armazenamento interno! ‘Loop’ desativado!</string>
     <!-- Version Checker -->
+    <string name="old_version">versão antiga</string>
+    <string name="very_old_version">versão muito antiga</string>
+    <string name="application_expired">Aplicativo expirado</string>
+    <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a LGS após %2$d dias, o loop será desativado após %3$d dias</string>
+    <string name="running_invalid_version">Detectamos que você está executando uma versão inválida. \"Loop\" desativado!</string>
+    <string name="versionavailable">Disponível %1$s disponível</string>
+    <string name="version_expire">A versão %1$s expira em %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Dados recalculados foram utilizados</string>
+    <string name="bg_too_close">Glicemia muito próxima:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">recalculado</string>
+    <string name="a11y_bg_quality_doubles">entradas duplicadas</string>
 </resources>
