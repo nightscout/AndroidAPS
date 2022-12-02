@@ -8,7 +8,6 @@
     <string name="patch_expiration_reminders">Напоминание об истечении срока патча</string>
     <string name="patch_buzzer_reminders">Напоминания зуммера патча</string>
     <string name="time_format_a_h_mm">ч:мм a</string>
-    <string name="bolus_delivered">Болюс %1$.2f ед. подан успешно</string>
     <string name="eopatch_ble_status">Статус BLE</string>
     <string name="eopatch_serial_number">Серийный номер</string>
     <string name="eopatch_lot_number">Номер партии</string>
