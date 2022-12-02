@@ -70,6 +70,7 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_fetching_tdd_history_cmddesc">Obtener el historial TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Actualizando fecha de la bomba</string>
     <string name="combov2_updating_pump_status_cmddesc">Actualizando estado de la bomba</string>
+    <string name="combov2_pairing_pin_failure">El PIN no funcionó. Comprueba si hay un error tipográfico. Si esto sigue sucediendo, cancela y vuelve a intentar el emparejamiento.</string>
     <string name="combov2_discovery_duration">Duración del descubrimiento (en segundos)</string>
     <string name="combov2_verbose_logging">Habilitar el registro detallado de Combo</string>
     <string name="combov2_getting_basal_profile">Obteniendo perfil basal; %1$d factor(es) leídos</string>
