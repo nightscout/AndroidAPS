@@ -110,9 +110,7 @@ class CalculationWorkflowImpl @Inject constructor(
                         "onEventAppInitialized",
                         System.currentTimeMillis(),
                         bgDataReload = true,
-                        limitDataToOldestAvailable = true,
-                        cause = it,
-                        runLoop = true
+                        cause = it
                     )
                 },
                 fabricPrivacy::logException
@@ -133,14 +131,12 @@ class CalculationWorkflowImpl @Inject constructor(
         job: String,
         iobCobCalculator: IobCobCalculator,
         overviewData: OverviewData,
-        from: String,
+        reason: String,
         end: Long,
         bgDataReload: Boolean,
-        limitDataToOldestAvailable: Boolean,
-        cause: Event?,
-        runLoop: Boolean
+        cause: Event?
     ) {
-        aapsLogger.debug(LTag.AUTOSENS, "Starting calculation worker: $from to ${dateUtil.dateAndTimeAndSecondsString(end)}")
+        aapsLogger.debug(LTag.AUTOSENS, "Starting calculation worker: $reason to ${dateUtil.dateAndTimeAndSecondsString(end)}")
 
         WorkManager.getInstance(context)
             .beginUniqueWork(
@@ -186,11 +182,11 @@ class CalculationWorkflowImpl @Inject constructor(
             .then(
                 if (activePlugin.activeSensitivity.isOref1)
                     OneTimeWorkRequest.Builder(IobCobOref1Worker::class.java)
-                        .setInputData(dataWorkerStorage.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(injector, iobCobCalculator, from, end, limitDataToOldestAvailable, cause)))
+                        .setInputData(dataWorkerStorage.storeInputData(IobCobOref1Worker.IobCobOref1WorkerData(injector, iobCobCalculator, reason, end, job == MAIN_CALCULATION, cause)))
                         .build()
                 else
                     OneTimeWorkRequest.Builder(IobCobOrefWorker::class.java)
-                        .setInputData(dataWorkerStorage.storeInputData(IobCobOrefWorker.IobCobOrefWorkerData(injector, iobCobCalculator, from, end, limitDataToOldestAvailable, cause)))
+                        .setInputData(dataWorkerStorage.storeInputData(IobCobOrefWorker.IobCobOrefWorkerData(injector, iobCobCalculator, reason, end, job == MAIN_CALCULATION, cause)))
                         .build()
             )
             .then(OneTimeWorkRequest.Builder(UpdateIobCobSensWorker::class.java).build())
@@ -205,19 +201,20 @@ class CalculationWorkflowImpl @Inject constructor(
                     .build()
             )
             .then(
-                runLoop,
+                job == MAIN_CALCULATION,
                 OneTimeWorkRequest.Builder(InvokeLoopWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(InvokeLoopWorker.InvokeLoopData(cause)))
                     .build()
             )
             .then(
-                runLoop,
+                job == MAIN_CALCULATION,
                 OneTimeWorkRequest.Builder(PreparePredictionsWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(PreparePredictionsWorker.PreparePredictionsData(overviewData)))
                     .build()
             )
             .then(
-                runLoop, OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
+                job == MAIN_CALCULATION,
+                OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
                     .setInputData(Data.Builder().putString(JOB, job).build())
                     .build()
             )

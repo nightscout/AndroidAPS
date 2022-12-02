@@ -257,15 +257,13 @@ class HistoryBrowseActivity : DaggerAppCompatActivity() {
 
     private fun runCalculation(from: String) {
         calculationWorkflow.runCalculation(
-            CalculationWorkflow.HISTORY_CALCULATION,
-            historyBrowserData.iobCobCalculator,
-            historyBrowserData.overviewData,
-            from,
-            historyBrowserData.overviewData.toTime,
+            job = CalculationWorkflow.HISTORY_CALCULATION,
+            iobCobCalculator = historyBrowserData.iobCobCalculator,
+            overviewData = historyBrowserData.overviewData,
+            reason = from,
+            end = historyBrowserData.overviewData.toTime,
             bgDataReload = true,
-            limitDataToOldestAvailable = false,
-            cause = EventCustomCalculationFinished(),
-            runLoop = false
+            cause = EventCustomCalculationFinished()
         )
     }
 
