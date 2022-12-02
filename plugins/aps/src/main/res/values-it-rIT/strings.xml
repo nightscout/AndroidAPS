@@ -88,4 +88,5 @@
     <string name="hardlimit">limite fisso</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Picco</string>
+    <!--    Loop -->
 </resources>
