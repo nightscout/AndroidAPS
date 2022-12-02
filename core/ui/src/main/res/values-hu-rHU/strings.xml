@@ -16,6 +16,25 @@
     <string name="pump">Pumpa</string>
     <string name="mute">Némít</string>
     <!--    Protection-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    APSResult-->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
+    <!-- Alerts -->
+    <!-- BolusWizard -->
+    <!--    Preferences-->
+    <!--    Protection-->
     <!--    Pumps -->
     <string name="serial_number">Sorozatszám</string>
     <string name="pump_icon">Pumpa ikon</string>
