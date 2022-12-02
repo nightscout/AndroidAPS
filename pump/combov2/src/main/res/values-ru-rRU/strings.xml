@@ -39,7 +39,6 @@
 1. Нажмите кнопку \"Назад\" или кнопку \"Отменить сопряжение\"\n
 2. Отмените сопряжение на Combo (нажав кнопку ВВЕРХ и кнопку МЕНЮ одновременно)\n
 3. Повторите процедуру сопряжения заново</string>
-    <string name="combov2_pin_entry_hint">0123456789</string>
     <string name="combov2_enter_pin">Введите PIN-код</string>
     <string name="combov2_cancel_pairing">Отменить сопряжение</string>
     <string name="combov2_pin_hint">10-значный PIN-код</string>
@@ -71,8 +70,6 @@
     <string name="combov2_fetching_tdd_history_cmddesc">Получение суточной истории дозировок TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Обновление даты и времени помпы</string>
     <string name="combov2_updating_pump_status_cmddesc">Обновление статуса помпы</string>
-    <string name="combov2_pairing_pin_failure">PIN-код не принят. Проверьте наличие опечаток. Если
-       ошибка повторится, отмените сопряжение и повторите процесс.</string>
     <string name="combov2_discovery_duration">Время обнаружения (в секундах)</string>
     <string name="combov2_verbose_logging">Включить подробное журналирование Combo</string>
     <string name="combov2_getting_basal_profile">Получение базового профиля; %1$d фактор(ов) прочитано</string>
@@ -88,15 +85,10 @@
     <string name="combov2_incorrect_active_basal_profile">Некорректный активный базальный профиль; должен быть активным профиль 1, а не %1$d</string>
     <string name="combov2_unrecognized_alert">Неопознанное оповещение Combo</string>
     <string name="combov2_combo_alert">Оповещение Combo</string>
-    <string name="combov2_last_bolus">%1$.1f%2$s(%3$s)</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d мин осталось)</string>
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (осталось меньше 1 минуты)</string>
     <string name="combov2_load_tdds_cancelled">Загрузка TDD отменена</string>
     <string name="combov2_retrieving_tdds_failed">Не удалось получить TDD</string>
-    <string name="combov2_no_activity">{fa-bed}</string>
-    <string name="combov2_battery_empty_indicator">{fa-battery-empty}</string>
-    <string name="combov2_battery_low_indicator">{fa-battery-quarter}</string>
-    <string name="combov2_battery_full_indicator">{fa-battery-full}</string>
     <string name="combov2_battery_low_warning">Низкий заряд батареи помпы</string>
     <string name="combov2_reservoir_low_warning">Низкий уровень инсулина в картридже помпы</string>
     <string name="combov2_setting_tbr_succeeded">Настройки TBR выполнены</string>

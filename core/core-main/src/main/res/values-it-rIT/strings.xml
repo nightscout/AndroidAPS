@@ -1,34 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Aggiorna</string>
-    <string name="error">Errore</string>
-    <string name="save">Salva</string>
-    <string name="not_set_short">Non impostato</string>
-    <string name="failedupdatebasalprofile">Impossibile aggiornare il profilo basale</string>
-    <string name="profile_set_ok">Profilo basale aggiornato nel micro</string>
-    <string name="invalidinput">Dati di input non validi</string>
-    <string name="tempbasaldeliveryerror">Errore erogazione basale temporanea</string>
     <string name="goingtodeliver">Sto per erogare %1$.2f U</string>
     <string name="waitingforpump">In attesa del micro</string>
-    <string name="bolusdelivering">Erogazione di %1$.2f U</string>
-    <string name="connecting">Connessione</string>
-    <string name="disconnected">Disconnesso</string>
     <string name="androidaps_start">AAPS avviato</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
-    <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
-    <string name="pumpbusy">Il micro è occupato</string>
-    <string name="connectionerror">Errore connessione micro</string>
     <string name="objectives">Obiettivi</string>
     <string name="please_wait">Attendi…</string>
-    <string name="mute">Muto</string>
-    <string name="reload">Ricarica</string>
     <string name="stop">Stop</string>
     <string name="carbs">CHO</string>
+    <string name="invalid_profile">Profilo non valido!</string>
+    <string name="no_profile_set">NESSUN PROFILO IMPOSTATO</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Unità</string>
@@ -42,35 +27,12 @@
     <string name="isf_long_label">Fattore di sensibilità insulinica (ISF)</string>
     <string name="basal_long_label">Velocità basale</string>
     <string name="target_long_label">Target glicemia</string>
-    <string name="initializing">Inizializzazione...</string>
-    <string name="serial_number">Numero seriale</string>
-    <string name="battery_label">Batteria</string>
-    <string name="last_connection_label">Ultima connessione</string>
-    <string name="last_bolus_label">Ultimo bolo</string>
-    <string name="dailyunits">Unità giornaliere</string>
-    <string name="base_basal_rate_label">Velocità basale originale</string>
-    <string name="tempbasal_label">Basale temporanea</string>
-    <string name="extended_bolus_label">Bolo Esteso</string>
-    <string name="reservoir_label">Serbatoio</string>
-    <string name="pumphistory">Storico micro</string>
-    <string name="viewprofile">Visualizza profilo</string>
-    <string name="eventtype">Tipo evento</string>
-    <string name="mgdl">mg/dl</string>
-    <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="advancedsettings_title">Impostazioni avanzate</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Spegne il bluetooth del telefono per qualche secondo se non è possibile alcuna connessione al micro. Questo può essere utile su alcuni telefoni.</string>
-    <string name="pairing">Associazione</string>
-    <string name="loopdisabled">LOOP DISABILITATO DAI VINCOLI</string>
-    <string name="bolusdelivered">Bolo di %1$.2f U erogato con successo</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="novalidbasalrate">Nessuna velocità basale valida letta dal micro</string>
-    <string name="limitingmaxiob">Limitazione max IOB a %1$.1f U a causa di: %2$s</string>
-    <string name="unsafeusage">uso non sicuro</string>
-    <string name="pump_unreachable">Micro irraggiungibile</string>
     <string name="extended_bolus">Bolo esteso</string>
     <string name="pump_time_updated">Ora del micro aggiornata</string>
     <string name="exit">Esci</string>
@@ -95,7 +57,6 @@
     <string name="loading">Caricamento…</string>
     <string name="notes_label">Note</string>
     <string name="remove_button">Rimuovi</string>
-    <string name="addnew">Aggiungi nuovo</string>
     <string name="addnew_above">Aggiungi nuovo sopra</string>
     <string name="wrong_pump_data">I dati arrivano da un micro differente. Cambia il driver del micro per resettarne lo stato.</string>
     <string name="bg_label">BG</string>
@@ -110,7 +71,6 @@
     <string name="loopsuspended">Loop sospeso</string>
     <string name="trend_arrow">Freccia trend</string>
     <string name="a11y_autosens_label">Asuto sens</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="required">ric</string>
     <string name="a11y_arrow_double_down">discesa rapida</string>
     <string name="a11y_arrow_single_down">discesa</string>
@@ -145,28 +105,15 @@
     <string name="paused">In pausa</string>
     <string name="invalid">NON VALIDO</string>
     <string name="login">Login</string>
+    <string name="prime_fill">Carica/Riempi</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Stoppa temp-target</string>
     <string name="closedloop">Loop chiuso</string>
     <string name="openloop">Loop aperto</string>
     <string name="lowglucosesuspend">Sospensione a glicemia bassa (LGS)</string>
-    <string name="confirm">Conferma</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <!--    Constraints-->
-    <string name="limitingbasalratio">Limitazione max velocità basale a %1$.2f U/h a causa di: %2$s</string>
-    <string name="pumplimit">limite micro</string>
-    <string name="limitingpercentrate">Limitazione max tasso percentuale a %1$d%% a causa di: %2$s</string>
-    <string name="itmustbepositivevalue">deve essere un valore positivo</string>
-    <string name="limitingbolus">Limitazione bolo a %1$.1f U a causa di: %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Micro non inizializzato, profilo non impostato!</string>
-    <!--    BlePreCheck-->
-    <string name="ble_not_supported">Bluetooth Low Energy non supportato.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy non supportato o dispositivo non associato.</string>
-    <string name="ble_not_enabled">Bluetooth non abilitato.</string>
-    <string name="location_not_found_title">La localizzazione non è abilitata</string>
-    <string name="location_not_found_message">Affinché la ricerca bluetooth funzioni sui dispositivi più recenti, la localizzazione deve essere abilitata, ma può essere disabilitata dopo l\'associazione. AAPS non tiene traccia della tua posizione.</string>
     <!--    Protection-->
     <string name="wrongpassword">Password errata</string>
     <string name="wrongpin">PIN errato</string>
@@ -182,6 +129,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Cancella basale temporanea</string>
     <string name="let_temp_basal_run">Lascia eseguire la basale temporanea</string>
     <string name="rate">Tasso</string>
     <string name="duration">Durata</string>
@@ -203,9 +151,12 @@
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Domanda : %1$s</string>
     <string name="careportal_exercise_message">Esercizio : %1$s</string>
+    <string name="careportal_pump_site_change">Cambio posizione cannula</string>
+    <string name="cgm_sensor_insert">Inserimento sensore</string>
     <string name="careportal_cgmsensorstart">Avvio sensore</string>
     <string name="careportal_cgm_sensor_stop">Arresto Sensore CGM</string>
     <string name="careportal_dad_alert">Avviso D.A.D.</string>
+    <string name="careportal_insulin_cartridge_change">Cambio cartuccia insulina</string>
     <string name="careportal_profileswitch">Cambio profilo</string>
     <string name="careportal_snackbolus">Bolo spuntino</string>
     <string name="careportal_mealbolus">Bolo pasto</string>
@@ -215,6 +166,8 @@
     <string name="careportal_tempbasalend">Fine basale temporanea</string>
     <string name="careportal_carbscorrection">Correzione con CHO</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="pump_battery_change">Cambio batteria micro</string>
+    <string name="temporary_target">Target temporaneo</string>
     <string name="careportal_temporarytargetvalue">Valore target temporaneo</string>
     <string name="careportal_temporarytargetcancel">Cancellazione temp-target</string>
     <string name="boluswizard">Calcolatore</string>
@@ -228,28 +181,21 @@
     <string name="wear">Smartwatch</string>
     <string name="automation">Automazione</string>
     <string name="custom">Personalizzato</string>
-    <string name="pump">Micro</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
     <string name="record">Record</string>
-    <string name="reading_pump_history">Lettura storico micro</string>
-    <string name="pump_icon">Icona micro</string>
     <!--    Command-->
     <string name="connectiontimedout">Time out connessione</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Attivato</string>
     <string name="comment">Commento</string>
-    <string name="success">OK</string>
     <string name="percent">Percento</string>
     <string name="absolute">Assoluto</string>
-    <string name="configbuilder_insulin">Insulina</string>
-    <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">In attesa del risultato</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g di CHO aggiuntivi richiesti entro %2$d minuti</string>
     <!--    TDDStatsActivity-->
-    <string name="stats">Statistiche</string>
     <string name="cumulative_tdd">TDD cumulativo</string>
     <string name="expweight">TDD esponenzialmente ponderato</string>
     <string name="basalrate">Basale</string>
@@ -264,37 +210,6 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Rilevamento tempo</string>
-    <string name="mute5min">Muto per 5 minuti</string>
-    <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">esportato %1$s fa</string>
-    <string name="exported_at" comment="at placeholder we add export date">esportato: %1$s</string>
-    <string name="exported_less_than_hour_ago">esportato meno di un\'ora fa</string>
-    <string name="in_directory" comment="placeholder is for exported file path">nella directory: %1$s</string>
-    <string name="preferences_import_list_title">Seleziona il file da importare</string>
-    <string name="metadata_warning_different_flavour">Le preferenze sono state create con una differente versione di AAPS (%1$s) mentre invece tu hai: %2$s.\n\nAlcune impostazioni potrebbero mancare o non essere valide - dopo l\'importazione controlla e aggiornare le tue preferenze.</string>
-    <string name="metadata_warning_different_device">Le preferenze sono state create su un dispositivo diverso. Va bene importarle da un vecchio/diverso telefono, ma assicurati che le preferenze importate siano corrette!</string>
-    <string name="metadata_warning_outdated_format">Stai usando il formato precedente (obsoleto) delle vecchie versioni di APPS, che non è sicuro! Usalo solo come ultima risorsa, se non hai un\'esportazione nel corrente formato JSON.</string>
-    <string name="metadata_warning_old_export">Le preferenze importate hanno già %1$s giorni! Forse hai preferenze più aggiornate. Hai scelto il file sbagliato? Ricorda di esportare le preferenze regolarmente!</string>
-    <string name="metadata_warning_date_format">Formato data-ora non valido!</string>
-    <string name="metadata_warning_different_version">Le preferenze arrivano da una differente versione secondaria dell\'applicazione (minor). Va bene se le stai importando dopo l\'aggiornamento, ma controlla che, dopo l\'importazione, le preferenze siano ancora corrette!</string>
-    <string name="metadata_urgent_different_version">Le preferenze arrivano da una differente versione principale dell\'applicazione (major). Le versioni principali differiscono in modo significativo e potrebbero avere preferenze incompatibili! Assicurati che, dopo l\'importazione, le preferenze siano ancora corrette!</string>
-    <string name="prefdecrypt_settings_tampered">File delle impostazioni manomesso</string>
-    <string name="prefdecrypt_settings_secure">Il file delle impostazioni è sicuro</string>
-    <string name="prefdecrypt_settings_unencrypted">Uso non sicuro, formato impostazioni non crittografato</string>
-    <string name="prefdecrypt_wrong_json">Errore formato JSON, campo obbligatorio mancante (formato, contenuto, metadati o sicurezza)</string>
-    <string name="prefdecrypt_wrong_password">Errore decrittazione, la password data non può decrittare il file</string>
-    <string name="prefdecrypt_issue_missing_file_hash">File checksum (hash) mancante, impossibile verificare l\'autenticità delle impostazioni!</string>
-    <string name="prefdecrypt_issue_modified">Il file è stato modificato dopo l\'esportazione!</string>
-    <string name="prefdecrypt_issue_parsing">Errore decrittazione, analisi preferenze fallita!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Errore decrittazione, la password fornita è errata o il file delle impostazioni è stato modificato! È possibile che il file importato sia stato esportato con una diversa password master.</string>
-    <string name="prefdecrypt_issue_wrong_format">Configurazione crittografia mancante, il formato delle impostazioni non è valido!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo di crittografia non supportato o non specificato!</string>
-    <!-- VersionChecker -->
-    <string name="running_invalid_version">Abbiamo rilevato che stai eseguendo una versione non valida. Loop disabilitato!</string>
-    <string name="versionavailable">Versione %1$s disponibile</string>
-    <string name="version_expire">Versione: %1$s | Scadenza: %2$s</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Riavvia il tuo telefono oppure fai ripartire AndroidAPS dalle impostazioni di sistema \naltrimenti Android APS non farà il log (è importante monitorare e verificare che gli algoritmi stiano funzionando correttamente)!</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLO</string>
     <string name="uel_bolus_calculator">CALCOLATORE BOLO</string>
@@ -385,7 +300,6 @@
     <string name="ue_action">Azione</string>
     <string name="ue_timestamp">Data e ora</string>
     <string name="ue_none">Nessuna unità</string>
-    <string name="ue_export_to_csv">Esporta voci utente in Excel (csv)</string>
     <string name="uel_loop_change">LOOP CAMBIATO</string>
     <string name="uel_loop_removed">LOOP RIMOSSO</string>
     <string name="uel_other">ALTRO</string>
@@ -404,7 +318,6 @@
     <string name="valueoutofrange">»%1$s« è fuori dai limiti consentiti</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f è fuori dai limiti consentiti</string>
     <string name="basal_value">Valore basale</string>
-    <string name="nsclient_version_does_not_match">La versione di AAPSClient non corrisponde alla versione di AAPS. Aggiorna.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLO %1$.2f U</string>
     <string name="carbs_g">CHO %1$d g</string>
@@ -424,16 +337,6 @@
     <string name="keepalive_status_outdated" comment="26 characters max for translation">KeepAlive. Stato obsoleto.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">KeepAlive. Basale obsoleta.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
-    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Connetti al micro: cliccato</string>
-    <string name="pump_driver_change" comment="26 characters max for translation">Cambio driver micro.</string>
-    <string name="device_changed" comment="26 characters max for translation">Dispositivo cambiato</string>
-    <string name="clicked_refresh" comment="26 characters max for translation">Aggiorna: cliccato</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Aggiornamento stato pianificato</string>
-    <string name="unconfirmed_command" comment="26 characters max for translation">Comando non confermato</string>
-    <string name="requested_by_user" comment="26 characters max for translation">Richiesto da utente</string>
-    <string name="user_request" comment="26 characters max for translation">Richiesta utente</string>
-    <string name="bolus_ok" comment="26 characters max for translation">Bolo OK</string>
-    <string name="pump_paired" comment="26 characters max for translation">Micro associato</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Tasto aggiornamento Insight</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basale</string>
@@ -492,12 +395,14 @@
     <string name="raise_notifications_as_android_notifications">Usa le notifiche di sistema per gli avvisi</string>
     <string name="urgent_alarm">Allarme urgente</string>
     <string name="info">INFO</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Autorizzazione SMS mancante</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Consiglio bolo</string>
+    <string name="bolus_advisor_message">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed essere ricordato quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
     <string name="partialboluswizard">Eroga parte del risultato del calcolatore [%]</string>
+    <string name="bolus_constraint_applied_warn">Vincolo bolo applicato: %1$.2f U a %2$.2f U</string>
+    <string name="bolus_recorded_only">Il bolo sarà solo registrato (non erogato dal micro)</string>
     <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>
     <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
     <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
@@ -517,16 +422,13 @@
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">Nessun micro disponibile!</string>
     <!--    Preferences-->
-    <plurals name="days">
-        <item quantity="one">%1$d giorno</item>
-        <item quantity="other">%1$d giorni</item>
-    </plurals>
-    <plurals name="hours">
-        <item quantity="one">%1$d ora</item>
-        <item quantity="other">%1$d ore</item>
-    </plurals>
-    <plurals name="minutes">
-        <item quantity="one">%1$d minuto</item>
-        <item quantity="other">%1$d minuti</item>
-    </plurals>
+    <string name="child">Bambino</string>
+    <string name="teenage">Adolescente</string>
+    <string name="adult">Adulto</string>
+    <string name="resistant_adult">Adulto insulino-resistente</string>
+    <string name="pregnant">Gravidanza</string>
+    <string name="patient_age_summary">Seleziona il tipo di paziente per configurare i limiti di sicurezza</string>
+    <string name="max_bolus_title">Max bolo consentito [U]</string>
+    <string name="max_carbs_title">Max CHO consentiti [g]</string>
+    <string name="patient_type">Tipo paziente</string>
 </resources>

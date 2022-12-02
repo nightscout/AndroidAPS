@@ -30,7 +30,6 @@
     <string name="combov2_pairing_in_progress">Appairage du Combo en cours</string>
     <string name="combov2_pairing_start_steps">Étapes pour effectuer l\'appairage avec votre Combo :\n\n1. Sur votre pompe, accédez aux paramètres Bluetooth\n2. Vérifiez si un appareil est déjà appairé, si oui, allez à l\'écran de la pompe \"Supprimer le périphérique\" pour supprimer/désassocier ce périphérique\n3. Allez à l\'écran de la pompe \"Ajouter un appareil\" et initiez l\'appairage sur la pompe\n4. Cliquez sur le bouton \"Commencer l\'appairage\" ci-dessous pour commencer l\'appairage dans AndroidAPS\n</string>
     <string name="combov2_steps_if_no_connection_during_pairing">Au bout d\'un moment, le nom du téléphone s\'affiche sur l\'écran de la pompe. Appuyez sur CHECK pour confirmer.\n\nLorsque l\'appairage est terminé avec succès, confirmez sur votre pompe en appuyant deux fois sur le bouton CHECK pour revenir à l\'écran d\'accueil.\n\nSi aucune connexion n\'est établie après plus de ~5 minutes :\n\n1. Appuyez sur le bouton \"Retour\" ou sur le bouton \"Annuler l\'appairage\"\n2. Annulez l\'appairage sur la Combo (appuyez en même temps sur les boutons HAUT et MENU pour annuler l\'appairage)\nEssayez à nouveau de faire l\'appairage</string>
-    <string name="combov2_pin_entry_hint">0123456789</string>
     <string name="combov2_enter_pin">Saisir le code PIN</string>
     <string name="combov2_cancel_pairing">Annuler l\'appairage</string>
     <string name="combov2_pin_hint">Code PIN à 10 chiffres</string>
@@ -62,7 +61,6 @@
     <string name="combov2_fetching_tdd_history_cmddesc">Récupération de l\'historique DTQ</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Mise à jour date et heure de la pompe</string>
     <string name="combov2_updating_pump_status_cmddesc">Mise à jour de l\'état pompe</string>
-    <string name="combov2_pairing_pin_failure">Le code PIN n\'a pas fonctionné. Vérifiez s\'il y a eu une faute de frappe. Si cela persiste, annulez et recommencez l\'appairage.</string>
     <string name="combov2_discovery_duration">Durée de recherche (en secondes)</string>
     <string name="combov2_verbose_logging">Activer les informations log détaillées de la Combo</string>
     <string name="combov2_getting_basal_profile">Récupération du profil basal, %1$d valeure(s) lue(s)</string>
@@ -78,15 +76,10 @@
     <string name="combov2_incorrect_active_basal_profile">Profil actif incorrect, le profil 1 doit être actif et non le profil %1$d</string>
     <string name="combov2_unrecognized_alert">Alerte Combo inconnue</string>
     <string name="combov2_combo_alert">Alerte Combo</string>
-    <string name="combov2_last_bolus">%1$.1f %2$s (%3$s)</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min restantes)</string>
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (moins de 1 min restantes)</string>
     <string name="combov2_load_tdds_cancelled">Chargement des DTQ annulé</string>
     <string name="combov2_retrieving_tdds_failed">Échec de la récupération des DTQ</string>
-    <string name="combov2_no_activity">{fa-bed}</string>
-    <string name="combov2_battery_empty_indicator">{fa-battery-empty}</string>
-    <string name="combov2_battery_low_indicator">{fa-battery-quarter}</string>
-    <string name="combov2_battery_full_indicator">{fa-battery-full}</string>
     <string name="combov2_battery_low_warning">Pile pompe faible</string>
     <string name="combov2_reservoir_low_warning">Niveau réservoir pompe bas</string>
     <string name="combov2_setting_tbr_succeeded">Paramétrage du DBT réussi</string>

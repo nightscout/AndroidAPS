@@ -1,34 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Osvježi</string>
-    <string name="error">Greška</string>
-    <string name="save">Spremi</string>
-    <string name="not_set_short">Nije postavljeno</string>
-    <string name="failedupdatebasalprofile">Ažuriranje bazalnog profila nije uspjelo</string>
-    <string name="profile_set_ok">Ažuriran bazalni profil u pumpi</string>
-    <string name="invalidinput">Nevažeći ulazni podaci</string>
-    <string name="tempbasaldeliveryerror">Pogreška isporuke temp bazala</string>
     <string name="goingtodeliver">Isporučit ću %1$.2f U</string>
     <string name="waitingforpump">Čekanje pumpe</string>
-    <string name="bolusdelivering">Isporuka %1$.2f U</string>
-    <string name="connecting">Povezivanje</string>
-    <string name="disconnected">Odspojen</string>
     <string name="androidaps_start">AAPS je počeo</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
-    <string name="reservoirvalue">%1$.0f / %2$d U</string>
-    <string name="pump_basebasalrate">%1$.2f U/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d mins</string>
-    <string name="pumpbusy">Pumpa je zauzeta</string>
-    <string name="connectionerror">Greška u spajanju pumpe</string>
     <string name="objectives">Ciljevi</string>
     <string name="please_wait">Molimo pričekajte…</string>
-    <string name="mute">Isključi zvuk</string>
-    <string name="reload">Ponovno učitaj</string>
     <string name="stop">Zaustavi</string>
     <string name="carbs">UH</string>
+    <string name="invalid_profile">Nevažeći profil!</string>
+    <string name="no_profile_set">PROFIL NIJE POSTAVLJEN</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Datum</string>
     <string name="units_label">Jedinice</string>
@@ -42,13 +27,8 @@
     <string name="isf_long_label">Faktor osjetljivosti na inzulin</string>
     <string name="basal_long_label">Bazalna stopa</string>
     <string name="target_long_label">Ciljana razina glukoze u krvi</string>
-    <string name="initializing">Pokretanje...</string>
-    <string name="serial_number">Serijski broj</string>
-    <string name="battery_label">Baterija</string>
-    <string name="last_connection_label">Zadnja uspostava veze</string>
-    <string name="last_bolus_label">Zadnji bolus</string>
     <string name="shortgram">g</string>
-    <string name="pump_unreachable">Pumpa nedostupna</string>
+    <string name="virtualpump_resultok">U redu</string>
     <string name="exit">Izlaz</string>
     <string name="iob">Aktivni inzulin</string>
     <string name="cob">Aktivni UGH</string>
@@ -63,7 +43,6 @@
     <string name="loopsuspended">Petlja suspendirana</string>
     <string name="trend_arrow">Strelica trenda</string>
     <string name="a11y_autosens_label">Auto sens</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="required">potrebno</string>
     <string name="a11y_arrow_double_down">brzo padajući</string>
     <string name="a11y_arrow_single_down">padanje</string>
@@ -98,22 +77,10 @@
     <string name="paused">Pauzirano</string>
     <string name="invalid">GREŠKA</string>
     <string name="login">Login</string>
+    <string name="overview_insulin_label">Inzulin</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <!--    Constraints-->
-    <string name="limitingbasalratio">Ograničavanje maksimalne bazalne doze na %1$.2f U/h zbog %2$s</string>
-    <string name="pumplimit">ograničenje pumpe</string>
-    <string name="limitingpercentrate">Ograničavanje maksimalne postotne stope na %1$d%% zbog %2$s</string>
-    <string name="itmustbepositivevalue">mora biti pozitivna vrijednost</string>
-    <string name="limitingbolus">Ograničavanje bolusa na %1$.1f U zbog %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Pumpa nije pokrenuta, profil nije postavljen!</string>
-    <!--    BlePreCheck-->
-    <string name="ble_not_supported">Bluetooth Low Energy nije podržan.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nije podržan ili uređaj nije uparen.</string>
-    <string name="ble_not_enabled">Bluetooth nije omogućen.</string>
-    <string name="location_not_found_title">Lokacija nije omogućena</string>
-    <string name="location_not_found_message">Da bi Bluetooth otkrivanje radilo na novijim uređajima, lokacija mora biti omogućena. AAPS ne prati vašu lokaciju i može se onemogućiti nakon uspješnog uparivanja.</string>
     <!--    Protection-->
     <string name="wrongpassword">Pogrešna lozinka</string>
     <string name="wrongpin">Pogrešan PIN</string>
@@ -129,6 +96,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Pokrenite profil %1$d%% na %2$d min</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Otkaži privremeni bazal</string>
     <string name="let_temp_basal_run">Pustite privremeni bazal da radi</string>
     <string name="rate">Stopa</string>
     <string name="duration">Trajanje</string>
@@ -137,21 +105,18 @@
     <!--    Temptarget-->
     <!--    Translator-->
     <string name="careportal_profileswitch">Zamjena profila</string>
+    <string name="careportal_temporarytargetvalue">Privremena ciljna vrijednost</string>
     <string name="glucosetype_sensor">Senzor</string>
-    <string name="pump">Pumpa</string>
+    <string name="unknown">nepoznato</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
-    <string name="success">Uspješno</string>
     <string name="percent">Postotak</string>
     <string name="absolute">Apsolutna</string>
-    <string name="configbuilder_insulin">Inzulin</string>
-    <string name="insulin_unit_shortname">U</string>
     <string name="waitingforpumpresult">Čekanje rezultata</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g dodatnih ugljikohidrata potrebnih unutar %2$d minuta</string>
     <!--    TDDStatsActivity-->
-    <string name="stats">Statistika</string>
     <string name="cumulative_tdd">Kumulativni TDD</string>
     <string name="expweight">Eksponencijalno ponderirani TDD</string>
     <string name="basalrate">Bazal</string>
@@ -166,37 +131,6 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Detekcija vremena</string>
-    <string name="mute5min">Isključite zvuk na 5 minuta</string>
-    <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">izvezeno prije %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">izvezeno u %1$s</string>
-    <string name="exported_less_than_hour_ago">izvezeno prije manje od sat vremena</string>
-    <string name="in_directory" comment="placeholder is for exported file path">na lokaciji: %1$s</string>
-    <string name="preferences_import_list_title">Odaberite datoteku za uvoz</string>
-    <string name="metadata_warning_different_flavour">Postavke su stvorene s drugom varijantom AAPS-a (%1$s) dok vi imate: %2$s.\n\nNeke postavke možda nedostaju ili su nevažeće - nakon uvoza provjerite i ažurirajte svoje postavke.</string>
-    <string name="metadata_warning_different_device">Postavke su stvorene na drugom uređaju. U redu je ako uvozite sa starijeg/drugog telefona, ali provjerite jesu li uvezene postavke točne!</string>
-    <string name="metadata_warning_outdated_format">Koristite zastarjeli naslijeđeni format iz starih verzija AAPS-a, koji nije siguran! Koristite ga samo u krajnjem slučaju, ako nemate izvoz u trenutnom, JSON formatu.</string>
-    <string name="metadata_warning_old_export">Uvezene postavke stare su već %1$s dana! Možda imate ažurnije postavke ili ste odabrali pogrešnu datoteku? Ne zaboravite redovito izvoziti postavke!</string>
-    <string name="metadata_warning_date_format">Nevažeći format datuma i vremena!</string>
-    <string name="metadata_warning_different_version">Postavke iz različite manje verzije aplikacije. U redu je ako uvozite nakon nadogradnje, ali nakon uvoza provjerite jesu li postavke još uvijek točne!</string>
-    <string name="metadata_urgent_different_version">Postavke iz različitih glavnih verzija aplikacije. Glavne verzije se značajno razlikuju i mogu imati nekompatibilne postavke! Provjerite jesu li postavke još uvijek točne nakon uvoza!</string>
-    <string name="prefdecrypt_settings_tampered">Datoteka postavki neovlašteno mijenjana</string>
-    <string name="prefdecrypt_settings_secure">Datoteka postavki je sigurna</string>
-    <string name="prefdecrypt_settings_unencrypted">Korištenje nesigurnog, nekriptiranog formata postavki</string>
-    <string name="prefdecrypt_wrong_json">Pogreška JSON formata, nedostaje obavezno polje (format, sadržaj, metapodaci ili sigurnost)</string>
-    <string name="prefdecrypt_wrong_password">Pogreška dešifriranja, dana lozinka ne može dešifrirati datoteku</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Nedostaje kontrolni zbroj datoteke (hash), ne može se provjeriti autentičnost postavki!</string>
-    <string name="prefdecrypt_issue_modified">Datoteka je izmijenjena nakon izvoza!</string>
-    <string name="prefdecrypt_issue_parsing">Pogreška dešifriranja, postavke raščlambe nisu uspjele!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Pogreška dešifriranja, navedena lozinka je nevažeća ili je datoteka postavki izmijenjena! Može se dogoditi da je uvezena datoteka izvezena s drugom glavnom lozinkom.</string>
-    <string name="prefdecrypt_issue_wrong_format">Nedostaje konfiguracija enkripcije, format postavki nije valjan!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Algoritam šifriranja nije podržan ili nije naveden!</string>
-    <!-- VersionChecker -->
-    <string name="running_invalid_version">Otkrili smo da koristite nevažeću verziju. Petlja onemogućena!</string>
-    <string name="versionavailable">Dostupna je verzija %1$s</string>
-    <string name="version_expire">Verzija %1$s ističe %2$s</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Ponovno pokrenite telefon ili ponovno pokrenite AAPS iz postavki sustava \n u suprotnom Android APS neće imati zapisivanje (važno je pratiti i provjeriti rade li algoritmi ispravno)!</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
     <string name="uel_bolus_calculator">BOLUS KALKULATOR</string>
@@ -237,7 +171,6 @@
     <string name="ue_action">Aktivnost</string>
     <string name="ue_timestamp">Vremenska oznaka</string>
     <string name="ue_none">Nema uređaja</string>
-    <string name="ue_export_to_csv">Izvoz korisničkih unosa u Excel (csv)</string>
     <string name="uel_loop_change">PETLJA PROMIJENJENA</string>
     <string name="uel_loop_removed">PETLJA UKLONJENA</string>
     <string name="uel_other">OSTALO</string>
@@ -252,9 +185,9 @@
     <string name="profile_max_daily_basal_value">Maksimalna bazalna vrijednost profila</string>
     <string name="current_basal_value">Trenutna bazalna vrijednost</string>
     <string name="profile_carbs_ratio_value">Vrijednost omjera ugljikohidrata profila</string>
-    <string name="nsclient_version_does_not_match">AAPSClient verzija ne odgovara verziji AAPS. Molimo ažurirajte.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Bazal</string>
     <string name="a11y_file">datoteka</string>
     <string name="a11y_user">korisnik</string>
     <!-- Autotune -->
@@ -302,8 +235,6 @@
     <string name="raise_notifications_as_android_notifications">Koristite obavijesti sustava za upozorenja i obavijesti</string>
     <string name="urgent_alarm">Hitan alarm</string>
     <string name="info">INFO</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Nedostaje dopuštenje za SMS</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">Savjetnik za bolus</string>
     <string name="bolus_advisor_message">Imate visoku glikemiju. Umjesto da jedete sada, preporuča se pričekati bolju glikemiju. Želite li sada napraviti korekcijski bolus i podsjetiti vas kada je vrijeme za jelo? U ovom slučaju neće biti zabilježeni ugljikohidrati i morate ponovno koristiti čarobnjaka kada vas podsjetimo.</string>
@@ -311,9 +242,6 @@
     <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_iob">IOB: %1$.2fU</string>
     <!--    Preferences-->
-    <plurals name="days">
-        <item quantity="one">%1$d dan</item>
-        <item quantity="few">%1$d dana</item>
-        <item quantity="other">%1$d dana</item>
-    </plurals>
+    <string name="max_bolus_title">Max dozvoljen bolus [U]</string>
+    <string name="max_carbs_title">Max dozvoljeni Uh [g]</string>
 </resources>
