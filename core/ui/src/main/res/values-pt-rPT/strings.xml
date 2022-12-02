@@ -14,7 +14,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Bomba não inicializada, perfil não definido!</string>
     <string name="failed_update_basal_profile">Falha a actualizar perfil da basal</string>
-    <string name="bolus_delivered">Bólus %1$.2f U administrado com sucesso</string>
     <string name="no_valid_basal_rate">Nenhum valor de basal válido foi lido da bomba</string>
     <string name="limiting_iob">A limitar IA para %1$.1f U porque %2$s</string>
     <string name="loop_disabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
@@ -45,6 +44,26 @@
     <string name="mute5min">Silenciar por 5 minutos</string>
     <string name="mute">Silêncio</string>
     <string name="success">Sucesso</string>
+    <string name="advancedsettings_title">Configurações Avançadas</string>
+    <!--    Protection-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    APSResult-->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
+    <!-- Alerts -->
+    <!-- BolusWizard -->
+    <!--    Preferences-->
     <!--    Protection-->
     <string name="unlock_settings">Definições Desbloqueio</string>
     <!--    Pumps -->
