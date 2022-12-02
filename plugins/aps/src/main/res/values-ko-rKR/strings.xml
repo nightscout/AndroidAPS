@@ -80,4 +80,5 @@
     <string name="maxvalueinpreferences">설정에서의 최대값</string>
     <string name="hardlimit">하드한계</string>
     <!--    Autotune   -->
+    <!--    Loop -->
 </resources>
