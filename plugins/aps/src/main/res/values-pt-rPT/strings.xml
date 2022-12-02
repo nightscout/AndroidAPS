@@ -80,4 +80,5 @@
     <string name="maxvalueinpreferences">valor máx nas preferências</string>
     <string name="hardlimit">limite rígido</string>
     <!--    Autotune   -->
+    <!--    Loop -->
 </resources>
