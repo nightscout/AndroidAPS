@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dynisf_adjust_sensitivity">Wijzig gevoeligheid en BG</string>
+    <string name="DynISFAdjust_title" formatted="false">Dynamische Isf aanpassingsfactor %</string>
     <string name="DynISFAdjust_summary" formatted="false">Aanpassingsfactor voor DynamicISF. Stel meer dan 100% in voor een agressievere correctie en minder dan 100% voor minder agressieve correctie.</string>
     <string name="high_temptarget_raises_sensitivity_title">Hoog tijdelijk streefdoel verhoogt gevoeligheid</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Verhogen van de gevoeligheid voor temptargets > = 100]]></string>
@@ -7,12 +9,14 @@
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Lagere gevoeligheid voor temptargets < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
     <string name="openaps_smb_dynamic_isf">Dynamische ISF</string>
+    <string name="smb_interval_summary">Tijdsinterval in minuten tussen afgeven van SMBs</string>
     <string name="resistance_lowers_target_title">Resistentie verlaagt het doel</string>
     <string name="resistance_lowers_target_summary">Wanneer insulineresistentie wordt gedetecteerd, wordt het BG streefdoel verlaagd</string>
     <string name="sensitivity_raises_target_title">Gevoeligheid verhoogt het doel</string>
     <string name="sensitivity_raises_target_summary">Wanneer insulinegevoeligheid wordt gedetecteerd, wordt het BG streefdoel verhoogd</string>
     <string name="openapsma_disabled">Plugin is gedeactiveerd</string>
     <string name="openapsma_no_glucose_data">Geen BG gegevens beschikbaar</string>
+    <string name="openaps_no_as_data">Geen autosens-gegevens beschikbaar</string>
     <string name="dynisf_shortname">DYNISF</string>
     <string name="executing">Uitvoeren</string>
     <string name="openapsama">OpenAPS AMA</string>
@@ -23,12 +27,19 @@
     <string name="description_smb_dynamic_isf">Meest recente algoritme voor gevorderde gebruikers met dynamische/automatische ISF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Bolus snooze dia deler</string>
     <string name="openapsma_run">Nu uitvoeren</string>
+    <string name="openapsma_last_run_label">Laatste berekening</string>
+    <string name="openapsma_input_parameters_label">Invoerparameters</string>
+    <string name="openapsma_glucose_status_label">Glucose status</string>
     <string name="openapsma_current_temp_label">Actueel</string>
+    <string name="openapsma_iob_data_label">IOB gegevens</string>
     <string name="openapsma_profile_label">Profiel</string>
+    <string name="openapsma_meal_data_label">Maaltijd gegevens</string>
     <string name="openapsma_request_label">Voorstel</string>
     <string name="constraints">Beperkingen</string>
     <string name="openapsma_autosensdata_label">Autosens gegevens</string>
+    <string name="openapsma_script_debug_data_label">Script debug</string>
     <string name="openapsama_use_autosens">Gebruik Autosens functie</string>
+    <string name="openapsma_max_basal_title">Maximaal instelbaar basaal E/uur</string>
     <string name="openapsma_max_basal_summary">Dit is de maximale waarde waarop het basaal door OpenAPS ingesteld kan worden</string>
     <string name="openapsma_max_iob_title">Maximale basaal IOB, dat OpenAPS kan toedienen [E]</string>
     <string name="openapsma_max_iob_summary">Deze waarde wordt de Max IOB genoemd in OpenAPS context\nDit is de maximale insuline hoeveelheid in [E] dat APS in één keer kan toedienen.</string>
@@ -45,7 +56,12 @@
     <string name="openapsama_current_basal_safety_multiplier">Huidige basaalstand veiligheids vermenigvuldigings factor</string>
     <string name="openapssmb_max_iob_title">Max totaal IOB dat OpenAPS niet kan overschrijden [E]</string>
     <string name="openapssmb_max_iob_summary">Deze waarde heet MAX IOB in OpenAPS context\nOpenAPS zal geen extra insuline toedienen als de actuele IOB onderstaande waarde overschreden heeft</string>
+    <string name="enable_uam">Activeer UAM</string>
+    <string name="enable_smb">Activeer SMB</string>
+    <string name="enable_smb_summary">Gebruik Super Micro Bolussen in plaats van tijdelijke basaalstanden voor een snellere reactie</string>
+    <string name="enable_uam_summary">Detectie van niet aangekondigde (UnAnnounced) Maaltijden</string>
     <string name="enable_smb_always">Activeer SMB altijd</string>
+    <string name="enable_smb_always_summary">Zet SMB altijd aan, onafhankelijk van bolussen. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5 of G6</string>
     <string name="enable_smb_after_carbs">Activeer SMB na koolhydraten</string>
     <string name="enable_smb_after_carbs_summary">SMB actief gedurende 6u, zelfs met 0 COB. Enkel mogelijk met een BG bron met goed gefilterde data zoals de G5 of G6</string>
     <string name="enable_smb_with_cob">Activeer SMB met Koolhydraten</string>
@@ -73,4 +89,13 @@
     <string name="hardlimit">max limiet (SC)</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Piek</string>
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">Er is een bolus toegediend gedurende de afgelopen 3 minuten, SMB wordt overgeslagen</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="description_loop">Activeer of deactiveer de implementatie die de Loop triggert.</string>
+    <string name="ignore5m">Negeer 5m</string>
+    <string name="ignore15m">Negeer 15m</string>
+    <string name="ignore30m">Negeer 30m</string>
+    <string name="basal_set_correctly">Basaal correct ingesteld</string>
+    <string name="loop_aps_label">APS</string>
 </resources>
