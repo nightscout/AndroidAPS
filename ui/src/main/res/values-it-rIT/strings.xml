@@ -59,7 +59,16 @@
     <string name="disconnectpumpfor3h">Disconnetti micro per 3 h</string>
     <string name="resume">Riprendi</string>
     <string name="reconnect">Riconnetti micro</string>
+    <string name="duration15m">15 min</string>
+    <string name="duration30m">30 min</string>
+    <string name="duration1h">1 ora</string>
+    <string name="duration2h">2 ore</string>
+    <string name="duration3h">3 ore</string>
+    <string name="duration10h">10 ore</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">risultato corretto con %</string>
+    <string name="a11_correction_units">risultato corretto con unità</string>
+    <string name="two_hours">2h</string>
     <string name="result_insulin_carbs">Risultato: %1$s %2$s</string>
     <string name="missing_carbs">Mancanti %1$d g</string>
     <string name="a11y_current_bg">glicemia corrente</string>
