@@ -26,4 +26,5 @@
     <string name="combo_activity_checking_for_history_changes">Ag féachaint d\'athruithe stair</string>
     <string name="bolusstopped">Bólas stopadh</string>
     <string name="bolusstopping">Ag stopadh bólas</string>
+    <string name="combo_error_display_never">Riamh</string>
 </resources>
