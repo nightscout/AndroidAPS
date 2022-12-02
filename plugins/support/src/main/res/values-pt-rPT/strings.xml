@@ -2,8 +2,19 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Horário de Verão em 24h ou menos</string>
+    <string name="dst_loop_disabled_warning">Horário de Verão a menos de 3 horas - Loop Fechado desativado</string>
     <!-- Storage constraint -->
     <!-- Version Checker -->
+    <string name="old_version">versão antiga</string>
+    <string name="very_old_version">versão muito antiga</string>
+    <string name="application_expired">A aplicação expirou</string>
+    <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a SGB após %2$d dias, o loop será desactivado após %3$d dias</string>
+    <string name="running_invalid_version">Detectamos que está a correr uma versão inválida. Loop desactivado!</string>
+    <string name="versionavailable">Disponível %1$s disponível</string>
+    <string name="version_expire">Versão: %1$s criada em %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Dados utilizados foram recalculados</string>
+    <string name="bg_too_close">Glicemia demasiado próxima:\n%1$s\n%2$s</string>
 </resources>
