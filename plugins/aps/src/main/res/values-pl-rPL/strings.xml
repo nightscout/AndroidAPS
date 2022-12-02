@@ -84,4 +84,13 @@
     <string name="hardlimit">twarde ograniczenie</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Szczyt</string>
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">Bolus został podany w ciągu ostatnich 3 minut, opuszczam SMB</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="description_loop">Włącz lub wyłącz działanie pętli.</string>
+    <string name="ignore5m">Ignoruj 5 min</string>
+    <string name="ignore15m">Ignoruj 15 min</string>
+    <string name="ignore30m">Ignoruj 30 min</string>
+    <string name="basal_set_correctly">Baza ustawiona prawidłowo</string>
+    <string name="loop_aps_label">APS</string>
 </resources>
