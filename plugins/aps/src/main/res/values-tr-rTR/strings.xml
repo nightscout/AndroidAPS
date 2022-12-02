@@ -58,9 +58,11 @@ Aktif Karbonhidratın ne kadar hızlı sindirildiğine ve KŞ\'nin beklenenden d
     <string name="openapssmb_max_iob_title">OpenAPS tarafından aşılamayacak maksimum toplam AİNS (Aktif İnsülin)[U]</string>
     <string name="openapssmb_max_iob_summary">Bu değer OpenAPS bağlamında Max AİNS (Aktif İnsülin) olarak adlandırılır\nOpenAPS, mevcut AİNS bu değerden daha büyükse daha fazla insülin vermez</string>
     <string name="enable_uam">UAM etkinleştir</string>
+    <string name="enable_smb">SMB etkinleştir</string>
     <string name="enable_smb_summary">Daha hızlı bir etki için geçici bazal yerine Super Micro Bolus kullanın</string>
     <string name="enable_uam_summary">(Uam) Bildirilmemiş öğünlerin tespiti</string>
     <string name="enable_smb_always">SMB\'yi her zaman etkinleştir</string>
+    <string name="enable_smb_always_summary">SMB\'yi her zaman boluslardan bağımsız olarak etkinleştirin. Yalnızca G5-G6 gibi güzel veri filtreleme özelliğine sahip KŞ kaynağıyla mümkündür</string>
     <string name="enable_smb_after_carbs">Yemeklerden sonra SMB\'yi etkinleştir</string>
     <!--    Verify if needed in safety-->
     <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
