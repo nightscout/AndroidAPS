@@ -89,4 +89,5 @@
     <string name="hardlimit">limite fixée</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Pic</string>
+    <!--    Loop -->
 </resources>
