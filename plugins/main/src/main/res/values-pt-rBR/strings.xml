@@ -138,7 +138,6 @@
     <string name="pb_label">Bateria da bomba</string>
     <string name="cannula">Cânula</string>
     <string name="ebstopsloop">O uso do Bólus Estendido irá parar o modo Closed Loop no tempo do bólus estendido. Quer realmente isso?</string>
-    <string name="extendedbolusdeliveryerror">Erro na entrega Bólus Estendido</string>
     <string name="statuslights_cannula_age">idade da cânula</string>
     <string name="statuslights_patch_pump_age">Idade da bomba patch</string>
     <string name="patch_pump">Bomba patch</string>
@@ -175,7 +174,6 @@
     <string name="a11y_bg_quality">qualidade da glicemia</string>
     <string name="a11y_blood_glucose">glicemia</string>
     <string name="a11y_bg_outdated">desatualizado</string>
-    <string name="aps_mode_title">Modo APS</string>
     <string name="set_basal_question">Aceitar nova basal temporária:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Assistente Rápido</string>
@@ -330,32 +328,6 @@
     <string name="buttonson_description">Botões são sempre exibidos na parte inferior da tela</string>
     <string name="largedisplay_description">Mostrador Grande</string>
     <string name="skin">Tema</string>
-    <!--    Loop -->
-    <string name="executing">Executando</string>
-    <string name="run_now">Executar agora</string>
-    <string name="smb_frequency_exceeded">Um bolus foi injectado nos últimos 3 minutos, saltando SMB</string>
-    <string name="pump_not_initialized">Bomba não inicializada!</string>
-    <string name="loop_shortname">LOOP</string>
-    <string name="description_loop">Ative ou desative a implementação ativando o loop.</string>
-    <string name="no_aps_selected">SEM APS SELECIONADO OU RESULTADO FORNECIDO</string>
-    <string name="ignore5m">Ignorar 5m</string>
-    <string name="ignore15m">Ignorar 15m</string>
-    <string name="ignore30m">Ignorar 30m</string>
-    <string name="carbs_suggestion">Sugestão de Carbs</string>
-    <string name="open_loop_new_suggestion">Nova sugestão disponível</string>
-    <string name="basal_set_correctly">Basal correctamente definida</string>
-    <string name="last_run_label">Última execução</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Pedido</string>
-    <string name="loop_constraints_processed_label">Depois das restrições processadas</string>
-    <string name="loop_tbr_request_time_label">Hora de solicitação Basal Temp</string>
-    <string name="loop_tbr_execution_time_label">Hora de execução Basal Temp</string>
-    <string name="loop_tbr_set_by_pump_label">Basal temporária definida pela bomba</string>
-    <string name="loop_smb_request_time_label">Hora de solicitação SMB</string>
-    <string name="loop_smb_execution_time_label">Hora de execução do SMB</string>
-    <string name="loop_smb_set_by_pump_label">SMB definido pela bomba</string>
-    <string name="loop_open_mode_min_change">Pedido de mudança mínima [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">A app mostrará um pedido de alteração apenas se a mudança for superior a este valor em %. O valor padrão é 20%</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Enviar os ficheiros de registo do dia de hoje para os programadores. Situação inesperada.</string>
