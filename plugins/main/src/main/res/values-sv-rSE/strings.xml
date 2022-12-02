@@ -139,7 +139,6 @@
     <string name="pb_label">Pumpbatteri</string>
     <string name="cannula">Kanyl</string>
     <string name="ebstopsloop">OBS! Om du använder förlängd bolus, kommer du inte längre vara i Closed Loop under den tiden som den förlängda bolusen är igång. Vill du fortsätta?</string>
-    <string name="extendedbolusdeliveryerror">Förlängd bolus misslyckad</string>
     <string name="statuslights_cannula_age">kanylålder</string>
     <string name="statuslights_patch_pump_age">slanglös pump ålder</string>
     <string name="patch_pump">Slanglös pump</string>
@@ -176,7 +175,6 @@
     <string name="a11y_bg_quality">Kvalitet på BG-data</string>
     <string name="a11y_blood_glucose">blodglukos</string>
     <string name="a11y_bg_outdated">föråldrad</string>
-    <string name="aps_mode_title">APS-läge</string>
     <string name="set_basal_question">Acceptera ny temp basal:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Snabbsteg</string>
@@ -320,32 +318,6 @@ Eversense-appen.</string>
     <string name="buttonson_description">Knappar visas alltid längst ned på skärmen</string>
     <string name="largedisplay_description">Stor skärm</string>
     <string name="skin">Tema</string>
-    <!--    Loop -->
-    <string name="executing">Utför</string>
-    <string name="run_now">Utför nu</string>
-    <string name="smb_frequency_exceeded">En bolus gavs för mindre än 3 min sedan. Hoppar över SMB</string>
-    <string name="pump_not_initialized">Pump inte initierad</string>
-    <string name="loop_shortname">Loop</string>
-    <string name="description_loop">Aktivera eller inaktivera implementationen som kör loopen.</string>
-    <string name="no_aps_selected">INGEN APS VALD</string>
-    <string name="ignore5m">Ignorera 5 min</string>
-    <string name="ignore15m">Ignorera 15 min</string>
-    <string name="ignore30m">Ignorera 30 min</string>
-    <string name="carbs_suggestion">KH-förslag</string>
-    <string name="open_loop_new_suggestion">Ny rekommendation tillgänglig</string>
-    <string name="basal_set_correctly">Basal justerad korrekt</string>
-    <string name="last_run_label">Senaste beräkning</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Beräknat behov</string>
-    <string name="loop_constraints_processed_label">Efter begränsningar</string>
-    <string name="loop_tbr_request_time_label">Basalförändring begärd</string>
-    <string name="loop_tbr_execution_time_label">Basalförändring utförd</string>
-    <string name="loop_tbr_set_by_pump_label">Temp basal satt i pump</string>
-    <string name="loop_smb_request_time_label">SMB begärd</string>
-    <string name="loop_smb_execution_time_label">SMB utförd</string>
-    <string name="loop_smb_set_by_pump_label">SMB satt i pump</string>
-    <string name="loop_open_mode_min_change">Minsta ändring som ger notifiering [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">I Open Loop-läge kommer AAPS bara att be om ändring ifall förändringen är större än detta värde. Standardvärdet är 20%</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
