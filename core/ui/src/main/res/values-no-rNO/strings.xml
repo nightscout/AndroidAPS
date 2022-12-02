@@ -45,6 +45,7 @@
     <string name="mute5min">Demp i 5 minutter</string>
     <string name="mute">Lyd av</string>
     <string name="success">Suksess</string>
+    <string name="advancedsettings_title">Avanserte innstillinger</string>
     <!--    Protection-->
     <string name="unlock_settings">Lås opp innstillinger</string>
     <!--    Pumps -->
