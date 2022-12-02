@@ -66,4 +66,5 @@
     <string name="min_recovery_duration">Mínima duración de la recuperación [s]</string>
     <string name="pump_alert">Alerta de infusor</string>
     <string name="pairing_information">Información de emparejamiento</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Botón de refresco de Insight</string>
 </resources>
