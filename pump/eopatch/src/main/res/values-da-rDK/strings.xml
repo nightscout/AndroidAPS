@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="category_alerts">Alarmer</string>
-    <string name="bolus_delivered">Bolus %1$.2fIE leveret succesfuldt</string>
     <string name="eopatch_status">Status</string>
     <string name="eopatch_base_basal_rate">Standard basal rate</string>
     <string name="eopatch_temp_basal_rate">Midlertidig basal rate</string>
