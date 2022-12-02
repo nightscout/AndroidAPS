@@ -132,7 +132,6 @@
     <string name="pb_label">泵电池</string>
     <string name="cannula">输注导管</string>
     <string name="ebstopsloop">在使用扩展大剂量(方波) 功能期间将停止闭环功能。你真的想要启用吗？</string>
-    <string name="extendedbolusdeliveryerror">扩展大剂量(方波) 输注错误</string>
     <string name="statuslights_cannula_age">导管年龄</string>
     <string name="statuslights_patch_pump_age">patch 泵年龄</string>
     <string name="patch_pump">Patch 泵</string>
@@ -169,7 +168,6 @@
     <string name="a11y_bg_quality">血糖质量</string>
     <string name="a11y_blood_glucose">血糖</string>
     <string name="a11y_bg_outdated">已过期</string>
-    <string name="aps_mode_title">APS模式</string>
     <string name="set_basal_question">接受新的临时基础率</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">快速向导</string>
@@ -321,32 +319,6 @@
     <string name="buttonson_description">按钮总是显示在屏幕底部</string>
     <string name="largedisplay_description">大显示屏</string>
     <string name="skin">皮肤</string>
-    <!--    Loop -->
-    <string name="executing">正在执行</string>
-    <string name="run_now">现在运行</string>
-    <string name="smb_frequency_exceeded">在最近3分钟内输注了大剂量，正在忽略SMB微型大剂量</string>
-    <string name="pump_not_initialized">泵未初始化!</string>
-    <string name="loop_shortname">闭环</string>
-    <string name="description_loop">激活或停用这个工具触发闭环。</string>
-    <string name="no_aps_selected">APS没有被选择或者提供结果</string>
-    <string name="ignore5m">忽略5分钟</string>
-    <string name="ignore15m">忽略 15分钟</string>
-    <string name="ignore30m">忽略30分钟</string>
-    <string name="carbs_suggestion">碳水建议</string>
-    <string name="open_loop_new_suggestion">新的建议可用</string>
-    <string name="basal_set_correctly">正确地设置基础率</string>
-    <string name="last_run_label">上一次运行</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">请求</string>
-    <string name="loop_constraints_processed_label">通过约束条件之后</string>
-    <string name="loop_tbr_request_time_label">临时基础率请求时间</string>
-    <string name="loop_tbr_execution_time_label">临时基础率持续时长</string>
-    <string name="loop_tbr_set_by_pump_label">通过泵设置临时基础率</string>
-    <string name="loop_smb_request_time_label">SMB 请求时间</string>
-    <string name="loop_smb_execution_time_label">SMB持续时长</string>
-    <string name="loop_smb_set_by_pump_label">通过泵设置SMB微型大剂量</string>
-    <string name="loop_open_mode_min_change">最小请求更改[%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">开环状态下，算法建议的基础率调整百分比大于此数值时，才会弹出更改建议。默认值为20%</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">发送包括当前时间的今日的日志文件给开发者。描述一下意外情况</string>
