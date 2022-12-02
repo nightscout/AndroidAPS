@@ -106,12 +106,14 @@
     <string name="string_suspended">Askıya Alındı</string>
     <string name="string_running">Çalışıyor</string>
     <string name="cancel">İptal</string>
+    <string name="confirm">Onayla</string>
     <string name="string_alarm">Alarm</string>
     <string name="string_connecting">Bağlanıyor</string>
     <string name="string_changing">Değişiyor</string>
     <string name="string_in_progress">İşlem Sürüyor</string>
     <string name="retry">Tekrar dene</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] Bir sonraki talimata kadar iğne kapağını ve yapışkan arkalığı ÇIKARMAYIN.</string>
+    <string name="string_are_you_sure_to_discard_current_patch">Mevcut pompayı çıkarmak istediğinizden emin misiniz?</string>
     <string name="string_unconfirmed_bolus_info_discard_confirm_message">Onaylanmamış bir bolus bilgisi nedeniyle, Bolus hesap mak. %s\'e kadar kullanılamaz.\n\nGeçerli Pompayı çıkarmak istediğinizden emin misiniz?</string>
     <string name="needle_insertion_error_1">İğne yerleştirme Hatası.</string>
     <string name="needle_insertion_error_2">Kolu çevirdikten sonra kalan deliğin yönünün düz olup olmadığını kontrol edin ve ardından \'Yeniden Dene\'ye dokunun.</string>
