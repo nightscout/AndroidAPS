@@ -139,7 +139,6 @@
     <string name="pb_label">Batteria micro</string>
     <string name="cannula">Cannula</string>
     <string name="ebstopsloop">L\'uso della funzione bolo esteso interromperà la modalità loop chiuso per il tempo di esecuzione del bolo esteso. Lo vuoi davvero?</string>
-    <string name="extendedbolusdeliveryerror">Errore erogazione bolo esteso</string>
     <string name="statuslights_cannula_age">Età cannula</string>
     <string name="statuslights_patch_pump_age">età micro a patch</string>
     <string name="patch_pump">Micro a patch</string>
@@ -178,7 +177,6 @@
     <string name="a11y_bg_quality">qualità glicemia</string>
     <string name="a11y_blood_glucose">glicemia</string>
     <string name="a11y_bg_outdated">obsoleto</string>
-    <string name="aps_mode_title">Modalità APS</string>
     <string name="set_basal_question">Accetta nuova basale temporanea:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Calcolatore rapido</string>
@@ -332,32 +330,6 @@
     <string name="buttonson_description">I tasti vengono sempre visualizzati nella parte inferiore dello schermo</string>
     <string name="largedisplay_description">Visualizzazione ampia</string>
     <string name="skin">Tema</string>
-    <!--    Loop -->
-    <string name="executing">Esecuzione</string>
-    <string name="run_now">Esegui ora</string>
-    <string name="smb_frequency_exceeded">Un bolo è stato erogato negli ultimi 3 minuti, SMB ignorato</string>
-    <string name="pump_not_initialized">Micro non inizializzato!</string>
-    <string name="loop_shortname">LOOP</string>
-    <string name="description_loop">Attiva o disattiva l\'implementazione per la gestione del loop.</string>
-    <string name="no_aps_selected">NESSUN APS SELEZIONATO O RISULTATO FORNITO</string>
-    <string name="ignore5m">Ignora | 5m</string>
-    <string name="ignore15m">Ignora | 15m</string>
-    <string name="ignore30m">Ignora | 30m</string>
-    <string name="carbs_suggestion">Suggerimento CHO</string>
-    <string name="open_loop_new_suggestion">Nuovo suggerimento disponibile</string>
-    <string name="basal_set_correctly">Basale impostata correttamente</string>
-    <string name="last_run_label">Ultima esecuzione</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Richiesta</string>
-    <string name="loop_constraints_processed_label">Dopo elaborazione vincoli</string>
-    <string name="loop_tbr_request_time_label">Richiesta basale temporanea (momento)</string>
-    <string name="loop_tbr_execution_time_label">Esecuzione basale temporanea (momento)</string>
-    <string name="loop_tbr_set_by_pump_label">Basale temporanea impostata dal micro</string>
-    <string name="loop_smb_request_time_label">Richiesta SMB (momento)</string>
-    <string name="loop_smb_execution_time_label">Esecuzione SMB (momento)</string>
-    <string name="loop_smb_set_by_pump_label">SMB impostato dal micro</string>
-    <string name="loop_open_mode_min_change">Richiesta minima di modifica [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Il loop aperto mostrerà una nuova richiesta di modifica solo se la modifica è maggiore di questo valore in %. Il valore predefinito è 20%</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Invia agli sviluppatori i file log di oggi e di questo momento. Situazione inaspettata.</string>
