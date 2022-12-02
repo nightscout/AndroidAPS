@@ -45,6 +45,7 @@
     <string name="mute5min">Muto per 5 minuti</string>
     <string name="mute">Muto</string>
     <string name="success">OK</string>
+    <string name="advancedsettings_title">Impostazioni avanzate</string>
     <!--    Protection-->
     <string name="unlock_settings">Impostazioni sblocco</string>
     <!--    Pumps -->
