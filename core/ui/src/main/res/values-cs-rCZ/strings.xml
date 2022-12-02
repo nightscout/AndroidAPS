@@ -14,7 +14,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Pumpa není inicializována, profil nenastaven!</string>
     <string name="failed_update_basal_profile">Chyba při nastavení bazálního profilu</string>
-    <string name="bolus_delivered">Bolus %1$.2f U byl úspěšně aplikován</string>
     <string name="no_valid_basal_rate">Z pumpy nepřečten žádný platný bazál</string>
     <string name="limiting_iob">IOB omezeno na %1$.1f U: %2$s</string>
     <string name="loop_disabled">SMYČKA ZAKÁZÁNA OMEZENÍM</string>
@@ -46,6 +45,25 @@
     <string name="mute">Ztlumit</string>
     <string name="success">Úspěch</string>
     <string name="advancedsettings_title">Rozšířené nastavení</string>
+    <!--    Protection-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    APSResult-->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
+    <!-- Alerts -->
+    <!-- BolusWizard -->
+    <!--    Preferences-->
     <!--    Protection-->
     <string name="unlock_settings">Odemknout nastavení</string>
     <!--    Pumps -->
