@@ -17,4 +17,5 @@
     <!--    Verify if needed in safety-->
     <!--    Autotune   -->
     <string name="insulin_peak">Peak</string>
+    <!--    Loop -->
 </resources>
