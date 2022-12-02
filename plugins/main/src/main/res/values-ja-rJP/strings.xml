@@ -77,8 +77,6 @@
     <!-- VirtualPump -->
     <!-- Source -->
     <!-- Skins -->
-    <!--    Loop -->
-    <string name="loop_aps_label">APS</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->
