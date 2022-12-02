@@ -14,7 +14,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Bomba no iniciada, perfil no establert!</string>
     <string name="failed_update_basal_profile">Error en actualitzar el perfil de basal</string>
-    <string name="bolus_delivered">Bolus %1$.2f U llliurat correctament</string>
     <string name="no_valid_basal_rate">No s\'ha pogut llegir de la bomba cap ràtio vàlida de basal</string>
     <string name="limiting_iob">Limitant IOB a %1$.1f U a causa de %2$s</string>
     <string name="loop_disabled">LLAÇ DESACTIVAT PER RESTRICCIONS</string>
@@ -44,6 +43,26 @@
     <string name="mute5min">Silenciar 5 minuts</string>
     <string name="mute">Silenciar</string>
     <string name="success">Correcte</string>
+    <string name="advancedsettings_title">Configuració avançada</string>
+    <!--    Protection-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    APSResult-->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
+    <!-- Alerts -->
+    <!-- BolusWizard -->
+    <!--    Preferences-->
     <!--    Protection-->
     <!--    Pumps -->
     <string name="battery_label">Bateria</string>
