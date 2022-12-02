@@ -14,7 +14,6 @@
     <string name="pump_base_basal_rate">%1$.2f E/t</string>
     <string name="pump_not_initialized_profile_not_set">Pumpen ikke initialisert, ingen profil valgt!</string>
     <string name="failed_update_basal_profile">Klarte ikke å oppdatere basalprofil</string>
-    <string name="bolus_delivered">Bolus %1$.2f E ble levert vellykket</string>
     <string name="no_valid_basal_rate">Ingen gyldige basaldoser ble lest fra pumpen</string>
     <string name="limiting_iob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
     <string name="loop_disabled">LOOP DEAKTIVERT PGA BEGRENSNINGER</string>
@@ -45,6 +44,26 @@
     <string name="mute5min">Demp i 5 minutter</string>
     <string name="mute">Lyd av</string>
     <string name="success">Suksess</string>
+    <string name="advancedsettings_title">Avanserte innstillinger</string>
+    <!--    Protection-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    APSResult-->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
+    <!-- Alerts -->
+    <!-- BolusWizard -->
+    <!--    Preferences-->
     <!--    Protection-->
     <string name="unlock_settings">Lås opp innstillinger</string>
     <!--    Pumps -->
