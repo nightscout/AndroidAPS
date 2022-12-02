@@ -130,7 +130,6 @@
     <string name="pb_label">Pompos baterija</string>
     <string name="cannula">Kaniulė</string>
     <string name="ebstopsloop">Ištęsto boluso funkcija sustabdys uždaro ciklo režimą ištęsto boluso veikimo metu. Ar tikrai norite patvirtinti savo pasirinkimą?</string>
-    <string name="extendedbolusdeliveryerror">Ištęstinio boluso suleidimo klaida</string>
     <string name="statuslights_cannula_age">kateterio amžius</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Ištęstinis bolusas ribojamas iki %1$.1f vv dėl %2$s</string>
@@ -165,7 +164,6 @@
     <string name="a11y_insulin_label">insulinas</string>
     <string name="chart_menu">Grafiko meniu</string>
     <string name="a11y_blood_glucose">kraujo glikemija</string>
-    <string name="aps_mode_title">DKS režimas</string>
     <string name="set_basal_question">Patvirtinti naują laikiną bazę:</string>
     <string name="overview_cgm">NGJ</string>
     <string name="quickwizard">Greitasis patarėjas</string>
@@ -312,32 +310,6 @@
     <string name="buttonson_description">Mygtukai visada rodomi ekrano apačioje</string>
     <string name="largedisplay_description">Didelis ekranas</string>
     <string name="skin">Išvaizda</string>
-    <!--    Loop -->
-    <string name="executing">Vykdoma</string>
-    <string name="run_now">Paleisti dabar</string>
-    <string name="smb_frequency_exceeded">Bolusas buvo suleistas per paskutines 3 minutes, SMB praleidžiamas</string>
-    <string name="pump_not_initialized">Pompa neprijungta!</string>
-    <string name="loop_shortname">CIKLAS</string>
-    <string name="description_loop">Aktyvuoja arba deaktyvuoja Ciklo paleidimą.</string>
-    <string name="no_aps_selected">NEPASIRINKTA DKS ARBA NĖRA REZULTATO</string>
-    <string name="ignore5m">Ignoruoti 5 min</string>
-    <string name="ignore15m">Ignoruoti 15 min</string>
-    <string name="ignore30m">Ignoruoti 30 min</string>
-    <string name="carbs_suggestion">Angliavandenių pasiūlymas</string>
-    <string name="open_loop_new_suggestion">Gautas naujas pasiūlymas</string>
-    <string name="basal_set_correctly">Bazė nustatyta teisingai</string>
-    <string name="last_run_label">Paskutinis veiksmas</string>
-    <string name="loop_aps_label">DKS</string>
-    <string name="request_label">Užklausa</string>
-    <string name="loop_constraints_processed_label">Pritaikius apribojimus</string>
-    <string name="loop_tbr_request_time_label">Laikinos bazės užklausos laikas</string>
-    <string name="loop_tbr_execution_time_label">Laikinos bazės įvykdymo laikas</string>
-    <string name="loop_tbr_set_by_pump_label">Laikina bazė nustatyta pompoje</string>
-    <string name="loop_smb_request_time_label">SMB užklausos laikas</string>
-    <string name="loop_smb_execution_time_label">SMB įvykdymo laikas</string>
-    <string name="loop_smb_set_by_pump_label">SMB nustatyta iš pompos</string>
-    <string name="loop_open_mode_min_change">Minimalaus pokyčio užklausa [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Atviras Ciklas parodys naujų pakeitimų užklausą tik tada, kai pokytis bus didesnis nei ši vertė %. Numatytoji vertė yra 20%</string>
     <!--    DataBroadcast-->
     <string name="cannula_usage">naudojimas:</string>
     <!--    Iob-->
