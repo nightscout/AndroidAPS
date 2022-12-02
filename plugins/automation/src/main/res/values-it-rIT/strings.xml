@@ -113,7 +113,6 @@
     <string name="sort_automation">Ordina automazione</string>
     <string name="remove_selected_items">Rimuovi elementi selezionati</string>
     <string name="count_selected">%1$d selezionato</string>
-    <string name="confirm_remove_multiple_items">Sicuro di voler eliminare %1$d elementi</string>
     <string name="system_automation">Automazione sistema</string>
     <string name="run_automations">Esegui automazioni</string>
     <string name="add_automation">Aggiungi regola</string>
