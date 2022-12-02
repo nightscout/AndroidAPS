@@ -81,4 +81,5 @@
     <string name="maxvalueinpreferences">Maksimali reikšmė nustatymuose</string>
     <string name="hardlimit">Nekeičiama riba</string>
     <!--    Autotune   -->
+    <!--    Loop -->
 </resources>
