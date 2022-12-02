@@ -39,7 +39,6 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
 1. Stiskněte tlačítko Zpět nebo tlačítko \"Zrušit párování\"\n
 2. Zrušte párování na Combo (současně stiskněte tlačítka „UP i MENU“ pro zrušení párování)\n
 3. Zkuste znovu spárovat</string>
-    <string name="combov2_pin_entry_hint">0123456789</string>
     <string name="combov2_enter_pin">Vložte PIN</string>
     <string name="combov2_cancel_pairing">Zrušit párování</string>
     <string name="combov2_pin_hint">10místný PIN</string>
@@ -71,7 +70,6 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_fetching_tdd_history_cmddesc">Načítám CDD historii</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Aktualizace data a času v pumpě</string>
     <string name="combov2_updating_pump_status_cmddesc">Nahrávám stav pumpy</string>
-    <string name="combov2_pairing_pin_failure">PIN nefungoval. Zkontrolujte, zda jste neudělali překlep. Pokud se to stále děje, zrušte a opakujte párování.</string>
     <string name="combov2_discovery_duration">Délka hledání (v sekundách)</string>
     <string name="combov2_verbose_logging">Povolit podrobné protokolování</string>
     <string name="combov2_getting_basal_profile">Získávání bazálního profilu; čtení %1$d. faktoru</string>
@@ -87,12 +85,10 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_incorrect_active_basal_profile">Nesprávný aktivní bazální profil; profil 1 musí být aktivní, ne profil %1$d</string>
     <string name="combov2_unrecognized_alert">Nerozpoznaná Combo výstraha</string>
     <string name="combov2_combo_alert">Combo výstraha</string>
-    <string name="combov2_last_bolus">%1$.1f %2$s (%3$s)</string>
     <string name="combov2_current_tbr">%1$d%% (zbývá %2$d min)</string>
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (zbývá méně než 1 min)</string>
     <string name="combov2_load_tdds_cancelled">Načítání CDD zrušeno</string>
     <string name="combov2_retrieving_tdds_failed">Načítání CDD selhalo</string>
-    <string name="combov2_no_activity">{fa-bed}</string>
     <string name="combov2_battery_low_warning">Slabá baterie v pumpě</string>
     <string name="combov2_reservoir_low_warning">V zásobníku je málo inzulínu</string>
     <string name="combov2_setting_tbr_succeeded">Nastavení dočasného bazálu bylo úspěšné</string>

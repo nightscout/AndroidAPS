@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="danars_pairing">Eşleştirme</string>
+    <string name="danars_no_device_available">Şu ana kadar hiçbir cihaz bulunamadı</string>
     <string name="danars_pairingok">Eşleştirme tamam</string>
     <string name="danars_pairingtimedout">Eşleştirme zaman aşımı</string>
     <string name="danars_waitingforpairing">Pompa ile eşleşme bekleniyor</string>

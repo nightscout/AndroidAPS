@@ -1,33 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Atnaujinti</string>
-    <string name="error">Klaida</string>
-    <string name="save">Išsaugoti</string>
-    <string name="not_set_short">Nenustatyta</string>
-    <string name="failedupdatebasalprofile">Nepavyko atnaujinti bazės profilio</string>
-    <string name="profile_set_ok">Bazės profilis pompoje atnaujintas</string>
-    <string name="invalidinput">Neteisingai įvesti duomenys</string>
-    <string name="tempbasaldeliveryerror">Laikinos bazės suleidimo klaida</string>
     <string name="goingtodeliver">Bus suleista %1$.2f vv</string>
     <string name="waitingforpump">Laukiama ryšio su pompa</string>
-    <string name="bolusdelivering">Leidžiama %1$.2f vv</string>
-    <string name="connecting">Jungiamasi</string>
-    <string name="disconnected">Atsijungta</string>
     <string name="formatsignedinsulinunits">%1$+.2f vv</string>
     <string name="format_carbs">%1$dg</string>
-    <string name="reservoirvalue">%1$.0f / %2$d vv</string>
-    <string name="pump_basebasalrate">%1$.2f vv/val</string>
     <string name="format_hours">%1$.2f val.</string>
     <string name="format_mins">%1$d min.</string>
-    <string name="pumpbusy">Pompa šiuo metu veikia</string>
-    <string name="connectionerror">Pompos prisijungimo klaida</string>
     <string name="objectives">Tikslai</string>
     <string name="please_wait">Palaukite…</string>
-    <string name="mute">Nutildyti</string>
-    <string name="reload">Atnaujinti</string>
     <string name="stop">Stop</string>
     <string name="carbs">AV</string>
+    <string name="no_profile_set">Nenustatytas profilis</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Vienetai</string>
@@ -39,35 +23,12 @@
     <string name="dia_long_label">Insulino veikimo trukmė</string>
     <string name="ic_long_label">Insulino į angliavandenius santykis</string>
     <string name="basal_long_label">Valandinė bazė</string>
-    <string name="initializing">Inicijuojama ...</string>
-    <string name="serial_number">Serijos numeris</string>
-    <string name="battery_label">Baterija</string>
-    <string name="last_connection_label">Paskutinis prisijungimas</string>
-    <string name="last_bolus_label">Paskutinis bolusas</string>
-    <string name="dailyunits">Paros insulinas</string>
-    <string name="base_basal_rate_label">Pagrindinis bazės dydis</string>
-    <string name="tempbasal_label">Laikina bazė</string>
-    <string name="extended_bolus_label">Ištęstas bolusas</string>
-    <string name="reservoir_label">Rezervuaras</string>
-    <string name="pumphistory">Pompos istorija</string>
-    <string name="viewprofile">Peržiūrėti profilį</string>
-    <string name="eventtype">Įvykio tipas</string>
-    <string name="mgdl">mg/dl</string>
-    <string name="mmol">mmol/l</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="advancedsettings_title">Papildomi nustatymai</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Vienai sekundei išjungia telefono bluetooth, jei ryšys su pompa nutrūksta. Gali būti veiksminga kai kuriems telefonų modeliams, turintiems BT problemų.</string>
-    <string name="pairing">Sujungiama</string>
-    <string name="loopdisabled">CIKLAS NEAKTYVUS DĖL APRIBOJIMŲ</string>
-    <string name="bolusdelivered">%1$.2f vv bolusas sėkmingai suleistas</string>
     <string name="virtualpump_resultok">Gerai</string>
-    <string name="novalidbasalrate">Jokio tinkamo bazės kiekio nenuskaityta iš pompos</string>
-    <string name="limitingmaxiob">Ribojamas maks AIO iki %1$.1f vv dėl %2$s</string>
-    <string name="unsafeusage">Nesaugus naudojimas</string>
-    <string name="pump_unreachable">Pompa nepasiekiama</string>
     <string name="extended_bolus">Ištęstas bolusas</string>
     <string name="pump_time_updated">Pompos laikas pakeistas</string>
     <string name="exit">Išeiti</string>
@@ -92,7 +53,6 @@
     <string name="loading">Kraunama …</string>
     <string name="notes_label">Pastabos</string>
     <string name="remove_button">Pašalinti</string>
-    <string name="addnew">Pridėti naują</string>
     <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos valdiklį.</string>
     <string name="bg_label">KG</string>
     <string name="calibration">Kalibravimas</string>
@@ -105,7 +65,6 @@
     <string name="notconfigured">Nesukonfigūruota</string>
     <string name="loopsuspended">Ciklas sustabdytas</string>
     <string name="trend_arrow">Tendencijos kryptis</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="required">reikal.</string>
     <string name="a11y_arrow_none">nėra</string>
     <string name="a11y_arrow_unknown">nežinoma</string>
@@ -130,28 +89,15 @@
     <string name="paused">Pristabdyta</string>
     <string name="invalid">KLAIDA</string>
     <string name="login">Prisijungti</string>
+    <string name="prime_fill">Užpildymas</string>
     <string name="overview_insulin_label">Insulinas</string>
     <string name="stoptemptarget">Sustabdykite laikiną tikslą</string>
     <string name="closedloop">Uždaras Ciklas</string>
     <string name="openloop">Atviras Ciklas</string>
     <string name="lowglucosesuspend">Sustabdymas esant žemai gliukozei</string>
-    <string name="confirm">Patvirtinti</string>
     <string name="dia">IVT</string>
     <string name="ic_short">IA</string>
     <string name="isf_short">JIF</string>
-    <!--    Constraints-->
-    <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
-    <string name="pumplimit">pompos limitas</string>
-    <string name="limitingpercentrate">Ribojamas maks procentų skaičius %1$d%%, nes %2$s</string>
-    <string name="itmustbepositivevalue">reikšmė turi būti teigiama</string>
-    <string name="limitingbolus">Bolusas ribojamas iki %1$.1f vv dėl %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Pompa neprijungta, profilis nepasirinktas!</string>
-    <!--    BlePreCheck-->
-    <string name="ble_not_supported">Bluetooth Low Energy nepalaikoma.</string>
-    <string name="ble_not_supported_or_not_paired">Nepalaikomas Bluetooth Low Energy arba įrenginys nesuporuotas.</string>
-    <string name="ble_not_enabled">Bluetooth neįjungta.</string>
-    <string name="location_not_found_title">Vietovės nustatymas neįjungtas</string>
-    <string name="location_not_found_message">Vietos nustatymo paslauga turi būti įjungta, kad Bluetooth aptikimas veiktų naujesniuose įrenginiuose. AAPS neseka Jūsų lokacijos, o vietos nustatymo paslauga gali būti išjungta po sėkmingo įrenginių suporavimo.</string>
     <!--    Protection-->
     <string name="wrongpassword">Neteisingas slaptažodis</string>
     <string name="passwords_dont_match">Slaptažodžiai nesutampa</string>
@@ -164,6 +110,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Pradėti profilį %1$d%% %2$d min</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Atšaukti laikiną bazę</string>
     <string name="let_temp_basal_run">Paleisti laikinąją bazę</string>
     <string name="rate">Vertė</string>
     <string name="duration">Trukmė</string>
@@ -185,9 +132,12 @@
     <string name="careportal_note_message">Pastaba: %1$s</string>
     <string name="careportal_question_message">Klausimas: %1$s</string>
     <string name="careportal_exercise_message">Aktyvumas: %1$s</string>
+    <string name="careportal_pump_site_change">Kateterio keitimas</string>
+    <string name="cgm_sensor_insert">NGJ įvedimas</string>
     <string name="careportal_cgmsensorstart">NGJ paleidimas</string>
     <string name="careportal_cgm_sensor_stop">NGJ stabdymas</string>
     <string name="careportal_dad_alert">D.A.D. įspėjimas</string>
+    <string name="careportal_insulin_cartridge_change">Rezervuaro keitimas</string>
     <string name="careportal_profileswitch">Profilio keitimas</string>
     <string name="careportal_snackbolus">Bolusas užkandžiui</string>
     <string name="careportal_mealbolus">Bolusas valgiui</string>
@@ -197,6 +147,8 @@
     <string name="careportal_tempbasalend">Užbaigta laikina bazė</string>
     <string name="careportal_carbscorrection">AV korekcijai</string>
     <string name="careportal_openapsoffline">OpenAPS neprisijungus</string>
+    <string name="pump_battery_change">Baterijos keitimas</string>
+    <string name="temporary_target">Laikinas tikslas</string>
     <string name="careportal_temporarytargetvalue">Laikino tikslo reikšmė</string>
     <string name="careportal_temporarytargetcancel">Laikino tikslo atšaukimas</string>
     <string name="boluswizard">Boluso patarėjas</string>
@@ -210,27 +162,20 @@
     <string name="wear">Išmanieji laikrodžiai</string>
     <string name="automation">Automatiškai</string>
     <string name="custom">Pasirinktinis</string>
-    <string name="pump">Pompa</string>
     <string name="loop">Ciklas</string>
     <string name="ns">NS</string>
     <string name="record">Įrašas</string>
-    <string name="reading_pump_history">Skaitoma pompos istorija</string>
-    <string name="pump_icon">Pompos ikonėlė</string>
     <!--    Command-->
     <string name="connectiontimedout">Prijungimo laikas baigėsi</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Vykdoma</string>
     <string name="comment">Komentaras</string>
-    <string name="success">Atlikta</string>
     <string name="percent">Procentai</string>
     <string name="absolute">Absoliutus</string>
-    <string name="configbuilder_insulin">Insulinas</string>
-    <string name="insulin_unit_shortname">vv</string>
     <string name="waitingforpumpresult">Laukiama rezultato</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
-    <string name="stats">Statistika</string>
     <string name="cumulative_tdd">BPD viso</string>
     <string name="expweight">Eksponentiškai svertinė BPD</string>
     <string name="basalrate">Valandinė bazė</string>
@@ -244,36 +189,6 @@
     <string name="tbb2">PB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Laiko nustatymas</string>
-    <string name="mute5min">Nutildyti 5 minutėms</string>
-    <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">eksportuota prieš %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">eksportuota %1$s</string>
-    <string name="exported_less_than_hour_ago">eksportuota mažiau nei prieš valandą</string>
-    <string name="in_directory" comment="placeholder is for exported file path">kataloge: %1$s</string>
-    <string name="preferences_import_list_title">Pasirinkite failą importavimui</string>
-    <string name="metadata_warning_different_flavour">Nustatymai sukurti naudojant skirtingą AAPS versiją (%1$s), jūsų turima: %2$s.\n\nKai kurių nustatymų gali trūkti arba jie gali būti neteisingi - po importavimo patikrinkite ir atnaujinkite nustatymus.</string>
-    <string name="metadata_warning_different_device">Nustatymai buvo sukurti naudojant kitą prietaisą. Viskas gerai, jei importuojante iš senesnio/kito telefono, tačiau įsitikinkite, kad visi importuoti nustatymai yra teisingi!</string>
-    <string name="metadata_warning_outdated_format">Jūs naudojate pasenusį formatą iš senos AAPS versijos, kuris nėra saugus! Naudokite tik kraštutiniu atveju, jei neturite nustatymų failo dabartiniu, JSON formatu.</string>
-    <string name="metadata_warning_old_export">Importuoti nustatymai yra %1$s d. senumo! Patikrinkite, gal pasirinkote neteisingą failą ir turite naujesnius? Nepamirškite reguliariai eksportuoti nustatymų!</string>
-    <string name="metadata_warning_date_format">Neteisingas datos ir laiko formatas!</string>
-    <string name="metadata_warning_different_version">Parametrai iš kitos palaikomosios programos versijos. Jei importuojate po atnaujinimo, tai yra normalu, bet po importavimo patikrinkite, ar visos nuostatos vis dar teisingos!</string>
-    <string name="metadata_urgent_different_version">Parametrai iš kitos pagrindinės programos versijos. Pagrindinės versijos labai skiriasi ir gali turėti nesuderinamų parametrų! Po importavimo įsitikinkite, kad parametrai vis dar teisingi!</string>
-    <string name="prefdecrypt_settings_tampered">Nustatymų failas sugadintas</string>
-    <string name="prefdecrypt_settings_secure">Nustatymų failas yra saugus</string>
-    <string name="prefdecrypt_settings_unencrypted">Naudojamas nesaugus, nešifruotas nustatymų formatas</string>
-    <string name="prefdecrypt_wrong_json">JSON formato klaida, neužpildyti reikalingi laukai (formatas, turinys, metaduomenys arba saugumas)</string>
-    <string name="prefdecrypt_wrong_password">Iššifravimo klaida, netinkamas slaptažodis</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Trūksta failo kontrolinės žymės, neįmanoma patikrinti autentiškumo!</string>
-    <string name="prefdecrypt_issue_modified">Failas pakeistas po eksportavimo!</string>
-    <string name="prefdecrypt_issue_parsing">Iššifravimo klaida, nustatymų analizė neįvyko!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Iššifravimas klaida, slaptažodis yra neteisingas arba nustatymų failas buvo pakeistas! Taip nutinka, jei importuotas failas buvo eksportuotas su kitu slaptažodžiu.</string>
-    <string name="prefdecrypt_issue_wrong_format">Trūksta šifravimo sąrankos parametrų, nustatymų formatas yra neteisingas!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Nepalaikomas arba nepatikslintas šifravimo algoritmas!</string>
-    <!-- VersionChecker -->
-    <string name="running_invalid_version">Nustatyta, kad naudojate neteisingą versiją. Ciklas išjungtas!</string>
-    <string name="versionavailable">Versiją %1$s jau galima naudoti</string>
-    <string name="version_expire">Versija %1$s baigia galioti %2$s</string>
-    <!-- Permissions -->
     <!-- User Entry -->
     <string name="uel_bolus">BOLUSAS</string>
     <string name="uel_bolus_calculator">SKAIČIUOTUVAS</string>
@@ -362,7 +277,6 @@
     <string name="ue_action">Veiksmas</string>
     <string name="ue_timestamp">Laiko žyma</string>
     <string name="ue_none">Nėra vienetų</string>
-    <string name="ue_export_to_csv">Eksportuoti vartotojo įrašus į Excel (csv)</string>
     <string name="uel_loop_change">CIKLAS PAKEISTAS</string>
     <string name="uel_loop_removed">CIKLAS PAŠALINTAS</string>
     <string name="uel_other">KITA</string>
@@ -400,16 +314,6 @@
     <string name="keepalive_status_outdated" comment="26 characters max for translation">Tęsti. Būklė per sena.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Tęsti. Bazė per sena.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
-    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Spausta \"jungtis su pompa\"</string>
-    <string name="pump_driver_change" comment="26 characters max for translation">Pompos valdiklio keitimas.</string>
-    <string name="device_changed" comment="26 characters max for translation">Įrenginys pakeistas</string>
-    <string name="clicked_refresh" comment="26 characters max for translation">Paspausta atnaujinti</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planuotas būklės naujinimas</string>
-    <string name="unconfirmed_command" comment="26 characters max for translation">Nepatvirtinta komanda</string>
-    <string name="requested_by_user" comment="26 characters max for translation">Užklausta vartotojo</string>
-    <string name="user_request" comment="26 characters max for translation">Vartotojo užklausa</string>
-    <string name="bolus_ok" comment="26 characters max for translation">Bolusas OK</string>
-    <string name="pump_paired" comment="26 characters max for translation">Pompa suporuota</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Mygtukas Naujinti</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Valandinė bazė</string>
@@ -423,33 +327,26 @@
     <string name="raise_notifications_as_android_notifications">Naudoti sistemos perspėjimus aliarmams ir įspėjimams</string>
     <string name="urgent_alarm">Kritiniai perspėjimai</string>
     <string name="info">INFO</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Trūksta leidimo SMS</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Boluso patarėjas</string>
+    <string name="bolus_advisor_message">Jūsų glikemija yra aukšta. Užuot valgę dabar, turėtumėte palaukti, kol sumažės glikemija. Ar norite dabar susileisti korekcinį bolusą ir nustatyti priminimą, kada ateis laikas valgyti? Tokiu atveju angliavandeniai nebus įrašyti, o po priminimo turėsite vėl naudoti boluso skaičiuoklę.</string>
     <string name="cobvsiob">AAO prieš AIO</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Nustatytas lėtas angliavandenių įsisavinimas: %2$d%% laiko. Dar karą patikrinkite savo skaičiavimus. AAO gali būti pervertinti, todėl gali būti suleista per daug insulino!!!!!</font>]]></string>
     <string name="partialboluswizard">Suleisti šią boluso skaičiuoklės rezultato dalį [%]</string>
+    <string name="bolus_constraint_applied_warn">Pritaikytas boluso apribojimas: %1$.2f vv iki %2$.2f vv</string>
+    <string name="bolus_recorded_only">Bolusai bus tik įrašyti (nebus suleisti iš pompos)</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
     <string name="no_action_selected">Veiksmas nepasirinktas, nieko neįvyks</string>
     <string name="wizard_no_actual_bg">Nėra naujausių cukraus duomenų, kuriais būtų galima pagrįsti skaičiavimus!</string>
     <string name="wizard_no_active_profile">Neparinktas aktyvus profilis!</string>
     <!--    Preferences-->
-    <plurals name="days">
-        <item quantity="one">%1$d d.</item>
-        <item quantity="few">%1$d d.</item>
-        <item quantity="many">%1$d d.</item>
-        <item quantity="other">%1$d d.</item>
-    </plurals>
-    <plurals name="hours">
-        <item quantity="one">%1$d val.</item>
-        <item quantity="few">%1$d val.</item>
-        <item quantity="many">%1$d val.</item>
-        <item quantity="other">%1$d val.</item>
-    </plurals>
-    <plurals name="minutes">
-        <item quantity="one">%1$d min.</item>
-        <item quantity="few">%1$d min.</item>
-        <item quantity="many">%1$d min.</item>
-        <item quantity="other">%1$d min.</item>
-    </plurals>
+    <string name="child">Vaikas</string>
+    <string name="teenage">Paauglys</string>
+    <string name="adult">Suaugęs</string>
+    <string name="resistant_adult">Insulinui rezistentiškas suaugęs</string>
+    <string name="pregnant">Nėštumas</string>
+    <string name="patient_age_summary">Pasirinkite paciento tipą saugumo riboms nustatyti</string>
+    <string name="max_bolus_title">Maksimalus leistinas bolusas [U]</string>
+    <string name="max_carbs_title">Maks. leistini angliavandeniai [g]</string>
+    <string name="patient_type">Paciento tipas</string>
 </resources>

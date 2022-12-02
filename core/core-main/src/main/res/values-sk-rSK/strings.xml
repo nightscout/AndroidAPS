@@ -1,32 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Obnoviť</string>
-    <string name="error">Chyba</string>
-    <string name="save">Uložiť</string>
-    <string name="not_set_short">Nenastavené</string>
-    <string name="failedupdatebasalprofile">Chyba pri aktualizovaní bazálneho profilu</string>
-    <string name="profile_set_ok">Bazálny profil v pumpe aktualizovaný</string>
-    <string name="invalidinput">Chybné vstupné dáta</string>
-    <string name="tempbasaldeliveryerror">Chyba podávania dočasného bazálu</string>
     <string name="goingtodeliver">Podávanie %1$.2f J inzulínu</string>
     <string name="waitingforpump">Čakám na pumpu</string>
-    <string name="bolusdelivering">Podávanie %1$.2f JI</string>
-    <string name="connecting">Pripájanie</string>
-    <string name="disconnected">Odpojené</string>
     <string name="androidaps_start">AAPS spustený</string>
     <string name="formatsignedinsulinunits">%1$+.2f JI</string>
     <string name="format_carbs">%1$d g</string>
-    <string name="reservoirvalue">%1$.0f / %2$d JI</string>
-    <string name="pump_basebasalrate">%1$.2f JI/h</string>
     <string name="format_hours">%1$.2f h</string>
     <string name="format_mins">%1$d min</string>
-    <string name="pumpbusy">Pumpa je zaneprázdnená</string>
-    <string name="connectionerror">Chyba pripájania pumpy</string>
     <string name="objectives">Ciele</string>
     <string name="please_wait">Čakajte prosím...</string>
-    <string name="mute">Stíšiť</string>
-    <string name="reload">Znova načítať</string>
     <string name="stop">Stop</string>
     <string name="carbs">Sacharidy</string>
     <string name="invalid_profile">Neplatný profil!</string>
@@ -44,35 +27,12 @@
     <string name="isf_long_label">Citlivosť na inzulín</string>
     <string name="basal_long_label">Bazál</string>
     <string name="target_long_label">Cieľová glykémia</string>
-    <string name="initializing">Inicializácia ...</string>
-    <string name="serial_number">Sériové číslo</string>
-    <string name="battery_label">Batéria</string>
-    <string name="last_connection_label">Posledné spojenie</string>
-    <string name="last_bolus_label">Posledný bolus</string>
-    <string name="dailyunits">Jednotiek za deň</string>
-    <string name="base_basal_rate_label">Základná hodnota bazálu</string>
-    <string name="tempbasal_label">Dočasný bazál</string>
-    <string name="extended_bolus_label">Predĺžený bolus</string>
-    <string name="reservoir_label">Zásobník</string>
-    <string name="pumphistory">História pumpy</string>
-    <string name="viewprofile">Zobraziť profil</string>
-    <string name="eventtype">Typ udalosti</string>
-    <string name="mgdl">mg/dL</string>
-    <string name="mmol">mmol/L</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
-    <string name="advancedsettings_title">Rozšírené nastavenia</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">Strážny pes BT</string>
     <string name="btwatchdog_summary">Vypne na 1 sekundu Bluetooth v telefóne, pokiaľ se nedarí pripojiť k pumpe. Môže to pomôcť pri telefónoch, ktoré majú problémy s BT.</string>
-    <string name="pairing">Párovanie</string>
-    <string name="loopdisabled">UZAVRETÝ OKRUH DEAKTIVOVANÝ OBMEDZENÍM</string>
-    <string name="bolusdelivered">Bolus %1$.2f JI podaný úspešne</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="novalidbasalrate">Nenačítaný žiadny platný bazál z pumpy</string>
-    <string name="limitingmaxiob">Max IOB obmedzený na %1$.1f JI: %2$s</string>
-    <string name="unsafeusage">nebezpečné použitie</string>
-    <string name="pump_unreachable">Pumpa nedostupná</string>
     <string name="extended_bolus">Predĺžený bolus</string>
     <string name="pump_time_updated">Čas v pumpe bol aktualizovaný</string>
     <string name="exit">Koniec</string>
@@ -97,7 +57,6 @@
     <string name="loading">Načítavanie...</string>
     <string name="notes_label">Poznámky</string>
     <string name="remove_button">Vymazať</string>
-    <string name="addnew">Pridať nový</string>
     <string name="addnew_above">Pridať novú nad</string>
     <string name="wrong_pump_data">Dáta prichádzajú z inej pumpy. Zmeňte ovládač pre obnovenie stavu pumpy.</string>
     <string name="bg_label">Glykémia</string>
@@ -112,7 +71,6 @@
     <string name="loopsuspended">Uzavretý okruh pozastavený</string>
     <string name="trend_arrow">Trendová šípka</string>
     <string name="a11y_autosens_label">Automatická detekcia citlivosti</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="required">pož.</string>
     <string name="a11y_arrow_double_down">rýchly pokles</string>
     <string name="a11y_arrow_single_down">klesajúca</string>
@@ -153,23 +111,9 @@
     <string name="closedloop">Uzavretý okruh</string>
     <string name="openloop">Otvorený okruh</string>
     <string name="lowglucosesuspend">Pozastavenie pri nízkej glykémii (LGS)</string>
-    <string name="confirm">Potvrdiť</string>
     <string name="dia">DIA</string>
     <string name="ic_short">I:C</string>
     <string name="isf_short">ISF</string>
-    <!--    Constraints-->
-    <string name="limitingbasalratio">Max bazál obmedzený na %1$.2f JI/h: %2$s</string>
-    <string name="pumplimit">limit pumpy</string>
-    <string name="limitingpercentrate">Bazál obmedzený na %1$d%%: %2$s</string>
-    <string name="itmustbepositivevalue">požadovaná kladná hodnota</string>
-    <string name="limitingbolus">Bolus obmedzený na %1$.1f JI: %2$s</string>
-    <string name="pumpNotInitializedProfileNotSet">Pumpa nie je inicializovaná, profil nenastavený!</string>
-    <!--    BlePreCheck-->
-    <string name="ble_not_supported">Bluetooth Low Energy nie je podporované.</string>
-    <string name="ble_not_supported_or_not_paired">Bluetooth Low Energy nie je podporované, alebo zariadenie nie je spárované.</string>
-    <string name="ble_not_enabled">Bluetooth nie je aktivovaný.</string>
-    <string name="location_not_found_title">Poloha nie je aktivovaná</string>
-    <string name="location_not_found_message">Pre vyhľadanie Bluetooth zariadení na novších telefónoch musí byť povolené zisťovanie polohy. AAPS vás nesleduje a po úspešnom spárovaní môžete túto voľbu opäť zakázať.</string>
     <!--    Protection-->
     <string name="wrongpassword">Nesprávne heslo</string>
     <string name="wrongpin">Nesprávny PIN</string>
@@ -237,28 +181,21 @@
     <string name="wear">Wear</string>
     <string name="automation">Automatika</string>
     <string name="custom">Voliteľný</string>
-    <string name="pump">Pumpa</string>
     <string name="loop">Uzavretý okruh</string>
     <string name="ns">NS</string>
     <string name="record">Záznam</string>
-    <string name="reading_pump_history">Načítavam históriu z pumpy</string>
-    <string name="pump_icon">Ikona pumpy</string>
     <!--    Command-->
     <string name="connectiontimedout">Vypršal čas na pripojenie</string>
     <!--    PumpEnactResult-->
     <string name="enacted">Vykonané</string>
     <string name="comment">Komentár</string>
-    <string name="success">Úspešne</string>
     <string name="percent">Percent</string>
     <string name="absolute">Absolútna</string>
-    <string name="configbuilder_insulin">Inzulín</string>
-    <string name="insulin_unit_shortname">JI</string>
     <string name="waitingforpumpresult">Čakanie na výsledok</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
     <string name="carbsreq">Požadovaných dodatočných %1$d g sacharidov v priebehu %2$d minút</string>
     <!--    TDDStatsActivity-->
-    <string name="stats">Štatistiky</string>
     <string name="cumulative_tdd">Kumulatívny TDD</string>
     <string name="expweight">Exponenciálne vážený TDD</string>
     <string name="basalrate">Bazál</string>
@@ -273,37 +210,6 @@
     <string name="tbb2">TBB * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Detekcia času</string>
-    <string name="mute5min">Stíšiť na 5 minút</string>
-    <!-- Maintenance -->
-    <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportované pred %1$s</string>
-    <string name="exported_at" comment="at placeholder we add export date">exportované v %1$s</string>
-    <string name="exported_less_than_hour_ago">exportované pred menej ako hodinou</string>
-    <string name="in_directory" comment="placeholder is for exported file path">v adresári: %1$s</string>
-    <string name="preferences_import_list_title">Vyberte súbor, ktorý chcete importovať</string>
-    <string name="metadata_warning_different_flavour">Nastavenia boli vytvorené inou verziou AAPS (%1$s) pretože máte: %2$s.\n\nNiektoré nastavenia môžu chýbať, alebo byť poškodené - po importovaní prosím skontrolujte a upravte nastavenia.</string>
-    <string name="metadata_warning_different_device">Nastavenia boli vytvorené na inom zariadení. Je to v poriadku, keď importujete zo staršieho/iného telefónu, ale skontrolujte, že importované nastavenia sú správne!</string>
-    <string name="metadata_warning_outdated_format">Používate zastaralý formát zo staršej verzie AAPS, čo nie je bezpečné! Používajte len ako poslednú možnosť, ak nemáte export v aktuálnom, JSON formáte.</string>
-    <string name="metadata_warning_old_export">Importované nastavenia sú už %1$s dní staré! Možno máte viacero novších nastavení, alebo ste zvolili nesprávny súbor? Nezabúdajte pravidelne exportovať nastavenia!</string>
-    <string name="metadata_warning_date_format">Nesprávny formát dátumu a času!</string>
-    <string name="metadata_warning_different_version">Nastavenie z odlišnej, nižšej verzie aplikácie. Je to v poriadku, pokiaľ importujete po aktualizácii, po importe však skontrolujte, či sú nastavenia stále správne!</string>
-    <string name="metadata_urgent_different_version">Nastavenia z odlišnej hlavnej verzie aplikácie. Hlavná verzia sa výrazne líši a nemusia mať kompatibilné nastavenia. Po importe skontrolujte, či sú nastavenia stále správne!</string>
-    <string name="prefdecrypt_settings_tampered">Súbor s nastaveniami poškodený</string>
-    <string name="prefdecrypt_settings_secure">Súbor s nastaveniami je zabezpečený</string>
-    <string name="prefdecrypt_settings_unencrypted">Použitie nezabezpečeného, nešifrovaného formátu nastavení</string>
-    <string name="prefdecrypt_wrong_json">Chyba formátu JSON, chýba povinné pole (formát, obsah, metadáta, alebo zabezpečenie)</string>
-    <string name="prefdecrypt_wrong_password">Chyba dešifrovania, dané heslo nemôže dešifrovať súbor</string>
-    <string name="prefdecrypt_issue_missing_file_hash">Chýba kontrolný súčet súboru (hash), nedá sa overiť pravosť nastavení!</string>
-    <string name="prefdecrypt_issue_modified">Súbor bol po exporte zmenený!</string>
-    <string name="prefdecrypt_issue_parsing">Chyba dešifrovania, analýza nastavení zlyhala!</string>
-    <string name="prefdecrypt_issue_wrong_pass">Chyba dešifrovania, zadané heslo je neplatné, alebo bol súbor nastavení zmenený! Môže sa stať, že importovaný súbor bol exportovaný s iným hlavným heslom.</string>
-    <string name="prefdecrypt_issue_wrong_format">Chýba konfigurácia šifrovania, formát nastavení je neplatný!</string>
-    <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný alebo neurčený šifrovací algoritmus!</string>
-    <!-- VersionChecker -->
-    <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
-    <string name="versionavailable">Verzia %1$s je k dispozícii</string>
-    <string name="version_expire">Verzia %1$s expiruje dňa %2$s</string>
-    <!-- Permissions -->
-    <string name="alert_dialog_storage_permission_text">Prosím reštartujte Váš telefón, alebo reštartujte AndroidAPS z nastavení \nv opačnom prípade AndroidAPS nebude mocť zaznamenávať logy (dôležité kvôli sledovaniu a overovaniu, že algoritmus pracuje správne)!</string>
     <!-- User Entry -->
     <string name="uel_bolus">BOLUS</string>
     <string name="uel_bolus_calculator">BOLUSOVÝ KALKULÁTOR</string>
@@ -394,7 +300,6 @@
     <string name="ue_action">Akcia</string>
     <string name="ue_timestamp">Časová pečiatka</string>
     <string name="ue_none">Žiadna jednotka</string>
-    <string name="ue_export_to_csv">Exportovať užívateľské záznamy do Excelu (csv)</string>
     <string name="uel_loop_change">UZAVRETÝ OKRUH ZMENENÝ</string>
     <string name="uel_loop_removed">UZAVRETÝ OKRUH ODSTRÁNENÝ</string>
     <string name="uel_other">INÉ</string>
@@ -413,7 +318,6 @@
     <string name="valueoutofrange">»%1$s« je mimo pevne nastavené limity</string>
     <string name="value_out_of_hard_limits">»%1$s« %2$.2f je mimo pevne nastavených limitov</string>
     <string name="basal_value">Hodnota bazálu</string>
-    <string name="nsclient_version_does_not_match">Verzia NSClienta nesúhlasí z verziou AndroidAPS. Prosím aktualizujte si ju.</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f JI</string>
     <string name="carbs_g">SACHARIDY %1$d g</string>
@@ -433,16 +337,6 @@
     <string name="keepalive_status_outdated" comment="26 characters max for translation">Udržiavam pripojené. Zastaralý stav.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Udržiavam pripojené. Zastaralý bazál.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
-    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Kliknuté pripojiť k pumpe</string>
-    <string name="pump_driver_change" comment="26 characters max for translation">Zmena ovládača pumpy.</string>
-    <string name="device_changed" comment="26 characters max for translation">Zariadenie zmenené</string>
-    <string name="clicked_refresh" comment="26 characters max for translation">Kliknuté na tlačítko obnoviť</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Naplánovaná aktualizácia stavu</string>
-    <string name="unconfirmed_command" comment="26 characters max for translation">Nepotvrdený príkaz</string>
-    <string name="requested_by_user" comment="26 characters max for translation">Požadované používateľom</string>
-    <string name="user_request" comment="26 characters max for translation">Požiadavka používateľa</string>
-    <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
-    <string name="pump_paired" comment="26 characters max for translation">Pumpa spárovaná</string>
     <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnoviť</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Bazál</string>
@@ -501,8 +395,6 @@
     <string name="raise_notifications_as_android_notifications">Používať systémové notifikácie pre výstrahy a oznámenia</string>
     <string name="urgent_alarm">Urgentný alarm</string>
     <string name="info">INFO</string>
-    <!-- SmsCommunicator -->
-    <string name="smscommunicator_missingsmspermission">Chýbajúce povolenie SMS príkazov</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">Bolusový poradca</string>
     <string name="bolus_advisor_message">Máte vysokú glykémiu. Namiesto jedla doporučujeme počkať na lepšiu glykémiu a pripomenúť, keď bude čas na jedlo. Prajete si poslať korekčný bolus a pripomenúť, keď bude čas na jedlo? V tomto prípade nebudú zapísané žiadne sacharidy, a neskôr musíte opäť spustiť kalkulačku, akonáhle vám to pripomenieme.</string>
@@ -530,22 +422,13 @@
     <string name="wizard_explain_tt_to">%1$s do %2$s</string>
     <string name="wizard_pump_not_available">Pumpa nedostupná!</string>
     <!--    Preferences-->
-    <plurals name="days">
-        <item quantity="one">%1$d deň</item>
-        <item quantity="few">%1$d dní</item>
-        <item quantity="many">%1$d dní</item>
-        <item quantity="other">%1$d dní</item>
-    </plurals>
-    <plurals name="hours">
-        <item quantity="one">%1$d hodina</item>
-        <item quantity="few">%1$d hodín</item>
-        <item quantity="many">%1$d hodín</item>
-        <item quantity="other">%1$d hodín</item>
-    </plurals>
-    <plurals name="minutes">
-        <item quantity="one">%1$d minúta</item>
-        <item quantity="few">%1$d minút</item>
-        <item quantity="many">%1$d minút</item>
-        <item quantity="other">%1$d minút</item>
-    </plurals>
+    <string name="child">Dieťa</string>
+    <string name="teenage">Dospievajúci</string>
+    <string name="adult">Dospelý</string>
+    <string name="resistant_adult">Dospelý s nízkou citlivosťou</string>
+    <string name="pregnant">Tehotenstvo</string>
+    <string name="patient_age_summary">Prosím vyberte typ pacienta pre nastavenie bezpečnostných limitov</string>
+    <string name="max_bolus_title">Maximálny povolený bolus [U]</string>
+    <string name="max_carbs_title">Max. povolené množstvo sacharidov [g]</string>
+    <string name="patient_type">Typ pacienta</string>
 </resources>

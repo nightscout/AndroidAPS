@@ -1,28 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    General-->
-    <string name="refresh">Frissítés</string>
-    <string name="error">Hiba</string>
-    <string name="not_set_short">Nincs beállítva</string>
     <string name="waitingforpump">Várakozás pumpára</string>
     <string name="formatsignedinsulinunits">%1$+.2f E</string>
     <string name="please_wait">Kérem várjon…</string>
-    <string name="mute">Némít</string>
-    <string name="reload">Újratölt</string>
     <string name="stop">Leállít</string>
     <string name="dia_label">DIA</string>
     <string name="basal_label">Bázis</string>
     <string name="target_label">Cél</string>
     <string name="basal_long_label">Bázisütem</string>
-    <string name="initializing">Inicializálás ...</string>
-    <string name="serial_number">Sorozatszám</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
-    <string name="pairing">Párosítás</string>
     <string name="virtualpump_resultok">OK</string>
-    <string name="pump_unreachable">Pumpa nem elérhető</string>
     <string name="pump_time_updated">Pumpa idő frissítve</string>
     <string name="exit">Kilép</string>
     <string name="alarm">Riasztás</string>
@@ -37,7 +28,6 @@
     <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Betöltés…</string>
     <string name="remove_button">Eltávolít</string>
-    <string name="addnew">Új hozzáadása</string>
     <string name="bg_label">VC</string>
     <string name="calibration">Kalibrálás</string>
     <string name="bolus_reminder">Bólus emlékeztető</string>
@@ -45,7 +35,6 @@
     <string name="shortgramm">g</string>
     <string name="notconfigured">Nincs beállítva</string>
     <string name="trend_arrow">Trendnyil</string>
-    <string name="value_unavailable_short">n/a</string>
     <string name="a11y_arrow_none">semmi</string>
     <string name="a11y_arrow_unknown">ismeretlen</string>
     <string name="a11y_high">magas</string>
@@ -59,8 +48,6 @@
     <string name="overview_insulin_label">Inzulin</string>
     <string name="lowglucosesuspend">Alacsony SZG felfüggesztés</string>
     <string name="dia">DIA</string>
-    <!--    Constraints-->
-    <!--    BlePreCheck-->
     <!--    Protection-->
     <string name="wrongpassword">Hibás jelszó</string>
     <string name="passwords_dont_match">Jelszavak nem egyeznek</string>
@@ -82,15 +69,10 @@
     <string name="wear">Wear</string>
     <string name="automation">Automatizálás</string>
     <string name="custom">Egyéni</string>
-    <string name="pump">Pumpa</string>
     <string name="loop">Loop</string>
     <string name="ns">NS</string>
-    <string name="reading_pump_history">Pumpa előzmények lekérése</string>
-    <string name="pump_icon">Pumpa ikon</string>
     <!--    Command-->
     <!--    PumpEnactResult-->
-    <string name="configbuilder_insulin">Inzulin</string>
-    <string name="insulin_unit_shortname">Е</string>
     <!--    CarbsReq-->
     <!--    TDDStatsActivity-->
     <string name="basalrate">Bázis</string>
@@ -98,9 +80,6 @@
     <string name="tdd">TND</string>
     <string name="weight">Súly</string>
     <!--    Ntp-->
-    <!-- Maintenance -->
-    <!-- VersionChecker -->
-    <!-- Permissions -->
     <!-- User Entry -->
     <string name="uel_cancel_bolus">BÓLUS MEGSZAKÍT</string>
     <!-- HardLimits -->
@@ -112,15 +91,13 @@
     <string name="autotune_compare_profile">Profilok összehasonlítása</string>
     <!-- Alerts -->
     <string name="info">INFO</string>
-    <!-- SmsCommunicator -->
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Bólusvarázsló</string>
     <!--    Preferences-->
-    <plurals name="days">
-        <item quantity="one">%1$d nap</item>
-        <item quantity="other">%1$d nap</item>
-    </plurals>
-    <plurals name="hours">
-        <item quantity="one">%1$d óra</item>
-        <item quantity="other">%1$d óra</item>
-    </plurals>
+    <string name="child">Gyerek</string>
+    <string name="teenage">Tinédzser</string>
+    <string name="adult">Felnőtt</string>
+    <string name="resistant_adult">Inzulinrezisztens felnőtt</string>
+    <string name="pregnant">Várandós</string>
+    <string name="patient_type">Betegkategória</string>
 </resources>

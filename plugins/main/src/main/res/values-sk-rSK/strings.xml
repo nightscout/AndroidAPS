@@ -425,12 +425,14 @@
     <string name="loop_open_mode_min_change">Minimálna požiadavka na zmenu [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Otvorený okruh vytvorí novú žiadosť o zmenu iba v prípade, že zmena je väčšia ako táto hodnota v %. Štandardná hodnota je 20%</string>
     <!--    DataBroadcast-->
+    <string name="cannula_usage">používanie:</string>
     <!--    Iob-->
     <string name="send_logfiles">Odošlite dnešné súbory protokolov vývojárom spolu s týmto časom. Neočakávaná situácia.</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Zobrazovanie stavu a riadenie AndroidAPS z hodiniek s WearOS.</string>
     <string name="no_watch_connected">(Žiadne hodinky nie sú pripojené)</string>
+    <string name="pump_status">Stav pumpy</string>
     <string name="loop_status">Stav uzavretého okruhu</string>
     <string name="wizard_result">Kalkulačka: \nInzulín: %1$.2fJI\nSacharidy: %2$dg</string>
     <string name="quick_wizard_not_available">Vybraný rýchly bolus už nie je k dispozícii, obnovte prosím dlaždicu</string>

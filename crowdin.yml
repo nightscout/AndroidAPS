@@ -21,8 +21,8 @@ files:
     translation: /plugins/configuration/src/main/res/values-%android_code%/strings.xml
   - source: /core/core-main/src/main/res/values/protection.xml
     translation: /core/core-main/src/main/res/values-%android_code%/protection.xml
-  - source: /core/graph/src/main/res/values/validator.xml
-    translation: /core/graph/src/main/res/values-%android_code%/validator.xml
+  - source: /core/validators/src/main/res/values/validator.xml
+    translation: /core/validators/src/main/res/values-%android_code%/validator.xml
   - source: /core/interfaces/src/main/res/values/strings.xml
     translation: /core/interfaces/src/main/res/values-%android_code%/strings.xml
   - source: /core/utils/src/main/res/values/strings.xml
@@ -77,3 +77,11 @@ files:
     translation: /plugins/sync/src/main/res/values-%android_code%/strings.xml
     translate_attributes: 0
     content_segmentation: 0
+  - source: /plugins/support/src/main/res/values/strings.xml
+    translation: /plugins/support/src/main/res/values-%android_code%/strings.xml
+  - source: /core/core-main/src/main/res/values/strings.xml
+    translation: /core/core-main/src/main/res/values-%android_code%/strings.xml
+  - source: /core/graph/src/main/res/values/strings.xml
+    translation: /core/graph/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/pump-core/src/main/res/values/strings.xml
+    translation: /pump/pump-core/src/main/res/values-%android_code%/strings.xml
