@@ -109,6 +109,8 @@
     <string name="automation_event">Automatizuotas įvykis</string>
     <string name="reorder_label">Pertvarkyti</string>
     <string name="user_action">Vartotojo veiksmas</string>
+    <string name="remove_selected_items">Pašalinti pasirinktus elementus</string>
+    <string name="count_selected">%1$d pasirinkta</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">P</string>
     <string name="tuesday_short">A</string>

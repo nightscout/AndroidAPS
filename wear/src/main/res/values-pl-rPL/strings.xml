@@ -2,6 +2,17 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
+    <string name="label_watchface">AAPS</string>
+    <string name="label_watchface_large">AAPS(Duży)</string>
+    <string name="label_watchface_big_chart">AAPS(DużyWykres)</string>
+    <string name="label_watchface_no_chart">AAPS(BezWykresu)</string>
+    <string name="label_watchface_circle">AAPS(Koło)</string>
+    <string name="label_watchface_cockpit">AAPS(Kokpit)</string>
+    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
+    <string name="label_watchface_digital_style">AAPS(StylCyfrowy)</string>
+    <string name="label_actions_tile">AAPS(Ustawienia)</string>
+    <string name="label_temp_target_tile">AAPS(Cel Tymczasowy)</string>
+    <string name="label_quick_wizard_tile">AAPS(Szybki kreator)</string>
     <string name="label_warning_sync">Brak danych!</string>
     <string name="label_warning_old">Stare dane!</string>
     <string name="label_warning_since">Od %1$s</string>
@@ -45,16 +56,23 @@
     <string name="pref_ring_history">Historia glikemi</string>
     <string name="pref_light_ring_history">Dyskretniejsza historia</string>
     <string name="pref_animations">Animacje</string>
+    <string name="pref_wizard_in_menu">Kalkulator w Menu</string>
     <string name="pref_prime_in_menu">Wypełnianie w menu</string>
     <string name="pref_single_target">Pojedyńcza wartość Celu</string>
+    <string name="pref_wizard_percentage">Procent kalkulatora</string>
     <string name="pref_complication_tap_action">Akcja po kliknięciu komplikacji</string>
     <string name="pref_unicode_in_complications">Unicode w Komplikacjach</string>
     <string name="pref_version">Wersja:</string>
+    <string name="pref_moreWatchfaceSettings">Więcej ustawień zegarka</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Proszę, zajrzyj do konfiguracji zegarka.</string>
     <string name="menu_tempt">CelTymcz.</string>
     <string name="menu_wizard">Kalkulator</string>
     <string name="menu_wizard_short">Kalk</string>
+    <string name="menu_treatment">Terapia</string>
+    <string name="menu_treatment_short">Lecz</string>
     <string name="menu_bolus">Bolus</string>
+    <string name="menu_carb">Węglowodany</string>
+    <string name="menu_ecarb">wirtualne węgle</string>
     <string name="menu_settings">Ustawienia</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Ponowna synchronizacja</string>
@@ -62,10 +80,20 @@
     <string name="menu_none">Brak</string>
     <string name="menu_default">Domyślnie</string>
     <string name="menu_menu">Menu</string>
+    <string name="quick_wizard_short">XL</string>
+    <string name="action_duration">Czas trwania akcji</string>
+    <string name="action_tempt_confirmation">Żądany cel tymczasowy</string>
+    <string name="action_quick_wizard_confirmation">Szybki kreator</string>
+    <string name="action_treatment_confirmation">Wymagane leczenie</string>
+    <string name="action_bolus_confirmation">Żądany bolus</string>
+    <string name="action_wizard_confirmation">Żądane obliczenia</string>
+    <string name="action_fill_confirmation">Wypełnij</string>
+    <string name="action_ecarb_confirmation">Żądane węglowodany</string>
     <string name="action_target" comment="In temp target menu, single target value">Cel</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Niski</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Wysoki</string>
     <string name="action_carbs">Węglowodany</string>
+    <string name="action_ecarbs">eCarbs</string>
     <string name="action_percentage">Procent</string>
     <string name="action_start_min">Start [min]</string>
     <string name="action_duration_h">Czas trwania [h]</string>
@@ -82,6 +110,7 @@
     <string name="cancel_bolus">ANULUJ BOLUS</string>
     <string name="status_pump">Pompa</string>
     <string name="status_loop">Pętla</string>
+    <string name="status_profile_switch">Zmiana profilu</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Węgl.</string>
     <string name="activity_IOB">IOB</string>
@@ -133,5 +162,9 @@
     <string name="temp_target_activity">Ćwiczenia</string>
     <string name="temp_target_manual">Ręczne</string>
     <string name="temp_target_cancel">Anuluj</string>
+    <string name="tile_none">Brak</string>
     <string name="tile_no_config">Konfiguracja nie jest dostępna</string>
+    <string name="wear_control_not_enabled">Sterowanie wear wyłączone</string>
+    <string name="wear_control_no_data">Brak dostępnych danych</string>
+    <string name="no_iob_u">--U</string>
 </resources>

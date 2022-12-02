@@ -4,6 +4,10 @@
     <!-- DST Helper -->
     <!-- Storage constraint -->
     <!-- Version Checker -->
+    <string name="old_version">ou weergawe</string>
+    <string name="very_old_version">baie ou weergawe</string>
+    <string name="running_invalid_version">Die weergawe is ongeldig. Lus afgeskakel!</string>
+    <string name="versionavailable">Weergawe %1$s beskikbaar</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
 </resources>

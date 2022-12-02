@@ -1,2 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="app_name">AAPS</string>
+    <string name="label_actions_activity">AAPS</string>
+    <string name="label_watchface">AAPS</string>
+    <string name="pref_1_hour">1 ώρα</string>
+    <string name="pref_2_hours">2 ώρες</string>
+    <string name="pref_3_hours">3 ώρες</string>
+    <string name="pref_4_hours">4 ώρες</string>
+    <string name="pref_5_hours">5 ώρες</string>
+    <string name="pref_low">Χαμηλή</string>
+    <string name="pref_high">Υψηλό</string>
+    <string name="pref_auto">Αυτόματο</string>
+    <string name="pref_version">Έκδοση:</string>
+    <string name="menu_wizard">Υπολογιστής</string>
+    <string name="menu_wizard_short">Υπολογ</string>
+    <string name="menu_treatment">Θεραπεία</string>
+    <string name="menu_bolus">Bolus</string>
+    <string name="menu_carb">Υδατάνθρακες</string>
+    <string name="menu_ecarb">eCarbs</string>
+    <string name="menu_settings">Ρυθμίσεις</string>
+    <string name="menu_status">Κατάσταση</string>
+    <string name="menu_prime_fill">Πλήρωση/Γέμισμα</string>
+    <string name="action_duration">Διάρκεια</string>
+    <string name="action_target" comment="In temp target menu, single target value">Στόχος</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Χαμηλό</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Υψηλό</string>
+    <string name="action_carbs">Υδατάνθρακες</string>
+    <string name="action_ecarbs">eCarbs</string>
+    <string name="action_percentage">Ποσοστό</string>
+    <string name="action_duration_h">Διάρκεια [h]</string>
+    <string name="action_insulin">Ινσουλίνη</string>
+    <string name="action_timeshift">αλλαγή ώρας</string>
+    <string name="action_bolus">Bolus</string>
+    <string name="status_pump">Αντλία</string>
+    <string name="status_loop">Κύκλωμα</string>
+    <string name="status_profile_switch">Αλλαγή Προφίλ</string>
+    <string name="status_tdd">TDD</string>
+    <string name="activity_IOB">IOB</string>
+    <string name="simple_ui_off">Ανενεργό</string>
+    <string name="temp_target_hypo">Υπογλυκαιμία</string>
+    <string name="temp_target_activity">Άσκηση</string>
+    <string name="temp_target_manual">Χειροκίνητα</string>
+    <string name="temp_target_cancel">Ακύρωση</string>
+    <string name="no_iob_u">--U</string>
+</resources>

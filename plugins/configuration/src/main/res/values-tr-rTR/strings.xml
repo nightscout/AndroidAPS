@@ -10,6 +10,7 @@
     <string name="end_user_license_agreement">Son Kullanıcı Lisans Sözleşmesi</string>
     <string name="end_user_license_agreement_text">TIBBİ KARAR VERMEK İÇİN KULLANILMAMALIDIR. UYGULANABİLİR YASANIN İZİN VERDİĞİ ÖLÇÜDE, PROGRAM İÇİN GARANTİ YOKTUR. TELİF HAKKI SAHİPLERİNİN VE / VEYA DİĞER TARAFLARIN YAZILI OLMASINA YÖNELİK BAŞKA HİÇBİR ŞEKİLDE BELİRTİLEN VEYA BELİRLİ BİR AMACA UYGUNLUK İLE İLGİLİ ZIMNİ GARANTİLER DE DAHİL OLMAK ÜZERE ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE AÇIK VEYA ZIMNİ HİÇBİR GARANTİ OLMAKSIZIN “OLDUĞU GİBİ” SAĞLAMAKTADIR. PROGRAMIN KALİTESİ VE PERFORMANSI İLE İLGİLİ TÜM RİSK SİZE AİTTİR. PROGRAMIN HASARLI OLMASI DURUMUNDA, TÜM GEREKLİ SERVİS, ONARIM VEYA DÜZELTME MALİYETİNİ KABUL ETMİŞ OLURSUNUZ.</string>
     <string name="end_user_license_agreement_i_understand">ANLADIM VE KABUL EDİYORUM</string>
+    <string name="display_settings">Görüntü Ayarları</string>
     <string name="low_mark">DÜŞÜK işareti</string>
     <string name="high_mark">Yüksek işareti</string>
     <string name="low_mark_comment">Aralıktan daha düşük değer (sadece görüntüle)</string>
@@ -88,6 +89,7 @@
     <string name="check_preferences_details_title">İçe aktarım sorun detayları</string>
     <string name="check_preferences_import_btn">İçe aktarma</string>
     <string name="check_preferences_import_anyway_btn">Yine de içe aktar (TEHLİKELİ!)</string>
+    <string name="import_setting">Ayarları içe aktarın</string>
     <string name="check_preferences_before_import">Lütfen içe aktarmadan önce tercihleri kontrol edin:</string>
     <string name="check_preferences_cannot_import">Tercihler içe aktarılamaz!</string>
     <string name="check_preferences_dangerous_import">Tercihler içe aktarılmamalıdır!</string>

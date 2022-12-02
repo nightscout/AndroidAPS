@@ -89,4 +89,13 @@
     <string name="hardlimit">жесткий предел</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Пик</string>
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">Болюс был подан в течение последних трех минут, минуя супер микро болюс SMB</string>
+    <string name="loop_shortname">ЗЦ</string>
+    <string name="description_loop">Активировать или деактивировать запуск цикла.</string>
+    <string name="ignore5m">Игнорировать 5 м</string>
+    <string name="ignore15m">Игнорировать 15 м</string>
+    <string name="ignore30m">Игнорировать 30 м</string>
+    <string name="basal_set_correctly">Базал задан корректно</string>
+    <string name="loop_aps_label">Система ИПЖ</string>
 </resources>

@@ -66,4 +66,5 @@
     <string name="min_recovery_duration">最小恢复持续时间 [s]</string>
     <string name="pump_alert">泵警报</string>
     <string name="pairing_information">配对信息</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight刷新按钮</string>
 </resources>

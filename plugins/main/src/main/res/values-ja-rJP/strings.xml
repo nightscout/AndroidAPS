@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator_pump_connect_fail">ポンプへの接続に失敗しました</string>
+    <string name="smscommunicator_pump_disconnected">ポンプが切断されました</string>
+    <string name="smscommunicator_reconnect">ポンプが再接続しました</string>
+    <string name="smscommunicator_remote_command_not_allowed">リモートコマンドが許可されていません</string>
+    <string name="smscommunicator_remote_bolus_not_allowed">リモートボーラスが利用できません。後でもう一度お試しください。</string>
     <string name="sms_delta">デルタ:</string>
     <string name="sms_basal">ベーサル:</string>
     <!-- Insulin -->
@@ -77,8 +82,6 @@
     <!-- VirtualPump -->
     <!-- Source -->
     <!-- Skins -->
-    <!--    Loop -->
-    <string name="loop_aps_label">APS</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->

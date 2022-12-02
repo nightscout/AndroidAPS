@@ -66,4 +66,5 @@
     <string name="min_recovery_duration">Min. durata recupero [s]</string>
     <string name="pump_alert">Avviso micro</string>
     <string name="pairing_information">Informazioni associazione</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Tasto aggiornamento Insight</string>
 </resources>

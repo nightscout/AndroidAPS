@@ -4,7 +4,6 @@
     <string name="triggercoblabel">Aktivni UGH</string>
     <string name="never">Nikada</string>
     <string name="action">Aktivnost:</string>
-    <string name="confirm_remove_multiple_items">Jeste li sigurni da želite ukloniti %1$d stavke</string>
     <string name="stop_processing">Zaustavi obradu</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">Po</string>

@@ -2,8 +2,22 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Sommer/vintertid inntreffer innen 24t</string>
+    <string name="dst_loop_disabled_warning">Sommer/vintertid inntreffer innen 3t - lukket loop er midlertidig deaktivert</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Frigjør minst %1$d MB fra internminnet! Loop deaktivert!</string>
     <!-- Version Checker -->
+    <string name="old_version">gammel versjon</string>
+    <string name="very_old_version">veldig gammel versjon</string>
+    <string name="application_expired">Applikasjon utløpt - oppdater</string>
+    <string name="new_version_warning">Ny versjon tilgjengelig i minst %1$d dager! Systemet vil bytte til \"stopp innen lavt (LGS)\" etter %2$d dager og loop vil deaktiveres etter %3$d dager</string>
+    <string name="running_invalid_version">Vi har oppdaget at du kjører en ugyldig versjon. Loop deaktivert!</string>
+    <string name="versionavailable">Versjon %1$s er tilgjengelig</string>
+    <string name="version_expire">Versjon %1$s utløper den %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Rekalkulerte siste data</string>
+    <string name="bg_too_close">BS for nær:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">beregnet på nytt</string>
+    <string name="a11y_bg_quality_doubles">doble registreringer</string>
 </resources>

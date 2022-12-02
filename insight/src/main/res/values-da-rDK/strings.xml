@@ -66,4 +66,5 @@
     <string name="min_recovery_duration">Min pause mellem forbindelsesforsøg [s]</string>
     <string name="pump_alert">Pumpe advarsel</string>
     <string name="pairing_information">Information om parring</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Opdater-knap</string>
 </resources>

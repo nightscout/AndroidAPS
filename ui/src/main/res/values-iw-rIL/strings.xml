@@ -12,7 +12,9 @@
     <string name="remind_to_bolus_later">תזכורת להזרקת בולוס אח\"כ</string>
     <string name="a11y_carb_reminder">קביעת תזכורת</string>
     <!--    Widget-->
+    <string name="configure">הגדרת אטימות</string>
     <!--     Activities-->
+    <string name="activity_monitor">מוניטור פעילות</string>
     <string name="do_you_want_reset_stats">האם ברצונכם לאפס את הסטטיסטיקות הפעילות?</string>
     <string name="statistics">סטטיסטיקה</string>
     <string name="calculation_in_progress">מבצע חישוב</string>

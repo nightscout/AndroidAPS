@@ -2,8 +2,21 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
+    <string name="dst_loop_disabled_warning">Изменение сезонного времени произошло меньше 3 часов назад-Закрытый цикл выключен</string>
     <!-- Storage constraint -->
     <!-- Version Checker -->
+    <string name="old_version">старая версия</string>
+    <string name="very_old_version">очень старая версия</string>
+    <string name="application_expired">Истек срок действия приложения</string>
+    <string name="new_version_warning">Новая версия доступна уже %1$d дней! По истечении %2$d дн алгоритм переходит в режим работы только с остановкой при низкой гликемии LGS, замкнутый цикл будет отключен через %3$d дн</string>
+    <string name="running_invalid_version">Мы обнаружили, что вы используете недопустимую версию. Цикл отключен!</string>
+    <string name="versionavailable">Доступна версия %1$s</string>
+    <string name="version_expire">Версия: %1$s истекает %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Используются пересчитанные данные</string>
+    <string name="bg_too_close">ГК слишком близко к \n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">пересчитано</string>
+    <string name="a11y_bg_quality_doubles">двойные записи</string>
 </resources>

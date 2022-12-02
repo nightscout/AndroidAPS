@@ -111,7 +111,6 @@
     <string name="user_action">Acțiunea utilizatorului</string>
     <string name="remove_automation">Elimină automatizarea</string>
     <string name="sort_automation">Sortează automatizarea</string>
-    <string name="confirm_remove_multiple_items">Sigur vrei să elimini %1$d element(e)</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">L</string>
     <string name="tuesday_short">Ma</string>

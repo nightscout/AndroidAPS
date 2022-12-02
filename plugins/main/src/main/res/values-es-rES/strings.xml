@@ -204,7 +204,6 @@
     <string name="pb_label">Batería de la bomba</string>
     <string name="cannula">Cánula</string>
     <string name="ebstopsloop">El uso de la función de bolo extendido detendrá el modo de bucle cerrado durante el tiempo de ejecución del bolo extendido. ¿Realmente quieres esto?</string>
-    <string name="extendedbolusdeliveryerror">Error al emitir bolo extendido</string>
     <string name="statuslights_cannula_age">edad de la cánula</string>
     <string name="statuslights_patch_pump_age">edad del parche de la bomba</string>
     <string name="patch_pump">Bomba parche</string>
@@ -243,7 +242,6 @@
     <string name="a11y_bg_quality">calidad de glucosa en sangre</string>
     <string name="a11y_blood_glucose">glucosa en sangre</string>
     <string name="a11y_bg_outdated">obsoleto</string>
-    <string name="aps_mode_title">Modo APS</string>
     <string name="set_basal_question">Aceptar nueva basal temporal:</string>
     <string name="overview_cgm">MCG</string>
     <string name="quickwizard">Asistente</string>
@@ -398,32 +396,6 @@
     <string name="buttonson_description">Los botones siempre se muestran en la parte inferior de la pantalla</string>
     <string name="largedisplay_description">Pantalla grande</string>
     <string name="skin">Tema</string>
-    <!--    Loop -->
-    <string name="executing">Ejecutando</string>
-    <string name="run_now">Ejecutar ahora</string>
-    <string name="smb_frequency_exceeded">Un bolo ha sido entregado en los últimos 3 minutos, omitiendo SMB</string>
-    <string name="pump_not_initialized">¡Bomba no iniciada!</string>
-    <string name="loop_shortname">LAZO</string>
-    <string name="description_loop">Activar o desactivar la posibilidad para activar el lazo.</string>
-    <string name="no_aps_selected">NO APS Seleccionado o resultado entregado</string>
-    <string name="ignore5m">Ignorar 5m</string>
-    <string name="ignore15m">Ignorar 15m</string>
-    <string name="ignore30m">Ignorar 30m</string>
-    <string name="carbs_suggestion">Sugerencia de carbohidratos</string>
-    <string name="open_loop_new_suggestion">Nueva propuesta disponible</string>
-    <string name="basal_set_correctly">Basal establecida correctamente</string>
-    <string name="last_run_label">Última ejecución</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Solicitud</string>
-    <string name="loop_constraints_processed_label">Tras procesar las restricciones</string>
-    <string name="loop_tbr_request_time_label">Tiempo requerido para basal temporal</string>
-    <string name="loop_tbr_execution_time_label">Tiempo de ejecución para basal temporal</string>
-    <string name="loop_tbr_set_by_pump_label">Basal temporal establecida por la bomba</string>
-    <string name="loop_smb_request_time_label">Tiempo requerido de SMB</string>
-    <string name="loop_smb_execution_time_label">Tiempo de ejecución de SMB</string>
-    <string name="loop_smb_set_by_pump_label">SMB administrado por la bomba</string>
-    <string name="loop_open_mode_min_change">Valor mínimo de cambio [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
     <!--    DataBroadcast-->
     <string name="cannula_usage">uso:</string>
     <!--    Iob-->

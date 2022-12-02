@@ -12,22 +12,28 @@
     <string name="reloadprofile">Recarregar perfil</string>
     <string name="correctionbous">Correção</string>
     <string name="ns_upload_only">(PERIGOSO PARA DESATIVAR) somente upload para NS</string>
+    <string name="ns_upload_only_summary">Somente upload para NS (sincronização desativada). Não é eficaz em SGV ao menos que você selecione uma fonte local como xDrip+. Não é eficaz em perfis enquanto NS-Profiles é usado.\n!!! AVISO!!! Desativar esta opção pode causar disfunções e overdose de insulina se qualquer um dos componentes (AAPS, NS, xDrip+) estiver configurado incorretamente. Observe cuidadosamente se os dados exibidos pelo AAPS correspondem ao estado da bomba!</string>
     <string name="wear">Wear</string>
     <string name="nav_about">Sobre</string>
     <string name="smscommunicator_missingphonestatepermission">Falta permissão do estado do telefone</string>
     <string name="ns_alarm_options">Opções Alarme</string>
+    <string name="ns_alarms">Criar notificações dos alarmes do NightScout</string>
+    <string name="ns_announcements">Notificar alerta do servidor NS</string>
     <string name="ns_alarm_stale_data_value_label">Tempo limite para dados obsoletos [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Tempo limite para Urgência por dados obsoletos [min]</string>
     <string name="sensitivity_warning">Ao ativar a função Autosense lembre-se de introduzir todos os carboidratos (carbs) que comeu. Caso contra contrário os desvios de carbs serão erroneamente identificados como uma variação da sensibilidade!!</string>
     <string name="notloadedplugins">Nem todos perfis foram carregados!</string>
     <string name="valuesnotstored">Valores não guardados!</string>
     <string name="invalid">INVÁLIDO</string>
+    <string name="gradually_increase_notification_volume">Aumentar o volume de alerta e notificações gradualmente</string>
     <string name="localalertsettings_title">Alertas local</string>
     <string name="enable_missed_bg_readings_alert">Alerta caso nenhuma glicemia seja recebida</string>
     <string name="enable_pump_unreachable_alert">Alerta caso não seja possivel alcançar a bomba</string>
     <string name="pump_unreachable_threshold">Limite para bomba inacessível [min]</string>
+    <string name="enable_carbs_req_alert">Alertar se carboidratos forem necessários</string>
     <string name="open_navigation">Abrir a navegação</string>
     <string name="close_navigation">Fechar a navegação</string>
+    <string name="remove_items">Remover itens</string>
     <string name="sort_items">Ordenar itens</string>
     <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
     <string name="error_adding_treatment_message">Um tratamento (insulina: %1$.2f, hidratos: %2$d, às: %3$s) não ficou gravado. Por favor verifique se foi realmente efectuado e se sim adicione manualmente aos tratamentos.</string>
@@ -41,9 +47,17 @@
     <string name="copytolocalprofile_invalid">Não foi possível criar o perfil. Perfil inválido.</string>
     <string name="cta_dont_kill_my_app_info">Não encerre meu aplicativo?</string>
     <string name="time_to_eat">Hora de comer!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
+    <string name="fabric_upload_disabled">Envio de logs de erro desativado!</string>
+    <string name="clear_filter">Limpar filtro</string>
+    <string name="cannula">Cânula</string>
+    <string name="email_address">Endereço de e-mail</string>
     <string name="remove_bg_readings">Remover leituras de Glicemia</string>
     <string name="identification_not_set">Identificação não definida no modo de desenvolvimento</string>
     <string name="a11y_dialog">caixa de diálogo</string>
     <!-- WEAR OS-->
+    <string name="wear_unknown_action_string">Comando de ação desconhecida:</string>
+    <string name="remove_selected_items">Remover itens selecionados</string>
+    <string name="count_selected">%1$d selecionado(s)</string>
     <string name="sort_label">Ordenar</string>
+    <string name="search">Pesquisar</string>
 </resources>

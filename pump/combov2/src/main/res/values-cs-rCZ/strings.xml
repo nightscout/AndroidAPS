@@ -70,6 +70,7 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_fetching_tdd_history_cmddesc">Načítám CDD historii</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Aktualizace data a času v pumpě</string>
     <string name="combov2_updating_pump_status_cmddesc">Nahrávám stav pumpy</string>
+    <string name="combov2_pairing_pin_failure">PIN nefungoval. Zkontrolujte, zda jste neudělali překlep. Pokud se to stále děje, zrušte a opakujte párování.</string>
     <string name="combov2_discovery_duration">Délka hledání (v sekundách)</string>
     <string name="combov2_verbose_logging">Povolit podrobné protokolování</string>
     <string name="combov2_getting_basal_profile">Získávání bazálního profilu; čtení %1$d. faktoru</string>

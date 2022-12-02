@@ -4,6 +4,10 @@
     <!-- DST Helper -->
     <!-- Storage constraint -->
     <!-- Version Checker -->
+    <string name="old_version">παλιά έκδοση</string>
+    <string name="very_old_version">πολύ παλιά έκδοση</string>
+    <string name="running_invalid_version">Διαπιστώσαμε ότι εκτελείτε μη έγκυρη έκδοση. Κύκλωμα απενεργοποιήθηκε!</string>
+    <string name="versionavailable">Έκδοση %1$s διαθέσιμη</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
 </resources>

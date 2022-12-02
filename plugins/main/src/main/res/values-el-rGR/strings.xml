@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS Επικοινωνία</string>
     <string name="smscommunicator_shortname">SMS</string>
     <string name="smscommunicator_tab_otp_label">Ρύθμιση ελέγχου ταυτότητας</string>
     <string name="sms_wrong_code">Λάθος κωδικός. Η εντολή ακυρώθηκε.</string>
+    <string name="smscommunicator_allowednumbers">Επιτρεπτά τηλεφωνικά νούμερα</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">Για έγχυση bolus %1$.2fU στείλτε με κωδικό %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">Για έγχυση bolus %1$.2fU απαντήστε με κωδικό %2$s</string>
@@ -19,6 +21,8 @@
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2fU δόθηκε επιτυχώς</string>
     <string name="smscommunicator_meal_bolus_delivered">Γευματική Bolus %1$.2fU μονάδες δόθηκε επιτυχώς</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Στόχος %1$s για %2$d λεπτά</string>
+    <string name="smscommunicator_tt_set">Στόχος %1$s για %2$d λεπτά ορίστηκε με επιτυχία</string>
+    <string name="smscommunicator_tt_canceled">Ο προσωρινός στόχος ακυρώθηκε με επιτυχία</string>
     <string name="smscommunicator_remote_commands_allowed">Άδεια για απομακρυσμένες εντολές μέσω SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Το κύκλωμα απενεργοποιήθηκε</string>
     <string name="smscommunicator_loop_has_been_enabled">Το κύκλωμα ενεργοποιήθηκε</string>
@@ -27,6 +31,7 @@
     <string name="smscommunicator_pump_connect_fail">Αποτυχία σύνδεσης με την αντλία</string>
     <string name="smscommunicator_pump_disconnect_with_code">Για αποσύνδεση αντλίας για %1$d λεπτά απαντήστε με κωδικό %2$s</string>
     <string name="smscommunicator_pump_disconnected">Η αντλία αποσυνδέθηκε</string>
+    <string name="smscommunicator_reconnect">Η αντλία επανασυνδέθηκε</string>
     <string name="smscommunicator_remote_command_not_allowed">Δεν επιτρέπεται απομακρυσμένη εντολή</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Απομακρυσμένο bolus μη διαθέσιμο. Δοκιμάστε ξανά αργότερα.</string>
     <string name="smscommunicator_basal_reply_with_code">Για έναρξη βασικού %1$.2fU/h για %2$d λεπτά απαντήστε με κωδικό %3$s</string>
@@ -62,20 +67,32 @@
     <string name="wrong_format">Λάθος μορφή αρχείου</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">Τελευταία BG:</string>
+    <string name="sms_delta">Διαφορά:</string>
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Βασικός Ρυθμός:</string>
     <string name="sms_min_ago">πριν από %1$d λεπτά</string>
     <string name="sms_loop_suspended_for">Αναστολή (%1$d m)</string>
     <string name="sms_read_status_failed">Η ανάγνωση κατάστασης απέτυχε</string>
     <string name="sms_profile_switch_created">Δημιουργήθηκε αλλαγή προφίλ</string>
     <!-- Insulin -->
+    <string name="description_insulin_rapid">Η ινσουλίνη που ορίζεται Humalog και NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Η ινσουλίνη που ορίζεται για Fiasp</string>
+    <string name="description_insulin_lyumjev">Προκαθορισμός ινσουλίνης για την Lyumjev</string>
+    <string name="description_insulin_free_peak">Σας επιτρέπει να ορίσετε το μέγιστο της δράσης της ινσουλίνης και πρέπει να χρησιμοποιείται μόνο από προχωρημένους χρήστες</string>
     <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Μέγιστη τιμή καμπύλης IOB</string>
+    <string name="insulin_peak_time">Μέγιστο καμπύλης [λεπτά]</string>
+    <string name="free_peak_oref">Προαιρετικά-αιχμή Oref</string>
+    <string name="rapid_acting_oref">Γρήγορη δράση - Oref</string>
     <string name="ultra_rapid_oref">Έξτρα Γρήγορη δράση - Oref</string>
+    <string name="dia_too_short">DIA για %1$f πολύ μικρή - χρησιμοποιήστε %2$f! </string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status_shortname">xds</string>
+    <string name="description_xdrip_status_line">Δείτε πληροφορίες σχετικά με το κύκλωμά σας στην πρόσοψη xDrip +.</string>
     <string name="xdrip_status_detailed_iob_title">Δείξε αναλυτικά IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Χώρισε την IOB σε bolus και βασικό στο ρολόι</string>
     <string name="disabled_loop">Κύκλωμα απενεργοποιημένο</string>
@@ -83,21 +100,28 @@
     <string name="xdrip_status_show_bgi_summary">Πρόσθεσε BGI στην γραμμή κατάστασης</string>
     <!-- Food-->
     <string name="food_short">Γεύμα</string>
+    <string name="description_food">Εμφανίζει τις επιλογές τροφίμων που ορίζεται στο Nightscout</string>
+    <string name="food">Γεύμα</string>
     <string name="short_kilo_joul">kj</string>
     <string name="short_energy">Ενέργεια</string>
     <string name="short_protein">Πρωτεΐνες</string>
     <string name="short_fat">Λίπος</string>
+    <string name="category">Κατηγορία</string>
+    <string name="subcategory">Υποκατηγορία</string>
     <string name="calculator_label">Υπολογιστής</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
     <string name="localprofile">Προφίλ</string>
     <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Ορίστε ένα προφίλ που είναι διαθέσιμο εκτός σύνδεσης.</string>
     <string name="units_colon">Μονάδες:</string>
     <string name="errors">Σφάλματα</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
     <!-- Objectives -->
     <string name="completed_well_done">Ολοκληρώθηκε, συγχαρητήρια!</string>
+    <string name="not_completed_yet">Δεν ολοκληρώθηκε ακόμη</string>
+    <string name="time_elapsed">Ο χρόνος που πέρασε</string>
     <string name="maxiobset">Το μέγιστο IOB έχει ρυθμιστεί σωστά</string>
     <string name="hasbgdata">BG διαθέσιμη από επιλεγμένη πηγή</string>
     <string name="loopenabled">Κύκλωμα ενεργοποιημένο</string>
@@ -117,7 +141,6 @@
     <string name="nav_history_browser">Ιστορικό περιήγησης</string>
     <string name="sensor_label">Αισθητήρας</string>
     <string name="insulin_label">Ινσουλίνη</string>
-    <string name="extendedbolusdeliveryerror">Σφάλμα έγχυσης εκτεταμένου bolus</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Περιορίζεται το εκτεταμένο bolus σε %1$.1f U λόγω %2$s</string>
     <string name="limitingcarbs">Περιορίζονται οι υδατάνθρακες σε %1$d g λόγω %2$s</string>
@@ -143,7 +166,6 @@
     <string name="statuslights_res_critical">Όριο προειδοποίησης πολύ χαμηλής αμπούλας [U]</string>
     <string name="a11y_insulin_label">ινσουλίνη</string>
     <string name="a11y_blood_glucose">γλυκόζη αίματος</string>
-    <string name="aps_mode_title">Λειτουργία APS</string>
     <string name="set_basal_question">Αποδοχή νέου Προσ Ρυθμού:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Γρήγορος Οδηγός</string>
@@ -254,25 +276,6 @@
     <string name="bgsource_upload">Ανέβασμα ρυθμίσεων BG</string>
     <string name="dexcom_log_ns_sensor_change_title">Αλλαγή αρχείου αισθητήρα σε NS</string>
     <!-- Skins -->
-    <!--    Loop -->
-    <string name="executing">Εκτελείτε</string>
-    <string name="run_now">Έναρξη τώρα</string>
-    <string name="smb_frequency_exceeded">Ένα bolus παραδόθηκε μέσα στα τελευταία 3 λεπτά, παράκαμψη SMB</string>
-    <string name="pump_not_initialized">Η αντλία δεν έχει ρυθμιστεί!</string>
-    <string name="loop_shortname">ΚΥΚΛΩΜΑ</string>
-    <string name="description_loop">Ενεργοποιήστε ή απενεργοποιήστε την εφαρμογή που ενεργοποιεί το κύκλωμα.</string>
-    <string name="no_aps_selected">ΔΕΝ ΕΠΙΛΕΧΘΗΚΕ APS Ή ΒΡΕΘΗΚΕ ΑΠΟΤΕΛΕΣΜΑ</string>
-    <string name="carbs_suggestion">Προτεινόμενοι Υδατάνθρακες</string>
-    <string name="open_loop_new_suggestion">Νέα πρόταση διαθέσιμη</string>
-    <string name="basal_set_correctly">Ο βασικός ρυθμός ορίστηκε σωστά</string>
-    <string name="last_run_label">Τελευταίος Υπολογισμός</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Αίτημα</string>
-    <string name="loop_constraints_processed_label">Μετά από επεξεργασία περιορισμών</string>
-    <string name="loop_tbr_set_by_pump_label">Προσωρινός Ρυθμός ορίστηκε από την αντλία</string>
-    <string name="loop_smb_set_by_pump_label">Το SMB ρυθμίστηκε από την αντλία</string>
-    <string name="loop_open_mode_min_change">Ελάχιστο αίτημα για αλλαγή [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Το Ανοιχτό κύκλωμα θα εμφανίσει νέο μήνυμα αλλαγής μόνο αν η αλλαγή είναι μεγαλύτερη από αυτήν τη τιμή %. Προεπιλεγμένη τιμή 20%</string>
     <!--    DataBroadcast-->
     <string name="cannula_usage">χρήσιμες συμβουλές:</string>
     <!--    Iob-->

@@ -89,4 +89,29 @@
     <string name="hardlimit">pevný limit</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Vrchol</string>
+    <!--    Loop -->
+    <string name="run_now">Spustit teď</string>
+    <string name="smb_frequency_exceeded">Odeslán bolus během posledních 3 minut, SMB přeskočeno</string>
+    <string name="pump_not_initialized">Pumpa není inicializována!</string>
+    <string name="loop_shortname">SMYČ</string>
+    <string name="description_loop">Povolení nebo zakázání smyčky.</string>
+    <string name="no_aps_selected">ŽÁDNÉ APS NEVYBRÁNO NEBO NEVRÁTILO VÝSLEDEK</string>
+    <string name="ignore5m">Ignorovat 5 m</string>
+    <string name="ignore15m">Ignorovat 15 m</string>
+    <string name="ignore30m">Ignorovat 30 m</string>
+    <string name="carbs_suggestion">Návrh sacharidů</string>
+    <string name="open_loop_new_suggestion">Dostupné nové doporučení</string>
+    <string name="basal_set_correctly">Bazál nastaven správně</string>
+    <string name="last_run_label">Poslední spuštění</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Požadavek</string>
+    <string name="loop_constraints_processed_label">Po zpracování omezení</string>
+    <string name="loop_tbr_request_time_label">Čas požadavku dočasného bazálu</string>
+    <string name="loop_tbr_execution_time_label">Čas provedení dočasného bazálu</string>
+    <string name="loop_tbr_set_by_pump_label">Bazál nastavený pumpou</string>
+    <string name="loop_smb_request_time_label">Čas požadavku SMB</string>
+    <string name="loop_smb_execution_time_label">Čas provedení SMB</string>
+    <string name="loop_smb_set_by_pump_label">SMB provedené pumpou</string>
+    <string name="loop_open_mode_min_change">Minimální změna pro výzvu [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Otevřená smyčka vytvoří novou žádost o změnu pouze v případě, že změna je větší než tato hodnota. Výchozí hodnota je 20 %</string>
 </resources>

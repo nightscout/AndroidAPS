@@ -22,6 +22,111 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute">Balbh</string>
     <string name="success">Rathúlacht</string>
+    <string name="tdd_total">TDD Lomlán</string>
+    <string name="waitingforpump">Ag fanacht do caidéil</string>
+    <string name="formatsignedinsulinunits">%1$+.2f A</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="format_hours">%1$.2f u</string>
+    <string name="format_mins">%1$d nóim</string>
+    <string name="stop">Stad</string>
+    <string name="carbs">Carbí</string>
+    <string name="date">Dáta</string>
+    <string name="units_label">Aonaid</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Bunaidh</string>
+    <string name="target_label">Cuspóir</string>
+    <string name="basal_long_label">Bunaidh ráta</string>
+    <string name="shortgram">g</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="virtualpump_resultok">Ceart go leor</string>
+    <string name="exit">Scoir</string>
+    <string name="loopisdisabled">Is lúb díchumasaithe</string>
+    <string name="alarm">Aláram</string>
+    <string name="disableloop">Díchumasaigh lúb</string>
+    <string name="enableloop">Cumasaigh lúb</string>
+    <string name="resumeloop">Lúb Atosú</string>
+    <string name="suspendloop">Fionraí lúb</string>
+    <string name="duration_min_label">Fad [min]</string>
+    <string name="glucose">Glúcóis</string>
+    <string name="iob">IOB</string>
+    <string name="cob">COB</string>
+    <string name="name_short">Ainm:</string>
+    <string name="time">Am</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="notes_label">Nótaí</string>
+    <string name="bg_label">BG</string>
+    <string name="calibration">Calabrú</string>
+    <string name="duration_label">Fad</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Caidéil ar fionraí</string>
+    <string name="loopsuspended">Lúb ar fionraí</string>
+    <string name="a11y_high">ard</string>
+    <string name="a11y_low">íseal</string>
+    <string name="profile">Próifíl</string>
+    <string name="treatments_wizard_cob_label">COB</string>
+    <string name="bolus_iob_label">Bólas IOB</string>
+    <string name="treatments_wizard_basaliob_label">Bunaidh IOB</string>
+    <string name="overview_insulin_label">Inslin</string>
+    <string name="closedloop">Lúb dúnta</string>
+    <string name="openloop">Lúb oscailte</string>
+    <string name="dia">DIA</string>
+    <string name="ic_short">IC</string>
+    <string name="isf_short">ISF</string>
+    <!--    Protection-->
+    <!--    Profile-->
+    <string name="profile_per_unit">/A</string>
+    <string name="profile_ins_units_per_hour">A/u</string>
+    <string name="profile_carbs_per_unit">g/A</string>
+    <!--    ProfileFunction-->
+    <!--    APSResult-->
+    <string name="rate">Ráta</string>
+    <string name="duration">Fad</string>
+    <string name="reason">Cúis</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Próifíl neamhbhailí: %1$s</string>
+    <!--    Temptarget-->
+    <string name="mins">%1$d nóim</string>
+    <!--    Translator-->
+    <string name="careportal_announcement">Fógra</string>
+    <string name="careportal_note">Nóta</string>
+    <string name="careportal_question">Ceist</string>
+    <string name="careportal_exercise">Cleachtadh</string>
+    <string name="glucosetype_finger">Méar</string>
+    <string name="glucosetype_sensor">Braiteoir</string>
+    <string name="activity">Gníomhaíocht</string>
+    <string name="loop">Lúb</string>
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <string name="comment">Tuairim</string>
+    <string name="percent">Faoin gcéad</string>
+    <string name="absolute">Iomlán</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <string name="basalrate">Bunaidh</string>
+    <string name="bolus">Bólas</string>
+    <string name="tdd">TDD</string>
+    <string name="ratio">Cóimheas</string>
+    <string name="amount_days"># Lá</string>
+    <string name="tbb2">TBB * 2</string>
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <string name="ue_action">Gníomh</string>
+    <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Bunaidh</string>
+    <string name="basalpct">Bunaidh %</string>
+    <!-- Autotune -->
+    <string name="autotune_result">Toradh: %1$s</string>
+    <!-- Alerts -->
+    <!-- BolusWizard -->
+    <!--    Preferences-->
+    <string name="teenage">Déagóirí</string>
+    <string name="adult">Duine fásta</string>
     <!--    Protection-->
     <!--    Pumps -->
     <string name="battery_label">Ceallraí</string>

@@ -2,6 +2,14 @@
 <resources>
     <string name="app_name">AAPS</string>
     <string name="label_actions_activity">AAPS</string>
+    <string name="label_watchface">AAPS</string>
+    <string name="label_watchface_large">AAPS (Large)</string>
+    <string name="label_watchface_big_chart">AAPS (BigChart)</string>
+    <string name="label_watchface_no_chart">AAPS (NoChart)</string>
+    <string name="label_watchface_circle">AAPS (Circle)</string>
+    <string name="label_watchface_cockpit">AAPS (Cockpit)</string>
+    <string name="label_watchface_steampunk">AAPS (Steampunk)</string>
+    <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
     <string name="label_actions_tile">AAPS(Åtgärder)</string>
     <string name="label_temp_target_tile">AAPS(Temp-mål)</string>
     <string name="label_quick_wizard_tile">AAPS(Snabbsteg)</string>
@@ -55,6 +63,7 @@
     <string name="pref_complication_tap_action">Åtgärd för komplikation \"tryck\"</string>
     <string name="pref_unicode_in_complications">Unicode i komplikationer</string>
     <string name="pref_version">Version:</string>
+    <string name="pref_moreWatchfaceSettings">Fler watchface-inställningar</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Kontrollera watchface-konfigurationen, tack.</string>
     <string name="menu_tempt">Tempmål</string>
     <string name="menu_wizard">Kalkylator</string>
@@ -62,6 +71,7 @@
     <string name="menu_treatment">Behandling</string>
     <string name="menu_treatment_short">Beh</string>
     <string name="menu_bolus">Bolus</string>
+    <string name="menu_carb">Kolhydrater</string>
     <string name="menu_settings">Inställningar</string>
     <string name="menu_status">Status</string>
     <string name="menu_resync">Synkronisera om</string>
@@ -98,6 +108,7 @@
     <string name="cancel_bolus">AVBRYT BOLUS</string>
     <string name="status_pump">Pump</string>
     <string name="status_loop">APS</string>
+    <string name="status_profile_switch">Profilbyte</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">KH</string>
     <string name="activity_IOB">IOB</string>
@@ -153,4 +164,5 @@
     <string name="tile_no_config">Ingen konfiguration tillgänglig</string>
     <string name="wear_control_not_enabled">Wear-kontroller inaktiverade</string>
     <string name="wear_control_no_data">Ingen data tillgänglig</string>
+    <string name="no_iob_u">--U</string>
 </resources>

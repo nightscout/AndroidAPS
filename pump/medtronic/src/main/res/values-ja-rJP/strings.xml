@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Medtronic (MDT) - Base -->
+    <string name="description_pump_medtronic">Medtronic製のポンプ統合には、RileyLinkデバイスと特定のポンプモデルが必要です</string>
     <!-- MDT Configuration -->
+    <string name="medtronic_serial_number">ポンプのシリアル番号</string>
+    <string name="medtronic_pump_type">ポンプの種類</string>
+    <string name="medtronic_pump_frequency">ポンプ周波数</string>
+    <string name="medtronic_pump_bolus_delay">ボーラス開始までの遅延時間(s)</string>
+    <string name="medtronic_pump_max_bolus">ポンプの最大ボーラス (U)</string>
+    <string name="medtronic_pump_max_basal">ポンプの最大ベーサル(U/h)</string>
+    <string name="medtronic_pump_frequency_us_ca">アメリカ &amp; カナダ (916 MHz)</string>
+    <string name="medtronic_pump_frequency_worldwide">ワールドワイド（868 Mhz）</string>
+    <string name="medtronic_pump_encoding_4b6b_local">ソフトウェア 4b6b エンコード</string>
+    <string name="medtronic_pump_encoding_4b6b_rileylink">ソフトウェア 4b6b エンコード</string>
+    <string name="medtronic_custom_action_wake_and_tune">ウェイクアップとチューニング</string>
     <!-- MDT Fragment -->
     <!-- MDT Errors -->
     <!-- MDT History -->

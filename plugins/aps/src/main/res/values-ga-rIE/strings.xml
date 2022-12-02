@@ -11,4 +11,7 @@
     <string name="constraints">Srianta</string>
     <!--    Verify if needed in safety-->
     <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="loop_shortname">LÚB</string>
+    <string name="loop_aps_label">APS</string>
 </resources>
