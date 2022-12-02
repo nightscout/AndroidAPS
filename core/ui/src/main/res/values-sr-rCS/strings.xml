@@ -4,7 +4,6 @@
     <string name="constraint_applied">Primenjeno ograničenje!</string>
     <string name="tempbasals_iobtotal_label_string">Ukupno IOB:</string>
     <string name="tt_label">TT</string>
-    <string name="bolus_delivered">Bolus %1$.2f U je uspešno isporučen</string>
     <string name="save">Sačuvaj</string>
     <string name="virtual_pump">Virtuelna Pumpa</string>
     <string name="constraints">Ograničenja</string>
@@ -12,6 +11,25 @@
     <string name="configbuilder_insulin">Insulin</string>
     <string name="pump">Pumpa</string>
     <string name="treatments_iob_label_string">IOB:</string>
+    <!--    Protection-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    APSResult-->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
+    <!-- Alerts -->
+    <!-- BolusWizard -->
+    <!--    Preferences-->
     <!--    Protection-->
     <!--    Pumps -->
     <!--    Constraints-->
