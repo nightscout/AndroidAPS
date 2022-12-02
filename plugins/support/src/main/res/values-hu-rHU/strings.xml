@@ -4,6 +4,9 @@
     <!-- DST Helper -->
     <!-- Storage constraint -->
     <!-- Version Checker -->
+    <string name="old_version">régi verzió</string>
+    <string name="very_old_version">nagyon régi verzió</string>
+    <string name="application_expired">Alkalmazás lejárt</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
 </resources>
