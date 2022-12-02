@@ -44,7 +44,7 @@ If no connection is established after more than ~5 minutes:\n\n
 2. Cancel the pairing on the Combo (press both UP and MENU
 buttons at the same time to cancel pairing)\n
 3. Try to pair again</string>
-    <string name="combov2_pin_entry_hint">0123456789</string>
+    <string name="combov2_pin_entry_hint" translatable="false">0123456789</string>
     <string name="combov2_enter_pin">Enter PIN</string>
     <string name="combov2_cancel_pairing">Cancel pairing</string>
     <string name="combov2_pin_hint">10-digit PIN</string>
@@ -76,8 +76,7 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_fetching_tdd_history_cmddesc">Fetching TDD history</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Updating pump datetime</string>
     <string name="combov2_updating_pump_status_cmddesc">Updating pump status</string>
-    <string name="combov2_pairing_pin_failure">PIN did not work. Check if there was a typo. If this
-        keeps happening, cancel and retry pairing.</string>
+    <string name="combov2_pairing_pin_failure">PIN did not work. Check if there was a typo. If this keeps happening, cancel and retry pairing.</string>
     <string name="key_combov2_discovery_duration" translatable="false">combov2_bt_discovery_duration</string>
     <string name="combov2_discovery_duration">Discovery duration (in seconds)</string>
     <string name="key_combov2_verbose_logging" translatable="false">combov2_verbose_logging</string>
@@ -95,15 +94,15 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_incorrect_active_basal_profile">Incorrect active basal profile; profile 1 must be the active one, not profile %1$d</string>
     <string name="combov2_unrecognized_alert">Unrecognized Combo alert</string>
     <string name="combov2_combo_alert">Combo alert</string>
-    <string name="combov2_last_bolus">%1$.1f %2$s (%3$s)</string>
+    <string name="combov2_last_bolus" translatable="false">%1$.1f %2$s (%3$s)</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min remaining)</string>
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (less than 1 min remaining)</string>
     <string name="combov2_load_tdds_cancelled">Loading TDDs cancelled</string>
     <string name="combov2_retrieving_tdds_failed">Retrieving TDDs failed</string>
-    <string name="combov2_no_activity">{fa-bed}</string>
-    <string name="combov2_battery_empty_indicator">{fa-battery-empty}</string>
-    <string name="combov2_battery_low_indicator">{fa-battery-quarter}</string>
-    <string name="combov2_battery_full_indicator">{fa-battery-full}</string>
+    <string name="combov2_no_activity" translatable="false">{fa-bed}</string>
+    <string name="combov2_battery_empty_indicator" translatable="false">{fa-battery-empty}</string>
+    <string name="combov2_battery_low_indicator" translatable="false">{fa-battery-quarter}</string>
+    <string name="combov2_battery_full_indicator" translatable="false">{fa-battery-full}</string>
     <string name="combov2_battery_low_warning">Pump battery is low</string>
     <string name="combov2_reservoir_low_warning">Pump reservoir level is low</string>
     <string name="combov2_setting_tbr_succeeded">Setting TBR succeeded</string>
