@@ -89,4 +89,5 @@
     <string name="hardlimit">límite estricto</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Pico</string>
+    <!--    Loop -->
 </resources>
