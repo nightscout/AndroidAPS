@@ -89,4 +89,5 @@
     <string name="hardlimit">מגבלה קשיחה</string>
     <!--    Autotune   -->
     <string name="insulin_peak">שיא</string>
+    <!--    Loop -->
 </resources>
