@@ -82,4 +82,5 @@
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
     <string name="hardlimit">limită fizică</string>
     <!--    Autotune   -->
+    <!--    Loop -->
 </resources>
