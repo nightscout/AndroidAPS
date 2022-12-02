@@ -45,6 +45,7 @@
     <string name="mute5min">Tysta i 5 minuter</string>
     <string name="mute">Tysta</string>
     <string name="success">Lyckad</string>
+    <string name="advancedsettings_title">Avancerade inställningar</string>
     <!--    Protection-->
     <string name="unlock_settings">Lås upp inställningar</string>
     <!--    Pumps -->
