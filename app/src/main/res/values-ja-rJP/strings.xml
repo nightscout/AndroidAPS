@@ -3,6 +3,34 @@
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <string name="nav_preferences_plugin">%1$s の設定</string>
+    <string name="nav_refreshtreatments">NS からトリートメントを更新</string>
+    <string name="nav_exit">終了</string>
+    <string name="delta">デルタ</string>
+    <string name="profile_label">プロファイル</string>
+    <string name="save">保存</string>
+    <string name="reloadprofile">プロファイルを再読み込み</string>
+    <string name="correctionbous">Corr</string>
+    <string name="ns_upload_only">(無効注意) NSアップロードのみ</string>
+    <string name="ns_upload_only_summary">NS アップロードのみ（同期無効）。xDrip + のようなローカル ソースが選択されていない限り、SGV は有効ではありません。NS-プロファイルが使用されている間はプロファイルでは無効です。\n!!! 警告 !!! このオプションを無効にすると、コンポーネント(AAPS, NS, xdrip+) のいずれかが間違った設定になっている場合、誤動作やインスリン過剰摂取が発生する可能性があります。 AAPSで表示されるデータがポンプの状態と一致するかどうかを注意深く確認してください。</string>
+    <string name="wear">ウェア</string>
+    <string name="nav_about">About</string>
+    <string name="smscommunicator_missingphonestatepermission">電話の状態許可(パーミッション) がありません</string>
+    <string name="ns_alarm_options">アラームオプション</string>
+    <string name="ns_alarms">NSアラームから通知を作成する</string>
+    <string name="ns_announcements">NSからのお知らせを通知する</string>
+    <string name="ns_alarm_stale_data_value_label">古いデータしきい値 [min]</string>
+    <string name="ns_alarm_urgent_stale_data_value_label">Urgent stale data threshold [min]</string>
+    <string name="sensitivity_warning">Autosense機能をオンにした場合、すべての炭水化物を入力することを忘れないでください。炭水化物偏差は間違った感度計算をされます。</string>
+    <string name="notloadedplugins">プロファイルが読み込まれていません！</string>
+    <string name="valuesnotstored">値は保存されていません！</string>
+    <string name="invalid">無効</string>
+    <string name="gradually_increase_notification_volume">アラートと通知の音量を徐々に増加させる</string>
+    <string name="localalertsettings_title">ローカルアラート</string>
+    <string name="enable_missed_bg_readings_alert">BGデータが受信されなかった場合に警告する</string>
+    <string name="enable_pump_unreachable_alert">ポンプが反応しない場合にアラートを鳴らす</string>
+    <string name="pump_unreachable_threshold">ポンプの反応時間のしきい値[min]</string>
+    <string name="enable_carbs_req_alert">炭水化物が必要な場合に通知する</string>
     <string name="unitsnosemicolon">Units</string>
     <!-- WEAR OS-->
 </resources>
