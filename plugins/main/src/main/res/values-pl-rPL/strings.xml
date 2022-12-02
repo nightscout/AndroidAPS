@@ -138,7 +138,6 @@
     <string name="pb_label">Bateria pompy</string>
     <string name="cannula">Kaniula</string>
     <string name="ebstopsloop">Użycie funkcji Extended bolus spowoduje zatrzymanie trybu pętli zamkniętej na czas działania przedłużonego bolusa. Czy na pewno tego chcesz?</string>
-    <string name="extendedbolusdeliveryerror">Błąd dostarczania bolusa przedłużonego</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Ograniczam bolus do %1$.1f U z uwagi na %2$s</string>
     <string name="limitingcarbs">Ograniczam węglow. do %1$d g z uwagi na %2$s</string>
@@ -170,7 +169,6 @@
     <string name="a11y_insulin_label">insulina</string>
     <string name="chart_menu">Menu wykresu</string>
     <string name="a11y_blood_glucose">stężenie glukozy we krwi</string>
-    <string name="aps_mode_title">Tryb APS</string>
     <string name="set_basal_question">Akceptuj nową bazę tymczasową:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Bolus zdefiniowany</string>
@@ -309,32 +307,6 @@
     <string name="buttonson_description">Przyciski są zawsze wyświetlane na dole ekranu</string>
     <string name="largedisplay_description">Duży ekran</string>
     <string name="skin">Motyw</string>
-    <!--    Loop -->
-    <string name="executing">Wykonywanie</string>
-    <string name="run_now">Uruchom teraz</string>
-    <string name="smb_frequency_exceeded">Bolus został podany w ciągu ostatnich 3 minut, opuszczam SMB</string>
-    <string name="pump_not_initialized">Pompa nie zainicjowana!</string>
-    <string name="loop_shortname">LOOP</string>
-    <string name="description_loop">Włącz lub wyłącz działanie pętli.</string>
-    <string name="no_aps_selected">NIE WYBRANO APS LUB NIE UZYSKANO WYNIKU</string>
-    <string name="ignore5m">Ignoruj 5 min</string>
-    <string name="ignore15m">Ignoruj 15 min</string>
-    <string name="ignore30m">Ignoruj 30 min</string>
-    <string name="carbs_suggestion">Sugestia węglowodanów</string>
-    <string name="open_loop_new_suggestion">Dostępna nowa sugestia</string>
-    <string name="basal_set_correctly">Baza ustawiona prawidłowo</string>
-    <string name="last_run_label">Ostatnie działanie</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Żądanie</string>
-    <string name="loop_constraints_processed_label">Po ograniczeniach</string>
-    <string name="loop_tbr_request_time_label">Żądany czas bazy tymczasowej</string>
-    <string name="loop_tbr_execution_time_label">Czas wykonywania bazy tymczasowej</string>
-    <string name="loop_tbr_set_by_pump_label">Baza tymczasowa ustawiona przez pompę</string>
-    <string name="loop_smb_request_time_label">Żądany czas SMB</string>
-    <string name="loop_smb_execution_time_label">Czas wykonywania SMB</string>
-    <string name="loop_smb_set_by_pump_label">SMB ustawiony przez pompę</string>
-    <string name="loop_open_mode_min_change">Minimalna żądana zmiana [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Otwarta pętla wprowadzi żądanie zmiany tylko w przypadku, gdy będzie ona większa niż ta wartość w %. Wartość domyślna to 20%</string>
     <!--    DataBroadcast-->
     <string name="cannula_usage">użytkowanie:</string>
     <!--    Iob-->
