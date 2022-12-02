@@ -39,6 +39,7 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute">Σίγαση</string>
     <string name="success">Επιτυχία</string>
+    <string name="advancedsettings_title">Ρυθμίσεις για Προχωρημένους</string>
     <!--    Protection-->
     <string name="unlock_settings">Ξεκλείδωμα ρυθμίσεων</string>
     <!--    Pumps -->
