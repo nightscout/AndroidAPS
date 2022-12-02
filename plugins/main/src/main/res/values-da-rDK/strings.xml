@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS Kommunikator</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Fjernstyr AndroidAPS ved hjælp af SMS-kommandoer.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">fra Authenticator app til: %1$s efterfulgt af PIN</string>
+    <string name="smscommunicator_otp_pin">Yderligere obligatorisk pinkode i slutningen</string>
+    <string name="smscommunicator_otp_pin_summary">Yderligere cifre, der skal huskes og påsættes i slutningen af hver genereret engangsadgangskode</string>
     <string name="smscommunicator_tab_otp_label">Authenticator opsætning</string>
+    <string name="smscommunicator_code_verify_label">Kode, der skal kontrolleres:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Bekræftelseskoden består af 6 cifre som vises af Autentificerings-app (kendt som OTP) efterfulgt af 3 eller flere cifre i obligatorisk PIN-kode.</string>
+    <string name="smscommunicator_otp_reset_btn">Nulstil Autentificering</string>
+    <string name="smscommunicator_otp_reset_title">Nulstil Autentificeringsnøgle</string>
+    <string name="smscommunicator_otp_reset_prompt">Er du sikker på at du vil nulstille autentificeringsnøgle? Det vil gøre alle aktuelt konfigurerede autentificatorer ugyldige, og du bliver nødt til at sætte dem op igen.</string>
+    <string name="smscommunicator_otp_reset_successful">Ny autentificeringsnøgle blev genereret! Brug venligst opdateret QR kode til at levere autentificatorer.</string>
+    <string name="smscommunicator_otp_export_title">Eksporterer OTP hemmelighed</string>
+    <string name="smscommunicator_otp_export_prompt">Er du sikker på, at du vil kopiere OTP hemmelighed til udklipsholderen?\n\nDu behøver den kun, hvis din autentificeringsapp har problemer med at scanne QR kode, du vil indtaste den manuelt, eller du vil konfigurere hardware OTP token ved hjælp af en dedikeret app.</string>
+    <string name="smscommunicator_otp_export_successful">OTP hemmelige (i Base32 format) eksporteret og kopieret til udklipsholder. Indsæt det i autentifikatoren eller hardware OTP brænder!</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Installer Authenticator</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scan kode for at opsætte AAPS OTP-koder</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Test Engangsadgangskode</string>
+    <string name="smscommunicator_otp_reset_header">Nulstil Autentificering</string>
+    <string name="smscommunicator_otp_install_info">På hver follower telefon installeres Authenticator app, der understøtter RFC 6238 TOTP tokens. Populære gratis apps er:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="sms_wrong_code">Forkert kode. Kommandoen annulleret.</string>
     <string name="sms_timeout_while_waiting">Timeout mens du venter på afslutning af tidligere pumpe kommunikation</string>
+    <string name="smscommunicator_allowednumbers">Tilladte telefonnumre</string>
+    <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">For at levere bolus %1$.2fIE svar med koden %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">For at levere måltidsbolus %1$.2fE svar med koden %2$s</string>
     <string name="smscommunicator_temptarget_with_code">For at indstille midlertidig mål %1$s svar med koden %2$s</string>
@@ -20,6 +41,8 @@
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2fIE leveret succesfuldt</string>
     <string name="smscommunicator_meal_bolus_delivered">Måltidsbolus %1$.2f IE leveret uden fejl</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Mål %1$s i %2$d minutter</string>
+    <string name="smscommunicator_tt_set">Mål %1$s i %2$d minutter er angivet succesfuldt</string>
+    <string name="smscommunicator_tt_canceled">Midlertidig mål er annulleret succesfuldt</string>
     <string name="smscommunicator_remote_commands_allowed">Tillad fjernkommandoer via SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Loop er blevet deaktiveret</string>
     <string name="smscommunicator_loop_has_been_enabled">Loop er blevet aktiveret</string>
@@ -28,6 +51,7 @@
     <string name="smscommunicator_pump_connect_fail">Forbindelse til pumpe mislykkedes</string>
     <string name="smscommunicator_pump_disconnect_with_code">For at frakoble pumpen i %1$d minutter, svar med kode %2$s</string>
     <string name="smscommunicator_pump_disconnected">Pumpe afbrudt</string>
+    <string name="smscommunicator_reconnect">Pumpe tilsluttet igen</string>
     <string name="smscommunicator_remote_command_not_allowed">Fjernkommandoen er ikke tilladt</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Fjernbolus er ikke tilgængelig. Prøv igen senere.</string>
     <string name="smscommunicator_basal_reply_with_code">For at starte basal %1$.2f E/t i %2$d minutter svar med kode %3$s</string>
@@ -53,6 +77,7 @@
     <string name="smscommunicator_tempbasal_cancel_failed">Annullering af midlertidig basal mislykkedes</string>
     <string name="smscommunicator_extended_cancel_failed">Annullering af forlænget bolus mislykkedes</string>
     <string name="smscommunicator_unknown_command">Ukendt kommando eller forkert svar</string>
+    <string name="smscommunicator_another_bolus_in_queue">Der er en anden bolus i kø. Prøv igen senere.</string>
     <string name="smscommunicator_wrong_duration">Forkert varighed</string>
     <string name="smscommunicator_loop_suspended">Loop suspenderet</string>
     <string name="smscommunicator_loop_resumed">Loop genoptaget</string>
@@ -74,18 +99,27 @@
     <string name="sms_read_status_failed">Læs status mislykkedes</string>
     <string name="sms_profile_switch_created">Profil switch oprettet</string>
     <string name="sms_wrong_tbr_duration">TBR-varigheden skal være et multiplum af %1$d minutter og større end 0.</string>
+    <string name="a11y_otp_qr_code">QR-kode til opsætning af engangs kodeord</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Insulin forudindstillet til Humalog og NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Insulinforudindstilling til Fiasp</string>
+    <string name="description_insulin_lyumjev">Insulin forudindstillet til Lyumjev</string>
+    <string name="description_insulin_free_peak">Giver dig mulighed for at definere spidsbelastningen af insulin-aktiviteten og bør kun bruges af avancerede brugere</string>
     <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">IOB Kurve Peak-Tid</string>
+    <string name="insulin_peak_time">Spidstidspunkt [min]</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
+    <string name="dia_too_short">DIA af %1$f for kort - bruger %2$f i stedet!</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip Statuslinje (ur)</string>
     <string name="xdrip_status_shortname">xds</string>
+    <string name="description_xdrip_status_line">Vis oplysninger om dit Loop på din xDrip+ urskive.</string>
     <string name="xdrip_status_detailed_iob_title">Vis detaljeret IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Bryd IOB ned i bolus og basal IOB på urskiven</string>
     <string name="disabled_loop">Loop deaktiveret</string>
@@ -94,25 +128,52 @@
     <string name="xdrip_status_settings">xDrip-status (ur)</string>
     <!-- Food-->
     <string name="food_short">Mad</string>
+    <string name="description_food">Viser forudindstillede madvarer defineret i Nightscout</string>
     <string name="filter">Filter</string>
+    <string name="food">Mad</string>
     <string name="short_kilo_joul">kJ</string>
     <string name="short_energy">En</string>
     <string name="short_protein">Pr</string>
     <string name="short_fat">Fedt</string>
+    <string name="category">Kategori</string>
+    <string name="subcategory">Underkategori</string>
     <string name="calculator_label">Beregner</string>
     <!-- Theme switcher dark and light mode-->
     <string name="theme_switcher_summary">Vælg mørk, lys eller følg systemtemaet</string>
+    <string name="app_color_scheme">App Farvetema</string>
+    <string name="dark_theme">Mørkt tema</string>
+    <string name="light_theme">Lyst tema</string>
+    <string name="follow_system_theme">Brug enhedens tema</string>
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Definér en profil, der er tilgængelig offline.</string>
+    <string name="a11y_add_new_to_list">tilføj ny til listen</string>
     <string name="do_you_want_switch_profile">Vil du skifte profil og kassere ændringer, der er foretaget i den aktuelle profil?</string>
     <string name="save_or_reset_changes_first">Gem eller nulstil aktuelle ændringer først</string>
     <string name="delete_current_profile">Fjern aktuelle profil?</string>
+    <string name="units_colon">Enheder:</string>
+    <string name="missing_profile_name">Manglende profilnavn</string>
+    <string name="error_in_ic_values">Fejl i IC-værdier</string>
+    <string name="error_in_basal_values">Fejl i basal rate værdier</string>
+    <string name="error_in_target_values">Fejl i målværdier</string>
+    <string name="error_in_isf_values">Fejl i ISF-værdier</string>
     <string name="profile_name_contains_dot">Profilnavn indeholder punktum.\nDette understøttes ikke af NS.\nProfilen er ikke uploadet til NS.</string>
+    <string name="invalid_profile_not_accepted">Ugyldig profil %1$s blev ikke accepteret fra NS</string>
+    <string name="view">Vis</string>
+    <string name="errors">Fejl</string>
+    <string name="select_profile">Vælg profil, du vil redigere</string>
+    <string name="profile_name">Profilnavn:</string>
+    <string name="a11y_add_new_profile">tilføj ny profil</string>
+    <string name="a11y_clone_profile">klon nuværende profil</string>
+    <string name="a11y_delete_current_profile">slet nuværende profil</string>
     <string name="dia_short">DIA</string>
+    <string name="target_short">MÅL</string>
     <string name="basal_short">BAS</string>
     <!-- Objectives -->
     <string name="completed_well_done">Fuldført, godt klaret!</string>
+    <string name="not_completed_yet">Ikke afsluttet endnu</string>
+    <string name="time_elapsed">Tid forløbet</string>
     <string name="maxiobset">Maksimal IOB sat korrekt</string>
     <string name="hasbgdata">BS tilgængelig fra valgte kilde</string>
     <string name="loopenabled">Loop aktiveret</string>
@@ -141,7 +202,6 @@
     <string name="pb_label">Pumpe batteri</string>
     <string name="cannula">Kanyle</string>
     <string name="ebstopsloop">Brug af funktionen til forlænget bolus vil stoppe lukket loop mode i det tidsrum, hvor der køres forlænget bolus. Vil du virkelig gøre det?</string>
-    <string name="extendedbolusdeliveryerror">Forlænget bolus leveringsfejl</string>
     <string name="statuslights_cannula_age">Indstik alder</string>
     <string name="statuslights_patch_pump_age">patch pumpe alder</string>
     <string name="patch_pump">Patch pumpe</string>
@@ -178,7 +238,6 @@
     <string name="a11y_bg_quality">blodglukose kvalitet</string>
     <string name="a11y_blood_glucose">blodglucose</string>
     <string name="a11y_bg_outdated">forældet</string>
-    <string name="aps_mode_title">APS Tilstand</string>
     <string name="set_basal_question">Acceptér ny midlertidig basal:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Lynguide</string>
@@ -332,32 +391,6 @@
     <string name="buttonson_description">Knapper vises altid nederst på skærmen</string>
     <string name="largedisplay_description">Stort display</string>
     <string name="skin">Udseende</string>
-    <!--    Loop -->
-    <string name="executing">Udfører</string>
-    <string name="run_now">Kør nu</string>
-    <string name="smb_frequency_exceeded">En bolus blev leveret inden for de sidste 3 minutter, springer SMB over</string>
-    <string name="pump_not_initialized">Pumpe er ikke initialiseret!</string>
-    <string name="loop_shortname">LOOP</string>
-    <string name="description_loop">Aktiver eller deaktiver implementeringen som aktiverer Loop.</string>
-    <string name="no_aps_selected">INGEN APS VALGT ELLER GIVET RESULTAT</string>
-    <string name="ignore5m">Ignorér 5m</string>
-    <string name="ignore15m">Ignorér 15m</string>
-    <string name="ignore30m">Ignorér 30m</string>
-    <string name="carbs_suggestion">Kulhydrat Forslag</string>
-    <string name="open_loop_new_suggestion">Nyt forslag tilgængeligt</string>
-    <string name="basal_set_correctly">Basal sat korrekt </string>
-    <string name="last_run_label">Sidst kørt</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Anmod</string>
-    <string name="loop_constraints_processed_label">Efter bearbejdede begrænsninger</string>
-    <string name="loop_tbr_request_time_label">Midlertidig basal anmodningstid</string>
-    <string name="loop_tbr_execution_time_label">Midlertidig basal afviklingstid</string>
-    <string name="loop_tbr_set_by_pump_label">Midlertidig basal sat af pumpe</string>
-    <string name="loop_smb_request_time_label">SMB anmodningstid</string>
-    <string name="loop_smb_execution_time_label">SMB udførelsestid</string>
-    <string name="loop_smb_set_by_pump_label">SMB indstillet af pumpe</string>
-    <string name="loop_open_mode_min_change">Minimal anmodningsændring [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Åben Loop vil kun foreslå ny ændringsanmodning, hvis ændringen er større end denne værdi i %. Standardværdien er 20%</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Send dagens logfiler til udviklere sammen med denne tid. Uventet situation.</string>
