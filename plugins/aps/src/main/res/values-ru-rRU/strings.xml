@@ -89,4 +89,5 @@
     <string name="hardlimit">жесткий предел</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Пик</string>
+    <!--    Loop -->
 </resources>
