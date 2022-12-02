@@ -37,6 +37,7 @@
     <string name="treatments_iob_label_string">IAB:</string>
     <string name="mute">Demp</string>
     <string name="success">Sukses</string>
+    <string name="advancedsettings_title">Gevorderde instellings</string>
     <!--    Protection-->
     <string name="unlock_settings">Ontsluit instellings</string>
     <!--    Pumps -->
