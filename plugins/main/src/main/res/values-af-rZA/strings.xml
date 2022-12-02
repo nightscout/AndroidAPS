@@ -92,7 +92,6 @@
     <string name="nav_history_browser">Geskiedenis blaaier</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insulien</string>
-    <string name="extendedbolusdeliveryerror">Verlengde bolus afleweringsfout</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Verlengde bolus is beperk tot %1$.1f U as gevolg van %2$s</string>
     <string name="limitingcarbs">Beperk koolhidrate tot %1$d g agv %2$s</string>
@@ -109,7 +108,6 @@
     <string name="statuslights_res_warning">Drempel waarskuwings stoor vlak [U]</string>
     <string name="statuslights_res_critical">Drempel kritieke stoor vlak [U]</string>
     <string name="a11y_insulin_label">insulien</string>
-    <string name="aps_mode_title">APS modus</string>
     <string name="set_basal_question">Aanvaar nuwe tydelike basale:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">SlimNutsman</string>
@@ -217,24 +215,6 @@
     <string name="bgsource_upload">BG oplaai instellings</string>
     <string name="dexcom_log_ns_sensor_change_title">Log sensor verander na NS</string>
     <!-- Skins -->
-    <!--    Loop -->
-    <string name="executing">Besig met uitvoering</string>
-    <string name="run_now">Begin nou</string>
-    <string name="smb_frequency_exceeded">\'n Bolus was binne die laaste 3 minute afgelewer, SMB is oorgespring</string>
-    <string name="pump_not_initialized">Pomp nie geïnisialiseer nie!</string>
-    <string name="loop_shortname">LUS</string>
-    <string name="description_loop">Aktiveer of deaktiveer die implementering die lus wakker maak.</string>
-    <string name="no_aps_selected">GEEN APS GEKIES OF UITSLAG VERSKAF</string>
-    <string name="open_loop_new_suggestion">Nuwe voorstel beskikbaar</string>
-    <string name="basal_set_correctly">Basale reggestel</string>
-    <string name="last_run_label">Vorige lopie</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Versoek</string>
-    <string name="loop_constraints_processed_label">Na verwerkte beperkings</string>
-    <string name="loop_tbr_set_by_pump_label">Tydelike basale gestel deur pomp</string>
-    <string name="loop_smb_set_by_pump_label">SMB gestel deur pomp</string>
-    <string name="loop_open_mode_min_change">Minimale versoek verandering [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Oop lus sal nuwe verandering versoek as die %. Verstek waarde is 20%</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Stuur vandag se loglêers aan ontwikkelaars saam met hierdie tyd. Onverwagte situasie.</string>
