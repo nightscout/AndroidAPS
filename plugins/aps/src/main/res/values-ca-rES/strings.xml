@@ -80,4 +80,5 @@
     <string name="maxvalueinpreferences">valor màxim a la configuració</string>
     <string name="hardlimit">límit estricte</string>
     <!--    Autotune   -->
+    <!--    Loop -->
 </resources>
