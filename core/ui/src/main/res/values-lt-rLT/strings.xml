@@ -45,6 +45,7 @@
     <string name="mute5min">Nutildyti 5 minutėms</string>
     <string name="mute">Nutildyti</string>
     <string name="success">Atlikta</string>
+    <string name="advancedsettings_title">Papildomi nustatymai</string>
     <!--    Protection-->
     <string name="unlock_settings">Atrakinti nustatymus</string>
     <!--    Pumps -->
