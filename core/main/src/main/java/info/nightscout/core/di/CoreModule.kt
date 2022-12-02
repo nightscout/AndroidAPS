@@ -5,11 +5,14 @@ import android.os.Build
 import android.telephony.SmsManager
 import dagger.Module
 import dagger.Provides
+import dagger.android.ContributesAndroidInjector
+import info.nightscout.core.services.AlarmSoundService
 
 @Module(
     includes = [
         CoreDataClassesModule::class,
-        PreferencesModule::class
+        PreferencesModule::class,
+        ServicesModule::class
     ]
 )
 open class CoreModule {
