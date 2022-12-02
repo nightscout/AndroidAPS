@@ -38,8 +38,8 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
 
             //String[] ALL_STATUS_FIELDS = {"reservoir", "battery", "clock", "status", "device"};
             val string = StringBuilder()
-                .append("<span style=\"color:${rh.gac(R.attr.nsTitleColor)}\">")
-                .append(rh.gs(R.string.pump))
+                .append("<span style=\"color:${rh.gac(info.nightscout.core.ui.R.attr.nsTitleColor)}\">")
+                .append(rh.gs(info.nightscout.core.ui.R.string.pump))
                 .append(": </span>")
 
             // test warning level
@@ -55,7 +55,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
                 else                                                                                                                   -> ProcessedDeviceStatusData.Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
-            val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
+            val insulinUnit = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
             val fields = nsSettingsStatus.pumpExtendedSettingsFields()
             if (pumpData.reservoirDisplayOverride != "")
                 string.append(pumpData.reservoirDisplayOverride).append("$insulinUnit ")
@@ -93,15 +93,15 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
     override val openApsStatus: Spanned
         get() {
             val string = StringBuilder()
-                .append("<span style=\"color:${rh.gac(R.attr.nsTitleColor)}\">")
+                .append("<span style=\"color:${rh.gac(info.nightscout.core.ui.R.attr.nsTitleColor)}\">")
                 .append(rh.gs(R.string.openaps_short))
                 .append(": </span>")
 
             // test warning level
             val level = when {
-                openAPSData.clockSuggested + T.mins(sp.getLong(R.string.key_ns_alarm_urgent_stale_data_value, 31)).msecs() < dateUtil.now() -> ProcessedDeviceStatusData.Levels.URGENT
-                openAPSData.clockSuggested + T.mins(sp.getLong(R.string.key_ns_alarm_stale_data_value, 16)).msecs() < dateUtil.now()        -> ProcessedDeviceStatusData.Levels.WARN
-                else                                                                                                                        -> ProcessedDeviceStatusData.Levels.INFO
+                openAPSData.clockSuggested + T.mins(sp.getLong(info.nightscout.core.utils.R.string.key_ns_alarm_urgent_stale_data_value, 31)).msecs() < dateUtil.now() -> ProcessedDeviceStatusData.Levels.URGENT
+                openAPSData.clockSuggested + T.mins(sp.getLong(info.nightscout.core.utils.R.string.key_ns_alarm_stale_data_value, 16)).msecs() < dateUtil.now()        -> ProcessedDeviceStatusData.Levels.WARN
+                else                                                                                                                                                   -> ProcessedDeviceStatusData.Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
             if (openAPSData.clockSuggested != 0L) string.append(dateUtil.minAgo(rh, openAPSData.clockSuggested)).append(" ")
@@ -133,7 +133,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
     override val uploaderStatusSpanned: Spanned
         get() {
             val string = StringBuilder()
-            string.append("<span style=\"color:${rh.gac(R.attr.nsTitleColor)}\">")
+            string.append("<span style=\"color:${rh.gac(info.nightscout.core.ui.R.attr.nsTitleColor)}\">")
             string.append(rh.gs(R.string.uploader_short))
             string.append(": </span>")
             val iterator: Iterator<*> = uploaderMap.entries.iterator()

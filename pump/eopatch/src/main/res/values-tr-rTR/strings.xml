@@ -8,7 +8,6 @@
     <string name="patch_expiration_reminders">Pompa Süre Sonu Hatırlatıcısı</string>
     <string name="patch_buzzer_reminders">Pompa sesli Hatırlatıcılar</string>
     <string name="time_format_a_h_mm">h:mm a</string>
-    <string name="bolus_delivered">%1$.2f Ü bolus başarıyla gönderildi</string>
     <string name="eopatch_ble_status">BLE Durumu</string>
     <string name="eopatch_serial_number">Seri Numarası</string>
     <string name="eopatch_lot_number">Parti Numarası</string>

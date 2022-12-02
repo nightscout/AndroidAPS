@@ -37,7 +37,7 @@ class EversensePlugin @Inject constructor(
     PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_eversense)
+    .pluginIcon(info.nightscout.core.main.R.drawable.ic_eversense)
     .pluginName(R.string.eversense)
     .shortName(R.string.eversense_shortname)
     .preferencesId(R.xml.pref_bgsource)
@@ -48,7 +48,7 @@ class EversensePlugin @Inject constructor(
     override var sensorBatteryLevel = -1
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.EVERSENSE && sp.getBoolean(R.string.key_do_ns_upload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.EVERSENSE && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
     // cannot be inner class because of needed injection
     class EversenseWorker(

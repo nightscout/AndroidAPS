@@ -9,7 +9,6 @@ import androidx.work.WorkContinuation
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
@@ -89,11 +88,11 @@ class CalculationWorkflowImpl @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(rh.gs(R.string.key_units))) {
+                           if (event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_units))) {
                                overviewData.reset()
                                rxBus.send(EventNewHistoryData(0, false))
                            }
-                           if (event.isChanged(rh.gs(R.string.key_rangetodisplay))) {
+                           if (event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_rangetodisplay))) {
                                overviewData.initRange()
                                runOnScaleChanged()
                                rxBus.send(EventNewHistoryData(0, false))

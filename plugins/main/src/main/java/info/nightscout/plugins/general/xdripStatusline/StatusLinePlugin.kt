@@ -51,7 +51,7 @@ class StatusLinePlugin @Inject constructor(
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
-        .pluginIcon((R.drawable.ic_blooddrop_48))
+        .pluginIcon((info.nightscout.core.main.R.drawable.ic_blooddrop_48))
         .pluginName(R.string.xdrip_status)
         .shortName(R.string.xdrip_status_shortname)
         .neverVisible(true)

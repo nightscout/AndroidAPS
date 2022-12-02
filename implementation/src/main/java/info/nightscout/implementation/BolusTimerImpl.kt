@@ -25,7 +25,7 @@ class BolusTimerImpl @Inject constructor(
 
     override fun scheduleAutomationEventBolusReminder() {
         val event = AutomationEventObject(injector).apply {
-            title = rh.gs(R.string.bolus_reminder)
+            title = rh.gs(info.nightscout.core.ui.R.string.bolus_reminder)
             readOnly = true
             systemAction = true
             autoRemove = true
@@ -48,7 +48,7 @@ class BolusTimerImpl @Inject constructor(
 
     override fun removeAutomationEventBolusReminder() {
         val event = AutomationEventObject(injector).apply {
-            title = rh.gs(R.string.bolus_reminder)
+            title = rh.gs(info.nightscout.core.ui.R.string.bolus_reminder)
         }
         automationPlugin.removeIfExists(event)
     }

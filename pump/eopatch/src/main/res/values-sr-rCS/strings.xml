@@ -1,4 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_delivered">Bolus %1$.2f U je uspešno isporučen</string>
 </resources>

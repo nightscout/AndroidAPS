@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="category_alerts">Alerte</string>
-    <string name="bolus_delivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
     <string name="eopatch_status">Stare</string>
     <string name="eopatch_base_basal_rate">Rată bazală implicită</string>
     <string name="eopatch_temp_basal_rate">Rată bazală temporară</string>

@@ -6,7 +6,6 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
@@ -14,6 +13,7 @@ import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.interfaces.source.BgSource
 import info.nightscout.interfaces.source.DoingOwnUploadSource
 import info.nightscout.plugins.R
@@ -32,7 +32,7 @@ class XdripPlugin @Inject constructor(
     PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon((R.drawable.ic_blooddrop_48))
+    .pluginIcon((info.nightscout.core.main.R.drawable.ic_blooddrop_48))
     .pluginName(R.string.xdrip)
     .description(R.string.description_source_xdrip),
     aapsLogger, rh, injector

@@ -77,7 +77,7 @@ class PrepareTemporaryTargetDataWorker(
         // create series
         data.overviewData.temporaryTargetSeries = LineGraphSeries(Array(targetsSeriesArray.size) { i -> targetsSeriesArray[i] }).also {
             it.isDrawBackground = false
-            it.color = rh.gac(ctx, R.attr.tempTargetBackgroundColor )
+            it.color = rh.gac(ctx, info.nightscout.core.ui.R.attr.tempTargetBackgroundColor )
             it.thickness = 2
         }
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 100, null))

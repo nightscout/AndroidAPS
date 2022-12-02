@@ -900,7 +900,7 @@ class DataSyncSelectorImplementation @Inject constructor(
 
     override fun processChangedProfileStore() {
         val lastSync = sp.getLong(R.string.key_ns_profile_store_last_synced_timestamp, 0)
-        val lastChange = sp.getLong(R.string.key_local_profile_last_change, 0)
+        val lastChange = sp.getLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, 0)
         if (lastChange == 0L) return
         if (lastChange > lastSync) {
             if (activePlugin.activeProfileSource.profile?.allProfilesValid != true) return

@@ -60,7 +60,7 @@ class TriggerProfilePercentTest : TriggerTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(Optional.of(info.nightscout.core.main.R.drawable.ic_actions_profileswitch), TriggerProfilePercent(injector).icon())
+        Assert.assertEquals(Optional.of(info.nightscout.interfaces.R.drawable.ic_actions_profileswitch), TriggerProfilePercent(injector).icon())
     }
 
     @Test fun friendlyNameTest() {

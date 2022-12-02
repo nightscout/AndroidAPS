@@ -13,7 +13,6 @@ import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.sync.R
-import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclientV3.extensions.toBolus
 import info.nightscout.plugins.sync.nsclientV3.extensions.toBolusCalculatorResult
@@ -78,15 +77,15 @@ class ProcessTreatmentsWorker(
 
             when (treatment) {
                 is NSBolus                  ->
-                    if (sp.getBoolean(R.string.key_ns_receive_insulin, false) || config.NSCLIENT)
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT)
                         storeDataForDb.boluses.add(treatment.toBolus())
 
                 is NSCarbs                  ->
-                    if (sp.getBoolean(R.string.key_ns_receive_carbs, false) || config.NSCLIENT)
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT)
                         storeDataForDb.carbs.add(treatment.toCarbs())
 
                 is NSTemporaryTarget        ->
-                    if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
                         if (treatment.duration > 0L) {
                             // not ending event
                             if (treatment.targetBottomAsMgdl() < Constants.MIN_TT_MGDL
@@ -107,14 +106,14 @@ class ProcessTreatmentsWorker(
                         storeDataForDb.temporaryBasals.add(treatment.toTemporaryBasal())
 
                 is NSEffectiveProfileSwitch ->
-                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         treatment.toEffectiveProfileSwitch(dateUtil)?.let { effectiveProfileSwitch ->
                             storeDataForDb.effectiveProfileSwitches.add(effectiveProfileSwitch)
                         }
                     }
 
                 is NSProfileSwitch          ->
-                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         treatment.toProfileSwitch(activePlugin, dateUtil)?.let { profileSwitch ->
                             storeDataForDb.profileSwitches.add(profileSwitch)
                         }
@@ -126,13 +125,13 @@ class ProcessTreatmentsWorker(
                     }
 
                 is NSTherapyEvent           ->
-                    if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
                         treatment.toTherapyEvent().let { therapyEvent ->
                             storeDataForDb.therapyEvents.add(therapyEvent)
                         }
 
                 is NSOfflineEvent           ->
-                    if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT)
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT)
                         treatment.toOfflineEvent().let { offlineEvent ->
                             storeDataForDb.offlineEvents.add(offlineEvent)
                         }

@@ -14,7 +14,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">泵未初始化, 配置文件未设置!</string>
     <string name="failed_update_basal_profile">更新基础率配置文件失败</string>
-    <string name="bolus_delivered">成功输注大剂量 %1$.2f U</string>
     <string name="no_valid_basal_rate">从泵中无法读取有效的基础率</string>
     <string name="limiting_iob">由于 %2$s, 将 IOB(活性胰岛素) 限制为 %1$.1f U</string>
     <string name="loop_disabled">按约束条件禁用循环</string>

@@ -60,7 +60,7 @@ class ComboFragment : DaggerFragment() {
             .subscribe({ updateGui() }, fabricPrivacy::logException)
         binding.comboRefreshButton.setOnClickListener {
             binding.comboRefreshButton.isEnabled = false
-            commandQueue.readStatus(rh.gs(R.string.user_request), object : Callback() {
+            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.user_request), object : Callback() {
                 override fun run() {
                     runOnUiThread { binding.comboRefreshButton.isEnabled = true }
                 }
@@ -81,15 +81,15 @@ class ComboFragment : DaggerFragment() {
         binding.comboState.text = comboPlugin.stateSummary
         val ps = comboPlugin.pump.state
         if (ps.insulinState == PumpState.EMPTY || ps.batteryState == PumpState.EMPTY || ps.activeAlert != null && ps.activeAlert.errorCode != null) {
-            binding.comboState.setTextColor(rh.gac(context, R.attr.warningColor))
+            binding.comboState.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.warningColor))
             binding.comboState.setTypeface(null, Typeface.BOLD)
         } else if (comboPlugin.pump.state.suspended
             || ps.activeAlert != null && ps.activeAlert.warningCode != null
         ) {
-            binding.comboState.setTextColor(rh.gac(context, R.attr.omniYellowColor))
+            binding.comboState.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.omniYellowColor))
             binding.comboState.setTypeface(null, Typeface.BOLD)
         } else {
-            binding.comboState.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+            binding.comboState.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
             binding.comboState.setTypeface(null, Typeface.NORMAL)
         }
 
@@ -97,27 +97,27 @@ class ComboFragment : DaggerFragment() {
         val activity = comboPlugin.pump.activity
         when {
             activity != null            -> {
-                binding.comboActivity.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+                binding.comboActivity.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                 binding.comboActivity.textSize = 14f
                 binding.comboActivity.text = activity
             }
 
             commandQueue.size() > 0     -> {
-                binding.comboActivity.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+                binding.comboActivity.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                 binding.comboActivity.textSize = 14f
                 binding.comboActivity.text = ""
             }
 
             comboPlugin.isInitialized() -> {
-                binding.comboActivity.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+                binding.comboActivity.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                 binding.comboActivity.textSize = 20f
                 binding.comboActivity.text = "{fa-bed}"
             }
 
             else                        -> {
-                binding.comboActivity.setTextColor(rh.gac(context, R.attr.warningColor))
+                binding.comboActivity.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.warningColor))
                 binding.comboActivity.textSize = 14f
-                binding.comboActivity.text = rh.gs(R.string.pump_unreachable)
+                binding.comboActivity.text = rh.gs(info.nightscout.core.ui.R.string.pump_unreachable)
             }
         }
         if (comboPlugin.isInitialized()) {
@@ -126,12 +126,12 @@ class ComboFragment : DaggerFragment() {
             when (ps.batteryState) {
                 PumpState.EMPTY -> {
                     binding.comboPumpstateBattery.text = "{fa-battery-empty}"
-                    binding.comboPumpstateBattery.setTextColor(rh.gac(context, R.attr.warningColor))
+                    binding.comboPumpstateBattery.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.warningColor))
                 }
 
                 PumpState.LOW   -> {
                     binding.comboPumpstateBattery.text = "{fa-battery-quarter}"
-                    binding.comboPumpstateBattery.setTextColor(rh.gac(context, R.attr.omniYellowColor))
+                    binding.comboPumpstateBattery.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.omniYellowColor))
                 }
 
                 else            -> {
@@ -143,26 +143,26 @@ class ComboFragment : DaggerFragment() {
             // reservoir
             val reservoirLevel = comboPlugin.pump.reservoirLevel
             when {
-                reservoirLevel != -1               -> binding.comboInsulinstate.text = reservoirLevel.toString() + " " + rh.gs(R.string.insulin_unit_shortname)
+                reservoirLevel != -1               -> binding.comboInsulinstate.text = reservoirLevel.toString() + " " + rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
                 ps.insulinState == PumpState.LOW   -> binding.comboInsulinstate.text = rh.gs(R.string.combo_reservoir_low)
                 ps.insulinState == PumpState.EMPTY -> binding.comboInsulinstate.text = rh.gs(R.string.combo_reservoir_empty)
                 else                               -> binding.comboInsulinstate.text = rh.gs(R.string.combo_reservoir_normal)
             }
             when (ps.insulinState) {
                 PumpState.UNKNOWN -> {
-                    binding.comboInsulinstate.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+                    binding.comboInsulinstate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                     binding.comboInsulinstate.setTypeface(null, Typeface.NORMAL)
                 }
                 PumpState.LOW     -> {
-                    binding.comboInsulinstate.setTextColor(rh.gac(context, R.attr.omniYellowColor))
+                    binding.comboInsulinstate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.omniYellowColor))
                     binding.comboInsulinstate.setTypeface(null, Typeface.BOLD)
                 }
                 PumpState.EMPTY   -> {
-                    binding.comboInsulinstate.setTextColor(rh.gac(context, R.attr.warningColor))
+                    binding.comboInsulinstate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.warningColor))
                     binding.comboInsulinstate.setTypeface(null, Typeface.BOLD)
                 }
                 else              -> {
-                    binding.comboInsulinstate.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+                    binding.comboInsulinstate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                     binding.comboInsulinstate.setTypeface(null, Typeface.NORMAL)
                 }
             }
@@ -173,15 +173,15 @@ class ComboFragment : DaggerFragment() {
             when {
                 comboPlugin.pump.lastSuccessfulCmdTime + 60 * 1000 > System.currentTimeMillis()      -> {
                     binding.comboLastconnection.setText(R.string.combo_pump_connected_now)
-                    binding.comboLastconnection.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+                    binding.comboLastconnection.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                 }
                 comboPlugin.pump.lastSuccessfulCmdTime + 30 * 60 * 1000 < System.currentTimeMillis() -> {
                     binding.comboLastconnection.text = rh.gs(R.string.combo_no_pump_connection, min)
-                    binding.comboLastconnection.setTextColor(rh.gac(context, R.attr.warningColor))
+                    binding.comboLastconnection.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.warningColor))
                 }
                 else                                                                                 -> {
                     binding.comboLastconnection.text = minAgo
-                    binding.comboLastconnection.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+                    binding.comboLastconnection.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                 }
             }
 
@@ -190,7 +190,7 @@ class ComboFragment : DaggerFragment() {
             if (bolus != null) {
                 val agoMsc = System.currentTimeMillis() - bolus.timestamp
                 val bolusMinAgo = agoMsc / 60.0 / 1000.0
-                val unit = rh.gs(R.string.insulin_unit_shortname)
+                val unit = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
                 val ago: String = when {
                     agoMsc < 60 * 1000 -> rh.gs(R.string.combo_pump_connected_now)
                     bolusMinAgo < 60   -> dateUtil.minAgo(rh, bolus.timestamp)
@@ -203,7 +203,7 @@ class ComboFragment : DaggerFragment() {
             }
 
             // base basal rate
-            binding.comboBaseBasalRate.text = rh.gs(R.string.pump_base_basal_rate, comboPlugin.baseBasalRate)
+            binding.comboBaseBasalRate.text = rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, comboPlugin.baseBasalRate)
 
             // TBR
             var tbrStr = ""

@@ -63,7 +63,7 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.swipeRefresh.setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
+        binding.swipeRefresh.setColorSchemeColors(rh.gac(context, android.R.attr.colorPrimaryDark), rh.gac(context, android.R.attr.colorPrimary), rh.gac(context,com.google.android.material.R.attr.colorSecondary))
         binding.swipeRefresh.setOnRefreshListener {
             binding.lastrun.text = rh.gs(R.string.executing)
             handler.post { activePlugin.activeAPS.invoke("OpenAPS swipe refresh", false) }

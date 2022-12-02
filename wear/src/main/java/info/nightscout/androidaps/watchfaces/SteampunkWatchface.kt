@@ -40,9 +40,9 @@ class SteampunkWatchface : BaseWatchFace() {
             binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.red_600))
         } else {
             binding.tertiaryLayout.setBackgroundResource(0)
-            binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.black_86p))
+            binding.timestamp.setTextColor(ContextCompat.getColor(this, android.support.wearable.R.color.black_86p))
         }
-        binding.loop.setTextColor(ContextCompat.getColor(this, if (loopLevel == 0) R.color.red_600 else R.color.black_86p))
+        binding.loop.setTextColor(ContextCompat.getColor(this, if (loopLevel == 0) R.color.red_600 else android.support.wearable.R.color.black_86p))
         if (singleBg.sgvString != "---") {
             var rotationAngle = 0f // by default, show ? on the dial (? is at 0 degrees on the dial)
             if (singleBg.glucoseUnits != "-") {

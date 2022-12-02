@@ -212,7 +212,7 @@ class DiaconnG8Service : DaggerService() {
                 if (abs(timeDiff) > 60 * 60 * 1.5) {
                     aapsLogger.debug(LTag.PUMPCOMM, "Pump time difference: $timeDiff seconds - large difference")
                     //If time-diff is very large, warn user until we can synchronize history readings properly
-                    uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), R.raw.error)
+                    uiInteraction.runAlarm(rh.gs(R.string.largetimediff), rh.gs(R.string.largetimedifftitle), info.nightscout.core.ui.R.raw.error)
 
                     //de-initialize pump
                     diaconnG8Pump.reset()
@@ -520,7 +520,7 @@ class DiaconnG8Service : DaggerService() {
                 sendMessage(InjectionSnackInquirePacket(injector), 2000) // last bolus
                 // 볼러스 결과 보고패킷에서 처리함.
                 bolusingEvent.percent = 100
-                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.disconnecting)))
+                rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.shared.R.string.disconnecting)))
             }
         })
         return !start.failed

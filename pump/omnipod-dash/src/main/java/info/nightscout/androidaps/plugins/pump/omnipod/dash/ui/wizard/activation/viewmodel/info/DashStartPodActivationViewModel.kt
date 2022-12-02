@@ -8,7 +8,7 @@ import javax.inject.Inject
 class DashStartPodActivationViewModel @Inject constructor() : StartPodActivationViewModel() {
 
     @StringRes
-    override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_start_pod_activation_title
+    override fun getTitleId(): Int = info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_activation_wizard_start_pod_activation_title
 
     @StringRes
     override fun getTextId(): Int = R.string.omnipod_dash_pod_activation_wizard_start_pod_activation_text

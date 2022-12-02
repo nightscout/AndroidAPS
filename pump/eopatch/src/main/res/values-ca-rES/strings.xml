@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="category_alerts">Alertes</string>
-    <string name="bolus_delivered">Bolus %1$.2f U llliurat correctament</string>
     <string name="eopatch_status">Estat</string>
     <string name="eopatch_base_basal_rate">Basal base</string>
     <string name="eopatch_temp_basal_rate">Basal temporal</string>

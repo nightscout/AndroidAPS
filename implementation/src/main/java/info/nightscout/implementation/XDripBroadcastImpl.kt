@@ -4,12 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.safeQueryBroadcastReceivers
@@ -57,7 +57,7 @@ class XDripBroadcastImpl @Inject constructor(
 
     // sent in 640G mode
     override fun send(glucoseValue: GlucoseValue) {
-        if (sp.getBoolean(R.string.key_dexcomg5_xdripupload, false)) {
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_dexcomg5_xdripupload, false)) {
             val format = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ", Locale.US)
             try {
                 val entriesBody = JSONArray()
@@ -91,7 +91,7 @@ class XDripBroadcastImpl @Inject constructor(
 
     // sent in NSClient dbaccess mode
     override fun sendProfile(profileStoreJson: JSONObject) {
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false))
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_nsclient_localbroadcasts, false))
             broadcast(
                 Intent(Intents.ACTION_NEW_PROFILE).apply {
                     addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
@@ -103,7 +103,7 @@ class XDripBroadcastImpl @Inject constructor(
 
     // sent in NSClient dbaccess mode
     override fun sendTreatments(addedOrUpdatedTreatments: JSONArray) {
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false))
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_nsclient_localbroadcasts, false))
             splitArray(addedOrUpdatedTreatments).forEach { part ->
                 broadcast(
                     Intent(Intents.ACTION_NEW_TREATMENT).apply {
@@ -116,7 +116,7 @@ class XDripBroadcastImpl @Inject constructor(
 
     // sent in NSClient dbaccess mode
     override fun sendSgvs(sgvs: JSONArray) {
-        if (sp.getBoolean(R.string.key_nsclient_localbroadcasts, false))
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_nsclient_localbroadcasts, false))
             splitArray(sgvs).forEach { part ->
                 broadcast(
                     Intent(Intents.ACTION_NEW_SGV).apply {

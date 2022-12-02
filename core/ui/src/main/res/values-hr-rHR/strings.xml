@@ -10,7 +10,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Pumpa nije pokrenuta, profil nije postavljen!</string>
     <string name="failed_update_basal_profile">Ažuriranje bazalnog profila nije uspjelo</string>
-    <string name="bolus_delivered">Bolus %1$.2f U uspješno isporučen</string>
     <string name="reload">Ponovno učitaj</string>
     <string name="save">Spremi</string>
     <string name="snooze">Snooze</string>

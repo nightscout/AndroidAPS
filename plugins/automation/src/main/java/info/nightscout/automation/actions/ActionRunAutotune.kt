@@ -3,7 +3,6 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputProfileName
 import info.nightscout.automation.elements.LabelWithElement
@@ -32,25 +31,25 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
     private var inputProfileName = InputProfileName(rh, activePlugin, "", true)
     private var daysBack = InputDuration(0, InputDuration.TimeUnit.DAYS)
 
-    override fun friendlyName(): Int = R.string.autotune_run
-    override fun shortDescription(): String = resourceHelper.gs(R.string.autotune_profile_name, inputProfileName.value)
-    @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
+    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.autotune_run
+    override fun shortDescription(): String = resourceHelper.gs(info.nightscout.core.ui.R.string.autotune_profile_name, inputProfileName.value)
+    @DrawableRes override fun icon(): Int = info.nightscout.interfaces.R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
-        val autoSwitch = sp.getBoolean(R.string.key_autotune_auto, false)
-        val profileName = if (inputProfileName.value == rh.gs(R.string.active)) "" else inputProfileName.value
-        var message = if (autoSwitch) R.string.autotune_run_with_autoswitch else R.string.autotune_run_without_autoswitch
+        val autoSwitch = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_auto, false)
+        val profileName = if (inputProfileName.value == rh.gs(info.nightscout.core.ui.R.string.active)) "" else inputProfileName.value
+        var message = if (autoSwitch) info.nightscout.core.ui.R.string.autotune_run_with_autoswitch else info.nightscout.core.ui.R.string.autotune_run_without_autoswitch
         Thread {
             if (!autotunePlugin.calculationRunning) {
                 autotunePlugin.atLog("[Automation] Run Autotune $profileName, ${daysBack.value} days, Autoswitch $autoSwitch")
                 autotunePlugin.aapsAutotune(daysBack.value, autoSwitch, profileName)
                 if (!autotunePlugin.lastRunSuccess) {
-                    message = R.string.autotune_run_with_error
+                    message = info.nightscout.core.ui.R.string.autotune_run_with_error
                     aapsLogger.error(LTag.AUTOMATION, "Error during Autotune Run")
                 }
                 callback.result(PumpEnactResult(injector).success(autotunePlugin.lastRunSuccess).comment(message)).run()
             } else {
-                message = R.string.autotune_run_cancelled
+                message = info.nightscout.core.ui.R.string.autotune_run_cancelled
                 aapsLogger.debug(LTag.AUTOMATION, "Autotune run detected, Autotune Run Cancelled")
                 callback.result(PumpEnactResult(injector).success(false).comment(message)).run()
             }
@@ -60,11 +59,11 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         if (defaultValue == 0)
-            defaultValue = sp.getInt(R.string.key_autotune_default_tune_days, 5)
+            defaultValue = sp.getInt(info.nightscout.core.utils.R.string.key_autotune_default_tune_days, 5)
         daysBack.value = defaultValue
         LayoutBuilder()
-            .add(LabelWithElement(rh, rh.gs(R.string.autotune_select_profile), "", inputProfileName))
-            .add(LabelWithElement(rh, rh.gs(R.string.autotune_tune_days), "", daysBack))
+            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.autotune_select_profile), "", inputProfileName))
+            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.autotune_tune_days), "", daysBack))
             .build(root)
     }
 
@@ -85,7 +84,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
         inputProfileName.value = JsonHelper.safeGetString(o, "profileToTune", "")
         defaultValue = JsonHelper.safeGetInt(o, "tunedays")
         if (defaultValue == 0)
-            defaultValue = sp.getInt(R.string.key_autotune_default_tune_days, 5)
+            defaultValue = sp.getInt(info.nightscout.core.utils.R.string.key_autotune_default_tune_days, 5)
         daysBack.value = defaultValue
         return this
     }

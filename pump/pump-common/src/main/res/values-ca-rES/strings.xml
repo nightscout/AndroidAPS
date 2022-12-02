@@ -5,7 +5,6 @@
     <string name="pump_operation_not_yet_supported_by_pump">Operació no compatible ENCARA amb la bomba.</string>
     <string name="common_resultok">OK</string>
     <string name="pump_serial_number">Número de sèrie bomba</string>
-    <string name="bolus_delivered">%1$.2f U / %2$.2f U lliurades</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_suspended">En pausa</string>
     <!-- PumpCommon - History Group -->

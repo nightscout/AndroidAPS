@@ -34,7 +34,7 @@ class AidexPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon((R.drawable.ic_blooddrop_48))
+        .pluginIcon((info.nightscout.core.main.R.drawable.ic_blooddrop_48))
         .pluginName(R.string.aidex)
         .shortName(R.string.aidex_short)
         .description(R.string.description_source_aidex),

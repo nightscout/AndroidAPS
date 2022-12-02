@@ -11,7 +11,6 @@ import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.pump.danars.R
 import info.nightscout.pump.danars.activities.PairingHelperActivity
 import info.nightscout.pump.danars.databinding.DanarsPairingProgressDialogBinding
 import info.nightscout.pump.danars.events.EventDanaRSPairingSuccess
@@ -71,7 +70,7 @@ class PairingProgressDialog : DaggerDialogFragment() {
                 if (pairingEnded) {
                     activity?.runOnUiThread {
                         _binding?.danarsPairingprogressProgressbar?.progress = 100
-                        _binding?.danarsPairingprogressStatus?.setText(R.string.danars_pairingok)
+                        _binding?.danarsPairingprogressStatus?.setText(info.nightscout.pump.dana.R.string.danars_pairingok)
                         handler.postDelayed({ dismiss() }, 1000)
                     }
                     return@Runnable
@@ -81,7 +80,7 @@ class PairingProgressDialog : DaggerDialogFragment() {
             }
             activity?.runOnUiThread {
                 _binding?.danarsPairingprogressProgressbar?.progress = 100
-                _binding?.danarsPairingprogressStatus?.setText(R.string.danars_pairingtimedout)
+                _binding?.danarsPairingprogressStatus?.setText(info.nightscout.pump.dana.R.string.danars_pairingtimedout)
                 _binding?.ok?.visibility = View.VISIBLE
             }
         }
@@ -106,7 +105,7 @@ class PairingProgressDialog : DaggerDialogFragment() {
     private fun setViews() {
         _binding?.danarsPairingprogressProgressbar?.max = 100
         _binding?.danarsPairingprogressProgressbar?.progress = 0
-        _binding?.danarsPairingprogressStatus?.text = rh.gs(R.string.danars_waitingforpairing)
+        _binding?.danarsPairingprogressStatus?.text = rh.gs(info.nightscout.pump.dana.R.string.danars_waitingforpairing)
         _binding?.ok?.visibility = View.GONE
         _binding?.ok?.setOnClickListener { dismiss() }
         handler.post(runnable)

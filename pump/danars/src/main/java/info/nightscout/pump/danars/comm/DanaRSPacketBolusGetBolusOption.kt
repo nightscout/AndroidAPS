@@ -4,7 +4,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.danars.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.logging.LTag
@@ -83,7 +82,7 @@ class DanaRSPacketBolusGetBolusOption(
         dataSize = 1
         val missedBolus04EndMin = byteArrayToInt(getBytes(data, dataIndex, dataSize))
         if (!danaPump.isExtendedBolusEnabled) {
-            uiInteraction.addNotification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(R.string.danar_enableextendedbolus), Notification.URGENT)
+            uiInteraction.addNotification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(info.nightscout.pump.dana.R.string.danar_enableextendedbolus), Notification.URGENT)
             failed = true
         } else {
             rxBus.send(EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED))

@@ -3,16 +3,15 @@ package info.nightscout.automation.triggers
 import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.utils.JsonHelper.safeGetInt
-import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
+import info.nightscout.interfaces.utils.JsonHelper.safeGetInt
+import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.rx.logging.LTag
-
 import org.json.JSONObject
 
 class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector) {
@@ -74,7 +73,7 @@ class TriggerPumpLastConnection(injector: HasAndroidInjector) : Trigger(injector
     override fun friendlyDescription(): String =
         rh.gs(R.string.automation_trigger_pump_last_connection_compared, rh.gs(comparator.value.stringRes), minutesAgo.value)
 
-    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_remove)
+    override fun icon(): Optional<Int> = Optional.of(info.nightscout.core.main.R.drawable.ic_remove)
 
     override fun duplicate(): Trigger = TriggerPumpLastConnection(injector, this)
 

@@ -20,9 +20,9 @@ import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.databinding.LoopFragmentBinding
 import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui
-import info.nightscout.rx.events.EventLoopUpdateGui
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventLoopUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -63,7 +63,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.swipeRefresh.setColorSchemeColors(rh.gac(context, R.attr.colorPrimaryDark), rh.gac(context, R.attr.colorPrimary), rh.gac(context, R.attr.colorSecondary))
+        binding.swipeRefresh.setColorSchemeColors(rh.gac(context, android.R.attr.colorPrimaryDark), rh.gac(context, android.R.attr.colorPrimary), rh.gac(context,com.google.android.material.R.attr.colorSecondary))
         binding.swipeRefresh.setOnRefreshListener {
             binding.lastrun.text = rh.gs(R.string.executing)
             handler.post {
@@ -107,7 +107,7 @@ class LoopFragment : DaggerFragment(), MenuProvider {
                        }, fabricPrivacy::logException)
 
         updateGUI()
-        sp.putBoolean(R.string.key_objectiveuseloop, true)
+        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveuseloop, true)
     }
 
     @Synchronized

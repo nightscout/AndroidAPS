@@ -14,7 +14,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Pompa nu este inițializată, profilul nu este setat!</string>
     <string name="failed_update_basal_profile">Actualizarea profilului bazalei a eșuat</string>
-    <string name="bolus_delivered">Bolusul de %1$.2fU a fost livrat cu succes</string>
     <string name="no_valid_basal_rate">Nu s-a citit o rată bazală validă din pompă</string>
     <string name="limiting_iob">Se limitează IOB la %1$.1f U datorită %2$s</string>
     <string name="loop_disabled">BUCLĂ DEZACTIVATĂ DATORITĂ CONSTRÂNGERILOR</string>

@@ -18,7 +18,6 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.plugins.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
@@ -70,7 +69,7 @@ class GraphData(
         addSeries(info.nightscout.core.graph.data.AreaGraphSeries(inRangeAreaDataPoints).also {
             it.color = 0
             it.isDrawBackground = true
-            it.backgroundColor = rh.gac(graph.context, R.attr.inRangeBackground)
+            it.backgroundColor = rh.gac(graph.context, info.nightscout.core.ui.R.attr.inRangeBackground)
         })
     }
 
@@ -220,7 +219,7 @@ class GraphData(
                 paint.style = Paint.Style.STROKE
                 paint.strokeWidth = 2f
                 paint.pathEffect = DashPathEffect(floatArrayOf(10f, 20f), 0f)
-                paint.color = rh.gac(graph.context, R.attr.dotLineColor)
+                paint.color = rh.gac(graph.context, info.nightscout.core.ui.R.attr.dotLineColor)
             })
         })
     }

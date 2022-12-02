@@ -61,7 +61,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
             position = bundle.getInt("position", -1)
         }
         val entry = if (position == -1) quickWizard.newEmptyItem() else quickWizard[position]
-        if (sp.getBoolean(R.string.key_wear_control, false)) {
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_control, false)) {
             binding.deviceLabel.visibility = View.VISIBLE
             binding.device.visibility = View.VISIBLE
         } else {

@@ -17,7 +17,6 @@ import info.nightscout.androidaps.R
 import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.LocalAlertUtils
@@ -29,6 +28,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.logging.AAPSLogger
@@ -197,10 +197,10 @@ class KeepAliveWorker(
             rxBus.send(EventProfileSwitchChanged())
         } else if (isStatusOutdated && !pump.isBusy()) {
             lastReadStatus = dateUtil.now()
-            commandQueue.readStatus(rh.gs(R.string.keepalive_status_outdated), null)
+            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.keepalive_status_outdated), null)
         } else if (isBasalOutdated && !pump.isBusy()) {
             lastReadStatus = dateUtil.now()
-            commandQueue.readStatus(rh.gs(R.string.keepalive_basal_outdated), null)
+            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.keepalive_basal_outdated), null)
         }
     }
 }

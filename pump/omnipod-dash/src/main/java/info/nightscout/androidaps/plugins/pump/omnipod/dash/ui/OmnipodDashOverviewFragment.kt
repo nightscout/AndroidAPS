@@ -125,9 +125,9 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             commandQueue.customCommand(
                 CommandResumeDelivery(),
                 DisplayResultDialogCallback(
-                    rh.gs(R.string.omnipod_common_error_failed_to_resume_delivery),
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_failed_to_resume_delivery),
                     true
-                ).messageOnSuccess(rh.gs(R.string.omnipod_common_confirmation_delivery_resumed))
+                ).messageOnSuccess(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_confirmation_delivery_resumed))
             )
         }
 
@@ -136,7 +136,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             commandQueue.readStatus(
                 rh.gs(R.string.requested_by_user),
                 DisplayResultDialogCallback(
-                    rh.gs(R.string.omnipod_common_error_failed_to_refresh_status),
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_failed_to_refresh_status),
                     false
                 )
             )
@@ -147,10 +147,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             commandQueue.customCommand(
                 CommandSilenceAlerts(),
                 DisplayResultDialogCallback(
-                    rh.gs(R.string.omnipod_common_error_failed_to_silence_alerts),
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_failed_to_silence_alerts),
                     false
                 )
-                    .messageOnSuccess(rh.gs(R.string.omnipod_common_confirmation_silenced_alerts))
+                    .messageOnSuccess(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_confirmation_silenced_alerts))
                     .actionOnSuccess { rxBus.send(EventDismissNotification(Notification.OMNIPOD_POD_ALERTS)) }
             )
         }
@@ -160,10 +160,10 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             commandQueue.customCommand(
                 CommandSuspendDelivery(),
                 DisplayResultDialogCallback(
-                    rh.gs(R.string.omnipod_common_error_failed_to_suspend_delivery),
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_failed_to_suspend_delivery),
                     true
                 )
-                    .messageOnSuccess(rh.gs(R.string.omnipod_common_confirmation_suspended_delivery))
+                    .messageOnSuccess(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_confirmation_suspended_delivery))
             )
         }
 
@@ -171,8 +171,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             disablePodActionButtons()
             commandQueue.customCommand(
                 CommandHandleTimeChange(true),
-                DisplayResultDialogCallback(rh.gs(R.string.omnipod_common_error_failed_to_set_time), true)
-                    .messageOnSuccess(rh.gs(R.string.omnipod_common_confirmation_time_on_pod_updated))
+                DisplayResultDialogCallback(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_failed_to_set_time), true)
+                    .messageOnSuccess(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_confirmation_time_on_pod_updated))
             )
         }
         if (config.isEngineeringMode()) {
@@ -270,11 +270,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             context,
             when {
                 connectionSuccessPercentage < 70 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
-                    R.attr.warningColor
+                    info.nightscout.core.ui.R.attr.warningColor
                 connectionSuccessPercentage < 90 && podStateManager.successfulConnectionAttemptsAfterRetries > 50 ->
-                    R.attr.omniYellowColor
+                    info.nightscout.core.ui.R.attr.omniYellowColor
                 else                                                                                              ->
-                    R.attr.defaultTextColor
+                    info.nightscout.core.ui.R.attr.defaultTextColor
             }
         )
         bluetoothStatusBinding.omnipodDashBluetoothConnectionQuality.setTextColor(connectionStatsColor)
@@ -298,11 +298,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.firmwareVersion.text = PLACEHOLDER
             podInfoBinding.timeOnPod.text = PLACEHOLDER
             podInfoBinding.podExpiryDate.text = PLACEHOLDER
-            podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+            podInfoBinding.podExpiryDate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
             podInfoBinding.baseBasalRate.text = PLACEHOLDER
             podInfoBinding.totalDelivered.text = PLACEHOLDER
             podInfoBinding.reservoir.text = PLACEHOLDER
-            podInfoBinding.reservoir.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+            podInfoBinding.reservoir.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
             podInfoBinding.podActiveAlerts.text = PLACEHOLDER
         } else {
             podInfoBinding.uniqueId.text = podStateManager.uniqueId.toString()
@@ -325,7 +325,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
             podInfoBinding.timeOnPod.text = podStateManager.time?.let {
                 rh.gs(
-                    R.string.omnipod_common_time_with_timezone,
+                    info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_with_timezone,
                     dateUtil.dateAndTimeString(it.toEpochSecond() * 1000),
                     timeZone
                 )
@@ -341,11 +341,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     context,
                     when {
                         !podStateManager.sameTimeZone ->
-                            R.attr.omniMagentaColor
+                            info.nightscout.core.ui.R.attr.omniMagentaColor
                         timeDeviationTooBig           ->
-                            R.attr.omniYellowColor
+                            info.nightscout.core.ui.R.attr.omniYellowColor
                         else                          ->
-                            R.attr.defaultTextColor
+                            info.nightscout.core.ui.R.attr.defaultTextColor
                     }
                 )
             )
@@ -361,11 +361,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                     context,
                     when {
                         expiresAt != null && ZonedDateTime.now().isAfter(expiresAt)               ->
-                            R.attr.warningColor
+                            info.nightscout.core.ui.R.attr.warningColor
                         expiresAt != null && ZonedDateTime.now().isAfter(expiresAt.minusHours(4)) ->
-                            R.attr.omniYellowColor
+                            info.nightscout.core.ui.R.attr.omniYellowColor
                         else                                                                      ->
-                            R.attr.defaultTextColor
+                            info.nightscout.core.ui.R.attr.defaultTextColor
                     }
                 )
             )
@@ -373,7 +373,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podStateManager.alarmType?.let {
                 errors.add(
                     rh.gs(
-                        R.string.omnipod_common_pod_status_pod_fault_description,
+                        info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_pod_fault_description,
                         it.value,
                         it.toString()
                     )
@@ -384,7 +384,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.baseBasalRate.text =
                 if (podStateManager.basalProgram != null && !podStateManager.isSuspended) {
                     rh.gs(
-                        R.string.pump_base_basal_rate,
+                        info.nightscout.core.ui.R.string.pump_base_basal_rate,
                         omnipodDashPumpPlugin.model()
                             .determineCorrectBasalSize(podStateManager.basalProgram!!.rateAt(System.currentTimeMillis()))
                     )
@@ -396,7 +396,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             podInfoBinding.totalDelivered.text =
                 if (podStateManager.isActivationCompleted && podStateManager.pulsesDelivered != null) {
                     rh.gs(
-                        R.string.omnipod_common_overview_total_delivered_value,
+                        info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_total_delivered_value,
                         (podStateManager.pulsesDelivered!! * PodConstants.POD_PULSE_BOLUS_UNITS)
                     )
                 } else {
@@ -406,8 +406,8 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             // reservoir
             if (podStateManager.pulsesRemaining == null) {
                 podInfoBinding.reservoir.text =
-                    rh.gs(R.string.omnipod_common_overview_reservoir_value_over50)
-                podInfoBinding.reservoir.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_reservoir_value_over50)
+                podInfoBinding.reservoir.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
             } else {
                 // TODO
                 // val lowReservoirThreshold = (omnipodAlertUtil.lowReservoirAlertUnits
@@ -415,16 +415,16 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 val lowReservoirThreshold: Short = PodConstants.DEFAULT_MAX_RESERVOIR_ALERT_THRESHOLD
 
                 podInfoBinding.reservoir.text = rh.gs(
-                    R.string.omnipod_common_overview_reservoir_value,
+                    info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_reservoir_value,
                     (podStateManager.pulsesRemaining!! * PodConstants.POD_PULSE_BOLUS_UNITS)
                 )
                 podInfoBinding.reservoir.setTextColor(
                     rh.gac(
                         context,
                         if (podStateManager.pulsesRemaining!! < lowReservoirThreshold) {
-                            R.attr.warningColor
+                            info.nightscout.core.ui.R.attr.warningColor
                         } else {
-                            R.attr.defaultTextColor
+                            info.nightscout.core.ui.R.attr.defaultTextColor
                         }
                     )
                 )
@@ -437,31 +437,31 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
         if (errors.size == 0) {
             podInfoBinding.errors.text = PLACEHOLDER
-            podInfoBinding.errors.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+            podInfoBinding.errors.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
         } else {
             podInfoBinding.errors.text = StringUtils.join(errors, System.lineSeparator())
-            podInfoBinding.errors.setTextColor(rh.gac(context, R.attr.warningColor))
+            podInfoBinding.errors.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.warningColor))
         }
     }
 
     private fun translatedActiveAlert(alert: AlertType): String {
         val id = when (alert) {
             AlertType.LOW_RESERVOIR       ->
-                R.string.omnipod_common_alert_low_reservoir
+                info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_low_reservoir
             AlertType.EXPIRATION          ->
-                R.string.omnipod_common_alert_expiration_advisory
+                info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_expiration_advisory
             AlertType.EXPIRATION_IMMINENT ->
-                R.string.omnipod_common_alert_expiration
+                info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_expiration
             AlertType.USER_SET_EXPIRATION ->
-                R.string.omnipod_common_alert_expiration_advisory
+                info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_expiration_advisory
             AlertType.AUTO_OFF            ->
-                R.string.omnipod_common_alert_shutdown_imminent
+                info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_shutdown_imminent
             AlertType.SUSPEND_IN_PROGRESS ->
                 R.string.omnipod_common_alert_delivery_suspended
             AlertType.SUSPEND_ENDED       ->
                 R.string.omnipod_common_alert_delivery_suspended
             else                          ->
-                R.string.omnipod_common_alert_unknown_alert
+                info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_unknown_alert
         }
         return rh.gs(id)
     }
@@ -479,37 +479,37 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 rh.gac(
                     context,
                     if (omnipodDashPumpPlugin.isUnreachableAlertTimeoutExceeded(getPumpUnreachableTimeout().toMillis())) {
-                        R.attr.warningColor
+                        info.nightscout.core.ui.R.attr.warningColor
                     } else {
-                        R.attr.defaultTextColor
+                        info.nightscout.core.ui.R.attr.defaultTextColor
                     }
                 )
             podInfoBinding.lastConnection.setTextColor(lastConnectionColor)
         } else {
-            podInfoBinding.lastConnection.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+            podInfoBinding.lastConnection.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
             podInfoBinding.lastConnection.text = PLACEHOLDER
         }
     }
 
     private fun updatePodStatus() {
         podInfoBinding.podStatus.text = if (podStateManager.activationProgress == ActivationProgress.NOT_STARTED) {
-            rh.gs(R.string.omnipod_common_pod_status_no_active_pod)
+            rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_no_active_pod)
         } else if (!podStateManager.isActivationCompleted) {
             if (!podStateManager.isUniqueIdSet) {
-                rh.gs(R.string.omnipod_common_pod_status_waiting_for_activation)
+                rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_waiting_for_activation)
             } else {
                 if (podStateManager.activationProgress.isBefore(ActivationProgress.PRIME_COMPLETED)) {
-                    rh.gs(R.string.omnipod_common_pod_status_waiting_for_activation)
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_waiting_for_activation)
                 } else {
-                    rh.gs(R.string.omnipod_common_pod_status_waiting_for_cannula_insertion)
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_waiting_for_cannula_insertion)
                 }
             }
         } else {
             if (podStateManager.podStatus!!.isRunning()) {
                 if (podStateManager.isSuspended) {
-                    rh.gs(R.string.omnipod_common_pod_status_suspended)
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_suspended)
                 } else {
-                    rh.gs(R.string.omnipod_common_pod_status_running)
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_status_running)
                 }
                 /*
             } else if (podStateManager.podStatus == PodProgressStatus.FAULT_EVENT_OCCURRED) {
@@ -526,11 +526,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             context,
             when {
                 !podStateManager.isActivationCompleted || podStateManager.isPodKaput || podStateManager.isSuspended ->
-                    R.attr.warningColor
+                    info.nightscout.core.ui.R.attr.warningColor
                 podStateManager.activeCommand != null                                                               ->
-                    R.attr.omniYellowColor
+                    info.nightscout.core.ui.R.attr.omniYellowColor
                 else                                                                                                ->
-                    R.attr.defaultTextColor
+                    info.nightscout.core.ui.R.attr.defaultTextColor
             }
         )
         podInfoBinding.podStatus.setTextColor(podStatusColor)
@@ -538,18 +538,18 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
 
     private fun updateLastBolus() {
 
-        var textColorAttr = R.attr.defaultTextColor
+        var textColorAttr = info.nightscout.core.ui.R.attr.defaultTextColor
         podStateManager.activeCommand?.let {
             val requestedBolus = it.requestedBolus
             if (requestedBolus != null) {
                 var text = rh.gs(
-                    R.string.omnipod_common_overview_last_bolus_value,
+                    info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_last_bolus_value,
                     omnipodDashPumpPlugin.model().determineCorrectBolusSize(requestedBolus),
-                    rh.gs(R.string.insulin_unit_shortname),
+                    rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname),
                     readableDuration(Duration.ofMillis(SystemClock.elapsedRealtime() - it.createdRealtime))
                 )
                 text += " (uncertain) "
-                textColorAttr = R.attr.warningColor
+                textColorAttr = info.nightscout.core.ui.R.attr.warningColor
                 podInfoBinding.lastBolus.text = text
                 podInfoBinding.lastBolus.setTextColor(rh.gac(context, textColorAttr))
                 return
@@ -563,13 +563,13 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 ?: it.requestedUnits
 
             val text = rh.gs(
-                R.string.omnipod_common_overview_last_bolus_value,
+                info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_last_bolus_value,
                 omnipodDashPumpPlugin.model().determineCorrectBolusSize(bolusSize),
-                rh.gs(R.string.insulin_unit_shortname),
+                rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname),
                 readableDuration(Duration.ofMillis(System.currentTimeMillis() - it.startTime))
             )
             if (!it.deliveryComplete) {
-                textColorAttr = R.attr.omniYellowColor
+                textColorAttr = info.nightscout.core.ui.R.attr.omniYellowColor
             }
             podInfoBinding.lastBolus.text = text
             podInfoBinding.lastBolus.setTextColor(rh.gac(context, textColorAttr))
@@ -588,7 +588,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             val minutesRunning = Duration.ofMillis(System.currentTimeMillis() - startTime).toMinutes()
 
             podInfoBinding.tempBasal.text = rh.gs(
-                R.string.omnipod_common_overview_temp_basal_value,
+                info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_overview_temp_basal_value,
                 rate,
                 dateUtil.timeString(startTime),
                 minutesRunning,
@@ -672,11 +672,11 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     }
 
     private fun isAutomaticallySilenceAlertsEnabled(): Boolean {
-        return sp.getBoolean(R.string.omnipod_common_preferences_automatically_silence_alerts, false)
+        return sp.getBoolean(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_preferences_automatically_silence_alerts, false)
     }
 
     private fun displayErrorDialog(title: String, message: String, withSound: Boolean) {
-            uiInteraction.runAlarm(message, title, if (withSound) R.raw.boluserror else 0)
+            uiInteraction.runAlarm(message, title, if (withSound) info.nightscout.core.ui.R.raw.boluserror else 0)
     }
 
     private fun displayOkDialog(title: String, message: String) {
@@ -693,17 +693,17 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
         val seconds = duration.seconds
         when {
             seconds < 10           -> {
-                return rh.gs(R.string.omnipod_common_moments_ago)
+                return rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_moments_ago)
             }
 
             seconds < 60           -> {
-                return rh.gs(R.string.omnipod_common_less_than_a_minute_ago)
+                return rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_less_than_a_minute_ago)
             }
 
             seconds < 60 * 60      -> { // < 1 hour
                 return rh.gs(
-                    R.string.omnipod_common_time_ago,
-                    rh.gq(R.plurals.omnipod_common_minutes, minutes, minutes)
+                    info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago,
+                    rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_minutes, minutes, minutes)
                 )
             }
 
@@ -711,16 +711,16 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 val minutesLeft = minutes % 60
                 if (minutesLeft > 0)
                     return rh.gs(
-                        R.string.omnipod_common_time_ago,
+                        info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago,
                         rh.gs(
-                            R.string.omnipod_common_composite_time,
-                            rh.gq(R.plurals.omnipod_common_hours, hours, hours),
-                            rh.gq(R.plurals.omnipod_common_minutes, minutesLeft, minutesLeft)
+                            info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_composite_time,
+                            rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_hours, hours, hours),
+                            rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_minutes, minutesLeft, minutesLeft)
                         )
                     )
                 return rh.gs(
-                    R.string.omnipod_common_time_ago,
-                    rh.gq(R.plurals.omnipod_common_hours, hours, hours)
+                    info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago,
+                    rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_hours, hours, hours)
                 )
             }
 
@@ -729,16 +729,16 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
                 val hoursLeft = hours % 24
                 if (hoursLeft > 0)
                     return rh.gs(
-                        R.string.omnipod_common_time_ago,
+                        info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago,
                         rh.gs(
-                            R.string.omnipod_common_composite_time,
-                            rh.gq(R.plurals.omnipod_common_days, days, days),
-                            rh.gq(R.plurals.omnipod_common_hours, hoursLeft, hoursLeft)
+                            info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_composite_time,
+                            rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_days, days, days),
+                            rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_hours, hoursLeft, hoursLeft)
                         )
                     )
                 return rh.gs(
-                    R.string.omnipod_common_time_ago,
-                    rh.gq(R.plurals.omnipod_common_days, days, days)
+                    info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_time_ago,
+                    rh.gq(info.nightscout.androidaps.plugins.pump.omnipod.common.R.plurals.omnipod_common_days, days, days)
                 )
             }
         }
@@ -752,7 +752,7 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
     private fun getPumpUnreachableTimeout(): Duration {
         return Duration.ofMinutes(
             sp.getInt(
-                R.string.key_pump_unreachable_threshold_minutes,
+                info.nightscout.core.utils.R.string.key_pump_unreachable_threshold_minutes,
                 Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES
             ).toLong()
         )
@@ -770,14 +770,14 @@ class OmnipodDashOverviewFragment : DaggerFragment() {
             if (result.success) {
                 val messageOnSuccess = this.messageOnSuccess
                 if (messageOnSuccess != null) {
-                    displayOkDialog(rh.gs(R.string.omnipod_common_confirmation), messageOnSuccess)
+                    displayOkDialog(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_confirmation), messageOnSuccess)
                 }
                 actionOnSuccess?.run()
             } else {
                 displayErrorDialog(
-                    rh.gs(R.string.omnipod_common_warning),
+                    rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_warning),
                     rh.gs(
-                        R.string.omnipod_common_two_strings_concatenated_by_colon,
+                        info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_two_strings_concatenated_by_colon,
                         errorMessagePrefix,
                         result.comment
                     ),

@@ -14,7 +14,6 @@
     <string name="pump_base_basal_rate">%1$.2f ед/ч</string>
     <string name="pump_not_initialized_profile_not_set">помпа не инициализирована, профиль не установлен</string>
     <string name="failed_update_basal_profile">не удалось обновить базальный профиль</string>
-    <string name="bolus_delivered">Болюс %1$.2f ед. подан успешно</string>
     <string name="no_valid_basal_rate">На помпе не найдены валидные записи о базалe</string>
     <string name="limiting_iob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
     <string name="loop_disabled">ЗЦ ОТМЕНЕН ОГРАНИЧЕНИЯМИ</string>

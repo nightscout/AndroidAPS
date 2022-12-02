@@ -5,7 +5,6 @@
     <string name="pump_operation_not_yet_supported_by_pump">İşlem HENÜZ pompa tarafından desteklenmiyor.</string>
     <string name="common_resultok">Tamam</string>
     <string name="pump_serial_number">Pompa Seri Numarası</string>
-    <string name="bolus_delivered">%1$.2f Ü / %2$.2f Ü gönderildi</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Başlatılmadı</string>
     <string name="pump_status_initialized">Başlatıldı</string>

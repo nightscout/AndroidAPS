@@ -36,7 +36,7 @@ class PoctechPlugin @Inject constructor(
     PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_poctech)
+    .pluginIcon(info.nightscout.core.main.R.drawable.ic_poctech)
     .pluginName(R.string.poctech)
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_poctech),
@@ -101,6 +101,6 @@ class PoctechPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.POCTECH_NATIVE && sp.getBoolean(R.string.key_do_ns_upload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.POCTECH_NATIVE && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
 }

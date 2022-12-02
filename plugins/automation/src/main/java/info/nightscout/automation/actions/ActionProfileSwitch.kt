@@ -3,7 +3,6 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputProfileName
 import info.nightscout.automation.elements.LabelWithElement
@@ -11,6 +10,7 @@ import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpEnactResult
@@ -32,19 +32,19 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.profilename
     override fun shortDescription(): String = rh.gs(R.string.changengetoprofilename, inputProfileName.value)
-    @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
+    @DrawableRes override fun icon(): Int = info.nightscout.interfaces.R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
         val activeProfileName = profileFunction.getProfileName()
         //Check for uninitialized profileName
         if (inputProfileName.value == "") {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile not initialized")
-            callback.result(PumpEnactResult(injector).success(false).comment(R.string.error_field_must_not_be_empty)).run()
+            callback.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.validators.R.string.error_field_must_not_be_empty)).run()
             return
         }
         if (profileFunction.getProfile() == null) {
             aapsLogger.error(LTag.AUTOMATION, "ProfileFunctions not initialized")
-            callback.result(PumpEnactResult(injector).success(false).comment(R.string.noprofile)).run()
+            callback.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.noprofile)).run()
             return
         }
         if (inputProfileName.value == activeProfileName) {
@@ -55,7 +55,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
         val profileStore = activePlugin.activeProfileSource.profile ?: return
         if (profileStore.getSpecificProfile(inputProfileName.value) == null) {
             aapsLogger.error(LTag.AUTOMATION, "Selected profile does not exist! - ${inputProfileName.value}")
-            callback.result(PumpEnactResult(injector).success(false).comment(R.string.notexists)).run()
+            callback.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.notexists)).run()
             return
         }
         uel.log(
@@ -64,7 +64,7 @@ class ActionProfileSwitch(injector: HasAndroidInjector) : Action(injector) {
             ValueWithUnit.Percent(100)
         )
         val result = profileFunction.createProfileSwitch(profileStore, inputProfileName.value, 0, 100, 0, dateUtil.now())
-        callback.result(PumpEnactResult(injector).success(result).comment(R.string.ok)).run()
+        callback.result(PumpEnactResult(injector).success(result).comment(info.nightscout.core.ui.R.string.ok)).run()
     }
 
     override fun generateDialog(root: LinearLayout) {

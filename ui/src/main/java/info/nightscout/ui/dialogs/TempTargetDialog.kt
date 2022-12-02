@@ -91,7 +91,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
             )
 
         val units = profileFunction.getUnits()
-        binding.units.text = if (units == GlucoseUnit.MMOL) rh.gs(R.string.mmol) else rh.gs(R.string.mgdl)
+        binding.units.text = if (units == GlucoseUnit.MMOL) rh.gs(info.nightscout.core.ui.R.string.mmol) else rh.gs(info.nightscout.core.ui.R.string.mgdl)
 
         // temp target
         context?.let { context ->
@@ -101,12 +101,12 @@ class TempTargetDialog : DialogFragmentWithDate() {
                 binding.targetCancel.visibility = View.GONE
 
             reasonList = Lists.newArrayList(
-                rh.gs(R.string.manual),
-                rh.gs(R.string.eatingsoon),
-                rh.gs(R.string.activity),
-                rh.gs(R.string.hypo)
+                rh.gs(info.nightscout.core.ui.R.string.manual),
+                rh.gs(info.nightscout.core.ui.R.string.eatingsoon),
+                rh.gs(info.nightscout.core.ui.R.string.activity),
+                rh.gs(info.nightscout.core.ui.R.string.hypo)
             )
-            binding.reasonList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, reasonList))
+            binding.reasonList.setAdapter(ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, reasonList))
 
             binding.targetCancel.setOnClickListener { binding.duration.value = 0.0; shortClick(it) }
             binding.eatingSoon.setOnClickListener { shortClick(it) }
@@ -140,19 +140,19 @@ class TempTargetDialog : DialogFragmentWithDate() {
             R.id.eating_soon -> {
                 binding.temptarget.value = defaultValueHelper.determineEatingSoonTT()
                 binding.duration.value = defaultValueHelper.determineEatingSoonTTDuration().toDouble()
-                binding.reasonList.setText(rh.gs(R.string.eatingsoon), false)
+                binding.reasonList.setText(rh.gs(info.nightscout.core.ui.R.string.eatingsoon), false)
             }
 
             R.id.activity    -> {
                 binding.temptarget.value = defaultValueHelper.determineActivityTT()
                 binding.duration.value = defaultValueHelper.determineActivityTTDuration().toDouble()
-                binding.reasonList.setText(rh.gs(R.string.activity), false)
+                binding.reasonList.setText(rh.gs(info.nightscout.core.ui.R.string.activity), false)
             }
 
             R.id.hypo        -> {
                 binding.temptarget.value = defaultValueHelper.determineHypoTT()
                 binding.duration.value = defaultValueHelper.determineHypoTTDuration().toDouble()
-                binding.reasonList.setText(rh.gs(R.string.hypo), false)
+                binding.reasonList.setText(rh.gs(info.nightscout.core.ui.R.string.hypo), false)
             }
         }
     }
@@ -167,49 +167,49 @@ class TempTargetDialog : DialogFragmentWithDate() {
         if (_binding == null) return false
         val actions: LinkedList<String> = LinkedList()
         var reason = binding.reasonList.text.toString()
-        val unitResId = if (profileFunction.getUnits() == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol
+        val unitResId = if (profileFunction.getUnits() == GlucoseUnit.MGDL) info.nightscout.core.ui.R.string.mgdl else info.nightscout.core.ui.R.string.mmol
         val target = binding.temptarget.value
         val duration = binding.duration.value.toInt()
         if (target != 0.0 && duration != 0) {
-            actions.add(rh.gs(R.string.reason) + ": " + reason)
-            actions.add(rh.gs(R.string.target_label) + ": " + Profile.toCurrentUnitsString(profileFunction, target) + " " + rh.gs(unitResId))
-            actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, duration))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.reason) + ": " + reason)
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.target_label) + ": " + Profile.toCurrentUnitsString(profileFunction, target) + " " + rh.gs(unitResId))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_mins, duration))
         } else {
-            actions.add(rh.gs(R.string.stoptemptarget))
-            reason = rh.gs(R.string.stoptemptarget)
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.stoptemptarget))
+            reason = rh.gs(info.nightscout.core.ui.R.string.stoptemptarget)
         }
         if (eventTimeChanged)
-            actions.add(rh.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.temporary_target), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.temporary_target), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 val units = profileFunction.getUnits()
                 when (reason) {
-                    rh.gs(R.string.eatingsoon)     -> uel.log(
+                    rh.gs(info.nightscout.core.ui.R.string.eatingsoon)     -> uel.log(
                         UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                             TemporaryTarget.Reason.EATING_SOON
                         ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(R.string.activity)       -> uel.log(
+                    rh.gs(info.nightscout.core.ui.R.string.activity)       -> uel.log(
                         UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                             TemporaryTarget.Reason.ACTIVITY
                         ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(R.string.hypo)           -> uel.log(
+                    rh.gs(info.nightscout.core.ui.R.string.hypo)           -> uel.log(
                         UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                             TemporaryTarget.Reason.HYPOGLYCEMIA
                         ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(R.string.manual)         -> uel.log(
+                    rh.gs(info.nightscout.core.ui.R.string.manual)         -> uel.log(
                         UserEntry.Action.TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged }, ValueWithUnit.TherapyEventTTReason(
                             TemporaryTarget.Reason.CUSTOM
                         ), ValueWithUnit.fromGlucoseUnit(target, units.asText), ValueWithUnit.Minute(duration)
                     )
 
-                    rh.gs(R.string.stoptemptarget) -> uel.log(UserEntry.Action.CANCEL_TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
+                    rh.gs(info.nightscout.core.ui.R.string.stoptemptarget) -> uel.log(UserEntry.Action.CANCEL_TT, UserEntry.Sources.TTDialog, ValueWithUnit.Timestamp(eventTime).takeIf { eventTimeChanged })
                 }
                 if (target == 0.0 || duration == 0) {
                     disposable += repository.runTransactionForResult(CancelCurrentTemporaryTargetIfAnyTransaction(eventTime))
@@ -224,10 +224,10 @@ class TempTargetDialog : DialogFragmentWithDate() {
                             timestamp = eventTime,
                             duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
                             reason = when (reason) {
-                                rh.gs(R.string.eatingsoon) -> TemporaryTarget.Reason.EATING_SOON
-                                rh.gs(R.string.activity)   -> TemporaryTarget.Reason.ACTIVITY
-                                rh.gs(R.string.hypo)       -> TemporaryTarget.Reason.HYPOGLYCEMIA
-                                else                       -> TemporaryTarget.Reason.CUSTOM
+                                rh.gs(info.nightscout.core.ui.R.string.eatingsoon) -> TemporaryTarget.Reason.EATING_SOON
+                                rh.gs(info.nightscout.core.ui.R.string.activity)   -> TemporaryTarget.Reason.ACTIVITY
+                                rh.gs(info.nightscout.core.ui.R.string.hypo)       -> TemporaryTarget.Reason.HYPOGLYCEMIA
+                                else                                                 -> TemporaryTarget.Reason.CUSTOM
                             },
                             lowTarget = Profile.toMgdl(target, profileFunction.getUnits()),
                             highTarget = Profile.toMgdl(target, profileFunction.getUnits())
@@ -240,7 +240,7 @@ class TempTargetDialog : DialogFragmentWithDate() {
                                 })
                 }
 
-                if (duration == 10) sp.putBoolean(R.string.key_objectiveusetemptarget, true)
+                if (duration == 10) sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusetemptarget, true)
             })
         }
         return true

@@ -66,7 +66,7 @@ class ProfilePlugin @Inject constructor(
         .mainType(PluginType.PROFILE)
         .fragmentClass(ProfileFragment::class.java.name)
         .enableByDefault(true)
-        .pluginIcon(R.drawable.ic_local_profile)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_local_profile)
         .pluginName(R.string.localprofile)
         .shortName(R.string.localprofile_shortname)
         .description(R.string.description_profile_local)
@@ -96,7 +96,7 @@ class ProfilePlugin @Inject constructor(
         val pumpDescription = activePlugin.activePump.pumpDescription
         with(profiles[currentProfileIndex]) {
             if (dia < hardLimits.minDia() || dia > hardLimits.maxDia()) {
-                ToastUtils.errorToast(activity, rh.gs(R.string.value_out_of_hard_limits, rh.gs(R.string.profile_dia), dia))
+                ToastUtils.errorToast(activity, rh.gs(info.nightscout.core.ui.R.string.value_out_of_hard_limits, rh.gs(info.nightscout.core.ui.R.string.profile_dia), dia))
                 return false
             }
             if (name.isNullOrEmpty()) {
@@ -192,7 +192,7 @@ class ProfilePlugin @Inject constructor(
         }
         sp.putInt(Constants.LOCAL_PROFILE + "_profiles", numOfProfiles)
 
-        sp.putLong(R.string.key_local_profile_last_change, dateUtil.now())
+        sp.putLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, dateUtil.now())
         createAndStoreConvertedProfile()
         isEdited = false
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.data.toString())
@@ -412,7 +412,7 @@ class ProfilePlugin @Inject constructor(
                 }
             }
             if (numOfProfiles > 0) json.put("defaultProfile", currentProfile()?.name)
-            val startDate = sp.getLong(R.string.key_local_profile_last_change, dateUtil.now())
+            val startDate = sp.getLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, dateUtil.now())
             json.put("startDate", dateUtil.toISOAsUTC(startDate))
             json.put("store", store)
         } catch (e: JSONException) {
@@ -455,10 +455,10 @@ class ProfilePlugin @Inject constructor(
             val profileJson = dataWorkerStorage.pickupJSONObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             xDripBroadcast.sendProfile(profileJson)
-            if (sp.getBoolean(R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
+            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
                 val store = profileInstantiator.storeInstance(profileJson)
                 val createdAt = store.getStartDate()
-                val lastLocalChange = sp.getLong(R.string.key_local_profile_last_change, 0)
+                val lastLocalChange = sp.getLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, 0)
                 aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")
                 @Suppress("LiftReturnOrAssignment")
                 if (createdAt > lastLocalChange || createdAt % 1000 == 0L) {// whole second means edited in NS

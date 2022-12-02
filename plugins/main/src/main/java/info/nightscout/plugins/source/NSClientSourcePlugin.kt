@@ -46,7 +46,7 @@ class NSClientSourcePlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_nsclient_bg)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_nsclient_bg)
         .pluginName(R.string.ns_client_bg)
         .shortName(R.string.ns_client_bg_short)
         .description(R.string.description_source_ns_client),
@@ -137,7 +137,7 @@ class NSClientSourcePlugin @Inject constructor(
             val sgvs = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
-            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(R.string.key_ns_receive_cgm, false))
+            if (!nsClientSourcePlugin.isEnabled() && !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_cgm, false))
                 return Result.success(workDataOf("Result" to "Sync not enabled"))
 
             var latestDateInReceivedData: Long = 0

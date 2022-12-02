@@ -6,7 +6,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.main.R
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.databinding.DialogNtpProgressBinding
 import info.nightscout.rx.AapsSchedulers
@@ -51,14 +50,14 @@ class NtpProgressDialog : DaggerDialogFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val defaultMessage = rh.gs(R.string.timedetection)
-        dialog?.setTitle(rh.gs(R.string.objectives))
+        val defaultMessage = rh.gs(info.nightscout.core.ui.R.string.timedetection)
+        dialog?.setTitle(rh.gs(info.nightscout.core.ui.R.string.objectives))
         binding.stop.setOnClickListener { dismiss() }
         binding.status.text = state ?: defaultMessage
         binding.progressbar.max = 100
         binding.progressbar.progress = percent
-        binding.stop.text = rh.gs(R.string.close)
-        binding.title.text = rh.gs(R.string.please_wait)
+        binding.stop.text = rh.gs(info.nightscout.core.ui.R.string.close)
+        binding.title.text = rh.gs(info.nightscout.core.ui.R.string.please_wait)
     }
 
     override fun onResume() {

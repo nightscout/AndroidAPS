@@ -9,7 +9,6 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.fromConstant
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TherapyEvent
@@ -22,6 +21,7 @@ import info.nightscout.database.impl.transactions.InvalidateGlucoseValueTransact
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.XDripBroadcast
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -52,7 +52,7 @@ class DexcomPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_dexcom_g6)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_dexcom_g6)
         .pluginName(R.string.dexcom_app_patched)
         .shortName(R.string.dexcom_short)
         .preferencesId(R.xml.pref_dexcom)
@@ -74,7 +74,7 @@ class DexcomPlugin @Inject constructor(
         (glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE ||
             glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE ||
             glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN)
-            && sp.getBoolean(R.string.key_do_ns_upload, false)
+            && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
     override fun onStart() {
         super.onStart()

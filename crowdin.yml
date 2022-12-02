@@ -3,6 +3,10 @@ files:
     translation: /app/src/main/res/values-%android_code%/strings.xml
   - source: /wear/src/main/res/values/strings.xml
     translation: /wear/src/main/res/values-%android_code%/strings.xml
+  - source: /app-wear-shared/shared/src/main/res/values/strings.xml
+    translation: /app-wear-shared/shared/src/main/res/values-%android_code%/strings.xml
+  - source: /app-wear-shared/shared-impl/src/main/res/values/strings.xml
+    translation: /app-wear-shared/shared-impl/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/aps/src/main/res/values/strings.xml
     translation: /plugins/aps/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/main/src/main/res/values/strings.xml
@@ -19,20 +23,32 @@ files:
     translation: /plugins/sensitivity/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/configuration/src/main/res/values/strings.xml
     translation: /plugins/configuration/src/main/res/values-%android_code%/strings.xml
-  - source: /core/core-main/src/main/res/values/protection.xml
-    translation: /core/core-main/src/main/res/values-%android_code%/protection.xml
-  - source: /core/validators/src/main/res/values/validator.xml
-    translation: /core/validators/src/main/res/values-%android_code%/validator.xml
+   - source: /plugins/sync/src/main/res/values/strings.xml
+    translation: /plugins/sync/src/main/res/values-%android_code%/strings.xml
+    translate_attributes: 0
+    content_segmentation: 0
+  - source: /plugins/support/src/main/res/values/strings.xml
+    translation: /plugins/support/src/main/res/values-%android_code%/strings.xml
+  - source: /core/graph/src/main/res/values/strings.xml
+    translation: /core/graph/src/main/res/values-%android_code%/strings.xml
   - source: /core/interfaces/src/main/res/values/strings.xml
     translation: /core/interfaces/src/main/res/values-%android_code%/strings.xml
   - source: /core/utils/src/main/res/values/strings.xml
     translation: /core/utils/src/main/res/values-%android_code%/strings.xml
+  - source: /core/ui/src/main/res/values/protection.xml
+    translation: /core/ui/src/main/res/values-%android_code%/protection.xml
+  - source: /core/validators/src/main/res/values/validator.xml
+    translation: /core/validators/src/main/res/values-%android_code%/validator.xml
   - source: /core/ui/src/main/res/values/strings.xml
     translation: /core/ui/src/main/res/values-%android_code%/strings.xml
-  - source: /app-wear-shared/shared/src/main/res/values/strings.xml
-    translation: /app-wear-shared/shared/src/main/res/values-%android_code%/strings.xml
-  - source: /app-wear-shared/shared-impl/src/main/res/values/strings.xml
-    translation: /app-wear-shared/shared-impl/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/pump-core/src/main/res/values/strings.xml
+    translation: /pump/pump-core/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/eopatch/src/main/res/values/strings.xml
+    translation: /pump/eopatch/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/diaconn/src/main/res/values/strings.xml
+    translation: /pump/diaconn/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/pump-common/src/main/res/values/strings.xml
+    translation: /pump/pump-common/src/main/res/values-%android_code%/strings.xml
   - source: /pump/combo/src/main/res/values/strings.xml
     translation: /pump/combo/src/main/res/values-%android_code%/strings.xml
   - source: /pump/combov2/src/main/res/values/strings.xml
@@ -63,25 +79,7 @@ files:
     translation: /insight/src/main/res/values-%android_code%/alert_titles.xml
   - source: /insight/src/main/res/values/exceptions.xml
     translation: /insight/src/main/res/values-%android_code%/exceptions.xml
-  - source: /pump/eopatch/src/main/res/values/strings.xml
-    translation: /pump/eopatch/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/diaconn/src/main/res/values/strings.xml
-    translation: /pump/diaconn/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/pump-common/src/main/res/values/strings.xml
-    translation: /pump/pump-common/src/main/res/values-%android_code%/strings.xml
   - source: /implementation/src/main/res/values/strings.xml
     translation: /implementation/src/main/res/values-%android_code%/strings.xml
   - source: /ui/src/main/res/values/strings.xml
     translation: /ui/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/sync/src/main/res/values/strings.xml
-    translation: /plugins/sync/src/main/res/values-%android_code%/strings.xml
-    translate_attributes: 0
-    content_segmentation: 0
-  - source: /plugins/support/src/main/res/values/strings.xml
-    translation: /plugins/support/src/main/res/values-%android_code%/strings.xml
-  - source: /core/core-main/src/main/res/values/strings.xml
-    translation: /core/core-main/src/main/res/values-%android_code%/strings.xml
-  - source: /core/graph/src/main/res/values/strings.xml
-    translation: /core/graph/src/main/res/values-%android_code%/strings.xml
-  - source: /pump/pump-core/src/main/res/values/strings.xml
-    translation: /pump/pump-core/src/main/res/values-%android_code%/strings.xml

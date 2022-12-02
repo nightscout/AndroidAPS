@@ -1,10 +1,10 @@
 package info.nightscout.plugins.aps.openAPSAMA
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.aps.APSResultObject
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.getPassedDurationToTimeInMinutes
 import info.nightscout.core.extensions.plannedRemainingMinutes
-import info.nightscout.core.aps.APSResultObject
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.DetermineBasalAdapter
 import info.nightscout.interfaces.aps.SMBDefaults
@@ -185,7 +185,7 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
         if (mealData.usedMinCarbsImpact > 0) {
             this.profile.put("min_5m_carbimpact", mealData.usedMinCarbsImpact)
         } else {
-            this.profile.put("min_5m_carbimpact", sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact))
+            this.profile.put("min_5m_carbimpact", sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact))
         }
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
             this.profile.put("out_units", "mmol/L")

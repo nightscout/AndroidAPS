@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="patch_expiration_reminders">Připomenutí expirace pumpy</string>
-    <string name="bolus_delivered">Bolus %1$.2f U byl úspěšně aplikován</string>
     <string name="symbol_day">dní</string>
     <string name="time_30min">30 min</string>
     <string name="time_1hr">1 h</string>

@@ -33,7 +33,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.workflow.R
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
@@ -207,7 +206,7 @@ class IobCobOref1Worker(
                 // if we are absorbing carbs
                 if (previous != null && previous.cob > 0) {
                     // calculate sum of min carb impact from all active treatments
-                    val totalMinCarbsImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
+                    val totalMinCarbsImpact = sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
 
                     // figure out how many carbs that represents
                     // but always assume at least 3mg/dL/5m (default) absorption per active treatment
@@ -300,7 +299,7 @@ class IobCobOref1Worker(
                 // add an extra negative deviation if a high temp target is running and exercise mode is set
                 // TODO AS-FIX
                 @Suppress("SimplifyBooleanWithConstants")
-                if (false && sp.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
+                if (false && sp.getBoolean(info.nightscout.core.utils.R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
                     val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
                     if (tempTarget is ValueWrapper.Existing && tempTarget.value.target() >= 100) {
                         autosensData.extraDeviation.add(-(tempTarget.value.target() - 100) / 20)

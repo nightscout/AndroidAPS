@@ -1,12 +1,12 @@
 package info.nightscout.automation.actions
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.automation.R
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.rx.logging.LTag
@@ -23,8 +23,8 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     private val disposable = CompositeDisposable()
 
-    override fun friendlyName(): Int = R.string.stoptemptarget
-    override fun shortDescription(): String = rh.gs(R.string.stoptemptarget)
+    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.stoptemptarget
+    override fun shortDescription(): String = rh.gs(info.nightscout.core.ui.R.string.stoptemptarget)
     override fun icon(): Int = R.drawable.ic_stop_24dp
 
     override fun doAction(callback: Callback) {
@@ -35,7 +35,7 @@ class ActionStopTempTarget(injector: HasAndroidInjector) : Action(injector) {
                        }, {
                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                        })
-        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+        callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
     }
 
     override fun isValid(): Boolean = true

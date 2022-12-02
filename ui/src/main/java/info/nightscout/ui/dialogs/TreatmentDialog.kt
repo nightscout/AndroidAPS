@@ -134,20 +134,20 @@ class TreatmentDialog : DialogFragmentWithDate() {
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(carbs)).value()
 
         if (insulinAfterConstraints > 0) {
-            actions.add(rh.gs(R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(context, rh, R.attr.bolusColor))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor))
             if (recordOnlyChecked)
-                actions.add(rh.gs(R.string.bolus_recorded_only).formatColor(context, rh, R.attr.warningColor))
+                actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-                actions.add(rh.gs(R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, R.attr.warningColor))
+                actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
         }
         if (carbsAfterConstraints > 0) {
-            actions.add(rh.gs(R.string.carbs) + ": " + rh.gs(R.string.format_carbs, carbsAfterConstraints).formatColor(context, rh, R.attr.carbsColor))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(info.nightscout.core.graph.R.string.format_carbs, carbsAfterConstraints).formatColor(context, rh, info.nightscout.core.ui.R.attr.carbsColor))
             if (carbsAfterConstraints != carbs)
-                actions.add(rh.gs(R.string.carbs_constraint_applied).formatColor(context, rh, R.attr.warningColor))
+                actions.add(rh.gs(R.string.carbs_constraint_applied).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
         }
         if (insulinAfterConstraints > 0 || carbsAfterConstraints > 0) {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.overview_treatment_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     val action = when {
                         insulinAfterConstraints.equals(0.0) -> UserEntry.Action.CARBS
                         carbsAfterConstraints == 0          -> UserEntry.Action.BOLUS
@@ -160,9 +160,9 @@ class TreatmentDialog : DialogFragmentWithDate() {
                     detailedBolusInfo.carbs = carbsAfterConstraints.toDouble()
                     detailedBolusInfo.context = context
                     if (recordOnlyChecked) {
-                        uel.log(action, UserEntry.Sources.TreatmentDialog, if (insulinAfterConstraints != 0.0) rh.gs(R.string.record) else "",
+                        uel.log(action, UserEntry.Sources.TreatmentDialog, if (insulinAfterConstraints != 0.0) rh.gs(info.nightscout.core.ui.R.string.record) else "",
                                 ValueWithUnit.Timestamp(detailedBolusInfo.timestamp).takeIf { eventTimeChanged },
-                                ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.record)).takeIf { insulinAfterConstraints != 0.0 },
+                                ValueWithUnit.SimpleString(rh.gsNotLocalised(info.nightscout.core.ui.R.string.record)).takeIf { insulinAfterConstraints != 0.0 },
                                 ValueWithUnit.Insulin(insulinAfterConstraints).takeIf { insulinAfterConstraints != 0.0 },
                                 ValueWithUnit.Gram(carbsAfterConstraints).takeIf { carbsAfterConstraints != 0 })
                         if (detailedBolusInfo.insulin > 0)
@@ -177,7 +177,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
                             commandQueue.bolus(detailedBolusInfo, object : Callback() {
                                 override fun run() {
                                     if (!result.success) {
-                                        uiInteraction.runAlarm(result.comment, rh.gs(R.string.treatmentdeliveryerror), R.raw.boluserror)
+                                        uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror), info.nightscout.core.ui.R.raw.boluserror)
                                     }
                                 }
                             })
@@ -192,7 +192,7 @@ class TreatmentDialog : DialogFragmentWithDate() {
             }
         } else
             activity?.let { activity ->
-                OKDialog.show(activity, rh.gs(R.string.overview_treatment_label), rh.gs(R.string.no_action_selected))
+                OKDialog.show(activity, rh.gs(info.nightscout.core.ui.R.string.overview_treatment_label), rh.gs(info.nightscout.core.ui.R.string.no_action_selected))
             }
         return true
     }

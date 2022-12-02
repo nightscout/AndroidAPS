@@ -30,7 +30,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
 
     var text = InputString()
 
-    override fun friendlyName(): Int = R.string.notification
+    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.notification
     override fun shortDescription(): String = rh.gs(R.string.notification_message, text.value)
     @DrawableRes override fun icon(): Int = R.drawable.ic_notifications
 
@@ -39,7 +39,7 @@ class ActionNotification(injector: HasAndroidInjector) : Action(injector) {
         rxBus.send(EventNewNotification(notification))
         disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(text.value)).subscribe()
         rxBus.send(EventRefreshOverview("ActionNotification"))
-        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+        callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
     }
 
     override fun toJSON(): String {

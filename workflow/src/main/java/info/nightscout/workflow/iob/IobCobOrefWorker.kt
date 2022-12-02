@@ -31,7 +31,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.workflow.R
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -209,7 +208,7 @@ class IobCobOrefWorker @Inject internal constructor(
                         }
                     } else {
                         //Oref sensitivity
-                        totalMinCarbsImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
+                        totalMinCarbsImpact = sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
                     }
 
                     // figure out how many carbs that represents

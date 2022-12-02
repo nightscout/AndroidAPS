@@ -12,7 +12,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Η αντλία δεν έχει ρυθμιστεί, δεν ορίστηκε προφίλ!</string>
     <string name="failed_update_basal_profile">Αποτυχία αναβάθμισης βασικού προφίλ</string>
-    <string name="bolus_delivered">Bolus %1$.2fU δόθηκε επιτυχώς</string>
     <string name="no_valid_basal_rate">Διαβάζεται από την αντλία μη έγκυρος βασικός ρυθμός</string>
     <string name="limiting_iob">Περιορίζεται η IOB σε %1$.1f U λόγω %2$s</string>
     <string name="loop_disabled">ΤΟ ΚΥΚΛΩΜΑ ΑΠΕΝΕΡΓΟΠΟΙΗΘΗΚΕ ΑΠΟ ΠΕΡΙΟΡΙΣΜΟΥΣ</string>

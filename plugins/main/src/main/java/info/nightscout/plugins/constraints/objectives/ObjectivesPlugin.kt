@@ -47,8 +47,8 @@ class ObjectivesPlugin @Inject constructor(
         .fragmentClass(ObjectivesFragment::class.qualifiedName)
         .alwaysEnabled(config.APS)
         .showInList(config.APS)
-        .pluginIcon(R.drawable.ic_graduation)
-        .pluginName(R.string.objectives)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_graduation)
+        .pluginName(info.nightscout.core.ui.R.string.objectives)
         .shortName(R.string.objectives_shortname)
         .description(R.string.description_objectives),
     aapsLogger, rh, injector
@@ -84,15 +84,15 @@ class ObjectivesPlugin @Inject constructor(
             objective.startedOn = 0
             objective.accomplishedOn = 0
         }
-        sp.putBoolean(R.string.key_objectives_bg_is_available_in_ns, false)
-        sp.putBoolean(R.string.key_objectives_pump_status_is_available_in_ns, false)
-        sp.putInt(R.string.key_ObjectivesmanualEnacts, 0)
-        sp.putBoolean(R.string.key_objectiveuseprofileswitch, false)
-        sp.putBoolean(R.string.key_objectiveusedisconnect, false)
-        sp.putBoolean(R.string.key_objectiveusereconnect, false)
-        sp.putBoolean(R.string.key_objectiveusetemptarget, false)
+        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, false)
+        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, false)
+        sp.putInt(info.nightscout.core.utils.R.string.key_ObjectivesmanualEnacts, 0)
+        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveuseprofileswitch, false)
+        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusedisconnect, false)
+        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusereconnect, false)
+        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusetemptarget, false)
         sp.putBoolean(R.string.key_objectiveuseactions, false)
-        sp.putBoolean(R.string.key_objectiveuseloop, false)
+        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveuseloop, false)
         sp.putBoolean(R.string.key_objectiveusescale, false)
     }
 

@@ -5,7 +5,6 @@
     <string name="pump_operation_not_yet_supported_by_pump">Operationen er ikke understøttet af pumpen ENDNU.</string>
     <string name="common_resultok">OK</string>
     <string name="pump_serial_number">Pumpe Serienummer</string>
-    <string name="bolus_delivered">%1$.2f IE / %2$.2f IE leveret</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Ikke initialiseret</string>
     <string name="pump_status_initialized">Initialiseret</string>

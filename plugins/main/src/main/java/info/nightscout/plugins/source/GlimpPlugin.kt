@@ -34,7 +34,7 @@ class GlimpPlugin @Inject constructor(
     PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_glimp)
+    .pluginIcon(info.nightscout.core.main.R.drawable.ic_glimp)
     .pluginName(R.string.glimp)
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_glimp),
@@ -88,6 +88,6 @@ class GlimpPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLIMP && sp.getBoolean(R.string.key_do_ns_upload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLIMP && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
 }

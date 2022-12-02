@@ -12,10 +12,10 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.core.extensions.valueToUnitsString
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.events.EventNewNotification
+import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.iob.generateCOBString
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
@@ -109,7 +109,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(SmsCommunicatorFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_sms)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_sms)
         .pluginName(R.string.smscommunicator)
         .shortName(R.string.smscommunicator_shortname)
         .preferencesId(R.xml.pref_smscommunicator)
@@ -309,7 +309,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     if (!remoteCommandsAllowed) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_remote_command_not_allowed)))
                     else if (commandQueue.bolusInQueue()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_another_bolus_in_queue)))
                     else if (divided.size == 2 && dateUtil.now() - lastRemoteBolusTime < minDistance) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.smscommunicator_remote_bolus_not_allowed)))
-                    else if (divided.size == 2 && pump.isSuspended()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.pumpsuspended)))
+                    else if (divided.size == 2 && pump.isSuspended()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(info.nightscout.core.ui.R.string.pumpsuspended)))
                     else if (divided.size == 2 || divided.size == 3) processBOLUS(divided, receivedSms)
                     else sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
 
@@ -371,7 +371,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         reply += (rh.gs(R.string.sms_iob) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U ("
             + rh.gs(R.string.sms_bolus) + " " + DecimalFormatter.to2Decimal(bolusIob.iob) + "U "
             + rh.gs(R.string.sms_basal) + " " + DecimalFormatter.to2Decimal(basalIob.basaliob) + "U), "
-            + rh.gs(R.string.cob) + ": " + cobInfo.generateCOBString())
+            + rh.gs(info.nightscout.core.ui.R.string.cob) + ": " + cobInfo.generateCOBString())
         sendSMS(Sms(receivedSms.phoneNumber, reply))
         receivedSms.processed = true
     }
@@ -398,7 +398,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                         }
                     })
                 } else
-                    sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.loopisdisabled)))
+                    sendSMS(Sms(receivedSms.phoneNumber, rh.gs(info.nightscout.core.ui.R.string.loopisdisabled)))
                 receivedSms.processed = true
             }
 
@@ -425,7 +425,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                     if (loop.isSuspended) rh.gs(R.string.sms_loop_suspended_for, loop.minutesToEndOfSuspend())
                     else rh.gs(R.string.smscommunicator_loop_is_enabled)
                 } else
-                    rh.gs(R.string.loopisdisabled)
+                    rh.gs(info.nightscout.core.ui.R.string.loopisdisabled)
                 sendSMS(Sms(receivedSms.phoneNumber, reply))
                 receivedSms.processed = true
             }
@@ -539,7 +539,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     private fun processPUMP(divided: Array<String>, receivedSms: Sms) {
         if (divided.size == 1) {
-            commandQueue.readStatus(rh.gs(R.string.sms), object : Callback() {
+            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.sms), object : Callback() {
                 override fun run() {
                     val pump = activePlugin.activePump
                     if (result.success) {
@@ -609,7 +609,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         val anInterface = activePlugin.activeProfileSource
         val store = anInterface.profile
         if (store == null) {
-            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.notconfigured)))
+            sendSMS(Sms(receivedSms.phoneNumber, rh.gs(info.nightscout.core.ui.R.string.notconfigured)))
             receivedSms.processed = true
             return
         }
@@ -618,7 +618,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         if (divided[1].uppercase(Locale.getDefault()) == "STATUS") {
             sendSMS(Sms(receivedSms.phoneNumber, profileName))
         } else if (divided[1].uppercase(Locale.getDefault()) == "LIST") {
-            if (list.isEmpty()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.invalid_profile)))
+            if (list.isEmpty()) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(info.nightscout.core.ui.R.string.invalid_profile)))
             else {
                 var reply = ""
                 for (i in list.indices) {
@@ -637,7 +637,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             else if (pIndex == 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
             else {
                 val profile = store.getSpecificProfile(list[pIndex - 1] as String)
-                if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.noprofile)))
+                if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(info.nightscout.core.ui.R.string.noprofile)))
                 else {
                     val passCode = generatePassCode()
                     val reply = rh.gs(R.string.smscommunicator_profile_reply_with_code, list[pIndex - 1], percentage, passCode)
@@ -653,7 +653,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                                     ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.sms_profile_switch_created))
                                 )
                             } else {
-                                sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.invalid_profile)))
+                                sendSMS(Sms(receivedSms.phoneNumber, rh.gs(info.nightscout.core.ui.R.string.invalid_profile)))
                             }
                         }
                     })
@@ -699,7 +699,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             var duration = 30
             if (divided.size > 2) duration = SafeParse.stringToInt(divided[2])
             val profile = profileFunction.getProfile()
-            if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.noprofile)))
+            if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(info.nightscout.core.ui.R.string.noprofile)))
             else if (tempBasalPct == 0 && divided[1] != "0%") sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
             else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.sms_wrong_tbr_duration, durationStep)))
             else {
@@ -754,7 +754,7 @@ class SmsCommunicatorPlugin @Inject constructor(
             var duration = 30
             if (divided.size > 2) duration = SafeParse.stringToInt(divided[2])
             val profile = profileFunction.getProfile()
-            if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.noprofile)))
+            if (profile == null) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(info.nightscout.core.ui.R.string.noprofile)))
             else if (tempBasal == 0.0 && divided[1] != "0") sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
             else if (duration <= 0 || duration % durationStep != 0) sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.sms_wrong_tbr_duration, durationStep)))
             else {
@@ -847,17 +847,17 @@ class SmsCommunicatorPlugin @Inject constructor(
                             override fun run() {
                                 if (result.success) {
                                     var replyText = rh.gs(R.string.smscommunicator_extended_set, aDouble, duration)
-                                    if (config.APS) replyText += "\n" + rh.gs(R.string.loopsuspended)
+                                    if (config.APS) replyText += "\n" + rh.gs(info.nightscout.core.ui.R.string.loopsuspended)
                                     replyText += "\n" + activePlugin.activePump.shortStatus(true)
                                     sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                                     if (config.APS)
                                         uel.log(
                                             Action.EXTENDED_BOLUS,
                                             Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_extended_set, aDouble, duration) + " / " + rh.gs(R.string.loopsuspended),
+                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_extended_set, aDouble, duration) + " / " + rh.gs(info.nightscout.core.ui.R.string.loopsuspended),
                                             ValueWithUnit.Insulin(aDouble ?: 0.0),
                                             ValueWithUnit.Minute(duration),
-                                            ValueWithUnit.SimpleString(rh.gsNotLocalised(R.string.loopsuspended))
+                                            ValueWithUnit.SimpleString(rh.gsNotLocalised(info.nightscout.core.ui.R.string.loopsuspended))
                                         )
                                     else
                                         uel.log(
@@ -903,7 +903,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                         override fun run() {
                             val resultSuccess = result.success
                             val resultBolusDelivered = result.bolusDelivered
-                            commandQueue.readStatus(rh.gs(R.string.sms), object : Callback() {
+                            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.sms), object : Callback() {
                                 override fun run() {
                                     if (resultSuccess) {
                                         var replyText = if (isMeal)
@@ -914,13 +914,13 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         lastRemoteBolusTime = dateUtil.now()
                                         if (isMeal) {
                                             profileFunction.getProfile()?.let { currentProfile ->
-                                                var eatingSoonTTDuration = sp.getInt(R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
+                                                var eatingSoonTTDuration = sp.getInt(info.nightscout.core.utils.R.string.key_eatingsoon_duration, Constants.defaultEatingSoonTTDuration)
                                                 eatingSoonTTDuration =
                                                     if (eatingSoonTTDuration > 0) eatingSoonTTDuration
                                                     else Constants.defaultEatingSoonTTDuration
                                                 var eatingSoonTT =
                                                     sp.getDouble(
-                                                        R.string.key_eatingsoon_target,
+                                                        info.nightscout.core.utils.R.string.key_eatingsoon_target,
                                                         if (currentProfile.units == GlucoseUnit.MMOL) Constants.defaultEatingSoonTTmmol else Constants.defaultEatingSoonTTmgdl
                                                     )
                                                 eatingSoonTT =
@@ -1055,27 +1055,27 @@ class SmsCommunicatorPlugin @Inject constructor(
                     var reason = TemporaryTarget.Reason.EATING_SOON
                     when {
                         isMeal     -> {
-                            keyDuration = R.string.key_eatingsoon_duration
+                            keyDuration = info.nightscout.core.utils.R.string.key_eatingsoon_duration
                             defaultTargetDuration = Constants.defaultEatingSoonTTDuration
-                            keyTarget = R.string.key_eatingsoon_target
+                            keyTarget = info.nightscout.core.utils.R.string.key_eatingsoon_target
                             defaultTargetMMOL = Constants.defaultEatingSoonTTmmol
                             defaultTargetMGDL = Constants.defaultEatingSoonTTmgdl
                             reason = TemporaryTarget.Reason.EATING_SOON
                         }
 
                         isActivity -> {
-                            keyDuration = R.string.key_activity_duration
+                            keyDuration = info.nightscout.core.utils.R.string.key_activity_duration
                             defaultTargetDuration = Constants.defaultActivityTTDuration
-                            keyTarget = R.string.key_activity_target
+                            keyTarget = info.nightscout.core.utils.R.string.key_activity_target
                             defaultTargetMMOL = Constants.defaultActivityTTmmol
                             defaultTargetMGDL = Constants.defaultActivityTTmgdl
                             reason = TemporaryTarget.Reason.ACTIVITY
                         }
 
                         isHypo     -> {
-                            keyDuration = R.string.key_hypo_duration
+                            keyDuration = info.nightscout.core.utils.R.string.key_hypo_duration
                             defaultTargetDuration = Constants.defaultHypoTTDuration
-                            keyTarget = R.string.key_hypo_target
+                            keyTarget = info.nightscout.core.utils.R.string.key_hypo_target
                             defaultTargetMMOL = Constants.defaultHypoTTmmol
                             defaultTargetMGDL = Constants.defaultHypoTTmgdl
                             reason = TemporaryTarget.Reason.HYPOGLYCEMIA
@@ -1221,7 +1221,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 false
             }
         } catch (e: SecurityException) {
-            val notification = Notification(Notification.MISSING_SMS_PERMISSION, rh.gs(R.string.smscommunicator_missingsmspermission), Notification.NORMAL)
+            val notification = Notification(Notification.MISSING_SMS_PERMISSION, rh.gs(info.nightscout.core.ui.R.string.smscommunicator_missingsmspermission), Notification.NORMAL)
             rxBus.send(EventNewNotification(notification))
             return false
         }

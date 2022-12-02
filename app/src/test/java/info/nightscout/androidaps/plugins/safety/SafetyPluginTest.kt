@@ -49,16 +49,16 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepare() {
         `when`(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
-        `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
-        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
         `when`(rh.gs(info.nightscout.plugins.aps.R.string.max_daily_basal_multiplier)).thenReturn("max daily basal multiplier")
         `when`(rh.gs(info.nightscout.plugins.aps.R.string.max_basal_multiplier)).thenReturn("max basal multiplier")
-        `when`(rh.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
-        `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        `when`(rh.gs(R.string.limiting_iob)).thenReturn("Limiting IOB to %1\$.1f U because of %2\$s")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.limiting_iob)).thenReturn("Limiting IOB to %1\$.1f U because of %2\$s")
         `when`(rh.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %1\$d g because of %2\$s")
-        `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         `when`(rh.gs(R.string.pumpisnottempbasalcapable)).thenReturn("Pump is not temp basal capable")
         `when`(rh.gs(info.nightscout.plugins.aps.R.string.increasing_max_basal)).thenReturn("Increasing max basal value because setting is lower than your max basal in profile")
         `when`(rh.gs(info.nightscout.plugins.aps.R.string.smb_disabled_in_preferences)).thenReturn("SMB disabled in preferences")
@@ -66,8 +66,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
         `when`(rh.gs(R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
         `when`(rh.gs(R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
-        `when`(rh.gs(R.string.key_child)).thenReturn("child")
-        `when`(rh.gs(R.string.lowglucosesuspend)).thenReturn("Low Glucose Suspend")
+        `when`(rh.gs(info.nightscout.core.utils.R.string.key_child)).thenReturn("child")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)).thenReturn("Low Glucose Suspend")
 
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
@@ -95,7 +95,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test
     fun disabledEngineeringModeShouldLimitClosedLoop() {
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("closed")
         `when`(config.isEngineeringModeOrRelease()).thenReturn(false)
         var c = Constraint(true)
         c = safetyPlugin.isClosedLoopAllowed(c)
@@ -105,7 +105,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test
     fun setOpenLoopInPreferencesShouldLimitClosedLoop() {
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("open")
         var c = Constraint(true)
         c = safetyPlugin.isClosedLoopAllowed(c)
         Assert.assertTrue(c.getReasons(aapsLogger).contains("Closed loop mode disabled in preferences"))
@@ -146,7 +146,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.plugins.aps.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         val c = Constraint(Constants.REALLYHIGHBASALRATE)
         safetyPlugin.applyBasalConstraints(c, validProfile)
         Assert.assertEquals(2.0, c.value(), 0.01)
@@ -160,7 +160,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test
     fun doNotAllowNegativeBasalRate() {
-        `when`(sp.getString(R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         val d = Constraint(-0.5)
         safetyPlugin.applyBasalConstraints(d, validProfile)
         Assert.assertEquals(0.0, d.value(), 0.01)
@@ -173,7 +173,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.plugins.aps.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         val i = Constraint(Constants.REALLYHIGHPERCENTBASALRATE)
         safetyPlugin.applyBasalPercentConstraints(i, validProfile)
         Assert.assertEquals(200, i.value())
@@ -194,7 +194,7 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(info.nightscout.plugins.aps.R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         val i = Constraint(Constants.REALLYHIGHBASALRATE)
         openAPSSMBPlugin.applyBasalConstraints(i, validProfile)
@@ -211,7 +211,7 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
 
     @Test
     fun doNotAllowNegativePercentBasalRate() {
-        `when`(sp.getString(R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         val i = Constraint(-22)
         safetyPlugin.applyBasalPercentConstraints(i, validProfile)
         Assert.assertEquals(0, i.value())
@@ -227,8 +227,8 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
 
     @Test
     fun bolusAmountShouldBeLimited() {
-        `when`(sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         var d = Constraint(Constants.REALLYHIGHBOLUS)
         d = safetyPlugin.applyBolusConstraints(d)
         Assert.assertEquals(3.0, d.value(), 0.01)
@@ -243,8 +243,8 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
 
     @Test
     fun doNotAllowNegativeBolusAmount() {
-        `when`(sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         var d = Constraint(-22.0)
         d = safetyPlugin.applyBolusConstraints(d)
         Assert.assertEquals(0.0, d.value(), 0.01)
@@ -255,7 +255,7 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
     @Test
     fun carbsAmountShouldBeLimited() {
         // No limit by default
-        `when`(sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48)).thenReturn(48)
+        `when`(sp.getInt(info.nightscout.core.utils.R.string.key_treatmentssafety_maxcarbs, 48)).thenReturn(48)
 
         // Negative carbs not allowed
         var i = Constraint(-22)
@@ -275,10 +275,10 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         //`when`(openAPSSMBPlugin.isEnabled()).thenReturn(true)
         //`when`(openAPSAMAPlugin.isEnabled()).thenReturn(false)
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("lgs")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("lgs")
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(R.string.key_age, "")).thenReturn("teenage")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("teenage")
 
         // Apply all limits
         var d = Constraint(Constants.REALLYHIGHIOB)

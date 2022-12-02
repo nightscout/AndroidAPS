@@ -84,12 +84,12 @@ class DanaRSPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(DanaFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_danai_128)
-        .pluginIcon2(R.drawable.ic_danars_128)
-        .pluginName(R.string.danarspump)
-        .shortName(R.string.danarspump_shortname)
+        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_danai_128)
+        .pluginIcon2(info.nightscout.core.ui.R.drawable.ic_danars_128)
+        .pluginName(info.nightscout.pump.dana.R.string.danarspump)
+        .shortName(info.nightscout.pump.dana.R.string.danarspump_shortname)
         .preferencesId(R.xml.pref_danars)
-        .description(R.string.description_pump_dana_rs),
+        .description(info.nightscout.pump.dana.R.string.description_pump_dana_rs),
     injector, aapsLogger, rh, commandQueue
 ), Pump, Dana, Constraints, OwnDatabasePlugin {
 
@@ -103,10 +103,10 @@ class DanaRSPlugin @Inject constructor(
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
 
-        if (pref.key == rh.gs(R.string.key_danars_name)) {
-            val value = sp.getStringOrNull(R.string.key_danars_name, null)
+        if (pref.key == rh.gs(info.nightscout.pump.dana.R.string.key_danars_name)) {
+            val value = sp.getStringOrNull(info.nightscout.pump.dana.R.string.key_danars_name, null)
             pref.summary = value
-                ?: rh.gs(R.string.not_set_short)
+                ?: rh.gs(info.nightscout.core.ui.R.string.not_set_short)
         }
     }
 
@@ -152,17 +152,17 @@ class DanaRSPlugin @Inject constructor(
     }
 
     fun changePump() {
-        mDeviceAddress = sp.getString(R.string.key_danars_address, "")
-        mDeviceName = sp.getString(R.string.key_danars_name, "")
+        mDeviceAddress = sp.getString(info.nightscout.pump.dana.R.string.key_danars_address, "")
+        mDeviceName = sp.getString(info.nightscout.pump.dana.R.string.key_danars_name, "")
         danaPump.reset()
-        commandQueue.readStatus(rh.gs(R.string.device_changed), null)
+        commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.device_changed), null)
     }
 
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "RS connect from: $reason")
         if (danaRSService != null && mDeviceAddress != "" && mDeviceName != "") {
             val success = danaRSService?.connect(reason, mDeviceAddress) ?: false
-            if (!success) ToastUtils.errorToast(context, R.string.ble_not_supported_or_not_paired)
+            if (!success) ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_supported_or_not_paired)
         }
     }
 
@@ -200,18 +200,18 @@ class DanaRSPlugin @Inject constructor(
 
     // Constraints interface
     override fun applyBasalConstraints(absoluteRate: Constraint<Double>, profile: Profile): Constraint<Double> {
-        absoluteRate.setIfSmaller(aapsLogger, danaPump.maxBasal, rh.gs(R.string.limitingbasalratio, danaPump.maxBasal, rh.gs(R.string.pumplimit)), this)
+        absoluteRate.setIfSmaller(aapsLogger, danaPump.maxBasal, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, danaPump.maxBasal, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
         return absoluteRate
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
-        percentRate.setIfGreater(aapsLogger, 0, rh.gs(R.string.limitingpercentrate, 0, rh.gs(R.string.itmustbepositivevalue)), this)
-        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, rh.gs(R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(R.string.pumplimit)), this)
+        percentRate.setIfGreater(aapsLogger, 0, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, 0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
+        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
         return percentRate
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
-        insulin.setIfSmaller(aapsLogger, danaPump.maxBolus, rh.gs(R.string.limitingbolus, danaPump.maxBolus, rh.gs(R.string.pumplimit)), this)
+        insulin.setIfSmaller(aapsLogger, danaPump.maxBolus, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, danaPump.maxBolus, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
         return insulin
     }
 
@@ -233,20 +233,20 @@ class DanaRSPlugin @Inject constructor(
         val result = PumpEnactResult(injector)
         if (!isInitialized()) {
             aapsLogger.error("setNewBasalProfile not initialized")
-            uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(R.string.pump_not_initialized_profile_not_set), Notification.URGENT)
-            result.comment = rh.gs(R.string.pump_not_initialized_profile_not_set)
+            uiInteraction.addNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED, rh.gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set), Notification.URGENT)
+            result.comment = rh.gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set)
             return result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
         }
         return if (danaRSService?.updateBasalsInPump(profile) != true) {
-            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failed_update_basal_profile), Notification.URGENT)
-            result.comment = rh.gs(R.string.failed_update_basal_profile)
+            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
+            result.comment = rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile)
             result
         } else {
             rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
             rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
             result.success = true
             result.enacted = true
             result.comment = "OK"
@@ -282,7 +282,7 @@ class DanaRSPlugin @Inject constructor(
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
         return if (detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0) {
-            val preferencesSpeed = sp.getInt(R.string.key_danars_bolusspeed, 0)
+            val preferencesSpeed = sp.getInt(info.nightscout.pump.dana.R.string.key_danars_bolusspeed, 0)
             var speed = 12
             when (preferencesSpeed) {
                 0 -> speed = 12
@@ -310,13 +310,13 @@ class DanaRSPlugin @Inject constructor(
             if (!result.success) {
                 var error = "" + danaPump.bolusStartErrorCode
                 when (danaPump.bolusStartErrorCode) {
-                    0x10 -> error = rh.gs(R.string.maxbolusviolation)
-                    0x20 -> error = rh.gs(R.string.commanderror)
-                    0x40 -> error = rh.gs(R.string.speederror)
-                    0x80 -> error = rh.gs(R.string.insulinlimitviolation)
+                    0x10 -> error = rh.gs(info.nightscout.pump.dana.R.string.maxbolusviolation)
+                    0x20 -> error = rh.gs(info.nightscout.pump.dana.R.string.commanderror)
+                    0x40 -> error = rh.gs(info.nightscout.pump.dana.R.string.speederror)
+                    0x80 -> error = rh.gs(info.nightscout.pump.dana.R.string.insulinlimitviolation)
                 }
-                result.comment = rh.gs(R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, error)
-            } else result.comment = rh.gs(R.string.ok)
+                result.comment = rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, error)
+            } else result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             result
         } else {
@@ -324,7 +324,7 @@ class DanaRSPlugin @Inject constructor(
             result.success = false
             result.bolusDelivered = 0.0
             result.carbsDelivered = 0.0
-            result.comment = rh.gs(R.string.invalid_input)
+            result.comment = rh.gs(info.nightscout.core.ui.R.string.invalid_input)
             aapsLogger.error("deliverTreatment: Invalid input")
             result
         }
@@ -418,7 +418,7 @@ class DanaRSPlugin @Inject constructor(
             result.isTempCancel = false
             result.enacted = false
             result.success = false
-            result.comment = rh.gs(R.string.invalid_input)
+            result.comment = rh.gs(info.nightscout.core.ui.R.string.invalid_input)
             aapsLogger.error("setTempBasalPercent: Invalid input")
             return result
         }
@@ -427,7 +427,7 @@ class DanaRSPlugin @Inject constructor(
             result.enacted = false
             result.success = true
             result.isTempCancel = false
-            result.comment = rh.gs(R.string.ok)
+            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
             result.duration = danaPump.tempBasalRemainingMin
             result.percent = danaPump.tempBasalPercent
             result.isPercent = true
@@ -445,7 +445,7 @@ class DanaRSPlugin @Inject constructor(
         if (connectionOK && danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percentAfterConstraint) {
             result.enacted = true
             result.success = true
-            result.comment = rh.gs(R.string.ok)
+            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
             result.isTempCancel = false
             result.duration = danaPump.tempBasalRemainingMin
             result.percent = danaPump.tempBasalPercent
@@ -455,7 +455,7 @@ class DanaRSPlugin @Inject constructor(
         }
         result.enacted = false
         result.success = false
-        result.comment = rh.gs(R.string.temp_basal_delivery_error)
+        result.comment = rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error)
         aapsLogger.error("setTempBasalPercent: Failed to set temp basal. connectionOK: $connectionOK isTempBasalInProgress: ${danaPump.isTempBasalInProgress} tempBasalPercent: ${danaPump.tempBasalPercent}")
         return result
     }
@@ -466,7 +466,7 @@ class DanaRSPlugin @Inject constructor(
         if (connectionOK && danaPump.isTempBasalInProgress && danaPump.tempBasalPercent == percent) {
             result.enacted = true
             result.success = true
-            result.comment = rh.gs(R.string.ok)
+            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
             result.isTempCancel = false
             result.duration = danaPump.tempBasalRemainingMin
             result.percent = danaPump.tempBasalPercent
@@ -476,7 +476,7 @@ class DanaRSPlugin @Inject constructor(
         }
         result.enacted = false
         result.success = false
-        result.comment = rh.gs(R.string.danar_valuenotsetproperly)
+        result.comment = rh.gs(info.nightscout.pump.dana.R.string.danar_valuenotsetproperly)
         aapsLogger.error("setHighTempBasalPercent: Failed to set temp basal. connectionOK: $connectionOK isTempBasalInProgress: ${danaPump.isTempBasalInProgress} tempBasalPercent: ${danaPump.tempBasalPercent}")
         return result
     }
@@ -491,7 +491,7 @@ class DanaRSPlugin @Inject constructor(
         if (danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = false
             result.success = true
-            result.comment = rh.gs(R.string.ok)
+            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
             result.duration = danaPump.extendedBolusRemainingMinutes
             result.absolute = danaPump.extendedBolusAbsoluteRate
             result.isPercent = false
@@ -504,7 +504,7 @@ class DanaRSPlugin @Inject constructor(
         if (connectionOK && danaPump.isExtendedInProgress && abs(danaPump.extendedBolusAmount - insulinAfterConstraint) < pumpDescription.extendedBolusStep) {
             result.enacted = true
             result.success = true
-            result.comment = rh.gs(R.string.ok)
+            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
             result.isTempCancel = false
             result.duration = danaPump.extendedBolusRemainingMinutes
             result.absolute = danaPump.extendedBolusAbsoluteRate
@@ -515,7 +515,7 @@ class DanaRSPlugin @Inject constructor(
         }
         result.enacted = false
         result.success = false
-        result.comment = rh.gs(R.string.danar_valuenotsetproperly)
+        result.comment = rh.gs(info.nightscout.pump.dana.R.string.danar_valuenotsetproperly)
         aapsLogger.error("setExtendedBolus: Failed to extended bolus")
         return result
     }
@@ -532,7 +532,7 @@ class DanaRSPlugin @Inject constructor(
             result.success = true
             result.enacted = false
             result.isTempCancel = true
-            result.comment = rh.gs(R.string.ok)
+            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK")
         }
         return result
@@ -547,7 +547,7 @@ class DanaRSPlugin @Inject constructor(
         } else {
             result.success = true
             result.enacted = false
-            result.comment = rh.gs(R.string.ok)
+            result.comment = rh.gs(info.nightscout.core.ui.R.string.ok)
             aapsLogger.debug(LTag.PUMP, "cancelExtendedBolus: OK")
         }
         return result
@@ -634,11 +634,11 @@ class DanaRSPlugin @Inject constructor(
     override fun canHandleDST(): Boolean = false
     override fun clearPairing() {
         aapsLogger.debug(LTag.PUMPCOMM, "Pairing keys cleared")
-        sp.remove(rh.gs(R.string.key_danars_pairingkey) + mDeviceName)
-        sp.remove(rh.gs(R.string.key_danars_v3_randompairingkey) + mDeviceName)
-        sp.remove(rh.gs(R.string.key_danars_v3_pairingkey) + mDeviceName)
-        sp.remove(rh.gs(R.string.key_danars_v3_randomsynckey) + mDeviceName)
-        sp.remove(rh.gs(R.string.key_dana_ble5_pairingkey) + mDeviceName)
+        sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_danars_pairingkey) + mDeviceName)
+        sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_randompairingkey) + mDeviceName)
+        sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_pairingkey) + mDeviceName)
+        sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_randomsynckey) + mDeviceName)
+        sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_dana_ble5_pairingkey) + mDeviceName)
     }
 
     override fun clearAllTables() = danaHistoryDatabase.clearAllTables()

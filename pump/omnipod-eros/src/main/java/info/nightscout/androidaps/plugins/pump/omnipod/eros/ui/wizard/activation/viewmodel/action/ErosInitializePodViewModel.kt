@@ -30,7 +30,7 @@ class ErosInitializePodViewModel @Inject constructor(
     override fun doExecuteAction(): Single<PumpEnactResult> = Single.fromCallable { aapsOmnipodManager.initializePod() }
 
     @StringRes
-    override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_initialize_pod_title
+    override fun getTitleId(): Int = info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_activation_wizard_initialize_pod_title
 
     @StringRes
     override fun getTextId() = R.string.omnipod_eros_pod_activation_wizard_initialize_pod_text

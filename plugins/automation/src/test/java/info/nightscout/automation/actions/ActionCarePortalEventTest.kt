@@ -23,7 +23,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
         `when`(sp.getString(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn("AAPS")
         `when`(
             rh.gs(
-                ArgumentMatchers.eq(info.nightscout.core.main.R.string.careportal_note_message),
+                ArgumentMatchers.eq(info.nightscout.core.ui.R.string.careportal_note_message),
                 ArgumentMatchers.anyString()
             )
         ).thenReturn("Note : %s")
@@ -40,7 +40,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.core.main.R.string.careportal, sut.friendlyName())
+        Assert.assertEquals(info.nightscout.core.ui.R.string.careportal, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {

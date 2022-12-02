@@ -148,7 +148,7 @@ public class ErosPodHistoryActivity extends DaggerAppCompatActivity {
 
         typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(rh));
 
-        ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_centered, typeListFull);
+        ArrayAdapter<TypeList> spinnerAdapter = new ArrayAdapter<>(this, info.nightscout.core.ui.R.layout.spinner_centered, typeListFull);
         historyTypeSpinner.setAdapter(spinnerAdapter);
 
         historyTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

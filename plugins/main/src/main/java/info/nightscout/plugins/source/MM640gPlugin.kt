@@ -36,7 +36,7 @@ class MM640gPlugin @Inject constructor(
     PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_generic_cgm)
+    .pluginIcon(info.nightscout.core.main.R.drawable.ic_generic_cgm)
     .pluginName(R.string.mm640g)
     .description(R.string.description_source_mm640g),
     aapsLogger, rh, injector
@@ -110,6 +110,6 @@ class MM640gPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.MM_600_SERIES && sp.getBoolean(R.string.key_do_ns_upload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.MM_600_SERIES && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
 }

@@ -1,8 +1,7 @@
 package info.nightscout.plugins.general.autotune
 
-import info.nightscout.interfaces.utils.Round
-import info.nightscout.plugins.aps.R
 import info.nightscout.core.utils.Percentile
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.LocalInsulin
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
@@ -42,9 +41,9 @@ class AutotuneCore @Inject constructor(
         val pumpCarbRatio = pumpProfile.ic
         val pumpCSF = pumpISF / pumpCarbRatio
         // Autosens constraints
-        val autotuneMax = sp.getDouble(R.string.key_openapsama_autosens_max, 1.2)
-        val autotuneMin = sp.getDouble(R.string.key_openapsama_autosens_min, 0.7)
-        val min5minCarbImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)
+        val autotuneMax = sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, 1.2)
+        val autotuneMin = sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7)
+        val min5minCarbImpact = sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)
 
         // tune DIA
         var newDia = dia

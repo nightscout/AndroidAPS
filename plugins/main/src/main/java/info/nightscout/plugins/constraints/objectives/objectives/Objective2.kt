@@ -215,8 +215,8 @@ class Objective2(injector: HasAndroidInjector) : Objective(injector, "exam", R.s
             .hint(Hint(R.string.nsclient_hint1))
         )
         tasks.add(ExamTask(this, R.string.other_medication_label, R.string.other_medication_text, "otherMedicationWarning")
-            .option(Option(R.string.yes, true))
-            .option(Option(R.string.no, false))
+            .option(Option(info.nightscout.core.ui.R.string.yes, true))
+            .option(Option(info.nightscout.core.ui.R.string.no, false))
         )
         for (task in tasks) (task as ExamTask).options.shuffle()
 

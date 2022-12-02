@@ -91,7 +91,7 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
 
     private fun refreshFromNightscout() {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.careportal), rh.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.careportal), rh.gs(R.string.refresheventsfromnightscout) + " ?", Runnable {
                 uel.log(Action.CAREPORTAL_NS_REFRESH, Sources.Treatments)
                 disposable += Completable.fromAction { repository.deleteAllTherapyEventsEntries() }
                     .subscribeOn(aapsSchedulers.io)
@@ -106,9 +106,9 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
 
     private fun removeStartedEvents() {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.careportal), rh.gs(R.string.careportal_remove_started_events), Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.careportal), rh.gs(R.string.careportal_remove_started_events), Runnable {
                 uel.log(Action.RESTART_EVENTS_REMOVED, Sources.Treatments)
-                disposable += repository.runTransactionForResult(InvalidateAAPSStartedTherapyEventTransaction(rh.gs(R.string.androidaps_start)))
+                disposable += repository.runTransactionForResult(InvalidateAAPSStartedTherapyEventTransaction(rh.gs(info.nightscout.core.ui.R.string.androidaps_start)))
                     .subscribe(
                         { result -> result.invalidated.forEach { aapsLogger.debug(LTag.DATABASE, "Invalidated therapy event $it") } },
                         { aapsLogger.error(LTag.DATABASE, "Error while invalidating therapy event", it) }
@@ -200,7 +200,7 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
         this.menu = menu
         inflater.inflate(R.menu.menu_treatments_careportal, menu)
         updateMenuVisibility()
-        val nsUploadOnly = !sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || !config.isEngineeringMode()
+        val nsUploadOnly = !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_therapy_events, false) || !config.isEngineeringMode()
         menu.findItem(R.id.nav_refresh_ns)?.isVisible = !nsUploadOnly
     }
 
@@ -245,16 +245,16 @@ class TreatmentsCareportalFragment : DaggerFragment(), MenuProvider {
     private fun getConfirmationText(selectedItems: SparseArray<TherapyEvent>): String {
         if (selectedItems.size() == 1) {
             val therapyEvent = selectedItems.valueAt(0)
-            return rh.gs(R.string.event_type) + ": " + translator.translate(therapyEvent.type) + "\n" +
-                rh.gs(R.string.notes_label) + ": " + (therapyEvent.note ?: "") + "\n" +
-                rh.gs(R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
+            return rh.gs(info.nightscout.core.ui.R.string.event_type) + ": " + translator.translate(therapyEvent.type) + "\n" +
+                rh.gs(info.nightscout.core.ui.R.string.notes_label) + ": " + (therapyEvent.note ?: "") + "\n" +
+                rh.gs(info.nightscout.core.ui.R.string.date) + ": " + dateUtil.dateAndTimeString(therapyEvent.timestamp)
         }
-        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected(selectedItems: SparseArray<TherapyEvent>) {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, therapyEvent ->
                     uel.log(
                         Action.CAREPORTAL_REMOVED, Sources.Treatments, therapyEvent.note,

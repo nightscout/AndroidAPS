@@ -6,11 +6,11 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.iobCalc
 import info.nightscout.core.extensions.toTemporaryBasal
-import info.nightscout.core.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy
 import info.nightscout.core.iob.determineBasalJson
+import info.nightscout.core.iob.iobCobCalculator.AutosensDataStoreObject
 import info.nightscout.core.iob.plus
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -121,13 +121,13 @@ class IobCobCalculatorPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(rh.gs(R.string.key_openapsama_autosens_period)) ||
-                               event.isChanged(rh.gs(R.string.key_age)) ||
-                               event.isChanged(rh.gs(R.string.key_absorption_maxtime)) ||
-                               event.isChanged(rh.gs(R.string.key_openapsama_min_5m_carbimpact)) ||
-                               event.isChanged(rh.gs(R.string.key_absorption_cutoff)) ||
-                               event.isChanged(rh.gs(R.string.key_openapsama_autosens_max)) ||
-                               event.isChanged(rh.gs(R.string.key_openapsama_autosens_min)) ||
+                           if (event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_period)) ||
+                               event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_age)) ||
+                               event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_absorption_maxtime)) ||
+                               event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact)) ||
+                               event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_absorption_cutoff)) ||
+                               event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_max)) ||
+                               event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_min)) ||
                                event.isChanged(rh.gs(R.string.key_insulin_oref_peak))
                            ) {
                                resetDataAndRunCalculation("onEventPreferenceChange", event)
@@ -481,7 +481,7 @@ class IobCobCalculatorPlugin @Inject constructor(
         val total = IobTotal(toTime)
         val profile = profileFunction.getProfile() ?: return total
         val dia = profile.dia
-        val divisor = sp.getDouble(R.string.key_openapsama_bolus_snooze_dia_divisor, 2.0)
+        val divisor = sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_bolus_snooze_dia_divisor, 2.0)
         assert(divisor > 0)
 
         val boluses = repository.getBolusesDataFromTime(toTime - range(), true).blockingGet()

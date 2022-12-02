@@ -7,8 +7,8 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
-import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.automation.R
+import info.nightscout.shared.interfaces.ResourceHelper
 
 class InputLocationMode(private val rh: ResourceHelper) : Element() {
 
@@ -51,7 +51,7 @@ class InputLocationMode(private val rh: ResourceHelper) : Element() {
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, Mode.labels(rh)).apply {
+                adapter = ArrayAdapter(root.context, info.nightscout.core.ui.R.layout.spinner_centered, Mode.labels(rh)).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 val spinnerParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {

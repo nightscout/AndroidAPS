@@ -72,7 +72,7 @@ class DiaconnG8BLEScanActivity : DaggerAppCompatActivity() {
             bluetoothAdapter?.safeEnable()
             startScan()
         } else {
-            ToastUtils.errorToast(context, context.getString(R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
         }
     }
 
@@ -111,7 +111,7 @@ class DiaconnG8BLEScanActivity : DaggerAppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
             return
         }
         if (device == null || device.name == null || device.name == "") {

@@ -10,8 +10,6 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.interfaces.workflow.WorkerClasses
-import info.nightscout.plugins.sync.R
-import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
@@ -57,7 +55,7 @@ class LoadBgWorker(
                             )
                         )
                         // Objective0
-                        sp.putBoolean(R.string.key_objectives_bg_is_available_in_ns, true)
+                        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
                         // Schedule processing of fetched data and continue of loading
                         WorkManager.getInstance(context).beginUniqueWork(
                             JOB_NAME,

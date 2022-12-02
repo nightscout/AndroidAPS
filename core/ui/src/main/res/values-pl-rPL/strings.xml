@@ -14,7 +14,6 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Pompa nie zainicjowana, profil nie ustawiony!</string>
     <string name="failed_update_basal_profile">Nieudane uaktualnienie profilu bazy</string>
-    <string name="bolus_delivered">Bolus %1$.2f U podany prawidłowo</string>
     <string name="no_valid_basal_rate">Brak prawidłowej dawki bazowej odczytanej z pompy</string>
     <string name="limiting_iob">Ograniczam IOB do %1$.1f U z uwagi na %2$s</string>
     <string name="loop_disabled">PĘTLA WYLĄCZONA Z UWAGI NA OGRANICZENIA</string>

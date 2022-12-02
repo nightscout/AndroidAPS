@@ -8,17 +8,15 @@ import androidx.core.app.NotificationManagerCompat
 import com.google.android.gms.tasks.Tasks
 import com.google.android.gms.wearable.*
 import dagger.android.AndroidInjection
-import info.nightscout.androidaps.R
-import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.rx.weardata.EventData
+import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.*
@@ -44,7 +42,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
     private val disposable = CompositeDisposable()
 
-    private val rxPath get() = getString(R.string.path_rx_bridge)
+    private val rxPath get() = getString(info.nightscout.shared.R.string.path_rx_bridge)
 
     override fun onCreate() {
         AndroidInjection.inject(this)

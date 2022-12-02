@@ -90,7 +90,7 @@ class AndroidPermissionImpl @Inject constructor(
             if (permissionNotGranted(activity, Manifest.permission.RECEIVE_SMS))
                 activePlugin.activeOverview.addNotification(
                     id = Notification.PERMISSION_SMS,
-                    text = rh.gs(R.string.smscommunicator_missingsmspermission),
+                    text = rh.gs(info.nightscout.core.ui.R.string.smscommunicator_missingsmspermission),
                     level = Notification.URGENT,
                     actionButtonId = R.string.request
                 ) {
@@ -111,7 +111,7 @@ class AndroidPermissionImpl @Inject constructor(
             if (permissionNotGranted(activity, Manifest.permission.BLUETOOTH_CONNECT) || permissionNotGranted(activity, Manifest.permission.BLUETOOTH_SCAN))
                 activePlugin.activeOverview.addNotification(
                     id = Notification.PERMISSION_BT,
-                    text = rh.gs(R.string.need_connect_permission),
+                    text = rh.gs(info.nightscout.core.ui.R.string.need_connect_permission),
                     level = Notification.URGENT,
                     actionButtonId = R.string.request
                 ) { askForPermission(activity, arrayOf(Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH_CONNECT)) }

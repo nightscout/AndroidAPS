@@ -3,23 +3,22 @@ package info.nightscout.automation.triggers
 import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
-import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import info.nightscout.automation.elements.InputDouble
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
+import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
+import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.rx.logging.LTag
-
 import org.json.JSONObject
 import java.text.DecimalFormat
 
 class TriggerAutosensValue(injector: HasAndroidInjector) : Trigger(injector) {
 
-    private val minValue = (sp.getDouble(R.string.key_openapsama_autosens_min, 0.7) * 100).toInt()
-    private val maxValue = (sp.getDouble(R.string.key_openapsama_autosens_max, 1.2) * 100).toInt()
+    private val minValue = (sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7) * 100).toInt()
+    private val maxValue = (sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, 1.2) * 100).toInt()
     private val step = 1.0
     private val decimalFormat = DecimalFormat("1")
     var autosens: InputDouble = InputDouble(100.0, minValue.toDouble(), maxValue.toDouble(), step, decimalFormat)

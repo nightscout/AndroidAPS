@@ -12,9 +12,9 @@ import androidx.fragment.app.FragmentManager
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
+import info.nightscout.automation.R
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.automation.R
 import java.util.Calendar
 
 class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUtil, var value: Long = dateUtil.now()) : Element() {
@@ -39,7 +39,7 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
                         setOnClickListener {
                             getFragmentManager(root.context)?.let { fm ->
                                 MaterialDatePicker.Builder.datePicker()
-                                    .setTheme(R.style.DatePicker)
+                                    .setTheme(info.nightscout.core.ui.R.style.DatePicker)
                                     .setSelection(dateUtil.timeStampToUtcDateMillis(value))
                                     .build()
                                     .apply {
@@ -61,7 +61,7 @@ class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUt
                                 val cal = Calendar.getInstance().apply { timeInMillis = value }
                                 val clockFormat = if (DateFormat.is24HourFormat(context)) TimeFormat.CLOCK_24H else TimeFormat.CLOCK_12H
                                 val timePicker = MaterialTimePicker.Builder()
-                                    .setTheme(R.style.TimePicker)
+                                    .setTheme(info.nightscout.core.ui.R.style.TimePicker)
                                     .setTimeFormat(clockFormat)
                                     .setHour(cal.get(Calendar.HOUR_OF_DAY))
                                     .setMinute(cal.get(Calendar.MINUTE))
