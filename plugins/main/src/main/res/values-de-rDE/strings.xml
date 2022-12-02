@@ -142,7 +142,6 @@
     <string name="pb_label">Pumpenbatterie</string>
     <string name="cannula">Kanüle</string>
     <string name="ebstopsloop">Die Verwendung eines Verzögerungsbolus unterbricht dem Closed Loop Modus für die Dauer des Verzögerungsbolus. Willst Du das wirklich?</string>
-    <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verzögerten Bolus</string>
     <string name="statuslights_cannula_age">Kanülenalter</string>
     <string name="statuslights_patch_pump_age">Alter Patchpumpe</string>
     <string name="patch_pump">Patch-Pumpe</string>
@@ -179,7 +178,6 @@
     <string name="a11y_bg_quality">BZ-Qualität</string>
     <string name="a11y_blood_glucose">Blutzucker</string>
     <string name="a11y_bg_outdated">veraltet</string>
-    <string name="aps_mode_title">APS-Modus</string>
     <string name="set_basal_question">Akzeptiere neue TBR:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">QuickWizard</string>
@@ -333,24 +331,6 @@
     <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
     <string name="largedisplay_description">Großer Bildschirm</string>
     <string name="skin">Erscheinungsbild</string>
-    <!--    Loop -->
-    <string name="run_now">Ausführen</string>
-    <string name="loop_shortname">LOOP</string>
-    <string name="no_aps_selected">KEIN APS AUSGEWÄHLT ODER KEIN ERGEBNIS VORHANDEN</string>
-    <string name="carbs_suggestion">Kohlenhydrate Vorschlag</string>
-    <string name="basal_set_correctly">Basalrate richtig eingestellt</string>
-    <string name="last_run_label">Letzte Ausführung</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Anfrage</string>
-    <string name="loop_constraints_processed_label">Beschränkungen angewendet</string>
-    <string name="loop_tbr_request_time_label">Temp. BR Anfragezeit</string>
-    <string name="loop_tbr_execution_time_label">Temp. BR Ausführungszeit</string>
-    <string name="loop_tbr_set_by_pump_label">TBR der Pumpe</string>
-    <string name="loop_smb_request_time_label">SMB Anfragezeit</string>
-    <string name="loop_smb_execution_time_label">SMB Ausführungszeit</string>
-    <string name="loop_smb_set_by_pump_label">SMB von der Pumpe abgegeben</string>
-    <string name="loop_open_mode_min_change">Minimaler Wert zur Anfrage einer Änderung [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
     <!--    DataBroadcast-->
     <string name="cannula_usage">androidAPS nutzen:</string>
     <!--    Iob-->
