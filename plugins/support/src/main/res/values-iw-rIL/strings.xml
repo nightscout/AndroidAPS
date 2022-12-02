@@ -2,8 +2,21 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">שינוי לשעון קיץ ב-24 השעות הקרובות</string>
+    <string name="dst_loop_disabled_warning">חל מעבר לשעון קיץ לפני פחות מ-3 שעות - לולאה סגורה מושבתת</string>
     <!-- Storage constraint -->
     <!-- Version Checker -->
+    <string name="old_version">גרסה ישנה</string>
+    <string name="very_old_version">גרסה ישנה מאוד</string>
+    <string name="application_expired">תוקף האפליקציה פג</string>
+    <string name="new_version_warning">גרסה חדשה זמינה כבר %1$d ימים! הגבלה להשהיה עקב סוכר נמוך תחל אחרי %2$d ימים, הלולאה תושבת אחרי %3$d ימים</string>
+    <string name="running_invalid_version">זיהינו שאתם משתמשים בגרסה לא תקפה. הלולאה מושבתת!</string>
+    <string name="versionavailable">גרסה %1$s זמינה</string>
+    <string name="version_expire">גרסה: %1$s תפוג תוקפה: %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">משתמש בנתונים מחושבים מחדש</string>
+    <string name="bg_too_close">רמת הסוכר קרובה מדי:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">חושב מחדש</string>
+    <string name="a11y_bg_quality_doubles">רישומים כפולים</string>
 </resources>
