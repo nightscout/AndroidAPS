@@ -45,6 +45,7 @@
     <string name="mute5min">Silenciar por 5 minutos</string>
     <string name="mute">Silêncio</string>
     <string name="success">Sucesso</string>
+    <string name="advancedsettings_title">Configurações Avançadas</string>
     <!--    Protection-->
     <string name="unlock_settings">Definições de desbloqueio</string>
     <!--    Pumps -->
