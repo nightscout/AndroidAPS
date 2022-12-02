@@ -45,6 +45,7 @@
     <string name="mute5min">5분 동안 음소거</string>
     <string name="mute">음소거</string>
     <string name="success">성공</string>
+    <string name="advancedsettings_title">고급 설정</string>
     <!--    Protection-->
     <string name="unlock_settings">설정 잠금해제</string>
     <!--    Pumps -->
