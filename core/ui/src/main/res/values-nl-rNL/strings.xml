@@ -45,6 +45,7 @@
     <string name="mute5min">5 minuten dempen</string>
     <string name="mute">Geluid dempen</string>
     <string name="success">Succes</string>
+    <string name="advancedsettings_title">Geavanceerde instellingen</string>
     <!--    Protection-->
     <string name="unlock_settings">Instellingen ontgrendelen</string>
     <!--    Pumps -->
