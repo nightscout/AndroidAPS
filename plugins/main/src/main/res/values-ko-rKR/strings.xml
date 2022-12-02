@@ -141,7 +141,6 @@
     <string name="pb_label">펌프 배터리</string>
     <string name="cannula">캐뉼라</string>
     <string name="ebstopsloop">확장 Bolus 기능을 사용하는 동안에는 Closed Loop 모드가 중지됩니다. 정말 원하십니까?</string>
-    <string name="extendedbolusdeliveryerror">확장Bolus 주입 에러</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">%2$s로 인해 확장Bolus가 %1$.1f U로 제한됩니다.</string>
     <string name="limitingcarbs">%2$s로 인해 탄수화물이 %1$d g로 제한됩니다.</string>
@@ -172,7 +171,6 @@
     <string name="a11y_graph">그래프</string>
     <string name="a11y_insulin_label">인슐린</string>
     <string name="chart_menu">차트 메뉴</string>
-    <string name="aps_mode_title">APS 모드</string>
     <string name="set_basal_question">새 임시Basal 적용:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">빠른마법사</string>
@@ -301,32 +299,6 @@
     <string name="buttonson_description">버튼을 화면 아래 고정하여 보여주기</string>
     <string name="largedisplay_description">큰 화면</string>
     <string name="skin">스킨</string>
-    <!--    Loop -->
-    <string name="executing">실행중</string>
-    <string name="run_now">지금 실행</string>
-    <string name="smb_frequency_exceeded">최근 3분 이내에 Bolus가 주입되었습니다. SMB를 건너뜁니다.</string>
-    <string name="pump_not_initialized">펌프가 초기화 되지 않았습니다!</string>
-    <string name="loop_shortname">LOOP</string>
-    <string name="description_loop">Loop를 활성화 혹은 비활성화합니다.</string>
-    <string name="no_aps_selected">APS가 선택되지 않았거나 계산된 결과가 없습니다.</string>
-    <string name="ignore5m">5분간 무시하기</string>
-    <string name="ignore15m">5분간 무시하기</string>
-    <string name="ignore30m">30분간 무시하기</string>
-    <string name="carbs_suggestion">탄수화물 제안</string>
-    <string name="open_loop_new_suggestion">새로운 제안이 있습니다</string>
-    <string name="basal_set_correctly">Basal이 정상적으로 설정되었습니다.</string>
-    <string name="last_run_label">최근 실행</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">요청</string>
-    <string name="loop_constraints_processed_label">제약 적용 후</string>
-    <string name="loop_tbr_request_time_label">임시 Basal 요청시간</string>
-    <string name="loop_tbr_execution_time_label">임시 Basal 실행시간</string>
-    <string name="loop_tbr_set_by_pump_label">펌프에 의한 임시Basal 설정</string>
-    <string name="loop_smb_request_time_label">SMB 요청시간</string>
-    <string name="loop_smb_execution_time_label">SMB 실행시간</string>
-    <string name="loop_smb_set_by_pump_label">펌프에 의한 SMB 설정</string>
-    <string name="loop_open_mode_min_change">최소 요청 변화 [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop가 %단위로 이 값보다 변화가 더 클 경우에만 새 변경 요청을 팝업합니다. 기본값은 20 %입니다</string>
     <!--    DataBroadcast-->
     <string name="cannula_usage">사용:</string>
     <!--    Iob-->
