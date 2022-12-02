@@ -2,8 +2,19 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Canvi a horari d\'estiu en 24h o menys</string>
+    <string name="dst_loop_disabled_warning">Canvi a horari d\'estiu fa menys de 3h - Llaç tancat desactivat</string>
     <!-- Storage constraint -->
     <!-- Version Checker -->
+    <string name="old_version">versió antiga</string>
+    <string name="very_old_version">versió molt antiga</string>
+    <string name="application_expired">Aplicació expirada</string>
+    <string name="new_version_warning">Nova versió disponible almenys %1$d dies! Retorn a LGS (Low Glucose Suspend = suspensió per glucèmia baixa) en %2$d dies, el llaç serà desactivat en %3$d dies</string>
+    <string name="running_invalid_version">Hem detectat que esteu executant una versió no vàlida. Llaç desactivat!</string>
+    <string name="versionavailable">Versió %1$s disponible</string>
+    <string name="version_expire">Versió: %1$s | Mida: %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Dades recalculades utilitzades</string>
+    <string name="bg_too_close">Glucèmia massa semblant: \n%1$s\n%2$s</string>
 </resources>
