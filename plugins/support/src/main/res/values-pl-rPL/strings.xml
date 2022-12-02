@@ -2,8 +2,19 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Zmiana czasu w 24h lub mniej</string>
+    <string name="dst_loop_disabled_warning">Zmiana czasu nastąpiła mniej niż 3 godziny temu - Zamknięta pętla wyłączona</string>
     <!-- Storage constraint -->
     <!-- Version Checker -->
+    <string name="old_version">stara wersja</string>
+    <string name="very_old_version">bardzo stara wersja</string>
+    <string name="application_expired">Aplikacja wygasła</string>
+    <string name="new_version_warning">Nowa wersja dostępna co najmniej %1$d dni! Powrót do LGS (zawieszania podawania bazy przy niskim poziomie) po %2$d dniach, pętla zostanie wyłączona po %3$d dniach</string>
+    <string name="running_invalid_version">Wykryliśmy, że używasz nieprawidlowej wersji. Pętla wyłączona!</string>
+    <string name="versionavailable">Wersja %1$s dostępna</string>
+    <string name="version_expire">Wersja %1$s wygasa %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Użyto przeliczonych wartości</string>
+    <string name="bg_too_close">Zbyt bliskie pomiary glikemii:\n%1$s\n%2$s</string>
 </resources>
