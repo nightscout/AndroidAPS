@@ -45,6 +45,7 @@
     <string name="mute5min">Stumm schalten für 5 Minuten</string>
     <string name="mute">Alarm stoppen</string>
     <string name="success">Erfolgreich</string>
+    <string name="advancedsettings_title">Erweiterte Einstellungen</string>
     <!--    Protection-->
     <string name="unlock_settings">Einstellungen freischalten</string>
     <!--    Pumps -->
