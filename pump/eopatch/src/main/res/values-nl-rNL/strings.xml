@@ -8,7 +8,6 @@
     <string name="patch_expiration_reminders">Patch houdbaarheid herinnering</string>
     <string name="patch_buzzer_reminders">Patch buzzer herinneringen</string>
     <string name="time_format_a_h_mm">h:mm a</string>
-    <string name="bolus_delivered">Bolus van %1$.2f E succesvol toegediend</string>
     <string name="eopatch_ble_status">BLE Status</string>
     <string name="eopatch_serial_number">Serienummer</string>
     <string name="eopatch_lot_number">Partijnummer</string>
