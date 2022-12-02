@@ -84,4 +84,13 @@
     <string name="hardlimit">твърд лимит</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Връх</string>
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">Има болус през последните 3 мин, пропускам SMB</string>
+    <string name="loop_shortname">ЦИК</string>
+    <string name="description_loop">Включва или изключва затворения кръг (loop).</string>
+    <string name="ignore5m">Игнориране за 5 мин</string>
+    <string name="ignore15m">Игнориране за 15 мин</string>
+    <string name="ignore30m">Игнориране за 30 мин</string>
+    <string name="basal_set_correctly">Базалът е зададен коректно</string>
+    <string name="loop_aps_label">Алгоритъм за APS</string>
 </resources>
