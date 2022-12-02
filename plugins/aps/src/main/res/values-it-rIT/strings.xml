@@ -88,4 +88,13 @@
     <string name="hardlimit">limite fisso</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Picco</string>
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">Un bolo è stato erogato negli ultimi 3 minuti, SMB ignorato</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="description_loop">Attiva o disattiva l\'implementazione per la gestione del loop.</string>
+    <string name="ignore5m">Ignora | 5m</string>
+    <string name="ignore15m">Ignora | 15m</string>
+    <string name="ignore30m">Ignora | 30m</string>
+    <string name="basal_set_correctly">Basale impostata correttamente</string>
+    <string name="loop_aps_label">APS</string>
 </resources>
