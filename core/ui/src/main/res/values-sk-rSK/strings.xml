@@ -14,6 +14,7 @@
     <string name="pump_base_basal_rate">%1$.2f JI/h</string>
     <string name="pump_not_initialized_profile_not_set">Pumpa nie je inicializovaná, profil nenastavený!</string>
     <string name="failed_update_basal_profile">Chyba pri aktualizovaní bazálneho profilu</string>
+    <string name="bolus_delivered_successfully">Bolus %1$.2f JI podaný úspešne</string>
     <string name="no_valid_basal_rate">Nenačítaný žiadny platný bazál z pumpy</string>
     <string name="limiting_iob">IOB obmedzený na %1$.1f JI: %2$s</string>
     <string name="loop_disabled">UZAVRETÝ OKRUH DEAKTIVOVANÝ OBMEDZENÍM</string>
@@ -46,6 +47,7 @@
     <string name="success">Úspešne</string>
     <string name="advancedsettings_title">Rozšírené nastavenia</string>
     <string name="extendedbolusdeliveryerror">Chyba pri podávaní predĺženého bolusu</string>
+    <string name="aps_mode_title">APS mód</string>
     <string name="extended_bolus">Predĺžený bolus</string>
     <string name="paused">Pozastavené</string>
     <string name="tdd_total">CDD celkom</string>
@@ -104,6 +106,7 @@
     <string name="loading">Načítavanie...</string>
     <string name="notes_label">Poznámky</string>
     <string name="remove_button">Vymazať</string>
+    <string name="add_new">Pridať nový</string>
     <string name="addnew_above">Pridať novú nad</string>
     <string name="wrong_pump_data">Dáta prichádzajú z inej pumpy. Zmeňte ovládač pre obnovenie stavu pumpy.</string>
     <string name="bg_label">Glykémia</string>
@@ -241,6 +244,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">Požadovaných dodatočných %1$d g sacharidov v priebehu %2$d minút</string>
     <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">Kumulatívny TDD</string>
     <string name="expweight">Exponenciálne vážený TDD</string>
     <string name="basalrate">Bazál</string>
     <string name="bolus">Bolus</string>
@@ -465,9 +469,15 @@
     <string name="wizard_explain_tt_to">%1$s do %2$s</string>
     <string name="wizard_pump_not_available">Pumpa nedostupná!</string>
     <!--    Preferences-->
+    <string name="child">Dieťa</string>
     <string name="teenage">Dospievajúci</string>
     <string name="adult">Dospelý</string>
+    <string name="resistant_adult">Dospelý s nízkou citlivosťou</string>
     <string name="pregnant">Tehotenstvo</string>
+    <string name="patient_age_summary">Prosím vyberte typ pacienta pre nastavenie bezpečnostných limitov</string>
+    <string name="max_bolus_title">Maximálny povolený bolus [U]</string>
+    <string name="max_carbs_title">Max. povolené množstvo sacharidov [g]</string>
+    <string name="patient_type">Typ pacienta</string>
     <!--    Protection-->
     <string name="unlock_settings">Odomknúť nastavenia</string>
     <!--    Pumps -->
