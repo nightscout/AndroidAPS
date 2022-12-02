@@ -2,6 +2,8 @@
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">SMS komutlarını kullanarak AAPS\'yi uzaktan kontrol edin.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">authenticator uygulamasından %1$s için PIN girin</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">%1$.2fÜ Bolus gönderilecek, kod ile cevap ver %2$s</string>
@@ -32,10 +34,17 @@
     <string name="smscommunicator_remote_command_not_allowed">Uzaktan komuta izin verilmez</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Uzaktan bolus gönderilemiyor. Daha sonra tekrar deneyin.</string>
     <string name="smscommunicator_basal_reply_with_code">%2$d dk boyunca bazalı %1$.2f Ü/sa yapmak için %3$s koduyla yanıtlayın</string>
+    <string name="sms_actual_bg">KŞ:</string>
+    <string name="sms_last_bg">Son KŞ:</string>
     <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">AİNS:</string>
     <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Bazal:</string>
+    <string name="sms_min_ago">%1$ddak önce</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
+    <string name="insulin_shortname">İNS</string>
+    <string name="rapid_acting_oref">Hızlı etkili Oref</string>
     <string name="ultra_rapid_oref">Ultra Hızlı Oref</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
@@ -43,10 +52,21 @@
     <!-- StatusLine -->
     <string name="xdrip_status_shortname">xd+</string>
     <!-- Food-->
+    <string name="food">Yiyecek</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="app_color_scheme">Uyg. Renk Şeması</string>
+    <string name="dark_theme">Koyu tema</string>
+    <string name="light_theme">Açık tema</string>
+    <string name="follow_system_theme">Cihaz temasını kullan</string>
     <!-- Profile -->
+    <string name="view">Görünüm</string>
+    <string name="errors">Hatalar</string>
+    <string name="profile_name">Profil adı:</string>
+    <string name="target_short">HDF</string>
+    <string name="basal_short">BAZ</string>
     <!-- Objectives -->
     <string name="completed_well_done">Tamamlandı, tebrikler!</string>
+    <string name="not_completed_yet">Henüz tamamlanmadı</string>
     <string name="maxiobset">Maksimal AİNS doğru şekilde ayarlandı</string>
     <string name="hasbgdata">Seçili kaynaktan KŞ kullanılabilir</string>
     <string name="synchaswritepermission">Senkronizasyon servisi yazma iznine sahip</string>
