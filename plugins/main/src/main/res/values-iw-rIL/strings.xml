@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">תקשורת SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">מיישום מאמת עבור: %1$s ואחריו PIN</string>
+    <string name="smscommunicator_otp_pin">תוספת PIN חובה בסוף האסימון</string>
+    <string name="smscommunicator_otp_pin_summary">ספרות נוספות שיש לשנן ולהדביק בסוף כל אחת מהסיסמאות החד פעמיות</string>
     <string name="smscommunicator_tab_otp_label">הגדרת מאמת</string>
+    <string name="smscommunicator_code_verify_label">קוד לבדיקה:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">קוד האימות מורכב מ-6 ספרות המוצגות על ידי יישום מאמת (הידוע בתור OTP) ואחריו 3 או יותר ספרות של PIN הכרחי.</string>
+    <string name="smscommunicator_otp_reset_btn">איפוס מאמתים</string>
+    <string name="smscommunicator_otp_reset_title">איפוס מפתח אימות</string>
+    <string name="smscommunicator_otp_reset_prompt">האם אתם בטוחים שברצונכם לאפס את מפתח האימות? איפוס יהפוך את כל המאמתים המוגדרים כעת לבלתי תקפים, ותצטרכו להגדיר אותם מחדש.</string>
+    <string name="smscommunicator_otp_reset_successful">מפתח אימות חדש הופק! נא להשתמש בקוד QR מעודכן כדי לאפשר אימות.</string>
+    <string name="smscommunicator_otp_export_title">יצוא סוד OTP</string>
+    <string name="smscommunicator_otp_export_prompt">אתם בטוחים שברצונכם להעתיק את סוד ה-OTP ללוח ההעתקה?\n\nייתכן שתצטרכו לעשות זאת רק אם יישום האימות נתקל בבעיות בסריקת קוד QR, או שברצונכם להכניס אותו ידנית או להגדיר אסימון OTP של חומרה באמצעות יישום ייעודי.</string>
+    <string name="smscommunicator_otp_export_successful">סוד OTP (בפורמט Base32) יוצא והועתק אל לוח ההעתקה. הדביקו אותו לתוך תוכנת האימות או בחומרת צריבת OTP!</string>
+    <string name="smscommunicator_otp_step1_install_header">1. התקנת מאמת</string>
+    <string name="smscommunicator_otp_step3_test_header">3. ניסוי סיסמה חד-פעמית</string>
+    <string name="smscommunicator_otp_reset_header">איפוס מאמתים</string>
+    <string name="smscommunicator_otp_install_info">בכל אחד מהטלפונים העוקבים, התקינו יישום מאמת התומך באסימוני RFC 6238 TOTP. יישומים פופולריים בחינם הם:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="sms_wrong_code">קוד שגוי. הפקודה בוטלה.</string>
     <string name="sms_timeout_while_waiting">בהמתנה עד לסיום תקשורת קודמת עם המשאבה</string>
+    <string name="smscommunicator_allowednumbers">מספרי טלפון מורשים</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">לאישור מתן בולוס %1$.2f יחידות יש להשיב עם הקוד %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">למתן %1$.2f יחידות בולוס ארוחה יש להשיב עם הקוד %2$s</string>
@@ -21,6 +39,8 @@
     <string name="smscommunicator_bolus_delivered">בולוס %1$.2f יח\' ניתן בהצלחה</string>
     <string name="smscommunicator_meal_bolus_delivered">בולוס עבור ארוחה %1$.2fU ניתן בהצלחה</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">ערך מטרה %1$s למשך %2$d דקות</string>
+    <string name="smscommunicator_tt_set">יעד %1$s עבור %2$d דקות הוגדר בהצלחה</string>
+    <string name="smscommunicator_tt_canceled">יעד זמני בוטל בהצלחה</string>
     <string name="smscommunicator_remote_commands_allowed">אפשר שליטה מרחוק באמצעות SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">הלולאה הושבתה</string>
     <string name="smscommunicator_loop_has_been_enabled">הלולאה הופעלה</string>
@@ -29,6 +49,7 @@
     <string name="smscommunicator_pump_connect_fail">החיבור אל המשאבה נכשל</string>
     <string name="smscommunicator_pump_disconnect_with_code">לניתוק המשאבה למשך %1$d דקות השיבו עם הקוד %2$s</string>
     <string name="smscommunicator_pump_disconnected">המשאבה מנותקת</string>
+    <string name="smscommunicator_reconnect">המשאבה חוברה מחדש</string>
     <string name="smscommunicator_remote_command_not_allowed">פקודה מרוחקת אינה מותרת</string>
     <string name="smscommunicator_remote_bolus_not_allowed">בולוס מרחוק אינו זמין. נסו שוב מאוחר יותר.</string>
     <string name="smscommunicator_basal_reply_with_code">להפעלת בזאלי %1$.2f יח\' לשעה למשך %2$d דקות יש להשיב עם הקוד %3$s</string>
@@ -54,6 +75,7 @@
     <string name="smscommunicator_tempbasal_cancel_failed">ביטול בזאלי זמני ניכשל</string>
     <string name="smscommunicator_extended_cancel_failed">ביטול בולוס ממושך נכשל</string>
     <string name="smscommunicator_unknown_command">פקודה לא מוכרת או תגובה שגויה</string>
+    <string name="smscommunicator_another_bolus_in_queue">ישנו בולוס נוסף בתור. נסו שוב מאוחר יותר.</string>
     <string name="smscommunicator_wrong_duration">משך שגוי</string>
     <string name="smscommunicator_loop_suspended">לולאה מושהית</string>
     <string name="smscommunicator_loop_resumed">לולאה חודשה</string>
@@ -66,20 +88,36 @@
     <string name="wrong_format">פורמט שגוי</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">ערכי סוכר אחרונים:</string>
+    <string name="sms_delta">דלתא:</string>
+    <string name="sms_iob">אינסולין פעיל:</string>
+    <string name="sms_bolus">בולוס:</string>
+    <string name="sms_basal">אינסולין בזאלי:</string>
     <string name="sms_min_ago">לפני %1$d דקות</string>
     <string name="sms_loop_suspended_for">מושהה (%1$d דק\')</string>
     <string name="sms_read_status_failed">קריאת סטטוס נכשלה</string>
     <string name="sms_profile_switch_created">נוצרה החלפת פרופיל</string>
     <string name="sms_wrong_tbr_duration">משך הבזאלי הזמני חייב להיות כפולה של %1$d דקות ויותר מ-0.</string>
+    <string name="a11y_otp_qr_code">ברקוד QR ליצירת סיסמה חד פעמית</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">הגדרת אינסולין ל-Humalog ו- NovoRapid / Novolog</string>
+    <string name="description_insulin_ultra_rapid">הגדרת אינסולין מסוג Fiasp</string>
+    <string name="description_insulin_lyumjev">הגדרת אינסולין מסוג Lyumjev</string>
+    <string name="description_insulin_free_peak">מאפשר להגדיר את שיא פעילות האינסולין, לשימוש על ידי משתמשים מתקדמים בלבד</string>
+    <string name="insulin_shortname">אינסולין</string>
+    <string name="insulin_oref_peak">שעת שיא של עקומת IOB</string>
+    <string name="insulin_peak_time">זמן שיא [min]</string>
+    <string name="free_peak_oref">Oref שיא חופשי</string>
+    <string name="rapid_acting_oref">Oref אינסולין מהיר</string>
     <string name="ultra_rapid_oref">Oref אינסולין אולטרה מהיר</string>
+    <string name="dia_too_short">DIA במשך %1$f הוא קצר מדי - משתמש ב-%2$f במקום!</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">שורת מצב xDrip (שעון)</string>
     <string name="xdrip_status_shortname">xDS</string>
+    <string name="description_xdrip_status_line">הצג מידע אודות הלולאה במסך xDrip בשעון החכם.</string>
     <string name="xdrip_status_detailed_iob_title">הצגת IOB מפורט</string>
     <string name="xdrip_status_detailed_iob_summary">לחלק את ה IOB לבולוס ובזאלי במסך השעון</string>
     <string name="disabled_loop">לולאה כבויה</string>
@@ -88,23 +126,52 @@
     <string name="xdrip_status_settings">מצב xDrip (שעון)</string>
     <!-- Food-->
     <string name="food_short">מזון</string>
+    <string name="description_food">מציג את ההגדרות הקבועות מראש עבור מזון המוגדר ב-Nightscout</string>
+    <string name="filter">סינון</string>
+    <string name="food">מזון</string>
     <string name="short_kilo_joul">kJ</string>
     <string name="short_energy">אנרגיה</string>
     <string name="short_protein">חלבון</string>
     <string name="short_fat">שומן</string>
+    <string name="category">קטגוריה</string>
+    <string name="subcategory">תת קטגוריה</string>
     <string name="calculator_label">מחשבון</string>
     <!-- Theme switcher dark and light mode-->
     <string name="theme_switcher_summary">לבחירת ערכת נושא כהה, בהירה או ע\"פ ערכת הנושא של המכשיר</string>
+    <string name="app_color_scheme">סכמת צבעים</string>
+    <string name="dark_theme">ערכת נושא כהה</string>
+    <string name="light_theme">ערכת נושא בהירה</string>
+    <string name="follow_system_theme">השתמש בערכת הנושא של המכשיר</string>
     <!-- Profile -->
     <string name="localprofile">פרופיל</string>
     <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">הגדירו פרופיל שזמין באופן לא מקוון.</string>
+    <string name="a11y_add_new_to_list">הוסף לרשימה</string>
     <string name="do_you_want_switch_profile">האם ברצונכם להחליף את הפרופיל ולזנוח את השינויים שבוצעו בפרופיל הנוכחי?</string>
     <string name="save_or_reset_changes_first">יש לשמור או לאפס תחילה את השינויים הנוכחיים</string>
     <string name="delete_current_profile">למחוק את הפרופיל הנוכחי?</string>
+    <string name="units_colon">יחידות:</string>
+    <string name="missing_profile_name">חסר שם לפרופיל</string>
+    <string name="error_in_ic_values">שגיאה בערכי יחס הפחמימות</string>
+    <string name="error_in_basal_values">שגיאה בערכי המינון הבזאלי</string>
+    <string name="error_in_target_values">שגיאה בערכי המטרה</string>
+    <string name="error_in_isf_values">שגיאה בערכי יחס התיקון</string>
     <string name="profile_name_contains_dot">שם הפרופיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
+    <string name="invalid_profile_not_accepted">הפרופיל הבלתי חוקי %1$s מ-Nightscout לא מאושר</string>
+    <string name="view">תצוגה</string>
+    <string name="errors">שגיאות</string>
+    <string name="select_profile">בחרו פרופיל לעריכה</string>
+    <string name="profile_name">שם הפרופיל:</string>
+    <string name="a11y_add_new_profile">הוסף פרופיל חדש</string>
+    <string name="a11y_clone_profile">שכפל את הפרופיל הנוכחי</string>
+    <string name="a11y_delete_current_profile">מחק את הפרופיל הנוכחי</string>
     <string name="dia_short">DIA</string>
+    <string name="target_short">ע\' מטרה</string>
+    <string name="basal_short">בזאלי</string>
     <!-- Objectives -->
     <string name="completed_well_done">הושלם, כל הכבוד!</string>
+    <string name="not_completed_yet">עוד לא הושלם</string>
+    <string name="time_elapsed">זמן שחלף</string>
     <string name="maxiobset">ערך IOB מקסימלי הוגדר כראוי</string>
     <string name="hasbgdata">ערכי סוכר זמינים מהמקור הנבחר</string>
     <string name="loopenabled">הלולאה פעילה</string>
@@ -133,7 +200,6 @@
     <string name="pb_label">סוללת המשאבה</string>
     <string name="cannula">צינורית</string>
     <string name="ebstopsloop">שימוש בבולוס ממושך יפסיק את מצב הלולאה הסגורה לזמן פעילות הבולוס. אתם בטוחים שאתם רוצים להמשיך?</string>
-    <string name="extendedbolusdeliveryerror">שגיאה במתן הבולוס הממושך</string>
     <string name="statuslights_cannula_age">גיל הצינורית</string>
     <string name="statuslights_patch_pump_age">גיל משאבה</string>
     <string name="patch_pump">משאבה ללא צינורית</string>
@@ -170,7 +236,6 @@
     <string name="a11y_bg_quality">איכות נתוני סוכר</string>
     <string name="a11y_blood_glucose">ערכי סוכר בדם</string>
     <string name="a11y_bg_outdated">לא עדכני</string>
-    <string name="aps_mode_title">מצב APS</string>
     <string name="set_basal_question">אשר בזאלי זמני חדש:</string>
     <string name="overview_cgm">סנסור</string>
     <string name="quickwizard">אשף מהיר</string>
@@ -325,32 +390,6 @@
     <string name="buttonson_description">לחצנים מוצגים תמיד בתחתית המסך</string>
     <string name="largedisplay_description">תצוגה גדולה</string>
     <string name="skin">סקין</string>
-    <!--    Loop -->
-    <string name="executing">מבצע</string>
-    <string name="run_now">בצע</string>
-    <string name="smb_frequency_exceeded">ניתן בולוס ב-3 הדקות האחרונות, מדלג על SMB</string>
-    <string name="pump_not_initialized">משאבה לא הופעלה!</string>
-    <string name="loop_shortname">לולאה</string>
-    <string name="description_loop">הפעלת או השבתת הלולאה.</string>
-    <string name="no_aps_selected">לא נבחרה או סופקה תוצאה ע\"י APS</string>
-    <string name="ignore5m">התעלם ל-5 דק\'</string>
-    <string name="ignore15m">התעלם ל-15 דק\'</string>
-    <string name="ignore30m">התעלם ל-30 דק\'</string>
-    <string name="carbs_suggestion">המלצת פחמימות</string>
-    <string name="open_loop_new_suggestion">הצעה חדשה זמינה</string>
-    <string name="basal_set_correctly">הבזאלי הוגדר כהלכה</string>
-    <string name="last_run_label">ההפעלה האחרונה</string>
-    <string name="loop_aps_label">אלגוריתם APS</string>
-    <string name="request_label">בקשה</string>
-    <string name="loop_constraints_processed_label">מגבלות לאחר עיבוד</string>
-    <string name="loop_tbr_request_time_label">זמן בקשת בזאלי זמני</string>
-    <string name="loop_tbr_execution_time_label">זמן הפעלת בזאלי זמני</string>
-    <string name="loop_tbr_set_by_pump_label">מינון בזאלי זמני שהוגדר במשאבה</string>
-    <string name="loop_smb_request_time_label">זמן בקשת SMB</string>
-    <string name="loop_smb_execution_time_label">זמן ביצוע SMB</string>
-    <string name="loop_smb_set_by_pump_label">SMB מוגדר באמצעות משאבה</string>
-    <string name="loop_open_mode_min_change">מינימום לבקשה לשינוי [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">\'לולאה פתוחה\' תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
     <!--    DataBroadcast-->
     <string name="cannula_usage">שימוש:</string>
     <!--    Iob-->
