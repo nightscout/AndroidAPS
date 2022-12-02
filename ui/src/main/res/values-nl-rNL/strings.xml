@@ -37,12 +37,17 @@
     <string name="format_carbs_ic">%1$.0fg IC: %2$.1f</string>
     <string name="treatments_wizard_total_label">Totaal</string>
     <!-- FillDialog -->
+    <string name="fill_warning">Zorg ervoor dat de hoeveelheid overeenkomt met de specificatie van uw infusieset!</string>
     <string name="record_pump_site_change">Markeer een infuuswissel in NS</string>
     <string name="record_insulin_cartridge_change">Markeer een insuline ampul wissel in NS</string>
     <!-- InsulinDialog -->
+    <string name="do_not_bolus_record_only">Geen bolus, enkel registreren</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Hergebruik %1$d%% %2$dh</string>
     <string name="timeshift_label">Tijd verschuiving</string>
+    <string name="percentage_label">Percentage</string>
     <!-- LoopDialog -->
+    <string name="suspendloopfor1h">Onderbreek loop voor 1u</string>
     <string name="suspendloopfor2h">Onderbreek loop voor 2u</string>
     <string name="suspendloopfor3h">Onderbreek loop voor 3u</string>
     <string name="suspendloopfor10h">Onderbreek loop voor 10u</string>
@@ -63,6 +68,7 @@
     <!-- WizardDialog -->
     <string name="a11_correction_percentage">corrigeer uitkomt met percentage</string>
     <string name="a11_correction_units">corrigeer uitkomt met units</string>
+    <string name="two_hours">2u</string>
     <string name="result_insulin_carbs">Resultaat: %1$s %2$s</string>
     <string name="missing_carbs">Er ontbreekt %1$d g</string>
     <string name="a11y_current_bg">huidige bloedglucose</string>
@@ -101,12 +107,23 @@
     <string name="show_loop_records">Toon loop records</string>
     <string name="show_hide_records">Verberg loop records</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Profiel 1</string>
     <string name="profile2">Profiel 2</string>
+    <string name="profile_type">Profieltype</string>
+    <string name="basal_pct_from_tdd_label">% van basaal</string>
     <string name="selected_profile">Geselecteerd:</string>
+    <string name="compare_profile">Vergelijk profielen</string>
+    <string name="nav_profile_helper">Profiel hulp</string>
+    <string name="motol_default_profile">Basis profiel</string>
+    <string name="current_profile">Huidig profiel</string>
+    <string name="available_profile">Beschikbare profielen</string>
     <string name="format_with_tdd">Duur: %1$d TDD: %2$.0f E</string>
     <string name="format_with_tdd_and_pct">Leeftijd: %1$d TDD: %2$.0f E %3$d%%</string>
     <string name="format_with_weight">Leeftijd: %1$d Gewicht: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV Basis profiel</string>
+    <string name="invalid_pct">Ongeldig % invoer</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Basaalstand</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOP INGEDRUKT</string>
 </resources>
