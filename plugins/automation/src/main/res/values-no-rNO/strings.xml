@@ -113,7 +113,6 @@
     <string name="sort_automation">Sorter automatisering</string>
     <string name="remove_selected_items">Fjern valgte elementer</string>
     <string name="count_selected">%1$d valgt</string>
-    <string name="confirm_remove_multiple_items">Er du sikker på at du vil fjerne %1$d elementer</string>
     <string name="system_automation">System automatisering</string>
     <string name="run_automations">Kjør automatisering</string>
     <string name="add_automation">Legg til regel</string>
