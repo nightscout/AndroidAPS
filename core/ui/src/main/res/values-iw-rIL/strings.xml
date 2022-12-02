@@ -45,6 +45,7 @@
     <string name="mute5min">השתקה ל-5 דקות</string>
     <string name="mute">השתק</string>
     <string name="success">הצלחה</string>
+    <string name="advancedsettings_title">הגדרות מתקדמות</string>
     <!--    Protection-->
     <string name="unlock_settings">שחרור נעילת הגדרות</string>
     <!--    Pumps -->
