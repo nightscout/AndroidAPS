@@ -89,4 +89,5 @@
     <string name="hardlimit">hård grænse</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Top</string>
+    <!--    Loop -->
 </resources>
