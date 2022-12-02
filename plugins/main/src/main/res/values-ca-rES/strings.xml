@@ -139,7 +139,6 @@
     <string name="pb_label">Pila de la bomba</string>
     <string name="cannula">Cànula</string>
     <string name="ebstopsloop">L\'ús d\'un bolus estès aturarà el mode llaç tancat mentre duri el bolus. Esteu segurs que voleu això?</string>
-    <string name="extendedbolusdeliveryerror">Error en lliurar bolus estès</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Limitant bolus estès a %1$.1f U a causa de %2$s</string>
     <string name="limitingcarbs">Limitant carbs a %1$d g a causa de %2$s</string>
@@ -170,7 +169,6 @@
     <string name="a11y_graph">gràfica</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="chart_menu">Menú gràfica</string>
-    <string name="aps_mode_title">Mode APS</string>
     <string name="set_basal_question">Acceptar nova basal temporal:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Assistent</string>
@@ -308,32 +306,6 @@
     <string name="buttonson_description">Els botons sempre es mostren a la part inferior de la pantalla</string>
     <string name="largedisplay_description">Pantalla grossa</string>
     <string name="skin">Tema</string>
-    <!--    Loop -->
-    <string name="executing">Executant</string>
-    <string name="run_now">Executar ara</string>
-    <string name="smb_frequency_exceeded">S\'ha lliurat un bolus els darrers 3 minuts, ignorant SMB</string>
-    <string name="pump_not_initialized">Bomba no iniciada!</string>
-    <string name="loop_shortname">LLAÇ</string>
-    <string name="description_loop">Activar o desactivar la implementació que activa el llaç.</string>
-    <string name="no_aps_selected">CAP APS SELECCIONAT O RESULTAT ENTREGAT</string>
-    <string name="ignore5m">Ignorar 5m</string>
-    <string name="ignore15m">Ignorar 15m</string>
-    <string name="ignore30m">Ignorar 30m</string>
-    <string name="carbs_suggestion">Proposta de carbs</string>
-    <string name="open_loop_new_suggestion">Nova proposta disponible</string>
-    <string name="basal_set_correctly">Basal configurada ok</string>
-    <string name="last_run_label">Última execució</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Petició</string>
-    <string name="loop_constraints_processed_label">Després de processar les restriccions</string>
-    <string name="loop_tbr_request_time_label">Hora sol·licitud basal temporal</string>
-    <string name="loop_tbr_execution_time_label">Hora execució basal temporal</string>
-    <string name="loop_tbr_set_by_pump_label">Basal temporal definida per la bomba</string>
-    <string name="loop_smb_request_time_label">Hora sol·licitud SMB</string>
-    <string name="loop_smb_execution_time_label">Hora execució SMB</string>
-    <string name="loop_smb_set_by_pump_label">SMB definit per la bomba</string>
-    <string name="loop_open_mode_min_change">Sol·licitud de canvi mínima [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">El llaç obert només mostrarà sol·licituds de canvi si son més grans que aquest valor en %. Valor per defecte: 20%</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Enviar logs del dia als desenvolupadors. Situació inesperada.</string>
