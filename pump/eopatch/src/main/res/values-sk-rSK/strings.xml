@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_delivered">Bolus %1$.2f JI podaný úspešne</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_safety_check_step">5/6</string>
     <string name="patch_rotate_knob_step">6/6</string>
