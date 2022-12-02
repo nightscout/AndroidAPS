@@ -141,7 +141,6 @@
     <string name="pb_label">Pumpe batteri</string>
     <string name="cannula">Kanyle</string>
     <string name="ebstopsloop">Brug af funktionen til forlænget bolus vil stoppe lukket loop mode i det tidsrum, hvor der køres forlænget bolus. Vil du virkelig gøre det?</string>
-    <string name="extendedbolusdeliveryerror">Forlænget bolus leveringsfejl</string>
     <string name="statuslights_cannula_age">Indstik alder</string>
     <string name="statuslights_patch_pump_age">patch pumpe alder</string>
     <string name="patch_pump">Patch pumpe</string>
@@ -178,7 +177,6 @@
     <string name="a11y_bg_quality">blodglukose kvalitet</string>
     <string name="a11y_blood_glucose">blodglucose</string>
     <string name="a11y_bg_outdated">forældet</string>
-    <string name="aps_mode_title">APS Tilstand</string>
     <string name="set_basal_question">Acceptér ny midlertidig basal:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Lynguide</string>
@@ -332,32 +330,6 @@
     <string name="buttonson_description">Knapper vises altid nederst på skærmen</string>
     <string name="largedisplay_description">Stort display</string>
     <string name="skin">Udseende</string>
-    <!--    Loop -->
-    <string name="executing">Udfører</string>
-    <string name="run_now">Kør nu</string>
-    <string name="smb_frequency_exceeded">En bolus blev leveret inden for de sidste 3 minutter, springer SMB over</string>
-    <string name="pump_not_initialized">Pumpe er ikke initialiseret!</string>
-    <string name="loop_shortname">LOOP</string>
-    <string name="description_loop">Aktiver eller deaktiver implementeringen som aktiverer Loop.</string>
-    <string name="no_aps_selected">INGEN APS VALGT ELLER GIVET RESULTAT</string>
-    <string name="ignore5m">Ignorér 5m</string>
-    <string name="ignore15m">Ignorér 15m</string>
-    <string name="ignore30m">Ignorér 30m</string>
-    <string name="carbs_suggestion">Kulhydrat Forslag</string>
-    <string name="open_loop_new_suggestion">Nyt forslag tilgængeligt</string>
-    <string name="basal_set_correctly">Basal sat korrekt </string>
-    <string name="last_run_label">Sidst kørt</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Anmod</string>
-    <string name="loop_constraints_processed_label">Efter bearbejdede begrænsninger</string>
-    <string name="loop_tbr_request_time_label">Midlertidig basal anmodningstid</string>
-    <string name="loop_tbr_execution_time_label">Midlertidig basal afviklingstid</string>
-    <string name="loop_tbr_set_by_pump_label">Midlertidig basal sat af pumpe</string>
-    <string name="loop_smb_request_time_label">SMB anmodningstid</string>
-    <string name="loop_smb_execution_time_label">SMB udførelsestid</string>
-    <string name="loop_smb_set_by_pump_label">SMB indstillet af pumpe</string>
-    <string name="loop_open_mode_min_change">Minimal anmodningsændring [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Åben Loop vil kun foreslå ny ændringsanmodning, hvis ændringen er større end denne værdi i %. Standardværdien er 20%</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Send dagens logfiler til udviklere sammen med denne tid. Uventet situation.</string>
