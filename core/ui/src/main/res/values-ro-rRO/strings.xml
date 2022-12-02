@@ -45,6 +45,7 @@
     <string name="mute5min">Dezactivează pentru 5 minute</string>
     <string name="mute">Liniște</string>
     <string name="success">Succes</string>
+    <string name="advancedsettings_title">Setări avansate</string>
     <!--    Protection-->
     <string name="unlock_settings">Deblochează setările</string>
     <!--    Pumps -->
