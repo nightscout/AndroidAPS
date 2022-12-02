@@ -119,7 +119,6 @@
     <string name="pb_label">Батерия на помпата</string>
     <string name="cannula">Канюла</string>
     <string name="ebstopsloop">Използване на удължен болус ще спре режим затворен цикъл за времето на болуса. Сигурни ли сте?</string>
-    <string name="extendedbolusdeliveryerror">Грешка при доставяне на удължен болус</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Ограничение на удължен болус до %1$.1f Е поради %2$s</string>
     <string name="limitingcarbs">Ограничаване на въглехидрати до %1$d гр. поради %2$s</string>
@@ -150,7 +149,6 @@
     <string name="a11y_graph">графика</string>
     <string name="a11y_insulin_label">инсулин</string>
     <string name="chart_menu">Меню на графиката</string>
-    <string name="aps_mode_title">APS режим</string>
     <string name="set_basal_question">Приложи нов временен базал:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Бърз болус</string>
@@ -289,32 +287,6 @@
     <string name="buttonson_description">Бутоните винаги се показват на дъното на екрана.</string>
     <string name="largedisplay_description">Голям екран</string>
     <string name="skin">Тема</string>
-    <!--    Loop -->
-    <string name="executing">Изпълнява</string>
-    <string name="run_now">Старт сега</string>
-    <string name="smb_frequency_exceeded">Има болус през последните 3 мин, пропускам SMB</string>
-    <string name="pump_not_initialized">Помпата не е инициализирана!</string>
-    <string name="loop_shortname">ЦИК</string>
-    <string name="description_loop">Включва или изключва затворения кръг (loop).</string>
-    <string name="no_aps_selected">НЕ Е ИЗБРАН APS ИЛИ НЯМА РЕЗУЛТАТ ОТ НЕГО</string>
-    <string name="ignore5m">Игнориране за 5 мин</string>
-    <string name="ignore15m">Игнориране за 15 мин</string>
-    <string name="ignore30m">Игнориране за 30 мин</string>
-    <string name="carbs_suggestion">Предложение</string>
-    <string name="open_loop_new_suggestion">Има ново предложение</string>
-    <string name="basal_set_correctly">Базалът е зададен коректно</string>
-    <string name="last_run_label">Последно изпълнение</string>
-    <string name="loop_aps_label">Алгоритъм за APS</string>
-    <string name="request_label">Искане</string>
-    <string name="loop_constraints_processed_label">След ограничения</string>
-    <string name="loop_tbr_request_time_label">Диапазон между временни базали</string>
-    <string name="loop_tbr_execution_time_label">Продължителност на временни базали</string>
-    <string name="loop_tbr_set_by_pump_label">Временният базал зададен от помпата</string>
-    <string name="loop_smb_request_time_label">Диапазон между изпълнение на SMB</string>
-    <string name="loop_smb_execution_time_label">Макс. време за изпълнение за SMB</string>
-    <string name="loop_smb_set_by_pump_label">SMB в помпата</string>
-    <string name="loop_open_mode_min_change">Минимална стойност за промяна [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">AndroidAPS ще покаже запитването за промяна на базала само ако е по-голямо от тази стойност.(Стандартно 20%)</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Изпрати последните лог файлове на разработчиците. Непредвидена ситуация.</string>
