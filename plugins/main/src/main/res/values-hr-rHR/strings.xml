@@ -175,12 +175,6 @@
     <string name="random_bg_short">GUK</string>
     <string name="dexcom_log_ns_sensor_change_summary">Stvorite događaj \"Promjena senzora\" u NS-u automatski pri pokretanju senzora</string>
     <!-- Skins -->
-    <!--    Loop -->
-    <string name="run_now">Pokreni sada</string>
-    <string name="description_loop">Aktiviraj ili deaktiviraj implementaciju koja pokreće loop.</string>
-    <string name="last_run_label">Zadnje pokretanje</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Zahtjev</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->
