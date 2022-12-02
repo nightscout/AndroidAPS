@@ -45,6 +45,7 @@
     <string name="mute5min">Wycisz na 5 minut</string>
     <string name="mute">Wycisz</string>
     <string name="success">Sukces</string>
+    <string name="advancedsettings_title">Ustawienia zaawansowane</string>
     <!--    Protection-->
     <string name="unlock_settings">Odblokuj ustawienia</string>
     <!--    Pumps -->
