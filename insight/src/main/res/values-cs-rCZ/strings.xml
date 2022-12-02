@@ -66,4 +66,5 @@
     <string name="min_recovery_duration">Min. doba čekání na obnovení spojení [s]</string>
     <string name="pump_alert">Výstraha pumpy</string>
     <string name="pairing_information">Informace o párování</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Tlačítko Obnovit</string>
 </resources>

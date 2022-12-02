@@ -80,4 +80,13 @@
     <string name="maxvalueinpreferences">설정에서의 최대값</string>
     <string name="hardlimit">하드한계</string>
     <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">최근 3분 이내에 Bolus가 주입되었습니다. SMB를 건너뜁니다.</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="description_loop">Loop를 활성화 혹은 비활성화합니다.</string>
+    <string name="ignore5m">5분간 무시하기</string>
+    <string name="ignore15m">5분간 무시하기</string>
+    <string name="ignore30m">30분간 무시하기</string>
+    <string name="basal_set_correctly">Basal이 정상적으로 설정되었습니다.</string>
+    <string name="loop_aps_label">APS</string>
 </resources>

@@ -9,6 +9,7 @@
     <string name="combov2_ready">Preparado</string>
     <string name="combov2_suspended">Suspenso</string>
     <string name="combov2_setting_basal_profile_cmddesc">Configurando perfil basal</string>
+    <string name="combov2_pairing_pin_failure">O PIN não funcionou. Verifique se houve um erro de digitação. Se isso continuar acontecendo, cancele e tente emparelhar novamente.</string>
     <string name="combov2_bolus_cancelled">Bolus cancelado</string>
     <string name="combov2_bolus_delivery_failed">A administração do bolus falhou. Nenhum bolus parece ter sido administrado. Para evitar uma dupla administração do bolus, por favor verifique a informação de bolus na bomba e se preciso administre o bolus novamente. Como segurança contra bugs, os bolus não são reprogramados de forma automática.</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min restantes)</string>

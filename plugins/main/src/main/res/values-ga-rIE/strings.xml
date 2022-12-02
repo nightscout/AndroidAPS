@@ -10,7 +10,10 @@
     <string name="smscommunicator_loop_resumed">Lúb atógáil</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">GF deiridh:</string>
+    <string name="sms_delta">Deilte:</string>
     <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bólas:</string>
+    <string name="sms_basal">Bunaidh:</string>
     <string name="sms_min_ago">%1$dnóim ó shin</string>
     <string name="sms_loop_suspended_for">Ar fionraí (%1$d nóim)</string>
     <!-- Insulin -->
@@ -26,14 +29,19 @@
     <string name="disabled_loop">Lúb díchumasaithe</string>
     <!-- Food-->
     <string name="food_short">Bia</string>
+    <string name="food">Bia</string>
     <string name="short_kilo_joul">kJ</string>
     <string name="short_fat">Saill</string>
+    <string name="category">Catagóir</string>
     <string name="calculator_label">Áireamhán</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
     <string name="localprofile">Próifíl</string>
+    <string name="units_colon">Aonaid:</string>
     <string name="errors">Earráidí</string>
+    <string name="profile_name">Ainm Próifíle:</string>
     <string name="dia_short">DIA</string>
+    <string name="basal_short">BUN</string>
     <!-- Objectives -->
     <string name="loopenabled">Lúb cumasaithe</string>
     <string name="apsselected">APS  roghnaithe</string>
@@ -49,7 +57,6 @@
     <!-- Safety -->
     <!-- Overview -->
     <string name="a11y_insulin_label">inslin</string>
-    <string name="aps_mode_title">APS mód</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">QuickWizard</string>
     <string name="overview_shortname">BAILE</string>
@@ -87,12 +94,6 @@
     <string name="tomato_short">Tomato</string>
     <string name="random_bg_short">BG</string>
     <!-- Skins -->
-    <!--    Loop -->
-    <string name="executing">Feidhmiú</string>
-    <string name="run_now">Reáchtáil anois</string>
-    <string name="loop_shortname">LÚB</string>
-    <string name="last_run_label">Reáchtáil deiridh</string>
-    <string name="loop_aps_label">APS</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->

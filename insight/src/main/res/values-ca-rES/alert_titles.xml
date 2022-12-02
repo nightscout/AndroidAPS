@@ -1,2 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="alert_r1_title">Lliureu bolus</string>
+    <string name="alert_r2_title">Bolus perdut</string>
+    <string name="alert_r3_title">Alarma rellotge</string>
+    <string name="alert_r4_title">Canvieu set d\'infusió</string>
+    <string name="alert_r7_title">TBR completada</string>
+    <string name="alert_w31_title">Reservori baix</string>
+    <string name="alert_w32_title">Bateria baixa</string>
+    <string name="alert_w33_title">Data/hora no vàlida</string>
+    <string name="alert_w34_title">Fi de la garantia</string>
+    <string name="alert_w36_title">TBR cancel·lada</string>
+    <string name="alert_w38_title">Bolus cancel·lat</string>
+    <string name="alert_w39_title">Avís temps de prèstec</string>
+    <string name="alert_m20_title">Reservori no inserit</string>
+    <string name="alert_m21_title">Reservori buit</string>
+    <string name="alert_m22_title">Bateria esgotada</string>
+    <string name="alert_m23_title">Desactivat automàtic - Bomba aturada</string>
+    <string name="alert_m24_title">Oclusió</string>
+    <string name="alert_m25_title">Temps de prèstec finalitzat - fi de l\'operació</string>
+    <string name="alert_m26_title">Canvi de reservori no finalitzat</string>
+    <string name="alert_m27_title">Ha fallat la descàrrega de dades</string>
+    <string name="alert_m28_title">Temps en pausa exhaurit</string>
+    <string name="alert_m29_title">Tipus de bateria no configurat</string>
+    <string name="alert_m30_title">Tipus de reservori no configurat</string>
+    <string name="alert_e6_title">Error mecànic</string>
+    <string name="alert_e10_title">Error de rebobinat</string>
+    <string name="alert_e13_title">Error d\'idioma</string>
+</resources>

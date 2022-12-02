@@ -37,6 +37,173 @@
     <string name="treatments_iob_label_string">IAB:</string>
     <string name="mute">Demp</string>
     <string name="success">Sukses</string>
+    <string name="advancedsettings_title">Gevorderde instellings</string>
+    <string name="extendedbolusdeliveryerror">Verlengde bolus afleweringsfout</string>
+    <string name="extended_bolus">Uitgebreide bolus</string>
+    <string name="paused">Onderbreek</string>
+    <string name="tdd_total">TDD totaal</string>
+    <string name="waitingforpump">Wag vir pomp</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_hours">%1$.2f h</string>
+    <string name="objectives">Doelstellings</string>
+    <string name="please_wait">Wag asseblief…</string>
+    <string name="stop">Staak</string>
+    <string name="carbs">Karbs</string>
+    <string name="active"><![CDATA[<Active>]]></string>
+    <string name="date">Datum</string>
+    <string name="units_label">Eenhede</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">IC</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">Basale</string>
+    <string name="target_label">Doelwit</string>
+    <string name="basal_long_label">Basale waarde</string>
+    <string name="shortgram">g</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="btwatchdog_summary">Skakel asb die foon se bluetooth af vir een sekonde Indien geen verbinding met die pomp moontlik is nie. Dit mag help vir sommige selfone waar die bluetooth stapel vries.</string>
+    <string name="virtualpump_resultok">OK</string>
+    <string name="pump_time_updated">Pomp tyd opgedateer</string>
+    <string name="exit">Uitgang</string>
+    <string name="removerecord">Verwyder rekord</string>
+    <string name="loopisdisabled">Loop is gedeaktiveer</string>
+    <string name="alarm">Alarm</string>
+    <string name="disableloop">Skakel loop af</string>
+    <string name="enableloop">Skakel loop aan</string>
+    <string name="resumeloop">Hervat lus</string>
+    <string name="suspendloop">Staak lus</string>
+    <string name="duration_min_label">Durasie [min]</string>
+    <string name="notification">Kennisgewing</string>
+    <string name="noprofile">Nog geen profiel gelaai vanaf NS</string>
+    <string name="exists">bestaan</string>
+    <string name="notexists">bestaan nie</string>
+    <string name="glucose">Glukose</string>
+    <string name="iob">IAB</string>
+    <string name="cob">KOB</string>
+    <string name="name_short">Naam:</string>
+    <string name="time">Tyd</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="notes_label">Notas</string>
+    <string name="remove_button">Verwyder</string>
+    <string name="bg_label">BG</string>
+    <string name="calibration">Kalibrasie</string>
+    <string name="duration_label">Duur</string>
+    <string name="shortgramm">g</string>
+    <string name="pumpsuspended">Pomp opgeskort</string>
+    <string name="notconfigured">Nie gekonfigureer nie</string>
+    <string name="loopsuspended">Lus opgeskort</string>
+    <string name="a11y_arrow_unknown">onbekend</string>
+    <string name="a11y_high">hoog</string>
+    <string name="a11y_low">laag</string>
+    <string name="none"><![CDATA[<none>]]></string>
+    <string name="remove_label">VERWYDER</string>
+    <string name="activate_profile">Aktiveer profiel</string>
+    <string name="reset">herstel</string>
+    <string name="profileswitch_ismissing">ProfileSwitch ontbreek. Doen \'n profiel skakelaar of druk \"Aktiveer profiel\" in die LokaleProfiel.</string>
+    <string name="profile">Profiel</string>
+    <string name="overview_treatment_label">Behandeling</string>
+    <string name="wear_wizard_settings">Ghoeroe-instellings</string>
+    <string name="bg_trend_label">15min tendens</string>
+    <string name="treatments_wizard_cob_label">KOB</string>
+    <string name="bolus_iob_label">Bolus IOB</string>
+    <string name="treatments_wizard_basaliob_label">Basale IAB</string>
+    <string name="invalid">ONGELDIG</string>
+    <string name="overview_insulin_label">Insulien</string>
+    <string name="stoptemptarget">Tydelike teiken gestop</string>
+    <string name="closedloop">Geslote lus</string>
+    <string name="openloop">Oop lus</string>
+    <string name="dia">DIA</string>
+    <!--    Protection-->
+    <string name="wrongpassword">Verkeerde wagwoord</string>
+    <!--    Profile-->
+    <string name="basalprofilenotaligned">Basale waardes nie in lyn met ure: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Basale waarde vervang deur maksimum ondersteunde waarde: %1$s</string>
+    <string name="profile_per_unit">/U</string>
+    <string name="profile_ins_units_per_hour">U/h</string>
+    <string name="profile_carbs_per_unit">g/U</string>
+    <!--    ProfileFunction-->
+    <string name="startprofile">Begin profiele%1$d%% vir %2$d min</string>
+    <!--    APSResult-->
+    <string name="let_temp_basal_run">Laat tydelike basale, hardloop</string>
+    <string name="rate">Tempo</string>
+    <string name="duration">Tydsduur</string>
+    <string name="reason">Rede</string>
+    <string name="nochangerequested">Geen verandering was versoek</string>
+    <!--    ProfileSwitch-->
+    <string name="zerovalueinprofile">Ongeldige profiel: %1$s</string>
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <string name="careportal">Careportal</string>
+    <string name="careportal_bgcheck">BG Toets</string>
+    <string name="careportal_announcement">Aankondiging</string>
+    <string name="careportal_note">Nota</string>
+    <string name="careportal_question">Vraag</string>
+    <string name="careportal_exercise">Oefening</string>
+    <string name="careportal_cgmsensorstart">CGM Sensor Begin</string>
+    <string name="careportal_profileswitch">Profiel wissel</string>
+    <string name="careportal_snackbolus">Peuselhappie Bolus</string>
+    <string name="careportal_mealbolus">Maaltyd Bolus</string>
+    <string name="careportal_correctionbolus">Regstelling Bolus</string>
+    <string name="careportal_combobolus">Kombo Bolus</string>
+    <string name="careportal_tempbasalstart">Temp Basale Begin</string>
+    <string name="careportal_tempbasalend">Temp Basale eind</string>
+    <string name="careportal_carbscorrection">Karbs regstelling</string>
+    <string name="careportal_openapsoffline">OpenAPS vanlynaf</string>
+    <string name="boluswizard">Bolus slimjan</string>
+    <string name="glucosetype_finger">Vinger</string>
+    <string name="glucosetype_sensor">Sensor</string>
+    <string name="manual">Per hand</string>
+    <string name="unknown">onbekend</string>
+    <string name="eatingsoon">Eet binnekort</string>
+    <string name="hypo">Hipo</string>
+    <string name="activity">Aktiwiteit</string>
+    <string name="wear">Wear</string>
+    <string name="automation">Outomatisasie</string>
+    <string name="custom">Gepasmaak</string>
+    <string name="loop">Lus</string>
+    <!--    Command-->
+    <string name="connectiontimedout">Verbinding verstreke</string>
+    <!--    PumpEnactResult-->
+    <string name="enacted">By hand gedoen</string>
+    <string name="comment">Kommentaar</string>
+    <string name="percent">Persentasie</string>
+    <string name="absolute">Absolute</string>
+    <string name="waitingforpumpresult">Wag vir uitslag</string>
+    <string name="smb_shortname">SMB</string>
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <string name="expweight">Eksponensiele geweegde TDD</string>
+    <string name="basalrate">Basale</string>
+    <string name="bolus">Bolus</string>
+    <string name="tdd">TDD</string>
+    <string name="ratio">Verhouding</string>
+    <string name="amount_days"># Dae</string>
+    <string name="weight">Gewig</string>
+    <string name="warning_Message">Moontlik onakkuraat as boluse gebruik word vir optop/vulling gebruik!</string>
+    <string name="tbb">Totale basis basale</string>
+    <string name="tbb2">TBB * 2</string>
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <string name="ue_action">Aksie</string>
+    <!-- HardLimits -->
+    <string name="valuelimitedto">%1$.2f beperk tot %2$.2f</string>
+    <!-- Command Queue + readStatus reasons -->
+    <string name="sms" comment="26 characters max for translation">SMS</string>
+    <string name="formatPercent">%1$.0f%%</string>
+    <string name="basal">Basale</string>
+    <string name="basalpct">Basale %</string>
+    <!-- Autotune -->
+    <string name="autotune_result">Resultaat: %1$s</string>
+    <string name="autotune_missing">Ontbreek</string>
+    <!-- Alerts -->
+    <string name="raise_notifications_as_android_notifications">Gebruik stelsel kennisgewings vir waarskuwings en kennisgewings</string>
+    <string name="urgent_alarm">Dringende Alarm</string>
+    <string name="info">INFO</string>
+    <!-- BolusWizard -->
+    <string name="no_action_selected">Geen aksie gekies, niks sal gebeur</string>
+    <!--    Preferences-->
+    <string name="teenage">Tiener</string>
+    <string name="adult">Volwassene</string>
     <!--    Protection-->
     <string name="unlock_settings">Ontsluit instellings</string>
     <!--    Pumps -->

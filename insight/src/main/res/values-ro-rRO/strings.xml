@@ -66,4 +66,5 @@
     <string name="min_recovery_duration">Timpul minim de restabilire [s]</string>
     <string name="pump_alert">Alertă a pompei</string>
     <string name="pairing_information">Informații despre asociere</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Buton Reîmprospătare Insight</string>
 </resources>

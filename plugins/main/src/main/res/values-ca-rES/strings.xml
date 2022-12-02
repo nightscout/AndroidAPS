@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">Comunicador SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">de l\'app d\'autenticació per: %1$s seguit per PIN</string>
+    <string name="smscommunicator_otp_pin">PIN obligatori addicional al final del token</string>
+    <string name="smscommunicator_otp_pin_summary">Dígits addicionals que han de ser memoritzats i afegits al final de cada clau d\'un sol ús</string>
     <string name="smscommunicator_tab_otp_label">Configuració de l\'Autenticador</string>
+    <string name="smscommunicator_code_verify_label">Codi per comprovar:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">El codi de verificació consta de 6 dígits mostrats per l\'app Autenticador (coneguts com OTP), seguits de 3 o més dígits del PIN obligatori.</string>
+    <string name="smscommunicator_otp_reset_btn">Restablir autenticadors</string>
+    <string name="smscommunicator_otp_reset_title">Restablir clau d\'Autenticador</string>
+    <string name="smscommunicator_otp_reset_prompt">Esteu segurs que voleu restablir la clau de l\'Autenticador (OTP)? Els Autenticadors configurats fins ara deixaran de ser vàlids i els haureu de tornar a configurar.</string>
+    <string name="smscommunicator_otp_reset_successful">Nova clau d\'Autenticador generada! Utilitzeu QRCode actualitzat per aprovisionar autenticadors.</string>
+    <string name="smscommunicator_otp_export_title">Exportant secret OTP</string>
+    <string name="smscommunicator_otp_export_prompt">Esteu segurs que voleu copiar el secret OTP al porta-retalls (clipboard)?\n\nNomés és necessari si la vostra app d\'autenticació te problemes per escanejar el QRCode, si voleu introduir-lo manualment o si voleu configurar un token OTP hardware amb una app dedicada.</string>
+    <string name="smscommunicator_otp_export_successful">Secret OTP (en format Base32) exportat i copiat al porta-retalls. Enganxeu-lo a l\'autenticador o gravador hardware d\'OTP!</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Instal·lar autenticador</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Provar clau d\'un sol ús</string>
+    <string name="smscommunicator_otp_reset_header">Restablir autenticadors</string>
+    <string name="smscommunicator_otp_install_info">Instal·leu a cada telèfon seguidor una app d\'autenticació compatible amb tokens RFC 6238 TOTP. Apps gratuites populars:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="sms_wrong_code">Codi erroni. Ordre cancel·lada.</string>
     <string name="sms_timeout_while_waiting">Temps d\'espera excedit en esperar el final de l\'anterior comunicació amb la bomba</string>
+    <string name="smscommunicator_allowednumbers">Nrs. de telèfon permesos</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">Per lliurar bolus %1$.2fU contesteu amb el codi %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">Per lliurar bolus d\'àpat %1$.2fU contesteu amb el codi %2$s</string>
@@ -21,6 +39,8 @@
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2f U llliurat correctament</string>
     <string name="smscommunicator_meal_bolus_delivered">Bolus d\'àpat %1$.2f U lliurat correctament</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Objectiu %1$s per %2$d minuts</string>
+    <string name="smscommunicator_tt_set">Objectiu %1$s per %2$d minuts definit correctament</string>
+    <string name="smscommunicator_tt_canceled">Objectiu Temporal cancel·lat correctament</string>
     <string name="smscommunicator_remote_commands_allowed">Permetre ordres remotes via SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">El llaç s\'ha desactivat</string>
     <string name="smscommunicator_loop_has_been_enabled">El llaç s\'ha activat</string>
@@ -29,6 +49,7 @@
     <string name="smscommunicator_pump_connect_fail">La connexió a la bomba ha fallat</string>
     <string name="smscommunicator_pump_disconnect_with_code">Per desconnectar la bomba %1$d minuts contesteu amb el codi %2$s</string>
     <string name="smscommunicator_pump_disconnected">Bomba desconnectada</string>
+    <string name="smscommunicator_reconnect">Bomba reconnectada</string>
     <string name="smscommunicator_remote_command_not_allowed">Ordre remota no permesa</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Bolus remot no disponible. Torneu-ho a intentar més tard.</string>
     <string name="smscommunicator_basal_reply_with_code">Per iniciar basal de %1$.2f U/h durant %2$d min. contesteu amb el codi %3$s</string>
@@ -54,6 +75,7 @@
     <string name="smscommunicator_tempbasal_cancel_failed">Error en cancel·lar basal temporal</string>
     <string name="smscommunicator_extended_cancel_failed">Error en cancel·lar bolus estès</string>
     <string name="smscommunicator_unknown_command">Ordre desconeguda o resposta incorrecta</string>
+    <string name="smscommunicator_another_bolus_in_queue">Hi ha un altre bolus en cua. Proveu més tard.</string>
     <string name="smscommunicator_wrong_duration">Durada errònia</string>
     <string name="smscommunicator_loop_suspended">Llaç aturat</string>
     <string name="smscommunicator_loop_resumed">Llaç reprès</string>
@@ -77,14 +99,24 @@
     <string name="sms_wrong_tbr_duration">La durada d\'una TBR ha de ser múltiple de %1$d minuts i més gran que 0.</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Configuració preestablerta per insulina Humalog i NovoRapid/NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Configuració preestablerta per insulina Fiasp</string>
+    <string name="description_insulin_lyumjev">Configuració preestablerta per insulina Lyumjev</string>
+    <string name="description_insulin_free_peak">Permet definir el pic d\'activitat de la insulina. A utilitzar només per usuaris avançats</string>
     <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Pic de la corba IOB</string>
+    <string name="insulin_peak_time">Temps del pic [min]</string>
+    <string name="free_peak_oref">Oref sense pic</string>
+    <string name="rapid_acting_oref">Oref ràpida</string>
     <string name="ultra_rapid_oref">Oref ultra ràpida</string>
+    <string name="dia_too_short">DIA de %1$f massa curt - utilitzant %2$f!</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">Línia d\'estat d\'xDrip+ (rellotge)</string>
     <string name="xdrip_status_shortname">xds</string>
+    <string name="description_xdrip_status_line">Mostrar informació del llaç a la vostra esfera xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Mostrar detalls IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Mostrar IOB de bolus i de basal per separat al rellotge</string>
     <string name="disabled_loop">Llaç desactivat</string>
@@ -93,24 +125,43 @@
     <string name="xdrip_status_settings">Estat d\'xDrip+ (rellotge)</string>
     <!-- Food-->
     <string name="food_short">Aliments</string>
+    <string name="description_food">Mostra els valors preestablerts per alimentació definits a Nightscout</string>
+    <string name="filter">Filtre</string>
+    <string name="food">Aliments</string>
     <string name="short_kilo_joul">kJ</string>
     <string name="short_energy">En</string>
     <string name="short_protein">Pr</string>
     <string name="short_fat">Greix</string>
+    <string name="category">Categoria</string>
+    <string name="subcategory">Subcategoria</string>
     <string name="calculator_label">Calculadora</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
     <string name="localprofile">Perfil</string>
+    <string name="localprofile_shortname">PL</string>
+    <string name="description_profile_local">Definir un perfil disponible fora de línia.</string>
     <string name="do_you_want_switch_profile">Voleu canviar de perfil i descartar els canvis fets a l\'actual?</string>
     <string name="save_or_reset_changes_first">Gravar o restablir primer els canvis</string>
     <string name="delete_current_profile">Eliminar perfil actual?</string>
+    <string name="units_colon">Unitats:</string>
+    <string name="missing_profile_name">Falta el nom del perfil</string>
+    <string name="error_in_ic_values">Error en els valors de IC</string>
+    <string name="error_in_basal_values">Error en els valors de basal</string>
+    <string name="error_in_target_values">Error en els valors de l\'objectiu </string>
+    <string name="error_in_isf_values">Error en els valors de ISF</string>
     <string name="profile_name_contains_dot">El nom del perfil conté punts.\nAixò NS no ho permet.\nPerfil no enviat a NS.</string>
+    <string name="invalid_profile_not_accepted">Perfil invàlid %1$s no acceptat de NS</string>
+    <string name="view">Vista</string>
     <string name="errors">Errors</string>
+    <string name="profile_name">Nom del perfil:</string>
     <string name="a11y_delete_current_profile">eliminar perfil actual</string>
     <string name="dia_short">DIA</string>
+    <string name="target_short">OBJ</string>
     <string name="basal_short">BAS</string>
     <!-- Objectives -->
     <string name="completed_well_done">Enllestit, ben fet!</string>
+    <string name="not_completed_yet">No finalitzat encara</string>
+    <string name="time_elapsed">Temps transcorregut</string>
     <string name="maxiobset">Màx IOB correctament configurada</string>
     <string name="hasbgdata">Glucèmia disponible des de la font seleccionada</string>
     <string name="loopenabled">Llaç activat</string>
@@ -139,7 +190,6 @@
     <string name="pb_label">Pila de la bomba</string>
     <string name="cannula">Cànula</string>
     <string name="ebstopsloop">L\'ús d\'un bolus estès aturarà el mode llaç tancat mentre duri el bolus. Esteu segurs que voleu això?</string>
-    <string name="extendedbolusdeliveryerror">Error en lliurar bolus estès</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Limitant bolus estès a %1$.1f U a causa de %2$s</string>
     <string name="limitingcarbs">Limitant carbs a %1$d g a causa de %2$s</string>
@@ -170,7 +220,6 @@
     <string name="a11y_graph">gràfica</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="chart_menu">Menú gràfica</string>
-    <string name="aps_mode_title">Mode APS</string>
     <string name="set_basal_question">Acceptar nova basal temporal:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Assistent</string>
@@ -308,32 +357,6 @@
     <string name="buttonson_description">Els botons sempre es mostren a la part inferior de la pantalla</string>
     <string name="largedisplay_description">Pantalla grossa</string>
     <string name="skin">Tema</string>
-    <!--    Loop -->
-    <string name="executing">Executant</string>
-    <string name="run_now">Executar ara</string>
-    <string name="smb_frequency_exceeded">S\'ha lliurat un bolus els darrers 3 minuts, ignorant SMB</string>
-    <string name="pump_not_initialized">Bomba no iniciada!</string>
-    <string name="loop_shortname">LLAÇ</string>
-    <string name="description_loop">Activar o desactivar la implementació que activa el llaç.</string>
-    <string name="no_aps_selected">CAP APS SELECCIONAT O RESULTAT ENTREGAT</string>
-    <string name="ignore5m">Ignorar 5m</string>
-    <string name="ignore15m">Ignorar 15m</string>
-    <string name="ignore30m">Ignorar 30m</string>
-    <string name="carbs_suggestion">Proposta de carbs</string>
-    <string name="open_loop_new_suggestion">Nova proposta disponible</string>
-    <string name="basal_set_correctly">Basal configurada ok</string>
-    <string name="last_run_label">Última execució</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Petició</string>
-    <string name="loop_constraints_processed_label">Després de processar les restriccions</string>
-    <string name="loop_tbr_request_time_label">Hora sol·licitud basal temporal</string>
-    <string name="loop_tbr_execution_time_label">Hora execució basal temporal</string>
-    <string name="loop_tbr_set_by_pump_label">Basal temporal definida per la bomba</string>
-    <string name="loop_smb_request_time_label">Hora sol·licitud SMB</string>
-    <string name="loop_smb_execution_time_label">Hora execució SMB</string>
-    <string name="loop_smb_set_by_pump_label">SMB definit per la bomba</string>
-    <string name="loop_open_mode_min_change">Sol·licitud de canvi mínima [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">El llaç obert només mostrarà sol·licituds de canvi si son més grans que aquest valor en %. Valor per defecte: 20%</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Enviar logs del dia als desenvolupadors. Situació inesperada.</string>

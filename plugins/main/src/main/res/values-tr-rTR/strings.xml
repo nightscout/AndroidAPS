@@ -1,8 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS Kominikatör</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">SMS komutlarını kullanarak AAPS\'yi uzaktan kontrol edin.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">authenticator uygulamasından %1$s için PIN girin</string>
+    <string name="smscommunicator_otp_pin">İlave zorunlu şifre (PIN)</string>
+    <string name="smscommunicator_otp_pin_summary">Oluşturulan Her Tek Kullanımlık şifrenin sonuna yapıştırılması ve ezberlenmesi gereken ek şifre</string>
+    <string name="smscommunicator_tab_otp_label">Kimlik doğrulayıcı (OTP-Authenticator) kurulumu</string>
+    <string name="smscommunicator_code_verify_label">Kontrol edilecek kod:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Doğrulama kodu, Authenticator uygulaması (OTP olarak bilinir) tarafından görüntülenen 6 haneden ve ardından 3 veya daha fazla zorunlu PIN hanesinden oluşur.</string>
+    <string name="smscommunicator_otp_reset_btn">Kimlik Doğrulayıcıları (OTP) Sıfırla</string>
+    <string name="smscommunicator_otp_reset_title">Kimlik Doğrulayıcı Anahtarını Sıfırla</string>
+    <string name="smscommunicator_otp_reset_prompt">Kimlik Doğrulayıcı (Authenticator) anahtarını sıfırlamak istediğinizden emin misiniz? Şu anda yapılandırılmış tüm Kimlik Doğrulayıcıları geçersiz kılar ve bunları yeniden ayarlamanız gerekir.</string>
+    <string name="smscommunicator_otp_reset_successful">Yeni Kimlik Doğrulayıcı (Authenticator) Anahtarı oluşturuldu! Kimlik doğrulayıcıları için lütfen güncellenmiş QRCode\'u kullanın.</string>
+    <string name="smscommunicator_otp_export_title">OTP dışa aktarma</string>
+    <string name="smscommunicator_otp_export_prompt">OTP secret panoya kopyalamak istediğinizden emin misiniz?\n\nYalnızca kimlik doğrulama uygulamanızın QRCode\'u tarama sorunları varsa, bunu elle girmek veya uygulamayı kullanarak OTP donanımı yapılandırmak istiyorsanız buna ihtiyacınız olabilir.</string>
+    <string name="smscommunicator_otp_export_successful">OTP secret (Base32 formatında) dışa aktarıldı ve panoya kopyalandı. Doğrulayıcıya veya OTP donanım yazıcısına yapıştırın!</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Doğrulayıcıyı (Authenticator) yükleyin</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. AAPS OTP kod kurulumu için QR kodu tarayın</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Tek Kullanımlık Parolayı (OTP) Test Edin</string>
+    <string name="smscommunicator_otp_reset_header">Doğrulayıcıları (Authenticators) Sıfırla</string>
+    <string name="smscommunicator_otp_install_info">Her takipçi telefonunda, RFC 6238 TOTP belirteçlerini destekleyen Kimlik Doğrulayıcı uygulamasını yükleyin. Popüler ücretsiz uygulamalar şunlardır:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Kimlik doğrulayıcıyı sıfırlayarak, önceden sağlanmış tüm doğrulayıcıları geçersiz kılarsınız. Onları tekrar kurmanız gerekecek!</string>
+    <string name="sms_wrong_code">Hatalı kod. Komut iptal edildi.</string>
+    <string name="sms_timeout_while_waiting">Önceki pompa iletişiminin bitmesini beklerken zaman aşımı</string>
+    <string name="smscommunicator_allowednumbers">İzinli telefon numaraları</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">%1$.2fÜ Bolus gönderilecek, kod ile cevap ver %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">%1$.2fÜ Yemek bolusu göndermek için %2$s koduyla yanıt verin</string>
@@ -32,21 +56,125 @@
     <string name="smscommunicator_remote_command_not_allowed">Uzaktan komuta izin verilmez</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Uzaktan bolus gönderilemiyor. Daha sonra tekrar deneyin.</string>
     <string name="smscommunicator_basal_reply_with_code">%2$d dk boyunca bazalı %1$.2f Ü/sa yapmak için %3$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_profile_reply_with_code">Profili %1$s %2$d%% olarak değiştirmek için %3$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_extended_reply_with_code">%2$d dakika boyunca %1$.2f Ü yayma bolus başlatmak için %3$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_carbs_reply_with_code">%2$s\'de %1$dg girmek için %3$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_basal_pct_reply_with_code">%2$d dk boyunca %1$d%% bazal başlatmak için %3$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_suspend_reply_with_code">Döngüyü %1$d dakika askıya almak için %2$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_loop_resume_reply_with_code">Döngüye devam etmek için %1$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_loop_enable_reply_with_code">Döngüyü etkinleştirmek için %1$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_loop_disable_reply_with_code">Döngüyü iptal etmek için %1$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_tempbasal_set">Geçici bazal %1$.2fÜ/s %2$d dakika için başarıyla başlatıldı</string>
+    <string name="smscommunicator_extended_set">%1$.2fÜ yayma bolus %2$d dakika boyunca başarıyla başlatıldı</string>
+    <string name="smscommunicator_carbs_set">%1$d g karbonhidrat başarıyla sisteme girildi</string>
+    <string name="smscommunicator_carbs_failed">%1$d g karbonhidrat girilemedi</string>
+    <string name="smscommunicator_tempbasal_set_percent">%2$d dakikalık geçici bazal %1$d%% başarıyla başlatıldı</string>
+    <string name="smscommunicator_tempbasal_failed">Geçici bazal başlatma başarısız oldu</string>
+    <string name="smscommunicator_extended_failed">Yayma bolus başlatma başarısız oldu</string>
+    <string name="smscommunicator_basal_stop_reply_with_code">Geçici bazalı durdurmak için %1$s kodunu gir</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">Yayma bolusu durdurmak için %1$s koduyla yanıtlayın</string>
+    <string name="smscommunicator_tempbasal_canceled">Geçici bazal iptal edildi</string>
+    <string name="smscommunicator_extended_canceled">Yayma bolus iptal edildi</string>
+    <string name="smscommunicator_tempbasal_cancel_failed">Geçici bazal iptal edilemedi</string>
+    <string name="smscommunicator_extended_cancel_failed">Yayma bolus iptal edilemedi</string>
+    <string name="smscommunicator_unknown_command">Bilinmeyen komut veya yanlış cevap</string>
+    <string name="smscommunicator_another_bolus_in_queue">Sırada başka bir bolus var. Daha sonra tekrar deneyin.</string>
+    <string name="smscommunicator_wrong_duration">Yanlış süre</string>
+    <string name="smscommunicator_loop_suspended">Döngü duraklatıldı</string>
+    <string name="smscommunicator_loop_resumed">Döngü devam ettirildi</string>
+    <string name="smscommunicator_invalid_phone_number">Geçersiz SMS telefon numarası</string>
+    <string name="smscommunicator_calibration_sent">Kalibrasyon gönderildi. Alma xDrip+\'ta etkinleştirilmelidir.</string>
+    <string name="smscommunicator_calibration_failed">xDrip+ kalibrasyonları almıyor</string>
+    <string name="smscommunicator_message_body">Geçersiz mesaj</string>
+    <string name="smscommunicator_report_pump_unreachable_summary">Ulaşılamaz pompa olayı tetiklenirse SMS gönder</string>
+    <string name="smscommunicator_pump_unreachable">Pompaya ulaşılamadığını bildir</string>
+    <string name="wrong_format">Yanlış Format</string>
+    <string name="sms_actual_bg">KŞ:</string>
+    <string name="sms_last_bg">Son KŞ:</string>
     <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">AİNS:</string>
     <string name="sms_bolus">Bolus:</string>
+    <string name="sms_basal">Bazal:</string>
+    <string name="sms_min_ago">%1$ddak önce</string>
+    <string name="sms_loop_suspended_for">(%1$d dk) Duraklatıldı</string>
+    <string name="sms_read_status_failed">Durum okuması başarısız oldu</string>
+    <string name="sms_profile_switch_created">Profil değiştirme yapıldı</string>
+    <string name="sms_wrong_tbr_duration">GBO süresi %1$d dakikanın katı ve 0\'dan büyük olmalıdır.</string>
+    <string name="a11y_otp_qr_code">Tek kullanımlık şifre kurulumu için QR Kodu</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Humalog ve NovoRapid / NovoLog için İnsülin Profili</string>
+    <string name="description_insulin_ultra_rapid">Fiasp için insülin Profili</string>
+    <string name="description_insulin_lyumjev">Lyumjev için insülin ayarı</string>
+    <string name="description_insulin_free_peak">İnsülin aktivitesinin zirvesini tanımlamanıza izin verir ve yalnızca ileri düzey kullanıcılar tarafından kullanılmalıdır.</string>
+    <string name="insulin_shortname">İNS</string>
+    <string name="insulin_oref_peak">AİNS Eğrisi Tepe Zamanı</string>
+    <string name="insulin_peak_time">Tepe zamanı [min]</string>
+    <string name="free_peak_oref">Serbest tepe Oref</string>
+    <string name="rapid_acting_oref">Hızlı etkili Oref</string>
     <string name="ultra_rapid_oref">Ultra Hızlı Oref</string>
+    <string name="dia_too_short">DIA %1$f çok kısa - bunun yerine %2$f kullanıyor!</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="xdrip_status">xDrip+ Durum Çizgisi (saat)</string>
     <string name="xdrip_status_shortname">xd+</string>
+    <string name="description_xdrip_status_line">Döngü\'yle ilgili bilgileri xDrip+ saat arayüzünde gösterin.</string>
+    <string name="xdrip_status_detailed_iob_title">Ayrıntılı AİNS göster</string>
+    <string name="xdrip_status_detailed_iob_summary">Saat arayüzü üzerinde AİNS\'i bolus ve bazal AİNS olarak ayırın</string>
+    <string name="disabled_loop">Döngü devre dışı</string>
+    <string name="xdrip_status_show_bgi_title">BGI (Kan Şekeri İndeksleri) göster</string>
+    <string name="xdrip_status_show_bgi_summary">BGI\'yı durum satırına ekle</string>
+    <string name="xdrip_status_settings">xDrip+ Durumu (saat)</string>
     <!-- Food-->
+    <string name="food_short">Yiyecek</string>
+    <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
+    <string name="filter">Filtre</string>
+    <string name="food">Yiyecek</string>
+    <string name="short_kilo_joul">kJ</string>
+    <string name="short_energy">En</string>
+    <string name="short_protein">Prt</string>
+    <string name="short_fat">Yağ</string>
+    <string name="category">Kategori</string>
+    <string name="subcategory">Alt kategori</string>
+    <string name="calculator_label">Hesap makinesi</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Sistem teması veya koyu ve açık tema için seçim yapın</string>
+    <string name="app_color_scheme">Uyg. Renk Şeması</string>
+    <string name="dark_theme">Koyu tema</string>
+    <string name="light_theme">Açık tema</string>
+    <string name="follow_system_theme">Cihaz temasını kullan</string>
     <!-- Profile -->
+    <string name="localprofile">Profil</string>
+    <string name="localprofile_shortname">YP</string>
+    <string name="description_profile_local">Çevrimdışı kullanılabilen bir profil tanımlayın.</string>
+    <string name="a11y_add_new_to_list">listeye yeni ekle</string>
+    <string name="do_you_want_switch_profile">Profili değiştirmek ve mevcut profilde yapılan değişiklikleri gözardı etmek istiyor musunuz?</string>
+    <string name="save_or_reset_changes_first">Önce mevcut değişiklikleri kaydedin veya sıfırlayın</string>
+    <string name="delete_current_profile">Mevcut profil silinsin mi?</string>
+    <string name="units_colon">Birim:</string>
+    <string name="missing_profile_name">Profil adı eksik</string>
+    <string name="error_in_ic_values">IC değerinde hata</string>
+    <string name="error_in_basal_values">Bazal değerlerde hata</string>
+    <string name="error_in_target_values">Hedef değerlerde hata</string>
+    <string name="error_in_isf_values">ISF değerinde hata</string>
+    <string name="profile_name_contains_dot">Profil adı noktalar içeriyor.\nBu NS tarafından desteklenmiyor.\n Profil NS\'a yüklenmez.</string>
+    <string name="invalid_profile_not_accepted">Geçersiz profil %1$s NS tarafından kabul edilmiyor</string>
+    <string name="view">Görünüm</string>
+    <string name="errors">Hatalar</string>
+    <string name="select_profile">Düzenlenecek profili seç</string>
+    <string name="profile_name">Profil adı:</string>
+    <string name="a11y_add_new_profile">yeni profil ekle</string>
+    <string name="a11y_clone_profile">mevcut profili klonla</string>
+    <string name="a11y_delete_current_profile">mevcut profil sil</string>
+    <string name="dia_short">İES</string>
+    <string name="target_short">HDF</string>
+    <string name="basal_short">BAZ</string>
     <!-- Objectives -->
     <string name="completed_well_done">Tamamlandı, tebrikler!</string>
+    <string name="not_completed_yet">Henüz tamamlanmadı</string>
+    <string name="time_elapsed">Geçen süre</string>
     <string name="maxiobset">Maksimal AİNS doğru şekilde ayarlandı</string>
     <string name="hasbgdata">Seçili kaynaktan KŞ kullanılabilir</string>
     <string name="synchaswritepermission">Senkronizasyon servisi yazma iznine sahip</string>
@@ -76,7 +204,6 @@
     <string name="pb_label">Pompa pili</string>
     <string name="cannula">Kanül</string>
     <string name="ebstopsloop">Yayma bolus özelliğinin kullanılması, yayma bolus çalıştırıldığı süre boyunca kapalı döngü modunu durduracaktır. Gerçekten istiyor musunuz?</string>
-    <string name="extendedbolusdeliveryerror">Yayma bolus iletim hatası</string>
     <string name="statuslights_cannula_age">kanül yaşı</string>
     <string name="statuslights_patch_pump_age">yama pompa yaşı</string>
     <string name="patch_pump">Yama pompa</string>
@@ -115,7 +242,6 @@
     <string name="a11y_bg_quality">kan şekeri kalitesi</string>
     <string name="a11y_blood_glucose">kan şekeri</string>
     <string name="a11y_bg_outdated">güncel değil</string>
-    <string name="aps_mode_title">APS modu</string>
     <string name="set_basal_question">Yeni geçici bazal oranını kabul et:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Hızlı Asistan</string>
@@ -221,10 +347,17 @@
     <string name="graph_scale">Grafik ölçeği</string>
     <string name="graph_menu_divider_header">Grafik</string>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Sanal pompa tipi</string>
+    <string name="virtual_pump_definition">Pompa tanımı</string>
+    <string name="virtual_pump_pump_def">Bolus: Adım=%1$s\nYayma Bolus: [Adım=%2$s, Süre=%3$sdk-%4$ssa]\nBazal: Adım=%5$s\nGBO: %6$s (ile %7$s), Süre=%8$sdk-%9$ssa\n%10$s</string>
+    <string name="virtual_pump_shortname">VPOMP</string>
     <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
+    <string name="virtual_pump_label">SANAL POMPA</string>
     <string name="virtualpump_settings">Sanal pompa ayarları</string>
     <string name="virtualpump_uploadstatus_title">Nightscout\'a durum aktar</string>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient KŞ</string>
+    <string name="ns_client_bg_short">NS KŞ</string>
     <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
     <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
@@ -233,7 +366,9 @@
     <string name="description_source_dexcom">\'Kendi Dexcom Uygulamanızı Oluşturun\' uygulamasından KŞ değerlerini alın.</string>
     <string name="eversense">Eversense App (yamalı)</string>
     <string name="description_source_eversense">Yamalı Eversense uygulamasından KŞ değerleri alır.</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Glimp\'ten KŞ değerleri alır.</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">600SeriesAndroidUploader\'dan KŞ değerleri alır.</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Poctech uygulamasından KŞ değerlerini alır</string>
@@ -244,6 +379,7 @@
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">KŞ değerlerini Tomato uygulamasından (MiaoMiao Cihazından) al</string>
+    <string name="aidex">GlucoRx Aidex</string>
     <string name="aidex_short">Aidex</string>
     <string name="description_source_aidex">GlucoRx Aidex CGMS\'den KŞ değerleri alır.</string>
     <string name="random_bg">Rastgele KŞ</string>
@@ -260,14 +396,16 @@
     <string name="buttonson_description">Butonlar her zaman ekranın altında görüntülenir</string>
     <string name="largedisplay_description">Büyük ekran</string>
     <string name="skin">Görünüm</string>
-    <!--    Loop -->
     <!--    DataBroadcast-->
     <string name="cannula_usage">kullanım:</string>
     <!--    Iob-->
+    <string name="send_logfiles">Bu günün kayıt dosyalarını geliştiricilere gönderin. Beklenmedik bir durum.</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">WearOS saatinizi kullanarak AAPS\'yi izleyin ve kontrol edin.</string>
     <string name="no_watch_connected">(Saat Bağlı Değil)</string>
+    <string name="pump_status">Pompa durumu</string>
+    <string name="loop_status">Döngü durumu</string>
     <string name="wizard_result">Hesap Mak.:\nİnsulin: %1$.2fÜ\nKarb: %2$dg</string>
     <string name="quick_wizard_not_available">Seçili hızlı asistan artık mevcut değil, lütfen kutucuğu yenileyin</string>
     <string name="quick_wizard_message">Hızlı Asistan: %1$s\nİnsülin: %2$.2fU\nKarb: %3$dg</string>
@@ -285,11 +423,15 @@
     <string name="wearcontrol_title">Saat tarafından kontrol</string>
     <string name="wearcontrol_summary">Tedavileri ve Geçici hedefleri saat tarafından girin.</string>
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
+    <string name="wear_display_settings">Görüntü Ayarları</string>
+    <string name="wear_general_settings">Genel Ayarlar</string>
     <string name="wear_detailed_delta_title">Ayrıntılı delta göster</string>
     <string name="wear_detailed_delta_summary">Deltayı bir ondalık basamak daha göster</string>
     <string name="wear_notifysmb_title">SMB\'yi bildir</string>
     <string name="wear_notifysmb_summary">Saatte SMB\'yi standart bir bolus gibi göster.</string>
     <string name="wear_predictions_summary">Saat arayüzü üzerindeki tahminleri göster.</string>
+    <string name="wear_predictions_title">Tahminler</string>
+    <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
     <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>

@@ -61,6 +61,7 @@
     <string name="combov2_fetching_tdd_history_cmddesc">Récupération de l\'historique DTQ</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Mise à jour date et heure de la pompe</string>
     <string name="combov2_updating_pump_status_cmddesc">Mise à jour de l\'état pompe</string>
+    <string name="combov2_pairing_pin_failure">Le code PIN n\'a pas fonctionné. Vérifiez s\'il y a eu une faute de frappe. Si cela persiste, annulez et recommencez l\'appairage.</string>
     <string name="combov2_discovery_duration">Durée de recherche (en secondes)</string>
     <string name="combov2_verbose_logging">Activer les informations log détaillées de la Combo</string>
     <string name="combov2_getting_basal_profile">Récupération du profil basal, %1$d valeure(s) lue(s)</string>

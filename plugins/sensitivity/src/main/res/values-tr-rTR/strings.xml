@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="sensitivity_oref1">Oref1 duyarlılık</string>
+    <string name="sensitivity_aaps">AAPS duyarlılık</string>
     <string name="sensitivity_weighted_average">Ağırlıklı ortalama duyarlılık</string>
     <string name="description_sensitivity_aaps">Duyarlılık, Oref0 ile aynı şekilde hesaplanır, ancak geçmişe yönelik zaman aralığı belirleyebilirsiniz. Minimum karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır.</string>
     <string name="description_sensitivity_oref1">Duyarlılık, geçmişteki 8 veya 24 saatlik verilerden (hangisi daha hassas ise) hesaplanır. Karbonhidratlar (emilmemişse) tercihlerde belirtilen süreden sonra kesilir. Eklenti ayrıca UAM\'ı da (bildirilmemiş öğünler) hesaplar.</string>
     <string name="description_sensitivity_weighted_average">Duyarlılık, sapmalardan ağırlıklı bir ortalama olarak hesaplanır. Daha yeni sapmalar daha yüksek ağırlığa sahiptir. Minimum karbonhidrat emilimi, tercihlerden maksimum karbonhidrat emilim süresinden hesaplanır. Bu algoritma, hassasiyet değişikliklerini takip etmede en hızlı olanıdır.</string>
     <string name="uam_disabled_oref1_not_selected">UAM (UnAnnounced Meals), Oref1 duyarlılık eklentisine bağlı olduğu için devre dışı bırakıldı</string>
+    <string name="absorption_settings_title">Emilim ayarları</string>
     <string name="absorption_max_time_title">Besinin maksimum emilim süresi [h]</string>
     <string name="absorption_max_time_summary">Yemekteki tüm karbonhidratların emilmesinin beklendiği saat cinsinden süre</string>
     <string name="openapsama_autosens_period">Otoduyarlılık süresi [h]</string>

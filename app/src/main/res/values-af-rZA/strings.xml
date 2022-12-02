@@ -6,6 +6,7 @@
     <string name="nav_refreshtreatments">Verfris behandelings vanaf NS</string>
     <string name="nav_exit">Gaan uit</string>
     <string name="delta">Delta</string>
+    <string name="profile_label">Profiel</string>
     <string name="save">Stoor</string>
     <string name="reloadprofile">Herlaai profiel</string>
     <string name="correctionbous">Corr</string>
@@ -29,5 +30,6 @@
     <string name="error_adding_treatment_message">\'n Behandeling (insulien: %1$.2f, koolhidrate: %2$d, by: %3$s) kon nie bygevoeg word by behandelings. Kontroleer asseblief en voeg per hand \'n rekord soos vanpas.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), vertraag: %3$d m</string>
     <string name="profile_total">== ∑  %1$s U</string>
+    <string name="unitsnosemicolon">Eenhede</string>
     <!-- WEAR OS-->
 </resources>

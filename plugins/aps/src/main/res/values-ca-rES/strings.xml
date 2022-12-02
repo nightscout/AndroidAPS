@@ -80,4 +80,13 @@
     <string name="maxvalueinpreferences">valor màxim a la configuració</string>
     <string name="hardlimit">límit estricte</string>
     <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">S\'ha lliurat un bolus els darrers 3 minuts, ignorant SMB</string>
+    <string name="loop_shortname">LLAÇ</string>
+    <string name="description_loop">Activar o desactivar la implementació que activa el llaç.</string>
+    <string name="ignore5m">Ignorar 5m</string>
+    <string name="ignore15m">Ignorar 15m</string>
+    <string name="ignore30m">Ignorar 30m</string>
+    <string name="basal_set_correctly">Basal configurada ok</string>
+    <string name="loop_aps_label">APS</string>
 </resources>

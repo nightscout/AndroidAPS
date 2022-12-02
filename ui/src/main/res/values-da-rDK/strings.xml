@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bolus_constraint_applied">Bolus begrænsning påført</string>
+    <string name="carbs_constraint_applied">Kulhydrat begrænsning påført</string>
+    <string name="temp_target_short">Midlertidig Mål</string>
     <string name="dialog_canceled">Dialog annulleret</string>
     <string name="start_activity_tt">Start Aktivitets mål</string>
     <string name="start_eating_soon_tt">Start \"Spiser snart\" mål</string>

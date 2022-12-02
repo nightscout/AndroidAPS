@@ -1,2 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="pref_low">Laag</string>
+    <string name="pref_high">Hoog</string>
+    <string name="pref_auto">Outo</string>
+    <string name="menu_wizard">Rekenaar</string>
+    <string name="menu_wizard_short">Bereken</string>
+    <string name="menu_treatment">Behandeling</string>
+    <string name="menu_bolus">Bolus</string>
+    <string name="menu_carb">Karbs</string>
+    <string name="menu_settings">Instellings</string>
+    <string name="menu_status">Status</string>
+    <string name="menu_prime_fill">Prima/vul</string>
+    <string name="action_duration">Duur</string>
+    <string name="action_target" comment="In temp target menu, single target value">Doelwit</string>
+    <string name="action_low" comment="In temp target menu, lower value from range">Laag</string>
+    <string name="action_high" comment="In temp target menu, higher value from range">Hoog</string>
+    <string name="action_carbs">Karbs</string>
+    <string name="action_percentage">Persentasie</string>
+    <string name="action_duration_h">Durasie [h]</string>
+    <string name="action_insulin">Insulien</string>
+    <string name="action_bolus">Bolus</string>
+    <string name="status_pump">Pomp</string>
+    <string name="status_loop">Lus</string>
+    <string name="status_profile_switch">Profiel wissel</string>
+    <string name="status_tdd">TDD</string>
+    <string name="activity_IOB">IAB</string>
+    <string name="simple_ui_off">Af</string>
+    <string name="temp_target_hypo">Hipo</string>
+    <string name="temp_target_activity">Aktiwiteit</string>
+    <string name="temp_target_manual">Per hand</string>
+    <string name="temp_target_cancel">Kanselleer</string>
+    <string name="no_iob_u">--U</string>
+</resources>

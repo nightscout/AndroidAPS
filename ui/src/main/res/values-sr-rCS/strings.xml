@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bolus_constraint_applied">Primenjeno ograničenje bolusa</string>
+    <string name="carbs_constraint_applied">Primenjeno ograničenje ugljenih hidrata</string>
+    <string name="temp_target_short">TT</string>
     <!--    Widget-->
     <!--     Activities-->
     <string name="glucose_type">Tip glukoze</string>

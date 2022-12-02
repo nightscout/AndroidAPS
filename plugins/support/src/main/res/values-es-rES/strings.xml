@@ -2,8 +2,22 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Cambio al horario de verano en menos de 24 horas</string>
+    <string name="dst_loop_disabled_warning">Cambio al horario de verano hace menos de 3 horas - Lazo cerrado deshabilitado</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Debe liberar al menos %1$d MB de almacenamiento interno. ¡Loop se encuentra desactivado!</string>
     <!-- Version Checker -->
+    <string name="old_version">versión antigua</string>
+    <string name="very_old_version">versión muy antigua</string>
+    <string name="application_expired">Aplicación caducada</string>
+    <string name="new_version_warning">Nueva versión disponible de al menos %1$d día/s. Se vuelve a la función de suspensión por glucosa baja (LGS) después de %2$d días. Después se deshabilitará el lazo en %3$d días</string>
+    <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Lazo desactivado!</string>
+    <string name="versionavailable">Versión %1$s disponible</string>
+    <string name="version_expire">La versión %1$s caduca el %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Datos recalculados usados</string>
+    <string name="bg_too_close">Datos de glucosa demasiado cercanos:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">recalculado</string>
+    <string name="a11y_bg_quality_doubles">entradas dobles</string>
 </resources>

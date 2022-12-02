@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS komunikator</string>
+    <string name="description_sms_communicator">Daljinsko upravljanje AAPS-om pomoću SMS naredbi.</string>
+    <string name="smscommunicator_allowednumbers">Dozvoljeni brojevi telefona</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">Za isporuku bolusa %1$.2fU odgovori sa kodom %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">Da bi isporučili bolus za obrok %1$.2fU odgovori sa kodom %2$s</string>
@@ -16,6 +19,8 @@
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2f U je uspešno isporučen</string>
     <string name="smscommunicator_meal_bolus_delivered">Bolus za obrok %1$.2f U je uspešno isporučen</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Cilj %1$s za %2$d minuta</string>
+    <string name="smscommunicator_tt_set">Cilj %1$s za %2$d minuta je uspešno postavljen</string>
+    <string name="smscommunicator_tt_canceled">Privremeni cilj uspješno je otkazan</string>
     <string name="smscommunicator_remote_commands_allowed">Dozvoli daljinske komande putem SMS-a</string>
     <string name="smscommunicator_loop_has_been_disabled">Petlja je onemogućena</string>
     <string name="smscommunicator_loop_has_been_enabled">Petlja je omogućena</string>
@@ -24,6 +29,7 @@
     <string name="smscommunicator_pump_connect_fail">Povezivanje sa pumpom nije uspelo</string>
     <string name="smscommunicator_pump_disconnect_with_code">Za isključivanje pumpe na %1$d minuta, odgovori sa kodom %2$s</string>
     <string name="smscommunicator_pump_disconnected">Pumpa nije povezana</string>
+    <string name="smscommunicator_reconnect">Pumpa je ponovo povezana</string>
     <string name="smscommunicator_remote_command_not_allowed">Daljinska komanda nije dozvoljena</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Daljinski bolus nije dostupan. Pokušaj ponovo kasnije.</string>
     <string name="smscommunicator_basal_reply_with_code">Za početak bazala %1$.2f U/h za %2$d min odgovori sa kodom %3$s</string>
@@ -41,14 +47,21 @@
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
     <!-- Insulin -->
+    <string name="description_insulin_rapid">Unapred podešena postavka insulina za Humalog i NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Unapred podešena postavka insulina za Fiasp</string>
+    <string name="description_insulin_lyumjev">Unapred podešena postavka insulina za Lyumjev</string>
+    <string name="description_insulin_free_peak">Omogućava definisanje vrhunca aktivnosti insulina i trebaju ga koriste samo napredni korisnici</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
+    <string name="description_xdrip_status_line">Prikažite informacije o tvom loop-u na tvom xDrip+ satu.</string>
     <string name="disabled_loop">Loop Onesposobljen</string>
     <!-- Food-->
+    <string name="description_food">Prikazuje unapred podešene postavke hrane definisane u Nightscout-u</string>
     <string name="calculator_label">Kalkulator</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
     <string name="localprofile">Profil</string>
+    <string name="description_profile_local">Definiši profil koji je dostupan bez internet veze.</string>
     <!-- Objectives -->
     <string name="description_objectives">Program učenja</string>
     <!-- Actions -->
@@ -61,7 +74,6 @@
     <string name="treatmentssafety_title">Sigurnost tretmana</string>
     <!-- Overview -->
     <string name="a11y_insulin_label">insulin</string>
-    <string name="aps_mode_title">APS režim</string>
     <string name="set_basal_question">Prihvatite novi privremeni bazal:</string>
     <string name="quickwizard">Brzi Čarobnjak</string>
     <string name="overview">Pregled</string>
@@ -89,17 +101,6 @@
     <string name="description_source_mm640g">Preuzimajte vrednosti GUK od 600SeriesAndroidUploader-a.</string>
     <string name="random_bg_short">GUK</string>
     <!-- Skins -->
-    <!--    Loop -->
-    <string name="run_now">Pokreni sada</string>
-    <string name="description_loop">Aktivirajte ili deaktivirajte implementaciju koja pokreće petlju.</string>
-    <string name="no_aps_selected">NIJE IZABRAN APS NITI PRUŽEN REZULTAT</string>
-    <string name="carbs_suggestion">Predlog za ugljene hidrate</string>
-    <string name="open_loop_new_suggestion">Novi predlog je dostupan</string>
-    <string name="last_run_label">Poslednje pokretanje</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Zahtev</string>
-    <string name="loop_constraints_processed_label">Nakon obrađenih ograničenja</string>
-    <string name="loop_tbr_set_by_pump_label">TBR postavljen pumpom</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->

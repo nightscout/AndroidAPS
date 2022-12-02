@@ -3,5 +3,14 @@
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <string name="nav_exit">Kilép</string>
+    <string name="profile_label">Profil</string>
+    <string name="correctionbous">Korr</string>
+    <string name="wear">Wear</string>
+    <string name="open_navigation">Navigáció megnyitása</string>
+    <string name="close_navigation">Navigáció bezárása</string>
+    <string name="profile_total">== ∑  %1$s E</string>
+    <string name="clear_filter">Szűrő törlése</string>
+    <string name="cannula">Kanül</string>
     <!-- WEAR OS-->
 </resources>

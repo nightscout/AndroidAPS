@@ -82,4 +82,13 @@
     <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
     <string name="hardlimit">limită fizică</string>
     <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">S-a livrat un bolus în ultimele 3 minute, nu se livrează SMB</string>
+    <string name="loop_shortname">BUCL</string>
+    <string name="description_loop">Activare sau dezactivare a implementării declanşatoare pentru buclă.</string>
+    <string name="ignore5m">Ignorați 5min</string>
+    <string name="ignore15m">Ignorați 15min</string>
+    <string name="ignore30m">Ignorați 30min</string>
+    <string name="basal_set_correctly">Bazala setată corect</string>
+    <string name="loop_aps_label">APS</string>
 </resources>

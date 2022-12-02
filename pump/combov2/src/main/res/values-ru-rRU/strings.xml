@@ -70,6 +70,8 @@
     <string name="combov2_fetching_tdd_history_cmddesc">Получение суточной истории дозировок TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Обновление даты и времени помпы</string>
     <string name="combov2_updating_pump_status_cmddesc">Обновление статуса помпы</string>
+    <string name="combov2_pairing_pin_failure">PIN-код не принят. Проверьте наличие опечаток. Если
+       ошибка повторится, отмените сопряжение и повторите процесс.</string>
     <string name="combov2_discovery_duration">Время обнаружения (в секундах)</string>
     <string name="combov2_verbose_logging">Включить подробное журналирование Combo</string>
     <string name="combov2_getting_basal_profile">Получение базового профиля; %1$d фактор(ов) прочитано</string>

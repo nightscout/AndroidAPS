@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Natívna integrácia pre pumpy Accu-Chek Combo</string>
+    <string name="combov2_could_not_connect">Nedá sa pripojiť k pumpe</string>
+    <string name="combov2_not_paired">Nespárované s pumpou</string>
+    <string name="combov2_pump_terminated_connection">Spojenie ukončené pumpou</string>
+    <string name="combov2_warning">Upozornenie Combo</string>
+    <string name="combov2_error">Chyba Combo</string>
+    <string name="combov2_warning_4">Zavolajte hotline pre aktualizáciu</string>
+    <string name="combov2_warning_10">Chyba Bluetooth; opakujte párovanie</string>
+    <string name="combov2_error_1">Zásobník je prázdny</string>
     <string name="combov2_error_2">Batéria vybitá</string>
     <string name="combov2_error_4">Oklúzia</string>
+    <string name="combov2_error_5">Koniec zálohy činnosti pumpy</string>
     <string name="combov2_error_6">Mechanická chyba</string>
+    <string name="combov2_error_7">Chyba elektroniky</string>
+    <string name="combov2_error_8">Prerušenie napájania</string>
+    <string name="combov2_error_9">Koniec doby zapožičania</string>
+    <string name="combov2_error_10">Chyba zásobníka</string>
+    <string name="combov2_error_11">Infúzny set nie je naplnený</string>
+    <string name="combov2_extended_bolus_not_supported">Predĺžený bolus nie je podporovaný</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Spárovať s pumpou</string>
+    <string name="combov2_unpair_pump_title">Zrušiť párovanie pumpy</string>
+    <string name="combov2_driver_state_label">Stav ovládača</string>
+    <string name="combov2_current_activity_label">Súčasná aktivita</string>
     <string name="bluetooth_address">Adresa Bluetooth</string>
     <string name="combov2_start_pairing">Spustiť párovanie</string>
+    <string name="combov2_pairing_in_progress">Prebieha Combo párovanie</string>
     <string name="combov2_not_initialized">Nie je inicializovaný</string>
     <string name="combov2_ready">Pripravený</string>
     <string name="combov2_suspended">Pozastavené</string>

@@ -2,8 +2,21 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Sommar/vintertid inträffar inom 24 timmar</string>
+    <string name="dst_loop_disabled_warning">Sommar/vintertid ändrades för mindre än 3 timmar sedan. Closed Loop avstängt</string>
     <!-- Storage constraint -->
     <!-- Version Checker -->
+    <string name="old_version">gammal version</string>
+    <string name="very_old_version">väldigt gammal version</string>
+    <string name="application_expired">Applikationen inte giltig längre</string>
+    <string name="new_version_warning">Ny version tillgänglig för %1$d dagar sedan. Systemet kommer att byta läge till \"stopp innan lågt\" efter %2$d dagar och sluta loopa helt efter %3$d dagar</string>
+    <string name="running_invalid_version">Du kör en ogiltig version. Loop avstängd!</string>
+    <string name="versionavailable">Version %1$s tillgänglig</string>
+    <string name="version_expire">Version %1$s upphör att gälla %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Omräknad data används</string>
+    <string name="bg_too_close">BG för nära:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">omräknad</string>
+    <string name="a11y_bg_quality_doubles">dubbla poster</string>
 </resources>

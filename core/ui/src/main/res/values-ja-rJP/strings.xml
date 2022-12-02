@@ -15,6 +15,59 @@
     <string name="save">保存</string>
     <string name="pump">ポンプ</string>
     <string name="mute">消音</string>
+    <string name="advancedsettings_title">詳細設定</string>
+    <string name="goingtodeliver">%1$.2fUを注入します</string>
+    <string name="waitingforpump">ポンプ反応待ち</string>
+    <string name="androidaps_start">AAPSを開始しました</string>
+    <string name="formatsignedinsulinunits">%1$+.2f U</string>
+    <string name="format_carbs">%1$d g</string>
+    <string name="format_hours">%1$.2f h</string>
+    <string name="format_mins">%1$d 分</string>
+    <string name="objectives">オブジェクティブ</string>
+    <string name="please_wait">お待ちください…</string>
+    <string name="stop">停止</string>
+    <string name="carbs">炭水化物</string>
+    <string name="invalid_profile">無効なプロファイル！</string>
+    <string name="no_profile_set">プロファイルがありません</string>
+    <string name="active"><![CDATA[<Active>]]></string>
+    <string name="date">日時</string>
+    <string name="units_label">Units</string>
+    <string name="dia_label">DIA</string>
+    <string name="ic_label">導入コスト</string>
+    <string name="isf_label">ISF</string>
+    <string name="basal_label">ベーサル</string>
+    <string name="target_label">ターゲット</string>
+    <string name="dia_long_label">インスリン作用時間</string>
+    <string name="ic_long_label">インスリン　カーボ比</string>
+    <string name="isf_long_label">インスリン効果値（Ｉｓｆ）</string>
+    <string name="basal_long_label">基礎レート</string>
+    <string name="target_long_label">目標血糖値</string>
+    <string name="shortgram">g</string>
+    <string name="shortpercent">%</string>
+    <string name="bluetooth">Bluetooth</string>
+    <string name="btwatchdog_title">BT Watchdog</string>
+    <string name="calibration">校正</string>
+    <string name="invalid">無効</string>
+    <!--    Protection-->
+    <!--    Profile-->
+    <!--    ProfileFunction-->
+    <!--    APSResult-->
+    <!--    ProfileSwitch-->
+    <!--    Temptarget-->
+    <!--    Translator-->
+    <string name="wear">ウェア</string>
+    <!--    Command-->
+    <!--    PumpEnactResult-->
+    <!--    CarbsReq-->
+    <!--    TDDStatsActivity-->
+    <!--    Ntp-->
+    <!-- User Entry -->
+    <!-- HardLimits -->
+    <!-- Command Queue + readStatus reasons -->
+    <!-- Autotune -->
+    <!-- Alerts -->
+    <!-- BolusWizard -->
+    <!--    Preferences-->
     <!--    Protection-->
     <!--    Pumps -->
     <string name="battery_label">バッテリー</string>
@@ -39,10 +92,19 @@
     <!--    Constraints-->
     <!-- Locale -->
     <!--    Dialogs-->
+    <string name="confirmation">確認</string>
+    <string name="message">メッセージ</string>
+    <string name="ok">OK</string>
+    <string name="cancel">キャンセル</string>
+    <string name="dismiss">無効</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
     <string name="close">閉じる</string>
     <!-- TwoMessagesDialog -->
+    <string name="password_preferences_decrypt_prompt">インポートされた設定を復元するために、マスターパスワードが必要です。</string>
     <!-- NumberPicker -->
     <!-- datetime layout -->
+    <string name="event_time_label">イベントタイム</string>
     <!-- BluetoothDevicePreference -->
     <string name="need_connect_permission">Bluetoothアプリの権限が必要です</string>
     <!--    Combo-->
