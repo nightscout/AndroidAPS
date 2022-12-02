@@ -112,7 +112,6 @@
     <string name="pb_label">Pomp batterij</string>
     <string name="cannula">Canule</string>
     <string name="ebstopsloop">Gebruik van Vertraagde bolus functie zal de closed loop modus stoppen voor de duur van de vertraagde bolus. Wil je dit toch?</string>
-    <string name="extendedbolusdeliveryerror">Vertraagde bolus toedieningsfout</string>
     <string name="statuslights_cannula_age">canule leeftijd</string>
     <string name="statuslights_patch_pump_age">patchpomp leeftijd</string>
     <string name="patch_pump">Patchpomp</string>
@@ -151,7 +150,6 @@
     <string name="a11y_bg_quality">bloedglucose kwaliteit</string>
     <string name="a11y_blood_glucose">bloed glucose</string>
     <string name="a11y_bg_outdated">verouderd</string>
-    <string name="aps_mode_title">APS Mode</string>
     <string name="set_basal_question">Accepteer nieuw tijdelijk basaal:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Vaste maaltijd</string>
@@ -305,32 +303,6 @@
     <string name="buttonson_description">Knoppen worden altijd weergegeven aan de onderkant van het scherm</string>
     <string name="largedisplay_description">Groot scherm</string>
     <string name="skin">Skin</string>
-    <!--    Loop -->
-    <string name="executing">Uitvoeren</string>
-    <string name="run_now">Nu uitvoeren</string>
-    <string name="smb_frequency_exceeded">Er is een bolus toegediend gedurende de afgelopen 3 minuten, SMB wordt overgeslagen</string>
-    <string name="pump_not_initialized">Pomp niet geïnitialiseerd!</string>
-    <string name="loop_shortname">LOOP</string>
-    <string name="description_loop">Activeer of deactiveer de implementatie die de Loop triggert.</string>
-    <string name="no_aps_selected">GEEN APS GESELECTEERD OF TOEGEKEND RESULTAAT</string>
-    <string name="ignore5m">Negeer 5m</string>
-    <string name="ignore15m">Negeer 15m</string>
-    <string name="ignore30m">Negeer 30m</string>
-    <string name="carbs_suggestion">Koolhydraten Voorstel</string>
-    <string name="open_loop_new_suggestion">Nieuw voorstel beschikbaar</string>
-    <string name="basal_set_correctly">Basaal correct ingesteld</string>
-    <string name="last_run_label">Laatste berekening</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Voorstel</string>
-    <string name="loop_constraints_processed_label">Berekening met toepassing van limieten</string>
-    <string name="loop_tbr_request_time_label">Tijdelijk basaal aanvraag tijd</string>
-    <string name="loop_tbr_execution_time_label">Tijdelijke basaal uitvoering tijd</string>
-    <string name="loop_tbr_set_by_pump_label">Tijdelijk basaal gezet door pomp</string>
-    <string name="loop_smb_request_time_label">SMB aanvraagtijd</string>
-    <string name="loop_smb_execution_time_label">SMB uitvoeringstijd</string>
-    <string name="loop_smb_set_by_pump_label">SMB op de pomp ingesteld</string>
-    <string name="loop_open_mode_min_change">Minimale verzoek voor aanpassing [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
     <!--    DataBroadcast-->
     <string name="cannula_usage">gebruik:</string>
     <!--    Iob-->
