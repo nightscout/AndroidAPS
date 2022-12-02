@@ -49,7 +49,6 @@
     <!-- Safety -->
     <!-- Overview -->
     <string name="a11y_insulin_label">inslin</string>
-    <string name="aps_mode_title">APS mód</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">QuickWizard</string>
     <string name="overview_shortname">BAILE</string>
@@ -87,12 +86,6 @@
     <string name="tomato_short">Tomato</string>
     <string name="random_bg_short">BG</string>
     <!-- Skins -->
-    <!--    Loop -->
-    <string name="executing">Feidhmiú</string>
-    <string name="run_now">Reáchtáil anois</string>
-    <string name="loop_shortname">LÚB</string>
-    <string name="last_run_label">Reáchtáil deiridh</string>
-    <string name="loop_aps_label">APS</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->
