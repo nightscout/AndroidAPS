@@ -2,8 +2,22 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Changement d\'heure d\'été/hiver dans moins de 24 heures</string>
+    <string name="dst_loop_disabled_warning">Changement d\'heure dans moins de 3 heures - Boucle fermée désactivée</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
     <!-- Version Checker -->
+    <string name="old_version">ancienne version</string>
+    <string name="very_old_version">très ancienne version</string>
+    <string name="application_expired">Application expirée</string>
+    <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>
+    <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
+    <string name="versionavailable">Version %1$s disponible</string>
+    <string name="version_expire">La version %1$s expire le %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Données recalculées utilisées</string>
+    <string name="bg_too_close">Gly trop proche :\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">recalculé</string>
+    <string name="a11y_bg_quality_doubles">entrées doubles</string>
 </resources>
