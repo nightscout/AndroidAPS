@@ -2,6 +2,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 
 android {
     namespace 'info.nightscout.comboctl'
@@ -9,6 +10,9 @@ android {
         main {
             kotlin.srcDirs += ['src/commonMain/kotlin', 'src/androidMain/kotlin']
             manifest.srcFile 'src/androidMain/AndroidManifest.xml'
+        }
+        test {
+            kotlin.srcDirs += ['src/jvmTest/kotlin']
         }
     }
 }
@@ -18,4 +22,8 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_version"
     implementation "org.jetbrains.kotlinx:kotlinx-datetime:$kotlinx_datetime_version"
     implementation "androidx.core:core-ktx:$core_version"
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test-junit5'
+    testImplementation "io.kotlintest:kotlintest-runner-junit5:3.4.2"
+    testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine:$junit_jupiter_version"
 }
