@@ -266,13 +266,13 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     // 2x Safety & Objectives
     @Test
     fun isClosedLoopAllowedTest() {
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("closed")
         objectivesPlugin.objectives[Objectives.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
         var c: Constraint<Boolean> = constraintChecker.isClosedLoopAllowed()
         aapsLogger.debug("Reason list: " + c.reasonList.toString())
 //        Assert.assertTrue(c.reasonList[0].toString().contains("Closed loop is disabled")) // Safety & Objectives
         Assert.assertEquals(false, c.value())
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("open")
         c = constraintChecker.isClosedLoopAllowed()
         Assert.assertTrue(c.reasonList[0].contains("Closed loop mode disabled in preferences")) // Safety & Objectives
 //        Assert.assertEquals(3, c.reasonList.size) // 2x Safety & Objectives
@@ -314,8 +314,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     fun isSMBModeEnabledTest() {
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
-        `when`(sp.getBoolean(R.string.key_use_smb, false)).thenReturn(false)
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
+        `when`(sp.getBoolean(info.nightscout.plugins.aps.R.string.key_use_smb, false)).thenReturn(false)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("open")
 //        `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(Constraint(true))
         val c = constraintChecker.isSMBModeEnabled()
         Assert.assertEquals(true, c.reasonList.size == 3) // 2x Safety & Objectives
