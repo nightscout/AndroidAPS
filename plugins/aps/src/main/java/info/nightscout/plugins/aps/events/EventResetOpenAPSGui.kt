@@ -2,4 +2,4 @@ package info.nightscout.plugins.aps.events
 
 import info.nightscout.rx.events.EventUpdateGui
 
-class EventOpenAPSUpdateResultGui(val text: String) : EventUpdateGui()
+class EventResetOpenAPSGui(val text: String) : EventUpdateGui()

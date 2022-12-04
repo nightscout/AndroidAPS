@@ -17,7 +17,7 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.aps.databinding.OpenapsFragmentBinding
 import info.nightscout.plugins.aps.events.EventOpenAPSUpdateGui
-import info.nightscout.plugins.aps.events.EventOpenAPSUpdateResultGui
+import info.nightscout.plugins.aps.events.EventResetOpenAPSGui
 import info.nightscout.plugins.aps.utils.JSONFormatter
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -97,10 +97,10 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
                            updateGUI()
                        }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventOpenAPSUpdateResultGui::class.java)
+            .toObservable(EventResetOpenAPSGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                           updateResultGUI(it.text)
+                           resetGUI(it.text)
                        }, fabricPrivacy::logException)
 
         updateGUI()
@@ -156,7 +156,7 @@ class OpenAPSFragment : DaggerFragment(), MenuProvider {
     }
 
     @Synchronized
-    private fun updateResultGUI(text: String) {
+    private fun resetGUI(text: String) {
         if (_binding == null) return
         binding.result.text = text
         binding.glucosestatus.text = ""
