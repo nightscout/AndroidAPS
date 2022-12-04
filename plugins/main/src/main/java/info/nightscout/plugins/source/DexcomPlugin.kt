@@ -27,6 +27,7 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.source.BgSource
+import info.nightscout.interfaces.source.DexcomBoyda
 import info.nightscout.plugins.R
 import info.nightscout.plugins.source.activities.RequestDexcomPermissionActivity
 import info.nightscout.rx.logging.AAPSLogger
@@ -58,7 +59,7 @@ class DexcomPlugin @Inject constructor(
         .preferencesId(R.xml.pref_dexcom)
         .description(R.string.description_source_dexcom),
     aapsLogger, rh, injector
-), BgSource {
+), BgSource, DexcomBoyda {
 
     init {
         if (!config.NSCLIENT) {
@@ -66,9 +67,7 @@ class DexcomPlugin @Inject constructor(
         }
     }
 
-    override fun advancedFilteringSupported(): Boolean {
-        return true
-    }
+    override fun advancedFilteringSupported(): Boolean = true
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
         (glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE ||

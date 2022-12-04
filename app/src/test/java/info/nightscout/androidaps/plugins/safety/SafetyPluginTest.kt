@@ -7,6 +7,7 @@ import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -37,6 +38,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var profiler: Profiler
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
+    @Mock lateinit var bgQualityCheck: BgQualityCheck
 
     private lateinit var hardLimits: HardLimits
     private lateinit var safetyPlugin: SafetyPlugin
@@ -80,7 +82,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         )
         openAPSSMBPlugin = OpenAPSSMBPlugin(
             injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, sp,
-            dateUtil, repository, glucoseStatusProvider
+            dateUtil, repository, glucoseStatusProvider, bgQualityCheck
         )
     }
 

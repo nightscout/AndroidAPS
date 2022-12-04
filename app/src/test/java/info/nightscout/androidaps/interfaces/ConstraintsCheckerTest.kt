@@ -13,6 +13,7 @@ import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.constraints.ConstraintsImpl
+import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.constraints.Objectives
@@ -71,6 +72,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var profileInstantiator: ProfileInstantiator
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
     @Mock lateinit var insightDatabase: InsightDatabase
+    @Mock lateinit var bgQualityCheck: BgQualityCheck
 
     private lateinit var hardLimits: HardLimits
     private lateinit var danaPump: DanaPump
@@ -182,7 +184,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 sp,
                 dateUtil,
                 repository,
-                glucoseStatusProvider
+                glucoseStatusProvider,
+                bgQualityCheck
             )
         openAPSSMBDynamicISFPlugin =
             OpenAPSSMBDynamicISFPlugin(
@@ -201,7 +204,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 dateUtil,
                 repository,
                 glucoseStatusProvider,
-                config
+                config,
+                bgQualityCheck
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(

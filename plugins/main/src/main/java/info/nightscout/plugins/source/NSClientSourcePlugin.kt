@@ -64,9 +64,7 @@ class NSClientSourcePlugin @Inject constructor(
         }
     }
 
-    override fun advancedFilteringSupported(): Boolean {
-        return isAdvancedFilteringEnabled
-    }
+    override fun advancedFilteringSupported(): Boolean = isAdvancedFilteringEnabled
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = false
 

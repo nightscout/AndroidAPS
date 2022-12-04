@@ -41,16 +41,10 @@ class AidexPlugin @Inject constructor(
     aapsLogger, rh, injector
 ), BgSource {
 
-    private var advancedFiltering = false
-
     /**
      * Aidex App doesn't have upload to NS
      */
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = true
-
-    override fun advancedFilteringSupported(): Boolean {
-        return advancedFiltering
-    }
 
     // Allow only for pumpcontrol or dev & engineering_mode
     override fun specialEnableCondition(): Boolean {

@@ -30,7 +30,7 @@ interface DetermineBasalAdapter {
         microBolusAllowed: Boolean = false,
         uamAllowed: Boolean = false,
         advancedFiltering: Boolean = false,
-        isSaveCgmSource: Boolean = false
+        flatBGsDetected: Boolean = false
     )
 
     operator fun invoke(): APSResult?
