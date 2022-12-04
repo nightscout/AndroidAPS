@@ -162,6 +162,8 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="canceling_tbr_failed">Error cancelando la basal temporal</string>
+    <string name="canceling_eb_failed">Error cancelando el bolo extendido</string>
     <!--    Protection-->
     <string name="wrongpassword">Contraseña incorrecta</string>
     <string name="wrongpin">Pin erróneo</string>
