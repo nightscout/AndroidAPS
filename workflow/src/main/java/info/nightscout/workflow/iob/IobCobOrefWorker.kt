@@ -63,7 +63,7 @@ class IobCobOrefWorker @Inject internal constructor(
     class IobCobOrefWorkerData(
         val injector: HasAndroidInjector,
         val iobCobCalculatorPlugin: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
-        val from: String,
+        val reason: String,
         val end: Long,
         val limitDataToOldestAvailable: Boolean,
         val cause: Event?
@@ -75,9 +75,9 @@ class IobCobOrefWorker @Inject internal constructor(
 
         val start = dateUtil.now()
         try {
-            aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread started: ${data.from}")
+            aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread started: ${data.reason}")
             if (!profileFunction.isProfileValid("IobCobThread")) {
-                aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (No profile): ${data.from}")
+                aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (No profile): ${data.reason}")
                 return Result.success(workDataOf("Error" to "app still initializing"))
             }
             //log.debug("Locking calculateSensitivityData");
@@ -87,8 +87,8 @@ class IobCobOrefWorker @Inject internal constructor(
             val bucketedData = ads.bucketedData
             val autosensDataTable = ads.autosensDataTable
             if (bucketedData == null || bucketedData.size < 3) {
-                aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (No bucketed data available): ${data.from}")
-                return Result.success(workDataOf("Error" to "Aborting calculation thread (No bucketed data available): ${data.from}"))
+                aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (No bucketed data available): ${data.reason}")
+                return Result.success(workDataOf("Error" to "Aborting calculation thread (No bucketed data available): ${data.reason}"))
             }
             val prevDataTime = ads.roundUpTime(bucketedData[bucketedData.size - 3].timestamp)
             aapsLogger.debug(LTag.AUTOSENS, "Prev data time: " + dateUtil.dateAndTimeString(prevDataTime))
@@ -97,8 +97,8 @@ class IobCobOrefWorker @Inject internal constructor(
             for (i in bucketedData.size - 4 downTo 0) {
                 rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt(), data.cause))
                 if (isStopped) {
-                    aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (trigger): ${data.from}")
-                    return Result.failure(workDataOf("Error" to "Aborting calculation thread (trigger): ${data.from}"))
+                    aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (trigger): ${data.reason}")
+                    return Result.failure(workDataOf("Error" to "Aborting calculation thread (trigger): ${data.reason}"))
                 }
                 // check if data already exists
                 var bgTime = bucketedData[i].timestamp
@@ -111,10 +111,10 @@ class IobCobOrefWorker @Inject internal constructor(
                 }
                 val profile = profileFunction.getProfile(bgTime)
                 if (profile == null) {
-                    aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (no profile): ${data.from}")
+                    aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (no profile): ${data.reason}")
                     continue  // profile not set yet
                 }
-                aapsLogger.debug(LTag.AUTOSENS, "Processing calculation thread: ${data.from} ($i/${bucketedData.size})")
+                aapsLogger.debug(LTag.AUTOSENS, "Processing calculation thread: ${data.reason} ($i/${bucketedData.size})")
                 val sens = profile.getIsfMgdl(bgTime)
                 val autosensData = AutosensDataObject(data.injector)
                 autosensData.time = bgTime
@@ -273,7 +273,7 @@ class IobCobOrefWorker @Inject internal constructor(
             }.start()
         } finally {
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100, data.cause))
-            aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread ended: ${data.from}")
+            aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread ended: ${data.reason}")
             profiler.log(LTag.AUTOSENS, "IobCobThread", start)
         }
         return Result.success()

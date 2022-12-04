@@ -33,11 +33,9 @@ interface CalculationWorkflow {
         job: String,
         iobCobCalculator: IobCobCalculator,
         overviewData: OverviewData,
-        from: String,
+        reason: String,
         end: Long,
         bgDataReload: Boolean,
-        limitDataToOldestAvailable: Boolean,
-        cause: Event?,
-        runLoop: Boolean
+        cause: Event?
     )
 }

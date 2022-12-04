@@ -150,15 +150,13 @@ class IobCobCalculatorPlugin @Inject constructor(
         clearCache()
         ads.reset()
         calculationWorkflow.runCalculation(
-            CalculationWorkflow.MAIN_CALCULATION,
-            this,
-            overviewData,
-            reason,
-            System.currentTimeMillis(),
+            job = CalculationWorkflow.MAIN_CALCULATION,
+            iobCobCalculator = this,
+            overviewData = overviewData,
+            reason = reason,
+            end = System.currentTimeMillis(),
             bgDataReload = false,
-            limitDataToOldestAvailable = true,
-            cause = event,
-            runLoop = true
+            cause = event
         )
     }
 
@@ -447,7 +445,15 @@ class IobCobCalculatorPlugin @Inject constructor(
             }
             ads.newHistoryData(time, aapsLogger, dateUtil)
         }
-        calculationWorkflow.runCalculation(CalculationWorkflow.MAIN_CALCULATION, this, overviewData, event.javaClass.simpleName, System.currentTimeMillis(), bgDataReload, true, event, runLoop = true)
+        calculationWorkflow.runCalculation(
+            job = CalculationWorkflow.MAIN_CALCULATION,
+            iobCobCalculator = this,
+            overviewData = overviewData,
+            reason = event.javaClass.simpleName,
+            end = System.currentTimeMillis(),
+            bgDataReload = bgDataReload,
+            cause = event
+        )
         //log.debug("Releasing onNewHistoryData");
     }
 
