@@ -111,7 +111,7 @@ class NSClientSourcePlugin @Inject constructor(
                 timestamp = sgv.mills ?: return null,
                 value = sgv.mgdl?.toDouble() ?: return null,
                 noise = null,
-                raw = sgv.filtered?.toDouble() ?: sgv.mgdl?.toDouble(),
+                raw = sgv.filtered?.toDouble(),
                 trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction),
                 nightscoutId = sgv.id,
                 sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device)
@@ -123,7 +123,7 @@ class NSClientSourcePlugin @Inject constructor(
                 timestamp = sgv.date,
                 value = sgv.sgv,
                 noise = sgv.noise?.toDouble(),
-                raw = sgv.filtered ?: sgv.sgv,
+                raw = sgv.filtered,
                 trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction.nsName),
                 nightscoutId = sgv.identifier,
                 sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device),
