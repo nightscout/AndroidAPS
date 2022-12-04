@@ -353,9 +353,9 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                         getPumpDescription().getPumpType(),
                         serialNumber()
                 );
-                result.success(true).enacted(true).isTempCancel(true);
+                result.success(true).enacted(true).isTempCancel(true).comment(info.nightscout.core.ui.R.string.ok);
             } else
-                result.success(false).enacted(false).isTempCancel(true);
+                result.success(false).enacted(false).isTempCancel(true).comment(info.nightscout.core.ui.R.string.canceling_eb_failed);
         } else {
             result.success(true).isTempCancel(true).comment(info.nightscout.core.ui.R.string.ok);
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK");

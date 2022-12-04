@@ -176,19 +176,25 @@ class EopatchPumpPlugin @Inject constructor(
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
         mLastDataTime = System.currentTimeMillis()
         if (patchManager.isActivated) {
-            if (patchManager.patchState.isTempBasalActive || patchManager.patchState.isBolusActive) {
-                return PumpEnactResult(injector)
-            } else {
-                var isSuccess: Boolean? = null
-                val result: BehaviorSubject<Boolean> = BehaviorSubject.create()
-                val disposable = result.hide()
-                    .subscribe {
-                        isSuccess = it
-                    }
+            if (patchManager.patchState.isTempBasalActive) {
+                val cancelResult = cancelTempBasal(true)
+                if (!cancelResult.success) return PumpEnactResult(injector).isTempCancel(true).comment(info.nightscout.core.ui.R.string.canceling_tbr_failed)
+            }
 
-                val nb = preferenceManager.getNormalBasalManager().convertProfileToNormalBasal(profile)
-                mDisposables.add(
-                    patchManager.startBasal(nb)
+            if (patchManager.patchState.isExtBolusActive) {
+                val cancelResult = cancelExtendedBolus()
+                if (!cancelResult.success) return PumpEnactResult(injector).comment(info.nightscout.core.ui.R.string.canceling_eb_failed)
+            }
+            var isSuccess: Boolean? = null
+            val result: BehaviorSubject<Boolean> = BehaviorSubject.create()
+            val disposable = result.hide()
+                .subscribe {
+                    isSuccess = it
+                }
+
+            val nb = preferenceManager.getNormalBasalManager().convertProfileToNormalBasal(profile)
+            mDisposables.add(
+                patchManager.startBasal(nb)
                         .observeOn(aapsSchedulers.main)
                         .subscribe({ response ->
                                        result.onNext(response.isSuccess)
@@ -209,7 +215,6 @@ class EopatchPumpPlugin @Inject constructor(
                 } else {
                     return PumpEnactResult(injector)
                 }
-            }
         } else {
             preferenceManager.getNormalBasalManager().setNormalBasal(profile)
             preferenceManager.flushNormalBasalManager()
@@ -479,7 +484,7 @@ class EopatchPumpPlugin @Inject constructor(
                 .map { PumpEnactResult(injector).success(true).enacted(true).isTempCancel(true) }
                 .onErrorReturnItem(
                     PumpEnactResult(injector).success(false).enacted(false)
-                        .comment(rh.gs(info.nightscout.core.ui.R.string.error))
+                        .comment(rh.gs(info.nightscout.core.ui.R.string.canceling_eb_failed))
                 )
                 .blockingGet()
         } else {

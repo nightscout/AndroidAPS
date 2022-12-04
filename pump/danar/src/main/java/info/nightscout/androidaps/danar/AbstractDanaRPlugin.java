@@ -334,7 +334,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                         serialNumber()
                 );
             } else
-                result.success(false).enacted(false).isTempCancel(true);
+                result.success(false).enacted(false).isTempCancel(true).comment(info.nightscout.core.ui.R.string.canceling_eb_failed);
         } else {
             result.success(true).comment(info.nightscout.core.ui.R.string.ok).isTempCancel(true);
             getAapsLogger().debug(LTag.PUMP, "cancelExtendedBolus: OK");
