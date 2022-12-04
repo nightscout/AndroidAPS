@@ -20,7 +20,7 @@ class CarbsDataPoint(
     override val shape = PointsWithLabelGraphSeries.Shape.CARBS
 
     override fun color(context: Context?): Int {
-        return if (data.isValid) rh.gac(context, R.attr.cobColor) else rh.gac(context, R.attr.alarmColor)
+        return if (data.isValid) rh.gac(context, info.nightscout.core.ui.R.attr.cobColor) else rh.gac(context, info.nightscout.core.ui.R.attr.alarmColor)
     }
 
     override fun setY(y: Double) {

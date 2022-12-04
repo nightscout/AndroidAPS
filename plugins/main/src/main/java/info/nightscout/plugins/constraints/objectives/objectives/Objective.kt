@@ -115,9 +115,9 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
             val hours = floor(duration.toDouble() / T.hours(1).msecs()).toInt()
             val minutes = floor(duration.toDouble() / T.mins(1).msecs()).toInt()
             return when {
-                days > 0  -> rh.gq(R.plurals.days, days, days)
-                hours > 0 -> rh.gq(R.plurals.hours, hours, hours)
-                else      -> rh.gq(R.plurals.minutes, minutes, minutes)
+                days > 0  -> rh.gq(info.nightscout.core.ui.R.plurals.days, days, days)
+                hours > 0 -> rh.gq(info.nightscout.core.ui.R.plurals.hours, hours, hours)
+                else      -> rh.gq(info.nightscout.core.ui.R.plurals.minutes, minutes, minutes)
             }
         }
     }
@@ -174,7 +174,7 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
             textView.setText(hint)
             textView.autoLinkMask = Linkify.WEB_URLS
             textView.linksClickable = true
-            textView.setLinkTextColor(rh.gac(context, R.attr.colorSecondary))
+            textView.setLinkTextColor(rh.gac(context, com.google.android.material.R.attr.colorSecondary))
             Linkify.addLinks(textView, Linkify.WEB_URLS)
             return textView
         }

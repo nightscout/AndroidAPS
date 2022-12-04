@@ -87,7 +87,7 @@ class TargetBgProfileGraph : GraphView {
         val targetSeries2: AreaGraphSeries<DoubleDataPoint> = AreaGraphSeries(targetDataPoints2)
         addSeries(targetSeries2)
         targetSeries2.isDrawBackground = false
-        targetSeries2.color = context.getColor(R.color.examinedProfile)
+        targetSeries2.color = context.getColor(info.nightscout.core.ui.R.color.examinedProfile)
 
         viewport.isXAxisBoundsManual = true
         viewport.setMinX(0.0)

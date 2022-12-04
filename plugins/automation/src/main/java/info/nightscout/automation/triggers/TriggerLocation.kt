@@ -4,7 +4,6 @@ import android.location.Location
 import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputButton
 import info.nightscout.automation.elements.InputDouble
@@ -13,8 +12,8 @@ import info.nightscout.automation.elements.InputString
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
-
 import org.json.JSONObject
 import java.text.DecimalFormat
 
@@ -96,7 +95,7 @@ class TriggerLocation(injector: HasAndroidInjector) : Trigger(injector) {
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
             .add(StaticLabel(rh, R.string.location, this))
-            .add(LabelWithElement(rh, rh.gs(R.string.name_short), "", name))
+            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.name_short), "", name))
             .add(LabelWithElement(rh, rh.gs(R.string.latitude_short), "", latitude))
             .add(LabelWithElement(rh, rh.gs(R.string.longitude_short), "", longitude))
             .add(LabelWithElement(rh, rh.gs(R.string.distance_short), "", distance))

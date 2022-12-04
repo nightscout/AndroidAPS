@@ -4,7 +4,6 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.danar.DanaRPlugin
-import info.nightscout.androidaps.danar.R
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -42,11 +41,11 @@ class DanaRPluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepareMocks() {
-        `when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")
-        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
-        `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
-        `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
+        `when`(sp.getString(info.nightscout.pump.dana.R.string.key_danars_address, "")).thenReturn("")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         danaPump = DanaPump(aapsLogger, sp, dateUtil, profileInstantiator)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePluginProvider, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
                                   uiInteraction, danaHistoryDatabase)

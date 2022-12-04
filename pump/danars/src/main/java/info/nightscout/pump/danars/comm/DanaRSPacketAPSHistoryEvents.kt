@@ -7,7 +7,6 @@ import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.danars.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.LTag
@@ -287,7 +286,7 @@ open class DanaRSPacketAPSHistoryEvents(
             }
 
             DanaPump.HistoryEntry.REFILL              -> {
-                if (sp.getBoolean(R.string.key_rs_loginsulinchange, true)) {
+                if (sp.getBoolean(info.nightscout.pump.dana.R.string.key_rs_loginsulinchange, true)) {
                     val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
                         type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
@@ -335,7 +334,7 @@ open class DanaRSPacketAPSHistoryEvents(
             }
 
             DanaPump.HistoryEntry.PRIME_CANNULA       -> {
-                if (sp.getBoolean(R.string.key_rs_logcanulachange, true)) {
+                if (sp.getBoolean(info.nightscout.pump.dana.R.string.key_rs_logcanulachange, true)) {
                     val newRecord = pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = datetime,
                         type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
@@ -369,7 +368,7 @@ open class DanaRSPacketAPSHistoryEvents(
             }
         }
         if (datetime > danaPump.lastEventTimeLoaded) danaPump.lastEventTimeLoaded = datetime
-        rxBus.send(EventPumpStatusChanged(rh.gs(R.string.processinghistory) + ": " + status))
+        rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.processinghistory) + ": " + status))
     }
 
     override val friendlyName: String = "APS_HISTORY_EVENTS"

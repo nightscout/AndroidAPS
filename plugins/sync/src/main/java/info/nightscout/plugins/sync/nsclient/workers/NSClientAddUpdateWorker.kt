@@ -1,12 +1,11 @@
 package info.nightscout.plugins.sync.nsclient.workers
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.bolusCalculatorResultFromJson
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
@@ -16,7 +15,6 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
-import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclient.extensions.bolusFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.carbsFromJson
@@ -29,7 +27,6 @@ import info.nightscout.plugins.sync.nsclient.extensions.temporaryBasalFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.temporaryTargetFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.therapyEventFromJson
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -38,10 +35,9 @@ import javax.inject.Inject
 class NSClientAddUpdateWorker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var config: Config
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
@@ -52,7 +48,7 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var xDripBroadcast: XDripBroadcast
     @Inject lateinit var storeDataForDb: StoreDataForDbImpl
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
         val treatments = dataWorkerStorage.pickupJSONArray(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
@@ -77,14 +73,14 @@ class NSClientAddUpdateWorker(
                 if (mills > latestDateInReceivedData) latestDateInReceivedData = mills
 
             if (insulin > 0) {
-                if (sp.getBoolean(R.string.key_ns_receive_insulin, false) || config.NSCLIENT) {
+                if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT) {
                     bolusFromJson(json)?.let { bolus ->
                         storeDataForDb.boluses.add(bolus)
                     } ?: aapsLogger.error("Error parsing bolus json $json")
                 }
             }
             if (carbs > 0) {
-                if (sp.getBoolean(R.string.key_ns_receive_carbs, false) || config.NSCLIENT) {
+                if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT) {
                     carbsFromJson(json)?.let { carb ->
                         storeDataForDb.carbs.add(carb)
                     } ?: aapsLogger.error("Error parsing bolus json $json")
@@ -104,14 +100,14 @@ class NSClientAddUpdateWorker(
             when {
                 insulin > 0 || carbs > 0                                                    -> Any()
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text                        ->
-                    if (sp.getBoolean(R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
                         temporaryTargetFromJson(json)?.let { temporaryTarget ->
                             storeDataForDb.temporaryTargets.add(temporaryTarget)
                         } ?: aapsLogger.error("Error parsing TT json $json")
                     }
 
                 eventType == TherapyEvent.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
-                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         effectiveProfileSwitchFromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
                             storeDataForDb.effectiveProfileSwitches.add(effectiveProfileSwitch)
                         } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
@@ -132,7 +128,7 @@ class NSClientAddUpdateWorker(
                     eventType == TherapyEvent.Type.EXERCISE.text ||
                     eventType == TherapyEvent.Type.NOTE.text ||
                     eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text                 ->
-                    if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
                         therapyEventFromJson(json)?.let { therapyEvent ->
                             storeDataForDb.therapyEvents.add(therapyEvent)
                         } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
@@ -153,14 +149,14 @@ class NSClientAddUpdateWorker(
                     }
 
                 eventType == TherapyEvent.Type.PROFILE_SWITCH.text                          ->
-                    if (sp.getBoolean(R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
                         profileSwitchFromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
                             storeDataForDb.profileSwitches.add(profileSwitch)
                         } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
                     }
 
                 eventType == TherapyEvent.Type.APS_OFFLINE.text                             ->
-                    if (sp.getBoolean(R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT) {
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT) {
                         offlineEventFromJson(json)?.let { offlineEvent ->
                             storeDataForDb.offlineEvents.add(offlineEvent)
                         } ?: aapsLogger.error("Error parsing OfflineEvent json $json")
@@ -171,9 +167,5 @@ class NSClientAddUpdateWorker(
         activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
         xDripBroadcast.sendTreatments(treatments)
         return ret
-    }
-
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
     }
 }

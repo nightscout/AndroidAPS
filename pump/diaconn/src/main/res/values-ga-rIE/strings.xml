@@ -1,5 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="diaconn_g8_history_alarm">Aláraim</string>
+    <string name="diaconn_g8_history_bolus">Bólasi</string>
+    <string name="diaconn_g8_history_dailyinsulin">Inslin lá</string>
+    <string name="diaconn_g8_history_errors">Earráidí</string>
+    <string name="diaconn_g8_history_refill">Athlán</string>
+    <string name="diaconn_g8_history_suspend">Fionraí</string>
+    <string name="diagonn_g8_tdd_label">TDD</string>
     <string name="bolus_step">Bólas Céim</string>
     <string name="basal_step">Bunaidh Céim</string>
+    <string name="diaconn_g8_pumpalarm_intensity_low">íseal</string>
+    <string name="diaconn_g8_pumpalarm_intensity_high">ard</string>
+    <string name="diaconn_g8_language">Teanga</string>
+    <string name="diaconn_g8_pumplang_korean">Cóiréis</string>
+    <string name="diaconn_g8_pumplang_english">Bearla (English)</string>
+    <string name="diaconn_g8_pumpalarm_low">íseal</string>
+    <string name="diaconn_g8_reasonother">Eile</string>
+    <string name="diaconn_g8_logsuccess">Rathúlacht</string>
 </resources>

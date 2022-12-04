@@ -20,7 +20,6 @@ import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.Round
-import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.LocalInsulin
 import info.nightscout.rx.logging.AAPSLogger
@@ -255,7 +254,7 @@ open class AutotuneIob @Inject constructor(
     }
     private fun getCalculationToTimeTreatments(time: Long, localInsulin: LocalInsulin): IobTotal {
         val total = IobTotal(time)
-        val detailedLog = sp.getBoolean(R.string.key_autotune_additional_log, false)
+        val detailedLog = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_additional_log, false)
         for (pos in boluses.indices) {
             val t = boluses[pos]
             if (!t.isValid) continue

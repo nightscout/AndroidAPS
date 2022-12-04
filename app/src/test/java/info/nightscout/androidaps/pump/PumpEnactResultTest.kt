@@ -3,7 +3,6 @@ package info.nightscout.androidaps.pump
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.core.main.R
 import info.nightscout.core.pump.toHtml
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.plugins.aps.loop.extensions.json
@@ -28,16 +27,16 @@ class PumpEnactResultTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun mock() {
-        `when`(rh.gs(R.string.success)).thenReturn("Success")
-        `when`(rh.gs(R.string.enacted)).thenReturn("Enacted")
-        `when`(rh.gs(R.string.comment)).thenReturn("Comment")
-        `when`(rh.gs(R.string.configbuilder_insulin)).thenReturn("Insulin")
-        `when`(rh.gs(R.string.smb_shortname)).thenReturn("SMB")
-        `when`(rh.gs(R.string.insulin_unit_shortname)).thenReturn("U")
-        `when`(rh.gs(R.string.cancel_temp)).thenReturn("Cancel temp basal")
-        `when`(rh.gs(R.string.duration)).thenReturn("Duration")
-        `when`(rh.gs(R.string.percent)).thenReturn("Percent")
-        `when`(rh.gs(R.string.absolute)).thenReturn("Absolute")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.success)).thenReturn("Success")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.enacted)).thenReturn("Enacted")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.comment)).thenReturn("Comment")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.configbuilder_insulin)).thenReturn("Insulin")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.smb_shortname)).thenReturn("SMB")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)).thenReturn("U")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.cancel_temp)).thenReturn("Cancel temp basal")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.duration)).thenReturn("Duration")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.percent)).thenReturn("Percent")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.absolute)).thenReturn("Absolute")
     }
 
     @Test fun successTest() {

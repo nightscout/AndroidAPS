@@ -113,7 +113,6 @@
     <string name="sort_automation">Сортировать автоматизацию</string>
     <string name="remove_selected_items">Удалить выбранные элементы</string>
     <string name="count_selected">%1$d выбрано</string>
-    <string name="confirm_remove_multiple_items">Вы уверены, что хотите удалить %1$d элемент</string>
     <string name="system_automation">Автоматизация системы</string>
     <string name="run_automations">Запустить автоматизацию</string>
     <string name="add_automation">Добавить правило</string>

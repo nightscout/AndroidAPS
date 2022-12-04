@@ -6,8 +6,8 @@ import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.actions.BackgroundActionActivity
 import info.nightscout.androidaps.interaction.actions.TempTargetActivity
 import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.rx.weardata.EventData
+import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -58,7 +58,7 @@ class TempTargetSource @Inject constructor(context: Context, sp: SP, aapsLogger:
             ),
             StaticAction(
                 settingName = "cancel",
-                buttonText = resources.getString(R.string.generic_cancel),
+                buttonText = resources.getString(android.support.wearable.R.string.generic_cancel),
                 iconRes = R.drawable.ic_target_cancel,
                 activityClass = BackgroundActionActivity::class.java.name,
                 message = message,

@@ -89,4 +89,13 @@
     <string name="hardlimit">limite rígido</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Pico</string>
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">Um bolus foi injectado nos últimos 3 minutos, saltando SMB</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="description_loop">Ative ou desative a implementação ativando o loop.</string>
+    <string name="ignore5m">Ignorar 5m</string>
+    <string name="ignore15m">Ignorar 15m</string>
+    <string name="ignore30m">Ignorar 30m</string>
+    <string name="basal_set_correctly">Basal correctamente definida</string>
+    <string name="loop_aps_label">APS</string>
 </resources>

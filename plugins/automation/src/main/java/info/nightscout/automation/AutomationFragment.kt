@@ -200,9 +200,9 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
                 rh.gac(
                     context,
                     when {
-                        automation.userAction        -> R.attr.userAction
-                        automation.areActionsValid() -> R.attr.validActions
-                        else                         -> R.attr.actionsError
+                        automation.userAction        -> info.nightscout.core.ui.R.attr.userAction
+                        automation.areActionsValid() -> info.nightscout.core.ui.R.attr.validActions
+                        else                         -> info.nightscout.core.ui.R.attr.actionsError
                     }
                 )
             )
@@ -212,7 +212,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
             holder.binding.iconLayout.removeAllViews()
             // trigger icons
             val triggerIcons = HashSet<Int>()
-            if (automation.userAction) triggerIcons.add(R.drawable.ic_user_options)
+            if (automation.userAction) triggerIcons.add(info.nightscout.core.ui.R.drawable.ic_user_options)
             fillIconSet(automation.trigger, triggerIcons)
             for (res in triggerIcons) {
                 addImage(res, holder.context, holder.binding.iconLayout)
@@ -289,14 +289,14 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
     private fun getConfirmationText(selectedItems: SparseArray<AutomationEventObject>): String {
         if (selectedItems.size() == 1) {
             val event = selectedItems.valueAt(0)
-            return rh.gs(R.string.removerecord) + " " + event.title
+            return rh.gs(info.nightscout.core.ui.R.string.removerecord) + " " + event.title
         }
-        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected(selectedItems: SparseArray<AutomationEventObject>) {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, event ->
                     uel.log(Action.AUTOMATION_REMOVED, Sources.Automation, event.title)
                     automationPlugin.removeAt(event.position)

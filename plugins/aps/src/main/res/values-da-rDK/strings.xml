@@ -89,4 +89,13 @@
     <string name="hardlimit">hård grænse</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Top</string>
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">En bolus blev leveret inden for de sidste 3 minutter, springer SMB over</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="description_loop">Aktiver eller deaktiver implementeringen som aktiverer Loop.</string>
+    <string name="ignore5m">Ignorér 5m</string>
+    <string name="ignore15m">Ignorér 15m</string>
+    <string name="ignore30m">Ignorér 30m</string>
+    <string name="basal_set_correctly">Basal sat korrekt </string>
+    <string name="loop_aps_label">APS</string>
 </resources>

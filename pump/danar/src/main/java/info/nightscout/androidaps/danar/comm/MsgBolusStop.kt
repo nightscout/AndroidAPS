@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danar.R
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.LTag
 
@@ -20,10 +19,10 @@ class MsgBolusStop(
         danaPump.bolusStopped = true
         if (!danaPump.bolusStopForced) {
             danaPump.bolusingTreatment?.insulin = danaPump.bolusAmountToBeDelivered
-            bolusingEvent.status = rh.gs(R.string.overview_bolusprogress_delivered)
+            bolusingEvent.status = rh.gs(info.nightscout.pump.dana.R.string.overview_bolusprogress_delivered)
             bolusingEvent.percent = 100
         } else {
-            bolusingEvent.status = rh.gs(R.string.overview_bolusprogress_stoped)
+            bolusingEvent.status = rh.gs(info.nightscout.pump.dana.R.string.overview_bolusprogress_stoped)
         }
         rxBus.send(bolusingEvent)
     }

@@ -1,7 +1,6 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.implementation.R
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.BolusProgressData
 import info.nightscout.interfaces.pump.DetailedBolusInfo
@@ -34,17 +33,17 @@ class CommandBolus(
     }
 
     override fun status(): String {
-        return (if (detailedBolusInfo.insulin > 0) rh.gs(R.string.bolus_u_min, detailedBolusInfo.insulin) else "") +
-            if (detailedBolusInfo.carbs > 0) rh.gs(R.string.carbs_g, detailedBolusInfo.carbs.toInt()) else ""
+        return (if (detailedBolusInfo.insulin > 0) rh.gs(info.nightscout.core.ui.R.string.bolus_u_min, detailedBolusInfo.insulin) else "") +
+            if (detailedBolusInfo.carbs > 0) rh.gs(info.nightscout.core.ui.R.string.carbs_g, detailedBolusInfo.carbs.toInt()) else ""
     }
 
     override fun log(): String {
-        return (if (detailedBolusInfo.insulin > 0) "BOLUS " + rh.gs(R.string.format_insulin_units, detailedBolusInfo.insulin) else "") +
-            if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
+        return (if (detailedBolusInfo.insulin > 0) "BOLUS " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, detailedBolusInfo.insulin) else "") +
+            if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(info.nightscout.core.graph.R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
     }
 
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.main.R.string.connectiontimedout))?.run()
+        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.connectiontimedout))?.run()
     }
 }

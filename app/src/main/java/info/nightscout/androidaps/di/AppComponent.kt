@@ -35,6 +35,7 @@ import info.nightscout.rx.di.RxModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.shared.impl.di.SharedImplModule
 import info.nightscout.ui.di.UiModule
+import info.nightscout.workflow.di.WorkflowModule
 import javax.inject.Singleton
 
 @Singleton
@@ -46,8 +47,6 @@ import javax.inject.Singleton
         ActivitiesModule::class,
         FragmentsModule::class,
         ReceiversModule::class,
-        ServicesModule::class,
-        WorkflowModule::class,
 
         // Gradle modules
         AutomationModule::class,
@@ -65,6 +64,7 @@ import javax.inject.Singleton
         ValidatorsModule::class,
         PluginsSupportModule::class,
         SyncModule::class,
+        WorkflowModule::class,
 
         // pumps
         ComboModule::class,
@@ -82,7 +82,6 @@ import javax.inject.Singleton
         OmnipodErosModule::class,
         PumpCommonModule::class,
         RileyLinkModule::class
-
     ]
 )
 interface AppComponent : AndroidInjector<MainApp> {

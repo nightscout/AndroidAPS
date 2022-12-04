@@ -2,7 +2,6 @@ package info.nightscout.implementation.protection
 
 import androidx.fragment.app.FragmentActivity
 import dagger.Reusable
-import info.nightscout.core.main.R
 import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.shared.sharedPreferences.SP
@@ -20,30 +19,30 @@ class ProtectionCheckImpl @Inject constructor(
     private var lastAuthorization = mutableListOf(0L, 0L, 0L)
 
     private val passwordsResourceIDs = listOf(
-        R.string.key_settings_password,
-        R.string.key_application_password,
-        R.string.key_bolus_password
+        info.nightscout.core.utils.R.string.key_settings_password,
+        info.nightscout.core.utils.R.string.key_application_password,
+        info.nightscout.core.utils.R.string.key_bolus_password
     )
 
     private val pinsResourceIDs = listOf(
-        R.string.key_settings_pin,
-        R.string.key_application_pin,
-        R.string.key_bolus_pin)
+        info.nightscout.core.utils.R.string.key_settings_pin,
+        info.nightscout.core.utils.R.string.key_application_pin,
+        info.nightscout.core.utils.R.string.key_bolus_pin)
 
     private val protectionTypeResourceIDs = listOf(
-        R.string.key_settings_protection,
-        R.string.key_application_protection,
-        R.string.key_bolus_protection)
+        info.nightscout.core.utils.R.string.key_settings_protection,
+        info.nightscout.core.utils.R.string.key_application_protection,
+        info.nightscout.core.utils.R.string.key_bolus_protection)
 
     private val titlePassResourceIDs = listOf(
-        R.string.settings_password,
-        R.string.application_password,
-        R.string.bolus_password)
+        info.nightscout.core.ui.R.string.settings_password,
+        info.nightscout.core.ui.R.string.application_password,
+        info.nightscout.core.ui.R.string.bolus_password)
 
     private val titlePinResourceIDs = listOf(
-        R.string.settings_pin,
-        R.string.application_pin,
-        R.string.bolus_pin)
+        info.nightscout.core.ui.R.string.settings_pin,
+        info.nightscout.core.ui.R.string.application_pin,
+        info.nightscout.core.ui.R.string.bolus_pin)
 
     override fun isLocked(protection: ProtectionCheck.Protection): Boolean {
         if (activeSession(protection)) {
@@ -52,7 +51,7 @@ class ProtectionCheckImpl @Inject constructor(
         return when (ProtectionCheck.ProtectionType.values()[sp.getInt(protectionTypeResourceIDs[protection.ordinal], ProtectionCheck.ProtectionType.NONE.ordinal)]) {
             ProtectionCheck.ProtectionType.NONE            -> false
             ProtectionCheck.ProtectionType.BIOMETRIC       -> true
-            ProtectionCheck.ProtectionType.MASTER_PASSWORD -> sp.getString(R.string.key_master_password, "") != ""
+            ProtectionCheck.ProtectionType.MASTER_PASSWORD -> sp.getString(info.nightscout.core.utils.R.string.key_master_password, "") != ""
             ProtectionCheck.ProtectionType.CUSTOM_PASSWORD -> sp.getString(passwordsResourceIDs[protection.ordinal], "") != ""
             ProtectionCheck.ProtectionType.CUSTOM_PIN      -> sp.getString(pinsResourceIDs[protection.ordinal], "") != ""
         }
@@ -63,7 +62,7 @@ class ProtectionCheckImpl @Inject constructor(
     }
 
     private fun activeSession(protection: ProtectionCheck.Protection): Boolean {
-        var timeout = TimeUnit.SECONDS.toMillis(sp.getInt(R.string.key_protection_timeout, 0).toLong())
+        var timeout = TimeUnit.SECONDS.toMillis(sp.getInt(info.nightscout.core.utils.R.string.key_protection_timeout, 0).toLong())
         // Default timeout to pass the resume check at start of an activity
         timeout = if (timeout < 1000) 1000 else timeout
         val last = lastAuthorization[protection.ordinal]
@@ -90,7 +89,7 @@ class ProtectionCheckImpl @Inject constructor(
                 BiometricCheck.biometricPrompt(activity, titlePassResourceIDs[protection.ordinal], { onOk(protection); ok?.run() }, cancel, fail, passwordCheck)
 
             ProtectionCheck.ProtectionType.MASTER_PASSWORD ->
-                passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { onOk(protection); ok?.run() }, { cancel?.run() }, { fail?.run() })
+                passwordCheck.queryPassword(activity, info.nightscout.core.ui.R.string.master_password, info.nightscout.core.utils.R.string.key_master_password, { onOk(protection); ok?.run() }, { cancel?.run() }, { fail?.run() })
 
             ProtectionCheck.ProtectionType.CUSTOM_PASSWORD ->
                 passwordCheck.queryPassword(

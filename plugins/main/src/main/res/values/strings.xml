@@ -232,7 +232,6 @@
     <string name="pb_label">Pump battery</string>
     <string name="cannula">Cannula</string>
     <string name="ebstopsloop">Use of Extended bolus feature will stop closed loop mode for the time of running extended bolus. Do you really want it?</string>
-    <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
     <string name="statuslights_cannula_age">cannula age</string>
     <string name="statuslights_patch_pump_age">patch pump age</string>
     <string name="patch_pump">Patch pump</string>
@@ -293,7 +292,6 @@
     <string name="a11y_bg_quality">blood glucose quality</string>
     <string name="a11y_blood_glucose">blood glucose</string>
     <string name="a11y_bg_outdated">outdated</string>
-    <string name="aps_mode_title">APS Mode</string>
     <string name="set_basal_question">Accept new temp basal:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">QuickWizard</string>
@@ -463,35 +461,6 @@
     <string name="buttonson_description">Buttons are always displayed on bottom of screen</string>
     <string name="largedisplay_description">Large display</string>
     <string name="skin">Skin</string>
-
-    <!--    Loop -->
-    <string name="key_smb_enable_carbs_suggestions_threshold" translatable="false">smb_enable_carbs_suggestions_threshold</string>
-
-    <string name="executing">Executing</string>
-    <string name="run_now">Run now</string>
-    <string name="smb_frequency_exceeded">A bolus was delivered within the last 3 minutes, skipping SMB</string>
-    <string name="pump_not_initialized">Pump not initialized!</string>
-    <string name="loop_shortname">LOOP</string>
-    <string name="description_loop">Activate or deactivate the implementation triggering the loop.</string>
-    <string name="no_aps_selected">NO APS SELECTED OR PROVIDED RESULT</string>
-    <string name="ignore5m">Ignore 5m</string>
-    <string name="ignore15m">Ignore 15m</string>
-    <string name="ignore30m">Ignore 30m</string>
-    <string name="carbs_suggestion">Carbs Suggestion</string>
-    <string name="open_loop_new_suggestion">New suggestion available</string>
-    <string name="basal_set_correctly">Basal set correctly</string>
-    <string name="last_run_label">Last run</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Request</string>
-    <string name="loop_constraints_processed_label">After processed constraints</string>
-    <string name="loop_tbr_request_time_label">Temp basal request time</string>
-    <string name="loop_tbr_execution_time_label">Temp basal execution time</string>
-    <string name="loop_tbr_set_by_pump_label">Temp basal set by pump</string>
-    <string name="loop_smb_request_time_label">SMB request time</string>
-    <string name="loop_smb_execution_time_label">SMB execution time</string>
-    <string name="loop_smb_set_by_pump_label">SMB set by pump</string>
-    <string name="loop_open_mode_min_change">Minimal request change [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
 
     <!--    DataBroadcast-->
     <string name="data_broadcaster" translatable="false">Data Broadcaster</string>

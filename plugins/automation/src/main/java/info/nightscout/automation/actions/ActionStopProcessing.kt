@@ -17,7 +17,7 @@ class ActionStopProcessing(injector: HasAndroidInjector) : Action(injector) {
     override fun isValid(): Boolean = true
 
     override fun doAction(callback: Callback) {
-        callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+        callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
     }
 
     override fun toJSON(): String {

@@ -17,6 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Aktivite monitörü</string>
     <string name="do_you_want_reset_stats">Etkinlik istatistiklerini sıfırlamak istiyor musunuz?</string>
+    <string name="do_you_want_reset_tdd_stats">GTD istatistiklerini sıfırlamak istiyor musunuz?</string>
     <string name="statistics">İstatistikler</string>
     <string name="calculation_in_progress">Hesaplanıyor</string>
     <string name="invalid_age">Geçersiz yaş girişi</string>
@@ -85,22 +86,45 @@
     <string name="treatments_iob_activity_total_label_string">Toplam AİNS etkinliği:</string>
     <string name="tempbasals_realduration_label_string">Süre:</string>
     <string name="tempbasals_netratio_label_string">Oran:</string>
+    <string name="tempbasals_netinsulin_label_string">İns:</string>
+    <string name="tempbasals_iob_label_string">AİNS:</string>
+    <string name="treatments_wizard_correction_label">Düzeltme</string>
+    <string name="meal_bolus">Ögün</string>
+    <string name="prime">Doldur</string>
     <string name="profile_changes">Profil değişiklikleri</string>
+    <string name="tempt_targets">Geçici Hedefler</string>
+    <string name="carbs_and_bolus">Karbonhidrat ve bolus</string>
     <string name="show_invalidated_records">Geçersiz kılınan / kaldırılan kayıtları göster</string>
     <string name="hide_invalidated_records">Geçersiz kılınan / kaldırılan kayıtları gizle</string>
     <string name="refresh_from_nightscout">Nightscout\'tan Yenile</string>
     <string name="refresheventsfromnightscout">NS\'tan yenile</string>
     <string name="show_invalidated">Geçersiz olanları göster</string>
     <string name="hide_invalidated">Geçersiz olanları gizle</string>
+    <string name="careportal_remove_started_events">AAPS tarafından başlatılmış girdileri kaldırın</string>
     <string name="hide_loop">Döngüyü gizle</string>
     <string name="show_loop">Döngüyü göster</string>
+    <string name="user_entry">Kullanıcı girişi</string>
     <string name="clone_label">Klon</string>
     <string name="show_loop_records">Döngü kayıtlarını göster</string>
     <string name="show_hide_records">Döngü kayıtlarını gizle</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Profil 1</string>
+    <string name="profile2">Profil 2</string>
+    <string name="profile_type">Profil tipi</string>
+    <string name="basal_pct_from_tdd_label">% bazalın</string>
+    <string name="selected_profile">Seçildi:</string>
+    <string name="compare_profile">Profilleri karşılaştırın</string>
+    <string name="nav_profile_helper">Profil yardımcısı</string>
+    <string name="motol_default_profile">Varsayılan profil</string>
+    <string name="current_profile">Mevcut profil</string>
+    <string name="available_profile">Kullanılabilir profil</string>
     <string name="format_with_tdd">Yaş: %1$d GTD: %2$.0f Ü</string>
     <string name="format_with_tdd_and_pct">Yaş: %1$d GTD: %2$.0f Ü %3$d%%</string>
     <string name="format_with_weight">Yaş: %1$d Ağırlık: %2$.0f kg</string>
+    <string name="dpv_default_profile">DPV Varsayılan profil</string>
+    <string name="invalid_pct">Geçersiz % giriş</string>
     <!-- Other dialogs -->
+    <string name="basal_rate">Bazal oranı</string>
     <!--    BolusProgressDialog-->
+    <string name="stop_pressed">DURDUR\'A BASILDI</string>
 </resources>

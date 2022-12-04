@@ -60,9 +60,9 @@ class OpenAPSSMBPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.APS)
         .fragmentClass(info.nightscout.plugins.aps.OpenAPSFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_generic_icon)
+        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_generic_icon)
         .pluginName(R.string.openapssmb)
-        .shortName(R.string.smb_shortname)
+        .shortName(info.nightscout.core.ui.R.string.smb_shortname)
         .preferencesId(R.xml.pref_openapssmb)
         .description(R.string.description_smb)
         .setDefault(),
@@ -104,17 +104,17 @@ class OpenAPSSMBPlugin @Inject constructor(
         val profile = profileFunction.getProfile()
         val pump = activePlugin.activePump
         if (profile == null) {
-            rxBus.send(info.nightscout.plugins.aps.events.EventOpenAPSUpdateResultGui(rh.gs(R.string.no_profile_set)))
-            aapsLogger.debug(LTag.APS, rh.gs(R.string.no_profile_set))
+            rxBus.send(info.nightscout.plugins.aps.events.EventResetOpenAPSGui(rh.gs(info.nightscout.core.ui.R.string.no_profile_set)))
+            aapsLogger.debug(LTag.APS, rh.gs(info.nightscout.core.ui.R.string.no_profile_set))
             return
         }
         if (!isEnabled()) {
-            rxBus.send(info.nightscout.plugins.aps.events.EventOpenAPSUpdateResultGui(rh.gs(R.string.openapsma_disabled)))
+            rxBus.send(info.nightscout.plugins.aps.events.EventResetOpenAPSGui(rh.gs(R.string.openapsma_disabled)))
             aapsLogger.debug(LTag.APS, rh.gs(R.string.openapsma_disabled))
             return
         }
         if (glucoseStatus == null) {
-            rxBus.send(info.nightscout.plugins.aps.events.EventOpenAPSUpdateResultGui(rh.gs(R.string.openapsma_no_glucose_data)))
+            rxBus.send(info.nightscout.plugins.aps.events.EventResetOpenAPSGui(rh.gs(R.string.openapsma_no_glucose_data)))
             aapsLogger.debug(LTag.APS, rh.gs(R.string.openapsma_no_glucose_data))
             return
         }
@@ -130,10 +130,10 @@ class OpenAPSSMBPlugin @Inject constructor(
             inputConstraints.copyReasons(maxIOBAllowedConstraint)
         }.value()
 
-        var minBg = hardLimits.verifyHardLimits(Round.roundTo(profile.getTargetLowMgdl(), 0.1), R.string.profile_low_target, HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1])
+        var minBg = hardLimits.verifyHardLimits(Round.roundTo(profile.getTargetLowMgdl(), 0.1), info.nightscout.core.ui.R.string.profile_low_target, HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1])
         var maxBg =
-            hardLimits.verifyHardLimits(Round.roundTo(profile.getTargetHighMgdl(), 0.1), R.string.profile_high_target, HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1])
-        var targetBg = hardLimits.verifyHardLimits(profile.getTargetMgdl(), R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1])
+            hardLimits.verifyHardLimits(Round.roundTo(profile.getTargetHighMgdl(), 0.1), info.nightscout.core.ui.R.string.profile_high_target, HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1])
+        var targetBg = hardLimits.verifyHardLimits(profile.getTargetMgdl(), info.nightscout.core.ui.R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1])
         var isTempTarget = false
         val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         if (tempTarget is ValueWrapper.Existing) {
@@ -141,35 +141,35 @@ class OpenAPSSMBPlugin @Inject constructor(
             minBg =
                 hardLimits.verifyHardLimits(
                     tempTarget.value.lowTarget,
-                    R.string.temp_target_low_target,
+                    info.nightscout.core.ui.R.string.temp_target_low_target,
                     HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_TEMP_MIN_BG[1].toDouble()
                 )
             maxBg =
                 hardLimits.verifyHardLimits(
                     tempTarget.value.highTarget,
-                    R.string.temp_target_high_target,
+                    info.nightscout.core.ui.R.string.temp_target_high_target,
                     HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_TEMP_MAX_BG[1].toDouble()
                 )
             targetBg =
                 hardLimits.verifyHardLimits(
                     tempTarget.value.target(),
-                    R.string.temp_target_value,
+                    info.nightscout.core.ui.R.string.temp_target_value,
                     HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[0].toDouble(),
                     HardLimits.VERY_HARD_LIMIT_TEMP_TARGET_BG[1].toDouble()
                 )
         }
-        if (!hardLimits.checkHardLimits(profile.dia, R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return
-        if (!hardLimits.checkHardLimits(profile.getIcTimeFromMidnight(MidnightUtils.secondsFromMidnight()), R.string.profile_carbs_ratio_value, hardLimits.minIC(), hardLimits.maxIC())) return
-        if (!hardLimits.checkHardLimits(profile.getIsfMgdl(), R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
-        if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
-        if (!hardLimits.checkHardLimits(pump.baseBasalRate, R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
+        if (!hardLimits.checkHardLimits(profile.dia, info.nightscout.core.ui.R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return
+        if (!hardLimits.checkHardLimits(profile.getIcTimeFromMidnight(MidnightUtils.secondsFromMidnight()), info.nightscout.core.ui.R.string.profile_carbs_ratio_value, hardLimits.minIC(), hardLimits.maxIC())) return
+        if (!hardLimits.checkHardLimits(profile.getIsfMgdl(), info.nightscout.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
+        if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), info.nightscout.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
+        if (!hardLimits.checkHardLimits(pump.baseBasalRate, info.nightscout.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
         startPart = System.currentTimeMillis()
         if (constraintChecker.isAutosensModeEnabled().value()) {
             val autosensData = iobCobCalculator.getLastAutosensDataWithWaitForCalculationFinish("OpenAPSPlugin")
             if (autosensData == null) {
-                rxBus.send(info.nightscout.plugins.aps.events.EventOpenAPSUpdateResultGui(rh.gs(R.string.openaps_no_as_data)))
+                rxBus.send(info.nightscout.plugins.aps.events.EventResetOpenAPSGui(rh.gs(R.string.openaps_no_as_data)))
                 return
             }
             lastAutosensResult = autosensData.autosensResult
@@ -240,7 +240,7 @@ class OpenAPSSMBPlugin @Inject constructor(
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
         if (isEnabled()) {
-            val maxIobPref: Double = sp.getDouble(R.string.key_openapssmb_max_iob, 3.0)
+            val maxIobPref: Double = sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapssmb_max_iob, 3.0)
             maxIob.setIfSmaller(aapsLogger, maxIobPref, rh.gs(R.string.limiting_iob, maxIobPref, rh.gs(R.string.maxvalueinpreferences)), this)
             maxIob.setIfSmaller(aapsLogger, hardLimits.maxIobSMB(), rh.gs(R.string.limiting_iob, hardLimits.maxIobSMB(), rh.gs(R.string.hardlimit)), this)
         }
@@ -254,15 +254,15 @@ class OpenAPSSMBPlugin @Inject constructor(
                 maxBasal = profile.getMaxDailyBasal()
                 absoluteRate.addReason(rh.gs(R.string.increasing_max_basal), this)
             }
-            absoluteRate.setIfSmaller(aapsLogger, maxBasal, rh.gs(R.string.limitingbasalratio, maxBasal, rh.gs(R.string.maxvalueinpreferences)), this)
+            absoluteRate.setIfSmaller(aapsLogger, maxBasal, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, maxBasal, rh.gs(R.string.maxvalueinpreferences)), this)
 
             // Check percentRate but absolute rate too, because we know real current basal in pump
             val maxBasalMultiplier = sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0)
             val maxFromBasalMultiplier = floor(maxBasalMultiplier * profile.getBasal() * 100) / 100
-            absoluteRate.setIfSmaller(aapsLogger, maxFromBasalMultiplier, rh.gs(R.string.limitingbasalratio, maxFromBasalMultiplier, rh.gs(R.string.max_basal_multiplier)), this)
+            absoluteRate.setIfSmaller(aapsLogger, maxFromBasalMultiplier, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, maxFromBasalMultiplier, rh.gs(R.string.max_basal_multiplier)), this)
             val maxBasalFromDaily = sp.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3.0)
             val maxFromDaily = floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100
-            absoluteRate.setIfSmaller(aapsLogger, maxFromDaily, rh.gs(R.string.limitingbasalratio, maxFromDaily, rh.gs(R.string.max_daily_basal_multiplier)), this)
+            absoluteRate.setIfSmaller(aapsLogger, maxFromDaily, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, maxFromDaily, rh.gs(R.string.max_daily_basal_multiplier)), this)
         }
         return absoluteRate
     }

@@ -113,7 +113,7 @@ public class TimeListEdit {
         // last "plus" to append new interval
         float factor = layout.getContext().getResources().getDisplayMetrics().density;
         finalAdd = new ImageView(context);
-        finalAdd.setImageResource(R.drawable.ic_add);
+        finalAdd.setImageResource(info.nightscout.core.main.R.drawable.ic_add);
         finalAdd.setContentDescription(layout.getContext().getResources().getString(R.string.a11y_add_new_to_list));
         LinearLayout.LayoutParams illp = new LinearLayout.LayoutParams((int) (35d * factor), (int) (35 * factor));
         illp.setMargins(0, 25, 0, 25); // llp.setMargins(left, top, right, bottom);
@@ -311,7 +311,7 @@ public class TimeListEdit {
         }
 
         final SpinnerAdapter adapter = new SpinnerAdapter(context,
-                R.layout.spinner_centered, timeList, timeListValues);
+                info.nightscout.core.ui.R.layout.spinner_centered, timeList, timeListValues);
         spinner.setAdapter(adapter);
         spinner.setSelection(posInList, false);
         adapter.notifyDataSetChanged();

@@ -113,7 +113,6 @@
     <string name="sort_automation">Classificar automação</string>
     <string name="remove_selected_items">Remover itens selecionados</string>
     <string name="count_selected">Selecionado %1$d</string>
-    <string name="confirm_remove_multiple_items">Tem certeza que deseja remover %1$d itens</string>
     <string name="system_automation">Automação do Sistema</string>
     <string name="run_automations">Executar automações</string>
     <string name="add_automation">Adicionar regra</string>

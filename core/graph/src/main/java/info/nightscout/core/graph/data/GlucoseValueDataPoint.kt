@@ -1,7 +1,6 @@
 package info.nightscout.core.graph.data
 
 import android.content.Context
-import info.nightscout.core.graph.R
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
@@ -34,20 +33,20 @@ class GlucoseValueDataPoint(
         val highLine = defaultValueHelper.determineHighLine()
         return when {
             isPrediction                   -> predictionColor(context)
-            valueToUnits(units) < lowLine  -> rh.gac(context, R.attr.bgLow)
-            valueToUnits(units) > highLine -> rh.gac(context, R.attr.highColor)
-            else                           -> rh.gac(context, R.attr.bgInRange)
+            valueToUnits(units) < lowLine  -> rh.gac(context, info.nightscout.core.ui.R.attr.bgLow)
+            valueToUnits(units) > highLine -> rh.gac(context, info.nightscout.core.ui.R.attr.highColor)
+            else                           -> rh.gac(context, info.nightscout.core.ui.R.attr.bgInRange)
         }
     }
 
     private fun predictionColor(context: Context?): Int {
         return when (data.sourceSensor) {
-            GlucoseValue.SourceSensor.IOB_PREDICTION   -> rh.gac(context, R.attr.iobColor)
-            GlucoseValue.SourceSensor.COB_PREDICTION   -> rh.gac(context, R.attr.cobColor)
-            GlucoseValue.SourceSensor.A_COB_PREDICTION -> -0x7f000001 and rh.gac(context, R.attr.cobColor)
-            GlucoseValue.SourceSensor.UAM_PREDICTION   -> rh.gac(context, R.attr.uamColor)
-            GlucoseValue.SourceSensor.ZT_PREDICTION    -> rh.gac(context, R.attr.ztColor)
-            else                                       -> rh.gac(context, R.attr.defaultTextColor)
+            GlucoseValue.SourceSensor.IOB_PREDICTION   -> rh.gac(context, info.nightscout.core.ui.R.attr.iobColor)
+            GlucoseValue.SourceSensor.COB_PREDICTION   -> rh.gac(context, info.nightscout.core.ui.R.attr.cobColor)
+            GlucoseValue.SourceSensor.A_COB_PREDICTION -> -0x7f000001 and rh.gac(context, info.nightscout.core.ui.R.attr.cobColor)
+            GlucoseValue.SourceSensor.UAM_PREDICTION   -> rh.gac(context, info.nightscout.core.ui.R.attr.uamColor)
+            GlucoseValue.SourceSensor.ZT_PREDICTION    -> rh.gac(context, info.nightscout.core.ui.R.attr.ztColor)
+            else                                       -> rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor)
         }
     }
 

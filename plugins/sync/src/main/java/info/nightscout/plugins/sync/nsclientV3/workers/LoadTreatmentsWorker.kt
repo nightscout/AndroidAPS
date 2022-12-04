@@ -4,17 +4,14 @@ import android.content.Context
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.interfaces.nsclient.StoreDataForDb
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
-import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.utils.DateUtil
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -22,9 +19,8 @@ import javax.inject.Inject
 class LoadTreatmentsWorker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var context: Context
@@ -32,7 +28,7 @@ class LoadTreatmentsWorker(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var storeDataForDb: StoreDataForDbImpl
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
         var ret = Result.success()
 
         runBlocking {
@@ -87,9 +83,5 @@ class LoadTreatmentsWorker(
             }
         }
         return ret
-    }
-
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
     }
 }

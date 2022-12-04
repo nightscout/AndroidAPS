@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">Comunicazioni SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Controlla AAPS in remoto usando i comandi SMS.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app autenticatore: %1$s seguito da PIN</string>
+    <string name="smscommunicator_otp_pin">PIN obbligatorio aggiuntivo a fine token</string>
+    <string name="smscommunicator_otp_pin_summary">Cifre aggiuntive che devono essere memorizzate e incollate alla fine di ogni OTP generata</string>
     <string name="smscommunicator_tab_otp_label">Configurazione autenticatore</string>
+    <string name="smscommunicator_code_verify_label">Codice controllo:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Il codice di verifica è composto da 6 cifre visualizzate dall\'app autenticatore (note come OTP) seguite da 3 o più cifre del PIN obbligatorio.</string>
+    <string name="smscommunicator_otp_reset_btn">Resetta autenticatori</string>
+    <string name="smscommunicator_otp_reset_title">Resetta chiave autenticatore</string>
+    <string name="smscommunicator_otp_reset_prompt">Sei sicuro di resettare la chiave autenticatore? Renderà non validi tutti gli autenticatori attualmente configurati e sarà necessario configurarli nuovamente.</string>
+    <string name="smscommunicator_otp_reset_successful">La nuova chiave autenticatore è stata generata! Usa il QRCode aggiornato per fornire gli autenticatori.</string>
+    <string name="smscommunicator_otp_export_title">Esportazione OTP secret</string>
+    <string name="smscommunicator_otp_export_prompt">Sei sicuro di voler copiare l\'OTP secret negli appunti?\n\nPotresti averne bisogno solo se la tua app autenticatore ha problemi con la scansione del QRCode, vuoi inserirlo manualmente o vuoi configurare un token OTP hardware usando un\'app dedicata.</string>
+    <string name="smscommunicator_otp_export_successful">OTP secret (in formato Base32) esportato e copiato negli appunti. Incollalo nell\'autenticatore o nel configuratore hardware di OTP!</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Installa l\'autenticatore</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scansione il codice per configurare i codici OTP di AAPS</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Testa OTP</string>
+    <string name="smscommunicator_otp_reset_header">Resetta autenticatori</string>
+    <string name="smscommunicator_otp_install_info">Su ogni telefono follower installa una app autenticatore che supporta i token RFC 6238 TOTP. App gratuite popolari sono:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Resettando l\'autenticatore rendi non validi tutti gli autenticatori già forniti. Dovrai configurarli di nuovo!</string>
     <string name="sms_wrong_code">Codice errato. Comando cancellato.</string>
     <string name="sms_timeout_while_waiting">Timeout nell\'attesa della fine della precedente comunicazione col micro.</string>
+    <string name="smscommunicator_allowednumbers">Numeri di telefono consentiti</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">Per erogare il bolo di %1$.2fU rispondi col codice %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">Per erogare il bolo pasto di %1$.2fU rispondi col codice %2$s</string>
@@ -21,6 +42,8 @@
     <string name="smscommunicator_bolus_delivered">Bolo di %1$.2f U erogato con successo</string>
     <string name="smscommunicator_meal_bolus_delivered">Bolo pasto di %1$.2f U erogato con successo</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Target %1$s per %2$d minuti</string>
+    <string name="smscommunicator_tt_set">Target %1$s per %2$d minuti impostato con successo</string>
+    <string name="smscommunicator_tt_canceled">Temp-Target cancellato con successo</string>
     <string name="smscommunicator_remote_commands_allowed">Consenti comandi remoti tramite SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Il loop è stato disabilitato</string>
     <string name="smscommunicator_loop_has_been_enabled">Il loop è stato abilitato</string>
@@ -29,6 +52,7 @@
     <string name="smscommunicator_pump_connect_fail">Connessione al micro fallita</string>
     <string name="smscommunicator_pump_disconnect_with_code">Per disconnettere il micro per %1$d minuti rispondi col codice %2$s</string>
     <string name="smscommunicator_pump_disconnected">Micro disconnesso</string>
+    <string name="smscommunicator_reconnect">Micro riconnesso</string>
     <string name="smscommunicator_remote_command_not_allowed">Il comando da remoto non è permesso</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Bolo remoto non disponibile. Riprova più tardi.</string>
     <string name="smscommunicator_basal_reply_with_code">Per avviare la basale %1$.2f U/h per %2$d min rispondi col codice %3$s</string>
@@ -54,6 +78,7 @@
     <string name="smscommunicator_tempbasal_cancel_failed">Basale temporanea: cancellazione fallita</string>
     <string name="smscommunicator_extended_cancel_failed">Bolo esteso: cancellazione fallita</string>
     <string name="smscommunicator_unknown_command">Comando sconosciuto o risposta errata</string>
+    <string name="smscommunicator_another_bolus_in_queue">C\'è un altro bolo in coda. Riprova più tardi.</string>
     <string name="smscommunicator_wrong_duration">Durata errata</string>
     <string name="smscommunicator_loop_suspended">Loop sospeso</string>
     <string name="smscommunicator_loop_resumed">Loop ripreso</string>
@@ -68,23 +93,34 @@
     <string name="sms_last_bg">Ultimo BG:</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IOB:</string>
+    <string name="sms_bolus">Bolo:</string>
+    <string name="sms_basal">Basale:</string>
     <string name="sms_min_ago">%1$dmin fa</string>
     <string name="sms_loop_suspended_for">Sospeso (%1$d m)</string>
     <string name="sms_read_status_failed">Lettura stato fallita</string>
     <string name="sms_profile_switch_created">Cambio profilo creato</string>
     <string name="sms_wrong_tbr_duration">La durata del TBR deve essere un multiplo di %1$d minuti e maggiore di 0.</string>
+    <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Preset per insulina Humalog e NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Preset per insulina Fiasp</string>
+    <string name="description_insulin_lyumjev">Preset per insulina Lyumjev</string>
+    <string name="description_insulin_free_peak">Ti consente di definire il picco di attività dell\'insulina e dovrebbe essere usato solo dagli utenti avanzati</string>
     <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Tempo picco Curva IOB</string>
+    <string name="insulin_peak_time">Tempo del picco [min]</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
+    <string name="dia_too_short">DIA di %1$f troppo breve - uso %2$f.</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">Statusline xDrip+ (smartwatch)</string>
     <string name="xdrip_status_shortname">xds</string>
+    <string name="description_xdrip_status_line">Mostra le informazioni del loop sulla watchface di xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Mostra IOB dettagliato</string>
     <string name="xdrip_status_detailed_iob_summary">Dividi IOB in bolo e basale sulla watchface</string>
     <string name="disabled_loop">Loop disabilitato</string>
@@ -93,24 +129,52 @@
     <string name="xdrip_status_settings">Stato xDrip+ (smartwatch)</string>
     <!-- Food-->
     <string name="food_short">Cibo</string>
+    <string name="description_food">Visualizza i preset dei cibi definiti in Nightscout</string>
+    <string name="filter">Filtro</string>
+    <string name="food">Cibo</string>
     <string name="short_kilo_joul">kJ</string>
     <string name="short_energy">Enr</string>
     <string name="short_protein">Prt</string>
     <string name="short_fat">Grs</string>
+    <string name="category">Categoria</string>
+    <string name="subcategory">Sottocategoria</string>
     <string name="calculator_label">Calcolatore</string>
     <!-- Theme switcher dark and light mode-->
     <string name="theme_switcher_summary">Scegli tema scuro, chiaro o segui quello del sistema</string>
+    <string name="app_color_scheme">Schema colori app</string>
+    <string name="dark_theme">Tema scuro</string>
+    <string name="light_theme">Tema chiaro</string>
+    <string name="follow_system_theme">Usa tema dispositivo</string>
     <!-- Profile -->
     <string name="localprofile">Profilo</string>
+    <string name="localprofile_shortname">PL</string>
+    <string name="description_profile_local">Definisci un profilo che è disponibile offline.</string>
+    <string name="a11y_add_new_to_list">aggiungi nuovo alla lista</string>
     <string name="do_you_want_switch_profile">Vuoi cambiare profilo e scartare le modifiche apportate al profilo corrente?</string>
     <string name="save_or_reset_changes_first">Salva o resetta prima le modifiche correnti</string>
     <string name="delete_current_profile">Rimuovere il profilo corrente?</string>
+    <string name="units_colon">Unità:</string>
+    <string name="missing_profile_name">Nome profilo mancante</string>
+    <string name="error_in_ic_values">Errore nei valori IC</string>
+    <string name="error_in_basal_values">Errore nei valori della basale</string>
+    <string name="error_in_target_values">Errore nei valori del target</string>
+    <string name="error_in_isf_values">Errore nei valori ISF</string>
     <string name="profile_name_contains_dot">Il nome profilo contiene dei punti.\nQuesto non è supportato da NS.\nIl profilo non viene caricato in NS.</string>
+    <string name="invalid_profile_not_accepted">Profilo %1$s non valido - non accettato da NS</string>
+    <string name="view">Vista</string>
+    <string name="errors">Errori</string>
+    <string name="select_profile">Seleziona profilo da modificare</string>
+    <string name="profile_name">Nome profilo:</string>
+    <string name="a11y_add_new_profile">aggiungi nuovo profilo</string>
+    <string name="a11y_clone_profile">clona profilo corrente</string>
+    <string name="a11y_delete_current_profile">elimina profilo corrente</string>
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
     <!-- Objectives -->
     <string name="completed_well_done">Completato, ben fatto!</string>
+    <string name="not_completed_yet">Non ancora completato</string>
+    <string name="time_elapsed">Tempo trascorso</string>
     <string name="maxiobset">Max IOB impostata correttamente</string>
     <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
     <string name="loopenabled">Loop abilitato</string>
@@ -139,7 +203,6 @@
     <string name="pb_label">Batteria micro</string>
     <string name="cannula">Cannula</string>
     <string name="ebstopsloop">L\'uso della funzione bolo esteso interromperà la modalità loop chiuso per il tempo di esecuzione del bolo esteso. Lo vuoi davvero?</string>
-    <string name="extendedbolusdeliveryerror">Errore erogazione bolo esteso</string>
     <string name="statuslights_cannula_age">Età cannula</string>
     <string name="statuslights_patch_pump_age">età micro a patch</string>
     <string name="patch_pump">Micro a patch</string>
@@ -178,7 +241,6 @@
     <string name="a11y_bg_quality">qualità glicemia</string>
     <string name="a11y_blood_glucose">glicemia</string>
     <string name="a11y_bg_outdated">obsoleto</string>
-    <string name="aps_mode_title">Modalità APS</string>
     <string name="set_basal_question">Accetta nuova basale temporanea:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Calcolatore rapido</string>
@@ -332,32 +394,6 @@
     <string name="buttonson_description">I tasti vengono sempre visualizzati nella parte inferiore dello schermo</string>
     <string name="largedisplay_description">Visualizzazione ampia</string>
     <string name="skin">Tema</string>
-    <!--    Loop -->
-    <string name="executing">Esecuzione</string>
-    <string name="run_now">Esegui ora</string>
-    <string name="smb_frequency_exceeded">Un bolo è stato erogato negli ultimi 3 minuti, SMB ignorato</string>
-    <string name="pump_not_initialized">Micro non inizializzato!</string>
-    <string name="loop_shortname">LOOP</string>
-    <string name="description_loop">Attiva o disattiva l\'implementazione per la gestione del loop.</string>
-    <string name="no_aps_selected">NESSUN APS SELEZIONATO O RISULTATO FORNITO</string>
-    <string name="ignore5m">Ignora | 5m</string>
-    <string name="ignore15m">Ignora | 15m</string>
-    <string name="ignore30m">Ignora | 30m</string>
-    <string name="carbs_suggestion">Suggerimento CHO</string>
-    <string name="open_loop_new_suggestion">Nuovo suggerimento disponibile</string>
-    <string name="basal_set_correctly">Basale impostata correttamente</string>
-    <string name="last_run_label">Ultima esecuzione</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Richiesta</string>
-    <string name="loop_constraints_processed_label">Dopo elaborazione vincoli</string>
-    <string name="loop_tbr_request_time_label">Richiesta basale temporanea (momento)</string>
-    <string name="loop_tbr_execution_time_label">Esecuzione basale temporanea (momento)</string>
-    <string name="loop_tbr_set_by_pump_label">Basale temporanea impostata dal micro</string>
-    <string name="loop_smb_request_time_label">Richiesta SMB (momento)</string>
-    <string name="loop_smb_execution_time_label">Esecuzione SMB (momento)</string>
-    <string name="loop_smb_set_by_pump_label">SMB impostato dal micro</string>
-    <string name="loop_open_mode_min_change">Richiesta minima di modifica [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Il loop aperto mostrerà una nuova richiesta di modifica solo se la modifica è maggiore di questo valore in %. Il valore predefinito è 20%</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Invia agli sviluppatori i file log di oggi e di questo momento. Situazione inaspettata.</string>

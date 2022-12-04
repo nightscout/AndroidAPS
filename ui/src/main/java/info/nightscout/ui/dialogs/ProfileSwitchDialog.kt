@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import com.google.common.base.Joiner
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
@@ -20,6 +19,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.Profile
@@ -125,7 +125,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                 dismiss()
                 return
             }
-            binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
+            binding.profileList.setAdapter(ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, profileList))
             // set selected to actual profile
             if (profileName != null)
                 binding.profileList.setText(profileName, false)
@@ -168,32 +168,32 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
         val actions: LinkedList<String> = LinkedList()
         val duration = binding.duration.value.toInt()
         if (duration > 0L)
-            actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, duration))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_mins, duration))
         val profileName = binding.profileList.text.toString()
-        actions.add(rh.gs(R.string.profile) + ": " + profileName)
+        actions.add(rh.gs(info.nightscout.core.ui.R.string.profile) + ": " + profileName)
         val percent = binding.percentage.value.toInt()
         if (percent != 100)
-            actions.add(rh.gs(R.string.percent) + ": " + percent + "%")
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.percent) + ": " + percent + "%")
         val timeShift = binding.timeshift.value.toInt()
         if (timeShift != 0)
-            actions.add(rh.gs(R.string.timeshift_label) + ": " + rh.gs(R.string.format_hours, timeShift.toDouble()))
+            actions.add(rh.gs(R.string.timeshift_label) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_hours, timeShift.toDouble()))
         val notes = binding.notesLayout.notes.text.toString()
         if (notes.isNotEmpty())
-            actions.add(rh.gs(R.string.notes_label) + ": " + notes)
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.notes_label) + ": " + notes)
         if (eventTimeChanged)
-            actions.add(rh.gs(R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.time) + ": " + dateUtil.dateAndTimeString(eventTime))
 
         val isTT = binding.duration.value > 0 && binding.percentage.value < 100 && binding.tt.isChecked
         val target = defaultValueHelper.determineActivityTT()
         val units = profileFunction.getUnits()
         if (isTT)
-            actions.add(rh.gs(R.string.temporary_target) + ": " + rh.gs(R.string.activity))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.temporary_target) + ": " + rh.gs(info.nightscout.core.ui.R.string.activity))
 
         activity?.let { activity ->
             val ps = profileFunction.buildProfileSwitch(profileStore, profileName, duration, percent, timeShift, eventTime) ?: return@let
-            val validity = ProfileSealed.PS(ps).isValid(rh.gs(R.string.careportal_profileswitch), activePlugin.activePump, config, rh, rxBus, hardLimits, false)
+            val validity = ProfileSealed.PS(ps).isValid(rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch), activePlugin.activePump, config, rh, rxBus, hardLimits, false)
             if (validity.isValid)
-                OKDialog.showConfirmation(activity, rh.gs(R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+                OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                     if (profileFunction.createProfileSwitch(
                             profileStore,
                             profileName = profileName,
@@ -211,7 +211,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.Percent(percent),
                                 ValueWithUnit.Hour(timeShift).takeIf { timeShift != 0 },
                                 ValueWithUnit.Minute(duration).takeIf { duration != 0 })
-                        if (percent == 90 && duration == 10) sp.putBoolean(R.string.key_objectiveuseprofileswitch, true)
+                        if (percent == 90 && duration == 10) sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveuseprofileswitch, true)
                         if (isTT) {
                             disposable += repository.runTransactionForResult(
                                 InsertAndCancelCurrentTemporaryTargetTransaction(
@@ -238,7 +238,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
             else {
                 OKDialog.show(
                     activity,
-                    rh.gs(R.string.careportal_profileswitch),
+                    rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch),
                     HtmlHelper.fromHtml(Joiner.on("<br/>").join(validity.reasons))
                 )
                 return false

@@ -22,11 +22,11 @@ class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.AppTheme)
+        setTheme(info.nightscout.core.ui.R.style.AppTheme)
         binding = ActivityPreferencesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        title = rh.gs(R.string.nav_preferences)
+        title = rh.gs(info.nightscout.configuration.R.string.nav_preferences)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         myPreferenceFragment = MyPreferenceFragment()

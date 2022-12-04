@@ -51,27 +51,27 @@ class LocalAlertUtilsImpl @Inject constructor(
     private val disposable = CompositeDisposable()
 
     private fun missedReadingsThreshold(): Long {
-        return T.mins(sp.getInt(R.string.key_missed_bg_readings_threshold_minutes, Constants.DEFAULT_MISSED_BG_READINGS_THRESHOLD_MINUTES).toLong()).msecs()
+        return T.mins(sp.getInt(info.nightscout.core.utils.R.string.key_missed_bg_readings_threshold_minutes, Constants.DEFAULT_MISSED_BG_READINGS_THRESHOLD_MINUTES).toLong()).msecs()
     }
 
     private fun pumpUnreachableThreshold(): Long {
-        return T.mins(sp.getInt(R.string.key_pump_unreachable_threshold_minutes, Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong()).msecs()
+        return T.mins(sp.getInt(info.nightscout.core.utils.R.string.key_pump_unreachable_threshold_minutes, Constants.DEFAULT_PUMP_UNREACHABLE_THRESHOLD_MINUTES).toLong()).msecs()
     }
 
     override fun checkPumpUnreachableAlarm(lastConnection: Long, isStatusOutdated: Boolean, isDisconnected: Boolean) {
         val alarmTimeoutExpired = isAlarmTimeoutExpired(lastConnection, pumpUnreachableThreshold())
         val nextAlarmOccurrenceReached = sp.getLong("nextPumpDisconnectedAlarm", 0L) < System.currentTimeMillis()
         if (config.APS && isStatusOutdated && alarmTimeoutExpired && nextAlarmOccurrenceReached && !isDisconnected) {
-            if (sp.getBoolean(R.string.key_enable_pump_unreachable_alert, true)) {
+            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_enable_pump_unreachable_alert, true)) {
                 aapsLogger.debug(LTag.CORE, "Generating pump unreachable alarm. lastConnection: " + dateUtil.dateAndTimeString(lastConnection) + " isStatusOutdated: " + isStatusOutdated)
                 sp.putLong("nextPumpDisconnectedAlarm", System.currentTimeMillis() + pumpUnreachableThreshold())
-                rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, rh.gs(R.string.pump_unreachable), Notification.URGENT).also { it.soundId = R.raw.alarm }))
-                uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(R.string.pump_unreachable), ValueWithUnit.TherapyEventType(TherapyEvent.Type.ANNOUNCEMENT))
-                if (sp.getBoolean(R.string.key_ns_create_announcements_from_errors, true))
-                    disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(rh.gs(R.string.pump_unreachable))).subscribe()
+                rxBus.send(EventNewNotification(Notification(Notification.PUMP_UNREACHABLE, rh.gs(info.nightscout.core.ui.R.string.pump_unreachable), Notification.URGENT).also { it.soundId = info.nightscout.core.ui.R.raw.alarm }))
+                uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(info.nightscout.core.ui.R.string.pump_unreachable), ValueWithUnit.TherapyEventType(TherapyEvent.Type.ANNOUNCEMENT))
+                if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_errors, true))
+                    disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(rh.gs(info.nightscout.core.ui.R.string.pump_unreachable))).subscribe()
             }
-            if (sp.getBoolean(R.string.key_smscommunicator_report_pump_unreachable, true))
-                smsCommunicator.sendNotificationToAllNumbers(rh.gs(R.string.pump_unreachable))
+            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_smscommunicator_report_pump_unreachable, true))
+                smsCommunicator.sendNotificationToAllNumbers(rh.gs(info.nightscout.core.ui.R.string.pump_unreachable))
         }
         if (!isStatusOutdated && !alarmTimeoutExpired) rxBus.send(EventDismissNotification(Notification.PUMP_UNREACHABLE))
     }
@@ -120,16 +120,16 @@ class LocalAlertUtilsImpl @Inject constructor(
     override fun checkStaleBGAlert() {
         val bgReadingWrapped = repository.getLastGlucoseValueWrapped().blockingGet()
         val bgReading = if (bgReadingWrapped is ValueWrapper.Existing) bgReadingWrapped.value else return
-        if (sp.getBoolean(R.string.key_enable_missed_bg_readings_alert, false)
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_enable_missed_bg_readings_alert, false)
             && bgReading.timestamp + missedReadingsThreshold() < System.currentTimeMillis()
             && sp.getLong("nextMissedReadingsAlarm", 0L) < System.currentTimeMillis()
         ) {
-            val n = Notification(Notification.BG_READINGS_MISSED, rh.gs(R.string.missed_bg_readings), Notification.URGENT)
-            n.soundId = R.raw.alarm
+            val n = Notification(Notification.BG_READINGS_MISSED, rh.gs(info.nightscout.core.ui.R.string.missed_bg_readings), Notification.URGENT)
+            n.soundId = info.nightscout.core.ui.R.raw.alarm
             sp.putLong("nextMissedReadingsAlarm", System.currentTimeMillis() + missedReadingsThreshold())
             rxBus.send(EventNewNotification(n))
-            uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(R.string.missed_bg_readings), ValueWithUnit.TherapyEventType(TherapyEvent.Type.ANNOUNCEMENT))
-            if (sp.getBoolean(R.string.key_ns_create_announcements_from_errors, true)) {
+            uel.log(Action.CAREPORTAL, Sources.Aaps, rh.gs(info.nightscout.core.ui.R.string.missed_bg_readings), ValueWithUnit.TherapyEventType(TherapyEvent.Type.ANNOUNCEMENT))
+            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_errors, true)) {
                 disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(n.text)).subscribe()
             }
         } else if (dateUtil.isOlderThan(bgReading.timestamp, 5).not()) {

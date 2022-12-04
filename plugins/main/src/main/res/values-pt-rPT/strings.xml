@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">Comunicador SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app Authenticator para: %1$s seguido pelo PIN</string>
+    <string name="smscommunicator_otp_pin">PIN obrigatório adicional no token final</string>
+    <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Senha-Única que seja gerada</string>
     <string name="smscommunicator_tab_otp_label">Configuração do Autenticador</string>
+    <string name="smscommunicator_code_verify_label">Código para verificar:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">O código de verificação consiste em 6 dígitos exibidos pela app Authenticator (conhecido como OTP) seguido de 3 ou mais dígitos de PIN obrigatório.</string>
+    <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>
+    <string name="smscommunicator_otp_reset_title">Repor Chave Autenticador</string>
+    <string name="smscommunicator_otp_reset_prompt">Tem certeza de redefinir chave Authenticador? Ele tornará todos os Authenticators configurados actualmente como inválidos, e precisará de os configurar novamente.</string>
+    <string name="smscommunicator_otp_reset_successful">Nova Chave do Autenticador foi gerada! Por favor, use o QRCode actualizado para os autenticadores.</string>
+    <string name="smscommunicator_otp_export_title">A exportar segredo da OTP</string>
+    <string name="smscommunicator_otp_export_prompt">Tem a certeza de que deseja copiar o segredo da OTP para a área de transferêencia?\n\nSó pode precisar se a app do seu autenticador tiver problemas para digitalizar QRCode, deseja digitá-lo manualmente ou deseja configurar o token OTP de hardware usando app dedicada.</string>
+    <string name="smscommunicator_otp_export_successful">Segredo da OTP (em formato Base32) exportado e copiado na áreas de transferênca. Cole-o no autenticador ou no hardware OTP burner!</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Instalar Autenticador</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Testar Uma-Senha-Única (OTP)</string>
+    <string name="smscommunicator_otp_reset_header">Repor Autenticadores</string>
+    <string name="smscommunicator_otp_install_info">Instalar uma app Autenticador que suporte Tokens RFC 6238 TOTP em cada telefone seguidor. Populares aplicativos gratuitos são:\n • Authy\n • o Google Authenticator\n • LastPass Autenticador\n • FreeOTP Autenticador</string>
     <string name="sms_wrong_code">Código errado. Comando cancelado.</string>
     <string name="sms_timeout_while_waiting">Tempo limite de espera para conclusão da comunicação com a bomba</string>
+    <string name="smscommunicator_allowednumbers">Número de telefones permitidos</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">Para administrar bólus %1$.2fU responder com código %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">Para administrar bólus %1$.2fU responder com código %2$s</string>
@@ -21,6 +39,8 @@
     <string name="smscommunicator_bolus_delivered">Bólus %1$.2f U administrado com sucesso</string>
     <string name="smscommunicator_meal_bolus_delivered">Bólus de Refeição %1$.2f U administrado com sucesso</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Alvo %1$s para %2$d minutos</string>
+    <string name="smscommunicator_tt_set">Alvo %1$s para %2$d minutos definido com sucesso</string>
+    <string name="smscommunicator_tt_canceled">Alvo Temporário cancelado com êxito</string>
     <string name="smscommunicator_remote_commands_allowed">Permitir comandos remotos via SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Loop foi desactivado</string>
     <string name="smscommunicator_loop_has_been_enabled">Loop foi activado</string>
@@ -29,6 +49,7 @@
     <string name="smscommunicator_pump_connect_fail">Ligação à bomba falhou</string>
     <string name="smscommunicator_pump_disconnect_with_code">Para remover a bomba por %1$d minutos responda com o código %2$s</string>
     <string name="smscommunicator_pump_disconnected">Bomba removida</string>
+    <string name="smscommunicator_reconnect">Bomba ligada novamente</string>
     <string name="smscommunicator_remote_command_not_allowed">O comando remoto não é permitido</string>
     <string name="smscommunicator_remote_bolus_not_allowed">O bólus remoto não está disponível. Tente novamente mais tarde.</string>
     <string name="smscommunicator_basal_reply_with_code">Para iniciar basal %1$.2f U/h por %2$d min responda com o código %3$s</string>
@@ -54,6 +75,7 @@
     <string name="smscommunicator_tempbasal_cancel_failed">Não foi possível cancelar a basal temporária</string>
     <string name="smscommunicator_extended_cancel_failed">Falhou a cancelar bólus prolongado</string>
     <string name="smscommunicator_unknown_command">Comando desconhecido ou resposta errada</string>
+    <string name="smscommunicator_another_bolus_in_queue">Existe outro bólus em espera. Tente novamente mais tarde.</string>
     <string name="smscommunicator_wrong_duration">Duração errada</string>
     <string name="smscommunicator_loop_suspended">Loop suspenso</string>
     <string name="smscommunicator_loop_resumed">Loop retomado</string>
@@ -67,6 +89,8 @@
     <string name="sms_actual_bg">Glicose:</string>
     <string name="sms_last_bg">Ultima Gli:</string>
     <string name="sms_delta">Delta:</string>
+    <string name="sms_iob">IA:</string>
+    <string name="sms_bolus">Bólus:</string>
     <string name="sms_basal">Basal:</string>
     <string name="sms_min_ago">%1$dmin atrás</string>
     <string name="sms_loop_suspended_for">Suspendido (%1$d m)</string>
@@ -75,14 +99,24 @@
     <string name="sms_wrong_tbr_duration">A duração do DBT deve ser de um múltiplo de %1$d minutos e maior que 0.</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Predefinição de Insulina Humalog e NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Predefinição de Insulina Fiasp</string>
+    <string name="description_insulin_lyumjev">Predefinição para Insulina Lyumjev</string>
+    <string name="description_insulin_free_peak">Permite definir o pico de atividade da insulina e deve ser usado somente por usuários avançados</string>
     <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Tempo do Pico da curva de IA</string>
+    <string name="insulin_peak_time">Tempo Pico [min]</string>
+    <string name="free_peak_oref">Oref Pico-Livre</string>
+    <string name="rapid_acting_oref">Oref Acção-Rápida</string>
     <string name="ultra_rapid_oref">Oref Ultra-Rápida</string>
+    <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
     <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">Linha Estado xDrip+ (relógio)</string>
     <string name="xdrip_status_shortname">xds</string>
+    <string name="description_xdrip_status_line">Mostrar informações sobre o loop no mostrador do xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Mostrar IA detalhada</string>
     <string name="xdrip_status_detailed_iob_summary">Dividir IA entre IA de bólus e de basal no ecrã do relógio</string>
     <string name="disabled_loop">Loop Desactivado</string>
@@ -91,23 +125,43 @@
     <string name="xdrip_status_settings">Estado xDrip+ (relógio)</string>
     <!-- Food-->
     <string name="food_short">Alimentos</string>
+    <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
+    <string name="filter">Filtro</string>
+    <string name="food">Alimentos</string>
     <string name="short_kilo_joul">kJ</string>
     <string name="short_energy">En</string>
     <string name="short_protein">Pr</string>
     <string name="short_fat">Gor</string>
+    <string name="category">Categoria</string>
+    <string name="subcategory">Subcategoria</string>
     <string name="calculator_label">Calculadora</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
     <string name="localprofile">Perfil</string>
+    <string name="localprofile_shortname">PL</string>
+    <string name="description_profile_local">Defina um perfil que está disponível offline.</string>
     <string name="do_you_want_switch_profile">Deseja mudar de perfil e descartar as alterações feitas no perfil actual?</string>
     <string name="save_or_reset_changes_first">Guardar ou repor as alterações actuais primeiro</string>
     <string name="delete_current_profile">Eliminar perfil actual?</string>
+    <string name="units_colon">Unidades:</string>
+    <string name="missing_profile_name">Nome do perfil ausente</string>
+    <string name="error_in_ic_values">Erro nos valores de IHC</string>
+    <string name="error_in_basal_values">Erro nos valores da basal</string>
+    <string name="error_in_target_values">Erros no valor alvo</string>
+    <string name="error_in_isf_values">Erro nos valores do FSI</string>
     <string name="profile_name_contains_dot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não é enviado para o NS.</string>
+    <string name="invalid_profile_not_accepted">Perfil inválido %1$s não aceite do NS</string>
+    <string name="view">Ver</string>
+    <string name="errors">Erros</string>
+    <string name="profile_name">Nome do Perfil:</string>
     <string name="a11y_delete_current_profile">eliminar perfil actual</string>
     <string name="dia_short">DIA</string>
+    <string name="target_short">ALV</string>
     <string name="basal_short">BAS</string>
     <!-- Objectives -->
     <string name="completed_well_done">Terminado, parabéns!</string>
+    <string name="not_completed_yet">Não concluído ainda</string>
+    <string name="time_elapsed">Tempo decorrido</string>
     <string name="maxiobset">IA máxima definida corretamente</string>
     <string name="hasbgdata">Glicose disponível da fonte seleccionada</string>
     <string name="loopenabled">Loop activado</string>
@@ -136,7 +190,6 @@
     <string name="pb_label">Bateria da Bomba</string>
     <string name="cannula">Cânula</string>
     <string name="ebstopsloop">O uso do Bólus Prolongado irá parar o modo Loop Fechado durante o tempo do bólus prolongado. Quer realmente isso?</string>
-    <string name="extendedbolusdeliveryerror">Erro na administração Bólus Prolongado</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">A limitar bólus prolongado para %1$.1f U porque %2$s</string>
     <string name="limitingcarbs">A limitar hidratos para %1$d g porque %2$s</string>
@@ -168,7 +221,6 @@
     <string name="a11y_insulin_label">insulina</string>
     <string name="chart_menu">Menu do Gráfico</string>
     <string name="a11y_blood_glucose">Glicose no Sangue</string>
-    <string name="aps_mode_title">Modo APS</string>
     <string name="set_basal_question">Aceitar nova basal temporária:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">Assistente Rápido</string>
@@ -310,32 +362,6 @@
     <string name="buttonson_description">Os botões são sempre exibidos na parte inferior do ecrã</string>
     <string name="largedisplay_description">Mostrador Grande</string>
     <string name="skin">Tema gráfico</string>
-    <!--    Loop -->
-    <string name="executing">A Executar</string>
-    <string name="run_now">Executar agora</string>
-    <string name="smb_frequency_exceeded">Um bólus foi administrado nos últimos 3 minutos, a ignorar SMB</string>
-    <string name="pump_not_initialized">Bomba não inicializada!</string>
-    <string name="loop_shortname">LOOP</string>
-    <string name="description_loop">Ativar ou desativar a aplicação que desencadeia o loop.</string>
-    <string name="no_aps_selected">NÃO EXISTE NENHUM APS SELECIONADO OU RESULTADO FORNECIDO</string>
-    <string name="ignore5m">Ignorar 5m</string>
-    <string name="ignore15m">Ignorar 15m</string>
-    <string name="ignore30m">Ignorar 30m</string>
-    <string name="carbs_suggestion">Sugestão de Hidratos</string>
-    <string name="open_loop_new_suggestion">Disponível nova sugestão</string>
-    <string name="basal_set_correctly">Basal correctamente definida</string>
-    <string name="last_run_label">Última execução</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Pedido</string>
-    <string name="loop_constraints_processed_label">Depois das restrições processadas</string>
-    <string name="loop_tbr_request_time_label">Hora de solicitação da DBT</string>
-    <string name="loop_tbr_execution_time_label">Hora de execução da DBT</string>
-    <string name="loop_tbr_set_by_pump_label">Basal temporária definida pela bomba</string>
-    <string name="loop_smb_request_time_label">Hora de solicitação SMB</string>
-    <string name="loop_smb_execution_time_label">Hora de execução do SMB</string>
-    <string name="loop_smb_set_by_pump_label">SMB definido pela bomba</string>
-    <string name="loop_open_mode_min_change">Pedido de mudança mínima [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">A app mostrará um pedido de alteração apenas se a mudança para uma nova basal temporária for superior a este valor em %. O valor padrão é 20%</string>
     <!--    DataBroadcast-->
     <string name="cannula_usage">utilização:</string>
     <!--    Iob-->

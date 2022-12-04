@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.InsulinFragmentBinding
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
@@ -32,7 +31,7 @@ class InsulinFragment : DaggerFragment() {
         super.onResume()
         binding.name.text = activePlugin.activeInsulin.friendlyName
         binding.comment.text = activePlugin.activeInsulin.comment
-        binding.dia.text = rh.gs(R.string.dia) + ":  " + rh.gs(R.string.format_hours, activePlugin.activeInsulin.dia)
+        binding.dia.text = rh.gs(info.nightscout.core.ui.R.string.dia) + ":  " + rh.gs(info.nightscout.core.ui.R.string.format_hours, activePlugin.activeInsulin.dia)
         binding.graph.show(activePlugin.activeInsulin)
     }
 

@@ -11,8 +11,8 @@ plugins {
 
 }
 
-apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
-apply from: "${project.rootDir}/core/core-main/jacoco_global.gradle"
+apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 
 repositories {
     mavenCentral()
@@ -185,7 +185,7 @@ dependencies {
     // https://github.com/nightscout/iconify.git
     implementation project(':app-wear-shared:shared')
     implementation project(':app-wear-shared:shared-impl')
-    implementation project(':core:core-main')
+    implementation project(':core:main')
     implementation project(':core:graph')
     implementation project(':core:graphview')
     implementation project(':core:interfaces')
@@ -221,6 +221,7 @@ dependencies {
     implementation project(':pump:omnipod-common')
     implementation project(':pump:omnipod-eros')
     implementation project(':pump:omnipod-dash')
+    implementation project(':workflow')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
@@ -235,7 +236,7 @@ dependencies {
 
 }
 
-apply from: "${project.rootDir}/core/core-main/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 
 
 /*

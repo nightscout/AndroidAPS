@@ -5,7 +5,6 @@ import androidx.annotation.StringRes;
 import java.util.HashMap;
 import java.util.Map;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup;
 
 /**
@@ -13,35 +12,35 @@ import info.nightscout.pump.common.defs.PumpHistoryEntryGroup;
  */
 public enum PodHistoryEntryType {
 
-    INITIALIZE_POD(1, R.string.omnipod_common_cmd_initialize_pod, PumpHistoryEntryGroup.Prime),
-    INSERT_CANNULA(2, R.string.omnipod_common_cmd_insert_cannula, PumpHistoryEntryGroup.Prime),
-    DEACTIVATE_POD(3, R.string.omnipod_common_cmd_deactivate_pod, PumpHistoryEntryGroup.Prime),
-    DISCARD_POD(4, R.string.omnipod_common_cmd_discard_pod, PumpHistoryEntryGroup.Prime),
+    INITIALIZE_POD(1, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_initialize_pod, PumpHistoryEntryGroup.Prime),
+    INSERT_CANNULA(2, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_insert_cannula, PumpHistoryEntryGroup.Prime),
+    DEACTIVATE_POD(3, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_deactivate_pod, PumpHistoryEntryGroup.Prime),
+    DISCARD_POD(4, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_discard_pod, PumpHistoryEntryGroup.Prime),
 
-    SET_TEMPORARY_BASAL(10, R.string.omnipod_common_cmd_set_tbr, PumpHistoryEntryGroup.Basal),
-    CANCEL_TEMPORARY_BASAL_BY_DRIVER(11, R.string.omnipod_common_cmd_cancel_tbr_by_driver, PumpHistoryEntryGroup.Basal),
-    CANCEL_TEMPORARY_BASAL(12, R.string.omnipod_common_cmd_cancel_tbr, PumpHistoryEntryGroup.Basal),
-    SET_FAKE_SUSPENDED_TEMPORARY_BASAL(13, R.string.omnipod_common_cmd_set_fake_suspended_tbr, PumpHistoryEntryGroup.Basal),
-    CANCEL_FAKE_SUSPENDED_TEMPORARY_BASAL(14, R.string.omnipod_common_cmd_cancel_fake_suspended_tbr, PumpHistoryEntryGroup.Basal),
-    SPLIT_TEMPORARY_BASAL(15, R.string.omnipod_common_cmd_split_tbr, PumpHistoryEntryGroup.Basal),
+    SET_TEMPORARY_BASAL(10, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_set_tbr, PumpHistoryEntryGroup.Basal),
+    CANCEL_TEMPORARY_BASAL_BY_DRIVER(11, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_cancel_tbr_by_driver, PumpHistoryEntryGroup.Basal),
+    CANCEL_TEMPORARY_BASAL(12, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_cancel_tbr, PumpHistoryEntryGroup.Basal),
+    SET_FAKE_SUSPENDED_TEMPORARY_BASAL(13, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_set_fake_suspended_tbr, PumpHistoryEntryGroup.Basal),
+    CANCEL_FAKE_SUSPENDED_TEMPORARY_BASAL(14, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_cancel_fake_suspended_tbr, PumpHistoryEntryGroup.Basal),
+    SPLIT_TEMPORARY_BASAL(15, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_split_tbr, PumpHistoryEntryGroup.Basal),
 
-    SET_BASAL_SCHEDULE(20, R.string.omnipod_common_cmd_set_basal_schedule, PumpHistoryEntryGroup.Basal),
+    SET_BASAL_SCHEDULE(20, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_set_basal_schedule, PumpHistoryEntryGroup.Basal),
 
-    GET_POD_STATUS(30, R.string.omnipod_common_cmd_get_pod_status, PumpHistoryEntryGroup.Configuration),
-    GET_POD_INFO(31, R.string.omnipod_common_cmd_get_pod_info, PumpHistoryEntryGroup.Configuration),
-    SET_TIME(32, R.string.omnipod_common_cmd_set_time, PumpHistoryEntryGroup.Configuration),
+    GET_POD_STATUS(30, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_get_pod_status, PumpHistoryEntryGroup.Configuration),
+    GET_POD_INFO(31, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_get_pod_info, PumpHistoryEntryGroup.Configuration),
+    SET_TIME(32, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_set_time, PumpHistoryEntryGroup.Configuration),
 
-    SET_BOLUS(40, R.string.omnipod_common_cmd_set_bolus, PumpHistoryEntryGroup.Bolus),
-    CANCEL_BOLUS(41, R.string.omnipod_common_cmd_cancel_bolus, PumpHistoryEntryGroup.Bolus),
+    SET_BOLUS(40, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_set_bolus, PumpHistoryEntryGroup.Bolus),
+    CANCEL_BOLUS(41, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_cancel_bolus, PumpHistoryEntryGroup.Bolus),
 
-    CONFIGURE_ALERTS(50, R.string.omnipod_common_cmd_configure_alerts, PumpHistoryEntryGroup.Alarm),
-    ACKNOWLEDGE_ALERTS(51, R.string.omnipod_common_cmd_silence_alerts, PumpHistoryEntryGroup.Alarm),
-    PLAY_TEST_BEEP(52, R.string.omnipod_common_cmd_play_test_beep, PumpHistoryEntryGroup.Alarm),
+    CONFIGURE_ALERTS(50, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_configure_alerts, PumpHistoryEntryGroup.Alarm),
+    ACKNOWLEDGE_ALERTS(51, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_silence_alerts, PumpHistoryEntryGroup.Alarm),
+    PLAY_TEST_BEEP(52, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_play_test_beep, PumpHistoryEntryGroup.Alarm),
 
-    SUSPEND_DELIVERY(60, R.string.omnipod_common_cmd_suspend_delivery, PumpHistoryEntryGroup.Basal),
-    RESUME_DELIVERY(61, R.string.omnipod_common_cmd_resume_delivery, PumpHistoryEntryGroup.Basal),
+    SUSPEND_DELIVERY(60, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_suspend_delivery, PumpHistoryEntryGroup.Basal),
+    RESUME_DELIVERY(61, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_resume_delivery, PumpHistoryEntryGroup.Basal),
 
-    UNKNOWN_ENTRY_TYPE(99, R.string.omnipod_common_cmd_unknown_entry);
+    UNKNOWN_ENTRY_TYPE(99, info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_cmd_unknown_entry);
 
     private final int code;
     private static final Map<Integer, PodHistoryEntryType> instanceMap;

@@ -5,7 +5,6 @@
     <string name="pump_operation_not_yet_supported_by_pump">펌프에서 지원되지 않는 작동.</string>
     <string name="common_resultok">네</string>
     <string name="pump_serial_number">펌프 일련번호</string>
-    <string name="bolus_delivered">%1$.2f U / %2$.2f U 주입됨</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_suspended">중지됨</string>
     <!-- PumpCommon - History Group -->

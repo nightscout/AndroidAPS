@@ -469,40 +469,40 @@
 
         </androidx.preference.PreferenceScreen>
 
+        <info.nightscout.core.validators.ValidatingEditTextPreference
+            android:defaultValue="100"
+            android:dialogMessage="@string/deliverpartofboluswizard"
+            android:inputType="number"
+            android:key="@string/key_boluswizard_percentage"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/partialboluswizard"
+            validate:maxNumber="100"
+            validate:minNumber="10"
+            validate:testType="numericRange" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_usebolusadvisor"
+            android:summary="@string/enable_bolus_advisor_summary"
+            android:title="@string/enable_bolus_advisor" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_usebolusreminder"
+            android:summary="@string/enablebolusreminder_summary"
+            android:title="@string/enablebolusreminder" />
+
         <androidx.preference.PreferenceScreen
             android:key="overview_advanced"
             android:title="@string/advancedsettings_title">
-
-            <info.nightscout.core.validators.ValidatingEditTextPreference
-                android:defaultValue="100"
-                android:dialogMessage="@string/deliverpartofboluswizard"
-                android:inputType="number"
-                android:key="@string/key_boluswizard_percentage"
-                android:maxLines="1"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"
-                android:title="@string/partialboluswizard"
-                validate:maxNumber="100"
-                validate:minNumber="10"
-                validate:testType="numericRange" />
-
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_usebolusadvisor"
-                android:summary="@string/enable_bolus_advisor_summary"
-                android:title="@string/enable_bolus_advisor" />
 
             <SwitchPreference
                 android:defaultValue="false"
                 android:key="@string/key_usesuperbolus"
                 android:summary="@string/enablesuperbolus_summary"
                 android:title="@string/enablesuperbolus" />
-
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_usebolusreminder"
-                android:summary="@string/enablebolusreminder_summary"
-                android:title="@string/enablebolusreminder" />
 
         </androidx.preference.PreferenceScreen>
 

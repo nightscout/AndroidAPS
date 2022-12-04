@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bolus_constraint_applied">Restrição de bólus aplicada</string>
+    <string name="carbs_constraint_applied">Restrição de hidratos de carbono aplicada</string>
+    <string name="temp_target_short">AT</string>
     <string name="start_activity_tt">Iniciar AT de atividade</string>
     <string name="start_eating_soon_tt">Iniciar AT de Comer em breve</string>
     <string name="start_hypo_tt">Iniciar AT de Hipo</string>

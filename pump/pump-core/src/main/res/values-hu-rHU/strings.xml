@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_pump_unreachable">Pumpa nem elérhető</string>
+</resources>

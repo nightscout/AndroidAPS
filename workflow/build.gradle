@@ -1,0 +1,29 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-allopen'
+    id 'com.hiya.jacoco-android'
+}
+
+apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
+
+android {
+    namespace 'info.nightscout.workflow'
+}
+
+dependencies {
+    implementation project(':core:libraries')
+    implementation project(':core:graphview')
+    implementation project(':app-wear-shared:shared')
+    implementation project(':database:entities')
+    implementation project(':database:impl')
+    implementation project(':core:main')
+    implementation project(':core:interfaces')
+    implementation project(':core:graph')
+    implementation project(':core:ui')
+    implementation project(':core:utils')
+}

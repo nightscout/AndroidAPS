@@ -39,7 +39,6 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
 1. Pulsa Atrás o el botón \"Cancelar emparejamiento\"\n
 2. Cancela el emparejamiento en Combo (presiona al mismo tiempo los botones ARRIBA y MENÚ al mismo tiempo para cancelar el emparejamiento)\n
 3. Intenta emparejar de nuevo</string>
-    <string name="combov2_pin_entry_hint">0123456789</string>
     <string name="combov2_enter_pin">Introducir PIN</string>
     <string name="combov2_cancel_pairing">Emparejamiento cancelado</string>
     <string name="combov2_pin_hint">PIN de 10 dígitos</string>
@@ -87,15 +86,10 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_incorrect_active_basal_profile">Perfil basal activo incorrecto; el perfil 1 debe ser el activo, no el perfil %1$d</string>
     <string name="combov2_unrecognized_alert">Alerta de Combo no reconocida</string>
     <string name="combov2_combo_alert">Alerta de Combo</string>
-    <string name="combov2_last_bolus">%1$.1f %2$s (%3$s)</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min restantes)</string>
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (menos de 1 min restante)</string>
     <string name="combov2_load_tdds_cancelled">Cargando TDDs cancelados</string>
     <string name="combov2_retrieving_tdds_failed">Error al recibir TDDs</string>
-    <string name="combov2_no_activity">{fa-bed}</string>
-    <string name="combov2_battery_empty_indicator">{fa-battery-empty}</string>
-    <string name="combov2_battery_low_indicator">{fa-battery-quarter}</string>
-    <string name="combov2_battery_full_indicator">{fa-battery-full}</string>
     <string name="combov2_battery_low_warning">Batería de bomba baja</string>
     <string name="combov2_reservoir_low_warning">El nivel del reservorio de bomba es bajo</string>
     <string name="combov2_setting_tbr_succeeded">Configuración de TBR exitosa</string>

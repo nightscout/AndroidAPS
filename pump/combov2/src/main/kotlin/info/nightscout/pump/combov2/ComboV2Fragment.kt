@@ -41,7 +41,7 @@ class ComboV2Fragment : DaggerFragment() {
 
         binding.combov2RefreshButton.setOnClickListener {
             binding.combov2RefreshButton.isEnabled = false
-            commandQueue.readStatus(rh.gs(R.string.user_request), null)
+            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.user_request), null)
         }
 
         viewLifecycleOwner.lifecycleScope.launch {
@@ -62,12 +62,12 @@ class ComboV2Fragment : DaggerFragment() {
                     .onEach { connectionState ->
                         val text = when (connectionState) {
                             ComboV2Plugin.DriverState.NotInitialized      -> rh.gs(R.string.combov2_not_initialized)
-                            ComboV2Plugin.DriverState.Disconnected        -> rh.gs(R.string.disconnected)
-                            ComboV2Plugin.DriverState.Connecting          -> rh.gs(R.string.connecting)
+                            ComboV2Plugin.DriverState.Disconnected        -> rh.gs(info.nightscout.core.ui.R.string.disconnected)
+                            ComboV2Plugin.DriverState.Connecting          -> rh.gs(info.nightscout.core.ui.R.string.connecting)
                             ComboV2Plugin.DriverState.CheckingPump        -> rh.gs(R.string.combov2_checking_pump)
                             ComboV2Plugin.DriverState.Ready               -> rh.gs(R.string.combov2_ready)
                             ComboV2Plugin.DriverState.Suspended           -> rh.gs(R.string.combov2_suspended)
-                            ComboV2Plugin.DriverState.Error               -> rh.gs(R.string.error)
+                            ComboV2Plugin.DriverState.Error               -> rh.gs(info.nightscout.core.ui.R.string.error)
                             is ComboV2Plugin.DriverState.ExecutingCommand ->
                                 when (val desc = connectionState.description) {
                                     is ComboCtlPump.GettingBasalProfileCommandDesc ->
@@ -150,7 +150,7 @@ class ComboV2Fragment : DaggerFragment() {
                 combov2Plugin.reservoirLevelUIFlow
                     .onEach { reservoirLevel ->
                         binding.combov2Reservoir.text = if (reservoirLevel != null)
-                            "${reservoirLevel.availableUnits} ${rh.gs(R.string.insulin_unit_shortname)}"
+                            "${reservoirLevel.availableUnits} ${rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)}"
                         else
                             ""
 
@@ -180,7 +180,7 @@ class ComboV2Fragment : DaggerFragment() {
                 combov2Plugin.baseBasalRateUIFlow
                     .onEach { baseBasalRate ->
                         binding.combov2BaseBasalRate.text = if (baseBasalRate != null)
-                            rh.gs(R.string.pump_base_basal_rate, baseBasalRate)
+                            rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, baseBasalRate)
                         else
                             ""
                     }
@@ -234,7 +234,7 @@ class ComboV2Fragment : DaggerFragment() {
             }
 
             in 60..(30 * 60) -> {
-                binding.combov2LastConnection.text = rh.gs(R.string.minago, secondsPassed / 60)
+                binding.combov2LastConnection.text = rh.gs(info.nightscout.shared.R.string.minago, secondsPassed / 60)
                 binding.combov2LastConnection.setTextColor(Color.WHITE)
             }
 
@@ -261,14 +261,14 @@ class ComboV2Fragment : DaggerFragment() {
                 rh.gs(R.string.combov2_less_than_one_minute_ago)
 
             else ->
-                rh.gs(R.string.minago, secondsPassed / 60)
+                rh.gs(info.nightscout.shared.R.string.minago, secondsPassed / 60)
         }
 
         binding.combov2LastBolus.text =
             rh.gs(
                 R.string.combov2_last_bolus,
                 lastBolus.bolusAmount.cctlBolusToIU(),
-                rh.gs(R.string.insulin_unit_shortname),
+                rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname),
                 bolusAgoText
             )
     }

@@ -66,4 +66,5 @@
     <string name="min_recovery_duration">Durée min. de récupération [s]</string>
     <string name="pump_alert">Alerte de la pompe</string>
     <string name="pairing_information">Information sur l’appairage</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Actualisation état Insight</string>
 </resources>

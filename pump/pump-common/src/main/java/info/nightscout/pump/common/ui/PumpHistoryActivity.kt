@@ -106,7 +106,7 @@ class PumpHistoryActivity : DaggerAppCompatActivity() {
         binding.pumpHistoryRecyclerView.adapter = recyclerViewAdapter
         binding.pumpHistoryStatus.visibility = View.GONE
         typeListFull = getTypeList(historyDataProvider.getAllowedPumpHistoryGroups())
-        val spinnerAdapter = ArrayAdapter(this, R.layout.spinner_centered, typeListFull!!)
+        val spinnerAdapter = ArrayAdapter(this, info.nightscout.core.ui.R.layout.spinner_centered, typeListFull!!)
 
         binding.pumpHistoryText.text = historyDataProvider.getText(PumpHistoryText.PUMP_HISTORY)
 

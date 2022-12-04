@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="key_objectiveuseactions" translatable="false">ObjectivesActionsUsed</string>
-    <string name="key_objectiveuseloop" translatable="false">ObjectivesLoopUsed</string>
     <string name="key_objectiveusescale" translatable="false">ObjectivesScaleUsed</string>
     <string name="key_objectives_request_code" translatable="false">objectives_request_code</string>
-    <string name="key_ObjectivesmanualEnacts" translatable="false">ObjectivesmanualEnacts</string>
 
     <string name="objectives_button_start">Start</string>
     <string name="objectives_button_verify">Verify</string>

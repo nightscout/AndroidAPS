@@ -147,18 +147,18 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment(), MenuProvider {
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(extendedBolus.timestamp, rh) else ""
             if (extendedBolus.isInProgress(dateUtil)) {
                 holder.binding.time.text = dateUtil.timeString(extendedBolus.timestamp)
-                holder.binding.time.setTextColor(rh.gac(context, R.attr.activeColor))
+                holder.binding.time.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.activeColor))
             } else {
                 holder.binding.time.text = dateUtil.timeRangeString(extendedBolus.timestamp, extendedBolus.end)
                 holder.binding.time.setTextColor(holder.binding.insulin.currentTextColor)
             }
             val profile = profileFunction.getProfile(extendedBolus.timestamp) ?: return
-            holder.binding.duration.text = rh.gs(R.string.format_mins, T.msecs(extendedBolus.duration).mins())
-            holder.binding.insulin.text = rh.gs(R.string.format_insulin_units, extendedBolus.amount)
+            holder.binding.duration.text = rh.gs(info.nightscout.core.ui.R.string.format_mins, T.msecs(extendedBolus.duration).mins())
+            holder.binding.insulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, extendedBolus.amount)
             val iob = extendedBolus.iobCalc(System.currentTimeMillis(), profile, activePlugin.activeInsulin)
-            holder.binding.iob.text = rh.gs(R.string.format_insulin_units, iob.iob)
-            holder.binding.ratio.text = rh.gs(R.string.pump_base_basal_rate, extendedBolus.rate)
-            if (iob.iob != 0.0) holder.binding.iob.setTextColor(rh.gac(context, R.attr.activeColor)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
+            holder.binding.iob.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, iob.iob)
+            holder.binding.ratio.text = rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, extendedBolus.rate)
+            if (iob.iob != 0.0) holder.binding.iob.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.activeColor)) else holder.binding.iob.setTextColor(holder.binding.insulin.currentTextColor)
             holder.binding.cbRemove.visibility = (extendedBolus.isValid && actionHelper.isRemoving).toVisibility()
             if (actionHelper.isRemoving) {
                 holder.binding.cbRemove.setOnCheckedChangeListener { _, value ->
@@ -219,15 +219,15 @@ class TreatmentsExtendedBolusesFragment : DaggerFragment(), MenuProvider {
     private fun getConfirmationText(selectedItems: SparseArray<ExtendedBolus>): String {
         if (selectedItems.size() == 1) {
             val bolus = selectedItems.valueAt(0)
-            return rh.gs(R.string.extended_bolus) + "\n" +
-                "${rh.gs(R.string.date)}: ${dateUtil.dateAndTimeString(bolus.timestamp)}"
+            return rh.gs(info.nightscout.core.ui.R.string.extended_bolus) + "\n" +
+                "${rh.gs(info.nightscout.core.ui.R.string.date)}: ${dateUtil.dateAndTimeString(bolus.timestamp)}"
         }
-        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected(selectedItems: SparseArray<ExtendedBolus>) {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, extendedBolus ->
                     uel.log(
                         Action.EXTENDED_BOLUS_REMOVED, Sources.Treatments,

@@ -147,10 +147,10 @@ class DexcomTirImpl : DexcomTIR {
             val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1f)
             row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
             row.gravity = Gravity.CENTER_HORIZONTAL
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0 }; text = context.getString(R.string.formatPercent, veryLowPct()) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text = context.getString(R.string.formatPercent, lowPct()) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text = context.getString(R.string.formatPercent, inRangePct()) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text = context.getString(R.string.formatPercent, highPct()) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 4 }; text = context.getString(R.string.formatPercent, veryHighPct()) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0 }; text = context.getString(info.nightscout.core.ui.R.string.formatPercent, veryLowPct()) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text = context.getString(info.nightscout.core.ui.R.string.formatPercent, lowPct()) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text = context.getString(info.nightscout.core.ui.R.string.formatPercent, inRangePct()) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text = context.getString(info.nightscout.core.ui.R.string.formatPercent, highPct()) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 4 }; text = context.getString(info.nightscout.core.ui.R.string.formatPercent, veryHighPct()) })
         }
 }

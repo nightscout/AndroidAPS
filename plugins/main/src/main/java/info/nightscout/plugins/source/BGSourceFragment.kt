@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.extensions.directionToIcon
 import info.nightscout.core.extensions.valueToUnitsString
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.ActionModeHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -26,6 +25,7 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InvalidateGlucoseValueTransaction
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -148,7 +148,7 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
                 val previous = glucoseValues[position - 1]
                 val diff = previous.timestamp - glucoseValue.timestamp
                 if (diff < T.secs(20).msecs())
-                    holder.binding.root.setBackgroundColor(rh.gac(context, R.attr.bgsourceError))
+                    holder.binding.root.setBackgroundColor(rh.gac(context, info.nightscout.core.ui.R.attr.bgsourceError))
             }
 
             holder.binding.root.setOnLongClickListener {
@@ -185,12 +185,12 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
             val glucoseValue = selectedItems.valueAt(0)
             return dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + glucoseValue.valueToUnitsString(profileFunction.getUnits())
         }
-        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
     private fun removeSelected(selectedItems: SparseArray<GlucoseValue>) {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
                 selectedItems.forEach { _, glucoseValue ->
                     val source = when ((activePlugin.activeBgSource as PluginBase).pluginDescription.pluginName) {
                         R.string.dexcom_app_patched -> Sources.Dexcom

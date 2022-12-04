@@ -2,10 +2,10 @@ package info.nightscout.plugins.constraints.versionChecker
 
 import android.os.Build
 import dagger.Lazy
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.versionChecker.AllowedVersions
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.plugins.support.R
@@ -56,11 +56,11 @@ class VersionCheckerUtilsImpl @Inject constructor(
                     compareWithCurrentVersion(version, config.get().VERSION_NAME)
 
                     // App expiration
-                    var endDate = sp.getLong(rh.gs(R.string.key_app_expiration) + "_" + config.get().VERSION_NAME, 0)
+                    var endDate = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_app_expiration) + "_" + config.get().VERSION_NAME, 0)
                     AllowedVersions().findByVersion(definition, config.get().VERSION_NAME)?.let { expirationJson ->
                         AllowedVersions().endDateToMilliseconds(expirationJson.getString("endDate"))?.let { ed ->
                             endDate = ed + T.days(1).msecs()
-                            sp.putLong(rh.gs(R.string.key_app_expiration) + "_" + config.get().VERSION_NAME, endDate)
+                            sp.putLong(rh.gs(info.nightscout.core.utils.R.string.key_app_expiration) + "_" + config.get().VERSION_NAME, endDate)
                         }
                     }
                     if (endDate != 0L) onExpireDateDetected(config.get().VERSION_NAME, dateUtil.dateString(endDate))

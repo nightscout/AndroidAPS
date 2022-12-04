@@ -3,7 +3,6 @@ package info.nightscout.plugins.general.autotune.data
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.blockValueBySeconds
 import info.nightscout.core.extensions.pureProfileFromJson
-import info.nightscout.core.main.R
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.entities.data.Block
@@ -111,7 +110,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
                 json.put("useCustomPeakTime", true)
                 json.put("insulinPeakTime", 45)
             } else if (insulinInterface.id === Insulin.InsulinType.OREF_FREE_PEAK) {
-                val peaktime: Int = sp.getInt(rh.gs(R.string.key_insulin_oref_peak), 75)
+                val peaktime: Int = sp.getInt(rh.gs(info.nightscout.core.utils.R.string.key_insulin_oref_peak), 75)
                 json.put("curve", if (peaktime > 50) "rapid-acting" else "ultra-rapid")
                 json.put("useCustomPeakTime", true)
                 json.put("insulinPeakTime", peaktime)
@@ -140,8 +139,8 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
                 )
             )
             json.put("carb_ratio", avgIC)
-            json.put("autosens_max", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")))
-            json.put("autosens_min", SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")))
+            json.put("autosens_max", SafeParse.stringToDouble(sp.getString(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, "1.2")))
+            json.put("autosens_min", SafeParse.stringToDouble(sp.getString(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, "0.7")))
             json.put("units", GlucoseUnit.MGDL.asText)
             json.put("timezone", TimeZone.getDefault().id)
             jsonString = json.toString(2).replace("\\/", "/")
@@ -174,7 +173,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
         val store = JSONObject()
         val tunedProfile = if (circadian) circadianProfile else profile
         if (profilename.isEmpty())
-            profilename = rh.gs(R.string.autotune_tunedprofile_name)
+            profilename = rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name)
         try {
             store.put(profilename, tunedProfile.toPureNsJson(dateUtil))
             json.put("defaultProfile", profilename)

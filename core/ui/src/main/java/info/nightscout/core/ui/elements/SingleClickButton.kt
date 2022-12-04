@@ -3,9 +3,8 @@ package info.nightscout.core.ui.elements
 import android.content.Context
 import android.util.AttributeSet
 import com.google.android.material.button.MaterialButton
-import info.nightscout.core.ui.R
 
-class SingleClickButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = R.style.Widget_MaterialComponents_Button) :
+class SingleClickButton @JvmOverloads constructor(context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = com.google.android.material.R.style.Widget_MaterialComponents_Button) :
     MaterialButton(context, attrs, defStyleAttr) {
 
     override fun performClick(): Boolean = guardClick { super.performClick() }

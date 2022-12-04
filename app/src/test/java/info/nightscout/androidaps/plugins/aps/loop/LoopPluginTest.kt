@@ -4,7 +4,6 @@ import android.app.NotificationManager
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
@@ -70,9 +69,9 @@ class LoopPluginTest : TestBase() {
 
     @Test
     fun testPluginInterface() {
-        `when`(rh.gs(R.string.loop)).thenReturn("Loop")
-        `when`(rh.gs(R.string.loop_shortname)).thenReturn("LOOP")
-        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.CLOSED.lowercase)
+        `when`(rh.gs(info.nightscout.core.ui.R.string.loop)).thenReturn("Loop")
+        `when`(rh.gs(info.nightscout.plugins.aps.R.string.loop_shortname)).thenReturn("LOOP")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.CLOSED.lowercase)
         val pumpDescription = PumpDescription()
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         Assert.assertEquals(LoopFragment::class.java.name, loopPlugin.pluginDescription.fragmentClass)
@@ -81,7 +80,7 @@ class LoopPluginTest : TestBase() {
         Assert.assertEquals("LOOP", loopPlugin.nameShort)
         Assert.assertEquals(true, loopPlugin.hasFragment())
         Assert.assertEquals(true, loopPlugin.showInList(PluginType.LOOP))
-        Assert.assertEquals(R.xml.pref_loop.toLong(), loopPlugin.preferencesId.toLong())
+        Assert.assertEquals(info.nightscout.plugins.aps.R.xml.pref_loop.toLong(), loopPlugin.preferencesId.toLong())
 
         // Plugin is disabled by default
         Assert.assertEquals(false, loopPlugin.isEnabled())

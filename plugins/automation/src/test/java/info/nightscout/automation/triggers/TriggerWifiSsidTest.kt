@@ -65,7 +65,7 @@ class TriggerWifiSsidTest : TriggerTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.core.main.R.string.ns_wifi_ssids, TriggerWifiSsid(injector).friendlyName())
+        Assert.assertEquals(info.nightscout.core.ui.R.string.ns_wifi_ssids, TriggerWifiSsid(injector).friendlyName())
     }
 
     @Test fun friendlyDescriptionTest() {

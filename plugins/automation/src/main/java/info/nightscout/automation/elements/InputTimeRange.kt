@@ -14,7 +14,6 @@ import com.google.android.material.timepicker.MaterialTimePicker
 import com.google.android.material.timepicker.TimeFormat
 import info.nightscout.automation.R
 import info.nightscout.core.utils.MidnightUtils
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
@@ -62,7 +61,7 @@ class InputTimeRange(private val rh: ResourceHelper, private val dateUtil: DateU
                     })
                 addView(TextView(root.context).apply {
                     @Suppress("SetTextI18n")
-                    text = rh.gs(R.string.and) + "      " + dateUtil.timeString(toMills(end))
+                    text = rh.gs(info.nightscout.core.ui.R.string.and) + "      " + dateUtil.timeString(toMills(end))
                     setPadding(px, px, px, px)
                     setOnClickListener {
                         getFragmentManager(root.context)?.let { fm ->

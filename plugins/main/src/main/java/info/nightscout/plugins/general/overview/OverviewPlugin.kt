@@ -5,31 +5,32 @@ import androidx.annotation.StringRes
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.events.EventIobCalculationProgress
+import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.extensions.putDouble
 import info.nightscout.core.extensions.putInt
 import info.nightscout.core.extensions.putString
 import info.nightscout.core.extensions.storeDouble
 import info.nightscout.core.extensions.storeInt
 import info.nightscout.core.extensions.storeString
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Overview
+import info.nightscout.interfaces.overview.OverviewMenus
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.plugins.R
-import info.nightscout.plugins.general.overview.events.EventUpdateOverviewCalcProgress
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.overview.notifications.NotificationWithAction
 import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
-import info.nightscout.plugins.iob.iobCobCalculator.events.EventIobCalculationProgress
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventPumpStatusChanged
+import info.nightscout.rx.events.EventUpdateOverviewCalcProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -59,7 +60,7 @@ class OverviewPlugin @Inject constructor(
         .fragmentClass(OverviewFragment::class.qualifiedName)
         .alwaysVisible(true)
         .alwaysEnabled(true)
-        .pluginIcon(R.drawable.ic_home)
+        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_home)
         .pluginName(R.string.overview)
         .shortName(R.string.overview_shortname)
         .preferencesId(R.xml.pref_overview)
@@ -153,58 +154,58 @@ class OverviewPlugin @Inject constructor(
 
     override fun configuration(): JSONObject =
         JSONObject()
-            .putString(R.string.key_units, sp, rh)
-            .putString(R.string.key_quickwizard, sp, rh)
-            .putInt(R.string.key_eatingsoon_duration, sp, rh)
-            .putDouble(R.string.key_eatingsoon_target, sp, rh)
-            .putInt(R.string.key_activity_duration, sp, rh)
-            .putDouble(R.string.key_activity_target, sp, rh)
-            .putInt(R.string.key_hypo_duration, sp, rh)
-            .putDouble(R.string.key_hypo_target, sp, rh)
-            .putDouble(R.string.key_low_mark, sp, rh)
-            .putDouble(R.string.key_high_mark, sp, rh)
-            .putDouble(R.string.key_statuslights_cage_warning, sp, rh)
-            .putDouble(R.string.key_statuslights_cage_critical, sp, rh)
-            .putDouble(R.string.key_statuslights_iage_warning, sp, rh)
-            .putDouble(R.string.key_statuslights_iage_critical, sp, rh)
-            .putDouble(R.string.key_statuslights_sage_warning, sp, rh)
-            .putDouble(R.string.key_statuslights_sage_critical, sp, rh)
+            .putString(info.nightscout.core.utils.R.string.key_units, sp, rh)
+            .putString(info.nightscout.core.utils.R.string.key_quickwizard, sp, rh)
+            .putInt(info.nightscout.core.utils.R.string.key_eatingsoon_duration, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_eatingsoon_target, sp, rh)
+            .putInt(info.nightscout.core.utils.R.string.key_activity_duration, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_activity_target, sp, rh)
+            .putInt(info.nightscout.core.utils.R.string.key_hypo_duration, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_hypo_target, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_low_mark, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_high_mark, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_statuslights_cage_warning, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_statuslights_cage_critical, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_statuslights_iage_warning, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_statuslights_iage_critical, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_statuslights_sage_warning, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_statuslights_sage_critical, sp, rh)
             .putDouble(R.string.key_statuslights_sbat_warning, sp, rh)
             .putDouble(R.string.key_statuslights_sbat_critical, sp, rh)
-            .putDouble(R.string.key_statuslights_bage_warning, sp, rh)
-            .putDouble(R.string.key_statuslights_bage_critical, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_statuslights_bage_warning, sp, rh)
+            .putDouble(info.nightscout.core.utils.R.string.key_statuslights_bage_critical, sp, rh)
             .putDouble(R.string.key_statuslights_res_warning, sp, rh)
             .putDouble(R.string.key_statuslights_res_critical, sp, rh)
             .putDouble(R.string.key_statuslights_bat_warning, sp, rh)
             .putDouble(R.string.key_statuslights_bat_critical, sp, rh)
-            .putInt(R.string.key_boluswizard_percentage, sp, rh)
+            .putInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, sp, rh)
 
     override fun applyConfiguration(configuration: JSONObject) {
         configuration
-            .storeString(R.string.key_units, sp, rh)
-            .storeString(R.string.key_quickwizard, sp, rh)
-            .storeInt(R.string.key_eatingsoon_duration, sp, rh)
-            .storeDouble(R.string.key_eatingsoon_target, sp, rh)
-            .storeInt(R.string.key_activity_duration, sp, rh)
-            .storeDouble(R.string.key_activity_target, sp, rh)
-            .storeInt(R.string.key_hypo_duration, sp, rh)
-            .storeDouble(R.string.key_hypo_target, sp, rh)
-            .storeDouble(R.string.key_low_mark, sp, rh)
-            .storeDouble(R.string.key_high_mark, sp, rh)
-            .storeDouble(R.string.key_statuslights_cage_warning, sp, rh)
-            .storeDouble(R.string.key_statuslights_cage_critical, sp, rh)
-            .storeDouble(R.string.key_statuslights_iage_warning, sp, rh)
-            .storeDouble(R.string.key_statuslights_iage_critical, sp, rh)
-            .storeDouble(R.string.key_statuslights_sage_warning, sp, rh)
-            .storeDouble(R.string.key_statuslights_sage_critical, sp, rh)
+            .storeString(info.nightscout.core.utils.R.string.key_units, sp, rh)
+            .storeString(info.nightscout.core.utils.R.string.key_quickwizard, sp, rh)
+            .storeInt(info.nightscout.core.utils.R.string.key_eatingsoon_duration, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_eatingsoon_target, sp, rh)
+            .storeInt(info.nightscout.core.utils.R.string.key_activity_duration, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_activity_target, sp, rh)
+            .storeInt(info.nightscout.core.utils.R.string.key_hypo_duration, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_hypo_target, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_low_mark, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_high_mark, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_statuslights_cage_warning, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_statuslights_cage_critical, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_statuslights_iage_warning, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_statuslights_iage_critical, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_statuslights_sage_warning, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_statuslights_sage_critical, sp, rh)
             .storeDouble(R.string.key_statuslights_sbat_warning, sp, rh)
             .storeDouble(R.string.key_statuslights_sbat_critical, sp, rh)
-            .storeDouble(R.string.key_statuslights_bage_warning, sp, rh)
-            .storeDouble(R.string.key_statuslights_bage_critical, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_statuslights_bage_warning, sp, rh)
+            .storeDouble(info.nightscout.core.utils.R.string.key_statuslights_bage_critical, sp, rh)
             .storeDouble(R.string.key_statuslights_res_warning, sp, rh)
             .storeDouble(R.string.key_statuslights_res_critical, sp, rh)
             .storeDouble(R.string.key_statuslights_bat_warning, sp, rh)
             .storeDouble(R.string.key_statuslights_bat_critical, sp, rh)
-            .storeInt(R.string.key_boluswizard_percentage, sp, rh)
+            .storeInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, sp, rh)
     }
 }

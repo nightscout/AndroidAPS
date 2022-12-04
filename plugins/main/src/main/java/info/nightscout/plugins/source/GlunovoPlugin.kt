@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Handler
 import android.os.HandlerThread
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TherapyEvent
@@ -16,6 +15,7 @@ import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.XDripBroadcast
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -47,7 +47,7 @@ class GlunovoPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_glunovo)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_glunovo)
         .pluginName(R.string.glunovo)
         .preferencesId(R.xml.pref_bgsource)
         .shortName(R.string.glunovo)
@@ -172,7 +172,7 @@ class GlunovoPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLUNOVO_NATIVE && sp.getBoolean(R.string.key_do_ns_upload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLUNOVO_NATIVE && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
     companion object {
 

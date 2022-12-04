@@ -5,7 +5,6 @@
     <string name="pump_operation_not_yet_supported_by_pump">Operationen stöds inte av pumpen ännu.</string>
     <string name="common_resultok">OK</string>
     <string name="pump_serial_number">Serienummer på pumpen</string>
-    <string name="bolus_delivered">%1$.2fU / %2$.2fU levererat</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Inte initierad</string>
     <string name="pump_status_suspended">Pausad</string>

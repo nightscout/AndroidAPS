@@ -143,5 +143,7 @@
     <string name="key_application_protection" translatable="false">application_protection</string>
     <string name="key_bolus_protection" translatable="false">bolus_protection</string>
     <string name="key_protection_timeout" translatable="false">protection_timeout</string>
+    <string name="key_objectiveuseloop" translatable="false">ObjectivesLoopUsed</string>
+    <string name="key_ObjectivesmanualEnacts" translatable="false">ObjectivesmanualEnacts</string>
 
 </resources>

@@ -3,7 +3,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.eros.ui.wizard.activatio
 import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.R
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.ActivationProgress
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsErosPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
@@ -32,8 +31,8 @@ class ErosInsertCannulaViewModel @Inject constructor(
     override fun doExecuteAction(): Single<PumpEnactResult> = Single.fromCallable { aapsOmnipodManager.insertCannula(profileFunction.getProfile()) }
 
     @StringRes
-    override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_insert_cannula_title
+    override fun getTitleId(): Int = info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_activation_wizard_insert_cannula_title
 
     @StringRes
-    override fun getTextId() = R.string.omnipod_common_pod_activation_wizard_insert_cannula_text
+    override fun getTextId() = info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_activation_wizard_insert_cannula_text
 }

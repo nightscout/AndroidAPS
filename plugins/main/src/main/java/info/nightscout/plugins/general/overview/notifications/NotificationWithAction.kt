@@ -49,7 +49,7 @@ class NotificationWithAction constructor(
                 id = NS_ALARM
                 level = NORMAL
                 text = nsAlarm.title()
-                soundId = R.raw.alarm
+                soundId = info.nightscout.core.ui.R.raw.alarm
             }
 
             2 -> {
@@ -59,14 +59,14 @@ class NotificationWithAction constructor(
                 soundId = R.raw.urgentalarm
             }
         }
-        buttonText = R.string.snooze
+        buttonText = info.nightscout.core.ui.R.string.snooze
         action = Runnable {
             activePlugin.activeNsClient?.handleClearAlarm(nsAlarm, 60 * 60 * 1000L)
             // Adding current time to snooze if we got staleData
             aapsLogger.debug(LTag.NOTIFICATION, "Notification text is: $text")
-            val msToSnooze = sp.getInt(R.string.key_ns_alarm_stale_data_value, 15) * 60 * 1000L
+            val msToSnooze = sp.getInt(info.nightscout.core.utils.R.string.key_ns_alarm_stale_data_value, 15) * 60 * 1000L
             aapsLogger.debug(LTag.NOTIFICATION, "snooze nsalarm_staledatavalue in minutes is ${T.msecs(msToSnooze).mins()} currentTimeMillis is: ${System.currentTimeMillis()}")
-            sp.putLong(R.string.key_snoozed_to, System.currentTimeMillis() + msToSnooze)
+            sp.putLong(info.nightscout.core.utils.R.string.key_snoozed_to, System.currentTimeMillis() + msToSnooze)
         }
     }
 

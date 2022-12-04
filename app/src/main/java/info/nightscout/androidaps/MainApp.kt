@@ -116,18 +116,18 @@ class MainApp : DaggerApplication() {
         handler.postDelayed(
             {
                 // check if identification is set
-                if (config.isDev() && sp.getStringOrNull(R.string.key_email_for_crash_report, null).isNullOrBlank())
+                if (config.isDev() && sp.getStringOrNull(info.nightscout.core.utils.R.string.key_email_for_crash_report, null).isNullOrBlank())
                     notificationStore.add(Notification(Notification.IDENTIFICATION_NOT_SET, rh.get().gs(R.string.identification_not_set), Notification.INFO))
                 // log version
                 disposable += repository.runTransaction(VersionChangeTransaction(BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE, gitRemote, commitHash)).subscribe()
                 // log app start
-                if (sp.getBoolean(R.string.key_ns_log_app_started_event, config.APS))
+                if (sp.getBoolean(info.nightscout.plugins.sync.R.string.key_ns_log_app_started_event, config.APS))
                     disposable += repository
                         .runTransaction(
                             InsertIfNewByTimestampTherapyEventTransaction(
                                 timestamp = dateUtil.now(),
                                 type = TherapyEvent.Type.NOTE,
-                                note = rh.get().gs(info.nightscout.core.main.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
+                                note = rh.get().gs(info.nightscout.core.ui.R.string.androidaps_start) + " - " + Build.MANUFACTURER + " " + Build.MODEL,
                                 glucoseUnit = TherapyEvent.GlucoseUnit.MGDL
                             )
                         )
@@ -189,32 +189,32 @@ class MainApp : DaggerApplication() {
         // set values for different builds
         if (!sp.contains(R.string.key_ns_alarms)) sp.putBoolean(R.string.key_ns_alarms, config.NSCLIENT)
         if (!sp.contains(R.string.key_ns_announcements)) sp.putBoolean(R.string.key_ns_announcements, config.NSCLIENT)
-        if (!sp.contains(R.string.key_language)) sp.putString(R.string.key_language, "default")
+        if (!sp.contains(info.nightscout.core.ui.R.string.key_language)) sp.putString(info.nightscout.core.ui.R.string.key_language, "default")
         // 3.1.0
         if (sp.contains("ns_wifionly")) {
             if (sp.getBoolean("ns_wifionly", false)) {
-                sp.putBoolean(R.string.key_ns_cellular, false)
-                sp.putBoolean(R.string.key_ns_wifi, true)
+                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_cellular, false)
+                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_wifi, true)
             } else {
-                sp.putBoolean(R.string.key_ns_cellular, true)
-                sp.putBoolean(R.string.key_ns_wifi, false)
+                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_cellular, true)
+                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_wifi, false)
             }
             sp.remove("ns_wifionly")
         }
         if (sp.contains("ns_charginonly")) {
             if (sp.getBoolean("ns_charginonly", false)) {
-                sp.putBoolean(R.string.key_ns_battery, false)
-                sp.putBoolean(R.string.key_ns_charging, true)
+                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_battery, false)
+                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_charging, true)
             } else {
-                sp.putBoolean(R.string.key_ns_battery, true)
-                sp.putBoolean(R.string.key_ns_charging, true)
+                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_battery, true)
+                sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_charging, true)
             }
             sp.remove("ns_charginonly")
         }
-        if (!sp.contains(R.string.key_ns_log_app_started_event))
-            sp.putBoolean(R.string.key_ns_log_app_started_event, config.APS)
-        if (sp.getString(R.string.key_maintenance_logs_email, "") == "logs@androidaps.org")
-            sp.putString(R.string.key_maintenance_logs_email, "logs@aaps.app")
+        if (!sp.contains(info.nightscout.plugins.sync.R.string.key_ns_log_app_started_event))
+            sp.putBoolean(info.nightscout.plugins.sync.R.string.key_ns_log_app_started_event, config.APS)
+        if (sp.getString(info.nightscout.configuration.R.string.key_maintenance_logs_email, "") == "logs@androidaps.org")
+            sp.putString(info.nightscout.configuration.R.string.key_maintenance_logs_email, "logs@aaps.app")
     }
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {

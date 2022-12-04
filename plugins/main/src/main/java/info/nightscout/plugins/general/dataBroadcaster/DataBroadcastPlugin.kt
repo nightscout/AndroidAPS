@@ -22,12 +22,12 @@ import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.plugins.R
-import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAutosensCalculationFinished
+import info.nightscout.rx.events.EventLoopUpdateGui
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

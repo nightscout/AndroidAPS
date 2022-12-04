@@ -113,7 +113,6 @@
     <string name="sort_automation">Otomasyonu sırala</string>
     <string name="remove_selected_items">Seçilen öğeleri kaldır</string>
     <string name="count_selected">%1$d seçildi</string>
-    <string name="confirm_remove_multiple_items">%1$d öğeyi kaldırmak istediğinizden emin misiniz</string>
     <string name="system_automation">Sistem otomasyonu</string>
     <string name="run_automations">Otomasyonları çalıştır</string>
     <string name="add_automation">Kural ekle</string>

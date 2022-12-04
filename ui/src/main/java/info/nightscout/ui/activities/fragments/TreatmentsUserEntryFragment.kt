@@ -74,7 +74,7 @@ class TreatmentsUserEntryFragment : DaggerFragment(), MenuProvider {
 
     private fun exportUserEntries() {
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.ue_export_to_csv) + "?") {
+            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.ue_export_to_csv) + "?") {
                 uel.log(Action.EXPORT_CSV, Sources.Treatments)
                 importExportPrefs.exportUserEntriesCsv(activity)
             }

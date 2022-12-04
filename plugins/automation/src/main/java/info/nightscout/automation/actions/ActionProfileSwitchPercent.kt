@@ -3,7 +3,6 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.Comparator
 import info.nightscout.automation.elements.InputDuration
@@ -14,6 +13,7 @@ import info.nightscout.automation.triggers.TriggerProfilePercent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
@@ -33,9 +33,9 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
     override fun friendlyName(): Int = R.string.profilepercentage
     override fun shortDescription(): String =
         if (duration.value == 0) rh.gs(R.string.startprofileforever, pct.value.toInt())
-        else rh.gs(R.string.startprofile, pct.value.toInt(), duration.value)
+        else rh.gs(info.nightscout.core.ui.R.string.startprofile, pct.value.toInt(), duration.value)
 
-    @DrawableRes override fun icon(): Int = R.drawable.ic_actions_profileswitch
+    @DrawableRes override fun icon(): Int = info.nightscout.interfaces.R.drawable.ic_actions_profileswitch
 
     init {
         precondition = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)
@@ -46,21 +46,21 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
             uel.log(
                 UserEntry.Action.PROFILE_SWITCH,
                 Sources.Automation,
-                title + ": " + rh.gs(R.string.startprofile, pct.value.toInt(), duration.value),
+                title + ": " + rh.gs(info.nightscout.core.ui.R.string.startprofile, pct.value.toInt(), duration.value),
                 ValueWithUnit.Percent(pct.value.toInt()),
                 ValueWithUnit.Minute(duration.value)
             )
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+            callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
         } else {
             aapsLogger.error(LTag.AUTOMATION, "Final profile not valid")
-            callback.result(PumpEnactResult(injector).success(false).comment(R.string.ok)).run()
+            callback.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.ok)).run()
         }
     }
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
             .add(LabelWithElement(rh, rh.gs(R.string.percent_u), "", pct))
-            .add(LabelWithElement(rh, rh.gs(R.string.duration_min_label), "", duration))
+            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.duration_min_label), "", duration))
             .build(root)
     }
 

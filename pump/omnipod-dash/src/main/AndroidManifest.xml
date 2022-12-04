@@ -10,15 +10,19 @@
     <application android:supportsRtl="true">
         <activity
             android:name=".ui.wizard.activation.DashPodActivationWizardActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.wizard.deactivation.DashPodDeactivationWizardActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.DashPodManagementActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.DashPodHistoryActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 </manifest>

@@ -8,7 +8,6 @@
     <string name="patch_expiration_reminders">Recordatorio de expiración del parche</string>
     <string name="patch_buzzer_reminders">Recordatorios de zumbidos del parche</string>
     <string name="time_format_a_h_mm">h:mm a</string>
-    <string name="bolus_delivered">Bolo de %1$.2f U enviado correctamente</string>
     <string name="eopatch_ble_status">Estado del Pod</string>
     <string name="eopatch_serial_number">Número de Serie</string>
     <string name="eopatch_lot_number">Número de Lote</string>

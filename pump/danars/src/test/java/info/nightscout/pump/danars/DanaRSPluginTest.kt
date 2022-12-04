@@ -57,9 +57,9 @@ class DanaRSPluginTest : DanaRSTestBase() {
 
     @BeforeEach
     fun prepareMocks() {
-        Mockito.`when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")
-        Mockito.`when`(rh.gs(eq(R.string.limitingbasalratio), anyObject(), anyObject())).thenReturn("limitingbasalratio")
-        Mockito.`when`(rh.gs(eq(R.string.limitingpercentrate), anyObject(), anyObject())).thenReturn("limitingpercentrate")
+        Mockito.`when`(sp.getString(info.nightscout.pump.dana.R.string.key_danars_address, "")).thenReturn("")
+        Mockito.`when`(rh.gs(eq(info.nightscout.core.ui.R.string.limitingbasalratio), anyObject(), anyObject())).thenReturn("limitingbasalratio")
+        Mockito.`when`(rh.gs(eq(info.nightscout.core.ui.R.string.limitingpercentrate), anyObject(), anyObject())).thenReturn("limitingpercentrate")
 
         danaRSPlugin =
             DanaRSPlugin(

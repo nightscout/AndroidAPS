@@ -7,7 +7,6 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.util.Log
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TherapyEvent
@@ -18,6 +17,7 @@ import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.XDripBroadcast
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -50,7 +50,7 @@ class IntelligoPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_intelligo)
+        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_intelligo)
         .pluginName(R.string.intelligo)
         .preferencesId(R.xml.pref_bgsource)
         .shortName(R.string.intelligo)
@@ -180,7 +180,7 @@ class IntelligoPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.INTELLIGO_NATIVE && sp.getBoolean(R.string.key_do_ns_upload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.INTELLIGO_NATIVE && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
     companion object {
 

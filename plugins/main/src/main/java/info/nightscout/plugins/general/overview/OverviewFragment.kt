@@ -29,9 +29,9 @@ import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.extensions.directionToIcon
 import info.nightscout.core.extensions.valueToUnitsString
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.displayText
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.UIRunnable
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -56,6 +56,7 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
+import info.nightscout.interfaces.overview.OverviewMenus
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.DefaultValueHelper
@@ -67,13 +68,8 @@ import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.plugins.R
-import info.nightscout.plugins.aps.loop.events.EventNewOpenLoopNotification
 import info.nightscout.plugins.databinding.OverviewFragmentBinding
 import info.nightscout.plugins.general.overview.activities.QuickWizardListActivity
-import info.nightscout.plugins.general.overview.events.EventUpdateOverviewCalcProgress
-import info.nightscout.plugins.general.overview.events.EventUpdateOverviewGraph
-import info.nightscout.plugins.general.overview.events.EventUpdateOverviewIobCob
-import info.nightscout.plugins.general.overview.events.EventUpdateOverviewSensitivity
 import info.nightscout.plugins.general.overview.graphData.GraphData
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
@@ -88,12 +84,17 @@ import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.rx.events.EventExtendedBolusChange
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventNewBG
+import info.nightscout.rx.events.EventNewOpenLoopNotification
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.events.EventScale
 import info.nightscout.rx.events.EventTempBasalChange
 import info.nightscout.rx.events.EventTempTargetChange
+import info.nightscout.rx.events.EventUpdateOverviewCalcProgress
+import info.nightscout.rx.events.EventUpdateOverviewGraph
+import info.nightscout.rx.events.EventUpdateOverviewIobCob
+import info.nightscout.rx.events.EventUpdateOverviewSensitivity
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.extensions.runOnUiThread
@@ -188,13 +189,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         smallHeight = screenHeight <= Constants.SMALL_HEIGHT
         val landscape = screenHeight < screenWidth
 
-        skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, binding, landscape, rh.gb(R.bool.isTablet), smallHeight)
+        skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, binding, landscape, rh.gb(info.nightscout.shared.R.bool.isTablet), smallHeight)
         binding.nsclientCard.visibility = config.NSCLIENT.toVisibility()
 
         binding.notifications.setHasFixedSize(false)
         binding.notifications.layoutManager = LinearLayoutManager(view.context)
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
-        binding.graphsLayout.bgGraph.gridLabelRenderer?.gridColor = rh.gac(context, R.attr.graphGrid)
+        binding.graphsLayout.bgGraph.gridLabelRenderer?.gridColor = rh.gac(context, info.nightscout.core.ui.R.attr.graphGrid)
         binding.graphsLayout.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.graphsLayout.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
         binding.graphsLayout.bgGraph.layoutParams?.height = rh.dpToPx(skinProvider.activeSkin().mainGraphHeight)
@@ -206,8 +207,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.graphsLayout.bgGraph.setOnLongClickListener {
             overviewData.rangeToDisplay += 6
             overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
-            sp.putInt(R.string.key_rangetodisplay, overviewData.rangeToDisplay)
-            rxBus.send(EventPreferenceChange(rh.gs(R.string.key_rangetodisplay)))
+            sp.putInt(info.nightscout.core.utils.R.string.key_rangetodisplay, overviewData.rangeToDisplay)
+            rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.utils.R.string.key_rangetodisplay)))
             sp.putBoolean(R.string.key_objectiveusescale, true)
             false
         }
@@ -270,8 +271,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             .observeOn(aapsSchedulers.main)
             .subscribe({
                            overviewData.rangeToDisplay = it.hours
-                           sp.putInt(R.string.key_rangetodisplay, it.hours)
-                           rxBus.send(EventPreferenceChange(rh.gs(R.string.key_rangetodisplay)))
+                           sp.putInt(info.nightscout.core.utils.R.string.key_rangetodisplay, it.hours)
+                           rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.utils.R.string.key_rangetodisplay)))
                            sp.putBoolean(R.string.key_objectiveusescale, true)
                        }, fabricPrivacy::logException)
         disposable += rxBus
@@ -437,7 +438,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             if (lastRun?.lastAPSRun != null && lastRun.constraintsProcessed?.isChangeRequested == true) {
                                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                                     if (isAdded)
-                                        OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
+                                        OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.tempbasal_label), lastRun.constraintsProcessed?.toSpanned()
                                             ?: "".toSpanned(), {
                                                                       uel.log(Action.ACCEPTS_TEMP_BASAL, Sources.Overview)
                                                                       (context?.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?)?.cancel(Constants.notificationID)
@@ -516,7 +517,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
                 activity?.let {
                     if (abs(wizard.insulinAfterConstraints - wizard.calculatedTotalInsulin) >= pump.pumpDescription.pumpType.determineCorrectBolusStepSize(wizard.insulinAfterConstraints) || carbsAfterConstraints != quickWizardEntry.carbs()) {
-                        OKDialog.show(it, rh.gs(R.string.treatmentdeliveryerror), rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.change_your_input))
+                        OKDialog.show(it, rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror), rh.gs(R.string.constraints_violation) + "\n" + rh.gs(R.string.change_your_input))
                         return
                     }
                     wizard.confirmAndExecute(it)
@@ -540,8 +541,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && !pump.isSuspended() && !loop.isDisconnected) {
                 binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
                 val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false)
-                binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(R.string.format_carbs, quickWizardEntry.carbs()) +
-                    " " + rh.gs(R.string.format_insulin_units, wizard.calculatedTotalInsulin)
+                binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(info.nightscout.core.graph.R.string.format_carbs, quickWizardEntry.carbs()) +
+                    " " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
                 if (wizard.calculatedTotalInsulin <= 0) binding.buttonsLayout.quickWizardButton.visibility = View.GONE
             } else binding.buttonsLayout.quickWizardButton.visibility = View.GONE
         }
@@ -583,16 +584,16 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_byoda), null, null)
                 for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
                     drawable?.mutate()
-                    drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, R.attr.cgmDexColor), PorterDuff.Mode.SRC_IN)
+                    drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, info.nightscout.core.ui.R.attr.cgmDexColor), PorterDuff.Mode.SRC_IN)
                 }
-                binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, R.attr.cgmDexColor))
+                binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.cgmDexColor))
             } else if (xDripIsBgSource) {
-                binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_xdrip), null, null)
+                binding.buttonsLayout.cgmButton.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(info.nightscout.core.main.R.drawable.ic_xdrip), null, null)
                 for (drawable in binding.buttonsLayout.cgmButton.compoundDrawables) {
                     drawable?.mutate()
-                    drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, R.attr.cgmXdripColor), PorterDuff.Mode.SRC_IN)
+                    drawable?.colorFilter = PorterDuffColorFilter(rh.gac(context, info.nightscout.core.ui.R.attr.cgmXdripColor), PorterDuff.Mode.SRC_IN)
                 }
-                binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, R.attr.cgmXdripColor))
+                binding.buttonsLayout.cgmButton.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.cgmXdripColor))
             }
             binding.buttonsLayout.cgmButton.visibility = (sp.getBoolean(R.string.key_show_cgm_button, false) && (xDripIsBgSource || dexcomIsSource)).toVisibility()
 
@@ -603,13 +604,13 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 for (event in events)
                     if (event.isEnabled && event.canRun())
                         context?.let { context ->
-                            SingleClickButton(context, null, R.attr.customBtnStyle).also {
-                                it.setTextColor(rh.gac(context, R.attr.treatmentButton))
+                            SingleClickButton(context, null, info.nightscout.core.ui.R.attr.customBtnStyle).also {
+                                it.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.treatmentButton))
                                 it.setTextSize(TypedValue.COMPLEX_UNIT_SP, 10f)
                                 it.layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT, 0.5f).also { l ->
                                     l.setMargins(0, 0, rh.dpToPx(-4), 0)
                                 }
-                                it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(R.drawable.ic_user_options), null, null)
+                                it.setCompoundDrawablesWithIntrinsicBounds(null, rh.gd(info.nightscout.core.ui.R.drawable.ic_user_options), null, null)
                                 it.text = event.title
 
                                 it.setOnClickListener {
@@ -632,7 +633,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 binding.infoLayout.apsMode.stateDescription = rh.gs(stringRes)
             } else {
-                binding.infoLayout.apsMode.contentDescription = rh.gs(R.string.aps_mode_title) + " " + rh.gs(stringRes)
+                binding.infoLayout.apsMode.contentDescription = rh.gs(info.nightscout.core.ui.R.string.aps_mode_title) + " " + rh.gs(stringRes)
             }
         }
 
@@ -644,20 +645,20 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 when {
                     (loop as PluginBase).isEnabled() && loop.isSuperBolus                       -> {
                         binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_superbolus)
-                        apsModeSetA11yLabel(R.string.superbolus)
+                        apsModeSetA11yLabel(info.nightscout.core.ui.R.string.superbolus)
                         binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
                         binding.infoLayout.apsModeText.visibility = View.VISIBLE
                     }
 
                     loop.isDisconnected                                                         -> {
-                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disconnected)
-                        apsModeSetA11yLabel(R.string.disconnected)
+                        binding.infoLayout.apsMode.setImageResource(info.nightscout.core.ui.R.drawable.ic_loop_disconnected)
+                        apsModeSetA11yLabel(info.nightscout.core.ui.R.string.disconnected)
                         binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
                         binding.infoLayout.apsModeText.visibility = View.VISIBLE
                     }
 
                     (loop as PluginBase).isEnabled() && loop.isSuspended                        -> {
-                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_paused)
+                        binding.infoLayout.apsMode.setImageResource(info.nightscout.core.ui.R.drawable.ic_loop_paused)
                         apsModeSetA11yLabel(R.string.suspendloop_label)
                         binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
                         binding.infoLayout.apsModeText.visibility = View.VISIBLE
@@ -668,36 +669,36 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             if (pump.model() == PumpType.OMNIPOD_EROS || pump.model() == PumpType.OMNIPOD_DASH) {
                                 // For Omnipod, indicate the pump as disconnected when it's suspended.
                                 // The only way to 'reconnect' it, is through the Omnipod tab
-                                apsModeSetA11yLabel(R.string.disconnected)
-                                R.drawable.ic_loop_disconnected
+                                apsModeSetA11yLabel(info.nightscout.core.ui.R.string.disconnected)
+                                info.nightscout.core.ui.R.drawable.ic_loop_disconnected
                             } else {
-                                apsModeSetA11yLabel(R.string.pump_paused)
-                                R.drawable.ic_loop_paused
+                                apsModeSetA11yLabel(info.nightscout.core.ui.R.string.pump_paused)
+                                info.nightscout.core.ui.R.drawable.ic_loop_paused
                             }
                         )
                         binding.infoLayout.apsModeText.visibility = View.GONE
                     }
 
                     (loop as PluginBase).isEnabled() && closedLoopEnabled.value() && loop.isLGS -> {
-                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_lgs)
-                        apsModeSetA11yLabel(R.string.uel_lgs_loop_mode)
+                        binding.infoLayout.apsMode.setImageResource(info.nightscout.core.ui.R.drawable.ic_loop_lgs)
+                        apsModeSetA11yLabel(info.nightscout.core.ui.R.string.uel_lgs_loop_mode)
                         binding.infoLayout.apsModeText.visibility = View.GONE
                     }
 
                     (loop as PluginBase).isEnabled() && closedLoopEnabled.value()               -> {
-                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_closed)
-                        apsModeSetA11yLabel(R.string.closedloop)
+                        binding.infoLayout.apsMode.setImageResource(info.nightscout.core.main.R.drawable.ic_loop_closed)
+                        apsModeSetA11yLabel(info.nightscout.core.ui.R.string.closedloop)
                         binding.infoLayout.apsModeText.visibility = View.GONE
                     }
 
                     (loop as PluginBase).isEnabled() && !closedLoopEnabled.value()              -> {
-                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_open)
-                        apsModeSetA11yLabel(R.string.openloop)
+                        binding.infoLayout.apsMode.setImageResource(info.nightscout.core.ui.R.drawable.ic_loop_open)
+                        apsModeSetA11yLabel(info.nightscout.core.ui.R.string.openloop)
                         binding.infoLayout.apsModeText.visibility = View.GONE
                     }
 
                     else                                                                        -> {
-                        binding.infoLayout.apsMode.setImageResource(R.drawable.ic_loop_disabled)
+                        binding.infoLayout.apsMode.setImageResource(info.nightscout.core.ui.R.drawable.ic_loop_disabled)
                         apsModeSetA11yLabel(R.string.disabled_loop)
                         binding.infoLayout.apsModeText.visibility = View.GONE
                     }
@@ -711,7 +712,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
             // pump status from ns
             binding.pump.text = processedDeviceStatusData.pumpStatus(nsSettingsStatus)
-            binding.pump.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.pump), processedDeviceStatusData.extendedPumpStatus) } }
+            binding.pump.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(info.nightscout.core.ui.R.string.pump), processedDeviceStatusData.extendedPumpStatus) } }
 
             // OpenAPS status from ns
             binding.openaps.text = processedDeviceStatusData.openApsStatus
@@ -737,12 +738,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 val graph = GraphView(context)
                 graph.layoutParams =
                     LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rh.dpToPx(skinProvider.activeSkin().secondaryGraphHeight)).also { it.setMargins(0, rh.dpToPx(15), 0, rh.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = rh.gac(context, R.attr.graphGrid)
+                graph.gridLabelRenderer?.gridColor = rh.gac(context, info.nightscout.core.ui.R.attr.graphGrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
-                graph.viewport.backgroundColor = rh.gac(context, R.attr.viewPortBackgroundColor)
+                graph.viewport.backgroundColor = rh.gac(context, info.nightscout.core.ui.R.attr.viewPortBackgroundColor)
                 relativeLayout.addView(graph)
 
                 val label = TextView(context)
@@ -787,11 +788,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.bg.text = lastBg?.valueToUnitsString(units)
-                ?: rh.gs(R.string.value_unavailable_short)
+                ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
             binding.infoLayout.bg.setTextColor(lastBgColor)
             binding.infoLayout.arrow.setImageResource(trendArrow.directionToIcon())
             binding.infoLayout.arrow.setColorFilter(lastBgColor)
-            binding.infoLayout.arrow.contentDescription = lastBgDescription + " " + rh.gs(R.string.and) + " " + trendDescription
+            binding.infoLayout.arrow.contentDescription = lastBgDescription + " " + rh.gs(info.nightscout.core.ui.R.string.and) + " " + trendDescription
 
             if (glucoseStatus != null) {
                 binding.infoLayout.deltaLarge.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
@@ -801,7 +802,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 binding.infoLayout.longAvgDelta.text = Profile.toSignedUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units)
             } else {
                 binding.infoLayout.deltaLarge.text = ""
-                binding.infoLayout.delta.text = "Δ " + rh.gs(R.string.value_unavailable_short)
+                binding.infoLayout.delta.text = "Δ " + rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
                 binding.infoLayout.avgDelta.text = ""
                 binding.infoLayout.longAvgDelta.text = ""
             }
@@ -839,26 +840,26 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             val profileBackgroundColor = profile?.let {
                 if (it is ProfileSealed.EPS) {
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
-                        R.attr.ribbonWarningColor
-                    else R.attr.ribbonDefaultColor
+                        info.nightscout.core.ui.R.attr.ribbonWarningColor
+                    else info.nightscout.core.ui.R.attr.ribbonDefaultColor
                 } else if (it is ProfileSealed.PS) {
-                    R.attr.ribbonDefaultColor
+                    info.nightscout.core.ui.R.attr.ribbonDefaultColor
                 } else {
-                    R.attr.ribbonDefaultColor
+                    info.nightscout.core.ui.R.attr.ribbonDefaultColor
                 }
-            } ?: R.attr.ribbonCriticalColor
+            } ?: info.nightscout.core.ui.R.attr.ribbonCriticalColor
 
             val profileTextColor = profile?.let {
                 if (it is ProfileSealed.EPS) {
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
-                        R.attr.ribbonTextWarningColor
-                    else R.attr.ribbonTextDefaultColor
+                        info.nightscout.core.ui.R.attr.ribbonTextWarningColor
+                    else info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
                 } else if (it is ProfileSealed.PS) {
-                    R.attr.ribbonTextDefaultColor
+                    info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
                 } else {
-                    R.attr.ribbonTextDefaultColor
+                    info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
                 }
-            } ?: R.attr.ribbonTextDefaultColor
+            } ?: info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
             setRibbon(binding.activeProfile, profileTextColor, profileBackgroundColor, profileFunction.getProfileNameWithRemainingTime())
         }
     }
@@ -873,7 +874,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.infoLayout.baseBasal.text = temporaryBasalText
             binding.infoLayout.baseBasal.setTextColor(temporaryBasalColor)
             binding.infoLayout.baseBasalIcon.setImageResource(temporaryBasalIcon)
-            binding.infoLayout.basalLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.basal), temporaryBasalDialogText) } }
+            binding.infoLayout.basalLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(info.nightscout.core.ui.R.string.basal), temporaryBasalDialogText) } }
         }
     }
 
@@ -885,7 +886,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.extendedBolus.text = extendedBolusText
-            binding.infoLayout.extendedLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.extended_bolus), extendedBolusDialogText) } }
+            binding.infoLayout.extendedLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(info.nightscout.core.ui.R.string.extended_bolus), extendedBolusDialogText) } }
             binding.infoLayout.extendedLayout.visibility = (extendedBolus != null && !pump.isFakingTempsByExtendedBoluses).toVisibility()
         }
     }
@@ -897,7 +898,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val pump = activePlugin.activePump
         val isPatchPump = pump.pumpDescription.isPatchPump
         binding.statusLightsLayout.apply {
-            cannulaOrPatch.setImageResource(if (isPatchPump) R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula)
+            cannulaOrPatch.setImageResource(if (isPatchPump) info.nightscout.core.main.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula)
             cannulaOrPatch.contentDescription = rh.gs(if (isPatchPump) R.string.statuslights_patch_pump_age else R.string.statuslights_cannula_age)
             cannulaOrPatch.scaleX = if (isPatchPump) 1.4f else 2f
             cannulaOrPatch.scaleY = cannulaOrPatch.scaleX
@@ -929,9 +930,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         runOnUiThread {
             _binding ?: return@runOnUiThread
             binding.infoLayout.iob.text = iobText
-            binding.infoLayout.iobLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(R.string.iob), iobDialogText) } }
+            binding.infoLayout.iobLayout.setOnClickListener { activity?.let { OKDialog.show(it, rh.gs(info.nightscout.core.ui.R.string.iob), iobDialogText) } }
             // cob
-            var cobText = displayText ?: rh.gs(R.string.value_unavailable_short)
+            var cobText = displayText ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
 
             val constraintsProcessed = loop.lastRun?.constraintsProcessed
             val lastRun = loop.lastRun
@@ -939,7 +940,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                 if (constraintsProcessed.carbsReq > 0) {
                     //only display carbsreq when carbs have not been entered recently
                     if (lastCarbsTime < lastRun.lastAPSRun) {
-                        cobText += " | " + constraintsProcessed.carbsReq + " " + rh.gs(R.string.required)
+                        cobText += " | " + constraintsProcessed.carbsReq + " " + rh.gs(info.nightscout.core.ui.R.string.required)
                     }
                     if (carbAnimation?.isRunning == false)
                         carbAnimation?.start()
@@ -961,8 +962,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             if (tempTarget != null) {
                 setRibbon(
                     binding.tempTarget,
-                    R.attr.ribbonTextWarningColor,
-                    R.attr.ribbonWarningColor,
+                    info.nightscout.core.ui.R.attr.ribbonTextWarningColor,
+                    info.nightscout.core.ui.R.attr.ribbonWarningColor,
                     Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
                 )
             } else {
@@ -974,15 +975,15 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                         aapsLogger.debug("Adjusted target. Profile: ${profile.getTargetMgdl()} APS: $targetUsed")
                         setRibbon(
                             binding.tempTarget,
-                            R.attr.ribbonTextWarningColor,
-                            R.attr.tempTargetBackgroundColor,
+                            info.nightscout.core.ui.R.attr.ribbonTextWarningColor,
+                            info.nightscout.core.ui.R.attr.tempTargetBackgroundColor,
                             Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
                         )
                     } else {
                         setRibbon(
                             binding.tempTarget,
-                            R.attr.ribbonTextDefaultColor,
-                            R.attr.ribbonDefaultColor,
+                            info.nightscout.core.ui.R.attr.ribbonTextDefaultColor,
+                            info.nightscout.core.ui.R.attr.ribbonDefaultColor,
                             Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
                         )
                     }
@@ -1092,9 +1093,9 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private fun updateSensitivity() {
         _binding ?: return
         if (constraintChecker.isAutosensModeEnabled().value() || !(config.NSCLIENT && overviewData.lastAutosensData(iobCobCalculator) == null)) {
-            binding.infoLayout.sensitivityIcon.setImageResource(R.drawable.ic_swap_vert_black_48dp_green)
+            binding.infoLayout.sensitivityIcon.setImageResource(info.nightscout.core.main.R.drawable.ic_swap_vert_black_48dp_green)
         } else {
-            binding.infoLayout.sensitivityIcon.setImageResource(R.drawable.ic_x_swap_vert)
+            binding.infoLayout.sensitivityIcon.setImageResource(info.nightscout.core.main.R.drawable.ic_x_swap_vert)
         }
 
         binding.infoLayout.sensitivity.text =

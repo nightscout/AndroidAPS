@@ -76,7 +76,7 @@ class NSClientV3Plugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(NSClientFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_nightscout_syncs)
+        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_nightscout_syncs)
         .pluginName(R.string.ns_client_v3)
         .shortName(R.string.ns_client_v3_short_name)
         .preferencesId(R.xml.pref_ns_client)
@@ -134,7 +134,7 @@ class NSClientV3Plugin @Inject constructor(
         lastFetched.collections.devicestatus = max(dateUtil.now() - maxAge, lastFetched.collections.devicestatus)
 
         nsAndroidClient = NSAndroidClientImpl(
-            baseUrl = sp.getString(R.string.key_nsclientinternal_url, "").lowercase().replace("https://", ""),
+            baseUrl = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace("https://", ""),
             accessToken = sp.getString(R.string.key_ns_client_token, ""),
             context = context,
             logging = true
@@ -190,8 +190,8 @@ class NSClientV3Plugin @Inject constructor(
         if (config.NSCLIENT) {
             preferenceFragment.findPreference<PreferenceScreen>(rh.gs(R.string.ns_sync_options))?.isVisible = false
 
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_errors))?.isVisible = false
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_errors))?.isVisible = false
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
         }
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = config.isEngineeringMode()
     }
@@ -225,7 +225,7 @@ class NSClientV3Plugin @Inject constructor(
             }
             return HtmlHelper.fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
-            uiInteraction.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", R.raw.error)
+            uiInteraction.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", info.nightscout.core.ui.R.raw.error)
         }
         return HtmlHelper.fromHtml("")
     }
@@ -242,7 +242,7 @@ class NSClientV3Plugin @Inject constructor(
     override val version: NsClient.Version
         get() = NsClient.Version.V3
 
-    override val address: String get() = sp.getString(R.string.key_nsclientinternal_url, "")
+    override val address: String get() = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "")
 
     override fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
         if (!isEnabled()) return

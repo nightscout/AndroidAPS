@@ -141,7 +141,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
 
     private fun showAlarmDialog(alarmCode: AlarmCode){
         val i = Intent(context, AlarmHelperActivity::class.java)
-        i.putExtra("soundid", R.raw.error)
+        i.putExtra("soundid", info.nightscout.core.ui.R.raw.error)
         i.putExtra("code", alarmCode.name)
         i.putExtra("status", resourceHelper.gs(alarmCode.resId))
         i.putExtra("title", resourceHelper.gs(R.string.string_alarm))
@@ -189,7 +189,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
                         }
                 )
             },
-            soundId = R.raw.error,
+            soundId = info.nightscout.core.ui.R.raw.error,
             date = pm.getPatchConfig().patchWakeupTimestamp + TimeUnit.SECONDS.toMillis(timeOffset)
         )
 

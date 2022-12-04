@@ -113,7 +113,6 @@
     <string name="sort_automation">Zoradiť automatizácie</string>
     <string name="remove_selected_items">Odstrániť vybrané položky</string>
     <string name="count_selected">Vybrané: %1$d</string>
-    <string name="confirm_remove_multiple_items">Naozaj chcete odstrániť %1$d položiek</string>
     <string name="system_automation">Automatizácia systému</string>
     <string name="run_automations">Spustiť automatizácie</string>
     <string name="add_automation">Pridať pravidlo</string>

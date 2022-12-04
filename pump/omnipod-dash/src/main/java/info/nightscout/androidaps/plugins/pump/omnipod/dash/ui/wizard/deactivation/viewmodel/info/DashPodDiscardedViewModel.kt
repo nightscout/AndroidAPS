@@ -2,14 +2,13 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui.wizard.deactivat
 
 import androidx.annotation.StringRes
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.deactivation.viewmodel.info.PodDiscardedViewModel
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import javax.inject.Inject
 
 class DashPodDiscardedViewModel @Inject constructor() : PodDiscardedViewModel() {
 
     @StringRes
-    override fun getTitleId(): Int = R.string.omnipod_common_pod_deactivation_wizard_pod_discarded_title
+    override fun getTitleId(): Int = info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_deactivation_wizard_pod_discarded_title
 
     @StringRes
-    override fun getTextId() = R.string.omnipod_common_pod_deactivation_wizard_pod_discarded_text
+    override fun getTextId() = info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_deactivation_wizard_pod_discarded_text
 }

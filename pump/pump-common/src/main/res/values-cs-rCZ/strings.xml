@@ -5,7 +5,7 @@
     <string name="pump_operation_not_yet_supported_by_pump">Operace prozatím pumpou nepodporována.</string>
     <string name="common_resultok">OK</string>
     <string name="pump_serial_number">Sériové číslo pumpy</string>
-    <string name="bolus_delivered">Vydáno %1$.2f U / %2$.2f U</string>
+    <string name="bolus_delivered_so_far">Vydáno %1$.2f U / %2$.2f U</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Není inicializován</string>
     <string name="pump_status_initialized">Inicializováno</string>

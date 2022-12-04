@@ -4,7 +4,7 @@ plugins {
     id 'kotlin-kapt'
  }
 
-apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
 
 android {
 

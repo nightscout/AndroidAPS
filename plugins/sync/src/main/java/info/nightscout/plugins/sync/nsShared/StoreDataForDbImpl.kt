@@ -2,9 +2,8 @@ package info.nightscout.plugins.sync.nsShared
 
 import android.content.Context
 import android.os.SystemClock
-import androidx.work.Worker
 import androidx.work.WorkerParameters
-import dagger.android.HasAndroidInjector
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
@@ -40,7 +39,6 @@ import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.plugins.sync.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.logging.AAPSLogger
@@ -103,17 +101,13 @@ class StoreDataForDbImpl @Inject constructor(
     class StoreBgWorker(
         context: Context,
         params: WorkerParameters
-    ) : Worker(context, params) {
+    ) : LoggingWorker(context, params) {
 
         @Inject lateinit var storeDataForDb: StoreDataForDbImpl
 
-        override fun doWork(): Result {
+        override fun doWorkAndLog(): Result {
             storeDataForDb.storeGlucoseValuesToDb()
             return Result.success()
-        }
-
-        init {
-            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
     }
 
@@ -522,13 +516,13 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("BolusCalculatorResult", NSBolusWizard::class.java.simpleName)
         SystemClock.sleep(pause)
 
-        if (sp.getBoolean(R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT)
             therapyEvents.filter { it.type == TherapyEvent.Type.ANNOUNCEMENT }.forEach {
                 if (it.timestamp > dateUtil.now() - 15 * 60 * 1000L &&
                     it.note?.isNotEmpty() == true &&
                     it.enteredBy != sp.getString("careportal_enteredby", "AndroidAPS")
                 ) {
-                    if (sp.getBoolean(R.string.key_ns_announcements, config.NSCLIENT))
+                    if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_announcements, config.NSCLIENT))
                         uiInteraction.addNotificationValidFor(Notification.NS_ANNOUNCEMENT, it.note ?: "", Notification.ANNOUNCEMENT, 60)
                 }
             }

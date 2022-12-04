@@ -72,8 +72,8 @@ class FoodFragment : DaggerFragment() {
 
         binding.filterInputLayout.setEndIconOnClickListener {
             binding.filter.setText("")
-            binding.categoryList.setText(rh.gs(R.string.none), false)
-            binding.subcategoryList.setText(rh.gs(R.string.none), false)
+            binding.categoryList.setText(rh.gs(info.nightscout.core.ui.R.string.none), false)
+            binding.subcategoryList.setText(rh.gs(info.nightscout.core.ui.R.string.none), false)
             filterData()
         }
         binding.categoryList.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ -> fillSubcategories(); filterData() }
@@ -132,17 +132,17 @@ class FoodFragment : DaggerFragment() {
         }
         // make it unique
         val categories = ArrayList(catSet)
-        categories.add(0, rh.gs(R.string.none))
+        categories.add(0, rh.gs(info.nightscout.core.ui.R.string.none))
         context?.let { context ->
-            binding.categoryList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, categories))
-            binding.categoryList.setText(rh.gs(R.string.none), false)
+            binding.categoryList.setAdapter(ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, categories))
+            binding.categoryList.setText(rh.gs(info.nightscout.core.ui.R.string.none), false)
         }
     }
 
     private fun fillSubcategories() {
         val categoryFilter = binding.categoryList.text.toString()
         val subCatSet: MutableSet<CharSequence> = HashSet()
-        if (categoryFilter != rh.gs(R.string.none)) {
+        if (categoryFilter != rh.gs(info.nightscout.core.ui.R.string.none)) {
             for (f in unfiltered) {
                 if (f.category != null && f.category == categoryFilter) {
                     val subCategory = f.subCategory
@@ -152,10 +152,10 @@ class FoodFragment : DaggerFragment() {
         }
         // make it unique
         val subcategories = ArrayList(subCatSet)
-        subcategories.add(0, rh.gs(R.string.none))
+        subcategories.add(0, rh.gs(info.nightscout.core.ui.R.string.none))
         context?.let { context ->
-            binding.subcategoryList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, subcategories))
-            binding.subcategoryList.setText(rh.gs(R.string.none), false)
+            binding.subcategoryList.setAdapter(ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, subcategories))
+            binding.subcategoryList.setText(rh.gs(info.nightscout.core.ui.R.string.none), false)
         }
     }
 
@@ -166,8 +166,8 @@ class FoodFragment : DaggerFragment() {
         val newFiltered = ArrayList<Food>()
         for (f in unfiltered) {
             if (f.category == null || f.subCategory == null) continue
-            if (subcategoryFilter != rh.gs(R.string.none) && f.subCategory != subcategoryFilter) continue
-            if (categoryFilter != rh.gs(R.string.none) && f.category != categoryFilter) continue
+            if (subcategoryFilter != rh.gs(info.nightscout.core.ui.R.string.none) && f.subCategory != subcategoryFilter) continue
+            if (categoryFilter != rh.gs(info.nightscout.core.ui.R.string.none) && f.category != categoryFilter) continue
             if (textFilter != "" && !f.name.lowercase(Locale.getDefault()).contains(textFilter.lowercase(Locale.getDefault()))) continue
             newFiltered.add(f)
         }
@@ -189,10 +189,10 @@ class FoodFragment : DaggerFragment() {
             val food = foodList[position]
             holder.binding.name.text = food.name
             holder.binding.portion.text = food.portion.toString() + food.unit
-            holder.binding.carbs.text = food.carbs.toString() + rh.gs(R.string.shortgramm)
-            holder.binding.fat.text = rh.gs(R.string.short_fat) + ": " + food.fat + rh.gs(R.string.shortgramm)
+            holder.binding.carbs.text = food.carbs.toString() + rh.gs(info.nightscout.core.ui.R.string.shortgramm)
+            holder.binding.fat.text = rh.gs(R.string.short_fat) + ": " + food.fat + rh.gs(info.nightscout.core.ui.R.string.shortgramm)
             holder.binding.fat.visibility = food.fat.isNotZero().toVisibility()
-            holder.binding.protein.text = rh.gs(R.string.short_protein) + ": " + food.protein + rh.gs(R.string.shortgramm)
+            holder.binding.protein.text = rh.gs(R.string.short_protein) + ": " + food.protein + rh.gs(info.nightscout.core.ui.R.string.shortgramm)
             holder.binding.protein.visibility = food.protein.isNotZero().toVisibility()
             holder.binding.energy.text = rh.gs(R.string.short_energy) + ": " + food.energy + rh.gs(R.string.short_kilo_joul)
             holder.binding.energy.visibility = food.energy.isNotZero().toVisibility()
@@ -210,7 +210,7 @@ class FoodFragment : DaggerFragment() {
                 binding.icRemove.setOnClickListener { v: View ->
                     val food = v.tag as Food
                     activity?.let { activity ->
-                        OKDialog.showConfirmation(activity, rh.gs(R.string.removerecord) + "\n" + food.name, {
+                        OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.removerecord) + "\n" + food.name, {
                             uel.log(Action.FOOD_REMOVED, Sources.Food, food.name)
                             disposable += repository.runTransactionForResult(InvalidateFoodTransaction(food.id))
                                 .subscribe(

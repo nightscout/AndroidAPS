@@ -16,7 +16,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import info.nightscout.androidaps.plugins.pump.omnipod.eros.R;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSet;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertSlot;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.AlertType;
@@ -68,21 +67,21 @@ public class AapsOmnipodUtil {
 
     private String translateAlertType(AlertType alertType) {
         if (alertType == null) {
-            return rh.gs(R.string.omnipod_common_alert_unknown_alert);
+            return rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_unknown_alert);
         }
         switch (alertType) {
             case FINISH_PAIRING_REMINDER:
-                return rh.gs(R.string.omnipod_common_alert_finish_pairing_reminder);
+                return rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_finish_pairing_reminder);
             case FINISH_SETUP_REMINDER:
-                return rh.gs(R.string.omnipod_common_alert_finish_setup_reminder_reminder);
+                return rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_finish_setup_reminder_reminder);
             case EXPIRATION_ALERT:
-                return rh.gs(R.string.omnipod_common_alert_expiration);
+                return rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_expiration);
             case EXPIRATION_ADVISORY_ALERT:
-                return rh.gs(R.string.omnipod_common_alert_expiration_advisory);
+                return rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_expiration_advisory);
             case SHUTDOWN_IMMINENT_ALARM:
-                return rh.gs(R.string.omnipod_common_alert_shutdown_imminent);
+                return rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_shutdown_imminent);
             case LOW_RESERVOIR_ALERT:
-                return rh.gs(R.string.omnipod_common_alert_low_reservoir);
+                return rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_alert_low_reservoir);
             default:
                 return alertType.name();
         }

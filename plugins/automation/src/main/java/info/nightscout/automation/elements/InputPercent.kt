@@ -2,7 +2,6 @@ package info.nightscout.automation.elements
 
 import android.view.Gravity
 import android.widget.LinearLayout
-import info.nightscout.automation.R
 import info.nightscout.core.ui.elements.NumberPicker
 import java.text.DecimalFormat
 
@@ -17,7 +16,7 @@ class InputPercent() : Element() {
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             NumberPicker(root.context, null).also {
-                it.setParams(value, MIN, MAX, 5.0, DecimalFormat("0"), true, root.findViewById(R.id.ok))
+                it.setParams(value, MIN, MAX, 5.0, DecimalFormat("0"), true, root.findViewById(info.nightscout.core.ui.R.id.ok))
                 it.setOnValueChangedListener { v: Double -> value = v }
                 it.gravity = Gravity.CENTER_HORIZONTAL
             })

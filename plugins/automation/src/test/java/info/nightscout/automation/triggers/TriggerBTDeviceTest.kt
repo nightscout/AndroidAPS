@@ -33,7 +33,7 @@ class TriggerBTDeviceTest : TriggerTestBase() {
 
     @Test
     fun icon() {
-        Assert.assertEquals(Optional.of(info.nightscout.core.main.R.drawable.ic_bluetooth_white_48dp), TriggerBTDevice(injector).icon())
+        Assert.assertEquals(Optional.of(info.nightscout.core.ui.R.drawable.ic_bluetooth_white_48dp), TriggerBTDevice(injector).icon())
     }
 
     @Test fun duplicate() {

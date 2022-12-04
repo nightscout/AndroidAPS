@@ -69,7 +69,7 @@ class NSClientPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(NSClientFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_nightscout_syncs)
+        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_nightscout_syncs)
         .pluginName(R.string.ns_client)
         .shortName(R.string.ns_client_short_name)
         .preferencesId(R.xml.pref_ns_client)
@@ -140,12 +140,12 @@ class NSClientPlugin @Inject constructor(
         if (config.NSCLIENT) {
             preferenceFragment.findPreference<PreferenceScreen>(rh.gs(R.string.ns_sync_options))?.isVisible = false
 
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_errors))?.isVisible = false
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_errors))?.isVisible = false
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
         }
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = config.isEngineeringMode()
         if (activePlugin.activeBgSource is DoingOwnUploadSource) {
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_do_ns_upload))?.isVisible = false
+            preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_do_ns_upload))?.isVisible = false
         }
     }
 
@@ -191,7 +191,7 @@ class NSClientPlugin @Inject constructor(
             }
             return fromHtml(newTextLog.toString())
         } catch (e: OutOfMemoryError) {
-            uiInteraction.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", R.raw.error)
+            uiInteraction.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", info.nightscout.core.ui.R.raw.error)
         }
         return fromHtml("")
     }

@@ -89,4 +89,29 @@
     <string name="hardlimit">pevný limit</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Vrchol</string>
+    <!--    Loop -->
+    <string name="run_now">Spustiť teraz</string>
+    <string name="smb_frequency_exceeded">Podaný bolus v priebehu posledných 3 minút, SMB preskočené</string>
+    <string name="pump_not_initialized">Pumpa nie je inicializovaná!</string>
+    <string name="loop_shortname">UZAVRETÝ OKRUH</string>
+    <string name="description_loop">Aktivuje alebo deaktivuje spustenie uzavretého okruhu.</string>
+    <string name="no_aps_selected">NEVYBRANÉ ŽIADNE APS, ALEBO NEBOL POSKYTNUTÝ ŽIADNY VÝSLEDOK</string>
+    <string name="ignore5m">Ignorovať 5m</string>
+    <string name="ignore15m">Ignorovať 15m</string>
+    <string name="ignore30m">Ignorovať 30m</string>
+    <string name="carbs_suggestion">Návrh sacharidov</string>
+    <string name="open_loop_new_suggestion">Dostupné nové doporučenie</string>
+    <string name="basal_set_correctly">Bazál nastavený správne</string>
+    <string name="last_run_label">Posledné spustenie</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Požiadavka</string>
+    <string name="loop_constraints_processed_label">Po spracovaní obmedzení</string>
+    <string name="loop_tbr_request_time_label">Čas požiadavky dočasného bazálu</string>
+    <string name="loop_tbr_execution_time_label">Čas spustenia dočasného bazálu</string>
+    <string name="loop_tbr_set_by_pump_label">Bazál nastavený pumpou</string>
+    <string name="loop_smb_request_time_label">Čas požiadavky SMB</string>
+    <string name="loop_smb_execution_time_label">Čas aplikácie SMB</string>
+    <string name="loop_smb_set_by_pump_label">SMB nastavené pumpou</string>
+    <string name="loop_open_mode_min_change">Minimálna požiadavka na zmenu [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Otvorený okruh vytvorí novú žiadosť o zmenu iba v prípade, že zmena je väčšia ako táto hodnota v %. Štandardná hodnota je 20%</string>
 </resources>

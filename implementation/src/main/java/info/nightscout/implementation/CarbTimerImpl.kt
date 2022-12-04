@@ -38,7 +38,7 @@ class CarbTimerImpl @Inject constructor(
      */
     override fun scheduleAutomationEventEatReminder() {
         val event = AutomationEventObject(injector).apply {
-            title = rh.gs(R.string.bolus_advisor)
+            title = rh.gs(info.nightscout.core.ui.R.string.bolus_advisor)
             readOnly = true
             systemAction = true
             autoRemove = true
@@ -95,7 +95,7 @@ class CarbTimerImpl @Inject constructor(
      */
     override fun removeAutomationEventEatReminder() {
         val event = AutomationEventObject(injector).apply {
-            title = rh.gs(R.string.bolus_advisor)
+            title = rh.gs(info.nightscout.core.ui.R.string.bolus_advisor)
         }
         automationPlugin.removeIfExists(event)
     }

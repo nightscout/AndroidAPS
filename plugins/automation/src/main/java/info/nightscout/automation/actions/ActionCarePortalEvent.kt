@@ -3,20 +3,19 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.fromConstant
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
-import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputCarePortalMenu
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputString
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
+import info.nightscout.core.extensions.fromConstant
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.utils.JsonHelper
@@ -49,7 +48,7 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
         cpEvent = InputCarePortalMenu(rh, actionCPEvent.cpEvent.value)
     }
 
-    override fun friendlyName(): Int = R.string.careportal
+    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.careportal
     override fun shortDescription(): String = rh.gs(cpEvent.value.stringResWithValue, note.value)
 
     @DrawableRes override fun icon(): Int = cpEvent.value.drawableRes
@@ -111,8 +110,8 @@ class ActionCarePortalEvent(injector: HasAndroidInjector) : Action(injector) {
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
             .add(cpEvent)
-            .add(LabelWithElement(rh, rh.gs(R.string.duration_min_label), "", duration))
-            .add(LabelWithElement(rh, rh.gs(R.string.notes_label), "", note))
+            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.duration_min_label), "", duration))
+            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.notes_label), "", note))
             .build(root)
     }
 

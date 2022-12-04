@@ -168,4 +168,7 @@
     <string name="tile_no_config">无可用配置</string>
     <string name="wear_control_not_enabled">穿戴设备控制功能已禁用</string>
     <string name="wear_control_no_data">无可用数据</string>
+    <string name="increment">增加</string>
+    <string name="decrement">减少</string>
+    <string name="no_iob_u">--U</string>
 </resources>

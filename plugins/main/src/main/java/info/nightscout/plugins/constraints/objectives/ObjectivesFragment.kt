@@ -16,13 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.interfaces.logging.UserEntryLogger
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.R
 import info.nightscout.plugins.constraints.objectives.activities.ObjectivesExamDialog
@@ -167,7 +167,7 @@ class ObjectivesFragment : DaggerFragment() {
             } else
                 holder.binding.gate.visibility = View.GONE
             if (!objective.isStarted) {
-                holder.binding.gate.setTextColor(rh.gac(context, R.attr.defaultTextColor))
+                holder.binding.gate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                 holder.binding.verify.visibility = View.GONE
                 holder.binding.progress.visibility = View.GONE
                 holder.binding.accomplished.visibility = View.GONE
@@ -178,7 +178,7 @@ class ObjectivesFragment : DaggerFragment() {
                 else
                     holder.binding.start.visibility = View.GONE
             } else if (objective.isAccomplished) {
-                holder.binding.gate.setTextColor(rh.gac(context, R.attr.isAccomplishedColor))
+                holder.binding.gate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.isAccomplishedColor))
                 holder.binding.verify.visibility = View.GONE
                 holder.binding.progress.visibility = View.GONE
                 holder.binding.start.visibility = View.GONE
@@ -186,7 +186,7 @@ class ObjectivesFragment : DaggerFragment() {
                 holder.binding.unfinish.visibility = View.VISIBLE
                 holder.binding.unstart.visibility = View.GONE
             } else if (objective.isStarted) {
-                holder.binding.gate.setTextColor(rh.gac(context,R.attr.defaultTextColor))
+                holder.binding.gate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                 holder.binding.verify.visibility = View.VISIBLE
                 holder.binding.verify.isEnabled = objective.isCompleted || binding.fake.isChecked
                 holder.binding.start.visibility = View.GONE
@@ -200,7 +200,7 @@ class ObjectivesFragment : DaggerFragment() {
                     // name
                     val name = TextView(holder.binding.progress.context)
                     name.text = "${rh.gs(task.task)}:"
-                    name.setTextColor(rh.gac(context,R.attr.defaultTextColor) )
+                    name.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor) )
                     holder.binding.progress.addView(name, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     // hint
                     task.hints.forEach { h ->
@@ -209,9 +209,9 @@ class ObjectivesFragment : DaggerFragment() {
                     }
                     // state
                     val state = TextView(holder.binding.progress.context)
-                    state.setTextColor(rh.gac(context,R.attr.defaultTextColor))
+                    state.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                     val basicHTML = "<font color=\"%1\$s\"><b>%2\$s</b></font>"
-                    val formattedHTML = String.format(basicHTML, if (task.isCompleted()) rh.gac(context, R.attr.isCompletedColor) else rh.gac(context, R.attr.isNotCompletedColor), task.progress)
+                    val formattedHTML = String.format(basicHTML, if (task.isCompleted()) rh.gac(context, info.nightscout.core.ui.R.attr.isCompletedColor) else rh.gac(context, info.nightscout.core.ui.R.attr.isNotCompletedColor), task.progress)
                     state.text = HtmlHelper.fromHtml(formattedHTML)
                     state.gravity = Gravity.END
                     holder.binding.progress.addView(state, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
@@ -228,12 +228,12 @@ class ObjectivesFragment : DaggerFragment() {
                     }
                     // horizontal line
                     val separator = View(holder.binding.progress.context)
-                    separator.setBackgroundColor(rh.gac(context, R.attr.separatorColor))
+                    separator.setBackgroundColor(rh.gac(context, info.nightscout.core.ui.R.attr.separatorColor))
                     holder.binding.progress.addView(separator, LinearLayout.LayoutParams.MATCH_PARENT, 2)
                 }
             }
             holder.binding.accomplished.text = rh.gs(R.string.accomplished, dateUtil.dateAndTimeString(objective.accomplishedOn))
-            holder.binding.accomplished.setTextColor(rh.gac(context,R.attr.defaultTextColor))
+            holder.binding.accomplished.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
             holder.binding.verify.setOnClickListener {
                 receiverStatusStore.updateNetworkStatus()
                 if (binding.fake.isChecked) {
@@ -246,7 +246,7 @@ class ObjectivesFragment : DaggerFragment() {
                     // move out of UI thread
                     handler.post {
                         NtpProgressDialog().show((context as AppCompatActivity).supportFragmentManager, "NtpCheck")
-                        rxBus.send(EventNtpStatus(rh.gs(R.string.timedetection), 0))
+                        rxBus.send(EventNtpStatus(rh.gs(info.nightscout.core.ui.R.string.timedetection), 0))
                         sntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
                                 aapsLogger.debug("NTP time: $time System time: ${dateUtil.now()}")
@@ -256,7 +256,7 @@ class ObjectivesFragment : DaggerFragment() {
                                 } else if (success) {
                                     if (objective.isCompleted(time)) {
                                         objective.accomplishedOn = time
-                                        rxBus.send(EventNtpStatus(rh.gs(R.string.success), 100))
+                                        rxBus.send(EventNtpStatus(rh.gs(info.nightscout.core.ui.R.string.success), 100))
                                         SystemClock.sleep(1000)
                                         rxBus.send(EventObjectivesUpdateGui())
                                         rxBus.send(EventSWUpdate(false))
@@ -285,7 +285,7 @@ class ObjectivesFragment : DaggerFragment() {
                 // move out of UI thread
                     handler.post {
                         NtpProgressDialog().show((context as AppCompatActivity).supportFragmentManager, "NtpCheck")
-                        rxBus.send(EventNtpStatus(rh.gs(R.string.timedetection), 0))
+                        rxBus.send(EventNtpStatus(rh.gs(info.nightscout.core.ui.R.string.timedetection), 0))
                         sntpClient.ntpTime(object : SntpClient.Callback() {
                             override fun run() {
                                 aapsLogger.debug("NTP time: $time System time: ${dateUtil.now()}")
@@ -294,7 +294,7 @@ class ObjectivesFragment : DaggerFragment() {
                                     rxBus.send(EventNtpStatus(rh.gs(R.string.notconnected), 99))
                                 } else if (success) {
                                     objective.startedOn = time
-                                    rxBus.send(EventNtpStatus(rh.gs(R.string.success), 100))
+                                    rxBus.send(EventNtpStatus(rh.gs(info.nightscout.core.ui.R.string.success), 100))
                                     SystemClock.sleep(1000)
                                     rxBus.send(EventObjectivesUpdateGui())
                                     rxBus.send(EventSWUpdate(false))
@@ -309,7 +309,7 @@ class ObjectivesFragment : DaggerFragment() {
             }
             holder.binding.unstart.setOnClickListener {
                 activity?.let { activity ->
-                    OKDialog.showConfirmation(activity, rh.gs(R.string.objectives), rh.gs(R.string.doyouwantresetstart), Runnable {
+                    OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.objectives), rh.gs(R.string.doyouwantresetstart), Runnable {
                         uel.log(Action.OBJECTIVE_UNSTARTED, Sources.Objectives,
                             ValueWithUnit.SimpleInt(position + 1))
                         objective.startedOn = 0

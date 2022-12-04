@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.danaRKorean.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.rx.events.EventDismissNotification
@@ -31,7 +30,7 @@ class MsgInitConnStatusBolus_k(
         aapsLogger.debug(LTag.PUMPCOMM, "Bolus max: " + danaPump.maxBolus)
         aapsLogger.debug(LTag.PUMPCOMM, "Delivery status: $deliveryStatus")
         if (!danaPump.isExtendedBolusEnabled) {
-            uiInteraction.addNotification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(R.string.danar_enableextendedbolus), Notification.URGENT)
+            uiInteraction.addNotification(Notification.EXTENDED_BOLUS_DISABLED, rh.gs(info.nightscout.pump.dana.R.string.danar_enableextendedbolus), Notification.URGENT)
         } else {
             rxBus.send(EventDismissNotification(Notification.EXTENDED_BOLUS_DISABLED))
         }

@@ -17,6 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Monitor aktivity</string>
     <string name="do_you_want_reset_stats">Chcete resetovat statistiky aktivity?</string>
+    <string name="do_you_want_reset_tdd_stats">Chcete resetovat statistiky CDD?</string>
     <string name="statistics">Statistika</string>
     <string name="calculation_in_progress">Probíhá výpočet</string>
     <string name="invalid_age">Neplatná položka věku</string>

@@ -31,7 +31,6 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
@@ -105,7 +104,6 @@ class ComboV2Plugin @Inject constructor (
     private val context: Context,
     private val rxBus: RxBus,
     private val constraintChecker: Constraints,
-    private val profileFunction: ProfileFunction,
     private val sp: SP,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
@@ -670,14 +668,14 @@ class ComboV2Plugin @Inject constructor (
 
             uiInteraction.addNotification(
                 Notification.PROFILE_NOT_SET_NOT_INITIALIZED,
-                rh.gs(R.string.pump_not_initialized_profile_not_set),
+                rh.gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set),
                 Notification.URGENT
             )
 
             return PumpEnactResult(injector).apply {
                 success = false
                 enacted = false
-                comment = rh.gs(R.string.pump_not_initialized_profile_not_set)
+                comment = rh.gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set)
             }
         }
 
@@ -699,7 +697,7 @@ class ComboV2Plugin @Inject constructor (
 
                         uiInteraction.addNotificationValidFor(
                             Notification.PROFILE_SET_OK,
-                            rh.gs(R.string.profile_set_ok),
+                            rh.gs(info.nightscout.core.ui.R.string.profile_set_ok),
                             Notification.INFO,
                             60
                         )
@@ -729,14 +727,14 @@ class ComboV2Plugin @Inject constructor (
 
                 uiInteraction.addNotification(
                     Notification.FAILED_UPDATE_PROFILE,
-                    rh.gs(R.string.failed_update_basal_profile),
+                    rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile),
                     Notification.URGENT
                 )
 
                 pumpEnactResult.apply {
                     success = false
                     enacted = false
-                    comment = rh.gs(R.string.failed_update_basal_profile)
+                    comment = rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile)
                 }
             }
         }
@@ -863,7 +861,7 @@ class ComboV2Plugin @Inject constructor (
                         is RTCommandProgressStage.DeliveringBolus -> {
                             val bolusingEvent = EventOverviewBolusProgress
                             bolusingEvent.percent = (progressReport.overallProgress * 100.0).toInt()
-                            bolusingEvent.status = rh.gs(R.string.bolus_delivering, detailedBolusInfo.insulin)
+                            bolusingEvent.status = rh.gs(info.nightscout.core.ui.R.string.bolus_delivering, detailedBolusInfo.insulin)
                             rxBus.send(bolusingEvent)
                         }
                         BasicProgressStage.Finished -> {
@@ -894,7 +892,7 @@ class ComboV2Plugin @Inject constructor (
                     acquiredPump.deliverBolus(requestedBolusAmount, bolusReason)
                 }
 
-                reportFinishedBolus(rh.gs(R.string.bolus_delivered, detailedBolusInfo.insulin), pumpEnactResult, succeeded = true)
+                reportFinishedBolus(rh.gs(info.nightscout.core.ui.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin), pumpEnactResult, succeeded = true)
             } catch (e: CancellationException) {
                 // Cancellation is not an error, but it also means
                 // that the profile update was not enacted.
@@ -1000,7 +998,7 @@ class ComboV2Plugin @Inject constructor (
                 pumpEnactResult.apply {
                     success = false
                     enacted = false
-                    comment = rh.gs(R.string.error)
+                    comment = rh.gs(info.nightscout.core.ui.R.string.error)
                 }
                 return pumpEnactResult
             }
@@ -1031,7 +1029,7 @@ class ComboV2Plugin @Inject constructor (
                 pumpEnactResult.apply {
                     success = false
                     enacted = false
-                    comment = rh.gs(R.string.error)
+                    comment = rh.gs(info.nightscout.core.ui.R.string.error)
                 }
                 return pumpEnactResult
             }
@@ -1430,7 +1428,7 @@ class ComboV2Plugin @Inject constructor (
                 // queue will contain a pump_driver_changed readstatus
                 // command already. The queue will see that and ignore
                 // this readStatus() call automatically.
-                commandQueue.readStatus(rh.gs(R.string.pump_paired), null)
+                commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.pump_paired), null)
             } finally {
                 pairingJob = null
                 pairingPINChannel?.close()
@@ -1454,7 +1452,7 @@ class ComboV2Plugin @Inject constructor (
         }
     }
 
-    fun unpair() {
+    private fun unpair() {
         if (unpairing)
             return
 

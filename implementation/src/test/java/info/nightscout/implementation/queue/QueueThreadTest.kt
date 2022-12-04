@@ -7,7 +7,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.implementation.R
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.constraints.Constraint
@@ -80,7 +79,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         val percentageConstraint = Constraint(0)
         Mockito.`when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject()))
             .thenReturn(percentageConstraint)
-        Mockito.`when`(rh.gs(ArgumentMatchers.eq(R.string.temp_basal_absolute), anyObject(), anyObject())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min")
+        Mockito.`when`(rh.gs(ArgumentMatchers.eq(info.nightscout.core.ui.R.string.temp_basal_absolute), anyObject(), anyObject())).thenReturn("TEMP BASAL %1\$.2f U/h %2\$d min")
 
         sut = QueueThread(commandQueue, context, aapsLogger, rxBus, activePlugin, rh, sp, androidPermission, config)
     }

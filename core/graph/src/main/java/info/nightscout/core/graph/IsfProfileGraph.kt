@@ -86,7 +86,7 @@ class IsfProfileGraph : GraphView {
         addSeries(isfSeries2)
         isfSeries2.thickness = 8
         isfSeries2.isDrawBackground = false
-        isfSeries2.color = context.getColor(R.color.examinedProfile)
+        isfSeries2.color = context.getColor(info.nightscout.core.ui.R.color.examinedProfile)
 
         viewport.isXAxisBoundsManual = true
         viewport.setMinX(0.0)

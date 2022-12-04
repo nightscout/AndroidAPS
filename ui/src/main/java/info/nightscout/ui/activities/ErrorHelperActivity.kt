@@ -3,7 +3,6 @@ package info.nightscout.ui.activities
 import android.os.Bundle
 import info.nightscout.core.services.AlarmSoundService
 import info.nightscout.core.ui.activities.DialogAppCompatActivity
-import info.nightscout.core.main.R
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.shared.sharedPreferences.SP
@@ -25,11 +24,11 @@ class ErrorHelperActivity : DialogAppCompatActivity() {
         val errorDialog = ErrorDialog()
         errorDialog.helperActivity = this
         errorDialog.status = intent.getStringExtra(AlarmSoundService.STATUS) ?: ""
-        errorDialog.sound = intent.getIntExtra(AlarmSoundService.SOUND_ID, R.raw.error)
+        errorDialog.sound = intent.getIntExtra(AlarmSoundService.SOUND_ID, info.nightscout.core.ui.R.raw.error)
         errorDialog.title = intent.getStringExtra(AlarmSoundService.TITLE) ?: ""
         errorDialog.show(supportFragmentManager, "Error")
 
-        if (sp.getBoolean(R.string.key_ns_create_announcements_from_errors, true))
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_errors, true))
             disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(intent.getStringExtra(AlarmSoundService.STATUS) ?: "")).subscribe()
     }
 }

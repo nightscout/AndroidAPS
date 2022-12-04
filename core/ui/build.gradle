@@ -3,7 +3,7 @@ plugins {
     id 'kotlin-android'
 }
 
-apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
 
 android {
     namespace 'info.nightscout.core.ui'

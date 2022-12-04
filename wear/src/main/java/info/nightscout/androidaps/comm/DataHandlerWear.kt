@@ -162,8 +162,8 @@ class DataHandlerWear @Inject constructor(
                 sp.putInt(R.string.key_bolus_wizard_percentage, it.bolusPercentage)
                 sp.putInt(R.string.key_treatments_safety_max_carbs, it.maxCarbs)
                 sp.putDouble(R.string.key_treatments_safety_max_bolus, it.maxBolus)
-                sp.putDouble(R.string.key_insulin_button_increment_1, it.insulinButtonIncrement1)
-                sp.putDouble(R.string.key_insulin_button_increment_2, it.insulinButtonIncrement2)
+                sp.putDouble(info.nightscout.shared.R.string.key_insulin_button_increment_1, it.insulinButtonIncrement1)
+                sp.putDouble(info.nightscout.shared.R.string.key_insulin_button_increment_2, it.insulinButtonIncrement2)
                 sp.putInt(R.string.key_carbs_button_increment_1, it.carbsButtonIncrement1)
                 sp.putInt(R.string.key_carbs_button_increment_2, it.carbsButtonIncrement2)
             }

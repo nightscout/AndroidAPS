@@ -9,13 +9,13 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.automation.R
 import info.nightscout.automation.dialogs.ChooseTriggerDialog
 import info.nightscout.automation.events.EventTriggerChanged
 import info.nightscout.automation.events.EventTriggerClone
 import info.nightscout.automation.events.EventTriggerRemove
 import info.nightscout.automation.services.LastLocationDataContainer
+import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -120,7 +120,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 gravity = Gravity.CENTER
             }
-            setImageResource(R.drawable.ic_add)
+            setImageResource(info.nightscout.core.main.R.drawable.ic_add)
             contentDescription = rh.gs(R.string.add_short)
             setOnClickListener {
                 scanForActivity(context)?.supportFragmentManager?.let {
@@ -142,7 +142,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
             layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {
                 gravity = Gravity.CENTER
             }
-            setImageResource(R.drawable.ic_remove)
+            setImageResource(info.nightscout.core.main.R.drawable.ic_remove)
             contentDescription = rh.gs(R.string.delete_short)
             setOnClickListener {
                 rxBus.send(EventTriggerRemove(trigger))
@@ -156,7 +156,7 @@ abstract class Trigger(val injector: HasAndroidInjector) {
                 gravity = Gravity.CENTER
             }
             layoutParams = params
-            setImageResource(R.drawable.ic_clone)
+            setImageResource(info.nightscout.core.main.R.drawable.ic_clone)
             contentDescription = rh.gs(R.string.copy_short)
             setOnClickListener {
                 rxBus.send(EventTriggerClone(trigger))

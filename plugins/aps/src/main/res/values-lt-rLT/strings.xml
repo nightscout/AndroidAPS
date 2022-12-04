@@ -81,4 +81,13 @@
     <string name="maxvalueinpreferences">Maksimali reikšmė nustatymuose</string>
     <string name="hardlimit">Nekeičiama riba</string>
     <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">Bolusas buvo suleistas per paskutines 3 minutes, SMB praleidžiamas</string>
+    <string name="loop_shortname">CIKLAS</string>
+    <string name="description_loop">Aktyvuoja arba deaktyvuoja Ciklo paleidimą.</string>
+    <string name="ignore5m">Ignoruoti 5 min</string>
+    <string name="ignore15m">Ignoruoti 15 min</string>
+    <string name="ignore30m">Ignoruoti 30 min</string>
+    <string name="basal_set_correctly">Bazė nustatyta teisingai</string>
+    <string name="loop_aps_label">DKS</string>
 </resources>

@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
@@ -28,6 +27,7 @@ import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.dialogs.TwoMessagesAlertDialog
 import info.nightscout.core.ui.dialogs.WarningDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -137,8 +137,8 @@ class ImportExportPrefsImpl @Inject constructor(
         val n6 = Settings.Global.getString(context.contentResolver, "device_name")
 
         // name provided (hopefully) by user
-        val patientName = sp.getString(R.string.key_patient_name, "")
-        val defaultPatientName = rh.gs(R.string.patient_name_default)
+        val patientName = sp.getString(info.nightscout.core.utils.R.string.key_patient_name, "")
+        val defaultPatientName = rh.gs(info.nightscout.core.ui.R.string.patient_name_default)
 
         // name we detect from OS
         val systemName = n1 ?: n2 ?: n3 ?: n4 ?: n5 ?: n6 ?: defaultPatientName
@@ -146,7 +146,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun askForMasterPass(activity: FragmentActivity, @StringRes canceledMsg: Int, then: ((password: String) -> Unit)) {
-        passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { password ->
+        passwordCheck.queryPassword(activity, info.nightscout.core.ui.R.string.master_password, info.nightscout.core.utils.R.string.key_master_password, { password ->
             then(password)
         }, {
                                         ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -158,7 +158,7 @@ class ImportExportPrefsImpl @Inject constructor(
         activity: FragmentActivity, @StringRes canceledMsg: Int, @StringRes passwordName: Int, @StringRes passwordExplanation: Int?,
         @StringRes passwordWarning: Int?, then: ((password: String) -> Unit)
     ) {
-        passwordCheck.queryAnyPassword(activity, passwordName, R.string.key_master_password, passwordExplanation, passwordWarning, { password ->
+        passwordCheck.queryAnyPassword(activity, passwordName, info.nightscout.core.utils.R.string.key_master_password, passwordExplanation, passwordWarning, { password ->
             then(password)
         }, {
                                            ToastUtils.warnToast(activity, rh.gs(canceledMsg))
@@ -171,7 +171,7 @@ class ImportExportPrefsImpl @Inject constructor(
     }
 
     private fun assureMasterPasswordSet(activity: FragmentActivity, @StringRes wrongPwdTitle: Int): Boolean {
-        if (!sp.contains(R.string.key_master_password) || (sp.getString(R.string.key_master_password, "") == "")) {
+        if (!sp.contains(info.nightscout.core.utils.R.string.key_master_password) || (sp.getString(info.nightscout.core.utils.R.string.key_master_password, "") == "")) {
             WarningDialog.showWarning(activity,
                                       rh.gs(wrongPwdTitle),
                                       rh.gs(R.string.master_password_missing, rh.gs(R.string.configbuilder_general), rh.gs(R.string.protection)),
@@ -203,7 +203,7 @@ class ImportExportPrefsImpl @Inject constructor(
         TwoMessagesAlertDialog.showAlert(
             activity, rh.gs(R.string.import_setting),
             rh.gs(R.string.import_from) + " " + fileToImport.name + " ?",
-            rh.gs(R.string.password_preferences_decrypt_prompt), {
+            rh.gs(info.nightscout.core.ui.R.string.password_preferences_decrypt_prompt), {
                 askForMasterPass(activity, R.string.preferences_import_canceled, then)
             }, null, R.drawable.ic_header_import
         )
@@ -381,10 +381,9 @@ class ImportExportPrefsImpl @Inject constructor(
     class CsvExportWorker(
         context: Context,
         params: WorkerParameters
-    ) : Worker(context, params) {
+    ) : LoggingWorker(context, params) {
 
         @Inject lateinit var injector: HasAndroidInjector
-        @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var rh: ResourceHelper
         @Inject lateinit var prefFileList: PrefFileListProvider
         @Inject lateinit var context: Context
@@ -392,11 +391,7 @@ class ImportExportPrefsImpl @Inject constructor(
         @Inject lateinit var storage: Storage
         @Inject lateinit var persistenceLayer: PersistenceLayer
 
-        init {
-            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        }
-
-        override fun doWork(): Result {
+        override fun doWorkAndLog(): Result {
             val entries = persistenceLayer.getUserEntryFilteredDataFromTime(MidnightTime.calc() - T.days(90).msecs()).blockingGet()
             prefFileList.ensureExportDirExists()
             val newFile = prefFileList.newExportCsvFile()

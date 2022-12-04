@@ -155,7 +155,7 @@ class DiaconnG8UserOptionsActivity : DaggerAppCompatActivity() {
         commandQueue.setUserOptions(object : Callback() {
             override fun run() {
                 if (!result.success) {
-                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.pumperror), R.raw.boluserror)
+                    uiInteraction.runAlarm(result.comment, rh.gs(R.string.pumperror), info.nightscout.core.ui.R.raw.boluserror)
                 }
             }
         })
@@ -168,7 +168,7 @@ class DiaconnG8UserOptionsActivity : DaggerAppCompatActivity() {
         categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_vibrate))
         categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_silent))
         context.let { context ->
-            val adapterCategories = ArrayAdapter(context, R.layout.spinner_centered, categories)
+            val adapterCategories = ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, categories)
             binding.beepAndAlarm.adapter = adapterCategories
         }
     }
@@ -179,7 +179,7 @@ class DiaconnG8UserOptionsActivity : DaggerAppCompatActivity() {
         categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_intensity_middle))
         categories.add(rh.gs(R.string.diaconn_g8_pumpalarm_intensity_high))
         context.let { context ->
-            val adapterCategories = ArrayAdapter(context, R.layout.spinner_centered, categories)
+            val adapterCategories = ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, categories)
             binding.alarmIntesity.adapter = adapterCategories
         }
     }

@@ -89,4 +89,13 @@
     <string name="hardlimit">מגבלה קשיחה</string>
     <!--    Autotune   -->
     <string name="insulin_peak">שיא</string>
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">ניתן בולוס ב-3 הדקות האחרונות, מדלג על SMB</string>
+    <string name="loop_shortname">לולאה</string>
+    <string name="description_loop">הפעלת או השבתת הלולאה.</string>
+    <string name="ignore5m">התעלם ל-5 דק\'</string>
+    <string name="ignore15m">התעלם ל-15 דק\'</string>
+    <string name="ignore30m">התעלם ל-30 דק\'</string>
+    <string name="basal_set_correctly">הבזאלי הוגדר כהלכה</string>
+    <string name="loop_aps_label">אלגוריתם APS</string>
 </resources>
