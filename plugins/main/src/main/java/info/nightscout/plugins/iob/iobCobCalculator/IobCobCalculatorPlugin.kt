@@ -403,7 +403,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                         scheduledEvent = null
                         scheduledHistoryPost = null
                     }
-                }, 1L, TimeUnit.SECONDS
+                }, 5L, TimeUnit.SECONDS
             )
         } else {
             // asked reload is newer -> adjust params only
