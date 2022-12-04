@@ -1,23 +1,20 @@
 package info.nightscout.plugins.sync.nsclientV3.workers
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import dagger.android.HasAndroidInjector
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
-import info.nightscout.rx.logging.AAPSLogger
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class LoadLastModificationWorker(
     context: Context, params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
         var ret = Result.success()
 
         runBlocking {
@@ -31,9 +28,5 @@ class LoadLastModificationWorker(
             }
         }
         return ret
-    }
-
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
     }
 }

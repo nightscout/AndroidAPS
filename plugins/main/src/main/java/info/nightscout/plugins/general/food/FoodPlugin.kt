@@ -1,12 +1,12 @@
 package info.nightscout.plugins.general.food
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.foodFromJson
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.Food
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.SyncNsFoodTransaction
@@ -43,19 +43,14 @@ class FoodPlugin @Inject constructor(
     class FoodWorker(
         context: Context,
         params: WorkerParameters
-    ) : Worker(context, params) {
+    ) : LoggingWorker(context, params) {
 
         @Inject lateinit var injector: HasAndroidInjector
-        @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var sp: SP
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
 
-        init {
-            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        }
-
-        override fun doWork(): Result {
+        override fun doWorkAndLog(): Result {
             val foods = dataWorkerStorage.pickupJSONArray(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             aapsLogger.debug(LTag.DATABASE, "Received Food Data: $foods")

@@ -1,12 +1,11 @@
 package info.nightscout.plugins.sync.nsclient.workers
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.bolusCalculatorResultFromJson
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
@@ -28,7 +27,6 @@ import info.nightscout.plugins.sync.nsclient.extensions.temporaryBasalFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.temporaryTargetFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.therapyEventFromJson
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -37,10 +35,9 @@ import javax.inject.Inject
 class NSClientAddUpdateWorker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var config: Config
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
@@ -51,7 +48,7 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var xDripBroadcast: XDripBroadcast
     @Inject lateinit var storeDataForDb: StoreDataForDbImpl
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
         val treatments = dataWorkerStorage.pickupJSONArray(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
@@ -170,9 +167,5 @@ class NSClientAddUpdateWorker(
         activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
         xDripBroadcast.sendTreatments(treatments)
         return ret
-    }
-
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
     }
 }

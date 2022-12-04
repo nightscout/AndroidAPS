@@ -1,13 +1,13 @@
 package info.nightscout.workflow
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
+import info.nightscout.core.utils.worker.LoggingWorker
 
 class DummyWorker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
-    override fun doWork(): Result = Result.success()
+    override fun doWorkAndLog(): Result = Result.success()
 }

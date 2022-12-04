@@ -3,15 +3,14 @@ package info.nightscout.workflow
 import android.content.Context
 import android.graphics.DashPathEffect
 import android.graphics.Paint
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.jjoe64.graphview.series.LineGraphSeries
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.graph.data.ScaledDataPoint
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -22,7 +21,7 @@ import javax.inject.Inject
 class PrepareBasalDataWorker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileFunction: ProfileFunction
@@ -30,7 +29,6 @@ class PrepareBasalDataWorker(
     @Inject lateinit var rxBus: RxBus
     private var ctx: Context
     init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         ctx =  rh.getThemedCtx(context)
     }
 
@@ -39,7 +37,7 @@ class PrepareBasalDataWorker(
         val overviewData: OverviewData
     )
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
 
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareBasalData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))

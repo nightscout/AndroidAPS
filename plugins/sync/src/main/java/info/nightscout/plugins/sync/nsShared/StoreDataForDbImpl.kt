@@ -2,9 +2,8 @@ package info.nightscout.plugins.sync.nsShared
 
 import android.content.Context
 import android.os.SystemClock
-import androidx.work.Worker
 import androidx.work.WorkerParameters
-import dagger.android.HasAndroidInjector
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
@@ -102,17 +101,13 @@ class StoreDataForDbImpl @Inject constructor(
     class StoreBgWorker(
         context: Context,
         params: WorkerParameters
-    ) : Worker(context, params) {
+    ) : LoggingWorker(context, params) {
 
         @Inject lateinit var storeDataForDb: StoreDataForDbImpl
 
-        override fun doWork(): Result {
+        override fun doWorkAndLog(): Result {
             storeDataForDb.storeGlucoseValuesToDb()
             return Result.success()
-        }
-
-        init {
-            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         }
     }
 

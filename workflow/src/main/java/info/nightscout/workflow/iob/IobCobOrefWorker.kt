@@ -2,7 +2,6 @@ package info.nightscout.workflow.iob
 
 import android.content.Context
 import android.os.SystemClock
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
@@ -10,6 +9,7 @@ import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
@@ -25,7 +25,6 @@ import info.nightscout.plugins.iob.iobCobCalculator.fromCarbs
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAutosensCalculationFinished
-import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -40,9 +39,8 @@ import kotlin.math.roundToLong
 class IobCobOrefWorker @Inject internal constructor(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
@@ -56,10 +54,6 @@ class IobCobOrefWorker @Inject internal constructor(
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
 
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-    }
-
     class IobCobOrefWorkerData(
         val injector: HasAndroidInjector,
         val iobCobCalculatorPlugin: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
@@ -69,7 +63,7 @@ class IobCobOrefWorker @Inject internal constructor(
         val cause: Event?
     )
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as IobCobOrefWorkerData?
             ?: return Result.success(workDataOf("Error" to "missing input data"))
 

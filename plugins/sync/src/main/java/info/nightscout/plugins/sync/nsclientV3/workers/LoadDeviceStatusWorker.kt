@@ -1,16 +1,14 @@
 package info.nightscout.plugins.sync.nsclientV3.workers
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
-import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import kotlinx.coroutines.runBlocking
@@ -19,9 +17,8 @@ import javax.inject.Inject
 class LoadDeviceStatusWorker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var context: Context
@@ -29,7 +26,7 @@ class LoadDeviceStatusWorker(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
         var ret = Result.success()
 
         runBlocking {
@@ -49,9 +46,5 @@ class LoadDeviceStatusWorker(
             }
         }
         return ret
-    }
-
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
     }
 }

@@ -2,7 +2,6 @@ package info.nightscout.plugins.profile
 
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
@@ -13,6 +12,7 @@ import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
@@ -434,10 +434,9 @@ class ProfilePlugin @Inject constructor(
     class NSProfileWorker(
         context: Context,
         params: WorkerParameters
-    ) : Worker(context, params) {
+    ) : LoggingWorker(context, params) {
 
         @Inject lateinit var injector: HasAndroidInjector
-        @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var rxBus: RxBus
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
@@ -447,11 +446,7 @@ class ProfilePlugin @Inject constructor(
         @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var profileInstantiator: ProfileInstantiator
 
-        init {
-            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        }
-
-        override fun doWork(): Result {
+        override fun doWorkAndLog(): Result {
             val profileJson = dataWorkerStorage.pickupJSONObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             xDripBroadcast.sendProfile(profileJson)
@@ -471,5 +466,4 @@ class ProfilePlugin @Inject constructor(
             return Result.success(workDataOf("Result" to "Sync not enabled"))
         }
     }
-
 }

@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
@@ -28,6 +27,7 @@ import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.dialogs.TwoMessagesAlertDialog
 import info.nightscout.core.ui.dialogs.WarningDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -381,10 +381,9 @@ class ImportExportPrefsImpl @Inject constructor(
     class CsvExportWorker(
         context: Context,
         params: WorkerParameters
-    ) : Worker(context, params) {
+    ) : LoggingWorker(context, params) {
 
         @Inject lateinit var injector: HasAndroidInjector
-        @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var rh: ResourceHelper
         @Inject lateinit var prefFileList: PrefFileListProvider
         @Inject lateinit var context: Context
@@ -392,11 +391,7 @@ class ImportExportPrefsImpl @Inject constructor(
         @Inject lateinit var storage: Storage
         @Inject lateinit var persistenceLayer: PersistenceLayer
 
-        init {
-            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        }
-
-        override fun doWork(): Result {
+        override fun doWorkAndLog(): Result {
             val entries = persistenceLayer.getUserEntryFilteredDataFromTime(MidnightTime.calc() - T.days(90).msecs()).blockingGet()
             prefFileList.ensureExportDirExists()
             val newFile = prefFileList.newExportCsvFile()
