@@ -510,8 +510,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                     override fun run() {
                         uel.log(Action.LGS_LOOP_MODE, Sources.SMS)
-                        sp.putString(R.string.key_aps_mode, ApsMode.LGS.lowercase)
-                        rxBus.send(EventPreferenceChange(rh.gs(R.string.lowglucosesuspend)))
+                        sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.LGS.lowercase)
+                        rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)))
                         val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                     }
@@ -525,8 +525,8 @@ class SmsCommunicatorPlugin @Inject constructor(
                 messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
                     override fun run() {
                         uel.log(Action.CLOSED_LOOP_MODE, Sources.SMS)
-                        sp.putString(R.string.key_aps_mode, ApsMode.CLOSED.lowercase)
-                        rxBus.send(EventPreferenceChange(rh.gs(R.string.closedloop)))
+                        sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.lowercase)
+                        rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.ui.R.string.closedloop)))
                         val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
                         sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
                     }
@@ -1284,10 +1284,10 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun getApsModeText(): String =
-        when (ApsMode.secureValueOf(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase))) {
-            ApsMode.OPEN   -> rh.gs(R.string.openloop)
-            ApsMode.CLOSED -> rh.gs(R.string.closedloop)
-            ApsMode.LGS    -> rh.gs(R.string.lowglucosesuspend)
-            else           -> rh.gs(R.string.unknown)
+        when (ApsMode.secureValueOf(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase))) {
+            ApsMode.OPEN   -> rh.gs(info.nightscout.core.ui.R.string.openloop)
+            ApsMode.CLOSED -> rh.gs(info.nightscout.core.ui.R.string.closedloop)
+            ApsMode.LGS    -> rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)
+            else           -> rh.gs(info.nightscout.core.ui.R.string.unknown)
         }
 }

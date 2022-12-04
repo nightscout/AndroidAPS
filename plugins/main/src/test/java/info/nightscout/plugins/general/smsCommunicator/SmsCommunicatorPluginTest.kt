@@ -254,10 +254,10 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         `when`(rh.gsNotLocalised(R.string.smscommunicator_tempbasal_canceled)).thenReturn("Temp basal canceled")
         `when`(rh.gsNotLocalised(R.string.smscommunicator_calibration_sent)).thenReturn("Calibration sent. Receiving must be enabled in xDrip+.")
         `when`(rh.gsNotLocalised(R.string.smscommunicator_tt_canceled)).thenReturn("Temp Target canceled successfully")
-        `when`(rh.gs(R.string.closedloop)).thenReturn(modeClosed)
-        `when`(rh.gs(R.string.openloop)).thenReturn(modeOpen)
-        `when`(rh.gs(R.string.lowglucosesuspend)).thenReturn(modeLgs)
-        `when`(rh.gs(R.string.unknown)).thenReturn(modeUnknown)
+        `when`(rh.gs(info.nightscout.core.ui.R.string.closedloop)).thenReturn(modeClosed)
+        `when`(rh.gs(info.nightscout.core.ui.R.string.openloop)).thenReturn(modeOpen)
+        `when`(rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)).thenReturn(modeLgs)
+        `when`(rh.gs(info.nightscout.core.ui.R.string.unknown)).thenReturn(modeUnknown)
         `when`(rh.gs(R.string.smscommunicator_set_closed_loop_reply_with_code)).thenReturn("In order to switch Loop mode to Closed loop reply with code %1\$s")
         `when`(rh.gs(R.string.smscommunicator_current_loop_mode)).thenReturn("Current loop mode: %1\$s")
         `when`(rh.gs(R.string.smscommunicator_set_lgs_reply_with_code)).thenReturn("In order to switch Loop mode to LGS (Low Glucose Suspend) reply with code %1\$s")
@@ -344,7 +344,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         //LOOP STATUS : enabled - APS mode - Closed
         `when`(loop.enabled).thenReturn(true)
         `when`(loop.isSuspended).thenReturn(false)
-        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.CLOSED.lowercase)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.CLOSED.lowercase)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
@@ -353,7 +353,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Loop is enabled - $modeClosed", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP STATUS : enabled - APS mode - Open
-        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.OPEN.lowercase)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.OPEN.lowercase)
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertFalse(sms.ignored)
@@ -361,7 +361,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Loop is enabled - $modeOpen", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP STATUS : enabled - APS mode - LGS
-        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.LGS.lowercase)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.LGS.lowercase)
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertFalse(sms.ignored)
@@ -369,7 +369,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         Assert.assertEquals("Loop is enabled - $modeLgs", smsCommunicatorPlugin.messages[1].text)
 
         //LOOP STATUS : enabled - APS mode - unknown
-        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn("some wrong value")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn("some wrong value")
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
         Assert.assertFalse(sms.ignored)
@@ -521,7 +521,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         var smsCommand = "LOOP CLOSED"
         val replyClosed = "In order to switch Loop mode to Closed loop reply with code "
         `when`(loop.enabled).thenReturn(true)
-        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.CLOSED.lowercase)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.CLOSED.lowercase)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", smsCommand)
         smsCommunicatorPlugin.processSms(sms)
@@ -536,7 +536,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         //LOOP LGS
         smsCommand = "LOOP LGS"
         val replyLgs = "In order to switch Loop mode to LGS (Low Glucose Suspend) reply with code "
-        `when`(sp.getString(R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.LGS.lowercase)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.LGS.lowercase)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", smsCommand)
         smsCommunicatorPlugin.processSms(sms)
