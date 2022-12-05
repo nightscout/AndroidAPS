@@ -14,6 +14,7 @@
     <string name="pump_base_basal_rate">%1$.2f E/t</string>
     <string name="pump_not_initialized_profile_not_set">Pumpen ikke initialisert, ingen profil valgt!</string>
     <string name="failed_update_basal_profile">Klarte ikke å oppdatere basalprofil</string>
+    <string name="bolus_delivered_successfully">Bolus %1$.2f E ble levert vellykket</string>
     <string name="no_valid_basal_rate">Ingen gyldige basaldoser ble lest fra pumpen</string>
     <string name="limiting_iob">Begrenser IOB til %1$.1f E på grunn av %2$s</string>
     <string name="loop_disabled">LOOP DEAKTIVERT PGA BEGRENSNINGER</string>
@@ -105,6 +106,7 @@
     <string name="loading">Laster…</string>
     <string name="notes_label">Merknader</string>
     <string name="remove_button">Fjern</string>
+    <string name="add_new">Legg til ny</string>
     <string name="addnew_above">Legg til ny over</string>
     <string name="wrong_pump_data">Data kommer fra forskjellige pumper. Bytt pumpevalg for å nullstille pumpens tilstand.</string>
     <string name="bg_label">BS</string>
@@ -160,6 +162,8 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IK</string>
     <string name="isf_short">ISF</string>
+    <string name="canceling_tbr_failed">Kansellering av Temp Basal feilet</string>
+    <string name="canceling_eb_failed">Kansellering av forlenget bolus feilet</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
     <string name="wrongpin">Feil PIN-kode</string>
@@ -242,6 +246,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g ekstra karbohydrater kreves innen %2$d minutter</string>
     <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">Akkumulert TDD</string>
     <string name="expweight">Eksponentielt vektet TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
