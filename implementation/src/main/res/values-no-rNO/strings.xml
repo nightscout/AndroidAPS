@@ -24,4 +24,5 @@
     <string name="detailed_14_days">Detaljert 14 dager</string>
     <string name="day_tir">Dag TIR</string>
     <string name="night_tir">Natt TIR</string>
+    <string name="carbs_short" comment="max 6 characters">Karbo</string>
 </resources>
