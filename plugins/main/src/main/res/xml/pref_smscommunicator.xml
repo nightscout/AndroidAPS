@@ -19,6 +19,17 @@
             android:key="@string/key_smscommunicator_remote_commands_allowed"
             android:title="@string/smscommunicator_remote_commands_allowed" />
 
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_smscommunicator_add_pump_status"
+            android:title="@string/smscommunicator_add_pump_status" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_smscommunicator_report_to_all"
+            android:title="@string/smscommunicator_report_to_all"
+            android:summary="@string/smscommunicator_report_to_all_summary"/>
+
         <info.nightscout.core.validators.ValidatingEditTextPreference
             android:defaultValue="15"
             android:key="@string/key_smscommunicator_remote_bolus_min_distance"

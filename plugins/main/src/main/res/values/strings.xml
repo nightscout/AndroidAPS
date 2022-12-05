@@ -7,6 +7,8 @@
     <string name="key_smscommunicator_remote_bolus_min_distance" translatable="false">smscommunicator_remotebolusmindistance</string>
     <string name="key_smscommunicator_allowednumbers" translatable="false">smscommunicator_allowednumbers</string>
     <string name="key_smscommunicator_remote_commands_allowed" translatable="false">smscommunicator_remotecommandsallowed</string>
+    <string name="key_smscommunicator_add_pump_status" translatable="false">smscommunicator_addpumpstatus</string>
+    <string name="key_smscommunicator_report_to_all" translatable="false">smscommunicator_reporttoall</string>
 
     <string name="smscommunicator">SMS Communicator</string>
     <string name="smscommunicator_shortname">SMS</string>
@@ -52,6 +54,9 @@
     <string name="smscommunicator_tt_set">Target %1$s for %2$d minutes set successfully</string>
     <string name="smscommunicator_tt_canceled">Temp Target canceled successfully</string>
     <string name="smscommunicator_remote_commands_allowed">Allow remote commands via SMS</string>
+    <string name="smscommunicator_add_pump_status">Add pump status to report message</string>
+    <string name="smscommunicator_report_to_all">Send report to all</string>
+    <string name="smscommunicator_report_to_all_summary">Disabling this option will send successful command report to sender only</string>
     <string name="smscommunicator_loop_has_been_disabled">Loop has been disabled</string>
     <string name="smscommunicator_loop_has_been_enabled">Loop has been enabled</string>
     <string name="smscommunicator_loop_is_enabled">Loop is enabled</string>
