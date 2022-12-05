@@ -157,7 +157,7 @@ class DanaRKoreanPlugin @Inject constructor(
             result
         } else {
             val result = PumpEnactResult(injector)
-            result.success(false).bolusDelivered(0.0).carbsDelivered(0.0).comment(info.nightscout.core.ui.R.string.invalid_input)
+            result.success(false).bolusDelivered(0.0).comment(info.nightscout.core.ui.R.string.invalid_input)
             aapsLogger.error("deliverTreatment: Invalid input")
             result
         }

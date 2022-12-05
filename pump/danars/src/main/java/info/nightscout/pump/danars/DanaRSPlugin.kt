@@ -306,7 +306,6 @@ class DanaRSPlugin @Inject constructor(
             val result = PumpEnactResult(injector)
             result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
             result.bolusDelivered = t.insulin
-            result.carbsDelivered = detailedBolusInfo.carbs
             if (!result.success) {
                 var error = "" + danaPump.bolusStartErrorCode
                 when (danaPump.bolusStartErrorCode) {
@@ -323,7 +322,6 @@ class DanaRSPlugin @Inject constructor(
             val result = PumpEnactResult(injector)
             result.success = false
             result.bolusDelivered = 0.0
-            result.carbsDelivered = 0.0
             result.comment = rh.gs(info.nightscout.core.ui.R.string.invalid_input)
             aapsLogger.error("deliverTreatment: Invalid input")
             result

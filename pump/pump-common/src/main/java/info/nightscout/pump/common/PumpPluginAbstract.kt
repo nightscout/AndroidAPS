@@ -308,8 +308,7 @@ abstract class PumpPluginAbstract protected constructor(
             if (detailedBolusInfo.insulin == 0.0 && detailedBolusInfo.carbs == 0.0) {
                 // neither carbs nor bolus requested
                 aapsLogger.error("deliverTreatment: Invalid input")
-                PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0).carbsDelivered(0.0)
-                    .comment(info.nightscout.core.ui.R.string.invalid_input)
+                PumpEnactResult(injector).success(false).enacted(false).bolusDelivered(0.0).comment(info.nightscout.core.ui.R.string.invalid_input)
             } else if (detailedBolusInfo.insulin > 0) {
                 // bolus needed, ask pump to deliver it
                 deliverBolus(detailedBolusInfo)
@@ -324,8 +323,7 @@ abstract class PumpPluginAbstract protected constructor(
                 bolusingEvent.percent = 100
                 rxBus.send(bolusingEvent)
                 aapsLogger.debug(LTag.PUMP, "deliverTreatment: Carb only treatment.")
-                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(0.0)
-                    .carbsDelivered(detailedBolusInfo.carbs).comment(R.string.common_resultok)
+                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(0.0).comment(R.string.common_resultok)
             }
         } finally {
             triggerUIChange()

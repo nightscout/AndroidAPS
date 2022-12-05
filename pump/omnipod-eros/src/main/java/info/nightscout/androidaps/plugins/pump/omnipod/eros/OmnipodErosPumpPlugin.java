@@ -661,7 +661,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         if (detailedBolusInfo.insulin == 0 && detailedBolusInfo.carbs == 0) {
             // neither carbs nor bolus requested
             aapsLogger.error("deliverTreatment: Invalid input: neither carbs nor insulin are set in treatment");
-            return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d).carbsDelivered(0d)
+            return new PumpEnactResult(getInjector()).success(false).enacted(false).bolusDelivered(0d)
                     .comment(info.nightscout.core.ui.R.string.invalid_input);
         } else if (detailedBolusInfo.insulin > 0) {
             // bolus needed, ask pump to deliver it
@@ -679,8 +679,7 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
                             "[date=%d, carbs=%.2f, pumpSerial=%s] - Result: %b",
                     detailedBolusInfo.timestamp, detailedBolusInfo.carbs, serialNumber(), result));
 
-            return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d)
-                    .carbsDelivered(detailedBolusInfo.carbs);
+            return new PumpEnactResult(getInjector()).success(true).enacted(true).bolusDelivered(0d);
         }
     }
 
@@ -1115,8 +1114,6 @@ public class OmnipodErosPumpPlugin extends PumpPluginBase implements Pump, Riley
         if (result.getSuccess()) {
             incrementStatistics(detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB ? OmnipodErosStorageKeys.Statistics.SMB_BOLUSES_DELIVERED
                     : OmnipodErosStorageKeys.Statistics.STANDARD_BOLUSES_DELIVERED);
-
-            result.carbsDelivered(detailedBolusInfo.carbs);
         }
 
         return result;
