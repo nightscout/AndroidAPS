@@ -20,7 +20,7 @@
             android:key="@string/key_combov2_unpair_pump"
             android:shouldDisableView="true"/>
 
-        <SeekBarPreference
+        <info.nightscout.core.ui.elements.IntSeekBarPreference
             android:key="@string/key_combov2_discovery_duration"
             android:title="@string/combov2_discovery_duration"
             android:min="30"
