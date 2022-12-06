@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_sleeping">수면</string>
+    <string name="pump_status_waking_up">시작중</string>
+    <string name="pump_status_active">활성</string>
+    <string name="pump_status_error_comm">연결오류</string>
+    <string name="pump_status_timeout_comm">연결시간초과</string>
+    <string name="pump_status_pump_unreachable">펌프에 연결할 수 없습니다.</string>
+    <string name="pump_status_invalid_config">유효하지 않은 설정</string>
+</resources>

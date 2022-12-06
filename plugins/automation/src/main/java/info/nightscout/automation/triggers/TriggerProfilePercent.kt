@@ -86,7 +86,7 @@ class TriggerProfilePercent(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.percentagecompared, rh.gs(comparator.value.stringRes), pct.value.toInt())
 
-    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_actions_profileswitch)
+    override fun icon(): Optional<Int> = Optional.of(info.nightscout.interfaces.R.drawable.ic_actions_profileswitch)
 
     override fun duplicate(): Trigger = TriggerProfilePercent(injector, this)
 

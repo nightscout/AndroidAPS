@@ -7,13 +7,13 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.plugins.R
-import info.nightscout.plugins.aps.loop.events.EventLoopUpdateGui
 import info.nightscout.plugins.general.wear.wearintegration.DataHandlerMobile
 import info.nightscout.plugins.general.wear.wearintegration.DataLayerListenerServiceMobileHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAutosensCalculationFinished
 import info.nightscout.rx.events.EventDismissBolusProgressIfRunning
+import info.nightscout.rx.events.EventLoopUpdateGui
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventPreferenceChange
@@ -43,8 +43,8 @@ class WearPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(WearFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_watch)
-        .pluginName(R.string.wear)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_watch)
+        .pluginName(info.nightscout.core.ui.R.string.wear)
         .shortName(R.string.wear_shortname)
         .preferencesId(R.xml.pref_wear)
         .description(R.string.description_wear),
@@ -64,7 +64,7 @@ class WearPlugin @Inject constructor(
             .subscribe({ event: EventDismissBolusProgressIfRunning ->
                            event.resultSuccess?.let {
                                val status =
-                                   if (it) rh.gs(R.string.success)
+                                   if (it) rh.gs(info.nightscout.core.ui.R.string.success)
                                    else rh.gs(R.string.no_success)
                                if (isEnabled()) rxBus.send(EventMobileToWear(EventData.BolusProgress(percent = 100, status = status)))
                            }

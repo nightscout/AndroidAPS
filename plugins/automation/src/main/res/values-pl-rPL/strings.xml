@@ -113,7 +113,6 @@
     <string name="sort_automation">Sortuj automatyzację</string>
     <string name="remove_selected_items">Usuń wybrane pozycje</string>
     <string name="count_selected">Wybrany %1$d</string>
-    <string name="confirm_remove_multiple_items">Czy na pewno chcesz usunąć %1$d pozycji</string>
     <string name="system_automation">Automatyzacja systemowa</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">P</string>

@@ -27,7 +27,6 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.danars.R
 import info.nightscout.pump.danars.activities.EnterPinActivity
 import info.nightscout.pump.danars.activities.PairingHelperActivity
 import info.nightscout.pump.danars.comm.DanaRSMessageHashTable
@@ -106,7 +105,7 @@ class BLEComm @Inject internal constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
         }
@@ -164,30 +163,30 @@ class BLEComm @Inject internal constructor(
         if (!encryptedDataRead && encryptedCommandSent && encryption == EncryptionType.ENCRYPTION_BLE5) {
             // there was no response from pump after started encryption
             // assume pairing keys are invalid
-            val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
+            val lastClearRequest = sp.getLong(info.nightscout.pump.dana.R.string.key_rs_last_clear_key_request, 0)
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
-                ToastUtils.errorToast(context, R.string.invalidpairing)
+                ToastUtils.errorToast(context, info.nightscout.pump.dana.R.string.invalidpairing)
                 danaRSPlugin.changePump()
                 removeBond()
             } else if (lastClearRequest == 0L) {
                 aapsLogger.error("Clearing pairing keys postponed")
-                sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
+                sp.putLong(info.nightscout.pump.dana.R.string.key_rs_last_clear_key_request, dateUtil.now())
             }
         }
         if (!encryptedDataRead && encryptedCommandSent && encryption == EncryptionType.ENCRYPTION_RSv3) {
             // there was no response from pump after started encryption
             // assume pairing keys are invalid
-            val lastClearRequest = sp.getLong(R.string.key_rs_last_clear_key_request, 0)
+            val lastClearRequest = sp.getLong(info.nightscout.pump.dana.R.string.key_rs_last_clear_key_request, 0)
             if (lastClearRequest != 0L && dateUtil.isOlderThan(lastClearRequest, 5)) {
                 aapsLogger.error("Clearing pairing keys !!!")
-                sp.remove(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
-                sp.remove(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
-                sp.remove(rh.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName)
-                ToastUtils.errorToast(context, R.string.invalidpairing)
+                sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName)
+                sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName)
+                sp.remove(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName)
+                ToastUtils.errorToast(context, info.nightscout.pump.dana.R.string.invalidpairing)
                 danaRSPlugin.changePump()
             } else if (lastClearRequest == 0L) {
                 aapsLogger.error("Clearing pairing keys postponed")
-                sp.putLong(R.string.key_rs_last_clear_key_request, dateUtil.now())
+                sp.putLong(info.nightscout.pump.dana.R.string.key_rs_last_clear_key_request, dateUtil.now())
             }
         }
         // cancel previous scheduled disconnection to prevent closing upcoming connection
@@ -208,7 +207,7 @@ class BLEComm @Inject internal constructor(
     }
 
     private fun removeBond() {
-        sp.getStringOrNull(R.string.key_danars_address, null)?.let { address ->
+        sp.getStringOrNull(info.nightscout.pump.dana.R.string.key_danars_address, null)?.let { address ->
             bluetoothAdapter?.getRemoteDevice(address)?.let { device ->
                 try {
                     device::class.java.getMethod("removeBond").invoke(device)
@@ -400,7 +399,7 @@ class BLEComm @Inject internal constructor(
             if (isConnected && (encryption == EncryptionType.ENCRYPTION_RSv3 || encryption == EncryptionType.ENCRYPTION_BLE5))
                 bleEncryption.decryptSecondLevelPacket(receivedData).also {
                     encryptedDataRead = true
-                    sp.putLong(R.string.key_rs_last_clear_key_request, 0L)
+                    sp.putLong(info.nightscout.pump.dana.R.string.key_rs_last_clear_key_request, 0L)
                 }
             else receivedData
         addToReadBuffer(incomingBuffer)
@@ -514,7 +513,7 @@ class BLEComm @Inject internal constructor(
     private fun sendConnect() {
         val deviceName = connectDeviceName
         if (deviceName == null || deviceName == "") {
-            uiInteraction.addNotification(Notification.DEVICE_NOT_PAIRED, rh.gs(R.string.pairfirst), Notification.URGENT)
+            uiInteraction.addNotification(Notification.DEVICE_NOT_PAIRED, rh.gs(info.nightscout.pump.dana.R.string.pairfirst), Notification.URGENT)
             return
         }
         val bytes = bleEncryption.getEncryptedPacket(BleEncryption.DANAR_PACKET__OPCODE_ENCRYPTION__PUMP_CHECK, null, deviceName)
@@ -530,7 +529,7 @@ class BLEComm @Inject internal constructor(
             encryption = EncryptionType.ENCRYPTION_DEFAULT
             danaPump.ignoreUserPassword = false
             // Grab pairing key from preferences if exists
-            val pairingKey = sp.getString(rh.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName, "")
+            val pairingKey = sp.getString(rh.gs(info.nightscout.pump.dana.R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName, "")
             aapsLogger.debug(LTag.PUMPBTCOMM, "Using stored pairing key: $pairingKey")
             if (pairingKey.isNotEmpty()) {
                 sendPasskeyCheck(pairingKey)
@@ -546,7 +545,7 @@ class BLEComm @Inject internal constructor(
             danaPump.hwModel = decryptedBuffer[5].toInt()
             danaPump.protocol = decryptedBuffer[7].toInt()
             // grab randomSyncKey
-            sp.putString(rh.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName, String.format("%02x", decryptedBuffer[decryptedBuffer.size - 1]))
+            sp.putString(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName, String.format("%02x", decryptedBuffer[decryptedBuffer.size - 1]))
 
             if (danaPump.hwModel == 0x05) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK V3 (OK)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
@@ -566,9 +565,9 @@ class BLEComm @Inject internal constructor(
             danaPump.protocol = decryptedBuffer[7].toInt()
             val pairingKey = DanaRSPacket.asciiStringFromBuff(decryptedBuffer, 8, 6) // used while bonding
             if (decryptedBuffer[8] != 0.toByte())
-                sp.putString(rh.gs(R.string.key_dana_ble5_pairingkey) + danaRSPlugin.mDeviceName, pairingKey)
+                sp.putString(rh.gs(info.nightscout.pump.dana.R.string.key_dana_ble5_pairingkey) + danaRSPlugin.mDeviceName, pairingKey)
 
-            val storedPairingKey = sp.getString(rh.gs(R.string.key_dana_ble5_pairingkey) + danaRSPlugin.mDeviceName, "")
+            val storedPairingKey = sp.getString(rh.gs(info.nightscout.pump.dana.R.string.key_dana_ble5_pairingkey) + danaRSPlugin.mDeviceName, "")
             if (storedPairingKey.isBlank()) {
                 removeBond()
                 disconnect("Non existing pairing key")
@@ -584,21 +583,21 @@ class BLEComm @Inject internal constructor(
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'P'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'M'.code.toByte() && decryptedBuffer[5] == 'P'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (PUMP)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
             mSendQueue.clear()
-            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.pumperror)))
-            pumpSync.insertAnnouncement(rh.gs(R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber)
-            uiInteraction.addNotification(Notification.PUMP_ERROR, rh.gs(R.string.pumperror), Notification.URGENT)
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(info.nightscout.pump.dana.R.string.pumperror)))
+            pumpSync.insertAnnouncement(rh.gs(info.nightscout.pump.dana.R.string.pumperror), null, danaPump.pumpType(), danaPump.serialNumber)
+            uiInteraction.addNotification(Notification.PUMP_ERROR, rh.gs(info.nightscout.pump.dana.R.string.pumperror), Notification.URGENT)
             // response BUSY: error status
         } else if (decryptedBuffer.size == 6 && decryptedBuffer[2] == 'B'.code.toByte() && decryptedBuffer[3] == 'U'.code.toByte() && decryptedBuffer[4] == 'S'.code.toByte() && decryptedBuffer[5] == 'Y'.code.toByte()) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (BUSY)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
             mSendQueue.clear()
-            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.pump_busy)))
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(info.nightscout.core.ui.R.string.pump_busy)))
         } else {
             // ERROR in response, wrong serial number
             aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK (ERROR)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
             mSendQueue.clear()
-            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(R.string.connection_error)))
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED, rh.gs(info.nightscout.core.ui.R.string.connection_error)))
             danaRSPlugin.clearPairing()
-            uiInteraction.addNotification(Notification.WRONG_SERIAL_NUMBER, rh.gs(R.string.password_cleared), Notification.URGENT)
+            uiInteraction.addNotification(Notification.WRONG_SERIAL_NUMBER, rh.gs(info.nightscout.core.ui.R.string.password_cleared), Notification.URGENT)
         }
     }
 
@@ -622,13 +621,13 @@ class BLEComm @Inject internal constructor(
     // 2nd packet v3
     // 0x00 Start encryption, 0x01 Request pairing
     private fun sendV3PairingInformation() {
-        val randomPairingKey = sp.getString(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
-        val pairingKey = sp.getString(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
+        val randomPairingKey = sp.getString(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
+        val pairingKey = sp.getString(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
         if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
             val tPairingKey = Base64.decode(pairingKey, Base64.DEFAULT)
             val tRandomPairingKey = Base64.decode(randomPairingKey, Base64.DEFAULT)
             var tRandomSyncKey: Byte = 0
-            val randomSyncKey = sp.getString(rh.gs(R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName, "")
+            val randomSyncKey = sp.getString(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_randomsynckey) + danaRSPlugin.mDeviceName, "")
             if (randomSyncKey.isNotEmpty()) {
                 tRandomSyncKey = randomSyncKey.toInt(16).toByte()
             }
@@ -664,8 +663,8 @@ class BLEComm @Inject internal constructor(
         } else if (encryption == EncryptionType.ENCRYPTION_RSv3) {
             // decryptedBuffer[2] : 0x00 OK  0x01 Error, No pairing
             if (decryptedBuffer[2] == 0x00.toByte()) {
-                val randomPairingKey = sp.getString(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
-                val pairingKey = sp.getString(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
+                val randomPairingKey = sp.getString(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
+                val pairingKey = sp.getString(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
                 if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
                     // expecting successful connect
                     isConnected = true
@@ -688,7 +687,7 @@ class BLEComm @Inject internal constructor(
             aapsLogger.debug(LTag.PUMPBTCOMM, "Pump user password: " + danaPump.rsPassword)
             if (!danaPump.isRSPasswordOK) {
                 aapsLogger.error(LTag.PUMPBTCOMM, "Wrong pump password")
-                uiInteraction.addNotification(Notification.WRONG_PUMP_PASSWORD, rh.gs(R.string.wrongpumppassword), Notification.URGENT)
+                uiInteraction.addNotification(Notification.WRONG_PUMP_PASSWORD, rh.gs(info.nightscout.pump.dana.R.string.wrongpumppassword), Notification.URGENT)
                 disconnect("WrongPassword")
                 SystemClock.sleep(T.mins(1).msecs())
             } else {
@@ -720,8 +719,8 @@ class BLEComm @Inject internal constructor(
 
     // 3rd packet v3 : only after entering PIN codes
     fun finishV3Pairing() {
-        val randomPairingKey = sp.getString(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
-        val pairingKey = sp.getString(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
+        val randomPairingKey = sp.getString(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, "")
+        val pairingKey = sp.getString(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, "")
         if (randomPairingKey.isNotEmpty() && pairingKey.isNotEmpty()) {
             val tPairingKey = Base64.decode(pairingKey, Base64.DEFAULT)
             val tRandomPairingKey = Base64.decode(randomPairingKey, Base64.DEFAULT)
@@ -747,7 +746,7 @@ class BLEComm @Inject internal constructor(
         sendTimeInfo()
         val pairingKey = byteArrayOf(decryptedBuffer[2], decryptedBuffer[3])
         // store pairing key to preferences
-        sp.putString(rh.gs(R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName, DanaRSPacket.bytesToHex(pairingKey))
+        sp.putString(rh.gs(info.nightscout.pump.dana.R.string.key_danars_pairingkey) + danaRSPlugin.mDeviceName, DanaRSPacket.bytesToHex(pairingKey))
         aapsLogger.debug(LTag.PUMPBTCOMM, "Got pairing key: " + DanaRSPacket.bytesToHex(pairingKey))
     }
 

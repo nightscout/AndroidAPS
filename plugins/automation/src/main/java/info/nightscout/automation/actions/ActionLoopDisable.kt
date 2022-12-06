@@ -2,12 +2,12 @@ package info.nightscout.automation.actions
 
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.automation.R
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.pump.PumpEnactResult
@@ -25,8 +25,8 @@ class ActionLoopDisable(injector: HasAndroidInjector) : Action(injector) {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var uel: UserEntryLogger
 
-    override fun friendlyName(): Int = R.string.disableloop
-    override fun shortDescription(): String = rh.gs(R.string.disableloop)
+    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.disableloop
+    override fun shortDescription(): String = rh.gs(info.nightscout.core.ui.R.string.disableloop)
     @DrawableRes override fun icon(): Int = R.drawable.ic_stop_24dp
 
     override fun doAction(callback: Callback) {

@@ -39,5 +39,6 @@
     <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
     <string name="a11y_bg_quality_recalculated">recalculated</string>
     <string name="a11y_bg_quality_doubles">double entries</string>
+    <string name="a11y_bg_quality_flat">Flat data. Considered to be wrong</string>
 
 </resources>

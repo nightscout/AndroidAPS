@@ -3,15 +3,17 @@ package info.nightscout.plugins.aps.di
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.autotune.Autotune
 import info.nightscout.plugins.aps.OpenAPSFragment
+import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.plugins.general.autotune.AutotunePlugin
 
 @Module(
     includes = [
         AutotuneModule::class,
         AlgModule::class,
-
+        LoopModule::class,
         ApsModule.Bindings::class
     ]
 )
@@ -24,6 +26,7 @@ abstract class ApsModule {
     @Module
     interface Bindings {
 
-        @Binds fun bindAutotuneInterface(autotunePlugin: AutotunePlugin): Autotune
+        @Binds fun bindLoop(loopPlugin: LoopPlugin): Loop
+        @Binds fun bindAutotune(autotunePlugin: AutotunePlugin): Autotune
     }
 }

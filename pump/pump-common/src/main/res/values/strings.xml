@@ -7,7 +7,7 @@
     <string name="common_resultok">OK</string>
 
     <string name="pump_serial_number">Pump Serial Number</string>
-    <string name="bolus_delivered">%1$.2f U / %2$.2f U delivered</string>
+    <string name="bolus_delivered_so_far">%1$.2f U / %2$.2f U delivered</string>
 
 
     <!-- PumpCommon - Pump Status -->

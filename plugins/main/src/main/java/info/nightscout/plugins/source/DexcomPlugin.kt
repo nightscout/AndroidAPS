@@ -4,13 +4,12 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.fromConstant
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry.Action
@@ -22,11 +21,13 @@ import info.nightscout.database.impl.transactions.InvalidateGlucoseValueTransact
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.XDripBroadcast
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.source.BgSource
+import info.nightscout.interfaces.source.DexcomBoyda
 import info.nightscout.plugins.R
 import info.nightscout.plugins.source.activities.RequestDexcomPermissionActivity
 import info.nightscout.rx.logging.AAPSLogger
@@ -52,13 +53,13 @@ class DexcomPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
-        .pluginIcon(R.drawable.ic_dexcom_g6)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_dexcom_g6)
         .pluginName(R.string.dexcom_app_patched)
         .shortName(R.string.dexcom_short)
         .preferencesId(R.xml.pref_dexcom)
         .description(R.string.description_source_dexcom),
     aapsLogger, rh, injector
-), BgSource {
+), BgSource, DexcomBoyda {
 
     init {
         if (!config.NSCLIENT) {
@@ -66,15 +67,13 @@ class DexcomPlugin @Inject constructor(
         }
     }
 
-    override fun advancedFilteringSupported(): Boolean {
-        return true
-    }
+    override fun advancedFilteringSupported(): Boolean = true
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
         (glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE ||
             glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE ||
             glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN)
-            && sp.getBoolean(R.string.key_do_ns_upload, false)
+            && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
     override fun onStart() {
         super.onStart()
@@ -85,9 +84,8 @@ class DexcomPlugin @Inject constructor(
     class DexcomWorker(
         context: Context,
         params: WorkerParameters
-    ) : Worker(context, params) {
+    ) : LoggingWorker(context, params) {
 
-        @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var dexcomPlugin: DexcomPlugin
         @Inject lateinit var sp: SP
@@ -97,11 +95,7 @@ class DexcomPlugin @Inject constructor(
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var uel: UserEntryLogger
 
-        init {
-            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        }
-
-        override fun doWork(): Result {
+        override fun doWorkAndLog(): Result {
             var ret = Result.success()
 
             if (!dexcomPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))

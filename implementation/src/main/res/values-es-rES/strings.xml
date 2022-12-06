@@ -24,4 +24,5 @@
     <string name="detailed_14_days">Datos detallados de 14 días</string>
     <string name="day_tir">TIR Diurno</string>
     <string name="night_tir">TIR Nocturno</string>
+    <string name="carbs_short" comment="max 6 characters">Carbohidratos</string>
 </resources>

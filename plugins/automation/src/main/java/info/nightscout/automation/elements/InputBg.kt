@@ -2,7 +2,6 @@ package info.nightscout.automation.elements
 
 import android.view.Gravity
 import android.widget.LinearLayout
-import info.nightscout.automation.R
 import info.nightscout.core.ui.elements.NumberPicker
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -29,7 +28,7 @@ class InputBg(profileFunction: ProfileFunction) : Element() {
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             NumberPicker(root.context, null).also {
-                it.setParams(value, minValue, maxValue, step, decimalFormat, false, root.findViewById(R.id.ok))
+                it.setParams(value, minValue, maxValue, step, decimalFormat, false, root.findViewById(info.nightscout.core.ui.R.id.ok))
                 it.setOnValueChangedListener { v: Double -> value = v }
                 it.gravity = Gravity.CENTER_HORIZONTAL
             })

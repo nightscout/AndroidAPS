@@ -2,7 +2,6 @@ package info.nightscout.workflow.iob
 
 import android.content.Context
 import android.os.SystemClock
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
@@ -11,6 +10,7 @@ import info.nightscout.core.extensions.target
 import info.nightscout.core.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
@@ -27,13 +27,11 @@ import info.nightscout.plugins.iob.iobCobCalculator.fromCarbs
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAutosensCalculationFinished
-import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.workflow.R
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
@@ -45,9 +43,8 @@ import kotlin.math.roundToLong
 class IobCobOref1Worker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
@@ -61,29 +58,25 @@ class IobCobOref1Worker(
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
 
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-    }
-
     class IobCobOref1WorkerData(
         val injector: HasAndroidInjector,
         val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
-        val from: String,
+        val reason: String,
         val end: Long,
         val limitDataToOldestAvailable: Boolean,
         val cause: Event?
     )
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
 
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as IobCobOref1WorkerData?
             ?: return Result.success(workDataOf("Error" to "missing input data"))
 
         val start = dateUtil.now()
         try {
-            aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread started: ${data.from}")
+            aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA thread started: ${data.reason}")
             if (!profileFunction.isProfileValid("IobCobThread")) {
-                aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (No profile): ${data.from}")
+                aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (No profile): ${data.reason}")
                 return Result.success(workDataOf("Error" to "app still initializing"))
             }
             //log.debug("Locking calculateSensitivityData");
@@ -93,8 +86,8 @@ class IobCobOref1Worker(
             val bucketedData = ads.bucketedData
             val autosensDataTable = ads.autosensDataTable
             if (bucketedData == null || bucketedData.size < 3) {
-                aapsLogger.debug(LTag.AUTOSENS,  {"Aborting calculation thread (No bucketed data available): ${data.from}"})
-                return Result.success(workDataOf("Error" to "Aborting calculation thread (No bucketed data available): ${data.from}"))
+                aapsLogger.debug(LTag.AUTOSENS,  {"Aborting calculation thread (No bucketed data available): ${data.reason}"})
+                return Result.success(workDataOf("Error" to "Aborting calculation thread (No bucketed data available): ${data.reason}"))
             }
             val prevDataTime = ads.roundUpTime(bucketedData[bucketedData.size - 3].timestamp)
             aapsLogger.debug(LTag.AUTOSENS, {"Prev data time: " + dateUtil.dateAndTimeString(prevDataTime)})
@@ -103,8 +96,8 @@ class IobCobOref1Worker(
             for (i in bucketedData.size - 4 downTo 0) {
                 rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100 - (100.0 * i / bucketedData.size).toInt(), data.cause))
                 if (isStopped) {
-                    aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (trigger): ${data.from}")
-                    return Result.failure(workDataOf("Error" to "Aborting calculation thread (trigger): ${data.from}"))
+                    aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (trigger): ${data.reason}")
+                    return Result.failure(workDataOf("Error" to "Aborting calculation thread (trigger): ${data.reason}"))
                 }
                 // check if data already exists
                 var bgTime = bucketedData[i].timestamp
@@ -117,10 +110,10 @@ class IobCobOref1Worker(
                 }
                 val profile = profileFunction.getProfile(bgTime)
                 if (profile == null) {
-                    aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (no profile): ${data.from}")
+                    aapsLogger.debug(LTag.AUTOSENS, "Aborting calculation thread (no profile): ${data.reason}")
                     continue  // profile not set yet
                 }
-                aapsLogger.debug(LTag.AUTOSENS, "Processing calculation thread: ${data.from} ($i/${bucketedData.size})")
+                aapsLogger.debug(LTag.AUTOSENS, "Processing calculation thread: ${data.reason} ($i/${bucketedData.size})")
                 val sens = profile.getIsfMgdl(bgTime)
                 val autosensData = AutosensDataObject(data.injector)
                 autosensData.time = bgTime
@@ -207,7 +200,7 @@ class IobCobOref1Worker(
                 // if we are absorbing carbs
                 if (previous != null && previous.cob > 0) {
                     // calculate sum of min carb impact from all active treatments
-                    val totalMinCarbsImpact = sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
+                    val totalMinCarbsImpact = sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
 
                     // figure out how many carbs that represents
                     // but always assume at least 3mg/dL/5m (default) absorption per active treatment
@@ -300,7 +293,7 @@ class IobCobOref1Worker(
                 // add an extra negative deviation if a high temp target is running and exercise mode is set
                 // TODO AS-FIX
                 @Suppress("SimplifyBooleanWithConstants")
-                if (false && sp.getBoolean(R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
+                if (false && sp.getBoolean(info.nightscout.core.utils.R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
                     val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
                     if (tempTarget is ValueWrapper.Existing && tempTarget.value.target() >= 100) {
                         autosensData.extraDeviation.add(-(tempTarget.value.target() - 100) / 20)
@@ -331,7 +324,7 @@ class IobCobOref1Worker(
             }.start()
         } finally {
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100, data.cause))
-            aapsLogger.debug(LTag.AUTOSENS, {"AUTOSENSDATA thread ended: ${data.from}"})
+            aapsLogger.debug(LTag.AUTOSENS, {"AUTOSENSDATA thread ended: ${data.reason}"})
             profiler.log(LTag.AUTOSENS, "IobCobOref1Thread", start)
         }
         return Result.success()

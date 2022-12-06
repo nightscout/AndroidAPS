@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="insight_status">Stádas</string>
+    <string name="started">Thosaigh</string>
+    <string name="stopped">Stopadh</string>
+    <string name="tdd_bolus">TDD Bólas</string>
+    <string name="tdd_basal">TDD Bunaidh</string>
+    <string name="eb_formatter">%1$.2f / %2$.2f A do %3$d nom</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
+    <string name="pump_stopped">Caidéil stopadh</string>
+    <string name="pump_started">Caidéil tosú</string>
+    <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_battery">Ceal.: %1$d%%</string>
+</resources>

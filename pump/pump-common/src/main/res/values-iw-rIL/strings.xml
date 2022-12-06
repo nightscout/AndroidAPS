@@ -5,7 +5,6 @@
     <string name="pump_operation_not_yet_supported_by_pump">הפעולה עוד לא נתמכת על ידי המשאבה.</string>
     <string name="common_resultok">אישור</string>
     <string name="pump_serial_number">המספר הסידורי של המשאבה</string>
-    <string name="bolus_delivered">%1$.2f יח\' מתוך %2$.2f יח\' הוזרקו</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">לא מאותחל</string>
     <string name="pump_status_initialized">מאותחל</string>

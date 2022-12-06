@@ -1,7 +1,6 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.implementation.R
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.Dana
 import info.nightscout.interfaces.pump.Diaconn
@@ -36,11 +35,11 @@ class CommandLoadHistory(
         }
     }
 
-    override fun status(): String = rh.gs(R.string.load_history, type.toInt())
+    override fun status(): String = rh.gs(info.nightscout.core.ui.R.string.load_history, type.toInt())
 
     override fun log(): String = "LOAD HISTORY $type"
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.main.R.string.connectiontimedout))?.run()
+        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.connectiontimedout))?.run()
     }
 }

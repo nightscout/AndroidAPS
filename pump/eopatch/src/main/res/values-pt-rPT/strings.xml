@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="category_alerts">Alertas</string>
-    <string name="bolus_delivered">Bólus %1$.2f U administrado com sucesso</string>
     <string name="eopatch_status">Estado</string>
     <string name="eopatch_base_basal_rate">Taxa Basal do Perfil</string>
     <string name="eopatch_temp_basal_rate">Taxa Basal Temp</string>

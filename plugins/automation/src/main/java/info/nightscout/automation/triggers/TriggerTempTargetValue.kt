@@ -75,7 +75,7 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.careportal_temporarytargetvalue
+    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.careportal_temporarytargetvalue
 
     override fun friendlyDescription(): String {
         return if (comparator.value == Comparator.Compare.IS_NOT_AVAILABLE)
@@ -90,7 +90,7 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(rh, R.string.careportal_temporarytargetvalue, this))
+            .add(StaticLabel(rh, info.nightscout.core.ui.R.string.careportal_temporarytargetvalue, this))
             .add(comparator)
             .add(LabelWithElement(rh, rh.gs(R.string.target_u, ttValue.units), "", ttValue))
             .build(root)

@@ -51,14 +51,14 @@ class StatusLightHandler @Inject constructor(
     ) {
         val pump = activePlugin.activePump
         val bgSource = activePlugin.activeBgSource
-        handleAge(cannulaAge, TherapyEvent.Type.CANNULA_CHANGE, R.string.key_statuslights_cage_warning, 48.0, R.string.key_statuslights_cage_critical, 72.0)
-        handleAge(insulinAge, TherapyEvent.Type.INSULIN_CHANGE, R.string.key_statuslights_iage_warning, 72.0, R.string.key_statuslights_iage_critical, 144.0)
-        handleAge(sensorAge, TherapyEvent.Type.SENSOR_CHANGE, R.string.key_statuslights_sage_warning, 216.0, R.string.key_statuslights_sage_critical, 240.0)
+        handleAge(cannulaAge, TherapyEvent.Type.CANNULA_CHANGE, info.nightscout.core.utils.R.string.key_statuslights_cage_warning, 48.0, info.nightscout.core.utils.R.string.key_statuslights_cage_critical, 72.0)
+        handleAge(insulinAge, TherapyEvent.Type.INSULIN_CHANGE, info.nightscout.core.utils.R.string.key_statuslights_iage_warning, 72.0, info.nightscout.core.utils.R.string.key_statuslights_iage_critical, 144.0)
+        handleAge(sensorAge, TherapyEvent.Type.SENSOR_CHANGE, info.nightscout.core.utils.R.string.key_statuslights_sage_warning, 216.0, info.nightscout.core.utils.R.string.key_statuslights_sage_critical, 240.0)
         if (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()) {
-            handleAge(batteryAge, TherapyEvent.Type.PUMP_BATTERY_CHANGE, R.string.key_statuslights_bage_warning, 216.0, R.string.key_statuslights_bage_critical, 240.0)
+            handleAge(batteryAge, TherapyEvent.Type.PUMP_BATTERY_CHANGE, info.nightscout.core.utils.R.string.key_statuslights_bage_warning, 216.0, info.nightscout.core.utils.R.string.key_statuslights_bage_critical, 240.0)
         }
 
-        val insulinUnit = rh.gs(R.string.insulin_unit_shortname)
+        val insulinUnit = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
         if (pump.pumpDescription.isPatchPump) {
             handlePatchReservoirLevel(
                 reservoirLevel,
@@ -90,8 +90,8 @@ class StatusLightHandler @Inject constructor(
             if (pump.model().supportBatteryLevel || erosBatteryLinkAvailable) {
                 handleLevel(batteryLevel, R.string.key_statuslights_bat_critical, 26.0, R.string.key_statuslights_bat_warning, 51.0, pump.batteryLevel.toDouble(), "%")
             } else {
-                batteryLevel?.text = rh.gs(R.string.value_unavailable_short)
-                batteryLevel?.setTextColor(rh.gac(batteryLevel.context, R.attr.defaultTextColor))
+                batteryLevel?.text = rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
+                batteryLevel?.setTextColor(rh.gac(batteryLevel.context, info.nightscout.core.ui.R.attr.defaultTextColor))
             }
         }
     }
@@ -104,7 +104,7 @@ class StatusLightHandler @Inject constructor(
             warnColors.setColorByAge(view, therapyEvent.value, warn, urgent)
             view?.text = therapyEvent.value.age(rh.shortTextMode(), rh, dateUtil)
         } else {
-            view?.text = if (rh.shortTextMode()) "-" else rh.gs(R.string.value_unavailable_short)
+            view?.text = if (rh.shortTextMode()) "-" else rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
         }
     }
 
@@ -124,7 +124,7 @@ class StatusLightHandler @Inject constructor(
     ) {
         if (level >= maxReading) {
             view?.text = DecimalFormatter.to0Decimal(maxReading, units)
-            view?.setTextColor(rh.gac(view.context, R.attr.defaultTextColor))
+            view?.setTextColor(rh.gac(view.context, info.nightscout.core.ui.R.attr.defaultTextColor))
         } else {
             handleLevel(view, criticalSetting, criticalDefaultValue, warnSetting, warnDefaultValue, level, units)
         }
@@ -145,11 +145,11 @@ class StatusLightHandler @Inject constructor(
     }
     private fun TherapyEvent.age(useShortText: Boolean, rh: ResourceHelper, dateUtil: DateUtil): String {
         val diff = dateUtil.computeDiff(timestamp, System.currentTimeMillis())
-        var days = " " + rh.gs(info.nightscout.core.main.R.string.days) + " "
-        var hours = " " + rh.gs(info.nightscout.core.main.R.string.hours) + " "
+        var days = " " + rh.gs(info.nightscout.shared.R.string.days) + " "
+        var hours = " " + rh.gs(info.nightscout.shared.R.string.hours) + " "
         if (useShortText) {
-            days = rh.gs(info.nightscout.core.main.R.string.shortday)
-            hours = rh.gs(info.nightscout.core.main.R.string.shorthour)
+            days = rh.gs(info.nightscout.shared.R.string.shortday)
+            hours = rh.gs(info.nightscout.shared.R.string.shorthour)
         }
         return diff[TimeUnit.DAYS].toString() + days + diff[TimeUnit.HOURS] + hours
     }

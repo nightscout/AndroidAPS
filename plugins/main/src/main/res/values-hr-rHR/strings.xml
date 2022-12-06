@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="description_sms_communicator">Daljinsko upravljanje AndroidAPS-om pomoću SMS naredbi.</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Skenirajte kod za postavljanje AAPS OTP kodova</string>
+    <string name="smscommunicator_otp_reset_warning">Poništavanjem autentifikatora činite sve već osigurane autentifikatore nevažećima. Morat ćete ih ponovno postaviti!</string>
     <string name="smscommunicator_temptarget_with_code">Za postavljanje privremenog cilja %1$s odgovorite s kodom %2$s</string>
     <string name="smscommunicator_temptarget_cancel">Da biste otkazali Temp Target, odgovorite s kodom %1$s</string>
     <string name="smscommunicator_stops_ns_with_code">Da biste onemogućili uslugu SMS Remote Service, odgovorite s kodom %1$s.\n\nImajte na umu da ćete je moći ponovno aktivirati samo s AAPS glavnog pametnog telefona.</string>
@@ -53,6 +56,7 @@
     <string name="sms_iob">Aktivni inzulin:</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Bazal:</string>
+    <string name="a11y_otp_qr_code">QR kod za postavljanje jednokratne lozinke</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
     <string name="description_insulin_rapid">Unaprijed podešen predložak za inzulin Humalog i NovoRapid / NovoLog</string>
@@ -72,6 +76,7 @@
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip+ Statusna linija (sat)</string>
     <string name="xdrip_status_shortname">xds</string>
+    <string name="description_xdrip_status_line">Prikažite informacije o svojem Loop-u na vašem xDrip+ brojčaniku.</string>
     <string name="xdrip_status_detailed_iob_title">Prikaži detaljan IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Podijelite IOB na bolus i bazalni IOB na brojčaniku</string>
     <string name="disabled_loop">Petlja onemogućena</string>
@@ -80,6 +85,7 @@
     <string name="xdrip_status_settings">xDrip+ status (sat)</string>
     <!-- Food-->
     <string name="food_short">Hrana</string>
+    <string name="description_food">Prikaži postavke prehrane definirane u Nightscout</string>
     <string name="filter">Filter</string>
     <string name="food">Hrana</string>
     <string name="short_kilo_joul">kJ</string>
@@ -98,6 +104,7 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Definirajte profil koji je dostupan izvan mreže.</string>
     <string name="a11y_add_new_to_list">dodaj novi na popis</string>
     <string name="do_you_want_switch_profile">Želite li promijeniti profil i odbaciti promjene napravljene na trenutnom profilu?</string>
     <string name="save_or_reset_changes_first">Prvo spremite ili poništite trenutne promjene</string>
@@ -175,12 +182,6 @@
     <string name="random_bg_short">GUK</string>
     <string name="dexcom_log_ns_sensor_change_summary">Stvorite događaj \"Promjena senzora\" u NS-u automatski pri pokretanju senzora</string>
     <!-- Skins -->
-    <!--    Loop -->
-    <string name="run_now">Pokreni sada</string>
-    <string name="description_loop">Aktiviraj ili deaktiviraj implementaciju koja pokreće loop.</string>
-    <string name="last_run_label">Zadnje pokretanje</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Zahtjev</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->

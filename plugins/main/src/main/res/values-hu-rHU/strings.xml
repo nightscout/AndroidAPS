@@ -5,6 +5,7 @@
     <string name="wrong_format">Hibás formátum</string>
     <string name="sms_actual_bg">VC:</string>
     <string name="sms_bolus">Bólus:</string>
+    <string name="sms_basal">Bázis:</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
     <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
@@ -14,12 +15,19 @@
     <!-- StatusLine -->
     <!-- Food-->
     <string name="food_short">Étel</string>
+    <string name="filter">Szűrő</string>
     <string name="food">Étel</string>
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
     <string name="localprofile">Profil</string>
+    <string name="missing_profile_name">Profilnév hiányzik</string>
+    <string name="error_in_basal_values">Hiba bázisértékekben</string>
+    <string name="error_in_target_values">Hiba célértékekben</string>
+    <string name="errors">Hibák</string>
     <string name="dia_short">DIA</string>
+    <string name="basal_short">BÁZ</string>
     <!-- Objectives -->
+    <string name="time_elapsed">Eltelt idő</string>
     <string name="apsselected">APS kiválasztva</string>
     <string name="objectives_next_button">Tovább</string>
     <string name="objectives_previous_button">Vissza</string>
@@ -70,7 +78,6 @@
     <string name="classic_description">Eredeti megjelenés</string>
     <string name="lowres_description">Alacsony felbontás</string>
     <string name="skin">Megjelenés</string>
-    <!--    Loop -->
     <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->

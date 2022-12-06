@@ -10,7 +10,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">A definir perfil basal</string>
     <string name="combov2_bolus_cancelled">Bólus cancelado</string>
     <string name="combov2_bolus_delivery_failed">Administração de bólus falhou. Nenhum bólus parece ter sido administrado. Para confirmar, por favor verifique a bomba de forma a evitar uma dupla administração de bólus e programe novamente o bólus. De forma a evitar qualquer problema, os bólus não são reprogramados de forma automática.</string>
-    <string name="combov2_last_bolus">%1$.1f %2$s (%3$s)</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min restantes)</string>
     <string name="combov2_battery_low_warning">Bateria da bomba está fraca</string>
     <string name="combov2_short_status_last_connection">ÚltimaLig: %1$d min. atrás</string>

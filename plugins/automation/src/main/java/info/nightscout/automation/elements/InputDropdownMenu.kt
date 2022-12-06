@@ -7,7 +7,6 @@ import android.widget.ArrayAdapter
 import android.widget.LinearLayout
 import android.widget.Spinner
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.automation.R
 
 class InputDropdownMenu(private val rh: ResourceHelper) : Element() {
 
@@ -26,7 +25,7 @@ class InputDropdownMenu(private val rh: ResourceHelper) : Element() {
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, itemList).apply {
+                adapter = ArrayAdapter(root.context, info.nightscout.core.ui.R.layout.spinner_centered, itemList).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).also {

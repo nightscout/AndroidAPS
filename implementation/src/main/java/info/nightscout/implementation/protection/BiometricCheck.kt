@@ -17,7 +17,6 @@ import androidx.biometric.BiometricPrompt.ERROR_USER_CANCELED
 import androidx.biometric.BiometricPrompt.ERROR_VENDOR
 import androidx.biometric.BiometricPrompt.PromptInfo
 import androidx.fragment.app.FragmentActivity
-import info.nightscout.core.main.R
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.protection.PasswordCheck
 import info.nightscout.shared.extensions.runOnUiThread
@@ -41,7 +40,7 @@ object BiometricCheck {
                         ToastUtils.errorToast(activity.baseContext, errString.toString())
                         // fallback to master password
                         runOnUiThread {
-                            passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                            passwordCheck.queryPassword(activity, info.nightscout.core.ui.R.string.master_password, info.nightscout.core.utils.R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                         }
                     }
 
@@ -53,7 +52,7 @@ object BiometricCheck {
                         // no pin set
                         // fallback to master password
                         runOnUiThread {
-                            passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                            passwordCheck.queryPassword(activity, info.nightscout.core.ui.R.string.master_password, info.nightscout.core.utils.R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                         }
                     }
 
@@ -62,7 +61,7 @@ object BiometricCheck {
                     ERROR_HW_NOT_PRESENT,
                     ERROR_NO_BIOMETRICS        ->
                         runOnUiThread {
-                            passwordCheck.queryPassword(activity, R.string.master_password, R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
+                            passwordCheck.queryPassword(activity, info.nightscout.core.ui.R.string.master_password, info.nightscout.core.utils.R.string.key_master_password, { ok?.run() }, { cancel?.run() }, { fail?.run() })
                         }
                 }
             }
@@ -82,8 +81,8 @@ object BiometricCheck {
 
         val promptInfo = PromptInfo.Builder()
             .setTitle(activity.getString(title))
-            .setDescription(activity.getString(R.string.biometric_title))
-            .setNegativeButtonText(activity.getString(R.string.cancel)) // not possible with setDeviceCredentialAllowed
+            .setDescription(activity.getString(info.nightscout.core.ui.R.string.biometric_title))
+            .setNegativeButtonText(activity.getString(info.nightscout.core.ui.R.string.cancel)) // not possible with setDeviceCredentialAllowed
 //            .setDeviceCredentialAllowed(true) // setDeviceCredentialAllowed creates new activity when PIN is requested, activity.fragmentManager crash afterwards
             .build()
 

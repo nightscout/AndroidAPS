@@ -86,4 +86,13 @@
     <string name="maxvalueinpreferences">在参数选项里的最大值</string>
     <string name="hardlimit">硬限制</string>
     <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">在最近3分钟内输注了大剂量，正在忽略SMB微型大剂量</string>
+    <string name="loop_shortname">闭环</string>
+    <string name="description_loop">激活或停用这个工具触发闭环。</string>
+    <string name="ignore5m">忽略5分钟</string>
+    <string name="ignore15m">忽略 15分钟</string>
+    <string name="ignore30m">忽略30分钟</string>
+    <string name="basal_set_correctly">正确地设置基础率</string>
+    <string name="loop_aps_label">APS</string>
 </resources>

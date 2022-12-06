@@ -3,5 +3,13 @@
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <string name="nav_preferences_plugin">%1$s Postavke</string>
+    <string name="nav_refreshtreatments">Osvežite tretmane iz NS-a</string>
+    <string name="nav_exit">Izađi</string>
+    <string name="delta">Delta</string>
+    <string name="profile_label">Profil</string>
+    <string name="save">Sačuvaj</string>
+    <string name="reloadprofile">Ponovo učitaj profil</string>
+    <string name="correctionbous">Korekcija</string>
     <!-- WEAR OS-->
 </resources>

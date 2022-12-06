@@ -27,7 +27,7 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAt
         : this(ctx, attrs, defStyle, 0)
 
     constructor(ctx: Context, attrs: AttributeSet)
-        : this(ctx, attrs, R.attr.editTextPreferenceStyle)
+        : this(ctx, attrs, androidx.preference.R.attr.editTextPreferenceStyle)
 
     override fun onBindViewHolder(holder: PreferenceViewHolder) {
         super.onBindViewHolder(holder)

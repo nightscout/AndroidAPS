@@ -1,7 +1,6 @@
 package info.nightscout.core.graph.data
 
 import android.content.Context
-import info.nightscout.core.graph.R
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.Translator
@@ -57,15 +56,15 @@ class TherapyEventDataPoint(
                 else                                                 -> PointsWithLabelGraphSeries.Shape.GENERAL
             }
 
-    override val size get() = if (rh.gb(R.bool.isTablet)) 12.0f else 10.0f
+    override val size get() = if (rh.gb(info.nightscout.shared.R.bool.isTablet)) 12.0f else 10.0f
     override fun color(context: Context?): Int {
         return when (data.type) {
-            TherapyEvent.Type.ANNOUNCEMENT          -> rh.gac(context, R.attr.notificationAnnouncement)
-            TherapyEvent.Type.NS_MBG                -> rh.gac(context, R.attr.therapyEvent_NS_MBG)
-            TherapyEvent.Type.FINGER_STICK_BG_VALUE -> rh.gac(context, R.attr.therapyEvent_FINGER_STICK_BG_VALUE)
-            TherapyEvent.Type.EXERCISE              -> rh.gac(context, R.attr.therapyEvent_EXERCISE)
-            TherapyEvent.Type.APS_OFFLINE           -> rh.gac(context, R.attr.therapyEvent_APS_OFFLINE) and -0x7f000001
-            else                                    -> rh.gac(context, R.attr.therapyEvent_Default)
+            TherapyEvent.Type.ANNOUNCEMENT          -> rh.gac(context, info.nightscout.core.ui.R.attr.notificationAnnouncement)
+            TherapyEvent.Type.NS_MBG                -> rh.gac(context, info.nightscout.core.ui.R.attr.therapyEvent_NS_MBG)
+            TherapyEvent.Type.FINGER_STICK_BG_VALUE -> rh.gac(context, info.nightscout.core.ui.R.attr.therapyEvent_FINGER_STICK_BG_VALUE)
+            TherapyEvent.Type.EXERCISE              -> rh.gac(context, info.nightscout.core.ui.R.attr.therapyEvent_EXERCISE)
+            TherapyEvent.Type.APS_OFFLINE           -> rh.gac(context, info.nightscout.core.ui.R.attr.therapyEvent_APS_OFFLINE) and -0x7f000001
+            else                                    -> rh.gac(context, info.nightscout.core.ui.R.attr.therapyEvent_Default)
         }
     }
 }

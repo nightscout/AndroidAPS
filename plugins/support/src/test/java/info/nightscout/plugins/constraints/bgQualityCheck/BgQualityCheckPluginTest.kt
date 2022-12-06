@@ -6,14 +6,18 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.aps.AutosensDataStore
+import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.source.BgSource
+import info.nightscout.interfaces.source.DexcomBoyda
 import info.nightscout.plugins.support.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
@@ -28,10 +32,12 @@ class BgQualityCheckPluginTest : TestBase() {
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var autosensDataStore: AutosensDataStore
+    @Mock lateinit var activePlugin: ActivePlugin
 
     private lateinit var plugin: BgQualityCheckPlugin
 
-    val injector = HasAndroidInjector { AndroidInjector { } }
+    private val injector = HasAndroidInjector { AndroidInjector { } }
+    val now = 100000000L
     //private val autosensDataStore = AutosensDataStoreObject()
 
     @BeforeEach
@@ -45,27 +51,29 @@ class BgQualityCheckPluginTest : TestBase() {
                 iobCobCalculator,
                 aapsSchedulers,
                 fabricPrivacy,
-                dateUtil
+                dateUtil,
+                activePlugin
             )
         `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
         `when`(rh.gs(anyInt())).thenReturn("")
         `when`(rh.gs(anyInt(), any(), any())).thenReturn("")
+        `when`(dateUtil.now()).thenReturn(now)
     }
 
     @Test
     fun runTest() {
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(null)
         plugin.processBgData()
-        Assert.assertEquals(BgQualityCheckPlugin.State.UNKNOWN, plugin.state)
-        Assert.assertEquals(0, plugin.icon())
+        Assertions.assertEquals(BgQualityCheck.State.UNKNOWN, plugin.state)
+        Assertions.assertEquals(0, plugin.icon())
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(true)
         plugin.processBgData()
-        Assert.assertEquals(BgQualityCheckPlugin.State.FIVE_MIN_DATA, plugin.state)
-        Assert.assertEquals(0, plugin.icon())
+        Assertions.assertEquals(BgQualityCheck.State.FIVE_MIN_DATA, plugin.state)
+        Assertions.assertEquals(0, plugin.icon())
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(false)
         plugin.processBgData()
-        Assert.assertEquals(BgQualityCheckPlugin.State.RECALCULATED, plugin.state)
-        Assert.assertEquals(R.drawable.ic_baseline_warning_24_yellow, plugin.icon())
+        Assertions.assertEquals(BgQualityCheck.State.RECALCULATED, plugin.state)
+        Assertions.assertEquals(R.drawable.ic_baseline_warning_24_yellow, plugin.icon())
 
         val superData: MutableList<GlucoseValue> = ArrayList()
         superData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = T.mins(20).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
@@ -76,10 +84,10 @@ class BgQualityCheckPluginTest : TestBase() {
 
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(true)
         plugin.processBgData()
-        Assert.assertEquals(BgQualityCheckPlugin.State.FIVE_MIN_DATA, plugin.state)
+        Assertions.assertEquals(BgQualityCheck.State.FIVE_MIN_DATA, plugin.state)
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(false)
         plugin.processBgData()
-        Assert.assertEquals(BgQualityCheckPlugin.State.RECALCULATED, plugin.state)
+        Assertions.assertEquals(BgQualityCheck.State.RECALCULATED, plugin.state)
 
         val duplicatedData: MutableList<GlucoseValue> = ArrayList()
         duplicatedData.add(
@@ -136,8 +144,8 @@ class BgQualityCheckPluginTest : TestBase() {
 
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(true)
         plugin.processBgData()
-        Assert.assertEquals(BgQualityCheckPlugin.State.DOUBLED, plugin.state)
-        Assert.assertEquals(R.drawable.ic_baseline_warning_24_red, plugin.icon())
+        Assertions.assertEquals(BgQualityCheck.State.DOUBLED, plugin.state)
+        Assertions.assertEquals(R.drawable.ic_baseline_warning_24_red, plugin.icon())
 
         val identicalData: MutableList<GlucoseValue> = ArrayList()
         identicalData.add(
@@ -194,19 +202,73 @@ class BgQualityCheckPluginTest : TestBase() {
 
         `when`(autosensDataStore.lastUsed5minCalculation).thenReturn(false)
         plugin.processBgData()
-        Assert.assertEquals(BgQualityCheckPlugin.State.DOUBLED, plugin.state)
+        Assertions.assertEquals(BgQualityCheck.State.DOUBLED, plugin.state)
+
+        // Flat data
+        val flatData: MutableList<GlucoseValue> = ArrayList()
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(0).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow
+            .FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 101.0, timestamp = now + T.mins(-10).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-15).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-20).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-25).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 99.0, timestamp = now + T.mins(-30).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-35).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-40).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-45).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(flatData)
+        `when`(iobCobCalculator.ads.lastBg()).thenReturn(flatData[0])
+
+        // Test non-dexcom plugin on flat data
+        class OtherPlugin : BgSource {
+
+            override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = true
+        }
+        `when`(activePlugin.activeBgSource).thenReturn(OtherPlugin())
+        plugin.processBgData()
+        Assertions.assertEquals(BgQualityCheck.State.FLAT, plugin.state)
+        Assertions.assertEquals(R.drawable.ic_baseline_trending_flat_24, plugin.icon())
+
+        // Test dexcom plugin on flat data
+        class DexcomPlugin : BgSource, DexcomBoyda {
+
+            override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = true
+        }
+        `when`(activePlugin.activeBgSource).thenReturn(DexcomPlugin())
+        plugin.processBgData()
+        Assertions.assertNotEquals(BgQualityCheck.State.FLAT, plugin.state)
+
+        // not enough data
+        val incompleteData: MutableList<GlucoseValue> = ArrayList()
+        incompleteData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(0).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        incompleteData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(incompleteData)
+        `when`(iobCobCalculator.ads.lastBg()).thenReturn(incompleteData[0])
+        `when`(activePlugin.activeBgSource).thenReturn(OtherPlugin())
+        plugin.processBgData()// must be more than 5 values
+        Assertions.assertNotEquals(BgQualityCheck.State.FLAT, plugin.state)
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 101.0, timestamp = now + T.mins(-10).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-15).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-20).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-25).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 99.0, timestamp = now + T.mins(-30).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-35).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-40).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
+        plugin.processBgData() // must be at least 45 min old
+        Assertions.assertNotEquals(BgQualityCheck.State.FLAT, plugin.state)
     }
 
     @Test
     fun applyMaxIOBConstraintsTest() {
-        plugin.state = BgQualityCheckPlugin.State.UNKNOWN
-        Assert.assertEquals(10.0, plugin.applyMaxIOBConstraints(Constraint(10.0)).value(), 0.001)
-        plugin.state = BgQualityCheckPlugin.State.FIVE_MIN_DATA
-        Assert.assertEquals(10.0, plugin.applyMaxIOBConstraints(Constraint(10.0)).value(), 0.001)
-        plugin.state = BgQualityCheckPlugin.State.RECALCULATED
-        Assert.assertEquals(10.0, plugin.applyMaxIOBConstraints(Constraint(10.0)).value(), 0.001)
-        plugin.state = BgQualityCheckPlugin.State.DOUBLED
-        Assert.assertEquals(0.0, plugin.applyMaxIOBConstraints(Constraint(10.0)).value(), 0.001)
+        plugin.state = BgQualityCheck.State.UNKNOWN
+        Assertions.assertEquals(10.0, plugin.applyMaxIOBConstraints(Constraint(10.0)).value(), 0.001)
+        plugin.state = BgQualityCheck.State.FIVE_MIN_DATA
+        Assertions.assertEquals(10.0, plugin.applyMaxIOBConstraints(Constraint(10.0)).value(), 0.001)
+        plugin.state = BgQualityCheck.State.RECALCULATED
+        Assertions.assertEquals(10.0, plugin.applyMaxIOBConstraints(Constraint(10.0)).value(), 0.001)
+        plugin.state = BgQualityCheck.State.DOUBLED
+        Assertions.assertEquals(0.0, plugin.applyMaxIOBConstraints(Constraint(10.0)).value(), 0.001)
     }
 
 }

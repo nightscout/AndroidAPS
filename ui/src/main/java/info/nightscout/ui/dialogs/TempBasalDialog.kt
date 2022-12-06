@@ -119,23 +119,23 @@ class TempBasalDialog : DialogFragmentWithDate() {
         if (isPercentPump) {
             val basalPercentInput = SafeParse.stringToInt(binding.basalPercentInput.text)
             percent = constraintChecker.applyBasalPercentConstraints(Constraint(basalPercentInput), profile).value()
-            actions.add(rh.gs(R.string.tempbasal_label) + ": $percent%")
-            actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
-            if (percent != basalPercentInput) actions.add(rh.gs(R.string.constraint_applied))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.tempbasal_label) + ": $percent%")
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_mins, durationInMinutes))
+            if (percent != basalPercentInput) actions.add(rh.gs(info.nightscout.core.ui.R.string.constraint_applied))
         } else {
             val basalAbsoluteInput = SafeParse.stringToDouble(binding.basalAbsoluteInput.text)
             absolute = constraintChecker.applyBasalConstraints(Constraint(basalAbsoluteInput), profile).value()
-            actions.add(rh.gs(R.string.tempbasal_label) + ": " + rh.gs(R.string.pump_base_basal_rate, absolute))
-            actions.add(rh.gs(R.string.duration) + ": " + rh.gs(R.string.format_mins, durationInMinutes))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.tempbasal_label) + ": " + rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, absolute))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_mins, durationInMinutes))
             if (abs(absolute - basalAbsoluteInput) > 0.01)
-                actions.add(rh.gs(R.string.constraint_applied).formatColor(context, rh, R.attr.warningColor))
+                actions.add(rh.gs(info.nightscout.core.ui.R.string.constraint_applied).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
         }
         activity?.let { activity ->
-            OKDialog.showConfirmation(activity, rh.gs(R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
+            OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.tempbasal_label), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {
                 val callback: Callback = object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                            uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error), info.nightscout.core.ui.R.raw.boluserror)
                         }
                     }
                 }

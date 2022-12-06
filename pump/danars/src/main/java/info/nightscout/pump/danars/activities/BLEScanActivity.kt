@@ -68,7 +68,7 @@ class BLEScanActivity : DaggerAppCompatActivity() {
             bluetoothAdapter?.safeEnable()
             startScan()
         } else {
-            ToastUtils.errorToast(context, context.getString(R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
         }
     }
 
@@ -86,7 +86,7 @@ class BLEScanActivity : DaggerAppCompatActivity() {
             } catch (ignore: IllegalStateException) {
             } // ignore BT not on
         } else {
-            ToastUtils.errorToast(context, context.getString(R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
         }
 
     private fun stopScan() =
@@ -96,7 +96,7 @@ class BLEScanActivity : DaggerAppCompatActivity() {
             } catch (ignore: IllegalStateException) {
             } // ignore BT not on
         } else {
-            ToastUtils.errorToast(context, context.getString(R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
         }
 
     @SuppressLint("MissingPermission")
@@ -151,13 +151,13 @@ class BLEScanActivity : DaggerAppCompatActivity() {
             }
 
             override fun onClick(v: View) {
-                sp.putString(R.string.key_danars_address, item.device.address)
-                sp.putString(R.string.key_danars_name, name.text.toString())
+                sp.putString(info.nightscout.pump.dana.R.string.key_danars_address, item.device.address)
+                sp.putString(info.nightscout.pump.dana.R.string.key_danars_name, name.text.toString())
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
                     item.device.createBond()
                     rxBus.send(EventDanaRSDeviceChange())
                 } else {
-                    ToastUtils.errorToast(context, context.getString(R.string.need_connect_permission))
+                    ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
                 }
                 finish()
             }

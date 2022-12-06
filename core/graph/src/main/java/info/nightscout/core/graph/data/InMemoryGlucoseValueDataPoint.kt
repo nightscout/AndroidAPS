@@ -1,7 +1,6 @@
 package info.nightscout.core.graph.data
 
 import android.content.Context
-import info.nightscout.core.graph.R
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
@@ -25,6 +24,6 @@ class InMemoryGlucoseValueDataPoint(
     override val shape = PointsWithLabelGraphSeries.Shape.BUCKETED_BG
     override val size = 0.3f
     override fun color(context: Context?): Int {
-        return rh.gac(context, R.attr.inMemoryColor)
+        return rh.gac(context, info.nightscout.core.ui.R.attr.inMemoryColor)
     }
 }

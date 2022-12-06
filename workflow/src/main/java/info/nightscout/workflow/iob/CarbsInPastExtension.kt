@@ -17,7 +17,7 @@ fun fromCarbs(t: Carbs, isAAPSOrWeighted: Boolean, profileFunction: ProfileFunct
     val min5minCarbImpact: Double
     val profile = profileFunction.getProfile(t.timestamp)
     if (isAAPSOrWeighted && profile != null) {
-        val maxAbsorptionHours = sp.getDouble(info.nightscout.core.main.R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
+        val maxAbsorptionHours = sp.getDouble(info.nightscout.core.utils.R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
         val sens = profile.getIsfMgdl(t.timestamp)
         val ic = profile.getIc(t.timestamp)
         min5minCarbImpact = t.amount / (maxAbsorptionHours * 60 / 5) * sens / ic
@@ -26,7 +26,7 @@ fun fromCarbs(t: Carbs, isAAPSOrWeighted: Boolean, profileFunction: ProfileFunct
             """Min 5m carbs impact for ${carbs}g @${dateUtil.dateAndTimeString(t.timestamp)} for ${maxAbsorptionHours}h calculated to $min5minCarbImpact ISF: $sens IC: $ic"""
         )
     } else {
-        min5minCarbImpact = sp.getDouble(info.nightscout.core.main.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
+        min5minCarbImpact = sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
     }
     return AutosensData.CarbsInPast(time, carbs, min5minCarbImpact, remaining)
 }

@@ -37,7 +37,7 @@ class AttachPodFragment : InfoFragmentBase() {
 
         view.findViewById<Button>(R.id.button_next).setOnClickListener {
             context?.let {
-                AlertDialog.Builder(it, R.style.DialogTheme)
+                AlertDialog.Builder(it, info.nightscout.core.ui.R.style.DialogTheme)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle(getString(getTitleId()))
                     .setMessage(getString(R.string.omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text))

@@ -66,4 +66,5 @@
     <string name="min_recovery_duration">Duração mínima da recuperação [s]</string>
     <string name="pump_alert">Alerta da Bomba</string>
     <string name="pairing_information">Informações de emparelhamento</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Botão de Atualização da Insight</string>
 </resources>

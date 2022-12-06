@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.danaRv2.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danar.R
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginType
@@ -25,7 +24,7 @@ class MsgCheckValue_v2(
         danaPump.protocol = intFromBuff(bytes, 1, 1)
         danaPump.productCode = intFromBuff(bytes, 2, 1)
         if (danaPump.hwModel != DanaPump.EXPORT_MODEL) {
-            uiInteraction.addNotification(Notification.WRONG_DRIVER, rh.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
+            uiInteraction.addNotification(Notification.WRONG_DRIVER, rh.gs(info.nightscout.pump.dana.R.string.pumpdrivercorrected), Notification.NORMAL)
             danaRPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to Korean DanaR")
             danaRKoreanPlugin.setPluginEnabled(PluginType.PUMP, true)
@@ -37,11 +36,11 @@ class MsgCheckValue_v2(
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaRv2Driver")
             rxBus.send(EventRebuildTabs())
-            commandQueue.readStatus(rh.gs(R.string.pump_driver_change), null) // force new connection
+            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.pump_driver_change), null) // force new connection
             return
         }
         if (danaPump.protocol != 2) {
-            uiInteraction.addNotification(Notification.WRONG_DRIVER, rh.gs(R.string.pumpdrivercorrected), Notification.NORMAL)
+            uiInteraction.addNotification(Notification.WRONG_DRIVER, rh.gs(info.nightscout.pump.dana.R.string.pumpdrivercorrected), Notification.NORMAL)
             danaRKoreanPlugin.disconnect("Wrong Model")
             aapsLogger.debug(LTag.PUMPCOMM, "Wrong model selected. Switching to non APS DanaR")
             danaRv2Plugin.setPluginEnabled(PluginType.PUMP, false)
@@ -53,7 +52,7 @@ class MsgCheckValue_v2(
             //If profile coming from pump, switch it as well
             configBuilder.storeSettings("ChangingDanaRv2Driver")
             rxBus.send(EventRebuildTabs())
-            commandQueue.readStatus(rh.gs(R.string.pump_driver_change), null) // force new connection
+            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.pump_driver_change), null) // force new connection
             return
         }
         aapsLogger.debug(LTag.PUMPCOMM, "Model: " + String.format("%02X ", danaPump.hwModel))

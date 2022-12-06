@@ -246,7 +246,7 @@ class EncryptedPrefsFormat @Inject constructor(
         if (container.has(PrefsMetadataKey.FILE_FORMAT.key) && container.has("security") && container.has("content") && container.has("metadata")) {
             val fileFormat = container.getString(PrefsMetadataKey.FILE_FORMAT.key)
             if ((fileFormat != PrefsFormat.FORMAT_KEY_ENC) && (fileFormat != PrefsFormat.FORMAT_KEY_NOENC)) {
-                metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(rh.gs(R.string.metadata_format_other), PrefsStatus.ERROR)
+                metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(rh.gs(info.nightscout.interfaces.R.string.metadata_format_other), PrefsStatus.ERROR)
             } else {
                 val meta = container.getJSONObject("metadata")
                 metadata[PrefsMetadataKey.FILE_FORMAT] = PrefMetadata(fileFormat, PrefsStatus.OK)

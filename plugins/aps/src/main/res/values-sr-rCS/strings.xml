@@ -22,4 +22,7 @@
     <string name="lgs_threshold_title">Nivo GUK ispod kojeg dolazi do suspenzije niske glukoze</string>
     <!--    Verify if needed in safety-->
     <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="description_loop">Aktivirajte ili deaktivirajte implementaciju koja pokreće petlju.</string>
+    <string name="loop_aps_label">APS</string>
 </resources>

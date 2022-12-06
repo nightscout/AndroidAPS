@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bolus_constraint_applied">Restrição de bólus aplicada</string>
+    <string name="carbs_constraint_applied">Restrições de carbs aplicada</string>
+    <string name="temp_target_short">TT</string>
     <string name="dialog_canceled">Janela cancelada</string>
     <string name="start_activity_tt">Iniciar atividade TT</string>
     <string name="start_eating_soon_tt">Iniciar Comer em breve TT</string>
     <string name="start_hypo_tt">Começar TT Hipo</string>
     <string name="time_offset">Fuso horário</string>
     <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Lembrar de administrar bolus mais tarde</string>
     <string name="a11y_carb_reminder">definir lembrete</string>
     <!--    Widget-->
     <string name="configure">Configurar opacidade</string>

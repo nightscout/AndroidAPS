@@ -157,8 +157,7 @@ class DefaultEditTextValidator : EditTextValidator {
             EditTextValidator.TEST_PERSONFULLNAME      -> PersonFullNameValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_notvalid_personfullname) else testErrorString)
             EditTextValidator.TEST_MIN_LENGTH          -> MinDigitLengthValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_not_a_minimum_length) else testErrorString, minLength)
             EditTextValidator.TEST_BG_RANGE            -> BgRangeValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_numeric_digits_range_allowed,
-                                                                                                                                     Profile.fromMgdlToUnits(minMgdl.toDouble(), profileFunction
-                                                                                                                                                 .getUnits()).toString(), Profile.fromMgdlToUnits(maxMgdl.toDouble(), profileFunction.getUnits()).toString()) else
+                Profile.fromMgdlToUnits(minMgdl.toDouble(), profileFunction.getUnits()).toString(), Profile.fromMgdlToUnits(maxMgdl.toDouble(), profileFunction.getUnits()).toString()) else
                                                                                                                                                  testErrorString, minMgdl, maxMgdl, profileFunction)
 
             EditTextValidator.TEST_CUSTOM              -> {

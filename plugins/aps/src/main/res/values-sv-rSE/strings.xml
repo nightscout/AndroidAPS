@@ -82,4 +82,13 @@
     <string name="maxvalueinpreferences">maxvärde i Inställningar</string>
     <string name="hardlimit">hård begränsning</string>
     <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">En bolus gavs för mindre än 3 min sedan. Hoppar över SMB</string>
+    <string name="loop_shortname">Loop</string>
+    <string name="description_loop">Aktivera eller inaktivera implementationen som kör loopen.</string>
+    <string name="ignore5m">Ignorera 5 min</string>
+    <string name="ignore15m">Ignorera 15 min</string>
+    <string name="ignore30m">Ignorera 30 min</string>
+    <string name="basal_set_correctly">Basal justerad korrekt</string>
+    <string name="loop_aps_label">APS</string>
 </resources>

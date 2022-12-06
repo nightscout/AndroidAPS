@@ -5,7 +5,6 @@
     <string name="pump_operation_not_yet_supported_by_pump">Operacja nie jest JESZCZE wspierana przez pompę.</string>
     <string name="common_resultok">OK</string>
     <string name="pump_serial_number">Numer seryjny pompy</string>
-    <string name="bolus_delivered">podano %1$.2f U / %2$.2f U</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Nie zainicjowany</string>
     <string name="pump_status_suspended">Wstrzymany</string>

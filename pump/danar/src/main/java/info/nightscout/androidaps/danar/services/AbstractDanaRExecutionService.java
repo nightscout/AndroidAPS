@@ -196,7 +196,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
     }
 
     protected void getBTSocketForSelectedPump() {
-        mDevName = sp.getString(R.string.key_danar_bt_name, "");
+        mDevName = sp.getString(info.nightscout.pump.dana.R.string.key_danar_bt_name, "");
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
             BluetoothAdapter bluetoothAdapter = ((BluetoothManager) context.getSystemService(Context.BLUETOOTH_SERVICE)).getAdapter();
 
@@ -216,13 +216,13 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
                         }
                     }
             } else {
-                ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), R.string.nobtadapter);
+                ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), info.nightscout.pump.dana.R.string.nobtadapter);
             }
             if (mBTDevice == null) {
-                ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), R.string.devicenotfound);
+                ToastUtils.INSTANCE.errorToast(context.getApplicationContext(), info.nightscout.pump.dana.R.string.devicenotfound);
             }
         } else {
-            ToastUtils.INSTANCE.errorToast(context, R.string.need_connect_permission);
+            ToastUtils.INSTANCE.errorToast(context, info.nightscout.core.ui.R.string.need_connect_permission);
         }
     }
 
@@ -293,7 +293,7 @@ public abstract class AbstractDanaRExecutionService extends DaggerService {
             long timeToWholeMinute = (60000 - time % 60000);
             if (timeToWholeMinute > 59800 || timeToWholeMinute < 3000)
                 break;
-            rxBus.send(new EventPumpStatusChanged(rh.gs(R.string.waitingfortimesynchronization, (int) (timeToWholeMinute / 1000))));
+            rxBus.send(new EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.waitingfortimesynchronization, (int) (timeToWholeMinute / 1000))));
             SystemClock.sleep(Math.min(timeToWholeMinute, 100));
         }
     }

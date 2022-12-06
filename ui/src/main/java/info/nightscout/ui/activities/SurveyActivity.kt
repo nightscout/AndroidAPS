@@ -34,7 +34,7 @@ class SurveyActivity : DaggerAppCompatActivity() {
 
         val profileStore = activePlugin.activeProfileSource.profile
         val profileList = profileStore?.getProfileList() ?: return
-        binding.spinner.adapter = ArrayAdapter(this, R.layout.spinner_centered, profileList)
+        binding.spinner.adapter = ArrayAdapter(this, info.nightscout.core.ui.R.layout.spinner_centered, profileList)
 
         binding.profile.setOnClickListener {
             val age = SafeParse.stringToInt(binding.age.text.toString())

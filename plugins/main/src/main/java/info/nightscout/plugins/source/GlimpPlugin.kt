@@ -1,11 +1,11 @@
 package info.nightscout.plugins.source
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
@@ -34,7 +34,7 @@ class GlimpPlugin @Inject constructor(
     PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_glimp)
+    .pluginIcon(info.nightscout.core.main.R.drawable.ic_glimp)
     .pluginName(R.string.glimp)
     .preferencesId(R.xml.pref_bgsource)
     .description(R.string.description_source_glimp),
@@ -45,19 +45,14 @@ class GlimpPlugin @Inject constructor(
     class GlimpWorker(
         context: Context,
         params: WorkerParameters
-    ) : Worker(context, params) {
+    ) : LoggingWorker(context, params) {
 
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var glimpPlugin: GlimpPlugin
-        @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var xDripBroadcast: XDripBroadcast
 
-        init {
-            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        }
-
-        override fun doWork(): Result {
+        override fun doWorkAndLog(): Result {
             var ret = Result.success()
 
             if (!glimpPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
@@ -88,6 +83,6 @@ class GlimpPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLIMP && sp.getBoolean(R.string.key_do_ns_upload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLIMP && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
 }

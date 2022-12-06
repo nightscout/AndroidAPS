@@ -25,7 +25,6 @@ class PumpEnactResult(injector: HasAndroidInjector) {
 
     // Result of treatment delivery
     var bolusDelivered = 0.0 // real value of delivered insulin
-    var carbsDelivered = 0.0 // real value of delivered carbs
     var queued = false
 
     fun success(success: Boolean): PumpEnactResult = this.also { this.success = success }
@@ -38,6 +37,5 @@ class PumpEnactResult(injector: HasAndroidInjector) {
     fun isPercent(isPercent: Boolean): PumpEnactResult = this.also { it.isPercent = isPercent }
     fun isTempCancel(isTempCancel: Boolean): PumpEnactResult = this.also { it.isTempCancel = isTempCancel }
     fun bolusDelivered(bolusDelivered: Double): PumpEnactResult = this.also { it.bolusDelivered = bolusDelivered }
-    fun carbsDelivered(carbsDelivered: Double): PumpEnactResult = this.also { it.carbsDelivered = carbsDelivered }
     fun queued(queued: Boolean): PumpEnactResult = this.also { it.queued = queued }
 }

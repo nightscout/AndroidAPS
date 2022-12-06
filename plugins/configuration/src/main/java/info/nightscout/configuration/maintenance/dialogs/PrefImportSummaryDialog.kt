@@ -29,8 +29,8 @@ object PrefImportSummaryDialog {
     @SuppressLint("InflateParams")
     fun showSummary(context: Context, importOk: Boolean, importPossible: Boolean, prefs: Prefs, ok: (() -> Unit)?, cancel: (() -> Unit)? = null) {
 
-        @StyleRes val theme: Int = if (importOk) R.style.DialogTheme else {
-            if (importPossible) R.style.AppThemeWarningDialog else R.style.AppThemeErrorDialog
+        @StyleRes val theme: Int = if (importOk) info.nightscout.core.ui.R.style.DialogTheme else {
+            if (importPossible) info.nightscout.core.ui.R.style.AppThemeWarningDialog else info.nightscout.core.ui.R.style.AppThemeErrorDialog
         }
 
         @StringRes val messageRes: Int = if (importOk) R.string.check_preferences_before_import else {
@@ -38,7 +38,7 @@ object PrefImportSummaryDialog {
         }
 
         @DrawableRes val headerIcon: Int = if (importOk) R.drawable.ic_header_import else {
-            if (importPossible) R.drawable.ic_header_warning else R.drawable.ic_header_error
+            if (importPossible) info.nightscout.core.ui.R.drawable.ic_header_warning else R.drawable.ic_header_error
         }
 
         val themedCtx = ContextThemeWrapper(context, theme)
@@ -57,8 +57,8 @@ object PrefImportSummaryDialog {
             (rowLayout.findViewById<View>(R.id.summary_icon) as ImageView).setImageResource(metaKey.icon)
             (rowLayout.findViewById<View>(R.id.status_icon) as ImageView).setImageResource(metaEntry.status.icon)
 
-            if (metaEntry.status == PrefsStatus.WARN) label.setTextColor(themedCtx.getColor(R.color.metadataTextWarning))
-            else if (metaEntry.status == PrefsStatus.ERROR) label.setTextColor(themedCtx.getColor(R.color.metadataTextError))
+            if (metaEntry.status == PrefsStatus.WARN) label.setTextColor(themedCtx.getColor(info.nightscout.interfaces.R.color.metadataTextWarning))
+            else if (metaEntry.status == PrefsStatus.ERROR) label.setTextColor(themedCtx.getColor(info.nightscout.interfaces.R.color.metadataTextError))
 
             if (metaEntry.info != null) {
                 details.add("<b>${context.getString(metaKey.label)}</b>: ${metaEntry.value}<br/><i style=\"color:silver\">${metaEntry.info}</i>")
@@ -92,13 +92,13 @@ object PrefImportSummaryDialog {
                 webView.setBackgroundColor(Color.TRANSPARENT)
                 webView.setLayerType(WebView.LAYER_TYPE_SOFTWARE, null)
 
-                MaterialAlertDialogBuilder(context, R.style.DialogTheme)
+                MaterialAlertDialogBuilder(context, info.nightscout.core.ui.R.style.DialogTheme)
                     .setCustomTitle(
                         info.nightscout.core.ui.dialogs.AlertDialogHelper.buildCustomTitle(
                             context,
                             context.getString(R.string.check_preferences_details_title),
                             R.drawable.ic_header_log,
-                            R.style.AppTheme
+                            info.nightscout.core.ui.R.style.AppTheme
                         )
                     )
                     .setView(detailsLayout)

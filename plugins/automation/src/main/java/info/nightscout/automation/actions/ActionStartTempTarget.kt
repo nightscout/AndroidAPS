@@ -3,8 +3,6 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.friendlyDescription
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.ComparatorExists
 import info.nightscout.automation.elements.InputDuration
@@ -12,6 +10,7 @@ import info.nightscout.automation.elements.InputTempTarget
 import info.nightscout.automation.elements.LabelWithElement
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.triggers.TriggerTempTarget
+import info.nightscout.core.extensions.friendlyDescription
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
@@ -20,6 +19,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -54,7 +54,7 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = R.string.starttemptarget
     override fun shortDescription(): String = rh.gs(R.string.starttemptarget) + ": " + tt().friendlyDescription(value.units, rh)
-    @DrawableRes override fun icon(): Int = R.drawable.ic_temptarget_high
+    @DrawableRes override fun icon(): Int = info.nightscout.core.main.R.drawable.ic_temptarget_high
 
     override fun doAction(callback: Callback) {
         disposable += repository.runTransactionForResult(InsertAndCancelCurrentTemporaryTargetTransaction(tt()))
@@ -68,18 +68,18 @@ class ActionStartTempTarget(injector: HasAndroidInjector) : Action(injector) {
                                ValueWithUnit.Mgdl(tt().highTarget).takeIf { tt().lowTarget != tt().highTarget },
                                ValueWithUnit.Minute(TimeUnit.MILLISECONDS.toMinutes(tt().duration).toInt())
                            )
-                           callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+                           callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
                        }, {
                            aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
-                           callback.result(PumpEnactResult(injector).success(false).comment(R.string.error)).run()
+                           callback.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.error)).run()
                        })
     }
 
     override fun generateDialog(root: LinearLayout) {
-        val unitResId = if (value.units == GlucoseUnit.MGDL) R.string.mgdl else R.string.mmol
+        val unitResId = if (value.units == GlucoseUnit.MGDL) info.nightscout.core.ui.R.string.mgdl else info.nightscout.core.ui.R.string.mmol
         LayoutBuilder()
-            .add(LabelWithElement(rh, rh.gs(R.string.temporary_target) + "\n[" + rh.gs(unitResId) + "]", "", value))
-            .add(LabelWithElement(rh, rh.gs(R.string.duration_min_label), "", duration))
+            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.temporary_target) + "\n[" + rh.gs(unitResId) + "]", "", value))
+            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.duration_min_label), "", duration))
             .build(root)
     }
 

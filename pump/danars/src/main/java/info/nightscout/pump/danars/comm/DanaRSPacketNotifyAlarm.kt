@@ -5,7 +5,6 @@ import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.dana.DanaPump
-import info.nightscout.pump.danars.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -31,31 +30,31 @@ class DanaRSPacketNotifyAlarm(
         var errorString = ""
         when (alarmCode) {
             0x01       ->  // Battery 0% Alarm
-                errorString = rh.gs(R.string.batterydischarged)
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.batterydischarged)
             0x02       ->  // Pump Error
-                errorString = rh.gs(R.string.pumperror) + " " + alarmCode
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.pumperror) + " " + alarmCode
             0x03       ->  // Occlusion
-                errorString = rh.gs(R.string.occlusion)
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.occlusion)
             0x04       ->  // LOW BATTERY
-                errorString = rh.gs(R.string.pumpshutdown)
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.pumpshutdown)
             0x05       ->  // Shutdown
-                errorString = rh.gs(R.string.lowbattery)
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.lowbattery)
             0x06       ->  // Basal Compare
-                errorString = rh.gs(R.string.basalcompare)
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.basalcompare)
             0x07, 0xFF ->  // Blood sugar measurement alert
-                errorString = rh.gs(R.string.bloodsugarmeasurementalert)
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.bloodsugarmeasurementalert)
             0x08, 0xFE ->  // Remaining insulin level
-                errorString = rh.gs(R.string.remaininsulinalert)
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.remaininsulinalert)
             0x09       ->  // Empty Reservoir
-                errorString = rh.gs(R.string.emptyreservoir)
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.emptyreservoir)
             0x0A       ->  // Check shaft
-                errorString = rh.gs(R.string.checkshaft)
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.checkshaft)
             0x0B       ->  // Basal MAX
-                errorString = rh.gs(R.string.basalmax)
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.basalmax)
             0x0C       ->  // Daily MAX
-                errorString = rh.gs(R.string.dailymax)
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.dailymax)
             0xFD       ->  // Blood sugar check miss alarm
-                errorString = rh.gs(R.string.missedbolus)
+                errorString = rh.gs(info.nightscout.pump.dana.R.string.missedbolus)
         }
         // No error no need to upload anything
         if (errorString == "") {

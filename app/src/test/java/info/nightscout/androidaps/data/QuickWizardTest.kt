@@ -2,7 +2,6 @@ package info.nightscout.androidaps.data
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry
@@ -50,7 +49,7 @@ class QuickWizardTest : TestBase() {
     @BeforeEach
     fun mock() {
 
-        `when`(sp.getString(R.string.key_quickwizard, "[]")).thenReturn("[]")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_quickwizard, "[]")).thenReturn("[]")
         quickWizard = QuickWizard(sp, injector)
     }
 

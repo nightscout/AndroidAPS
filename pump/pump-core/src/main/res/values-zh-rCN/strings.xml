@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_sleeping">休眠</string>
+    <string name="pump_status_waking_up">唤醒中</string>
+    <string name="pump_status_active">启用</string>
+    <string name="pump_status_error_comm">通信出错</string>
+    <string name="pump_status_timeout_comm">通信超时</string>
+    <string name="pump_status_pump_unreachable">泵无法连接</string>
+    <string name="pump_status_invalid_config">无效配置</string>
+</resources>

@@ -7,7 +7,6 @@ import android.os.PowerManager
 import android.os.SystemClock
 import info.nightscout.core.utils.extensions.safeDisable
 import info.nightscout.core.utils.extensions.safeEnable
-import info.nightscout.implementation.R
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
@@ -63,18 +62,18 @@ class QueueThread internal constructor(
                     }
                 if (!pump.isConnected() && secondsElapsed > Constants.PUMP_MAX_CONNECTION_TIME_IN_SECONDS) {
                     rxBus.send(EventDismissBolusProgressIfRunning(null, null))
-                    rxBus.send(EventPumpStatusChanged(rh.gs(R.string.connectiontimedout)))
+                    rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.core.ui.R.string.connectiontimedout)))
                     aapsLogger.debug(LTag.PUMPQUEUE, "timed out")
                     pump.stopConnecting()
 
                     //BLUETOOTH-WATCHDOG
-                    var watchdog = sp.getBoolean(R.string.key_btwatchdog, false)
-                    val lastWatchdog = sp.getLong(R.string.key_btwatchdog_lastbark, 0L)
+                    var watchdog = sp.getBoolean(info.nightscout.core.utils.R.string.key_btwatchdog, false)
+                    val lastWatchdog = sp.getLong(info.nightscout.core.utils.R.string.key_btwatchdog_lastbark, 0L)
                     watchdog = watchdog && System.currentTimeMillis() - lastWatchdog > Constants.MIN_WATCHDOG_INTERVAL_IN_SECONDS * 1000
                     if (watchdog) {
                         aapsLogger.debug(LTag.PUMPQUEUE, "BT watchdog - toggling the phone bluetooth")
                         //write time
-                        sp.putLong(R.string.key_btwatchdog_lastbark, System.currentTimeMillis())
+                        sp.putLong(info.nightscout.core.utils.R.string.key_btwatchdog_lastbark, System.currentTimeMillis())
                         //toggle BT
                         pump.disconnect("watchdog")
                         SystemClock.sleep(1000)

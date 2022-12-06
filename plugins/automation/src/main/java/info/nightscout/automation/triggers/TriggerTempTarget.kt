@@ -53,7 +53,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.temporary_target
+    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.temporary_target
 
     override fun friendlyDescription(): String =
         rh.gs(R.string.temptargetcompared, rh.gs(comparator.value.stringRes))
@@ -64,7 +64,7 @@ class TriggerTempTarget(injector: HasAndroidInjector) : Trigger(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(rh, R.string.temporary_target, this))
+            .add(StaticLabel(rh, info.nightscout.core.ui.R.string.temporary_target, this))
             .add(comparator)
             .build(root)
     }

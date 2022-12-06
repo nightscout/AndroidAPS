@@ -236,18 +236,18 @@ class NSSettingsStatusImpl @Inject constructor(
 
     override fun copyStatusLightsNsSettings(context: Context?) {
         val action = Runnable {
-            getExtendedWarnValue("cage", "warn")?.let { sp.putDouble(R.string.key_statuslights_cage_warning, it) }
-            getExtendedWarnValue("cage", "urgent")?.let { sp.putDouble(R.string.key_statuslights_cage_critical, it) }
-            getExtendedWarnValue("iage", "warn")?.let { sp.putDouble(R.string.key_statuslights_iage_warning, it) }
-            getExtendedWarnValue("iage", "urgent")?.let { sp.putDouble(R.string.key_statuslights_iage_critical, it) }
-            getExtendedWarnValue("sage", "warn")?.let { sp.putDouble(R.string.key_statuslights_sage_warning, it) }
-            getExtendedWarnValue("sage", "urgent")?.let { sp.putDouble(R.string.key_statuslights_sage_critical, it) }
-            getExtendedWarnValue("bage", "warn")?.let { sp.putDouble(R.string.key_statuslights_bage_warning, it) }
-            getExtendedWarnValue("bage", "urgent")?.let { sp.putDouble(R.string.key_statuslights_bage_critical, it) }
+            getExtendedWarnValue("cage", "warn")?.let { sp.putDouble(info.nightscout.core.utils.R.string.key_statuslights_cage_warning, it) }
+            getExtendedWarnValue("cage", "urgent")?.let { sp.putDouble(info.nightscout.core.utils.R.string.key_statuslights_cage_critical, it) }
+            getExtendedWarnValue("iage", "warn")?.let { sp.putDouble(info.nightscout.core.utils.R.string.key_statuslights_iage_warning, it) }
+            getExtendedWarnValue("iage", "urgent")?.let { sp.putDouble(info.nightscout.core.utils.R.string.key_statuslights_iage_critical, it) }
+            getExtendedWarnValue("sage", "warn")?.let { sp.putDouble(info.nightscout.core.utils.R.string.key_statuslights_sage_warning, it) }
+            getExtendedWarnValue("sage", "urgent")?.let { sp.putDouble(info.nightscout.core.utils.R.string.key_statuslights_sage_critical, it) }
+            getExtendedWarnValue("bage", "warn")?.let { sp.putDouble(info.nightscout.core.utils.R.string.key_statuslights_bage_warning, it) }
+            getExtendedWarnValue("bage", "urgent")?.let { sp.putDouble(info.nightscout.core.utils.R.string.key_statuslights_bage_critical, it) }
             uel.log(Action.NS_SETTINGS_COPIED, UserEntry.Sources.NSClient)
         }
 
-        if (context != null) OKDialog.showConfirmation(context, rh.gs(R.string.statuslights), rh.gs(R.string.copy_existing_values), action)
+        if (context != null) OKDialog.showConfirmation(context, rh.gs(info.nightscout.core.ui.R.string.statuslights), rh.gs(R.string.copy_existing_values), action)
         else action.run()
     }
 }

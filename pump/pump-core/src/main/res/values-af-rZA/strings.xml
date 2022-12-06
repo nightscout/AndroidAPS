@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_sleeping">Slaap</string>
+    <string name="pump_status_waking_up">Besig om te wek</string>
+    <string name="pump_status_active">Aktief</string>
+    <string name="pump_status_error_comm">Fout met kommunikasie</string>
+    <string name="pump_status_timeout_comm">Te lank op kommunikasie gewag</string>
+    <string name="pump_status_pump_unreachable">Pomp onbereikbaar</string>
+    <string name="pump_status_invalid_config">Ongeldige konfigirasie</string>
+</resources>

@@ -161,7 +161,7 @@ class DashPodHistoryActivity : DaggerAppCompatActivity() {
 
         historyTypeSpinner = findViewById(R.id.omnipod_historytype)
         typeListFull = getTypeList(PumpHistoryEntryGroup.Companion.getTranslatedList(rh))
-        val spinnerAdapter: ArrayAdapter<TypeList> = ArrayAdapter<TypeList>(this, R.layout.spinner_centered, typeListFull!!)
+        val spinnerAdapter: ArrayAdapter<TypeList> = ArrayAdapter<TypeList>(this, info.nightscout.core.ui.R.layout.spinner_centered, typeListFull!!)
         historyTypeSpinner?.run {
             adapter = spinnerAdapter
             onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -219,7 +219,7 @@ class DashPodHistoryActivity : DaggerAppCompatActivity() {
         private fun setTextViewColor(check_result: Boolean, textview: TextView, record: HistoryRecord) {
             if (check_result && !record.isSuccess()) {
                 // Record says not success
-                textview.setTextColor(rh.gac(textview.context, R.attr.omniYellowColor))
+                textview.setTextColor(rh.gac(textview.context, info.nightscout.core.ui.R.attr.omniYellowColor))
                 return
             }
             // On success set color
@@ -233,23 +233,23 @@ class DashPodHistoryActivity : DaggerAppCompatActivity() {
                 OmnipodCommandType.SUSPEND_DELIVERY,
                 OmnipodCommandType.RESUME_DELIVERY,
                 OmnipodCommandType.SET_BASAL_PROFILE -> {
-                    R.attr.omniCyanColor
+                    info.nightscout.core.ui.R.attr.omniCyanColor
                 }
                 // User action
                 OmnipodCommandType.PLAY_TEST_BEEP,
                 OmnipodCommandType.ACKNOWLEDGE_ALERTS,
                 OmnipodCommandType.CANCEL_BOLUS -> {
-                    R.attr.omniCyanColor
+                    info.nightscout.core.ui.R.attr.omniCyanColor
                 }
                 // Insulin treatment
                 OmnipodCommandType.SET_BOLUS,
                 OmnipodCommandType.SET_TEMPORARY_BASAL -> {
-                    R.attr.defaultTextColor
+                    info.nightscout.core.ui.R.attr.defaultTextColor
                 }
 
                 else ->
                     // Other
-                    R.attr.omniGrayColor
+                    info.nightscout.core.ui.R.attr.omniGrayColor
             }
             textview.setTextColor(rh.gac(textview.context, textColorAttr))
         }

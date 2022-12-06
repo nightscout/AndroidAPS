@@ -23,7 +23,7 @@ class ActionsPlugin @Inject constructor(
         .fragmentClass(ActionsFragment::class.qualifiedName)
         .enableByDefault(config.APS || config.PUMPCONTROL)
         .visibleByDefault(config.APS || config.PUMPCONTROL)
-        .pluginIcon(R.drawable.ic_action)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_action)
         .pluginName(R.string.actions)
         .shortName(R.string.actions_shortname)
         .description(R.string.description_actions),

@@ -102,7 +102,7 @@ class MaintenanceFragment : DaggerFragment() {
                             .subscribeOn(aapsSchedulers.io)
                             .subscribeBy(
                                 onError = { aapsLogger.error("Error clearing databases", it) },
-                                onComplete = { rxBus.send(EventPreferenceChange(rh.gs(R.string.key_units))) }
+                                onComplete = { rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.utils.R.string.key_units))) }
                             )
                     uel.log(Action.RESET_DATABASES, Sources.Maintenance)
                 })
@@ -119,7 +119,7 @@ class MaintenanceFragment : DaggerFragment() {
                             onError = { aapsLogger.error("Error cleaning up databases", it) },
                             onComplete = {
                                 if (result.isNotEmpty())
-                                    OKDialog.show(activity, rh.gs(R.string.result), HtmlHelper.fromHtml("<b>" + rh.gs(R.string.cleared_entries) + "</b>\n" + result).toSpanned())
+                                    OKDialog.show(activity, rh.gs(info.nightscout.core.ui.R.string.result), HtmlHelper.fromHtml("<b>" + rh.gs(R.string.cleared_entries) + "</b>\n" + result).toSpanned())
                                 aapsLogger.info(LTag.CORE, "Cleaned up databases with result: $result")
                             }
                         )
@@ -144,7 +144,7 @@ class MaintenanceFragment : DaggerFragment() {
         binding.navLogsettings.setOnClickListener { startActivity(Intent(activity, LogSettingActivity::class.java)) }
         binding.exportCsv.setOnClickListener {
             activity?.let { activity ->
-                OKDialog.showConfirmation(activity, rh.gs(R.string.ue_export_to_csv) + "?") {
+                OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.ue_export_to_csv) + "?") {
                     uel.log(Action.EXPORT_CSV, Sources.Maintenance)
                     importExportPrefs.exportUserEntriesCsv(activity)
                 }

@@ -87,7 +87,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
 
                 prefFile.metadata[PrefsMetadataKey.AAPS_FLAVOUR]?.let {
                     metaVariantFormat.text = it.value
-                    val colorAttr = if (it.status == PrefsStatus.OK) R.attr.metadataTextOkColor else R.attr.metadataTextWarningColor
+                    val colorAttr = if (it.status == PrefsStatus.OK) info.nightscout.core.ui.R.attr.metadataTextOkColor else info.nightscout.core.ui.R.attr.metadataTextWarningColor
                     metaVariantFormat.setTextColor(rh.gac(metaVariantFormat.context, colorAttr))
                 }
 
@@ -97,7 +97,7 @@ class PrefImportListActivity : DaggerAppCompatActivity() {
 
                 prefFile.metadata[PrefsMetadataKey.AAPS_VERSION]?.let {
                     metaAppVersion.text = it.value
-                    val colorAttr = if (it.status == PrefsStatus.OK) R.attr.metadataTextOkColor else R.attr.metadataTextWarningColor
+                    val colorAttr = if (it.status == PrefsStatus.OK) info.nightscout.core.ui.R.attr.metadataTextOkColor else info.nightscout.core.ui.R.attr.metadataTextWarningColor
                     metaAppVersion.setTextColor(rh.gac(metaVariantFormat.context, colorAttr))
                 }
 

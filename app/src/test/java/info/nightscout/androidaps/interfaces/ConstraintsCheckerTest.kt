@@ -3,7 +3,6 @@ package info.nightscout.androidaps.interfaces
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.HardLimitsMock
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.implementations.ConfigImpl
@@ -14,6 +13,7 @@ import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.constraints.ConstraintsImpl
+import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.constraints.Objectives
@@ -72,6 +72,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var profileInstantiator: ProfileInstantiator
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
     @Mock lateinit var insightDatabase: InsightDatabase
+    @Mock lateinit var bgQualityCheck: BgQualityCheck
 
     private lateinit var hardLimits: HardLimits
     private lateinit var danaPump: DanaPump
@@ -101,36 +102,36 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
-        `when`(rh.gs(R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
-        `when`(rh.gs(R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
-        `when`(rh.gs(info.nightscout.ui.R.string.no_valid_basal_rate)).thenReturn("No valid basal rate read from pump")
-        `when`(rh.gs(R.string.autosens_disabled_in_preferences)).thenReturn("Autosens disabled in preferences")
-        `when`(rh.gs(R.string.smb_disabled_in_preferences)).thenReturn("SMB disabled in preferences")
-        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
-        `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
-        `when`(rh.gs(R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
-        `when`(rh.gs(R.string.max_basal_multiplier)).thenReturn("max basal multiplier")
-        `when`(rh.gs(R.string.max_daily_basal_multiplier)).thenReturn("max daily basal multiplier")
-        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
-        `when`(rh.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s")
-        `when`(rh.gs(R.string.hardlimit)).thenReturn("hard limit")
-        `when`(rh.gs(R.string.key_child)).thenReturn("child")
-        `when`(rh.gs(R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s")
-        `when`(rh.gs(info.nightscout.ui.R.string.limiting_iob)).thenReturn("Limiting IOB to %.1f U because of %s")
-        `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
-        `when`(rh.gs(R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
-        `when`(rh.gs(R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
-        `when`(rh.gs(R.string.pumplimit)).thenReturn("pump limit")
-        `when`(rh.gs(R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
-        `when`(rh.gs(R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
-        `when`(rh.gs(R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
-        `when`(rh.gs(R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
-        `when`(context.getString(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
-        `when`(rh.gs(R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
+        `when`(rh.gs(info.nightscout.plugins.R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
+        `when`(rh.gs(info.nightscout.plugins.R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.no_valid_basal_rate)).thenReturn("No valid basal rate read from pump")
+        `when`(rh.gs(info.nightscout.plugins.aps.R.string.autosens_disabled_in_preferences)).thenReturn("Autosens disabled in preferences")
+        `when`(rh.gs(info.nightscout.plugins.aps.R.string.smb_disabled_in_preferences)).thenReturn("SMB disabled in preferences")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
+        `when`(rh.gs(info.nightscout.plugins.R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
+        `when`(rh.gs(info.nightscout.plugins.aps.R.string.max_basal_multiplier)).thenReturn("max basal multiplier")
+        `when`(rh.gs(info.nightscout.plugins.aps.R.string.max_daily_basal_multiplier)).thenReturn("max daily basal multiplier")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s")
+        `when`(rh.gs(info.nightscout.plugins.R.string.hardlimit)).thenReturn("hard limit")
+        `when`(rh.gs(info.nightscout.core.utils.R.string.key_child)).thenReturn("child")
+        `when`(rh.gs(info.nightscout.plugins.R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s")
+        `when`(rh.gs(info.nightscout.plugins.aps.R.string.limiting_iob)).thenReturn("Limiting IOB to %.1f U because of %s")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
+        `when`(rh.gs(info.nightscout.plugins.R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.pumplimit)).thenReturn("pump limit")
+        `when`(rh.gs(info.nightscout.plugins.R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
+        `when`(context.getString(info.nightscout.pump.combo.R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
+        `when`(rh.gs(info.nightscout.plugins.R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
 
         // RS constructor
-        `when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")
+        `when`(sp.getString(info.nightscout.pump.dana.R.string.key_danars_address, "")).thenReturn("")
 
         //SafetyPlugin
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
@@ -183,7 +184,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 sp,
                 dateUtil,
                 repository,
-                glucoseStatusProvider
+                glucoseStatusProvider,
+                bgQualityCheck
             )
         openAPSSMBDynamicISFPlugin =
             OpenAPSSMBDynamicISFPlugin(
@@ -202,7 +204,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 dateUtil,
                 repository,
                 glucoseStatusProvider,
-                config
+                config,
+                bgQualityCheck
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(
@@ -266,13 +269,13 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     // 2x Safety & Objectives
     @Test
     fun isClosedLoopAllowedTest() {
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("closed")
         objectivesPlugin.objectives[Objectives.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
         var c: Constraint<Boolean> = constraintChecker.isClosedLoopAllowed()
         aapsLogger.debug("Reason list: " + c.reasonList.toString())
 //        Assert.assertTrue(c.reasonList[0].toString().contains("Closed loop is disabled")) // Safety & Objectives
         Assert.assertEquals(false, c.value())
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("open")
         c = constraintChecker.isClosedLoopAllowed()
         Assert.assertTrue(c.reasonList[0].contains("Closed loop mode disabled in preferences")) // Safety & Objectives
 //        Assert.assertEquals(3, c.reasonList.size) // 2x Safety & Objectives
@@ -284,7 +287,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     fun isAutosensModeEnabledTest() {
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
-        `when`(sp.getBoolean(R.string.key_openapsama_use_autosens, false)).thenReturn(false)
+        `when`(sp.getBoolean(info.nightscout.plugins.aps.R.string.key_openapsama_use_autosens, false)).thenReturn(false)
         val c = constraintChecker.isAutosensModeEnabled()
         Assert.assertEquals(true, c.reasonList.size == 2) // Safety & Objectives
         Assert.assertEquals(true, c.mostLimitedReasonList.size == 2) // Safety & Objectives
@@ -314,8 +317,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     fun isSMBModeEnabledTest() {
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
-        `when`(sp.getBoolean(R.string.key_use_smb, false)).thenReturn(false)
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("open")
+        `when`(sp.getBoolean(info.nightscout.plugins.aps.R.string.key_use_smb, false)).thenReturn(false)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("open")
 //        `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(Constraint(true))
         val c = constraintChecker.isSMBModeEnabled()
         Assert.assertEquals(true, c.reasonList.size == 3) // 2x Safety & Objectives
@@ -339,10 +342,10 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 //        insightPlugin.setStatusResult(result);
 
         // No limit by default
-        `when`(sp.getDouble(R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
-        `when`(sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
-        `when`(sp.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
+        `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
+        `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
 
         // Apply all limits
         val d = constraintChecker.getMaxBasalAllowed(validProfile)
@@ -366,10 +369,10 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 //        insightPlugin.setStatusResult(result);
 
         // No limit by default
-        `when`(sp.getDouble(R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
-        `when`(sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
-        `when`(sp.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsma_max_basal, 1.0)).thenReturn(1.0)
+        `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsama_current_basal_safety_multiplier, 4.0)).thenReturn(4.0)
+        `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsama_max_daily_safety_multiplier, 3.0)).thenReturn(3.0)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
 
         // Apply all limits
         val i = constraintChecker.getMaxBasalPercentAllowed(validProfile)
@@ -395,8 +398,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 //        insightPlugin.setStatusResult(result);
 
         // No limit by default
-        `when`(sp.getDouble(R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(R.string.key_age, "")).thenReturn("child")
+        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_treatmentssafety_maxbolus, 3.0)).thenReturn(3.0)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
 
         // Apply all limits
         val d = constraintChecker.getMaxBolusAllowed()
@@ -409,7 +412,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Test
     fun carbsAmountShouldBeLimited() {
         // No limit by default
-        `when`(sp.getInt(R.string.key_treatmentssafety_maxcarbs, 48)).thenReturn(48)
+        `when`(sp.getInt(info.nightscout.core.utils.R.string.key_treatmentssafety_maxcarbs, 48)).thenReturn(48)
 
         // Apply all limits
         val i = constraintChecker.getMaxCarbsAllowed()
@@ -422,9 +425,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Test
     fun iobAMAShouldBeLimited() {
         // No limit by default
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
-        `when`(sp.getDouble(R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
-        `when`(sp.getString(R.string.key_age, "")).thenReturn("teenage")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("closed")
+        `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("teenage")
         openAPSAMAPlugin.setPluginEnabled(PluginType.APS, true)
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, false)
 
@@ -438,9 +441,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Test
     fun iobSMBShouldBeLimited() {
         // No limit by default
-        `when`(sp.getString(R.string.key_aps_mode, "open")).thenReturn("closed")
-        `when`(sp.getDouble(R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
-        `when`(sp.getString(R.string.key_age, "")).thenReturn("teenage")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("closed")
+        `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("teenage")
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         openAPSAMAPlugin.setPluginEnabled(PluginType.APS, false)
 

@@ -9,7 +9,6 @@ import info.nightscout.automation.elements.InputWeekDay
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
 import info.nightscout.core.utils.MidnightUtils
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.rx.logging.LTag
@@ -86,7 +85,7 @@ class TriggerRecurringTime(injector: HasAndroidInjector) : Trigger(injector) {
         return if (counter == 0) rh.gs(R.string.never) else sb.toString()
     }
 
-    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_access_alarm_24dp)
+    override fun icon(): Optional<Int> = Optional.of(info.nightscout.core.main.R.drawable.ic_access_alarm_24dp)
 
     override fun duplicate(): Trigger = TriggerRecurringTime(injector, this)
 

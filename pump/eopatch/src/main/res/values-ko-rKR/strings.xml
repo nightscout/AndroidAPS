@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="category_alerts">경고</string>
-    <string name="bolus_delivered">Bolus %1$.2f U이 성공적으로 주입되었습니다.</string>
     <string name="eopatch_status">상태</string>
     <string name="eopatch_base_basal_rate">기본 basal 양</string>
     <string name="eopatch_temp_basal_rate">임시 basal 양</string>

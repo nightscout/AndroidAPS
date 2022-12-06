@@ -1,11 +1,10 @@
 package info.nightscout.workflow
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.iob.IobCobCalculator
@@ -20,17 +19,12 @@ import javax.inject.Inject
 class LoadBgDataWorker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var repository: AppRepository
-
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-    }
 
     class LoadBgData(
         val iobCobCalculator: IobCobCalculator,
@@ -53,7 +47,7 @@ class LoadBgDataWorker(
         }
     }
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
 
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as LoadBgData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))

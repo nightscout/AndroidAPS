@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.danar.comm
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.danar.R
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.rx.logging.LTag
 
@@ -26,11 +25,11 @@ class MsgSetBasalProfile(
         if (result != 1) {
             failed = true
             aapsLogger.debug(LTag.PUMPCOMM, "Set basal profile result: $result FAILED!!!")
-            uiInteraction.addNotification(Notification.PROFILE_SET_FAILED, rh.gs(R.string.profile_set_failed), Notification.URGENT)
+            uiInteraction.addNotification(Notification.PROFILE_SET_FAILED, rh.gs(info.nightscout.pump.dana.R.string.profile_set_failed), Notification.URGENT)
         } else {
             failed = false
             aapsLogger.debug(LTag.PUMPCOMM, "Set basal profile result: $result")
-            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
         }
     }
 }

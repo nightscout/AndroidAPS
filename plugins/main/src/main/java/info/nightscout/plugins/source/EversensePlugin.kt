@@ -1,11 +1,11 @@
 package info.nightscout.plugins.source
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
@@ -37,7 +37,7 @@ class EversensePlugin @Inject constructor(
     PluginDescription()
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(R.drawable.ic_eversense)
+    .pluginIcon(info.nightscout.core.main.R.drawable.ic_eversense)
     .pluginName(R.string.eversense)
     .shortName(R.string.eversense_shortname)
     .preferencesId(R.xml.pref_bgsource)
@@ -48,27 +48,22 @@ class EversensePlugin @Inject constructor(
     override var sensorBatteryLevel = -1
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.EVERSENSE && sp.getBoolean(R.string.key_do_ns_upload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.EVERSENSE && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
     // cannot be inner class because of needed injection
     class EversenseWorker(
         context: Context,
         params: WorkerParameters
-    ) : Worker(context, params) {
+    ) : LoggingWorker(context, params) {
 
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var eversensePlugin: EversensePlugin
-        @Inject lateinit var aapsLogger: AAPSLogger
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var xDripBroadcast: XDripBroadcast
 
-        init {
-            (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-        }
-
-        override fun doWork(): Result {
+        override fun doWorkAndLog(): Result {
             var ret = Result.success()
 
             if (!eversensePlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))

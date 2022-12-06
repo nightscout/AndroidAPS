@@ -13,7 +13,6 @@ import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.TotalDailyDose
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.implementation.R
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -140,7 +139,7 @@ class TddCalculatorImpl @Inject constructor(
         return TableLayout(context).also { layout ->
             layout.layoutParams = TableLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
             layout.addView(TextView(context).apply {
-                text = rh.gs(R.string.tdd)
+                text = rh.gs(info.nightscout.core.ui.R.string.tdd)
                 setTypeface(typeface, Typeface.BOLD)
                 gravity = Gravity.CENTER_HORIZONTAL
                 setTextAppearance(android.R.style.TextAppearance_Material_Medium)
@@ -150,7 +149,7 @@ class TddCalculatorImpl @Inject constructor(
             averageTdd?.let { averageTdd ->
                 layout.addView(TextView(context).apply {
                     layoutParams = lp
-                    text = rh.gs(R.string.average)
+                    text = rh.gs(info.nightscout.core.ui.R.string.average)
                     setTypeface(typeface, Typeface.BOLD)
                     gravity = Gravity.CENTER_HORIZONTAL
                     setTextAppearance(android.R.style.TextAppearance_Material_Medium)
@@ -158,7 +157,7 @@ class TddCalculatorImpl @Inject constructor(
                 layout.addView(averageTdd.toTableRow(context, rh, tdds.size(), includeCarbs = true))
             }
             layout.addView(TextView(context).apply {
-                text = rh.gs(R.string.today)
+                text = rh.gs(info.nightscout.shared.R.string.today)
                 setTypeface(typeface, Typeface.BOLD)
                 gravity = Gravity.CENTER_HORIZONTAL
                 setTextAppearance(android.R.style.TextAppearance_Material_Medium)

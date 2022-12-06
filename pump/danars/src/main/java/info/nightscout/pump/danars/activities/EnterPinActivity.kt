@@ -9,7 +9,6 @@ import info.nightscout.core.utils.hexStringToByteArray
 import info.nightscout.core.validators.DefaultEditTextValidator
 import info.nightscout.core.validators.EditTextValidator
 import info.nightscout.pump.danars.DanaRSPlugin
-import info.nightscout.pump.danars.R
 import info.nightscout.pump.danars.databinding.DanarsEnterPinActivityBinding
 import info.nightscout.pump.danars.services.BLEComm
 import info.nightscout.rx.AapsSchedulers
@@ -42,12 +41,12 @@ class EnterPinActivity : DaggerAppCompatActivity() {
         setContentView(binding.root)
 
         val p1 = DefaultEditTextValidator(binding.rsV3Pin1, this)
-            .setTestErrorString(rh.gs(R.string.error_mustbe12hexadidits), this)
-            .setCustomRegexp(rh.gs(R.string.twelvehexanumber), this)
+            .setTestErrorString(rh.gs(info.nightscout.core.validators.R.string.error_mustbe12hexadidits), this)
+            .setCustomRegexp(rh.gs(info.nightscout.core.validators.R.string.twelvehexanumber), this)
             .setTestType(EditTextValidator.TEST_REGEXP, this)
         val p2 = DefaultEditTextValidator(binding.rsV3Pin2, this)
-            .setTestErrorString(rh.gs(R.string.error_mustbe8hexadidits), this)
-            .setCustomRegexp(rh.gs(R.string.eighthexanumber), this)
+            .setTestErrorString(rh.gs(info.nightscout.core.validators.R.string.error_mustbe8hexadidits), this)
+            .setCustomRegexp(rh.gs(info.nightscout.core.validators.R.string.eighthexanumber), this)
             .setTestType(EditTextValidator.TEST_REGEXP, this)
 
         binding.okcancel.ok.setOnClickListener {
@@ -59,7 +58,7 @@ class EnterPinActivity : DaggerAppCompatActivity() {
                 if (result) {
                     bleComm.finishV3Pairing()
                     finish()
-                } else OKDialog.show(this, rh.gs(R.string.error), rh.gs(R.string.invalid_input))
+                } else OKDialog.show(this, rh.gs(info.nightscout.core.ui.R.string.error), rh.gs(info.nightscout.core.ui.R.string.invalid_input))
             }
         }
         binding.okcancel.cancel.setOnClickListener { finish() }
@@ -88,12 +87,12 @@ class EnterPinActivity : DaggerAppCompatActivity() {
         for (i in pairingKey.indices)
             pairingKeyCheckSum = pairingKeyCheckSum xor pairingKey[i]
 
-        sp.putString(rh.gs(R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, Base64.encodeToString(pairingKey, Base64.DEFAULT))
+        sp.putString(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_pairingkey) + danaRSPlugin.mDeviceName, Base64.encodeToString(pairingKey, Base64.DEFAULT))
 
         for (i in randomPairingKey.indices)
             pairingKeyCheckSum = pairingKeyCheckSum xor randomPairingKey[i]
 
-        sp.putString(rh.gs(R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, Base64.encodeToString(randomPairingKey, Base64.DEFAULT))
+        sp.putString(rh.gs(info.nightscout.pump.dana.R.string.key_danars_v3_randompairingkey) + danaRSPlugin.mDeviceName, Base64.encodeToString(randomPairingKey, Base64.DEFAULT))
 
         return checksum[0] == pairingKeyCheckSum
     }

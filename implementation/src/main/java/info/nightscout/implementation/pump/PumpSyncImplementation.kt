@@ -1,7 +1,6 @@
 package info.nightscout.implementation.pump
 
 import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.main.R
 import info.nightscout.core.pump.fromDbPumpType
 import info.nightscout.core.pump.toDbPumpType
 import info.nightscout.core.pump.toDbSource
@@ -74,14 +73,14 @@ class PumpSyncImplementation @Inject constructor(
                 syncStopExtendedBolusWithPumpId(dateUtil.now(), dateUtil.now(), it.pumpType, it.pumpSerial)
             }
         }
-        sp.remove(R.string.key_active_pump_type)
-        sp.remove(R.string.key_active_pump_serial_number)
-        sp.remove(R.string.key_active_pump_change_timestamp)
+        sp.remove(info.nightscout.core.utils.R.string.key_active_pump_type)
+        sp.remove(info.nightscout.core.utils.R.string.key_active_pump_serial_number)
+        sp.remove(info.nightscout.core.utils.R.string.key_active_pump_change_timestamp)
     }
 
     override fun verifyPumpIdentification(type: PumpType, serialNumber: String): Boolean {
-        val storedType = sp.getString(R.string.key_active_pump_type, "")
-        val storedSerial = sp.getString(R.string.key_active_pump_serial_number, "")
+        val storedType = sp.getString(info.nightscout.core.utils.R.string.key_active_pump_type, "")
+        val storedSerial = sp.getString(info.nightscout.core.utils.R.string.key_active_pump_serial_number, "")
         if (activePlugin.activePump is VirtualPump) return true
         if (type.description == storedType && serialNumber == storedSerial) return true
         aapsLogger.debug(LTag.PUMP, "verifyPumpIdentification failed for $type $serialNumber")
@@ -97,16 +96,16 @@ class PumpSyncImplementation @Inject constructor(
      * @return true if data is allowed
      */
     private fun confirmActivePump(timestamp: Long, type: PumpType, serialNumber: String, showNotification: Boolean = true): Boolean {
-        val storedType = sp.getString(R.string.key_active_pump_type, "")
-        val storedSerial = sp.getString(R.string.key_active_pump_serial_number, "")
-        val storedTimestamp = sp.getLong(R.string.key_active_pump_change_timestamp, 0L)
+        val storedType = sp.getString(info.nightscout.core.utils.R.string.key_active_pump_type, "")
+        val storedSerial = sp.getString(info.nightscout.core.utils.R.string.key_active_pump_serial_number, "")
+        val storedTimestamp = sp.getLong(info.nightscout.core.utils.R.string.key_active_pump_change_timestamp, 0L)
 
         // If no value stored assume we start using new pump from now
         if (storedType.isEmpty() || storedSerial.isEmpty()) {
             aapsLogger.debug(LTag.PUMP, "Registering new pump ${type.description} $serialNumber")
-            sp.putString(R.string.key_active_pump_type, type.description)
-            sp.putString(R.string.key_active_pump_serial_number, serialNumber)
-            sp.putLong(R.string.key_active_pump_change_timestamp, dateUtil.now()) // allow only data newer than register time (ie. ignore older history)
+            sp.putString(info.nightscout.core.utils.R.string.key_active_pump_type, type.description)
+            sp.putString(info.nightscout.core.utils.R.string.key_active_pump_serial_number, serialNumber)
+            sp.putLong(info.nightscout.core.utils.R.string.key_active_pump_change_timestamp, dateUtil.now()) // allow only data newer than register time (ie. ignore older history)
             return timestamp > dateUtil.now() - T.mins(1).msecs() // allow first record to be 1 min old
         }
 
@@ -116,7 +115,7 @@ class PumpSyncImplementation @Inject constructor(
         }
 
         if (showNotification && (type.description != storedType || serialNumber != storedSerial) && timestamp >= storedTimestamp)
-            rxBus.send(EventNewNotification(Notification(Notification.WRONG_PUMP_DATA, rh.gs(R.string.wrong_pump_data), Notification.URGENT)))
+            rxBus.send(EventNewNotification(Notification(Notification.WRONG_PUMP_DATA, rh.gs(info.nightscout.core.ui.R.string.wrong_pump_data), Notification.URGENT)))
         aapsLogger.error(
             LTag.PUMP,
             "Ignoring pump history record  Allowed: ${dateUtil.dateAndTimeAndSecondsString(storedTimestamp)} $storedType $storedSerial Received: $timestamp ${
@@ -167,7 +166,7 @@ class PumpSyncImplementation @Inject constructor(
                 }
             else null,
             profile = profileFunction.getProfile(),
-            serialNumber = sp.getString(R.string.key_active_pump_serial_number, "")
+            serialNumber = sp.getString(info.nightscout.core.utils.R.string.key_active_pump_serial_number, "")
         )
     }
 

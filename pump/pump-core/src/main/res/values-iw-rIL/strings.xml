@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PumpDeviceState -->
+    <string name="pump_status_sleeping">שינה</string>
+    <string name="pump_status_waking_up">מתעורר</string>
+    <string name="pump_status_active">פעיל</string>
+    <string name="pump_status_error_comm">שגיאת תקשורת</string>
+    <string name="pump_status_timeout_comm">חריגה ממגבלת הזמן לתקשורת</string>
+    <string name="pump_status_pump_unreachable">המשאבה לא זמינה</string>
+    <string name="pump_status_invalid_config">תצורה לא חוקית</string>
+</resources>

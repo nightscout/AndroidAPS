@@ -47,7 +47,7 @@ class ComboPluginTest : TestBase() {
 
     @BeforeEach
     fun prepareMocks() {
-        `when`(rh.gs(R.string.no_valid_basal_rate)).thenReturn("No valid basal rate read from pump")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.no_valid_basal_rate)).thenReturn("No valid basal rate read from pump")
         `when`(context.getString(R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
         comboPlugin = ComboPlugin(injector, aapsLogger, RxBus(aapsSchedulers, aapsLogger), rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, uiInteraction)
     }

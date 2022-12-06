@@ -7,9 +7,11 @@ import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.source.DexcomBoyda
 import info.nightscout.plugins.support.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -33,10 +35,11 @@ class BgQualityCheckPlugin @Inject constructor(
     rh: ResourceHelper,
     private val rxBus: RxBus,
     private val iobCobCalculator: IobCobCalculator,
-    private val aapsSchedulers: 
+    private val aapsSchedulers:
     AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val activePlugin: ActivePlugin
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.CONSTRAINTS)
@@ -48,13 +51,6 @@ class BgQualityCheckPlugin @Inject constructor(
 ), Constraints, BgQualityCheck {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
-
-    enum class State {
-        UNKNOWN,
-        FIVE_MIN_DATA,
-        RECALCULATED,
-        DOUBLED
-    }
 
     override fun onStart() {
         super.onStart()
@@ -69,51 +65,83 @@ class BgQualityCheckPlugin @Inject constructor(
         disposable.clear()
     }
 
-    var state: State = State.UNKNOWN
+    override var state: BgQualityCheck.State = BgQualityCheck.State.UNKNOWN
     override var message: String = ""
 
     // Fallback to LGS if BG values are doubled
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> =
-        if (state == State.DOUBLED)
+        if (state == BgQualityCheck.State.DOUBLED)
             maxIob.set(aapsLogger, 0.0, "Doubled values in BGSource", this)
         else
             maxIob
 
-    @Suppress("CascadeIf") fun processBgData() {
+    fun processBgData() {
         val readings = iobCobCalculator.ads.getBgReadingsDataTableCopy()
         for (i in readings.indices)
         // Deltas are calculated from last ~50 min. Detect RED state only on this interval
             if (i < min(readings.size - 2, 10))
                 if (abs(readings[i].timestamp - readings[i + 1].timestamp) <= T.secs(20).msecs()) {
-                    state = State.DOUBLED
+                    state = BgQualityCheck.State.DOUBLED
                     aapsLogger.debug(LTag.CORE, "BG similar. Turning on red state.\n${readings[i]}\n${readings[i + 1]}")
                     message = rh.gs(R.string.bg_too_close, dateUtil.dateAndTimeAndSecondsString(readings[i].timestamp), dateUtil.dateAndTimeAndSecondsString(readings[i + 1].timestamp))
                     return
                 }
-        if (iobCobCalculator.ads.lastUsed5minCalculation == true) {
-            state = State.FIVE_MIN_DATA
+        if (activePlugin.activeBgSource !is DexcomBoyda && isBgFlatForInterval(staleBgCheckPeriodMinutes, staleBgMaxDeltaMgdl) == true) {
+            state = BgQualityCheck.State.FLAT
+            message = rh.gs(R.string.a11y_bg_quality_flat)
+        } else if (iobCobCalculator.ads.lastUsed5minCalculation == true) {
+            state = BgQualityCheck.State.FIVE_MIN_DATA
             message = "Data is clean"
         } else if (iobCobCalculator.ads.lastUsed5minCalculation == false) {
-            state = State.RECALCULATED
+            state = BgQualityCheck.State.RECALCULATED
             message = rh.gs(R.string.recalculated_data_used)
         } else {
-            state = State.UNKNOWN
+            state = BgQualityCheck.State.UNKNOWN
             message = ""
         }
     }
 
+    // inspired by @justmara
+    @Suppress("SpellCheckingInspection", "SameParameterValue")
+    private fun isBgFlatForInterval(minutes: Long, maxDelta: Double): Boolean? {
+        val data = iobCobCalculator.ads.getBgReadingsDataTableCopy()
+        val lastBg = iobCobCalculator.ads.lastBg()?.value
+        val now = dateUtil.now()
+        val offset = now - T.mins(minutes).msecs()
+        val sizeRecords = data.size
+
+        lastBg ?: return null
+        if (sizeRecords < 5) return null // not enough data
+        if (data[data.size - 1].timestamp > now - 45 * 60 * 1000L) return null // data too fresh to detect
+        if (data[0].timestamp < now - 7 * 60 * 1000L) return null // data is old
+
+        for (bg in data) {
+            if (bg.timestamp < offset) break
+            if (abs(lastBg - bg.value) > maxDelta) return false
+        }
+        return true
+    }
+
     @DrawableRes override fun icon(): Int =
         when (state) {
-            State.UNKNOWN       -> 0
-            State.FIVE_MIN_DATA -> 0
-            State.RECALCULATED  -> R.drawable.ic_baseline_warning_24_yellow
-            State.DOUBLED       -> R.drawable.ic_baseline_warning_24_red
+            BgQualityCheck.State.UNKNOWN       -> 0
+            BgQualityCheck.State.FIVE_MIN_DATA -> 0
+            BgQualityCheck.State.RECALCULATED  -> R.drawable.ic_baseline_warning_24_yellow
+            BgQualityCheck.State.DOUBLED       -> R.drawable.ic_baseline_warning_24_red
+            BgQualityCheck.State.FLAT          -> R.drawable.ic_baseline_trending_flat_24
         }
 
     override fun stateDescription(): String =
         when (state) {
-            State.RECALCULATED -> rh.gs(R.string.a11y_bg_quality_recalculated)
-            State.DOUBLED      -> rh.gs(R.string.a11y_bg_quality_doubles)
-            else               -> ""
+            BgQualityCheck.State.RECALCULATED -> rh.gs(R.string.a11y_bg_quality_recalculated)
+            BgQualityCheck.State.DOUBLED      -> rh.gs(R.string.a11y_bg_quality_doubles)
+            BgQualityCheck.State.FLAT         -> rh.gs(R.string.a11y_bg_quality_flat)
+            else                              -> ""
         }
+
+    companion object {
+
+        const val staleBgCheckPeriodMinutes = 45L
+        const val staleBgMaxDeltaMgdl = 1.0
+    }
 }

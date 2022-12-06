@@ -28,6 +28,7 @@ import info.nightscout.automation.dialogs.ChooseTriggerDialog
 import info.nightscout.automation.dialogs.EditActionDialog
 import info.nightscout.automation.dialogs.EditEventDialog
 import info.nightscout.automation.dialogs.EditTriggerDialog
+import info.nightscout.automation.services.LocationService
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.automation.triggers.TriggerAutosensValue
 import info.nightscout.automation.triggers.TriggerBTDevice
@@ -102,6 +103,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun actionStartTempTargetInjector(): ActionStartTempTarget
     @ContributesAndroidInjector abstract fun actionStopTempTargetInjector(): ActionStopTempTarget
     @ContributesAndroidInjector abstract fun actionDummyInjector(): ActionDummy
+    @ContributesAndroidInjector abstract fun contributesLocationService(): LocationService
 
     @Module
     interface Bindings {

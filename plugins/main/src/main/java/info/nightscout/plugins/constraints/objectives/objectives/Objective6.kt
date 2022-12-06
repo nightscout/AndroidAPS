@@ -15,7 +15,7 @@ class Objective6(injector: HasAndroidInjector) : Objective(injector, "maxiob", R
         tasks.add(MinimumDurationTask(this, T.days(1).msecs()))
         tasks.add(
             object : Task(this, R.string.closedmodeenabled) {
-                override fun isCompleted(): Boolean = sp.getString(R.string.key_aps_mode, "open") == "closed"
+                override fun isCompleted(): Boolean = sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open") == "closed"
             })
         tasks.add(
             object : Task(this, R.string.maxiobset) {

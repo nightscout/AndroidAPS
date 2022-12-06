@@ -124,7 +124,7 @@ class ActionsFragment : DaggerFragment() {
             activity?.let { activity ->
                 protectionCheck.queryProtection(activity, ProtectionCheck.Protection.BOLUS, UIRunnable {
                     OKDialog.showConfirmation(
-                        activity, rh.gs(R.string.extended_bolus), rh.gs(R.string.ebstopsloop),
+                        activity, rh.gs(info.nightscout.core.ui.R.string.extended_bolus), rh.gs(R.string.ebstopsloop),
                         Runnable {
                             uiInteraction.runExtendedBolusDialog(childFragmentManager)
                         }, null
@@ -138,7 +138,7 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelExtended(object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            uiInteraction.runAlarm(result.comment, rh.gs(R.string.extendedbolusdeliveryerror), R.raw.boluserror)
+                            uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.extendedbolusdeliveryerror), info.nightscout.core.ui.R.raw.boluserror)
                         }
                     }
                 })
@@ -158,7 +158,7 @@ class ActionsFragment : DaggerFragment() {
                 commandQueue.cancelTempBasal(true, object : Callback() {
                     override fun run() {
                         if (!result.success) {
-                            uiInteraction.runAlarm(result.comment, rh.gs(R.string.temp_basal_delivery_error), R.raw.boluserror)
+                            uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.temp_basal_delivery_error), info.nightscout.core.ui.R.raw.boluserror)
                         }
                     }
                 })
@@ -172,25 +172,25 @@ class ActionsFragment : DaggerFragment() {
         binding.historyBrowser.setOnClickListener { startActivity(Intent(context, uiInteraction.historyBrowseActivity)) }
         binding.tddStats.setOnClickListener { startActivity(Intent(context, uiInteraction.tddStatsActivity)) }
         binding.bgCheck.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BGCHECK, R.string.careportal_bgcheck)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BGCHECK, info.nightscout.core.ui.R.string.careportal_bgcheck)
         }
         binding.cgmSensorInsert.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.SENSOR_INSERT, R.string.cgm_sensor_insert)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.SENSOR_INSERT, info.nightscout.core.ui.R.string.cgm_sensor_insert)
         }
         binding.pumpBatteryChange.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BATTERY_CHANGE, R.string.pump_battery_change)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.BATTERY_CHANGE, info.nightscout.core.ui.R.string.pump_battery_change)
         }
         binding.note.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.NOTE, R.string.careportal_note)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.NOTE, info.nightscout.core.ui.R.string.careportal_note)
         }
         binding.exercise.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.EXERCISE, R.string.careportal_exercise)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.EXERCISE, info.nightscout.core.ui.R.string.careportal_exercise)
         }
         binding.question.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.QUESTION, R.string.careportal_question)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.QUESTION, info.nightscout.core.ui.R.string.careportal_question)
         }
         binding.announcement.setOnClickListener {
-            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.ANNOUNCEMENT, R.string.careportal_announcement)
+            uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.ANNOUNCEMENT, info.nightscout.core.ui.R.string.careportal_announcement)
         }
 
         sp.putBoolean(R.string.key_objectiveuseactions, true)
@@ -255,7 +255,7 @@ class ActionsFragment : DaggerFragment() {
                 binding.extendedBolus.visibility = View.GONE
                 binding.extendedBolusCancel.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                binding.extendedBolusCancel.text = rh.gs(R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil)
+                binding.extendedBolusCancel.text = rh.gs(info.nightscout.core.ui.R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil)
             } else {
                 binding.extendedBolus.visibility = View.VISIBLE
                 binding.extendedBolusCancel.visibility = View.GONE
@@ -271,7 +271,7 @@ class ActionsFragment : DaggerFragment() {
                 binding.setTempBasal.visibility = View.GONE
                 binding.cancelTempBasal.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                binding.cancelTempBasal.text = rh.gs(R.string.cancel) + " " + activeTemp.toStringShort()
+                binding.cancelTempBasal.text = rh.gs(info.nightscout.core.ui.R.string.cancel) + " " + activeTemp.toStringShort()
             } else {
                 binding.setTempBasal.visibility = View.VISIBLE
                 binding.cancelTempBasal.visibility = View.GONE
@@ -286,7 +286,7 @@ class ActionsFragment : DaggerFragment() {
         val isPatchPump = pump.pumpDescription.isPatchPump
         binding.status.apply {
             cannulaOrPatch.text = if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
-            val imageResource = if (isPatchPump) R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
+            val imageResource = if (isPatchPump) info.nightscout.core.main.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
             cannulaOrPatch.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
             batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
             cannulaUsageLabel.visibility = isPatchPump.not().toVisibility()
@@ -315,7 +315,7 @@ class ActionsFragment : DaggerFragment() {
         for (customAction in customActions) {
             if (!customAction.isEnabled) continue
 
-            val btn = SingleClickButton(currentContext, null, R.attr.customBtnStyle)
+            val btn = SingleClickButton(currentContext, null, info.nightscout.core.ui.R.attr.customBtnStyle)
             btn.text = rh.gs(customAction.name)
 
             val layoutParams = LinearLayout.LayoutParams(

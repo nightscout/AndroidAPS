@@ -7,17 +7,15 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkQuery
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.google.common.util.concurrent.ListenableFuture
-import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.LocalAlertUtils
@@ -29,9 +27,9 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventProfileSwitchChanged
-import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -45,9 +43,8 @@ import kotlin.math.abs
 class KeepAliveWorker(
     private val context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var localAlertUtils: LocalAlertUtils
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var config: Config
@@ -65,10 +62,6 @@ class KeepAliveWorker(
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
 
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-    }
-
     companion object {
 
         private val STATUS_UPDATE_FREQUENCY = T.mins(15).msecs()
@@ -83,7 +76,7 @@ class KeepAliveWorker(
         private const val KA_10 = "KeepAlive_10"
     }
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
         aapsLogger.debug(LTag.CORE, "KeepAlive received from: " + inputData.getString("schedule"))
 
         // 15 min interval is WorkManager minimum so schedule another instances to have 5 min interval
@@ -197,10 +190,10 @@ class KeepAliveWorker(
             rxBus.send(EventProfileSwitchChanged())
         } else if (isStatusOutdated && !pump.isBusy()) {
             lastReadStatus = dateUtil.now()
-            commandQueue.readStatus(rh.gs(R.string.keepalive_status_outdated), null)
+            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.keepalive_status_outdated), null)
         } else if (isBasalOutdated && !pump.isBusy()) {
             lastReadStatus = dateUtil.now()
-            commandQueue.readStatus(rh.gs(R.string.keepalive_basal_outdated), null)
+            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.keepalive_basal_outdated), null)
         }
     }
 }

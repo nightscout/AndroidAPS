@@ -19,6 +19,7 @@
     <string name="tbr_formatter">%2$d / %3$d분 동안 %1$d%%</string>
     <string name="multiwave_bolus">Multiwave Bolus</string>
     <string name="eb_formatter">%3$d분 동안 %1$.2f / %2$.2f U</string>
+    <string name="insight_last_bolus">마지막 Bolus</string>
     <string name="searching_for_devices">장치 검색중...</string>
     <string name="pairing_completed">동기화 완료</string>
     <string name="code_compare">이 장치에서 보여지는 코드와 펌프에서 보여지는 코드가 동일한가요?</string>

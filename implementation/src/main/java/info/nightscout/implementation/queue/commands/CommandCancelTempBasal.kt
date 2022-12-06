@@ -1,7 +1,6 @@
 package info.nightscout.implementation.queue.commands
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.implementation.R
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
@@ -23,11 +22,11 @@ class CommandCancelTempBasal(
         callback?.result(r)?.run()
     }
 
-    override fun status(): String = rh.gs(R.string.uel_accepts_temp_basal)
+    override fun status(): String = rh.gs(info.nightscout.core.ui.R.string.uel_accepts_temp_basal)
 
     override fun log(): String = "CANCEL TEMPBASAL"
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.main.R.string.connectiontimedout))?.run()
+        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.connectiontimedout))?.run()
     }
 }
