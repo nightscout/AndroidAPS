@@ -28,7 +28,7 @@ dependencies {
 
 
     // NSClient, Tidepool
-    api("io.socket:socket.io-client:1.0.0") {
+    api("io.socket:socket.io-client:1.0.2") {
         // excluding org.json which is provided by Android
         exclude group: "org.json", module: "json"
     }
