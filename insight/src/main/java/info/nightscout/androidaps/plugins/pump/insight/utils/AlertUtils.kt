@@ -109,7 +109,7 @@ class AlertUtils @Inject constructor(private val rh: ResourceHelper) {
 
     fun getAlertIcon(alertCategory: AlertCategory) = when (alertCategory) {
         ERROR       -> R.drawable.ic_error
-        MAINTENANCE -> R.drawable.ic_maintenance
+        MAINTENANCE -> info.nightscout.core.ui.R.drawable.ic_maintenance
         WARNING     -> R.drawable.ic_warning
         REMINDER    -> R.drawable.ic_reminder
     }

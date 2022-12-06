@@ -16,7 +16,6 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.lifecycle.MutableLiveData
 import javax.inject.Inject
 import dagger.android.DaggerService
-import info.nightscout.androidaps.insight.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.androidaps.plugins.pump.insight.activities.InsightAlertActivity
@@ -264,15 +263,15 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
             AlertStatus.ACTIVE  -> {
                     val muteIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "mute")
                     val mutePendingIntent = PendingIntent.getService(this, 1, muteIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                    notificationBuilder.addAction(0, resourceHelper.gs(R.string.mute), mutePendingIntent)
+                    notificationBuilder.addAction(0, resourceHelper.gs(info.nightscout.core.ui.R.string.mute), mutePendingIntent)
                     val confirmIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "confirm")
                     val confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                    notificationBuilder.addAction(0, resourceHelper.gs(R.string.confirm), confirmPendingIntent)
+                    notificationBuilder.addAction(0, resourceHelper.gs(info.nightscout.core.ui.R.string.confirm), confirmPendingIntent)
                 }
             AlertStatus.SNOOZED -> {
                 val confirmIntent = Intent(this, InsightAlertService::class.java).putExtra("command", "confirm")
                 val confirmPendingIntent = PendingIntent.getService(this, 2, confirmIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-                notificationBuilder.addAction(0, resourceHelper.gs(R.string.confirm), confirmPendingIntent)
+                notificationBuilder.addAction(0, resourceHelper.gs(info.nightscout.core.ui.R.string.confirm), confirmPendingIntent)
             }
             else                -> Unit
         }

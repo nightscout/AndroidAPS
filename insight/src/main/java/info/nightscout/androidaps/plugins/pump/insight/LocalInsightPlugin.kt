@@ -86,7 +86,7 @@ class LocalInsightPlugin @Inject constructor(
     private val pumpSync: PumpSync,
     private val insightDatabase: InsightDatabase
 ) : PumpPluginBase(PluginDescription()
-    .pluginIcon(R.drawable.ic_insight_128)
+    .pluginIcon(info.nightscout.core.ui.R.drawable.ic_insight_128)
     .pluginName(R.string.insight_local)
     .shortName(R.string.insightpump_shortname)
     .mainType(PluginType.PUMP)
@@ -248,7 +248,7 @@ class LocalInsightPlugin @Inject constructor(
                 val setDateTimeMessage = SetDateTimeMessage()
                 setDateTimeMessage.pumpTime = pumpTime
                 connectionService?.requestMessage(setDateTimeMessage)?.await()
-                val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, rh.gs(R.string.pump_time_updated), Notification.INFO, 60)
+                val notification = Notification(Notification.INSIGHT_DATE_TIME_UPDATED, rh.gs(info.nightscout.core.ui.R.string.pump_time_updated), Notification.INFO, 60)
                 rxBus.send(EventNewNotification(notification))
             }
         }
@@ -362,11 +362,11 @@ class LocalInsightPlugin @Inject constructor(
                 profileBlock.profileBlocks = profileBlocks
                 ParameterBlockUtil.writeConfigurationBlock(service, profileBlock)
                 rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
-                val notification = Notification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, 60)
+                val notification = Notification(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
                 rxBus.send(EventNewNotification(notification))
                 result.success(true)
                     .enacted(true)
-                    .comment(R.string.virtualpump_resultok)
+                    .comment(info.nightscout.core.ui.R.string.virtualpump_resultok)
                 this.profileBlocks = profileBlocks
                 try {
                     fetchStatus()
@@ -374,17 +374,17 @@ class LocalInsightPlugin @Inject constructor(
                 }
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
-                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failed_update_basal_profile), Notification.URGENT)
+                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
                 result.comment(ExceptionTranslator.getString(context, e))
             } catch (e: InsightException) {
                 aapsLogger.info(LTag.PUMP, "Exception while setting profile: " + e.javaClass.canonicalName)
-                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failed_update_basal_profile), Notification.URGENT)
+                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
                 result.comment(ExceptionTranslator.getString(context, e))
             } catch (e: Exception) {
                 aapsLogger.error("Exception while setting profile", e)
-                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(R.string.failed_update_basal_profile), Notification.URGENT)
+                val notification = Notification(Notification.FAILED_UPDATE_PROFILE, rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
                 rxBus.send(EventNewNotification(notification))
                 result.comment(ExceptionTranslator.getString(context, e))
             }
@@ -451,7 +451,7 @@ class LocalInsightPlugin @Inject constructor(
                     val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType === DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
                     val bolusingEvent = EventOverviewBolusProgress
                     bolusingEvent.t = t
-                    bolusingEvent.status = rh.gs(R.string.bolus_delivered, 0.0, insulin)
+                    bolusingEvent.status = rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, 0.0, insulin)
                     bolusingEvent.percent = 0
                     rxBus.send(bolusingEvent)
                     var trials = 0
@@ -493,13 +493,13 @@ class LocalInsightPlugin @Inject constructor(
                             trials = -1
                             val percentBefore = bolusingEvent.percent
                             bolusingEvent.percent = (100.0 / activeBolus.initialAmount * (activeBolus.initialAmount - activeBolus.remainingAmount)).toInt()
-                            bolusingEvent.status = rh.gs(R.string.bolus_delivered, activeBolus.initialAmount - activeBolus.remainingAmount, activeBolus.initialAmount)
+                            bolusingEvent.status = rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, activeBolus.initialAmount - activeBolus.remainingAmount, activeBolus.initialAmount)
                             if (percentBefore != bolusingEvent.percent) rxBus.send(bolusingEvent)
                         } else {
                             synchronized(_bolusLock) {
                                 if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                     if (!bolusCancelled) {
-                                        bolusingEvent.status = rh.gs(R.string.bolus_delivered, insulin, insulin)
+                                        bolusingEvent.status = rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, insulin, insulin)
                                         bolusingEvent.percent = 100
                                         rxBus.send(bolusingEvent)
                                     }
@@ -574,7 +574,7 @@ class LocalInsightPlugin @Inject constructor(
                                     .isPercent(false)
                                     .absolute(absoluteRate)
                                     .duration(durationInMinutes)
-                                    .comment(R.string.virtualpump_resultok)
+                                    .comment(info.nightscout.core.ui.R.string.virtualpump_resultok)
                             } else {
                                 result.comment(ebResult.comment)
                             }
@@ -625,7 +625,7 @@ class LocalInsightPlugin @Inject constructor(
                 .duration(durationInMinutes)
                 .success(true)
                 .enacted(true)
-                .comment(R.string.virtualpump_resultok)
+                .comment(info.nightscout.core.ui.R.string.virtualpump_resultok)
             readHistory()
             fetchStatus()
         } catch (e: AppLayerErrorException) {
@@ -675,7 +675,7 @@ class LocalInsightPlugin @Inject constructor(
                         bolusID = bolusID
                     )
                 )
-                result.success(true).enacted(true).comment(R.string.virtualpump_resultok)
+                result.success(true).enacted(true).comment(info.nightscout.core.ui.R.string.virtualpump_resultok)
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while delivering extended bolus: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
                 result.comment(ExceptionTranslator.getString(context, e))
@@ -722,10 +722,10 @@ class LocalInsightPlugin @Inject constructor(
                     .isTempCancel(true)
                 confirmAlert(AlertType.WARNING_36)
                 alertService?.ignore(null)
-                result.comment(R.string.virtualpump_resultok)
+                result.comment(info.nightscout.core.ui.R.string.virtualpump_resultok)
             } catch (e: NoActiveTBRToCanceLException) {
                 result.success(true)
-                result.comment(R.string.virtualpump_resultok)
+                result.comment(info.nightscout.core.ui.R.string.virtualpump_resultok)
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while canceling TBR: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
                 result.comment(ExceptionTranslator.getString(context, e))
@@ -773,7 +773,7 @@ class LocalInsightPlugin @Inject constructor(
                         }
                     }
                 }
-                result.success(true).comment(R.string.virtualpump_resultok)
+                result.success(true).comment(info.nightscout.core.ui.R.string.virtualpump_resultok)
             } catch (e: AppLayerErrorException) {
                 aapsLogger.info(LTag.PUMP, "Exception while canceling extended bolus: " + e.javaClass.canonicalName + " (" + e.errorCode + ")")
                 result.comment(ExceptionTranslator.getString(context, e))
@@ -1185,7 +1185,7 @@ class LocalInsightPlugin @Inject constructor(
 
             OperatingMode.PAUSED  -> {
                 pumpID.eventType = InsightPumpID.EventType.PumpPaused
-                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, rh.gs(R.string.pump_paused))
+                if (sp.getBoolean("insight_log_operating_mode_changes", false)) logNote(timestamp, rh.gs(info.nightscout.core.ui.R.string.pump_paused))
             }
 
             else                  -> Unit
@@ -1454,21 +1454,21 @@ class LocalInsightPlugin @Inject constructor(
     }
 
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
-        percentRate.setIfGreater(aapsLogger, 0, rh.gs(R.string.limitingpercentrate, 0, rh.gs(R.string.itmustbepositivevalue)), this)
-        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, rh.gs(R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(R.string.pumplimit))
+        percentRate.setIfGreater(aapsLogger, 0, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, 0, rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)), this)
+        percentRate.setIfSmaller(aapsLogger, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate, pumpDescription.maxTempPercent, rh.gs(info.nightscout.core.ui.R.string.pumplimit))
                                  , this)
         return percentRate
     }
 
     override fun applyBolusConstraints(insulin: Constraint<Double>): Constraint<Double> {
         if (!limitsFetched) return insulin
-        insulin.setIfSmaller(aapsLogger, maximumBolusAmount, rh.gs(R.string.limitingbolus, maximumBolusAmount, rh.gs(R.string.pumplimit)), this)
+        insulin.setIfSmaller(aapsLogger, maximumBolusAmount, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, maximumBolusAmount, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
         if (insulin.value() < minimumBolusAmount) {
 
             //TODO: Add function to Constraints or use different approach
             // This only works if the interface of the InsightPlugin is called last.
             // If not, another constraint could theoretically set the value between 0 and minimumBolusAmount
-            insulin.set(aapsLogger, 0.0, rh.gs(R.string.limitingbolus, minimumBolusAmount, rh.gs(R.string.pumplimit)), this)
+            insulin.set(aapsLogger, 0.0, rh.gs(info.nightscout.core.ui.R.string.limitingbolus, minimumBolusAmount, rh.gs(info.nightscout.core.ui.R.string.pumplimit)), this)
         }
         return insulin
     }

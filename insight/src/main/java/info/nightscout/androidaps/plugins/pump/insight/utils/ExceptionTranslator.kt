@@ -29,7 +29,7 @@ object ExceptionTranslator {
     init {
         TABLE[ConnectionFailedException::class.java] = R.string.connection_failed
         TABLE[ConnectionLostException::class.java] = R.string.connection_lost
-        TABLE[DisconnectedException::class.java] = R.string.disconnected
+        TABLE[DisconnectedException::class.java] = info.nightscout.core.ui.R.string.disconnected
         TABLE[SatlPairingRejectedException::class.java] = R.string.pairing_rejected
         TABLE[SocketCreationFailedException::class.java] = R.string.socket_creation_failed
         TABLE[TimeoutException::class.java] = R.string.timeout

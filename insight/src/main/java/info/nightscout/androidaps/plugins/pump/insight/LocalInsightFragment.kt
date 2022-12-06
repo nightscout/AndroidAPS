@@ -165,7 +165,7 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
         localInsightPlugin.connectionService?.let {
             val string = when (it.state) {
                 InsightState.NOT_PAIRED                 -> R.string.not_paired
-                InsightState.DISCONNECTED               -> R.string.disconnected
+                InsightState.DISCONNECTED               -> info.nightscout.core.ui.R.string.disconnected
                 InsightState.CONNECTING,
                 InsightState.SATL_CONNECTION_REQUEST,
                 InsightState.SATL_KEY_REQUEST,
@@ -178,8 +178,8 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
                 InsightState.APP_CONNECT_MESSAGE,
                 InsightState.APP_FIRMWARE_VERSIONS,
                 InsightState.APP_SYSTEM_IDENTIFICATION,
-                InsightState.AWAITING_CODE_CONFIRMATION -> R.string.connecting
-                InsightState.CONNECTED                  -> R.string.connected
+                InsightState.AWAITING_CODE_CONFIRMATION -> info.nightscout.core.ui.R.string.connecting
+                InsightState.CONNECTED                  -> info.nightscout.shared.R.string.connected
                 InsightState.RECOVERING                 -> R.string.recovering
             }
             statusItems.add(getStatusItem(rh.gs(R.string.insight_status), rh.gs(string)))
@@ -231,7 +231,7 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
                 }
             OperatingMode.PAUSED  -> {
                     binding.operatingMode.setText(R.string.start_pump)
-                    string = R.string.paused
+                    string = info.nightscout.core.ui.R.string.paused
                 }
 
             null                  -> Unit
@@ -241,38 +241,38 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
 
     private fun getBatteryStatusItem(statusItems: MutableList<View>) {
         val batteryStatus = localInsightPlugin.batteryStatus ?: return
-        statusItems.add(getStatusItem(rh.gs(R.string.battery_label), batteryStatus.batteryAmount.toString() + "%"))
+        statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.battery_label), batteryStatus.batteryAmount.toString() + "%"))
     }
 
     private fun getCartridgeStatusItem(statusItems: MutableList<View>) {
         val cartridgeStatus = localInsightPlugin.cartridgeStatus ?: return
         val status: String
         status = if (cartridgeStatus.isInserted) to2Decimal(cartridgeStatus.remainingAmount) + "U" else rh.gs(R.string.not_inserted)
-        statusItems.add(getStatusItem(rh.gs(R.string.reservoir_label), status))
+        statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.reservoir_label), status))
     }
 
     private fun getTDDItems(statusItems: MutableList<View>) {
         val tdd = localInsightPlugin.totalDailyDose ?: return
         statusItems.add(getStatusItem(rh.gs(R.string.tdd_bolus), to2Decimal(tdd.bolus)))
         statusItems.add(getStatusItem(rh.gs(R.string.tdd_basal), to2Decimal(tdd.basal)))
-        statusItems.add(getStatusItem(rh.gs(R.string.tdd_total), to2Decimal(tdd.bolusAndBasal)))
+        statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.tdd_total), to2Decimal(tdd.bolusAndBasal)))
     }
 
     private fun getBaseBasalRateItem(statusItems: MutableList<View>) {
         val activeBasalRate = localInsightPlugin.activeBasalRate ?: return
-        statusItems.add(getStatusItem(rh.gs(R.string.base_basal_rate_label),to2Decimal(activeBasalRate.activeBasalRate) + " U/h (" + activeBasalRate.activeBasalProfileName + ")"))
+        statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.base_basal_rate_label),to2Decimal(activeBasalRate.activeBasalRate) + " U/h (" + activeBasalRate.activeBasalProfileName + ")"))
     }
 
     private fun getTBRItem(statusItems: MutableList<View>) {
         val activeTBR = localInsightPlugin.activeTBR ?: return
-        statusItems.add(getStatusItem(rh.gs(R.string.tempbasal_label), rh.gs(R.string.tbr_formatter, activeTBR.percentage, activeTBR.initialDuration - activeTBR.remainingDuration, activeTBR.initialDuration)))
+        statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.tempbasal_label), rh.gs(R.string.tbr_formatter, activeTBR.percentage, activeTBR.initialDuration - activeTBR.remainingDuration, activeTBR.initialDuration)))
     }
 
     private fun getLastBolusItem(statusItems: MutableList<View>) {
         if (localInsightPlugin.lastBolusAmount.equals(0.0) || localInsightPlugin.lastBolusTimestamp.equals(0L)) return
         val agoMsc = System.currentTimeMillis() - localInsightPlugin.lastBolusTimestamp
         val bolusMinAgo = agoMsc / 60.0 / 1000.0
-        val unit = rh.gs(R.string.insulin_unit_shortname)
+        val unit = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
         val ago: String
         ago = if (bolusMinAgo < 60) {
             dateUtil.minAgo(rh, localInsightPlugin.lastBolusTimestamp)
@@ -292,7 +292,7 @@ class LocalInsightFragment : DaggerFragment(), View.OnClickListener {
             val label: String?
             label = when (activeBolus.bolusType) {
                 BolusType.MULTIWAVE -> rh.gs(R.string.multiwave_bolus)
-                BolusType.EXTENDED  -> rh.gs(R.string.extended_bolus)
+                BolusType.EXTENDED  -> rh.gs(info.nightscout.core.ui.R.string.extended_bolus)
                 else                -> null
             }
             label?.let {
