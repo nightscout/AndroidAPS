@@ -66,4 +66,10 @@
     <string name="maxvalueinpreferences">maks waarde in voorkeure</string>
     <string name="hardlimit">harde limiet</string>
     <!--    Autotune   -->
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">\'n Bolus was binne die laaste 3 minute afgelewer, SMB is oorgespring</string>
+    <string name="loop_shortname">LUS</string>
+    <string name="description_loop">Aktiveer of deaktiveer die implementering die lus wakker maak.</string>
+    <string name="basal_set_correctly">Basale reggestel</string>
+    <string name="loop_aps_label">APS</string>
 </resources>

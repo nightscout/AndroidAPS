@@ -3,14 +3,13 @@ package info.nightscout.automation.triggers
 import android.widget.LinearLayout
 import com.google.common.base.Optional
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.shared.utils.T
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDateTime
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
-
+import info.nightscout.shared.utils.T
 import org.json.JSONObject
 
 class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
@@ -51,18 +50,18 @@ class TriggerTime(injector: HasAndroidInjector) : Trigger(injector) {
         return this
     }
 
-    override fun friendlyName(): Int = R.string.time
+    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.time
 
     override fun friendlyDescription(): String =
         rh.gs(R.string.atspecifiedtime, dateUtil.dateAndTimeString(time.value))
 
-    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_access_alarm_24dp)
+    override fun icon(): Optional<Int> = Optional.of(info.nightscout.core.main.R.drawable.ic_access_alarm_24dp)
 
     override fun duplicate(): Trigger = TriggerTime(injector, time.value)
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(StaticLabel(rh, R.string.time, this))
+            .add(StaticLabel(rh, info.nightscout.core.ui.R.string.time, this))
             .add(time)
             .build(root)
     }

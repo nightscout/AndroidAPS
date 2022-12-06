@@ -17,6 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Aktivitetsmonitor</string>
     <string name="do_you_want_reset_stats">Vil du tilbakestille aktivitetsstatistikken?</string>
+    <string name="do_you_want_reset_tdd_stats">Vil du tilbakestille TDD statistikken?</string>
     <string name="statistics">Statistikk</string>
     <string name="calculation_in_progress">Beregning pågår</string>
     <string name="invalid_age">Ugyldig alder</string>

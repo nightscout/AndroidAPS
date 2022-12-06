@@ -82,6 +82,7 @@
     <string name="needbatteryreplace">É necessária a troca da bateria</string>
     <string name="needinsullinreplace">É necessária a troca da insulina</string>
     <string name="pumpversion">versão da bomba</string>
+    <string name="apsIncarnationNo">aps_incarnation_no</string>
     <string name="pumpserialno">número de série da bomba</string>
     <string name="diaconn_g8_loginsulinchange_title">Mudança do reservatório do log</string>
     <string name="diaconn_g8_loginsulinchange_summary">Adicionar evento \"Mudança de Insulina\" ao portal de cuidados, quando detectado no histórico</string>
@@ -117,6 +118,9 @@
     <string name="diaconn_g8_logalarmblock">Injeção Bloqueada (%s)</string>
     <string name="diaconn_g8_lgorelease">autorização da basal (%s)</string>
     <string name="diaconn_g8_lgosuspend">basal suspensa (%s)</string>
+    <string name="diaconn_g8_logdualnormalsuccess">Bolus multionda aplicado com sucesso</string>
+    <string name="diaconn_g8_logdualsquarestart">Bolus multionda iniciou</string>
+    <string name="diaconn_g8_logdualsquaresuccess">Bolus multionda aplicado com sucesso</string>
     <string name="diaconn_g8_logsquarestart">Bolus multionda iniciou</string>
     <string name="diaconn_g8_logsquaresuccess">Bolus multionda aplicado com sucesso</string>
     <string name="diaconn_g8_logmealfail">Falha na refeição</string>

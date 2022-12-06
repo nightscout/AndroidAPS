@@ -17,14 +17,14 @@ class ActionLoopEnableTest : ActionsTestBase() {
     fun setup() {
 
         testPumpPlugin.pumpDescription.isTempBasalCapable = true
-        `when`(rh.gs(info.nightscout.core.main.R.string.enableloop)).thenReturn("Enable loop")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.enableloop)).thenReturn("Enable loop")
         `when`(context.getString(R.string.alreadyenabled)).thenReturn("Already enabled")
 
         sut = ActionLoopEnable(injector)
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.core.main.R.string.enableloop, sut.friendlyName())
+        Assert.assertEquals(info.nightscout.core.ui.R.string.enableloop, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {

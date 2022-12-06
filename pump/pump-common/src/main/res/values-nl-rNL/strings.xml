@@ -5,7 +5,6 @@
     <string name="pump_operation_not_yet_supported_by_pump">Operatie NOG niet ondersteund door de pomp.</string>
     <string name="common_resultok">OK</string>
     <string name="pump_serial_number">Serienummer van de pomp</string>
-    <string name="bolus_delivered">%1$.2f E / %2$.2f E toegediend</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Niet geïnitialiseerd</string>
     <string name="pump_status_initialized">Geïnitialiseerd</string>

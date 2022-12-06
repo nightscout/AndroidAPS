@@ -22,7 +22,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
     init {
         tasks.add(object : Task(this, R.string.objectives_bgavailableinns) {
             override fun isCompleted(): Boolean {
-                return sp.getBoolean(R.string.key_objectives_bg_is_available_in_ns, false)
+                return sp.getBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, false)
             }
         })
         tasks.add(object : Task(this, R.string.synchaswritepermission) {
@@ -41,7 +41,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
         })
         tasks.add(object : Task(this, R.string.objectives_pumpstatusavailableinns) {
             override fun isCompleted(): Boolean {
-                return sp.getBoolean(R.string.key_objectives_pump_status_is_available_in_ns, false)
+                return sp.getBoolean(info.nightscout.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, false)
             }
         })
         tasks.add(object : Task(this, R.string.hasbgdata) {
@@ -60,7 +60,7 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
                 return (usedAPS as PluginBase).isEnabled()
             }
         })
-        tasks.add(object : Task(this, R.string.activate_profile) {
+        tasks.add(object : Task(this, info.nightscout.core.ui.R.string.activate_profile) {
             override fun isCompleted(): Boolean {
                 return repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet() is ValueWrapper.Existing
             }

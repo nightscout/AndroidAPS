@@ -89,4 +89,29 @@
     <string name="hardlimit">жесткий предел</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Пик</string>
+    <!--    Loop -->
+    <string name="run_now">Выполнить сейчас</string>
+    <string name="smb_frequency_exceeded">Болюс был подан в течение последних трех минут, минуя супер микро болюс SMB</string>
+    <string name="pump_not_initialized">Помпа не инициализирована!</string>
+    <string name="loop_shortname">ЗЦ</string>
+    <string name="description_loop">Активировать или деактивировать запуск цикла.</string>
+    <string name="no_aps_selected">APS не выбрана или не выдала результат</string>
+    <string name="ignore5m">Игнорировать 5 м</string>
+    <string name="ignore15m">Игнорировать 15 м</string>
+    <string name="ignore30m">Игнорировать 30 м</string>
+    <string name="carbs_suggestion">Предложены углеводы</string>
+    <string name="open_loop_new_suggestion">Есть новое предложение</string>
+    <string name="basal_set_correctly">Базал задан корректно</string>
+    <string name="last_run_label">Предыдущее выполнение</string>
+    <string name="loop_aps_label">Система ИПЖ</string>
+    <string name="request_label">Запрос</string>
+    <string name="loop_constraints_processed_label">После наложенных ограничений</string>
+    <string name="loop_tbr_request_time_label">Время запроса временной базальной скорости</string>
+    <string name="loop_tbr_execution_time_label">Время выполнения временной базальной скорости</string>
+    <string name="loop_tbr_set_by_pump_label">Временный базал задан помпой</string>
+    <string name="loop_smb_request_time_label">Время запроса микроболюса SMB</string>
+    <string name="loop_smb_execution_time_label">Время выполнения микроболюса SMB</string>
+    <string name="loop_smb_set_by_pump_label">Супер микро болюс SMB задан помпой</string>
+    <string name="loop_open_mode_min_change">Минимальный запрос на изменения [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Алгоритм ИПЖ выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение в %. Значение по умолчанию — 20%</string>
 </resources>

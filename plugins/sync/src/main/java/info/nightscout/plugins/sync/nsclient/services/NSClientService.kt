@@ -140,8 +140,8 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event: EventPreferenceChange ->
-                           if (event.isChanged(rh.gs(R.string.key_nsclientinternal_url)) ||
-                               event.isChanged(rh.gs(R.string.key_nsclientinternal_api_secret)) ||
+                           if (event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_url)) ||
+                               event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_api_secret)) ||
                                event.isChanged(rh.gs(R.string.key_ns_client_paused))
                            ) {
                                latestDateInReceivedData = 0
@@ -360,8 +360,8 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
 
     private fun readPreferences() {
         nsEnabled = nsClientPlugin.isEnabled()
-        nsURL = sp.getString(R.string.key_nsclientinternal_url, "")
-        nsAPISecret = sp.getString(R.string.key_nsclientinternal_api_secret, "")
+        nsURL = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "")
+        nsAPISecret = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_api_secret, "")
         nsDevice = sp.getString("careportal_enteredby", "")
     }
 
@@ -576,7 +576,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
                         if (sgvs.length() > 0) {
                             rxBus.send(EventNSClientNewLog("DATA", "received " + sgvs.length() + " sgvs"))
                             // Objective0
-                            sp.putBoolean(R.string.key_objectives_bg_is_available_in_ns, true)
+                            sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
                             dataWorkerStorage
                                 .beginUniqueWork(
                                     NSClientV3Plugin.JOB_NAME,
@@ -666,7 +666,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
 
     private fun handleAnnouncement(announcement: JSONObject) {
         val defaultVal = config.NSCLIENT
-        if (sp.getBoolean(R.string.key_ns_announcements, defaultVal)) {
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_announcements, defaultVal)) {
             val nsAlarm = NSAlarm(announcement)
             uiInteraction.addNotificationWithAction(injector, nsAlarm)
             rxBus.send(EventNSClientNewLog("ANNOUNCEMENT", safeGetString(announcement, "message", "received")))
@@ -676,8 +676,8 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
 
     private fun handleAlarm(alarm: JSONObject) {
         val defaultVal = config.NSCLIENT
-        if (sp.getBoolean(R.string.key_ns_alarms, defaultVal)) {
-            val snoozedTo = sp.getLong(R.string.key_snoozed_to, 0L)
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, defaultVal)) {
+            val snoozedTo = sp.getLong(info.nightscout.core.utils.R.string.key_snoozed_to, 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarm(alarm)
                 uiInteraction.addNotificationWithAction(injector, nsAlarm)
@@ -689,8 +689,8 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
 
     private fun handleUrgentAlarm(alarm: JSONObject) {
         val defaultVal = config.NSCLIENT
-        if (sp.getBoolean(R.string.key_ns_alarms, defaultVal)) {
-            val snoozedTo = sp.getLong(R.string.key_snoozed_to, 0L)
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, defaultVal)) {
+            val snoozedTo = sp.getLong(info.nightscout.core.utils.R.string.key_snoozed_to, 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarm(alarm)
                 uiInteraction.addNotificationWithAction(injector, nsAlarm)

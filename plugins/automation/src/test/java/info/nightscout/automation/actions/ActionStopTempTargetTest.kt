@@ -18,13 +18,13 @@ class ActionStopTempTargetTest : ActionsTestBase() {
 
     @BeforeEach
     fun setup() {
-        `when`(rh.gs(R.string.stoptemptarget)).thenReturn("Stop temp target")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.stoptemptarget)).thenReturn("Stop temp target")
 
         sut = ActionStopTempTarget(injector)
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(R.string.stoptemptarget, sut.friendlyName())
+        Assert.assertEquals(info.nightscout.core.ui.R.string.stoptemptarget, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {

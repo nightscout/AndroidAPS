@@ -43,8 +43,8 @@ class DashInitializePodViewModel @Inject constructor(
 
     override fun doExecuteAction(): Single<PumpEnactResult> =
         Single.create { source ->
-            val lowReservoirAlertEnabled = sp.getBoolean(R.string.key_omnipod_common_low_reservoir_alert_enabled, true)
-            val lowReservoirAlertUnits = sp.getInt(R.string.key_omnipod_common_low_reservoir_alert_units, 10)
+            val lowReservoirAlertEnabled = sp.getBoolean(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_low_reservoir_alert_enabled, true)
+            val lowReservoirAlertUnits = sp.getInt(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_low_reservoir_alert_units, 10)
             val lowReservoirAlertTrigger = if (lowReservoirAlertEnabled) {
                 AlertTrigger.ReservoirVolumeTrigger((lowReservoirAlertUnits * 10).toShort())
             } else
@@ -78,7 +78,7 @@ class DashInitializePodViewModel @Inject constructor(
         }
 
     @StringRes
-    override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_initialize_pod_title
+    override fun getTitleId(): Int = info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_activation_wizard_initialize_pod_title
 
     @StringRes
     override fun getTextId() = R.string.omnipod_dash_pod_activation_wizard_initialize_pod_text

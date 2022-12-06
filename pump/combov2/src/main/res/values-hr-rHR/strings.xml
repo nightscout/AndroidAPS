@@ -1,6 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_could_not_connect">Nije moguće spojiti pumpu</string>
+    <string name="combov2_not_paired">Nije uparen s pumpom</string>
+    <string name="combov2_pump_terminated_connection">Pumpa je prekinula vezu</string>
+    <string name="combov2_warning">Kombinirano upozorenje</string>
+    <string name="combov2_error">Kombinirano greška</string>
+    <string name="combov2_warning_4">Nazovite telefonsku liniju za ažuriranje</string>
+    <string name="combov2_warning_10">Bluetooth greška; ponovite uparivanje</string>
+    <string name="combov2_error_1">Rezervoar prazan</string>
+    <string name="combov2_error_2">Baterija prazna</string>
+    <string name="combov2_error_4">Začepljenje</string>
+    <string name="combov2_error_5">Kraj rada backupa pumpe</string>
+    <string name="combov2_error_6">Mehanička greška</string>
+    <string name="combov2_error_7">Elektronička greška</string>
+    <string name="combov2_error_8">Prekid napajanja</string>
+    <string name="combov2_error_9">Kraj rada backupa pumpe</string>
+    <string name="combov2_error_10">Greška rezervoara</string>
+    <string name="combov2_error_11">Set za infuziju nije pripremljen</string>
+    <string name="combov2_extended_bolus_not_supported">Produženi bolus nije podržan</string>
+    <string name="combov2_pair_with_pump_title">¸Upari s pumpom</string>
+    <string name="combov2_unpair_pump_title">Raspari pumpu</string>
+    <string name="combov2_driver_state_label">Status drivera</string>
+    <string name="combov2_current_activity_label">Trenutna aktivnost</string>
+    <string name="bluetooth_address">Bluetooth adresa</string>
+    <string name="combov2_start_pairing">Pokreni uparivanje</string>
+    <string name="combov2_pairing_in_progress">Combo uparivanje u tijeku</string>
+    <string name="combov2_pairing_start_steps">Koraci za uparivanje s vašim Combom:\n\n
+1. Na pumpi idite do Bluetooth postavki\n
+2. Provjerite je li uređaj već prikazan kao uparen; ako je tako, idite na zaslon pumpe \"Izbriši uređaj\" da izbrišete/poništite uparivanje tog uređaja\n
+3. Idite na zaslon pumpe \"Dodaj uređaj\" i pokrenite uparivanje na pumpi\n
+4. Pritisnite donji gumb \"Započni uparivanje\" da biste započeli uparivanje u AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Nakon nekog vremena, naziv telefona se prikazuje na ekranu pumpe; pritisnite PROVJERI za potvrdu.\n\n
+Kada je uparivanje uspješno dovršeno, potvrdite završeno uparivanje na pumpi i vratite se na glavni zaslon pumpe pritiskom na tipku CHECK dva puta.\n\n
+Ako se veza ne uspostavi nakon više od ~5 minuta:\n\n
+1. Pritisnite Natrag ili gumb \"Odustani od uparivanja\"\n
+2. Otkažite uparivanje na Combu (pritisnite i GORE i IZBORNIK
+gumbe u isto vrijeme za poništavanje uparivanja)\n
+3. Pokušajte ponovno upariti</string>
+    <string name="combov2_enter_pin">Unesite PIN</string>
+    <string name="combov2_cancel_pairing">Otkaži uparivanje</string>
+    <string name="combov2_pin_hint">10-znamenkasti PIN</string>
+    <string name="combov2_pairing_finished_successfully">Uspješno uparen s Combom</string>
+    <string name="combov2_pairing_cancelled">Korisnik je otkazao uparivanje s Combom</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Isteklo je vremensko ograničenje skeniranja</string>
+    <string name="combov2_pairing_failed_due_to_error">Uparivanje nije uspjelo zbog pogreške: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Uparivanje je prekinuto iz nepoznatih razloga</string>
+    <string name="combov2_scanning_for_pump">Traženje pumpe</string>
+    <string name="combov2_establishing_bt_connection">Uspostavljanje Bluetooth veze (pokušaj br. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Izvođenje uparivanja s pumpicom</string>
+    <string name="combov2_pairing_pump_requests_pin">Pumpa zahtijeva 10-znamenkasti PIN</string>
+    <string name="combov2_pairing_finishing">Završetak uparivanja</string>
+    <string name="combov2_no_connection_for_n_mins">Nema veze %1$d minuta</string>
+    <string name="combov2_less_than_one_minute_ago">Prije manje od 1 minute</string>
+    <string name="combov2_setting_current_pump_time">Postavljanje trenutnog vremena pumpe</string>
+    <string name="combov2_setting_current_pump_date">Postavljanje trenutnog datuma pumpe</string>
+    <string name="combov2_not_initialized">Nije inicijalizirano</string>
+    <string name="combov2_checking_pump">Provjera pumpe</string>
     <string name="combov2_ready">Spremno</string>
     <string name="combov2_suspended">Suspendiran</string>
     <string name="combov2_short_status_battery_state_low">nisko</string>
+    <string name="combov2_timezone_changed">Vremenska zona promijenjena</string>
+    <string name="combov2_datetime_changed">Datum i/ili vrijeme promijenjeni</string>
+    <string name="combov2_dst_started">Počelo je ljetno računanje vremena (DST)</string>
+    <string name="combov2_dst_ended">Završilo je ljetno računanje vremena (DST)</string>
 </resources>

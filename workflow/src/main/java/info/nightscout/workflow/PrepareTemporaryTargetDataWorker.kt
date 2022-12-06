@@ -1,16 +1,15 @@
 package info.nightscout.workflow
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.jjoe64.graphview.series.DataPoint
 import com.jjoe64.graphview.series.LineGraphSeries
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.extensions.target
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
@@ -25,7 +24,7 @@ import kotlin.math.max
 class PrepareTemporaryTargetDataWorker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileFunction: ProfileFunction
@@ -35,7 +34,6 @@ class PrepareTemporaryTargetDataWorker(
     @Inject lateinit var rxBus: RxBus
     private var ctx: Context
     init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
         ctx =  rh.getThemedCtx(context)
     }
 
@@ -43,7 +41,7 @@ class PrepareTemporaryTargetDataWorker(
         val overviewData: OverviewData
     )
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
 
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareTemporaryTargetData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
@@ -51,7 +49,7 @@ class PrepareTemporaryTargetDataWorker(
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 0, null))
         val profile = profileFunction.getProfile() ?: return Result.success(workDataOf("Error" to "missing profile"))
         val units = profileFunction.getUnits()
-        var toTime = data.overviewData.toTime
+        var toTime = data.overviewData.endTime
         val targetsSeriesArray: MutableList<DataPoint> = ArrayList()
         var lastTarget = -1.0
         loop.lastRun?.constraintsProcessed?.let { toTime = max(it.latestPredictionsTime, toTime) }
@@ -77,7 +75,7 @@ class PrepareTemporaryTargetDataWorker(
         // create series
         data.overviewData.temporaryTargetSeries = LineGraphSeries(Array(targetsSeriesArray.size) { i -> targetsSeriesArray[i] }).also {
             it.isDrawBackground = false
-            it.color = rh.gac(ctx, R.attr.tempTargetBackgroundColor )
+            it.color = rh.gac(ctx, info.nightscout.core.ui.R.attr.tempTargetBackgroundColor )
             it.thickness = 2
         }
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 100, null))

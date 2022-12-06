@@ -29,6 +29,6 @@ class CommandCustomCommand(
     override fun log(): String = customCommand.statusDescription
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.main.R.string.connectiontimedout))?.run()
+        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.connectiontimedout))?.run()
     }
 }

@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS-Kommunikator</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">von der Authenticator App für: %1$s gefolgt von der PIN</string>
+    <string name="smscommunicator_otp_pin">Zusätzliche obligatorische PIN am Token-Ende</string>
+    <string name="smscommunicator_otp_pin_summary">Zusätzliche Ziffern, die auswendig gelernt und am Ende jedes generierten Einmal-Passworts angehängt werden sollten.</string>
     <string name="smscommunicator_tab_otp_label">Konfiguration des Authentifikators</string>
+    <string name="smscommunicator_code_verify_label">Zu prüfender Code:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Der Verifizierungscode besteht aus 6 Ziffern, die von Authenticator App (auch OTP genannt) angezeigt werden, gefolgt von 3 oder mehr Ziffern der obligatorischen PIN.</string>
+    <string name="smscommunicator_otp_reset_btn">Authentifikators zurücksetzen</string>
+    <string name="smscommunicator_otp_reset_title">Authentifikatorschlüssel zurücksetzen</string>
+    <string name="smscommunicator_otp_reset_prompt">Willst Du wirklich den Authentifikatorschlüssel zurücksetzen? Dies wird alle momentan genutzten Authentifikatoren ungültig machen und Du musst sie neu einrichten.</string>
+    <string name="smscommunicator_otp_reset_successful">Neuer Authentifizierungsschlüssel generiert! Bitte verwende den aktualisierten QR-Code für die Bereitstellung von Authentifikatoren.</string>
+    <string name="smscommunicator_otp_export_title">OTP-Secret exportieren</string>
+    <string name="smscommunicator_otp_export_prompt">Willst Du wirklich das OTP Secret in die Zwischenablage kopieren?\n\nDas ist nur erforderlich, wenn Deine Authentifizierungs-App Probleme mit dem Scannen des QR-Codes hat. Du kannst es auch manuell eingeben oder einen Hardware-OTP-Token mit einer bestimmten App verwenden.</string>
+    <string name="smscommunicator_otp_export_successful">OTP Secret (im Base32 Format) exportiert und in die Zwischenablage kopiert. Setze es von dort in Deine Authentifizierungs-App ein.</string>
+    <string name="smscommunicator_otp_step1_install_header">1. Authentifikator installieren</string>
+    <string name="smscommunicator_otp_step3_test_header">3. Teste das Einmal-Passwort</string>
+    <string name="smscommunicator_otp_reset_header">Authentifikators zurücksetzen</string>
+    <string name="smscommunicator_otp_install_info">Installiere auf jedem Follower-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
     <string name="sms_wrong_code">Falscher Code. Befehl wurde abgebrochen.</string>
     <string name="sms_timeout_while_waiting">Zeitüberschreitung beim Warten auf das Ende der vorherigen Kommunikation mit der Pumpe</string>
+    <string name="smscommunicator_allowednumbers">Erlaubte Telefonnummern</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">Um einen Bolus von %1$.2f IE abzugeben, antworte mit dem Code %2$s.</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">Um einen Mahlzeitenbolus von %1$.2f IE abzugeben, antworte mit  dem Code %2$s.</string>
@@ -21,6 +39,8 @@
     <string name="smscommunicator_bolus_delivered">Bolus %1$.2f IE erfolgreich abgegeben</string>
     <string name="smscommunicator_meal_bolus_delivered">Mahlzeiten-Bolus %1$.2f IE erfolgreich abgegeben</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">Ziel %1$s für %2$d Minuten</string>
+    <string name="smscommunicator_tt_set">Ziel %1$s für %2$d Minuten erfolgreich gesetzt.</string>
+    <string name="smscommunicator_tt_canceled">Temporäres Ziel wurde erfolgreich abgebrochen</string>
     <string name="smscommunicator_remote_commands_allowed">Erlaube Fernsteuerung per SMS</string>
     <string name="smscommunicator_loop_has_been_disabled">Loop wurde deaktiviert.</string>
     <string name="smscommunicator_loop_has_been_enabled">Lopp wurde aktiviert.</string>
@@ -29,6 +49,7 @@
     <string name="smscommunicator_pump_connect_fail">Verbindung zur Pumpe fehlgeschlagen</string>
     <string name="smscommunicator_pump_disconnect_with_code">Um die Verbindung zur Pumpe für %1$d Minuten zu trennen, antworte mit dem Code %2$s</string>
     <string name="smscommunicator_pump_disconnected">Verbindung zur Pumpe getrennt</string>
+    <string name="smscommunicator_reconnect">Verbindung zur Pumpe wiederhergestellt</string>
     <string name="smscommunicator_remote_command_not_allowed">Ferngesteuerte Befehle sind nicht erlaubt.</string>
     <string name="smscommunicator_remote_bolus_not_allowed">Bolusabgabe aus der Ferne nicht verfügbar. Versuche es später erneut.</string>
     <string name="smscommunicator_basal_reply_with_code">Um eine Basalrate von %1$.2f IE/h für %2$d Minuten zu setzen, antworte mit dem Code %3$s</string>
@@ -54,6 +75,7 @@
     <string name="smscommunicator_tempbasal_cancel_failed">Das Abbrechen der TBR ist fehlgeschlagen.</string>
     <string name="smscommunicator_extended_cancel_failed">Der Abbruch des erweiterten Bolus ist fehlgeschlagen.</string>
     <string name="smscommunicator_unknown_command">Unbekannter Befehl oder falsche Antwort</string>
+    <string name="smscommunicator_another_bolus_in_queue">In der Warteschlange befindet sich ein weiterer Bolus. Bitte später erneut versuchen.</string>
     <string name="smscommunicator_wrong_duration">Falsche Dauer</string>
     <string name="smscommunicator_loop_suspended">Loop pausiert</string>
     <string name="smscommunicator_loop_resumed">Loop wurde fortgesetzt</string>
@@ -75,18 +97,27 @@
     <string name="sms_read_status_failed">Lesen des Status fehlgeschlagen</string>
     <string name="sms_profile_switch_created">Profilwechsel wurde erstellt</string>
     <string name="sms_wrong_tbr_duration">Die TBR-Dauer muss ein Vielfaches von %1$d Minuten und größer als 0 sein.</string>
+    <string name="a11y_otp_qr_code">QR Code für einmaliges Passwort einrichten</string>
     <!-- Insulin -->
     <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Insulinprofil für Humalog und NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Insulinprofil für Fiasp</string>
+    <string name="description_insulin_lyumjev">Insulin-Voreinstellung für Lyumjev</string>
+    <string name="description_insulin_free_peak">Erlaubt dir, das Wirkmaximum der Insulinaktivität zu definieren, und sollte nur von erfahrenen Anwendern genutzt werden</string>
     <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Wirkungshoch der IOB-Kurve</string>
+    <string name="insulin_peak_time">Wirkungshoch [min]</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
     <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
+    <string name="dia_too_short">DIA von %1$f ist zu kurz - AAPS nutzt stattdessen %2$f!</string>
     <string name="fast_acting_insulin_comment">NovoRapid, NovoLog, Humalog</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip+ Statuszeile (Uhr)</string>
     <string name="xdrip_status_shortname">xds</string>
+    <string name="description_xdrip_status_line">Zeige Loop-Informationen auf Deinem xDrip+-Watchface.</string>
     <string name="xdrip_status_detailed_iob_title">Zeige detailliertes IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="disabled_loop">Loop deaktiviert</string>
@@ -95,25 +126,51 @@
     <string name="xdrip_status_settings">xDrip+ Status (Uhr)</string>
     <!-- Food-->
     <string name="food_short">Essen</string>
+    <string name="description_food">Zeigt die Essensvorlagen aus Nightscout an</string>
     <string name="filter">Filter</string>
+    <string name="food">Essen</string>
     <string name="short_kilo_joul">kJ</string>
     <string name="short_energy">En</string>
     <string name="short_protein">Prot</string>
     <string name="short_fat">Ft</string>
+    <string name="category">Kategorie</string>
+    <string name="subcategory">Unterkategorie</string>
     <string name="calculator_label">Rechner</string>
     <!-- Theme switcher dark and light mode-->
     <string name="theme_switcher_summary">Wähle das dunkle, helle oder das Systemdesign</string>
+    <string name="app_color_scheme">App Farbschema</string>
+    <string name="dark_theme">Dunkles Design</string>
+    <string name="light_theme">Helles Design</string>
+    <string name="follow_system_theme">Systemdesign verwenden</string>
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
+    <string name="description_profile_local">Definiere ein Profil, was auch offline verfügbar ist.</string>
+    <string name="a11y_add_new_to_list">neu zur Liste hinzufügen</string>
     <string name="do_you_want_switch_profile">Willst Du das Profil wechseln und die Änderungen am aktuellen Profil verwerfen?</string>
     <string name="save_or_reset_changes_first">Speichere oder verwerfe die aktuellen Änderungen zuerst</string>
     <string name="delete_current_profile">Aktuelles Profil löschen?</string>
+    <string name="units_colon">Einheiten:</string>
+    <string name="missing_profile_name">Fehlender Profilname</string>
+    <string name="error_in_ic_values">Fehler in IC-Werten</string>
+    <string name="error_in_basal_values">Fehler in den Basalwerten</string>
+    <string name="error_in_target_values">Fehler in den Zielwerten</string>
+    <string name="error_in_isf_values">Fehler in ISF-Werten</string>
     <string name="profile_name_contains_dot">Profilname enthält Punkte.\nDies wird von NS nicht unterstützt.\nProfil wird nicht zu NS hochgeladen.</string>
+    <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
+    <string name="view">Ansicht</string>
+    <string name="errors">Fehler</string>
+    <string name="select_profile">Profil zum Bearbeiten auswählen</string>
+    <string name="profile_name">Profilname:</string>
+    <string name="a11y_add_new_profile">Neues Profil hinzufügen</string>
+    <string name="a11y_clone_profile">aktuelles Profil klonen (kopieren)</string>
+    <string name="a11y_delete_current_profile">aktuelles Profil löschen</string>
     <string name="dia_short">DIA</string>
+    <string name="target_short">ZIEL</string>
     <string name="basal_short">BAS</string>
     <!-- Objectives -->
     <string name="completed_well_done">Abgeschlossen, gut gemacht!</string>
+    <string name="time_elapsed">Verstrichene Zeit</string>
     <string name="maxiobset">Maximales IOB richtig gesetzt</string>
     <string name="hasbgdata">BZ verfügbar von gewählter Quelle</string>
     <string name="loopenabled">Loop aktiviert</string>
@@ -142,7 +199,6 @@
     <string name="pb_label">Pumpenbatterie</string>
     <string name="cannula">Kanüle</string>
     <string name="ebstopsloop">Die Verwendung eines Verzögerungsbolus unterbricht dem Closed Loop Modus für die Dauer des Verzögerungsbolus. Willst Du das wirklich?</string>
-    <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verzögerten Bolus</string>
     <string name="statuslights_cannula_age">Kanülenalter</string>
     <string name="statuslights_patch_pump_age">Alter Patchpumpe</string>
     <string name="patch_pump">Patch-Pumpe</string>
@@ -179,7 +235,6 @@
     <string name="a11y_bg_quality">BZ-Qualität</string>
     <string name="a11y_blood_glucose">Blutzucker</string>
     <string name="a11y_bg_outdated">veraltet</string>
-    <string name="aps_mode_title">APS-Modus</string>
     <string name="set_basal_question">Akzeptiere neue TBR:</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">QuickWizard</string>
@@ -333,24 +388,6 @@
     <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
     <string name="largedisplay_description">Großer Bildschirm</string>
     <string name="skin">Erscheinungsbild</string>
-    <!--    Loop -->
-    <string name="run_now">Ausführen</string>
-    <string name="loop_shortname">LOOP</string>
-    <string name="no_aps_selected">KEIN APS AUSGEWÄHLT ODER KEIN ERGEBNIS VORHANDEN</string>
-    <string name="carbs_suggestion">Kohlenhydrate Vorschlag</string>
-    <string name="basal_set_correctly">Basalrate richtig eingestellt</string>
-    <string name="last_run_label">Letzte Ausführung</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">Anfrage</string>
-    <string name="loop_constraints_processed_label">Beschränkungen angewendet</string>
-    <string name="loop_tbr_request_time_label">Temp. BR Anfragezeit</string>
-    <string name="loop_tbr_execution_time_label">Temp. BR Ausführungszeit</string>
-    <string name="loop_tbr_set_by_pump_label">TBR der Pumpe</string>
-    <string name="loop_smb_request_time_label">SMB Anfragezeit</string>
-    <string name="loop_smb_execution_time_label">SMB Ausführungszeit</string>
-    <string name="loop_smb_set_by_pump_label">SMB von der Pumpe abgegeben</string>
-    <string name="loop_open_mode_min_change">Minimaler Wert zur Anfrage einer Änderung [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
     <!--    DataBroadcast-->
     <string name="cannula_usage">androidAPS nutzen:</string>
     <!--    Iob-->

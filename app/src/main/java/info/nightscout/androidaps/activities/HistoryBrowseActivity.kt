@@ -12,7 +12,6 @@ import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerAppCompatActivity
-import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
 import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -110,7 +109,7 @@ class HistoryBrowseActivity : DaggerAppCompatActivity() {
         binding.date.setOnClickListener {
             MaterialDatePicker.Builder.datePicker()
                 .setSelection(dateUtil.timeStampToUtcDateMillis(historyBrowserData.overviewData.fromTime))
-                .setTheme(R.style.DatePicker)
+                .setTheme(info.nightscout.core.ui.R.style.DatePicker)
                 .build()
                 .apply {
                     addOnPositiveButtonClickListener { selection ->
@@ -130,7 +129,7 @@ class HistoryBrowseActivity : DaggerAppCompatActivity() {
             windowManager.defaultDisplay.getMetrics(dm)
 
         axisWidth = if (dm.densityDpi <= 120) 3 else if (dm.densityDpi <= 160) 10 else if (dm.densityDpi <= 320) 35 else if (dm.densityDpi <= 420) 50 else if (dm.densityDpi <= 560) 70 else 80
-        binding.bgGraph.gridLabelRenderer?.gridColor = rh.gac(this, R.attr.graphGrid)
+        binding.bgGraph.gridLabelRenderer?.gridColor = rh.gac(this, info.nightscout.core.ui.R.attr.graphGrid)
         binding.bgGraph.gridLabelRenderer?.reloadStyles()
         binding.bgGraph.gridLabelRenderer?.labelVerticalWidth = axisWidth
 
@@ -211,12 +210,12 @@ class HistoryBrowseActivity : DaggerAppCompatActivity() {
 
                 val graph = GraphView(this)
                 graph.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, rh.dpToPx(100)).also { it.setMargins(0, rh.dpToPx(15), 0, rh.dpToPx(10)) }
-                graph.gridLabelRenderer?.gridColor = rh.gac(R.attr.graphGrid)
+                graph.gridLabelRenderer?.gridColor = rh.gac(info.nightscout.core.ui.R.attr.graphGrid)
                 graph.gridLabelRenderer?.reloadStyles()
                 graph.gridLabelRenderer?.isHorizontalLabelsVisible = false
                 graph.gridLabelRenderer?.labelVerticalWidth = axisWidth
                 graph.gridLabelRenderer?.numVerticalLabels = 3
-                graph.viewport.backgroundColor = rh.gac(this, R.attr.viewPortBackgroundColor)
+                graph.viewport.backgroundColor = rh.gac(this, info.nightscout.core.ui.R.attr.viewPortBackgroundColor)
                 relativeLayout.addView(graph)
 
                 val label = TextView(this)
@@ -258,15 +257,13 @@ class HistoryBrowseActivity : DaggerAppCompatActivity() {
 
     private fun runCalculation(from: String) {
         calculationWorkflow.runCalculation(
-            CalculationWorkflow.HISTORY_CALCULATION,
-            historyBrowserData.iobCobCalculator,
-            historyBrowserData.overviewData,
-            from,
-            historyBrowserData.overviewData.toTime,
+            job = CalculationWorkflow.HISTORY_CALCULATION,
+            iobCobCalculator = historyBrowserData.iobCobCalculator,
+            overviewData = historyBrowserData.overviewData,
+            reason = from,
+            end = historyBrowserData.overviewData.toTime,
             bgDataReload = true,
-            limitDataToOldestAvailable = false,
-            cause = EventCustomCalculationFinished(),
-            runLoop = false
+            cause = EventCustomCalculationFinished()
         )
     }
 

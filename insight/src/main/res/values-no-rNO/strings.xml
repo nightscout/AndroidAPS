@@ -66,4 +66,5 @@
     <string name="min_recovery_duration">Min pause mellom tilkoblingsforsøk [s]</string>
     <string name="pump_alert">Pumpe varsling</string>
     <string name="pairing_information">Tilkoblingsinformasjon</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight oppdateringsknapp</string>
 </resources>

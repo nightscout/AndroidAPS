@@ -110,7 +110,7 @@ function enable_smb(
     return false;
 }
 
-var determine_basal = function determine_basal(glucose_status, currenttemp, iob_data, profile, autosens_data, meal_data, tempBasalFunctions, microBolusAllowed, reservoir_data, currentTime, isSaveCgmSource) {
+var determine_basal = function determine_basal(glucose_status, currenttemp, iob_data, profile, autosens_data, meal_data, tempBasalFunctions, microBolusAllowed, reservoir_data, currentTime, flatBGsDetected) {
     var rT = {}; //short for requestedTemp
 
     var deliverAt = new Date();
@@ -142,16 +142,14 @@ var determine_basal = function determine_basal(glucose_status, currenttemp, iob_
     if (minAgo > 12 || minAgo < -5) { // Dexcom data is too old, or way in the future
         rT.reason = "If current system time "+systemTime+" is correct, then BG data is too old. The last BG data was read "+minAgo+"m ago at "+bgTime;
     // if BG is too old/noisy, or is changing less than 1 mg/dL/5m for 45m, cancel any high temps and shorten any long zero temps
-    //cherry pick from oref upstream dev cb8e94990301277fb1016c778b4e9efa55a6edbc
-    } else if ( bg > 60 && glucose_status.delta == 0 && glucose_status.short_avgdelta > -1 && glucose_status.short_avgdelta < 1 && glucose_status.long_avgdelta > -1 && glucose_status.long_avgdelta < 1 && !isSaveCgmSource) {
+    } else if ( bg > 60 && flatBGsDetected) {
         if ( glucose_status.last_cal && glucose_status.last_cal < 3 ) {
             rT.reason = "CGM was just calibrated";
         } else {
             rT.reason = "Error: CGM data is unchanged for the past ~45m";
         }
     }
-    //cherry pick from oref upstream dev cb8e94990301277fb1016c778b4e9efa55a6edbc
-    if (bg <= 10 || bg === 38 || noise >= 3 || minAgo > 12 || minAgo < -5 || ( bg > 60 && glucose_status.delta == 0 && glucose_status.short_avgdelta > -1 && glucose_status.short_avgdelta < 1 && glucose_status.long_avgdelta > -1 && glucose_status.long_avgdelta < 1 ) && !isSaveCgmSource ) {
+    if (bg <= 10 || bg === 38 || noise >= 3 || minAgo > 12 || minAgo < -5 || ( bg > 60 && flatBGsDetected )) {
         if (currenttemp.rate > basal) { // high temp is running
             rT.reason += ". Replacing high temp basal of "+currenttemp.rate+" with neutral temp of "+basal;
             rT.deliverAt = deliverAt;

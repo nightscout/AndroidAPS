@@ -76,8 +76,8 @@ class BasalProfileGraph : GraphView {
         addSeries(basalSeries2)
         basalSeries2.thickness = 8
         basalSeries2.isDrawBackground = false
-        basalSeries2.color = context.getColor(R.color.examinedProfile)
-        basalSeries2.backgroundColor = context.getColor(R.color.examinedProfile)
+        basalSeries2.color = context.getColor(info.nightscout.core.ui.R.color.examinedProfile)
+        basalSeries2.backgroundColor = context.getColor(info.nightscout.core.ui.R.color.examinedProfile)
 
         viewport.isXAxisBoundsManual = true
         viewport.setMinX(0.0)

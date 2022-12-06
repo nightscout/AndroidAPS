@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bolus_constraint_applied">Bolus 제한이 적용되었습니다</string>
+    <string name="carbs_constraint_applied">탄수화물 제한이 적용되었습니다</string>
+    <string name="temp_target_short">임시목표</string>
     <string name="start_activity_tt">활동 임시목표 시작</string>
     <string name="start_eating_soon_tt">식사직전 임시목표 시작</string>
     <string name="start_hypo_tt">저혈당 임시목표 시작</string>

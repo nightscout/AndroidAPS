@@ -1,10 +1,8 @@
 package info.nightscout.workflow
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.graph.data.BolusDataPoint
@@ -15,6 +13,7 @@ import info.nightscout.core.graph.data.ExtendedBolusDataPoint
 import info.nightscout.core.graph.data.PointsWithLabelGraphSeries
 import info.nightscout.core.graph.data.TherapyEventDataPoint
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.TherapyEvent
@@ -34,7 +33,7 @@ import javax.inject.Inject
 class PrepareTreatmentsDataWorker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileFunction: ProfileFunction
@@ -45,15 +44,11 @@ class PrepareTreatmentsDataWorker(
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
 
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-    }
-
     class PrepareTreatmentsData(
         val overviewData: OverviewData
     )
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
 
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareTreatmentsData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))

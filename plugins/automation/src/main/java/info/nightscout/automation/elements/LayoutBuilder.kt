@@ -3,7 +3,6 @@ package info.nightscout.automation.elements
 import android.content.Context
 import android.view.ViewGroup
 import android.widget.LinearLayout
-import info.nightscout.automation.R
 
 class LayoutBuilder {
 
@@ -24,7 +23,7 @@ class LayoutBuilder {
             layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply {
                 setMargins(0, 0, dpToPx(layout.context, 2), dpToPx(layout.context, 2))
             }
-            setBackgroundColor(layout.context.getColor(R.color.mdtp_line_dark))
+            setBackgroundColor(layout.context.getColor(info.nightscout.core.ui.R.color.mdtp_line_dark))
         }
         for (e in mElements) {
             e.addToLayout(elementLayout)

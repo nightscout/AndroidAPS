@@ -13,11 +13,11 @@ import android.widget.ScrollView
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginFragment
@@ -163,6 +163,6 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
         binding.url.text = nsClientPlugin?.address
         binding.status.text = nsClientPlugin?.status
         val size = dataSyncSelector.queueSize()
-        binding.queue.text = if (size >= 0) size.toString() else rh.gs(R.string.value_unavailable_short)
+        binding.queue.text = if (size >= 0) size.toString() else rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
     }
 }

@@ -95,14 +95,14 @@ class AutotuneFragment : DaggerFragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        sp.putBoolean(R.string.key_autotune_tune_insulin_curve, false)  // put to false tune insulin curve
-        sp.putBoolean(R.string.key_autotune_additional_log, false)      // put to false additional log
+        sp.putBoolean(info.nightscout.core.utils.R.string.key_autotune_tune_insulin_curve, false)  // put to false tune insulin curve
+        sp.putBoolean(info.nightscout.core.utils.R.string.key_autotune_additional_log, false)      // put to false additional log
         autotunePlugin.loadLastRun()
         if (autotunePlugin.lastNbDays.isEmpty())
-            autotunePlugin.lastNbDays = sp.getInt(R.string.key_autotune_default_tune_days, 5).toString()
-        val defaultValue = sp.getInt(R.string.key_autotune_default_tune_days, 5).toDouble()
+            autotunePlugin.lastNbDays = sp.getInt(info.nightscout.core.utils.R.string.key_autotune_default_tune_days, 5).toString()
+        val defaultValue = sp.getInt(info.nightscout.core.utils.R.string.key_autotune_default_tune_days, 5).toDouble()
         profileStore = activePlugin.activeProfileSource.profile ?: profileInstantiator.storeInstance(JSONObject())
-        profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
+        profileName = if (binding.profileList.text.toString() == rh.gs(info.nightscout.core.ui.R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
             profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector)
         }
@@ -136,7 +136,7 @@ class AutotuneFragment : DaggerFragment() {
 
         binding.profileList.onItemClickListener = AdapterView.OnItemClickListener { _, _, _, _ ->
             if (!autotunePlugin.calculationRunning) {
-                profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
+                profileName = if (binding.profileList.text.toString() == rh.gs(info.nightscout.core.ui.R.string.active)) "" else binding.profileList.text.toString()
                 profileFunction.getProfile()?.let { currentProfile ->
                     profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector)
                 }
@@ -148,13 +148,13 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         binding.autotuneCopyLocal.setOnClickListener {
-            val localName = rh.gs(R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun)
-            val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
+            val localName = rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name) + " " + dateUtil.dateAndTimeString(autotunePlugin.lastRun)
+            val circadian = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_circadian_ic_isf, false)
             autotunePlugin.tunedProfile?.let { tunedProfile ->
                 OKDialog.showConfirmation(requireContext(),
-                                 rh.gs(R.string.autotune_copy_localprofile_button),
-                                 rh.gs(R.string.autotune_copy_local_profile_message) + "\n" + localName,
-                                 Runnable {
+                                          rh.gs(info.nightscout.core.ui.R.string.autotune_copy_localprofile_button),
+                                          rh.gs(info.nightscout.core.ui.R.string.autotune_copy_local_profile_message) + "\n" + localName,
+                                          Runnable {
                                      val profilePlugin = activePlugin.activeProfileSource
                                      profilePlugin.addProfile(profilePlugin.copyFrom(tunedProfile.getProfile(circadian), localName))
                                      rxBus.send(EventLocalProfileChanged())
@@ -171,9 +171,9 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneUpdateProfile.setOnClickListener {
             val localName = autotunePlugin.pumpProfile.profilename
             OKDialog.showConfirmation(requireContext(),
-                             rh.gs(R.string.autotune_update_input_profile_button),
-                             rh.gs(R.string.autotune_update_local_profile_message, localName),
-                             Runnable {
+                                      rh.gs(info.nightscout.core.ui.R.string.autotune_update_input_profile_button),
+                                      rh.gs(info.nightscout.core.ui.R.string.autotune_update_local_profile_message, localName),
+                                      Runnable {
                                  autotunePlugin.tunedProfile?.profilename = localName
                                  autotunePlugin.updateProfile(autotunePlugin.tunedProfile)
                                  autotunePlugin.updateButtonVisibility = View.GONE
@@ -191,9 +191,9 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneRevertProfile.setOnClickListener {
             val localName = autotunePlugin.pumpProfile.profilename
             OKDialog.showConfirmation(requireContext(),
-                             rh.gs(R.string.autotune_revert_input_profile_button),
-                             rh.gs(R.string.autotune_revert_local_profile_message, localName),
-                             Runnable {
+                                      rh.gs(info.nightscout.core.ui.R.string.autotune_revert_input_profile_button),
+                                      rh.gs(info.nightscout.core.ui.R.string.autotune_revert_local_profile_message, localName),
+                                      Runnable {
                                  autotunePlugin.tunedProfile?.profilename = ""
                                  autotunePlugin.updateProfile(autotunePlugin.pumpProfile)
                                  autotunePlugin.updateButtonVisibility = View.VISIBLE
@@ -232,14 +232,14 @@ class AutotuneFragment : DaggerFragment() {
 
         binding.autotuneCompare.setOnClickListener {
             val pumpProfile = autotunePlugin.pumpProfile
-            val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
+            val circadian = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_circadian_ic_isf, false)
             val tunedProfile = if (circadian) autotunePlugin.tunedProfile?.circadianProfile else autotunePlugin.tunedProfile?.profile
             uiInteraction.runProfileViewerDialog(
                 fragmentManager = childFragmentManager,
                 time = dateUtil.now(),
                 mode = UiInteraction.Mode.PROFILE_COMPARE,
                 customProfile = pumpProfile.profile.toPureNsJson(dateUtil).toString(),
-                customProfileName = pumpProfile.profilename + "\n" + rh.gs(R.string.autotune_tunedprofile_name),
+                customProfileName = pumpProfile.profilename + "\n" + rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name),
                 customProfile2 = tunedProfile?.toPureNsJson(dateUtil).toString()
             )
         }
@@ -247,11 +247,11 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneProfileswitch.setOnClickListener {
             val tunedProfile = autotunePlugin.tunedProfile
             autotunePlugin.updateProfile(tunedProfile)
-            val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
+            val circadian = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_circadian_ic_isf, false)
             tunedProfile?.let { tunedP ->
                 tunedP.profileStore(circadian)?.let {
                     OKDialog.showConfirmation(requireContext(),
-                                              rh.gs(R.string.activate_profile) + ": " + tunedP.profilename + " ?",
+                                              rh.gs(info.nightscout.core.ui.R.string.activate_profile) + ": " + tunedP.profilename + " ?",
                                               {
                                                   uel.log(
                                                       UserEntry.Action.STORE_PROFILE,
@@ -317,14 +317,14 @@ class AutotuneFragment : DaggerFragment() {
     private fun updateGui() {
         _binding ?: return
         profileStore = activePlugin.activeProfileSource.profile ?: profileInstantiator.storeInstance(JSONObject())
-        profileName = if (binding.profileList.text.toString() == rh.gs(R.string.active)) "" else binding.profileList.text.toString()
+        profileName = if (binding.profileList.text.toString() == rh.gs(info.nightscout.core.ui.R.string.active)) "" else binding.profileList.text.toString()
         profileFunction.getProfile()?.let { currentProfile ->
             profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector)
         }
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
-        profileList.add(0, rh.gs(R.string.active))
+        profileList.add(0, rh.gs(info.nightscout.core.ui.R.string.active))
         context?.let { context ->
-            binding.profileList.setAdapter(ArrayAdapter(context, R.layout.spinner_centered, profileList))
+            binding.profileList.setAdapter(ArrayAdapter(context, info.nightscout.core.ui.R.layout.spinner_centered, profileList))
         } ?: return
         // set selected to actual profile
         if (autotunePlugin.selectedProfile.isNotEmpty())
@@ -342,7 +342,7 @@ class AutotuneFragment : DaggerFragment() {
         binding.autotuneCompare.visibility = View.GONE
         when {
             autotunePlugin.calculationRunning -> {
-                binding.tuneWarning.text = rh.gs(R.string.autotune_warning_during_run)
+                binding.tuneWarning.text = rh.gs(info.nightscout.core.ui.R.string.autotune_warning_during_run)
             }
 
             autotunePlugin.lastRunSuccess     -> {
@@ -350,7 +350,7 @@ class AutotuneFragment : DaggerFragment() {
                 binding.autotuneUpdateProfile.visibility = autotunePlugin.updateButtonVisibility
                 binding.autotuneRevertProfile.visibility = if (autotunePlugin.updateButtonVisibility == View.VISIBLE) View.GONE else View.VISIBLE
                 binding.autotuneProfileswitch.visibility = View.VISIBLE
-                binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
+                binding.tuneWarning.text = rh.gs(info.nightscout.core.ui.R.string.autotune_warning_after_run)
                 binding.autotuneCompare.visibility = View.VISIBLE
             }
 
@@ -369,7 +369,7 @@ class AutotuneFragment : DaggerFragment() {
     private fun checkNewDay() {
         val runToday = autotunePlugin.lastRun > MidnightTime.calc(dateUtil.now() - autotunePlugin.autotuneStartHour * 3600 * 1000L) + autotunePlugin.autotuneStartHour * 3600 * 1000L
         if (runToday && autotunePlugin.result != "") {
-            binding.tuneWarning.text = rh.gs(R.string.autotune_warning_after_run)
+            binding.tuneWarning.text = rh.gs(info.nightscout.core.ui.R.string.autotune_warning_after_run)
         } else if (!runToday || autotunePlugin.result.isEmpty()) //if new day re-init result, default days, warning and button's visibility
             resetParam(!runToday)
     }
@@ -378,18 +378,18 @@ class AutotuneFragment : DaggerFragment() {
         var warning = ""
         var nl = ""
         if (profileFunction.getProfile() == null) {
-            warning = rh.gs(R.string.profileswitch_ismissing)
+            warning = rh.gs(info.nightscout.core.ui.R.string.profileswitch_ismissing)
             return warning
         }
         profileFunction.getProfile()?.let { currentProfile ->
             profile = ATProfile(profileStore.getSpecificProfile(profileName)?.let { ProfileSealed.Pure(it) } ?: currentProfile, LocalInsulin(""), injector).also { profile ->
-                if (!profile.isValid) return rh.gs(R.string.autotune_profile_invalid)
+                if (!profile.isValid) return rh.gs(info.nightscout.core.ui.R.string.autotune_profile_invalid)
                 if (profile.icSize > 1) {
-                    warning += nl + rh.gs(R.string.autotune_ic_warning, profile.icSize, profile.ic)
+                    warning += nl + rh.gs(info.nightscout.core.ui.R.string.autotune_ic_warning, profile.icSize, profile.ic)
                     nl = "\n"
                 }
                 if (profile.isfSize > 1) {
-                    warning += nl + rh.gs(R.string.autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits().asText)
+                    warning += nl + rh.gs(info.nightscout.core.ui.R.string.autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits().asText)
                 }
             }
         }
@@ -399,7 +399,7 @@ class AutotuneFragment : DaggerFragment() {
     private fun resetParam(resetDay: Boolean) {
         binding.tuneWarning.text = addWarnings()
         if (resetDay) {
-            autotunePlugin.lastNbDays = sp.getInt(R.string.key_autotune_default_tune_days, 5).toString()
+            autotunePlugin.lastNbDays = sp.getInt(info.nightscout.core.utils.R.string.key_autotune_default_tune_days, 5).toString()
             days.setAll(true)
         }
         autotunePlugin.result = ""
@@ -451,7 +451,7 @@ class AutotuneFragment : DaggerFragment() {
                                     })
                                 autotunePlugin.tunedProfile?.let { tuned ->
                                     layout.addView(toTableRowHeader(context))
-                                    val tuneInsulin = sp.getBoolean(R.string.key_autotune_tune_insulin_curve, false)
+                                    val tuneInsulin = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_tune_insulin_curve, false)
                                     if (tuneInsulin) {
                                         layout.addView(
                                             toTableRowValue(
@@ -465,7 +465,7 @@ class AutotuneFragment : DaggerFragment() {
                                         layout.addView(
                                             toTableRowValue(
                                                 context,
-                                                rh.gs(R.string.dia),
+                                                rh.gs(info.nightscout.core.ui.R.string.dia),
                                                 Round.roundTo(autotunePlugin.pumpProfile.localInsulin.dia, 0.1),
                                                 Round.roundTo(tuned.localInsulin.dia, 0.1),
                                                 "%.1f"
@@ -475,16 +475,16 @@ class AutotuneFragment : DaggerFragment() {
                                     layout.addView(
                                         toTableRowValue(
                                             context,
-                                            rh.gs(R.string.isf_short),
+                                            rh.gs(info.nightscout.core.ui.R.string.isf_short),
                                             Round.roundTo(autotunePlugin.pumpProfile.isf / toMgDl, 0.001),
                                             Round.roundTo(tuned.isf / toMgDl, 0.001),
                                             isfFormat
                                         )
                                     )
-                                    layout.addView(toTableRowValue(context, rh.gs(R.string.ic_short), Round.roundTo(autotunePlugin.pumpProfile.ic, 0.001), Round.roundTo(tuned.ic, 0.001), "%.2f"))
+                                    layout.addView(toTableRowValue(context, rh.gs(info.nightscout.core.ui.R.string.ic_short), Round.roundTo(autotunePlugin.pumpProfile.ic, 0.001), Round.roundTo(tuned.ic, 0.001), "%.2f"))
                                     layout.addView(
                                         TextView(context).apply {
-                                            text = rh.gs(R.string.basal)
+                                            text = rh.gs(info.nightscout.core.ui.R.string.basal)
                                             setTypeface(typeface, Typeface.BOLD)
                                             gravity = Gravity.CENTER_HORIZONTAL
                                             setTextAppearance(android.R.style.TextAppearance_Material_Medium)
@@ -518,27 +518,27 @@ class AutotuneFragment : DaggerFragment() {
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 0 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = if (basal) rh.gs(R.string.time) else rh.gs(R.string.autotune_param)
+                text = if (basal) rh.gs(info.nightscout.core.ui.R.string.time) else rh.gs(info.nightscout.core.ui.R.string.autotune_param)
             })
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 1 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = rh.gs(R.string.profile)
+                text = rh.gs(info.nightscout.core.ui.R.string.profile)
             })
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 2 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = rh.gs(R.string.autotune_tunedprofile_name)
+                text = rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name)
             })
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 3 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = rh.gs(R.string.autotune_percent)
+                text = rh.gs(info.nightscout.core.ui.R.string.autotune_percent)
             })
             header.addView(TextView(context).apply {
                 layoutParams = lp.apply { column = 4 }
                 textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                text = if (basal) rh.gs(R.string.autotune_missing) else " "
+                text = if (basal) rh.gs(info.nightscout.core.ui.R.string.autotune_missing) else " "
             })
         }
 

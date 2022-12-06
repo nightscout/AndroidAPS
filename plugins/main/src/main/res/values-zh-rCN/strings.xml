@@ -1,9 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS短信通讯器</string>
+    <string name="smscommunicator_shortname">手机SMS</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">从验证码生成器应用获取%1$s的随机码，并附加PIN码</string>
+    <string name="smscommunicator_otp_pin">验证码末尾强制附加的PIN码</string>
+    <string name="smscommunicator_otp_pin_summary">在每次生成的一次性随机密码末尾，需要记住并强制附加的数字。</string>
     <string name="smscommunicator_tab_otp_label">验证码生成器设置</string>
+    <string name="smscommunicator_code_verify_label">验证码检查：</string>
+    <string name="smscommunicator_code_verify_hint">OTP随机 + PIN固定</string>
+    <string name="smscommunicator_code_verify_info">验证码包含6位数字，由验证器应用程序生成（称为OTP），然后再包含3位或3位以上的必填数字PIN码。</string>
+    <string name="smscommunicator_otp_reset_btn">重置身份验证器</string>
+    <string name="smscommunicator_otp_reset_title">重置身份验证器的密钥</string>
+    <string name="smscommunicator_otp_reset_prompt">你确定要重置验证器密钥吗？它将导致以前配置的OTP随机验证码无效，您需要重新设置它们(在遥控手机的OTP应用上)。</string>
+    <string name="smscommunicator_otp_reset_successful">生成了新的身份验证器密钥！请使用更新的二维码设置验证器。</string>
+    <string name="smscommunicator_otp_export_title">导出OTP密钥</string>
+    <string name="smscommunicator_otp_export_prompt">你确定要将OTP密钥复制到剪贴板？\n\n只有在验证器应用扫描二维码出现问题时，你才需要这么做。可能你想手动输入二维码，或者使用专用的应用程序配置硬件OTP令牌。</string>
+    <string name="smscommunicator_otp_export_successful">将OTP密钥 (Base32 格式) 导出并复制到剪贴板。粘贴它到身份验证器或硬件OTP中！</string>
+    <string name="smscommunicator_otp_step1_install_header">1. 安装身份验证器app</string>
+    <string name="smscommunicator_otp_step3_test_header">3. 测试一次性验证码</string>
+    <string name="smscommunicator_otp_reset_header">重置身份验证器</string>
+    <string name="smscommunicator_otp_install_info">在其他遥控手机上安装支持RFC 6238 TOTP令牌协议的应用程序。常用的免费应用有:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="sms_wrong_code">错误的代码。命令取消</string>
     <string name="sms_timeout_while_waiting">等待上一次胰岛素泵通信完成时超时</string>
+    <string name="smscommunicator_allowednumbers">允许的手机号码</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
     <string name="smscommunicator_bolus_reply_with_code">要输注大剂量胰岛素%1$.2fU 回复如下代码 %2$s</string>
     <string name="smscommunicator_meal_bolus_reply_with_code">要输注餐前大剂量 %1$.2fU ，请回复验证码 %2$s</string>
@@ -19,6 +39,8 @@
     <string name="smscommunicator_bolus_delivered">成功输注大剂量 %1$.2f U</string>
     <string name="smscommunicator_meal_bolus_delivered">成功输注餐时大剂量%1$.2fU</string>
     <string name="smscommunicator_meal_bolus_delivered_tt">目标 %1$s 执行 %2$d 分钟</string>
+    <string name="smscommunicator_tt_set">目标 %1$s 执行 %2$d 分钟设置成功</string>
+    <string name="smscommunicator_tt_canceled">临时目标已成功取消</string>
     <string name="smscommunicator_remote_commands_allowed">通过SMS短信允许远程命令</string>
     <string name="smscommunicator_loop_has_been_disabled">闭环已经被禁用</string>
     <string name="smscommunicator_loop_has_been_enabled">闭环已经被启用</string>
@@ -27,6 +49,7 @@
     <string name="smscommunicator_pump_connect_fail">连接泵失败</string>
     <string name="smscommunicator_pump_disconnect_with_code">断开泵%1$d分钟，请回复验证码：%2$s</string>
     <string name="smscommunicator_pump_disconnected">泵已断开</string>
+    <string name="smscommunicator_reconnect">泵已重新连接</string>
     <string name="smscommunicator_remote_command_not_allowed">远程命令没有被允许</string>
     <string name="smscommunicator_remote_bolus_not_allowed">远程大剂量不可用。请稍后再试。</string>
     <string name="smscommunicator_basal_reply_with_code">执行基础率%1$.2fU/h持续时间%2$d分钟，请回复验证码：%3$s</string>
@@ -52,6 +75,7 @@
     <string name="smscommunicator_tempbasal_cancel_failed">取消临时基础率失败</string>
     <string name="smscommunicator_extended_cancel_failed">取消扩展大剂量失败</string>
     <string name="smscommunicator_unknown_command">未知的命令或者错误的回复</string>
+    <string name="smscommunicator_another_bolus_in_queue">队列中在执行另一个大剂量命令，请稍后再试。</string>
     <string name="smscommunicator_wrong_duration">错误的持续时间</string>
     <string name="smscommunicator_loop_suspended">闭环暂停了</string>
     <string name="smscommunicator_loop_resumed">闭环恢复了</string>
@@ -64,21 +88,36 @@
     <string name="wrong_format">格式错误</string>
     <string name="sms_actual_bg">血糖:</string>
     <string name="sms_last_bg">上次血糖：</string>
+    <string name="sms_delta">增量:</string>
+    <string name="sms_iob">IOB活性胰岛素:</string>
+    <string name="sms_bolus">大剂量:</string>
+    <string name="sms_basal">基础率:</string>
     <string name="sms_min_ago">%1$d分钟前</string>
     <string name="sms_loop_suspended_for">暂停了 (%1$d m)</string>
     <string name="sms_read_status_failed">读取状态失败了</string>
     <string name="sms_profile_switch_created">配置文件切换已创建</string>
     <string name="sms_wrong_tbr_duration">TBR(临时基础率) 的持续时间必须是 %1$d 分钟的倍数，且大于0。</string>
+    <string name="a11y_otp_qr_code">用于安装一次性随机验证码的二维码</string>
     <!-- Insulin -->
+    <string name="lyumjev">Lyumjev(超速效赖脯胰岛素)</string>
+    <string name="description_insulin_rapid">胰岛素预设为 Humalog(优泌乐) 和 NovoRapid(门冬)/NovoLog(诺和锐)</string>
+    <string name="description_insulin_ultra_rapid">Fiasp 胰岛素预设</string>
+    <string name="description_insulin_lyumjev">预设为Lyumjev速效赖脯胰岛素</string>
+    <string name="description_insulin_free_peak">允许您定义胰岛素作用的峰值, 并且只应由高级用户使用</string>
     <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">IOB 曲线峰值时间</string>
+    <string name="insulin_peak_time">峰值时间 [min]</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="rapid_acting_oref">速效 Oref</string>
     <string name="ultra_rapid_oref">超速效 Oref</string>
+    <string name="dia_too_short">DIA of %1$f 太短了，请使用 %2$f 代替</string>
     <string name="fast_acting_insulin_comment">诺和锐, 门冬, 优泌乐</string>
     <string name="ultra_fast_acting_insulin_comment">Fiasp超速效</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip+状态线 (手表)</string>
     <string name="xdrip_status_shortname">xdrip</string>
+    <string name="description_xdrip_status_line">在 xDrip + 表盘上显示有关闭环的信息。</string>
     <string name="xdrip_status_detailed_iob_title">显示详细 IOB</string>
     <string name="xdrip_status_detailed_iob_summary">在手表的表盘上分别显示大剂量IOB和基础IOB</string>
     <string name="disabled_loop">闭环禁用</string>
@@ -87,23 +126,52 @@
     <string name="xdrip_status_settings">xDrip+状态 (手表)</string>
     <!-- Food-->
     <string name="food_short">食物</string>
+    <string name="description_food">显示 Nightscout 中定义的食物预设</string>
+    <string name="filter">筛选</string>
+    <string name="food">食物</string>
     <string name="short_kilo_joul">kJ</string>
     <string name="short_energy">En</string>
     <string name="short_protein">蛋白质</string>
     <string name="short_fat">脂肪</string>
+    <string name="category">类别</string>
+    <string name="subcategory">子类别</string>
     <string name="calculator_label">计算器</string>
     <!-- Theme switcher dark and light mode-->
     <string name="theme_switcher_summary">选择暗色，亮色，或跟随系统主题</string>
+    <string name="app_color_scheme">App颜色主题</string>
+    <string name="dark_theme">暗色主题</string>
+    <string name="light_theme">亮色主题</string>
+    <string name="follow_system_theme">跟随系统主题</string>
     <!-- Profile -->
     <string name="localprofile">配置文件</string>
+    <string name="localprofile_shortname">本地配置文件</string>
+    <string name="description_profile_local">定义一个离线可使用的配置文件。</string>
+    <string name="a11y_add_new_to_list">新增条目到列表</string>
     <string name="do_you_want_switch_profile">是否要切换配置文件并放弃对当前配置文件所作的更改?</string>
     <string name="save_or_reset_changes_first">首先保存或重置当前更改</string>
     <string name="delete_current_profile">删除当前配置文件</string>
+    <string name="units_colon">单位:</string>
+    <string name="missing_profile_name">缺少配置文件名称</string>
+    <string name="error_in_ic_values">IC数值错误</string>
+    <string name="error_in_basal_values">基础率数值错误</string>
+    <string name="error_in_target_values">目标数值错误</string>
+    <string name="error_in_isf_values">ISF数值错误</string>
     <string name="profile_name_contains_dot">配置文件名称包含点。\n这不受 NS 支持。\n配置未上载到 NS。</string>
+    <string name="invalid_profile_not_accepted">不接受来自NS的无效配置文件%1$s</string>
+    <string name="view">查看</string>
+    <string name="errors">错误</string>
+    <string name="select_profile">选择要编辑的配置文件</string>
+    <string name="profile_name">个人配置名称：</string>
+    <string name="a11y_add_new_profile">添加新配置文件</string>
+    <string name="a11y_clone_profile">克隆当前配置文件</string>
+    <string name="a11y_delete_current_profile">删除当前配置文件</string>
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
+    <string name="basal_short">基础率</string>
     <!-- Objectives -->
     <string name="completed_well_done">完成了，做的好</string>
+    <string name="not_completed_yet">尚未完成</string>
+    <string name="time_elapsed">已用时间</string>
     <string name="maxiobset">合理地设置最大 IOB</string>
     <string name="hasbgdata">所选的血糖值来源的血糖是可用的</string>
     <string name="loopenabled">闭环启用了</string>
@@ -132,7 +200,6 @@
     <string name="pb_label">泵电池</string>
     <string name="cannula">输注导管</string>
     <string name="ebstopsloop">在使用扩展大剂量(方波) 功能期间将停止闭环功能。你真的想要启用吗？</string>
-    <string name="extendedbolusdeliveryerror">扩展大剂量(方波) 输注错误</string>
     <string name="statuslights_cannula_age">导管年龄</string>
     <string name="statuslights_patch_pump_age">patch 泵年龄</string>
     <string name="patch_pump">Patch 泵</string>
@@ -169,7 +236,6 @@
     <string name="a11y_bg_quality">血糖质量</string>
     <string name="a11y_blood_glucose">血糖</string>
     <string name="a11y_bg_outdated">已过期</string>
-    <string name="aps_mode_title">APS模式</string>
     <string name="set_basal_question">接受新的临时基础率</string>
     <string name="overview_cgm">CGM</string>
     <string name="quickwizard">快速向导</string>
@@ -321,32 +387,6 @@
     <string name="buttonson_description">按钮总是显示在屏幕底部</string>
     <string name="largedisplay_description">大显示屏</string>
     <string name="skin">皮肤</string>
-    <!--    Loop -->
-    <string name="executing">正在执行</string>
-    <string name="run_now">现在运行</string>
-    <string name="smb_frequency_exceeded">在最近3分钟内输注了大剂量，正在忽略SMB微型大剂量</string>
-    <string name="pump_not_initialized">泵未初始化!</string>
-    <string name="loop_shortname">闭环</string>
-    <string name="description_loop">激活或停用这个工具触发闭环。</string>
-    <string name="no_aps_selected">APS没有被选择或者提供结果</string>
-    <string name="ignore5m">忽略5分钟</string>
-    <string name="ignore15m">忽略 15分钟</string>
-    <string name="ignore30m">忽略30分钟</string>
-    <string name="carbs_suggestion">碳水建议</string>
-    <string name="open_loop_new_suggestion">新的建议可用</string>
-    <string name="basal_set_correctly">正确地设置基础率</string>
-    <string name="last_run_label">上一次运行</string>
-    <string name="loop_aps_label">APS</string>
-    <string name="request_label">请求</string>
-    <string name="loop_constraints_processed_label">通过约束条件之后</string>
-    <string name="loop_tbr_request_time_label">临时基础率请求时间</string>
-    <string name="loop_tbr_execution_time_label">临时基础率持续时长</string>
-    <string name="loop_tbr_set_by_pump_label">通过泵设置临时基础率</string>
-    <string name="loop_smb_request_time_label">SMB 请求时间</string>
-    <string name="loop_smb_execution_time_label">SMB持续时长</string>
-    <string name="loop_smb_set_by_pump_label">通过泵设置SMB微型大剂量</string>
-    <string name="loop_open_mode_min_change">最小请求更改[%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">开环状态下，算法建议的基础率调整百分比大于此数值时，才会弹出更改建议。默认值为20%</string>
     <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">发送包括当前时间的今日的日志文件给开发者。描述一下意外情况</string>

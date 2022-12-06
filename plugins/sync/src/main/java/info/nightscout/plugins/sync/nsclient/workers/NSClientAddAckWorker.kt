@@ -2,11 +2,10 @@ package info.nightscout.plugins.sync.nsclient.workers
 
 import android.content.Context
 import android.os.SystemClock
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
@@ -41,7 +40,6 @@ import info.nightscout.plugins.sync.nsclient.acks.NSAddAck
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
-import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
@@ -49,17 +47,16 @@ import javax.inject.Inject
 class NSClientAddAckWorker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-    @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
         var ret = Result.success()
 
         val ack = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as NSAddAck?
@@ -322,9 +319,5 @@ class NSClientAddAckWorker(
 
         }
         return ret
-    }
-
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
     }
 }

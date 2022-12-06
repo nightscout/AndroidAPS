@@ -8,12 +8,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import info.nightscout.androidaps.R
-import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.androidaps.interaction.utils.EditPlusMinusViewAdapter
 import info.nightscout.androidaps.interaction.utils.PlusMinusEditText
 import info.nightscout.androidaps.nondeprecated.GridPagerAdapterNonDeprecated
-import info.nightscout.shared.SafeParse
+import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.rx.weardata.EventData.ActionBolusPreCheck
+import info.nightscout.shared.SafeParse
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
@@ -35,8 +35,8 @@ class BolusActivity : ViewSelectorActivity() {
         override fun getColumnCount(arg0: Int): Int = 2
         override fun getRowCount(): Int = 1
 
-        val increment1 = (sp.getDouble(R.string.key_insulin_button_increment_1, 0.5) * 10).roundToInt() / 10.0
-        val increment2 = (sp.getDouble(R.string.key_insulin_button_increment_2, 1.0) * 10).roundToInt() / 10.0
+        val increment1 = (sp.getDouble(info.nightscout.shared.R.string.key_insulin_button_increment_1, 0.5) * 10).roundToInt() / 10.0
+        val increment2 = (sp.getDouble(info.nightscout.shared.R.string.key_insulin_button_increment_2, 1.0) * 10).roundToInt() / 10.0
         val stepValues = listOf(0.1, increment1, increment2)
 
         override fun instantiateItem(container: ViewGroup, row: Int, col: Int): View = when (col) {

@@ -66,4 +66,5 @@
     <string name="min_recovery_duration">משך זמן התאוששות מינימלי [s]</string>
     <string name="pump_alert">התראת משאבה</string>
     <string name="pairing_information">פרטי צימוד</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">לחצן ריענון Insight</string>
 </resources>

@@ -28,9 +28,9 @@ abstract class AbstractSensitivityPlugin(
     fun fillResult(ratio: Double, carbsAbsorbed: Double, pastSensitivity: String,
                    ratioLimit: String, sensResult: String, deviationsArraySize: Int): AutosensResult {
         return fillResult(ratio, carbsAbsorbed, pastSensitivity, ratioLimit, sensResult,
-            deviationsArraySize,
-            SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_min, "0.7")),
-            SafeParse.stringToDouble(sp.getString(R.string.key_openapsama_autosens_max, "1.2")))
+                          deviationsArraySize,
+                          SafeParse.stringToDouble(sp.getString(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, "0.7")),
+                          SafeParse.stringToDouble(sp.getString(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, "1.2")))
     }
 
     fun fillResult(ratioParam: Double, carbsAbsorbed: Double, pastSensitivity: String,

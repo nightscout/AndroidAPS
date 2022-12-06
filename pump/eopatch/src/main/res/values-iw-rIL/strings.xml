@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="category_alerts">התראות</string>
-    <string name="bolus_delivered">בולוס %1$.2f יח\' ניתן בהצלחה</string>
     <string name="eopatch_status">סטטוס</string>
     <string name="eopatch_base_basal_rate">ערך בזאלי בסיסי</string>
     <string name="eopatch_temp_basal_rate">מינון בזאלי זמני</string>
     <string name="eopatch_total_delivered">סה\"כ שהוזרק</string>
+    <string name="symbol_day">יום</string>
+    <string name="symbol_plus">+</string>
+    <string name="symbol_minus">-</string>
+    <string name="time_30min">30 דקות</string>
+    <string name="time_1hr">שעה</string>
+    <string name="all_blank">\u0020</string>
     <string name="patch_finish">סיום</string>
     <string name="patch_step_desc_1">1.</string>
     <string name="patch_step_desc_2">2.</string>
@@ -14,5 +19,16 @@
     <string name="string_suspend">השהיה</string>
     <string name="string_suspended">מושהה</string>
     <string name="string_running">פועל</string>
+    <string name="cancel">ביטול</string>
+    <string name="confirm">אישור</string>
+    <string name="string_alarm">התראה</string>
+    <string name="string_connecting">מתחבר</string>
+    <string name="string_changing">משנה</string>
+    <string name="string_in_progress">מעבד</string>
+    <string name="retry">נסה שוב</string>
     <string name="string_suspended_insulin_delivery_message">הזרקת האינסולין מופסקת.</string>
+    <string name="finish">סיום</string>
+    <string name="string_temp_basal_remained_hhmm">זמן נותר: %1$s:%2$s</string>
+    <string name="next">הבא</string>
+    <string name="patch_connection_fail">נסה שוב אחרי ניסיון תקשורת לפאץ\'.</string>
 </resources>

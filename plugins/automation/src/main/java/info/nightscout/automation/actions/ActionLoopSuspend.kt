@@ -3,7 +3,6 @@ package info.nightscout.automation.actions
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.LabelWithElement
@@ -12,6 +11,7 @@ import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.utils.JsonHelper
@@ -28,7 +28,7 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
 
     var minutes = InputDuration(30, InputDuration.TimeUnit.MINUTES)
 
-    override fun friendlyName(): Int = R.string.suspendloop
+    override fun friendlyName(): Int = info.nightscout.core.ui.R.string.suspendloop
     override fun shortDescription(): String = rh.gs(R.string.suspendloopforXmin, minutes.getMinutes())
     @DrawableRes override fun icon(): Int = R.drawable.ic_pause_circle_outline_24dp
 
@@ -40,7 +40,7 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
                 UserEntry.Action.SUSPEND, Sources.Automation, title + ": " + rh.gs(R.string.suspendloopforXmin, minutes.getMinutes()),
                 ValueWithUnit.Minute(minutes.getMinutes())
             )
-            callback.result(PumpEnactResult(injector).success(true).comment(R.string.ok)).run()
+            callback.result(PumpEnactResult(injector).success(true).comment(info.nightscout.core.ui.R.string.ok)).run()
         } else {
             callback.result(PumpEnactResult(injector).success(true).comment(R.string.alreadysuspended)).run()
         }
@@ -64,7 +64,7 @@ class ActionLoopSuspend(injector: HasAndroidInjector) : Action(injector) {
 
     override fun generateDialog(root: LinearLayout) {
         LayoutBuilder()
-            .add(LabelWithElement(rh, rh.gs(R.string.duration_min_label), "", minutes))
+            .add(LabelWithElement(rh, rh.gs(info.nightscout.core.ui.R.string.duration_min_label), "", minutes))
             .build(root)
     }
 

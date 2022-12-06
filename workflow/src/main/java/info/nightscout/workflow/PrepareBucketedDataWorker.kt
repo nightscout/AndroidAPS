@@ -1,41 +1,34 @@
 package info.nightscout.workflow
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.graph.data.DataPointWithLabelInterface
 import info.nightscout.core.graph.data.InMemoryGlucoseValueDataPoint
 import info.nightscout.core.graph.data.PointsWithLabelGraphSeries
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class PrepareBucketedDataWorker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var aapsLogger: AAPSLogger
-
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-    }
 
     class PrepareBucketedData(
         val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
         val overviewData: OverviewData
     )
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
 
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareBucketedData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))

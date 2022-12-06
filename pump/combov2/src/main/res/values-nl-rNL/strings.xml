@@ -13,7 +13,6 @@
     <string name="combov2_setting_basal_profile_cmddesc">Instellen van basaal profiel</string>
     <string name="combov2_bolus_cancelled">Bolus geannuleerd</string>
     <string name="combov2_bolus_delivery_failed">Bolus toedienen mislukt. Waarschijnlijk is er geen bolus toegediend. Gelieve de pomp te controleren om een dubbele bolus te voorkomen. Indien nodig geef je een nieuwe bolus. Als bescherming tegen programmeerfouten worden bolussen niet automatisch opnieuw uitgevoerd.</string>
-    <string name="combov2_last_bolus">%1$.1f %2$s (%3$s)</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min resterend)</string>
     <string name="combov2_battery_low_warning">Batterij pomp is bijna leeg</string>
     <string name="combov2_short_status_last_connection">Laatste verbinding: %1$d min geleden</string>

@@ -1,2 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="connection_failed">Ha fallat la connexió</string>
+    <string name="connection_lost">S\'ha perdut la connexió</string>
+    <string name="pairing_rejected">Sincronització rebutjada</string>
+    <string name="socket_creation_failed">Ha fallat la creació del socket</string>
+    <string name="timeout">Temps d\'espera exhaurit</string>
+    <string name="maximum_number_of_bolus_type_already_running">Màxim nr. de tipus de bolus ja en execució</string>
+    <string name="no_active_tbr_to_cancel">No hi ha cap TBR actiu per cancel·lar</string>
+    <string name="no_active_tbr_to_change">No hi ha cap TBR actiu per modificar</string>
+    <string name="no_such_bolus_to_cancel">No hi ha cap bolus per cancel·lar</string>
+    <string name="pump_already_in_that_state_exception">La bomba ja està en aquest estat</string>
+    <string name="run_mode_not_allowed">Mode no permès</string>
+</resources>

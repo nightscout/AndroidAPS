@@ -192,9 +192,9 @@ class PrefFileListProviderImpl @Inject constructor(
         return if (hours == 0) {
             rh.gs(R.string.exported_less_than_hour_ago)
         } else if ((hours < 24) && (hours > 0)) {
-            rh.gs(R.string.exported_ago, rh.gq(R.plurals.hours, hours, hours))
+            rh.gs(R.string.exported_ago, rh.gq(info.nightscout.core.ui.R.plurals.hours, hours, hours))
         } else if ((days < IMPORT_AGE_NOT_YET_OLD_DAYS) && (days > 0)) {
-            rh.gs(R.string.exported_ago, rh.gq(R.plurals.days, days, days))
+            rh.gs(R.string.exported_ago, rh.gq(info.nightscout.core.ui.R.plurals.days, days, days))
         } else {
             rh.gs(R.string.exported_at, utcTime.substring(0, 10))
         }

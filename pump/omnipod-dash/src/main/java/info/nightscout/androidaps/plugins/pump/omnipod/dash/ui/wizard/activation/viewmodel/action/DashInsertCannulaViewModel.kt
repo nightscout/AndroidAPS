@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.viewmodel.action.InsertCannulaViewModel
-import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.OmnipodDashManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.OmnipodDashPodStateManager
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
@@ -67,8 +66,8 @@ class DashInsertCannulaViewModel @Inject constructor(
                 profile,
                 basalProgram
             )
-            val expirationReminderEnabled = sp.getBoolean(R.string.key_omnipod_common_expiration_reminder_enabled, true)
-            val expirationHours = sp.getInt(R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown, 9)
+            val expirationReminderEnabled = sp.getBoolean(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_enabled, true)
+            val expirationHours = sp.getInt(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown, 9)
 
             val expirationHoursBeforeShutdown = if (expirationReminderEnabled)
                 expirationHours.toLong()
@@ -127,8 +126,8 @@ class DashInsertCannulaViewModel @Inject constructor(
     }
 
     @StringRes
-    override fun getTitleId(): Int = R.string.omnipod_common_pod_activation_wizard_insert_cannula_title
+    override fun getTitleId(): Int = info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_activation_wizard_insert_cannula_title
 
     @StringRes
-    override fun getTextId() = R.string.omnipod_common_pod_activation_wizard_insert_cannula_text
+    override fun getTextId() = info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_activation_wizard_insert_cannula_text
 }

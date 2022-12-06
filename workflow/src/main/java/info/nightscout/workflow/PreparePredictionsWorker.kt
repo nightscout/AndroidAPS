@@ -1,7 +1,6 @@
 package info.nightscout.workflow
 
 import android.content.Context
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
@@ -10,6 +9,7 @@ import info.nightscout.core.graph.data.DataPointWithLabelInterface
 import info.nightscout.core.graph.data.GlucoseValueDataPoint
 import info.nightscout.core.graph.data.PointsWithLabelGraphSeries
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
@@ -29,7 +29,7 @@ import kotlin.math.min
 class PreparePredictionsWorker(
     context: Context,
     params: WorkerParameters
-) : Worker(context, params) {
+) : LoggingWorker(context, params) {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var overviewData: OverviewData
@@ -44,15 +44,11 @@ class PreparePredictionsWorker(
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var rh: ResourceHelper
 
-    init {
-        (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
-    }
-
     class PreparePredictionsData(
         val overviewData: OverviewData
     )
 
-    override fun doWork(): Result {
+    override fun doWorkAndLog(): Result {
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PreparePredictionsData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 

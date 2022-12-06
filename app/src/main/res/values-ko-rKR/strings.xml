@@ -7,6 +7,7 @@
     <string name="nav_refreshtreatments">NS에서 관리 새로고침</string>
     <string name="nav_exit">종료</string>
     <string name="delta">증분</string>
+    <string name="profile_label">프로파일</string>
     <string name="save">저장</string>
     <string name="reloadprofile">프로파일 새로고침</string>
     <string name="correctionbous">교정주입</string>

@@ -92,7 +92,7 @@ class AutomationPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(AutomationFragment::class.qualifiedName)
-        .pluginIcon(R.drawable.ic_automation)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_automation)
         .pluginName(R.string.automation)
         .shortName(R.string.automation_short)
         .showInList(config.APS)
@@ -218,19 +218,19 @@ class AutomationPlugin @Inject constructor(
         var commonEventsEnabled = true
         if (loop.isSuspended || !(loop as PluginBase).isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")
-            executionLog.add(rh.gs(R.string.loopisdisabled))
+            executionLog.add(rh.gs(info.nightscout.core.ui.R.string.loopisdisabled))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
         if (loop.isDisconnected || !(loop as PluginBase).isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop disconnected")
-            executionLog.add(rh.gs(R.string.disconnected))
+            executionLog.add(rh.gs(info.nightscout.core.ui.R.string.disconnected))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }
         if (activePlugin.activePump.isSuspended()) {
             aapsLogger.debug(LTag.AUTOMATION, "Pump suspended")
-            executionLog.add(rh.gs(R.string.waitingforpump))
+            executionLog.add(rh.gs(info.nightscout.core.ui.R.string.waitingforpump))
             rxBus.send(EventAutomationUpdateGui())
             commonEventsEnabled = false
         }

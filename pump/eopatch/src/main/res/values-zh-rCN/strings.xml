@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="category_alerts">警报</string>
-    <string name="bolus_delivered">成功输注大剂量 %1$.2f U</string>
     <string name="eopatch_status">状态</string>
     <string name="eopatch_base_basal_rate">基础率</string>
     <string name="eopatch_temp_basal_rate">临时基础率</string>

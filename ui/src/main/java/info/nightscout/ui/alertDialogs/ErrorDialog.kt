@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.main.R
 import info.nightscout.core.ui.activities.DialogAppCompatActivity
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
@@ -45,7 +44,7 @@ class ErrorDialog : DaggerDialogFragment() {
         savedInstanceState: Bundle?
     ): View {
         val theme: Resources.Theme? = context?.theme
-        theme?.applyStyle(R.style.AppTheme_NoActionBar, true)
+        theme?.applyStyle(info.nightscout.core.ui.R.style.AppTheme_NoActionBar, true)
 
         dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE)
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
@@ -55,7 +54,7 @@ class ErrorDialog : DaggerDialogFragment() {
         savedInstanceState?.let { bundle ->
             bundle.getString("status")?.let { status = it }
             bundle.getString("title")?.let { title = it }
-            sound = bundle.getInt("sound", R.raw.error)
+            sound = bundle.getInt("sound", info.nightscout.core.ui.R.raw.error)
         }
         aapsLogger.debug("Error dialog displayed")
         _binding = DialogErrorBinding.inflate(inflater, container, false)

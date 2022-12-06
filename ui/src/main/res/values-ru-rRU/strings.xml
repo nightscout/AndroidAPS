@@ -17,6 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Монитор активности</string>
     <string name="do_you_want_reset_stats">Хотите сбросить статистику активности?</string>
+    <string name="do_you_want_reset_tdd_stats">Хотите сбросить статистику суточной дозировки TDD?</string>
     <string name="statistics">Статистика</string>
     <string name="calculation_in_progress">Идет подсчет</string>
     <string name="invalid_age">Некорректное значение возраст</string>

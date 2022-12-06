@@ -35,6 +35,8 @@
     <string name="rileylink_last_used_frequency">Frequência da Última Utilização:</string>
     <string name="rileylink_last_device_contact">Último contato do dispositivo:</string>
     <string name="rileylink_firmware_version">Versão do firmware:</string>
+    <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
     <string name="rileylink_pump_serial_number">Número de série da Bomba:</string>
     <string name="rileylink_pump_frequency">Frequência da Bomba:</string>
     <string name="rileylink_pump_frequency_value">%1$.1f MHz</string>

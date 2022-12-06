@@ -89,4 +89,15 @@
     <string name="hardlimit">festem Grenzwert</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Gipfel</string>
+    <!--    Loop -->
+    <string name="smb_frequency_exceeded">Aufgrund eines Bolus in den letzten 3 Minuten wird kein SMB abgegeben</string>
+    <string name="pump_not_initialized">Pumpe nicht initialisiert!</string>
+    <string name="loop_shortname">LOOP</string>
+    <string name="description_loop">Aktiviere oder deaktiviere die Anwendung, die den Loop ausführt.</string>
+    <string name="ignore5m">5 Min. ignorieren</string>
+    <string name="ignore15m">15 Min. ignorieren</string>
+    <string name="ignore30m">30 Min. ignorieren</string>
+    <string name="open_loop_new_suggestion">Neue Empfehlung verfügbar</string>
+    <string name="basal_set_correctly">Basalrate richtig eingestellt</string>
+    <string name="loop_aps_label">APS</string>
 </resources>

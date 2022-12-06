@@ -72,15 +72,15 @@ class QuickWizardListActivity : DaggerAppCompatActivity(), OnStartDragListener {
             holder.binding.from.text = dateUtil.timeString(entry.validFromDate())
             holder.binding.to.text = dateUtil.timeString(entry.validToDate())
             holder.binding.buttonText.text = entry.buttonText()
-            holder.binding.carbs.text = rh.gs(R.string.format_carbs, entry.carbs())
+            holder.binding.carbs.text = rh.gs(info.nightscout.core.graph.R.string.format_carbs, entry.carbs())
             if (entry.device() == QuickWizardEntry.DEVICE_ALL) {
                 holder.binding.device.visibility = View.GONE
             } else {
                 holder.binding.device.visibility = View.VISIBLE
                 holder.binding.device.setImageResource(
                     when (quickWizard[position].device()) {
-                        QuickWizardEntry.DEVICE_WATCH -> R.drawable.ic_watch
-                        else                          -> R.drawable.ic_smartphone
+                        QuickWizardEntry.DEVICE_WATCH -> info.nightscout.core.main.R.drawable.ic_watch
+                        else                          -> info.nightscout.core.main.R.drawable.ic_smartphone
                     }
                 )
                 holder.binding.device.contentDescription = when (quickWizard[position].device()) {
@@ -172,7 +172,7 @@ class QuickWizardListActivity : DaggerAppCompatActivity(), OnStartDragListener {
     }
 
     private fun removeSelected(selectedItems: SparseArray<QuickWizardEntry>) {
-        OKDialog.showConfirmation(this, rh.gs(R.string.removerecord), getConfirmationText(selectedItems), Runnable {
+        OKDialog.showConfirmation(this, rh.gs(info.nightscout.core.ui.R.string.removerecord), getConfirmationText(selectedItems), Runnable {
             selectedItems.forEach { _, item ->
                 quickWizard.remove(item.position)
                 rxBus.send(EventQuickWizardChange())
@@ -182,7 +182,7 @@ class QuickWizardListActivity : DaggerAppCompatActivity(), OnStartDragListener {
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.menu_actions, menu)
+        menuInflater.inflate(info.nightscout.core.utils.R.menu.menu_actions, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -200,10 +200,10 @@ class QuickWizardListActivity : DaggerAppCompatActivity(), OnStartDragListener {
     private fun getConfirmationText(selectedItems: SparseArray<QuickWizardEntry>): String {
         if (selectedItems.size() == 1) {
             val entry = selectedItems.valueAt(0)
-            return "${rh.gs(R.string.remove_button)} ${entry.buttonText()} ${rh.gs(R.string.format_carbs, entry.carbs())}\n" +
+            return "${rh.gs(info.nightscout.core.ui.R.string.remove_button)} ${entry.buttonText()} ${rh.gs(info.nightscout.core.graph.R.string.format_carbs, entry.carbs())}\n" +
                 "${dateUtil.timeString(entry.validFromDate())} - ${dateUtil.timeString(entry.validToDate())}"
         }
-        return rh.gs(R.string.confirm_remove_multiple_items, selectedItems.size())
+        return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }
 
 }

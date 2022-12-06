@@ -3,7 +3,6 @@ package info.nightscout.implementation.queue.commands
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.implementation.R
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
@@ -44,15 +43,15 @@ class CommandSetProfile constructor(
         val profileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
         if (profileSwitch is ValueWrapper.Existing && r.enacted && hasNsId && !config.NSCLIENT) {
             if ((smsCommunicator as PluginBase).isEnabled())
-                smsCommunicator.sendNotificationToAllNumbers(rh.gs(R.string.profile_set_ok))
+                smsCommunicator.sendNotificationToAllNumbers(rh.gs(info.nightscout.core.ui.R.string.profile_set_ok))
         }
     }
 
-    override fun status(): String = rh.gs(R.string.set_profile)
+    override fun status(): String = rh.gs(info.nightscout.core.ui.R.string.set_profile)
 
     override fun log(): String = "SET PROFILE"
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
-        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.main.R.string.connectiontimedout))?.run()
+        callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.connectiontimedout))?.run()
     }
 }

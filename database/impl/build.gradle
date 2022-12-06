@@ -6,8 +6,8 @@ plugins {
     id 'com.hiya.jacoco-android'
 }
 
-apply from: "${project.rootDir}/core/core-main/android_dependencies.gradle"
-apply from: "${project.rootDir}/core/core-main/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/android_module_dependencies.gradle"
 
 android {
 

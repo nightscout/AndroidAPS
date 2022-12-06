@@ -89,4 +89,29 @@
     <string name="hardlimit">limite fixée</string>
     <!--    Autotune   -->
     <string name="insulin_peak">Pic</string>
+    <!--    Loop -->
+    <string name="run_now">Exécuter maintenant</string>
+    <string name="smb_frequency_exceeded">Un bolus a été délivré au cours des 3 dernières minutes, SMB ignoré</string>
+    <string name="pump_not_initialized">Pompe non initialisée !</string>
+    <string name="loop_shortname">BOUCLE</string>
+    <string name="description_loop">Activer ou désactiver la mise en œuvre déclenchant la Boucle.</string>
+    <string name="no_aps_selected">Pas d\'APS sélectionné ou pas de résultat fourni</string>
+    <string name="ignore5m">Ignorer 5m</string>
+    <string name="ignore15m">Ignorer 15m</string>
+    <string name="ignore30m">Ignorer 30m</string>
+    <string name="carbs_suggestion">Suggestion de glucides</string>
+    <string name="open_loop_new_suggestion">Nouvelle recommendation disponible</string>
+    <string name="basal_set_correctly">Basal configuré correctement</string>
+    <string name="last_run_label">Dernière exécution</string>
+    <string name="loop_aps_label">APS</string>
+    <string name="request_label">Requête</string>
+    <string name="loop_constraints_processed_label">Après applicaton des restrictions</string>
+    <string name="loop_tbr_request_time_label">Heure de demande basal temp</string>
+    <string name="loop_tbr_execution_time_label">Heure d\'exécution basal temp</string>
+    <string name="loop_tbr_set_by_pump_label">Basal temporaire défini par la pompe</string>
+    <string name="loop_smb_request_time_label">Heure de demande SMB</string>
+    <string name="loop_smb_execution_time_label">Heure d\'exécution SMB</string>
+    <string name="loop_smb_set_by_pump_label">SMB défini par la pompe</string>
+    <string name="loop_open_mode_min_change">Changement minimum [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Le fonctionnement de la Boucle demandera une confirmation uniquement si le changement est supérieur à cette valeur en %. Par défaut, la valeur est 20%</string>
 </resources>

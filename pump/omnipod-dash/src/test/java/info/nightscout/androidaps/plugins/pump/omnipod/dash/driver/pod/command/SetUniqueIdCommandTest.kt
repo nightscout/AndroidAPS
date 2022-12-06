@@ -9,7 +9,7 @@ import java.util.Date
 class SetUniqueIdCommandTest {
 
     @Test @Throws(DecoderException::class) fun testEncoding() {
-        val encoded = SetUniqueIdCommand.Builder()
+        @Suppress("DEPRECATION") val encoded = SetUniqueIdCommand.Builder()
             .setUniqueId(37879811)
             .setSequenceNumber(6.toShort())
             .setLotNumber(135556289)

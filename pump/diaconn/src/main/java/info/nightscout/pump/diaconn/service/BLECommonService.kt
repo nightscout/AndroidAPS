@@ -89,7 +89,7 @@ class BLECommonService @Inject internal constructor(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
         ) {
-            ToastUtils.errorToast(context, context.getString(R.string.need_connect_permission))
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
             aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
             return false
         }
@@ -338,20 +338,20 @@ class BLECommonService @Inject internal constructor(
             if (message is InjectionBlockReportPacket) {
                 message.handleMessage(data)
                 diaconnG8Pump.bolusBlocked = true
-                uiInteraction.runAlarm(rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.injectionblocked), rh.gs(R.string.injectionblocked), info.nightscout.core.ui.R.raw.boluserror)
                 return
             }
             // battery warning report
             if (message is BatteryWarningReportPacket) {
                 message.handleMessage(data)
-                uiInteraction.runAlarm(rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.needbatteryreplace), rh.gs(R.string.batterywarning), info.nightscout.core.ui.R.raw.boluserror)
                 return
             }
 
             // insulin lack warning report
             if (message is InsulinLackReportPacket) {
                 message.handleMessage(data)
-                uiInteraction.runAlarm(rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), R.raw.boluserror)
+                uiInteraction.runAlarm(rh.gs(R.string.needinsullinreplace), rh.gs(R.string.insulinlackwarning), info.nightscout.core.ui.R.raw.boluserror)
                 return
             }
 

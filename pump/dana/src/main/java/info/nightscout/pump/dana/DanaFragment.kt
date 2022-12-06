@@ -110,7 +110,7 @@ class DanaFragment : DaggerFragment() {
         binding.btConnectionLayout.setOnClickListener {
             aapsLogger.debug(LTag.PUMP, "Clicked connect to pump")
             danaPump.reset()
-            commandQueue.readStatus(rh.gs(R.string.clicked_connect_to_pump), null)
+            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.clicked_connect_to_pump), null)
         }
         if (activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS ||
             activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_I
@@ -207,7 +207,7 @@ class DanaFragment : DaggerFragment() {
         if (pump.lastConnection != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMilliseconds.toDouble() / 60.0 / 1000.0).toInt()
-            binding.lastConnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(R.string.minago, agoMin) + ")"
+            binding.lastConnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(info.nightscout.shared.R.string.minago, agoMin) + ")"
             warnColors.setColor(binding.lastConnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {
@@ -215,18 +215,18 @@ class DanaFragment : DaggerFragment() {
             val agoHours = agoMilliseconds.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
-                binding.lastBolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(R.string.format_insulin_units, pump.lastBolusAmount)
+                binding.lastBolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, pump.lastBolusAmount)
             else
                 binding.lastBolus.text = ""
         }
 
-        binding.dailyUnits.text = rh.gs(R.string.reservoir_value, pump.dailyTotalUnits, pump.maxDailyTotalUnits)
+        binding.dailyUnits.text = rh.gs(info.nightscout.core.ui.R.string.reservoir_value, pump.dailyTotalUnits, pump.maxDailyTotalUnits)
         warnColors.setColor(binding.dailyUnits, pump.dailyTotalUnits, pump.maxDailyTotalUnits * 0.75, pump.maxDailyTotalUnits * 0.9)
-        binding.baseBasalRate.text = "( " + (pump.activeProfile + 1) + " )  " + rh.gs(R.string.pump_base_basal_rate, plugin.baseBasalRate)
+        binding.baseBasalRate.text = "( " + (pump.activeProfile + 1) + " )  " + rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, plugin.baseBasalRate)
         // DanaRPlugin, DanaRKoreanPlugin
         binding.tempbasal.text = danaPump.temporaryBasalToString()
         binding.extendedbolus.text = danaPump.extendedBolusToString()
-        binding.reservoir.text = rh.gs(R.string.reservoir_value, pump.reservoirRemainingUnits, 300)
+        binding.reservoir.text = rh.gs(info.nightscout.core.ui.R.string.reservoir_value, pump.reservoirRemainingUnits, 300)
         warnColors.setColorInverse(binding.reservoir, pump.reservoirRemainingUnits, 50.0, 20.0)
         binding.battery.text = "{fa-battery-" + pump.batteryRemaining / 25 + "}"
         warnColors.setColorInverse(binding.battery, pump.batteryRemaining.toDouble(), 51.0, 26.0)

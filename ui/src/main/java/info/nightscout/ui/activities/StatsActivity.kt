@@ -47,8 +47,8 @@ class StatsActivity : DaggerAppCompatActivity() {
         binding = ActivityStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.tdds.addView(TextView(this).apply { text = getString(R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress) })
-        binding.tir.addView(TextView(this).apply { text = getString(R.string.tir) + ": " + rh.gs(R.string.calculation_in_progress) })
+        binding.tdds.addView(TextView(this).apply { text = getString(info.nightscout.core.ui.R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress) })
+        binding.tir.addView(TextView(this).apply { text = getString(info.nightscout.core.ui.R.string.tir) + ": " + rh.gs(R.string.calculation_in_progress) })
         binding.activity.addView(TextView(this).apply { text = getString(R.string.activity_monitor) + ": " + rh.gs(R.string.calculation_in_progress) })
 
         disposable += Single.fromCallable { tddCalculator.stats(this) }

@@ -8,7 +8,6 @@ import info.nightscout.database.entities.data.TargetBlock
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -47,9 +46,9 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         val inputProfile = atProfileFromOapsJson(JSONObject(inputProfileJson), dateUtil)!!
         val prep = PreppedGlucose(JSONObject(prepJson), dateUtil)
 
-        `when`(sp.getDouble(R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
-        `when`(sp.getDouble(R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
-        `when`(sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
+        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
+        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
+        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
         val oapsOutputProfileJson = File("src/test/res/autotune/test1/aapsorefprofile.json").readText()
         val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)
         val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, inputProfile)
@@ -71,9 +70,9 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         val pumpProfileJson = File("src/test/res/autotune/test4/profile.pump.json").readText()
         val pumpProfile = atProfileFromOapsJson(JSONObject(pumpProfileJson), dateUtil)!!
         val prep = PreppedGlucose(JSONObject(prepJson), dateUtil)
-        `when`(sp.getDouble(R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
-        `when`(sp.getDouble(R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
-        `when`(sp.getDouble(R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
+        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, 1.2)).thenReturn(autotuneMax)
+        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7)).thenReturn(autotuneMin)
+        `when`(sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, 3.0)).thenReturn(min5mCarbImpact)
         val oapsOutputProfileJson = File("src/test/res/autotune/test4/newprofile.2022-05-30.json").readText()
         val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)
         val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, pumpProfile)

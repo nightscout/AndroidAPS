@@ -90,7 +90,7 @@ class ErosPodManagementActivity : DaggerAppCompatActivity() {
 
         binding.buttonDiscardPod.setOnClickListener {
             OKDialog.showConfirmation(this,
-                                                                      rh.gs(R.string.omnipod_common_pod_management_discard_pod_confirmation), Thread {
+                                      rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_management_discard_pod_confirmation), Thread {
                     aapsOmnipodManager.discardPodState()
                 })
         }
@@ -110,14 +110,14 @@ class ErosPodManagementActivity : DaggerAppCompatActivity() {
 
         binding.buttonPlayTestBeep.setOnClickListener {
             binding.buttonPlayTestBeep.isEnabled = false
-            binding.buttonPlayTestBeep.setText(R.string.omnipod_common_pod_management_button_playing_test_beep)
+            binding.buttonPlayTestBeep.setText(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_management_button_playing_test_beep)
 
             commandQueue.customCommand(CommandPlayTestBeep(), object : Callback() {
                 override fun run() {
                     if (!result.success) {
                         displayErrorDialog(
-                            rh.gs(R.string.omnipod_common_warning),
-                            rh.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, rh.gs(R.string.omnipod_common_error_failed_to_play_test_beep), result.comment),
+                            rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_warning),
+                            rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_two_strings_concatenated_by_colon, rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_error_failed_to_play_test_beep), result.comment),
                             false
                         )
                     }
@@ -133,8 +133,8 @@ class ErosPodManagementActivity : DaggerAppCompatActivity() {
                 override fun run() {
                     if (!result.success) {
                         displayErrorDialog(
-                            rh.gs(R.string.omnipod_common_warning),
-                            rh.gs(R.string.omnipod_common_two_strings_concatenated_by_colon, rh.gs(R.string.omnipod_eros_error_failed_to_read_pulse_log), result.comment),
+                            rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_warning),
+                            rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_two_strings_concatenated_by_colon, rh.gs(R.string.omnipod_eros_error_failed_to_read_pulse_log), result.comment),
                             false
                         )
                     }
@@ -191,14 +191,14 @@ class ErosPodManagementActivity : DaggerAppCompatActivity() {
             if (podStateManager.isPodInitialized && podStateManager.activationProgress.isAtLeast(ActivationProgress.PAIRING_COMPLETED)) {
                 if (commandQueue.isCustomCommandInQueue(CommandPlayTestBeep::class.java)) {
                     binding.buttonPlayTestBeep.isEnabled = false
-                    binding.buttonPlayTestBeep.setText(R.string.omnipod_common_pod_management_button_playing_test_beep)
+                    binding.buttonPlayTestBeep.setText(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_management_button_playing_test_beep)
                 } else {
                     binding.buttonPlayTestBeep.isEnabled = true
-                    binding.buttonPlayTestBeep.setText(R.string.omnipod_common_pod_management_button_play_test_beep)
+                    binding.buttonPlayTestBeep.setText(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_management_button_play_test_beep)
                 }
             } else {
                 binding.buttonPlayTestBeep.isEnabled = false
-                binding.buttonPlayTestBeep.setText(R.string.omnipod_common_pod_management_button_play_test_beep)
+                binding.buttonPlayTestBeep.setText(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_management_button_play_test_beep)
             }
 
             if (discardButtonEnabled) {
@@ -219,7 +219,7 @@ class ErosPodManagementActivity : DaggerAppCompatActivity() {
                 }
             }
         } else {
-            binding.buttonPlayTestBeep.setText(R.string.omnipod_common_pod_management_button_play_test_beep)
+            binding.buttonPlayTestBeep.setText(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_management_button_play_test_beep)
             binding.buttonActivatePod.isEnabled = false
             binding.buttonDeactivatePod.isEnabled = false
             binding.buttonPlayTestBeep.isEnabled = false
@@ -235,14 +235,14 @@ class ErosPodManagementActivity : DaggerAppCompatActivity() {
     }
 
     private fun displayErrorDialog(title: String, message: String, @Suppress("SameParameterValue") withSound: Boolean) {
-        uiInteraction.runAlarm(message, title, if (withSound) R.raw.boluserror else 0)
+        uiInteraction.runAlarm(message, title, if (withSound) info.nightscout.core.ui.R.raw.boluserror else 0)
     }
 
     private fun displayNotConfiguredDialog() {
         context.let {
             info.nightscout.core.ui.UIRunnable {
                 OKDialog.show(
-                    it, rh.gs(R.string.omnipod_common_warning),
+                    it, rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_warning),
                     rh.gs(R.string.omnipod_eros_error_operation_not_possible_no_configuration), null
                 )
             }.run()

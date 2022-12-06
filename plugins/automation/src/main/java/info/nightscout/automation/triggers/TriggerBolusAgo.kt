@@ -75,7 +75,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.lastboluscompared, rh.gs(comparator.value.stringRes), minutesAgo.getMinutes())
 
-    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_bolus)
+    override fun icon(): Optional<Int> = Optional.of(info.nightscout.core.main.R.drawable.ic_bolus)
 
     override fun duplicate(): Trigger = TriggerBolusAgo(injector, this)
 
@@ -83,7 +83,7 @@ class TriggerBolusAgo(injector: HasAndroidInjector) : Trigger(injector) {
         LayoutBuilder()
             .add(StaticLabel(rh, R.string.lastboluslabel, this))
             .add(comparator)
-            .add(LabelWithElement(rh, rh.gs(R.string.lastboluslabel) + ": ", rh.gs(R.string.unit_minutes), minutesAgo))
+            .add(LabelWithElement(rh, rh.gs(R.string.lastboluslabel) + ": ", rh.gs(info.nightscout.shared.R.string.unit_minutes), minutesAgo))
             .build(root)
     }
 }

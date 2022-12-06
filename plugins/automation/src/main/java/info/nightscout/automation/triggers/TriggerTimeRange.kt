@@ -8,7 +8,6 @@ import info.nightscout.automation.elements.InputTimeRange
 import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
 import info.nightscout.core.utils.MidnightUtils
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.JsonHelper.safeGetInt
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.rx.logging.LTag
@@ -67,7 +66,7 @@ class TriggerTimeRange(injector: HasAndroidInjector) : Trigger(injector) {
     override fun friendlyDescription(): String =
         rh.gs(R.string.timerange_value, dateUtil.timeString(toMills(range.start)), dateUtil.timeString(toMills(range.end)))
 
-    override fun icon(): Optional<Int> = Optional.of(R.drawable.ic_access_alarm_24dp)
+    override fun icon(): Optional<Int> = Optional.of(info.nightscout.core.main.R.drawable.ic_access_alarm_24dp)
 
     override fun duplicate(): Trigger = TriggerTimeRange(injector, range.start, range.end)
 

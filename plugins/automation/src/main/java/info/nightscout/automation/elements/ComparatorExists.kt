@@ -8,7 +8,6 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import androidx.annotation.StringRes
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.automation.R
 
 class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Compare.EXISTS) : Element() {
 
@@ -17,8 +16,8 @@ class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Comp
 
         @get:StringRes val stringRes: Int
             get() = when (this) {
-                EXISTS -> R.string.exists
-                NOT_EXISTS -> R.string.notexists
+                EXISTS -> info.nightscout.core.ui.R.string.exists
+                NOT_EXISTS -> info.nightscout.core.ui.R.string.notexists
             }
 
         companion object {
@@ -34,7 +33,7 @@ class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Comp
     override fun addToLayout(root: LinearLayout) {
         root.addView(
             Spinner(root.context).apply {
-                adapter = ArrayAdapter(root.context, R.layout.spinner_centered, Compare.labels(rh)).apply {
+                adapter = ArrayAdapter(root.context, info.nightscout.core.ui.R.layout.spinner_centered, Compare.labels(rh)).apply {
                     setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                 }
                 layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply {

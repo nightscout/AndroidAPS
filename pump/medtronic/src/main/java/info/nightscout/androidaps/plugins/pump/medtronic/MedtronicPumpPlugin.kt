@@ -110,7 +110,7 @@ class MedtronicPumpPlugin @Inject constructor(
     PluginDescription() //
         .mainType(PluginType.PUMP) //
         .fragmentClass(MedtronicFragment::class.java.name) //
-        .pluginIcon(R.drawable.ic_veo_128)
+        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_veo_128)
         .pluginName(R.string.medtronic_name) //
         .shortName(R.string.medtronic_name_short) //
         .preferencesId(R.xml.pref_medtronic)
@@ -168,9 +168,9 @@ class MedtronicPumpPlugin @Inject constructor(
 
     override fun updatePreferenceSummary(pref: Preference) {
         super.updatePreferenceSummary(pref)
-        if (pref.key == rh.gs(R.string.key_rileylink_mac_address)) {
-            val value = sp.getStringOrNull(R.string.key_rileylink_mac_address, null)
-            pref.summary = value ?: rh.gs(R.string.not_set_short)
+        if (pref.key == rh.gs(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R.string.key_rileylink_mac_address)) {
+            val value = sp.getStringOrNull(info.nightscout.androidaps.plugins.pump.common.hw.rileylink.R.string.key_rileylink_mac_address, null)
+            pref.summary = value ?: rh.gs(info.nightscout.core.ui.R.string.not_set_short)
         }
     }
 
@@ -646,7 +646,7 @@ class MedtronicPumpPlugin @Inject constructor(
                     // LOG.debug("MedtronicPumpPlugin::deliverBolus - Delivery Canceled after Bolus started.");
                     Thread {
                         SystemClock.sleep(2000)
-                        uiInteraction.runAlarm(rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(R.string.medtronic_warning), R.raw.boluserror)
+                        uiInteraction.runAlarm(rh.gs(R.string.medtronic_cmd_cancel_bolus_not_supported), rh.gs(R.string.medtronic_warning), info.nightscout.core.ui.R.raw.boluserror)
                     }.start()
                 }
                 val now = System.currentTimeMillis()
@@ -664,10 +664,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 val time = now + bolusTime * 1000
                 busyTimestamps.add(time)
                 setEnableCustomAction(MedtronicCustomActionType.ClearBolusBlock, true)
-                PumpEnactResult(injector).success(true) //
-                    .enacted(true) //
-                    .bolusDelivered(detailedBolusInfo.insulin) //
-                    .carbsDelivered(detailedBolusInfo.carbs)
+                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin)
             }
         } finally {
             finishAction("Bolus")
@@ -1202,7 +1199,7 @@ class MedtronicPumpPlugin @Inject constructor(
                 if (rileyLinkMedtronicService?.verifyConfiguration() == true) {
                     serviceTaskExecutor.startTask(WakeAndTuneTask(injector))
                 } else {
-                    uiInteraction.runAlarm(rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration), rh.gs(R.string.medtronic_warning), R.raw.boluserror)
+                    uiInteraction.runAlarm(rh.gs(R.string.medtronic_error_operation_not_possible_no_configuration), rh.gs(R.string.medtronic_warning), info.nightscout.core.ui.R.raw.boluserror)
                 }
             }
 

@@ -40,7 +40,7 @@ class ThemeSwitcherPlugin @Inject constructor(
 
     override fun onStart() {
         compositeDisposable.add(rxBus.toObservable(EventPreferenceChange::class.java).subscribe {
-            if (it.isChanged(rh.gs(R.string.key_use_dark_mode))) {
+            if (it.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_use_dark_mode))) {
                 setThemeMode()
                 rxBus.send(EventThemeSwitch())
             }
@@ -48,7 +48,7 @@ class ThemeSwitcherPlugin @Inject constructor(
     }
 
     fun setThemeMode() {
-        val mode = when (sp.getString(R.string.key_use_dark_mode, "dark")) {
+        val mode = when (sp.getString(info.nightscout.core.utils.R.string.key_use_dark_mode, "dark")) {
             sp.getString(R.string.value_dark_theme, "dark")   -> MODE_NIGHT_YES
             sp.getString(R.string.value_light_theme, "light") -> MODE_NIGHT_NO
             else                                              -> MODE_NIGHT_FOLLOW_SYSTEM

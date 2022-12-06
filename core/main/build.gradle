@@ -1,0 +1,40 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+    id 'kotlin-kapt'
+    id 'kotlin-parcelize'
+    id 'kotlin-allopen'
+    id 'com.hiya.jacoco-android'
+}
+
+apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/android_module_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/allopen_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
+
+dependencies {
+    implementation project(':app-wear-shared:shared')
+    implementation project(':database:entities')
+    implementation project(':core:graph')
+    implementation project(':core:interfaces')
+    implementation project(':core:ui')
+    implementation project(':core:utils')
+
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    api 'com.google.guava:guava:31.1-jre'
+
+    api "androidx.activity:activity-ktx:$activity_version"
+    api "androidx.appcompat:appcompat:$appcompat_version"
+
+    api "com.google.dagger:dagger-android:$dagger_version"
+    api "com.google.dagger:dagger-android-support:$dagger_version"
+
+    //WorkManager
+    api "androidx.work:work-runtime-ktx:$work_version" // DataWorkerStorage
+}
+
+android {
+    namespace 'info.nightscout.core.main'
+}

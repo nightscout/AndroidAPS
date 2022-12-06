@@ -81,4 +81,6 @@
     <string name="min_recovery_duration">Min. recovery duration [s]</string>
     <string name="pump_alert">Pump alert</string>
     <string name="pairing_information">Pairing information</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Refresh Button</string>
+
 </resources>

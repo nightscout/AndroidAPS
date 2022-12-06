@@ -5,7 +5,6 @@ import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.plugins.sync.R
 import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -82,7 +81,7 @@ class NSDeviceStatusHandler @Inject constructor(
             updateDeviceData(nsDeviceStatus)
             updateOpenApsData(nsDeviceStatus)
             updateUploaderData(nsDeviceStatus)
-            nsDeviceStatus.pump?.let { sp.putBoolean(R.string.key_objectives_pump_status_is_available_in_ns, true) }  // Objective 0
+            nsDeviceStatus.pump?.let { sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true) }  // Objective 0
             if (config.NSCLIENT && !configurationDetected)
                 nsDeviceStatus.configuration?.let {
                     // copy configuration of Insulin and Sensitivity from main AAPS

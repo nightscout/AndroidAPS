@@ -17,7 +17,7 @@ class ActionLoopSuspendTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
 
-        `when`(context.getString(info.nightscout.core.main.R.string.suspendloop)).thenReturn("Suspend loop")
+        `when`(context.getString(info.nightscout.core.ui.R.string.suspendloop)).thenReturn("Suspend loop")
         `when`(rh.gs(ArgumentMatchers.eq(R.string.suspendloopforXmin), ArgumentMatchers.anyInt())).thenReturn("Suspend loop for %d min")
         `when`(context.getString(R.string.alreadysuspended)).thenReturn("Already suspended")
 
@@ -25,7 +25,7 @@ class ActionLoopSuspendTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.core.main.R.string.suspendloop, sut.friendlyName())
+        Assert.assertEquals(info.nightscout.core.ui.R.string.suspendloop, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {

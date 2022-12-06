@@ -111,7 +111,7 @@ class DanaHistoryActivity : DaggerAppCompatActivity() {
             typeList.add(TypeList(RecordTypes.RECORD_TYPE_REFILL, rh.gs(R.string.danar_history_refill)))
             typeList.add(TypeList(RecordTypes.RECORD_TYPE_SUSPEND, rh.gs(R.string.danar_history_syspend)))
         }
-        binding.typeList.setAdapter(ArrayAdapter(this, R.layout.spinner_centered, typeList))
+        binding.typeList.setAdapter(ArrayAdapter(this, info.nightscout.core.ui.R.layout.spinner_centered, typeList))
 
         binding.reload.setOnClickListener {
             val selected = typeList.firstOrNull { it.name == binding.typeList.text.toString() } ?: return@setOnClickListener
@@ -174,9 +174,9 @@ class DanaHistoryActivity : DaggerAppCompatActivity() {
                 }
 
                 RecordTypes.RECORD_TYPE_DAILY                                                                                                                                                              -> {
-                    holder.binding.dailyBasal.text = rh.gs(R.string.format_insulin_units, record.dailyBasal)
-                    holder.binding.dailyBolus.text = rh.gs(R.string.format_insulin_units, record.dailyBolus)
-                    holder.binding.dailyTotal.text = rh.gs(R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
+                    holder.binding.dailyBasal.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, record.dailyBasal)
+                    holder.binding.dailyBolus.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, record.dailyBolus)
+                    holder.binding.dailyTotal.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
                     holder.binding.time.text = dateUtil.dateString(record.timestamp)
                     holder.binding.time.visibility = View.VISIBLE
                     holder.binding.value.visibility = View.GONE

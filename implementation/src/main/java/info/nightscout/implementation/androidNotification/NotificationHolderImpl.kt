@@ -8,10 +8,9 @@ import android.content.Context
 import android.content.Intent
 import androidx.core.app.NotificationCompat
 import androidx.core.app.TaskStackBuilder
-import info.nightscout.core.main.R
 import info.nightscout.interfaces.NotificationHolder
-import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.ui.IconsProvider
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -49,7 +48,7 @@ class NotificationHolderImpl @Inject constructor(
             .setCategory(NotificationCompat.CATEGORY_STATUS)
             .setSmallIcon(iconsProvider.getNotificationIcon())
             .setLargeIcon(rh.decodeResource(iconsProvider.getIcon()))
-            .setContentTitle(rh.gs(R.string.loading))
+            .setContentTitle(rh.gs(info.nightscout.core.ui.R.string.loading))
             .setContentIntent(openAppIntent(context))
             .build()
             .also {

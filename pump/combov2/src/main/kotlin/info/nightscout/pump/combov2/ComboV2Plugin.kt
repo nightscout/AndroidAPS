@@ -31,7 +31,6 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
@@ -105,7 +104,6 @@ class ComboV2Plugin @Inject constructor (
     private val context: Context,
     private val rxBus: RxBus,
     private val constraintChecker: Constraints,
-    private val profileFunction: ProfileFunction,
     private val sp: SP,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
@@ -135,7 +133,17 @@ class ComboV2Plugin @Inject constructor (
 
     private val _pumpDescription = PumpDescription()
 
-    private val pumpStateStore = SPPumpStateStore(sp)
+    // The internal SP is the one that will be mainly used by the driver.
+    // The AAPS main SP is updated when the pump state store is created
+    // and when the driver disconnects (to update the nonce value).
+    private val internalSP = InternalSP(
+        context.getSharedPreferences(
+            context.packageName + ".COMBO_PUMP_STATE_STORE",
+            Context.MODE_PRIVATE
+        ),
+        context
+    )
+    private val pumpStateStore = AAPSPumpStateStore(aapsMainSP = sp, internalSP = internalSP)
 
     // These are initialized in onStart() and torn down in onStop().
     private var bluetoothInterface: AndroidBluetoothInterface? = null
@@ -237,6 +245,34 @@ class ComboV2Plugin @Inject constructor (
 
     override fun onStart() {
         super.onStart()
+
+        // Check if there is a pump state in the internal SP. If not, try to
+        // copy a pump state from the AAPS main SP. It is possible for example
+        // that AAPS was reinstalled, and the previous settings were imported.
+        // In that case, the internal SP is empty, but there is a pump state
+        // that comes from the settings. We want to restore that pump state
+        // then. If however, there _is_ a pump state in the internal SP, then
+        // we just ignore any state in the main SP. For example, if the user
+        // imports an older AAPS settings file with an old pump state, and a
+        // Combo is already paired with AAPS, then it makes no sense to overwrite
+        // the current pump state with the old one from the imported settings.
+        if (pumpStateStore.getAvailablePumpStateAddresses().isEmpty()) {
+            aapsLogger.info(LTag.PUMP, "There is no pump state in the internal SP; trying to copy a pump state from the main AAPS SP")
+            pumpStateStore.copyAllValuesFromAAPSMainSP(commit = true)
+            val btAddress = pumpStateStore.getAvailablePumpStateAddresses().firstOrNull()
+            if (btAddress == null)
+                aapsLogger.info(LTag.PUMP, "No pump state found in the main AAPS SP; continuing without a pump state (implying that no pump is paired)")
+            else
+                aapsLogger.info(LTag.PUMP, "Pump state found in the main AAPS SP (bluetooth address: $btAddress); continuing with that state")
+        } else {
+            // Copy over the internal SP pump state to the main AAPS SP. If the user
+            // just imported AAPS settings, and said settings contained an old pump
+            // state, then that old pump state is ignored if there is already a
+            // current pump state in the internal SP - but we still need to make sure
+            // the old pump state in the main AAPS SP is replaced by the current one.
+            aapsLogger.debug(LTag.PUMP, "Copying internal SP pump state to main AAPS SP")
+            pumpStateStore.copyAllValuesToAAPSMainSP(commit = false)
+        }
 
         aapsLogger.debug(LTag.PUMP, "Creating bluetooth interface")
         bluetoothInterface = AndroidBluetoothInterface(context)
@@ -626,6 +662,11 @@ class ComboV2Plugin @Inject constructor (
     override fun disconnect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Disconnecting from Combo; reason: $reason")
         disconnectInternal(forceDisconnect = false)
+
+        // Sync up the TBR and nonce states in the main AAPS SP. We don't do this all the
+        // time since this is unnecessary waste of resources. It is sufficient to update
+        // those once AAPS is done with the connection.
+        pumpStateStore.copyVariantValuesToAAPSMainSP(commit = false)
     }
 
     // This is called when (a) the AAPS watchdog is about to toggle
@@ -670,14 +711,14 @@ class ComboV2Plugin @Inject constructor (
 
             uiInteraction.addNotification(
                 Notification.PROFILE_NOT_SET_NOT_INITIALIZED,
-                rh.gs(R.string.pump_not_initialized_profile_not_set),
+                rh.gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set),
                 Notification.URGENT
             )
 
             return PumpEnactResult(injector).apply {
                 success = false
                 enacted = false
-                comment = rh.gs(R.string.pump_not_initialized_profile_not_set)
+                comment = rh.gs(info.nightscout.core.ui.R.string.pump_not_initialized_profile_not_set)
             }
         }
 
@@ -699,7 +740,7 @@ class ComboV2Plugin @Inject constructor (
 
                         uiInteraction.addNotificationValidFor(
                             Notification.PROFILE_SET_OK,
-                            rh.gs(R.string.profile_set_ok),
+                            rh.gs(info.nightscout.core.ui.R.string.profile_set_ok),
                             Notification.INFO,
                             60
                         )
@@ -729,14 +770,14 @@ class ComboV2Plugin @Inject constructor (
 
                 uiInteraction.addNotification(
                     Notification.FAILED_UPDATE_PROFILE,
-                    rh.gs(R.string.failed_update_basal_profile),
+                    rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile),
                     Notification.URGENT
                 )
 
                 pumpEnactResult.apply {
                     success = false
                     enacted = false
-                    comment = rh.gs(R.string.failed_update_basal_profile)
+                    comment = rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile)
                 }
             }
         }
@@ -863,7 +904,7 @@ class ComboV2Plugin @Inject constructor (
                         is RTCommandProgressStage.DeliveringBolus -> {
                             val bolusingEvent = EventOverviewBolusProgress
                             bolusingEvent.percent = (progressReport.overallProgress * 100.0).toInt()
-                            bolusingEvent.status = rh.gs(R.string.bolus_delivering, detailedBolusInfo.insulin)
+                            bolusingEvent.status = rh.gs(info.nightscout.core.ui.R.string.bolus_delivering, detailedBolusInfo.insulin)
                             rxBus.send(bolusingEvent)
                         }
                         BasicProgressStage.Finished -> {
@@ -894,7 +935,7 @@ class ComboV2Plugin @Inject constructor (
                     acquiredPump.deliverBolus(requestedBolusAmount, bolusReason)
                 }
 
-                reportFinishedBolus(rh.gs(R.string.bolus_delivered, detailedBolusInfo.insulin), pumpEnactResult, succeeded = true)
+                reportFinishedBolus(rh.gs(info.nightscout.core.ui.R.string.bolus_delivered_successfully, detailedBolusInfo.insulin), pumpEnactResult, succeeded = true)
             } catch (e: CancellationException) {
                 // Cancellation is not an error, but it also means
                 // that the profile update was not enacted.
@@ -1000,7 +1041,7 @@ class ComboV2Plugin @Inject constructor (
                 pumpEnactResult.apply {
                     success = false
                     enacted = false
-                    comment = rh.gs(R.string.error)
+                    comment = rh.gs(info.nightscout.core.ui.R.string.error)
                 }
                 return pumpEnactResult
             }
@@ -1031,7 +1072,7 @@ class ComboV2Plugin @Inject constructor (
                 pumpEnactResult.apply {
                     success = false
                     enacted = false
-                    comment = rh.gs(R.string.error)
+                    comment = rh.gs(info.nightscout.core.ui.R.string.error)
                 }
                 return pumpEnactResult
             }
@@ -1430,7 +1471,7 @@ class ComboV2Plugin @Inject constructor (
                 // queue will contain a pump_driver_changed readstatus
                 // command already. The queue will see that and ignore
                 // this readStatus() call automatically.
-                commandQueue.readStatus(rh.gs(R.string.pump_paired), null)
+                commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.pump_paired), null)
             } finally {
                 pairingJob = null
                 pairingPINChannel?.close()
@@ -1454,7 +1495,7 @@ class ComboV2Plugin @Inject constructor (
         }
     }
 
-    fun unpair() {
+    private fun unpair() {
         if (unpairing)
             return
 

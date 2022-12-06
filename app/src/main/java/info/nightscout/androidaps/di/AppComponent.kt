@@ -47,8 +47,6 @@ import javax.inject.Singleton
         ActivitiesModule::class,
         FragmentsModule::class,
         ReceiversModule::class,
-        ServicesModule::class,
-        WorkflowModule::class,
 
         // Gradle modules
         AutomationModule::class,
@@ -66,6 +64,7 @@ import javax.inject.Singleton
         ValidatorsModule::class,
         PluginsSupportModule::class,
         SyncModule::class,
+        WorkflowModule::class,
 
         // pumps
         ComboModule::class,
@@ -83,7 +82,6 @@ import javax.inject.Singleton
         OmnipodErosModule::class,
         PumpCommonModule::class,
         RileyLinkModule::class
-
     ]
 )
 interface AppComponent : AndroidInjector<MainApp> {

@@ -35,7 +35,7 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.json.JSONException
 import org.json.JSONObject
-import java.util.*
+import java.util.TimeZone
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.collections.ArrayList
@@ -67,12 +67,12 @@ class AutotunePlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.GENERAL)
         .fragmentClass(AutotuneFragment::class.qualifiedName)
-        .pluginIcon(R.drawable.ic_autotune)
-        .pluginName(R.string.autotune)
-        .shortName(R.string.autotune_shortname)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_autotune)
+        .pluginName(info.nightscout.core.ui.R.string.autotune)
+        .shortName(info.nightscout.core.ui.R.string.autotune_shortname)
         .preferencesId(R.xml.pref_autotune)
         .showInList(config.isEngineeringMode() && config.isDev())
-        .description(R.string.autotune_description),
+        .description(info.nightscout.core.ui.R.string.autotune_description),
     aapsLogger, resourceHelper, injector
 ), Autotune {
 
@@ -115,18 +115,18 @@ class AutotunePlugin @Inject constructor(
         var logResult = ""
         result = ""
         if (profileFunction.getProfile() == null) {
-            result = rh.gs(R.string.profileswitch_ismissing)
+            result = rh.gs(info.nightscout.core.ui.R.string.profileswitch_ismissing)
             rxBus.send(EventAutotuneUpdateGui())
             calculationRunning = false
             return
         }
-        val detailedLog = sp.getBoolean(R.string.key_autotune_additional_log, false)
+        val detailedLog = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_additional_log, false)
         calculationRunning = true
         lastNbDays = "" + daysBack
         lastRun = dateUtil.now()
         val profileStore = activePlugin.activeProfileSource.profile
         if (profileStore == null) {
-            result = rh.gs(R.string.profileswitch_ismissing)
+            result = rh.gs(info.nightscout.core.ui.R.string.profileswitch_ismissing)
             rxBus.send(EventAutotuneUpdateGui())
             calculationRunning = false
             return
@@ -146,7 +146,7 @@ class AutotunePlugin @Inject constructor(
         val starttime = endTime - daysBack * 24 * 60 * 60 * 1000L
         autotuneFS.exportSettings(settings(lastRun, daysBack, starttime, endTime))
         tunedProfile = ATProfile(profile, localInsulin, injector).also {
-            it.profilename = rh.gs(R.string.autotune_tunedprofile_name)
+            it.profilename = rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name)
         }
         pumpProfile = ATProfile(profile, localInsulin, injector).also {
             it.profilename = selectedProfile
@@ -174,7 +174,7 @@ class AutotunePlugin @Inject constructor(
                 tunedProfile?.let {
                     autotuneIob.initializeData(from, to, it)  //autotuneIob contains BG and Treatments data from history (<=> query for ns-treatments and ns-entries)
                     if (autotuneIob.boluses.size == 0) {
-                        result = rh.gs(R.string.autotune_error)
+                        result = rh.gs(info.nightscout.core.ui.R.string.autotune_error)
                         log("No basal data on day ${i + 1}")
                         autotuneFS.exportResult(result)
                         autotuneFS.exportLogAndZip(lastRun)
@@ -191,7 +191,7 @@ class AutotunePlugin @Inject constructor(
                             autotuneFS.exportTunedProfile(tunedProfile)   //<=> newprofile.yyyymmdd.json files exported for results compare with oref0 autotune on virtual machine
                             if (currentCalcDay < calcDays) {
                                 log("Partial result for day ${i + 1}".trimIndent())
-                                result = rh.gs(R.string.autotune_partial_result, currentCalcDay, calcDays)
+                                result = rh.gs(info.nightscout.core.ui.R.string.autotune_partial_result, currentCalcDay, calcDays)
                                 rxBus.send(EventAutotuneUpdateGui())
                             }
                             logResult = showResults(tunedProfile, pumpProfile)
@@ -205,7 +205,7 @@ class AutotunePlugin @Inject constructor(
                         }
                 }
                 if (tunedProfile == null) {
-                    result = rh.gs(R.string.autotune_error)
+                    result = rh.gs(info.nightscout.core.ui.R.string.autotune_error)
                     log("TunedProfile is null on day ${i + 1}")
                     autotuneFS.exportResult(result)
                     autotuneFS.exportLogAndZip(lastRun)
@@ -215,7 +215,7 @@ class AutotunePlugin @Inject constructor(
                 }
             }
         }
-        result = rh.gs(R.string.autotune_result, dateUtil.dateAndTimeString(lastRun))
+        result = rh.gs(info.nightscout.core.ui.R.string.autotune_result, dateUtil.dateAndTimeString(lastRun))
         if (!detailedLog)
             autotuneFS.exportLog(lastRun)
         autotuneFS.exportResult(logResult)
@@ -223,14 +223,14 @@ class AutotunePlugin @Inject constructor(
         updateButtonVisibility = View.VISIBLE
 
         if (autoSwitch) {
-            val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
+            val circadian = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_circadian_ic_isf, false)
             tunedProfile?.let { tunedP ->
                 tunedP.profilename = pumpProfile.profilename
                 updateProfile(tunedP)
                 uel.log(
                     UserEntry.Action.STORE_PROFILE,
                     UserEntry.Sources.Automation,
-                    rh.gs(R.string.autotune),
+                    rh.gs(info.nightscout.core.ui.R.string.autotune),
                     ValueWithUnit.SimpleString(tunedP.profilename)
                 )
                 updateButtonVisibility = View.GONE
@@ -248,7 +248,7 @@ class AutotunePlugin @Inject constructor(
                         uel.log(
                             UserEntry.Action.PROFILE_SWITCH,
                             UserEntry.Sources.Automation,
-                            rh.gs(R.string.autotune),
+                            rh.gs(info.nightscout.core.ui.R.string.autotune),
                             ValueWithUnit.SimpleString(tunedP.profilename)
                         )
                     }
@@ -264,7 +264,7 @@ class AutotunePlugin @Inject constructor(
             calculationRunning = false
             return
         }
-        result = rh.gs(R.string.autotune_error)
+        result = rh.gs(info.nightscout.core.ui.R.string.autotune_error)
         rxBus.send(EventAutotuneUpdateGui())
         calculationRunning = false
         return
@@ -273,18 +273,18 @@ class AutotunePlugin @Inject constructor(
     private fun showResults(tunedProfile: ATProfile?, pumpProfile: ATProfile): String {
         if (tunedProfile == null)
             return "No Result"  // should never occurs
-        val line = rh.gs(R.string.autotune_log_separator)
+        val line = rh.gs(info.nightscout.core.ui.R.string.autotune_log_separator)
         var strResult = line
-        strResult += rh.gs(R.string.autotune_log_title)
+        strResult += rh.gs(info.nightscout.core.ui.R.string.autotune_log_title)
         strResult += line
-        val tuneInsulin = sp.getBoolean(R.string.key_autotune_tune_insulin_curve, false)
+        val tuneInsulin = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_tune_insulin_curve, false)
         if (tuneInsulin) {
-            strResult += rh.gs(R.string.autotune_log_peak, rh.gs(R.string.insulin_peak), pumpProfile.localInsulin.peak, tunedProfile.localInsulin.peak)
-            strResult += rh.gs(R.string.autotune_log_dia, rh.gs(R.string.ic_short), pumpProfile.localInsulin.dia, tunedProfile.localInsulin.dia)
+            strResult += rh.gs(info.nightscout.core.ui.R.string.autotune_log_peak, rh.gs(R.string.insulin_peak), pumpProfile.localInsulin.peak, tunedProfile.localInsulin.peak)
+            strResult += rh.gs(info.nightscout.core.ui.R.string.autotune_log_dia, rh.gs(info.nightscout.core.ui.R.string.ic_short), pumpProfile.localInsulin.dia, tunedProfile.localInsulin.dia)
         }
         // show ISF and CR
-        strResult += rh.gs(R.string.autotune_log_ic_isf, rh.gs(R.string.isf_short), pumpProfile.isf, tunedProfile.isf)
-        strResult += rh.gs(R.string.autotune_log_ic_isf, rh.gs(R.string.ic_short), pumpProfile.ic, tunedProfile.ic)
+        strResult += rh.gs(info.nightscout.core.ui.R.string.autotune_log_ic_isf, rh.gs(info.nightscout.core.ui.R.string.isf_short), pumpProfile.isf, tunedProfile.isf)
+        strResult += rh.gs(info.nightscout.core.ui.R.string.autotune_log_ic_isf, rh.gs(info.nightscout.core.ui.R.string.ic_short), pumpProfile.ic, tunedProfile.ic)
         strResult += line
         var totalBasal = 0.0
         var totalTuned = 0.0
@@ -292,10 +292,10 @@ class AutotunePlugin @Inject constructor(
             totalBasal += pumpProfile.basal[i]
             totalTuned += tunedProfile.basal[i]
             val percentageChangeValue = tunedProfile.basal[i] / pumpProfile.basal[i] * 100 - 100
-            strResult += rh.gs(R.string.autotune_log_basal, i.toDouble(), pumpProfile.basal[i], tunedProfile.basal[i], tunedProfile.basalUntuned[i], percentageChangeValue)
+            strResult += rh.gs(info.nightscout.core.ui.R.string.autotune_log_basal, i.toDouble(), pumpProfile.basal[i], tunedProfile.basal[i], tunedProfile.basalUntuned[i], percentageChangeValue)
         }
         strResult += line
-        strResult += rh.gs(R.string.autotune_log_sum_basal, totalBasal, totalTuned)
+        strResult += rh.gs(info.nightscout.core.ui.R.string.autotune_log_sum_basal, totalBasal, totalTuned)
         strResult += line
         log(strResult)
         return strResult
@@ -308,16 +308,16 @@ class AutotunePlugin @Inject constructor(
         val utcOffset = T.msecs(TimeZone.getDefault().getOffset(dateUtil.now()).toLong()).hours()
         val startDateString = dateUtil.toISOString(firstloopstart).substring(0, 10)
         val endDateString = dateUtil.toISOString(lastloopend - 24 * 60 * 60 * 1000L).substring(0, 10)
-        val nsUrl = sp.getString(R.string.key_nsclientinternal_url, "")
-        val optCategorizeUam = if (sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false)) "-c=true" else ""
-        val optInsulinCurve = if (sp.getBoolean(R.string.key_autotune_tune_insulin_curve, false)) "-i=true" else ""
+        val nsUrl = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "")
+        val optCategorizeUam = if (sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_categorize_uam_as_basal, false)) "-c=true" else ""
+        val optInsulinCurve = if (sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_tune_insulin_curve, false)) "-i=true" else ""
         try {
             jsonSettings.put("datestring", dateUtil.toISOString(runDate))
             jsonSettings.put("dateutc", dateUtil.toISOAsUTC(runDate))
             jsonSettings.put("utcOffset", utcOffset)
             jsonSettings.put("units", profileFunction.getUnits().asText)
             jsonSettings.put("timezone", TimeZone.getDefault().id)
-            jsonSettings.put("url_nightscout", sp.getString(R.string.key_nsclientinternal_url, ""))
+            jsonSettings.put("url_nightscout", sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, ""))
             jsonSettings.put("nbdays", nbDays)
             jsonSettings.put("startdate", startDateString)
             jsonSettings.put("enddate", endDateString)
@@ -327,7 +327,7 @@ class AutotunePlugin @Inject constructor(
             jsonSettings.put("oref0_command", "oref0-autotune -d=~/aaps -n=$nsUrl -s=$startDateString -e=$endDateString $optCategorizeUam $optInsulinCurve")
             // aaps_command is for running modified oref0-autotune with exported data from aaps (ns-entries and ns-treatment json files copied in ~/aaps/autotune folder and pumpprofile.json copied in ~/aaps/settings/
             jsonSettings.put("aaps_command", "aaps-autotune -d=~/aaps -s=$startDateString -e=$endDateString $optCategorizeUam $optInsulinCurve")
-            jsonSettings.put("categorize_uam_as_basal", sp.getBoolean(R.string.key_autotune_categorize_uam_as_basal, false))
+            jsonSettings.put("categorize_uam_as_basal", sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_categorize_uam_as_basal, false))
             jsonSettings.put("tune_insulin_curve", false)
 
             val peaktime: Int = insulinInterface.peak
@@ -354,7 +354,7 @@ class AutotunePlugin @Inject constructor(
     fun updateProfile(newProfile: ATProfile?) {
         if (newProfile == null) return
         val profilePlugin = activePlugin.activeProfileSource
-        val circadian = sp.getBoolean(R.string.key_autotune_circadian_ic_isf, false)
+        val circadian = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_circadian_ic_isf, false)
         val profileStore = activePlugin.activeProfileSource.profile ?: profileInstantiator.storeInstance(JSONObject())
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         var indexLocalProfile = -1
@@ -396,14 +396,14 @@ class AutotunePlugin @Inject constructor(
         }
         json.put("result", result)
         json.put("updateButtonVisibility", updateButtonVisibility)
-        sp.putString(R.string.key_autotune_last_run, json.toString())
+        sp.putString(info.nightscout.core.utils.R.string.key_autotune_last_run, json.toString())
     }
 
     fun loadLastRun() {
         result = ""
         lastRunSuccess = false
         try {
-            val json = JSONObject(sp.getString(R.string.key_autotune_last_run, ""))
+            val json = JSONObject(sp.getString(info.nightscout.core.utils.R.string.key_autotune_last_run, ""))
             lastNbDays = JsonHelper.safeGetString(json, "lastNbDays", "")
             lastRun = JsonHelper.safeGetLong(json, "lastRun")
             val pumpPeak = JsonHelper.safeGetInt(json, "pumpPeak")

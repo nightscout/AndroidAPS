@@ -10,7 +10,6 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import dagger.android.HasAndroidInjector
-import info.nightscout.configuration.R
 import info.nightscout.configuration.setupwizard.events.EventSWLabel
 
 class SWEditUrl(injector: HasAndroidInjector) : SWItem(injector, Type.URL) {
@@ -38,7 +37,7 @@ class SWEditUrl(injector: HasAndroidInjector) : SWItem(injector, Type.URL) {
         editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                if (Patterns.WEB_URL.matcher(s).matches()) save(s.toString(), updateDelay) else rxBus.send(EventSWLabel(rh.gs(R.string.error_url_not_valid)))
+                if (Patterns.WEB_URL.matcher(s).matches()) save(s.toString(), updateDelay) else rxBus.send(EventSWLabel(rh.gs(info.nightscout.core.validators.R.string.error_url_not_valid)))
             }
 
             override fun afterTextChanged(s: Editable) {}

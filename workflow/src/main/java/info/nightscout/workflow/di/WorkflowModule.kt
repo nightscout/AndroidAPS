@@ -2,6 +2,7 @@ package info.nightscout.workflow.di
 
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import info.nightscout.workflow.DummyWorker
 import info.nightscout.workflow.InvokeLoopWorker
 import info.nightscout.workflow.LoadBgDataWorker
 import info.nightscout.workflow.PrepareBasalDataWorker
@@ -33,4 +34,5 @@ abstract class WorkflowModule {
     @ContributesAndroidInjector abstract fun prepareBucketedDataWorkerInjector(): PrepareBucketedDataWorker
     @ContributesAndroidInjector abstract fun loadBgDataWorkerInjector(): LoadBgDataWorker
     @ContributesAndroidInjector abstract fun invokeLoopWorkerInjector(): InvokeLoopWorker
+    @ContributesAndroidInjector abstract fun dummyWorkerInjector(): DummyWorker
 }

@@ -3,11 +3,16 @@
     <!--    <string name="fi_lang" translatable="false">Finnish</string> -->
     <!--   <string name="he_lang" translatable="false">Hebrew</string> -->
     <!--    <string name="ja_lang" translatable="false">Japanese</string> -->
+    <string name="nav_preferences_plugin">%1$s Preferences</string>
     <string name="nav_refreshtreatments">Ανανέωση Θεραπειών από NS</string>
     <string name="nav_exit">Έξοδος</string>
     <string name="delta">Διαφορά</string>
+    <string name="profile_label">Προφίλ</string>
+    <string name="save">Αποθήκευση</string>
     <string name="reloadprofile">Ξαναφορτώστε το προφίλ</string>
     <string name="correctionbous">Διορθ</string>
+    <string name="ns_upload_only">(ΕΠΙΚΙΝΔΥΝΗ Η ΑΠΕΝΕΡΓΟΠΟΙΗΣΗ) ΝS upload μόνο</string>
+    <string name="ns_upload_only_summary">NS ανεβάσετε μόνο (απενεργοποιημένος συγχρονισμός). Δεν είναι αποτελεσματικός στο SGV εκτός και αν έχει επιλεγεί μια τοπική πηγή όπως το xDrip +. Δεν είναι αποτελεσματική στα Προφίλ ενώ χρησιμοποιείται τα NS προφίλ\n!!! ΠΡΟΣΟΧΗ !!! Η απενεργοποίηση αυτής της επιλογής μπορεί να προκαλέσει δυσλειτουργίες και υπερδοσολογία ινσουλίνης αν κάποιο από τα στοιχεία σας (AAPS, NS, xDrip +) είναι λάθος ρυθμισμένο. Προσεκτικά δείτε αν τα δεδομένα που εμφανίζονται από το AAPS ταιριάζουν με την κατάσταση της αντλίας!</string>
     <string name="wear">Wear</string>
     <string name="nav_about">Σχετικά με</string>
     <string name="smscommunicator_missingphonestatepermission">Λείπει η άδεια κατάστασης τηλεφώνου</string>
@@ -28,5 +33,6 @@
     <string name="error_adding_treatment_message">Μια θεραπεία (ινσουλίνη: %1$.2f, υδατάνθρακες: %2$d, στο: %3$s) δεν μπορεί να προστεθεί στις θεραπείες. Παρακαλούμε ελέγξτε και προσθέστε χειροκίνητα μια εγγραφή ανάλογα με την περίπτωση.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), καθυστέρηση: %3$d m</string>
     <string name="profile_total">== ∑  %1$s U</string>
+    <string name="unitsnosemicolon">Μονάδες</string>
     <!-- WEAR OS-->
 </resources>

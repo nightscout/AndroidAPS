@@ -18,7 +18,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     fun setup() {
 
         `when`(rh.gs(R.string.startprofileforever)).thenReturn("Start profile %d%%")
-        `when`(rh.gs(info.nightscout.core.main.R.string.startprofile)).thenReturn("Start profile %d%% for %d min")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.startprofile)).thenReturn("Start profile %d%% for %d min")
 
         sut = ActionProfileSwitchPercent(injector)
     }
@@ -34,7 +34,7 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(info.nightscout.core.main.R.drawable.ic_actions_profileswitch, sut.icon())
+        Assert.assertEquals(info.nightscout.interfaces.R.drawable.ic_actions_profileswitch, sut.icon())
     }
 
     @Test fun doActionTest() {
