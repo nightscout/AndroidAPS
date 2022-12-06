@@ -20,7 +20,9 @@
     <string name="in_range">Dentro da meta</string>
     <string name="above" comment="above &quot;in range&quot;">Acima</string>
     <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">Desvio Padrão (DP ou SD): %1$s</string>
     <string name="detailed_14_days">Detalhes de 14 dias</string>
     <string name="day_tir">Tempo no Alvo (TIR) do dia</string>
     <string name="night_tir">Tempo no alvo (TIR) noturno</string>
+    <string name="carbs_short" comment="max 6 characters">Carboidratos</string>
 </resources>

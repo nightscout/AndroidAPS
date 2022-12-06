@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Никогда не подключалась</string>
     <string name="pump_status_sleeping">Спящий режим</string>
     <string name="pump_status_waking_up">Пробуждение</string>
     <string name="pump_status_active">Работает</string>
