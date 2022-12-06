@@ -154,7 +154,7 @@ class AutotunePlugin @Inject constructor(
         autotuneFS.exportPumpProfile(pumpProfile)
 
         if (calcDays==0) {
-            result = rh.gs(R.string.autotune_error_more_days)
+            result = rh.gs(info.nightscout.core.ui.R.string.autotune_error_more_days)
             log(result)
             calculationRunning = false
             tunedProfile = null
