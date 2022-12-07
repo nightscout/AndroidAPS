@@ -42,12 +42,14 @@ import info.nightscout.plugins.source.GlimpPlugin
 import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.pump.dana.DanaPump
+import info.nightscout.pump.dana.R
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
 /**
@@ -131,7 +133,10 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(rh.gs(info.nightscout.plugins.R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
 
         // RS constructor
+        `when`(sp.getString(R.string.key_danars_name, "")).thenReturn("")
         `when`(sp.getString(info.nightscout.pump.dana.R.string.key_danars_address, "")).thenReturn("")
+        // R
+        `when`(sp.getString(info.nightscout.pump.dana.R.string.key_danar_bt_name, "")).thenReturn("")
 
         //SafetyPlugin
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)

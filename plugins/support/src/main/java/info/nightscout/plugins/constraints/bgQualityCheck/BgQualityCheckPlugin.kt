@@ -26,6 +26,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.min
 
 @Singleton
@@ -115,9 +116,13 @@ class BgQualityCheckPlugin @Inject constructor(
         if (data[data.size - 1].timestamp > now - 45 * 60 * 1000L) return null // data too fresh to detect
         if (data[0].timestamp < now - 7 * 60 * 1000L) return null // data is old
 
+        var bgmin: Double = lastBg
+        var bgmax: Double = bgmin
         for (bg in data) {
             if (bg.timestamp < offset) break
-            if (abs(lastBg - bg.value) > maxDelta) return false
+            bgmin = min(bgmin, bg.value)
+            bgmax = max(bgmax, bg.value)
+            if (bgmax - bgmin > maxDelta) return false
         }
         return true
     }
@@ -142,6 +147,6 @@ class BgQualityCheckPlugin @Inject constructor(
     companion object {
 
         const val staleBgCheckPeriodMinutes = 45L
-        const val staleBgMaxDeltaMgdl = 1.0
+        const val staleBgMaxDeltaMgdl = 2.0
     }
 }
