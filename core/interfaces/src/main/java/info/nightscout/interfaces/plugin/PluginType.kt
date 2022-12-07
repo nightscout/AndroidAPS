@@ -6,5 +6,5 @@ package info.nightscout.interfaces.plugin
  * set by [info.nightscout.interfaces.PluginDescription.mainType]
  */
 enum class PluginType {
-    GENERAL, SENSITIVITY, PROFILE, APS, PUMP, CONSTRAINTS, LOOP, BGSOURCE, INSULIN, SYNC
+    GENERAL, SENSITIVITY, PROFILE, APS, PUMP, CONSTRAINTS, LOOP, BGSOURCE, INSULIN, SYNC, SMOOTHING
 }

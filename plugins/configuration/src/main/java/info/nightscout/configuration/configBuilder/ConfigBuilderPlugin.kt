@@ -20,6 +20,7 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.smoothing.Smoothing
 import info.nightscout.interfaces.source.BgSource
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.rx.bus.RxBus
@@ -131,7 +132,9 @@ class ConfigBuilderPlugin @Inject constructor(
                     (if (p.isEnabled(PluginType.CONSTRAINTS)) " CONSTRAINTS" else "") +
                     (if (p.isEnabled(PluginType.LOOP)) " LOOP" else "") +
                     (if (p.isEnabled(PluginType.BGSOURCE)) " BGSOURCE" else "") +
-                    if (p.isEnabled(PluginType.INSULIN)) " INSULIN" else ""
+                    (if (p.isEnabled(PluginType.INSULIN)) " INSULIN" else "") +
+                    (if (p.isEnabled(PluginType.SYNC)) " SYNC" else "") +
+                    if (p.isEnabled(PluginType.SMOOTHING)) " SMOOTHING" else ""
             )
         }
     }
@@ -195,6 +198,7 @@ class ConfigBuilderPlugin @Inject constructor(
         when (type) {
             PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
             PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)
+            PluginType.SMOOTHING   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Smoothing::class.java)
             PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
             PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
             PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)

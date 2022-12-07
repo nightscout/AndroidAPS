@@ -103,6 +103,7 @@ class ConfigBuilderFragment : DaggerFragment() {
             createViewsForPlugins(info.nightscout.core.ui.R.string.configbuilder_insulin, R.string.configbuilder_insulin_description, PluginType.INSULIN, activePlugin.getSpecificPluginsVisibleInList(PluginType.INSULIN))
         if (!config.NSCLIENT) {
             createViewsForPlugins(R.string.configbuilder_bgsource, R.string.configbuilder_bgsource_description, PluginType.BGSOURCE, activePlugin.getSpecificPluginsVisibleInList(PluginType.BGSOURCE))
+            createViewsForPlugins(R.string.configbuilder_smoothing, R.string.configbuilder_smoothing_description, PluginType.SMOOTHING, activePlugin.getSpecificPluginsVisibleInList(PluginType.SMOOTHING))
             createViewsForPlugins(R.string.configbuilder_pump, R.string.configbuilder_pump_description, PluginType.PUMP, activePlugin.getSpecificPluginsVisibleInList(PluginType.PUMP))
         }
         if (config.APS || config.PUMPCONTROL || config.isEngineeringMode())

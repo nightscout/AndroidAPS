@@ -8,7 +8,6 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploaderPlugin
-import info.nightscout.plugins.general.persistentNotification.PersistentNotificationPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
@@ -31,6 +30,7 @@ import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.plugins.general.food.FoodPlugin
 import info.nightscout.plugins.general.overview.OverviewPlugin
+import info.nightscout.plugins.general.persistentNotification.PersistentNotificationPlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.plugins.general.wear.WearPlugin
@@ -62,6 +62,8 @@ import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.sensitivity.SensitivityOref1Plugin
 import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
+import info.nightscout.smoothing.ExponentialSmoothingPlugin
+import info.nightscout.smoothing.NoSmoothingPlugin
 import javax.inject.Qualifier
 
 @Suppress("unused")
@@ -433,6 +435,18 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(500)
     abstract fun bindThemeSwitcherPlugin(plugin: ThemeSwitcherPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(600)
+    abstract fun bindNoSmoothingPlugin(plugin: NoSmoothingPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(605)
+    abstract fun bindExponentialSmoothingPlugin(plugin: ExponentialSmoothingPlugin): PluginBase
 
     @Qualifier
     annotation class AllConfigs

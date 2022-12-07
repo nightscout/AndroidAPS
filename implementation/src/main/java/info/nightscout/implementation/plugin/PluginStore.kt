@@ -14,6 +14,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.smoothing.Smoothing
 import info.nightscout.interfaces.source.BgSource
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
@@ -191,6 +192,8 @@ class PluginStore @Inject constructor(
         get() = getSpecificPluginsListByInterface(IobCobCalculator::class.java).first() as IobCobCalculator
     override val activeObjectives: Objectives?
         get() = getSpecificPluginsListByInterface(Objectives::class.java).firstOrNull() as Objectives
+    override val activeSmoothing: Smoothing?
+        get() = getSpecificPluginsListByInterface(Smoothing::class.java).firstOrNull() as Smoothing
 
     override val activeNsClient: NsClient?
         get() = getTheOneEnabledInArray(getSpecificPluginsListByInterface(NsClient::class.java), PluginType.SYNC) as NsClient?
