@@ -10,9 +10,9 @@ import info.nightscout.androidaps.insight.database.InsightDatabase
 import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.constraints.ConstraintsImpl
+import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -45,11 +45,10 @@ import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.R
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
 import info.nightscout.shared.sharedPreferences.SP
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 
 /**
@@ -134,15 +133,15 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         // RS constructor
         `when`(sp.getString(R.string.key_danars_name, "")).thenReturn("")
-        `when`(sp.getString(info.nightscout.pump.dana.R.string.key_danars_address, "")).thenReturn("")
+        `when`(sp.getString(R.string.key_danars_address, "")).thenReturn("")
         // R
-        `when`(sp.getString(info.nightscout.pump.dana.R.string.key_danar_bt_name, "")).thenReturn("")
+        `when`(sp.getString(R.string.key_danar_bt_name, "")).thenReturn("")
 
         //SafetyPlugin
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         constraintChecker = ConstraintsImpl(activePlugin)
 
-        val glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
+        val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
 
         hardLimits = HardLimitsMock(sp, rh)
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
@@ -265,9 +264,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         comboPlugin.setPluginEnabled(PluginType.PUMP, true)
         comboPlugin.setValidBasalRateProfileSelectedOnPump(false)
         val c = constraintChecker.isLoopInvocationAllowed()
-        Assert.assertEquals(true, c.reasonList.size == 2) // Combo & Objectives
-        Assert.assertEquals(true, c.mostLimitedReasonList.size == 2) // Combo & Objectives
-        Assert.assertEquals(java.lang.Boolean.FALSE, c.value())
+        Assertions.assertEquals(true, c.reasonList.size == 2) // Combo & Objectives
+        Assertions.assertEquals(true, c.mostLimitedReasonList.size == 2) // Combo & Objectives
+        Assertions.assertEquals(java.lang.Boolean.FALSE, c.value())
     }
 
     // Safety & Objectives
@@ -278,13 +277,13 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         objectivesPlugin.objectives[Objectives.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
         var c: Constraint<Boolean> = constraintChecker.isClosedLoopAllowed()
         aapsLogger.debug("Reason list: " + c.reasonList.toString())
-//        Assert.assertTrue(c.reasonList[0].toString().contains("Closed loop is disabled")) // Safety & Objectives
-        Assert.assertEquals(false, c.value())
+//        Assertions.assertTrue(c.reasonList[0].toString().contains("Closed loop is disabled")) // Safety & Objectives
+        Assertions.assertEquals(false, c.value())
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("open")
         c = constraintChecker.isClosedLoopAllowed()
-        Assert.assertTrue(c.reasonList[0].contains("Closed loop mode disabled in preferences")) // Safety & Objectives
-//        Assert.assertEquals(3, c.reasonList.size) // 2x Safety & Objectives
-        Assert.assertEquals(false, c.value())
+        Assertions.assertTrue(c.reasonList[0].contains("Closed loop mode disabled in preferences")) // Safety & Objectives
+//        Assertions.assertEquals(3, c.reasonList.size) // 2x Safety & Objectives
+        Assertions.assertEquals(false, c.value())
     }
 
     // Safety & Objectives
@@ -294,9 +293,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         objectivesPlugin.objectives[Objectives.AUTOSENS_OBJECTIVE].startedOn = 0
         `when`(sp.getBoolean(info.nightscout.plugins.aps.R.string.key_openapsama_use_autosens, false)).thenReturn(false)
         val c = constraintChecker.isAutosensModeEnabled()
-        Assert.assertEquals(true, c.reasonList.size == 2) // Safety & Objectives
-        Assert.assertEquals(true, c.mostLimitedReasonList.size == 2) // Safety & Objectives
-        Assert.assertEquals(java.lang.Boolean.FALSE, c.value())
+        Assertions.assertEquals(true, c.reasonList.size == 2) // Safety & Objectives
+        Assertions.assertEquals(true, c.mostLimitedReasonList.size == 2) // Safety & Objectives
+        Assertions.assertEquals(java.lang.Boolean.FALSE, c.value())
     }
 
     // Safety
@@ -304,9 +303,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     fun isAdvancedFilteringEnabledTest() {
         `when`(activePlugin.activeBgSource).thenReturn(glimpPlugin)
         val c = constraintChecker.isAdvancedFilteringEnabled()
-        Assert.assertEquals(true, c.reasonList.size == 1) // Safety
-        Assert.assertEquals(true, c.mostLimitedReasonList.size == 1) // Safety
-        Assert.assertEquals(false, c.value())
+        Assertions.assertEquals(true, c.reasonList.size == 1) // Safety
+        Assertions.assertEquals(true, c.mostLimitedReasonList.size == 1) // Safety
+        Assertions.assertEquals(false, c.value())
     }
 
     // SMB should limit
@@ -314,7 +313,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     fun isSuperBolusEnabledTest() {
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         val c = constraintChecker.isSuperBolusEnabled()
-        Assert.assertEquals(java.lang.Boolean.FALSE, c.value()) // SMB should limit
+        Assertions.assertEquals(java.lang.Boolean.FALSE, c.value()) // SMB should limit
     }
 
     // Safety & Objectives
@@ -326,9 +325,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("open")
 //        `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(Constraint(true))
         val c = constraintChecker.isSMBModeEnabled()
-        Assert.assertEquals(true, c.reasonList.size == 3) // 2x Safety & Objectives
-        Assert.assertEquals(true, c.mostLimitedReasonList.size == 3) // 2x Safety & Objectives
-        Assert.assertEquals(false, c.value())
+        Assertions.assertEquals(true, c.reasonList.size == 3) // 2x Safety & Objectives
+        Assertions.assertEquals(true, c.mostLimitedReasonList.size == 3) // 2x Safety & Objectives
+        Assertions.assertEquals(false, c.value())
     }
 
     // applyBasalConstraints tests
@@ -354,9 +353,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         // Apply all limits
         val d = constraintChecker.getMaxBasalAllowed(validProfile)
-        Assert.assertEquals(0.8, d.value(), 0.01)
-        Assert.assertEquals(3, d.reasonList.size)
-        Assert.assertEquals("DanaR: Limiting max basal rate to 0.80 U/h because of pump limit", d.getMostLimitedReasons(aapsLogger))
+        Assertions.assertEquals(0.8, d.value(), 0.01)
+        Assertions.assertEquals(3, d.reasonList.size)
+        Assertions.assertEquals("DanaR: Limiting max basal rate to 0.80 U/h because of pump limit", d.getMostLimitedReasons(aapsLogger))
     }
 
     @Test
@@ -381,9 +380,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         // Apply all limits
         val i = constraintChecker.getMaxBasalPercentAllowed(validProfile)
-        Assert.assertEquals(200, i.value())
-        Assert.assertEquals(6, i.reasonList.size)
-        Assert.assertEquals("Safety: Limiting max percent rate to 200% because of pump limit", i.getMostLimitedReasons(aapsLogger))
+        Assertions.assertEquals(200, i.value())
+        Assertions.assertEquals(6, i.reasonList.size)
+        Assertions.assertEquals("Safety: Limiting max percent rate to 200% because of pump limit", i.getMostLimitedReasons(aapsLogger))
     }
 
     // applyBolusConstraints tests
@@ -408,9 +407,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         // Apply all limits
         val d = constraintChecker.getMaxBolusAllowed()
-        Assert.assertEquals(3.0, d.value(), 0.01)
-        Assert.assertEquals(4, d.reasonList.size) // 2x Safety & RS & R
-        Assert.assertEquals("Safety: Limiting bolus to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
+        Assertions.assertEquals(3.0, d.value(), 0.01)
+        Assertions.assertEquals(4, d.reasonList.size) // 2x Safety & RS & R
+        Assertions.assertEquals("Safety: Limiting bolus to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
 
     // applyCarbsConstraints tests
@@ -421,9 +420,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         // Apply all limits
         val i = constraintChecker.getMaxCarbsAllowed()
-        Assert.assertEquals(48, i.value())
-        Assert.assertEquals(true, i.reasonList.size == 1)
-        Assert.assertEquals("Safety: Limiting carbs to 48 g because of max value in preferences", i.getMostLimitedReasons(aapsLogger))
+        Assertions.assertEquals(48, i.value())
+        Assertions.assertEquals(true, i.reasonList.size == 1)
+        Assertions.assertEquals("Safety: Limiting carbs to 48 g because of max value in preferences", i.getMostLimitedReasons(aapsLogger))
     }
 
     // applyMaxIOBConstraints tests
@@ -438,9 +437,9 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         // Apply all limits
         val d = constraintChecker.getMaxIOBAllowed()
-        Assert.assertEquals(1.5, d.value(), 0.01)
-        Assert.assertEquals(d.reasonList.toString(), 2, d.reasonList.size)
-        Assert.assertEquals("OpenAPSAMA: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
+        Assertions.assertEquals(1.5, d.value(), 0.01)
+        Assertions.assertEquals(2, d.reasonList.size)
+        Assertions.assertEquals("OpenAPSAMA: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
 
     @Test
@@ -454,8 +453,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         // Apply all limits
         val d = constraintChecker.getMaxIOBAllowed()
-        Assert.assertEquals(3.0, d.value(), 0.01)
-        Assert.assertEquals(d.reasonList.toString(), 2, d.reasonList.size)
-        Assert.assertEquals("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
+        Assertions.assertEquals(3.0, d.value(), 0.01)
+        Assertions.assertEquals(2, d.reasonList.size)
+        Assertions.assertEquals("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
     }
 }

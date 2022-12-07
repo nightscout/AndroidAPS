@@ -16,6 +16,7 @@ import info.nightscout.implementation.XDripBroadcastImpl
 import info.nightscout.implementation.androidNotification.NotificationHolderImpl
 import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.implementation.db.PersistenceLayerImpl
+import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import info.nightscout.implementation.logging.LoggerUtilsImpl
 import info.nightscout.implementation.overview.OverviewDataImpl
 import info.nightscout.implementation.plugin.PluginStore
@@ -48,6 +49,7 @@ import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.db.PersistenceLayer
+import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.logging.LoggerUtils
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -124,5 +126,6 @@ abstract class ImplementationModule {
         @Binds fun bindsStorage(fileStorage: FileStorage): Storage
         @Binds fun bindsReceiverStatusStore(receiverStatusStoreImpl: ReceiverStatusStoreImpl): ReceiverStatusStore
         @Binds fun bindsUserEntryPresentationHelper(userEntryPresentationHelperImpl: UserEntryPresentationHelperImpl): UserEntryPresentationHelper
+        @Binds fun bindsGlucoseStatusProvider(glucoseStatusProviderImpl: GlucoseStatusProviderImpl): GlucoseStatusProvider
     }
 }

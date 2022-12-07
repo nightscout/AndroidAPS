@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.interfaces
+package info.nightscout.implementation.profile
 
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.interfaces.profile.PureProfile

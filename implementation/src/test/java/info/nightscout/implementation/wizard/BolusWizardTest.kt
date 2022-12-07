@@ -1,11 +1,12 @@
-package info.nightscout.core.wizard
+package info.nightscout.implementation.wizard
 
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.TestPumpPlugin
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
+import info.nightscout.core.wizard.BolusWizard
+import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.aps.Loop
@@ -25,7 +26,6 @@ import org.junit.Assert
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.`when`
 import org.mockito.invocation.InvocationOnMock
 
 class BolusWizardTest : TestBase() {
@@ -56,7 +56,7 @@ class BolusWizardTest : TestBase() {
                 it.loop = loop
                 it.dateUtil = dateUtil
                 it.iobCobCalculator = iobCobCalculator
-                it.glucoseStatusProvider = GlucoseStatusProvider(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
+                it.glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
             }
         }
     }
@@ -66,19 +66,19 @@ class BolusWizardTest : TestBase() {
     @Suppress("SameParameterValue")
     private fun setupProfile(targetLow: Double, targetHigh: Double, insulinSensitivityFactor: Double, insulinToCarbRatio: Double): Profile {
         val profile = Mockito.mock(Profile::class.java)
-        `when`(profile.getTargetLowMgdl()).thenReturn(targetLow)
-        `when`(profile.getTargetLowMgdl()).thenReturn(targetHigh)
-        `when`(profile.getIsfMgdl()).thenReturn(insulinSensitivityFactor)
-        `when`(profile.getIc()).thenReturn(insulinToCarbRatio)
+        Mockito.`when`(profile.getTargetLowMgdl()).thenReturn(targetLow)
+        Mockito.`when`(profile.getTargetLowMgdl()).thenReturn(targetHigh)
+        Mockito.`when`(profile.getIsfMgdl()).thenReturn(insulinSensitivityFactor)
+        Mockito.`when`(profile.getIc()).thenReturn(insulinToCarbRatio)
 
-        `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
-        `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
-        `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
-        `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
+        Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        Mockito.`when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
+        Mockito.`when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
+        Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         testPumpPlugin.pumpDescription = PumpDescription().also {
             it.bolusStep = pumpBolusStep
         }
-        `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
+        Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
 
         Mockito.doAnswer { invocation: InvocationOnMock ->
             invocation.getArgument<Constraint<Double>>(0)

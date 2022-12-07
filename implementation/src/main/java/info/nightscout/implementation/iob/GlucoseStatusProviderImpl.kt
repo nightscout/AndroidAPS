@@ -1,10 +1,11 @@
-package info.nightscout.core.iob.iobCobCalculator
+package info.nightscout.implementation.iob
 
 import dagger.Reusable
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.core.iob.asRounded
 import info.nightscout.core.iob.log
 import info.nightscout.interfaces.iob.GlucoseStatus
+import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -14,16 +15,16 @@ import kotlin.math.roundToLong
 
 @Reusable
 @OpenForTesting
-class GlucoseStatusProvider @Inject constructor(
+class GlucoseStatusProviderImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val iobCobCalculator: IobCobCalculator,
     private val dateUtil: DateUtil
-) {
+) : GlucoseStatusProvider {
 
-    val glucoseStatusData: GlucoseStatus?
+    override val glucoseStatusData: GlucoseStatus?
         get() = getGlucoseStatusData()
 
-    fun getGlucoseStatusData(allowOldData: Boolean = false): GlucoseStatus? {
+    override fun getGlucoseStatusData(allowOldData: Boolean): GlucoseStatus? {
         val data = iobCobCalculator.ads.getBgReadingsDataTableCopy()
         val sizeRecords = data.size
         if (sizeRecords == 0) {

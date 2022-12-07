@@ -54,7 +54,8 @@ class ProfileStoreObject(val injector: HasAndroidInjector, override val data: JS
     }
 
     override fun getDefaultProfile(): PureProfile? = getDefaultProfileName()?.let { getSpecificProfile(it) }
-    override fun getDefaultProfileJson(): JSONObject? = getDefaultProfileName()?.let { getSpecificProfileJson(it) }
+    override fun getDefaultProfileJson(): JSONObject? =
+        getDefaultProfileName()?.let { getSpecificProfileJson(it) }
 
     override fun getDefaultProfileName(): String? {
         val defaultProfileName = data.optString("defaultProfile")
