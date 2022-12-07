@@ -1091,17 +1091,34 @@ class ComboV2Plugin @Inject constructor (
         return pumpEnactResult
     }
 
-    private fun setTbrInternal(percentage: Int, durationInMinutes: Int, tbrType: ComboCtlTbr.Type, force100Percent: Boolean, pumpEnactResult: PumpEnactResult) {
+    private fun setTbrInternal(
+        percentage: Int,
+        durationInMinutes: Int,
+        tbrType: ComboCtlTbr.Type,
+        force100Percent: Boolean,
+        pumpEnactResult: PumpEnactResult
+    ) {
         runBlocking {
             try {
                 executeCommand {
-                    pump!!.setTbr(percentage, durationInMinutes, tbrType, force100Percent)
-                }
+                    val setTbrOutcome =  pump!!.setTbr(percentage, durationInMinutes, tbrType, force100Percent)
 
-                pumpEnactResult.apply {
-                    success = true
-                    enacted = true
-                    comment = rh.gs(R.string.combov2_setting_tbr_succeeded)
+                    val tbrComment = when (setTbrOutcome) {
+                        ComboCtlPump.SetTbrOutcome.SET_NORMAL_TBR                  ->
+                            rh.gs(R.string.combov2_setting_tbr_succeeded)
+                        ComboCtlPump.SetTbrOutcome.SET_EMULATED_100_TBR            ->
+                            rh.gs(R.string.combov2_set_emulated_100_tbr)
+                        ComboCtlPump.SetTbrOutcome.LETTING_EMULATED_100_TBR_FINISH ->
+                            rh.gs(R.string.combov2_letting_emulated_100_tbr_finish)
+                        ComboCtlPump.SetTbrOutcome.IGNORED_REDUNDANT_100_TBR       ->
+                            rh.gs(R.string.combov2_ignoring_redundant_100_tbr)
+                    }
+
+                    pumpEnactResult.apply {
+                        success = true
+                        enacted = true
+                        comment = tbrComment
+                    }
                 }
             } catch (e: QuantityNotChangingException) {
                 aapsLogger.error(LTag.PUMP, "TBR percentage adjustment hit a limit: $e")
