@@ -154,6 +154,7 @@ class DanaRSPlugin @Inject constructor(
     fun changePump() {
         mDeviceAddress = sp.getString(info.nightscout.pump.dana.R.string.key_danars_address, "")
         mDeviceName = sp.getString(info.nightscout.pump.dana.R.string.key_danars_name, "")
+        danaPump.serialNumber = sp.getString(info.nightscout.pump.dana.R.string.key_danars_name, "")
         danaPump.reset()
         commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.device_changed), null)
     }

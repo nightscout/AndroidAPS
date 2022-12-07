@@ -151,10 +151,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventInitializationChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ passwordResetCheck(this) }, fabricPrivacy::logException)
         if (startWizard() && !isRunningRealPumpTest()) {
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                 startActivity(Intent(this, SetupWizardActivity::class.java))
@@ -168,6 +164,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             androidPermission.notifyForSystemWindowPermissions(this)
             androidPermission.notifyForBtConnectPermission(this)
         }
+        passwordResetCheck(this)
     }
 
     private fun checkPluginPreferences(viewPager: ViewPager2) {
