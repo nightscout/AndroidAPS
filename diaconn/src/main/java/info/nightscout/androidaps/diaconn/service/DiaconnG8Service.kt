@@ -275,18 +275,21 @@ class DiaconnG8Service : DaggerService() {
         if (apsWrappingCount == -1 && apsLastLogNum == 9999 ) {
             apsWrappingCount = pumpWrappingCount
             apsLastLogNum = if (pumpLastNum - 1 < 0) 0 else pumpLastNum -2
+            aapsLogger.debug(LTag.PUMPCOMM, "first install app apsWrappingCount : $apsWrappingCount, apsLastLogNum : $apsLastLogNum")
         }
         // if another pump
         if (pumpSerialNo != diaconnG8Pump.serialNo) {
             apsWrappingCount = pumpWrappingCount
             apsLastLogNum = if (pumpLastNum - 1 < 0) 0 else pumpLastNum -2
             sp.putInt(rh.gs(R.string.pumpserialno), diaconnG8Pump.serialNo)
+            aapsLogger.debug(LTag.PUMPCOMM, "Pump serialNo is different apsWrappingCount : $apsWrappingCount, apsLastLogNum : $apsLastLogNum")
         }
         // if pump reset
         if (apsIncarnationNum != diaconnG8Pump.pumpIncarnationNum) {
             apsWrappingCount = pumpWrappingCount
             apsLastLogNum = if (pumpLastNum - 1 < 0) 0 else pumpLastNum -2
-            sp.putInt(R.string.apsIncarnationNo, apsIncarnationNum)
+            sp.putInt(R.string.apsIncarnationNo, diaconnG8Pump.pumpIncarnationNum)
+            aapsLogger.debug(LTag.PUMPCOMM, "Pump incarnationnum is different apsWrappingCount : $apsWrappingCount, apsLastLogNum : $apsLastLogNum")
         }
             aapsLogger.debug(LTag.PUMPCOMM, "apsWrappingCount : $apsWrappingCount, apsLastLogNum : $apsLastLogNum")
 
@@ -378,7 +381,7 @@ class DiaconnG8Service : DaggerService() {
         } else if (pumpWrappingCount > wrappingCount && platformPumpLogNum < 9999) {
             start = (platformPumpLogNum + 1)
             end = 10000
-        } else if (pumpWrappingCount > wrappingCount && platformPumpLogNum >= 9999 ) {
+        } else if (pumpWrappingCount > wrappingCount) {
             start = 0 // 처음부터 시작
             end = pumpLastNum
         } else {

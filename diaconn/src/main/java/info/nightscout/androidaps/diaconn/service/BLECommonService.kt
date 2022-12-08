@@ -90,6 +90,14 @@ class BLECommonService @Inject internal constructor(
             return false
         }
 
+        if(bluetoothGatt != null) {
+            bluetoothGatt!!.disconnect()
+            SystemClock.sleep(200)
+            bluetoothGatt!!.close()
+            SystemClock.sleep(200)
+            bluetoothGatt = null
+        }
+
         val device = bluetoothAdapter?.getRemoteDevice(address)
         if (device == null) {
             aapsLogger.error("Device not found.  Unable to connect from: $from")
