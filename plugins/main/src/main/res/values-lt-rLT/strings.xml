@@ -161,22 +161,6 @@
     <string name="dia_short">IVT</string>
     <string name="target_short">TIKSLAS</string>
     <string name="basal_short">VB</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Užbaigta, puiku!</string>
-    <string name="not_completed_yet">Dar nebaigta</string>
-    <string name="time_elapsed">Praėjo laiko</string>
-    <string name="maxiobset">Maksimalus AIO nustatytas tinkamai</string>
-    <string name="hasbgdata">KG šaltinis pasirinktas teisingai</string>
-    <string name="loopenabled">Ciklas aktyvuotas</string>
-    <string name="apsselected">DKS pasirinkta</string>
-    <string name="closedmodeenabled">Uždaras ciklas aktyvus</string>
-    <string name="objectives_shortname">TIKSL</string>
-    <string name="description_objectives">Mokymosi programa</string>
-    <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
-    <string name="objectives_next_button">Kitas</string>
-    <string name="objectives_previous_button">Ankstesnis</string>
-    <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
-    <string name="objectives_button_unstart">Išvalyti pradėtus</string>
     <!-- Actions -->
     <string name="actions">Veiksmai</string>
     <string name="description_actions">Mygtukai greitesniam pagrindinių funkcijų paleidimui</string>
@@ -194,18 +178,6 @@
     <string name="cannula">Kaniulė</string>
     <string name="ebstopsloop">Ištęsto boluso funkcija sustabdys uždaro ciklo režimą ištęsto boluso veikimo metu. Ar tikrai norite patvirtinti savo pasirinkimą?</string>
     <string name="statuslights_cannula_age">kateterio amžius</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Ištęstinis bolusas ribojamas iki %1$.1f vv dėl %2$s</string>
-    <string name="limitingcarbs">Ribojami angliavandeniai iki %1$d g dėl %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pompa negali nustatyti laikinos bazės</string>
-    <string name="closedmodedisabledinpreferences">Uždaro ciklo būsena išjungta nustatymuose</string>
-    <string name="closed_loop_disabled_on_dev_branch">Naudojama neužbaigta versija. Uždaras ciklas neaktyvus.</string>
-    <string name="closed_loop_disabled_with_eb">Uždara ciklas išjungtas dėl ištęsto boluso veikimo</string>
-    <string name="smbalwaysdisabled">Funkcijos \"SMB visada\" ir \"SMB po angliavandenių\" išjungtos, nes kraujo gliukozės duomenų šaltinis neturi reikalingo filtravimo</string>
-    <string name="smbnotallowedinopenloopmode">SMB neleidžiami atviro ciklo režime</string>
-    <string name="maxvalueinpreferences">Maksimali reikšmė nustatymuose</string>
-    <string name="hardlimit">Nekeičiama riba</string>
-    <string name="treatmentssafety_title">Terapijos saugumas</string>
     <!-- Overview -->
     <string name="show_statuslights">Pradžios ekrane rodyti spalvotus indikatorius</string>
     <string name="statuslights_cage_warning">Kaniulės ribinio laiko įspėjimas [h]</string>
@@ -332,7 +304,6 @@
     <string name="description_pump_virtual">Integracija pompoms, kurios dar neturi reikalingo valdiklio (Atviras Ciklas)</string>
     <string name="virtual_pump_label">Virtuali pompa</string>
     <string name="virtualpump_settings">Virtualios pompos nustatymai</string>
-    <string name="virtualpump_uploadstatus_title">Perduoti būsenos duomenis į NS</string>
     <!-- Source -->
     <string name="ns_client_bg">NSClient KG</string>
     <string name="ns_client_bg_short">NS KG</string>
