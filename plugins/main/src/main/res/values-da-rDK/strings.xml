@@ -170,22 +170,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">MÅL</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Fuldført, godt klaret!</string>
-    <string name="not_completed_yet">Ikke afsluttet endnu</string>
-    <string name="time_elapsed">Tid forløbet</string>
-    <string name="maxiobset">Maksimal IOB sat korrekt</string>
-    <string name="hasbgdata">BS tilgængelig fra valgte kilde</string>
-    <string name="loopenabled">Loop aktiveret</string>
-    <string name="apsselected">APS valgt</string>
-    <string name="closedmodeenabled">Lukket tilstand aktiveret</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Oplæringsprogram</string>
-    <string name="doyouwantresetstart">Vil du nulstille objektiv start? Du kan miste dine fremskridt.</string>
-    <string name="objectives_next_button">Næste</string>
-    <string name="objectives_previous_button">Forrige</string>
-    <string name="objectives_button_unfinish">Ryd færdigt</string>
-    <string name="objectives_button_unstart">Ryd startet</string>
     <!-- Actions -->
     <string name="actions">Handlinger</string>
     <string name="description_actions">Nogle knapper til hurtigt at få adgang til almindelige funktioner</string>
@@ -205,18 +189,6 @@
     <string name="statuslights_cannula_age">Indstik alder</string>
     <string name="statuslights_patch_pump_age">patch pumpe alder</string>
     <string name="patch_pump">Patch pumpe</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Begrænser udvidet bolus til %1$.1f IE på grund af %2$s</string>
-    <string name="limitingcarbs">Begrænser kulhydrater til %1$d g på grund af %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pumpe er ikke egnet til midlertidig basal</string>
-    <string name="closedmodedisabledinpreferences">Lukket loop tilstand deaktiveret i præferencer</string>
-    <string name="closed_loop_disabled_on_dev_branch">Kører dev version. Lukket loop er deaktiveret.</string>
-    <string name="closed_loop_disabled_with_eb">Lukket loop deaktiveret på grund af kørsel af forlænget bolus</string>
-    <string name="smbalwaysdisabled">SMB altid og efter kulhydrater deaktiveret, fordi den aktive BS kilde ikke understøtter avanceret filtrering</string>
-    <string name="smbnotallowedinopenloopmode">SMB er ikke tilladt i åben loop mode</string>
-    <string name="maxvalueinpreferences">max værdi i præferencer</string>
-    <string name="hardlimit">hård grænse</string>
-    <string name="treatmentssafety_title">Behandlings sikkerhed</string>
     <!-- Overview -->
     <string name="show_statuslights">Vis statuslys på startskærm</string>
     <string name="statuslights_iage_warning">Grænseværdi for insulin-alder [h]</string>
@@ -350,7 +322,6 @@
     <string name="description_pump_virtual">Pumpeintegration til pumper, som endnu ikke har nogen driver (Åbent Loop)</string>
     <string name="virtual_pump_label">VIRTUEL PUMPE</string>
     <string name="virtualpump_settings">Indstillinger for virtuel pumpe</string>
-    <string name="virtualpump_uploadstatus_title">Upload status til NS</string>
     <!-- Source -->
     <string name="ns_client_bg">NSClient BS</string>
     <string name="ns_client_bg_short">NS BS</string>
