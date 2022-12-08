@@ -18,10 +18,8 @@
     <string name="units_colon">Units:</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
     <!-- Actions -->
     <string name="actions_shortname">ACT</string>
-    <!-- Safety -->
     <!-- Overview -->
     <string name="overview">概要</string>
     <string name="overview_shortname">HOME</string>
