@@ -179,20 +179,20 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
             // draw data point
             if (!overdraw) {
                 if (value.getShape() == Shape.BG || value.getShape() == Shape.COB_FAIL_OVER) {
-                    mPaint.setStyle(Paint.Style.FILL);
+                    mPaint.setStyle(value.getPaintStyle());
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, value.getSize() * scaledPxSize, mPaint);
                 } else if (value.getShape() == Shape.BG || value.getShape() == Shape.IOB_PREDICTION || value.getShape() == Shape.BUCKETED_BG) {
                     mPaint.setColor(value.color(graphView.getContext()));
-                    mPaint.setStyle(Paint.Style.FILL);
+                    mPaint.setStyle(value.getPaintStyle());
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, value.getSize() * scaledPxSize, mPaint);
                 } else if (value.getShape() == Shape.PREDICTION) {
                     mPaint.setColor(value.color(graphView.getContext()));
-                    mPaint.setStyle(Paint.Style.FILL);
+                    mPaint.setStyle(value.getPaintStyle());
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, scaledPxSize, mPaint);
-                    mPaint.setStyle(Paint.Style.FILL);
+                    mPaint.setStyle(value.getPaintStyle());
                     mPaint.setStrokeWidth(0);
                     canvas.drawCircle(endX, endY, scaledPxSize / 3, mPaint);
                 } else if (value.getShape() == Shape.RECTANGLE) {

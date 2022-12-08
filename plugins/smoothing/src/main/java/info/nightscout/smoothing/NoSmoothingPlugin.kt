@@ -2,7 +2,7 @@ package info.nightscout.smoothing
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -22,10 +22,12 @@ class NoSmoothingPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SMOOTHING)
         .pluginIcon(info.nightscout.core.ui.R.drawable.ic_timeline_24)
-        .enableByDefault(true)
+        .setDefault(true)
         .pluginName(R.string.no_smoothing_name)
         .shortName(R.string.smoothing_shortname)
         .description(R.string.description_no_smoothing),
     aapsLogger, rh, injector
 ), Smoothing {
+
+    override fun smooth(data: MutableList<InMemoryGlucoseValue>): MutableList<InMemoryGlucoseValue> = data
 }

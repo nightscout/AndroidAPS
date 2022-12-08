@@ -1,6 +1,7 @@
 package info.nightscout.core.graph.data
 
 import android.content.Context
+import android.graphics.Paint
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.T
@@ -22,6 +23,7 @@ class EffectiveProfileSwitchDataPoint(
     override val duration = 0L
     override val shape = PointsWithLabelGraphSeries.Shape.PROFILE
     override val size = 2f
+    override val paintStyle: Paint.Style = Paint.Style.FILL // not used
     override fun color(context: Context?): Int {
         return rh.gac(context, info.nightscout.core.ui.R.attr.profileSwitchColor)
     }

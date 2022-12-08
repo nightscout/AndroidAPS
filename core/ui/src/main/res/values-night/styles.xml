@@ -206,7 +206,7 @@
         <item name="smbColor">@color/tempbasal</item>
         <item name="bolusDataPointColor">@color/pumpHistory</item>
         <item name="profileSwitchColor">@color/profileSwitch</item>
-        <item name="inMemoryColor">@color/white</item>
+        <item name="originalBgValueColor">@color/white</item>
         <item name="therapyEvent_NS_MBG">@color/red</item>
         <item name="therapyEvent_FINGER_STICK_BG_VALUE">@color/red</item>
         <item name="therapyEvent_EXERCISE">@color/blue</item>

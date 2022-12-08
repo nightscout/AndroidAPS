@@ -1,6 +1,7 @@
 package info.nightscout.interfaces.utils
 
 import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.interfaces.aps.AutosensDataStore
 
 /**
  *  Convert BG direction value to trend arrow or calculate it if not provided
@@ -15,6 +16,13 @@ interface TrendCalculator {
      * @return TrendArrow
      */
     fun getTrendArrow(glucoseValue: GlucoseValue?): GlucoseValue.TrendArrow
+    /**
+     * Provide or calculate trend from newest bucketed data
+     *
+     * @param autosensDataStore current store from IobCobCalculator
+     * @return TrendArrow
+     */
+    fun getTrendArrow(autosensDataStore: AutosensDataStore): GlucoseValue.TrendArrow?
 
     /**
      * Provide or calculate trend
@@ -23,4 +31,11 @@ interface TrendCalculator {
      * @return string description of TrendArrow
      */
     fun getTrendDescription(glucoseValue: GlucoseValue?): String
+    /**
+     * Provide or calculate trend from newest bucketed data
+     *
+     * @param autosensDataStore current store from IobCobCalculator
+     * @return string description of TrendArrow
+     */
+    fun getTrendDescription(autosensDataStore: AutosensDataStore): String
 }

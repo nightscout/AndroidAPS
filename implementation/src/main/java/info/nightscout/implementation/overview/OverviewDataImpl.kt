@@ -26,7 +26,9 @@ import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.aps.AutosensData
+import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.iob.CobInfo
+import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -119,43 +121,42 @@ class OverviewDataImpl @Inject constructor(
      * BG
      */
 
-    override val lastBg: GlucoseValue?
-        get() =
-            repository.getLastGlucoseValueWrapped().blockingGet().let { gvWrapped ->
-                if (gvWrapped is ValueWrapper.Existing) gvWrapped.value
-                else null
-            }
+    override fun lastBg(autosensDataStore: AutosensDataStore): InMemoryGlucoseValue? =
+        autosensDataStore.bucketedData?.let { if (it.size > 0) it[0] else null }
+    // repository.getLastGlucoseValueWrapped().blockingGet().let { gvWrapped ->
+    //     if (gvWrapped is ValueWrapper.Existing) gvWrapped.value
+    //     else null
+    // }
 
-    override val isLow: Boolean
-        get() = lastBg?.let { lastBg ->
+    override fun isLow(autosensDataStore: AutosensDataStore): Boolean =
+        lastBg(autosensDataStore)?.let { lastBg ->
             lastBg.valueToUnits(profileFunction.getUnits()) < defaultValueHelper.determineLowLine()
         } ?: false
 
-    override val isHigh: Boolean
-        get() = lastBg?.let { lastBg ->
+    override fun isHigh(autosensDataStore: AutosensDataStore): Boolean =
+        lastBg(autosensDataStore)?.let { lastBg ->
             lastBg.valueToUnits(profileFunction.getUnits()) > defaultValueHelper.determineHighLine()
         } ?: false
 
     @ColorInt
-    override fun lastBgColor(context: Context?): Int =
+    override fun lastBgColor(context: Context?, autosensDataStore: AutosensDataStore): Int =
         when {
-            isLow  -> rh.gac(context, info.nightscout.core.ui.R.attr.bgLow)
-            isHigh -> rh.gac(context, info.nightscout.core.ui.R.attr.highColor)
-            else   -> rh.gac(context, info.nightscout.core.ui.R.attr.bgInRange)
+            isLow(autosensDataStore)  -> rh.gac(context, info.nightscout.core.ui.R.attr.bgLow)
+            isHigh(autosensDataStore) -> rh.gac(context, info.nightscout.core.ui.R.attr.highColor)
+            else                      -> rh.gac(context, info.nightscout.core.ui.R.attr.bgInRange)
         }
 
-    override val lastBgDescription: String
-        get() = when {
-            isLow  -> rh.gs(info.nightscout.core.ui.R.string.a11y_low)
-            isHigh -> rh.gs(info.nightscout.core.ui.R.string.a11y_high)
-            else   -> rh.gs(info.nightscout.core.ui.R.string.a11y_inrange)
+    override fun lastBgDescription(autosensDataStore: AutosensDataStore): String =
+        when {
+            isLow(autosensDataStore)  -> rh.gs(info.nightscout.core.ui.R.string.a11y_low)
+            isHigh(autosensDataStore) -> rh.gs(info.nightscout.core.ui.R.string.a11y_high)
+            else                      -> rh.gs(info.nightscout.core.ui.R.string.a11y_inrange)
         }
 
-    override val isActualBg: Boolean
-        get() =
-            lastBg?.let { lastBg ->
-                lastBg.timestamp > dateUtil.now() - T.mins(9).msecs()
-            } ?: false
+    override fun isActualBg(autosensDataStore: AutosensDataStore): Boolean =
+        lastBg(autosensDataStore)?.let { lastBg ->
+            lastBg.timestamp > dateUtil.now() - T.mins(9).msecs()
+        } ?: false
 
     /*
      * TEMPORARY BASAL

@@ -1,6 +1,7 @@
 package info.nightscout.core.graph.data
 
 import android.content.Context
+import android.graphics.Paint
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.Translator
@@ -55,6 +56,7 @@ class TherapyEventDataPoint(
                 duration > 0                                         -> PointsWithLabelGraphSeries.Shape.GENERAL_WITH_DURATION
                 else                                                 -> PointsWithLabelGraphSeries.Shape.GENERAL
             }
+    override val paintStyle: Paint.Style = Paint.Style.FILL // not used
 
     override val size get() = if (rh.gb(info.nightscout.shared.R.bool.isTablet)) 12.0f else 10.0f
     override fun color(context: Context?): Int {

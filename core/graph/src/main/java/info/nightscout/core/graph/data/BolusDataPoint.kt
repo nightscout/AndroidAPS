@@ -1,6 +1,7 @@
 package info.nightscout.core.graph.data
 
 import android.content.Context
+import android.graphics.Paint
 import info.nightscout.database.entities.Bolus
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
@@ -22,7 +23,7 @@ class BolusDataPoint(
         get() = DecimalFormatter.toPumpSupportedBolus(data.amount, activePlugin.activePump, rh)
     override val duration = 0L
     override val size = 2f
-
+    override val paintStyle: Paint.Style = Paint.Style.FILL // not used
     override val shape
         get() = if (data.type == Bolus.Type.SMB) PointsWithLabelGraphSeries.Shape.SMB else PointsWithLabelGraphSeries.Shape.BOLUS
 

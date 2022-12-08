@@ -1,6 +1,7 @@
 package info.nightscout.core.graph.data
 
 import android.content.Context
+import android.graphics.Paint
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
@@ -16,7 +17,7 @@ class GlucoseValueDataPoint(
     private val rh: ResourceHelper
 ) : DataPointWithLabelInterface {
 
-    fun valueToUnits(units: GlucoseUnit): Double =
+    private fun valueToUnits(units: GlucoseUnit): Double =
         if (units == GlucoseUnit.MGDL) data.value else data.value * Constants.MGDL_TO_MMOLL
 
     override fun getX(): Double = data.timestamp.toDouble()
@@ -26,16 +27,13 @@ class GlucoseValueDataPoint(
     override val label: String = Profile.toCurrentUnitsString(profileFunction, data.value)
     override val duration = 0L
     override val shape get() = if (isPrediction) PointsWithLabelGraphSeries.Shape.PREDICTION else PointsWithLabelGraphSeries.Shape.BG
-    override val size = 1f
+    override val size = if (isPrediction) 1f else 0.6f
+    override val paintStyle: Paint.Style = if (isPrediction) Paint.Style.FILL else Paint.Style.STROKE
+
     override fun color(context: Context?): Int {
-        val units = profileFunction.getUnits()
-        val lowLine = defaultValueHelper.determineLowLine()
-        val highLine = defaultValueHelper.determineHighLine()
         return when {
             isPrediction                   -> predictionColor(context)
-            valueToUnits(units) < lowLine  -> rh.gac(context, info.nightscout.core.ui.R.attr.bgLow)
-            valueToUnits(units) > highLine -> rh.gac(context, info.nightscout.core.ui.R.attr.highColor)
-            else                           -> rh.gac(context, info.nightscout.core.ui.R.attr.bgInRange)
+            else                           -> rh.gac(context, info.nightscout.core.ui.R.attr.originalBgValueColor)
         }
     }
 

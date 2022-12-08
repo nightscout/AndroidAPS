@@ -78,7 +78,7 @@ interface ActivePlugin {
     /**
      *  Smoothing plugin
      */
-    val activeSmoothing: Smoothing?
+    val activeSmoothing: Smoothing
 
     /**
      *  Currently selected NsClient plugin

@@ -237,7 +237,7 @@ class AutosensDataStoreObject : AutosensDataStore {
                 val bgDelta = newer.value - older.value
                 val timeDiffToNew = newer.timestamp - currentTime
                 val currentBg = newer.value - timeDiffToNew.toDouble() / (newer.timestamp - older.timestamp) * bgDelta
-                val newBgReading = InMemoryGlucoseValue(currentTime, currentBg.roundToLong().toDouble(), true)
+                val newBgReading = InMemoryGlucoseValue(currentTime, currentBg.roundToLong().toDouble())
                 newBucketedData.add(newBgReading)
                 //log.debug("BG: " + newBgReading.value + " (" + new Date(newBgReading.date).toLocaleString() + ") Prev: " + older.value + " (" + new Date(older.date).toLocaleString() + ") Newer: " + newer.value + " (" + new Date(newer.date).toLocaleString() + ")");
             }
@@ -273,7 +273,7 @@ class AutosensDataStoreObject : AutosensDataStore {
                         val gapDelta = bgReadings[i].value - lastBg
                         //console.error(gapDelta, lastBg, elapsed_minutes);
                         val nextBg = lastBg + 5.0 / elapsedMinutes * gapDelta
-                        val newBgReading = InMemoryGlucoseValue(nextBgTime, nextBg.roundToLong().toDouble(), true)
+                        val newBgReading = InMemoryGlucoseValue(nextBgTime, nextBg.roundToLong().toDouble())
                         //console.error("Interpolated", bData[j]);
                         bData.add(newBgReading)
                         aapsLogger.debug(LTag.AUTOSENS) { "Adding. bgTime: ${dateUtil.toISOString(bgTime)} lastBgTime: ${dateUtil.toISOString(lastBgTime)} $newBgReading" }

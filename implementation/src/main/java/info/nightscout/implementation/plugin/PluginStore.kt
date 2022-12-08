@@ -37,6 +37,7 @@ class PluginStore @Inject constructor(
     private var activeAPSStore: APS? = null
     private var activeInsulinStore: Insulin? = null
     private var activeSensitivityStore: Sensitivity? = null
+    private var activeSmoothingStore: Smoothing? = null
 
     override fun loadDefaults() {
         verifySelectionInCategories()
@@ -106,6 +107,16 @@ class PluginStore @Inject constructor(
             aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SensitivityInterface")
         }
         setFragmentVisibilities((activeSensitivityStore as PluginBase).name, pluginsInCategory, PluginType.SENSITIVITY)
+
+        // PluginType.SMOOTHING
+        pluginsInCategory = getSpecificPluginsList(PluginType.SMOOTHING)
+        activeSmoothingStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.SMOOTHING) as Smoothing?
+        if (activeSmoothingStore == null) {
+            activeSmoothingStore = getDefaultPlugin(PluginType.SMOOTHING) as Smoothing
+            (activeSmoothingStore as PluginBase).setPluginEnabled(PluginType.SMOOTHING, true)
+            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SmoothingInterface")
+        }
+        setFragmentVisibilities((activeSmoothingStore as PluginBase).name, pluginsInCategory, PluginType.SMOOTHING)
 
         // PluginType.PROFILE
         pluginsInCategory = getSpecificPluginsList(PluginType.PROFILE)
@@ -182,6 +193,10 @@ class PluginStore @Inject constructor(
         get() = activeSensitivityStore
             ?: checkNotNull(activeSensitivityStore) { "No sensitivity selected" }
 
+    override val activeSmoothing: Smoothing
+        get() = activeSmoothingStore
+            ?: checkNotNull(activeSmoothingStore) { "No smoothing selected" }
+
     override val activeOverview: Overview
         get() = getSpecificPluginsListByInterface(Overview::class.java).first() as Overview
 
@@ -191,10 +206,7 @@ class PluginStore @Inject constructor(
     override val activeIobCobCalculator: IobCobCalculator
         get() = getSpecificPluginsListByInterface(IobCobCalculator::class.java).first() as IobCobCalculator
     override val activeObjectives: Objectives?
-        get() = getSpecificPluginsListByInterface(Objectives::class.java).firstOrNull() as Objectives
-    override val activeSmoothing: Smoothing?
-        get() = getSpecificPluginsListByInterface(Smoothing::class.java).firstOrNull() as Smoothing
-
+        get() = getSpecificPluginsListByInterface(Objectives::class.java).firstOrNull() as Objectives?
     override val activeNsClient: NsClient?
         get() = getTheOneEnabledInArray(getSpecificPluginsListByInterface(NsClient::class.java), PluginType.SYNC) as NsClient?
 

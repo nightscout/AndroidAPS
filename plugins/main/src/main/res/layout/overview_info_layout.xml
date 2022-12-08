@@ -11,7 +11,7 @@
         android:id="@+id/bg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="00.0"
+        tools:text="00.0"
         android:textSize="60sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/delta_large"
@@ -32,7 +32,7 @@
         android:id="@+id/delta_large"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="(+1.0)"
+        tools:text="(+1.0)"
         android:textSize="60sp"
         android:textStyle="bold"
         android:visibility="gone"
@@ -60,7 +60,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             app:layout_constraintHorizontal_bias="0.0"
-            app:srcCompat="@drawable/ic_flat"
             android:contentDescription="@string/trend_arrow" />
 
         <TextView
@@ -69,7 +68,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:layout_constraintTop_toTopOf="@+id/long_avg_delta"
-            android:text="n/a"
+            tools:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Small"
             tools:ignore="HardcodedText" />
 
@@ -106,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:textAlignment="textEnd"
-                android:text="n/a"
+                tools:text="n/a"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 tools:ignore="HardcodedText" />
 
@@ -123,7 +122,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:textAlignment="textEnd"
-                android:text="15m Δ: "
+                android:text="Δ15: "
                 android:contentDescription="15 minutes delta"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 tools:ignore="HardcodedText" />
@@ -134,7 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:textAlignment="textEnd"
-                android:text="n/a"
+                tools:text="n/a"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 tools:ignore="HardcodedText" />
 
@@ -151,7 +150,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:textAlignment="textEnd"
-                android:text="40m Δ: "
+                android:text="Δ40: "
                 android:contentDescription="40 minutes delta"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 tools:ignore="HardcodedText" />
@@ -162,7 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
                 android:textAlignment="textEnd"
-                android:text="n/a"
+                tools:text="n/a"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 tools:ignore="HardcodedText" />
 
@@ -226,7 +225,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="-5dp"
-            android:text="8:00 PM"
+            tools:text="8:00 PM"
             android:textSize="25sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -238,7 +237,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="-10dp"
             android:gravity="center_vertical"
-            android:text="(-5)"
+            tools:text="(-5)"
             android:textSize="19sp"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -271,7 +270,7 @@
             android:gravity="center_horizontal"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
-            android:text="n/a"
+            tools:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -304,7 +303,7 @@
             android:gravity="center_horizontal"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
-            android:text="n/a"
+            tools:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -336,7 +335,7 @@
             android:gravity="center_horizontal"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
-            android:text="n/a"
+            tools:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -367,7 +366,7 @@
             android:gravity="center_horizontal"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
-            android:text="n/a"
+            tools:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -400,7 +399,7 @@
             android:gravity="center_horizontal"
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
-            android:text="n/a"
+            tools:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
             tools:ignore="HardcodedText" />
@@ -412,7 +411,7 @@
             android:layout_marginTop="-9dp"
             android:gravity="center_horizontal"
             android:paddingBottom="3dp"
-            android:text="n/a"
+            tools:text="n/a"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
             android:visibility="visible"
