@@ -11,7 +11,6 @@ import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
@@ -34,6 +33,7 @@ import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.plugins.aps.openAPSSMBDynamicISF.OpenAPSSMBDynamicISFPlugin
+import info.nightscout.plugins.constraints.ConstraintsImpl
 import info.nightscout.plugins.constraints.objectives.ObjectivesPlugin
 import info.nightscout.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.plugins.constraints.safety.SafetyPlugin
@@ -103,33 +103,33 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
-        `when`(rh.gs(info.nightscout.plugins.R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
-        `when`(rh.gs(info.nightscout.plugins.R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
+        `when`(rh.gs(info.nightscout.plugins.constraints.R.string.closed_loop_disabled_on_dev_branch)).thenReturn("Running dev version. Closed loop is disabled.")
+        `when`(rh.gs(info.nightscout.plugins.constraints.R.string.closedmodedisabledinpreferences)).thenReturn("Closed loop mode disabled in preferences")
         `when`(rh.gs(info.nightscout.core.ui.R.string.no_valid_basal_rate)).thenReturn("No valid basal rate read from pump")
         `when`(rh.gs(info.nightscout.plugins.aps.R.string.autosens_disabled_in_preferences)).thenReturn("Autosens disabled in preferences")
         `when`(rh.gs(info.nightscout.plugins.aps.R.string.smb_disabled_in_preferences)).thenReturn("SMB disabled in preferences")
         `when`(rh.gs(info.nightscout.core.ui.R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
-        `when`(rh.gs(info.nightscout.plugins.R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
+        `when`(rh.gs(info.nightscout.plugins.constraints.R.string.maxvalueinpreferences)).thenReturn("max value in preferences")
         `when`(rh.gs(info.nightscout.plugins.aps.R.string.max_basal_multiplier)).thenReturn("max basal multiplier")
         `when`(rh.gs(info.nightscout.plugins.aps.R.string.max_daily_basal_multiplier)).thenReturn("max daily basal multiplier")
         `when`(rh.gs(info.nightscout.core.ui.R.string.pumplimit)).thenReturn("pump limit")
         `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbolus)).thenReturn("Limiting bolus to %.1f U because of %s")
-        `when`(rh.gs(info.nightscout.plugins.R.string.hardlimit)).thenReturn("hard limit")
+        `when`(rh.gs(info.nightscout.plugins.constraints.R.string.hardlimit)).thenReturn("hard limit")
         `when`(rh.gs(info.nightscout.core.utils.R.string.key_child)).thenReturn("child")
-        `when`(rh.gs(info.nightscout.plugins.R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s")
+        `when`(rh.gs(info.nightscout.plugins.constraints.R.string.limitingcarbs)).thenReturn("Limiting carbs to %d g because of %s")
         `when`(rh.gs(info.nightscout.plugins.aps.R.string.limiting_iob)).thenReturn("Limiting IOB to %.1f U because of %s")
         `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         `when`(rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
-        `when`(rh.gs(info.nightscout.plugins.R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
+        `when`(rh.gs(info.nightscout.plugins.constraints.R.string.smbnotallowedinopenloopmode)).thenReturn("SMB not allowed in open loop mode")
         `when`(rh.gs(info.nightscout.core.ui.R.string.pumplimit)).thenReturn("pump limit")
-        `when`(rh.gs(info.nightscout.plugins.R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
+        `when`(rh.gs(info.nightscout.plugins.constraints.R.string.smbalwaysdisabled)).thenReturn("SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
         `when`(rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
         `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbolus)).thenReturn("Limiting bolus to %1\$.1f U because of %2\$s")
         `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(context.getString(info.nightscout.pump.combo.R.string.combo_pump_unsupported_operation)).thenReturn("Requested operation not supported by pump")
-        `when`(rh.gs(info.nightscout.plugins.R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
+        `when`(rh.gs(info.nightscout.plugins.constraints.R.string.objectivenotstarted)).thenReturn("Objective %1\$d not started")
 
         // RS constructor
         `when`(sp.getString(R.string.key_danars_name, "")).thenReturn("")
@@ -242,7 +242,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 hardLimits,
                 ConfigImpl(fileListProvider),
                 iobCobCalculator,
-                dateUtil
+                dateUtil,
+                uiInteraction
             )
         val constraintsPluginsList = ArrayList<PluginBase>()
         constraintsPluginsList.add(safetyPlugin)

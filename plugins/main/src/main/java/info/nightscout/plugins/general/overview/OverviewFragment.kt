@@ -210,7 +210,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             overviewData.rangeToDisplay = if (overviewData.rangeToDisplay > 24) 6 else overviewData.rangeToDisplay
             sp.putInt(info.nightscout.core.utils.R.string.key_rangetodisplay, overviewData.rangeToDisplay)
             rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.utils.R.string.key_rangetodisplay)))
-            sp.putBoolean(R.string.key_objectiveusescale, true)
+            sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusescale, true)
             false
         }
         prepareGraphsIfNeeded(overviewMenus.setting.size)
@@ -274,7 +274,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                            overviewData.rangeToDisplay = it.hours
                            sp.putInt(info.nightscout.core.utils.R.string.key_rangetodisplay, it.hours)
                            rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.utils.R.string.key_rangetodisplay)))
-                           sp.putBoolean(R.string.key_objectiveusescale, true)
+                           sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusescale, true)
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventBucketedDataCreated::class.java)
@@ -660,7 +660,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
                     (loop as PluginBase).isEnabled() && loop.isSuspended                        -> {
                         binding.infoLayout.apsMode.setImageResource(info.nightscout.core.ui.R.drawable.ic_loop_paused)
-                        apsModeSetA11yLabel(R.string.suspendloop_label)
+                        apsModeSetA11yLabel(info.nightscout.core.ui.R.string.suspendloop_label)
                         binding.infoLayout.apsModeText.text = dateUtil.age(loop.minutesToEndOfSuspend() * 60000L, true, rh)
                         binding.infoLayout.apsModeText.visibility = View.VISIBLE
                     }
