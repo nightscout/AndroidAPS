@@ -127,18 +127,10 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CILJ</string>
     <string name="basal_short">BAZAL</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Dovršeno, bravo!</string>
-    <string name="not_completed_yet">Nije još dovršeno</string>
-    <string name="time_elapsed">Prošlo vrijeme</string>
-    <string name="description_objectives">Program učenja</string>
-    <string name="objectives_next_button">Sljedeći</string>
     <!-- Actions -->
     <string name="description_actions">Nekoliko izbora za brzi pristup uobičajenim funkcijama</string>
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Inzulin</string>
-    <!-- Safety -->
-    <string name="treatmentssafety_title">Sigurnosne postavke medikacije</string>
     <!-- Overview -->
     <string name="a11y_insulin_label">inzulin</string>
     <string name="a11y_only_on_watch">samo na satu</string>
@@ -167,7 +159,6 @@
     <string name="description_pump_virtual">Integracija pumpe za pumpe koje još nemaju upravljački program (otvorena petlja)</string>
     <string name="virtual_pump_label">VIRTUALNA PUMPA</string>
     <string name="virtualpump_settings">Postavke virtualne pumpe</string>
-    <string name="virtualpump_uploadstatus_title">Prijenos statusa u NS</string>
     <!-- Source -->
     <string name="description_source_ns_client">Preuzima podatke o GUK-u s Nightscout-a</string>
     <string name="description_source_xdrip">Preuzima podatke o GUK-a s xDrip+.</string>
