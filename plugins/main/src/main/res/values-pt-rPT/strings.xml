@@ -158,22 +158,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">ALV</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Terminado, parabéns!</string>
-    <string name="not_completed_yet">Não concluído ainda</string>
-    <string name="time_elapsed">Tempo decorrido</string>
-    <string name="maxiobset">IA máxima definida corretamente</string>
-    <string name="hasbgdata">Glicose disponível da fonte seleccionada</string>
-    <string name="loopenabled">Loop activado</string>
-    <string name="apsselected">APS seleccionado</string>
-    <string name="closedmodeenabled">Modo fechado ativado</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Programa de aprendizagem</string>
-    <string name="doyouwantresetstart">Deseja reiniciar o objectivo? Pode perder seu progresso.</string>
-    <string name="objectives_next_button">Seguinte</string>
-    <string name="objectives_previous_button">Anterior</string>
-    <string name="objectives_button_unfinish">Limpar terminado</string>
-    <string name="objectives_button_unstart">Limpar iniciado</string>
     <!-- Actions -->
     <string name="actions">Acções</string>
     <string name="description_actions">Alguns botões para aceder rapidamente a funções comuns</string>
@@ -190,18 +174,6 @@
     <string name="pb_label">Bateria da Bomba</string>
     <string name="cannula">Cânula</string>
     <string name="ebstopsloop">O uso do Bólus Prolongado irá parar o modo Loop Fechado durante o tempo do bólus prolongado. Quer realmente isso?</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">A limitar bólus prolongado para %1$.1f U porque %2$s</string>
-    <string name="limitingcarbs">A limitar hidratos para %1$d g porque %2$s</string>
-    <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
-    <string name="closedmodedisabledinpreferences">Loop fechado desativado nas preferências</string>
-    <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desativado.</string>
-    <string name="closed_loop_disabled_with_eb">Loop Fechado desativado por causa da execução do Bólus Prolongado</string>
-    <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicose activa não suportar filtro avançado</string>
-    <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
-    <string name="maxvalueinpreferences">valor máx nas preferências</string>
-    <string name="hardlimit">limite rígido</string>
-    <string name="treatmentssafety_title">Segurança de Tratamentos</string>
     <!-- Overview -->
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
     <string name="statuslights_iage_warning">Limite aviso idade insulina [h]</string>
@@ -326,7 +298,6 @@
     <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
     <string name="virtual_pump_label">BOMBA VIRTUAL</string>
     <string name="virtualpump_settings">Definições da bomba virtual</string>
-    <string name="virtualpump_uploadstatus_title">Enviar estado para NS</string>
     <!-- Source -->
     <string name="ns_client_bg">Glicose ClienteNS</string>
     <string name="ns_client_bg_short">Glicemia do NS</string>
