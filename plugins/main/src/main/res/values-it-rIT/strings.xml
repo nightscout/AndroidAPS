@@ -171,22 +171,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Completato, ben fatto!</string>
-    <string name="not_completed_yet">Non ancora completato</string>
-    <string name="time_elapsed">Tempo trascorso</string>
-    <string name="maxiobset">Max IOB impostata correttamente</string>
-    <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
-    <string name="loopenabled">Loop abilitato</string>
-    <string name="apsselected">APS selezionato</string>
-    <string name="closedmodeenabled">Modalità chiusa abilitata</string>
-    <string name="objectives_shortname">OBT</string>
-    <string name="description_objectives">Programma di apprendimento</string>
-    <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
-    <string name="objectives_next_button">Avanti</string>
-    <string name="objectives_previous_button">Indietro</string>
-    <string name="objectives_button_unfinish">Cancella completamento</string>
-    <string name="objectives_button_unstart">Cancella avvio</string>
     <!-- Actions -->
     <string name="actions">Azioni</string>
     <string name="description_actions">Alcuni tasti per accedere rapidamente alle funzioni comuni</string>
@@ -206,18 +190,6 @@
     <string name="statuslights_cannula_age">Età cannula</string>
     <string name="statuslights_patch_pump_age">età micro a patch</string>
     <string name="patch_pump">Micro a patch</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Limitazione bolo esteso a %1$.1f U a causa di: %2$s</string>
-    <string name="limitingcarbs">Limitazione carboidrati a %1$d g a causa di: %2$s</string>
-    <string name="pumpisnottempbasalcapable">Micro non in grado di impostare la basale temporanea</string>
-    <string name="closedmodedisabledinpreferences">Modalità loop chiuso disabilitata nelle preferenze</string>
-    <string name="closed_loop_disabled_on_dev_branch">Versione sviluppatore in esecuzione. Loop chiuso disabilitato.</string>
-    <string name="closed_loop_disabled_with_eb">Loop chiuso disabilitato a causa dell\'esecuzione di un bolo esteso</string>
-    <string name="smbalwaysdisabled">Le funzioni \"SMB sempre\" e \"SMB dopo i CHO\" sono disabilitate perché l\'attuale sorgente delle glicemie non supporta il filtraggio avanzato</string>
-    <string name="smbnotallowedinopenloopmode">SMB non consentito in modalità loop aperto</string>
-    <string name="maxvalueinpreferences">valore max nelle preferenze</string>
-    <string name="hardlimit">limite fisso</string>
-    <string name="treatmentssafety_title">Sicurezza trattamenti</string>
     <!-- Overview -->
     <string name="show_statuslights">Mostra indicatori di stato sulla home</string>
     <string name="statuslights_cage_warning">Età cannula: soglia di avviso [h]</string>
@@ -352,7 +324,6 @@
     <string name="description_pump_virtual">Per microinfusori che non hanno ancora alcun driver (Loop aperto)</string>
     <string name="virtual_pump_label">MICRO VIRTUALE</string>
     <string name="virtualpump_settings">Impostazioni micro virtuale</string>
-    <string name="virtualpump_uploadstatus_title">Carica stato in NS</string>
     <!-- Source -->
     <string name="ns_client_bg">BG NSClient</string>
     <string name="ns_client_bg_short">BG NS</string>
