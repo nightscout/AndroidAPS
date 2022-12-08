@@ -12,7 +12,7 @@ buildscript {
         dagger_version = '2.44.2'
         coroutines_version = '1.6.4'
         activity_version = '1.6.1'
-        fragmentktx_version = '1.5.4'
+        fragmentktx_version = '1.5.5'
         ormLite_version = '4.46'
         gson_version = '2.10'
         nav_version = '2.5.3'
