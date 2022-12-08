@@ -168,21 +168,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">ZIEL</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Abgeschlossen, gut gemacht!</string>
-    <string name="time_elapsed">Verstrichene Zeit</string>
-    <string name="maxiobset">Maximales IOB richtig gesetzt</string>
-    <string name="hasbgdata">BZ verfügbar von gewählter Quelle</string>
-    <string name="loopenabled">Loop aktiviert</string>
-    <string name="apsselected">APS ausgewählt</string>
-    <string name="closedmodeenabled">Closed mode aktiviert</string>
-    <string name="objectives_shortname">ZIEL</string>
-    <string name="description_objectives">Das Programm kennenlernen</string>
-    <string name="doyouwantresetstart">Möchtest Du den Start der Ziele zurücksetzen? Du verlierst Deine Fortschritte.</string>
-    <string name="objectives_next_button">Weiter</string>
-    <string name="objectives_previous_button">Zurück</string>
-    <string name="objectives_button_unfinish">Ziel erneut öffnen</string>
-    <string name="objectives_button_unstart">Ziel neu starten</string>
     <!-- Actions -->
     <string name="actions">Aktionen</string>
     <string name="description_actions">Einige Schaltflächen, um auf häufig verwendete Funktionen zugreifen zu können.</string>
@@ -202,18 +187,6 @@
     <string name="statuslights_cannula_age">Kanülenalter</string>
     <string name="statuslights_patch_pump_age">Alter Patchpumpe</string>
     <string name="patch_pump">Patch-Pumpe</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Begrenze verzögerten Bolus auf %1$.1f IE wegen %2$s</string>
-    <string name="limitingcarbs">Begrenze Kohlenhydrate auf %1$d g wegen %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pumpe verfügt nicht über temporäre Basalraten</string>
-    <string name="closedmodedisabledinpreferences">Closed-Loop-Modus in den Einstellungen deaktiviert</string>
-    <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version, Closed Loop ist nicht verfügbar.</string>
-    <string name="closed_loop_disabled_with_eb">Closed Loop wegen Verzögerungsbolus unterbrochen</string>
-    <string name="smbalwaysdisabled">SMB wird immer und nach Kohlenhydraten deaktiviert, weil die aktive BZ-Quelle keine geeignete Filterung der Werte unterstützt.</string>
-    <string name="smbnotallowedinopenloopmode">SMB sind im Open Loop Modus nicht erlaubt</string>
-    <string name="maxvalueinpreferences">Max. Wert in den Einstellungen</string>
-    <string name="hardlimit">festem Grenzwert</string>
-    <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
     <!-- Overview -->
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
     <string name="statuslights_iage_warning">Warnschwelle Insulinalter [h]</string>
@@ -347,7 +320,6 @@
     <string name="description_pump_virtual">Pumpenintegration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
     <string name="virtual_pump_label">VIRTUELLE PUMPE</string>
     <string name="virtualpump_settings">Einstellungen der virtuellen Pumpe</string>
-    <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
     <!-- Source -->
     <string name="ns_client_bg">Nightscout-Client BZ</string>
     <string name="ns_client_bg_short">NS BZ</string>
