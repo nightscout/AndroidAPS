@@ -26,11 +26,6 @@
     <string name="errors">Hibák</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BÁZ</string>
-    <!-- Objectives -->
-    <string name="time_elapsed">Eltelt idő</string>
-    <string name="apsselected">APS kiválasztva</string>
-    <string name="objectives_next_button">Tovább</string>
-    <string name="objectives_previous_button">Vissza</string>
     <!-- Actions -->
     <string name="actions">Műveletek</string>
     <string name="tools">Eszközök</string>
@@ -38,7 +33,6 @@
     <string name="age_label">kor:</string>
     <string name="insulin_label">Inzulin</string>
     <string name="cannula">Kanül</string>
-    <!-- Safety -->
     <!-- Overview -->
     <string name="a11y_graph">grafikon</string>
     <string name="a11y_insulin_label">inzulin</string>
