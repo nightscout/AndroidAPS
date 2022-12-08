@@ -3,20 +3,20 @@ package info.nightscout.androidaps.plugins.pump.insight.utils
 import info.nightscout.androidaps.TestBase
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
-import org.junit.Test
+import org.junit.jupiter.api.Test
 
 class ByteBufTest : TestBase() {
 
 
     @Test
-    fun `test length on creation`() {
+    fun testLengthOnCreation() {
         val sut = ByteBuf(15)
         assertEquals(0, sut.filledSize) // not filled yet
         assertEquals(0, sut.bytes.size)
     }
 
     @Test
-    fun `test put and get bytes`() {
+    fun testPutGetBytes() {
         val sut = ByteBuf(15)
         val array1 = byteArrayOf(10, 20, -10, 15, -128, 127, 27)
         sut.putBytes(array1)
@@ -37,7 +37,7 @@ class ByteBufTest : TestBase() {
     }
 
     @Test
-    fun `test put read byteLE`() {
+    fun testPutReadByteLE() {
         val sut = ByteBuf(15)
         val array1 = byteArrayOf(10, 20, -10, 15, -128, 127, 27)
         sut.putBytesLE(array1)
@@ -47,7 +47,7 @@ class ByteBufTest : TestBase() {
     }
 
     @Test
-    fun `test put read UInt`() {
+    fun testPutReadUInt() {
         val sut = ByteBuf(15)
         sut.putUInt8(240)
         sut.putUInt8(-227)
@@ -66,8 +66,8 @@ class ByteBufTest : TestBase() {
     }
 
 
-    @Test
-    fun `test put read Decimal`() {
+    @Test @Throws(Exception::class)
+    fun testPutReadDecimal() {
         val sut = ByteBuf(15)
         sut.putUInt16Decimal(245.9275)
         sut.putUInt16Decimal(-115.249)
@@ -80,7 +80,7 @@ class ByteBufTest : TestBase() {
     }
 
     @Test
-    fun `test put read short`() {
+    fun testPutReadShort() {
         val sut = ByteBuf(15)
         sut.putShort(240)
         sut.putShort(-32207)
@@ -91,7 +91,7 @@ class ByteBufTest : TestBase() {
 
 
     @Test
-    fun `test put read UInt32LE`() {
+    fun testPutReadUInt32LE() {
         val sut = ByteBuf(15)
         sut.putUInt32LE(164532015)
         assertTrue(sut.bytes.contentEquals(byteArrayOf(47, -113, -50, 9)))
@@ -100,9 +100,9 @@ class ByteBufTest : TestBase() {
 
 
     @Test
-    fun `test put read UTF16 + ASCII`() {
+    fun testPutReadUTF16ASCII() {
         val sut = ByteBuf(68)
-        val txt : String = "*Gs :&{]8/"
+        val txt = "*Gs :&{]8/"
         sut.putBytes(byteArrayOf(42, 71, 115, 32, 58, 38, 123, 93, 56, 47, 0))
         assertEquals(txt, sut.readASCII(txt.length))
         sut.putUTF16(txt, txt.length)
