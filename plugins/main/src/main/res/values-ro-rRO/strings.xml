@@ -159,22 +159,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">BZL</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Finalizat cu succes!</string>
-    <string name="not_completed_yet">Încă incomplet</string>
-    <string name="time_elapsed">Timp scurs</string>
-    <string name="maxiobset">IOB maxim configurat corect</string>
-    <string name="hasbgdata">Glicemie disponibilă din sursa selectată</string>
-    <string name="loopenabled">Buclă activată</string>
-    <string name="apsselected">APS selectat</string>
-    <string name="closedmodeenabled">Mod buclă închisă activat</string>
-    <string name="objectives_shortname">OBI</string>
-    <string name="description_objectives">Program de învăţare</string>
-    <string name="doyouwantresetstart">Doriți să reîncepeți obiectivul? Vă puteți pierde progresul.</string>
-    <string name="objectives_next_button">Următor</string>
-    <string name="objectives_previous_button">Anterior</string>
-    <string name="objectives_button_unfinish">Șterge starea \"Terminat\"</string>
-    <string name="objectives_button_unstart">Șterge starea \"Început\"</string>
     <!-- Actions -->
     <string name="actions">Acțiuni</string>
     <string name="description_actions">Butoane pentru accesarea celor mai comune facilităţi</string>
@@ -192,18 +176,6 @@
     <string name="cannula">Canula</string>
     <string name="ebstopsloop">Utilizarea unui bolus extins va opri modul buclă închisă pe timpul livrării bolusului extins. Sigur doriți acest lucru?</string>
     <string name="statuslights_cannula_age">vechime canulă</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Se limitează bolusul extins la %1$.1f U datorită %2$s</string>
-    <string name="limitingcarbs">Se limitează carbohidrații %1$d g datorită %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pompa nu suportă bazale temporare</string>
-    <string name="closedmodedisabledinpreferences">Modul buclă închisă dezactivat în preferințe</string>
-    <string name="closed_loop_disabled_on_dev_branch">Se folosește versiunea dev. Bucla închisă este dezactivată.</string>
-    <string name="closed_loop_disabled_with_eb">Bucla închisă dezactivată din cauza livrării bolusului extins</string>
-    <string name="smbalwaysdisabled">SMB dezactivat întotdeauna și după carbohidrați, deoarece sursa glicemiei nu suportă filtrare avansată</string>
-    <string name="smbnotallowedinopenloopmode">SMB nu este permis în mod buclă deschisă</string>
-    <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
-    <string name="hardlimit">limită fizică</string>
-    <string name="treatmentssafety_title">Setări siguranță tratament</string>
     <!-- Overview -->
     <string name="show_statuslights">Afișați indicatorii luminoși ai pompei pe ecranul de start</string>
     <string name="statuslights_iage_warning">Prag de avertizare vechime insulină [h]</string>
@@ -328,7 +300,6 @@
     <string name="description_pump_virtual">Integrare cu pompele ce nu au încă un driver software disponibil (Buclă Deschisă)</string>
     <string name="virtual_pump_label">POMPĂ VIRTUALĂ</string>
     <string name="virtualpump_settings">Setări pompă virtuală</string>
-    <string name="virtualpump_uploadstatus_title">Trimitere status către NS</string>
     <!-- Source -->
     <string name="ns_client_bg">Glicemie NSClient</string>
     <string name="ns_client_bg_short">NS GL</string>
