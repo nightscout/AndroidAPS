@@ -20,4 +20,5 @@
     <string name="bg_too_close">Datos de glucosa demasiado cercanos:\n%1$s\n%2$s</string>
     <string name="a11y_bg_quality_recalculated">recalculado</string>
     <string name="a11y_bg_quality_doubles">entradas dobles</string>
+    <string name="a11y_bg_quality_flat">Datos planos. Considerados erróneos</string>
 </resources>
