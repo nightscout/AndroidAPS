@@ -179,7 +179,6 @@ open class VirtualPumpPlugin @Inject constructor(
         val result = PumpEnactResult(injector)
             .success(true)
             .bolusDelivered(detailedBolusInfo.insulin)
-            .carbsDelivered(detailedBolusInfo.carbs)
             .enacted(detailedBolusInfo.insulin > 0 || detailedBolusInfo.carbs > 0)
             .comment(rh.gs(info.nightscout.core.ui.R.string.virtualpump_resultok))
         val bolusingEvent = EventOverviewBolusProgress

@@ -6,7 +6,6 @@ import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.core.extensions.target
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
@@ -14,8 +13,10 @@ import info.nightscout.interfaces.aps.APS
 import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.DetermineBasalAdapter
 import info.nightscout.interfaces.aps.SMBDefaults
+import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
@@ -55,7 +56,8 @@ class OpenAPSSMBPlugin @Inject constructor(
     private val sp: SP,
     private val dateUtil: DateUtil,
     private val repository: AppRepository,
-    private val glucoseStatusProvider: GlucoseStatusProvider
+    private val glucoseStatusProvider: GlucoseStatusProvider,
+    private val bgQualityCheck: BgQualityCheck
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.APS)
@@ -191,6 +193,7 @@ class OpenAPSSMBPlugin @Inject constructor(
             constraintChecker.isUAMEnabled(it)
             inputConstraints.copyReasons(it)
         }
+        val flatBGsDetected = bgQualityCheck.state == BgQualityCheck.State.FLAT
         profiler.log(LTag.APS, "detectSensitivityAndCarbAbsorption()", startPart)
         profiler.log(LTag.APS, "SMB data gathering", start)
         start = System.currentTimeMillis()
@@ -207,7 +210,7 @@ class OpenAPSSMBPlugin @Inject constructor(
                 smbAllowed.value(),
                 uam.value(),
                 advancedFiltering.value(),
-                activePlugin.activeBgSource.javaClass.simpleName == "DexcomPlugin"
+                flatBGsDetected
             )
             val now = System.currentTimeMillis()
             val determineBasalResultSMB = determineBasalAdapterSMBJS.invoke()

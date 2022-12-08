@@ -73,9 +73,7 @@ class RandomBgPlugin @Inject constructor(
 
     private val disposable = CompositeDisposable()
 
-    override fun advancedFilteringSupported(): Boolean {
-        return true
-    }
+    override fun advancedFilteringSupported(): Boolean = true
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
         glucoseValue.sourceSensor == GlucoseValue.SourceSensor.RANDOM && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)

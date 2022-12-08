@@ -3,11 +3,12 @@ package info.nightscout.plugins.aps.openAPSSMBDynamicISF
 import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.DetermineBasalAdapter
+import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -42,7 +43,8 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     dateUtil: DateUtil,
     repository: AppRepository,
     glucoseStatusProvider: GlucoseStatusProvider,
-    private val config: Config
+    private val config: Config,
+    private val bgQualityCheck: BgQualityCheck
 ) : OpenAPSSMBPlugin(
     injector,
     aapsLogger,
@@ -58,7 +60,8 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     sp,
     dateUtil,
     repository,
-    glucoseStatusProvider
+    glucoseStatusProvider,
+    bgQualityCheck
 ) {
 
     init {

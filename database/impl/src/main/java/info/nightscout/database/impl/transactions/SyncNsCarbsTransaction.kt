@@ -5,7 +5,8 @@ import info.nightscout.database.entities.Carbs
 /**
  * Sync the carbs from NS
  */
-class SyncNsCarbsTransaction(private val carbs: List<Carbs>) : Transaction<SyncNsCarbsTransaction.TransactionResult>() {
+class SyncNsCarbsTransaction(private val carbs: List<Carbs>, private val nsClientMode: Boolean) :
+    Transaction<SyncNsCarbsTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
         val result = TransactionResult()
@@ -24,7 +25,7 @@ class SyncNsCarbsTransaction(private val carbs: List<Carbs>) : Transaction<SyncN
                     result.invalidated.add(current)
                 }
                 // and change duration
-                if (current.duration != carb.duration) {
+                if (current.duration != carb.duration && nsClientMode) {
                     current.amount = carb.amount
                     current.duration = carb.duration
                     database.carbsDao.updateExistingEntry(current)

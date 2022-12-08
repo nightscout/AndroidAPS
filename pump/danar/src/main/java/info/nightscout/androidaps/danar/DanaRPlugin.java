@@ -172,8 +172,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
                 connectionOK = sExecutionService.bolus(detailedBolusInfo.insulin, (int) detailedBolusInfo.carbs, detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp, t);
             PumpEnactResult result = new PumpEnactResult(getInjector());
             result.success(connectionOK && Math.abs(detailedBolusInfo.insulin - t.getInsulin()) < pumpDescription.getBolusStep())
-                    .bolusDelivered(t.getInsulin())
-                    .carbsDelivered(detailedBolusInfo.carbs);
+                    .bolusDelivered(t.getInsulin());
             if (!result.getSuccess())
                 result.comment(rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.getInsulin(), danaPump.getBolusStartErrorCode()));
             else
@@ -199,7 +198,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
             return result;
         } else {
             PumpEnactResult result = new PumpEnactResult(getInjector());
-            result.success(false).bolusDelivered(0d).carbsDelivered(0d).comment(info.nightscout.core.ui.R.string.invalid_input);
+            result.success(false).bolusDelivered(0d).comment(info.nightscout.core.ui.R.string.invalid_input);
             aapsLogger.error("deliverTreatment: Invalid input");
             return result;
         }

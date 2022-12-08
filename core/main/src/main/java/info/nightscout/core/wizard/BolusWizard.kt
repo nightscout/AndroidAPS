@@ -6,7 +6,6 @@ import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.highValueToUnitsToString
 import info.nightscout.core.extensions.lowValueToUnitsToString
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.extensions.formatColor
@@ -24,6 +23,7 @@ import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatus
+import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin

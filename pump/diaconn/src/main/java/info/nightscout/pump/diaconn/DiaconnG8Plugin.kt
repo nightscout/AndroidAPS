@@ -278,7 +278,6 @@ class DiaconnG8Plugin @Inject constructor(
             val result = PumpEnactResult(injector)
             result.success = connectionOK
             result.bolusDelivered = t.insulin
-            result.carbsDelivered = detailedBolusInfo.carbs
 
             if (result.success) result.enacted = true
             if (!result.success) {
@@ -290,7 +289,6 @@ class DiaconnG8Plugin @Inject constructor(
             val result = PumpEnactResult(injector)
             result.success = false
             result.bolusDelivered = 0.0
-            result.carbsDelivered = 0.0
             result.comment = rh.gs(info.nightscout.core.ui.R.string.invalid_input)
             aapsLogger.error("deliverTreatment: Invalid input")
             result

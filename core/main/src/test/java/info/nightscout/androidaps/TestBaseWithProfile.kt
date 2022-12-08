@@ -10,7 +10,6 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -38,18 +37,7 @@ open class TestBaseWithProfile : TestBase() {
 
     val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
-    val profileInjector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is ProfileStoreObject) {
-                it.aapsLogger = aapsLogger
-                it.activePlugin = activePluginProvider
-                it.config = config
-                it.rh = rh
-                it.rxBus = rxBus
-                it.hardLimits = hardLimits
-            }
-        }
-    }
+    val profileInjector = HasAndroidInjector { AndroidInjector { } }
 
     private lateinit var invalidProfileJSON: String
     private lateinit var validProfileJSON: String
@@ -69,33 +57,5 @@ open class TestBaseWithProfile : TestBase() {
         testPumpPlugin = TestPumpPlugin(profileInjector)
         `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         hardLimits = HardLimitsMock(sp, rh)
-    }
-
-    fun getValidProfileStore(): ProfileStore {
-        val json = JSONObject()
-        val store = JSONObject()
-        store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
-        json.put("defaultProfile", TESTPROFILENAME)
-        json.put("store", store)
-        return ProfileStoreObject(profileInjector, json, dateUtil)
-    }
-
-    fun getInvalidProfileStore1(): ProfileStore {
-        val json = JSONObject()
-        val store = JSONObject()
-        store.put(TESTPROFILENAME, JSONObject(invalidProfileJSON))
-        json.put("defaultProfile", TESTPROFILENAME)
-        json.put("store", store)
-        return ProfileStoreObject(profileInjector, json, dateUtil)
-    }
-
-    fun getInvalidProfileStore2(): ProfileStore {
-        val json = JSONObject()
-        val store = JSONObject()
-        store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
-        store.put("invalid", JSONObject(invalidProfileJSON))
-        json.put("defaultProfile", TESTPROFILENAME + "invalid")
-        json.put("store", store)
-        return ProfileStoreObject(profileInjector, json, dateUtil)
     }
 }

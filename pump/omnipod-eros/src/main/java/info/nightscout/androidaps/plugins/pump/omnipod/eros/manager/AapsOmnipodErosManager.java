@@ -446,7 +446,7 @@ public class AapsOmnipodErosManager {
 
         sp.remove(OmnipodErosStorageKeys.Preferences.ACTIVE_BOLUS);
 
-        return new PumpEnactResult(injector).success(true).enacted(true).carbsDelivered(detailedBolusInfo.carbs).bolusDelivered(detailedBolusInfo.insulin);
+        return new PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin);
     }
 
     public PumpEnactResult cancelBolus() {

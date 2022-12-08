@@ -17,7 +17,6 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -29,7 +28,6 @@ class QueueThreadTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var sp: SP
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var androidPermission: AndroidPermission

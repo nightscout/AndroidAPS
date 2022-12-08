@@ -162,6 +162,8 @@
     <string name="dia">DIA</string>
     <string name="ic_short">I:C</string>
     <string name="isf_short">ISF</string>
+    <string name="canceling_tbr_failed">Rušení dočasného bazálu selhalo</string>
+    <string name="canceling_eb_failed">Zastavení prodlouženého bolusu selhalo</string>
     <!--    Protection-->
     <string name="wrongpassword">Chybné heslo</string>
     <string name="wrongpin">Nesprávný PIN</string>

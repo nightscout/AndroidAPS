@@ -71,6 +71,7 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_fetching_tdd_history_cmddesc">Henter TDD historikk</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Oppdaterer dato/klokkeslett i pumpen</string>
     <string name="combov2_updating_pump_status_cmddesc">Oppdaterer pumpestatus</string>
+    <string name="combov2_pairing_pin_failure">PIN-koden fungerte ikke. Sjekk om det var en skrivefeil. Hvis dette fortsetter å skje, avbryt og prøv å pare enhet på nytt.</string>
     <string name="combov2_discovery_duration">Søkevarighet (i sekunder)</string>
     <string name="combov2_verbose_logging">Aktiver detaljert Combo logging</string>
     <string name="combov2_getting_basal_profile">Henter basalprofil; %1$d registrering(er) lest</string>
@@ -109,4 +110,12 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_short_status_battery_state_low">lavt</string>
     <string name="combov2_short_status_battery_state_full">full</string>
     <string name="combov2_short_status_battery_state">Batt: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Autodetekter og automatisk registrer bytte av insulireservoar</string>
+    <string name="combov2_automatic_battery_entry">Autodetekter og automatisk registrer batteribytte</string>
+    <string name="combov2_note_reservoir_change">Bytte av insulinreservoar ble automatisk registrert av Combo driveren</string>
+    <string name="combov2_note_battery_change">Bytte av batteri ble automatisk registrert av Combo driveren</string>
+    <string name="combov2_timezone_changed">Tidssone endret</string>
+    <string name="combov2_datetime_changed">Dato og/eller klokkeslett endret</string>
+    <string name="combov2_dst_started">Sommertid (DST) er startet</string>
+    <string name="combov2_dst_ended">Sommertid (DST) er avsluttet</string>
 </resources>

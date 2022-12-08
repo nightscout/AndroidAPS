@@ -59,7 +59,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
     private var microBolusAllowed = false
     private var smbAlwaysAllowed = false
     private var currentTime: Long = 0
-    private var saveCgmSource = false
+    private var flatBGsDetected = false
 
     override var currentTempParam: String? = null
     override var iobDataParam: String? = null
@@ -81,7 +81,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         aapsLogger.debug(LTag.APS, "MicroBolusAllowed:  $microBolusAllowed")
         aapsLogger.debug(LTag.APS, "SMBAlwaysAllowed:  $smbAlwaysAllowed")
         aapsLogger.debug(LTag.APS, "CurrentTime: $currentTime")
-        aapsLogger.debug(LTag.APS, "isSaveCgmSource: $saveCgmSource")
+        aapsLogger.debug(LTag.APS, "flatBGsDetected: $flatBGsDetected")
         var determineBasalResultSMB: DetermineBasalResultSMB? = null
         val rhino = Context.enter()
         val scope: Scriptable = rhino.initStandardObjects()
@@ -121,7 +121,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
                     java.lang.Boolean.valueOf(microBolusAllowed),
                     makeParam(null, rhino, scope),  // reservoir data as undefined
                     java.lang.Long.valueOf(currentTime),
-                    java.lang.Boolean.valueOf(saveCgmSource)
+                    java.lang.Boolean.valueOf(flatBGsDetected)
                 )
                 val jsResult = determineBasalObj.call(rhino, scope, scope, params) as NativeObject
                 scriptDebug = LoggerCallback.scriptDebug
@@ -176,7 +176,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         microBolusAllowed: Boolean,
         uamAllowed: Boolean,
         advancedFiltering: Boolean,
-        isSaveCgmSource: Boolean
+        flatBGsDetected: Boolean
     ) {
         val pump = activePlugin.activePump
         val pumpBolusStep = pump.pumpDescription.bolusStep
@@ -312,7 +312,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.microBolusAllowed = microBolusAllowed
         smbAlwaysAllowed = advancedFiltering
         currentTime = now
-        saveCgmSource = isSaveCgmSource
+        this.flatBGsDetected = flatBGsDetected
     }
 
     private fun makeParam(jsonObject: JSONObject?, rhino: Context, scope: Scriptable): Any {

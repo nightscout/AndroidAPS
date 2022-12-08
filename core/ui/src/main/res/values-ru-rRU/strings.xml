@@ -14,6 +14,7 @@
     <string name="pump_base_basal_rate">%1$.2f ед/ч</string>
     <string name="pump_not_initialized_profile_not_set">помпа не инициализирована, профиль не установлен</string>
     <string name="failed_update_basal_profile">не удалось обновить базальный профиль</string>
+    <string name="bolus_delivered_successfully">Болюс %1$.2f ед. подан успешно</string>
     <string name="no_valid_basal_rate">На помпе не найдены валидные записи о базалe</string>
     <string name="limiting_iob">Ограничение активного инсулина IOB до %1$.1f ед. из-за %2$s</string>
     <string name="loop_disabled">ЗЦ ОТМЕНЕН ОГРАНИЧЕНИЯМИ</string>
@@ -46,6 +47,7 @@
     <string name="success">Успешно</string>
     <string name="advancedsettings_title">Дополнительные настройки</string>
     <string name="extendedbolusdeliveryerror">Ошибка подачи пролонгированного болюса</string>
+    <string name="aps_mode_title">Режим APS</string>
     <string name="extended_bolus">Пролонгированный болюс</string>
     <string name="paused">на паузе</string>
     <string name="tdd_total">Суммарный суточный инсулин TDD</string>
@@ -104,6 +106,7 @@
     <string name="loading">Загрузка…</string>
     <string name="notes_label">Заметки</string>
     <string name="remove_button">Удалить</string>
+    <string name="add_new">Добавить новый</string>
     <string name="addnew_above">Добавить строку сверху</string>
     <string name="wrong_pump_data">Данные поступают с другой помпы. Измените драйвер помпы, чтобы сбросить ее состояние.</string>
     <string name="bg_label">ГК</string>
@@ -241,6 +244,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">Необходимо дополнительно %1$d г углеводов в течение %2$d минут</string>
     <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">Накопительная суточная доза TDD</string>
     <string name="expweight">экспоненциально взвешенные TDD</string>
     <string name="basalrate">базал</string>
     <string name="bolus">Болюс</string>

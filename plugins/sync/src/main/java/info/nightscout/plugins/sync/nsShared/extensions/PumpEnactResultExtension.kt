@@ -14,6 +14,5 @@ fun PumpEnactResult.log(): String {
         " IsPercent: " + isPercent +
         " IsTempCancel: " + isTempCancel +
         " bolusDelivered: " + bolusDelivered +
-        " carbsDelivered: " + carbsDelivered +
         " Queued: " + queued
 }

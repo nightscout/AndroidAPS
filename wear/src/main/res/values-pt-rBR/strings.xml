@@ -172,6 +172,7 @@
     <string name="decrement">diminuição</string>
     <string name="first_char_high">H</string>
     <string name="first_char_low">L</string>
+    <string name="abbreviation_average">média</string>
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>

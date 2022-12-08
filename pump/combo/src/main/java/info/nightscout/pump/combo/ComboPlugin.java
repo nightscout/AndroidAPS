@@ -629,8 +629,7 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
             return new PumpEnactResult(getInjector())
                     .success(true)
                     .enacted(lastPumpBolus.amount > 0)
-                    .bolusDelivered(lastPumpBolus.amount)
-                    .carbsDelivered(detailedBolusInfo.carbs);
+                    .bolusDelivered(lastPumpBolus.amount);
         } finally {
             pump.activity = null;
             rxBus.send(new EventComboPumpUpdateGUI());
