@@ -158,22 +158,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">OBJ</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Enllestit, ben fet!</string>
-    <string name="not_completed_yet">No finalitzat encara</string>
-    <string name="time_elapsed">Temps transcorregut</string>
-    <string name="maxiobset">Màx IOB correctament configurada</string>
-    <string name="hasbgdata">Glucèmia disponible des de la font seleccionada</string>
-    <string name="loopenabled">Llaç activat</string>
-    <string name="apsselected">APS seleccionat</string>
-    <string name="closedmodeenabled">Llaç tancat activat</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Programa d\'aprenentatge</string>
-    <string name="doyouwantresetstart">Voleu reiniciar l\'objectiu? Podeu perdre el vostre progrés.</string>
-    <string name="objectives_next_button">Següent</string>
-    <string name="objectives_previous_button">Previ</string>
-    <string name="objectives_button_unfinish">Cancel·lar finalització</string>
-    <string name="objectives_button_unstart">Cancel·lar inici</string>
     <!-- Actions -->
     <string name="actions">Accions</string>
     <string name="description_actions">Alguns botons per accedir ràpid a funcions habituals</string>
@@ -190,18 +174,6 @@
     <string name="pb_label">Pila de la bomba</string>
     <string name="cannula">Cànula</string>
     <string name="ebstopsloop">L\'ús d\'un bolus estès aturarà el mode llaç tancat mentre duri el bolus. Esteu segurs que voleu això?</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Limitant bolus estès a %1$.1f U a causa de %2$s</string>
-    <string name="limitingcarbs">Limitant carbs a %1$d g a causa de %2$s</string>
-    <string name="pumpisnottempbasalcapable">La bomba no té la funcionalitat de basals temporals</string>
-    <string name="closedmodedisabledinpreferences">Mode llaç tancat desactivat a la configuració</string>
-    <string name="closed_loop_disabled_on_dev_branch">Executant versió de desenvolupament. Llaç tancat no disponible.</string>
-    <string name="closed_loop_disabled_with_eb">Llaç tancat desactivat degut a bolus estès actiu</string>
-    <string name="smbalwaysdisabled">Les funcions \"SMB sempre\" i \"SMB després de carbohidrats\" estan desactivades pq la font de glucèmia no fa filtrat avançat</string>
-    <string name="smbnotallowedinopenloopmode">SMB no permès en mode llaç obert</string>
-    <string name="maxvalueinpreferences">valor màxim a la configuració</string>
-    <string name="hardlimit">límit estricte</string>
-    <string name="treatmentssafety_title">Seguretat tractaments</string>
     <!-- Overview -->
     <string name="show_statuslights">Mostrar indicadors d\'estat a la pantalla d\'inici</string>
     <string name="statuslights_iage_warning">Llindar per avís d\'edat de l\'insulina [h]</string>
@@ -321,7 +293,6 @@
     <string name="description_pump_virtual">Integració de bombes d\'insulina per les quals encara no existeix driver/controlador (Llaç obert)</string>
     <string name="virtual_pump_label">BOMBA VIRTUAL</string>
     <string name="virtualpump_settings">Configuració bomba virtual</string>
-    <string name="virtualpump_uploadstatus_title">Enviar estat a NS</string>
     <!-- Source -->
     <string name="ns_client_bg">Glucèmia NSClient</string>
     <string name="ns_client_bg_short">Glucèmia NS</string>
