@@ -158,22 +158,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">Цел</string>
     <string name="basal_short">БАЗА</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Приключихме, Браво!</string>
-    <string name="not_completed_yet">Все още не сме неприключили</string>
-    <string name="time_elapsed">Изминало време</string>
-    <string name="maxiobset">Максимален IOB е зададен правилно</string>
-    <string name="hasbgdata">Има данни за КЗ от избрания източник</string>
-    <string name="loopenabled">APS разрешен</string>
-    <string name="apsselected">Избран APS</string>
-    <string name="closedmodeenabled">APS - Затворен кръг е позволен</string>
-    <string name="objectives_shortname">Цел</string>
-    <string name="description_objectives">Разучаване на програмата</string>
-    <string name="doyouwantresetstart">Искате ли да нулирате прогреса си?</string>
-    <string name="objectives_next_button">Следващ</string>
-    <string name="objectives_previous_button">Предишен</string>
-    <string name="objectives_button_unfinish">Изчисти приключение</string>
-    <string name="objectives_button_unstart">Изчисти стартираните</string>
     <!-- Actions -->
     <string name="actions">Действия</string>
     <string name="description_actions">Бутони за бърз достъп до основни функции</string>
@@ -190,18 +174,6 @@
     <string name="pb_label">Батерия на помпата</string>
     <string name="cannula">Канюла</string>
     <string name="ebstopsloop">Използване на удължен болус ще спре режим затворен цикъл за времето на болуса. Сигурни ли сте?</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Ограничение на удължен болус до %1$.1f Е поради %2$s</string>
-    <string name="limitingcarbs">Ограничаване на въглехидрати до %1$d гр. поради %2$s</string>
-    <string name="pumpisnottempbasalcapable">Помпата не поддържа временен базал</string>
-    <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
-    <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
-    <string name="closed_loop_disabled_with_eb">Затворен цикъл е недостъпен поради стартиран Удължен болус</string>
-    <string name="smbalwaysdisabled">SMB \"винаги включен\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
-    <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим Отворен кръг</string>
-    <string name="maxvalueinpreferences">макс. стойност в настройките</string>
-    <string name="hardlimit">твърд лимит</string>
-    <string name="treatmentssafety_title">Настройки на сигурността</string>
     <!-- Overview -->
     <string name="show_statuslights">Покажи статус светлини на началния екран</string>
     <string name="statuslights_iage_warning">Праг за инсулинова възраст [часа]</string>
@@ -323,7 +295,6 @@
     <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
     <string name="virtual_pump_label">ВИРТУАЛНА ПОМПА</string>
     <string name="virtualpump_settings">Настойки Виртуална Помпа</string>
-    <string name="virtualpump_uploadstatus_title">Качва статуса в NS</string>
     <!-- Source -->
     <string name="ns_client_bg">КЗ от NS</string>
     <string name="ns_client_bg_short">NS КЗ</string>
