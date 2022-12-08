@@ -171,23 +171,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CIEĽ</string>
     <string name="basal_short">BAZ</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Hotovo, gratulujeme!</string>
-    <string name="not_completed_yet">Nedokončené</string>
-    <string name="time_elapsed">Uplynutý čas</string>
-    <string name="maxiobset">Maximálne IOB nastavené správne</string>
-    <string name="hasbgdata">Glykémie dostupné z vybraného zdroja</string>
-    <string name="synchaswritepermission">Služba synchronizácie má oprávnenie k zápisu</string>
-    <string name="loopenabled">Uzavretý okruh povolený</string>
-    <string name="apsselected">APS vybrané</string>
-    <string name="closedmodeenabled">Uzavretý okruh povolený</string>
-    <string name="objectives_shortname">CIEĽ</string>
-    <string name="description_objectives">Výukový program</string>
-    <string name="doyouwantresetstart">Chcete resetovať začiatok cieľa? Môžete prísť o svoj pokrok.</string>
-    <string name="objectives_next_button">Ďalej</string>
-    <string name="objectives_previous_button">Späť</string>
-    <string name="objectives_button_unfinish">Vymazanie dokončené</string>
-    <string name="objectives_button_unstart">Vymazanie začaté</string>
     <!-- Actions -->
     <string name="actions">Akcie</string>
     <string name="description_actions">Niektoré tlačidlá na rýchly prístup do spoločných funkcií</string>
@@ -207,18 +190,6 @@
     <string name="statuslights_cannula_age">vek kanyly</string>
     <string name="statuslights_patch_pump_age">vek náplasťovej pumpy</string>
     <string name="patch_pump">Náplasťová pumpa</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Predĺžený bolus obmedzený na %1$.1f JI: %2$s</string>
-    <string name="limitingcarbs">Sacharidy obmedzené na %1$d g: %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
-    <string name="closedmodedisabledinpreferences">Uzavretý okruh zakázaný v nastaveniach</string>
-    <string name="closed_loop_disabled_on_dev_branch">Bežiaca vývojárska verzia. Uzavretý okruh je zakázaný.</string>
-    <string name="closed_loop_disabled_with_eb">Uzavretý okruh je zastavený kvôli prebiehajúcemu predĺženému bolusu</string>
-    <string name="smbalwaysdisabled">\"SMB vždy\" a \"po jedle\" zakázané pretože zdroj glykémie nepodporuje rozšírené filtrovánie</string>
-    <string name="smbnotallowedinopenloopmode">SBM nie sú povolené pri otvorenom okruhu</string>
-    <string name="maxvalueinpreferences">maximálna hodnota v nastaveniach</string>
-    <string name="hardlimit">pevný limit</string>
-    <string name="treatmentssafety_title">Bezpečnosť zadania ošetrenia</string>
     <!-- Overview -->
     <string name="show_statuslights">Zobraziť indikátory stavu na domovskej obrazovke</string>
     <string name="statuslights_cage_warning">Prah upozornenia na vek kanyly [h]</string>
@@ -354,7 +325,6 @@
     <string name="description_pump_virtual">Ovládač pumpy pre užívateľov bez podporovanej pumpy (Otvorený okruh)</string>
     <string name="virtual_pump_label">Virtuálna pumpa</string>
     <string name="virtualpump_settings">Nastavenie virtuálnej pumpy</string>
-    <string name="virtualpump_uploadstatus_title">Nahrať stav do NS</string>
     <!-- Source -->
     <string name="ns_client_bg">Glykémie z NS</string>
     <string name="ns_client_bg_short">NS GL</string>
