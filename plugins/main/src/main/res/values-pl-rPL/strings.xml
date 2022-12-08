@@ -158,22 +158,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CEL</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Ukończone, wspaniale!</string>
-    <string name="not_completed_yet">Nie ukończono</string>
-    <string name="time_elapsed">Czas jaki upłynął</string>
-    <string name="maxiobset">Maks. IOB ustawione poprawnie</string>
-    <string name="hasbgdata">BG dostępne z wybranego źródła</string>
-    <string name="loopenabled">Pętla włączona</string>
-    <string name="apsselected">Wybrano APS</string>
-    <string name="closedmodeenabled">Tryb zamknięty włączony</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Program do nauki</string>
-    <string name="doyouwantresetstart">Czy chcesz zresetować czas rozpoczęcia zadania? Możesz utracić postępy.</string>
-    <string name="objectives_next_button">Dalej</string>
-    <string name="objectives_previous_button">Poprzedni</string>
-    <string name="objectives_button_unfinish">Wyczyść skończone</string>
-    <string name="objectives_button_unstart">Wyczyść rozpoczęte</string>
     <!-- Actions -->
     <string name="actions">Akcje</string>
     <string name="description_actions">Niektóre przyciski umożliwiające szybki dostęp do typowych funkcji</string>
@@ -190,18 +174,6 @@
     <string name="pb_label">Bateria pompy</string>
     <string name="cannula">Kaniula</string>
     <string name="ebstopsloop">Użycie funkcji Extended bolus spowoduje zatrzymanie trybu pętli zamkniętej na czas działania przedłużonego bolusa. Czy na pewno tego chcesz?</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Ograniczam bolus do %1$.1f U z uwagi na %2$s</string>
-    <string name="limitingcarbs">Ograniczam węglow. do %1$d g z uwagi na %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pompa nie jest zdolna do wykonywania dawek bazowych tymczasowych</string>
-    <string name="closedmodedisabledinpreferences">Tryb zamkniętej pętli wyłączony w ustawieniach</string>
-    <string name="closed_loop_disabled_on_dev_branch">Uruchomiona jest wersja dev. Zamknięta pętla jest wyłączona.</string>
-    <string name="closed_loop_disabled_with_eb">Zamknięta pętla wyłączona, ponieważ działa Extended Bolus (bolus przedłużony)</string>
-    <string name="smbalwaysdisabled">SMB zawsze i po węglow. wyłączone z uwagi na brak źródła BG z zaawansowanym filtrowaniem</string>
-    <string name="smbnotallowedinopenloopmode">SMB nie dozwolone w trybie otwartej pętli</string>
-    <string name="maxvalueinpreferences">maks. wartość w ustawieniach</string>
-    <string name="hardlimit">twarde ograniczenie</string>
-    <string name="treatmentssafety_title">Bezpieczeństwo terapii</string>
     <!-- Overview -->
     <string name="show_statuslights">Pokaż diody stanu na ekranie głównym</string>
     <string name="statuslights_iage_warning">Ostrzeżenie o czasie insuliny [h]</string>
@@ -323,7 +295,6 @@
     <string name="description_pump_virtual">Integracja z pompami, które nie posiadają jeszcze żadnego sterownika (Open Loop)</string>
     <string name="virtual_pump_label">POMPA WIRTUALNA</string>
     <string name="virtualpump_settings">Ustawienia pompy wirtualnej</string>
-    <string name="virtualpump_uploadstatus_title">Przesyłaj status do NS</string>
     <!-- Source -->
     <string name="ns_client_bg">NSClient BG</string>
     <string name="ns_client_bg_short">NS BG</string>
