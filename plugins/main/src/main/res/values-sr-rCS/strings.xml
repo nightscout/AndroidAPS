@@ -62,16 +62,12 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="description_profile_local">Definiši profil koji je dostupan bez internet veze.</string>
-    <!-- Objectives -->
-    <string name="description_objectives">Program učenja</string>
     <!-- Actions -->
     <string name="description_actions">Neke tipke za brzi pristup uobičajenim funkcijama</string>
     <string name="tempbasal_button">Privremeni Basal</string>
     <string name="extended_bolus_button">Produženi Bolus</string>
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Insulin</string>
-    <!-- Safety -->
-    <string name="treatmentssafety_title">Sigurnost tretmana</string>
     <!-- Overview -->
     <string name="a11y_insulin_label">insulin</string>
     <string name="set_basal_question">Prihvatite novi privremeni bazal:</string>
