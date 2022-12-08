@@ -14,7 +14,6 @@ import info.nightscout.implementation.TrendCalculatorImpl
 import info.nightscout.implementation.UserEntryLoggerImpl
 import info.nightscout.implementation.XDripBroadcastImpl
 import info.nightscout.implementation.androidNotification.NotificationHolderImpl
-import info.nightscout.implementation.constraints.ConstraintsImpl
 import info.nightscout.implementation.db.PersistenceLayerImpl
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import info.nightscout.implementation.logging.LoggerUtilsImpl
@@ -47,7 +46,6 @@ import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.interfaces.Translator
 import info.nightscout.interfaces.XDripBroadcast
-import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.logging.LoggerUtils
@@ -121,7 +119,6 @@ abstract class ImplementationModule {
         @Binds fun bindIconsProviderInterface(iconsProvider: IconsProviderImplementation): IconsProvider
         @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolderImpl): NotificationHolder
         @Binds fun bindCommandQueue(commandQueue: CommandQueueImplementation): CommandQueue
-        @Binds fun bindsConstraints(constraintsImpl: ConstraintsImpl): Constraints
         @Binds fun bindsProfileFunction(profileFunctionImpl: ProfileFunctionImpl): ProfileFunction
         @Binds fun bindsStorage(fileStorage: FileStorage): Storage
         @Binds fun bindsReceiverStatusStore(receiverStatusStoreImpl: ReceiverStatusStoreImpl): ReceiverStatusStore

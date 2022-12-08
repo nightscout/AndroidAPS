@@ -195,24 +195,6 @@
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
 
-    <!-- Objectives -->
-    <string name="completed_well_done">Completed, well done!</string>
-    <string name="not_completed_yet">Not completed yet</string>
-    <string name="time_elapsed">Time elapsed</string>
-    <string name="maxiobset">Maximal IOB set properly</string>
-    <string name="hasbgdata">BG available from selected source</string>
-    <string name="synchaswritepermission">Synchronization service has write permission</string>
-    <string name="loopenabled">Loop enabled</string>
-    <string name="apsselected">APS selected</string>
-    <string name="closedmodeenabled">Closed mode enabled</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Learning program</string>
-    <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
-    <string name="objectives_next_button">Next</string>
-    <string name="objectives_previous_button">Prev</string>
-    <string name="objectives_button_unfinish">Clear finished</string>
-    <string name="objectives_button_unstart">Clear started</string>
-
     <!-- Actions -->
     <string name="actions">Actions</string>
     <string name="description_actions">Some buttons to quickly access common features</string>
@@ -232,21 +214,6 @@
     <string name="statuslights_cannula_age">cannula age</string>
     <string name="statuslights_patch_pump_age">patch pump age</string>
     <string name="patch_pump">Patch pump</string>
-
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
-    <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
-
-    <string name="safety" translatable="false">Safety</string>
-    <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
-    <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
-    <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
-    <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>
-    <string name="smbalwaysdisabled">SMB always and after carbs disabled because active BG source doesn\'t support advanced filtering</string>
-    <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
-    <string name="maxvalueinpreferences">max value in preferences</string>
-    <string name="hardlimit">hard limit</string>
-    <string name="treatmentssafety_title">Treatments safety</string>
 
     <!-- Overview -->
     <string name="key_show_calibration_button" translatable="false">show_calibration_button</string>
@@ -397,7 +364,6 @@
     <string name="graph_menu_divider_header">Graph</string>
 
     <!-- VirtualPump -->
-    <string name="key_virtual_pump_upload_status" translatable="false">virtualpump_uploadstatus</string>
     <string name="virtual_pump_type">Virtual Pump Type</string>
     <string name="virtual_pump_definition">Pump Definition</string>
     <string name="virtual_pump_pump_def">Bolus: Step=%1$s\nExtended Bolus: [Step=%2$s, Duration=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (by %7$s), Duration=%8$smin-%9$sh\n%10$s</string>
@@ -406,7 +372,6 @@
     <string name="description_pump_virtual">Pump integration for pumps which don\'t have any driver yet (Open Loop)</string>
     <string name="virtual_pump_label">VIRTUAL PUMP</string>
     <string name="virtualpump_settings">Virtual pump settings</string>
-    <string name="virtualpump_uploadstatus_title">Upload status to NS</string>
 
     <!-- Source -->
     <string name="key_dexcom_log_ns_sensor_change" translatable="false">dexcom_lognssensorchange</string>

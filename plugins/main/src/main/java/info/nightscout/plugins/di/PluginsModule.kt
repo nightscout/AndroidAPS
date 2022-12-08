@@ -19,7 +19,6 @@ import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
         ProfileModule::class,
         SourceModule::class,
         VirtualPumpModule::class,
-        ObjectivesModule::class,
         SkinsModule::class,
         SkinsUiModule::class,
         ActionsModule::class,

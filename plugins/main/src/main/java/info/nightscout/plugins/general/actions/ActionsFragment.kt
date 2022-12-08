@@ -193,7 +193,7 @@ class ActionsFragment : DaggerFragment() {
             uiInteraction.runCareDialog(childFragmentManager, UiInteraction.EventType.ANNOUNCEMENT, info.nightscout.core.ui.R.string.careportal_announcement)
         }
 
-        sp.putBoolean(R.string.key_objectiveuseactions, true)
+        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveuseactions, true)
     }
 
     @Synchronized

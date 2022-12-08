@@ -124,7 +124,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
-        val uploadStatus = preferenceFragment.findPreference(rh.gs(R.string.key_virtual_pump_upload_status)) as SwitchPreference?
+        val uploadStatus = preferenceFragment.findPreference(rh.gs(info.nightscout.core.utils.R.string.key_virtual_pump_upload_status)) as SwitchPreference?
             ?: return
         uploadStatus.isVisible = !config.NSCLIENT
     }
@@ -340,7 +340,7 @@ open class VirtualPumpPlugin @Inject constructor(
 
     override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
         val now = System.currentTimeMillis()
-        if (!sp.getBoolean(R.string.key_virtual_pump_upload_status, false)) {
+        if (!sp.getBoolean(info.nightscout.core.utils.R.string.key_virtual_pump_upload_status, false)) {
             return JSONObject()
         }
         val pump = JSONObject()
