@@ -171,23 +171,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">DOEL</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Voltooid, goed gedaan!</string>
-    <string name="not_completed_yet">Nog niet voltooid</string>
-    <string name="time_elapsed">Verstreken tijd</string>
-    <string name="maxiobset">Maximum IOB juist ingesteld</string>
-    <string name="hasbgdata">BG beschikbaar op gekozen bron</string>
-    <string name="synchaswritepermission">Synchronisatieservice heeft schrijfrechten</string>
-    <string name="loopenabled">Loop Actief</string>
-    <string name="apsselected">APS geslecteerd</string>
-    <string name="closedmodeenabled">Closed modus actief</string>
-    <string name="objectives_shortname">DOEL</string>
-    <string name="description_objectives">Leerprogramma</string>
-    <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
-    <string name="objectives_next_button">Volgende</string>
-    <string name="objectives_previous_button">Vorige</string>
-    <string name="objectives_button_unfinish">Voltooiing wissen</string>
-    <string name="objectives_button_unstart">Start wissen</string>
     <!-- Actions -->
     <string name="actions">Acties</string>
     <string name="description_actions">Een aantal knoppen voor snelle toegang tot algemene functies</string>
@@ -207,18 +190,6 @@
     <string name="statuslights_cannula_age">canule leeftijd</string>
     <string name="statuslights_patch_pump_age">patchpomp leeftijd</string>
     <string name="patch_pump">Patchpomp</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Beperken van extended bolus op %1$.1f E vanwege %2$s</string>
-    <string name="limitingcarbs">Koolhydraten worden beperkt tot %1$d gr doordat %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pomp kan geen tijdelijk basaal aanvaarden</string>
-    <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de instellingen</string>
-    <string name="closed_loop_disabled_on_dev_branch">Dev versie actief. Closed loop gedeactiveerd</string>
-    <string name="closed_loop_disabled_with_eb">Closed loop modus uitgeschakeld vanwege afgeven Vertraagde bolus</string>
-    <string name="smbalwaysdisabled">SMB altijd gedeactiveerd doordat de gekozen BG bron geen optimale filtering toepast</string>
-    <string name="smbnotallowedinopenloopmode">SMB niet toegestaan in Open Loop modus</string>
-    <string name="maxvalueinpreferences">Maximum waarde in instellingen</string>
-    <string name="hardlimit">max limiet (SC)</string>
-    <string name="treatmentssafety_title">Behandelingen veiligheid</string>
     <!-- Overview -->
     <string name="show_statuslights">Toon statusindicatoren op startscherm</string>
     <string name="statuslights_cage_warning">Drempelwaarde waarschuwing canule leeftijd [h]</string>
@@ -353,7 +324,6 @@
     <string name="description_pump_virtual">Pomp integratie voor pompen, waar nog geen driver voor is (Open Loop)</string>
     <string name="virtual_pump_label">VIRTUELE POMP</string>
     <string name="virtualpump_settings">Virtuele pomp instellingen</string>
-    <string name="virtualpump_uploadstatus_title">Upload status naar NS</string>
     <!-- Source -->
     <string name="ns_client_bg">NSClient BG</string>
     <string name="ns_client_bg_short">NS BG</string>
