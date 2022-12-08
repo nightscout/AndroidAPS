@@ -39,6 +39,7 @@ import info.nightscout.ui.dialogs.TempBasalDialog
 import info.nightscout.ui.dialogs.TempTargetDialog
 import info.nightscout.ui.dialogs.TreatmentDialog
 import info.nightscout.ui.dialogs.WizardDialog
+import info.nightscout.ui.widget.Widget
 import javax.inject.Inject
 
 class UiInteractionImpl @Inject constructor(
@@ -65,6 +66,10 @@ class UiInteractionImpl @Inject constructor(
         i.putExtra(AlarmSoundService.TITLE, title)
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(i)
+    }
+
+    override fun updateWidget(context: Context) {
+        Widget.updateWidget(context)
     }
 
     override fun runWizardDialog(fragmentManager: FragmentManager, carbs: Int?, name: String?) {

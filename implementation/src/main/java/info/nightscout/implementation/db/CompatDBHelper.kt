@@ -13,6 +13,7 @@ import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.rx.events.EventExtendedBolusChange
@@ -27,24 +28,24 @@ import info.nightscout.rx.events.EventTherapyEventChange
 import info.nightscout.rx.events.EventTreatmentChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import info.nightscout.ui.widget.Widget
 import io.reactivex.rxjava3.disposables.Disposable
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class CompatDBHelper @Inject constructor(
-    val aapsLogger: AAPSLogger,
-    val repository: AppRepository,
-    val rxBus: RxBus,
-    val context: Context
+    private val aapsLogger: AAPSLogger,
+    private val repository: AppRepository,
+    private val rxBus: RxBus,
+    private val context: Context,
+    private val uiInteraction: UiInteraction
 ) {
 
     fun dbChangeDisposable(): Disposable = repository
         .changeObservable()
         .doOnSubscribe {
             rxBus.send(EventNewBG(null))
-            Widget.updateWidget(context)
+            uiInteraction.updateWidget(context)
         }
         .subscribe {
             /**
@@ -57,7 +58,7 @@ class CompatDBHelper @Inject constructor(
             it.filterIsInstance<GlucoseValue>().maxByOrNull { gv -> gv.timestamp }?.let { gv ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventNewBg $gv")
                 rxBus.send(EventNewBG(gv.timestamp))
-                Widget.updateWidget(context)
+                uiInteraction.updateWidget(context)
                 newestGlucoseValue = gv
             }
             it.filterIsInstance<GlucoseValue>().minOfOrNull { gv -> gv.timestamp }?.let { timestamp ->
