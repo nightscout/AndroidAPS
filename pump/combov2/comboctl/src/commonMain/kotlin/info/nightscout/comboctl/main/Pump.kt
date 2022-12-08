@@ -2826,14 +2826,12 @@ class Pump(
                 }
             }
 
-            // All factors retrieved. Press CHECK once to get back to the total
-            // basal rate screen, and then CHECK again to return to the main menu.
-
-            rtNavigationContext.shortPressButton(RTNavigationButton.CHECK)
-            waitUntilScreenAppears(rtNavigationContext, ParsedScreen.BasalRateTotalScreen::class)
-
-            rtNavigationContext.shortPressButton(RTNavigationButton.CHECK)
-            waitUntilScreenAppears(rtNavigationContext, ParsedScreen.MainScreen::class)
+            // All factors retrieved. Press BACK repeatedly until we are back at the main menu.
+            cycleToRTScreen(
+                rtNavigationContext,
+                RTNavigationButton.BACK,
+                ParsedScreen.MainScreen::class
+            )
 
             getBasalProfileReporter.setCurrentProgressStage(BasicProgressStage.Finished)
 
