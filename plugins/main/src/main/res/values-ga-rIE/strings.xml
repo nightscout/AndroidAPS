@@ -42,11 +42,6 @@
     <string name="profile_name">Ainm Próifíle:</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BUN</string>
-    <!-- Objectives -->
-    <string name="loopenabled">Lúb cumasaithe</string>
-    <string name="apsselected">APS  roghnaithe</string>
-    <string name="objectives_next_button">Ar Aghaidh</string>
-    <string name="objectives_previous_button">Roimhe seo</string>
     <!-- Actions -->
     <string name="actions">Gníomhartha</string>
     <string name="actions_shortname">GNÍ</string>
@@ -54,7 +49,6 @@
     <string name="age_label">aois:</string>
     <string name="insulin_label">Inslin</string>
     <string name="pb_label">Caidéil ceallraí</string>
-    <!-- Safety -->
     <!-- Overview -->
     <string name="a11y_insulin_label">inslin</string>
     <string name="overview_cgm">CGM</string>
