@@ -171,23 +171,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">OBJ</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">¡Logrado, bien hecho!</string>
-    <string name="not_completed_yet">No logrado</string>
-    <string name="time_elapsed">Tiempo agotado</string>
-    <string name="maxiobset">Máximo IOB ajustado correctamente</string>
-    <string name="hasbgdata">Glucosa disponible desde la fuente seleccionada</string>
-    <string name="synchaswritepermission">El servicio de sincronización tiene permiso de escritura</string>
-    <string name="loopenabled">Lazo activado</string>
-    <string name="apsselected">APS seleccionado</string>
-    <string name="closedmodeenabled">Lazo cerrado activado</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Programa de aprendizaje</string>
-    <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
-    <string name="objectives_next_button">Siguiente</string>
-    <string name="objectives_previous_button">Anterior</string>
-    <string name="objectives_button_unfinish">Limpieza finalizada</string>
-    <string name="objectives_button_unstart">Limpieza iniciada</string>
     <!-- Actions -->
     <string name="actions">Acciones</string>
     <string name="description_actions">Algunos botones para acceder rápidamente a funciones comunes</string>
@@ -207,18 +190,6 @@
     <string name="statuslights_cannula_age">edad de la cánula</string>
     <string name="statuslights_patch_pump_age">edad del parche de la bomba</string>
     <string name="patch_pump">Bomba parche</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Limitando el bolo extendido a %1$.1f U debido a %2$s</string>
-    <string name="limitingcarbs">Limitando carbohidratos a %1$d g debido a %2$s</string>
-    <string name="pumpisnottempbasalcapable">La bomba no tiene capacidad basal temporal</string>
-    <string name="closedmodedisabledinpreferences">Lazo cerrado deshabilitado en preferencias</string>
-    <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Lazo cerrado no disponible.</string>
-    <string name="closed_loop_disabled_with_eb">Bucle cerrado inhabilitado debido a la ejecución del bolo extendido</string>
-    <string name="smbalwaysdisabled">SMB siempre y después de carbohidratos desactivados porque la fuente activa de BG no soporta filtrado avanzado</string>
-    <string name="smbnotallowedinopenloopmode">SMB no permitido en modo de lazo abierto</string>
-    <string name="maxvalueinpreferences">valor máximo en preferencias</string>
-    <string name="hardlimit">límite estricto</string>
-    <string name="treatmentssafety_title">Seguridad de tratamientos</string>
     <!-- Overview -->
     <string name="show_statuslights">Mostrar luces de estado en la pantalla de inicio</string>
     <string name="statuslights_cage_warning">Umbral de advertencia de la edad de la cánula [h]</string>
@@ -354,7 +325,6 @@
     <string name="description_pump_virtual">Integración de bombas de insulina que aún no tienen ningún controlador disponible (lazo abierto)</string>
     <string name="virtual_pump_label">BOMBA VIRTUAL</string>
     <string name="virtualpump_settings">Ajustes de bomba virtual</string>
-    <string name="virtualpump_uploadstatus_title">Subir estado a Nightscout</string>
     <!-- Source -->
     <string name="ns_client_bg">NSClient BG</string>
     <string name="ns_client_bg_short">NS BG</string>
