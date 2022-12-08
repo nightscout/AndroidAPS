@@ -89,19 +89,6 @@
     <string name="errors">Foute</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Voltooi, baie mooi gedoen!</string>
-    <string name="not_completed_yet">Nog nie voltooi nie</string>
-    <string name="time_elapsed">Tydsverloop</string>
-    <string name="maxiobset">Maksimum IAB behoorlik gestel</string>
-    <string name="hasbgdata">BG beskikbaar vanaf geselekteerde bron</string>
-    <string name="loopenabled">Lus geaktiveer</string>
-    <string name="apsselected">APS gekies</string>
-    <string name="closedmodeenabled">Geslote modus geaktiveer</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Onderrig program</string>
-    <string name="objectives_next_button">Volgende</string>
-    <string name="objectives_previous_button">Vorige</string>
     <!-- Actions -->
     <string name="actions">Aksies</string>
     <string name="description_actions">\'n Paar knoppies vir vinnige algemene nutsfunskies</string>
@@ -112,17 +99,6 @@
     <string name="nav_history_browser">Geskiedenis blaaier</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insulien</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Verlengde bolus is beperk tot %1$.1f U as gevolg van %2$s</string>
-    <string name="limitingcarbs">Beperk koolhidrate tot %1$d g agv %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pomp is nie tydelike basale bekwame</string>
-    <string name="closedmodedisabledinpreferences">Geslote lus modus in voorkeure gedeaktiveer</string>
-    <string name="closed_loop_disabled_on_dev_branch">Veranderende ontwikkelende weergawe. Geslote lus is gedeaktiveerd.</string>
-    <string name="smbalwaysdisabled">SMB is altyd na koolhidrate versper omdat aktiewe BG bron nie gevorderde filter ondersteun nie</string>
-    <string name="smbnotallowedinopenloopmode">SMB nie toegelaat in open lus modus</string>
-    <string name="maxvalueinpreferences">maks waarde in voorkeure</string>
-    <string name="hardlimit">harde limiet</string>
-    <string name="treatmentssafety_title">Behandelings veiligheid</string>
     <!-- Overview -->
     <string name="show_statuslights">Wys status vlae op tuisskerm</string>
     <string name="statuslights_res_warning">Drempel waarskuwings stoor vlak [U]</string>
@@ -212,7 +188,6 @@
     <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
     <string name="virtual_pump_label">VIRTUELE POMP</string>
     <string name="virtualpump_settings">Virtuele pomp instellings</string>
-    <string name="virtualpump_uploadstatus_title">Oplaaistatus aan NS</string>
     <!-- Source -->
     <string name="ns_client_bg">NSClient BG</string>
     <string name="description_source_ns_client">Laai BG data af vanaf Nightscout</string>
