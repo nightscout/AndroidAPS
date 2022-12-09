@@ -17,6 +17,7 @@ import info.nightscout.interfaces.aps.AutosensData
 import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.utils.DecimalFormatter
@@ -52,6 +53,7 @@ class IobCobOrefWorker @Inject internal constructor(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+    @Inject lateinit var instantiator: Instantiator
 
     class IobCobOrefWorkerData(
         val injector: HasAndroidInjector,
@@ -109,7 +111,7 @@ class IobCobOrefWorker @Inject internal constructor(
                 }
                 aapsLogger.debug(LTag.AUTOSENS, "Processing calculation thread: ${data.reason} ($i/${bucketedData.size})")
                 val sens = profile.getIsfMgdl(bgTime)
-                val autosensData = data.iobCobCalculator.provideEmptyAutosensDataObject()
+                val autosensData = instantiator.provideAutosensDataObject()
                 autosensData.time = bgTime
                 if (previous != null) autosensData.activeCarbsList = previous.cloneCarbsList() else autosensData.activeCarbsList = ArrayList()
 

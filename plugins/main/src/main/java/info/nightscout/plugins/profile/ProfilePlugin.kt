@@ -24,7 +24,7 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profile.ProfileInstantiator
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.profile.PureProfile
@@ -60,7 +60,7 @@ class ProfilePlugin @Inject constructor(
     private val hardLimits: HardLimits,
     private val dateUtil: DateUtil,
     private val config: Config,
-    private val profileInstantiator: ProfileInstantiator
+    private val instantiator: Instantiator
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.PROFILE)
@@ -419,7 +419,7 @@ class ProfilePlugin @Inject constructor(
             aapsLogger.error("Unhandled exception", e)
         }
 
-        return profileInstantiator.storeInstance(json)
+        return instantiator.provideProfileStore(json)
     }
 
     override val profile: ProfileStore?
@@ -444,14 +444,14 @@ class ProfilePlugin @Inject constructor(
         @Inject lateinit var config: Config
         @Inject lateinit var profilePlugin: ProfilePlugin
         @Inject lateinit var xDripBroadcast: XDripBroadcast
-        @Inject lateinit var profileInstantiator: ProfileInstantiator
+        @Inject lateinit var instantiator: Instantiator
 
         override fun doWorkAndLog(): Result {
             val profileJson = dataWorkerStorage.pickupJSONObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             xDripBroadcast.sendProfile(profileJson)
             if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
-                val store = profileInstantiator.storeInstance(profileJson)
+                val store = instantiator.provideProfileStore(profileJson)
                 val createdAt = store.getStartDate()
                 val lastLocalChange = sp.getLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, 0)
                 aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")

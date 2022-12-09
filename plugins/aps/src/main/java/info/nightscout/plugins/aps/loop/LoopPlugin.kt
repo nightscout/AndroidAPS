@@ -57,7 +57,6 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.plugins.aps.APSResultObject
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.loop.events.EventLoopSetLastRunGui
 import info.nightscout.plugins.aps.loop.extensions.json
@@ -783,8 +782,6 @@ class LoopPlugin @Inject constructor(
             configuration = runningConfiguration.configuration().toString()
         )
     }
-
-    override fun provideEmptyAPSResultObject(): APSResult = APSResultObject(injector)
 
     companion object {
 

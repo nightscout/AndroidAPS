@@ -12,7 +12,7 @@ import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profile.ProfileInstantiator
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.Round
@@ -38,7 +38,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     @Inject lateinit var config: Config
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var profileInstantiator: ProfileInstantiator
+    @Inject lateinit var instantiator: Instantiator
 
     var profile: ProfileSealed
     var circadianProfile: ProfileSealed
@@ -179,7 +179,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
             json.put("defaultProfile", profilename)
             json.put("store", store)
             json.put("startDate", dateUtil.toISOAsUTC(dateUtil.now()))
-            profileStore = profileInstantiator.storeInstance(json)
+            profileStore = instantiator.provideProfileStore(json)
         } catch (e: JSONException) {
         }
         return profileStore

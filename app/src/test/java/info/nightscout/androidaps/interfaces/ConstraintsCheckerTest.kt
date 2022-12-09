@@ -20,7 +20,7 @@ import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.ProfileInstantiator
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpEnactResult
@@ -70,7 +70,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var insightDatabaseDao: InsightDatabaseDao
     @Mock lateinit var ruffyScripter: RuffyScripter
     @Mock lateinit var uiInteraction: UiInteraction
-    @Mock lateinit var profileInstantiator: ProfileInstantiator
+    @Mock lateinit var instantiator: Instantiator
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
     @Mock lateinit var insightDatabase: InsightDatabase
     @Mock lateinit var bgQualityCheck: BgQualityCheck
@@ -145,7 +145,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
 
         hardLimits = HardLimitsMock(sp, rh)
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
-        danaPump = DanaPump(aapsLogger, sp, dateUtil, profileInstantiator)
+        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, uiInteraction)
         danaRPlugin = DanaRPlugin(injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,

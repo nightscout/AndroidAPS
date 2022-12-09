@@ -57,6 +57,4 @@ interface Loop {
         runningConfiguration: RunningConfiguration,
         version: String
     ): DeviceStatus?
-
-    fun provideEmptyAPSResultObject(): APSResult
 }

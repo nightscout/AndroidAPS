@@ -2,7 +2,7 @@ package info.nightscout.pump.dana
 
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileInstantiator
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
@@ -33,7 +33,7 @@ class DanaPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val dateUtil: DateUtil,
-    private val profileInstantiator: ProfileInstantiator
+    private val instantiator: Instantiator
 ) {
 
     @Suppress("unused")
@@ -380,7 +380,7 @@ class DanaPump @Inject constructor(
             } catch (e: Exception) {
                 return null
             }
-            return profileInstantiator.storeInstance(json)
+            return instantiator.provideProfileStore(json)
         }
         return null
     }
