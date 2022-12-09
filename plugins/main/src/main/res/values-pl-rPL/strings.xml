@@ -272,43 +272,6 @@
     <string name="treatments_shortname">TREAT</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_menu_divider_header">Wykres</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Pompa wirtualna</string>
-    <string name="virtual_pump_definition">Definicja Pompy</string>
-    <string name="virtual_pump_pump_def">Bolus: Krok =%1$s\nBolus Przedłużony: [krok =%2$s, czas trwania =%3$smin -%4$sh] \nBasal: krok =%5$s\nTBR: %6$s (przez %7$s), czas trwania =%8$smin -%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMP</string>
-    <string name="description_pump_virtual">Integracja z pompami, które nie posiadają jeszcze żadnego sterownika (Open Loop)</string>
-    <string name="virtual_pump_label">POMPA WIRTUALNA</string>
-    <string name="virtualpump_settings">Ustawienia pompy wirtualnej</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient BG</string>
-    <string name="ns_client_bg_short">NS BG</string>
-    <string name="description_source_ns_client">Pobieraj wartości BG z Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Pobieraj wartości BG z xDrip+.</string>
-    <string name="dexcom_app_patched">Dexcom Patched</string>
-    <string name="dexcom_short">DEX.PATCH.</string>
-    <string name="description_source_dexcom">Pobieraj glikemię ze spatchowanej aplikacji Dexcom.</string>
-    <string name="eversense">Apka Eversense (spatchowana)</string>
-    <string name="description_source_eversense">Pobieraj wartości BG ze spatchowanej aplikacji Eversense.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Pobieraj wartości BG z Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Pobieraj wartości BG z uploadera pomp serii 600.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Odczytuj wartości BG z aplikacji Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Otrzymuj wartości z aplikacji Glunovo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Otrzymuj poziomy cukru (BG) z Apki Tomato) (urządzenie MiaoMiao)</string>
-    <string name="random_bg">Losowa BG</string>
-    <string name="description_source_random_bg">Generuj losowe dane BG (tylko tryb demonstracyjny)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Prześlij dane BG do xDrip+</string>
-    <string name="do_xdrip_upload_summary">W xDrip+ wybierz źródło danych 640g/Eversense</string>
-    <string name="bgsource_upload">Ustawienia wysyłania wartości BG (poziomów cukru)</string>
-    <string name="dexcom_log_ns_sensor_change_title">Prześlij zmianę sensora do NS</string>
     <!-- Skins -->
     <string name="classic_description">Motyw oryginalny</string>
     <string name="lowres_description">Mały ekran</string>
