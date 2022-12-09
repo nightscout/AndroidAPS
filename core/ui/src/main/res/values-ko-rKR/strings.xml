@@ -136,6 +136,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="virtualpump_uploadstatus_title">NS에 상태 업로드하기</string>
+    <string name="suspendloop_label">중지 또는 일시중지된 loop</string>
+    <string name="iob_label">활성 인슐린 (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">잘못된 비밀번호</string>
     <string name="passwords_dont_match">비밀번호가 일치하지 않습니다.</string>
