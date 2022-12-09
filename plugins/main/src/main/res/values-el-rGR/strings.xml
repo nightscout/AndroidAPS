@@ -207,35 +207,6 @@
     <string name="bgi_shortname">-BGI</string>
     <string name="treatments_shortname">ΘΕΡΑΠ</string>
     <string name="sensitivity_shortname">SENS</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Τύπος εικονικής αντλίας</string>
-    <string name="virtual_pump_definition">Ορισμός Αντλίας</string>
-    <string name="virtual_pump_pump_def">Bolus: Άμεσο=%1$s\nΕκτεταμένο Bolus: [Άμεσο=%2$s, Διάρκεια=%3$smin-%4$sh]\nΒασικός: Άμεσο=%5$s\nTBR: %6$s (με %7$s), Διάρκεια=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">Εικ. αντλία</string>
-    <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
-    <string name="virtual_pump_label">ΕΙΚΟΝΙΚΗ ΑΝΤΛΙΑ</string>
-    <string name="virtualpump_settings">Ρυθμίσεις Εικονικής αντλίας</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient BG</string>
-    <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Λάβετε τις τιμές BG από το xDrip+.</string>
-    <string name="eversense">Eversense App (τροποποιημένη)</string>
-    <string name="description_source_eversense">Λάβετε τις τιμές BG από την εφαρμογή του Eversense.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Λάβετε τις τιμές BG από το Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Λάβετε τις τιμές BG από την εφαρμογή Poctech</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Λάβετε τιμές BG από Tomato app (MiaoMiao)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Αποστολή δεδομένων BG στο xDrip+</string>
-    <string name="do_xdrip_upload_summary">Στο xDrip+, επιλέξτε την πηγή δεδομένων 640g / Eversense</string>
-    <string name="bgsource_upload">Ανέβασμα ρυθμίσεων BG</string>
-    <string name="dexcom_log_ns_sensor_change_title">Αλλαγή αρχείου αισθητήρα σε NS</string>
     <!-- Skins -->
     <!--    DataBroadcast-->
     <string name="cannula_usage">χρήσιμες συμβουλές:</string>
