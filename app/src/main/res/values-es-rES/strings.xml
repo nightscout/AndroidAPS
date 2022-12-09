@@ -46,7 +46,6 @@
     <string name="authorizationfailed">Ha fallado la autorización</string>
     <string name="copytolocalprofile_invalid">No se puede crear el perfil. El perfil es inválido.</string>
     <string name="cta_dont_kill_my_app_info">¿No matar mi aplicación?</string>
-    <string name="time_to_eat">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
     <string name="fabric_upload_disabled">¡Carga de registros de errores desactivada!</string>
     <string name="clear_filter">Borrar filtro</string>
     <string name="cannula">Cánula</string>
