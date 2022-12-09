@@ -299,48 +299,6 @@
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graf skala</string>
     <string name="graph_menu_divider_header">Graf</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Virtuel pumpe type</string>
-    <string name="virtual_pump_definition">Pumpe Definition</string>
-    <string name="virtual_pump_pump_def">Bolus: Trin=%1$s\nForlænget Bolus: [Trin=%2$s, Varighed=%3$smin-%4$sh]\nBasal: Trin=%5$s\nTBR: %6$s (by %7$s), Varighed=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMPE</string>
-    <string name="description_pump_virtual">Pumpeintegration til pumper, som endnu ikke har nogen driver (Åbent Loop)</string>
-    <string name="virtual_pump_label">VIRTUEL PUMPE</string>
-    <string name="virtualpump_settings">Indstillinger for virtuel pumpe</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient BS</string>
-    <string name="ns_client_bg_short">NS BS</string>
-    <string name="description_source_ns_client">Downloader BG data fra Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Modtag BG-værdier fra xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Modtag BS-værdier fra \'Byg din egen Dexcom App\'.</string>
-    <string name="eversense">Eversense App (patched)</string>
-    <string name="description_source_eversense">Modtag BG værdier fra den patchede Eversense app.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Modtag BG-værdier fra Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Modtag BG-værdier fra 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Modtag BS-værdier fra Poctech app</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Modtag værdier fra Glunovo app</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Modtag værdier fra Intelligo-appen</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Modtag BS-værdier fra Tomato-appen (MiaoMiao enhed)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Modtag BG-værdier fra GlucoRx Aidex CGMS.</string>
-    <string name="random_bg">Tilfældigt BS</string>
-    <string name="description_source_random_bg">Generér tilfældige BS-data (kun demotilstand)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Seng BS data til xDrip+</string>
-    <string name="do_xdrip_upload_summary">I xDrip+ vælg 640g/Eversense datakilde</string>
-    <string name="bgsource_upload">BS upload indstillinger</string>
-    <string name="dexcom_log_ns_sensor_change_title">Log sensor ændring til NS</string>
     <!-- Skins -->
     <string name="classic_description">Original udseende</string>
     <string name="lowres_description">Lav kvalitets udseende</string>
