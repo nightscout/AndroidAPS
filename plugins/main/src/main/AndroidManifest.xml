@@ -20,10 +20,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".source.activities.RequestDexcomPermissionActivity"
-            android:exported="false" />
-
-        <activity
             android:name="info.nightscout.plugins.general.overview.activities.QuickWizardListActivity"
             android:exported="false"
             android:theme="@style/AppTheme">

@@ -59,7 +59,7 @@ class RunningConfigurationImpl @Inject constructor(
                 json.put("insulinConfiguration", insulinInterface.configuration())
                 json.put("sensitivity", sensitivityInterface.id.value)
                 json.put("sensitivityConfiguration", sensitivityInterface.configuration())
-                json.put("smoothing", smoothingInterface?.javaClass?.simpleName)
+                json.put("smoothing", smoothingInterface.javaClass.simpleName)
                 json.put("overviewConfiguration", overviewInterface.configuration())
                 json.put("safetyConfiguration", safetyInterface.configuration())
                 json.put("pump", pumpInterface.model().description)

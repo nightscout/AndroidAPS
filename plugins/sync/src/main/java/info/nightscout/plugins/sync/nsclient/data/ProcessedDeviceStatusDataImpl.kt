@@ -2,9 +2,10 @@ package info.nightscout.plugins.sync.nsclient.data
 
 import android.text.Spanned
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.aps.APSResultObject
+import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.Round
@@ -21,7 +22,8 @@ import javax.inject.Singleton
 class ProcessedDeviceStatusDataImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val dateUtil: DateUtil,
-    private val sp: SP
+    private val sp: SP,
+    private val instantiator: Instantiator
 ) : ProcessedDeviceStatusData {
 
     override var pumpData: ProcessedDeviceStatusData.PumpData? = null
@@ -112,11 +114,10 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
     override val openApsTimestamp: Long
         get() = if (openAPSData.clockSuggested != 0L) openAPSData.clockSuggested else -1
 
-    override fun getAPSResult(injector: HasAndroidInjector): APSResultObject {
-        val result = APSResultObject(injector)
-        result.json = openAPSData.suggested
-        result.date = openAPSData.clockSuggested
-        return result
+    override fun getAPSResult(injector: HasAndroidInjector): APSResult =
+        instantiator.provideAPSResultObject().also {
+        it.json = openAPSData.suggested
+        it.date = openAPSData.clockSuggested
     }
     override val uploaderStatus: String
         get() {

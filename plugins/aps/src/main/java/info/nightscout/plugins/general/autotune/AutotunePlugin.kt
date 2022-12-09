@@ -16,7 +16,7 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profile.ProfileInstantiator
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.plugins.aps.R
@@ -61,7 +61,7 @@ class AutotunePlugin @Inject constructor(
     private val config: Config,
     private val uel: UserEntryLogger,
     aapsLogger: AAPSLogger,
-    private val profileInstantiator: ProfileInstantiator
+    private val instantiator: Instantiator
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -325,7 +325,7 @@ class AutotunePlugin @Inject constructor(
         if (newProfile == null) return
         val profilePlugin = activePlugin.activeProfileSource
         val circadian = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_circadian_ic_isf, false)
-        val profileStore = activePlugin.activeProfileSource.profile ?: profileInstantiator.storeInstance(JSONObject())
+        val profileStore = activePlugin.activeProfileSource.profile ?: instantiator.provideProfileStore(JSONObject())
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         var indexLocalProfile = -1
         for (p in profileList.indices)

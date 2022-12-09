@@ -11,24 +11,28 @@ files:
     translation: /plugins/aps/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/main/src/main/res/values/strings.xml
     translation: /plugins/main/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/main/src/main/res/values/exam.xml
-    translation: /plugins/main/src/main/res/values-%android_code%/%original_file_name%
-  - source: /plugins/main/src/main/res/values/objectives.xml
-    translation: /plugins/main/src/main/res/values-%android_code%/%original_file_name%
+  - source: /plugins/constraints/src/main/res/values/exam.xml
+    translation: /plugins/constraints/src/main/res/values-%android_code%/%original_file_name%
+  - source: /plugins/constraints/src/main/res/values/objectives.xml
+    translation: /plugins/constraints/src/main/res/values-%android_code%/%original_file_name%
   - source: /plugins/automation/src/main/res/values/strings.xml
     translation: /plugins/automation/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/openhumans/src/main/res/values/strings.xml
     translation: /plugins/openhumans/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/sensitivity/src/main/res/values/strings.xml
     translation: /plugins/sensitivity/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/source/src/main/res/values/strings.xml
+    translation: /plugins/source/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/insulin/src/main/res/values/strings.xml
+    translation: /plugins/insulin/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/configuration/src/main/res/values/strings.xml
     translation: /plugins/configuration/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/sync/src/main/res/values/strings.xml
     translation: /plugins/sync/src/main/res/values-%android_code%/strings.xml
     translate_attributes: 0
     content_segmentation: 0
-  - source: /plugins/support/src/main/res/values/strings.xml
-    translation: /plugins/support/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/constraints/src/main/res/values/strings.xml
+    translation: /plugins/constraints/src/main/res/values-%android_code%/strings.xml
   - source: /core/graph/src/main/res/values/strings.xml
     translation: /core/graph/src/main/res/values-%android_code%/strings.xml
   - source: /core/interfaces/src/main/res/values/strings.xml
@@ -69,6 +73,8 @@ files:
     translation: /pump/omnipod-eros/src/main/res/values-%android_code%/strings.xml
   - source: /pump/rileylink/src/main/res/values/strings.xml
     translation: /pump/rileylink/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/virtual/src/main/res/values/strings.xml
+    translation: /pump/virtual/src/main/res/values-%android_code%/strings.xml
   - source: /insight/src/main/res/values/strings.xml
     translation: /insight/src/main/res/values-%android_code%/strings.xml
   - source: /insight/src/main/res/values/alert_codes.xml

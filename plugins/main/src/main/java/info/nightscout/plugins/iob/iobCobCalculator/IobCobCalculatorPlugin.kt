@@ -128,7 +128,7 @@ class IobCobCalculatorPlugin @Inject constructor(
                                event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_absorption_cutoff)) ||
                                event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_max)) ||
                                event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_min)) ||
-                               event.isChanged(rh.gs(R.string.key_insulin_oref_peak))
+                               event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_insulin_oref_peak))
                            ) {
                                resetDataAndRunCalculation("onEventPreferenceChange", event)
                            }
