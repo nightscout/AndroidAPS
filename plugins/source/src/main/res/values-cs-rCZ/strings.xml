@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="ns_client_bg">Glykémie z NS</string>
+    <string name="ns_client_bg_short">NSGL</string>
+    <string name="description_source_ns_client">Příjem glykémií z Nightscoutu</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Příjem glykémií z xDripu+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Příjem hodnot glykémií z upravené aplikace Dexcom (BYODA).</string>
+    <string name="eversense">Eversense aplikace (upravená)</string>
+    <string name="description_source_eversense">Příjem glykémií z modifikované Eversense aplikace.</string>
+    <string name="glimp">Glimp</string>
+    <string name="description_source_glimp">Příjem glykémií z Glimpu.</string>
+    <string name="mm640g">MM640g</string>
+    <string name="description_source_mm640g">Příjem glykémií z Uploaderu 640G.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Získávat glykémie z aplikace Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Získávat glykémie z aplikace Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Přijímat hodnoty z aplikace Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Přijímat hodnoty glykémií z Tomato aplikace (MiaoMiao zařízení)</string>
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Přijímat hodnoty glykémie ze senzoru GlucoRx Aidex.</string>
+    <string name="random_bg">Náhodná glykémie</string>
+    <string name="description_source_random_bg">Generovat náhodná data glykémie (pouze režim Demo)</string>
+    <string name="random_bg_short">Gly</string>
+    <string name="do_xdrip_upload_title">Odesílat data do xDrip+</string>
+    <string name="do_xdrip_upload_summary">V xDrip+ vyberte zdroj dat 640g/Eversense</string>
+    <string name="bgsource_upload">Nastavení nahrávání glykémií</string>
+    <string name="dexcom_log_ns_sensor_change_title">Zaznamenávat výměnu senzoru do NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Vytvořit událost \"Výměna senzoru\" v NS automaticky po spuštění senzoru</string>
+    <string name="direction">směr</string>
+</resources>
