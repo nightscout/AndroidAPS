@@ -275,13 +275,13 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     // 2x Safety & Objectives
     @Test
     fun isClosedLoopAllowedTest() {
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("closed")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         objectivesPlugin.objectives[Objectives.MAXIOB_ZERO_CL_OBJECTIVE].startedOn = 0
         var c: Constraint<Boolean> = constraintChecker.isClosedLoopAllowed()
         aapsLogger.debug("Reason list: " + c.reasonList.toString())
 //        Assertions.assertTrue(c.reasonList[0].toString().contains("Closed loop is disabled")) // Safety & Objectives
         Assertions.assertEquals(false, c.value())
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("open")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
         c = constraintChecker.isClosedLoopAllowed()
         Assertions.assertTrue(c.reasonList[0].contains("Closed loop mode disabled in preferences")) // Safety & Objectives
 //        Assertions.assertEquals(3, c.reasonList.size) // 2x Safety & Objectives
@@ -324,7 +324,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         objectivesPlugin.objectives[Objectives.SMB_OBJECTIVE].startedOn = 0
         `when`(sp.getBoolean(info.nightscout.plugins.aps.R.string.key_use_smb, false)).thenReturn(false)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("open")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
 //        `when`(constraintChecker.isClosedLoopAllowed()).thenReturn(Constraint(true))
         val c = constraintChecker.isSMBModeEnabled()
         Assertions.assertEquals(true, c.reasonList.size == 3) // 2x Safety & Objectives
