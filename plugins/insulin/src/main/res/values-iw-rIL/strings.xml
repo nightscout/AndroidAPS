@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">הגדרת אינסולין ל-Humalog ו- NovoRapid / Novolog</string>
+    <string name="description_insulin_ultra_rapid">הגדרת אינסולין מסוג Fiasp</string>
+    <string name="description_insulin_lyumjev">הגדרת אינסולין מסוג Lyumjev</string>
+    <string name="description_insulin_free_peak">מאפשר להגדיר את שיא פעילות האינסולין, לשימוש על ידי משתמשים מתקדמים בלבד</string>
+    <string name="insulin_shortname">אינסולין</string>
+    <string name="insulin_oref_peak">שעת שיא של עקומת IOB</string>
+    <string name="insulin_peak_time">זמן שיא [min]</string>
+    <string name="free_peak_oref">Oref שיא חופשי</string>
+    <string name="rapid_acting_oref">Oref אינסולין מהיר</string>
+    <string name="dia_too_short">DIA במשך %1$f הוא קצר מדי - משתמש ב-%2$f במקום!</string>
+</resources>

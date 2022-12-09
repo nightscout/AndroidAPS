@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Ta emot BG-data från xDrip+.</string>
+    <string name="dexcom_app_patched">Patchad Dexcom-app</string>
+    <string name="dexcom_short">Dex</string>
+    <string name="description_source_dexcom">Ta emot BG-värden från \"Bygg din egen Dexcom-app\".</string>
+    <string name="eversense">Eversense App (modifierad)</string>
+    <string name="description_source_eversense">Ta emot BG-data från den modifierade
+Eversense-appen.</string>
+    <string name="description_source_glimp">Ta emot BG-data från Glimp</string>
+    <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Ta emot BG-data från Poctechappen</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Ta emot värden från Glunovo-appen</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Ta emot BG-data från tomato app (MiaoMiao-enhet)</string>
+    <string name="bgsource_upload">Uppladdningsinställningar för BG</string>
+</resources>

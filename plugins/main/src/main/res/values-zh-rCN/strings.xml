@@ -98,21 +98,6 @@
     <string name="sms_profile_switch_created">配置文件切换已创建</string>
     <string name="sms_wrong_tbr_duration">TBR(临时基础率) 的持续时间必须是 %1$d 分钟的倍数，且大于0。</string>
     <string name="a11y_otp_qr_code">用于安装一次性随机验证码的二维码</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev(超速效赖脯胰岛素)</string>
-    <string name="description_insulin_rapid">胰岛素预设为 Humalog(优泌乐) 和 NovoRapid(门冬)/NovoLog(诺和锐)</string>
-    <string name="description_insulin_ultra_rapid">Fiasp 胰岛素预设</string>
-    <string name="description_insulin_lyumjev">预设为Lyumjev速效赖脯胰岛素</string>
-    <string name="description_insulin_free_peak">允许您定义胰岛素作用的峰值, 并且只应由高级用户使用</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">IOB 曲线峰值时间</string>
-    <string name="insulin_peak_time">峰值时间 [min]</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">速效 Oref</string>
-    <string name="ultra_rapid_oref">超速效 Oref</string>
-    <string name="dia_too_short">DIA of %1$f 太短了，请使用 %2$f 代替</string>
-    <string name="fast_acting_insulin_comment">诺和锐, 门冬, 优泌乐</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp超速效</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip+状态线 (手表)</string>
@@ -168,22 +153,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">基础率</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">完成了，做的好</string>
-    <string name="not_completed_yet">尚未完成</string>
-    <string name="time_elapsed">已用时间</string>
-    <string name="maxiobset">合理地设置最大 IOB</string>
-    <string name="hasbgdata">所选的血糖值来源的血糖是可用的</string>
-    <string name="loopenabled">闭环启用了</string>
-    <string name="apsselected">APS已选择</string>
-    <string name="closedmodeenabled">闭环模式启用了</string>
-    <string name="objectives_shortname">目标</string>
-    <string name="description_objectives">学习计划</string>
-    <string name="doyouwantresetstart">你想要重置已启动的目标? 你会失去已有的进度。</string>
-    <string name="objectives_next_button">下一个</string>
-    <string name="objectives_previous_button">上一个</string>
-    <string name="objectives_button_unfinish">清除已完成</string>
-    <string name="objectives_button_unstart">清除已启动</string>
     <!-- Actions -->
     <string name="actions">手动操作</string>
     <string name="description_actions">一些快速访问常用功能的按钮</string>
@@ -203,18 +172,6 @@
     <string name="statuslights_cannula_age">导管年龄</string>
     <string name="statuslights_patch_pump_age">patch 泵年龄</string>
     <string name="patch_pump">Patch 泵</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">由于 %2$s, 将扩展大剂量限制为 %1$.1f U</string>
-    <string name="limitingcarbs">由于 %2$s, 将碳水化合物限制为 %1$d 克</string>
-    <string name="pumpisnottempbasalcapable">这个泵无法设置临时基础率</string>
-    <string name="closedmodedisabledinpreferences">在参数选项中禁用了闭环模式</string>
-    <string name="closed_loop_disabled_on_dev_branch">正在运行开发版本，闭环被禁用了</string>
-    <string name="closed_loop_disabled_with_eb">由于运行扩展大剂量而禁用了闭环</string>
-    <string name="smbalwaysdisabled">SMB always and after carbs disabled 因为实时的血糖来源不支持高级筛选</string>
-    <string name="smbnotallowedinopenloopmode">在开环模式下不允许使用SMB－微型大剂量</string>
-    <string name="maxvalueinpreferences">在参数选项里的最大值</string>
-    <string name="hardlimit">硬限制</string>
-    <string name="treatmentssafety_title">治疗安全</string>
     <!-- Overview -->
     <string name="show_statuslights">在主屏幕上显示状态指示灯</string>
     <string name="statuslights_iage_warning">胰岛素状态灯警示阀值[小时]</string>
@@ -340,47 +297,6 @@
     <string name="sensitivity_shortname">灵敏度</string>
     <string name="graph_scale">图形缩放</string>
     <string name="graph_menu_divider_header">绘图</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">虚拟泵类型</string>
-    <string name="virtual_pump_definition">泵定义</string>
-    <string name="virtual_pump_pump_def">大剂量: Step=%1$s\n扩展大剂量: [Step=%2$s, 持续时间=%3$smin-%4$sh]\n基础率: Step=%5$s\nTBR临时基础率: %6$s (by %7$s), 持续时间=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">虚拟泵</string>
-    <string name="description_pump_virtual">与我们还没有其驱动的泵集成（开环）</string>
-    <string name="virtual_pump_label">虚拟泵</string>
-    <string name="virtualpump_settings">虚拟泵设置</string>
-    <string name="virtualpump_uploadstatus_title">将状态上传到 NS</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient 血糖</string>
-    <string name="ns_client_bg_short">NS血糖</string>
-    <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">从 xDrip+ 接收血糖值。</string>
-    <string name="dexcom_app_patched">BYODA德康补丁版(构建你自己的德康应用Build Your Own Dexcom App)</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">从德康补丁版接收血糖数据(Build Your Own Dexcom App)。</string>
-    <string name="eversense">Everyang App (补丁)</string>
-    <string name="description_source_eversense">从 Eversense 补丁app接收血糖值。</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">从 Glimp 接收血糖值。</string>
-    <string name="mm640g">美敦力640g</string>
-    <string name="description_source_mm640g">从美敦力600Series 的AndroidUploader 接收血糖值。</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">从 Poctech app 接收血糖值。</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">从Glunovo应用接收血糖数据。</string>
-    <string name="tomato">番茄（喵喵）</string>
-    <string name="tomato_short">番茄</string>
-    <string name="description_source_tomato">从番茄app(喵喵设备) 接收血糖值</string>
-    <string name="aidex">GlucoRx Aidex动泰</string>
-    <string name="aidex_short">Aidex动泰</string>
-    <string name="description_source_aidex">从GlucoRx Aidex动泰持续葡萄糖监测系统接收血糖值。</string>
-    <string name="random_bg">随机血糖</string>
-    <string name="description_source_random_bg">生成随机血糖数据（仅限demo演示模式）</string>
-    <string name="random_bg_short">血糖</string>
-    <string name="do_xdrip_upload_title">将血糖数据发送到 xDrip +</string>
-    <string name="do_xdrip_upload_summary">在 xDrip + 选择640ｇ/Eversense 数据源</string>
-    <string name="bgsource_upload">血糖上传设置</string>
-    <string name="dexcom_log_ns_sensor_change_title">记录传感器更换至NS服务器</string>
     <!-- Skins -->
     <string name="classic_description">原始皮肤</string>
     <string name="lowres_description">低分辨率皮肤</string>

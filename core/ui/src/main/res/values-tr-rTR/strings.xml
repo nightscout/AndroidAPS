@@ -160,6 +160,9 @@
     <string name="dia">İES</string>
     <string name="ic_short">IC Karbonhidrat İnsülin Oranı</string>
     <string name="isf_short">IDF İnsülin Duyarlılık Faktörü</string>
+    <string name="virtualpump_uploadstatus_title">Nightscout\'a durum aktar</string>
+    <string name="suspendloop_label">Döngüyü Devre Dışı bırakma/Askıya alma</string>
+    <string name="iob_label">Aktif İnsülin (AİNS)</string>
     <!--    Protection-->
     <string name="wrongpassword">Hatalı parola</string>
     <string name="wrongpin">Yanlış PIN</string>

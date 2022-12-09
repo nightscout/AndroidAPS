@@ -101,6 +101,7 @@
     <string name="loading">Lade…</string>
     <string name="notes_label">Notizen</string>
     <string name="remove_button">Löschen</string>
+    <string name="add_new">Neu hinzufügen</string>
     <string name="addnew_above">Neu oben hinzufügen</string>
     <string name="wrong_pump_data">Daten kommen von einer anderen Pumpe. Wechsle den Pumpentreiber.</string>
     <string name="bg_label">BZ</string>
@@ -155,6 +156,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
+    <string name="suspendloop_label">Deaktiviere/Pausiere den Loop</string>
+    <string name="iob_label">Aktives Insulin (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Falsches Passwort</string>
     <string name="wrongpin">Falsche PIN</string>
@@ -316,6 +320,7 @@
     <string name="uel_export_settings">EINSTELLUNGEN EXPORTIEREN</string>
     <string name="uel_import_settings">EINSTELLUNGEN IMPORTIEREN</string>
     <string name="uel_reset_databases">DATENBANK ZURÜCKSETZEN</string>
+    <string name="uel_cleanup_databases">DATENBANKEN BEREINIGEN</string>
     <string name="uel_export_databases">DATENBANK EXPORTIEREN</string>
     <string name="uel_import_databases">DATENBANK IMPORTIEREN</string>
     <string name="uel_otp_export">OTP EXPORT</string>

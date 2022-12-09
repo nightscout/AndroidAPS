@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">没有安装xDrip+</string>
     <string name="calibration_sent">校准发送到 xDrip+</string>
     <string name="bg_label">血糖</string>
-    <string name="time_to_eat">吃饭时间</string>
-    <string name="time_to_bolus">输注胰岛素时间到了！\n请运行大剂量向导，然后再次进行计算。</string>
     <string name="executing_right_now">现在命令被执行了</string>
     <string name="basal_value_below_minimum">基础率值低于泵支持的最小值。配置文件没有设定</string>
     <string name="permission">权限</string>

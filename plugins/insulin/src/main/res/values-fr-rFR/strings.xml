@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="free_peak_oref">Profil d\'insuline ajustable Oref</string>
+    <string name="rapid_acting_oref">Insuline à Action Rapide Oref </string>
+    <string name="ultra_rapid_oref">Insuline Ultra Rapide Oref</string>
+    <string name="dia_too_short">Durée d’Action pour %1$f trop courte - utiliser %2$f à la place !</string>
+</resources>

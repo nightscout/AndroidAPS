@@ -59,7 +59,6 @@
     <string name="exercise_setunchanged">Nechte svůj cíl glykémie beze změny.</string>
     <string name="exercise_15g">Počkejte, dokud glykémie neklesne pod Váš dočasný cíl hypoglykémie a pak snězte15 g rychlých sacharidů.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/temptarget.html#docasny-cil-pri-pohybove-aktivite</string>
-    <string name="suspendloop_label">Zakázaná/pozastavená smyčka</string>
     <string name="suspendloop_doigetinsulin">Dostávám inzulín, když je smyčka zakázána/pozastavena?</string>
     <string name="suspendloop_yes">Ano, bazální inzulín se dále dodává.</string>
     <string name="suspendloop_no">Ne, podávání inzulínu je zastaveno.</string>
@@ -149,7 +148,6 @@
     <string name="cob3_longer">Nastavením profilu na 150 % dojde k prodloužení doby absorpce sacharidů</string>
     <string name="cob3_shorter">Nastavením profilu na 150 % dojde ke zkrácení doby absorpce sacharidů</string>
     <string name="cob3_no_effect">Nastavení profilu na 150% neovlivní vypočtenou absorpci sacharidů</string>
-    <string name="iob_label">Aktivní inzulín (IOB)</string>
     <string name="iob_value">Hodnota IOB je ovlivněna vydanými dočasnými bazály.</string>
     <string name="iob_hightemp">Vysoký dočasný bazál nebude spuštěn, pokud je Vaše glykémie nižší než cíl.</string>
     <string name="iob_negiob">Negativní IOB po značnou dobu bez cvičení naznačuje, že váš profil je příliš \"silný\" a ve vašem profilu je potřeba méně inzulínu.</string>

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">가상용 펌프를 위한 설정(Open Loop)</string>
+    <string name="virtualpump_settings">가상펌프 설정</string>
+</resources>

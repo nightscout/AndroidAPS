@@ -44,7 +44,6 @@
     <string name="authorizationfailed">Autorizarea a eșuat</string>
     <string name="copytolocalprofile_invalid">Nu se poate crea profilul. Profilul este invalid.</string>
     <string name="cta_dont_kill_my_app_info">Nu-mi opri aplicația?</string>
-    <string name="time_to_eat">Timpul sa mănânci!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="fabric_upload_disabled">Încărcarea jurnalelor de erori este dezactivata!</string>
     <string name="clear_filter">Șterge filtru</string>
     <string name="cannula">Canula</string>

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Gauti kraujo gliukozės vertes iš Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Gauti kraujo gliukozės reikšmes iš xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Gauti kraujo gliukozės reikšmes iš \'Build Your Own Dexcom App\'.</string>
+    <string name="eversense">Eversense programėlė (modifikuota)</string>
+    <string name="description_source_eversense">Gauti kraujo gliukozės vertes iš modifikuotos Eversense programėlės.</string>
+    <string name="description_source_glimp">Gauti kraujo gliukozės vertes iš Glimp.</string>
+    <string name="description_source_mm640g">Gauti kraujo gliukozės vertes iš 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Gauti KG vertes iš Poctech programėlės</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Gauti KG reikšmes iš Glunovo programos</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Gauti KG reikšmes iš Intelligo programos</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Gauti KG vertes iš Tomato programėlės (MiaoMiao)</string>
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Gauti KG reikšmes iš GlucoRx Aidex CGMS programos.</string>
+    <string name="bgsource_upload">KG duomenų perdavimo nustatymai</string>
+</resources>

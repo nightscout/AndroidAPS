@@ -98,21 +98,6 @@
     <string name="sms_profile_switch_created">Profilwechsel wurde erstellt</string>
     <string name="sms_wrong_tbr_duration">Die TBR-Dauer muss ein Vielfaches von %1$d Minuten und größer als 0 sein.</string>
     <string name="a11y_otp_qr_code">QR Code für einmaliges Passwort einrichten</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Insulinprofil für Humalog und NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Insulinprofil für Fiasp</string>
-    <string name="description_insulin_lyumjev">Insulin-Voreinstellung für Lyumjev</string>
-    <string name="description_insulin_free_peak">Erlaubt dir, das Wirkmaximum der Insulinaktivität zu definieren, und sollte nur von erfahrenen Anwendern genutzt werden</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">Wirkungshoch der IOB-Kurve</string>
-    <string name="insulin_peak_time">Wirkungshoch [min]</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
-    <string name="dia_too_short">DIA von %1$f ist zu kurz - AAPS nutzt stattdessen %2$f!</string>
-    <string name="fast_acting_insulin_comment">NovoRapid, NovoLog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip+ Statuszeile (Uhr)</string>
@@ -168,21 +153,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">ZIEL</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Abgeschlossen, gut gemacht!</string>
-    <string name="time_elapsed">Verstrichene Zeit</string>
-    <string name="maxiobset">Maximales IOB richtig gesetzt</string>
-    <string name="hasbgdata">BZ verfügbar von gewählter Quelle</string>
-    <string name="loopenabled">Loop aktiviert</string>
-    <string name="apsselected">APS ausgewählt</string>
-    <string name="closedmodeenabled">Closed mode aktiviert</string>
-    <string name="objectives_shortname">ZIEL</string>
-    <string name="description_objectives">Das Programm kennenlernen</string>
-    <string name="doyouwantresetstart">Möchtest Du den Start der Ziele zurücksetzen? Du verlierst Deine Fortschritte.</string>
-    <string name="objectives_next_button">Weiter</string>
-    <string name="objectives_previous_button">Zurück</string>
-    <string name="objectives_button_unfinish">Ziel erneut öffnen</string>
-    <string name="objectives_button_unstart">Ziel neu starten</string>
     <!-- Actions -->
     <string name="actions">Aktionen</string>
     <string name="description_actions">Einige Schaltflächen, um auf häufig verwendete Funktionen zugreifen zu können.</string>
@@ -202,18 +172,6 @@
     <string name="statuslights_cannula_age">Kanülenalter</string>
     <string name="statuslights_patch_pump_age">Alter Patchpumpe</string>
     <string name="patch_pump">Patch-Pumpe</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Begrenze verzögerten Bolus auf %1$.1f IE wegen %2$s</string>
-    <string name="limitingcarbs">Begrenze Kohlenhydrate auf %1$d g wegen %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pumpe verfügt nicht über temporäre Basalraten</string>
-    <string name="closedmodedisabledinpreferences">Closed-Loop-Modus in den Einstellungen deaktiviert</string>
-    <string name="closed_loop_disabled_on_dev_branch">Entwickler-Version, Closed Loop ist nicht verfügbar.</string>
-    <string name="closed_loop_disabled_with_eb">Closed Loop wegen Verzögerungsbolus unterbrochen</string>
-    <string name="smbalwaysdisabled">SMB wird immer und nach Kohlenhydraten deaktiviert, weil die aktive BZ-Quelle keine geeignete Filterung der Werte unterstützt.</string>
-    <string name="smbnotallowedinopenloopmode">SMB sind im Open Loop Modus nicht erlaubt</string>
-    <string name="maxvalueinpreferences">Max. Wert in den Einstellungen</string>
-    <string name="hardlimit">festem Grenzwert</string>
-    <string name="treatmentssafety_title">Sicherheitseinstellungen der Behandlungen</string>
     <!-- Overview -->
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
     <string name="statuslights_iage_warning">Warnschwelle Insulinalter [h]</string>
@@ -339,49 +297,6 @@
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Diagrammskala</string>
     <string name="graph_menu_divider_header">Diagramm</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Typ der virtuellen Pumpe</string>
-    <string name="virtual_pump_definition">Pumpen-Definition</string>
-    <string name="virtual_pump_pump_def">Bolus: Schritt=%1$s\nVerzögerter Bolus: [Schritt=%2$s, Dauer=%3$smin-%4$sh]\nBasal: Schritt=%5$s\nTBR: %6$s (bei %7$s), Dauer=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VP</string>
-    <string name="description_pump_virtual">Pumpenintegration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
-    <string name="virtual_pump_label">VIRTUELLE PUMPE</string>
-    <string name="virtualpump_settings">Einstellungen der virtuellen Pumpe</string>
-    <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
-    <!-- Source -->
-    <string name="ns_client_bg">Nightscout-Client BZ</string>
-    <string name="ns_client_bg_short">NS BZ</string>
-    <string name="description_source_ns_client">Lade Blutzuckerdaten von Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Empfange Blutzuckerwerte von xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Erhalte BZ-Werte von der \'Build Your Own Dexcom App\'.</string>
-    <string name="eversense">Eversense App (gepatcht)</string>
-    <string name="description_source_eversense">Empfange BZ-Werte von der gepatchten Eversense-App.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Empfange Blutzuckerwerte von Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Empfange Blutzuckerwerte vom 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Empfange Blutzucker-Werte von der Poctech-App.</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Werte von der Glunovo App erhalten</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Empfange Werte von der Intelligo App</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Empfange Blutzucker-Werte von der Tomato-App (MiaoMiao-Geräte)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Erhalte BG-Werte von GlucoRx Aidex CGMS.</string>
-    <string name="random_bg">Zufalls-BZ</string>
-    <string name="description_source_random_bg">Zufalls-BZ Daten erstellen (nur Demo-Modus)</string>
-    <string name="random_bg_short">BZ</string>
-    <string name="do_xdrip_upload_title">Sende BZ-Werte zu xDrip+</string>
-    <string name="do_xdrip_upload_summary">Wähle in xDrip+ 640g/Eversense als Daten-Quelle.</string>
-    <string name="bgsource_upload">BZ Upload Einstellungen</string>
-    <string name="dexcom_log_ns_sensor_change_title">Speichere Sensor Wechsel in Nightscout</string>
     <!-- Skins -->
     <string name="classic_description">Ursprüngliches Erscheinungsbild</string>
     <string name="lowres_description">Darstellung niedrige Auflösung</string>

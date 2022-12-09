@@ -6,4 +6,8 @@
     <!-- Version Checker -->
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="treatmentssafety_title">Sigurnost tretmana</string>
+    <!-- Objectives -->
+    <string name="description_objectives">Program učenja</string>
 </resources>

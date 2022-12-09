@@ -46,7 +46,6 @@
     <string name="authorizationfailed">Удостоверяването неуспешно</string>
     <string name="copytolocalprofile_invalid">Създаването на профила невъзможно. Профилът е невалиден.</string>
     <string name="cta_dont_kill_my_app_info">Не убивай приложението?</string>
-    <string name="time_to_eat">Време за ядене!\nИзпълнете болус съветника и направете изчисления отново.</string>
     <string name="fabric_upload_disabled">Качването на данни за проблеми е забранено!(Fabric)</string>
     <string name="clear_filter">Премахни филтъра</string>
     <string name="cannula">Канюла</string>

@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ neįdiegta</string>
     <string name="calibration_sent">Kalibracija nusiųsta į xDrip+</string>
     <string name="bg_label">KG</string>
-    <string name="time_to_eat">Laikas valgyti</string>
-    <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
     <string name="executing_right_now">Komanda vykdoma</string>
     <string name="basal_value_below_minimum">Valandinės bazės vertė mažesnė už minimalią. Profilis nenustatytas!</string>
     <string name="permission">Leidimas</string>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Insulininställning för vanliga direktverkande insuliner som Humalog, Lispro, Apidra och Novorapid/Novolog</string>
+    <string name="description_insulin_ultra_rapid">Insulininställning för ultrasnabba insuliner, t ex Fiasp</string>
+    <string name="description_insulin_lyumjev">Insulininställning för Lyumjev</string>
+    <string name="description_insulin_free_peak">Låter dig ställa in tidpunkten för toppen på insulinets aktivitet. Bör bara användas av avancerade användare</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Peaktid för IOB-kurvan</string>
+    <string name="insulin_peak_time">Peaktid [min]</string>
+    <string name="free_peak_oref">Free-Peak Oref</string>
+    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <string name="dia_too_short">%1$f tim DIA är för kort. Använder %2$f istället!</string>
+</resources>

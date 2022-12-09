@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ no instal·lat</string>
     <string name="calibration_sent">Calibració enviada a xDrip+</string>
     <string name="bg_label">Glucèmia</string>
-    <string name="time_to_eat">Hora de menjar</string>
-    <string name="time_to_bolus">Hora d’aplicar bolus!\nExecuteu l\'assistent de bolus i torneu a fer els càlculs.</string>
     <string name="executing_right_now">Ordre executant-se ara mateix</string>
     <string name="basal_value_below_minimum">Valor de basal per sota del mínim. Perfil no definit!</string>
     <string name="permission">Permís</string>

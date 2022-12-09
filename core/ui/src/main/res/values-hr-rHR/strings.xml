@@ -108,6 +108,7 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="virtualpump_uploadstatus_title">Prijenos statusa u NS</string>
     <!--    Protection-->
     <string name="wrongpassword">Pogrešna lozinka</string>
     <string name="wrongpin">Pogrešan PIN</string>

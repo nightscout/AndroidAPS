@@ -2,22 +2,15 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Promjena računanja vremena za 24 sata ili manje</string>
-    <string name="dst_loop_disabled_warning">Promjena računanja vremena prije manje od 3 sata - zatvorena petlja onemogućena</string>
     <!-- Storage constraint -->
-    <string name="disk_full">Oslobodite najmanje %1$d MB iz interne pohrane! Petlja onemogućena!</string>
     <!-- Version Checker -->
-    <string name="old_version">stara verzija</string>
-    <string name="very_old_version">vrlo stara verzija</string>
-    <string name="application_expired">Aplikacija je istekla</string>
-    <string name="new_version_warning">Nova verzija dostupna najmanje %1$d dana! Vraćanje na LGS nakon %2$d dana, petlja će biti onemogućena nakon %3$d dana</string>
-    <string name="running_invalid_version">Otkrili smo da koristite nevažeću verziju. Petlja onemogućena!</string>
-    <string name="versionavailable">Dostupna je verzija %1$s</string>
-    <string name="version_expire">Verzija %1$s ističe %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
-    <string name="recalculated_data_used">Korišteni preračunati podaci</string>
-    <string name="bg_too_close">BG preblizu:\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">preračunato</string>
-    <string name="a11y_bg_quality_doubles">dvostruki unosi</string>
+    <!-- Safety -->
+    <string name="treatmentssafety_title">Sigurnosne postavke medikacije</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Dovršeno, bravo!</string>
+    <string name="not_completed_yet">Nije još dovršeno</string>
+    <string name="time_elapsed">Prošlo vrijeme</string>
+    <string name="description_objectives">Program učenja</string>
 </resources>

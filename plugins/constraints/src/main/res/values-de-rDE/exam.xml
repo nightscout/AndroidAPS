@@ -20,6 +20,8 @@
     <string name="pumpdisconnect_unnecessary">Nichts, da kein Insulin abgegeben wird, wenn die Pumpe physisch getrennt ist.</string>
     <string name="pumpdisconnect_notstop">Unterbricht die Insulinzufuhr nicht, wenn die Pumpe physikalisch verbunden bleibt.</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Getting-Started/FAQ.html#andere-einstellungen</string>
+    <string name="objectives_label">AAPS-Einstellungen</string>
+    <string name="objectives2_label">AAPS-Einstellungen</string>
     <string name="objectives_howtosave">Welches ist die empfohlene Vorgehensweise, um ein Backup Deiner Einstellungen zu erstellen?</string>
     <string name="objectives_notesettings">Du brauchst Deine Einstellungen nicht zu exportieren, sofern Du Dir diese notierst.</string>
     <string name="objectives_afterobjective">Exportiere die Einstellungen nach Abschluss eines Objectives (Ziels).</string>
@@ -51,7 +53,6 @@
     <string name="exercise_setunchanged">Lasse Dein Blutzuckerziel unverändert.</string>
     <string name="exercise_15g">Warte, bis die Blutglukose unter das temporäre Hypoziel abfällt und esse dann 15 g schnell wirkende Kohlenhydrate.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Usage/temptarget.html#aktivitaten-temp-target</string>
-    <string name="suspendloop_label">Deaktiviere/Pausiere den Loop</string>
     <string name="suspendloop_doigetinsulin">Bekomme ich Insulin, wenn der Loop deaktiviert/pausiert ist?</string>
     <string name="suspendloop_yes">Ja, Basalinsulin wird weiter abgegeben.</string>
     <string name="suspendloop_no">Nein, die Insulinabgabe ist gestoppt.</string>
@@ -79,8 +80,10 @@
     <string name="prerequisites2_label">Voraussetzungen</string>
     <string name="prerequisites2_profile">Überprüfte und belastbare Profileinstellungen (ISF, I:C Verhältnis, Basalraten, DIA etc.).</string>
     <string name="prerequisites2_device">Ein kompatibles Android-Gerät (z.B. Handy, Android-Uhr oder Tablet).</string>
+    <string name="prerequisites2_internet">AAPS benötigt eine Internetverbindung, um im Closed Loop laufen zu können.</string>
     <string name="prerequisites2_supportedcgm">Ein unterstütztes CGM und eine passende App, um Blutzuckerwerte auf dem Gerät zu erhalten.</string>
     <string name="prerequisites2_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Module/module.html</string>
+    <string name="update_label">Aktualisiere AAPS</string>
     <string name="whatistrue">Kreuze alle richtigen Antworten an.</string>
     <string name="update_git">Du musst Git auf Deinem Computer installiert und konfiguriert haben.</string>
     <string name="update_keys">Du solltest den Speicherort des Keystores speichern und immer den gleichen Signaturschlüssel für Updates verwenden wie für die vorherige Installation.</string>
@@ -88,11 +91,11 @@
     <string name="update_askfriend">Wenn Du Schwierigkeiten beim Erstellen der apk hast, kannst Du eine apk installieren, die von einem Freund erstellt wurde.</string>
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Installing-AndroidAPS/Update-to-new-version.html</string>
     <string name="troubleshooting_label">Problembehandlung</string>
+    <string name="troubleshooting_wheretoask">Wo können Sie nach Hilfe bei AAPS suchen?</string>
     <string name="troubleshooting_yourendo">Du solltest Deine Diabetesklinik / Deinen Diabetologen fragen.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Installing-AndroidAPS/Update-to-new-version.html#problembehandlung</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/loopedDE/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
-    <string name="insulin_plugins">Insulin-Plugins</string>
     <string name="insulin_ultrarapid">Welches Insulin kann mit dem Ultra-Rapid-Oref-Plugin verwendet werden?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
@@ -128,7 +131,6 @@
     <string name="cob3_longer">Die Einstellung des Profils auf 150% verlängert die Zeit für Kohlenhydrataufnahme</string>
     <string name="cob3_shorter">Die Einstellung des Profils auf 150% verkürzt die Zeit für Kohlenhydrataufnahme</string>
     <string name="cob3_no_effect">Die Einstellung des Profils auf 150% verändert die Zeit für die Kohlenhydrataufnahme nicht</string>
-    <string name="iob_label">Aktives Insulin (IOB)</string>
     <string name="iob_value">IOB wird von den abgegebenen temporären Basalraten beeinflusst.</string>
     <string name="iob_hightemp">Eine hohe temporäre Basalrate wird nicht abgegeben, wenn der BZ unterhalb des Zielwerts liegt.</string>
     <string name="iob_negiob">Ein negativer IOB über einen längeren Zeitraum bei fehlender Bewegung deutet darauf hin, dass Dein Profil zu stark ist und weniger Insulin in Deinen Einstellungen benötigt wird.</string>
