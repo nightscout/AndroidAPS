@@ -80,17 +80,6 @@
     <string name="treatments">Tretmani</string>
     <!--    OverviewMenu-->
     <string name="overview_show_treatments">Tretmani</string>
-    <!-- VirtualPump -->
-    <string name="description_pump_virtual">Integracija pumpe za pumpe koje još uvek nemaju upravljački program (Open Loop)</string>
-    <string name="virtual_pump_label">VIRTUALNA PUMPA</string>
-    <!-- Source -->
-    <string name="description_source_ns_client">Preuzimajte podatke GUK sa Nightscout-a</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Preuzimajte vrijednosti GUK od xDrip+.</string>
-    <string name="description_source_eversense">Preuzimajte vrednosti GUK iz zakrpljene aplikacije Eversense.</string>
-    <string name="description_source_glimp">Preuzimajte vrednosti GUK od Glimp-a.</string>
-    <string name="description_source_mm640g">Preuzimajte vrednosti GUK od 600SeriesAndroidUploader-a.</string>
-    <string name="random_bg_short">GUK</string>
     <!-- Skins -->
     <!--    DataBroadcast-->
     <!--    Iob-->
