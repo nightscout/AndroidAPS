@@ -43,7 +43,6 @@
     <string name="chartmenu">차트 메뉴</string>
     <string name="authorizationfailed">인증 실패</string>
     <string name="cta_dont_kill_my_app_info">앱이 종료되지 않도록 합니다?</string>
-    <string name="time_to_eat">식사할 시간입니다! \nBolus wizard를 켜고 다시 계산하십시오.</string>
     <string name="fabric_upload_disabled">충돌 로그 업로드가 작동하지 않습니다.</string>
     <string name="clear_filter">필터 지우기</string>
     <string name="cannula">캐뉼라</string>
