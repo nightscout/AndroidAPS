@@ -46,7 +46,6 @@
     <string name="authorizationfailed">Autorizácia zlyhala</string>
     <string name="copytolocalprofile_invalid">Nie je možné vytvoriť lokálny profil. Profil je neplatný.</string>
     <string name="cta_dont_kill_my_app_info">Nepotláčať moju aplikáciu?</string>
-    <string name="time_to_eat">Čas na jedlo!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
     <string name="fabric_upload_disabled">Odosielanie protokolov o zlyhaní je zakázané!</string>
     <string name="clear_filter">Vyčistiť filter</string>
     <string name="cannula">Kanyla</string>
