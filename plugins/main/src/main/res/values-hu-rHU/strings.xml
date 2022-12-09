@@ -54,15 +54,6 @@
     <string name="overview_show_abs_insulin">Inzulin összesen</string>
     <string name="basal_shortname">BÁZ</string>
     <string name="graph_menu_divider_header">Grafikon</string>
-    <!-- VirtualPump -->
-    <!-- Source -->
-    <string name="glimp">Glimp</string>
-    <string name="mm640g">MM640g</string>
-    <string name="poctech">Poctech</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="random_bg">Véletlenszerű VC</string>
-    <string name="random_bg_short">VC</string>
     <!-- Skins -->
     <string name="classic_description">Eredeti megjelenés</string>
     <string name="lowres_description">Alacsony felbontás</string>
