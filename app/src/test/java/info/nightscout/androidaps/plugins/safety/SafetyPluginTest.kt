@@ -98,7 +98,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test
     fun disabledEngineeringModeShouldLimitClosedLoop() {
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.CLOSED.lowercase)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         `when`(config.isEngineeringModeOrRelease()).thenReturn(false)
         var c = Constraint(true)
         c = safetyPlugin.isClosedLoopAllowed(c)
@@ -108,7 +108,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
 
     @Test
     fun setOpenLoopInPreferencesShouldLimitClosedLoop() {
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.OPEN.lowercase)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
         var c = Constraint(true)
         c = safetyPlugin.isClosedLoopAllowed(c)
         Assertions.assertTrue(c.getReasons(aapsLogger).contains("Closed loop mode disabled in preferences"))
@@ -278,7 +278,7 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         //`when`(openAPSSMBPlugin.isEnabled()).thenReturn(true)
         //`when`(openAPSAMAPlugin.isEnabled()).thenReturn(false)
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.LGS.lowercase)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.LGS.name)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("teenage")

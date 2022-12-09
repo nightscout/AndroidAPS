@@ -430,7 +430,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Test
     fun iobAMAShouldBeLimited() {
         // No limit by default
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.CLOSED.lowercase)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapsma_max_iob, 1.5)).thenReturn(1.5)
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("teenage")
         openAPSAMAPlugin.setPluginEnabled(PluginType.APS, true)
@@ -446,7 +446,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Test
     fun iobSMBShouldBeLimited() {
         // No limit by default
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)).thenReturn(ApsMode.CLOSED.lowercase)
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         `when`(sp.getDouble(info.nightscout.plugins.aps.R.string.key_openapssmb_max_iob, 3.0)).thenReturn(3.0)
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("teenage")
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)

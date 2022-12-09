@@ -1,10 +1,10 @@
 package info.nightscout.interfaces
 
-enum class ApsMode(val lowercase: String) {
-    OPEN("open"),
-    CLOSED("closed"),
-    LGS("lgs"),
-    UNDEFINED("undefined");
+enum class ApsMode() {
+    OPEN,
+    CLOSED,
+    LGS,
+    UNDEFINED;
 
     companion object {
 

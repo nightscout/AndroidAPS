@@ -162,7 +162,7 @@ class LoopDialog : DaggerDialogFragment() {
         val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(Constraint(true))
         val closedLoopAllowed2 = activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) ?: false
         val lgsEnabled = constraintChecker.isLgsAllowed(Constraint(true))
-        val apsMode = ApsMode.secureValueOf(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase))
+        val apsMode = ApsMode.secureValueOf(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
         val pump = activePlugin.activePump
 
         binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()
@@ -211,27 +211,27 @@ class LoopDialog : DaggerDialogFragment() {
             else                                                   -> {
                 binding.overviewLoop.visibility = View.VISIBLE
                 binding.overviewEnable.visibility = View.GONE
-                when {
-                    apsMode == ApsMode.CLOSED -> {
+                when (apsMode) {
+                    ApsMode.CLOSED -> {
                         binding.overviewCloseloop.visibility = View.GONE
                         binding.overviewLgsloop.visibility = View.VISIBLE
                         binding.overviewOpenloop.visibility = View.VISIBLE
                     }
 
-                    apsMode == ApsMode.LGS    -> {
+                    ApsMode.LGS    -> {
                         binding.overviewCloseloop.visibility = closedLoopAllowed.value().toVisibility()   //show Close loop button only if Close loop allowed
                         binding.overviewLgsloop.visibility = View.GONE
                         binding.overviewOpenloop.visibility = View.VISIBLE
                     }
 
-                    apsMode == ApsMode.OPEN   -> {
+                    ApsMode.OPEN   -> {
                         binding.overviewCloseloop.visibility =
                             closedLoopAllowed2.toVisibility()          //show CloseLoop button only if Objective 6 is completed (closedLoopAllowed always false in open loop mode)
                         binding.overviewLgsloop.visibility = lgsEnabled.value().toVisibility()
                         binding.overviewOpenloop.visibility = View.GONE
                     }
 
-                    else                -> {
+                    else           -> {
                         binding.overviewCloseloop.visibility = View.GONE
                         binding.overviewLgsloop.visibility = View.GONE
                         binding.overviewOpenloop.visibility = View.GONE
@@ -283,21 +283,21 @@ class LoopDialog : DaggerDialogFragment() {
         when (v.id) {
             R.id.overview_closeloop                       -> {
                 uel.log(UserEntry.Action.CLOSED_LOOP_MODE, UserEntry.Sources.LoopDialog)
-                sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.lowercase)
+                sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.name)
                 rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.ui.R.string.closedloop)))
                 return true
             }
 
             R.id.overview_lgsloop                         -> {
                 uel.log(UserEntry.Action.LGS_LOOP_MODE, UserEntry.Sources.LoopDialog)
-                sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.LGS.lowercase)
+                sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.LGS.name)
                 rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)))
                 return true
             }
 
             R.id.overview_openloop                        -> {
                 uel.log(UserEntry.Action.OPEN_LOOP_MODE, UserEntry.Sources.LoopDialog)
-                sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase)
+                sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)
                 rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)))
                 return true
             }

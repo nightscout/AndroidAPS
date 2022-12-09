@@ -67,7 +67,7 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        val mode = ApsMode.secureValueOf(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase))
+        val mode = ApsMode.secureValueOf(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
         if (mode == ApsMode.OPEN) value.set(aapsLogger, false, rh.gs(R.string.closedmodedisabledinpreferences), this)
         if (!config.isEngineeringModeOrRelease()) {
             if (value.value()) {
@@ -160,7 +160,7 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
-        val apsMode = ApsMode.secureValueOf(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.lowercase))
+        val apsMode = ApsMode.secureValueOf(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
         if (apsMode == ApsMode.LGS) maxIob.setIfSmaller(aapsLogger, HardLimits.MAX_IOB_LGS, rh.gs(info.nightscout.core.ui.R.string.limiting_iob, HardLimits.MAX_IOB_LGS, rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)), this)
         return maxIob
     }
