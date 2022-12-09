@@ -272,42 +272,6 @@
     <string name="treatments_shortname">Леч</string>
     <string name="sensitivity_shortname">ЧУВСТВ</string>
     <string name="graph_menu_divider_header">Графика</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Виртуална помпа тип</string>
-    <string name="virtual_pump_definition">Описание на помпата</string>
-    <string name="virtual_pump_pump_def">Болус: Стъпка =%1$s\Удължен болус: [стъпка =%2$s, продължителност =%3$smin -%4$sh] \nБазал: стъпка =%5$s\ nTBR: %6$s (от %7$s), продължителност =%8$sмин -%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">ВП</string>
-    <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
-    <string name="virtual_pump_label">ВИРТУАЛНА ПОМПА</string>
-    <string name="virtualpump_settings">Настойки Виртуална Помпа</string>
-    <!-- Source -->
-    <string name="ns_client_bg">КЗ от NS</string>
-    <string name="ns_client_bg_short">NS КЗ</string>
-    <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Получаване на данни за КЗ от xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="eversense">Eversense приложение(модифицирано)</string>
-    <string name="description_source_eversense">Получава данни за КЗ от модифицираното приложение на Eversense.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Получават стойности на КЗ от 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Получавай данни за КЗ от Poctech апликацията.</string>
-    <string name="glunovo">Глуново</string>
-    <string name="description_source_glunovo">Получавай данните от Glunowo апликацията</string>
-    <string name="tomato">Tomato(MяоМяо)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Получавай КЗ от Tomato апликация (устройство МяоМяо)</string>
-    <string name="random_bg">Произволна КЗ</string>
-    <string name="description_source_random_bg">Генерира произволни захари(демо режим)</string>
-    <string name="random_bg_short">КЗ</string>
-    <string name="do_xdrip_upload_title">Изпращай данни за КЗ към xDrip+</string>
-    <string name="do_xdrip_upload_summary">В xDrip+ изберете 640g/Eversense за източник на данни</string>
-    <string name="bgsource_upload">Настройки при качване на КЗ към Nightscout</string>
-    <string name="dexcom_log_ns_sensor_change_title">Записвай смяната на сензор в NS</string>
     <!-- Skins -->
     <string name="classic_description">Оригинален изглед</string>
     <string name="lowres_description">Скин за ниска резолюция</string>
