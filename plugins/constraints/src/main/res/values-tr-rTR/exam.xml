@@ -59,7 +59,6 @@
     <string name="exercise_setunchanged">Kan şekeri hedefinizi değiştirmeden bırakın.</string>
     <string name="exercise_15g">Kan şekeri, hipo geçici hedefinizin altına düşene kadar bekleyin ve ardından 15 g hızlı etkili karbonhidrat yiyin.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">Döngüyü Devre Dışı bırakma/Askıya alma</string>
     <string name="suspendloop_doigetinsulin">Döngü devre dışı bırakıldığında/askıya alındığında insülin alır mıyım?</string>
     <string name="suspendloop_yes">Evet, bazal insülin verilmeye devam ediyor.</string>
     <string name="suspendloop_no">Hayır, insülin iletimi durdurulur.</string>
@@ -149,7 +148,6 @@
     <string name="cob3_longer">Profili %150\'ye ayarlamak karbonhidratların daha uzun sürede emilmesini sağlar</string>
     <string name="cob3_shorter">Profili %150\'ye ayarlamak karbonhidratların daha kısa sürede emilmesini sağlar</string>
     <string name="cob3_no_effect">Profili %150\'ye ayarlamak hesaplanan karbonhidrat emilimini etkilemez</string>
-    <string name="iob_label">Aktif İnsülin (AİNS)</string>
     <string name="iob_value">AİNS değeri, verilen geçici bazallardan etkilenir.</string>
     <string name="iob_hightemp">Kan şekeriniz hedefin altına düştüğünde yüksek geçici bazal verilmeyecektir.</string>
     <string name="iob_negiob">Egzersiz yapmadığınız halde uzun bir dönem için negatif AİNS, profilinizin çok güçlü olduğunu ve ayarlarınızda daha az insüline ihtiyaç duyulduğunu gösterir.</string>
