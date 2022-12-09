@@ -302,49 +302,6 @@
     <string name="sensitivity_shortname">SENZ</string>
     <string name="graph_scale">Mierka grafu</string>
     <string name="graph_menu_divider_header">Graf</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Typ virtuálnej pumpy</string>
-    <string name="virtual_pump_definition">Definícia pumpy</string>
-    <string name="virtual_pump_pump_def">Bolus: Krok =%1$s\nPredl. bolus: [Krok=%2$s, Dĺžka=%3$smin-%4$sh]\nBazál: Krok=%5$s\nDoč. bazál: %6$s (%7$s), Dĺžka=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUM</string>
-    <string name="description_pump_virtual">Ovládač pumpy pre užívateľov bez podporovanej pumpy (Otvorený okruh)</string>
-    <string name="virtual_pump_label">Virtuálna pumpa</string>
-    <string name="virtualpump_settings">Nastavenie virtuálnej pumpy</string>
-    <!-- Source -->
-    <string name="ns_client_bg">Glykémie z NS</string>
-    <string name="ns_client_bg_short">NS GL</string>
-    <string name="description_source_ns_client">Získavať hodnoty glykémií z Nightscoutu</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Prijímať hodnoty glykémií z xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Prijímať hodnoty glykémií z upravenej aplikácie Dexcom (BYODA).</string>
-    <string name="eversense">Eversense aplikácia (upravená)</string>
-    <string name="description_source_eversense">Získavať glykémie z upravenej Eversense aplikácie.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Získavať hodnoty glykémií z aplikácie Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Získavať hodnoty glykémií z 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Získavať glykémie z aplikácie Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Získavať glykémie z aplikácie Glunovo</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Prijímať hodnoty z aplikácie Intelligo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Prijímať glykémie z aplikácie Tomato (zariadenie MiaoMiao)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Prijímať hodnoty glykémie zo senzora GlucoRx Aidex.</string>
-    <string name="random_bg">Náhodná glykémia</string>
-    <string name="description_source_random_bg">Vygeneruj náhodné dáta glykémií (iba Demo režim)</string>
-    <string name="random_bg_short">Gly</string>
-    <string name="do_xdrip_upload_title">Odosielať glykémie do xDrip+</string>
-    <string name="do_xdrip_upload_summary">V xDrip+ vyberte zdroj dát 640g/Eversense</string>
-    <string name="bgsource_upload">Nastavenie nahrávania glykémie</string>
-    <string name="dexcom_log_ns_sensor_change_title">Ulož výmenu senzora do NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Vytvoriť udalosť \"Výmena senzora\" v NS automaticky pri spustení senzora</string>
     <!-- Skins -->
     <string name="classic_description">Pôvodný vzhľad</string>
     <string name="lowres_description">Vzhľad pre nízke rozlišenie</string>
