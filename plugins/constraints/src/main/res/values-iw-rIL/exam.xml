@@ -59,7 +59,6 @@
     <string name="exercise_setunchanged">השאירו את ערך מטרת הסוכר ללא שינוי.</string>
     <string name="exercise_15g">המתינו עד שהגלוקוז בדם יירד מתחת לערך המטרה של היפו ואז אכלו 15 גרם של פחמימות מהירות.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">השבתת \\ השהיית לולאה</string>
     <string name="suspendloop_doigetinsulin">האם אני מקבל\\ת אינסולין כאשר הלולאה מושבתת\\מושהית?</string>
     <string name="suspendloop_yes">כן, אינסולין בזאלי ממשיך להינתן.</string>
     <string name="suspendloop_no">לא, אספקת האינסולין נפסקת.</string>
@@ -109,7 +108,6 @@
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
-    <string name="insulin_plugins">תוספי אינסולין</string>
     <string name="insulin_ultrarapid">באיזה אינסולין להשתמש עם תוסף האולטרה מהיר?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
@@ -149,7 +147,6 @@
     <string name="cob3_longer">הגדרת 150% פרופיל תגרום להארכת משך ספיגת הפחמימות</string>
     <string name="cob3_shorter">הגדרת 150% פרופיל תגרום לקיצור משך ספיגת הפחמימות</string>
     <string name="cob3_no_effect">הגדרת 150% פרופיל לא תשפיע על חישוב משך ספיגת הפחמימות</string>
-    <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
     <string name="iob_value">ערך האינסולין הפעיל (IOB) מושפע ממינונים בזאליים זמניים שסופקו.</string>
     <string name="iob_hightemp">מינון בזאלי גבוה לא יינתן כאשר רמת הסוכר נמוכה מערך המטרה.</string>
     <string name="iob_negiob">אינסולין פעיל שלילי לאורך זמן בו לא נעשית פעילות מצביע על כך שהפרופיל חזק מדי, נדרש פחות אינסולין ויש להגדיר זאת בפרופיל.</string>
