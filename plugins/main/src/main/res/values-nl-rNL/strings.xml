@@ -301,49 +301,6 @@
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Grafiek schaal</string>
     <string name="graph_menu_divider_header">Grafiek</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Virtuele pomp Type</string>
-    <string name="virtual_pump_definition">Pomp definitie</string>
-    <string name="virtual_pump_pump_def">Bolus: Stap=%1$s\nExtended Bolus: [Stap=%2$s, Duur=%3$smin-%4$sh]\nBasaal: Stap=%5$s\nTBR: %6$s (by %7$s), Duur=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMP</string>
-    <string name="description_pump_virtual">Pomp integratie voor pompen, waar nog geen driver voor is (Open Loop)</string>
-    <string name="virtual_pump_label">VIRTUELE POMP</string>
-    <string name="virtualpump_settings">Virtuele pomp instellingen</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient BG</string>
-    <string name="ns_client_bg_short">NS BG</string>
-    <string name="description_source_ns_client">Download BG waardes van Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Ontvang BG waardes van xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Ontvang BG waarden van de \'Build Your Own Dexcom App\' (BYODA).</string>
-    <string name="eversense">Eversense App (aangepast)</string>
-    <string name="description_source_eversense">Ontvang BG waardes van de aangepaste Eversense app.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Ontvang BG waardes van Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Ontvang BG waardes van 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Ontvang BG waardes van Poctech app</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Ontvang waardes van Glunovo app</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Ontvang waarden van de Intelligo app</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Ontvang BG waardes van Tomato app (MiaoMiao apparaatje)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Ontvang BG waarden van GlucoRx Aidex CGMS.</string>
-    <string name="random_bg">Willekeurige BG</string>
-    <string name="description_source_random_bg">Willekeurige BG gegevens genereren (alleen Demo modus)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Stuur BG data naar xDrip+</string>
-    <string name="do_xdrip_upload_summary">In xDrip+ kies 640g/Eversense data bron</string>
-    <string name="bgsource_upload">BG upload instellingen</string>
-    <string name="dexcom_log_ns_sensor_change_title">Noteer sensor wissel in NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Noteer automatisch \"Sensor Wissel\" in NS bij starten van sensor</string>
     <!-- Skins -->
     <string name="classic_description">Klassiek weergave thema</string>
     <string name="lowres_description">Lage resolutie skin</string>
