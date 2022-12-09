@@ -97,21 +97,6 @@
     <string name="sms_read_status_failed">Error en llegir estat</string>
     <string name="sms_profile_switch_created">Canvi de perfil creat</string>
     <string name="sms_wrong_tbr_duration">La durada d\'una TBR ha de ser múltiple de %1$d minuts i més gran que 0.</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Configuració preestablerta per insulina Humalog i NovoRapid/NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Configuració preestablerta per insulina Fiasp</string>
-    <string name="description_insulin_lyumjev">Configuració preestablerta per insulina Lyumjev</string>
-    <string name="description_insulin_free_peak">Permet definir el pic d\'activitat de la insulina. A utilitzar només per usuaris avançats</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">Pic de la corba IOB</string>
-    <string name="insulin_peak_time">Temps del pic [min]</string>
-    <string name="free_peak_oref">Oref sense pic</string>
-    <string name="rapid_acting_oref">Oref ràpida</string>
-    <string name="ultra_rapid_oref">Oref ultra ràpida</string>
-    <string name="dia_too_short">DIA de %1$f massa curt - utilitzant %2$f!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">Línia d\'estat d\'xDrip+ (rellotge)</string>
