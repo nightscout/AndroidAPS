@@ -1,7 +1,7 @@
 package info.nightscout.plugins.aps.openAPSAMA
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.aps.APSResultObject
+import info.nightscout.plugins.aps.APSResultObject
 import info.nightscout.rx.logging.LTag
 import org.json.JSONException
 import org.json.JSONObject

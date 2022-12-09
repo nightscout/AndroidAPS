@@ -14,8 +14,8 @@ import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.configuration.activities.SingleFragmentActivity
 import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.services.AlarmSoundService
-import info.nightscout.core.services.AlarmSoundServiceHelper
+import info.nightscout.ui.services.AlarmSoundService
+import info.nightscout.ui.services.AlarmSoundServiceHelper
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSAlarm

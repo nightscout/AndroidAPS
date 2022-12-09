@@ -1,4 +1,4 @@
-package info.nightscout.core.iob.iobCobCalculator.data
+package info.nightscout.plugins.iob.iobCobCalculator.data
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.Constants
@@ -22,18 +22,22 @@ class AutosensDataObject(injector: HasAndroidInjector) : AutosensData {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var dateUtil: DateUtil
 
+    init {
+        injector.androidInjector().inject(this)
+    }
+
     override var time = 0L
     override var bg = 0.0 // mgdl
     override var pastSensitivity = ""
     override var deviation = 0.0
     override var validDeviation = false
-    var activeCarbsList: MutableList<AutosensData.CarbsInPast> = ArrayList()
-    var absorbed = 0.0
+    override var activeCarbsList: MutableList<AutosensData.CarbsInPast> = ArrayList()
+    override var absorbed = 0.0
     override var carbsFromBolus = 0.0
     override var cob = 0.0
-    var bgi = 0.0
-    var delta = 0.0
-    var avgDelta = 0.0
+    override var bgi = 0.0
+    override var delta = 0.0
+    override var avgDelta = 0.0
     override var avgDeviation = 0.0
     override var autosensResult = AutosensResult()
     override var slopeFromMaxDeviation = 0.0
@@ -86,7 +90,7 @@ class AutosensDataObject(injector: HasAndroidInjector) : AutosensData {
     }
 
     // remove carbs older than timeframe
-    fun removeOldCarbs(toTime: Long, isAAPSOrWeighted: Boolean) {
+    override fun removeOldCarbs(toTime: Long, isAAPSOrWeighted: Boolean) {
         val maxAbsorptionHours: Double =
             if (isAAPSOrWeighted) sp.getDouble(info.nightscout.core.utils.R.string.key_absorption_maxtime, Constants.DEFAULT_MAX_ABSORPTION_TIME)
             else sp.getDouble(info.nightscout.core.utils.R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME)
@@ -102,7 +106,7 @@ class AutosensDataObject(injector: HasAndroidInjector) : AutosensData {
         }
     }
 
-    fun deductAbsorbedCarbs() {
+    override fun deductAbsorbedCarbs() {
         var ac = absorbed
         var i = 0
         while (i < activeCarbsList.size && ac > 0) {
@@ -114,8 +118,5 @@ class AutosensDataObject(injector: HasAndroidInjector) : AutosensData {
             }
             i++
         }
-    }
-    init {
-        injector.androidInjector().inject(this)
     }
 }

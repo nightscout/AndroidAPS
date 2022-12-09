@@ -1,9 +1,10 @@
-package info.nightscout.core.aps
+package info.nightscout.plugins.aps
 
 import android.text.Spanned
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.convertedToPercent
+import info.nightscout.core.ui.R
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.constraints.Constraint
@@ -14,7 +15,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
+import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -41,7 +42,7 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
 
-    var date: Long = 0
+    override var date: Long = 0
     override var reason: String = ""
     override var rate = 0.0
     override var percent = 0
@@ -116,11 +117,11 @@ open class APSResultObject @Inject constructor(val injector: HasAndroidInjector)
 
             // reason
             ret += "<b>" + rh.gs(info.nightscout.core.ui.R.string.reason) + "</b>: " + reason.replace("<", "&lt;").replace(">", "&gt;")
-            return fromHtml(ret)
+            return HtmlHelper.fromHtml(ret)
         }
         return if (isCarbsRequired) {
-            fromHtml(carbsRequiredText)
-        } else fromHtml(rh.gs(info.nightscout.core.ui.R.string.nochangerequested))
+            HtmlHelper.fromHtml(carbsRequiredText)
+        } else HtmlHelper.fromHtml(rh.gs(R.string.nochangerequested))
     }
 
     override fun newAndClone(injector: HasAndroidInjector): APSResult {

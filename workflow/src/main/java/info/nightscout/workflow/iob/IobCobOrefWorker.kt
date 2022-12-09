@@ -6,7 +6,6 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.events.EventIobCalculationProgress
-import info.nightscout.core.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
@@ -56,7 +55,7 @@ class IobCobOrefWorker @Inject internal constructor(
 
     class IobCobOrefWorkerData(
         val injector: HasAndroidInjector,
-        val iobCobCalculatorPlugin: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
+        val iobCobCalculator: IobCobCalculator, // cannot be injected : HistoryBrowser uses different instance
         val reason: String,
         val end: Long,
         val limitDataToOldestAvailable: Boolean,
@@ -75,9 +74,9 @@ class IobCobOrefWorker @Inject internal constructor(
                 return Result.success(workDataOf("Error" to "app still initializing"))
             }
             //log.debug("Locking calculateSensitivityData");
-            val oldestTimeWithData = data.iobCobCalculatorPlugin.calculateDetectionStart(data.end, data.limitDataToOldestAvailable)
+            val oldestTimeWithData = data.iobCobCalculator.calculateDetectionStart(data.end, data.limitDataToOldestAvailable)
             // work on local copy and set back when finished
-            val ads = data.iobCobCalculatorPlugin.ads.clone()
+            val ads = data.iobCobCalculator.ads.clone()
             val bucketedData = ads.bucketedData
             val autosensDataTable = ads.autosensDataTable
             if (bucketedData == null || bucketedData.size < 3) {
@@ -110,7 +109,7 @@ class IobCobOrefWorker @Inject internal constructor(
                 }
                 aapsLogger.debug(LTag.AUTOSENS, "Processing calculation thread: ${data.reason} ($i/${bucketedData.size})")
                 val sens = profile.getIsfMgdl(bgTime)
-                val autosensData = AutosensDataObject(data.injector)
+                val autosensData = data.iobCobCalculator.provideEmptyAutosensDataObject()
                 autosensData.time = bgTime
                 if (previous != null) autosensData.activeCarbsList = previous.cloneCarbsList() else autosensData.activeCarbsList = ArrayList()
 
@@ -125,7 +124,7 @@ class IobCobOrefWorker @Inject internal constructor(
                 autosensData.bg = bg
                 delta = bg - bucketedData[i + 1].value
                 avgDelta = (bg - bucketedData[i + 3].value) / 3
-                val iob = data.iobCobCalculatorPlugin.calculateFromTreatmentsAndTemps(bgTime, profile)
+                val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(bgTime, profile)
                 val bgi = -iob.activity * sens * 5
                 val deviation = delta - bgi
                 val avgDeviation = ((avgDelta - bgi) * 1000).roundToLong() / 1000.0
@@ -260,7 +259,7 @@ class IobCobOrefWorker @Inject internal constructor(
                 autosensData.autosensResult = sensitivity
                 aapsLogger.debug(LTag.AUTOSENS, autosensData.toString())
             }
-            data.iobCobCalculatorPlugin.ads = ads
+            data.iobCobCalculator.ads = ads
             Thread {
                 SystemClock.sleep(1000)
                 rxBus.send(EventAutosensCalculationFinished(data.cause))
