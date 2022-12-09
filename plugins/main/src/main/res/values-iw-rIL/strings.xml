@@ -297,49 +297,6 @@
     <string name="sensitivity_shortname">רגישות</string>
     <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="graph_menu_divider_header">גרף</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">סוג משאבה וירטואלית</string>
-    <string name="virtual_pump_definition">הגדרת משאבה</string>
-    <string name="virtual_pump_pump_def">בולוס: צעד=%1$s\nבולוס ממושך: [צעד=%2$s, משך=%3$s מינ\'-%4$sש\']\nבזאלי: צעד=%5$s\nבזאלי זמני: %6$s (עם %7$s), משך=%8$s מינ\'-%9$sש\'\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMP</string>
-    <string name="description_pump_virtual">שימוש במשאבות אשר עדיין אין להם מנהל התקן כלשהו (לולאה פתוחה)</string>
-    <string name="virtual_pump_label">משאבה וירטואלית</string>
-    <string name="virtualpump_settings">הגדרות משאבה וירטואלית</string>
-    <!-- Source -->
-    <string name="ns_client_bg">נתוני סוכר מ-NSClient</string>
-    <string name="ns_client_bg_short">סוכר NS</string>
-    <string name="description_source_ns_client">הורדת ערכי סוכר בדם מ-Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">קבלת ערכי סוכר מ-xDrip.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">השתמש בנתוני הסוכר מאפליקציית \"בנה לעצמך דקסקום\" (BYODA).</string>
-    <string name="eversense">אפליקלציית Eversense (עם פאץ\')</string>
-    <string name="description_source_eversense">קבלת ערכי רמת סוכר מאפליקציית Eversense עם פאץ\'.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">קבלת ערכי סוכר בדם מאפליקציית Glimp.</string>
-    <string name="mm640g">Minimed 640G</string>
-    <string name="description_source_mm640g">קבלת ערכי סוכר בדם מ-600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">קבלת ערכי סוכר מיישום Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">קבלת ערכי סוכר מיישום Glunovo</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">קבלת ערכי סוכר מיישום Intelligo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">קבלת ערכי סוכר מאפליקציית Tomato (התקן MiaoMiao)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">קבלת נתוני סוכר מחיישני GlucoRx Aidex.</string>
-    <string name="random_bg">נתוני סוכר אקראיים</string>
-    <string name="description_source_random_bg">הפקת נתוני גלוקוז אקראיים (מצב הדגמה בלבד)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">שליחת נתוני סוכר אל xDrip</string>
-    <string name="do_xdrip_upload_summary">ב-xDrip בחרו 640g/Eversense כמקור נתונים</string>
-    <string name="bgsource_upload">הגדרות העלאת ערכי סוכר בדם</string>
-    <string name="dexcom_log_ns_sensor_change_title">רישום החלפת סנסור ב-Nightscout</string>
-    <string name="dexcom_log_ns_sensor_change_summary">רישום אירוע \"החלפת סנסור\" ב-Nightscout באופן אוטומטי בעת הפעלת החיישן</string>
     <!-- Skins -->
     <string name="classic_description">סקין מקורי</string>
     <string name="lowres_description">סקין רזולוציה נמוכה</string>
