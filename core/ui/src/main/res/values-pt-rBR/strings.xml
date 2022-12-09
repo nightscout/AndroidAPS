@@ -157,6 +157,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">FSI</string>
+    <string name="virtualpump_uploadstatus_title">Enviar estado para NS</string>
+    <string name="suspendloop_label">Loop Desativado/Suspenso</string>
+    <string name="iob_label">Insulina ativa (IA)</string>
     <!--    Protection-->
     <string name="wrongpassword">Senha incorreta</string>
     <string name="wrongpin">PIN incorreto</string>
