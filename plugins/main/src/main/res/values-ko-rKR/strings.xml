@@ -260,37 +260,6 @@
     <string name="treatments_shortname">TREAT</string>
     <string name="sensitivity_shortname">민감도</string>
     <string name="graph_menu_divider_header">그래프</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">가성펌프 종류</string>
-    <string name="virtual_pump_definition">펌프 정의</string>
-    <string name="virtual_pump_pump_def">Bolus: 스텝=%1$s\n확장Bolus: [Step=%2$s, 기간=%3$s분-%4$s시]\nBasal: 스텝=%5$s\n임시Basal: %6$s (by %7$s), 기간=%8$s분-%9$s시\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMP</string>
-    <string name="description_pump_virtual">가상용 펌프를 위한 설정(Open Loop)</string>
-    <string name="virtual_pump_label">가상 펌프</string>
-    <string name="virtualpump_settings">가상펌프 설정</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient 혈당</string>
-    <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">xDrip+에서 혈당값 받기</string>
-    <string name="eversense">Eversense 앱(패치버전)</string>
-    <string name="description_source_eversense">패치된 Eversense 앱에서 혈당값 받기</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Glimp에서 혈당값 받기</string>
-    <string name="mm640g">미니메드640g</string>
-    <string name="description_source_mm640g">600SeriesAndroidUploader에서 혈당값 받기</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Poctech 앱에서 혈당값 받기</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">혈당값이 Tomato앱(MiaoMaio장치) 으로부터 수신되었습니다.</string>
-    <string name="random_bg">무작위 혈당</string>
-    <string name="description_source_random_bg">무작위로 혈당을 생성합니다(데모 버전 전용)</string>
-    <string name="random_bg_short">혈당</string>
-    <string name="do_xdrip_upload_title">혈당 데이터를 xDrip+에 전송하기</string>
-    <string name="do_xdrip_upload_summary">xDrip+ 데이터 소스에서 640g/Eversense을 선택하세요</string>
-    <string name="bgsource_upload">혈당 업로드 설정</string>
-    <string name="dexcom_log_ns_sensor_change_title">센서 교체 NS에 기록하기</string>
     <!-- Skins -->
     <string name="classic_description">기본 스킨</string>
     <string name="lowres_description">저해상도 스킨</string>
