@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ ikke installeret</string>
     <string name="calibration_sent">Kalibrering sendt til xDrip+</string>
     <string name="bg_label">BG</string>
-    <string name="time_to_eat">Tid til at spise</string>
-    <string name="time_to_bolus">Tid til bolus!\nKør Bolus-guiden og lav beregningen igen.</string>
     <string name="executing_right_now">Kommando udføres lige nu</string>
     <string name="basal_value_below_minimum">Basal værdi under minimum. Profil ikke angivet!</string>
     <string name="permission">Tilladelse</string>
