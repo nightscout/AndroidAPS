@@ -51,7 +51,6 @@
     <string name="exercise_setunchanged">임시 목표를 변경하지 않습니다.</string>
     <string name="exercise_15g">\"저혈당 임시 목표\"보다 혈당이 떨어질 때까지 기다린 후 빠르게 반응하는 탄수화물 15g을 섭취합니다.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">중지 또는 일시중지된 loop</string>
     <string name="suspendloop_doigetinsulin">Loop가 중지/일시중지 되었을때 인슐린이 주입됩니까?</string>
     <string name="suspendloop_yes">네, Basal 인슐린은 계속 주입됩니다.</string>
     <string name="suspendloop_no">아니오, 인슐린 주입이 모두 중지됩니다.</string>
@@ -91,8 +90,6 @@
     <string name="troubleshooting_yourendo">당뇨병 클리닉/내분비내과의사에게 문의해야 합니다.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
-    <string name="insulin_plugins">인슐린 플러그인</string>
     <string name="insulin_ultrarapid">어떤 인슐린에서 초-초속효성의 Oref 플러그인을 사용해야 할까요?</string>
     <string name="insulin_fiasp">피아스프(Fiasp®)</string>
     <string name="insulin_novorapid">노보래피드(NovoRapid®)/노보로그(Novolog®)</string>
@@ -105,7 +102,6 @@
     <string name="sensitivity_cannula">캐뉼라 교체를 입력하면 Autosens 비율은 100%로 되돌아갑니다.</string>
     <string name="sensitivity_time">일부 플러그인 옵션은 사용자가 설정 가능한 시간 범위를 갖습니다.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">탄수화물 입력 오류</string>
     <string name="wrongcarbs_whattodo">부적절한 탄수화물을 입력하였다면 어떻게 하여야 합니까?</string>
     <string name="wrongcarbs_treatmentstab">관리 메뉴에서 잘못된 입력을 삭제하고, 새로운 탄수화물 양으로 수정합니다.</string>
@@ -115,7 +111,6 @@
     <string name="wronginsulin_whattodo">만약 펌프 기록에서 보여지는 것보다 인슐린이 적게 주입되었을 때 어떻게 해야 할까요? (예를 들어, 주입 막힘, 캐뉼라 문제, 샤워 후 펌프 재부착을 잊어버렸을 때)</string>
     <string name="wronginsulin_careportal">Nightscout 케어포탈에서 인슐린 데이터를 삭제하여 펌프 기록에서 이를 제거합니다.</string>
     <string name="wronginsulin_prime">\"주입되지 않은\" 인슐린양을 계산하여 시린지/펜 또는 prime 기능을 사용하여 인슐린을 주입합니다.</string>
-    <string name="iob_label">활성 인슐린 (IOB)</string>
     <string name="iob_value">IOB 값은 실행된 임시 basal의 영향을 받습니다.</string>
     <string name="iob_hightemp">혈당이 목표보다 낮을 경우 높은 임시 basal은 실행되지 않습니다.</string>
     <string name="iob_negiob">운동 없이도 음수의 IOB (마이너스 IOB) 구간이 많을 경우, 프로파일이 너무 강한 것이며 인슐린 양을 적게 설정해야 합니다.</string>
