@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">הורדת ערכי סוכר בדם מ-Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">קבלת ערכי סוכר מ-xDrip.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">השתמש בנתוני הסוכר מאפליקציית \"בנה לעצמך דקסקום\" (BYODA).</string>
+    <string name="eversense">אפליקלציית Eversense (עם פאץ\')</string>
+    <string name="description_source_eversense">קבלת ערכי רמת סוכר מאפליקציית Eversense עם פאץ\'.</string>
+    <string name="description_source_glimp">קבלת ערכי סוכר בדם מאפליקציית Glimp.</string>
+    <string name="description_source_mm640g">קבלת ערכי סוכר בדם מ-600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">קבלת ערכי סוכר מיישום Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">קבלת ערכי סוכר מיישום Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">קבלת ערכי סוכר מיישום Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">קבלת ערכי סוכר מאפליקציית Tomato (התקן MiaoMiao)</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">קבלת נתוני סוכר מחיישני GlucoRx Aidex.</string>
+    <string name="bgsource_upload">הגדרות העלאת ערכי סוכר בדם</string>
+</resources>
