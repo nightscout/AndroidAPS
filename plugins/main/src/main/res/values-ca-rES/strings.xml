@@ -270,43 +270,6 @@
     <string name="treatments_shortname">TRACT</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_menu_divider_header">Gràfica</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Tipus de bomba virtual</string>
-    <string name="virtual_pump_definition">Definició de bomba</string>
-    <string name="virtual_pump_pump_def">Bolus: Pas=%1$s\nBolus estès: [Pas=%2$s, Durada=%3$smin-%4$sh]\nBasal: Pas=%5$s\nTBR: %6$s (per %7$s), Durada=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">BOMBAV</string>
-    <string name="description_pump_virtual">Integració de bombes d\'insulina per les quals encara no existeix driver/controlador (Llaç obert)</string>
-    <string name="virtual_pump_label">BOMBA VIRTUAL</string>
-    <string name="virtualpump_settings">Configuració bomba virtual</string>
-    <!-- Source -->
-    <string name="ns_client_bg">Glucèmia NSClient</string>
-    <string name="ns_client_bg_short">Glucèmia NS</string>
-    <string name="description_source_ns_client">Descarrega dades de glucèmia des de Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Rebre valors de glucèmia de xDrip+.</string>
-    <string name="dexcom_app_patched">Dexcom (BYODA)</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Rebre els valors de glucosa de l\'aplicació Dexcom \'Build Your Own Device\'.</string>
-    <string name="eversense">App Eversense (\"parxejada\")</string>
-    <string name="description_source_eversense">Rebre valors de glucèmia de l\'app Eversense \"parxejada\".</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Rebre valors de glucèmia de Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Rebre valors de glucèmia del 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Rebre valors de glucèmia de l\'app Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Rebre valors de l\'app Glunovo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Rebre valors de glucèmia de l\'app Tomato (dispositiu MiaoMiao)</string>
-    <string name="random_bg">Glucèmia aleatòria</string>
-    <string name="description_source_random_bg">Generar dades de glucèmia aleatòries (Només mode demo)</string>
-    <string name="random_bg_short">Glucèmia</string>
-    <string name="do_xdrip_upload_title">Enviar dades de glucèmia a xDrip+</string>
-    <string name="do_xdrip_upload_summary">A xDrip+ seleccionar font de dades 640g/Eversense</string>
-    <string name="bgsource_upload">Configuració enviament dades glucèmia</string>
-    <string name="dexcom_log_ns_sensor_change_title">Enregistrar canvi de sensor a NS</string>
     <!-- Skins -->
     <string name="classic_description">Tema original</string>
     <string name="lowres_description">Tema baixa resolució</string>
