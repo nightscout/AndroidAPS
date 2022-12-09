@@ -51,7 +51,6 @@
     <string name="exercise_setunchanged">Pozostaw cel poziomu glukozy we krwi niezmieniony.</string>
     <string name="exercise_15g">Poczekaj, aż poziom glukozy we krwi spadnie poniżej celu tymczasowego \"Hipo\", a następnie zjedz 15 g szybko działających węglowodanów.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">Wyłączona/zawieszona pętla</string>
     <string name="suspendloop_doigetinsulin">Czy otrzymuję insulinę, gdy pętla jest wyłączona/zawieszona?</string>
     <string name="suspendloop_yes">Tak, insulina bazowa nadal jest dostarczana.</string>
     <string name="suspendloop_no">Nie, podawanie insuliny jest zatrzymane.</string>
@@ -91,8 +90,6 @@
     <string name="troubleshooting_yourendo">Należy zwrócić się do diabetologa lub lekarza endokrynologa.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
-    <string name="insulin_plugins">Wtyczki insuliny</string>
     <string name="insulin_ultrarapid">Która insulina powinna być używana z wtyczką Ultra-Rapid Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid ® /Novolog ®</string>
@@ -105,7 +102,6 @@
     <string name="sensitivity_cannula">Rejestracja zmiany wkłucia spowoduje zresetowanie współczynnika Autosens z powrotem do 100%.</string>
     <string name="sensitivity_time">Niektóre z opcji wtyczki mają konfigurowalne zakresy czasu, które mogą być ustawiane przez użytkownika.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Błędy wprowadzania węglowodanów</string>
     <string name="wrongcarbs_whattodo">Co powinieneś zrobić, gdy wprowadziłeś niewłaściwą ilość węglowodanów?</string>
     <string name="wrongcarbs_treatmentstab">Usuń niepoprawny wpis w leczeniu (Treat) i wprowadź poprawną nową wartość węglowodanów.</string>
@@ -115,7 +111,6 @@
     <string name="wronginsulin_whattodo">Co należy zrobić, jeśli otrzymano mniej insuliny niż sugeruje historia pompy, np. z powodu niedrożności, uszkodzonej kaniuli lub zapomnienia o ponownym podłączeniu pompy po prysznicu? </string>
     <string name="wronginsulin_careportal">Usuń dane insuliny z portalu Nightscout aby usunąć je z historii pompy.</string>
     <string name="wronginsulin_prime">Podaj obliczoną dawkę „pominiętej” insuliny za pomocą strzykawki / wstrzykiwacza lub za pomocą pompy funkcji wypełnienia.</string>
-    <string name="iob_label">Aktywna insulina (IOB)</string>
     <string name="iob_value">Na wartość IOB mają wpływ wykonane tymczasowe dawki bazowe.</string>
     <string name="iob_hightemp">Wysoka tymczasowa dawka bazowa nie zostanie podana, gdy twóje poziom cukru we krwi jest poniżej poziomu docelowego.</string>
     <string name="iob_negiob">Negatywne IOB utrzymujące się przez znaczny okres czasu bez wysiłku fizycznego sugeruje, że Twój profil jest zbyt silny i mniej insuliny jest wymagane w Twoich ustawieniach.</string>
