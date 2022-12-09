@@ -126,4 +126,6 @@
     <string name="friday_short">ו\'</string>
     <string name="saturday_short">ש\'</string>
     <string name="sunday_short">א\'</string>
+    <!--    Reminders-->
+    <string name="time_to_bolus">זמן להזריק בולוס!\nהשתמשו במחשבון וחשבו מחדש.</string>
 </resources>
