@@ -59,7 +59,6 @@
     <string name="exercise_setunchanged">La målverdien for ditt blodsukker være uforandret.</string>
     <string name="exercise_15g">Vent til blodsukkeret ditt synker under Hypo temp target og spis så 15 gram med hurtigvirkende karbohydrater.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#active temp-target</string>
-    <string name="suspendloop_label">Deaktiver/pause loop</string>
     <string name="suspendloop_doigetinsulin">Får jag insulin når loop er stanset/pauset?</string>
     <string name="suspendloop_yes">Ja, basal insulin vil fortsatt bli levert.</string>
     <string name="suspendloop_no">Nei, levering av insulin er stanset.</string>
@@ -149,7 +148,6 @@
     <string name="cob3_longer">Ved å sette profilen til 150% vil karbohydrater absorberes over lengre tid</string>
     <string name="cob3_shorter">Ved å sette profilen til 150% vil karbohydrater absorberes over kortere tid</string>
     <string name="cob3_no_effect">Ved å sette profilen til 150% påvirkes ikke beregningen av absorbering av karbohydrater</string>
-    <string name="iob_label">Aktivt insulin (IOB)</string>
     <string name="iob_value">IOB verdi påvirkes av midlertidige temp basaler.</string>
     <string name="iob_hightemp">Høy temp basal vil ikke bli gitt når ditt blodsukker er under målverdi.</string>
     <string name="iob_negiob">Negativ IOB i en lengre periode selv om du ikke trener tyder på at profilen din gir for mye insulin og kanskje bør reduseres i innstillingene.</string>
