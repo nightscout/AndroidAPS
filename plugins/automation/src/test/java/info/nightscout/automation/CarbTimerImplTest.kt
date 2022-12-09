@@ -1,10 +1,9 @@
-package info.nightscout.implementation
+package info.nightscout.automation
 
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.services.LocationServiceHelper
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -19,14 +18,13 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.Mockito
-import org.mockito.Mockito.any
-import org.mockito.Mockito.anyInt
-import org.mockito.Mockito.`when`
 
 class CarbTimerImplTest : TestBase() {
 
@@ -54,27 +52,26 @@ class CarbTimerImplTest : TestBase() {
     private lateinit var timerUtil: TimerUtil
 
     private lateinit var automationPlugin: AutomationPlugin
-    private lateinit var sut: CarbTimerImpl
 
     @BeforeEach
     fun init() {
-        `when`(rh.gs(anyInt())).thenReturn("")
-        `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        Mockito.`when`(rh.gs(anyInt())).thenReturn("")
+        Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtil(context)
         timerUtil = TimerUtil(context)
-        automationPlugin = AutomationPlugin(injector, rh, context, sp, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin)
-        sut = CarbTimerImpl(injector, rh, automationPlugin, timerUtil)
+        automationPlugin = AutomationPlugin(injector, rh, context, sp, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger, aapsSchedulers, config, locationServiceHelper, dateUtil,
+                                            activePlugin, timerUtil)
     }
 
     @Test
     fun doTest() {
-        Assert.assertEquals(0, automationPlugin.size())
-        sut.scheduleAutomationEventEatReminder()
-        Assert.assertEquals(1, automationPlugin.size())
-        sut.removeAutomationEventEatReminder()
-        Assert.assertEquals(0, automationPlugin.size())
+        Assertions.assertEquals(0, automationPlugin.size())
+        automationPlugin.scheduleAutomationEventEatReminder()
+        Assertions.assertEquals(1, automationPlugin.size())
+        automationPlugin.removeAutomationEventEatReminder()
+        Assertions.assertEquals(0, automationPlugin.size())
 
-        sut.scheduleTimeToEatReminder(1)
+        automationPlugin.scheduleTimeToEatReminder(1)
         Mockito.verify(context, Mockito.times(1)).startActivity(any())
     }
 }

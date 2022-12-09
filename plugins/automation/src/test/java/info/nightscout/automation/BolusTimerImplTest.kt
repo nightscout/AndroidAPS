@@ -1,10 +1,9 @@
-package info.nightscout.implementation
+package info.nightscout.automation
 
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.automation.AutomationPlugin
 import info.nightscout.automation.services.LocationServiceHelper
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -14,16 +13,17 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.utils.TimerUtil
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
-import org.mockito.Mockito.anyInt
-import org.mockito.Mockito.`when`
+import org.mockito.Mockito
 
 class BolusTimerImplTest : TestBase() {
 
@@ -38,6 +38,7 @@ class BolusTimerImplTest : TestBase() {
     @Mock lateinit var locationServiceHelper: LocationServiceHelper
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var profileFunction: ProfileFunction
+    @Mock lateinit var timerUtil: TimerUtil
 
     private val injector = HasAndroidInjector {
         AndroidInjector {
@@ -50,23 +51,22 @@ class BolusTimerImplTest : TestBase() {
     private lateinit var dateUtil: DateUtil
 
     private lateinit var automationPlugin: AutomationPlugin
-    private lateinit var sut: BolusTimerImpl
 
     @BeforeEach
     fun init() {
-        `when`(rh.gs(anyInt())).thenReturn("")
-        `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
+        Mockito.`when`(rh.gs(anyInt())).thenReturn("")
+        Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         dateUtil = DateUtil(context)
-        automationPlugin = AutomationPlugin(injector, rh, context, sp, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger, aapsSchedulers, config, locationServiceHelper, dateUtil, activePlugin)
-        sut = BolusTimerImpl(injector, rh, automationPlugin)
+        automationPlugin = AutomationPlugin(injector, rh, context, sp, fabricPrivacy, loop, rxBus, constraintChecker, aapsLogger, aapsSchedulers, config, locationServiceHelper, dateUtil,
+                                            activePlugin, timerUtil)
     }
 
     @Test
     fun doTest() {
-        Assert.assertEquals(0, automationPlugin.size())
-        sut.scheduleAutomationEventBolusReminder()
-        Assert.assertEquals(1, automationPlugin.size())
-        sut.removeAutomationEventBolusReminder()
-        Assert.assertEquals(0, automationPlugin.size())
+        Assertions.assertEquals(0, automationPlugin.size())
+        automationPlugin.scheduleAutomationEventBolusReminder()
+        Assertions.assertEquals(1, automationPlugin.size())
+        automationPlugin.removeAutomationEventBolusReminder()
+        Assertions.assertEquals(0, automationPlugin.size())
     }
 }

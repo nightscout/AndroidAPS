@@ -19,7 +19,6 @@ dependencies {
     implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
     implementation project(':database:impl')
-    implementation project(':plugins:automation')
     implementation project(':core:main')
     implementation project(':core:graph')
     implementation project(':core:graphview')

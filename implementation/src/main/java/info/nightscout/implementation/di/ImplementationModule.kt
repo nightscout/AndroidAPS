@@ -4,8 +4,6 @@ import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.core.graph.OverviewData
-import info.nightscout.implementation.BolusTimerImpl
-import info.nightscout.implementation.CarbTimerImpl
 import info.nightscout.implementation.DefaultValueHelperImpl
 import info.nightscout.implementation.HardLimitsImpl
 import info.nightscout.implementation.LocalAlertUtilsImpl
@@ -40,8 +38,6 @@ import info.nightscout.implementation.stats.TddCalculatorImpl
 import info.nightscout.implementation.stats.TirCalculatorImpl
 import info.nightscout.implementation.storage.FileStorage
 import info.nightscout.implementation.userEntry.UserEntryPresentationHelperImpl
-import info.nightscout.interfaces.BolusTimer
-import info.nightscout.interfaces.CarbTimer
 import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.interfaces.Translator
@@ -113,8 +109,6 @@ abstract class ImplementationModule {
         @Binds fun bindDexcomTirCalculatorInterface(dexcomTirCalculator: DexcomTirCalculatorImpl): DexcomTirCalculator
         @Binds fun bindPumpSyncInterface(pumpSyncImplementation: PumpSyncImplementation): PumpSync
         @Binds fun bindXDripBroadcastInterface(xDripBroadcastImpl: XDripBroadcastImpl): XDripBroadcast
-        @Binds fun bindCarbTimerInterface(carbTimer: CarbTimerImpl): CarbTimer
-        @Binds fun bindBolusTimerInterface(bolusTimer: BolusTimerImpl): BolusTimer
         @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils
         @Binds fun bindIconsProviderInterface(iconsProvider: IconsProviderImplementation): IconsProvider
         @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolderImpl): NotificationHolder
