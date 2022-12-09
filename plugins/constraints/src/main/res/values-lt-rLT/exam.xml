@@ -51,7 +51,6 @@
     <string name="exercise_setunchanged">Palikti tikslinę glikemiją nepakeistą.</string>
     <string name="exercise_15g">Palaukti, kol glikemija nukris žemiau laikino hipoglikemijos tikslo, tada suvalgyti 15 g greitųjų angliavandenių.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">Ciklas išjungtas/sustabdytas</string>
     <string name="suspendloop_doigetinsulin">Ar man leidžiamas insulinas, kai ciklas yra išjungtas / pristabdytas?</string>
     <string name="suspendloop_yes">Taip, bazinis insulinas ir toliau leidžiamas.</string>
     <string name="suspendloop_no">Ne, insulino tiekimas sustabdytas.</string>
@@ -91,8 +90,6 @@
     <string name="troubleshooting_yourendo">Turėtumėte kreiptis į savo diabeto kliniką/endokrinologą.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
-    <string name="insulin_plugins">Insulino įskiepiai</string>
     <string name="insulin_ultrarapid">Kurį insuliną reikėtų naudoti su Ultra-Rapid Oref įskiepiu?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
@@ -105,7 +102,6 @@
     <string name="sensitivity_cannula">Pažymėjus kaniulės pakeitimą, Autosens santykis vėl bus grąžintas į 100%.</string>
     <string name="sensitivity_time">Kai kurios įskiepo parinktys turi konfigūruojamus laiko intervalus, kuriuos gali nustatyti vartotojas.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Angliavandenių įvedimo klaidos</string>
     <string name="wrongcarbs_whattodo">Ką reikia daryti, jei įrašyti neteisingi angliavandeniai?</string>
     <string name="wrongcarbs_treatmentstab">Ištrinti neteisingą įrašą Terapijos skiltyje ir įvesti teisingą angliavandenių kiekį.</string>
@@ -115,7 +111,6 @@
     <string name="wronginsulin_whattodo">Ką turėtumėte daryti, jei buvo suleista mažiau insulino nei rodo pompos istorija, pvz. dėl užsikimšimo, neveikiančios kaniulės ar pamiršus po dušo vėl pritvirtinti pompą? </string>
     <string name="wronginsulin_careportal">Ištrinti insulino suleidimo įrašą per Nightscout Careportal, kad pašalintumėte jį iš pompos istorijos.</string>
     <string name="wronginsulin_prime">Susileisti trūkstamą insulino kiekį švirkštu ar naudojantis infuzinės sistemos užpildymo funkcija.</string>
-    <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>
     <string name="iob_value">AIO reikšmei įtakos turi nustatyta laikina valandinė bazė.</string>
     <string name="iob_hightemp">Padidinta laikina bazė nebus nustatyta, jei kraujo glikemija yra žemiau nustatyto tikslo.</string>
     <string name="iob_negiob">Jei ilgą laiką stebima neigiama AIO reikšmė ir nėra fizinio aktyvumo, tai rodo, kad jūsų nustatymai yra per „agresyvūs“ ir kad jums reikia mažiau insulino nei nustatyta.</string>
