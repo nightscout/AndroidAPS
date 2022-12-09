@@ -277,43 +277,6 @@
     <string name="treatments_shortname">TRAT</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_menu_divider_header">Grafic</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Tipul pompei virtuale</string>
-    <string name="virtual_pump_definition">Definirea pompei</string>
-    <string name="virtual_pump_pump_def">Bolus: Pas=%1$s\nBolus Extins: [Pas=%2$s, Durată=%3$smin-%4$sh]\nBazală: Pas=%5$s\nRBT: %6$s (cu %7$s), Durată=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">POMPĂV</string>
-    <string name="description_pump_virtual">Integrare cu pompele ce nu au încă un driver software disponibil (Buclă Deschisă)</string>
-    <string name="virtual_pump_label">POMPĂ VIRTUALĂ</string>
-    <string name="virtualpump_settings">Setări pompă virtuală</string>
-    <!-- Source -->
-    <string name="ns_client_bg">Glicemie NSClient</string>
-    <string name="ns_client_bg_short">NS GL</string>
-    <string name="description_source_ns_client">Descarcă datele despre glicemii din Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Primește valorile glicemiei din xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Primește valori de glicemie de la aplicația Dexcom modificată.</string>
-    <string name="eversense">Aplicația Eversense (modificată)</string>
-    <string name="description_source_eversense">Primește valorile glicemiei din aplicația Eversense modificată.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Primește valorile glicemiei din aplicația Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Primește valorile glicemiei din aplicația 600SeriesAndroidUploader (Medtronic).</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Citire a valorii glicemiei din aplicația Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Primiți glicemii de la aplicația Glunovo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Înregistrează valorile glicemiei din aplicația Tomato (dispozitiv MiaoMIao)</string>
-    <string name="random_bg">Glicemie aleatoare</string>
-    <string name="description_source_random_bg">Generare glicemie aleator (doar mod Demo)</string>
-    <string name="random_bg_short">Gl</string>
-    <string name="do_xdrip_upload_title">Trimite date glicemie la xDrip+</string>
-    <string name="do_xdrip_upload_summary">Selectați 640g/Eversense ca sursă de date în xDrip+</string>
-    <string name="bgsource_upload">Setări înregistrare glicemie</string>
-    <string name="dexcom_log_ns_sensor_change_title">Înregistrează schimbarea senzorului în NS</string>
     <!-- Skins -->
     <string name="classic_description">Tema originală</string>
     <string name="lowres_description">Skin de rezoluție redusă</string>
