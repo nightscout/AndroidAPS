@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ nije instaliran</string>
     <string name="calibration_sent">Kalibracija poslana na xDrip+</string>
     <string name="bg_label">GUK</string>
-    <string name="time_to_eat">Vrijeme za jelo</string>
-    <string name="time_to_bolus">Vrijeme je za bolus!\nPokrenite čarobnjak za bolus i ponovite izračun.</string>
     <string name="executing_right_now">Naredba se izvršava upravo sada</string>
     <string name="basal_value_below_minimum">Bazalna vrijednost ispod minimuma. Profil nije postavljen!</string>
     <string name="permission">Dozvola</string>
