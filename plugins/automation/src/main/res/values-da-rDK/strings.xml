@@ -126,4 +126,6 @@
     <string name="friday_short">Fr</string>
     <string name="saturday_short">Lø</string>
     <string name="sunday_short">Sø</string>
+    <!--    Reminders-->
+    <string name="time_to_bolus">Tid til bolus!\nKør Bolus-guiden og lav beregningen igen.</string>
 </resources>
