@@ -218,10 +218,11 @@ dependencies {
     implementation project(':pump:medtronic')
     implementation project(':pump:pump-common')
     implementation project(':pump:pump-core')
-    implementation project(':pump:rileylink')
     implementation project(':pump:omnipod-common')
     implementation project(':pump:omnipod-eros')
     implementation project(':pump:omnipod-dash')
+    implementation project(':pump:rileylink')
+    implementation project(':pump:virtual')
     implementation project(':workflow')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')

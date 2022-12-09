@@ -48,7 +48,6 @@ import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
-import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.plugins.source.AidexPlugin
 import info.nightscout.plugins.source.DexcomPlugin
 import info.nightscout.plugins.source.EversensePlugin
@@ -63,6 +62,7 @@ import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
+import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRebuildTabs

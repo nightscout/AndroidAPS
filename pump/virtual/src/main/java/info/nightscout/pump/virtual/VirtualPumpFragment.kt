@@ -1,4 +1,4 @@
-package info.nightscout.plugins.pump.virtual
+package info.nightscout.pump.virtual
 
 import android.os.Bundle
 import android.os.Handler
@@ -11,9 +11,8 @@ import info.nightscout.core.extensions.toStringFull
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.plugins.R
-import info.nightscout.plugins.databinding.VirtualPumpFragmentBinding
-import info.nightscout.plugins.pump.virtual.events.EventVirtualPumpUpdateGui
+import info.nightscout.pump.virtual.databinding.VirtualPumpFragmentBinding
+import info.nightscout.pump.virtual.events.EventVirtualPumpUpdateGui
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventExtendedBolusChange

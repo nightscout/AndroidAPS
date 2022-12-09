@@ -14,9 +14,9 @@ import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.source.BgSource
 import info.nightscout.plugins.R
-import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -39,7 +39,7 @@ class RandomBgPlugin @Inject constructor(
     private val sp: SP,
     private val repository: AppRepository,
     private val xDripBroadcast: XDripBroadcast,
-    private val virtualPumpPlugin: VirtualPumpPlugin,
+    private val virtualPump: VirtualPump,
     private val config: Config
 ) : PluginBase(
     PluginDescription()
@@ -94,7 +94,7 @@ class RandomBgPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        return isRunningTest() || config.isUnfinishedMode() || virtualPumpPlugin.isEnabled() && config.isEngineeringMode()
+        return isRunningTest() || config.isUnfinishedMode() || virtualPump.isEnabled() && config.isEngineeringMode()
     }
 
     private fun handleNewData() {

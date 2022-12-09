@@ -1,11 +1,11 @@
-package info.nightscout.plugins.di
+package info.nightscout.pump.virtual.di
 
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.interfaces.pump.VirtualPump
-import info.nightscout.plugins.pump.virtual.VirtualPumpFragment
-import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.pump.virtual.VirtualPumpFragment
+import info.nightscout.pump.virtual.VirtualPumpPlugin
 
 @Module(
     includes = [

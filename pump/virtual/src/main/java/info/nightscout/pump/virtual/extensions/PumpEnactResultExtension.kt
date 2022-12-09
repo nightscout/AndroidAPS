@@ -1,4 +1,4 @@
-package info.nightscout.plugins.extensions
+package info.nightscout.pump.virtual.extensions
 
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.shared.interfaces.ResourceHelper

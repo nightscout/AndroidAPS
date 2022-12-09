@@ -32,6 +32,7 @@ import info.nightscout.pump.dana.di.DanaHistoryModule
 import info.nightscout.pump.dana.di.DanaModule
 import info.nightscout.pump.danars.di.DanaRSModule
 import info.nightscout.pump.diaconn.di.DiaconnG8Module
+import info.nightscout.pump.virtual.di.VirtualPumpModule
 import info.nightscout.rx.di.RxModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.shared.impl.di.SharedImplModule
@@ -83,7 +84,8 @@ import javax.inject.Singleton
         OmnipodDashModule::class,
         OmnipodErosModule::class,
         PumpCommonModule::class,
-        RileyLinkModule::class
+        RileyLinkModule::class,
+        VirtualPumpModule::class
     ]
 )
 interface AppComponent : AndroidInjector<MainApp> {

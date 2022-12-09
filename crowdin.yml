@@ -71,6 +71,8 @@ files:
     translation: /pump/omnipod-eros/src/main/res/values-%android_code%/strings.xml
   - source: /pump/rileylink/src/main/res/values/strings.xml
     translation: /pump/rileylink/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/virtual/src/main/res/values/strings.xml
+    translation: /pump/virtual/src/main/res/values-%android_code%/strings.xml
   - source: /insight/src/main/res/values/strings.xml
     translation: /insight/src/main/res/values-%android_code%/strings.xml
   - source: /insight/src/main/res/values/alert_codes.xml

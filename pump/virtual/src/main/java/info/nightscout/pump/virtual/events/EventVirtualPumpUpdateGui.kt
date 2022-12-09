@@ -1,4 +1,4 @@
-package info.nightscout.plugins.pump.virtual.events
+package info.nightscout.pump.virtual.events
 
 import info.nightscout.rx.events.EventUpdateGui
 

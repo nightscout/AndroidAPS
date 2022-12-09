@@ -1,4 +1,4 @@
-package info.nightscout.plugins.pump.virtual
+package info.nightscout.pump.virtual
 
 import android.os.SystemClock
 import androidx.preference.PreferenceFragmentCompat
@@ -28,9 +28,8 @@ import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.utils.TimeChangeType
-import info.nightscout.plugins.R
-import info.nightscout.plugins.extensions.toText
-import info.nightscout.plugins.pump.virtual.events.EventVirtualPumpUpdateGui
+import info.nightscout.pump.virtual.events.EventVirtualPumpUpdateGui
+import info.nightscout.pump.virtual.extensions.toText
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventOverviewBolusProgress

@@ -41,7 +41,6 @@ import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.plugins.profile.ProfilePlugin
-import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.plugins.source.AidexPlugin
 import info.nightscout.plugins.source.DexcomPlugin
 import info.nightscout.plugins.source.GlimpPlugin
@@ -59,6 +58,7 @@ import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
+import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.sensitivity.SensitivityOref1Plugin
 import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin

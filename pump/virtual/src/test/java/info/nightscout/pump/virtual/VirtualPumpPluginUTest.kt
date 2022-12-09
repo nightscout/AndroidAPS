@@ -1,4 +1,4 @@
-package info.nightscout.plugins.pump.virtual
+package info.nightscout.pump.virtual
 
 import dagger.android.AndroidInjector
 import info.nightscout.androidaps.TestBase
@@ -13,7 +13,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -32,7 +32,7 @@ class VirtualPumpPluginUTest : TestBase() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var config: Config
 
-    lateinit var virtualPumpPlugin: VirtualPumpPlugin
+    private lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
     @BeforeEach
     fun prepareMocks() {
@@ -43,7 +43,7 @@ class VirtualPumpPluginUTest : TestBase() {
     fun refreshConfiguration() {
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo")
         virtualPumpPlugin.refreshConfiguration()
-        Assert.assertEquals(PumpType.ACCU_CHEK_COMBO, virtualPumpPlugin.pumpType)
+        Assertions.assertEquals(PumpType.ACCU_CHEK_COMBO, virtualPumpPlugin.pumpType)
     }
 
     @Test
@@ -52,6 +52,6 @@ class VirtualPumpPluginUTest : TestBase() {
         virtualPumpPlugin.refreshConfiguration()
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_virtualpump_type, "Generic AAPS")).thenReturn("Accu-Chek Combo")
         virtualPumpPlugin.refreshConfiguration()
-        Assert.assertEquals(PumpType.ACCU_CHEK_COMBO, virtualPumpPlugin.pumpType)
+        Assertions.assertEquals(PumpType.ACCU_CHEK_COMBO, virtualPumpPlugin.pumpType)
     }
 }
