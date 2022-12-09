@@ -53,6 +53,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -104,7 +105,6 @@ class NSClientV3Plugin @Inject constructor(
                 nsAndroidClient.lastStatus?.apiPermissions?.isRead() == true -> rh.gs(R.string.read_only)
                 else                                                         -> rh.gs(info.nightscout.core.ui.R.string.unknown)
             }
-    override val nsClientService: NSClientService? = null // service not needed
 
     internal lateinit var nsAndroidClient: NSAndroidClient
 //    private lateinit var nsAndroidRxClient: NSAndroidRxClient
@@ -251,7 +251,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     override fun resend(reason: String) {
-        nsClientService?.resend(reason)
+//        nsClientService?.resend(reason)
     }
 
     override fun pause(newState: Boolean) {
@@ -269,12 +269,12 @@ class NSClientV3Plugin @Inject constructor(
             aapsLogger.debug(LTag.NSCLIENT, "Upload disabled. Message dropped")
             return
         }
-        nsClientService?.sendAlarmAck(
-            AlarmAck().also { ack ->
-                ack.level = originalAlarm.level()
-                ack.group = originalAlarm.group()
-                ack.silenceTime = silenceTimeInMilliseconds
-            })
+        // nsClientService?.sendAlarmAck(
+        //     AlarmAck().also { ack ->
+        //         ack.level = originalAlarm.level()
+        //         ack.group = originalAlarm.group()
+        //         ack.silenceTime = silenceTimeInMilliseconds
+        //     })
     }
 
     override fun updateLatestBgReceivedIfNewer(latestReceived: Long) {
@@ -299,6 +299,14 @@ class NSClientV3Plugin @Inject constructor(
             )
         )
         storeLastFetched()
+    }
+
+    override fun dbAdd(collection: String, data: JSONObject, originalObject: Any, progress: String) {
+        TODO("Not yet implemented")
+    }
+
+    override fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String) {
+        TODO("Not yet implemented")
     }
 
     private fun storeLastFetched() {

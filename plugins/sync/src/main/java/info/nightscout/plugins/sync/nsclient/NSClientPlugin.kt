@@ -47,6 +47,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -81,7 +82,7 @@ class NSClientPlugin @Inject constructor(
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val listLog: MutableList<EventNSClientNewLog> = ArrayList()
     override var status = ""
-    override var nsClientService: NSClientService? = null
+    var nsClientService: NSClientService? = null
     val isAllowed: Boolean
         get() = nsClientReceiverDelegate.allowed
     val blockingReason: String
@@ -234,5 +235,13 @@ class NSClientPlugin @Inject constructor(
 
     override fun resetToFullSync() {
         dataSyncSelector.resetToNextFullSync()
+    }
+
+    override fun dbAdd(collection: String, data: JSONObject, originalObject: Any, progress: String) {
+        nsClientService?.dbAdd(collection, data, originalObject, progress)
+    }
+
+    override fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String) {
+        nsClientService?.dbUpdate(collection, _id, data, originalObject, progress)
     }
 }

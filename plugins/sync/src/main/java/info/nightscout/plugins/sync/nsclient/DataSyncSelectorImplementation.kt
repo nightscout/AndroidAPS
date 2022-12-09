@@ -159,7 +159,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                 }
                 // without nsId = create new
                 bolus.first.interfaceIDs.nightscoutId == null                                      ->
-                    activePlugin.activeNsClient?.nsClientService?.dbAdd(
+                    activePlugin.activeNsClient?.dbAdd(
                         "treatments",
                         bolus.first.toJson(true, dateUtil),
                         DataSyncSelector.PairBolus(bolus.first, bolus.second.id),
@@ -167,7 +167,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                     )
                 // with nsId = update if it's modified record
                 bolus.first.interfaceIDs.nightscoutId != null && bolus.first.id != bolus.second.id ->
-                    activePlugin.activeNsClient?.nsClientService?.dbUpdate(
+                    activePlugin.activeNsClient?.dbUpdate(
                         "treatments",
                         bolus.first.interfaceIDs.nightscoutId,
                         bolus.first.toJson(false, dateUtil),
@@ -222,10 +222,10 @@ class DataSyncSelectorImplementation @Inject constructor(
                 }
                 // without nsId = create new
                 carb.first.interfaceIDs.nightscoutId == null                                    ->
-                    activePlugin.activeNsClient?.nsClientService?.dbAdd("treatments", carb.first.toJson(true, dateUtil), DataSyncSelector.PairCarbs(carb.first, carb.second.id), "$startId/$lastDbId")
+                    activePlugin.activeNsClient?.dbAdd("treatments", carb.first.toJson(true, dateUtil), DataSyncSelector.PairCarbs(carb.first, carb.second.id), "$startId/$lastDbId")
                 // with nsId = update if it's modified record
                 carb.first.interfaceIDs.nightscoutId != null && carb.first.id != carb.second.id ->
-                    activePlugin.activeNsClient?.nsClientService?.dbUpdate(
+                    activePlugin.activeNsClient?.dbUpdate(
                         "treatments",
                         carb.first.interfaceIDs.nightscoutId,
                         carb.first.toJson(false, dateUtil),
@@ -280,7 +280,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                 }
                 // without nsId = create new
                 bolusCalculatorResult.first.interfaceIDs.nightscoutId == null                                                                      ->
-                    activePlugin.activeNsClient?.nsClientService?.dbAdd(
+                    activePlugin.activeNsClient?.dbAdd(
                         "treatments",
                         bolusCalculatorResult.first.toJson(true, dateUtil, profileFunction),
                         DataSyncSelector.PairBolusCalculatorResult(bolusCalculatorResult.first, bolusCalculatorResult.second.id),
@@ -288,7 +288,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                     )
                 // with nsId = update if it's modified record
                 bolusCalculatorResult.first.interfaceIDs.nightscoutId != null && bolusCalculatorResult.first.id != bolusCalculatorResult.second.id ->
-                    activePlugin.activeNsClient?.nsClientService?.dbUpdate(
+                    activePlugin.activeNsClient?.dbUpdate(
                         "treatments", bolusCalculatorResult.first.interfaceIDs.nightscoutId, bolusCalculatorResult.first.toJson(false, dateUtil, profileFunction),
                         DataSyncSelector.PairBolusCalculatorResult(bolusCalculatorResult.first, bolusCalculatorResult.second.id), "$startId/$lastDbId"
                     )
@@ -340,7 +340,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                 }
                 // without nsId = create new
                 tt.first.interfaceIDs.nightscoutId == null                                ->
-                    activePlugin.activeNsClient?.nsClientService?.dbAdd(
+                    activePlugin.activeNsClient?.dbAdd(
                         "treatments",
                         tt.first.toJson(true, profileFunction.getUnits(), dateUtil),
                         DataSyncSelector.PairTemporaryTarget(tt.first, tt.second.id),
@@ -348,7 +348,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                     )
                 // existing with nsId = update
                 tt.first.interfaceIDs.nightscoutId != null                                ->
-                    activePlugin.activeNsClient?.nsClientService?.dbUpdate(
+                    activePlugin.activeNsClient?.dbUpdate(
                         "treatments",
                         tt.first.interfaceIDs.nightscoutId,
                         tt.first.toJson(false, profileFunction.getUnits(), dateUtil),
@@ -403,10 +403,10 @@ class DataSyncSelectorImplementation @Inject constructor(
                 }
                 // without nsId = create new
                 food.first.interfaceIDs.nightscoutId == null                                    ->
-                    activePlugin.activeNsClient?.nsClientService?.dbAdd("food", food.first.toJson(true), DataSyncSelector.PairFood(food.first, food.second.id), "$startId/$lastDbId")
+                    activePlugin.activeNsClient?.dbAdd("food", food.first.toJson(true), DataSyncSelector.PairFood(food.first, food.second.id), "$startId/$lastDbId")
                 // with nsId = update
                 food.first.interfaceIDs.nightscoutId != null                                    ->
-                    activePlugin.activeNsClient?.nsClientService?.dbUpdate(
+                    activePlugin.activeNsClient?.dbUpdate(
                         "food",
                         food.first.interfaceIDs.nightscoutId,
                         food.first.toJson(false),
@@ -462,10 +462,10 @@ class DataSyncSelectorImplementation @Inject constructor(
                     }
                     // without nsId = create new
                     gv.first.interfaceIDs.nightscoutId == null                                ->
-                        activePlugin.activeNsClient?.nsClientService?.dbAdd("entries", gv.first.toJson(true, dateUtil), DataSyncSelector.PairGlucoseValue(gv.first, gv.second.id), "$startId/$lastDbId")
+                        activePlugin.activeNsClient?.dbAdd("entries", gv.first.toJson(true, dateUtil), DataSyncSelector.PairGlucoseValue(gv.first, gv.second.id), "$startId/$lastDbId")
                     // with nsId = update
                     else                                                                      ->  //  gv.first.interfaceIDs.nightscoutId != null
-                        activePlugin.activeNsClient?.nsClientService?.dbUpdate(
+                        activePlugin.activeNsClient?.dbUpdate(
                             "entries",
                             gv.first.interfaceIDs.nightscoutId,
                             gv.first.toJson(false, dateUtil),
@@ -524,10 +524,10 @@ class DataSyncSelectorImplementation @Inject constructor(
                 }
                 // without nsId = create new
                 te.first.interfaceIDs.nightscoutId == null                                ->
-                    activePlugin.activeNsClient?.nsClientService?.dbAdd("treatments", te.first.toJson(true, dateUtil), DataSyncSelector.PairTherapyEvent(te.first, te.second.id), "$startId/$lastDbId")
+                    activePlugin.activeNsClient?.dbAdd("treatments", te.first.toJson(true, dateUtil), DataSyncSelector.PairTherapyEvent(te.first, te.second.id), "$startId/$lastDbId")
                 // nsId = update
                 te.first.interfaceIDs.nightscoutId != null                                ->
-                    activePlugin.activeNsClient?.nsClientService?.dbUpdate(
+                    activePlugin.activeNsClient?.dbUpdate(
                         "treatments",
                         te.first.interfaceIDs.nightscoutId,
                         te.first.toJson(false, dateUtil),
@@ -567,7 +567,7 @@ class DataSyncSelectorImplementation @Inject constructor(
             when {
                 // without nsId = create new
                 deviceStatus.interfaceIDs.nightscoutId == null ->
-                    activePlugin.activeNsClient?.nsClientService?.dbAdd("devicestatus", deviceStatus.toJson(dateUtil), deviceStatus, "$startId/$lastDbId")
+                    activePlugin.activeNsClient?.dbAdd("devicestatus", deviceStatus.toJson(dateUtil), deviceStatus, "$startId/$lastDbId")
                 // with nsId = ignore
                 deviceStatus.interfaceIDs.nightscoutId != null -> Any()
             }
@@ -620,7 +620,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                     }
                     // without nsId = create new
                     tb.first.interfaceIDs.nightscoutId == null                                ->
-                        activePlugin.activeNsClient?.nsClientService?.dbAdd(
+                        activePlugin.activeNsClient?.dbAdd(
                             "treatments",
                             tb.first.toJson(true, profile, dateUtil),
                             DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id),
@@ -628,7 +628,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                         )
                     // with nsId = update
                     tb.first.interfaceIDs.nightscoutId != null                                ->
-                        activePlugin.activeNsClient?.nsClientService?.dbUpdate(
+                        activePlugin.activeNsClient?.dbUpdate(
                             "treatments",
                             tb.first.interfaceIDs.nightscoutId,
                             tb.first.toJson(false, profile, dateUtil),
@@ -691,7 +691,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                     }
                     // without nsId = create new
                     eb.first.interfaceIDs.nightscoutId == null                                ->
-                        activePlugin.activeNsClient?.nsClientService?.dbAdd(
+                        activePlugin.activeNsClient?.dbAdd(
                             "treatments",
                             eb.first.toJson(true, profile, dateUtil),
                             DataSyncSelector.PairExtendedBolus(eb.first, eb.second.id),
@@ -699,7 +699,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                         )
                     // with nsId = update
                     eb.first.interfaceIDs.nightscoutId != null                                ->
-                        activePlugin.activeNsClient?.nsClientService?.dbUpdate(
+                        activePlugin.activeNsClient?.dbUpdate(
                             "treatments",
                             eb.first.interfaceIDs.nightscoutId,
                             eb.first.toJson(false, profile, dateUtil),
@@ -759,10 +759,10 @@ class DataSyncSelectorImplementation @Inject constructor(
                 }
                 // without nsId = create new
                 ps.first.interfaceIDs.nightscoutId == null                                ->
-                    activePlugin.activeNsClient?.nsClientService?.dbAdd("treatments", ps.first.toJson(true, dateUtil), DataSyncSelector.PairProfileSwitch(ps.first, ps.second.id), "$startId/$lastDbId")
+                    activePlugin.activeNsClient?.dbAdd("treatments", ps.first.toJson(true, dateUtil), DataSyncSelector.PairProfileSwitch(ps.first, ps.second.id), "$startId/$lastDbId")
                 // with nsId = update
                 ps.first.interfaceIDs.nightscoutId != null                                ->
-                    activePlugin.activeNsClient?.nsClientService?.dbUpdate(
+                    activePlugin.activeNsClient?.dbUpdate(
                         "treatments",
                         ps.first.interfaceIDs.nightscoutId,
                         ps.first.toJson(false, dateUtil),
@@ -816,7 +816,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                 }
                 // without nsId = create new
                 ps.first.interfaceIDs.nightscoutId == null                                ->
-                    activePlugin.activeNsClient?.nsClientService?.dbAdd(
+                    activePlugin.activeNsClient?.dbAdd(
                         "treatments",
                         ps.first.toJson(true, dateUtil),
                         DataSyncSelector.PairEffectiveProfileSwitch(ps.first, ps.second.id),
@@ -824,7 +824,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                     )
                 // with nsId = update
                 ps.first.interfaceIDs.nightscoutId != null                                ->
-                    activePlugin.activeNsClient?.nsClientService?.dbUpdate(
+                    activePlugin.activeNsClient?.dbUpdate(
                         "treatments",
                         ps.first.interfaceIDs.nightscoutId,
                         ps.first.toJson(false, dateUtil),
@@ -879,10 +879,10 @@ class DataSyncSelectorImplementation @Inject constructor(
                 }
                 // without nsId = create new
                 oe.first.interfaceIDs.nightscoutId == null                                ->
-                    activePlugin.activeNsClient?.nsClientService?.dbAdd("treatments", oe.first.toJson(true, dateUtil), DataSyncSelector.PairOfflineEvent(oe.first, oe.second.id), "$startId/$lastDbId")
+                    activePlugin.activeNsClient?.dbAdd("treatments", oe.first.toJson(true, dateUtil), DataSyncSelector.PairOfflineEvent(oe.first, oe.second.id), "$startId/$lastDbId")
                 // existing with nsId = update
                 oe.first.interfaceIDs.nightscoutId != null                                ->
-                    activePlugin.activeNsClient?.nsClientService?.dbUpdate(
+                    activePlugin.activeNsClient?.dbUpdate(
                         "treatments",
                         oe.first.interfaceIDs.nightscoutId,
                         oe.first.toJson(false, dateUtil),
@@ -905,7 +905,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         if (lastChange > lastSync) {
             if (activePlugin.activeProfileSource.profile?.allProfilesValid != true) return
             val profileJson = activePlugin.activeProfileSource.profile?.data ?: return
-            activePlugin.activeNsClient?.nsClientService?.dbAdd("profile", profileJson, DataSyncSelector.PairProfileStore(profileJson, dateUtil.now()), "")
+            activePlugin.activeNsClient?.dbAdd("profile", profileJson, DataSyncSelector.PairProfileStore(profileJson, dateUtil.now()), "")
         }
     }
 }
