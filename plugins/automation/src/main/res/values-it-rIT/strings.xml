@@ -126,4 +126,6 @@
     <string name="friday_short">V</string>
     <string name="saturday_short">S</string>
     <string name="sunday_short">D</string>
+    <!--    Reminders-->
+    <string name="time_to_bolus">Tempo di fare un bolo!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
 </resources>
