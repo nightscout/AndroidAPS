@@ -8,4 +8,6 @@
     <!-- BG Quality -->
     <!-- Safety -->
     <!-- Objectives -->
+    <string name="time_elapsed">Eltelt idő</string>
+    <string name="apsselected">APS kiválasztva</string>
 </resources>
