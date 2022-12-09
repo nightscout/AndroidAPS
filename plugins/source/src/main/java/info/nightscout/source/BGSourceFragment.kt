@@ -140,7 +140,7 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
             val newDay = position == 0 || !dateUtil.isSameDay(glucoseValue.timestamp, glucoseValues[position - 1].timestamp)
             holder.binding.date.visibility = newDay.toVisibility()
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(glucoseValue.timestamp, rh) else ""
-            holder.binding.time.text = dateUtil.timeString(glucoseValue.timestamp)
+            holder.binding.time.text = dateUtil.timeStringWithSeconds(glucoseValue.timestamp)
             holder.binding.value.text = glucoseValue.valueToUnitsString(profileFunction.getUnits())
             holder.binding.direction.setImageResource(glucoseValue.trendArrow.directionToIcon())
             if (position > 0) {

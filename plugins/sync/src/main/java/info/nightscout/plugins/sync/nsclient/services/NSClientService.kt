@@ -251,7 +251,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
         } else if (!nsEnabled) {
             rxBus.send(EventNSClientNewLog("NSCLIENT", "disabled"))
             rxBus.send(EventNSClientStatus("Disabled"))
-        } else if (nsURL != "" && (config.isEngineeringMode() || nsURL.lowercase(Locale.getDefault()).startsWith("https://"))) {
+        } else if (nsURL != "" && (nsURL.lowercase(Locale.getDefault()).startsWith("https://"))) {
             try {
                 rxBus.send(EventNSClientStatus("Connecting ..."))
                 val opt = IO.Options()

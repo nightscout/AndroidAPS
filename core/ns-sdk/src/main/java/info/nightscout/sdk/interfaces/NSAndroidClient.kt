@@ -8,6 +8,7 @@ import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
 
 interface NSAndroidClient {
 
+    val lastStatus: Status?
     suspend fun getVersion(): String
     suspend fun getStatus(): Status
     suspend fun getEntries(): String

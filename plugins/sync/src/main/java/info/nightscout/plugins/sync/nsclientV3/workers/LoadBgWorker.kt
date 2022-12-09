@@ -76,6 +76,7 @@ class LoadBgWorker(
                 }
             else {
                 rxBus.send(EventNSClientNewLog("END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}"))
+                nsClientV3Plugin.scheduleNewExecution() // Idea is to run after 5 min after last BG
                 WorkManager.getInstance(context)
                     .beginUniqueWork(
                         NSClientV3Plugin.JOB_NAME,

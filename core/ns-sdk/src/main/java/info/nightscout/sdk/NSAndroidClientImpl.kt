@@ -58,6 +58,8 @@ class NSAndroidClientImpl(
         accessToken = accessToken,
         logging = logging
     )
+    override var lastStatus: Status? = null
+        private set
 
     /*
     * TODO: how should our result look like?
@@ -81,7 +83,7 @@ class NSAndroidClientImpl(
     }
 
     override suspend fun getStatus(): Status = callWrapper(dispatcher) {
-        api.statusSimple().result!!.toLocal()
+        api.statusSimple().result!!.toLocal().also { lastStatus = it }
     }
 
     // TODO: return something better than a String
