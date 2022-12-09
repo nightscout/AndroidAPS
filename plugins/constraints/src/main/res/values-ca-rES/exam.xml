@@ -55,7 +55,6 @@
     <string name="exercise_setunchanged">Deixar l\'objectiu glucèmic com està.</string>
     <string name="exercise_15g">Esperar que la glucèmia baixi per sota del vostre objectiu temporal d\'hipoglucèmia i llavors prendre 15g de carbohidrats d\'acció ràpida.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">Llaç desactivat/aturat</string>
     <string name="suspendloop_doigetinsulin">Rebo insulina quan el llaç està desactivat/aturat?</string>
     <string name="suspendloop_yes">Sí, la insulina basal es continua lliurant.</string>
     <string name="suspendloop_no">No, s\'atura el lliurament d\'insulina.</string>
@@ -99,8 +98,6 @@
     <string name="troubleshooting_yourendo">Preguntant a la clínica on us porten la diabetis o a la vostra endocrinòloga.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
-    <string name="insulin_plugins">Plugins d\'insulina</string>
     <string name="insulin_ultrarapid">Quina insulina s\'ha de fer servir amb el plugin Ultra-Rapid Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
@@ -113,7 +110,6 @@
     <string name="sensitivity_cannula">L\'enregistrament d\'un canvi de cànula restableix la ràtio Autosens, deixant-lo de nou a un 100%.</string>
     <string name="sensitivity_time">Algunes de les opcions de plugins es poden configurar segons rangs horaris que poden ser definits per l\'usuari.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Errors d\'entrada de carbohidrats</string>
     <string name="wrongcarbs_whattodo">Què cal fer si feu una entrada incorrecta de carbohidrats?</string>
     <string name="wrongcarbs_treatmentstab">Elimineu la entrada incorrecta a Tractaments i introduïu el valor correcte de carbohidrats.</string>
@@ -123,7 +119,6 @@
     <string name="wronginsulin_whattodo">Què cal fer si rebeu menys insulina de la que suggereix l\'historial de la bomba, p.ex. degut a una oclusió, a una cànula que no funciona o un oblit de reconnexió de la bomba després d\'una dutxa?</string>
     <string name="wronginsulin_careportal">Eliminar dades d\'insulina del portal de cures Nightscout per eliminar-les de l\'historial de la bomba.</string>
     <string name="wronginsulin_prime">Lliurar un bolus amb part de la insulina que falta utilitzant una jeringa/ploma o el menú d\'encebat.</string>
-    <string name="iob_label">Insulina \"a bord\" (IOB)</string>
     <string name="iob_value">El valor d\'IOB es veu afectat per les basals temporals lliurades.</string>
     <string name="iob_hightemp">Una basal temporal alta no serà lliurada si la glucèmia està per sota de l\'objectiu.</string>
     <string name="iob_negiob">Un valor d\'IOB negatiu durant un període de temps important i en absència d\'exercici físic suggereix que el vostre perfil és massa \"fort\" i necessiteu menys insulina en la vostra configuració.</string>
