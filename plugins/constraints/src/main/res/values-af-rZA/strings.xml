@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">Beperk koolhidrate tot %1$d g agv %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pomp is nie tydelike basale bekwame</string>
+    <string name="closedmodedisabledinpreferences">Geslote lus modus in voorkeure gedeaktiveer</string>
+    <string name="closed_loop_disabled_on_dev_branch">Veranderende ontwikkelende weergawe. Geslote lus is gedeaktiveerd.</string>
+    <string name="smbalwaysdisabled">SMB is altyd na koolhidrate versper omdat aktiewe BG bron nie gevorderde filter ondersteun nie</string>
+    <string name="smbnotallowedinopenloopmode">SMB nie toegelaat in open lus modus</string>
+    <string name="maxvalueinpreferences">maks waarde in voorkeure</string>
+    <string name="hardlimit">harde limiet</string>
+    <string name="treatmentssafety_title">Behandelings veiligheid</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">Nog nie voltooi nie</string>
+    <string name="time_elapsed">Tydsverloop</string>
+    <string name="maxiobset">Maksimum IAB behoorlik gestel</string>
+    <string name="hasbgdata">BG beskikbaar vanaf geselekteerde bron</string>
+    <string name="loopenabled">Lus geaktiveer</string>
+    <string name="apsselected">APS gekies</string>
+    <string name="closedmodeenabled">Geslote modus geaktiveer</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Onderrig program</string>
+</resources>

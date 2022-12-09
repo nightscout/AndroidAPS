@@ -6,6 +6,7 @@ import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
+import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.impl.AppRepository
@@ -68,4 +69,5 @@ class PersistenceLayerImpl @Inject constructor(
 
     override fun getTemporaryTargetActiveAt(timestamp: Long): Single<ValueWrapper<TemporaryTarget>> = repository.getTemporaryTargetActiveAt(timestamp)
     override fun getUserEntryFilteredDataFromTime(timestamp: Long): Single<List<UserEntry>> = repository.getUserEntryFilteredDataFromTime(timestamp)
+    override fun getEffectiveProfileSwitchActiveAt(timestamp: Long): Single<ValueWrapper<EffectiveProfileSwitch>> = repository.getEffectiveProfileSwitchActiveAt(timestamp)
 }

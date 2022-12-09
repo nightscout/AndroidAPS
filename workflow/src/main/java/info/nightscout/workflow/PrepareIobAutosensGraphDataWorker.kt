@@ -17,12 +17,12 @@ import info.nightscout.core.graph.data.Scale
 import info.nightscout.core.graph.data.ScaledDataPoint
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy
-import info.nightscout.core.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.aps.AutosensData
 import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.interfaces.iob.IobCobCalculator
@@ -94,7 +94,7 @@ class PrepareIobAutosensGraphDataWorker(
     }
 
     class AutosensDataPoint(
-        private val ad: AutosensDataObject,
+        private val ad: AutosensData,
         private val scale: Scale,
         private val chartTime: Long,
         private val rh: ResourceHelper
@@ -163,7 +163,7 @@ class PrepareIobAutosensGraphDataWorker(
             val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(time, profile)
             val baseBasalIob = data.iobCobCalculator.calculateAbsoluteIobFromBaseBasals(time)
             val absIob = IobTotal.combine(iob, baseBasalIob)
-            val autosensData = adsData.getAutosensDataAtTime(time) as AutosensDataObject?
+            val autosensData = adsData.getAutosensDataAtTime(time)
             if (abs(lastIob - iob.iob) > 0.02) {
                 if (abs(lastIob - iob.iob) > 0.2) iobArray.add(ScaledDataPoint(time, lastIob, data.overviewData.iobScale))
                 iobArray.add(ScaledDataPoint(time, iob.iob, data.overviewData.iobScale))

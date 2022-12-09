@@ -155,6 +155,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="virtualpump_uploadstatus_title">Upload status til NS</string>
+    <string name="suspendloop_label">Deaktiveret/Suspendéret Loop</string>
+    <string name="iob_label">Insulin om bord (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Forkert kodeord</string>
     <string name="wrongpin">Forkert pinkode</string>

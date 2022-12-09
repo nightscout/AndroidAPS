@@ -119,4 +119,6 @@
     <string name="friday_short">Pn</string>
     <string name="saturday_short">Š</string>
     <string name="sunday_short">S</string>
+    <!--    Reminders-->
+    <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
 </resources>

@@ -101,21 +101,6 @@
     <string name="sms_profile_switch_created">Cambio profilo creato</string>
     <string name="sms_wrong_tbr_duration">La durata del TBR deve essere un multiplo di %1$d minuti e maggiore di 0.</string>
     <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Preset per insulina Humalog e NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Preset per insulina Fiasp</string>
-    <string name="description_insulin_lyumjev">Preset per insulina Lyumjev</string>
-    <string name="description_insulin_free_peak">Ti consente di definire il picco di attività dell\'insulina e dovrebbe essere usato solo dagli utenti avanzati</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">Tempo picco Curva IOB</string>
-    <string name="insulin_peak_time">Tempo del picco [min]</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
-    <string name="dia_too_short">DIA di %1$f troppo breve - uso %2$f.</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">Statusline xDrip+ (smartwatch)</string>
@@ -171,22 +156,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Completato, ben fatto!</string>
-    <string name="not_completed_yet">Non ancora completato</string>
-    <string name="time_elapsed">Tempo trascorso</string>
-    <string name="maxiobset">Max IOB impostata correttamente</string>
-    <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
-    <string name="loopenabled">Loop abilitato</string>
-    <string name="apsselected">APS selezionato</string>
-    <string name="closedmodeenabled">Modalità chiusa abilitata</string>
-    <string name="objectives_shortname">OBT</string>
-    <string name="description_objectives">Programma di apprendimento</string>
-    <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
-    <string name="objectives_next_button">Avanti</string>
-    <string name="objectives_previous_button">Indietro</string>
-    <string name="objectives_button_unfinish">Cancella completamento</string>
-    <string name="objectives_button_unstart">Cancella avvio</string>
     <!-- Actions -->
     <string name="actions">Azioni</string>
     <string name="description_actions">Alcuni tasti per accedere rapidamente alle funzioni comuni</string>
@@ -206,18 +175,6 @@
     <string name="statuslights_cannula_age">Età cannula</string>
     <string name="statuslights_patch_pump_age">età micro a patch</string>
     <string name="patch_pump">Micro a patch</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Limitazione bolo esteso a %1$.1f U a causa di: %2$s</string>
-    <string name="limitingcarbs">Limitazione carboidrati a %1$d g a causa di: %2$s</string>
-    <string name="pumpisnottempbasalcapable">Micro non in grado di impostare la basale temporanea</string>
-    <string name="closedmodedisabledinpreferences">Modalità loop chiuso disabilitata nelle preferenze</string>
-    <string name="closed_loop_disabled_on_dev_branch">Versione sviluppatore in esecuzione. Loop chiuso disabilitato.</string>
-    <string name="closed_loop_disabled_with_eb">Loop chiuso disabilitato a causa dell\'esecuzione di un bolo esteso</string>
-    <string name="smbalwaysdisabled">Le funzioni \"SMB sempre\" e \"SMB dopo i CHO\" sono disabilitate perché l\'attuale sorgente delle glicemie non supporta il filtraggio avanzato</string>
-    <string name="smbnotallowedinopenloopmode">SMB non consentito in modalità loop aperto</string>
-    <string name="maxvalueinpreferences">valore max nelle preferenze</string>
-    <string name="hardlimit">limite fisso</string>
-    <string name="treatmentssafety_title">Sicurezza trattamenti</string>
     <!-- Overview -->
     <string name="show_statuslights">Mostra indicatori di stato sulla home</string>
     <string name="statuslights_cage_warning">Età cannula: soglia di avviso [h]</string>
@@ -344,50 +301,6 @@
     <string name="treatments_shortname">TRATT</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Scala del grafico</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Tipo micro virtuale</string>
-    <string name="virtual_pump_definition">Definizione micro</string>
-    <string name="virtual_pump_pump_def">Bolo: Step=%1$s\nBolo Esteso: [Step=%2$s, Durata=%3$smin-%4$sh]\nBasale: Step=%5$s\nTBR: %6$s (di %7$s), Durata=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">MICROV</string>
-    <string name="description_pump_virtual">Per microinfusori che non hanno ancora alcun driver (Loop aperto)</string>
-    <string name="virtual_pump_label">MICRO VIRTUALE</string>
-    <string name="virtualpump_settings">Impostazioni micro virtuale</string>
-    <string name="virtualpump_uploadstatus_title">Carica stato in NS</string>
-    <!-- Source -->
-    <string name="ns_client_bg">BG NSClient</string>
-    <string name="ns_client_bg_short">BG NS</string>
-    <string name="description_source_ns_client">Scarica dati glicemia da Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Ricevi valori glicemia da xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Ricevi valori glicemia dall\'app Dexcom ottenuta con \'Build Your Own Dexcom App\'.</string>
-    <string name="eversense">Eversense app (modificata)</string>
-    <string name="description_source_eversense">Ricevi valori glicemia dall\'app Eversense modificata.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Ricevi valori glicemia da Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Ricevi valori glicemia da 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Ricevi valori glicemia da app Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Ricevi valori glicemia da app Glunovo</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Ricevi valori da app Intelligo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Ricevi valori glicemia da app Tomato (dispositivo MiaoMiao)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">GlucoRx Aidex</string>
-    <string name="description_source_aidex">Ricevi valori glicemia da CGM GlucoRx Aidex.</string>
-    <string name="random_bg">BG casuale</string>
-    <string name="description_source_random_bg">Genera dati glicemia casuali (solo modalità demo)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Invia dati BG a xDrip+</string>
-    <string name="do_xdrip_upload_summary">In xDrip+ seleziona origine dati 640g/Eversense</string>
-    <string name="bgsource_upload">Impostazioni caricamento BG</string>
-    <string name="dexcom_log_ns_sensor_change_title">Registra cambio sensore in NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Crea evento \"Cambio Sensore\" in NS all\'avvio del sensore</string>
     <!-- Skins -->
     <string name="classic_description">Tema originale</string>
     <string name="lowres_description">Tema a bassa risoluzione</string>

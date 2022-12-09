@@ -85,7 +85,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     }
 
-    val injector = HasAndroidInjector {
+    private val injector = HasAndroidInjector {
         AndroidInjector {
             if (it is Command) {
                 it.aapsLogger = aapsLogger

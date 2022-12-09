@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <string name="phone_checker" translatable="false">PhoneChecker</string>
+
+    <!-- DST Helper -->
+    <string name="key_snooze_dst_in24h" translatable="false">snooze_dst_in24h</string>
+    <string name="key_snooze_loop_disabled" translatable="false">snooze_loop_disabled</string>
+
+    <string name="dst_plugin_name" translatable="false">Daylight Saving time</string>
+    <string name="dst_in_24h_warning">Daylight Saving time change in 24h or less</string>
+    <string name="dst_loop_disabled_warning">Daylight Saving time change less than 3 hours ago - Closed loop disabled</string>
+
+    <!-- Storage constraint -->
+    <string name="storage" translatable="false">Storage constraint</string>
+    <string name="disk_full">Free at least %1$d MB from internal storage! Loop disabled!</string>
+
+    <!-- Version Checker -->
+    <string name="version_checker" translatable="false">Version Checker</string>
+    <string name="old_version">old version</string>
+    <string name="very_old_version">very old version</string>
+    <string name="application_expired">Application expired</string>
+    <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after %2$d days, loop will be disabled after %3$d days</string>
+    <string name="key_last_time_this_version_detected_as_ok" translatable="false">last_time_this_version_detected</string>
+    <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_warning</string>
+    <string name="key_last_expired_versionchecker_warning" translatable="false">last_expired_version_checker_warning</string>
+    <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
+    <string name="key_last_revoked_certs_check" translatable="false">last_revoked_certs_check</string>
+    <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
+    <string name="versionavailable">Version %1$s available</string>
+    <string name="version_expire">Version %1$s expire on %2$s</string>
+
+    <!-- Signature verifier -->
+    <string name="signature_verifier" translatable="false">Signature verifier</string>
+
+    <!-- BG Quality -->
+    <string name="bg_quality" translatable="false">BG Quality</string>
+    <string name="recalculated_data_used">Recalculated data used</string>
+    <string name="bg_too_close">BG too close:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">recalculated</string>
+    <string name="a11y_bg_quality_doubles">double entries</string>
+    <string name="a11y_bg_quality_flat">Flat data. Considered to be wrong</string>
+
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Limiting extended bolus to %1$.1f U because of %2$s</string>
+    <string name="limitingcarbs">Limiting carbs to %1$d g because of %2$s</string>
+
+    <string name="safety" translatable="false">Safety</string>
+    <string name="pumpisnottempbasalcapable">Pump is not temp basal capable</string>
+    <string name="closedmodedisabledinpreferences">Closed loop mode disabled in preferences</string>
+    <string name="closed_loop_disabled_on_dev_branch">Running dev version. Closed loop is disabled.</string>
+    <string name="closed_loop_disabled_with_eb">Closed loop disabled because of running Extended bolus</string>
+    <string name="smbalwaysdisabled">SMB always and after carbs disabled because active BG source doesn\'t support advanced filtering</string>
+    <string name="smbnotallowedinopenloopmode">SMB not allowed in open loop mode</string>
+    <string name="maxvalueinpreferences">max value in preferences</string>
+    <string name="hardlimit">hard limit</string>
+    <string name="treatmentssafety_title">Treatments safety</string>
+
+    <!-- Objectives -->
+    <string name="completed_well_done">Completed, well done!</string>
+    <string name="not_completed_yet">Not completed yet</string>
+    <string name="time_elapsed">Time elapsed</string>
+    <string name="maxiobset">Maximal IOB set properly</string>
+    <string name="hasbgdata">BG available from selected source</string>
+    <string name="synchaswritepermission">Synchronization service has write permission</string>
+    <string name="loopenabled">Loop enabled</string>
+    <string name="apsselected">APS selected</string>
+    <string name="closedmodeenabled">Closed mode enabled</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Learning program</string>
+    <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
+    <string name="objectives_next_button">Next</string>
+    <string name="objectives_previous_button">Prev</string>
+    <string name="objectives_button_unfinish">Clear finished</string>
+    <string name="objectives_button_unstart">Clear started</string>
+
+
+</resources>

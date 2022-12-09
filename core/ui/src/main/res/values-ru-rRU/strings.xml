@@ -162,6 +162,9 @@
     <string name="dia">Время действия инсулина DIA</string>
     <string name="ic_short">IC углкоэф ГУ/инс</string>
     <string name="isf_short">ISF (чувствительность к инсулину)</string>
+    <string name="virtualpump_uploadstatus_title">статус передачи данных в NS</string>
+    <string name="suspendloop_label">Отключенный/приостановленный цикл</string>
+    <string name="iob_label">Активный инсулин (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Неверный пароль</string>
     <string name="wrongpin">Неверный PIN-код</string>

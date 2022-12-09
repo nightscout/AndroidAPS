@@ -158,6 +158,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">KH-ratio</string>
     <string name="isf_short">ISF</string>
+    <string name="virtualpump_uploadstatus_title">Upload status naar NS</string>
+    <string name="suspendloop_label">Uitgeschakelde/onderbroken loop</string>
+    <string name="iob_label">Insuline aan boord (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Verkeerd wachtwoord</string>
     <string name="wrongpin">Onjuiste PIN-code</string>

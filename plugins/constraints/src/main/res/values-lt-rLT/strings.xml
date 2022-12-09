@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">Ribojami angliavandeniai iki %1$d g dėl %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pompa negali nustatyti laikinos bazės</string>
+    <string name="closedmodedisabledinpreferences">Uždaro ciklo būsena išjungta nustatymuose</string>
+    <string name="closed_loop_disabled_on_dev_branch">Naudojama neužbaigta versija. Uždaras ciklas neaktyvus.</string>
+    <string name="closed_loop_disabled_with_eb">Uždara ciklas išjungtas dėl ištęsto boluso veikimo</string>
+    <string name="smbalwaysdisabled">Funkcijos \"SMB visada\" ir \"SMB po angliavandenių\" išjungtos, nes kraujo gliukozės duomenų šaltinis neturi reikalingo filtravimo</string>
+    <string name="smbnotallowedinopenloopmode">SMB neleidžiami atviro ciklo režime</string>
+    <string name="maxvalueinpreferences">Maksimali reikšmė nustatymuose</string>
+    <string name="hardlimit">Nekeičiama riba</string>
+    <string name="treatmentssafety_title">Terapijos saugumas</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">Dar nebaigta</string>
+    <string name="time_elapsed">Praėjo laiko</string>
+    <string name="maxiobset">Maksimalus AIO nustatytas tinkamai</string>
+    <string name="hasbgdata">KG šaltinis pasirinktas teisingai</string>
+    <string name="loopenabled">Ciklas aktyvuotas</string>
+    <string name="apsselected">DKS pasirinkta</string>
+    <string name="closedmodeenabled">Uždaras ciklas aktyvus</string>
+    <string name="objectives_shortname">TIKSL</string>
+    <string name="description_objectives">Mokymosi programa</string>
+    <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
+    <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
+    <string name="objectives_button_unstart">Išvalyti pradėtus</string>
+</resources>

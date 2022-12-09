@@ -161,6 +161,9 @@
     <string name="dia">DAI</string>
     <string name="ic_short">G/I</string>
     <string name="isf_short">SI</string>
+    <string name="virtualpump_uploadstatus_title">Remontée des informations vers NS</string>
+    <string name="suspendloop_label">Boucle désactivée/suspendue</string>
+    <string name="iob_label">Insuline Active (IA)</string>
     <!--    Protection-->
     <string name="wrongpassword">Mot de passe incorrect</string>
     <string name="wrongpin">Code PIN incorrect</string>

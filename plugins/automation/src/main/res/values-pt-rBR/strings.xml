@@ -126,4 +126,6 @@
     <string name="friday_short">6a</string>
     <string name="saturday_short">Sáb</string>
     <string name="sunday_short">Dom</string>
+    <!--    Reminders-->
+    <string name="time_to_bolus">Hora do bolus!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
 </resources>

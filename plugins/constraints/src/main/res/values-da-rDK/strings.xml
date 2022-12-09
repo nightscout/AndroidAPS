@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">Begrænser kulhydrater til %1$d g på grund af %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pumpe er ikke egnet til midlertidig basal</string>
+    <string name="closedmodedisabledinpreferences">Lukket loop tilstand deaktiveret i præferencer</string>
+    <string name="closed_loop_disabled_on_dev_branch">Kører dev version. Lukket loop er deaktiveret.</string>
+    <string name="closed_loop_disabled_with_eb">Lukket loop deaktiveret på grund af kørsel af forlænget bolus</string>
+    <string name="smbalwaysdisabled">SMB altid og efter kulhydrater deaktiveret, fordi den aktive BS kilde ikke understøtter avanceret filtrering</string>
+    <string name="smbnotallowedinopenloopmode">SMB er ikke tilladt i åben loop mode</string>
+    <string name="maxvalueinpreferences">max værdi i præferencer</string>
+    <string name="hardlimit">hård grænse</string>
+    <string name="treatmentssafety_title">Behandlings sikkerhed</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">Ikke afsluttet endnu</string>
+    <string name="time_elapsed">Tid forløbet</string>
+    <string name="maxiobset">Maksimal IOB sat korrekt</string>
+    <string name="hasbgdata">BS tilgængelig fra valgte kilde</string>
+    <string name="loopenabled">Loop aktiveret</string>
+    <string name="apsselected">APS valgt</string>
+    <string name="closedmodeenabled">Lukket tilstand aktiveret</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Oplæringsprogram</string>
+    <string name="doyouwantresetstart">Vil du nulstille objektiv start? Du kan miste dine fremskridt.</string>
+    <string name="objectives_button_unfinish">Ryd færdigt</string>
+    <string name="objectives_button_unstart">Ryd startet</string>
+</resources>

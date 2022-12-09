@@ -14,8 +14,8 @@ import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.configuration.activities.SingleFragmentActivity
 import info.nightscout.core.events.EventNewNotification
-import info.nightscout.core.services.AlarmSoundService
-import info.nightscout.core.services.AlarmSoundServiceHelper
+import info.nightscout.ui.services.AlarmSoundService
+import info.nightscout.ui.services.AlarmSoundServiceHelper
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSAlarm
@@ -39,6 +39,7 @@ import info.nightscout.ui.dialogs.TempBasalDialog
 import info.nightscout.ui.dialogs.TempTargetDialog
 import info.nightscout.ui.dialogs.TreatmentDialog
 import info.nightscout.ui.dialogs.WizardDialog
+import info.nightscout.ui.widget.Widget
 import javax.inject.Inject
 
 class UiInteractionImpl @Inject constructor(
@@ -65,6 +66,10 @@ class UiInteractionImpl @Inject constructor(
         i.putExtra(AlarmSoundService.TITLE, title)
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         context.startActivity(i)
+    }
+
+    override fun updateWidget(context: Context) {
+        Widget.updateWidget(context)
     }
 
     override fun runWizardDialog(fragmentManager: FragmentManager, carbs: Int?, name: String?) {

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">%2$s로 인해 탄수화물이 %1$d g로 제한됩니다.</string>
+    <string name="pumpisnottempbasalcapable">이 펌프 임시Basal을 지원하지 않습니다.</string>
+    <string name="closedmodedisabledinpreferences">설정에서 Closed Loop 모드가 비활성화되었습니다.</string>
+    <string name="closed_loop_disabled_on_dev_branch">개발자버전을 실행중입니다. Closed Loop는 비활성화 됩니다.</string>
+    <string name="closed_loop_disabled_with_eb">확장 Bolus 사용으로 인해 Closed Loop가 비활성화됨</string>
+    <string name="smbalwaysdisabled">선택한 혈당 출처가 고급 필터링을 지원하지 않기 때문에 SMB가 항상 비활성화됩니다.</string>
+    <string name="smbnotallowedinopenloopmode">Open Loop모드에선 SMB가 허용되지 않습니다.</string>
+    <string name="maxvalueinpreferences">설정에서의 최대값</string>
+    <string name="hardlimit">하드한계</string>
+    <string name="treatmentssafety_title">관리 안전설정</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">아직 완료되지 않았습니다.</string>
+    <string name="time_elapsed">경과 시간</string>
+    <string name="maxiobset">최대 IOB가 바르게 설정됨</string>
+    <string name="hasbgdata">선택한 소스에서 혈당이 들어옵니다.</string>
+    <string name="loopenabled">Loop 활성화됨</string>
+    <string name="apsselected">APS 선택됨</string>
+    <string name="closedmodeenabled">Closed 모드가 활성화됨</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">프로그램 배우기</string>
+    <string name="doyouwantresetstart">목표를 초기화하시겠습니까? 진행상황이 삭제됩니다.</string>
+    <string name="objectives_button_unfinish">완료 초기화</string>
+    <string name="objectives_button_unstart">시작 초기화</string>
+</resources>

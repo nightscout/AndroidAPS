@@ -44,7 +44,6 @@
     <string name="authorizationfailed">Autoryzacja nie powiodła się</string>
     <string name="copytolocalprofile_invalid">Nie można utworzyć profilu. Profil jest nieprawidłowy.</string>
     <string name="cta_dont_kill_my_app_info">Nie zabij mojej aplikacji?</string>
-    <string name="time_to_eat">Czas jeść!\nUruchom kreatora bolusa i zrób obliczenia ponownie.</string>
     <string name="fabric_upload_disabled">Przesyłanie dzienników awarii jest wyłączone!</string>
     <string name="clear_filter">Wyczyść filtr</string>
     <string name="cannula">Kaniula</string>

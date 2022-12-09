@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ אינו מותקן</string>
     <string name="calibration_sent">כיול נשלח ל-xDrip+</string>
     <string name="bg_label">BG</string>
-    <string name="time_to_eat">זמן לאכול</string>
-    <string name="time_to_bolus">זמן להזריק בולוס!\nהשתמשו במחשבון וחשבו מחדש.</string>
     <string name="executing_right_now">הפקודה מבוצעת כעת</string>
     <string name="basal_value_below_minimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
     <string name="permission">הרשאה</string>

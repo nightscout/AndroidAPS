@@ -28,6 +28,7 @@ dependencies {
     implementation project(':core:interfaces')
 
     testImplementation project(':implementation')
+    testImplementation project(':plugins:main')
 
     api "androidx.constraintlayout:constraintlayout:$constraintlayout_version"
     api "com.google.android.gms:play-services-location:$play_services_location_version"

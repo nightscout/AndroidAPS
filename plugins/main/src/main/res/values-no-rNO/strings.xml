@@ -101,21 +101,6 @@
     <string name="sms_profile_switch_created">Profilbytte opprettet</string>
     <string name="sms_wrong_tbr_duration">Temp basal varighet må oppgis i antall %1$d minutter og større enn 0.</string>
     <string name="a11y_otp_qr_code">QR-kode for oppsett av engangspassord</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Insulininnstillinger for Humalog og NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Insulininnstillinger for Fiasp</string>
-    <string name="description_insulin_lyumjev">Insulininnstillinger for Lyumjev</string>
-    <string name="description_insulin_free_peak">Lar deg definere toppen på insulinaktiviteten og skal kun brukes av avanserte brukere</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">IOB-kurvens topptid</string>
-    <string name="insulin_peak_time">Topptid [min]</string>
-    <string name="free_peak_oref">Egendefinert topp Oref</string>
-    <string name="rapid_acting_oref">Hurtigvirkende Oref</string>
-    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
-    <string name="dia_too_short">DIA på %1$f er for kort - bruker %2$f i stedet!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip+ statuslinje (klokke)</string>
@@ -171,23 +156,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">MÅL</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Fullført, godt gjort!</string>
-    <string name="not_completed_yet">Enda Ikke fullført</string>
-    <string name="time_elapsed">Tid brukt</string>
-    <string name="maxiobset">Maks IOB er angitt riktig</string>
-    <string name="hasbgdata">BS tilgjengelig fra valgt kilde</string>
-    <string name="synchaswritepermission">Synkroniseringstjeneste har skriverettigheter</string>
-    <string name="loopenabled">Loop er aktivert</string>
-    <string name="apsselected">APS valgt</string>
-    <string name="closedmodeenabled">Lukket loop aktivert</string>
-    <string name="objectives_shortname">MÅL</string>
-    <string name="description_objectives">Opplæringsprogram</string>
-    <string name="doyouwantresetstart">Ønsker du å omstarte læringsmålet? Du vil miste fullførte trinn.</string>
-    <string name="objectives_next_button">Neste</string>
-    <string name="objectives_previous_button">Forrige</string>
-    <string name="objectives_button_unfinish">Sletting ferdig</string>
-    <string name="objectives_button_unstart">Sletting startet</string>
     <!-- Actions -->
     <string name="actions">Handlinger</string>
     <string name="description_actions">Hurtigknapper for rask tilgang til ofte brukte funksjoner</string>
@@ -207,18 +175,6 @@
     <string name="statuslights_cannula_age">kanyle alder</string>
     <string name="statuslights_patch_pump_age">patch pumpe alder</string>
     <string name="patch_pump">Patch pumpe</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Begrenser forlenget bolus til %1$.1f E på grunn av %2$s</string>
-    <string name="limitingcarbs">Begrenser karbohydrater til %1$d g på grunn av %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pumpen støtter ikke temp basaler</string>
-    <string name="closedmodedisabledinpreferences">Lukket Loop er eaktivert i innstillinger</string>
-    <string name="closed_loop_disabled_on_dev_branch">Du kjører dev-versjonen. Lukket loop ikke aktivert.</string>
-    <string name="closed_loop_disabled_with_eb">Lukket loop deaktivert på grunn av forlenget bolus</string>
-    <string name="smbalwaysdisabled">SMB Alltid På og SMB Etter Karbohydrater er deaktivert fordi BS kilden ikke støtter avansert filtrering</string>
-    <string name="smbnotallowedinopenloopmode">SMB ikke tillatt i åpen loop</string>
-    <string name="maxvalueinpreferences">maks verdi i innstillingene</string>
-    <string name="hardlimit">hard begrensning</string>
-    <string name="treatmentssafety_title">Sikkerhet ved behandlinger</string>
     <!-- Overview -->
     <string name="show_statuslights">Vis statusindikatorer på hjem-skjermen</string>
     <string name="statuslights_cage_warning">Terskel for advarsel om alder på slangesett [h]</string>
@@ -345,50 +301,6 @@
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graf skala</string>
     <string name="graph_menu_divider_header">Graf</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Virtuell pumpetype</string>
-    <string name="virtual_pump_definition">Pumpedefinisjon</string>
-    <string name="virtual_pump_pump_def">Bolus: Step=%1$s\nForlenget bolus: [Step=%2$s, Varighet=%3$smin-%4$sh]\nBasal: Step=%5$s\nTBR: %6$s (av %7$s), Varighet=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMP</string>
-    <string name="description_pump_virtual">Integrasjon mot pumper som ikke støttes av AndroidAPS (åpen loop)</string>
-    <string name="virtual_pump_label">VIRTUELL PUMPE</string>
-    <string name="virtualpump_settings">Innstillinger for virtuell pumpe</string>
-    <string name="virtualpump_uploadstatus_title">Last opp status til Nightscout</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient BS</string>
-    <string name="ns_client_bg_short">NS BS</string>
-    <string name="description_source_ns_client">Last ned BS-verdier fra Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Motta BS-verdier fra xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Motta BS verdier fra \'Build Your Own Dexcom App\'.</string>
-    <string name="eversense">Eversense App (patched)</string>
-    <string name="description_source_eversense">Motta BS-verdier fra den modifiserte Eversense-appen.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Motta BS-verdier fra Glimp.</string>
-    <string name="mm640g">MM640G</string>
-    <string name="description_source_mm640g">Motta BS-verdier fra 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Motta BS verdier fra Poctech app</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Motta BS verdier fra Glunovo app</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Motta BS-verdier fra Intelligo-app</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Motta BS verdier fra Tomato app (MiaoMiao enhet)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Motta BS verdier fra GlucoRx Aidex CGM.</string>
-    <string name="random_bg">Vilkårlig BS</string>
-    <string name="description_source_random_bg">Generer vilkårlige BS data (kun demo formål)</string>
-    <string name="random_bg_short">BS</string>
-    <string name="do_xdrip_upload_title">Send BS data til xDrip+</string>
-    <string name="do_xdrip_upload_summary">I xDrip+, velg 640G/Eversens som datakilde</string>
-    <string name="bgsource_upload">Innstillinger for opplasting av BS</string>
-    <string name="dexcom_log_ns_sensor_change_title">Logg sensor bytte til NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Opprett hendelse \"Sensor bytte\" automatisk i NS ved start av sensoren</string>
     <!-- Skins -->
     <string name="classic_description">Opprinnelig visningstema</string>
     <string name="lowres_description">Tema for lav oppløsning</string>

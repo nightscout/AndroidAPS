@@ -126,4 +126,7 @@
     <string name="friday_short">F</string>
     <string name="saturday_short">L</string>
     <string name="sunday_short">S</string>
+    <!--    Reminders-->
+    <string name="time_to_eat">Nå må du spise!\nBruk bolus-veiviser og gjør beregning på nytt.</string>
+    <string name="time_to_bolus">Tid for bolus!\nStart bolus-veiviser og gjør beregning på nytt.</string>
 </resources>

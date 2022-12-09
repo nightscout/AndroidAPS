@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="a11y_bg_quality_flat">Dados fixos. Considere que podem ser imprecisos.</string>
+    <!-- Safety -->
+    <string name="limitingcarbs">A limitar hidratos para %1$d g porque %2$s</string>
+    <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
+    <string name="closedmodedisabledinpreferences">Loop fecchado disabilitado nas preferências</string>
+    <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desabilitado.</string>
+    <string name="closed_loop_disabled_with_eb">Closed Loop desabilitado por causa da execução do Bólus Estendido</string>
+    <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicemia activa não suportar filtro avançado</string>
+    <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
+    <string name="maxvalueinpreferences">valor máx nas preferências</string>
+    <string name="hardlimit">limite rígido</string>
+    <string name="treatmentssafety_title">Segurança do Tratamento</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">Incompleto</string>
+    <string name="time_elapsed">Tempo decorrido</string>
+    <string name="maxiobset">IOB máxima definida correctamente</string>
+    <string name="hasbgdata">Glicemia disponivel desde a fonte selecionada</string>
+    <string name="synchaswritepermission">O serviço de sincronização tem permissão de escrita</string>
+    <string name="loopenabled">Loop activado</string>
+    <string name="apsselected">APS seleccionado</string>
+    <string name="closedmodeenabled">Modo fechado ativado</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Programa de aprendizagem</string>
+    <string name="doyouwantresetstart">Deseja reiniciar o objetivo? Pode perder seu progresso.</string>
+    <string name="objectives_button_unfinish">Limpeza terminado</string>
+    <string name="objectives_button_unstart">Limpeza iniciado</string>
+</resources>

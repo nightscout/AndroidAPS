@@ -18,8 +18,13 @@ interface AutosensData {
     var pastSensitivity: String
     var deviation: Double
     var validDeviation: Boolean
+    var activeCarbsList: MutableList<CarbsInPast>
+    var absorbed: Double
     var carbsFromBolus: Double
     var cob: Double
+    var bgi: Double
+    var delta: Double
+    var avgDelta: Double
     var slopeFromMaxDeviation: Double
     var slopeFromMinDeviation: Double
     var usedMinCarbsImpact: Double
@@ -37,4 +42,6 @@ interface AutosensData {
     var autosensResult: AutosensResult
 
     fun cloneCarbsList(): MutableList<CarbsInPast>
+    fun deductAbsorbedCarbs()
+    fun removeOldCarbs(toTime: Long, isAAPSOrWeighted: Boolean)
 }

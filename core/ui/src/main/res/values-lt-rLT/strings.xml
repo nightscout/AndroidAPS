@@ -141,6 +141,9 @@
     <string name="dia">IVT</string>
     <string name="ic_short">IA</string>
     <string name="isf_short">JIF</string>
+    <string name="virtualpump_uploadstatus_title">Perduoti būsenos duomenis į NS</string>
+    <string name="suspendloop_label">Ciklas išjungtas/sustabdytas</string>
+    <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>
     <!--    Protection-->
     <string name="wrongpassword">Neteisingas slaptažodis</string>
     <string name="passwords_dont_match">Slaptažodžiai nesutampa</string>
