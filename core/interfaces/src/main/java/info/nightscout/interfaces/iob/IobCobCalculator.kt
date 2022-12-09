@@ -104,4 +104,6 @@ interface IobCobCalculator {
      *  @return IobTotal
      */
     fun calculateIobFromTempBasalsIncludingConvertedExtended(): IobTotal
+
+    fun provideEmptyAutosensDataObject(): AutosensData
 }

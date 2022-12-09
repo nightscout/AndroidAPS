@@ -198,7 +198,7 @@
 
                 </LinearLayout>
 
-                <info.nightscout.plugins.insulin.ActivityGraph
+                <info.nightscout.core.graph.ActivityGraph
                     android:id="@+id/insulin_graph"
                     android:layout_width="match_parent"
                     android:layout_height="100dip"

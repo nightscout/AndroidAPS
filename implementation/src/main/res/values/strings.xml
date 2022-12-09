@@ -5,8 +5,6 @@
 
     <string name="bg_label">BG</string>
 
-    <string name="time_to_eat">Time to eat</string>
-    <string name="time_to_bolus">Time to bolus!\nRun Bolus wizard and do calculation again.</string>
     <string name="executing_right_now">Command is executed right now</string>
     <string name="basal_value_below_minimum">Basal value below minimum. Profile not set!</string>
     <string name="permission">Permission</string>

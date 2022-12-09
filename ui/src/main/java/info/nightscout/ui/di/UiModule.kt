@@ -32,12 +32,15 @@ import info.nightscout.ui.dialogs.TempTargetDialog
 import info.nightscout.ui.dialogs.TreatmentDialog
 import info.nightscout.ui.dialogs.WizardDialog
 import info.nightscout.ui.dialogs.WizardInfoDialog
+import info.nightscout.ui.services.AlarmSoundService
 import info.nightscout.ui.widget.Widget
 import info.nightscout.ui.widget.WidgetConfigureActivity
 
 @Module
 @Suppress("unused")
 abstract class UiModule {
+
+    @ContributesAndroidInjector abstract fun contributesAlarmSoundService(): AlarmSoundService
 
     @ContributesAndroidInjector abstract fun contributesWidget(): Widget
     @ContributesAndroidInjector abstract fun contributesWidgetConfigureActivity(): WidgetConfigureActivity

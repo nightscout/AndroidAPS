@@ -17,6 +17,8 @@ import info.nightscout.automation.actions.ActionSendSMS
 import info.nightscout.automation.actions.ActionStartTempTarget
 import info.nightscout.automation.actions.ActionStopProcessing
 import info.nightscout.automation.actions.ActionStopTempTarget
+import info.nightscout.automation.elements.Comparator
+import info.nightscout.automation.elements.InputDelta
 import info.nightscout.automation.events.EventAutomationDataChanged
 import info.nightscout.automation.events.EventAutomationUpdateGui
 import info.nightscout.automation.events.EventLocationChange
@@ -41,6 +43,7 @@ import info.nightscout.automation.triggers.TriggerTimeRange
 import info.nightscout.automation.triggers.TriggerWifiSsid
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.automation.Automation
 import info.nightscout.interfaces.automation.AutomationEvent
@@ -50,6 +53,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.utils.TimerUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventBTChange
@@ -67,6 +71,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import java.text.DecimalFormat
 import java.util.Collections
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -87,7 +92,8 @@ class AutomationPlugin @Inject constructor(
     private val config: Config,
     private val locationServiceHelper: LocationServiceHelper,
     private val dateUtil: DateUtil,
-    private val activePlugin: ActivePlugin
+    private val activePlugin: ActivePlugin,
+    private val timerUtil: TimerUtil
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -401,5 +407,110 @@ class AutomationPlugin @Inject constructor(
             TriggerPumpLastConnection(injector),
             TriggerBTDevice(injector),
         )
+    }
+
+    /**
+     * Generate reminder via [info.nightscout.interfaces.utils.TimerUtil]
+     *
+     * @param seconds seconds to the future
+     */
+    override fun scheduleTimeToEatReminder(seconds: Int) =
+        timerUtil.scheduleReminder(seconds, rh.gs(R.string.time_to_eat))
+
+    /**
+     * Create new Automation event to alarm when is time to eat
+     */
+    override fun scheduleAutomationEventEatReminder() {
+        val event = AutomationEventObject(injector).apply {
+            title = rh.gs(info.nightscout.core.ui.R.string.bolus_advisor)
+            readOnly = true
+            systemAction = true
+            autoRemove = true
+            trigger = TriggerConnector(injector, TriggerConnector.Type.OR).apply {
+
+                // Bg under 180 mgdl and dropping by 15 mgdl
+                list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
+                    list.add(TriggerBg(injector, 180.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(rh, -15.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(
+                        TriggerDelta(
+                            injector,
+                            InputDelta(rh, -8.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE),
+                            GlucoseUnit.MGDL,
+                            Comparator.Compare.IS_EQUAL_OR_LESSER
+                        )
+                    )
+                })
+                // Bg under 160 mgdl and dropping by 9 mgdl
+                list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
+                    list.add(TriggerBg(injector, 160.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(rh, -9.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(
+                        TriggerDelta(
+                            injector,
+                            InputDelta(rh, -5.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE),
+                            GlucoseUnit.MGDL,
+                            Comparator.Compare.IS_EQUAL_OR_LESSER
+                        )
+                    )
+                })
+                // Bg under 145 mgdl and dropping
+                list.add(TriggerConnector(injector, TriggerConnector.Type.AND).apply {
+                    list.add(TriggerBg(injector, 145.0, GlucoseUnit.MGDL, Comparator.Compare.IS_LESSER))
+                    list.add(TriggerDelta(injector, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_LESSER))
+                    list.add(
+                        TriggerDelta(
+                            injector,
+                            InputDelta(rh, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.SHORT_AVERAGE),
+                            GlucoseUnit.MGDL,
+                            Comparator.Compare.IS_EQUAL_OR_LESSER
+                        )
+                    )
+                })
+            }
+            actions.add(ActionAlarm(injector, rh.gs(R.string.time_to_eat)))
+        }
+
+        addIfNotExists(event)
+    }
+
+    /**
+     * Remove Automation event
+     */
+    override fun removeAutomationEventEatReminder() {
+        val event = AutomationEventObject(injector).apply {
+            title = rh.gs(info.nightscout.core.ui.R.string.bolus_advisor)
+        }
+        removeIfExists(event)
+    }
+
+    override fun scheduleAutomationEventBolusReminder() {
+        val event = AutomationEventObject(injector).apply {
+            title = rh.gs(info.nightscout.core.ui.R.string.bolus_reminder)
+            readOnly = true
+            systemAction = true
+            autoRemove = true
+            trigger = TriggerConnector(injector, TriggerConnector.Type.AND).apply {
+
+                // Bg above 70 mgdl and delta positive mgdl
+                list.add(TriggerBg(injector, 70.0, GlucoseUnit.MGDL, Comparator.Compare.IS_EQUAL_OR_GREATER))
+                list.add(
+                    TriggerDelta(
+                        injector, InputDelta(rh, 0.0, -360.0, 360.0, 1.0, DecimalFormat("0"), InputDelta.DeltaType.DELTA), GlucoseUnit.MGDL, Comparator.Compare
+                            .IS_GREATER
+                    )
+                )
+            }
+            actions.add(ActionAlarm(injector, rh.gs(R.string.time_to_bolus)))
+        }
+
+        addIfNotExists(event)
+    }
+
+    override fun removeAutomationEventBolusReminder() {
+        val event = AutomationEventObject(injector).apply {
+            title = rh.gs(info.nightscout.core.ui.R.string.bolus_reminder)
+        }
+        removeIfExists(event)
     }
 }

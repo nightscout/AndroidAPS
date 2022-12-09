@@ -10,6 +10,7 @@ import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.constraints.Constraint
@@ -42,7 +43,8 @@ ActionsTestBase : TestBaseWithProfile() {
         aapsLogger: AAPSLogger,
         rh: ResourceHelper,
         injector: HasAndroidInjector,
-        pluginDescription: PluginDescription
+        pluginDescription: PluginDescription,
+        private val apsResult: APSResult
     ) : PluginBase(
         pluginDescription, aapsLogger, rh, injector
     ), Loop {
@@ -75,6 +77,9 @@ ActionsTestBase : TestBaseWithProfile() {
             runningConfiguration: RunningConfiguration,
             version: String
         ): DeviceStatus? = null
+
+        override fun provideEmptyAPSResultObject(): APSResult = apsResult
+
         override fun setPluginEnabled(type: PluginType, newState: Boolean) {}
     }
 
@@ -87,6 +92,7 @@ ActionsTestBase : TestBaseWithProfile() {
     @Mock lateinit var loopPlugin: TestLoopPlugin
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var context: Context
+    @Mock lateinit var apsResult: APSResult
 
     private val pluginDescription = PluginDescription()
     lateinit var testPumpPlugin: TestPumpPlugin

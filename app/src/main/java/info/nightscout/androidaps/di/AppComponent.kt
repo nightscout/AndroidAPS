@@ -20,6 +20,7 @@ import info.nightscout.core.di.CoreModule
 import info.nightscout.core.validators.di.ValidatorsModule
 import info.nightscout.database.impl.DatabaseModule
 import info.nightscout.implementation.di.ImplementationModule
+import info.nightscout.insulin.di.InsulinModule
 import info.nightscout.plugins.aps.di.ApsModule
 import info.nightscout.plugins.constraints.di.PluginsConstraintsModule
 import info.nightscout.plugins.di.PluginsModule
@@ -55,6 +56,7 @@ import javax.inject.Singleton
         CoreModule::class,
         DatabaseModule::class,
         ImplementationModule::class,
+        InsulinModule::class,
         OpenHumansModule::class,
         PluginsModule::class,
         RxModule::class,

@@ -11,16 +11,18 @@ files:
     translation: /plugins/aps/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/main/src/main/res/values/strings.xml
     translation: /plugins/main/src/main/res/values-%android_code%/strings.xml
-  - source: /plugins/main/src/main/res/values/exam.xml
-    translation: /plugins/main/src/main/res/values-%android_code%/%original_file_name%
-  - source: /plugins/main/src/main/res/values/objectives.xml
-    translation: /plugins/main/src/main/res/values-%android_code%/%original_file_name%
+  - source: /plugins/constraints/src/main/res/values/exam.xml
+    translation: /plugins/constraints/src/main/res/values-%android_code%/%original_file_name%
+  - source: /plugins/constraints/src/main/res/values/objectives.xml
+    translation: /plugins/constraints/src/main/res/values-%android_code%/%original_file_name%
   - source: /plugins/automation/src/main/res/values/strings.xml
     translation: /plugins/automation/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/openhumans/src/main/res/values/strings.xml
     translation: /plugins/openhumans/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/sensitivity/src/main/res/values/strings.xml
     translation: /plugins/sensitivity/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/insulin/src/main/res/values/strings.xml
+    translation: /plugins/insulin/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/configuration/src/main/res/values/strings.xml
     translation: /plugins/configuration/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/sync/src/main/res/values/strings.xml
