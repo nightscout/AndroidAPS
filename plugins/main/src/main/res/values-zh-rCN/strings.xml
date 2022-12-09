@@ -98,21 +98,6 @@
     <string name="sms_profile_switch_created">配置文件切换已创建</string>
     <string name="sms_wrong_tbr_duration">TBR(临时基础率) 的持续时间必须是 %1$d 分钟的倍数，且大于0。</string>
     <string name="a11y_otp_qr_code">用于安装一次性随机验证码的二维码</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev(超速效赖脯胰岛素)</string>
-    <string name="description_insulin_rapid">胰岛素预设为 Humalog(优泌乐) 和 NovoRapid(门冬)/NovoLog(诺和锐)</string>
-    <string name="description_insulin_ultra_rapid">Fiasp 胰岛素预设</string>
-    <string name="description_insulin_lyumjev">预设为Lyumjev速效赖脯胰岛素</string>
-    <string name="description_insulin_free_peak">允许您定义胰岛素作用的峰值, 并且只应由高级用户使用</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">IOB 曲线峰值时间</string>
-    <string name="insulin_peak_time">峰值时间 [min]</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">速效 Oref</string>
-    <string name="ultra_rapid_oref">超速效 Oref</string>
-    <string name="dia_too_short">DIA of %1$f 太短了，请使用 %2$f 代替</string>
-    <string name="fast_acting_insulin_comment">诺和锐, 门冬, 优泌乐</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp超速效</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip+状态线 (手表)</string>
