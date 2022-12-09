@@ -36,6 +36,7 @@ import info.nightscout.pump.virtual.di.VirtualPumpModule
 import info.nightscout.rx.di.RxModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.shared.impl.di.SharedImplModule
+import info.nightscout.source.di.SourceModule
 import info.nightscout.ui.di.UiModule
 import info.nightscout.workflow.di.WorkflowModule
 import javax.inject.Singleton
@@ -66,6 +67,7 @@ import javax.inject.Singleton
         UiModule::class,
         ValidatorsModule::class,
         PluginsConstraintsModule::class,
+        SourceModule::class,
         SyncModule::class,
         WorkflowModule::class,
 

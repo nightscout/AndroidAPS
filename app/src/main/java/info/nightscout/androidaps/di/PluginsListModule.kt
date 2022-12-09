@@ -41,17 +41,6 @@ import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.plugins.profile.ProfilePlugin
-import info.nightscout.plugins.source.AidexPlugin
-import info.nightscout.plugins.source.DexcomPlugin
-import info.nightscout.plugins.source.GlimpPlugin
-import info.nightscout.plugins.source.GlunovoPlugin
-import info.nightscout.plugins.source.IntelligoPlugin
-import info.nightscout.plugins.source.MM640gPlugin
-import info.nightscout.plugins.source.NSClientSourcePlugin
-import info.nightscout.plugins.source.PoctechPlugin
-import info.nightscout.plugins.source.RandomBgPlugin
-import info.nightscout.plugins.source.TomatoPlugin
-import info.nightscout.plugins.source.XdripPlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
@@ -62,6 +51,17 @@ import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.sensitivity.SensitivityOref1Plugin
 import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
+import info.nightscout.source.AidexPlugin
+import info.nightscout.source.DexcomPlugin
+import info.nightscout.source.GlimpPlugin
+import info.nightscout.source.GlunovoPlugin
+import info.nightscout.source.IntelligoPlugin
+import info.nightscout.source.MM640gPlugin
+import info.nightscout.source.NSClientSourcePlugin
+import info.nightscout.source.PoctechPlugin
+import info.nightscout.source.RandomBgPlugin
+import info.nightscout.source.TomatoPlugin
+import info.nightscout.source.XdripPlugin
 import javax.inject.Qualifier
 
 @Suppress("unused")

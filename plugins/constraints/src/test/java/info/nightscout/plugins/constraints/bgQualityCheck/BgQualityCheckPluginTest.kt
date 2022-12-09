@@ -37,7 +37,7 @@ class BgQualityCheckPluginTest : TestBase() {
     private lateinit var plugin: BgQualityCheckPlugin
 
     private val injector = HasAndroidInjector { AndroidInjector { } }
-    val now = 100000000L
+    private val now = 100000000L
     //private val autosensDataStore = AutosensDataStoreObject()
 
     @BeforeEach
@@ -234,6 +234,9 @@ class BgQualityCheckPluginTest : TestBase() {
         class DexcomPlugin : BgSource, DexcomBoyda {
 
             override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean = true
+            override fun isEnabled(): Boolean = false
+            override fun requestPermissionIfNeeded() {}
+            override fun findDexcomPackageName(): String? = null
         }
         `when`(activePlugin.activeBgSource).thenReturn(DexcomPlugin())
         plugin.processBgData()

@@ -48,14 +48,6 @@ import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
-import info.nightscout.plugins.source.AidexPlugin
-import info.nightscout.plugins.source.DexcomPlugin
-import info.nightscout.plugins.source.EversensePlugin
-import info.nightscout.plugins.source.GlimpPlugin
-import info.nightscout.plugins.source.GlunovoPlugin
-import info.nightscout.plugins.source.IntelligoPlugin
-import info.nightscout.plugins.source.PoctechPlugin
-import info.nightscout.plugins.source.TomatoPlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
@@ -72,6 +64,14 @@ import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.source.AidexPlugin
+import info.nightscout.source.DexcomPlugin
+import info.nightscout.source.EversensePlugin
+import info.nightscout.source.GlimpPlugin
+import info.nightscout.source.GlunovoPlugin
+import info.nightscout.source.IntelligoPlugin
+import info.nightscout.source.PoctechPlugin
+import info.nightscout.source.TomatoPlugin
 import javax.inject.Inject
 
 class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {

@@ -17,7 +17,6 @@ import info.nightscout.plugins.iob.iobCobCalculator.data.AutosensDataObject
         FoodModule::class,
         SMSCommunicatorModule::class,
         ProfileModule::class,
-        SourceModule::class,
         SkinsModule::class,
         SkinsUiModule::class,
         ActionsModule::class,

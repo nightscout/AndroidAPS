@@ -19,9 +19,9 @@ import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.plugins.constraints.safety.SafetyPlugin
-import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.plugins.source.GlimpPlugin
+import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.source.GlimpPlugin
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
