@@ -181,7 +181,7 @@
     <string name="tools">Nástroje</string>
     <string name="nav_history_browser">Prohlížeč historie</string>
     <string name="sensor_label">Senzor</string>
-    <string name="age_label">věk:</string>
+    <string name="age_label">stáří:</string>
     <string name="level_label">úroveň:</string>
     <string name="insulin_label">Inzulín</string>
     <string name="pb_label">Baterie pumpy</string>
