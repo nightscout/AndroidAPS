@@ -1,4 +1,4 @@
-package info.nightscout.plugins.insulin
+package info.nightscout.core.graph
 
 import android.content.Context
 import android.graphics.Color

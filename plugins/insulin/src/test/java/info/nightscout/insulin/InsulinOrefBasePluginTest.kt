@@ -1,4 +1,4 @@
-package info.nightscout.plugins.insulin
+package info.nightscout.insulin
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -7,12 +7,13 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONObject
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -38,7 +39,7 @@ class InsulinOrefBasePluginTest {
         aapsLogger: AAPSLogger,
         config: Config,
         hardLimits: HardLimits
-    ) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits) {
+    ) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
 
         override fun sendShortDiaNotification(dia: Double) {
             shortDiaNotificationSend = true
@@ -65,6 +66,7 @@ class InsulinOrefBasePluginTest {
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var config: Config
     @Mock lateinit var hardLimits: HardLimits
+    @Mock lateinit var uiInteraction: UiInteraction
 
     private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -79,12 +81,12 @@ class InsulinOrefBasePluginTest {
 
     @Test
     fun testGetDia() {
-        Assert.assertEquals(5.0, sut.dia, 0.0)
+        Assertions.assertEquals(5.0, sut.dia, 0.0)
         testUserDefinedDia = 5.0 + 1
-        Assert.assertEquals(5.0 + 1, sut.dia, 0.0)
+        Assertions.assertEquals(5.0 + 1, sut.dia, 0.0)
         testUserDefinedDia = 5.0 - 1
-        Assert.assertEquals(5.0, sut.dia, 0.0)
-        Assert.assertTrue(shortDiaNotificationSend)
+        Assertions.assertEquals(5.0, sut.dia, 0.0)
+        Assertions.assertTrue(shortDiaNotificationSend)
     }
 
     @Test
@@ -96,22 +98,22 @@ class InsulinOrefBasePluginTest {
         // check directly after bolus
         treatment.timestamp = time
         treatment.amount = 10.0
-        Assert.assertEquals(10.0, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
+        Assertions.assertEquals(10.0, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
         // check after 1 hour
         treatment.timestamp = time - 1 * 60 * 60 * 1000 // 1 hour
         treatment.amount = 10.0
-        Assert.assertEquals(3.92, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
+        Assertions.assertEquals(3.92, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
         // check after 2 hour
         treatment.timestamp = time - 2 * 60 * 60 * 1000 // 2 hours
         treatment.amount = 10.0
-        Assert.assertEquals(0.77, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
+        Assertions.assertEquals(0.77, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
         // check after 3 hour
         treatment.timestamp = time - 3 * 60 * 60 * 1000 // 3 hours
         treatment.amount = 10.0
-        Assert.assertEquals(0.10, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
+        Assertions.assertEquals(0.10, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
         // check after dia
         treatment.timestamp = time - 4 * 60 * 60 * 1000 // 4 hours
         treatment.amount = 10.0
-        Assert.assertEquals(0.0, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
+        Assertions.assertEquals(0.0, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
     }
 }

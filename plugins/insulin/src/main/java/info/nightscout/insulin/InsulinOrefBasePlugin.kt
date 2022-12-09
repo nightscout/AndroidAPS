@@ -1,7 +1,6 @@
-package info.nightscout.plugins.insulin
+package info.nightscout.insulin
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.events.EventNewNotification
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.interfaces.Config
@@ -12,8 +11,8 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -34,7 +33,8 @@ abstract class InsulinOrefBasePlugin(
     val rxBus: RxBus,
     aapsLogger: AAPSLogger,
     config: Config,
-    val hardLimits: HardLimits
+    val hardLimits: HardLimits,
+    val uiInteraction: UiInteraction
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.INSULIN)
@@ -61,8 +61,7 @@ abstract class InsulinOrefBasePlugin(
     open fun sendShortDiaNotification(dia: Double) {
         if (System.currentTimeMillis() - lastWarned > 60 * 1000) {
             lastWarned = System.currentTimeMillis()
-            val notification = Notification(Notification.SHORT_DIA, String.format(notificationPattern, dia, hardLimits.minDia()), Notification.URGENT)
-            rxBus.send(EventNewNotification(notification))
+            uiInteraction.addNotification(Notification.SHORT_DIA, String.format(notificationPattern, dia, hardLimits.minDia()), Notification.URGENT)
         }
     }
 

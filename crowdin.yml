@@ -21,6 +21,8 @@ files:
     translation: /plugins/openhumans/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/sensitivity/src/main/res/values/strings.xml
     translation: /plugins/sensitivity/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/insulin/src/main/res/values/strings.xml
+    translation: /plugins/insulin/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/configuration/src/main/res/values/strings.xml
     translation: /plugins/configuration/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/sync/src/main/res/values/strings.xml

@@ -28,6 +28,7 @@ import info.nightscout.automation.AutomationPlugin
 import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.implementation.plugin.PluginStore
+import info.nightscout.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.plugin.PluginBase
@@ -47,7 +48,6 @@ import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
-import info.nightscout.plugins.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
 import info.nightscout.plugins.source.AidexPlugin
 import info.nightscout.plugins.source.DexcomPlugin

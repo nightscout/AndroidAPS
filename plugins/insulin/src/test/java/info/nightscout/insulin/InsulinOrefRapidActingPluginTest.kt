@@ -1,16 +1,16 @@
-package info.nightscout.plugins.insulin
+package info.nightscout.insulin
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
-import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -23,9 +23,9 @@ import org.mockito.quality.Strictness
 
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
-class InsulinLyumjevPluginTest {
+class InsulinOrefRapidActingPluginTest {
 
-    private lateinit var sut: InsulinLyumjevPlugin
+    private lateinit var sut: InsulinOrefRapidActingPlugin
 
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var rxBus: RxBus
@@ -33,6 +33,7 @@ class InsulinLyumjevPluginTest {
     @Mock lateinit var aapsLogger: AAPSLogger
     @Mock lateinit var config: Config
     @Mock lateinit var hardLimits: HardLimits
+    @Mock lateinit var uiInteraction: UiInteraction
 
     private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
@@ -41,29 +42,29 @@ class InsulinLyumjevPluginTest {
 
     @BeforeEach
     fun setup() {
-        sut = InsulinLyumjevPlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits)
+        sut = InsulinOrefRapidActingPlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction)
     }
 
     @Test
     fun `simple peak test`() {
-        assertEquals(45, sut.peak)
+        Assertions.assertEquals(75, sut.peak)
     }
 
     @Test
     fun getIdTest() {
-        assertEquals(Insulin.InsulinType.OREF_LYUMJEV, sut.id)
+        Assertions.assertEquals(Insulin.InsulinType.OREF_RAPID_ACTING, sut.id)
     }
 
     @Test
     fun commentStandardTextTest() {
-        `when`(rh.gs(eq(R.string.lyumjev))).thenReturn("Lyumjev")
-        assertEquals("Lyumjev", sut.commentStandardText())
+        `when`(rh.gs(eq(R.string.fast_acting_insulin_comment))).thenReturn("Novorapid, Novolog, Humalog")
+        Assertions.assertEquals("Novorapid, Novolog, Humalog", sut.commentStandardText())
     }
 
     @Test
     fun getFriendlyNameTest() {
-        `when`(rh.gs(eq(R.string.lyumjev))).thenReturn("Lyumjev")
-        assertEquals("Lyumjev", sut.friendlyName)
+        `when`(rh.gs(eq(R.string.rapid_acting_oref))).thenReturn("Rapid-Acting Oref")
+        Assertions.assertEquals("Rapid-Acting Oref", sut.friendlyName)
     }
 
 }

@@ -14,7 +14,6 @@ import info.nightscout.plugins.iob.iobCobCalculator.data.AutosensDataObject
 @Module(
     includes = [
         PluginsModule.Bindings::class,
-        InsulinModule::class,
         FoodModule::class,
         SMSCommunicatorModule::class,
         ProfileModule::class,

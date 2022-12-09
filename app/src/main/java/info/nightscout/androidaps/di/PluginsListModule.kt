@@ -8,7 +8,6 @@ import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploaderPlugin
-import info.nightscout.plugins.general.persistentNotification.PersistentNotificationPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
@@ -17,6 +16,10 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.OmnipodErosPumpPlugi
 import info.nightscout.automation.AutomationPlugin
 import info.nightscout.configuration.configBuilder.ConfigBuilderPlugin
 import info.nightscout.configuration.maintenance.MaintenancePlugin
+import info.nightscout.insulin.InsulinLyumjevPlugin
+import info.nightscout.insulin.InsulinOrefFreePeakPlugin
+import info.nightscout.insulin.InsulinOrefRapidActingPlugin
+import info.nightscout.insulin.InsulinOrefUltraRapidActingPlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -31,14 +34,11 @@ import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.plugins.general.food.FoodPlugin
 import info.nightscout.plugins.general.overview.OverviewPlugin
+import info.nightscout.plugins.general.persistentNotification.PersistentNotificationPlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
-import info.nightscout.plugins.insulin.InsulinLyumjevPlugin
-import info.nightscout.plugins.insulin.InsulinOrefFreePeakPlugin
-import info.nightscout.plugins.insulin.InsulinOrefRapidActingPlugin
-import info.nightscout.plugins.insulin.InsulinOrefUltraRapidActingPlugin
 import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.plugins.profile.ProfilePlugin
 import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin

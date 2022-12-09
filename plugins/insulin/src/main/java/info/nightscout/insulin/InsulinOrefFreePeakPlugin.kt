@@ -1,4 +1,4 @@
-package info.nightscout.plugins.insulin
+package info.nightscout.insulin
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.putInt
@@ -6,8 +6,8 @@ import info.nightscout.core.extensions.storeInt
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.plugins.R
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -28,16 +28,17 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
     rxBus: RxBus,
     aapsLogger: AAPSLogger,
     config: Config,
-    hardLimits: HardLimits
-) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits) {
+    hardLimits: HardLimits,
+    uiInteraction: UiInteraction
+) : InsulinOrefBasePlugin(injector, rh, profileFunction, rxBus, aapsLogger, config, hardLimits, uiInteraction) {
 
     override val id get(): Insulin.InsulinType = Insulin.InsulinType.OREF_FREE_PEAK
 
     override val friendlyName get(): String = rh.gs(R.string.free_peak_oref)
 
-    override fun configuration(): JSONObject = JSONObject().putInt(R.string.key_insulin_oref_peak, sp, rh)
+    override fun configuration(): JSONObject = JSONObject().putInt(info.nightscout.core.utils.R.string.key_insulin_oref_peak, sp, rh)
     override fun applyConfiguration(configuration: JSONObject) {
-        configuration.storeInt(R.string.key_insulin_oref_peak, sp, rh)
+        configuration.storeInt(info.nightscout.core.utils.R.string.key_insulin_oref_peak, sp, rh)
     }
 
     override fun commentStandardText(): String {
@@ -45,7 +46,7 @@ class InsulinOrefFreePeakPlugin @Inject constructor(
     }
 
     override val peak: Int
-        get() = sp.getInt(R.string.key_insulin_oref_peak, DEFAULT_PEAK)
+        get() = sp.getInt(info.nightscout.core.utils.R.string.key_insulin_oref_peak, DEFAULT_PEAK)
 
     companion object {
 
