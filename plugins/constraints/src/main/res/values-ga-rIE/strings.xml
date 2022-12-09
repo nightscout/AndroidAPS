@@ -8,4 +8,6 @@
     <!-- BG Quality -->
     <!-- Safety -->
     <!-- Objectives -->
+    <string name="loopenabled">Lúb cumasaithe</string>
+    <string name="apsselected">APS  roghnaithe</string>
 </resources>
