@@ -167,35 +167,6 @@
     <string name="activity_shortname">ACT</string>
     <string name="treatments_shortname">BEHANDEL</string>
     <string name="sensitivity_shortname">SENS</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Virtuele Pomp</string>
-    <string name="virtual_pump_definition">Pomp definisie</string>
-    <string name="virtual_pump_pump_def">Bolus: Stap =%1$s\nVerlengde Bolus: [stap%2$s, duur = =%3$smin -%4$sh]\nBasal: stap =%5$s\nTBR: %6$s (deur %7$s), duur =%8$smin -%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VPOMP</string>
-    <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
-    <string name="virtual_pump_label">VIRTUELE POMP</string>
-    <string name="virtualpump_settings">Virtuele pomp instellings</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient BG</string>
-    <string name="description_source_ns_client">Laai BG data af vanaf Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Ontvang BG waardes vana xDrip+.</string>
-    <string name="eversense">Eversense App (bygewerk)</string>
-    <string name="description_source_eversense">Ontvang BG waardes uit die gelapte Eversense toep.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Ontvang BG waardes vanaf Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Onvang BG waardes vanaf die 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Ontvang BG waardes van Poctech toepassing</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Ontvang BG waardes vanaf Tomato toep (MiaoMiao toestel)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Stuur BG data na xDrip+</string>
-    <string name="do_xdrip_upload_summary">Xdrip+ kies 640g/Eversense data bron</string>
-    <string name="bgsource_upload">BG oplaai instellings</string>
-    <string name="dexcom_log_ns_sensor_change_title">Log sensor verander na NS</string>
     <!-- Skins -->
     <!--    DataBroadcast-->
     <!--    Iob-->
