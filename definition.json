@@ -3,23 +3,11 @@
  ,{"minAndroid":24,"maxAndroid":25,"supported":"2.6.2"}
  ,{"minAndroid":26,"maxAndroid":27,"supported":"2.8.2"}
  ,{"minAndroid":28,"maxAndroid":99,"supported":"3.0.0"}
- ,{"endDate":"2022-03-19","version":"3.0.0.1-dev-e"}
- ,{"endDate":"2022-04-09","version":"3.0.0.1-dev-h"}
- ,{"endDate":"2022-05-15","version":"3.0.0.1-dev-i"}
- ,{"endDate":"2022-05-15","version":"3.0.0.1-dev-j"}
- ,{"endDate":"2022-05-25","version":"3.0.0.2-dev-i"}
- ,{"endDate":"2022-05-15","version":"3.0.0.2-dev-j"}
- ,{"endDate":"2022-05-30","version":"3.0.0.2-dev-k"}
- ,{"endDate":"2022-06-16","version":"3.0.0.2-dev-l"}
- ,{"endDate":"2022-06-29","version":"3.0.0.2-dev-m"}
- ,{"endDate":"2022-07-21","version":"3.0.0.2-dev-n"}
- ,{"endDate":"2022-07-25","version":"3.0.0.2-dev-o"}
- ,{"endDate":"2022-07-21","version":"3.1-beta1"}
- ,{"endDate":"2022-08-19","version":"3.1.0-dev-a"}
  ,{"endDate":"2022-08-19","version":"3.1.0.1-dev-a"}
  ,{"endDate":"2022-08-19","version":"3.1.0.2-dev-a"}
  ,{"endDate":"2022-10-10","version":"3.1.0.3-dev-a"}
  ,{"endDate":"2022-11-10","version":"3.1.0.3-dev-b"}
  ,{"endDate":"2022-12-10","version":"3.1.0.3-dev-c"}
  ,{"endDate":"2022-12-10","version":"3.1.0.3-dev-c-nscv3"}
+ ,{"endDate":"2022-12-19","version":"3.1.0.3-dev-d"}
 ]
