@@ -59,7 +59,6 @@
     <string name="exercise_setunchanged">Laissez votre cible de glycémie inchangée.</string>
     <string name="exercise_15g">Attendez que la glycémie tombe en dessous de votre cible temporaire d\'hypo, puis mangez 15 g de glucides à action rapide.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/fr/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">Boucle désactivée/suspendue</string>
     <string name="suspendloop_doigetinsulin">Est-ce que je reçois de l\'insuline lorsque la boucle est désactivée / suspendue ?</string>
     <string name="suspendloop_yes">Oui, l\'insuline basale continue à être délivrée.</string>
     <string name="suspendloop_no">Non, l\'injection d\'insuline est arrêtée.</string>
@@ -149,7 +148,6 @@
     <string name="cob3_longer">Définir le profil à 150% rendra l\'absorption des glucides plus longue</string>
     <string name="cob3_shorter">Définir le profil à 150% réduira le temps d\'absorption des glucides</string>
     <string name="cob3_no_effect">Définir le profil à 150% n\'impactera pas le calcul de l\'absorption des glucides</string>
-    <string name="iob_label">Insuline Active (IA)</string>
     <string name="iob_value">La valeur de l\'IA est impactée par les débits de basal temporaires émis.</string>
     <string name="iob_hightemp">Une basale temp haute ne sera pas donnée quand votre glycémie est en dessous de la cible.</string>
     <string name="iob_negiob">Une IA négative pendant une période significative en l\'absence d\'exercice indique que votre profil est trop fort et qu\'il faut moins d\'insuline dans vos paramètres.</string>
