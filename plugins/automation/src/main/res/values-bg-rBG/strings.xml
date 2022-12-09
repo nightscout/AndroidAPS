@@ -117,4 +117,6 @@
     <string name="friday_short">П</string>
     <string name="saturday_short">С</string>
     <string name="sunday_short">Н</string>
+    <!--    Reminders-->
+    <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>
 </resources>
