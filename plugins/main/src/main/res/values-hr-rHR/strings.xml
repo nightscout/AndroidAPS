@@ -136,27 +136,6 @@
     <string name="overview_show_treatments">Tretmani</string>
     <string name="basal_shortname">BAZAL</string>
     <string name="graph_scale">Skala grafikona</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Vrsta virtualne pumpe</string>
-    <string name="virtual_pump_definition">Definicija pumpe</string>
-    <string name="virtual_pump_pump_def">Bolus: korak=%1$s\nProduženi bolus: [korak=%2$s, trajanje=%3$smin-%4$sh]\nBazal: korak=%5$s\nTBR: %6$s (do %7$s), Trajanje=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMP</string>
-    <string name="description_pump_virtual">Integracija pumpe za pumpe koje još nemaju upravljački program (otvorena petlja)</string>
-    <string name="virtual_pump_label">VIRTUALNA PUMPA</string>
-    <string name="virtualpump_settings">Postavke virtualne pumpe</string>
-    <!-- Source -->
-    <string name="description_source_ns_client">Preuzima podatke o GUK-u s Nightscout-a</string>
-    <string name="description_source_xdrip">Preuzima podatke o GUK-a s xDrip+.</string>
-    <string name="description_source_eversense">Primajte vrijednosti GUK-a iz zakrpane aplikacije Eversense.</string>
-    <string name="description_source_glimp">Primajte vrijednosti GUK-a od Glimpa.</string>
-    <string name="description_source_mm640g">Primajte vrijednosti glukoze u krvi od 600SeriesAndroidUploader.</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Primite vrijednosti iz aplikacije Intelligo</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Primite vrijednosti GK od GlucoRx Aidex CGMS.</string>
-    <string name="random_bg_short">GUK</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Stvorite događaj \"Promjena senzora\" u NS-u automatski pri pokretanju senzora</string>
     <!-- Skins -->
     <!--    DataBroadcast-->
     <!--    Iob-->
