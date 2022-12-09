@@ -300,49 +300,6 @@
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Escala do gráfico</string>
     <string name="graph_menu_divider_header">Gráfico</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Tipo da Bomba Virtual</string>
-    <string name="virtual_pump_definition">Definição da Bomba</string>
-    <string name="virtual_pump_pump_def">Bólus: Passo=%1$s\nBólus Estendido: [Passo=%2$s, Duração=%3$smin -%4$sh] \nBasal: Passo=%5$s\ nTBR: %6$s (por %7$s), Duração=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">BOMBAV</string>
-    <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
-    <string name="virtual_pump_label">BOMBA VIRTUAL</string>
-    <string name="virtualpump_settings">Definições da bomba virtual</string>
-    <!-- Source -->
-    <string name="ns_client_bg">Glic NSCliente</string>
-    <string name="ns_client_bg_short">NS glicemia</string>
-    <string name="description_source_ns_client">Downloads de dados de Glicose do Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Receber valores de glicose do xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Receber valores de glicemia do \'Build Your Own Dexcom App\'.</string>
-    <string name="eversense">Aplicação Eversense (com patch)</string>
-    <string name="description_source_eversense">Receber valores de Glicose da aplicação Eversense modificada.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Receber valores BG do Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Receber valores de Glucose do 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Receber valores GLIC do aplicativo Glunovo</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Receber valores da app Intelligo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Receber valores de Glicose da aplicação Tomato (dispositivo MiaoMiao)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Receber valores BG do GlucoRx Aidex CGMS.</string>
-    <string name="random_bg">Glic. Aleatória</string>
-    <string name="description_source_random_bg">Gerar dados de Glic. aleatórios (Somente modo de Demonstração)</string>
-    <string name="random_bg_short">GLIC</string>
-    <string name="do_xdrip_upload_title">Enviar dados Glic. para xDrip+</string>
-    <string name="do_xdrip_upload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
-    <string name="bgsource_upload">Configurações de upload de BG</string>
-    <string name="dexcom_log_ns_sensor_change_title">Registar mudança de sensor para NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Criar evento \"Mudança de Sensor\" no NS automaticamente ao iniciar o sensor.</string>
     <!-- Skins -->
     <string name="classic_description">Tema original</string>
     <string name="lowres_description">Design de baixa resolução</string>
