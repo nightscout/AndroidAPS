@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Downloads de dados de Glicose do Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Receber valores de glicose do xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Receber valores de glicemia do \'Build Your Own Dexcom App\'.</string>
+    <string name="eversense">Aplicação Eversense (com patch)</string>
+    <string name="description_source_eversense">Receber valores de Glicose da aplicação Eversense modificada.</string>
+    <string name="description_source_glimp">Receber valores BG do Glimp.</string>
+    <string name="description_source_mm640g">Receber valores de Glucose do 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Receber valores GLIC do aplicativo Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Receber valores da app Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Receber valores de Glicose da aplicação Tomato (dispositivo MiaoMiao)</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Receber valores BG do GlucoRx Aidex CGMS.</string>
+    <string name="bgsource_upload">Configurações de upload de BG</string>
+</resources>
