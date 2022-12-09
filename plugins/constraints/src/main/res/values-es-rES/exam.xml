@@ -59,7 +59,6 @@
     <string name="exercise_setunchanged">Deja tu objetivo de glucosa sanguíneo sin cambios.</string>
     <string name="exercise_15g">Espere hasta que la glucosa en sangre caiga por debajo de su objetivo de hipo temp y luego coma 15 g de hidratos de carbono de actividad rápida.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">Desactiva/suspende el lazo</string>
     <string name="suspendloop_doigetinsulin">¿Recibo insulina cuando el lazo está desactivado/suspendido?</string>
     <string name="suspendloop_yes">Sí, la insulina basal sigue siendo entregada.</string>
     <string name="suspendloop_no">No, la administración de la insulina está detenida.</string>
@@ -149,7 +148,6 @@
     <string name="cob3_longer">Establecer el perfil a 150% hará que los carbohidratos se absorban más lentamente</string>
     <string name="cob3_shorter">Establecer el perfil a 150% hará que los carbohidratos se absorban más rápidamente</string>
     <string name="cob3_no_effect">Establecer el perfil a 150% no afectará la absorción calculada de carbohidratos</string>
-    <string name="iob_label">Insulina a bordo (IOB)</string>
     <string name="iob_value">El valor del IOB se ve afectado por las bases temporales ejecutadas.</string>
     <string name="iob_hightemp">No se dará alta tasa basal temporal cuando su nivel de azúcar en sangre esté por debajo del objetivo.</string>
     <string name="iob_negiob">El IOB negativo durante un período sustancial en ausencia de ejercicio sugiere que tu perfil es demasiado fuerte y que se necesita menos insulina en tus ajustes.</string>
