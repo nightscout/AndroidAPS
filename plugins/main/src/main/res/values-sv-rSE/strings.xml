@@ -284,44 +284,6 @@
     <string name="treatments_shortname">Beh</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_menu_divider_header">Graf</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Typ av virtuell pump</string>
-    <string name="virtual_pump_definition">Pumpdefinition</string>
-    <string name="virtual_pump_pump_def">Bolus: Steg =%1$s\nFörlängd bolus: [Steg=%2$s, duration =%3$smin -%4$sh] \nBasal: Steg=%5$s\nTempbasal: %6$s (av %7$s), duration =%8$smin -%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">vPump</string>
-    <string name="description_pump_virtual">Integration för pumpar som ännu inte stöds av AndroidAPS (Open loop)</string>
-    <string name="virtual_pump_label">Virtuell pump</string>
-    <string name="virtualpump_settings">Inställningar för Virtuell pump</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient BG</string>
-    <string name="ns_client_bg_short">NS BG</string>
-    <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Ta emot BG-data från xDrip+.</string>
-    <string name="dexcom_app_patched">Patchad Dexcom-app</string>
-    <string name="dexcom_short">Dex</string>
-    <string name="description_source_dexcom">Ta emot BG-värden från \"Bygg din egen Dexcom-app\".</string>
-    <string name="eversense">Eversense App (modifierad)</string>
-    <string name="description_source_eversense">Ta emot BG-data från den modifierade
-Eversense-appen.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Ta emot BG-data från Glimp</string>
-    <string name="mm640g">Minimed 640G</string>
-    <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Ta emot BG-data från Poctechappen</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Ta emot värden från Glunovo-appen</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Ta emot BG-data från tomato app (MiaoMiao-enhet)</string>
-    <string name="random_bg">Slumpgenerator för BG</string>
-    <string name="description_source_random_bg">Generera slumpmässiga BG-data (endast demo-läge)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Skicka BG-data till xDrip+</string>
-    <string name="do_xdrip_upload_summary">Välj \"640G/Eversense\" som datakälla i xDrip+</string>
-    <string name="bgsource_upload">Uppladdningsinställningar för BG</string>
-    <string name="dexcom_log_ns_sensor_change_title">Logga sensorbyte till Nightscout</string>
     <!-- Skins -->
     <string name="classic_description">Ursprungligt tema</string>
     <string name="lowres_description">Lågupplöst tema</string>
