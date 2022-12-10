@@ -97,4 +97,7 @@
     <string name="remove_all">Eliminar todos</string>
     <string name="reset_start">Restablecer inicio</string>
     <string name="upload_now">Subir ahora</string>
+    <string name="not_connected">No conectado</string>
+    <string name="read_only">Sólo lectura</string>
+    <string name="working">Funcionando</string>
 </resources>
