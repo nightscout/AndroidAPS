@@ -2,12 +2,27 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Changement d\'heure dans moins de 24 heures</string>
+    <string name="dst_loop_disabled_warning">Changement d\'heure dans moins de 3 heures - Boucle fermée désactivée</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
     <!-- Version Checker -->
+    <string name="old_version">ancienne version</string>
+    <string name="very_old_version">très ancienne version</string>
+    <string name="application_expired">Application expirée</string>
+    <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>
+    <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
+    <string name="versionavailable">Version %1$s disponible</string>
+    <string name="version_expire">La version %1$s expire le %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Données recalculées utilisées</string>
+    <string name="bg_too_close">Gly trop proche :\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">recalculé</string>
+    <string name="a11y_bg_quality_doubles">entrées doubles</string>
     <string name="a11y_bg_quality_flat">Données plates. Considérées comme incorrectes</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">Bolus étendu limité à %1$.1f U à cause de %2$s</string>
     <string name="limitingcarbs">Limiter les glucides %1$d g à cause de %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompe n’est pas capable de basals temporaires</string>
     <string name="closedmodedisabledinpreferences">Mode de Boucle Fermée désactivé dans les préférences</string>
@@ -17,7 +32,7 @@
     <string name="smbnotallowedinopenloopmode">SMB non autorisé en mode boucle ouverte</string>
     <string name="maxvalueinpreferences">valeur Max dans les préférences</string>
     <string name="hardlimit">limite fixée</string>
-    <string name="treatmentssafety_title">Traitements de sécurité</string>
+    <string name="treatmentssafety_title">Sécurité des traitements</string>
     <!-- Objectives -->
     <string name="completed_well_done">Terminé, félicitations !</string>
     <string name="not_completed_yet">Pas encore terminé</string>
