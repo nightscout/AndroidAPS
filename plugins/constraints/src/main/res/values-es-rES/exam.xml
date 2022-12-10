@@ -1,19 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dia_whatmeansdia">¿Qué es cierto acerca de DIA?</string>
-    <string name="dia_label_exam">Duración de la acción de insulina (DIA)</string>
-    <string name="dia_profile">Debes establecer el valor de DIA en tu perfil.</string>
-    <string name="dia_minimumis5h">El valor mínimo permitido es 5 horas.</string>
-    <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
-    <string name="dia_meaningisequaltodiapump">Si estás satisfecho con el valor de DIA que utilizaste en tu bomba antes de utilizar AAPS y te funcionó bien, no hay necesidad de cambarlo cuando empieces a cerrar el lazo.</string>
-    <string name="dia_valuemustbedetermined">Deberías determinar por ti mismo el valor apropiado para DIA.</string>
-    <string name="hypott_label">Objetivo temporal ante Hipoglucemia</string>
-    <string name="hypott_whenhypott">¿Cuál es la razón principal para establecer un objetivo temporal por hipoglucemia?</string>
-    <string name="hypott_wrongbasal">Para corregir hipoglucemias causadas por ajustes incorrectos de la tasa basal.</string>
-    <string name="hypott_preventoversmb">Para evitar que AAPS corrija de forma excesiva ante un aumento rápido de la glucosa por tomar carbohidratos rápidos para recuperarse de una hipoglucemia.</string>
-    <string name="hypott_exercise">Para corregir una hipoglucemia que sucedió como resultando del ejercicio.</string>
-    <string name="hypott_0basal">Para evitar que la glucosa sanguínea continue bajando si ya hay una tasa basal temporal igual a 0% en funcionamiento.</string>
-    <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
+    <string name="dia_whatmeansdia">¿Qué es cierto acerca de DAI?</string>
+    <string name="dia_label_exam">Duración de la acción de insulina (DAI)</string>
+    <string name="dia_profile">Debes establecer el valor de DAI en tu perfil.</string>
+    <string name="dia_minimumis5h">El valor mínimo permitido es de 5 horas.</string>
+    <string name="dia_meaningisequaltodiapump">Si estás satisfecho con el valor de DAI que utilizas en tu bomba antes de utilizar AAPS y te funcionó bien, no hay necesidad de cambiarlo cuando empieces a usar el bucle cerrado.</string>
+    <string name="dia_valuemustbedetermined">Deberás determinar por ti mismo el valor apropiado para DAI.</string>
     <string name="offlineprofile_whatprofile">¿Qué perfil puede ser usado y configurado estando desconectado?</string>
     <string name="offlineprofile_label">Tema: Perfil desconectado</string>
     <string name="offlineprofile_nsprofile">El perfil que proviene de Nightscout (NS) puede ser utilizado, pero no configurado.</string>
