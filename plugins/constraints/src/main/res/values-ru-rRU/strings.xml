@@ -2,11 +2,27 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
+    <string name="dst_loop_disabled_warning">Изменение сезонного времени произошло меньше 3 часов назад-Закрытый цикл выключен</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Освободите по крайней мере %1$d MB из внутренней памяти! Цикл остановлен!</string>
     <!-- Version Checker -->
+    <string name="old_version">старая версия</string>
+    <string name="very_old_version">очень старая версия</string>
+    <string name="application_expired">Истек срок действия приложения</string>
+    <string name="new_version_warning">Новая версия доступна уже %1$d дней! По истечении %2$d дн алгоритм переходит в режим работы только с остановкой при низкой гликемии LGS, замкнутый цикл будет отключен через %3$d дн</string>
+    <string name="running_invalid_version">Мы обнаружили, что вы используете недопустимую версию. Цикл отключен!</string>
+    <string name="versionavailable">Доступна версия %1$s</string>
+    <string name="version_expire">Версия: %1$s истекает %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Используются пересчитанные данные</string>
+    <string name="bg_too_close">ГК слишком близко:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">пересчитано</string>
+    <string name="a11y_bg_quality_doubles">двойные записи</string>
+    <string name="a11y_bg_quality_flat">Неменяющиеся данные. Принимаю за неверные</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">Ограничиваю пролонгированный болюс до %1$.1f ед. из-за %2$s</string>
     <string name="limitingcarbs">Ограничение углеводов до %1$d г. из-за %2$s</string>
     <string name="pumpisnottempbasalcapable">Помпа не рассчитана на подачу временного базала</string>
     <string name="closedmodedisabledinpreferences">Режим замкнутого цикла отключен в настройках</string>
@@ -18,6 +34,7 @@
     <string name="hardlimit">жесткий предел</string>
     <string name="treatmentssafety_title">Безопасность терапии</string>
     <!-- Objectives -->
+    <string name="completed_well_done">Завершено, отлично!</string>
     <string name="not_completed_yet">Не завершено</string>
     <string name="time_elapsed">Прошло времени</string>
     <string name="maxiobset">Максимум активного инсулина IOB установлен правильно</string>
