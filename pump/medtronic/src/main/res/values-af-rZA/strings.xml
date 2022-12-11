@@ -35,7 +35,7 @@
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Basale profiel is verkeerd op pomp (moet STD wees).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Verkeerde TBR op pomp (Moet Absoluut wees).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Verkeerde Maks Bolus gestel op Pomp(moet %1$.2f wees).</string>
-    <string name="medtronic_error_pump_wrong_max_basal_set">Verkeerde Maks Basale op Pomp (moet %1$.2f %1$.2f wees),.</string>
+    <string name="medtronic_error_pump_wrong_max_basal_set">Verkeerde Maks Basale op Pomp (moet %1$.2f wees).</string>
     <string name="medtronic_error_operation_not_possible_no_configuration">Operasie nie moontlik.\n\n Jy moet jou Medtronic pomp opstel voordat jy die operasie kan gebruik.</string>
     <string name="medtronic_error_pump_24h_time_change_requested">Oor 24h Tyd was versoek.</string>
     <!-- MDT History -->
