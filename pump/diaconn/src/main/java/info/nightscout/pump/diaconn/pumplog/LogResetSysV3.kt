@@ -6,18 +6,19 @@ import java.nio.ByteOrder
 /*
  * System Reset Log
  */
-class LOG_RESET_SYS_V3 private constructor(
+@Suppress("SpellCheckingInspection")
+class LogResetSysV3 private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte,
     val batteryRemain: Byte,
     val reason: Byte,  // 사유(1:공장초기화 후 리셋, 2:긴급정지 해제 후 리셋, 3:사용자 배터리 교체 후 리셋, 4:캘리브레이션 후 리셋, 9:예상치 못한 시스템 리셋)
-    val rcon1: Short,  // PIC 데이터 시트 내 정의된 2바이트 값
-    val rcon2: Short   // PIC 데이터 시트 내 정의된 2바이트 값
+    private val rcon1: Short,  // PIC 데이터 시트 내 정의된 2바이트 값
+    private val rcon2: Short   // PIC 데이터 시트 내 정의된 2바이트 값
 ) {
 
-    val type: Byte = PumplogUtil.getType(typeAndKind)
-    val kind: Byte = PumplogUtil.getKind(typeAndKind)
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
 
     override fun toString(): String {
         val sb = StringBuilder("LOG_RESET_SYS_V3{")
@@ -37,18 +38,18 @@ class LOG_RESET_SYS_V3 private constructor(
     companion object {
 
         const val LOG_KIND: Byte = 0x01
-        fun parse(data: String): LOG_RESET_SYS_V3 {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        fun parse(data: String): LogResetSysV3 {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_RESET_SYS_V3(
+            return LogResetSysV3(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getShort(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getShort(buffer)
             )
         }
     }

@@ -381,13 +381,6 @@ class AndroidBluetoothInterface(private val androidContext: Context) : Bluetooth
         // instance was already processed. This check here instead
         // verifies if we have seen the same Bluetooth address on
         // *different* Android Bluetooth device instances.
-        // TODO: Test how AndroidBluetoothInterface behaves if the
-        // device is unpaired while discovery  is ongoing (manually by
-        // the user for example). In theory, this should be handled
-        // properly by the onBondStateChanged function below.
-        // TODO: This check may not be necessary on all Android
-        // devices. On some, it seems to also work if we use the
-        // first offered BluetoothDevice.
         if (comboctlBtAddress !in previouslyDiscoveredDevices) {
             previouslyDiscoveredDevices[comboctlBtAddress] = androidBtDevice
             logger(LogLevel.DEBUG) {

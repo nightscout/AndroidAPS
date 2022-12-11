@@ -6,18 +6,18 @@ import java.nio.ByteOrder
 /*
 * Insulin shortage alarm
 */
-class LOG_ALARM_SHORTAGE private constructor(
+class LogAlarmShortAge private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte, // 1=INFO, 2=WARNING, 3=MAJOR, 4=CRITICAL
-    val alarmLevel: Byte, // 1=OCCUR, 2=STOP
-    val ack: Byte,     // (1~100U)
+    private val alarmLevel: Byte, // 1=OCCUR, 2=STOP
+    private val ack: Byte,     // (1~100U)
     val remain: Byte,
     val batteryRemain: Byte
 ) {
 
-    val type: Byte = PumplogUtil.getType(typeAndKind)
-    val kind: Byte = PumplogUtil.getKind(typeAndKind)
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
 
     override fun toString(): String {
         val sb = StringBuilder("LOG_ALARM_SHORTAGE{")
@@ -37,18 +37,18 @@ class LOG_ALARM_SHORTAGE private constructor(
     companion object {
 
         const val LOG_KIND: Byte = 0x2A
-        fun parse(data: String): LOG_ALARM_SHORTAGE {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        fun parse(data: String): LogAlarmShortAge {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_ALARM_SHORTAGE(
+            return LogAlarmShortAge(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer)
             )
         }
     }

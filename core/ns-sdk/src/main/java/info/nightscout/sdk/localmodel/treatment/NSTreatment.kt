@@ -8,8 +8,8 @@ interface NSTreatment {
     val identifier: String
     val units: NsUnits?
     val eventType: EventType
-    val srvModified: Long
-    val srvCreated: Long
+    val srvModified: Long?
+    val srvCreated: Long?
     val utcOffset: Long
     val subject: String?
     var isReadOnly: Boolean

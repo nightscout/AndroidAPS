@@ -25,7 +25,6 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSAlarm
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.sync.DataSyncSelector
-import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.interfaces.utils.JsonHelper.safeGetStringAllowNull
@@ -72,7 +71,7 @@ import java.net.URISyntaxException
 import java.util.Locale
 import javax.inject.Inject
 
-class NSClientService : DaggerService(), NsClient.NSClientService {
+class NSClientService : DaggerService() {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -251,7 +250,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
         } else if (!nsEnabled) {
             rxBus.send(EventNSClientNewLog("NSCLIENT", "disabled"))
             rxBus.send(EventNSClientStatus("Disabled"))
-        } else if (nsURL != "" && (config.isEngineeringMode() || nsURL.lowercase(Locale.getDefault()).startsWith("https://"))) {
+        } else if (nsURL != "" && (nsURL.lowercase(Locale.getDefault()).startsWith("https://"))) {
             try {
                 rxBus.send(EventNSClientStatus("Connecting ..."))
                 val opt = IO.Options()
@@ -598,7 +597,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
         }
     }
 
-    override fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String) {
+    fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String) {
         try {
             if (_id == null) return
             if (!isConnected || !hasWriteAuth) return
@@ -618,7 +617,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
         }
     }
 
-    override fun dbAdd(collection: String, data: JSONObject, originalObject: Any, progress: String) {
+    fun dbAdd(collection: String, data: JSONObject, originalObject: Any, progress: String) {
         try {
             if (!isConnected || !hasWriteAuth) return
             val message = JSONObject()

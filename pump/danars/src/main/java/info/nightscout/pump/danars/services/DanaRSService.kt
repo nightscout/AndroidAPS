@@ -262,19 +262,13 @@ class DanaRSService : DaggerService() {
             return result
         }
         SystemClock.sleep(1000)
-        val msg: DanaRSPacketAPSHistoryEvents
-        if (danaPump.lastHistoryFetched == 0L) {
-            msg = DanaRSPacketAPSHistoryEvents(injector, 0)
-            aapsLogger.debug(LTag.PUMPCOMM, "Loading complete event history")
-        } else {
-            msg = DanaRSPacketAPSHistoryEvents(injector, danaPump.lastHistoryFetched)
-            aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + dateUtil.dateAndTimeString(danaPump.lastHistoryFetched))
-        }
+        val msg = DanaRSPacketAPSHistoryEvents(injector, danaPump.readHistoryFrom)
+        aapsLogger.debug(LTag.PUMPCOMM, "Loading event history from: " + dateUtil.dateAndTimeString(danaPump.readHistoryFrom))
         sendMessage(msg)
         while (!danaPump.historyDoneReceived && bleComm.isConnected) {
             SystemClock.sleep(100)
         }
-        danaPump.lastHistoryFetched = if (danaPump.lastEventTimeLoaded != 0L) danaPump.lastEventTimeLoaded - T.mins(1).msecs() else 0
+        danaPump.readHistoryFrom = if (danaPump.lastEventTimeLoaded != 0L) danaPump.lastEventTimeLoaded - T.mins(1).msecs() else 0
         aapsLogger.debug(LTag.PUMPCOMM, "Events loaded")
         rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.gettingpumpstatus)))
         sendMessage(DanaRSPacketGeneralInitialScreenInformation(injector))
@@ -305,7 +299,7 @@ class DanaRSService : DaggerService() {
 //            sendMessage(msg);
             val msgSetHistoryEntryV2 = DanaRSPacketAPSSetEventHistory(injector, DanaPump.HistoryEntry.CARBS.value, carbTime, carbs, 0)
             sendMessage(msgSetHistoryEntryV2)
-            danaPump.lastHistoryFetched = min(danaPump.lastHistoryFetched, carbTime - T.mins(1).msecs())
+            danaPump.readHistoryFrom = min(danaPump.readHistoryFrom, carbTime - T.mins(1).msecs())
             if (!msgSetHistoryEntryV2.isReceived || msgSetHistoryEntryV2.failed)
                 uiInteraction.runAlarm(rh.gs(info.nightscout.pump.dana.R.string.carbs_store_error), rh.gs(info.nightscout.core.ui.R.string.error), info.nightscout.core.ui.R.raw.boluserror)
         }

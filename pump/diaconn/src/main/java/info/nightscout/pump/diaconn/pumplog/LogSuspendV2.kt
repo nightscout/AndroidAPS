@@ -6,16 +6,17 @@ import java.nio.ByteOrder
 /*
 * 일시정지 시작 (기저정지)
 */
-class LOG_SUSPEND_V2 private constructor(
+@Suppress("SpellCheckingInspection")
+class LogSuspendV2 private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte,
     val batteryRemain: Byte,    // 1=기본, 2=생활1, 3=생활2, 4=생활3, 5=닥터1, 6=닥터2
-    val patternType: Byte
+    private val patternType: Byte
 ) {
 
-    val type: Byte = PumplogUtil.getType(typeAndKind)
-    val kind: Byte = PumplogUtil.getKind(typeAndKind)
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
 
     override fun toString(): String {
         val sb = StringBuilder("LOG_SUSPEND_V2{")
@@ -46,16 +47,16 @@ class LOG_SUSPEND_V2 private constructor(
     companion object {
 
         const val LOG_KIND: Byte = 0x03
-        fun parse(data: String): LOG_SUSPEND_V2 {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        fun parse(data: String): LogSuspendV2 {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_SUSPEND_V2(
+            return LogSuspendV2(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer)
             )
         }
     }

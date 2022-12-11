@@ -7,18 +7,19 @@ import java.nio.ByteOrder
 /*
 * 듀얼주입 성공
 */
-class LOG_INJECT_DUAL_SUCCESS private constructor(
+@Suppress("SpellCheckingInspection")
+class LogInjectDualSuccess private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte, // 47.5=4750
-    val injectNormAmount: Short, // 47.5=4750
+    private val injectNormAmount: Short, // 47.5=4750
     val injectSquareAmount: Short, // 1분단위 주입시간(124=124분=2시간4분)
     private val injectTime: Byte,
     val batteryRemain: Byte
 ) {
 
-    val type: Byte = PumplogUtil.getType(typeAndKind)
-    val kind: Byte = PumplogUtil.getKind(typeAndKind)
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
     fun getInjectTime(): Int {
         return injectTime and 0xff
     }
@@ -41,18 +42,18 @@ class LOG_INJECT_DUAL_SUCCESS private constructor(
     companion object {
 
         const val LOG_KIND: Byte = 0x10
-        fun parse(data: String): LOG_INJECT_DUAL_SUCCESS {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        fun parse(data: String): LogInjectDualSuccess {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_INJECT_DUAL_SUCCESS(
+            return LogInjectDualSuccess(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer)
             )
         }
     }

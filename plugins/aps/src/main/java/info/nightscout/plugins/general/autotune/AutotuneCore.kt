@@ -165,7 +165,7 @@ class AutotuneCore @Inject constructor(
         for (i in 0..23) {
             newHourlyBasalProfile[i] = hourlyBasalProfile[i]
         }
-        val basalUnTuned = previousAutotune.basalUntuned
+        val basalUnTuned = previousAutotune.basalUnTuned
 
         //autotune-core (lib/autotune/index.js) #210-#266
         // look at net deviations for each hour
@@ -484,7 +484,7 @@ class AutotuneCore @Inject constructor(
         previousAutotune.basal = basalProfile
         previousAutotune.isf = isf
         previousAutotune.ic = Round.roundTo(carbRatio, 0.001)
-        previousAutotune.basalUntuned = basalUnTuned
+        previousAutotune.basalUnTuned = basalUnTuned
         previousAutotune.dia = newDia
         previousAutotune.peak = newPeak
         val localInsulin = LocalInsulin("Ins_$newPeak-$newDia", newPeak, newDia)

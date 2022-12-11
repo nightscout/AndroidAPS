@@ -1,8 +1,8 @@
 package info.nightscout.insulin
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.extensions.putInt
-import info.nightscout.core.extensions.storeInt
+import info.nightscout.core.utils.extensions.putInt
+import info.nightscout.core.utils.extensions.storeInt
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.profile.ProfileFunction

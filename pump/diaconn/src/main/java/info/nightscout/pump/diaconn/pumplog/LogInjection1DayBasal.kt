@@ -6,7 +6,8 @@ import java.nio.ByteOrder
 /*
 * 당일 주입 총량 (기저)
 */
-class LOG_INJECTION_1DAY_BASAL private constructor(
+@Suppress("SpellCheckingInspection")
+class LogInjection1DayBasal private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte,
@@ -15,8 +16,8 @@ class LOG_INJECTION_1DAY_BASAL private constructor(
     val batteryRemain: Byte
 ) {
 
-    val type: Byte = PumplogUtil.getType(typeAndKind)
-    val kind: Byte = PumplogUtil.getKind(typeAndKind)
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
 
     override fun toString(): String {
         val sb = StringBuilder("LOG_INJECTION_1DAY_BASAL{")
@@ -33,16 +34,16 @@ class LOG_INJECTION_1DAY_BASAL private constructor(
 
     companion object {
         const val LOG_KIND: Byte = 0x2E
-        fun parse(data: String): LOG_INJECTION_1DAY_BASAL {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        fun parse(data: String): LogInjection1DayBasal {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_INJECTION_1DAY_BASAL(
+            return LogInjection1DayBasal(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getByte(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getByte(buffer)
             )
         }
     }

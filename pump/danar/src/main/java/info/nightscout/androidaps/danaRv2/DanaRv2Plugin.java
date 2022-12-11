@@ -57,8 +57,6 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     private final TemporaryBasalStorage temporaryBasalStorage;
     private final FabricPrivacy fabricPrivacy;
 
-    public long lastEventTimeLoaded = 0;
-
     @Inject
     public DanaRv2Plugin(
             HasAndroidInjector injector,
@@ -345,7 +343,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         PumpEnactResult result = new PumpEnactResult(getInjector());
         if (danaPump.isTempBasalInProgress()) {
             sExecutionService.tempBasalStop();
-            result.enacted(true).isTempCancel(true);
+            result.success(true).enacted(true).isTempCancel(true);
         } else {
             result.success(true).isTempCancel(true).comment(info.nightscout.core.ui.R.string.ok);
             aapsLogger.debug(LTag.PUMP, "cancelRealTempBasal: OK");

@@ -57,7 +57,7 @@ import info.nightscout.pump.diaconn.packet.TempBasalInquirePacket
 import info.nightscout.pump.diaconn.packet.TempBasalSettingPacket
 import info.nightscout.pump.diaconn.packet.TimeInquirePacket
 import info.nightscout.pump.diaconn.packet.TimeSettingPacket
-import info.nightscout.pump.diaconn.pumplog.PumplogUtil
+import info.nightscout.pump.diaconn.pumplog.PumpLogUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
@@ -168,7 +168,7 @@ class DiaconnG8Service : DaggerService() {
 
             val pumpFirmwareVersion = sp.getString(rh.gs(R.string.pumpversion), "")
 
-            if (pumpFirmwareVersion.isNotEmpty() && PumplogUtil.isPumpVersionGe(pumpFirmwareVersion, 3, 0)) {
+            if (pumpFirmwareVersion.isNotEmpty() && PumpLogUtil.isPumpVersionGe(pumpFirmwareVersion, 3, 0)) {
                 sendMessage(BigAPSMainInfoInquirePacket(injector)) // APS Pump Main Info
             } else {
                 sendMessage(BasalLimitInquirePacket(injector)) // basal Limit

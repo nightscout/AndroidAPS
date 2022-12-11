@@ -143,4 +143,8 @@
     <string name="reset_start">Reset start</string>
     <string name="upload_now">Upload now</string>
 
+    <string name="not_connected">Not connected</string>
+    <string name="read_only">Read only</string>
+    <string name="working">Working</string>
+
 </resources>

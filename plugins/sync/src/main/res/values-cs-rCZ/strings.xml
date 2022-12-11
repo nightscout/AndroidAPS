@@ -97,4 +97,7 @@
     <string name="remove_all">Odstranit vše</string>
     <string name="reset_start">Resetovat start</string>
     <string name="upload_now">Nahrát nyní</string>
+    <string name="not_connected">Nepřipojeno</string>
+    <string name="read_only">Jen pro čtení</string>
+    <string name="working">Pracuji</string>
 </resources>

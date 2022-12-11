@@ -13,7 +13,8 @@ import java.util.TimeZone;
 /*
  * 디아콘 G8 펌프 로그 유틸리티 클래스
  */
-public class PumplogUtil {
+@SuppressWarnings({"CommentedOutCode", "SpellCheckingInspection"})
+public class PumpLogUtil {
 	/*
 	 * 바이트버퍼에서 4바이트 날짜를 구한다.
 	 * @param buffer 바이트버퍼
@@ -39,7 +40,7 @@ public class PumplogUtil {
 	 */
     @SuppressLint("SimpleDateFormat")
 	public static String getDttm(String data) {
-		byte[] bytes = PumplogUtil.hexStringToByteArray(data);
+		byte[] bytes = PumpLogUtil.hexStringToByteArray(data);
 		byte b0 = bytes[0];
 		byte b1 = bytes[1];
 		byte b2 = bytes[2];
@@ -74,9 +75,11 @@ public class PumplogUtil {
 	 * @param buffer 바이트버퍼
 	 * @return int
 	 */
+    /*
 	public static int getInt(ByteBuffer buffer) {
 		return buffer.getInt();
 	}
+	*/
 
 	/*
 	 * 로그데이터에서 로그 타입 바이트를 구한다.
@@ -136,12 +139,14 @@ public class PumplogUtil {
 	 * @param data 1970.1.1이후 경과한 초
 	 * @return 날짜(GMT기준)
 	 */
+    /*
 	public static Date pumpTimeToGMTDate(Integer data) {
 		long epochTime = new Date(0).getTime(); // 1970-01-01
 		long pumpTime = data.longValue() * 1000; // 초를 밀리초 단위로 변환
 		int timeZoneOffset = TimeZone.getDefault().getRawOffset(); // GMT와 로컬 타임존 사이의 차이
 		return new Date(epochTime + pumpTime - timeZoneOffset);
 	}
+    */
 
     /*
      * 펌프 버전이 해당 버전보다 크거나 같은지 여부 확인(새로운 기능이 추가된 버전을 체크하기 위함)

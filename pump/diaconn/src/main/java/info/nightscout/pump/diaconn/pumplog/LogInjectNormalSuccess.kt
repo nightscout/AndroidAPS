@@ -5,31 +5,34 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 /*
-* 스퀘어주입 설정(시작)
+* 일반주입 성공
 */
-class LOG_SET_SQUARE_INJECTION private constructor(
+@Suppress("SpellCheckingInspection")
+class LogInjectNormalSuccess private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte,    // 47.5=4750
-    val setAmount: Short,    // 1~30(10분 단위 값 의미)
-    private val injectTime: Byte,
+    private val setAmount: Short,    // 47.5=4750
+    val injectAmount: Short,    // 1분단위 주입시간(124=124분=2시간4분)
+    val injectTime: Byte,
     val batteryRemain: Byte
 ) {
 
-    val type: Byte = PumplogUtil.getType(typeAndKind)
-    val kind: Byte = PumplogUtil.getKind(typeAndKind)
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
     fun getInjectTime(): Int {
         return injectTime and 0xff
     }
 
     override fun toString(): String {
-        val sb = StringBuilder("LOG_SET_SQUARE_INJECTION{")
+        val sb = StringBuilder("LOG_INJECT_NORMAL_SUCCESS{")
         sb.append("LOG_KIND=").append(LOG_KIND.toInt())
         sb.append(", data='").append(data).append('\'')
         sb.append(", dttm='").append(dttm).append('\'')
         sb.append(", type=").append(type.toInt())
         sb.append(", kind=").append(kind.toInt())
         sb.append(", setAmount=").append(setAmount.toInt())
+        sb.append(", injectAmount=").append(injectAmount.toInt())
         sb.append(", injectTime=").append(injectTime and 0xff)
         sb.append(", batteryRemain=").append(batteryRemain.toInt())
         sb.append('}')
@@ -38,18 +41,19 @@ class LOG_SET_SQUARE_INJECTION private constructor(
 
     companion object {
 
-        const val LOG_KIND: Byte = 0x0C
-        fun parse(data: String): LOG_SET_SQUARE_INJECTION {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        const val LOG_KIND: Byte = 0x0A
+        fun parse(data: String): LogInjectNormalSuccess {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_SET_SQUARE_INJECTION(
+            return LogInjectNormalSuccess(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer)
             )
         }
     }

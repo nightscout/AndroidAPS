@@ -23,7 +23,6 @@ import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.plugins.iob.iobCobCalculator.fromCarbs
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAutosensCalculationFinished
