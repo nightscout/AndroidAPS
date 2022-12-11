@@ -6,7 +6,7 @@ import java.nio.ByteOrder
 /*
 * Battery Shortage Alarm Log
 */
-class LOG_ALARM_BATTERY private constructor(
+class LogAlarmBattery private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte,    // 1=INFO, 2=WARNING, 3=MAJOR, 4=CRITICAL
@@ -15,8 +15,8 @@ class LOG_ALARM_BATTERY private constructor(
     val batteryRemain: Byte
 ) {
 
-    val type: Byte = PumplogUtil.getType(typeAndKind)
-    val kind: Byte = PumplogUtil.getKind(typeAndKind)
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
 
     override fun toString(): String {
         val sb = StringBuilder("LOG_ALARM_BATTERY{")
@@ -35,17 +35,17 @@ class LOG_ALARM_BATTERY private constructor(
     companion object {
 
         const val LOG_KIND: Byte = 0x28
-        fun parse(data: String): LOG_ALARM_BATTERY {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        fun parse(data: String): LogAlarmBattery {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_ALARM_BATTERY(
+            return LogAlarmBattery(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer)
             )
         }
     }

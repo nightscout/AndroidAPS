@@ -89,14 +89,14 @@ class AutotuneFS @Inject constructor(
     }
 
     fun exportPumpProfile(profile: ATProfile) {
-        createAutotunefile(PUMPPROFILE, profile.profiletoOrefJSON(), true)
-        createAutotunefile(PUMPPROFILE, profile.profiletoOrefJSON())
+        createAutotunefile(PUMPPROFILE, profile.profileToOrefJSON(), true)
+        createAutotunefile(PUMPPROFILE, profile.profileToOrefJSON())
     }
 
     fun exportTunedProfile(tunedProfile: ATProfile) {
-        createAutotunefile(TUNEDPROFILE + formatDate(tunedProfile.from) + ".json", tunedProfile.profiletoOrefJSON())
+        createAutotunefile(TUNEDPROFILE + formatDate(tunedProfile.from) + ".json", tunedProfile.profileToOrefJSON())
         try {
-            createAutotunefile(rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name) + ".json", tunedProfile.profiletoOrefJSON(), true)
+            createAutotunefile(rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name) + ".json", tunedProfile.profileToOrefJSON(), true)
         } catch (e: JSONException) {
         }
     }

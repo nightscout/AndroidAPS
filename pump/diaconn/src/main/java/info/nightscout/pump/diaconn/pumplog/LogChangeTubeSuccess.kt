@@ -6,7 +6,8 @@ import java.nio.ByteOrder
 /*
 * 튜브 공기빼기 성공
 */
-class LOG_CHANGE_TUBE_SUCCESS private constructor(
+@Suppress("SpellCheckingInspection")
+class LogChangeTubeSuccess private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte,    //  47.5=4750
@@ -15,8 +16,8 @@ class LOG_CHANGE_TUBE_SUCCESS private constructor(
     val batteryRemain: Byte
 ) {
 
-    val type: Byte = PumplogUtil.getType(typeAndKind)
-    val kind: Byte = PumplogUtil.getKind(typeAndKind)
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
 
     override fun toString(): String {
         val sb = StringBuilder("LOG_CHANGE_TUBE_SUCCESS{")
@@ -35,17 +36,17 @@ class LOG_CHANGE_TUBE_SUCCESS private constructor(
     companion object {
 
         const val LOG_KIND: Byte = 0x18
-        fun parse(data: String): LOG_CHANGE_TUBE_SUCCESS {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        fun parse(data: String): LogChangeTubeSuccess {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_CHANGE_TUBE_SUCCESS(
+            return LogChangeTubeSuccess(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getByte(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getByte(buffer)
             )
         }
     }

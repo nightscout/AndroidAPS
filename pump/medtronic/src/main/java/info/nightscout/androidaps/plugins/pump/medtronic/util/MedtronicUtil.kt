@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.util
 
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
@@ -18,13 +19,13 @@ import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
-import org.joda.time.LocalTime
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.experimental.or
+import kotlin.math.abs
 
 /**
  * Created by andy on 5/9/18.
@@ -38,39 +39,41 @@ class MedtronicUtil @Inject constructor(
     private val uiInteraction: UiInteraction
 ) {
 
+    @Suppress("PrivatePropertyName")
     private val ENVELOPE_SIZE = 4 // 0xA7 S1 S2 S3 CMD PARAM_COUNT [PARAMS]
 
     //private MedtronicDeviceType medtronicPumpModel;
     private var currentCommand: MedtronicCommandType? = null
     var settings: Map<String, PumpSettingDTO>? = null
+    @Suppress("PrivatePropertyName")
     private val BIG_FRAME_LENGTH = 65
-    private val doneBit = 1 shl 7
+    //private val doneBit = 1 shl 7
     var pumpTime: ClockDTO? = null
-    var gsonInstance = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
+    var gsonInstance: Gson = GsonBuilder().excludeFieldsWithoutExposeAnnotation().create()
 
-    fun getTimeFrom30MinInterval(interval: Int): LocalTime {
-        return if (interval % 2 == 0) {
-            LocalTime(interval / 2, 0)
-        } else {
-            LocalTime((interval - 1) / 2, 30)
-        }
-    }
+    // fun getTimeFrom30MinInterval(interval: Int): LocalTime {
+    //     return if (interval % 2 == 0) {
+    //         LocalTime(interval / 2, 0)
+    //     } else {
+    //         LocalTime((interval - 1) / 2, 30)
+    //     }
+    // }
 
-    fun decodeBasalInsulin(i: Int, j: Int): Double {
-        return decodeBasalInsulin(makeUnsignedShort(i, j))
-    }
+    // fun decodeBasalInsulin(i: Int, j: Int): Double {
+    //     return decodeBasalInsulin(makeUnsignedShort(i, j))
+    // }
 
-    fun decodeBasalInsulin(i: Int): Double {
-        return i.toDouble() / 40.0
-    }
+    // fun decodeBasalInsulin(i: Int): Double {
+    //     return i.toDouble() / 40.0
+    // }
 
-    fun getBasalStrokes(amount: Double): ByteArray {
-        return getBasalStrokes(amount, false)
-    }
+    // fun getBasalStrokes(amount: Double): ByteArray {
+    //     return getBasalStrokes(amount, false)
+    // }
 
-    fun getBasalStrokesInt(amount: Double): Int {
-        return getStrokesInt(amount, 40)
-    }
+    // fun getBasalStrokesInt(amount: Double): Int {
+    //     return getStrokesInt(amount, 40)
+    // }
 
     fun getBolusStrokes(amount: Double): ByteArray {
         val strokesPerUnit = medtronicPumpStatus.medtronicDeviceType.bolusStrokes
@@ -89,17 +92,17 @@ class MedtronicUtil @Inject constructor(
         return ByteUtil.fromHexString(String.format("%02x%0" + 2 * length + "x", length, strokes))
     }
 
-    fun createCommandBody(input: ByteArray): ByteArray {
-        return ByteUtil.concat(input.size.toByte(), input)
-    }
+    // fun createCommandBody(input: ByteArray): ByteArray {
+    //     return ByteUtil.concat(input.size.toByte(), input)
+    // }
 
-    fun sendNotification(notificationType: MedtronicNotificationType, rh: ResourceHelper) {
-        uiInteraction.addNotification(
-            notificationType.notificationType,
-            rh.gs(notificationType.resourceId),
-            notificationType.notificationUrgency
-        )
-    }
+    // fun sendNotification(notificationType: MedtronicNotificationType, rh: ResourceHelper) {
+    //     uiInteraction.addNotification(
+    //         notificationType.notificationType,
+    //         rh.gs(notificationType.resourceId),
+    //         notificationType.notificationUrgency
+    //     )
+    // }
 
     fun sendNotification(notificationType: MedtronicNotificationType, rh: ResourceHelper, vararg parameters: Any?) {
         uiInteraction.addNotification(
@@ -117,7 +120,7 @@ class MedtronicUtil @Inject constructor(
         return buildCommandPayload(rileyLinkServiceData, commandType.commandCode, parameters)
     }
 
-    fun buildCommandPayload(rileyLinkServiceData: RileyLinkServiceData, commandType: Byte, parameters: ByteArray?): ByteArray {
+    private fun buildCommandPayload(rileyLinkServiceData: RileyLinkServiceData, commandType: Byte, parameters: ByteArray?): ByteArray {
         // A7 31 65 51 C0 00 52
         val commandLength = (if (parameters == null) 2 else 2 + parameters.size).toByte()
         val sendPayloadBuffer = ByteBuffer.allocate(ENVELOPE_SIZE + commandLength) // + CRC_SIZE
@@ -283,12 +286,13 @@ class MedtronicUtil @Inject constructor(
             return getStrokes(amount, 40, returnFixedSize)
         }
 
-        fun getStrokes(amount: Double, strokesPerUnit: Int, returnFixedSize: Boolean): ByteArray {
+        @Suppress("SameParameterValue")
+        private fun getStrokes(amount: Double, strokesPerUnit: Int, returnFixedSize: Boolean): ByteArray {
             val strokes = getStrokesInt(amount, strokesPerUnit)
             return getByteArrayFromUnsignedShort(strokes, returnFixedSize)
         }
 
-        fun getStrokesInt(amount: Double, strokesPerUnit: Int): Int {
+        private fun getStrokesInt(amount: Double, strokesPerUnit: Int): Int {
             //var length = 1
             var scrollRate = 1
             if (strokesPerUnit >= 40) {
@@ -304,7 +308,7 @@ class MedtronicUtil @Inject constructor(
 
         fun isSame(d1: Double, d2: Double): Boolean {
             val diff = d1 - d2
-            return Math.abs(diff) <= 0.000001
+            return abs(diff) <= 0.000001
         }
     }
 

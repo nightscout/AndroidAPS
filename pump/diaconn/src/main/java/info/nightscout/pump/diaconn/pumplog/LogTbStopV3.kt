@@ -8,7 +8,8 @@ import java.nio.ByteOrder
 /*
 * 임시기저 중지(완료)
 */
-class LOG_TB_STOP_V3 private constructor(
+@Suppress("SpellCheckingInspection")
+class LogTbStopV3 private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte,
@@ -20,8 +21,8 @@ class LOG_TB_STOP_V3 private constructor(
     private val tbDttm: String
 ) {
 
-    val type: Byte = PumplogUtil.getType(typeAndKind)
-    val kind: Byte = PumplogUtil.getKind(typeAndKind)
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
 
     fun getTbInjectRateRatio(): Int {
         return tbInjectRateRatio and 0xffff
@@ -36,7 +37,7 @@ class LOG_TB_STOP_V3 private constructor(
         sb.append(", kind=").append(kind.toInt())
         sb.append(", tbInjectRateRatio=").append(tbInjectRateRatio and 0xffff)
         sb.append(", reason=").append(reason.toInt())
-        if (!StringUtils.equals(tbDttm, PumplogUtil.getDttm("ffffffff"))) {
+        if (!StringUtils.equals(tbDttm, PumpLogUtil.getDttm("ffffffff"))) {
             sb.append(", tbDttm=").append(tbDttm)
         }
         sb.append('}')
@@ -46,17 +47,17 @@ class LOG_TB_STOP_V3 private constructor(
     companion object {
 
         const val LOG_KIND: Byte = 0x13
-        fun parse(data: String): LOG_TB_STOP_V3 {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        fun parse(data: String): LogTbStopV3 {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_TB_STOP_V3(
+            return LogTbStopV3(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getDttm(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getDttm(buffer)
             )
         }
     }

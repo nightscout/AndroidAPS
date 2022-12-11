@@ -7,7 +7,8 @@ import java.nio.ByteOrder
 /*
 * 식사주입 실패
 */
-class LOG_INJECT_MEAL_FAIL private constructor(
+@Suppress("SpellCheckingInspection")
+class LogInjectMealFail private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte,     // 47.5=4750
@@ -18,8 +19,8 @@ class LOG_INJECT_MEAL_FAIL private constructor(
     val reason: Byte
 ) {
 
-    val type: Byte = PumplogUtil.getType(typeAndKind)
-    val kind: Byte = PumplogUtil.getKind(typeAndKind)
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
 
     fun getInjectTime(): Int {
         return injectTime and 0xff
@@ -44,19 +45,19 @@ class LOG_INJECT_MEAL_FAIL private constructor(
     companion object {
 
         const val LOG_KIND: Byte = 0x09
-        fun parse(data: String): LOG_INJECT_MEAL_FAIL {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        fun parse(data: String): LogInjectMealFail {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_INJECT_MEAL_FAIL(
+            return LogInjectMealFail(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer)
             )
         }
     }

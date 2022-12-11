@@ -6,7 +6,8 @@ import java.nio.ByteOrder
 /*
 * 일시정지 중지 (기저정지 해제)
 */
-class LOG_SUSPEND_RELEASE_V2 private constructor(
+@Suppress("SpellCheckingInspection")
+class LogSuspendReleaseV2 private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte,
@@ -17,7 +18,7 @@ class LOG_SUSPEND_RELEASE_V2 private constructor(
     val type: Byte
     val kind: Byte
     val batteryRemain: Byte
-    val patternType // 1=기본, 2=생활1, 3=생활2, 4=생활3, 5=닥터1, 6=닥터2
+    private val patternType // 1=기본, 2=생활1, 3=생활2, 4=생활3, 5=닥터1, 6=닥터2
         : Byte
 
     override fun toString(): String {
@@ -48,23 +49,23 @@ class LOG_SUSPEND_RELEASE_V2 private constructor(
     companion object {
 
         const val LOG_KIND: Byte = 0x04
-        fun parse(data: String): LOG_SUSPEND_RELEASE_V2 {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        fun parse(data: String): LogSuspendReleaseV2 {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_SUSPEND_RELEASE_V2(
+            return LogSuspendReleaseV2(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getByte(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getByte(buffer)
             )
         }
     }
 
     init {
-        type = PumplogUtil.getType(typeAndKind)
-        kind = PumplogUtil.getKind(typeAndKind)
+        type = PumpLogUtil.getType(typeAndKind)
+        kind = PumpLogUtil.getKind(typeAndKind)
         this.batteryRemain = batteryRemain
         this.patternType = patternType
     }

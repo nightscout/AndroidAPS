@@ -6,7 +6,8 @@ import java.nio.ByteOrder
 /*
 * 1시간 단위 기저 주입량
 */
-class LOG_INJECTION_1HOUR_BASAL private constructor(
+@Suppress("SpellCheckingInspection")
+class LogInjection1HourBasal private constructor(
     val data: String,
     val dttm: String,
     typeAndKind: Byte,
@@ -17,8 +18,8 @@ class LOG_INJECTION_1HOUR_BASAL private constructor(
     private val remainTotalAmount: Short
 ) {
 
-    val type: Byte = PumplogUtil.getType(typeAndKind)
-    val kind: Byte = PumplogUtil.getKind(typeAndKind)
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
     val beforeAmount // 해당시간의 임시기저 계산 전 기저주입량: 기저주입막힘 발생 시 기저주입 막힘량 제외, 기저정지로 인해 주입되지 않은 량 제외, 리셋으로 인해 주입되지 않은 량 제외(47.5=4750)
         : Short = tbBeforeAmount
     val afterAmount // 해당시간의 임시기저 계산 후 기저주입량: 기저주입막힘 발생 시 기저주입 막힘량 제외, 기저정지로 인해 주입되지 않은 량 제외, 리셋으로 인해 주입되지 않은 량 제외(47.5=4750)
@@ -42,18 +43,18 @@ class LOG_INJECTION_1HOUR_BASAL private constructor(
     companion object {
 
         const val LOG_KIND: Byte = 0x2C
-        fun parse(data: String): LOG_INJECTION_1HOUR_BASAL {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        fun parse(data: String): LogInjection1HourBasal {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_INJECTION_1HOUR_BASAL(
+            return LogInjection1HourBasal(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getShort(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getShort(buffer)
             )
         }
     }

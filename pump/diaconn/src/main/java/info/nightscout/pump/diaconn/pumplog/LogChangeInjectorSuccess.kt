@@ -4,22 +4,22 @@ import java.nio.ByteBuffer
 import java.nio.ByteOrder
 
 /*
-* 바늘 공기빼기 성공
+* 주사기 교체 성공
 */
-class LOG_CHANGE_NEEDLE_SUCCESS private constructor(
+class LogChangeInjectorSuccess private constructor(
     val data: String,
     val dttm: String,
-    typeAndKind: Byte,    //  47.5=4750
-    val primeAmount: Short,    //  47.5=4750
+    typeAndKind: Byte,    // 47.5=4750
+    val primeAmount: Short,    // 47.5=4750
     val remainAmount: Short,
     val batteryRemain: Byte
 ) {
 
-    val type: Byte = PumplogUtil.getType(typeAndKind)
-    val kind: Byte = PumplogUtil.getKind(typeAndKind)
+    val type: Byte = PumpLogUtil.getType(typeAndKind)
+    val kind: Byte = PumpLogUtil.getKind(typeAndKind)
 
     override fun toString(): String {
-        val sb = StringBuilder("LOG_CHANGE_NEEDLE_SUCCESS{")
+        val sb = StringBuilder("LOG_CHANGE_INJECTOR_SUCCESS{")
         sb.append("LOG_KIND=").append(LOG_KIND.toInt())
         sb.append(", data='").append(data).append('\'')
         sb.append(", dttm='").append(dttm).append('\'')
@@ -34,18 +34,18 @@ class LOG_CHANGE_NEEDLE_SUCCESS private constructor(
 
     companion object {
 
-        const val LOG_KIND: Byte = 0x1C
-        fun parse(data: String): LOG_CHANGE_NEEDLE_SUCCESS {
-            val bytes = PumplogUtil.hexStringToByteArray(data)
+        const val LOG_KIND: Byte = 0x1A
+        fun parse(data: String): LogChangeInjectorSuccess {
+            val bytes = PumpLogUtil.hexStringToByteArray(data)
             val buffer = ByteBuffer.wrap(bytes)
             buffer.order(ByteOrder.LITTLE_ENDIAN)
-            return LOG_CHANGE_NEEDLE_SUCCESS(
+            return LogChangeInjectorSuccess(
                 data,
-                PumplogUtil.getDttm(buffer),
-                PumplogUtil.getByte(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getShort(buffer),
-                PumplogUtil.getByte(buffer)
+                PumpLogUtil.getDttm(buffer),
+                PumpLogUtil.getByte(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getShort(buffer),
+                PumpLogUtil.getByte(buffer)
             )
         }
     }

@@ -1,7 +1,6 @@
 package info.nightscout.pump.combo.di
 
 import dagger.Module
-import info.nightscout.androidaps.danars.di.ComboActivitiesModule
 
 @Module(includes = [
     ComboActivitiesModule::class
