@@ -428,7 +428,6 @@
     <string name="autotune_param">Парам</string>
     <string name="autotune_percent">%</string>
     <string name="autotune_missing">Отсутствует</string>
-    <string name="autotune_profile_name">Профиль авто тюн</string>
     <string name="autotune_run">Выполнить Autotune</string>
     <string name="autotune_check_input_profile_button">Проверьте профиль ввода</string>
     <string name="autotune_compare_profile">Сравнить профили</string>
