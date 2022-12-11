@@ -17,6 +17,13 @@ internal data class RemoteStorage(
     @SerializedName("version") val version: String
 )
 
+internal data class RemoteCreateUpdateResponse(
+    @SerializedName("identifier") val identifier: String?,
+    @SerializedName("isDeduplication") val isDeduplication: Boolean?,
+    @SerializedName("deduplicatedIdentifier") val deduplicatedIdentifier: String?,
+    @SerializedName("lastModified") val lastModified: Long?
+)
+
 internal data class RemoteApiPermissions(
     @SerializedName("devicestatus") val deviceStatus: RemoteApiPermission,
     @SerializedName("entries") val entries: RemoteApiPermission,

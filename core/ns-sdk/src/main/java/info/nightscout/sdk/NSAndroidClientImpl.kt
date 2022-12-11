@@ -3,12 +3,16 @@ package info.nightscout.sdk
 import android.content.Context
 import info.nightscout.sdk.exceptions.DateHeaderOutOfToleranceException
 import info.nightscout.sdk.exceptions.InvalidAccessTokenException
+import info.nightscout.sdk.exceptions.InvalidFormatNightscoutException
 import info.nightscout.sdk.exceptions.TodoNightscoutException
+import info.nightscout.sdk.exceptions.UnknownResponseNightscoutException
 import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.Status
 import info.nightscout.sdk.localmodel.entry.NSSgvV3
+import info.nightscout.sdk.localmodel.treatment.CreateUpdateResponse
 import info.nightscout.sdk.localmodel.treatment.NSTreatment
 import info.nightscout.sdk.mapper.toLocal
+import info.nightscout.sdk.mapper.toRemoteTreatment
 import info.nightscout.sdk.mapper.toSgv
 import info.nightscout.sdk.mapper.toTreatment
 import info.nightscout.sdk.networking.NetworkStackBuilder
@@ -149,6 +153,22 @@ class NSAndroidClientImpl(
         val response = api.getDeviceStatusModifiedSince(from)
         if (response.isSuccessful) {
             return@callWrapper response.body()?.result.toNotNull()
+        } else {
+            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+        }
+    }
+
+    override suspend fun createTreatment(nsTreatment: NSTreatment): CreateUpdateResponse = callWrapper(dispatcher) {
+
+        val remoteTreatment = nsTreatment.toRemoteTreatment() ?: throw InvalidFormatNightscoutException()
+        val response = api.createTreatment(remoteTreatment)
+        if (response.isSuccessful) {
+            return@callWrapper CreateUpdateResponse(
+                identifier = response.body()?.result?.identifier ?: throw UnknownResponseNightscoutException(),
+                isDeduplication = response.body()?.result?.isDeduplication ?: false,
+                deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,
+                lastModified = response.body()?.result?.lastModified
+            )
         } else {
             throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
         }

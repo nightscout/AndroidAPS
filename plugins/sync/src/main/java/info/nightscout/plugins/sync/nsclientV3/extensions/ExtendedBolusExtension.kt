@@ -11,6 +11,6 @@ fun NSExtendedBolus.toExtendedBolus(): ExtendedBolus =
         utcOffset = utcOffset,
         amount = enteredinsulin,
         duration = duration,
-        isEmulatingTempBasal = isEmulatingTempbasal,
+        isEmulatingTempBasal = isEmulatingTempBasal ?: false,
         interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
