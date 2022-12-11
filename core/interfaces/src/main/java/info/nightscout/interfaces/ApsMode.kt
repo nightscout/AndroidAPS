@@ -8,12 +8,6 @@ enum class ApsMode() {
 
     companion object {
 
-        fun secureValueOf(stringValue: String): ApsMode {
-            return try {
-                valueOf(stringValue.uppercase())
-            } catch (e: IllegalArgumentException) {
-                UNDEFINED
-            }
-        }
+        fun fromString(stringValue: String?) = values().firstOrNull { it.name == (stringValue?.uppercase() ?: UNDEFINED) }
     }
 }

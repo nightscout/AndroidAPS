@@ -162,7 +162,7 @@ class LoopDialog : DaggerDialogFragment() {
         val closedLoopAllowed = constraintChecker.isClosedLoopAllowed(Constraint(true))
         val closedLoopAllowed2 = activePlugin.activeObjectives?.isAccomplished(Objectives.MAXIOB_OBJECTIVE) ?: false
         val lgsEnabled = constraintChecker.isLgsAllowed(Constraint(true))
-        val apsMode = ApsMode.secureValueOf(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
+        val apsMode = ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
         val pump = activePlugin.activePump
 
         binding.overviewDisconnect15m.visibility = pumpDescription.tempDurationStep15mAllowed.toVisibility()

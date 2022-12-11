@@ -1284,7 +1284,7 @@ class SmsCommunicatorPlugin @Inject constructor(
     }
 
     private fun getApsModeText(): String =
-        when (ApsMode.secureValueOf(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))) {
+        when (ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))) {
             ApsMode.OPEN   -> rh.gs(info.nightscout.core.ui.R.string.openloop)
             ApsMode.CLOSED -> rh.gs(info.nightscout.core.ui.R.string.closedloop)
             ApsMode.LGS    -> rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)

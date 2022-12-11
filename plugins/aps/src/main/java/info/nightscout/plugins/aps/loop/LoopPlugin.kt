@@ -183,7 +183,7 @@ class LoopPlugin @Inject constructor(
         get() {
             val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
             val maxIobAllowed = constraintChecker.getMaxIOBAllowed().value()
-            val apsMode = ApsMode.secureValueOf(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
+            val apsMode = ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
             val pump = activePlugin.activePump
             var isLGS = false
             if (!isSuspended && !pump.isSuspended()) if (closedLoopEnabled.value()) if (maxIobAllowed == HardLimits.MAX_IOB_LGS || apsMode == ApsMode.LGS) isLGS = true
