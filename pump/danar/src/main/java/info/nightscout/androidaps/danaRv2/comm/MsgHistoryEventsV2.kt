@@ -277,7 +277,7 @@ class MsgHistoryEventsV2 constructor(
                 status = "UNKNOWN " + dateUtil.timeString(datetime)
             }
         }
-        if (datetime > danaRv2Plugin.lastEventTimeLoaded) danaRv2Plugin.lastEventTimeLoaded = datetime
+        if (datetime > danaPump.lastEventTimeLoaded) danaPump.lastEventTimeLoaded = datetime
         rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.processinghistory) + ": " + status))
     }
 }

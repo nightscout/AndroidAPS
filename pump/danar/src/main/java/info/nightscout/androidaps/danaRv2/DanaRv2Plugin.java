@@ -57,8 +57,6 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
     private final TemporaryBasalStorage temporaryBasalStorage;
     private final FabricPrivacy fabricPrivacy;
 
-    public long lastEventTimeLoaded = 0;
-
     @Inject
     public DanaRv2Plugin(
             HasAndroidInjector injector,

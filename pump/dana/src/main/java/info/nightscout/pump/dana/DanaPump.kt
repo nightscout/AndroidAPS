@@ -55,7 +55,7 @@ class DanaPump @Inject constructor(
 
     var lastConnection: Long = 0
     var lastSettingsRead: Long = 0
-    @JvmField var lastHistoryFetched: Long = 0
+    @JvmField var readHistoryFrom: Long = 0 // start next history read from this timestamp
     @JvmField var historyDoneReceived: Boolean = false // true when last history message is received
 
     // Info
@@ -410,7 +410,7 @@ class DanaPump @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "DanaRPump reset")
         lastConnection = 0
         lastSettingsRead = 0
-        lastHistoryFetched = 0
+        readHistoryFrom = 0
     }
 
     fun modelFriendlyName(): String =
