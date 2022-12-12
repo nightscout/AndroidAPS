@@ -4,8 +4,12 @@
     <string name="dia_label_exam">Duración de la acción de insulina (DAI)</string>
     <string name="dia_profile">Debes establecer el valor de DAI en tu perfil.</string>
     <string name="dia_minimumis5h">El valor mínimo permitido es de 5 horas.</string>
+    <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
     <string name="dia_meaningisequaltodiapump">Si estás satisfecho con el valor de DAI que utilizas en tu bomba antes de utilizar AAPS y te funcionó bien, no hay necesidad de cambiarlo cuando empieces a usar el bucle cerrado.</string>
     <string name="dia_valuemustbedetermined">Deberás determinar por ti mismo el valor apropiado para DAI.</string>
+    <string name="hypott_label">Objetivo temporal ante Hipoglucemia</string>
+    <string name="hypott_whenhypott">¿Cuál es la razón principal para establecer un objetivo temporal por hipoglucemia?</string>
+    <string name="hypott_wrongbasal">Para corregir hipoglucemias causadas por ajustes incorrectos de la tasa basal.</string>
     <string name="pumpdisconnect_missinginsulin">Evita que AAPS considere la insulina que no se suministró cuando la bomba estaba físicamente desconectada</string>
     <string name="pumpdisconnect_openloop">Se activará el modo de bucle abierto en AAPS.</string>
     <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
