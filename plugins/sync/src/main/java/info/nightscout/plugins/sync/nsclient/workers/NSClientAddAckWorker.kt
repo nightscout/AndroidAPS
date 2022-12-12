@@ -6,7 +6,6 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
-import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
 import info.nightscout.database.impl.transactions.UpdateNsIdBolusTransaction
@@ -274,10 +273,10 @@ class NSClientAddAckWorker(
                 dataSyncSelector.processChangedEffectiveProfileSwitchesCompat()
             }
 
-            is DeviceStatus -> {
+            is DataSyncSelector.PairDeviceStatus -> {
                 val deviceStatus = ack.originalObject
-                deviceStatus.interfaceIDs.nightscoutId = ack.id
-                repository.runTransactionForResult(UpdateNsIdDeviceStatusTransaction(deviceStatus))
+                deviceStatus.value.interfaceIDs.nightscoutId = ack.id
+                repository.runTransactionForResult(UpdateNsIdDeviceStatusTransaction(deviceStatus.value))
                     .doOnError { error ->
                         aapsLogger.error(LTag.DATABASE, "Updated ns id of DeviceStatus failed", error)
                         ret = Result.failure((workDataOf("Error" to error.toString())))
@@ -285,10 +284,10 @@ class NSClientAddAckWorker(
                     .doOnSuccess {
                         ret = Result.success(workDataOf("ProcessedData" to deviceStatus.toString()))
                         aapsLogger.debug(LTag.DATABASE, "Updated ns id of DeviceStatus $deviceStatus")
-                        dataSyncSelector.confirmLastDeviceStatusIdIfGreater(deviceStatus.id)
+                        dataSyncSelector.confirmLastDeviceStatusIdIfGreater(deviceStatus.value.id)
                     }
                     .blockingGet()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked DeviceStatus " + deviceStatus.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("DBADD", "Acked DeviceStatus " + deviceStatus.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
                 dataSyncSelector.processChangedDeviceStatusesCompat()
             }

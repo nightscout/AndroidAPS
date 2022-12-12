@@ -23,6 +23,6 @@ interface NsClient : Sync {
 
     fun resetToFullSync()
 
-    fun dbAdd(collection: String, data: JSONObject, originalObject: Any, progress: String)
-    fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String)
+    fun dbAdd(collection: String, originalObject: DataSyncSelector.DataPair, progress: String)
+    fun dbUpdate(collection: String, originalObject: DataSyncSelector.DataPair, progress: String)
 }

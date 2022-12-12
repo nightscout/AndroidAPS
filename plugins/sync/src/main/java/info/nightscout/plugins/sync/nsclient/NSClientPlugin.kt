@@ -12,6 +12,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.extensions.toJson
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
@@ -20,6 +21,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.source.DoingOwnUploadSource
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.NsClient
@@ -32,6 +34,7 @@ import info.nightscout.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.plugins.sync.nsclient.data.AlarmAck
+import info.nightscout.plugins.sync.nsclient.extensions.toJson
 import info.nightscout.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -45,9 +48,9 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -65,7 +68,9 @@ class NSClientPlugin @Inject constructor(
     private val config: Config,
     private val dataSyncSelector: DataSyncSelector,
     private val uiInteraction: UiInteraction,
-    private val activePlugin: ActivePlugin
+    private val activePlugin: ActivePlugin,
+    private val dateUtil: DateUtil,
+    private val profileFunction: ProfileFunction
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -237,11 +242,60 @@ class NSClientPlugin @Inject constructor(
         dataSyncSelector.resetToNextFullSync()
     }
 
-    override fun dbAdd(collection: String, data: JSONObject, originalObject: Any, progress: String) {
-        nsClientService?.dbAdd(collection, data, originalObject, progress)
+    override fun dbAdd(collection: String, originalObject: DataSyncSelector.DataPair, progress: String) {
+        when (originalObject) {
+            is DataSyncSelector.PairBolus                  -> originalObject.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairCarbs                  -> originalObject.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairBolusCalculatorResult  -> originalObject.value.toJson(true, dateUtil, profileFunction)
+            is DataSyncSelector.PairTemporaryTarget        -> originalObject.value.toJson(true, profileFunction.getUnits(), dateUtil)
+            is DataSyncSelector.PairFood                   -> originalObject.value.toJson(true)
+            is DataSyncSelector.PairGlucoseValue           -> originalObject.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairTherapyEvent           -> originalObject.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairDeviceStatus           -> originalObject.value.toJson(dateUtil)
+            is DataSyncSelector.PairTemporaryBasal         -> originalObject.value.toJson(true, profileFunction.getProfile(originalObject.value.timestamp), dateUtil)
+            is DataSyncSelector.PairExtendedBolus          -> originalObject.value.toJson(true, profileFunction.getProfile(originalObject.value.timestamp), dateUtil)
+            is DataSyncSelector.PairProfileSwitch          -> originalObject.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairEffectiveProfileSwitch -> originalObject.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairOfflineEvent           -> originalObject.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairProfileStore           -> originalObject.value
+            else                                           -> null
+        }?.let { data ->
+            nsClientService?.dbAdd(collection, data, originalObject, progress)
+        }
     }
 
-    override fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String) {
-        nsClientService?.dbUpdate(collection, _id, data, originalObject, progress)
+    override fun dbUpdate(collection: String, originalObject: DataSyncSelector.DataPair, progress: String) {
+        val id = when (originalObject) {
+            is DataSyncSelector.PairBolus                  -> originalObject.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairCarbs                  -> originalObject.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairBolusCalculatorResult  -> originalObject.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairTemporaryTarget        -> originalObject.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairFood                   -> originalObject.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairGlucoseValue           -> originalObject.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairTherapyEvent           -> originalObject.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairTemporaryBasal         -> originalObject.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairExtendedBolus          -> originalObject.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairProfileSwitch          -> originalObject.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairEffectiveProfileSwitch -> originalObject.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairOfflineEvent           -> originalObject.value.interfaceIDs.nightscoutId
+            else                                           -> throw IllegalStateException()
+        }
+        when (originalObject) {
+            is DataSyncSelector.PairBolus                  -> originalObject.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairCarbs                  -> originalObject.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairBolusCalculatorResult  -> originalObject.value.toJson(false, dateUtil, profileFunction)
+            is DataSyncSelector.PairTemporaryTarget        -> originalObject.value.toJson(false, profileFunction.getUnits(), dateUtil)
+            is DataSyncSelector.PairFood                   -> originalObject.value.toJson(false)
+            is DataSyncSelector.PairGlucoseValue           -> originalObject.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairTherapyEvent           -> originalObject.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairTemporaryBasal         -> originalObject.value.toJson(false, profileFunction.getProfile(originalObject.value.timestamp), dateUtil)
+            is DataSyncSelector.PairExtendedBolus          -> originalObject.value.toJson(false, profileFunction.getProfile(originalObject.value.timestamp), dateUtil)
+            is DataSyncSelector.PairProfileSwitch          -> originalObject.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairEffectiveProfileSwitch -> originalObject.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairOfflineEvent           -> originalObject.value.toJson(false, dateUtil)
+            else                                           -> null
+        }?.let { data ->
+            nsClientService?.dbUpdate(collection, id, data, originalObject, progress)
+        }
     }
 }

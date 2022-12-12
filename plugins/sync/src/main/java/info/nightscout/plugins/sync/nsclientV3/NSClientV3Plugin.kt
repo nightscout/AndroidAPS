@@ -19,6 +19,7 @@ import info.nightscout.interfaces.nsclient.NSAlarm
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
 import info.nightscout.interfaces.ui.UiInteraction
@@ -301,11 +302,13 @@ class NSClientV3Plugin @Inject constructor(
         storeLastFetched()
     }
 
-    override fun dbAdd(collection: String, data: JSONObject, originalObject: Any, progress: String) {
-        TODO("Not yet implemented")
+    override fun dbAdd(collection: String, originalObject: DataSyncSelector.DataPair, progress: String) {
+        if (collection == "treatments") {
+            //val result = nsAndroidClient.createTreatment()
+        }
     }
 
-    override fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String) {
+    override fun dbUpdate(collection: String, originalObject: DataSyncSelector.DataPair, progress: String) {
         TODO("Not yet implemented")
     }
 

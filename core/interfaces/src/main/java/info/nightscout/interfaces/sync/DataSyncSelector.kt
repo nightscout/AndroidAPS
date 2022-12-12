@@ -17,19 +17,21 @@ import org.json.JSONObject
 
 interface DataSyncSelector {
 
-    data class PairTemporaryTarget(val value: TemporaryTarget, val updateRecordId: Long)
-    data class PairGlucoseValue(val value: GlucoseValue, val updateRecordId: Long)
-    data class PairTherapyEvent(val value: TherapyEvent, val updateRecordId: Long)
-    data class PairFood(val value: Food, val updateRecordId: Long)
-    data class PairBolus(val value: Bolus, val updateRecordId: Long)
-    data class PairCarbs(val value: Carbs, val updateRecordId: Long)
-    data class PairBolusCalculatorResult(val value: BolusCalculatorResult, val updateRecordId: Long)
-    data class PairTemporaryBasal(val value: TemporaryBasal, val updateRecordId: Long)
-    data class PairExtendedBolus(val value: ExtendedBolus, val updateRecordId: Long)
-    data class PairProfileSwitch(val value: ProfileSwitch, val updateRecordId: Long)
-    data class PairEffectiveProfileSwitch(val value: EffectiveProfileSwitch, val updateRecordId: Long)
-    data class PairOfflineEvent(val value: OfflineEvent, val updateRecordId: Long)
-    data class PairProfileStore(val value: JSONObject, val timestampSync: Long)
+    interface DataPair
+    data class PairTemporaryTarget(val value: TemporaryTarget, val updateRecordId: Long): DataPair
+    data class PairGlucoseValue(val value: GlucoseValue, val updateRecordId: Long): DataPair
+    data class PairTherapyEvent(val value: TherapyEvent, val updateRecordId: Long): DataPair
+    data class PairFood(val value: Food, val updateRecordId: Long): DataPair
+    data class PairBolus(val value: Bolus, val updateRecordId: Long): DataPair
+    data class PairCarbs(val value: Carbs, val updateRecordId: Long): DataPair
+    data class PairBolusCalculatorResult(val value: BolusCalculatorResult, val updateRecordId: Long): DataPair
+    data class PairTemporaryBasal(val value: TemporaryBasal, val updateRecordId: Long): DataPair
+    data class PairExtendedBolus(val value: ExtendedBolus, val updateRecordId: Long): DataPair
+    data class PairProfileSwitch(val value: ProfileSwitch, val updateRecordId: Long): DataPair
+    data class PairEffectiveProfileSwitch(val value: EffectiveProfileSwitch, val updateRecordId: Long): DataPair
+    data class PairOfflineEvent(val value: OfflineEvent, val updateRecordId: Long): DataPair
+    data class PairProfileStore(val value: JSONObject, val timestampSync: Long): DataPair
+    data class PairDeviceStatus(val value: DeviceStatus, val unused: Long?): DataPair
 
     fun queueSize(): Long
 
