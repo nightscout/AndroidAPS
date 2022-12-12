@@ -787,6 +787,7 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of TemporaryTarget $it")
+                    nsIdUpdated.inc(TemporaryTarget::class.java.simpleName)
                 }
             }
 
@@ -798,6 +799,7 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of GlucoseValue $it")
+                    nsIdUpdated.inc(GlucoseValue::class.java.simpleName)
                 }
             }
 
@@ -809,6 +811,7 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of Food $it")
+                    nsIdUpdated.inc(Food::class.java.simpleName)
                 }
             }
 
@@ -820,6 +823,7 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of TherapyEvent $it")
+                    nsIdUpdated.inc(TherapyEvent::class.java.simpleName)
                 }
             }
 
@@ -831,6 +835,7 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of Bolus $it")
+                    nsIdUpdated.inc(Bolus::class.java.simpleName)
                 }
             }
 
@@ -842,6 +847,7 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of Carbs $it")
+                    nsIdUpdated.inc(Carbs::class.java.simpleName)
                 }
             }
 
@@ -853,6 +859,7 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of BolusCalculatorResult $it")
+                    nsIdUpdated.inc(BolusCalculatorResult::class.java.simpleName)
                 }
             }
 
@@ -864,6 +871,7 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of TemporaryBasal $it")
+                    nsIdUpdated.inc(TemporaryBasal::class.java.simpleName)
                 }
             }
 
@@ -875,6 +883,7 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of ExtendedBolus $it")
+                    nsIdUpdated.inc(ExtendedBolus::class.java.simpleName)
                 }
             }
 
@@ -886,6 +895,7 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of ProfileSwitch $it")
+                    nsIdUpdated.inc(ProfileSwitch::class.java.simpleName)
                 }
             }
 
@@ -897,6 +907,7 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of EffectiveProfileSwitch $it")
+                    nsIdUpdated.inc(EffectiveProfileSwitch::class.java.simpleName)
                 }
             }
 
@@ -908,6 +919,7 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of DeviceStatus $it")
+                    nsIdUpdated.inc(DeviceStatus::class.java.simpleName)
                 }
             }
 
@@ -919,8 +931,21 @@ class StoreDataForDbImpl @Inject constructor(
             .also { result ->
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of OfflineEvent $it")
+                    nsIdUpdated.inc(OfflineEvent::class.java.simpleName)
                 }
             }
+        sendLog("GlucoseValue", GlucoseValue::class.java.simpleName)
+        sendLog("Bolus", NSBolus::class.java.simpleName)
+        sendLog("Carbs", NSCarbs::class.java.simpleName)
+        sendLog("TemporaryTarget", NSTemporaryTarget::class.java.simpleName)
+        sendLog("TemporaryBasal", NSTemporaryBasal::class.java.simpleName)
+        sendLog("EffectiveProfileSwitch", NSEffectiveProfileSwitch::class.java.simpleName)
+        sendLog("ProfileSwitch", NSProfileSwitch::class.java.simpleName)
+        sendLog("BolusCalculatorResult", NSBolusWizard::class.java.simpleName)
+        sendLog("TherapyEvent", NSTherapyEvent::class.java.simpleName)
+        sendLog("OfflineEvent", NSOfflineEvent::class.java.simpleName)
+        sendLog("ExtendedBolus", NSExtendedBolus::class.java.simpleName)
+        rxBus.send(EventNSClientNewLog("DONE NSIDs", ""))
     }
 
     private fun sendLog(item: String, clazz: String) {
