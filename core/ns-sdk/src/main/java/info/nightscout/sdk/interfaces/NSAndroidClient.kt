@@ -20,5 +20,6 @@ interface NSAndroidClient {
     suspend fun getSgvsNewerThan(from: Long, limit: Long): List<NSSgvV3>
     suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): List<NSTreatment>
     suspend fun getDeviceStatusModifiedSince(from: Long): List<RemoteDeviceStatus>
-    suspend fun createTreatment(NsTreatment: NSTreatment): CreateUpdateResponse
+    suspend fun createTreatment(nsTreatment: NSTreatment): CreateUpdateResponse
+    suspend fun updateTreatment(nsTreatment: NSTreatment): CreateUpdateResponse
 }

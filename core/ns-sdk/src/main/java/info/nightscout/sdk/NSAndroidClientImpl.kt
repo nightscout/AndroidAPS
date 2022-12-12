@@ -174,6 +174,22 @@ class NSAndroidClientImpl(
         }
     }
 
+    override suspend fun updateTreatment(nsTreatment: NSTreatment): CreateUpdateResponse = callWrapper(dispatcher) {
+
+        val remoteTreatment = nsTreatment.toRemoteTreatment() ?: throw InvalidFormatNightscoutException()
+        val response = api.updateTreatment(remoteTreatment)
+        if (response.isSuccessful) {
+            return@callWrapper CreateUpdateResponse(
+                identifier = response.body()?.result?.identifier ?: throw UnknownResponseNightscoutException(),
+                isDeduplication = response.body()?.result?.isDeduplication ?: false,
+                deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,
+                lastModified = response.body()?.result?.lastModified
+            )
+        } else {
+            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+        }
+    }
+
     private suspend fun <T> callWrapper(dispatcher: CoroutineDispatcher, block: suspend () -> T): T =
         withContext(dispatcher) {
             retry(
