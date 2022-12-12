@@ -242,60 +242,60 @@ class NSClientPlugin @Inject constructor(
         dataSyncSelector.resetToNextFullSync()
     }
 
-    override fun dbAdd(collection: String, originalObject: DataSyncSelector.DataPair, progress: String) {
-        when (originalObject) {
-            is DataSyncSelector.PairBolus                  -> originalObject.value.toJson(true, dateUtil)
-            is DataSyncSelector.PairCarbs                  -> originalObject.value.toJson(true, dateUtil)
-            is DataSyncSelector.PairBolusCalculatorResult  -> originalObject.value.toJson(true, dateUtil, profileFunction)
-            is DataSyncSelector.PairTemporaryTarget        -> originalObject.value.toJson(true, profileFunction.getUnits(), dateUtil)
-            is DataSyncSelector.PairFood                   -> originalObject.value.toJson(true)
-            is DataSyncSelector.PairGlucoseValue           -> originalObject.value.toJson(true, dateUtil)
-            is DataSyncSelector.PairTherapyEvent           -> originalObject.value.toJson(true, dateUtil)
-            is DataSyncSelector.PairDeviceStatus           -> originalObject.value.toJson(dateUtil)
-            is DataSyncSelector.PairTemporaryBasal         -> originalObject.value.toJson(true, profileFunction.getProfile(originalObject.value.timestamp), dateUtil)
-            is DataSyncSelector.PairExtendedBolus          -> originalObject.value.toJson(true, profileFunction.getProfile(originalObject.value.timestamp), dateUtil)
-            is DataSyncSelector.PairProfileSwitch          -> originalObject.value.toJson(true, dateUtil)
-            is DataSyncSelector.PairEffectiveProfileSwitch -> originalObject.value.toJson(true, dateUtil)
-            is DataSyncSelector.PairOfflineEvent           -> originalObject.value.toJson(true, dateUtil)
-            is DataSyncSelector.PairProfileStore           -> originalObject.value
+    override fun dbAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+        when (dataPair) {
+            is DataSyncSelector.PairBolus                  -> dataPair.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(true, dateUtil, profileFunction)
+            is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(true, profileFunction.getUnits(), dateUtil)
+            is DataSyncSelector.PairFood                   -> dataPair.value.toJson(true)
+            is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairDeviceStatus           -> dataPair.value.toJson(dateUtil)
+            is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(true, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+            is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(true, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+            is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(true, dateUtil)
+            is DataSyncSelector.PairProfileStore           -> dataPair.value
             else                                           -> null
         }?.let { data ->
-            nsClientService?.dbAdd(collection, data, originalObject, progress)
+            nsClientService?.dbAdd(collection, data, dataPair, progress)
         }
     }
 
-    override fun dbUpdate(collection: String, originalObject: DataSyncSelector.DataPair, progress: String) {
-        val id = when (originalObject) {
-            is DataSyncSelector.PairBolus                  -> originalObject.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairCarbs                  -> originalObject.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairBolusCalculatorResult  -> originalObject.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairTemporaryTarget        -> originalObject.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairFood                   -> originalObject.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairGlucoseValue           -> originalObject.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairTherapyEvent           -> originalObject.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairTemporaryBasal         -> originalObject.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairExtendedBolus          -> originalObject.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairProfileSwitch          -> originalObject.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairEffectiveProfileSwitch -> originalObject.value.interfaceIDs.nightscoutId
-            is DataSyncSelector.PairOfflineEvent           -> originalObject.value.interfaceIDs.nightscoutId
+    override fun dbUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+        val id = when (dataPair) {
+            is DataSyncSelector.PairBolus                  -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairCarbs                  -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairFood                   -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairGlucoseValue           -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairTherapyEvent           -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairExtendedBolus          -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairProfileSwitch          -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.interfaceIDs.nightscoutId
+            is DataSyncSelector.PairOfflineEvent           -> dataPair.value.interfaceIDs.nightscoutId
             else                                           -> throw IllegalStateException()
         }
-        when (originalObject) {
-            is DataSyncSelector.PairBolus                  -> originalObject.value.toJson(false, dateUtil)
-            is DataSyncSelector.PairCarbs                  -> originalObject.value.toJson(false, dateUtil)
-            is DataSyncSelector.PairBolusCalculatorResult  -> originalObject.value.toJson(false, dateUtil, profileFunction)
-            is DataSyncSelector.PairTemporaryTarget        -> originalObject.value.toJson(false, profileFunction.getUnits(), dateUtil)
-            is DataSyncSelector.PairFood                   -> originalObject.value.toJson(false)
-            is DataSyncSelector.PairGlucoseValue           -> originalObject.value.toJson(false, dateUtil)
-            is DataSyncSelector.PairTherapyEvent           -> originalObject.value.toJson(false, dateUtil)
-            is DataSyncSelector.PairTemporaryBasal         -> originalObject.value.toJson(false, profileFunction.getProfile(originalObject.value.timestamp), dateUtil)
-            is DataSyncSelector.PairExtendedBolus          -> originalObject.value.toJson(false, profileFunction.getProfile(originalObject.value.timestamp), dateUtil)
-            is DataSyncSelector.PairProfileSwitch          -> originalObject.value.toJson(false, dateUtil)
-            is DataSyncSelector.PairEffectiveProfileSwitch -> originalObject.value.toJson(false, dateUtil)
-            is DataSyncSelector.PairOfflineEvent           -> originalObject.value.toJson(false, dateUtil)
+        when (dataPair) {
+            is DataSyncSelector.PairBolus                  -> dataPair.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(false, dateUtil, profileFunction)
+            is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(false, profileFunction.getUnits(), dateUtil)
+            is DataSyncSelector.PairFood                   -> dataPair.value.toJson(false)
+            is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+            is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+            is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)
             else                                           -> null
         }?.let { data ->
-            nsClientService?.dbUpdate(collection, id, data, originalObject, progress)
+            nsClientService?.dbUpdate(collection, id, data, dataPair, progress)
         }
     }
 }

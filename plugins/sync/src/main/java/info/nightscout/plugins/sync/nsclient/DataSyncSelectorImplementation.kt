@@ -1,19 +1,6 @@
 package info.nightscout.plugins.sync.nsclient
 
 import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.BolusCalculatorResult
-import info.nightscout.database.entities.Carbs
-import info.nightscout.database.entities.DeviceStatus
-import info.nightscout.database.entities.EffectiveProfileSwitch
-import info.nightscout.database.entities.ExtendedBolus
-import info.nightscout.database.entities.Food
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.entities.OfflineEvent
-import info.nightscout.database.entities.ProfileSwitch
-import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -118,17 +105,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    // Prepared for v3 (returns all modified after)
-    override fun changedBoluses(): List<Bolus> {
-        val startId = sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
-        return appRepository.getModifiedBolusesDataFromId(startId)
-            .blockingGet()
-            .filter { it.type != Bolus.Type.PRIMING }
-            .also {
-                aapsLogger.debug(LTag.NSCLIENT, "Loading Bolus data for sync from $startId. Records ${it.size}")
-            }
-    }
-
     override tailrec fun processChangedBolusesCompat() {
         val lastDbIdWrapped = appRepository.getLastBolusIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -139,18 +115,18 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.bolusesRemaining = lastDbId - startId
         appRepository.getNextSyncElementBolus(startId).blockingGet()?.let { bolus ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading Bolus data Start: $startId ID: ${bolus.first.id} HistoryID: ${bolus.second.id} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading Bolus data Start: $startId ${bolus.first} forID: ${bolus.second.id} ")
             when {
                 // new record with existing NS id => must be coming from NS => ignore
                 bolus.first.id == bolus.second.id && bolus.first.interfaceIDs.nightscoutId != null -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Bolus. Loaded from NS: ${bolus.first.id} HistoryID: ${bolus.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Bolus. Loaded from NS: ${bolus.second.id} ")
                     confirmLastBolusIdIfGreater(bolus.second.id)
                     processChangedBolusesCompat()
                     return
                 }
                 // only NsId changed, no need to upload
                 bolus.first.onlyNsIdAdded(bolus.second)                                            -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Bolus. Only NS id changed ID: ${bolus.first.id} HistoryID: ${bolus.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Bolus. Only NS id changed: ${bolus.second.id} ")
                     confirmLastBolusIdIfGreater(bolus.second.id)
                     processChangedBolusesCompat()
                     return
@@ -181,14 +157,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    // Prepared for v3 (returns all modified after)
-    override fun changedCarbs(): List<Carbs> {
-        val startId = sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
-        return appRepository.getModifiedCarbsDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading Carbs data for sync from $startId. Records ${it.size}")
-        }
-    }
-
     override tailrec fun processChangedCarbsCompat() {
         val lastDbIdWrapped = appRepository.getLastCarbsIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -199,18 +167,18 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.carbsRemaining = lastDbId - startId
         appRepository.getNextSyncElementCarbs(startId).blockingGet()?.let { carb ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading Carbs data Start: $startId ID: ${carb.first.id} HistoryID: ${carb.second.id} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading Carbs data Start: $startId ${carb.first} forID: ${carb.second.id} ")
             when {
                 // new record with existing NS id => must be coming from NS => ignore
                 carb.first.id == carb.second.id && carb.first.interfaceIDs.nightscoutId != null -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Carbs. Loaded from NS: ${carb.first.id} HistoryID: ${carb.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Carbs. Loaded from NS: ${carb.second.id} ")
                     confirmLastCarbsIdIfGreater(carb.second.id)
                     processChangedCarbsCompat()
                     return
                 }
                 // only NsId changed, no need to upload
                 carb.first.onlyNsIdAdded(carb.second)                                           -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Carbs. Only NS id changed ID: ${carb.first.id} HistoryID: ${carb.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Carbs. Only NS id changed ID: ${carb.second.id} ")
                     confirmLastCarbsIdIfGreater(carb.second.id)
                     processChangedCarbsCompat()
                     return
@@ -237,14 +205,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    // Prepared for v3 (returns all modified after)
-    override fun changedBolusCalculatorResults(): List<BolusCalculatorResult> {
-        val startId = sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
-        return appRepository.getModifiedBolusCalculatorResultsDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading BolusCalculatorResult data for sync from $startId. Records ${it.size}")
-        }
-    }
-
     override tailrec fun processChangedBolusCalculatorResultsCompat() {
         val lastDbIdWrapped = appRepository.getLastBolusCalculatorResultIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -255,18 +215,18 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.bcrRemaining = lastDbId - startId
         appRepository.getNextSyncElementBolusCalculatorResult(startId).blockingGet()?.let { bolusCalculatorResult ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading BolusCalculatorResult data Start: $startId ID: ${bolusCalculatorResult.first.id} HistoryID: ${bolusCalculatorResult.second.id} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading BolusCalculatorResult data Start: $startId ${bolusCalculatorResult.first} forID: ${bolusCalculatorResult.second.id} ")
             when {
                 // new record with existing NS id => must be coming from NS => ignore
                 bolusCalculatorResult.first.id == bolusCalculatorResult.second.id && bolusCalculatorResult.first.interfaceIDs.nightscoutId != null -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring BolusCalculatorResult. Loaded from NS: ${bolusCalculatorResult.first.id} HistoryID: ${bolusCalculatorResult.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring BolusCalculatorResult. Loaded from NS: ${bolusCalculatorResult.second.id} ")
                     confirmLastBolusCalculatorResultsIdIfGreater(bolusCalculatorResult.second.id)
                     processChangedBolusCalculatorResultsCompat()
                     return
                 }
                 // only NsId changed, no need to upload
                 bolusCalculatorResult.first.onlyNsIdAdded(bolusCalculatorResult.second)                                                            -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring BolusCalculatorResult. Only NS id changed ID: ${bolusCalculatorResult.first.id} HistoryID: ${bolusCalculatorResult.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring BolusCalculatorResult. Only NS id changed ID: ${bolusCalculatorResult.second.id} ")
                     confirmLastBolusCalculatorResultsIdIfGreater(bolusCalculatorResult.second.id)
                     processChangedBolusCalculatorResultsCompat()
                     return
@@ -296,14 +256,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    // Prepared for v3 (returns all modified after)
-    override fun changedTempTargets(): List<TemporaryTarget> {
-        val startId = sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)
-        return appRepository.getModifiedTemporaryTargetsDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading TemporaryTarget data for sync from $startId. Records ${it.size}")
-        }
-    }
-
     override tailrec fun processChangedTempTargetsCompat() {
         val lastDbIdWrapped = appRepository.getLastTempTargetIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -314,18 +266,18 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.ttsRemaining = lastDbId - startId
         appRepository.getNextSyncElementTemporaryTarget(startId).blockingGet()?.let { tt ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading TemporaryTarget data Start: $startId ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading TemporaryTarget data Start: $startId ${tt.first} forID: ${tt.second.id} ")
             when {
                 // new record with existing NS id => must be coming from NS => ignore
                 tt.first.id == tt.second.id && tt.first.interfaceIDs.nightscoutId != null -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Loaded from NS: ${tt.first.id} HistoryID: ${tt.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Loaded from NS: ${tt.second.id} ")
                     confirmLastTempTargetsIdIfGreater(tt.second.id)
                     processChangedTempTargetsCompat()
                     return
                 }
                 // only NsId changed, no need to upload
                 tt.first.onlyNsIdAdded(tt.second)                                         -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Only NS id changed ID: ${tt.first.id} HistoryID: ${tt.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryTarget. Only NS id changed ID: ${tt.second.id} ")
                     confirmLastTempTargetsIdIfGreater(tt.second.id)
                     processChangedTempTargetsCompat()
                     return
@@ -356,14 +308,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    // Prepared for v3 (returns all modified after)
-    override fun changedFoods(): List<Food> {
-        val startId = sp.getLong(R.string.key_ns_food_last_synced_id, 0)
-        return appRepository.getModifiedFoodDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading Food data for sync from $startId. Records ${it.size}")
-        }
-    }
-
     override tailrec fun processChangedFoodsCompat() {
         val lastDbIdWrapped = appRepository.getLastFoodIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -374,18 +318,18 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.foodsRemaining = lastDbId - startId
         appRepository.getNextSyncElementFood(startId).blockingGet()?.let { food ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading Food data Start: $startId ID: ${food.first.id} HistoryID: ${food.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading Food data Start: $startId ${food.first} forID: ${food.second.id} ")
             when {
                 // new record with existing NS id => must be coming from NS => ignore
                 food.first.id == food.second.id && food.first.interfaceIDs.nightscoutId != null -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Food. Loaded from NS: ${food.first.id} HistoryID: ${food.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Food. Loaded from NS: ${food.second.id} ")
                     confirmLastFoodIdIfGreater(food.second.id)
                     processChangedFoodsCompat()
                     return
                 }
                 // only NsId changed, no need to upload
                 food.first.onlyNsIdAdded(food.second)                                           -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Food. Only NS id changed ID: ${food.first.id} HistoryID: ${food.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring Food. Only NS id changed ID: ${food.second.id} ")
                     confirmLastFoodIdIfGreater(food.second.id)
                     processChangedFoodsCompat()
                     return
@@ -412,14 +356,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    // Prepared for v3 (returns all modified after)
-    override fun changedGlucoseValues(): List<GlucoseValue> {
-        val startId = sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)
-        return appRepository.getModifiedBgReadingsDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading GlucoseValue data for sync from $startId . Records ${it.size}")
-        }
-    }
-
     override tailrec fun processChangedGlucoseValuesCompat() {
         val lastDbIdWrapped = appRepository.getLastGlucoseValueIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -430,19 +366,19 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.gvsRemaining = lastDbId - startId
         appRepository.getNextSyncElementGlucoseValue(startId).blockingGet()?.let { gv ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading GlucoseValue data ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading GlucoseValue data Start: $startId ${gv.first} forID: ${gv.second.id} ")
             if (activePlugin.activeBgSource.shouldUploadToNs(gv.first)) {
                 when {
                     // new record with existing NS id => must be coming from NS => ignore 
                     gv.first.id == gv.second.id && gv.first.interfaceIDs.nightscoutId != null -> {
-                        aapsLogger.info(LTag.NSCLIENT, "Ignoring GlucoseValue. Loaded from NS: ${gv.first.id} HistoryID: ${gv.second.id} ")
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring GlucoseValue. Loaded from NS: ${gv.second.id} ")
                         confirmLastGlucoseValueIdIfGreater(gv.second.id)
                         processChangedGlucoseValuesCompat()
                         return
                     }
                     // only NsId changed, no need to upload
                     gv.first.onlyNsIdAdded(gv.second)                                         -> {
-                        aapsLogger.info(LTag.NSCLIENT, "Ignoring GlucoseValue. Only NS id changed ID: ${gv.first.id} HistoryID: ${gv.second.id} ")
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring GlucoseValue. Only NS id changed ID: ${gv.second.id} ")
                         confirmLastGlucoseValueIdIfGreater(gv.second.id)
                         processChangedGlucoseValuesCompat()
                         return
@@ -473,14 +409,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    // Prepared for v3 (returns all modified after)
-    override fun changedTherapyEvents(): List<TherapyEvent> {
-        val startId = sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)
-        return appRepository.getModifiedTherapyEventDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading TherapyEvents data for sync from $startId. Records ${it.size}")
-        }
-    }
-
     override tailrec fun processChangedTherapyEventsCompat() {
         val lastDbIdWrapped = appRepository.getLastTherapyEventIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -491,18 +419,18 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.tesRemaining = lastDbId - startId
         appRepository.getNextSyncElementTherapyEvent(startId).blockingGet()?.let { te ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading TherapyEvents data Start: $startId ID: ${te.first.id} HistoryID: ${te.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading TherapyEvents data Start: $startId ${te.first} forID: ${te.second.id} ")
             when {
                 // new record with existing NS id => must be coming from NS => ignore
                 te.first.id == te.second.id && te.first.interfaceIDs.nightscoutId != null -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TherapyEvent. Loaded from NS: ${te.first.id} HistoryID: ${te.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TherapyEvent. Loaded from NS: ${te.second.id} ")
                     confirmLastTherapyEventIdIfGreater(te.second.id)
                     processChangedTherapyEventsCompat()
                     return
                 }
                 // only NsId changed, no need to upload
                 te.first.onlyNsIdAdded(te.second)                                         -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TherapyEvent. Only NS id changed ID: ${te.first.id} HistoryID: ${te.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TherapyEvent. Only NS id changed ID: ${te.second.id} ")
                     confirmLastTherapyEventIdIfGreater(te.second.id)
                     processChangedTherapyEventsCompat()
                     return
@@ -529,13 +457,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    override fun changedDeviceStatuses(): List<DeviceStatus> {
-        val startId = sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)
-        return appRepository.getModifiedDeviceStatusDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading DeviceStatus data for sync from $startId. Records ${it.size}")
-        }
-    }
-
     override fun processChangedDeviceStatusesCompat() {
         val lastDbIdWrapped = appRepository.getLastDeviceStatusIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -546,7 +467,7 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.dssRemaining = lastDbId - startId
         appRepository.getNextSyncElementDeviceStatus(startId).blockingGet()?.let { deviceStatus ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading DeviceStatus data Start: $startId ID: ${deviceStatus.id}")
+            aapsLogger.info(LTag.NSCLIENT, "Loading DeviceStatus data Start: $startId $deviceStatus")
             when {
                 // without nsId = create new
                 deviceStatus.interfaceIDs.nightscoutId == null ->
@@ -565,14 +486,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    // Prepared for v3 (returns all modified after)
-    override fun changedTemporaryBasals(): List<TemporaryBasal> {
-        val startId = sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
-        return appRepository.getModifiedTemporaryBasalDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading TemporaryBasal data for sync from $startId. Records ${it.size}")
-        }
-    }
-
     override tailrec fun processChangedTemporaryBasalsCompat() {
         val lastDbIdWrapped = appRepository.getLastTemporaryBasalIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -583,18 +496,18 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.tbrsRemaining = lastDbId - startId
         appRepository.getNextSyncElementTemporaryBasal(startId).blockingGet()?.let { tb ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading TemporaryBasal data Start: $startId ID: ${tb.first.id} HistoryID: ${tb.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading TemporaryBasal data Start: $startId ${tb.first} forID: ${tb.second.id} ")
             when {
                 // new record with existing NS id => must be coming from NS => ignore
                 tb.first.id == tb.second.id && tb.first.interfaceIDs.nightscoutId != null -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Loaded from NS: ${tb.first.id} HistoryID: ${tb.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Loaded from NS: ${tb.second.id} ")
                     confirmLastTemporaryBasalIdIfGreater(tb.second.id)
                     processChangedTemporaryBasalsCompat()
                     return
                 }
                 // only NsId changed, no need to upload
                 tb.first.onlyNsIdAdded(tb.second)                                         -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Only NS id changed ID: ${tb.first.id} HistoryID: ${tb.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Only NS id changed ID: ${tb.second.id} ")
                     confirmLastTemporaryBasalIdIfGreater(tb.second.id)
                     processChangedTemporaryBasalsCompat()
                     return
@@ -625,14 +538,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    // Prepared for v3 (returns all modified after)
-    override fun changedExtendedBoluses(): List<ExtendedBolus> {
-        val startId = sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
-        return appRepository.getModifiedExtendedBolusDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading ExtendedBolus data for sync from $startId. Records ${it.size}")
-        }
-    }
-
     override tailrec fun processChangedExtendedBolusesCompat() {
         val lastDbIdWrapped = appRepository.getLastExtendedBolusIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -643,20 +548,20 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.ebsRemaining = lastDbId - startId
         appRepository.getNextSyncElementExtendedBolus(startId).blockingGet()?.let { eb ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading ExtendedBolus data Start: $startId ID: ${eb.first.id} HistoryID: ${eb.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading ExtendedBolus data Start: $startId ${eb.first} forID: ${eb.second.id} ")
             val profile = profileFunction.getProfile(eb.first.timestamp)
             if (profile != null) {
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
                     eb.first.id == eb.second.id && eb.first.interfaceIDs.nightscoutId != null -> {
-                        aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. Loaded from NS: ${eb.first.id} HistoryID: ${eb.second.id} ")
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. Loaded from NS: ${eb.second.id} ")
                         confirmLastExtendedBolusIdIfGreater(eb.second.id)
                         processChangedExtendedBolusesCompat()
                         return
                     }
                     // only NsId changed, no need to upload
                     eb.first.onlyNsIdAdded(eb.second)                                         -> {
-                        aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. Only NS id changed ID: ${eb.first.id} HistoryID: ${eb.second.id} ")
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. Only NS id changed ID: ${eb.second.id} ")
                         confirmLastExtendedBolusIdIfGreater(eb.second.id)
                         processChangedExtendedBolusesCompat()
                         return
@@ -678,7 +583,7 @@ class DataSyncSelectorImplementation @Inject constructor(
                 }
                 return
             } else {
-                aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. No profile: ${eb.first.id} HistoryID: ${eb.second.id} ")
+                aapsLogger.info(LTag.NSCLIENT, "Ignoring ExtendedBolus. No profile: ${eb.second.id} ")
                 confirmLastExtendedBolusIdIfGreater(eb.second.id)
                 processChangedExtendedBolusesCompat()
                 return
@@ -693,13 +598,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    override fun changedProfileSwitch(): List<ProfileSwitch> {
-        val startId = sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)
-        return appRepository.getModifiedProfileSwitchDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading ProfileSwitch data for sync from $startId. Records ${it.size}")
-        }
-    }
-
     override tailrec fun processChangedProfileSwitchesCompat() {
         val lastDbIdWrapped = appRepository.getLastProfileSwitchIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -710,18 +608,18 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.pssRemaining = lastDbId - startId
         appRepository.getNextSyncElementProfileSwitch(startId).blockingGet()?.let { ps ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading ProfileSwitch data Start: $startId ID: ${ps.first.id} HistoryID: ${ps.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading ProfileSwitch data Start: $startId ${ps.first} forID: ${ps.second.id} ")
             when {
                 // new record with existing NS id => must be coming from NS => ignore
                 ps.first.id == ps.second.id && ps.first.interfaceIDs.nightscoutId != null -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Loaded from NS: ${ps.first.id} HistoryID: ${ps.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Loaded from NS: ${ps.second.id} ")
                     confirmLastProfileSwitchIdIfGreater(ps.second.id)
                     processChangedProfileSwitchesCompat()
                     return
                 }
                 // only NsId changed, no need to upload
                 ps.first.onlyNsIdAdded(ps.second)                                         -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Only NS id changed ID: ${ps.first.id} HistoryID: ${ps.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring ProfileSwitch. Only NS id changed ID: ${ps.second.id} ")
                     confirmLastProfileSwitchIdIfGreater(ps.second.id)
                     processChangedProfileSwitchesCompat()
                     return
@@ -748,13 +646,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    override fun changedEffectiveProfileSwitch(): List<EffectiveProfileSwitch> {
-        val startId = sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
-        return appRepository.getModifiedEffectiveProfileSwitchDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading EffectiveProfileSwitch data for sync from $startId. Records ${it.size}")
-        }
-    }
-
     override tailrec fun processChangedEffectiveProfileSwitchesCompat() {
         val lastDbIdWrapped = appRepository.getLastEffectiveProfileSwitchIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -765,18 +656,18 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.epssRemaining = lastDbId - startId
         appRepository.getNextSyncElementEffectiveProfileSwitch(startId).blockingGet()?.let { ps ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading EffectiveProfileSwitch data Start: $startId ID: ${ps.first.id} HistoryID: ${ps.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading EffectiveProfileSwitch data Start: $startId ${ps.first} forID: ${ps.second.id} ")
             when {
                 // new record with existing NS id => must be coming from NS => ignore
                 ps.first.id == ps.second.id && ps.first.interfaceIDs.nightscoutId != null -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Loaded from NS: ${ps.first.id} HistoryID: ${ps.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Loaded from NS: ${ps.second.id} ")
                     confirmLastEffectiveProfileSwitchIdIfGreater(ps.second.id)
                     processChangedEffectiveProfileSwitchesCompat()
                     return
                 }
                 // only NsId changed, no need to upload
                 ps.first.onlyNsIdAdded(ps.second)                                         -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Only NS id changed ID: ${ps.first.id} HistoryID: ${ps.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring EffectiveProfileSwitch. Only NS id changed ID: ${ps.second.id} ")
                     confirmLastEffectiveProfileSwitchIdIfGreater(ps.second.id)
                     processChangedEffectiveProfileSwitchesCompat()
                     return
@@ -807,14 +698,6 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    // Prepared for v3 (returns all modified after)
-    override fun changedOfflineEvents(): List<OfflineEvent> {
-        val startId = sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)
-        return appRepository.getModifiedOfflineEventsDataFromId(startId).blockingGet().also {
-            aapsLogger.debug(LTag.NSCLIENT, "Loading OfflineEvent data for sync from $startId. Records ${it.size}")
-        }
-    }
-
     override tailrec fun processChangedOfflineEventsCompat() {
         val lastDbIdWrapped = appRepository.getLastOfflineEventIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
@@ -825,18 +708,18 @@ class DataSyncSelectorImplementation @Inject constructor(
         }
         queueCounter.oesRemaining = lastDbId - startId
         appRepository.getNextSyncElementOfflineEvent(startId).blockingGet()?.let { oe ->
-            aapsLogger.info(LTag.NSCLIENT, "Loading OfflineEvent data Start: $startId ID: ${oe.first.id} HistoryID: ${oe.second} ")
+            aapsLogger.info(LTag.NSCLIENT, "Loading OfflineEvent data Start: $startId ${oe.first} forID: ${oe.second.id} ")
             when {
                 // new record with existing NS id => must be coming from NS => ignore
                 oe.first.id == oe.second.id && oe.first.interfaceIDs.nightscoutId != null -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Loaded from NS: ${oe.first.id} HistoryID: ${oe.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Loaded from NS: ${oe.second.id} ")
                     confirmLastOfflineEventIdIfGreater(oe.second.id)
                     processChangedOfflineEventsCompat()
                     return
                 }
                 // only NsId changed, no need to upload
                 oe.first.onlyNsIdAdded(oe.second)                                         -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Only NS id changed ID: ${oe.first.id} HistoryID: ${oe.second.id} ")
+                    aapsLogger.info(LTag.NSCLIENT, "Ignoring OfflineEvent. Only NS id changed ID: ${oe.second.id} ")
                     confirmLastOfflineEventIdIfGreater(oe.second.id)
                     processChangedOfflineEventsCompat()
                     return

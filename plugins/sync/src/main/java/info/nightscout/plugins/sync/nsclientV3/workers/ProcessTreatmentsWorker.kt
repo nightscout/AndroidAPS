@@ -10,9 +10,9 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.logging.UserEntryLogger
+import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.sync.R
-import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclientV3.extensions.toBolus
 import info.nightscout.plugins.sync.nsclientV3.extensions.toBolusCalculatorResult
 import info.nightscout.plugins.sync.nsclientV3.extensions.toCarbs
@@ -54,7 +54,7 @@ class ProcessTreatmentsWorker(
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var xDripBroadcast: XDripBroadcast
-    @Inject lateinit var storeDataForDb: StoreDataForDbImpl
+    @Inject lateinit var storeDataForDb: StoreDataForDb
 
     override fun doWorkAndLog(): Result {
         @Suppress("UNCHECKED_CAST")

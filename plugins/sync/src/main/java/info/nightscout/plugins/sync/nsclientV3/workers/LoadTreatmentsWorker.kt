@@ -8,7 +8,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
-import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
+import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
@@ -26,7 +26,7 @@ class LoadTreatmentsWorker(
     @Inject lateinit var context: Context
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var storeDataForDb: StoreDataForDbImpl
+    @Inject lateinit var storeDataForDb: StoreDataForDb
 
     override fun doWorkAndLog(): Result {
         var ret = Result.success()

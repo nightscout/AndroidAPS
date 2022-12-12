@@ -29,8 +29,7 @@ import info.nightscout.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.plugins.sync.nsclient.NsClientReceiverDelegate
-import info.nightscout.plugins.sync.nsclient.data.AlarmAck
-import info.nightscout.plugins.sync.nsclient.services.NSClientService
+import info.nightscout.plugins.sync.nsclientV3.extensions.toNSBolus
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadStatusWorker
@@ -52,9 +51,9 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -302,13 +301,31 @@ class NSClientV3Plugin @Inject constructor(
         storeLastFetched()
     }
 
-    override fun dbAdd(collection: String, originalObject: DataSyncSelector.DataPair, progress: String) {
-        if (collection == "treatments") {
-            //val result = nsAndroidClient.createTreatment()
+    override fun dbAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+        when (dataPair) {
+            is DataSyncSelector.PairBolus -> dataPair.value.toNSBolus()
+            // is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(false, dateUtil)
+            // is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(false, dateUtil, profileFunction)
+            // is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(false, profileFunction.getUnits(), dateUtil)
+            // is DataSyncSelector.PairFood                   -> dataPair.value.toJson(false)
+            // is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(false, dateUtil)
+            // is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(false, dateUtil)
+            // is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+            // is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+            // is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(false, dateUtil)
+            // is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(false, dateUtil)
+            // is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)
+            else                          -> null
+        }?.let { data ->
+            runBlocking {
+                if (collection == "treatments") {
+                    val result = nsAndroidClient.createTreatment(data)
+                }
+            }
         }
     }
 
-    override fun dbUpdate(collection: String, originalObject: DataSyncSelector.DataPair, progress: String) {
+    override fun dbUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
         TODO("Not yet implemented")
     }
 
