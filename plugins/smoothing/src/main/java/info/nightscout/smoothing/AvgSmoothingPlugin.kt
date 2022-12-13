@@ -34,6 +34,11 @@ class AvgSmoothingPlugin @Inject constructor(
 
     @Suppress("LocalVariableName")
     override fun smooth(data: MutableList<InMemoryGlucoseValue>): MutableList<InMemoryGlucoseValue> {
+        if (data.lastIndex < 4)
+        {
+            aapsLogger.debug(LTag.GLUCOSE, "Not enough value's to smooth!")
+            return data
+        }
 
         for (i in data.lastIndex -1 downTo 1) {            
             // Check if value's are in a valid range
