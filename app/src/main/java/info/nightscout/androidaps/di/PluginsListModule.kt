@@ -52,6 +52,7 @@ import info.nightscout.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.sensitivity.SensitivityOref1Plugin
 import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.smoothing.ExponentialSmoothingPlugin
+import info.nightscout.smoothing.AvgSmoothingPlugin
 import info.nightscout.smoothing.NoSmoothingPlugin
 import info.nightscout.source.AidexPlugin
 import info.nightscout.source.DexcomPlugin
@@ -447,6 +448,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(605)
     abstract fun bindExponentialSmoothingPlugin(plugin: ExponentialSmoothingPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(610)
+    abstract fun bindAvgSmoothingPlugin(plugin: AvgSmoothingPlugin): PluginBase
 
     @Qualifier
     annotation class AllConfigs
