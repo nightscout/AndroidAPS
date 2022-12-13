@@ -8,7 +8,9 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.smoothing.Smoothing
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.max
@@ -33,28 +35,30 @@ class AvgSmoothingPlugin @Inject constructor(
     @Suppress("LocalVariableName")
     override fun smooth(data: MutableList<InMemoryGlucoseValue>): MutableList<InMemoryGlucoseValue> {
 
-        for (i in data.lastIndex -1 downTo 1) {
-            // TODO: Bucketed is always calculated to 5 min (CHECK!), Maybe add a separate timecheck?
-            // TODO: We could further improve this by adding a weight to the neighbours
-            if (isValid(data[i].value) && isValid(data[i - 1].value) && isValid(data[i + 1].value))
+        for (i in data.lastIndex -1 downTo 1) {            
+            // Check if value's are in a valid range
+            // Bucketed is always calculated to 5 min, we still check if our data is evenly spaced with an allowance of 30 seconds
+            if (isValid(data[i].value) && isValid(data[i - 1].value) && isValid(data[i + 1].value)
+                && Math.abs(data[i].timestamp - data[i - 1].timestamp - (data[i + 1].timestamp - data[i].timestamp)) < T.secs(30).msecs())
             {
-                var result = ((data[i - 1].value + data[i].value + data[i + 1].value) / 3.0)
-                data[i].smoothed = result
-                aapsLogger.debug("RESULT $result")
+                // We could further improve this by adding a weight to the neighbours, for simplicity this is not done.
+                data[i].smoothed = ((data[i - 1].value + data[i].value + data[i + 1].value) / 3.0)
             }
             else
             {
-                // TODO: Decide what to do here
-                data[i].smoothed = data[i].value
+                // data[i].smoothed = data[i].value
+                val currentTime = data[i].timestamp
+                val value = data[i].value
+                aapsLogger.debug(LTag.GLUCOSE, "Value: $value at $currentTime not smoothed")
             }
         }
-
-        // append data we cannot smooth
-        data[data.lastIndex].smoothed = data[data.lastIndex].value
-        data[0].smoothed = data[0].value
+        // We leave the data we can not smooth as is, alternativly we could provide raw value's to the smoothed value's:
+        // data[data.lastIndex].smoothed = data[data.lastIndex].value
+        // data[0].smoothed = data[0].value
         return data
     }
     private fun isValid(n: Double): Boolean {
+        // For Dexcom: Below 39 is LOW, above 401 Dexcom just says HI
         return n > 39 && n < 401
     }
 }
