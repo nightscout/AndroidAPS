@@ -2,19 +2,32 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Horário de Verão em 24h ou menos</string>
-    <string name="dst_loop_disabled_warning">Horário de Verão a menos de 3 horas - Loop Fechado desativado</string>
     <!-- Storage constraint -->
     <!-- Version Checker -->
-    <string name="old_version">versão antiga</string>
-    <string name="very_old_version">versão muito antiga</string>
-    <string name="application_expired">A aplicação expirou</string>
-    <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a SGB após %2$d dias, o loop será desactivado após %3$d dias</string>
-    <string name="running_invalid_version">Detectamos que está a correr uma versão inválida. Loop desactivado!</string>
-    <string name="versionavailable">Disponível %1$s disponível</string>
-    <string name="version_expire">Versão: %1$s criada em %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
-    <string name="recalculated_data_used">Dados utilizados foram recalculados</string>
-    <string name="bg_too_close">Glicemia demasiado próxima:\n%1$s\n%2$s</string>
+    <!-- Safety -->
+    <string name="limitingcarbs">A limitar hidratos para %1$d g porque %2$s</string>
+    <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
+    <string name="closedmodedisabledinpreferences">Loop fechado desativado nas preferências</string>
+    <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desativado.</string>
+    <string name="closed_loop_disabled_with_eb">Loop Fechado desativado por causa da execução do Bólus Prolongado</string>
+    <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicose activa não suportar filtro avançado</string>
+    <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
+    <string name="maxvalueinpreferences">valor máx nas preferências</string>
+    <string name="hardlimit">limite rígido</string>
+    <string name="treatmentssafety_title">Segurança de Tratamentos</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">Não concluído ainda</string>
+    <string name="time_elapsed">Tempo decorrido</string>
+    <string name="maxiobset">IA máxima definida corretamente</string>
+    <string name="hasbgdata">Glicose disponível da fonte seleccionada</string>
+    <string name="loopenabled">Loop activado</string>
+    <string name="apsselected">APS seleccionado</string>
+    <string name="closedmodeenabled">Modo fechado ativado</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Programa de aprendizagem</string>
+    <string name="doyouwantresetstart">Deseja reiniciar o objectivo? Pode perder seu progresso.</string>
+    <string name="objectives_button_unfinish">Limpar terminado</string>
+    <string name="objectives_button_unstart">Limpar iniciado</string>
 </resources>

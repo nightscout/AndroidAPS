@@ -19,5 +19,35 @@
     <string name="recalculated_data_used">Použita přepočítaná data</string>
     <string name="bg_too_close">Glykémie je příliš blízko:\n%1$s\n%2$s</string>
     <string name="a11y_bg_quality_recalculated">přepočítáno</string>
-    <string name="a11y_bg_quality_doubles">dvojité položky</string>
+    <string name="a11y_bg_quality_doubles">zdvojené záznamy</string>
+    <string name="a11y_bg_quality_flat">Neměnná data. Pravděpodobně jsou neplatná</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Prodloužený bolus omezen na %1$.1f U z důvodu %2$s</string>
+    <string name="limitingcarbs">Sacharidy omezeny na %1$d g: %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
+    <string name="closedmodedisabledinpreferences">Uzavřená smyčka zakázána v nastavení</string>
+    <string name="closed_loop_disabled_on_dev_branch">Běží DEV verze. Uzavřená smyčka je zakázána.</string>
+    <string name="closed_loop_disabled_with_eb">Uzavřená smyčka je zastavena kvůli běžícímu prodlouženému bolusu</string>
+    <string name="smbalwaysdisabled">\"SMB vždy\" a \"po jídle\" zakázáno protože zdroj glykémie nepodporuje rozšířené filtrování</string>
+    <string name="smbnotallowedinopenloopmode">SBM není povoleno v otevřené smyčce</string>
+    <string name="maxvalueinpreferences">maximální hodnota v nastavení</string>
+    <string name="hardlimit">pevný limit</string>
+    <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Hotovo, gratulujeme!</string>
+    <string name="not_completed_yet">Nedokončeno</string>
+    <string name="time_elapsed">Čas</string>
+    <string name="maxiobset">Maximální IOB nastaveno správně</string>
+    <string name="hasbgdata">Glykémie dostupné z vybraného zdroje</string>
+    <string name="synchaswritepermission">Služba synchronizace má oprávnění k zápisu</string>
+    <string name="loopenabled">Smyčka povolena</string>
+    <string name="apsselected">APS vybráno</string>
+    <string name="closedmodeenabled">Uzavřená smyčka povolena</string>
+    <string name="objectives_shortname">CÍLE</string>
+    <string name="description_objectives">Výukový program</string>
+    <string name="doyouwantresetstart">Chcete resetovat začátek cíle? Můžete přijít o svůj pokrok.</string>
+    <string name="objectives_next_button">Další</string>
+    <string name="objectives_previous_button">Zpět</string>
+    <string name="objectives_button_unfinish">Vymazat dokončeno</string>
+    <string name="objectives_button_unstart">Vymazat start</string>
 </resources>

@@ -46,7 +46,6 @@
     <string name="authorizationfailed">授权失败</string>
     <string name="copytolocalprofile_invalid">无法创建配置文件。配置文件无效。</string>
     <string name="cta_dont_kill_my_app_info">不要杀死我的应用程序？</string>
-    <string name="time_to_eat">吃饭时间到了！\n请运行大剂量向导，然后进行计算。</string>
     <string name="fabric_upload_disabled">已禁用崩溃日志上传！</string>
     <string name="clear_filter">清除筛选</string>
     <string name="cannula">输注导管</string>

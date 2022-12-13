@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ nie zainstalowany</string>
     <string name="calibration_sent">Kalibracja przesłana do xDrip+</string>
     <string name="bg_label">BG</string>
-    <string name="time_to_eat">Czas na jedzenie</string>
-    <string name="time_to_bolus">Czas na bolus!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
     <string name="executing_right_now">Polecenie jest teraz wykonywane</string>
     <string name="basal_value_below_minimum">Wartość bazy poniżej minimum. Nie ustawiono profilu!</string>
     <string name="permission">Uprawnienia</string>

@@ -2743,14 +2743,17 @@ class Pump(
                     )
                 }
 
-                numObservedScreens++
-
                 val factorIndexOnScreen = parsedScreen.beginTime.hour
 
                 // numUnits null means the basal profile factor
                 // is currently not shown due to blinking.
                 if (parsedScreen.numUnits == null)
                     return@longPressRTButtonUntil LongPressRTButtonsCommand.ContinuePressingButton
+
+                // Increase this _after_ checking for a blinking screen
+                // to not accidentally count the blinking and non-blinking
+                // screens as two separate ones.
+                numObservedScreens++
 
                 // If the factor in the profile is >= 0,
                 // it means it was already read earlier.
@@ -2759,13 +2762,15 @@ class Pump(
 
                 val factor = parsedScreen.numUnits
                 basalProfileFactors[factorIndexOnScreen] = factor
-                logger(LogLevel.DEBUG) { "Got basal profile factor #$factorIndexOnScreen : $factor" }
+
+                numRetrievedFactors++
+                logger(LogLevel.DEBUG) {
+                    "Got basal profile factor #$factorIndexOnScreen : $factor; $numRetrievedFactors factor(s) read and $numObservedScreens screen(s) observed thus far"
+                }
 
                 getBasalProfileReporter.setCurrentProgressStage(
                     RTCommandProgressStage.GettingBasalProfile(numRetrievedFactors)
                 )
-
-                numRetrievedFactors++
 
                 return@longPressRTButtonUntil if (numObservedScreens >= NUM_COMBO_BASAL_PROFILE_FACTORS)
                     LongPressRTButtonsCommand.ReleaseButton
@@ -2819,21 +2824,19 @@ class Pump(
                         }
                     }
 
+                    numRetrievedFactors++
                     getBasalProfileReporter.setCurrentProgressStage(
                         RTCommandProgressStage.GettingBasalProfile(numRetrievedFactors)
                     )
-                    numRetrievedFactors++
                 }
             }
 
-            // All factors retrieved. Press CHECK once to get back to the total
-            // basal rate screen, and then CHECK again to return to the main menu.
-
-            rtNavigationContext.shortPressButton(RTNavigationButton.CHECK)
-            waitUntilScreenAppears(rtNavigationContext, ParsedScreen.BasalRateTotalScreen::class)
-
-            rtNavigationContext.shortPressButton(RTNavigationButton.CHECK)
-            waitUntilScreenAppears(rtNavigationContext, ParsedScreen.MainScreen::class)
+            // All factors retrieved. Press BACK repeatedly until we are back at the main menu.
+            cycleToRTScreen(
+                rtNavigationContext,
+                RTNavigationButton.BACK,
+                ParsedScreen.MainScreen::class
+            )
 
             getBasalProfileReporter.setCurrentProgressStage(BasicProgressStage.Finished)
 

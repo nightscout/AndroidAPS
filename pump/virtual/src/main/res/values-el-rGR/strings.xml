@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
+    <string name="virtualpump_settings">Ρυθμίσεις Εικονικής αντλίας</string>
+</resources>

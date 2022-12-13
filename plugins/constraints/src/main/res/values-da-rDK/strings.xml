@@ -2,21 +2,32 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Sommertids ændring inden de næste 24 timer eller mindre</string>
-    <string name="dst_loop_disabled_warning">Sommertids ændring mindre end 3 timer siden - Lukket loop deaktiveret</string>
     <!-- Storage constraint -->
     <!-- Version Checker -->
-    <string name="old_version">gammel version</string>
-    <string name="very_old_version">meget gammel version</string>
-    <string name="application_expired">Applikationen er udløbet</string>
-    <string name="new_version_warning">Ny version har været tilgængelig i mindst %1$d dage! Falder til LGS efter %2$d dage, loop vil blive deaktiveret efter %3$d dage</string>
-    <string name="running_invalid_version">Vi har opdaget, at du kører en ugyldig version. Loop deaktiveret!</string>
-    <string name="versionavailable">Version %1$s tilgængelig</string>
-    <string name="version_expire">Version %1$s udløber den %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
-    <string name="recalculated_data_used">Genberegnede data anvendt</string>
-    <string name="bg_too_close">BG for tæt:\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">genberegnet</string>
-    <string name="a11y_bg_quality_doubles">dobbelt postering</string>
+    <!-- Safety -->
+    <string name="limitingcarbs">Begrænser kulhydrater til %1$d g på grund af %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pumpe er ikke egnet til midlertidig basal</string>
+    <string name="closedmodedisabledinpreferences">Lukket loop tilstand deaktiveret i præferencer</string>
+    <string name="closed_loop_disabled_on_dev_branch">Kører dev version. Lukket loop er deaktiveret.</string>
+    <string name="closed_loop_disabled_with_eb">Lukket loop deaktiveret på grund af kørsel af forlænget bolus</string>
+    <string name="smbalwaysdisabled">SMB altid og efter kulhydrater deaktiveret, fordi den aktive BS kilde ikke understøtter avanceret filtrering</string>
+    <string name="smbnotallowedinopenloopmode">SMB er ikke tilladt i åben loop mode</string>
+    <string name="maxvalueinpreferences">max værdi i præferencer</string>
+    <string name="hardlimit">hård grænse</string>
+    <string name="treatmentssafety_title">Behandlings sikkerhed</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">Ikke afsluttet endnu</string>
+    <string name="time_elapsed">Tid forløbet</string>
+    <string name="maxiobset">Maksimal IOB sat korrekt</string>
+    <string name="hasbgdata">BS tilgængelig fra valgte kilde</string>
+    <string name="loopenabled">Loop aktiveret</string>
+    <string name="apsselected">APS valgt</string>
+    <string name="closedmodeenabled">Lukket tilstand aktiveret</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Oplæringsprogram</string>
+    <string name="doyouwantresetstart">Vil du nulstille objektiv start? Du kan miste dine fremskridt.</string>
+    <string name="objectives_button_unfinish">Ryd færdigt</string>
+    <string name="objectives_button_unstart">Ryd startet</string>
 </resources>

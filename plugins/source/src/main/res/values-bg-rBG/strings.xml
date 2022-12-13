@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Получаване на данни за КЗ от xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="eversense">Eversense приложение(модифицирано)</string>
+    <string name="description_source_eversense">Получава данни за КЗ от модифицираното приложение на Eversense.</string>
+    <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
+    <string name="description_source_mm640g">Получават стойности на КЗ от 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Получавай данни за КЗ от Poctech апликацията.</string>
+    <string name="glunovo">Глуново</string>
+    <string name="description_source_glunovo">Получавай данните от Glunowo апликацията</string>
+    <string name="tomato">Tomato(MяоМяо)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Получавай КЗ от Tomato апликация (устройство МяоМяо)</string>
+    <string name="bgsource_upload">Настройки при качване на КЗ към Nightscout</string>
+</resources>

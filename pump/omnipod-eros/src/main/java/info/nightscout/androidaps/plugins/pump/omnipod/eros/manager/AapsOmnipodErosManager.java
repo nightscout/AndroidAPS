@@ -56,12 +56,12 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.ErosP
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.manager.OmnipodManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.event.EventOmnipodErosPumpValuesChanged;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.extensions.DetailedBolusInfoExtensionKt;
+import info.nightscout.androidaps.plugins.pump.omnipod.eros.extensions.PumpStateExtensionKt;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.ErosHistory;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryRecordEntity;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.rileylink.manager.OmnipodRileyLinkCommunicationManager;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.OmnipodAlertUtil;
-import info.nightscout.core.pump.PumpStateExtensionKt;
 import info.nightscout.interfaces.notifications.Notification;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.pump.DetailedBolusInfo;

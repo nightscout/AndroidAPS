@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">שימוש במשאבות אשר עדיין אין להם מנהל התקן כלשהו (לולאה פתוחה)</string>
+    <string name="virtualpump_settings">הגדרות משאבה וירטואלית</string>
+</resources>

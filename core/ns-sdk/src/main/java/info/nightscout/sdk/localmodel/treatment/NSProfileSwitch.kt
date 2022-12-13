@@ -6,10 +6,10 @@ import org.json.JSONObject
 data class NSProfileSwitch(
     override val date: Long,
     override val device: String?,
-    override val identifier: String,
+    override val identifier: String?,
     override val units: NsUnits?,
-    override val srvModified: Long,
-    override val srvCreated: Long,
+    override val srvModified: Long?,
+    override val srvCreated: Long?,
     override val utcOffset: Long,
     override val subject: String?,
     override var isReadOnly: Boolean,

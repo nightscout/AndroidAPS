@@ -19,6 +19,7 @@ import info.nightscout.interfaces.nsclient.NSAlarm
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
 import info.nightscout.interfaces.ui.UiInteraction
@@ -26,11 +27,9 @@ import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientResend
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.plugins.sync.nsclient.NsClientReceiverDelegate
-import info.nightscout.plugins.sync.nsclient.data.AlarmAck
-import info.nightscout.plugins.sync.nsclient.services.NSClientService
+import info.nightscout.plugins.sync.nsclientV3.extensions.toNSBolus
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadStatusWorker
@@ -52,6 +51,7 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import javax.inject.Inject
@@ -87,21 +87,30 @@ class NSClientV3Plugin @Inject constructor(
     companion object {
 
         val JOB_NAME: String = this::class.java.simpleName
+        val REFRESH_INTERVAL = T.mins(5).msecs()
     }
 
     private val disposable = CompositeDisposable()
+    private lateinit var runLoop: Runnable
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val listLog: MutableList<EventNSClientNewLog> = ArrayList()
-    override var status = ""
-    override val nsClientService: NSClientService? = null // service not needed
+    override val status
+        get() =
+            when {
+                sp.getBoolean(R.string.key_ns_client_paused, false)          -> rh.gs(info.nightscout.core.ui.R.string.paused)
+                isAllowed.not()                                              -> blockingReason
+                nsAndroidClient.lastStatus == null                           -> rh.gs(R.string.not_connected)
+                workIsRunning(arrayOf(JOB_NAME))                             -> rh.gs(R.string.working)
+                nsAndroidClient.lastStatus?.apiPermissions?.isFull() == true -> rh.gs(info.nightscout.shared.R.string.connected)
+                nsAndroidClient.lastStatus?.apiPermissions?.isRead() == true -> rh.gs(R.string.read_only)
+                else                                                         -> rh.gs(info.nightscout.core.ui.R.string.unknown)
+            }
 
     internal lateinit var nsAndroidClient: NSAndroidClient
 //    private lateinit var nsAndroidRxClient: NSAndroidRxClient
 
-    val isAllowed: Boolean
-        get() = nsClientReceiverDelegate.allowed
-    val blockingReason: String
-        get() = nsClientReceiverDelegate.blockingReason
+    val isAllowed get() = nsClientReceiverDelegate.allowed
+    val blockingReason get() = nsClientReceiverDelegate.blockingReason
 
     private val maxAge = T.days(77).msecs()
     internal var lastModified: LastModified? = null // timestamp of last modification for every collection
@@ -133,31 +142,24 @@ class NSClientV3Plugin @Inject constructor(
         lastFetched.collections.profile = max(dateUtil.now() - maxAge, lastFetched.collections.profile)
         lastFetched.collections.devicestatus = max(dateUtil.now() - maxAge, lastFetched.collections.devicestatus)
 
-        nsAndroidClient = NSAndroidClientImpl(
-            baseUrl = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace("https://", ""),
-            accessToken = sp.getString(R.string.key_ns_client_token, ""),
-            context = context,
-            logging = true
-        )
+        setClient()
 
         nsClientReceiverDelegate.grabReceiversState()
         disposable += rxBus
-            .toObservable(EventNSClientStatus::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                               status = event.getStatus(context)
-                               rxBus.send(EventNSClientUpdateGUI())
-                               // Pass to setup wizard
-                               rxBus.send(EventSWSyncStatus(event.getStatus(context)))
-                       }, fabricPrivacy::logException)
-        disposable += rxBus
             .toObservable(EventNetworkChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
+            .subscribe({ ev ->
+                           nsClientReceiverDelegate.onStatusEvent(ev)
+                           setClient()
+                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
+            .subscribe({ ev ->
+                           nsClientReceiverDelegate.onStatusEvent(ev)
+                           if (ev.isChanged(rh.gs(R.string.key_ns_client_token)) || ev.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_url)))
+                               setClient()
+                       }, fabricPrivacy::logException)
         // disposable += rxBus
         //     .toObservable(EventAppExit::class.java)
         //     .observeOn(aapsSchedulers.io)
@@ -177,10 +179,18 @@ class NSClientV3Plugin @Inject constructor(
             .toObservable(EventNSClientResend::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event -> resend(event.reason) }, fabricPrivacy::logException)
+
+        runLoop = Runnable {
+            executeLoop()
+            handler.postDelayed(runLoop, REFRESH_INTERVAL)
+        }
+        handler.postDelayed(runLoop, REFRESH_INTERVAL)
+        executeLoop()
     }
 
     override fun onStop() {
         // context.applicationContext.unbindService(mConnection)
+        handler.removeCallbacksAndMessages(null)
         disposable.clear()
         super.onStop()
     }
@@ -196,14 +206,24 @@ class NSClientV3Plugin @Inject constructor(
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = config.isEngineeringMode()
     }
 
-    override val hasWritePermission: Boolean get() = nsClientService?.hasWriteAuth ?: false
-    override val connected: Boolean get() = nsClientService?.isConnected ?: false
+    override val hasWritePermission: Boolean get() = nsAndroidClient.lastStatus?.apiPermissions?.isFull() ?: false
+    override val connected: Boolean get() = nsAndroidClient.lastStatus != null
 
     override fun clearLog() {
         handler.post {
             synchronized(listLog) { listLog.clear() }
             rxBus.send(EventNSClientUpdateGUI())
         }
+    }
+
+    private fun setClient() {
+        nsAndroidClient = NSAndroidClientImpl(
+            baseUrl = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace("https://", ""),
+            accessToken = sp.getString(R.string.key_ns_client_token, ""),
+            context = context,
+            logging = true
+        )
+        rxBus.send(EventSWSyncStatus(status))
     }
 
     private fun addToLog(ev: EventNSClientNewLog) {
@@ -231,7 +251,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     override fun resend(reason: String) {
-        nsClientService?.resend(reason)
+//        nsClientService?.resend(reason)
     }
 
     override fun pause(newState: Boolean) {
@@ -239,8 +259,7 @@ class NSClientV3Plugin @Inject constructor(
         rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_client_paused)))
     }
 
-    override val version: NsClient.Version
-        get() = NsClient.Version.V3
+    override val version: NsClient.Version get() = NsClient.Version.V3
 
     override val address: String get() = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "")
 
@@ -250,12 +269,12 @@ class NSClientV3Plugin @Inject constructor(
             aapsLogger.debug(LTag.NSCLIENT, "Upload disabled. Message dropped")
             return
         }
-        nsClientService?.sendAlarmAck(
-            AlarmAck().also { ack ->
-                ack.level = originalAlarm.level()
-                ack.group = originalAlarm.group()
-                ack.silenceTime = silenceTimeInMilliseconds
-            })
+        // nsClientService?.sendAlarmAck(
+        //     AlarmAck().also { ack ->
+        //         ack.level = originalAlarm.level()
+        //         ack.group = originalAlarm.group()
+        //         ack.silenceTime = silenceTimeInMilliseconds
+        //     })
     }
 
     override fun updateLatestBgReceivedIfNewer(latestReceived: Long) {
@@ -282,11 +301,59 @@ class NSClientV3Plugin @Inject constructor(
         storeLastFetched()
     }
 
+    override fun dbAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+        when (dataPair) {
+            is DataSyncSelector.PairBolus -> dataPair.value.toNSBolus()
+            // is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(false, dateUtil)
+            // is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(false, dateUtil, profileFunction)
+            // is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(false, profileFunction.getUnits(), dateUtil)
+            // is DataSyncSelector.PairFood                   -> dataPair.value.toJson(false)
+            // is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(false, dateUtil)
+            // is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(false, dateUtil)
+            // is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+            // is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+            // is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(false, dateUtil)
+            // is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(false, dateUtil)
+            // is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)
+            else                          -> null
+        }?.let { data ->
+            runBlocking {
+                if (collection == "treatments") {
+                    val result = nsAndroidClient.createTreatment(data)
+                }
+            }
+        }
+    }
+
+    override fun dbUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+        TODO("Not yet implemented")
+    }
+
     private fun storeLastFetched() {
         sp.putString(R.string.key_ns_client_v3_last_modified, Json.encodeToString(LastModified.serializer(), lastFetched))
     }
 
     fun test() {
+        executeLoop()
+    }
+
+    fun scheduleNewExecution() {
+        val toTime = lastFetched.collections.entries + T.mins(6).plus(T.secs(0)).msecs()
+        if (toTime > dateUtil.now()) {
+            handler.postDelayed({ executeLoop() }, toTime - dateUtil.now())
+            rxBus.send(EventNSClientNewLog("NEXT", dateUtil.dateAndTimeAndSecondsString(toTime)))
+        }
+    }
+
+    private fun executeLoop() {
+        if (sp.getBoolean(R.string.key_ns_client_paused, false)) {
+            rxBus.send(EventNSClientNewLog("NSCLIENT", "paused"))
+            return
+        }
+        if (!isAllowed) {
+            rxBus.send(EventNSClientNewLog("NSCLIENT", blockingReason))
+            return
+        }
         if (workIsRunning(arrayOf(JOB_NAME)))
             rxBus.send(EventNSClientNewLog("RUN", "Already running"))
         else {

@@ -97,21 +97,6 @@
     <string name="sms_read_status_failed">Четенето на статуса се провали</string>
     <string name="sms_profile_switch_created">Създаден запис - Промяна на профил</string>
     <string name="sms_wrong_tbr_duration">Продължителността на временния база; трябва да бъде кратна на %1$d минути и по-голяма от 0.</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Действие на инсулините Humalog и NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Действие на инсулин Fiasp</string>
-    <string name="description_insulin_lyumjev">Действие на инсулин Lyumjev</string>
-    <string name="description_insulin_free_peak">Позволява да зададете сами пика на инсулиновата активност (не използвайте, ако сте нови потребители)</string>
-    <string name="insulin_shortname">ИНС</string>
-    <string name="insulin_oref_peak">Пик на кривата на IOB</string>
-    <string name="insulin_peak_time">Време на пик [мин.]</string>
-    <string name="free_peak_oref">Със свободен пик по Oref</string>
-    <string name="rapid_acting_oref">Бързодействащ по Oref</string>
-    <string name="ultra_rapid_oref">Ултра бързодействащ по Oref</string>
-    <string name="dia_too_short">DIA от %1$f е твърде кратка - използвай %2$f вместо това!</string>
-    <string name="fast_acting_insulin_comment">Novorapid Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip+ линия със статута (часовник)</string>
@@ -158,22 +143,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">Цел</string>
     <string name="basal_short">БАЗА</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Приключихме, Браво!</string>
-    <string name="not_completed_yet">Все още не сме неприключили</string>
-    <string name="time_elapsed">Изминало време</string>
-    <string name="maxiobset">Максимален IOB е зададен правилно</string>
-    <string name="hasbgdata">Има данни за КЗ от избрания източник</string>
-    <string name="loopenabled">APS разрешен</string>
-    <string name="apsselected">Избран APS</string>
-    <string name="closedmodeenabled">APS - Затворен кръг е позволен</string>
-    <string name="objectives_shortname">Цел</string>
-    <string name="description_objectives">Разучаване на програмата</string>
-    <string name="doyouwantresetstart">Искате ли да нулирате прогреса си?</string>
-    <string name="objectives_next_button">Следващ</string>
-    <string name="objectives_previous_button">Предишен</string>
-    <string name="objectives_button_unfinish">Изчисти приключение</string>
-    <string name="objectives_button_unstart">Изчисти стартираните</string>
     <!-- Actions -->
     <string name="actions">Действия</string>
     <string name="description_actions">Бутони за бърз достъп до основни функции</string>
@@ -190,18 +159,6 @@
     <string name="pb_label">Батерия на помпата</string>
     <string name="cannula">Канюла</string>
     <string name="ebstopsloop">Използване на удължен болус ще спре режим затворен цикъл за времето на болуса. Сигурни ли сте?</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Ограничение на удължен болус до %1$.1f Е поради %2$s</string>
-    <string name="limitingcarbs">Ограничаване на въглехидрати до %1$d гр. поради %2$s</string>
-    <string name="pumpisnottempbasalcapable">Помпата не поддържа временен базал</string>
-    <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
-    <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
-    <string name="closed_loop_disabled_with_eb">Затворен цикъл е недостъпен поради стартиран Удължен болус</string>
-    <string name="smbalwaysdisabled">SMB \"винаги включен\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
-    <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим Отворен кръг</string>
-    <string name="maxvalueinpreferences">макс. стойност в настройките</string>
-    <string name="hardlimit">твърд лимит</string>
-    <string name="treatmentssafety_title">Настройки на сигурността</string>
     <!-- Overview -->
     <string name="show_statuslights">Покажи статус светлини на началния екран</string>
     <string name="statuslights_iage_warning">Праг за инсулинова възраст [часа]</string>
@@ -315,43 +272,6 @@
     <string name="treatments_shortname">Леч</string>
     <string name="sensitivity_shortname">ЧУВСТВ</string>
     <string name="graph_menu_divider_header">Графика</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Виртуална помпа тип</string>
-    <string name="virtual_pump_definition">Описание на помпата</string>
-    <string name="virtual_pump_pump_def">Болус: Стъпка =%1$s\Удължен болус: [стъпка =%2$s, продължителност =%3$smin -%4$sh] \nБазал: стъпка =%5$s\ nTBR: %6$s (от %7$s), продължителност =%8$sмин -%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">ВП</string>
-    <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
-    <string name="virtual_pump_label">ВИРТУАЛНА ПОМПА</string>
-    <string name="virtualpump_settings">Настойки Виртуална Помпа</string>
-    <string name="virtualpump_uploadstatus_title">Качва статуса в NS</string>
-    <!-- Source -->
-    <string name="ns_client_bg">КЗ от NS</string>
-    <string name="ns_client_bg_short">NS КЗ</string>
-    <string name="description_source_ns_client">Изтегля стойности на КЗ от Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Получаване на данни за КЗ от xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="eversense">Eversense приложение(модифицирано)</string>
-    <string name="description_source_eversense">Получава данни за КЗ от модифицираното приложение на Eversense.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Получава данни за КЗ от Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Получават стойности на КЗ от 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Получавай данни за КЗ от Poctech апликацията.</string>
-    <string name="glunovo">Глуново</string>
-    <string name="description_source_glunovo">Получавай данните от Glunowo апликацията</string>
-    <string name="tomato">Tomato(MяоМяо)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Получавай КЗ от Tomato апликация (устройство МяоМяо)</string>
-    <string name="random_bg">Произволна КЗ</string>
-    <string name="description_source_random_bg">Генерира произволни захари(демо режим)</string>
-    <string name="random_bg_short">КЗ</string>
-    <string name="do_xdrip_upload_title">Изпращай данни за КЗ към xDrip+</string>
-    <string name="do_xdrip_upload_summary">В xDrip+ изберете 640g/Eversense за източник на данни</string>
-    <string name="bgsource_upload">Настройки при качване на КЗ към Nightscout</string>
-    <string name="dexcom_log_ns_sensor_change_title">Записвай смяната на сензор в NS</string>
     <!-- Skins -->
     <string name="classic_description">Оригинален изглед</string>
     <string name="lowres_description">Скин за ниска резолюция</string>

@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ nicht installiert</string>
     <string name="calibration_sent">Kalibrierung an xDrip+ gesendet+</string>
     <string name="bg_label">BZ</string>
-    <string name="time_to_eat">Zeit zum Essen</string>
-    <string name="time_to_bolus">Zeit für den nächsten Bolus!\nFühre den Bolus-Assistenten aus, um die Berechnung erneut durchzuführen.</string>
     <string name="executing_right_now">Befehl wird zurzeit ausgeführt</string>
     <string name="basal_value_below_minimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
     <string name="permission">Berechtigung</string>

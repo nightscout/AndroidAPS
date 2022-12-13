@@ -59,7 +59,6 @@
     <string name="exercise_setunchanged">Lad dit blodsukker være uændret.</string>
     <string name="exercise_15g">Vent, til blodsukkeret falder under din midlertidige hypo-basal, og spis 15g hurtigt virkende kulhydrater.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">Deaktiveret/Suspendéret Loop</string>
     <string name="suspendloop_doigetinsulin">Modtager jeg insulin, når Loop er deaktiveret/suspenderet?</string>
     <string name="suspendloop_yes">Ja, basal insulin fortsætter med at blive levereret.</string>
     <string name="suspendloop_no">Nej, levering af insulin er stoppet.</string>
@@ -109,7 +108,6 @@
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
-    <string name="insulin_plugins">Insulin Plugins</string>
     <string name="insulin_ultrarapid">Hvilken insulin skal du bruge sammen med Ultra-Rapid Oref-pluginnet?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
@@ -149,7 +147,6 @@
     <string name="cob3_longer">Ved indstilling af profil til 150%, vil kulhydrater være længere tid om at absorberes</string>
     <string name="cob3_shorter">Ved indstilling af profil til 150%, vil kulhydrater være kortere tid om at absorberes</string>
     <string name="cob3_no_effect">Ved indstilling af profil til 150%, påvirkes absorbering af beregnet kulhydrat ikke</string>
-    <string name="iob_label">Insulin om bord (IOB)</string>
     <string name="iob_value">IOB-værdi påvirkes af midlertidige basaler.</string>
     <string name="iob_hightemp">Høj midlertidlig basal vil ikke blive givet, når dit blodsukker er under målet.</string>
     <string name="iob_negiob">Negative IOB i en længere periode uden motion tyder på, at din profil er for stærk, og at der er behov for mindre insulin i dine indstillinger.</string>

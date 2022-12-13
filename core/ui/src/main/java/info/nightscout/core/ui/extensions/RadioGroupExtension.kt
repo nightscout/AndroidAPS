@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.extensions
+package info.nightscout.core.ui.extensions
 
 import android.widget.RadioGroup
 import androidx.appcompat.widget.AppCompatRadioButton

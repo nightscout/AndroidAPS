@@ -4,9 +4,10 @@
     <!-- DST Helper -->
     <!-- Storage constraint -->
     <!-- Version Checker -->
-    <string name="old_version">régi verzió</string>
-    <string name="very_old_version">nagyon régi verzió</string>
-    <string name="application_expired">Alkalmazás lejárt</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <!-- Safety -->
+    <!-- Objectives -->
+    <string name="time_elapsed">Eltelt idő</string>
+    <string name="apsselected">APS kiválasztva</string>
 </resources>

@@ -126,4 +126,7 @@
     <string name="friday_short">Пт</string>
     <string name="saturday_short">Сб</string>
     <string name="sunday_short">Вс</string>
+    <!--    Reminders-->
+    <string name="time_to_eat">Пора есть!\n Запустите помощник болюса снова для подсчета.</string>
+    <string name="time_to_bolus">Пора дать болюс!\nЗапустите помощник болюса и повторите расчет.</string>
 </resources>

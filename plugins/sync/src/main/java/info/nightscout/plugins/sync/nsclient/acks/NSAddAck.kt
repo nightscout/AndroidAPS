@@ -1,10 +1,15 @@
 package info.nightscout.plugins.sync.nsclient.acks
 
+import androidx.work.OneTimeWorkRequest
+import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.plugins.sync.nsclient.services.NSClientService
+import info.nightscout.plugins.sync.nsclient.workers.NSClientAddAckWorker
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventNSClientRestart
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.utils.DateUtil
 import io.socket.client.Ack
 import org.json.JSONArray
 import org.json.JSONObject
@@ -12,11 +17,13 @@ import org.json.JSONObject
 class NSAddAck(
     private val aapsLogger: AAPSLogger,
     private val rxBus: RxBus,
+    private val nsClientService: NSClientService,
+    private val dateUtil: DateUtil,
+    private val dataWorkerStorage: DataWorkerStorage,
     val originalObject: Any? = null
 ) : Event(), Ack {
 
     var id: String? = null
-    private var nsClientID: String? = null
     var json: JSONObject? = null
     override fun call(vararg args: Any) {
         // Regular response
@@ -27,11 +34,8 @@ class NSAddAck(
                 response = responseArray.getJSONObject(0)
                 id = response.getString("_id")
                 json = response
-                if (response.has("NSCLIENT_ID")) {
-                    nsClientID = response.getString("NSCLIENT_ID")
-                }
             }
-            rxBus.send(this)
+            processAddAck()
             return
         } catch (e: Exception) {
             aapsLogger.error("Unhandled exception", e)
@@ -50,5 +54,14 @@ class NSAddAck(
         } catch (e: Exception) {
             aapsLogger.error("Unhandled exception", e)
         }
+    }
+
+    private fun processAddAck() {
+        nsClientService.lastAckTime = dateUtil.now()
+        dataWorkerStorage.enqueue(
+            OneTimeWorkRequest.Builder(NSClientAddAckWorker::class.java)
+                .setInputData(dataWorkerStorage.storeInputData(this))
+                .build()
+        )
     }
 }

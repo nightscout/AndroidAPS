@@ -164,6 +164,9 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Rušení dočasného bazálu selhalo</string>
     <string name="canceling_eb_failed">Zastavení prodlouženého bolusu selhalo</string>
+    <string name="virtualpump_uploadstatus_title">Nahrávat status do NS</string>
+    <string name="suspendloop_label">Zakázaná/pozastavená smyčka</string>
+    <string name="iob_label">Aktivní inzulín (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Chybné heslo</string>
     <string name="wrongpin">Nesprávný PIN</string>

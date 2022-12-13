@@ -59,7 +59,6 @@
     <string name="exercise_setunchanged">Lasciare il tuo target glicemico invariato.</string>
     <string name="exercise_15g">Attendere che la glicemia scenda al di sotto del tuo target temporaneo \"ipoglicemia\" e poi mangiare 15 g di carboidrati a rapido assorbimento.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">Loop disabilitato/sospeso</string>
     <string name="suspendloop_doigetinsulin">Ricevo insulina quando il loop è disabilitato/sospeso?</string>
     <string name="suspendloop_yes">Sì, l\'insulina basale continua a essere erogata.</string>
     <string name="suspendloop_no">No, l\'erogazione di insulina è interrotta.</string>
@@ -109,7 +108,6 @@
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/aapsitalia/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
-    <string name="insulin_plugins">Plugin insulina</string>
     <string name="insulin_ultrarapid">Quale insulina dovresti usare con il plugin Ultra-Rapid Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
@@ -149,7 +147,6 @@
     <string name="cob3_longer">Impostare il profilo al 150% richiederà un tempo maggiore per l\'assorbimento dei CHO</string>
     <string name="cob3_shorter">Impostare il profilo al 150% richiederà un tempo minore per l\'assorbimento dei CHO</string>
     <string name="cob3_no_effect">Impostare il profilo al 150% non influirà sull\'assorbimento calcolato dei CHO</string>
-    <string name="iob_label">Insulina attiva (IOB)</string>
     <string name="iob_value">Il valore IOB è influenzato dalle basali temporanee emesse.</string>
     <string name="iob_hightemp">Non verrà emessa una basale temporanea alta quando la tua glicemia è al di sotto del target.</string>
     <string name="iob_negiob">IOB negativo per un periodo considerevole in assenza di esercizio fisico suggerisce che il tuo profilo è troppo incisivo e che è necessaria meno insulina nelle tue impostazioni.</string>

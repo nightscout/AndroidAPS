@@ -137,6 +137,9 @@
     <string name="dia">DIA (Durada de l\'Acció de la Insulina)</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="virtualpump_uploadstatus_title">Enviar estat a NS</string>
+    <string name="suspendloop_label">Llaç desactivat/aturat</string>
+    <string name="iob_label">Insulina \"a bord\" (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Contrasenya incorrecta</string>
     <string name="passwords_dont_match">Les contrasenyes no coincideixen</string>

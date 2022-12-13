@@ -7,8 +7,10 @@ import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
+import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.ExtendedBolus
+import info.nightscout.database.entities.Food
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.ProfileSwitch
@@ -29,6 +31,19 @@ import info.nightscout.database.impl.transactions.SyncNsProfileSwitchTransaction
 import info.nightscout.database.impl.transactions.SyncNsTemporaryBasalTransaction
 import info.nightscout.database.impl.transactions.SyncNsTemporaryTargetTransaction
 import info.nightscout.database.impl.transactions.SyncNsTherapyEventTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdBolusCalculatorResultTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdBolusTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdCarbsTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdDeviceStatusTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdEffectiveProfileSwitchTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdExtendedBolusTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdFoodTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdGlucoseValueTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdOfflineEventTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdProfileSwitchTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdTemporaryBasalTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdTemporaryTargetTransaction
+import info.nightscout.database.impl.transactions.UpdateNsIdTherapyEventTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
@@ -55,6 +70,8 @@ import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
 import info.nightscout.sdk.localmodel.treatment.NSTherapyEvent
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -75,17 +92,30 @@ class StoreDataForDbImpl @Inject constructor(
 ) : StoreDataForDb {
 
     override val glucoseValues: MutableList<TransactionGlucoseValue> = mutableListOf()
+    override val boluses: MutableList<Bolus> = mutableListOf()
+    override val carbs: MutableList<Carbs> = mutableListOf()
+    override val temporaryTargets: MutableList<TemporaryTarget> = mutableListOf()
+    override val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
+    override val bolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
+    override val therapyEvents: MutableList<TherapyEvent> = mutableListOf()
+    override val extendedBoluses: MutableList<ExtendedBolus> = mutableListOf()
+    override val temporaryBasals: MutableList<TemporaryBasal> = mutableListOf()
+    override val profileSwitches: MutableList<ProfileSwitch> = mutableListOf()
+    override val offlineEvents: MutableList<OfflineEvent> = mutableListOf()
 
-    val boluses: MutableList<Bolus> = mutableListOf()
-    val carbs: MutableList<Carbs> = mutableListOf()
-    val temporaryTargets: MutableList<TemporaryTarget> = mutableListOf()
-    val effectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
-    val bolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
-    val therapyEvents: MutableList<TherapyEvent> = mutableListOf()
-    val extendedBoluses: MutableList<ExtendedBolus> = mutableListOf()
-    val temporaryBasals: MutableList<TemporaryBasal> = mutableListOf()
-    val profileSwitches: MutableList<ProfileSwitch> = mutableListOf()
-    val offlineEvents: MutableList<OfflineEvent> = mutableListOf()
+    override val nsIdGlucoseValues: MutableList<GlucoseValue> = mutableListOf()
+    override val nsIdBoluses: MutableList<Bolus> = mutableListOf()
+    override val nsIdCarbs: MutableList<Carbs> = mutableListOf()
+    override val nsIdFoods: MutableList<Food> = mutableListOf()
+    override val nsIdTemporaryTargets: MutableList<TemporaryTarget> = mutableListOf()
+    override val nsIdEffectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
+    override val nsIdBolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
+    override val nsIdTherapyEvents: MutableList<TherapyEvent> = mutableListOf()
+    override val nsIdExtendedBoluses: MutableList<ExtendedBolus> = mutableListOf()
+    override val nsIdTemporaryBasals: MutableList<TemporaryBasal> = mutableListOf()
+    override val nsIdProfileSwitches: MutableList<ProfileSwitch> = mutableListOf()
+    override val nsIdOfflineEvents: MutableList<OfflineEvent> = mutableListOf()
+    override val nsIdDeviceStatuses: MutableList<DeviceStatus> = mutableListOf()
 
     private val userEntries: MutableList<UserEntry> = mutableListOf()
 
@@ -103,7 +133,7 @@ class StoreDataForDbImpl @Inject constructor(
         params: WorkerParameters
     ) : LoggingWorker(context, params) {
 
-        @Inject lateinit var storeDataForDb: StoreDataForDbImpl
+        @Inject lateinit var storeDataForDb: StoreDataForDb
 
         override fun doWorkAndLog(): Result {
             storeDataForDb.storeGlucoseValuesToDb()
@@ -115,7 +145,7 @@ class StoreDataForDbImpl @Inject constructor(
         if (containsKey(key)) merge(key, 1, Long::plus)
         else put(key, 1)
 
-    private fun storeGlucoseValuesToDb() {
+    override fun storeGlucoseValuesToDb() {
         rxBus.send(EventNSClientNewLog("PROCESSING BG", ""))
 
         if (glucoseValues.isNotEmpty())
@@ -151,7 +181,7 @@ class StoreDataForDbImpl @Inject constructor(
         rxBus.send(EventNSClientNewLog("DONE BG", ""))
     }
 
-    fun storeTreatmentsToDb() {
+    override fun storeTreatmentsToDb() {
         rxBus.send(EventNSClientNewLog("PROCESSING TR", ""))
 
         if (boluses.isNotEmpty())
@@ -729,6 +759,168 @@ class StoreDataForDbImpl @Inject constructor(
 
         uel.log(userEntries)
         rxBus.send(EventNSClientNewLog("DONE TR", ""))
+    }
+
+    private val eventWorker = Executors.newSingleThreadScheduledExecutor()
+    private var scheduledEventPost: ScheduledFuture<*>? = null
+    override fun scheduleNsIdUpdate() {
+        class PostRunnable : Runnable {
+
+            override fun run() {
+                aapsLogger.debug(LTag.CORE, "Firing updateNsIds")
+                scheduledEventPost = null
+                updateNsIds()
+            }
+        }
+        // cancel waiting task to prevent sending multiple posts
+        scheduledEventPost?.cancel(false)
+        val task: Runnable = PostRunnable()
+        scheduledEventPost = eventWorker.schedule(task, 30, TimeUnit.SECONDS)
+    }
+
+    private fun updateNsIds() {
+        repository.runTransactionForResult(UpdateNsIdTemporaryTargetTransaction(nsIdTemporaryTargets))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of TemporaryTarget failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of TemporaryTarget $it")
+                }
+            }
+
+        repository.runTransactionForResult(UpdateNsIdGlucoseValueTransaction(nsIdGlucoseValues))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of GlucoseValue failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of GlucoseValue $it")
+                }
+            }
+
+        repository.runTransactionForResult(UpdateNsIdFoodTransaction(nsIdFoods))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of Food failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of Food $it")
+                }
+            }
+
+        repository.runTransactionForResult(UpdateNsIdTherapyEventTransaction(nsIdTherapyEvents))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of TherapyEvent failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of TherapyEvent $it")
+                }
+            }
+
+        repository.runTransactionForResult(UpdateNsIdBolusTransaction(nsIdBoluses))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of Bolus failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of Bolus $it")
+                }
+            }
+
+        repository.runTransactionForResult(UpdateNsIdCarbsTransaction(nsIdCarbs))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of Carbs failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of Carbs $it")
+                }
+            }
+
+        repository.runTransactionForResult(UpdateNsIdBolusCalculatorResultTransaction(nsIdBolusCalculatorResults))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of BolusCalculatorResult failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of BolusCalculatorResult $it")
+                }
+            }
+
+        repository.runTransactionForResult(UpdateNsIdTemporaryBasalTransaction(nsIdTemporaryBasals))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of TemporaryBasal failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of TemporaryBasal $it")
+                }
+            }
+
+        repository.runTransactionForResult(UpdateNsIdExtendedBolusTransaction(nsIdExtendedBoluses))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of ExtendedBolus failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of ExtendedBolus $it")
+                }
+            }
+
+        repository.runTransactionForResult(UpdateNsIdProfileSwitchTransaction(nsIdProfileSwitches))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of ProfileSwitch failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of ProfileSwitch $it")
+                }
+            }
+
+        repository.runTransactionForResult(UpdateNsIdEffectiveProfileSwitchTransaction(nsIdEffectiveProfileSwitches))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of EffectiveProfileSwitch failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of EffectiveProfileSwitch $it")
+                }
+            }
+
+        repository.runTransactionForResult(UpdateNsIdDeviceStatusTransaction(nsIdDeviceStatuses))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of DeviceStatus failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of DeviceStatus $it")
+                }
+            }
+
+        repository.runTransactionForResult(UpdateNsIdOfflineEventTransaction(nsIdOfflineEvents))
+            .doOnError { error ->
+                aapsLogger.error(LTag.DATABASE, "Updated nsId of OfflineEvent failed", error)
+            }
+            .blockingGet()
+            .also { result ->
+                result.updatedNsId.forEach {
+                    aapsLogger.debug(LTag.DATABASE, "Updated nsId of OfflineEvent $it")
+                }
+            }
     }
 
     private fun sendLog(item: String, clazz: String) {

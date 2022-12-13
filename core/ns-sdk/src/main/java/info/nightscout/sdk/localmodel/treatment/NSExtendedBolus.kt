@@ -5,10 +5,10 @@ import info.nightscout.sdk.localmodel.entry.NsUnits
 data class NSExtendedBolus(
     override val date: Long,
     override val device: String?,
-    override val identifier: String,
+    override val identifier: String?,
     override val units: NsUnits?,
-    override val srvModified: Long,
-    override val srvCreated: Long,
+    override val srvModified: Long?,
+    override val srvCreated: Long?,
     override val utcOffset: Long,
     override val subject: String?,
     override var isReadOnly: Boolean,
@@ -21,5 +21,5 @@ data class NSExtendedBolus(
     override val pumpSerial: String?,
     val duration: Long,
     val enteredinsulin: Double,
-    val isEmulatingTempbasal: Boolean
+    val isEmulatingTempBasal: Boolean?
 ) : NSTreatment

@@ -346,7 +346,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
             MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(injector,
                     DanaPump.HistoryEntry.CARBS.getValue(), carbtime, carbs, 0);
             mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
-            danaPump.lastHistoryFetched = Math.min(danaPump.lastHistoryFetched, carbtime - T.Companion.mins(1).msecs());
+            danaPump.readHistoryFrom = Math.min(danaPump.readHistoryFrom, carbtime - T.Companion.mins(1).msecs());
             if (!msgSetHistoryEntry_v2.isReceived() || msgSetHistoryEntry_v2.getFailed())
                 uiInteraction.runAlarm(rh.gs(info.nightscout.pump.dana.R.string.carbs_store_error), rh.gs(info.nightscout.core.ui.R.string.error), info.nightscout.core.ui.R.raw.boluserror);
         }
@@ -418,7 +418,7 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         MsgSetHistoryEntry_v2 msgSetHistoryEntry_v2 = new MsgSetHistoryEntry_v2(injector,
                 DanaPump.HistoryEntry.CARBS.getValue(), time, amount, 0);
         mSerialIOThread.sendMessage(msgSetHistoryEntry_v2);
-        danaPump.lastHistoryFetched = Math.min(danaPump.lastHistoryFetched, time - T.Companion.mins(1).msecs());
+        danaPump.readHistoryFrom = Math.min(danaPump.readHistoryFrom, time - T.Companion.mins(1).msecs());
         return true;
     }
 
@@ -433,18 +433,17 @@ public class DanaRv2ExecutionService extends AbstractDanaRExecutionService {
         if (!isConnected())
             return new PumpEnactResult(injector).success(false);
         SystemClock.sleep(300);
-        MsgHistoryEventsV2 msg = new MsgHistoryEventsV2(injector, danaPump.lastHistoryFetched);
-        aapsLogger.debug(LTag.PUMP, "Loading event history from: " + dateUtil.dateAndTimeString(danaPump.lastHistoryFetched));
+        MsgHistoryEventsV2 msg = new MsgHistoryEventsV2(injector, danaPump.readHistoryFrom);
+        aapsLogger.debug(LTag.PUMP, "Loading event history from: " + dateUtil.dateAndTimeString(danaPump.readHistoryFrom));
 
         mSerialIOThread.sendMessage(msg);
         while (!danaPump.historyDoneReceived && mRfcommSocket.isConnected()) {
             SystemClock.sleep(100);
         }
         SystemClock.sleep(200);
-        if (danaRv2Plugin.lastEventTimeLoaded != 0)
-            danaPump.lastHistoryFetched = danaRv2Plugin.lastEventTimeLoaded - T.Companion.mins(1).msecs();
+        if (danaPump.getLastEventTimeLoaded() != 0) danaPump.readHistoryFrom = danaPump.getLastEventTimeLoaded() - T.Companion.mins(1).msecs();
         else
-            danaPump.lastHistoryFetched = 0;
+            danaPump.readHistoryFrom = 0;
         danaPump.setLastConnection(System.currentTimeMillis());
         return new PumpEnactResult(injector).success(true);
     }

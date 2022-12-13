@@ -51,7 +51,6 @@
     <string name="exercise_setunchanged">Lăsaţi valoarea ţintă a glicemiei dumneavoastră neschimbată.</string>
     <string name="exercise_15g">Aşteptaţi până când glicemia scade sub Ținta Temporară de hipoglicemie şi apoi mâncaţi 15 g de carbohidraţi cu acţiune rapidă.</string>
     <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
-    <string name="suspendloop_label">Buclă dezactivată/suspendată</string>
     <string name="suspendloop_doigetinsulin">Primesc insulina atunci când bucla închisă este dezactivata/suspendata?</string>
     <string name="suspendloop_yes">Da, insulina bazală este livrată în continuare.</string>
     <string name="suspendloop_no">Nu, livrarea de insulină este oprită.</string>
@@ -91,8 +90,6 @@
     <string name="troubleshooting_yourendo">Ar trebui să întrebați medicul diabetolog.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/EN/Installing-AndroidAPS/Update-to-new-version.html#troubleshooting</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/AndroidAPSUsers/</string>
-    <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
-    <string name="insulin_plugins">Plugin-uri insulină</string>
     <string name="insulin_ultrarapid">Ce insulină trebuie să utilizaţi cu plugin-ul Ultra-Rapid Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
@@ -105,7 +102,6 @@
     <string name="sensitivity_cannula">Înregistrarea unei schimbări de canula va reseta raportul Autosens înapoi la 100%.</string>
     <string name="sensitivity_time">Unele dintre opțiunile plugin-ului au intervale de timp configurabile care pot fi setate de către utilizator.</string>
     <string name="sensitivity_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Sensitivity-detection-and-COB.html</string>
-    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_label">Erori la introducerea carbohidraților</string>
     <string name="wrongcarbs_whattodo">Ce ar trebui sa faceți dacă ați introdus o cantitate de carbohidrați greșită?</string>
     <string name="wrongcarbs_treatmentstab">Ştergeţi intrarea incorectă din Tratamente şi introduceţi noua valoare de carbohidrați corectă.</string>
@@ -115,7 +111,6 @@
     <string name="wronginsulin_whattodo">Ce trebuie să faci dacă ai primit mai putină insulină decât sugerează istoricul pompei, de exemplu datorită unei ocluzii, a unei canule defecte sau pentru ca ai uitat sa reatașezi pompa după un dus? </string>
     <string name="wronginsulin_careportal">Șterge datele despre insulină din Nightscout Careportal pentru a le înlătura din istoricul pompei.</string>
     <string name="wronginsulin_prime">Bolusati o cantitate parțiala de insulina din insulina calculata ca fiind lipsa utilizând seringa/penul sau amorsarea.</string>
-    <string name="iob_label">Insulină activă (IOB)</string>
     <string name="iob_value">Valoarea IOB este afectată de bazalele temporare emise.</string>
     <string name="iob_hightemp">Rata bazala ridicata temporara nu va fi livrata atunci când glicemia este sub nivelul țintă.</string>
     <string name="iob_negiob">Un IOB negativ pentru o perioadă substanțială în absența exercițiilor fizice sugerează că profilul tău este prea puternic și este nevoie de mai puţină insulină în setările inițiale.</string>

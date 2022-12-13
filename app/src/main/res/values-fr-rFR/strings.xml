@@ -46,7 +46,6 @@
     <string name="authorizationfailed">Echec de l\'authentification</string>
     <string name="copytolocalprofile_invalid">Impossible de créer le profil. Le profil est invalide.</string>
     <string name="cta_dont_kill_my_app_info">Garder l\'appli en arrière plan ?</string>
-    <string name="time_to_eat">Il est temps de manger !\nExécutez l\'assistant Bolus et refaites le calcul.</string>
     <string name="fabric_upload_disabled">Téléchargement logs crashs désactivé!</string>
     <string name="clear_filter">Effacer le filtre</string>
     <string name="cannula">Canule</string>

@@ -117,4 +117,6 @@
     <string name="friday_short">Se</string>
     <string name="saturday_short">Sa</string>
     <string name="sunday_short">D</string>
+    <!--    Reminders-->
+    <string name="time_to_bolus">Hora de fazer o bólus!\nExecute o assistente de bólus e faça o cálculo novamente.</string>
 </resources>

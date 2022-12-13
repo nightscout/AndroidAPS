@@ -2,19 +2,32 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
-    <string name="dst_in_24h_warning">Canvi a horari d\'estiu en 24h o menys</string>
-    <string name="dst_loop_disabled_warning">Canvi a horari d\'estiu fa menys de 3h - Llaç tancat desactivat</string>
     <!-- Storage constraint -->
     <!-- Version Checker -->
-    <string name="old_version">versió antiga</string>
-    <string name="very_old_version">versió molt antiga</string>
-    <string name="application_expired">Aplicació expirada</string>
-    <string name="new_version_warning">Nova versió disponible almenys %1$d dies! Retorn a LGS (Low Glucose Suspend = suspensió per glucèmia baixa) en %2$d dies, el llaç serà desactivat en %3$d dies</string>
-    <string name="running_invalid_version">Hem detectat que esteu executant una versió no vàlida. Llaç desactivat!</string>
-    <string name="versionavailable">Versió %1$s disponible</string>
-    <string name="version_expire">Versió: %1$s | Mida: %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
-    <string name="recalculated_data_used">Dades recalculades utilitzades</string>
-    <string name="bg_too_close">Glucèmia massa semblant: \n%1$s\n%2$s</string>
+    <!-- Safety -->
+    <string name="limitingcarbs">Limitant carbs a %1$d g a causa de %2$s</string>
+    <string name="pumpisnottempbasalcapable">La bomba no té la funcionalitat de basals temporals</string>
+    <string name="closedmodedisabledinpreferences">Mode llaç tancat desactivat a la configuració</string>
+    <string name="closed_loop_disabled_on_dev_branch">Executant versió de desenvolupament. Llaç tancat no disponible.</string>
+    <string name="closed_loop_disabled_with_eb">Llaç tancat desactivat degut a bolus estès actiu</string>
+    <string name="smbalwaysdisabled">Les funcions \"SMB sempre\" i \"SMB després de carbohidrats\" estan desactivades pq la font de glucèmia no fa filtrat avançat</string>
+    <string name="smbnotallowedinopenloopmode">SMB no permès en mode llaç obert</string>
+    <string name="maxvalueinpreferences">valor màxim a la configuració</string>
+    <string name="hardlimit">límit estricte</string>
+    <string name="treatmentssafety_title">Seguretat tractaments</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">No finalitzat encara</string>
+    <string name="time_elapsed">Temps transcorregut</string>
+    <string name="maxiobset">Màx IOB correctament configurada</string>
+    <string name="hasbgdata">Glucèmia disponible des de la font seleccionada</string>
+    <string name="loopenabled">Llaç activat</string>
+    <string name="apsselected">APS seleccionat</string>
+    <string name="closedmodeenabled">Llaç tancat activat</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Programa d\'aprenentatge</string>
+    <string name="doyouwantresetstart">Voleu reiniciar l\'objectiu? Podeu perdre el vostre progrés.</string>
+    <string name="objectives_button_unfinish">Cancel·lar finalització</string>
+    <string name="objectives_button_unstart">Cancel·lar inici</string>
 </resources>

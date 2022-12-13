@@ -162,6 +162,11 @@
     <string name="dia">Время действия инсулина DIA</string>
     <string name="ic_short">IC углкоэф ГУ/инс</string>
     <string name="isf_short">ISF (чувствительность к инсулину)</string>
+    <string name="canceling_tbr_failed">Отмена врем базала не состоялась</string>
+    <string name="canceling_eb_failed">Сбой отмены пролонгированного болюса</string>
+    <string name="virtualpump_uploadstatus_title">статус передачи данных в NS</string>
+    <string name="suspendloop_label">Отключенный/приостановленный цикл</string>
+    <string name="iob_label">Активный инсулин (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Неверный пароль</string>
     <string name="wrongpin">Неверный PIN-код</string>
@@ -423,7 +428,6 @@
     <string name="autotune_param">Парам</string>
     <string name="autotune_percent">%</string>
     <string name="autotune_missing">Отсутствует</string>
-    <string name="autotune_profile_name">Профиль авто тюн</string>
     <string name="autotune_run">Выполнить Autotune</string>
     <string name="autotune_check_input_profile_button">Проверьте профиль ввода</string>
     <string name="autotune_compare_profile">Сравнить профили</string>

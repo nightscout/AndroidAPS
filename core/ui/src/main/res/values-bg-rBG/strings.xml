@@ -138,6 +138,7 @@
     <string name="dia">DIA</string>
     <string name="ic_short">И / Въгл</string>
     <string name="isf_short">Чувств</string>
+    <string name="virtualpump_uploadstatus_title">Качва статуса в NS</string>
     <!--    Protection-->
     <string name="wrongpassword">Грешна парола</string>
     <string name="passwords_dont_match">Паролите не съвпадат</string>

@@ -97,4 +97,7 @@
     <string name="remove_all">Supprimer tout</string>
     <string name="reset_start">Réinitialiser le démarrage</string>
     <string name="upload_now">Télécharger maintenant</string>
+    <string name="not_connected">Non connecté</string>
+    <string name="read_only">Lecture seule</string>
+    <string name="working">Opération en cours</string>
 </resources>

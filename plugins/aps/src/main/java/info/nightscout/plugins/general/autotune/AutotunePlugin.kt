@@ -14,9 +14,9 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.MidnightTime
 import info.nightscout.plugins.aps.R
@@ -131,10 +131,10 @@ class AutotunePlugin @Inject constructor(
         val starttime = endTime - daysBack * 24 * 60 * 60 * 1000L
         autotuneFS.exportSettings(settings(lastRun, daysBack, starttime, endTime))
         tunedProfile = ATProfile(profile, localInsulin, injector).also {
-            it.profilename = rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name)
+            it.profileName = rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name)
         }
         pumpProfile = ATProfile(profile, localInsulin, injector).also {
-            it.profilename = selectedProfile
+            it.profileName = selectedProfile
         }
         autotuneFS.exportPumpProfile(pumpProfile)
 
@@ -195,31 +195,31 @@ class AutotunePlugin @Inject constructor(
         if (autoSwitch) {
             val circadian = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_circadian_ic_isf, false)
             tunedProfile?.let { tunedP ->
-                tunedP.profilename = pumpProfile.profilename
+                tunedP.profileName = pumpProfile.profileName
                 updateProfile(tunedP)
                 uel.log(
                     UserEntry.Action.STORE_PROFILE,
                     UserEntry.Sources.Automation,
                     rh.gs(info.nightscout.core.ui.R.string.autotune),
-                    ValueWithUnit.SimpleString(tunedP.profilename)
+                    ValueWithUnit.SimpleString(tunedP.profileName)
                 )
                 updateButtonVisibility = View.GONE
                 tunedP.profileStore(circadian)?.let { profilestore ->
                     if (profileFunction.createProfileSwitch(
                             profilestore,
-                            profileName = tunedP.profilename,
+                            profileName = tunedP.profileName,
                             durationInMinutes = 0,
                             percentage = 100,
                             timeShiftInHours = 0,
                             timestamp = dateUtil.now()
                         )
                     ) {
-                        log("Profile Switch succeed ${tunedP.profilename}")
+                        log("Profile Switch succeed ${tunedP.profileName}")
                         uel.log(
                             UserEntry.Action.PROFILE_SWITCH,
                             UserEntry.Sources.Automation,
                             rh.gs(info.nightscout.core.ui.R.string.autotune),
-                            ValueWithUnit.SimpleString(tunedP.profilename)
+                            ValueWithUnit.SimpleString(tunedP.profileName)
                         )
                     }
                     rxBus.send(EventLocalProfileChanged())
@@ -262,7 +262,7 @@ class AutotunePlugin @Inject constructor(
             totalBasal += pumpProfile.basal[i]
             totalTuned += tunedProfile.basal[i]
             val percentageChangeValue = tunedProfile.basal[i] / pumpProfile.basal[i] * 100 - 100
-            strResult += rh.gs(info.nightscout.core.ui.R.string.autotune_log_basal, i.toDouble(), pumpProfile.basal[i], tunedProfile.basal[i], tunedProfile.basalUntuned[i], percentageChangeValue)
+            strResult += rh.gs(info.nightscout.core.ui.R.string.autotune_log_basal, i.toDouble(), pumpProfile.basal[i], tunedProfile.basal[i], tunedProfile.basalUnTuned[i], percentageChangeValue)
         }
         strResult += line
         strResult += rh.gs(info.nightscout.core.ui.R.string.autotune_log_sum_basal, totalBasal, totalTuned)
@@ -329,10 +329,10 @@ class AutotunePlugin @Inject constructor(
         val profileList: ArrayList<CharSequence> = profileStore.getProfileList()
         var indexLocalProfile = -1
         for (p in profileList.indices)
-            if (profileList[p] == newProfile.profilename)
+            if (profileList[p] == newProfile.profileName)
                 indexLocalProfile = p
         if (indexLocalProfile == -1) {
-            profilePlugin.addProfile(profilePlugin.copyFrom(newProfile.getProfile(circadian), newProfile.profilename))
+            profilePlugin.addProfile(profilePlugin.copyFrom(newProfile.getProfile(circadian), newProfile.profileName))
             return
         }
         profilePlugin.currentProfileIndex = indexLocalProfile
@@ -348,17 +348,17 @@ class AutotunePlugin @Inject constructor(
         json.put("lastNbDays", lastNbDays)
         json.put("lastRun", lastRun)
         json.put("pumpProfile", pumpProfile.profile.toPureNsJson(dateUtil))
-        json.put("pumpProfileName", pumpProfile.profilename)
+        json.put("pumpProfileName", pumpProfile.profileName)
         json.put("pumpPeak", pumpProfile.peak)
         json.put("pumpDia", pumpProfile.dia)
         tunedProfile?.let { atProfile ->
             json.put("tunedProfile", atProfile.profile.toPureNsJson(dateUtil))
             json.put("tunedCircadianProfile", atProfile.circadianProfile.toPureNsJson(dateUtil))
-            json.put("tunedProfileName", atProfile.profilename)
+            json.put("tunedProfileName", atProfile.profileName)
             json.put("tunedPeak", atProfile.peak)
             json.put("tunedDia", atProfile.dia)
             for (i in 0..23) {
-                json.put("missingDays_$i", atProfile.basalUntuned[i])
+                json.put("missingDays_$i", atProfile.basalUnTuned[i])
             }
         }
         json.put("result", result)
@@ -379,7 +379,7 @@ class AutotunePlugin @Inject constructor(
             selectedProfile = JsonHelper.safeGetString(json, "pumpProfileName", "")
             val profile = JsonHelper.safeGetJSONObject(json, "pumpProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
                 ?: return
-            pumpProfile = ATProfile(ProfileSealed.Pure(profile), localInsulin, injector).also { it.profilename = selectedProfile }
+            pumpProfile = ATProfile(ProfileSealed.Pure(profile), localInsulin, injector).also { it.profileName = selectedProfile }
             val tunedPeak = JsonHelper.safeGetInt(json, "tunedPeak")
             val tunedDia = JsonHelper.safeGetDouble(json, "tunedDia")
             localInsulin = LocalInsulin("PumpInsulin", tunedPeak, tunedDia)
@@ -389,10 +389,10 @@ class AutotunePlugin @Inject constructor(
             val circadianTuned = JsonHelper.safeGetJSONObject(json, "tunedCircadianProfile", null)?.let { pureProfileFromJson(it, dateUtil) }
                 ?: return
             tunedProfile = ATProfile(ProfileSealed.Pure(tuned), localInsulin, injector).also { atProfile ->
-                atProfile.profilename = tunedProfileName
+                atProfile.profileName = tunedProfileName
                 atProfile.circadianProfile = ProfileSealed.Pure(circadianTuned)
                 for (i in 0..23) {
-                    atProfile.basalUntuned[i] = JsonHelper.safeGetInt(json, "missingDays_$i")
+                    atProfile.basalUnTuned[i] = JsonHelper.safeGetInt(json, "missingDays_$i")
                 }
             }
             result = JsonHelper.safeGetString(json, "result", "")

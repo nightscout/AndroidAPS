@@ -2,21 +2,32 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
-    <string name="dst_in_24h_warning">在24小时或更少时间内变更\"夏令时\"</string>
-    <string name="dst_loop_disabled_warning">夏令时变更在三小时内-已禁用闭环</string>
     <!-- Storage constraint -->
     <!-- Version Checker -->
-    <string name="old_version">旧版本</string>
-    <string name="very_old_version">非常旧版本</string>
-    <string name="application_expired">应用版本已过期。</string>
-    <string name="new_version_warning">新版本已发布至少%1$d天！将在%2$d天后回退到LGS (低血糖维持模式)，闭环功能将在%3$d天后禁用。</string>
-    <string name="running_invalid_version">我们检测到您运行的版本无效。 已禁用循环!</string>
-    <string name="versionavailable">版本 %1$s 可用</string>
-    <string name="version_expire">版本 %1$s 将在 %2$s 过期</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
-    <string name="recalculated_data_used">重新计算的数据</string>
-    <string name="bg_too_close">血糖间隔太近:\n%1$s\n%2$s</string>
-    <string name="a11y_bg_quality_recalculated">重新计算</string>
-    <string name="a11y_bg_quality_doubles">双重条目</string>
+    <!-- Safety -->
+    <string name="limitingcarbs">由于 %2$s, 将碳水化合物限制为 %1$d 克</string>
+    <string name="pumpisnottempbasalcapable">这个泵无法设置临时基础率</string>
+    <string name="closedmodedisabledinpreferences">在参数选项中禁用了闭环模式</string>
+    <string name="closed_loop_disabled_on_dev_branch">正在运行开发版本，闭环被禁用了</string>
+    <string name="closed_loop_disabled_with_eb">由于运行扩展大剂量而禁用了闭环</string>
+    <string name="smbalwaysdisabled">SMB always and after carbs disabled 因为实时的血糖来源不支持高级筛选</string>
+    <string name="smbnotallowedinopenloopmode">在开环模式下不允许使用SMB－微型大剂量</string>
+    <string name="maxvalueinpreferences">在参数选项里的最大值</string>
+    <string name="hardlimit">硬限制</string>
+    <string name="treatmentssafety_title">治疗安全</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">尚未完成</string>
+    <string name="time_elapsed">已用时间</string>
+    <string name="maxiobset">合理地设置最大 IOB</string>
+    <string name="hasbgdata">所选的血糖值来源的血糖是可用的</string>
+    <string name="loopenabled">闭环启用了</string>
+    <string name="apsselected">APS已选择</string>
+    <string name="closedmodeenabled">闭环模式启用了</string>
+    <string name="objectives_shortname">目标</string>
+    <string name="description_objectives">学习计划</string>
+    <string name="doyouwantresetstart">你想要重置已启动的目标? 你会失去已有的进度。</string>
+    <string name="objectives_button_unfinish">清除已完成</string>
+    <string name="objectives_button_unstart">清除已启动</string>
 </resources>

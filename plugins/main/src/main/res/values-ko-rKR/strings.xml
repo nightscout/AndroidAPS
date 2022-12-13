@@ -97,21 +97,6 @@
     <string name="sms_read_status_failed">상태를 읽지 못했습니다.</string>
     <string name="sms_profile_switch_created">프로파일 변경 생성됨</string>
     <string name="sms_wrong_tbr_duration">TBR 기간은 %1$d분의 배수가 되어야 하고 0보다 커야 함.</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">휴마로그와 노보래피드에 대한 인슐린 설정</string>
-    <string name="description_insulin_ultra_rapid">피아스프에 대한 인슐린 설정</string>
-    <string name="description_insulin_lyumjev">Lyumjev에 대한 인슐린 설정</string>
-    <string name="description_insulin_free_peak">인슐린활동의 피크를 직접 정의할 수 있습니다. 고급 사용자만 사용해야 합니다.</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">IOB 커브 피크 시간</string>
-    <string name="insulin_peak_time">피크 시간 [min]</string>
-    <string name="free_peak_oref">사용자지정-피크 Oref</string>
-    <string name="rapid_acting_oref">초속효성 Oref</string>
-    <string name="ultra_rapid_oref">초-초속효성 Oref</string>
-    <string name="dia_too_short">DIA %1$f는 너무 짧습니다. 대신 %2$f을 사용하세요!</string>
-    <string name="fast_acting_insulin_comment">노보래피드, 휴마로그, 에피드라</string>
-    <string name="ultra_fast_acting_insulin_comment">피아스프(Fiasp)</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip+ 상태표시라인 (워치)</string>
@@ -151,22 +136,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">TARG</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">훌륭합니다. 완료되었습니다!</string>
-    <string name="not_completed_yet">아직 완료되지 않았습니다.</string>
-    <string name="time_elapsed">경과 시간</string>
-    <string name="maxiobset">최대 IOB가 바르게 설정됨</string>
-    <string name="hasbgdata">선택한 소스에서 혈당이 들어옵니다.</string>
-    <string name="loopenabled">Loop 활성화됨</string>
-    <string name="apsselected">APS 선택됨</string>
-    <string name="closedmodeenabled">Closed 모드가 활성화됨</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">프로그램 배우기</string>
-    <string name="doyouwantresetstart">목표를 초기화하시겠습니까? 진행상황이 삭제됩니다.</string>
-    <string name="objectives_next_button">다음</string>
-    <string name="objectives_previous_button">이전</string>
-    <string name="objectives_button_unfinish">완료 초기화</string>
-    <string name="objectives_button_unstart">시작 초기화</string>
     <!-- Actions -->
     <string name="actions">실행</string>
     <string name="description_actions">일반 기능을 빠르게 실행시킬 버튼</string>
@@ -183,18 +152,6 @@
     <string name="pb_label">펌프 배터리</string>
     <string name="cannula">캐뉼라</string>
     <string name="ebstopsloop">확장 Bolus 기능을 사용하는 동안에는 Closed Loop 모드가 중지됩니다. 정말 원하십니까?</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">%2$s로 인해 확장Bolus가 %1$.1f U로 제한됩니다.</string>
-    <string name="limitingcarbs">%2$s로 인해 탄수화물이 %1$d g로 제한됩니다.</string>
-    <string name="pumpisnottempbasalcapable">이 펌프 임시Basal을 지원하지 않습니다.</string>
-    <string name="closedmodedisabledinpreferences">설정에서 Closed Loop 모드가 비활성화되었습니다.</string>
-    <string name="closed_loop_disabled_on_dev_branch">개발자버전을 실행중입니다. Closed Loop는 비활성화 됩니다.</string>
-    <string name="closed_loop_disabled_with_eb">확장 Bolus 사용으로 인해 Closed Loop가 비활성화됨</string>
-    <string name="smbalwaysdisabled">선택한 혈당 출처가 고급 필터링을 지원하지 않기 때문에 SMB가 항상 비활성화됩니다.</string>
-    <string name="smbnotallowedinopenloopmode">Open Loop모드에선 SMB가 허용되지 않습니다.</string>
-    <string name="maxvalueinpreferences">설정에서의 최대값</string>
-    <string name="hardlimit">하드한계</string>
-    <string name="treatmentssafety_title">관리 안전설정</string>
     <!-- Overview -->
     <string name="show_statuslights">홈화면에 상태 표시등 보여주기</string>
     <string name="statuslights_iage_warning">인슐린 사용 기간 경고 기준 [h]</string>
@@ -303,38 +260,6 @@
     <string name="treatments_shortname">TREAT</string>
     <string name="sensitivity_shortname">민감도</string>
     <string name="graph_menu_divider_header">그래프</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">가성펌프 종류</string>
-    <string name="virtual_pump_definition">펌프 정의</string>
-    <string name="virtual_pump_pump_def">Bolus: 스텝=%1$s\n확장Bolus: [Step=%2$s, 기간=%3$s분-%4$s시]\nBasal: 스텝=%5$s\n임시Basal: %6$s (by %7$s), 기간=%8$s분-%9$s시\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMP</string>
-    <string name="description_pump_virtual">가상용 펌프를 위한 설정(Open Loop)</string>
-    <string name="virtual_pump_label">가상 펌프</string>
-    <string name="virtualpump_settings">가상펌프 설정</string>
-    <string name="virtualpump_uploadstatus_title">NS에 상태 업로드하기</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient 혈당</string>
-    <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">xDrip+에서 혈당값 받기</string>
-    <string name="eversense">Eversense 앱(패치버전)</string>
-    <string name="description_source_eversense">패치된 Eversense 앱에서 혈당값 받기</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Glimp에서 혈당값 받기</string>
-    <string name="mm640g">미니메드640g</string>
-    <string name="description_source_mm640g">600SeriesAndroidUploader에서 혈당값 받기</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Poctech 앱에서 혈당값 받기</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">혈당값이 Tomato앱(MiaoMaio장치) 으로부터 수신되었습니다.</string>
-    <string name="random_bg">무작위 혈당</string>
-    <string name="description_source_random_bg">무작위로 혈당을 생성합니다(데모 버전 전용)</string>
-    <string name="random_bg_short">혈당</string>
-    <string name="do_xdrip_upload_title">혈당 데이터를 xDrip+에 전송하기</string>
-    <string name="do_xdrip_upload_summary">xDrip+ 데이터 소스에서 640g/Eversense을 선택하세요</string>
-    <string name="bgsource_upload">혈당 업로드 설정</string>
-    <string name="dexcom_log_ns_sensor_change_title">센서 교체 NS에 기록하기</string>
     <!-- Skins -->
     <string name="classic_description">기본 스킨</string>
     <string name="lowres_description">저해상도 스킨</string>

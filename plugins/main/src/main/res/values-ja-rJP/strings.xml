@@ -8,7 +8,6 @@
     <string name="smscommunicator_remote_bolus_not_allowed">リモートボーラスが利用できません。後でもう一度お試しください。</string>
     <string name="sms_delta">デルタ:</string>
     <string name="sms_basal">ベーサル:</string>
-    <!-- Insulin -->
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <!-- Food-->
@@ -18,10 +17,8 @@
     <string name="units_colon">Units:</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
     <!-- Actions -->
     <string name="actions_shortname">ACT</string>
-    <!-- Safety -->
     <!-- Overview -->
     <string name="overview">概要</string>
     <string name="overview_shortname">HOME</string>
@@ -79,8 +76,6 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TREAT</string>
-    <!-- VirtualPump -->
-    <!-- Source -->
     <!-- Skins -->
     <!--    DataBroadcast-->
     <!--    Iob-->

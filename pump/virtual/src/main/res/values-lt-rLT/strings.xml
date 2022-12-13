@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">Integracija pompoms, kurios dar neturi reikalingo valdiklio (Atviras Ciklas)</string>
+    <string name="virtualpump_settings">Virtualios pompos nustatymai</string>
+</resources>

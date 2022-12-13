@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Laai BG data af vanaf Nightscout</string>
+    <string name="eversense">Eversense App (bygewerk)</string>
+    <string name="description_source_eversense">Ontvang BG waardes uit die gelapte Eversense toep.</string>
+    <string name="description_source_glimp">Ontvang BG waardes vanaf Glimp.</string>
+    <string name="description_source_mm640g">Onvang BG waardes vanaf die 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Ontvang BG waardes van Poctech toepassing</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Ontvang BG waardes vanaf Tomato toep (MiaoMiao toestel)</string>
+    <string name="bgsource_upload">BG oplaai instellings</string>
+</resources>

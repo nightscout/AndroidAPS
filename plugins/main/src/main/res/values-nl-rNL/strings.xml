@@ -101,21 +101,6 @@
     <string name="sms_profile_switch_created">Profiel wissel aangemaakt</string>
     <string name="sms_wrong_tbr_duration">Tijdelijk basaal duur moet een veelvoud van %1$d minuten en groter dan 0 zijn.</string>
     <string name="a11y_otp_qr_code">QR Code voor het instellen van een eenmalig wachtwoord</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Insuline instelling voor Humalog en NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Insuline instelling voor Fiasp</string>
-    <string name="description_insulin_lyumjev">Insuline instelling voor Lyumjev</string>
-    <string name="description_insulin_free_peak">Hiermee kan je de piek van de insulineactiviteit definiëren, mag alleen worden gebruikt door gevorderde gebruikers</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">IOB curve piek tijd</string>
-    <string name="insulin_peak_time">Piek tijd [min]</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Snel-werkende Oref</string>
-    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
-    <string name="dia_too_short">DIA van %1$f te kort - %2$f wordt inplaats gebruikt!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip+ Statuslijn (horloge)</string>
@@ -171,23 +156,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">DOEL</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Voltooid, goed gedaan!</string>
-    <string name="not_completed_yet">Nog niet voltooid</string>
-    <string name="time_elapsed">Verstreken tijd</string>
-    <string name="maxiobset">Maximum IOB juist ingesteld</string>
-    <string name="hasbgdata">BG beschikbaar op gekozen bron</string>
-    <string name="synchaswritepermission">Synchronisatieservice heeft schrijfrechten</string>
-    <string name="loopenabled">Loop Actief</string>
-    <string name="apsselected">APS geslecteerd</string>
-    <string name="closedmodeenabled">Closed modus actief</string>
-    <string name="objectives_shortname">DOEL</string>
-    <string name="description_objectives">Leerprogramma</string>
-    <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
-    <string name="objectives_next_button">Volgende</string>
-    <string name="objectives_previous_button">Vorige</string>
-    <string name="objectives_button_unfinish">Voltooiing wissen</string>
-    <string name="objectives_button_unstart">Start wissen</string>
     <!-- Actions -->
     <string name="actions">Acties</string>
     <string name="description_actions">Een aantal knoppen voor snelle toegang tot algemene functies</string>
@@ -207,18 +175,6 @@
     <string name="statuslights_cannula_age">canule leeftijd</string>
     <string name="statuslights_patch_pump_age">patchpomp leeftijd</string>
     <string name="patch_pump">Patchpomp</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Beperken van extended bolus op %1$.1f E vanwege %2$s</string>
-    <string name="limitingcarbs">Koolhydraten worden beperkt tot %1$d gr doordat %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pomp kan geen tijdelijk basaal aanvaarden</string>
-    <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de instellingen</string>
-    <string name="closed_loop_disabled_on_dev_branch">Dev versie actief. Closed loop gedeactiveerd</string>
-    <string name="closed_loop_disabled_with_eb">Closed loop modus uitgeschakeld vanwege afgeven Vertraagde bolus</string>
-    <string name="smbalwaysdisabled">SMB altijd gedeactiveerd doordat de gekozen BG bron geen optimale filtering toepast</string>
-    <string name="smbnotallowedinopenloopmode">SMB niet toegestaan in Open Loop modus</string>
-    <string name="maxvalueinpreferences">Maximum waarde in instellingen</string>
-    <string name="hardlimit">max limiet (SC)</string>
-    <string name="treatmentssafety_title">Behandelingen veiligheid</string>
     <!-- Overview -->
     <string name="show_statuslights">Toon statusindicatoren op startscherm</string>
     <string name="statuslights_cage_warning">Drempelwaarde waarschuwing canule leeftijd [h]</string>
@@ -345,50 +301,6 @@
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Grafiek schaal</string>
     <string name="graph_menu_divider_header">Grafiek</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Virtuele pomp Type</string>
-    <string name="virtual_pump_definition">Pomp definitie</string>
-    <string name="virtual_pump_pump_def">Bolus: Stap=%1$s\nExtended Bolus: [Stap=%2$s, Duur=%3$smin-%4$sh]\nBasaal: Stap=%5$s\nTBR: %6$s (by %7$s), Duur=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMP</string>
-    <string name="description_pump_virtual">Pomp integratie voor pompen, waar nog geen driver voor is (Open Loop)</string>
-    <string name="virtual_pump_label">VIRTUELE POMP</string>
-    <string name="virtualpump_settings">Virtuele pomp instellingen</string>
-    <string name="virtualpump_uploadstatus_title">Upload status naar NS</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient BG</string>
-    <string name="ns_client_bg_short">NS BG</string>
-    <string name="description_source_ns_client">Download BG waardes van Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Ontvang BG waardes van xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Ontvang BG waarden van de \'Build Your Own Dexcom App\' (BYODA).</string>
-    <string name="eversense">Eversense App (aangepast)</string>
-    <string name="description_source_eversense">Ontvang BG waardes van de aangepaste Eversense app.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Ontvang BG waardes van Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Ontvang BG waardes van 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Ontvang BG waardes van Poctech app</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Ontvang waardes van Glunovo app</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Ontvang waarden van de Intelligo app</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Ontvang BG waardes van Tomato app (MiaoMiao apparaatje)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Ontvang BG waarden van GlucoRx Aidex CGMS.</string>
-    <string name="random_bg">Willekeurige BG</string>
-    <string name="description_source_random_bg">Willekeurige BG gegevens genereren (alleen Demo modus)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Stuur BG data naar xDrip+</string>
-    <string name="do_xdrip_upload_summary">In xDrip+ kies 640g/Eversense data bron</string>
-    <string name="bgsource_upload">BG upload instellingen</string>
-    <string name="dexcom_log_ns_sensor_change_title">Noteer sensor wissel in NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Noteer automatisch \"Sensor Wissel\" in NS bij starten van sensor</string>
     <!-- Skins -->
     <string name="classic_description">Klassiek weergave thema</string>
     <string name="lowres_description">Lage resolutie skin</string>

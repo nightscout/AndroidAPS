@@ -1,4 +1,4 @@
-package info.nightscout.core.pump
+package info.nightscout.androidaps.plugins.pump.omnipod.eros.extensions
 
 import info.nightscout.interfaces.pump.PumpSync
 import kotlin.math.ceil

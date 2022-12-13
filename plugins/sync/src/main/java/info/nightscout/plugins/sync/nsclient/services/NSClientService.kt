@@ -25,7 +25,6 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSAlarm
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.sync.DataSyncSelector
-import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.interfaces.utils.JsonHelper.safeGetStringAllowNull
@@ -40,10 +39,8 @@ import info.nightscout.plugins.sync.nsclient.acks.NSAuthAck
 import info.nightscout.plugins.sync.nsclient.acks.NSUpdateAck
 import info.nightscout.plugins.sync.nsclient.data.AlarmAck
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
-import info.nightscout.plugins.sync.nsclient.workers.NSClientAddAckWorker
 import info.nightscout.plugins.sync.nsclient.workers.NSClientAddUpdateWorker
 import info.nightscout.plugins.sync.nsclient.workers.NSClientMbgWorker
-import info.nightscout.plugins.sync.nsclient.workers.NSClientUpdateRemoveAckWorker
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -72,7 +69,7 @@ import java.net.URISyntaxException
 import java.util.Locale
 import javax.inject.Inject
 
-class NSClientService : DaggerService(), NsClient.NSClientService {
+class NSClientService : DaggerService() {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -111,7 +108,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
     private var nsAPISecret = ""
     private var nsDevice = ""
     private val nsHours = 48
-    private var lastAckTime: Long = 0
+    internal var lastAckTime: Long = 0
     private var nsApiHashCode = ""
     private val reconnections = ArrayList<Long>()
 
@@ -168,38 +165,12 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
             .toObservable(NSAuthAck::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ ack -> processAuthAck(ack) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(NSUpdateAck::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ack -> processUpdateAck(ack) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(NSAddAck::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ack -> processAddAck(ack) }, fabricPrivacy::logException)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         disposable.clear()
         if (wakeLock?.isHeld == true) wakeLock?.release()
-    }
-
-    private fun processAddAck(ack: NSAddAck) {
-        lastAckTime = dateUtil.now()
-        dataWorkerStorage.enqueue(
-            OneTimeWorkRequest.Builder(NSClientAddAckWorker::class.java)
-                .setInputData(dataWorkerStorage.storeInputData(ack))
-                .build()
-        )
-    }
-
-    private fun processUpdateAck(ack: NSUpdateAck) {
-        lastAckTime = dateUtil.now()
-        dataWorkerStorage.enqueue(
-            OneTimeWorkRequest.Builder(NSClientUpdateRemoveAckWorker::class.java)
-                .setInputData(dataWorkerStorage.storeInputData(ack))
-                .build()
-        )
     }
 
     private fun processAuthAck(ack: NSAuthAck) {
@@ -251,7 +222,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
         } else if (!nsEnabled) {
             rxBus.send(EventNSClientNewLog("NSCLIENT", "disabled"))
             rxBus.send(EventNSClientStatus("Disabled"))
-        } else if (nsURL != "" && (config.isEngineeringMode() || nsURL.lowercase(Locale.getDefault()).startsWith("https://"))) {
+        } else if (nsURL != "" && (nsURL.lowercase(Locale.getDefault()).startsWith("https://"))) {
             try {
                 rxBus.send(EventNSClientStatus("Connecting ..."))
                 val opt = IO.Options()
@@ -598,7 +569,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
         }
     }
 
-    override fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String) {
+    fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String) {
         try {
             if (_id == null) return
             if (!isConnected || !hasWriteAuth) return
@@ -606,7 +577,7 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
             message.put("collection", collection)
             message.put("_id", _id)
             message.put("data", data)
-            socket?.emit("dbUpdate", message, NSUpdateAck("dbUpdate", _id, aapsLogger, rxBus, originalObject))
+            socket?.emit("dbUpdate", message, NSUpdateAck("dbUpdate", _id, aapsLogger, rxBus, this, dateUtil, dataWorkerStorage, originalObject))
             rxBus.send(
                 EventNSClientNewLog(
                     "DBUPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " +
@@ -618,13 +589,13 @@ class NSClientService : DaggerService(), NsClient.NSClientService {
         }
     }
 
-    override fun dbAdd(collection: String, data: JSONObject, originalObject: Any, progress: String) {
+    fun dbAdd(collection: String, data: JSONObject, originalObject: Any, progress: String) {
         try {
             if (!isConnected || !hasWriteAuth) return
             val message = JSONObject()
             message.put("collection", collection)
             message.put("data", data)
-            socket?.emit("dbAdd", message, NSAddAck(aapsLogger, rxBus, originalObject))
+            socket?.emit("dbAdd", message, NSAddAck(aapsLogger, rxBus, this, dateUtil, dataWorkerStorage, originalObject))
             rxBus.send(EventNSClientNewLog("DBADD $collection", "Sent " + originalObject.javaClass.simpleName + " " + data + " " + progress))
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)

@@ -75,20 +75,6 @@
     <string name="sms_loop_suspended_for">Αναστολή (%1$d m)</string>
     <string name="sms_read_status_failed">Η ανάγνωση κατάστασης απέτυχε</string>
     <string name="sms_profile_switch_created">Δημιουργήθηκε αλλαγή προφίλ</string>
-    <!-- Insulin -->
-    <string name="description_insulin_rapid">Η ινσουλίνη που ορίζεται Humalog και NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Η ινσουλίνη που ορίζεται για Fiasp</string>
-    <string name="description_insulin_lyumjev">Προκαθορισμός ινσουλίνης για την Lyumjev</string>
-    <string name="description_insulin_free_peak">Σας επιτρέπει να ορίσετε το μέγιστο της δράσης της ινσουλίνης και πρέπει να χρησιμοποιείται μόνο από προχωρημένους χρήστες</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">Μέγιστη τιμή καμπύλης IOB</string>
-    <string name="insulin_peak_time">Μέγιστο καμπύλης [λεπτά]</string>
-    <string name="free_peak_oref">Προαιρετικά-αιχμή Oref</string>
-    <string name="rapid_acting_oref">Γρήγορη δράση - Oref</string>
-    <string name="ultra_rapid_oref">Έξτρα Γρήγορη δράση - Oref</string>
-    <string name="dia_too_short">DIA για %1$f πολύ μικρή - χρησιμοποιήστε %2$f! </string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status_shortname">xds</string>
@@ -118,19 +104,6 @@
     <string name="errors">Σφάλματα</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Ολοκληρώθηκε, συγχαρητήρια!</string>
-    <string name="not_completed_yet">Δεν ολοκληρώθηκε ακόμη</string>
-    <string name="time_elapsed">Ο χρόνος που πέρασε</string>
-    <string name="maxiobset">Το μέγιστο IOB έχει ρυθμιστεί σωστά</string>
-    <string name="hasbgdata">BG διαθέσιμη από επιλεγμένη πηγή</string>
-    <string name="loopenabled">Κύκλωμα ενεργοποιημένο</string>
-    <string name="apsselected">Επιλέχθηκε APS</string>
-    <string name="closedmodeenabled">Ενεργοποιήθηκε η κλειστή λειτουργία</string>
-    <string name="objectives_shortname">ΣΤΟΧΟΙ</string>
-    <string name="description_objectives">Πρόγραμμα εκμάθησης</string>
-    <string name="objectives_next_button">Επόμενο</string>
-    <string name="objectives_previous_button">Προηγ</string>
     <!-- Actions -->
     <string name="actions">Ενέργειες</string>
     <string name="description_actions">Ορισμένα πλήκτρα για γρήγορη πρόσβαση σε κοινά χαρακτηριστικά</string>
@@ -141,17 +114,6 @@
     <string name="nav_history_browser">Ιστορικό περιήγησης</string>
     <string name="sensor_label">Αισθητήρας</string>
     <string name="insulin_label">Ινσουλίνη</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Περιορίζεται το εκτεταμένο bolus σε %1$.1f U λόγω %2$s</string>
-    <string name="limitingcarbs">Περιορίζονται οι υδατάνθρακες σε %1$d g λόγω %2$s</string>
-    <string name="pumpisnottempbasalcapable">Η αντλία δεν υποστηρίζει προσωρινό βασικό ρυθμό</string>
-    <string name="closedmodedisabledinpreferences">Το κλειστό κύκλωμα είναι απενεργοποιημένο στις Επιλογές</string>
-    <string name="closed_loop_disabled_on_dev_branch">Εκτελείται έκδοση Dev. Το κλειστό κύκλωμα είναι απενεργοποιημένο.</string>
-    <string name="smbalwaysdisabled">Το SMB πάντα και μετά το γεύμα απενεργοποιείται επειδή η ενεργή πηγή BG δεν υποστηρίζει προηγμένο φιλτράρισμα</string>
-    <string name="smbnotallowedinopenloopmode">To SMB δεν επιτρέπεται σε λειτουργία ανοιχτού κυκλώματος</string>
-    <string name="maxvalueinpreferences">μέγιστη τιμή στις Επιλογές</string>
-    <string name="hardlimit">σταθερό όριο</string>
-    <string name="treatmentssafety_title">Ασφάλεια Θεραπειών</string>
     <!-- Overview -->
     <string name="show_statuslights">Εμφάνιση του φωτισμού κατάστασης στην αρχική οθόνη</string>
     <string name="statuslights_iage_warning">Όριο προειδοποίησης για την ηλικία της ινσουλίνης[h]</string>
@@ -245,36 +207,6 @@
     <string name="bgi_shortname">-BGI</string>
     <string name="treatments_shortname">ΘΕΡΑΠ</string>
     <string name="sensitivity_shortname">SENS</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Τύπος εικονικής αντλίας</string>
-    <string name="virtual_pump_definition">Ορισμός Αντλίας</string>
-    <string name="virtual_pump_pump_def">Bolus: Άμεσο=%1$s\nΕκτεταμένο Bolus: [Άμεσο=%2$s, Διάρκεια=%3$smin-%4$sh]\nΒασικός: Άμεσο=%5$s\nTBR: %6$s (με %7$s), Διάρκεια=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">Εικ. αντλία</string>
-    <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
-    <string name="virtual_pump_label">ΕΙΚΟΝΙΚΗ ΑΝΤΛΙΑ</string>
-    <string name="virtualpump_settings">Ρυθμίσεις Εικονικής αντλίας</string>
-    <string name="virtualpump_uploadstatus_title">Φόρτωση κατάστασης στο NS</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient BG</string>
-    <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Λάβετε τις τιμές BG από το xDrip+.</string>
-    <string name="eversense">Eversense App (τροποποιημένη)</string>
-    <string name="description_source_eversense">Λάβετε τις τιμές BG από την εφαρμογή του Eversense.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Λάβετε τις τιμές BG από το Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Λάβετε τις τιμές BG από την εφαρμογή Poctech</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Λάβετε τιμές BG από Tomato app (MiaoMiao)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Αποστολή δεδομένων BG στο xDrip+</string>
-    <string name="do_xdrip_upload_summary">Στο xDrip+, επιλέξτε την πηγή δεδομένων 640g / Eversense</string>
-    <string name="bgsource_upload">Ανέβασμα ρυθμίσεων BG</string>
-    <string name="dexcom_log_ns_sensor_change_title">Αλλαγή αρχείου αισθητήρα σε NS</string>
     <!-- Skins -->
     <!--    DataBroadcast-->
     <string name="cannula_usage">χρήσιμες συμβουλές:</string>

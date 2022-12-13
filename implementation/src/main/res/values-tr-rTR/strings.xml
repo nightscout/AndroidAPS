@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ uygulaması yüklenmemiş</string>
     <string name="calibration_sent">Kalibrasyon xDrip+ a gönderildi</string>
     <string name="bg_label">KŞ</string>
-    <string name="time_to_eat">Yemek zamanı</string>
-    <string name="time_to_bolus">Bolus zamanı!\nBolus sihirbazını çalıştırın ve yeniden hesaplama yapın.</string>
     <string name="executing_right_now">Komut şu anda çalıştırıldı</string>
     <string name="basal_value_below_minimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>
     <string name="permission">Yetki</string>

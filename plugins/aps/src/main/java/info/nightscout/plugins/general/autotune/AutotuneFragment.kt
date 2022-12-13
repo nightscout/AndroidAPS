@@ -28,9 +28,9 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.MidnightTime
@@ -149,12 +149,12 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         binding.autotuneUpdateProfile.setOnClickListener {
-            val localName = autotunePlugin.pumpProfile.profilename
+            val localName = autotunePlugin.pumpProfile.profileName
             OKDialog.showConfirmation(requireContext(),
                                       rh.gs(info.nightscout.core.ui.R.string.autotune_update_input_profile_button),
                                       rh.gs(info.nightscout.core.ui.R.string.autotune_update_local_profile_message, localName),
                                       Runnable {
-                                 autotunePlugin.tunedProfile?.profilename = localName
+                                 autotunePlugin.tunedProfile?.profileName = localName
                                  autotunePlugin.updateProfile(autotunePlugin.tunedProfile)
                                  autotunePlugin.updateButtonVisibility = View.GONE
                                  autotunePlugin.saveLastRun()
@@ -169,12 +169,12 @@ class AutotuneFragment : DaggerFragment() {
         }
 
         binding.autotuneRevertProfile.setOnClickListener {
-            val localName = autotunePlugin.pumpProfile.profilename
+            val localName = autotunePlugin.pumpProfile.profileName
             OKDialog.showConfirmation(requireContext(),
                                       rh.gs(info.nightscout.core.ui.R.string.autotune_revert_input_profile_button),
                                       rh.gs(info.nightscout.core.ui.R.string.autotune_revert_local_profile_message, localName),
                                       Runnable {
-                                 autotunePlugin.tunedProfile?.profilename = ""
+                                 autotunePlugin.tunedProfile?.profileName = ""
                                  autotunePlugin.updateProfile(autotunePlugin.pumpProfile)
                                  autotunePlugin.updateButtonVisibility = View.VISIBLE
                                  autotunePlugin.saveLastRun()
@@ -192,11 +192,11 @@ class AutotuneFragment : DaggerFragment() {
             val pumpProfile = profileFunction.getProfile()?.let { currentProfile ->
                 profileStore.getSpecificProfile(profileName)?.let { specificProfile ->
                     ATProfile(ProfileSealed.Pure(specificProfile), LocalInsulin(""), injector).also {
-                        it.profilename = profileName
+                        it.profileName = profileName
                     }
                 }
                     ?: ATProfile(currentProfile, LocalInsulin(""), injector).also {
-                        it.profilename = profileFunction.getProfileName()
+                        it.profileName = profileFunction.getProfileName()
                     }
             }
             pumpProfile?.let {
@@ -205,7 +205,7 @@ class AutotuneFragment : DaggerFragment() {
                     time = dateUtil.now(),
                     mode = UiInteraction.Mode.CUSTOM_PROFILE,
                     customProfile = pumpProfile.profile.toPureNsJson(dateUtil).toString(),
-                    customProfileName = pumpProfile.profilename
+                    customProfileName = pumpProfile.profileName
                 )
             }
         }
@@ -219,7 +219,7 @@ class AutotuneFragment : DaggerFragment() {
                 time = dateUtil.now(),
                 mode = UiInteraction.Mode.PROFILE_COMPARE,
                 customProfile = pumpProfile.profile.toPureNsJson(dateUtil).toString(),
-                customProfileName = pumpProfile.profilename + "\n" + rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name),
+                customProfileName = pumpProfile.profileName + "\n" + rh.gs(info.nightscout.core.ui.R.string.autotune_tunedprofile_name),
                 customProfile2 = tunedProfile?.toPureNsJson(dateUtil).toString()
             )
         }
@@ -231,17 +231,17 @@ class AutotuneFragment : DaggerFragment() {
             tunedProfile?.let { tunedP ->
                 tunedP.profileStore(circadian)?.let {
                     OKDialog.showConfirmation(requireContext(),
-                                              rh.gs(info.nightscout.core.ui.R.string.activate_profile) + ": " + tunedP.profilename + " ?",
+                                              rh.gs(info.nightscout.core.ui.R.string.activate_profile) + ": " + tunedP.profileName + " ?",
                                               {
                                                   uel.log(
                                                       UserEntry.Action.STORE_PROFILE,
                                                       UserEntry.Sources.Autotune,
-                                                      ValueWithUnit.SimpleString(tunedP.profilename)
+                                                      ValueWithUnit.SimpleString(tunedP.profileName)
                                                   )
                                                   val now = dateUtil.now()
                                                   if (profileFunction.createProfileSwitch(
                                                           it,
-                                                          profileName = tunedP.profilename,
+                                                          profileName = tunedP.profileName,
                                                           durationInMinutes = 0,
                                                           percentage = 100,
                                                           timeShiftInHours = 0,
@@ -252,7 +252,7 @@ class AutotuneFragment : DaggerFragment() {
                                                           UserEntry.Action.PROFILE_SWITCH,
                                                           UserEntry.Sources.Autotune,
                                                           "Autotune AutoSwitch",
-                                                          ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profilename)
+                                                          ValueWithUnit.SimpleString(autotunePlugin.tunedProfile!!.profileName)
                                                       )
                                                   }
                                                   rxBus.send(EventLocalProfileChanged())
@@ -472,7 +472,7 @@ class AutotuneFragment : DaggerFragment() {
                                         val time = df.format(h.toLong()) + ":00"
                                         totalPump += autotunePlugin.pumpProfile.basal[h]
                                         totalTuned += tuned.basal[h]
-                                        layout.addView(toTableRowValue(context, time, autotunePlugin.pumpProfile.basal[h], tuned.basal[h], "%.3f", tuned.basalUntuned[h].toString()))
+                                        layout.addView(toTableRowValue(context, time, autotunePlugin.pumpProfile.basal[h], tuned.basal[h], "%.3f", tuned.basalUnTuned[h].toString()))
                                     }
                                     layout.addView(toTableRowValue(context, "∑", totalPump, totalTuned, "%.3f", " "))
                                 }

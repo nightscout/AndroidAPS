@@ -67,8 +67,9 @@ class AndroidBluetoothDevice(
             // just yet (for example because the UI is still shown on the LCD), while
             // the retryBlocking loop here is in place because the _Android device_
             // may not be ready to connect right away.
-            // TODO: Test and define what happens when all attempts failed.
-            // The user needs to be informed and given the choice to try again.
+            // When all attempts fail, retryBlocking() lets the exception pass through.
+            // That exception is wrapped in BluetoothException, which then needs to be
+            // handled by the caller.
             val totalNumAttempts = 5
             retryBlocking(numberOfRetries = totalNumAttempts, delayBetweenRetries = 100) { attemptNumber, previousException ->
                 if (abortConnectAttempt)
