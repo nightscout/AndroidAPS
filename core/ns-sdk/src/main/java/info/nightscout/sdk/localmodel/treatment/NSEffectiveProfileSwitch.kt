@@ -20,6 +20,7 @@ data class NSEffectiveProfileSwitch(
     override val endId: Long?,
     override val pumpType: String?,
     override val pumpSerial: String?,
+    override var app: String? = null,
     val profileJson: JSONObject,
     val originalProfileName: String,
     val originalCustomizedName: String,

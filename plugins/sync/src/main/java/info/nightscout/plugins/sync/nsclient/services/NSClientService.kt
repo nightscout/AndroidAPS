@@ -580,7 +580,7 @@ class NSClientService : DaggerService() {
             socket?.emit("dbUpdate", message, NSUpdateAck("dbUpdate", _id, aapsLogger, rxBus, this, dateUtil, dataWorkerStorage, originalObject))
             rxBus.send(
                 EventNSClientNewLog(
-                    "DBUPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " +
+                    "UPDATE $collection", "Sent " + originalObject.javaClass.simpleName + " " +
                         "" + _id + " " + data + progress
                 )
             )
@@ -596,7 +596,7 @@ class NSClientService : DaggerService() {
             message.put("collection", collection)
             message.put("data", data)
             socket?.emit("dbAdd", message, NSAddAck(aapsLogger, rxBus, this, dateUtil, dataWorkerStorage, originalObject))
-            rxBus.send(EventNSClientNewLog("DBADD $collection", "Sent " + originalObject.javaClass.simpleName + " " + data + " " + progress))
+            rxBus.send(EventNSClientNewLog("ADD $collection", "Sent " + originalObject.javaClass.simpleName + " " + data + " " + progress))
         } catch (e: JSONException) {
             aapsLogger.error("Unhandled exception", e)
         }

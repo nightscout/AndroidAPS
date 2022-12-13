@@ -1,4 +1,4 @@
-package info.nightscout.plugins.sync.nsclient
+package info.nightscout.plugins.sync.nsShared
 
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
@@ -56,11 +56,12 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     private val queueCounter = QueueCounter()
+    private val isPaused get() = sp.getBoolean(R.string.key_ns_client_paused, false)
 
     override fun queueSize(): Long = queueCounter.size()
 
     override fun doUpload() {
-        if (sp.getBoolean(R.string.key_ns_upload, true)) {
+        if (sp.getBoolean(R.string.key_ns_upload, true) && !isPaused) {
             processChangedBolusesCompat()
             processChangedCarbsCompat()
             processChangedBolusCalculatorResultsCompat()
@@ -106,6 +107,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override tailrec fun processChangedBolusesCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastBolusIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
@@ -158,6 +160,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override tailrec fun processChangedCarbsCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastCarbsIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
@@ -206,6 +209,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override tailrec fun processChangedBolusCalculatorResultsCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastBolusCalculatorResultIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
@@ -257,6 +261,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override tailrec fun processChangedTempTargetsCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastTempTargetIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)
@@ -309,6 +314,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override tailrec fun processChangedFoodsCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastFoodIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_food_last_synced_id, 0)
@@ -357,6 +363,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override tailrec fun processChangedGlucoseValuesCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastGlucoseValueIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)
@@ -369,7 +376,7 @@ class DataSyncSelectorImplementation @Inject constructor(
             aapsLogger.info(LTag.NSCLIENT, "Loading GlucoseValue data Start: $startId ${gv.first} forID: ${gv.second.id} ")
             if (activePlugin.activeBgSource.shouldUploadToNs(gv.first)) {
                 when {
-                    // new record with existing NS id => must be coming from NS => ignore 
+                    // new record with existing NS id => must be coming from NS => ignore
                     gv.first.id == gv.second.id && gv.first.interfaceIDs.nightscoutId != null -> {
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring GlucoseValue. Loaded from NS: ${gv.second.id} ")
                         confirmLastGlucoseValueIdIfGreater(gv.second.id)
@@ -410,6 +417,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override tailrec fun processChangedTherapyEventsCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastTherapyEventIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)
@@ -458,6 +466,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override fun processChangedDeviceStatusesCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastDeviceStatusIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)
@@ -471,7 +480,7 @@ class DataSyncSelectorImplementation @Inject constructor(
             when {
                 // without nsId = create new
                 deviceStatus.interfaceIDs.nightscoutId == null ->
-                    activePlugin.activeNsClient?.dbAdd("devicestatus", DataSyncSelector.PairDeviceStatus(deviceStatus, null), "$startId/$lastDbId")
+                    activePlugin.activeNsClient?.dbAdd("devicestatus", DataSyncSelector.PairDeviceStatus(deviceStatus, 0), "$startId/$lastDbId")
                 // with nsId = ignore
                 deviceStatus.interfaceIDs.nightscoutId != null -> Any()
             }
@@ -487,6 +496,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override tailrec fun processChangedTemporaryBasalsCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastTemporaryBasalIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
@@ -539,6 +549,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override tailrec fun processChangedExtendedBolusesCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastExtendedBolusIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
@@ -599,6 +610,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override tailrec fun processChangedProfileSwitchesCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastProfileSwitchIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)
@@ -647,6 +659,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override tailrec fun processChangedEffectiveProfileSwitchesCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastEffectiveProfileSwitchIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
@@ -699,6 +712,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override tailrec fun processChangedOfflineEventsCompat() {
+        if (isPaused) return
         val lastDbIdWrapped = appRepository.getLastOfflineEventIdWrapped().blockingGet()
         val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
         var startId = sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)
@@ -744,6 +758,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     override fun processChangedProfileStore() {
+        if (isPaused) return
         val lastSync = sp.getLong(R.string.key_ns_profile_store_last_synced_timestamp, 0)
         val lastChange = sp.getLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, 0)
         if (lastChange == 0L) return

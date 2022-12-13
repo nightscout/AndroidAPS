@@ -17,21 +17,24 @@ import org.json.JSONObject
 
 interface DataSyncSelector {
 
-    interface DataPair
-    data class PairTemporaryTarget(val value: TemporaryTarget, val updateRecordId: Long): DataPair
-    data class PairGlucoseValue(val value: GlucoseValue, val updateRecordId: Long): DataPair
-    data class PairTherapyEvent(val value: TherapyEvent, val updateRecordId: Long): DataPair
-    data class PairFood(val value: Food, val updateRecordId: Long): DataPair
-    data class PairBolus(val value: Bolus, val updateRecordId: Long): DataPair
-    data class PairCarbs(val value: Carbs, val updateRecordId: Long): DataPair
-    data class PairBolusCalculatorResult(val value: BolusCalculatorResult, val updateRecordId: Long): DataPair
-    data class PairTemporaryBasal(val value: TemporaryBasal, val updateRecordId: Long): DataPair
-    data class PairExtendedBolus(val value: ExtendedBolus, val updateRecordId: Long): DataPair
-    data class PairProfileSwitch(val value: ProfileSwitch, val updateRecordId: Long): DataPair
-    data class PairEffectiveProfileSwitch(val value: EffectiveProfileSwitch, val updateRecordId: Long): DataPair
-    data class PairOfflineEvent(val value: OfflineEvent, val updateRecordId: Long): DataPair
-    data class PairProfileStore(val value: JSONObject, val timestampSync: Long): DataPair
-    data class PairDeviceStatus(val value: DeviceStatus, val unused: Long?): DataPair
+    interface DataPair { 
+        val value: Any
+        val id: Long
+    }
+    data class PairTemporaryTarget(override val value: TemporaryTarget, override val id: Long): DataPair
+    data class PairGlucoseValue(override val value: GlucoseValue, override val id: Long): DataPair
+    data class PairTherapyEvent(override val value: TherapyEvent, override val id: Long): DataPair
+    data class PairFood(override val value: Food, override val id: Long): DataPair
+    data class PairBolus(override val value: Bolus, override val id: Long): DataPair
+    data class PairCarbs(override val value: Carbs, override val id: Long): DataPair
+    data class PairBolusCalculatorResult(override val value: BolusCalculatorResult, override val id: Long): DataPair
+    data class PairTemporaryBasal(override val value: TemporaryBasal, override val id: Long): DataPair
+    data class PairExtendedBolus(override val value: ExtendedBolus, override val id: Long): DataPair
+    data class PairProfileSwitch(override val value: ProfileSwitch, override val id: Long): DataPair
+    data class PairEffectiveProfileSwitch(override val value: EffectiveProfileSwitch, override val id: Long): DataPair
+    data class PairOfflineEvent(override val value: OfflineEvent, override val id: Long): DataPair
+    data class PairProfileStore(override val value: JSONObject, override val id: Long): DataPair
+    data class PairDeviceStatus(override val value: DeviceStatus, override val id: Long): DataPair
 
     fun queueSize(): Long
 

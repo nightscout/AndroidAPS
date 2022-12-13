@@ -39,16 +39,16 @@ class LoadBgWorker(
         var ret = Result.success()
 
         runBlocking {
-            if ((nsClientV3Plugin.lastModified?.collections?.entries ?: Long.MAX_VALUE) > nsClientV3Plugin.lastFetched.collections.entries)
+            if ((nsClientV3Plugin.newestDataOnServer?.collections?.entries ?: Long.MAX_VALUE) > nsClientV3Plugin.lastLoadedSrvModified.collections.entries)
                 try {
                     //val sgvs = nsClientV3Plugin.nsAndroidClient.getSgvsModifiedSince(nsClientV3Plugin.lastFetched.collections.entries)
-                    val sgvs = nsClientV3Plugin.nsAndroidClient.getSgvsNewerThan(nsClientV3Plugin.lastFetched.collections.entries, 500)
+                    val sgvs = nsClientV3Plugin.nsAndroidClient.getSgvsNewerThan(nsClientV3Plugin.lastLoadedSrvModified.collections.entries, 500)
                     aapsLogger.debug("SGVS: $sgvs")
                     if (sgvs.isNotEmpty()) {
                         rxBus.send(
                             EventNSClientNewLog(
                                 "RCV",
-                                "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}"
+                                "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastLoadedSrvModified.collections.entries)}"
                             )
                         )
                         // Objective0
@@ -60,7 +60,7 @@ class LoadBgWorker(
                             OneTimeWorkRequest.Builder(workerClasses.nsClientSourceWorker).setInputData(dataWorkerStorage.storeInputData(sgvs)).build()
                         ).then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build()).enqueue()
                     } else {
-                        rxBus.send(EventNSClientNewLog("END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}"))
+                        rxBus.send(EventNSClientNewLog("END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastLoadedSrvModified.collections.entries)}"))
                         WorkManager.getInstance(context)
                             .beginUniqueWork(
                                 NSClientV3Plugin.JOB_NAME,
@@ -75,7 +75,7 @@ class LoadBgWorker(
                     ret = Result.failure(workDataOf("Error" to error.toString()))
                 }
             else {
-                rxBus.send(EventNSClientNewLog("END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.entries)}"))
+                rxBus.send(EventNSClientNewLog("END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastLoadedSrvModified.collections.entries)}"))
                 nsClientV3Plugin.scheduleNewExecution() // Idea is to run after 5 min after last BG
                 WorkManager.getInstance(context)
                     .beginUniqueWork(

@@ -20,6 +20,7 @@ data class NSProfileSwitch(
     override val endId: Long?,
     override val pumpType: String?,
     override val pumpSerial: String?,
+    override var app: String? = null,
     val profileJson: JSONObject?,
     val profileName: String,
     val originalProfileName: String?,

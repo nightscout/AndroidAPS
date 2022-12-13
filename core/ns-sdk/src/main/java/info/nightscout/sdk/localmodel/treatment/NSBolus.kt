@@ -19,6 +19,7 @@ data class NSBolus(
     override val endId: Long?,
     override val pumpType: String?,
     override val pumpSerial: String?,
+    override var app: String? = null,
     val insulin: Double,
     val type: BolusType
 

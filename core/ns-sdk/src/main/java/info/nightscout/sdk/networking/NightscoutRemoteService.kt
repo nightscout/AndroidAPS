@@ -2,18 +2,15 @@ package info.nightscout.sdk.networking
 
 import com.google.gson.JsonElement
 import info.nightscout.sdk.remotemodel.LastModified
-import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
 import info.nightscout.sdk.remotemodel.NSResponse
 import info.nightscout.sdk.remotemodel.RemoteCreateUpdateResponse
+import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
 import info.nightscout.sdk.remotemodel.RemoteEntry
 import info.nightscout.sdk.remotemodel.RemoteStatusResponse
 import info.nightscout.sdk.remotemodel.RemoteTreatment
-import okhttp3.RequestBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Path
@@ -57,9 +54,9 @@ internal interface NightscoutRemoteService {
     suspend fun getDeviceStatusModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteDeviceStatus>>>
 
     @POST("v3/treatments")
-    fun createTreatment(@Body remoteTreatment: RemoteTreatment): Response<NSResponse<RemoteCreateUpdateResponse>>
+    suspend fun createTreatment(@Body remoteTreatment: RemoteTreatment): Response<NSResponse<RemoteCreateUpdateResponse>>
 
     @PUT("v3/treatments")
-    fun updateTreatment(@Body remoteTreatment: RemoteTreatment): Response<NSResponse<RemoteCreateUpdateResponse>>
+    suspend fun updateTreatment(@Body remoteTreatment: RemoteTreatment): Response<NSResponse<RemoteCreateUpdateResponse>>
 
 }

@@ -19,6 +19,7 @@ data class NSCarbs(
     override val endId: Long?,
     override val pumpType: String?,
     override val pumpSerial: String?,
+    override var app: String? = null,
     val carbs: Double,
     val duration: Long
 ) : NSTreatment

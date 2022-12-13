@@ -11,11 +11,15 @@ import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.database.entities.interfaces.TraceableDBEntry
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.nsclient.NSAlarm
+import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -71,7 +75,9 @@ class NSClientV3Plugin @Inject constructor(
     private val nsClientReceiverDelegate: NsClientReceiverDelegate,
     private val config: Config,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val storeDataForDb: StoreDataForDb,
+    private val dataSyncSelector: DataSyncSelector
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -113,8 +119,8 @@ class NSClientV3Plugin @Inject constructor(
     val blockingReason get() = nsClientReceiverDelegate.blockingReason
 
     private val maxAge = T.days(77).msecs()
-    internal var lastModified: LastModified? = null // timestamp of last modification for every collection
-    internal var lastFetched =
+    internal var newestDataOnServer: LastModified? = null // timestamp of last modification for every collection
+    internal var lastLoadedSrvModified =
         LastModified(
             LastModified.Collections(
                 dateUtil.now() - maxAge,
@@ -128,7 +134,7 @@ class NSClientV3Plugin @Inject constructor(
 //        context.bindService(Intent(context, NSClientService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         super.onStart()
 
-        lastFetched = Json.decodeFromString(
+        lastLoadedSrvModified = Json.decodeFromString(
             sp.getString(
                 R.string.key_ns_client_v3_last_modified,
                 Json.encodeToString(
@@ -137,10 +143,10 @@ class NSClientV3Plugin @Inject constructor(
                 )
             )
         )
-        lastFetched.collections.entries = max(dateUtil.now() - maxAge, lastFetched.collections.entries)
-        lastFetched.collections.treatments = max(dateUtil.now() - maxAge, lastFetched.collections.treatments)
-        lastFetched.collections.profile = max(dateUtil.now() - maxAge, lastFetched.collections.profile)
-        lastFetched.collections.devicestatus = max(dateUtil.now() - maxAge, lastFetched.collections.devicestatus)
+        lastLoadedSrvModified.collections.entries = max(dateUtil.now() - maxAge, lastLoadedSrvModified.collections.entries)
+        lastLoadedSrvModified.collections.treatments = max(dateUtil.now() - maxAge, lastLoadedSrvModified.collections.treatments)
+        lastLoadedSrvModified.collections.profile = max(dateUtil.now() - maxAge, lastLoadedSrvModified.collections.profile)
+        lastLoadedSrvModified.collections.devicestatus = max(dateUtil.now() - maxAge, lastLoadedSrvModified.collections.devicestatus)
 
         setClient()
 
@@ -251,7 +257,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     override fun resend(reason: String) {
-//        nsClientService?.resend(reason)
+        executeLoop()
     }
 
     override fun pause(newState: Boolean) {
@@ -278,19 +284,19 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     override fun updateLatestBgReceivedIfNewer(latestReceived: Long) {
-        if (latestReceived > lastFetched.collections.entries) {
-            lastFetched.collections.entries = latestReceived
+        if (latestReceived > lastLoadedSrvModified.collections.entries) {
+            lastLoadedSrvModified.collections.entries = latestReceived
             storeLastFetched()
         }
     }
 
     override fun updateLatestTreatmentReceivedIfNewer(latestReceived: Long) {
-        lastFetched.collections.treatments = latestReceived
+        lastLoadedSrvModified.collections.treatments = latestReceived
         storeLastFetched()
     }
 
     override fun resetToFullSync() {
-        lastFetched = LastModified(
+        lastLoadedSrvModified = LastModified(
             LastModified.Collections(
                 dateUtil.now() - maxAge,
                 dateUtil.now() - maxAge,
@@ -302,6 +308,20 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     override fun dbAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+        dbOperation(collection, dataPair, progress, Operation.CREATE)
+    }
+
+    override fun dbUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+        dbOperation(collection, dataPair, progress, Operation.UPDATE)
+    }
+
+    enum class Operation { CREATE, UPDATE }
+    private val gson: Gson = GsonBuilder().create()
+    private fun dbOperation(collection: String, dataPair: DataSyncSelector.DataPair, progress: String, operation: Operation) {
+        val call = when(operation) {
+            Operation.CREATE -> nsAndroidClient::createTreatment
+            Operation.UPDATE -> nsAndroidClient::updateTreatment
+        }
         when (dataPair) {
             is DataSyncSelector.PairBolus -> dataPair.value.toNSBolus()
             // is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(false, dateUtil)
@@ -319,18 +339,51 @@ class NSClientV3Plugin @Inject constructor(
         }?.let { data ->
             runBlocking {
                 if (collection == "treatments") {
-                    val result = nsAndroidClient.createTreatment(data)
+                    try {
+                        val id = if (dataPair.value is TraceableDBEntry) (dataPair.value as TraceableDBEntry).interfaceIDs.nightscoutId else ""
+                        rxBus.send(
+                            EventNSClientNewLog(
+                                when(operation) {
+                                    Operation.CREATE -> "ADD $collection"
+                                    Operation.UPDATE -> "UPDATE $collection"
+                                },
+                                when(operation) {
+                                    Operation.CREATE -> "Sent ${dataPair.javaClass.simpleName} ${gson.toJson(data)} $progress"
+                                    Operation.UPDATE -> "Sent ${dataPair.javaClass.simpleName} $id ${gson.toJson(data)} $progress"
+                                }
+                            )
+                        )
+                        val result = call(data)
+                        when (dataPair) {
+                            is DataSyncSelector.PairBolus -> {
+                                if (result.response == 201) { // created
+                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                    storeDataForDb.nsIdBoluses.add(dataPair.value)
+                                    storeDataForDb.scheduleNsIdUpdate()
+                                }
+                                dataSyncSelector.confirmLastBolusIdIfGreater(dataPair.id)
+                            }
+                            // is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(false, dateUtil)
+                            // is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(false, dateUtil, profileFunction)
+                            // is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(false, profileFunction.getUnits(), dateUtil)
+                            // is DataSyncSelector.PairFood                   -> dataPair.value.toJson(false)
+                            // is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(false, dateUtil)
+                            // is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(false, dateUtil)
+                            // is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+                            // is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+                            // is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(false, dateUtil)
+                            // is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(false, dateUtil)
+                            // is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)
+                        }
+                    } catch (e: Exception) {
+                        aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
+                    }
                 }
             }
         }
     }
-
-    override fun dbUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
-        TODO("Not yet implemented")
-    }
-
     private fun storeLastFetched() {
-        sp.putString(R.string.key_ns_client_v3_last_modified, Json.encodeToString(LastModified.serializer(), lastFetched))
+        sp.putString(R.string.key_ns_client_v3_last_modified, Json.encodeToString(LastModified.serializer(), lastLoadedSrvModified))
     }
 
     fun test() {
@@ -338,7 +391,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     fun scheduleNewExecution() {
-        val toTime = lastFetched.collections.entries + T.mins(6).plus(T.secs(0)).msecs()
+        val toTime = lastLoadedSrvModified.collections.entries + T.mins(6).plus(T.secs(0)).msecs()
         if (toTime > dateUtil.now()) {
             handler.postDelayed({ executeLoop() }, toTime - dateUtil.now())
             rxBus.send(EventNSClientNewLog("NEXT", dateUtil.dateAndTimeAndSecondsString(toTime)))
@@ -366,8 +419,10 @@ class NSClientV3Plugin @Inject constructor(
                 )
                 .then(OneTimeWorkRequest.Builder(LoadLastModificationWorker::class.java).build())
                 .then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
-                // LoadTreatmentsWorker is enqueued after BG finish
-                //.then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
+                // Other Workers are enqueued after BG finish
+                // LoadTreatmentsWorker
+                // LoadDeviceStatusWorker
+                // DataSyncWorker
                 .enqueue()
         }
     }

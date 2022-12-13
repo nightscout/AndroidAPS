@@ -1,11 +1,9 @@
 package info.nightscout.sdk.remotemodel
 
-import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
 import info.nightscout.sdk.localmodel.treatment.EventType
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat
-import org.json.JSONObject
 
 /*
 * Depending on the type, different other fields are present.
@@ -23,7 +21,7 @@ internal data class RemoteTreatment(
     @SerializedName("timestamp") val timestamp: Long? = null,          // integer($int64) or string required timestamp when the record or event occurred, you can choose from three input formats Unix  epoch in milliseconds (1525383610088), Unix epoch in seconds (1525383610), ISO 8601 with optional timezone ('2018-05-03T21:40:10.088Z' or '2018-05-03T23:40:10.088+02:00')
     @SerializedName("created_at") val created_at: String? = null,       // integer($int64) or string timestamp on previous version of api, in my examples, a lot of treatments don't have date, only created_at, some of them with string others with long...
     @SerializedName("utcOffset") val utcOffset: Long? = null,          // integer Local UTC offset (timezone) of the event in minutes. This field can be set either directly by the client (in the incoming document) or it is automatically parsed from the date field.
-    // @SerializedName("app") val app : String,                       // TODO required ? Application or system in which the record was entered by human or device for the first time.
+    @SerializedName("app") var app : String? = null,                   // Application or system in which the record was entered by human or device for the first time.
     @SerializedName("device") val device: String? = null,              // string The device from which the data originated (including serial number of the device, if it is relevant and safe).
     @SerializedName("srvCreated") val srvCreated: Long? = null,         // integer($int64) example: 1525383610088 The server's timestamp of document insertion into the database (Unix epoch in ms). This field appears only for documents which were inserted by API v3.
     @SerializedName("subject") val subject: String? = null,            // string Name of the security subject (within Nightscout scope) which has created the document. This field is automatically set by the server from the passed token or JWT.
