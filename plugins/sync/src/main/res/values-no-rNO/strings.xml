@@ -97,4 +97,7 @@
     <string name="remove_all">Fjern alt</string>
     <string name="reset_start">Tilbakestill til oppstart</string>
     <string name="upload_now">Last opp nå</string>
+    <string name="not_connected">Ikke tilkoblet</string>
+    <string name="read_only">Skrivebeskyttet</string>
+    <string name="working">Prosesserer</string>
 </resources>
