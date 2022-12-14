@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Pobieraj wartości BG z Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Pobieraj wartości BG z xDrip+.</string>
+    <string name="dexcom_app_patched">Dexcom Patched</string>
+    <string name="dexcom_short">DEX.PATCH.</string>
+    <string name="description_source_dexcom">Pobieraj glikemię ze spatchowanej aplikacji Dexcom.</string>
+    <string name="eversense">Apka Eversense (spatchowana)</string>
+    <string name="description_source_eversense">Pobieraj wartości BG ze spatchowanej aplikacji Eversense.</string>
+    <string name="description_source_glimp">Pobieraj wartości BG z Glimp.</string>
+    <string name="description_source_mm640g">Pobieraj wartości BG z uploadera pomp serii 600.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Odczytuj wartości BG z aplikacji Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Otrzymuj wartości z aplikacji Glunovo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Otrzymuj poziomy cukru (BG) z Apki Tomato) (urządzenie MiaoMiao)</string>
+    <string name="bgsource_upload">Ustawienia wysyłania wartości BG (poziomów cukru)</string>
+</resources>

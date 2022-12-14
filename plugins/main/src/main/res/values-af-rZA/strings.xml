@@ -47,19 +47,6 @@
     <string name="sms_loop_suspended_for">Opgeskort (%1$d m)</string>
     <string name="sms_read_status_failed">Lees status gefaal</string>
     <string name="sms_profile_switch_created">Profiel skakelaar geskep</string>
-    <!-- Insulin -->
-    <string name="description_insulin_rapid">Insulien voorkeure vir Humalog en NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Insulien voorkeure vir Fiasp</string>
-    <string name="description_insulin_free_peak">Laat jou toe om die piek van die insulien aktiwiteit definieer en behoort slegs gebruik te word deur gevorderde gebruikers</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">IAB kurwe piek tyd</string>
-    <string name="insulin_peak_time">Piek tyd [min]</string>
-    <string name="free_peak_oref">Vry-piek Oref</string>
-    <string name="rapid_acting_oref">Snelaksie Oref</string>
-    <string name="ultra_rapid_oref">Ultra-Snel Oref</string>
-    <string name="dia_too_short">DIA van %1$f is te kort - %2$f in stede gebruik!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status_shortname">xds</string>
@@ -89,19 +76,6 @@
     <string name="errors">Foute</string>
     <string name="dia_short">DIA</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Voltooi, baie mooi gedoen!</string>
-    <string name="not_completed_yet">Nog nie voltooi nie</string>
-    <string name="time_elapsed">Tydsverloop</string>
-    <string name="maxiobset">Maksimum IAB behoorlik gestel</string>
-    <string name="hasbgdata">BG beskikbaar vanaf geselekteerde bron</string>
-    <string name="loopenabled">Lus geaktiveer</string>
-    <string name="apsselected">APS gekies</string>
-    <string name="closedmodeenabled">Geslote modus geaktiveer</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Onderrig program</string>
-    <string name="objectives_next_button">Volgende</string>
-    <string name="objectives_previous_button">Vorige</string>
     <!-- Actions -->
     <string name="actions">Aksies</string>
     <string name="description_actions">\'n Paar knoppies vir vinnige algemene nutsfunskies</string>
@@ -112,17 +86,6 @@
     <string name="nav_history_browser">Geskiedenis blaaier</string>
     <string name="sensor_label">Sensor</string>
     <string name="insulin_label">Insulien</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Verlengde bolus is beperk tot %1$.1f U as gevolg van %2$s</string>
-    <string name="limitingcarbs">Beperk koolhidrate tot %1$d g agv %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pomp is nie tydelike basale bekwame</string>
-    <string name="closedmodedisabledinpreferences">Geslote lus modus in voorkeure gedeaktiveer</string>
-    <string name="closed_loop_disabled_on_dev_branch">Veranderende ontwikkelende weergawe. Geslote lus is gedeaktiveerd.</string>
-    <string name="smbalwaysdisabled">SMB is altyd na koolhidrate versper omdat aktiewe BG bron nie gevorderde filter ondersteun nie</string>
-    <string name="smbnotallowedinopenloopmode">SMB nie toegelaat in open lus modus</string>
-    <string name="maxvalueinpreferences">maks waarde in voorkeure</string>
-    <string name="hardlimit">harde limiet</string>
-    <string name="treatmentssafety_title">Behandelings veiligheid</string>
     <!-- Overview -->
     <string name="show_statuslights">Wys status vlae op tuisskerm</string>
     <string name="statuslights_res_warning">Drempel waarskuwings stoor vlak [U]</string>
@@ -204,36 +167,6 @@
     <string name="activity_shortname">ACT</string>
     <string name="treatments_shortname">BEHANDEL</string>
     <string name="sensitivity_shortname">SENS</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Virtuele Pomp</string>
-    <string name="virtual_pump_definition">Pomp definisie</string>
-    <string name="virtual_pump_pump_def">Bolus: Stap =%1$s\nVerlengde Bolus: [stap%2$s, duur = =%3$smin -%4$sh]\nBasal: stap =%5$s\nTBR: %6$s (deur %7$s), duur =%8$smin -%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VPOMP</string>
-    <string name="description_pump_virtual">Pomp integrasie vir pompe wat nog nie enige drywer het nie (oop lus)</string>
-    <string name="virtual_pump_label">VIRTUELE POMP</string>
-    <string name="virtualpump_settings">Virtuele pomp instellings</string>
-    <string name="virtualpump_uploadstatus_title">Oplaaistatus aan NS</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient BG</string>
-    <string name="description_source_ns_client">Laai BG data af vanaf Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Ontvang BG waardes vana xDrip+.</string>
-    <string name="eversense">Eversense App (bygewerk)</string>
-    <string name="description_source_eversense">Ontvang BG waardes uit die gelapte Eversense toep.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Ontvang BG waardes vanaf Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Onvang BG waardes vanaf die 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Ontvang BG waardes van Poctech toepassing</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Ontvang BG waardes vanaf Tomato toep (MiaoMiao toestel)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Stuur BG data na xDrip+</string>
-    <string name="do_xdrip_upload_summary">Xdrip+ kies 640g/Eversense data bron</string>
-    <string name="bgsource_upload">BG oplaai instellings</string>
-    <string name="dexcom_log_ns_sensor_change_title">Log sensor verander na NS</string>
     <!-- Skins -->
     <!--    DataBroadcast-->
     <!--    Iob-->

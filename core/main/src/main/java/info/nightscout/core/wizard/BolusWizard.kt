@@ -6,7 +6,6 @@ import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.highValueToUnitsToString
 import info.nightscout.core.extensions.lowValueToUnitsToString
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.extensions.formatColor
@@ -16,14 +15,14 @@ import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
-import info.nightscout.interfaces.BolusTimer
-import info.nightscout.interfaces.CarbTimer
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
+import info.nightscout.interfaces.automation.Automation
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatus
+import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -69,8 +68,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var carbTimer: CarbTimer
-    @Inject lateinit var bolusTimer: BolusTimer
+    @Inject lateinit var automation: Automation
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var persistenceLayer: PersistenceLayer
@@ -361,9 +359,9 @@ class BolusWizard @Inject constructor(
             }
             accepted = true
             if (calculatedTotalInsulin > 0.0)
-                bolusTimer.removeAutomationEventBolusReminder()
+                automation.removeAutomationEventBolusReminder()
             if (carbs > 0.0)
-                carbTimer.removeAutomationEventEatReminder()
+                automation.removeAutomationEventEatReminder()
             if (sp.getBoolean(info.nightscout.core.ui.R.string.key_usebolusadvisor, false) && Profile.toMgdl(bg, profile.units) > 180 && carbs > 0 && carbTime >= 0)
                 OKDialog.showYesNoCancel(ctx, rh.gs(info.nightscout.core.ui.R.string.bolus_advisor), rh.gs(info.nightscout.core.ui.R.string.bolus_advisor_message),
                                                                          { bolusAdvisorProcessing(ctx) },
@@ -402,7 +400,7 @@ class BolusWizard @Inject constructor(
                             if (!result.success) {
                                 uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror), info.nightscout.core.ui.R.raw.boluserror)
                             } else
-                                carbTimer.scheduleAutomationEventEatReminder()
+                                automation.scheduleAutomationEventEatReminder()
                         }
                     })
                 }
@@ -494,7 +492,7 @@ class BolusWizard @Inject constructor(
                     bolusCalculatorResult?.let { persistenceLayer.insertOrUpdate(it) }
                 }
                 if (useAlarm && carbs > 0 && carbTime > 0) {
-                    carbTimer.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
+                    automation.scheduleTimeToEatReminder(T.mins(carbTime.toLong()).secs().toInt())
                 }
             }
         })

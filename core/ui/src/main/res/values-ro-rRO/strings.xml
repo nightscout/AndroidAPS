@@ -140,6 +140,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="virtualpump_uploadstatus_title">Trimitere status către NS</string>
+    <string name="suspendloop_label">Buclă dezactivată/suspendată</string>
+    <string name="iob_label">Insulină activă (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Parola greșită</string>
     <string name="passwords_dont_match">Parolele nu corespund</string>

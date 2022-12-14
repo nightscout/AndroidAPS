@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ nu este instalat.</string>
     <string name="calibration_sent">Calibrare trimisă către xDrip+</string>
     <string name="bg_label">Gl</string>
-    <string name="time_to_eat">Timpul sa mănânci</string>
-    <string name="time_to_bolus">Timpul sa faci bolus!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
     <string name="executing_right_now">Se execută comanda chiar acum</string>
     <string name="basal_value_below_minimum">Valoarea bazalei este sub minimul permis. Profilul nu este setat!</string>
     <string name="permission">Permisiune</string>

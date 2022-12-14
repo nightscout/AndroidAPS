@@ -13,4 +13,6 @@
     <string name="friday_short">Pe</string>
     <string name="saturday_short">Su</string>
     <string name="sunday_short">Ne</string>
+    <!--    Reminders-->
+    <string name="time_to_bolus">Vrijeme je za bolus!\nPokrenite čarobnjak za bolus i ponovite izračun.</string>
 </resources>

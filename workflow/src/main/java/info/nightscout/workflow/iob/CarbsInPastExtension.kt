@@ -1,4 +1,4 @@
-package info.nightscout.plugins.iob.iobCobCalculator
+package info.nightscout.workflow.iob
 
 import info.nightscout.database.entities.Carbs
 import info.nightscout.interfaces.Constants

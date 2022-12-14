@@ -141,6 +141,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="virtualpump_uploadstatus_title">Przesyłaj status do NS</string>
+    <string name="suspendloop_label">Wyłączona/zawieszona pętla</string>
+    <string name="iob_label">Aktywna insulina (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Złe hasło</string>
     <string name="passwords_dont_match">Hasła się nie zgadzają</string>

@@ -162,6 +162,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">I:C</string>
     <string name="isf_short">ISF</string>
+    <string name="virtualpump_uploadstatus_title">Nahrať stav do NS</string>
+    <string name="suspendloop_label">Deaktivovaný/pozastavený uzavretý okruh</string>
+    <string name="iob_label">Aktívny inzulín (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Nesprávne heslo</string>
     <string name="wrongpin">Nesprávny PIN</string>

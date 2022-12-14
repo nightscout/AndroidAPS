@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
+    <string name="eversense">Eversense App (τροποποιημένη)</string>
+    <string name="description_source_eversense">Λάβετε τις τιμές BG από την εφαρμογή του Eversense.</string>
+    <string name="description_source_glimp">Λάβετε τις τιμές BG από το Glimp.</string>
+    <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Λάβετε τις τιμές BG από την εφαρμογή Poctech</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Λάβετε τιμές BG από Tomato app (MiaoMiao)</string>
+    <string name="bgsource_upload">Ανέβασμα ρυθμίσεων BG</string>
+</resources>

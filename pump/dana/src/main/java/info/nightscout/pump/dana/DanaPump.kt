@@ -2,7 +2,7 @@ package info.nightscout.pump.dana
 
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileInstantiator
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
@@ -33,7 +33,7 @@ class DanaPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val dateUtil: DateUtil,
-    private val profileInstantiator: ProfileInstantiator
+    private val instantiator: Instantiator
 ) {
 
     @Suppress("unused")
@@ -55,7 +55,7 @@ class DanaPump @Inject constructor(
 
     var lastConnection: Long = 0
     var lastSettingsRead: Long = 0
-    @JvmField var lastHistoryFetched: Long = 0
+    @JvmField var readHistoryFrom: Long = 0 // start next history read from this timestamp
     @JvmField var historyDoneReceived: Boolean = false // true when last history message is received
 
     // Info
@@ -380,7 +380,7 @@ class DanaPump @Inject constructor(
             } catch (e: Exception) {
                 return null
             }
-            return profileInstantiator.storeInstance(json)
+            return instantiator.provideProfileStore(json)
         }
         return null
     }
@@ -410,7 +410,7 @@ class DanaPump @Inject constructor(
         aapsLogger.debug(LTag.PUMP, "DanaRPump reset")
         lastConnection = 0
         lastSettingsRead = 0
-        lastHistoryFetched = 0
+        readHistoryFrom = 0
     }
 
     fun modelFriendlyName(): String =

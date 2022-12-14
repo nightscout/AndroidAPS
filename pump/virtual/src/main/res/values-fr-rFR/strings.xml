@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="virtual_pump_type">Type de pompe virtuelle</string>
+    <string name="virtual_pump_definition">Définition de pompe</string>
+    <string name="virtual_pump_pump_def">Bolus : Étape =%1$s\nExtended Bolus : [Étape =%2$s, Durée =%3$smin -%4$sh]\nBasal : Étape =%5$s\nTBR : %6$s (par %7$s), Durée =%8$smin -%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">POMPEV</string>
+    <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
+    <string name="virtual_pump_label">POMPE VIRTUELLE</string>
+    <string name="virtualpump_settings">Paramètres pompe virtuelle</string>
+</resources>

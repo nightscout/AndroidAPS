@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ není nainstalován</string>
     <string name="calibration_sent">Kalibrace odeslána do xDripu+</string>
     <string name="bg_label">Gly</string>
-    <string name="time_to_eat">Čas k jídlu</string>
-    <string name="time_to_bolus">Čas na bolus!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="executing_right_now">Příkaz je právě prováděn</string>
     <string name="basal_value_below_minimum">Hodnota bazálu pod povoleným minimem. Nenastaveno!</string>
     <string name="permission">Povolení</string>

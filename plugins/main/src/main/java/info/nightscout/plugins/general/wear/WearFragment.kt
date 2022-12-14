@@ -5,9 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import dagger.android.support.DaggerFragment
-import info.nightscout.androidaps.plugins.general.wear.events.EventWearUpdateGui
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.plugins.databinding.WearFragmentBinding
+import info.nightscout.plugins.general.wear.events.EventWearUpdateGui
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileToWear

@@ -16,12 +16,12 @@ import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
-import info.nightscout.interfaces.BolusTimer
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants.INSULIN_PLUS1_DEFAULT
 import info.nightscout.interfaces.Constants.INSULIN_PLUS2_DEFAULT
 import info.nightscout.interfaces.Constants.INSULIN_PLUS3_DEFAULT
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.automation.Automation
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.db.PersistenceLayer
@@ -65,7 +65,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var ctx: Context
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var config: Config
-    @Inject lateinit var bolusTimer: BolusTimer
+    @Inject lateinit var automation: Automation
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
@@ -256,7 +256,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     ValueWithUnit.Minute(timeOffset).takeIf { timeOffset != 0 })
                             persistenceLayer.insertOrUpdateBolus(detailedBolusInfo.createBolus())
                             if (timeOffset == 0)
-                                bolusTimer.removeAutomationEventBolusReminder()
+                                automation.removeAutomationEventBolusReminder()
                         } else {
                             uel.log(
                                 UserEntry.Action.BOLUS, UserEntry.Sources.InsulinDialog,
@@ -268,7 +268,7 @@ class InsulinDialog : DialogFragmentWithDate() {
                                     if (!result.success) {
                                         uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror), info.nightscout.core.ui.R.raw.boluserror)
                                     } else {
-                                        bolusTimer.removeAutomationEventBolusReminder()
+                                        automation.removeAutomationEventBolusReminder()
                                     }
                                 }
                             })

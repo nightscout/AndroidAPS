@@ -28,6 +28,7 @@ import info.nightscout.automation.AutomationPlugin
 import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.implementation.plugin.PluginStore
+import info.nightscout.insulin.InsulinOrefFreePeakPlugin
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.plugin.PluginBase
@@ -47,22 +48,13 @@ import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
-import info.nightscout.plugins.insulin.InsulinOrefFreePeakPlugin
-import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
-import info.nightscout.plugins.source.AidexPlugin
-import info.nightscout.plugins.source.DexcomPlugin
-import info.nightscout.plugins.source.EversensePlugin
-import info.nightscout.plugins.source.GlimpPlugin
-import info.nightscout.plugins.source.GlunovoPlugin
-import info.nightscout.plugins.source.IntelligoPlugin
-import info.nightscout.plugins.source.PoctechPlugin
-import info.nightscout.plugins.source.TomatoPlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
+import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRebuildTabs
@@ -72,6 +64,14 @@ import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.source.AidexPlugin
+import info.nightscout.source.DexcomPlugin
+import info.nightscout.source.EversensePlugin
+import info.nightscout.source.GlimpPlugin
+import info.nightscout.source.GlunovoPlugin
+import info.nightscout.source.IntelligoPlugin
+import info.nightscout.source.PoctechPlugin
+import info.nightscout.source.TomatoPlugin
 import javax.inject.Inject
 
 class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChangeListener {

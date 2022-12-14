@@ -122,4 +122,6 @@
     <string name="friday_short">P</string>
     <string name="saturday_short">S</string>
     <string name="sunday_short">N</string>
+    <!--    Reminders-->
+    <string name="time_to_bolus">Czas na bolus!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
 </resources>

@@ -9,12 +9,15 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.json.JSONObject
 
-fun ExtendedBolus.toJson(isAdd: Boolean, profile: Profile, dateUtil: DateUtil): JSONObject =
-    if (isEmulatingTempBasal)
-        toTemporaryBasal(profile)
-            .toJson(isAdd, profile, dateUtil)
-            .put("extendedEmulated", toRealJson(isAdd, dateUtil))
-    else toRealJson(isAdd, dateUtil)
+fun ExtendedBolus.toJson(isAdd: Boolean, profile: Profile?, dateUtil: DateUtil): JSONObject? =
+    profile?.let {
+        if (isEmulatingTempBasal)
+            toTemporaryBasal(profile)
+                .toJson(isAdd, profile, dateUtil)
+                ?.put("extendedEmulated", toRealJson(isAdd, dateUtil))
+        else toRealJson(isAdd, dateUtil)
+    }
+
 
 fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()

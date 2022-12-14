@@ -1,15 +1,14 @@
 package info.nightscout.sdk.localmodel.treatment
 
 import info.nightscout.sdk.localmodel.entry.NsUnits
-import org.json.JSONObject
 
 data class NSBolusWizard(
     override val date: Long,
     override val device: String?,
-    override val identifier: String,
+    override val identifier: String?,
     override val units: NsUnits?,
-    override val srvModified: Long,
-    override val srvCreated: Long,
+    override val srvModified: Long?,
+    override val srvCreated: Long?,
     override val utcOffset: Long,
     override val subject: String?,
     override var isReadOnly: Boolean,
@@ -20,6 +19,7 @@ data class NSBolusWizard(
     override val endId: Long?,
     override val pumpType: String?,
     override val pumpSerial: String?,
+    override var app: String? = null,
     val bolusCalculatorResult: String?,
     val glucose: Double?,
 ) : NSTreatment

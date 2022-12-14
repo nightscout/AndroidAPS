@@ -132,7 +132,7 @@
         </provider>
 
         <service
-            android:name="info.nightscout.core.services.AlarmSoundService"
+            android:name="info.nightscout.ui.services.AlarmSoundService"
             android:enabled="true"
             android:exported="true" />
         <uses-library

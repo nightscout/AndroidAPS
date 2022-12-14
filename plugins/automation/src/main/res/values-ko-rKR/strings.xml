@@ -111,4 +111,5 @@
     <string name="friday_short">금</string>
     <string name="saturday_short">토</string>
     <string name="sunday_short">일</string>
+    <!--    Reminders-->
 </resources>

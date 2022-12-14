@@ -16,7 +16,7 @@ class NSAndroidRxClientImpl(private val client: NSAndroidClient) : NSAndroidRxCl
     override fun getStatus(): Single<Status> = rxSingle { client.getStatus() }
     override fun getLastModified(): Single<LastModified> = rxSingle { client.getLastModified() }
     override fun getSgvsModifiedSince(from: Long): Single<List<NSSgvV3>> = rxSingle { client.getSgvsModifiedSince(from) }
-    override fun getTreatmentsModifiedSince(from: Long, limit: Long): Single<List<NSTreatment>> =
+    override fun getTreatmentsModifiedSince(from: Long, limit: Long): Single<NSAndroidClient.ReadResponse<List<NSTreatment>>> =
         rxSingle { client.getTreatmentsModifiedSince(from, limit) }
     override fun getDeviceStatusModifiedSince(from: Long): Single<List<RemoteDeviceStatus>> =
         rxSingle { client.getDeviceStatusModifiedSince(from) }

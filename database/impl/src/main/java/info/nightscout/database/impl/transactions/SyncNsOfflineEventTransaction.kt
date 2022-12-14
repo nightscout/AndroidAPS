@@ -7,7 +7,7 @@ import kotlin.math.abs
 /**
  * Sync the OfflineEvent from NS
  */
-class SyncNsOfflineEventTransaction(private val offlineEvents: List<OfflineEvent>) :
+class SyncNsOfflineEventTransaction(private val offlineEvents: List<OfflineEvent>, private val nsClientMode: Boolean) :
     Transaction<SyncNsOfflineEventTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
@@ -28,7 +28,7 @@ class SyncNsOfflineEventTransaction(private val offlineEvents: List<OfflineEvent
                         database.offlineEventDao.updateExistingEntry(current)
                         result.invalidated.add(current)
                     }
-                    if (current.duration != offlineEvent.duration) {
+                    if (current.duration != offlineEvent.duration && nsClientMode) {
                         current.duration = offlineEvent.duration
                         database.offlineEventDao.updateExistingEntry(current)
                         result.updatedDuration.add(current)

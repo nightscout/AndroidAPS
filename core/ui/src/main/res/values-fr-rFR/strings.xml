@@ -14,6 +14,7 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Pompe non initialisée, profil non défini !</string>
     <string name="failed_update_basal_profile">La mise à jour du profil basal a échouée</string>
+    <string name="bolus_delivered_successfully">Bolus de %1$.2f U délivré avec succès</string>
     <string name="no_valid_basal_rate">Aucun débit basal valide lu depuis la pompe</string>
     <string name="limiting_iob">Limiter l’IA %1$.1f U en raison de la %2$s</string>
     <string name="loop_disabled">BOUCLE DÉSACTIVÉE PAR RESTRICTIONS</string>
@@ -161,6 +162,11 @@
     <string name="dia">DAI</string>
     <string name="ic_short">G/I</string>
     <string name="isf_short">SI</string>
+    <string name="canceling_tbr_failed">Echec de l\'annulation du basal temporaire</string>
+    <string name="canceling_eb_failed">Échec de l\'annulation du Bolus étendu</string>
+    <string name="virtualpump_uploadstatus_title">Remontée des informations vers NS</string>
+    <string name="suspendloop_label">Boucle désactivée/suspendue</string>
+    <string name="iob_label">Insuline Active (IA)</string>
     <!--    Protection-->
     <string name="wrongpassword">Mot de passe incorrect</string>
     <string name="wrongpin">Code PIN incorrect</string>
@@ -243,6 +249,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$dg de glucides requis dans %2$d min.</string>
     <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">DTQ cumulée</string>
     <string name="expweight">DTQ avec Pondération Exponentielle</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>

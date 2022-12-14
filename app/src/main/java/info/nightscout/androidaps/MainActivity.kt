@@ -151,10 +151,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventInitializationChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ passwordResetCheck(this) }, fabricPrivacy::logException)
         if (startWizard() && !isRunningRealPumpTest()) {
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                 startActivity(Intent(this, SetupWizardActivity::class.java))
@@ -168,6 +164,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             androidPermission.notifyForSystemWindowPermissions(this)
             androidPermission.notifyForBtConnectPermission(this)
         }
+        passwordResetCheck(this)
     }
 
     private fun checkPluginPreferences(viewPager: ViewPager2) {
@@ -352,6 +349,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
                 message += "${rh.gs(info.nightscout.configuration.R.string.configbuilder_nightscoutversion_label)} ${nsSettingsStatus.getVersion()}"
                 if (config.isEngineeringMode()) message += "\n${rh.gs(info.nightscout.configuration.R.string.engineering_mode_enabled)}"
+                if (config.isUnfinishedMode()) message += "\nUnfinished mode enabled"
                 if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(R.string.fabric_upload_disabled)}"
                 message += rh.gs(info.nightscout.pump.combo.R.string.about_link_urls)
                 val messageSpanned = SpannableString(message)

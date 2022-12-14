@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">Limitant carbs a %1$d g a causa de %2$s</string>
+    <string name="pumpisnottempbasalcapable">La bomba no té la funcionalitat de basals temporals</string>
+    <string name="closedmodedisabledinpreferences">Mode llaç tancat desactivat a la configuració</string>
+    <string name="closed_loop_disabled_on_dev_branch">Executant versió de desenvolupament. Llaç tancat no disponible.</string>
+    <string name="closed_loop_disabled_with_eb">Llaç tancat desactivat degut a bolus estès actiu</string>
+    <string name="smbalwaysdisabled">Les funcions \"SMB sempre\" i \"SMB després de carbohidrats\" estan desactivades pq la font de glucèmia no fa filtrat avançat</string>
+    <string name="smbnotallowedinopenloopmode">SMB no permès en mode llaç obert</string>
+    <string name="maxvalueinpreferences">valor màxim a la configuració</string>
+    <string name="hardlimit">límit estricte</string>
+    <string name="treatmentssafety_title">Seguretat tractaments</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">No finalitzat encara</string>
+    <string name="time_elapsed">Temps transcorregut</string>
+    <string name="maxiobset">Màx IOB correctament configurada</string>
+    <string name="hasbgdata">Glucèmia disponible des de la font seleccionada</string>
+    <string name="loopenabled">Llaç activat</string>
+    <string name="apsselected">APS seleccionat</string>
+    <string name="closedmodeenabled">Llaç tancat activat</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Programa d\'aprenentatge</string>
+    <string name="doyouwantresetstart">Voleu reiniciar l\'objectiu? Podeu perdre el vostre progrés.</string>
+    <string name="objectives_button_unfinish">Cancel·lar finalització</string>
+    <string name="objectives_button_unstart">Cancel·lar inici</string>
+</resources>

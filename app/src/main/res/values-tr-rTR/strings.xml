@@ -46,7 +46,6 @@
     <string name="authorizationfailed">Yetkilendirme başarısız oldu</string>
     <string name="copytolocalprofile_invalid">Profil oluşturulamıyor. Profil geçersiz.</string>
     <string name="cta_dont_kill_my_app_info">Uygulamamı devre dışı bırakma?</string>
-    <string name="time_to_eat">Yemek zamanı!\nBolus sihirbazını çalıştırın ve yeniden hesaplama yapın.</string>
     <string name="fabric_upload_disabled">Çökme günlükleri yükleme devre dışı bırakıldı!</string>
     <string name="clear_filter">Filtreyi temizle</string>
     <string name="cannula">Kanül</string>

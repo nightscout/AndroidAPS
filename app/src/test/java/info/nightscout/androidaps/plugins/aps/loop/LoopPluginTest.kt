@@ -21,7 +21,7 @@ import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.aps.loop.LoopFragment
 import info.nightscout.plugins.aps.loop.LoopPlugin
-import info.nightscout.plugins.pump.virtual.VirtualPumpPlugin
+import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP

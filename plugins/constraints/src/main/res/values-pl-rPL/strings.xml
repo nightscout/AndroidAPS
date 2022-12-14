@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">Ograniczam węglow. do %1$d g z uwagi na %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pompa nie jest zdolna do wykonywania dawek bazowych tymczasowych</string>
+    <string name="closedmodedisabledinpreferences">Tryb zamkniętej pętli wyłączony w ustawieniach</string>
+    <string name="closed_loop_disabled_on_dev_branch">Uruchomiona jest wersja dev. Zamknięta pętla jest wyłączona.</string>
+    <string name="closed_loop_disabled_with_eb">Zamknięta pętla wyłączona, ponieważ działa Extended Bolus (bolus przedłużony)</string>
+    <string name="smbalwaysdisabled">SMB zawsze i po węglow. wyłączone z uwagi na brak źródła BG z zaawansowanym filtrowaniem</string>
+    <string name="smbnotallowedinopenloopmode">SMB nie dozwolone w trybie otwartej pętli</string>
+    <string name="maxvalueinpreferences">maks. wartość w ustawieniach</string>
+    <string name="hardlimit">twarde ograniczenie</string>
+    <string name="treatmentssafety_title">Bezpieczeństwo terapii</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">Nie ukończono</string>
+    <string name="time_elapsed">Czas jaki upłynął</string>
+    <string name="maxiobset">Maks. IOB ustawione poprawnie</string>
+    <string name="hasbgdata">BG dostępne z wybranego źródła</string>
+    <string name="loopenabled">Pętla włączona</string>
+    <string name="apsselected">Wybrano APS</string>
+    <string name="closedmodeenabled">Tryb zamknięty włączony</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Program do nauki</string>
+    <string name="doyouwantresetstart">Czy chcesz zresetować czas rozpoczęcia zadania? Możesz utracić postępy.</string>
+    <string name="objectives_button_unfinish">Wyczyść skończone</string>
+    <string name="objectives_button_unstart">Wyczyść rozpoczęte</string>
+</resources>

@@ -2,7 +2,6 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state
 
 import android.os.SystemClock
 import com.google.gson.Gson
-import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.EventOmnipodDashPumpValuesChanged
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.Id
@@ -20,6 +19,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.DefaultStatusResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.SetUniqueIdResponse
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.response.VersionResponse
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -437,7 +437,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
     }
 
     @Synchronized
-    override fun updateActiveCommand() = Maybe.create<CommandConfirmed> { source ->
+    override fun updateActiveCommand(): Maybe<CommandConfirmed> = Maybe.create { source ->
         val activeCommand = podState.activeCommand
         if (activeCommand == null) {
             logger.error(LTag.PUMPCOMM, "No active command to update")
@@ -515,6 +515,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                     "lastResponse=$lastStatusResponseReceived " +
                     "$sequenceNumberOfLastProgrammingCommand $historyId"
             )
+            @Suppress("KotlinConstantConditions")
             when {
                 createdRealtime <= podState.lastStatusResponseReceived &&
                     sequence == podState.sequenceNumberOfLastProgrammingCommand ->

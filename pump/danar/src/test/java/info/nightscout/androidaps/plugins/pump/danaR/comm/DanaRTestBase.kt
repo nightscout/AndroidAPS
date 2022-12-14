@@ -11,8 +11,7 @@ import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profile.ProfileInstantiator
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.queue.CommandQueue
@@ -33,7 +32,6 @@ import org.mockito.kotlin.doNothing
 open class DanaRTestBase : TestBase() {
 
     @Mock lateinit var sp: SP
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var danaRPlugin: DanaRPlugin
@@ -46,14 +44,14 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
-    @Mock lateinit var profileInstantiator: ProfileInstantiator
+    @Mock lateinit var instantiator: Instantiator
     @Mock lateinit var uiInteraction: UiInteraction
 
     private lateinit var testPumpPlugin: TestPumpPlugin
 
     @BeforeEach
     fun setup() {
-        danaPump = DanaPump(aapsLogger, sp, dateUtil, profileInstantiator)
+        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator)
         testPumpPlugin = TestPumpPlugin(injector)
         `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
         doNothing().`when`(danaRKoreanPlugin).setPluginEnabled(anyObject(), anyBoolean())

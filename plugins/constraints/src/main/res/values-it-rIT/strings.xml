@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">Limitazione carboidrati a %1$d g a causa di: %2$s</string>
+    <string name="pumpisnottempbasalcapable">Micro non in grado di impostare la basale temporanea</string>
+    <string name="closedmodedisabledinpreferences">Modalità loop chiuso disabilitata nelle preferenze</string>
+    <string name="closed_loop_disabled_on_dev_branch">Versione sviluppatore in esecuzione. Loop chiuso disabilitato.</string>
+    <string name="closed_loop_disabled_with_eb">Loop chiuso disabilitato a causa dell\'esecuzione di un bolo esteso</string>
+    <string name="smbalwaysdisabled">Le funzioni \"SMB sempre\" e \"SMB dopo i CHO\" sono disabilitate perché l\'attuale sorgente delle glicemie non supporta il filtraggio avanzato</string>
+    <string name="smbnotallowedinopenloopmode">SMB non consentito in modalità loop aperto</string>
+    <string name="maxvalueinpreferences">valore max nelle preferenze</string>
+    <string name="hardlimit">limite fisso</string>
+    <string name="treatmentssafety_title">Sicurezza trattamenti</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">Non ancora completato</string>
+    <string name="time_elapsed">Tempo trascorso</string>
+    <string name="maxiobset">Max IOB impostata correttamente</string>
+    <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
+    <string name="loopenabled">Loop abilitato</string>
+    <string name="apsselected">APS selezionato</string>
+    <string name="closedmodeenabled">Modalità chiusa abilitata</string>
+    <string name="objectives_shortname">OBT</string>
+    <string name="description_objectives">Programma di apprendimento</string>
+    <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
+    <string name="objectives_button_unfinish">Cancella completamento</string>
+    <string name="objectives_button_unstart">Cancella avvio</string>
+</resources>

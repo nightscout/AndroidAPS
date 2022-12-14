@@ -97,21 +97,6 @@
     <string name="sms_read_status_failed">Odczyt statusu nie powiódł się</string>
     <string name="sms_profile_switch_created">Zmiana profilu wykonana</string>
     <string name="sms_wrong_tbr_duration">Czas trwania TBR musi być wielokrotnością %1$d minut i większy niż 0.</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Profil insulinowy dla Humalog i Novorapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Profil insulinowy dla Fiasp</string>
-    <string name="description_insulin_lyumjev">Profil insulinowy dla Lyumjev</string>
-    <string name="description_insulin_free_peak">Pozwala na określenie czasu wartości szczytowej działania insuliny i powinno być używane tylko przez zaawansowanych użytkowników</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">IOB Czas piku krzywej działania insuliny</string>
-    <string name="insulin_peak_time">Czas piku [min]</string>
-    <string name="free_peak_oref">Swobodny-Pik Oref</string>
-    <string name="rapid_acting_oref">Szybko-Działający Oref</string>
-    <string name="ultra_rapid_oref">Ultra-Szybki Oref</string>
-    <string name="dia_too_short">DIA %1$f zbyt krótki - przyjmuję %2$f w zamian!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">Linia Statusu xDrip+ (zegarek)</string>
@@ -158,22 +143,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CEL</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Ukończone, wspaniale!</string>
-    <string name="not_completed_yet">Nie ukończono</string>
-    <string name="time_elapsed">Czas jaki upłynął</string>
-    <string name="maxiobset">Maks. IOB ustawione poprawnie</string>
-    <string name="hasbgdata">BG dostępne z wybranego źródła</string>
-    <string name="loopenabled">Pętla włączona</string>
-    <string name="apsselected">Wybrano APS</string>
-    <string name="closedmodeenabled">Tryb zamknięty włączony</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Program do nauki</string>
-    <string name="doyouwantresetstart">Czy chcesz zresetować czas rozpoczęcia zadania? Możesz utracić postępy.</string>
-    <string name="objectives_next_button">Dalej</string>
-    <string name="objectives_previous_button">Poprzedni</string>
-    <string name="objectives_button_unfinish">Wyczyść skończone</string>
-    <string name="objectives_button_unstart">Wyczyść rozpoczęte</string>
     <!-- Actions -->
     <string name="actions">Akcje</string>
     <string name="description_actions">Niektóre przyciski umożliwiające szybki dostęp do typowych funkcji</string>
@@ -190,18 +159,6 @@
     <string name="pb_label">Bateria pompy</string>
     <string name="cannula">Kaniula</string>
     <string name="ebstopsloop">Użycie funkcji Extended bolus spowoduje zatrzymanie trybu pętli zamkniętej na czas działania przedłużonego bolusa. Czy na pewno tego chcesz?</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Ograniczam bolus do %1$.1f U z uwagi na %2$s</string>
-    <string name="limitingcarbs">Ograniczam węglow. do %1$d g z uwagi na %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pompa nie jest zdolna do wykonywania dawek bazowych tymczasowych</string>
-    <string name="closedmodedisabledinpreferences">Tryb zamkniętej pętli wyłączony w ustawieniach</string>
-    <string name="closed_loop_disabled_on_dev_branch">Uruchomiona jest wersja dev. Zamknięta pętla jest wyłączona.</string>
-    <string name="closed_loop_disabled_with_eb">Zamknięta pętla wyłączona, ponieważ działa Extended Bolus (bolus przedłużony)</string>
-    <string name="smbalwaysdisabled">SMB zawsze i po węglow. wyłączone z uwagi na brak źródła BG z zaawansowanym filtrowaniem</string>
-    <string name="smbnotallowedinopenloopmode">SMB nie dozwolone w trybie otwartej pętli</string>
-    <string name="maxvalueinpreferences">maks. wartość w ustawieniach</string>
-    <string name="hardlimit">twarde ograniczenie</string>
-    <string name="treatmentssafety_title">Bezpieczeństwo terapii</string>
     <!-- Overview -->
     <string name="show_statuslights">Pokaż diody stanu na ekranie głównym</string>
     <string name="statuslights_iage_warning">Ostrzeżenie o czasie insuliny [h]</string>
@@ -315,44 +272,6 @@
     <string name="treatments_shortname">TREAT</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_menu_divider_header">Wykres</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Pompa wirtualna</string>
-    <string name="virtual_pump_definition">Definicja Pompy</string>
-    <string name="virtual_pump_pump_def">Bolus: Krok =%1$s\nBolus Przedłużony: [krok =%2$s, czas trwania =%3$smin -%4$sh] \nBasal: krok =%5$s\nTBR: %6$s (przez %7$s), czas trwania =%8$smin -%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMP</string>
-    <string name="description_pump_virtual">Integracja z pompami, które nie posiadają jeszcze żadnego sterownika (Open Loop)</string>
-    <string name="virtual_pump_label">POMPA WIRTUALNA</string>
-    <string name="virtualpump_settings">Ustawienia pompy wirtualnej</string>
-    <string name="virtualpump_uploadstatus_title">Przesyłaj status do NS</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient BG</string>
-    <string name="ns_client_bg_short">NS BG</string>
-    <string name="description_source_ns_client">Pobieraj wartości BG z Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Pobieraj wartości BG z xDrip+.</string>
-    <string name="dexcom_app_patched">Dexcom Patched</string>
-    <string name="dexcom_short">DEX.PATCH.</string>
-    <string name="description_source_dexcom">Pobieraj glikemię ze spatchowanej aplikacji Dexcom.</string>
-    <string name="eversense">Apka Eversense (spatchowana)</string>
-    <string name="description_source_eversense">Pobieraj wartości BG ze spatchowanej aplikacji Eversense.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Pobieraj wartości BG z Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Pobieraj wartości BG z uploadera pomp serii 600.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Odczytuj wartości BG z aplikacji Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Otrzymuj wartości z aplikacji Glunovo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Otrzymuj poziomy cukru (BG) z Apki Tomato) (urządzenie MiaoMiao)</string>
-    <string name="random_bg">Losowa BG</string>
-    <string name="description_source_random_bg">Generuj losowe dane BG (tylko tryb demonstracyjny)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Prześlij dane BG do xDrip+</string>
-    <string name="do_xdrip_upload_summary">W xDrip+ wybierz źródło danych 640g/Eversense</string>
-    <string name="bgsource_upload">Ustawienia wysyłania wartości BG (poziomów cukru)</string>
-    <string name="dexcom_log_ns_sensor_change_title">Prześlij zmianę sensora do NS</string>
     <!-- Skins -->
     <string name="classic_description">Motyw oryginalny</string>
     <string name="lowres_description">Mały ekran</string>

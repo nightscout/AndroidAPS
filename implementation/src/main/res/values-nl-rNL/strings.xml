@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ niet geïnstalleerd</string>
     <string name="calibration_sent">Kalibratie verzonden naar xDrip+</string>
     <string name="bg_label">BG</string>
-    <string name="time_to_eat">Tijd om te eten</string>
-    <string name="time_to_bolus">Tijd om te bolussen!\nVoer de boluswizard uit en maak de berekening opnieuw.</string>
     <string name="executing_right_now">Opdracht wordt nu uitgevoerd</string>
     <string name="basal_value_below_minimum">Basaalwaarde onder minimum. Profiel niet ingesteld!</string>
     <string name="permission">Toestemming</string>

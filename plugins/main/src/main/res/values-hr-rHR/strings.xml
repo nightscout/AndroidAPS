@@ -57,21 +57,6 @@
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Bazal:</string>
     <string name="a11y_otp_qr_code">QR kod za postavljanje jednokratne lozinke</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Unaprijed podešen predložak za inzulin Humalog i NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Unaprijed podešen predložak za inzulin Fiasp</string>
-    <string name="description_insulin_lyumjev">Unaprijed podešen predložak za inzulin Lyumjev</string>
-    <string name="description_insulin_free_peak">Omogućuje definiranje vrhunca aktivnosti inzulina i trebaju ga koristiti samo napredni korisnici</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">Vršno vrijeme IOB krivulje</string>
-    <string name="insulin_peak_time">Špica [min]</string>
-    <string name="free_peak_oref">Free-Peak Oref</string>
-    <string name="rapid_acting_oref">Rapid-Acting Oref</string>
-    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
-    <string name="dia_too_short">DIA od %1$f prekratak - umjesto njega koristite %2$f!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip+ Statusna linija (sat)</string>
@@ -127,18 +112,10 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CILJ</string>
     <string name="basal_short">BAZAL</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Dovršeno, bravo!</string>
-    <string name="not_completed_yet">Nije još dovršeno</string>
-    <string name="time_elapsed">Prošlo vrijeme</string>
-    <string name="description_objectives">Program učenja</string>
-    <string name="objectives_next_button">Sljedeći</string>
     <!-- Actions -->
     <string name="description_actions">Nekoliko izbora za brzi pristup uobičajenim funkcijama</string>
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Inzulin</string>
-    <!-- Safety -->
-    <string name="treatmentssafety_title">Sigurnosne postavke medikacije</string>
     <!-- Overview -->
     <string name="a11y_insulin_label">inzulin</string>
     <string name="a11y_only_on_watch">samo na satu</string>
@@ -159,28 +136,6 @@
     <string name="overview_show_treatments">Tretmani</string>
     <string name="basal_shortname">BAZAL</string>
     <string name="graph_scale">Skala grafikona</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Vrsta virtualne pumpe</string>
-    <string name="virtual_pump_definition">Definicija pumpe</string>
-    <string name="virtual_pump_pump_def">Bolus: korak=%1$s\nProduženi bolus: [korak=%2$s, trajanje=%3$smin-%4$sh]\nBazal: korak=%5$s\nTBR: %6$s (do %7$s), Trajanje=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMP</string>
-    <string name="description_pump_virtual">Integracija pumpe za pumpe koje još nemaju upravljački program (otvorena petlja)</string>
-    <string name="virtual_pump_label">VIRTUALNA PUMPA</string>
-    <string name="virtualpump_settings">Postavke virtualne pumpe</string>
-    <string name="virtualpump_uploadstatus_title">Prijenos statusa u NS</string>
-    <!-- Source -->
-    <string name="description_source_ns_client">Preuzima podatke o GUK-u s Nightscout-a</string>
-    <string name="description_source_xdrip">Preuzima podatke o GUK-a s xDrip+.</string>
-    <string name="description_source_eversense">Primajte vrijednosti GUK-a iz zakrpane aplikacije Eversense.</string>
-    <string name="description_source_glimp">Primajte vrijednosti GUK-a od Glimpa.</string>
-    <string name="description_source_mm640g">Primajte vrijednosti glukoze u krvi od 600SeriesAndroidUploader.</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Primite vrijednosti iz aplikacije Intelligo</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Primite vrijednosti GK od GlucoRx Aidex CGMS.</string>
-    <string name="random_bg_short">GUK</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Stvorite događaj \"Promjena senzora\" u NS-u automatski pri pokretanju senzora</string>
     <!-- Skins -->
     <!--    DataBroadcast-->
     <!--    Iob-->

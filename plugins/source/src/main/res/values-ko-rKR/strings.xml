@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">xDrip+에서 혈당값 받기</string>
+    <string name="eversense">Eversense 앱(패치버전)</string>
+    <string name="description_source_eversense">패치된 Eversense 앱에서 혈당값 받기</string>
+    <string name="description_source_glimp">Glimp에서 혈당값 받기</string>
+    <string name="description_source_mm640g">600SeriesAndroidUploader에서 혈당값 받기</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Poctech 앱에서 혈당값 받기</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">혈당값이 Tomato앱(MiaoMaio장치) 으로부터 수신되었습니다.</string>
+    <string name="bgsource_upload">혈당 업로드 설정</string>
+</resources>

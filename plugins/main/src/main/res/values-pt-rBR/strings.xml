@@ -101,21 +101,6 @@
     <string name="sms_profile_switch_created">Troca de perfil criada</string>
     <string name="sms_wrong_tbr_duration">A duração da basal temporária deve ser um múltiplo de %1$d minutos e maior que 0.</string>
     <string name="a11y_otp_qr_code">Código QR para configuração de senha de uso único</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Predefinição de Insulina para Humalog e NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Pré-ajuste de Insulina para Fiasp</string>
-    <string name="description_insulin_lyumjev">Configuração pre-definida para a Insulina Lyumyev</string>
-    <string name="description_insulin_free_peak">Permite que você defina o pico da atividade de insulina, deve ser usado apenas por usuários avançados</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">Tempo Pico da curva de IOB</string>
-    <string name="insulin_peak_time">Tempo Pico [min]</string>
-    <string name="free_peak_oref">Oref Pico-Livre</string>
-    <string name="rapid_acting_oref">Oref Ação Rápida</string>
-    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
-    <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">Linha do estado do Xdrip+ (relógio)</string>
@@ -171,22 +156,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">ALV</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Terminado, parabéns!</string>
-    <string name="not_completed_yet">Incompleto</string>
-    <string name="time_elapsed">Tempo decorrido</string>
-    <string name="maxiobset">IOB máxima definida correctamente</string>
-    <string name="hasbgdata">Glicemia disponivel desde a fonte selecionada</string>
-    <string name="loopenabled">Loop activado</string>
-    <string name="apsselected">APS seleccionado</string>
-    <string name="closedmodeenabled">Modo fechado ativado</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Programa de aprendizagem</string>
-    <string name="doyouwantresetstart">Deseja reiniciar o objetivo? Pode perder seu progresso.</string>
-    <string name="objectives_next_button">Seguinte</string>
-    <string name="objectives_previous_button">Anterior</string>
-    <string name="objectives_button_unfinish">Limpeza terminado</string>
-    <string name="objectives_button_unstart">Limpeza iniciado</string>
     <!-- Actions -->
     <string name="actions">Ações</string>
     <string name="description_actions">Alguns botões para acessar rapidamente a funções comuns</string>
@@ -206,18 +175,6 @@
     <string name="statuslights_cannula_age">idade da cânula</string>
     <string name="statuslights_patch_pump_age">Idade da bomba patch</string>
     <string name="patch_pump">Bomba patch</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">A limitar bólus estendido para %1$.1f U porque %2$s</string>
-    <string name="limitingcarbs">A limitar hidratos para %1$d g porque %2$s</string>
-    <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
-    <string name="closedmodedisabledinpreferences">Loop fecchado disabilitado nas preferências</string>
-    <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desabilitado.</string>
-    <string name="closed_loop_disabled_with_eb">Closed Loop desabilitado por causa da execução do Bólus Estendido</string>
-    <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicemia activa não suportar filtro avançado</string>
-    <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
-    <string name="maxvalueinpreferences">valor máx nas preferências</string>
-    <string name="hardlimit">limite rígido</string>
-    <string name="treatmentssafety_title">Segurança do Tratamento</string>
     <!-- Overview -->
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
     <string name="statuslights_iage_warning">Aviso de limite da vida útil da insulina [h]</string>
@@ -343,50 +300,6 @@
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Escala do gráfico</string>
     <string name="graph_menu_divider_header">Gráfico</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Tipo da Bomba Virtual</string>
-    <string name="virtual_pump_definition">Definição da Bomba</string>
-    <string name="virtual_pump_pump_def">Bólus: Passo=%1$s\nBólus Estendido: [Passo=%2$s, Duração=%3$smin -%4$sh] \nBasal: Passo=%5$s\ nTBR: %6$s (por %7$s), Duração=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">BOMBAV</string>
-    <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
-    <string name="virtual_pump_label">BOMBA VIRTUAL</string>
-    <string name="virtualpump_settings">Definições da bomba virtual</string>
-    <string name="virtualpump_uploadstatus_title">Enviar estado para NS</string>
-    <!-- Source -->
-    <string name="ns_client_bg">Glic NSCliente</string>
-    <string name="ns_client_bg_short">NS glicemia</string>
-    <string name="description_source_ns_client">Downloads de dados de Glicose do Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Receber valores de glicose do xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Receber valores de glicemia do \'Build Your Own Dexcom App\'.</string>
-    <string name="eversense">Aplicação Eversense (com patch)</string>
-    <string name="description_source_eversense">Receber valores de Glicose da aplicação Eversense modificada.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Receber valores BG do Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Receber valores de Glucose do 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Receber valores GLIC do aplicativo Glunovo</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Receber valores da app Intelligo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Receber valores de Glicose da aplicação Tomato (dispositivo MiaoMiao)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Receber valores BG do GlucoRx Aidex CGMS.</string>
-    <string name="random_bg">Glic. Aleatória</string>
-    <string name="description_source_random_bg">Gerar dados de Glic. aleatórios (Somente modo de Demonstração)</string>
-    <string name="random_bg_short">GLIC</string>
-    <string name="do_xdrip_upload_title">Enviar dados Glic. para xDrip+</string>
-    <string name="do_xdrip_upload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
-    <string name="bgsource_upload">Configurações de upload de BG</string>
-    <string name="dexcom_log_ns_sensor_change_title">Registar mudança de sensor para NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Criar evento \"Mudança de Sensor\" no NS automaticamente ao iniciar o sensor.</string>
     <!-- Skins -->
     <string name="classic_description">Tema original</string>
     <string name="lowres_description">Design de baixa resolução</string>

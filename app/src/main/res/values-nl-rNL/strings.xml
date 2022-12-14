@@ -46,7 +46,6 @@
     <string name="authorizationfailed">Autorisatie mislukt</string>
     <string name="copytolocalprofile_invalid">Kan profiel niet aanmaken. Profiel is ongeldig.</string>
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
-    <string name="time_to_eat">Tijd om te eten!\nVoer de boluswizard opnieuw uit.</string>
     <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
     <string name="clear_filter">Verwijder filter</string>
     <string name="cannula">Canule</string>

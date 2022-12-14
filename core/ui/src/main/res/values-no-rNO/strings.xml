@@ -164,6 +164,9 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Kansellering av Temp Basal feilet</string>
     <string name="canceling_eb_failed">Kansellering av forlenget bolus feilet</string>
+    <string name="virtualpump_uploadstatus_title">Last opp status til Nightscout</string>
+    <string name="suspendloop_label">Deaktiver/pause loop</string>
+    <string name="iob_label">Aktivt insulin (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Feil passord</string>
     <string name="wrongpin">Feil PIN-kode</string>

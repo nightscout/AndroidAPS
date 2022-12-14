@@ -14,8 +14,10 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileStore
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
@@ -37,25 +39,46 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var config: Config
     @Mock lateinit var context: Context
+    @Mock lateinit var sp: SP
 
+    private lateinit var hardLimits: HardLimits
     lateinit var dateUtil: DateUtil
     val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
-    val profileInjector = HasAndroidInjector { AndroidInjector { } }
+    val profileInjector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is ProfileStoreObject) {
+                it.aapsLogger = aapsLogger
+                it.activePlugin = activePluginProvider
+                it.config = config
+                it.rh = rh
+                it.rxBus = rxBus
+                it.hardLimits = hardLimits
+            }
+        }
+    }
 
     private lateinit var validProfileJSON: String
+    private lateinit var invalidProfileJSON: String
     lateinit var validProfile: ProfileSealed.Pure
     lateinit var effectiveProfileSwitch: EffectiveProfileSwitch
+    lateinit var testPumpPlugin: TestPumpPlugin
 
     @Suppress("PropertyName") val TESTPROFILENAME = "someProfile"
 
     @BeforeEach
     fun prepareMock() {
+        invalidProfileJSON = "{\"dia\":\"1\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"}," +
+            "{\"time\":\"2:00\",\"value\":\"3.4\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}]," +
+            "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
         validProfileJSON = "{\"dia\":\"5\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"}," +
             "{\"time\":\"2:00\",\"value\":\"3.4\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}]," +
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
+        testPumpPlugin = TestPumpPlugin(profileInjector)
+        `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         dateUtil = Mockito.spy(DateUtil(context))
         `when`(dateUtil.now()).thenReturn(1656358822000)
+        hardLimits = HardLimitsMock(sp, rh)
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!)
         effectiveProfileSwitch = EffectiveProfileSwitch(
             timestamp = dateUtil.now(),
@@ -172,6 +195,25 @@ open class TestBaseWithProfile : TestBase() {
         val store = JSONObject()
         store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
         json.put("defaultProfile", TESTPROFILENAME)
+        json.put("store", store)
+        return ProfileStoreObject(profileInjector, json, dateUtil)
+    }
+
+    fun getInvalidProfileStore1(): ProfileStore {
+        val json = JSONObject()
+        val store = JSONObject()
+        store.put(TESTPROFILENAME, JSONObject(invalidProfileJSON))
+        json.put("defaultProfile", TESTPROFILENAME)
+        json.put("store", store)
+        return ProfileStoreObject(profileInjector, json, dateUtil)
+    }
+
+    fun getInvalidProfileStore2(): ProfileStore {
+        val json = JSONObject()
+        val store = JSONObject()
+        store.put(TESTPROFILENAME, JSONObject(validProfileJSON))
+        store.put("invalid", JSONObject(invalidProfileJSON))
+        json.put("defaultProfile", TESTPROFILENAME + "invalid")
         json.put("store", store)
         return ProfileStoreObject(profileInjector, json, dateUtil)
     }

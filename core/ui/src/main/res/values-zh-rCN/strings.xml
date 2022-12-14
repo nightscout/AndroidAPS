@@ -154,6 +154,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="virtualpump_uploadstatus_title">将状态上传到 NS</string>
+    <string name="suspendloop_label">禁用/暂停闭环</string>
+    <string name="iob_label">活性胰岛素(IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">密码错误</string>
     <string name="wrongpin">PIN 码错误</string>
@@ -480,7 +483,7 @@
     <!--    Constraints-->
     <string name="limitingbasalratio">最大基础率被限定为 %1$.2f U/h 由于 %2$s</string>
     <string name="pumplimit">泵限制</string>
-    <string name="limitingpercentrate">由于 %2$s, 将最大百分比限制为 %1$d%</string>
+    <string name="limitingpercentrate">由于 %2$s, 将最大百分比限制为 %1$d%%</string>
     <string name="itmustbepositivevalue">它必须是正数</string>
     <string name="limitingbolus">由于 %2$s, 将大剂量限制为 %1$.1f U</string>
     <!-- Locale -->

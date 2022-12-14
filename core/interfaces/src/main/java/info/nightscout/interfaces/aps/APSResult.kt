@@ -8,6 +8,7 @@ import info.nightscout.interfaces.iob.IobTotal
 import org.json.JSONObject
 
 interface APSResult {
+    var date: Long
     var json: JSONObject?
     var reason: String
     var rate: Double

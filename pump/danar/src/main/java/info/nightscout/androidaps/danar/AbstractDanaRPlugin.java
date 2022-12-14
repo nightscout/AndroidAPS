@@ -120,6 +120,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
                     }
                 })
         );
+        danaPump.setSerialNumber(sp.getString(info.nightscout.pump.dana.R.string.key_danar_bt_name, "")); // fill at start to allow password reset
     }
 
     @Override protected void onStop() {

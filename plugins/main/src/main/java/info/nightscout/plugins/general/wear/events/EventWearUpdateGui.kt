@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.general.wear.events
+package info.nightscout.plugins.general.wear.events
 
 import info.nightscout.rx.events.Event
 

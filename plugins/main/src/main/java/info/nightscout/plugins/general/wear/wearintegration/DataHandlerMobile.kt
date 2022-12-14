@@ -9,7 +9,6 @@ import info.nightscout.core.extensions.valueToUnits
 import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.graph.data.GlucoseValueDataPoint
 import info.nightscout.core.iob.generateCOBString
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.iob.round
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -34,6 +33,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData

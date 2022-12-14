@@ -75,6 +75,7 @@ ActionsTestBase : TestBaseWithProfile() {
             runningConfiguration: RunningConfiguration,
             version: String
         ): DeviceStatus? = null
+
         override fun setPluginEnabled(type: PluginType, newState: Boolean) {}
     }
 
