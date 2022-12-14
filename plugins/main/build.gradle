@@ -28,6 +28,8 @@ dependencies {
     implementation project(':core:utils')
     implementation project(':core:validators')
 
+    testImplementation project(':implementation')
+
     api "androidx.appcompat:appcompat:$appcompat_version"
     api "com.google.android.material:material:$material_version"
 

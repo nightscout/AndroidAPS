@@ -5,7 +5,7 @@ import info.nightscout.database.entities.TherapyEvent
 /**
  * Sync the TherapyEvents from NS
  */
-class SyncNsTherapyEventTransaction(private val therapyEvents: List<TherapyEvent>) :
+class SyncNsTherapyEventTransaction(private val therapyEvents: List<TherapyEvent>, private val nsClientMode: Boolean) :
     Transaction<SyncNsTherapyEventTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
@@ -24,7 +24,7 @@ class SyncNsTherapyEventTransaction(private val therapyEvents: List<TherapyEvent
                     database.therapyEventDao.updateExistingEntry(current)
                     result.invalidated.add(current)
                 }
-                if (current.duration != therapyEvent.duration) {
+                if (current.duration != therapyEvent.duration && nsClientMode) {
                     current.duration = therapyEvent.duration
                     database.therapyEventDao.updateExistingEntry(current)
                     result.updatedDuration.add(current)

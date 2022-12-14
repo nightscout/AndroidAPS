@@ -101,21 +101,6 @@
     <string name="sms_profile_switch_created">Cambio de perfil creado</string>
     <string name="sms_wrong_tbr_duration">La duración de TBR debe ser un múltiplo de %1$d minutos y mayor a 0.</string>
     <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Ajustes de insulina preestablecidos para Humalog y NovoRapid/NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Ajuste de insulina preestablecido para Fiasp</string>
-    <string name="description_insulin_lyumjev">Ajuste de insulina preestablecido para Lyumjev</string>
-    <string name="description_insulin_free_peak">Permite personalizar el pico de acción máxima de la insulina. Debe ser utilizado únicamente por usuarios avanzados</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">Tiempo del pico máximo de la curva de IOB</string>
-    <string name="insulin_peak_time">Tiempo del pico máximo de acción de la insulina [min]</string>
-    <string name="free_peak_oref">Personalizar Pico</string>
-    <string name="rapid_acting_oref">Acción Rápida</string>
-    <string name="ultra_rapid_oref">Ultra-Rápido Oref</string>
-    <string name="dia_too_short">DIA de %1$f demasiado corto - usando %2$f!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">Línea de estado de xDrip+ (reloj)</string>
@@ -171,23 +156,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">OBJ</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">¡Logrado, bien hecho!</string>
-    <string name="not_completed_yet">No logrado</string>
-    <string name="time_elapsed">Tiempo agotado</string>
-    <string name="maxiobset">Máximo IOB ajustado correctamente</string>
-    <string name="hasbgdata">Glucosa disponible desde la fuente seleccionada</string>
-    <string name="synchaswritepermission">El servicio de sincronización tiene permiso de escritura</string>
-    <string name="loopenabled">Lazo activado</string>
-    <string name="apsselected">APS seleccionado</string>
-    <string name="closedmodeenabled">Lazo cerrado activado</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Programa de aprendizaje</string>
-    <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
-    <string name="objectives_next_button">Siguiente</string>
-    <string name="objectives_previous_button">Anterior</string>
-    <string name="objectives_button_unfinish">Limpieza finalizada</string>
-    <string name="objectives_button_unstart">Limpieza iniciada</string>
     <!-- Actions -->
     <string name="actions">Acciones</string>
     <string name="description_actions">Algunos botones para acceder rápidamente a funciones comunes</string>
@@ -207,18 +175,6 @@
     <string name="statuslights_cannula_age">edad de la cánula</string>
     <string name="statuslights_patch_pump_age">edad del parche de la bomba</string>
     <string name="patch_pump">Bomba parche</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Limitando el bolo extendido a %1$.1f U debido a %2$s</string>
-    <string name="limitingcarbs">Limitando carbohidratos a %1$d g debido a %2$s</string>
-    <string name="pumpisnottempbasalcapable">La bomba no tiene capacidad basal temporal</string>
-    <string name="closedmodedisabledinpreferences">Lazo cerrado deshabilitado en preferencias</string>
-    <string name="closed_loop_disabled_on_dev_branch">Ejecutando la versión dev. Lazo cerrado no disponible.</string>
-    <string name="closed_loop_disabled_with_eb">Bucle cerrado inhabilitado debido a la ejecución del bolo extendido</string>
-    <string name="smbalwaysdisabled">SMB siempre y después de carbohidratos desactivados porque la fuente activa de BG no soporta filtrado avanzado</string>
-    <string name="smbnotallowedinopenloopmode">SMB no permitido en modo de lazo abierto</string>
-    <string name="maxvalueinpreferences">valor máximo en preferencias</string>
-    <string name="hardlimit">límite estricto</string>
-    <string name="treatmentssafety_title">Seguridad de tratamientos</string>
     <!-- Overview -->
     <string name="show_statuslights">Mostrar luces de estado en la pantalla de inicio</string>
     <string name="statuslights_cage_warning">Umbral de advertencia de la edad de la cánula [h]</string>
@@ -346,50 +302,6 @@
     <string name="sensitivity_shortname">Sens</string>
     <string name="graph_scale">Escala gráfica</string>
     <string name="graph_menu_divider_header">Gráfico</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Tipo de bomba virtual</string>
-    <string name="virtual_pump_definition">Definición de la bomba</string>
-    <string name="virtual_pump_pump_def">Bolo: Paso =%1$s\nBolo Extendido: [paso =%2$s, Duración =%3$smin -%4$sh] \nBasal: Paso =%5$s\nTBR: %6$s ( %7$s), Duración =%8$sMin -%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">BOMBAV</string>
-    <string name="description_pump_virtual">Integración de bombas de insulina que aún no tienen ningún controlador disponible (lazo abierto)</string>
-    <string name="virtual_pump_label">BOMBA VIRTUAL</string>
-    <string name="virtualpump_settings">Ajustes de bomba virtual</string>
-    <string name="virtualpump_uploadstatus_title">Subir estado a Nightscout</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient BG</string>
-    <string name="ns_client_bg_short">NS BG</string>
-    <string name="description_source_ns_client">Recibir los datos de glucosa de Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Recibir los valores de glucosa de xDrip+</string>
-    <string name="dexcom_app_patched">Dexcom (BYODA)</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Recibir los valores de glucosa de la aplicación Dexcom \'Build Your Own Device\'</string>
-    <string name="eversense">Eversense App (parcheada)</string>
-    <string name="description_source_eversense">Recibir los valores de glucosa de la aplicación Eversense parcheada.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Recibir valores de glucosa de Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Recibir los valores de glucosa del 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Recibir los valores de glucosa de Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Recibir los valores de glucosa de la aplicación Glunovo</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Recibir los valores de glucosa de Intelligo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Recibir los valores de glucosa de Tomato App (MiaoMiao) </string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Recibir los valores de glucosa de GlucoRx Aidex CGMS</string>
-    <string name="random_bg">Glucosa aleatoria</string>
-    <string name="description_source_random_bg">Generar datos aleatorios de glucosa (sólo modo Demo)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">Enviar datos de glucosa a xDrip+</string>
-    <string name="do_xdrip_upload_summary">En xDrip+, selecciona 640G/Eversense como fuente de datos</string>
-    <string name="bgsource_upload">Ajuste de subida de datos de glucosa</string>
-    <string name="dexcom_log_ns_sensor_change_title">Registro de cambio de sensor en Nightscout</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Crear evento \"Cambio de sensor\" en Nightscout automáticamente al iniciar el sensor</string>
     <!-- Skins -->
     <string name="classic_description">Tema original</string>
     <string name="lowres_description">Tema baja resolución</string>

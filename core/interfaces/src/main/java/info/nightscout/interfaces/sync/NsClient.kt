@@ -2,7 +2,6 @@ package info.nightscout.interfaces.sync
 
 import android.text.Spanned
 import info.nightscout.interfaces.nsclient.NSAlarm
-import org.json.JSONObject
 
 interface NsClient : Sync {
     enum class Version {
@@ -11,7 +10,6 @@ interface NsClient : Sync {
 
     val version: Version
     val address: String
-    val nsClientService: NSClientService?
 
     fun pause(newState: Boolean)
     fun resend(reason: String)
@@ -24,9 +22,6 @@ interface NsClient : Sync {
 
     fun resetToFullSync()
 
-    interface NSClientService {
-
-        fun dbAdd(collection: String, data: JSONObject, originalObject: Any, progress: String)
-        fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String)
-    }
+    fun dbAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String)
+    fun dbUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String)
 }

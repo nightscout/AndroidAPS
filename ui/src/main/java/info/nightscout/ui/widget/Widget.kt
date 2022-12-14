@@ -17,7 +17,6 @@ import info.nightscout.core.extensions.directionToIcon
 import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.displayText
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.interfaces.Config
@@ -26,6 +25,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.aps.VariableSensitivityResult
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile

@@ -101,21 +101,6 @@
     <string name="sms_profile_switch_created">Profil değiştirme yapıldı</string>
     <string name="sms_wrong_tbr_duration">GBO süresi %1$d dakikanın katı ve 0\'dan büyük olmalıdır.</string>
     <string name="a11y_otp_qr_code">Tek kullanımlık şifre kurulumu için QR Kodu</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Humalog ve NovoRapid / NovoLog için İnsülin Profili</string>
-    <string name="description_insulin_ultra_rapid">Fiasp için insülin Profili</string>
-    <string name="description_insulin_lyumjev">Lyumjev için insülin ayarı</string>
-    <string name="description_insulin_free_peak">İnsülin aktivitesinin zirvesini tanımlamanıza izin verir ve yalnızca ileri düzey kullanıcılar tarafından kullanılmalıdır.</string>
-    <string name="insulin_shortname">İNS</string>
-    <string name="insulin_oref_peak">AİNS Eğrisi Tepe Zamanı</string>
-    <string name="insulin_peak_time">Tepe zamanı [min]</string>
-    <string name="free_peak_oref">Serbest tepe Oref</string>
-    <string name="rapid_acting_oref">Hızlı etkili Oref</string>
-    <string name="ultra_rapid_oref">Ultra Hızlı Oref</string>
-    <string name="dia_too_short">DIA %1$f çok kısa - bunun yerine %2$f kullanıyor!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">xDrip+ Durum Çizgisi (saat)</string>
@@ -171,23 +156,6 @@
     <string name="dia_short">İES</string>
     <string name="target_short">HDF</string>
     <string name="basal_short">BAZ</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Tamamlandı, tebrikler!</string>
-    <string name="not_completed_yet">Henüz tamamlanmadı</string>
-    <string name="time_elapsed">Geçen süre</string>
-    <string name="maxiobset">Maksimal AİNS doğru şekilde ayarlandı</string>
-    <string name="hasbgdata">Seçili kaynaktan KŞ kullanılabilir</string>
-    <string name="synchaswritepermission">Senkronizasyon servisi yazma iznine sahip</string>
-    <string name="loopenabled">Döngü etkin</string>
-    <string name="apsselected">APS Seçildi</string>
-    <string name="closedmodeenabled">Kapalı mod etkin</string>
-    <string name="objectives_shortname">GRV</string>
-    <string name="description_objectives">Eğitim programı</string>
-    <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
-    <string name="objectives_next_button">Sonraki</string>
-    <string name="objectives_previous_button">Geri</string>
-    <string name="objectives_button_unfinish">Komple tamamlandı</string>
-    <string name="objectives_button_unstart">Yeniden Başla</string>
     <!-- Actions -->
     <string name="actions">Eylemler</string>
     <string name="description_actions">Ortak özelliklere hızlıca erişmek için bazı düğmeler</string>
@@ -207,18 +175,6 @@
     <string name="statuslights_cannula_age">kanül yaşı</string>
     <string name="statuslights_patch_pump_age">yama pompa yaşı</string>
     <string name="patch_pump">Yama pompa</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">%2$s\'den dolayı yayma bolus %1$.1f Ü ile sınırlandırılıyor</string>
-    <string name="limitingcarbs">%2$s\'den dolayı karbonhidratlar %1$d g ile sınırlandırılıyor</string>
-    <string name="pumpisnottempbasalcapable">Pompa geçici bazal özellikli değil</string>
-    <string name="closedmodedisabledinpreferences">Kapalı Döngü tercihlerde devre dışı bırakıldı</string>
-    <string name="closed_loop_disabled_on_dev_branch">Geliştirici sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
-    <string name="closed_loop_disabled_with_eb">Yayma bolus çalıştığı için kapalı döngü devre dışı bırakıldı</string>
-    <string name="smbalwaysdisabled">Aktif KŞ kaynağı gelişmiş filtrelemeyi desteklemediği için SMB (Super Micro Bolus) her zaman ve karbonhidratlardan sonra devre dışı bırakıldı</string>
-    <string name="smbnotallowedinopenloopmode">Açık Döngü modunda SMB\'ye (Super Micro Bolus) izin verilmiyor</string>
-    <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
-    <string name="hardlimit">sert sınır</string>
-    <string name="treatmentssafety_title">Tedavi güvenliği</string>
     <!-- Overview -->
     <string name="show_statuslights">Ana ekranda durum ışıklarını göster</string>
     <string name="statuslights_cage_warning">Kanül ömrü uyarısı belirle (saat) [h]</string>
@@ -346,50 +302,6 @@
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Grafik ölçeği</string>
     <string name="graph_menu_divider_header">Grafik</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Sanal pompa tipi</string>
-    <string name="virtual_pump_definition">Pompa tanımı</string>
-    <string name="virtual_pump_pump_def">Bolus: Adım=%1$s\nYayma Bolus: [Adım=%2$s, Süre=%3$sdk-%4$ssa]\nBazal: Adım=%5$s\nGBO: %6$s (ile %7$s), Süre=%8$sdk-%9$ssa\n%10$s</string>
-    <string name="virtual_pump_shortname">VPOMP</string>
-    <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
-    <string name="virtual_pump_label">SANAL POMPA</string>
-    <string name="virtualpump_settings">Sanal pompa ayarları</string>
-    <string name="virtualpump_uploadstatus_title">Nightscout\'a durum aktar</string>
-    <!-- Source -->
-    <string name="ns_client_bg">NSClient KŞ</string>
-    <string name="ns_client_bg_short">NS KŞ</string>
-    <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">\'Kendi Dexcom Uygulamanızı Oluşturun\' uygulamasından KŞ değerlerini alın.</string>
-    <string name="eversense">Eversense App (yamalı)</string>
-    <string name="description_source_eversense">Yamalı Eversense uygulamasından KŞ değerleri alır.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Glimp\'ten KŞ değerleri alır.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">600SeriesAndroidUploader\'dan KŞ değerleri alır.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Poctech uygulamasından KŞ değerlerini alır</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Glunovo uygulamasından değerler alır</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Intelligo uygulamasından değerler alır</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">KŞ değerlerini Tomato uygulamasından (MiaoMiao Cihazından) al</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">GlucoRx Aidex CGMS\'den KŞ değerleri alır.</string>
-    <string name="random_bg">Rastgele KŞ</string>
-    <string name="description_source_random_bg">Rastgele KŞ verileri oluşturun (Yalnızca demo modunda)</string>
-    <string name="random_bg_short">KŞ</string>
-    <string name="do_xdrip_upload_title">XDrip+\'a KŞ verilerini gönder</string>
-    <string name="do_xdrip_upload_summary">xDrip+ içerisinde 640g/Eversense veri kaynağı seç</string>
-    <string name="bgsource_upload">KŞ yükleme ayarları</string>
-    <string name="dexcom_log_ns_sensor_change_title">Sensör değişimlerini NS\'a kaydet</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Sensör başlangıcında otomatik olarak NS\'de \"Sensör Değişimi\" olayı oluştur</string>
     <!-- Skins -->
     <string name="classic_description">Orjinal görünüm</string>
     <string name="lowres_description">Düşük çözünürlüklü görünüm</string>

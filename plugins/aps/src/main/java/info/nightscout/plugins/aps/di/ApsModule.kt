@@ -3,8 +3,10 @@ package info.nightscout.plugins.aps.di
 import dagger.Binds
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
+import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.autotune.Autotune
+import info.nightscout.plugins.aps.APSResultObject
 import info.nightscout.plugins.aps.OpenAPSFragment
 import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.plugins.general.autotune.AutotunePlugin
@@ -22,6 +24,7 @@ import info.nightscout.plugins.general.autotune.AutotunePlugin
 abstract class ApsModule {
 
     @ContributesAndroidInjector abstract fun contributesOpenAPSFragment(): OpenAPSFragment
+    @ContributesAndroidInjector abstract fun apsResultInjector(): APSResultObject
 
     @Module
     interface Bindings {

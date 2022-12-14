@@ -19,32 +19,32 @@ import info.nightscout.pump.diaconn.api.PumpLogDto
 import info.nightscout.pump.diaconn.common.RecordTypes
 import info.nightscout.pump.diaconn.database.DiaconnHistoryRecord
 import info.nightscout.pump.diaconn.database.DiaconnHistoryRecordDao
-import info.nightscout.pump.diaconn.pumplog.LOG_ALARM_BATTERY
-import info.nightscout.pump.diaconn.pumplog.LOG_ALARM_BLOCK
-import info.nightscout.pump.diaconn.pumplog.LOG_ALARM_SHORTAGE
-import info.nightscout.pump.diaconn.pumplog.LOG_CHANGE_INJECTOR_SUCCESS
-import info.nightscout.pump.diaconn.pumplog.LOG_CHANGE_NEEDLE_SUCCESS
-import info.nightscout.pump.diaconn.pumplog.LOG_CHANGE_TUBE_SUCCESS
-import info.nightscout.pump.diaconn.pumplog.LOG_INJECTION_1DAY
-import info.nightscout.pump.diaconn.pumplog.LOG_INJECTION_1DAY_BASAL
-import info.nightscout.pump.diaconn.pumplog.LOG_INJECTION_1HOUR_BASAL
-import info.nightscout.pump.diaconn.pumplog.LOG_INJECTION_DUAL_NORMAL
-import info.nightscout.pump.diaconn.pumplog.LOG_INJECT_DUAL_FAIL
-import info.nightscout.pump.diaconn.pumplog.LOG_INJECT_DUAL_SUCCESS
-import info.nightscout.pump.diaconn.pumplog.LOG_INJECT_MEAL_FAIL
-import info.nightscout.pump.diaconn.pumplog.LOG_INJECT_MEAL_SUCCESS
-import info.nightscout.pump.diaconn.pumplog.LOG_INJECT_NORMAL_FAIL
-import info.nightscout.pump.diaconn.pumplog.LOG_INJECT_NORMAL_SUCCESS
-import info.nightscout.pump.diaconn.pumplog.LOG_INJECT_SQUARE_FAIL
-import info.nightscout.pump.diaconn.pumplog.LOG_INJECT_SQUARE_SUCCESS
-import info.nightscout.pump.diaconn.pumplog.LOG_RESET_SYS_V3
-import info.nightscout.pump.diaconn.pumplog.LOG_SET_DUAL_INJECTION
-import info.nightscout.pump.diaconn.pumplog.LOG_SET_SQUARE_INJECTION
-import info.nightscout.pump.diaconn.pumplog.LOG_SUSPEND_RELEASE_V2
-import info.nightscout.pump.diaconn.pumplog.LOG_SUSPEND_V2
-import info.nightscout.pump.diaconn.pumplog.LOG_TB_START_V3
-import info.nightscout.pump.diaconn.pumplog.LOG_TB_STOP_V3
-import info.nightscout.pump.diaconn.pumplog.PumplogUtil
+import info.nightscout.pump.diaconn.pumplog.LogAlarmBattery
+import info.nightscout.pump.diaconn.pumplog.LogAlarmBlock
+import info.nightscout.pump.diaconn.pumplog.LogAlarmShortAge
+import info.nightscout.pump.diaconn.pumplog.LogChangeInjectorSuccess
+import info.nightscout.pump.diaconn.pumplog.LogChangeNeedleSuccess
+import info.nightscout.pump.diaconn.pumplog.LogChangeTubeSuccess
+import info.nightscout.pump.diaconn.pumplog.LogInjectDualFail
+import info.nightscout.pump.diaconn.pumplog.LogInjectDualSuccess
+import info.nightscout.pump.diaconn.pumplog.LogInjectMealFail
+import info.nightscout.pump.diaconn.pumplog.LogInjectMealSuccess
+import info.nightscout.pump.diaconn.pumplog.LogInjectNormalFail
+import info.nightscout.pump.diaconn.pumplog.LogInjectNormalSuccess
+import info.nightscout.pump.diaconn.pumplog.LogInjectSquareFail
+import info.nightscout.pump.diaconn.pumplog.LogInjectSquareSuccess
+import info.nightscout.pump.diaconn.pumplog.LogInjection1Day
+import info.nightscout.pump.diaconn.pumplog.LogInjection1DayBasal
+import info.nightscout.pump.diaconn.pumplog.LogInjection1HourBasal
+import info.nightscout.pump.diaconn.pumplog.LogInjectionDualNormal
+import info.nightscout.pump.diaconn.pumplog.LogResetSysV3
+import info.nightscout.pump.diaconn.pumplog.LogSetDualInjection
+import info.nightscout.pump.diaconn.pumplog.LogSetSquareInjection
+import info.nightscout.pump.diaconn.pumplog.LogSuspendReleaseV2
+import info.nightscout.pump.diaconn.pumplog.LogSuspendV2
+import info.nightscout.pump.diaconn.pumplog.LogTbStartV3
+import info.nightscout.pump.diaconn.pumplog.LogTbStopV3
+import info.nightscout.pump.diaconn.pumplog.PumpLogUtil
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.LTag
@@ -113,22 +113,22 @@ class BigLogInquireResponsePacket(
             val logNum = getShortToInt(bufferData)  // 2byte
             // log Data Parsing
             val logData = byteArrayOf(
-                PumplogUtil.getByte(bufferData),
-                PumplogUtil.getByte(bufferData),
-                PumplogUtil.getByte(bufferData),
-                PumplogUtil.getByte(bufferData),
-                PumplogUtil.getByte(bufferData),
-                PumplogUtil.getByte(bufferData),
-                PumplogUtil.getByte(bufferData),
-                PumplogUtil.getByte(bufferData),
-                PumplogUtil.getByte(bufferData),
-                PumplogUtil.getByte(bufferData),
-                PumplogUtil.getByte(bufferData),
-                PumplogUtil.getByte(bufferData)
+                PumpLogUtil.getByte(bufferData),
+                PumpLogUtil.getByte(bufferData),
+                PumpLogUtil.getByte(bufferData),
+                PumpLogUtil.getByte(bufferData),
+                PumpLogUtil.getByte(bufferData),
+                PumpLogUtil.getByte(bufferData),
+                PumpLogUtil.getByte(bufferData),
+                PumpLogUtil.getByte(bufferData),
+                PumpLogUtil.getByte(bufferData),
+                PumpLogUtil.getByte(bufferData),
+                PumpLogUtil.getByte(bufferData),
+                PumpLogUtil.getByte(bufferData)
             )
             // process Log to DB
             val logDataToHexString = toNarrowHex(logData)
-            val pumpLogKind: Byte = PumplogUtil.getKind(logDataToHexString)
+            val pumpLogKind: Byte = PumpLogUtil.getKind(logDataToHexString)
             var status: String
             val diaconnG8HistoryRecord = DiaconnHistoryRecord(0)
 
@@ -151,8 +151,8 @@ class BigLogInquireResponsePacket(
 
                 when (pumpLogKind) {
 
-                    LOG_INJECT_MEAL_SUCCESS.LOG_KIND     -> {
-                        val logItem = LOG_INJECT_MEAL_SUCCESS.parse(logDataToHexString)
+                    LogInjectMealSuccess.LOG_KIND -> {
+                        val logItem = LogInjectMealSuccess.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -186,8 +186,8 @@ class BigLogInquireResponsePacket(
                         status = "MEAL_BOLUS_SUCCESS" + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_INJECT_MEAL_FAIL.LOG_KIND        -> {
-                        val logItem = LOG_INJECT_MEAL_FAIL.parse(logDataToHexString)
+                    LogInjectMealFail.LOG_KIND -> {
+                        val logItem = LogInjectMealFail.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -221,8 +221,8 @@ class BigLogInquireResponsePacket(
                         status = "MEAL_BOLUS_FAIL " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_INJECT_NORMAL_SUCCESS.LOG_KIND   -> {
-                        val logItem = LOG_INJECT_NORMAL_SUCCESS.parse(logDataToHexString)
+                    LogInjectNormalSuccess.LOG_KIND -> {
+                        val logItem = LogInjectNormalSuccess.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
 
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
@@ -257,8 +257,8 @@ class BigLogInquireResponsePacket(
                         status = "BOLUS_SUCCESS" + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_INJECT_NORMAL_FAIL.LOG_KIND      -> {
-                        val logItem = LOG_INJECT_NORMAL_FAIL.parse(logDataToHexString)
+                    LogInjectNormalFail.LOG_KIND -> {
+                        val logItem = LogInjectNormalFail.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -295,8 +295,8 @@ class BigLogInquireResponsePacket(
                         status = "BOLUS_FAIL " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_SET_SQUARE_INJECTION.LOG_KIND    -> {
-                        val logItem = LOG_SET_SQUARE_INJECTION.parse(logDataToHexString)
+                    LogSetSquareInjection.LOG_KIND -> {
+                        val logItem = LogSetSquareInjection.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -326,8 +326,8 @@ class BigLogInquireResponsePacket(
                         status = "EXTENDED_BOLUS_START " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_INJECT_SQUARE_SUCCESS.LOG_KIND   -> {
-                        val logItem = LOG_INJECT_SQUARE_SUCCESS.parse(logDataToHexString)
+                    LogInjectSquareSuccess.LOG_KIND -> {
+                        val logItem = LogInjectSquareSuccess.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -343,8 +343,8 @@ class BigLogInquireResponsePacket(
                         status = "EXTENDED_BOLUS_END " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_INJECT_SQUARE_FAIL.LOG_KIND      -> {
-                        val logItem = LOG_INJECT_SQUARE_FAIL.parse(logDataToHexString)
+                    LogInjectSquareFail.LOG_KIND -> {
+                        val logItem = LogInjectSquareFail.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -371,8 +371,8 @@ class BigLogInquireResponsePacket(
                         status = "EXTENDED_BOLUS_FAIL " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_SET_DUAL_INJECTION.LOG_KIND      -> {
-                        val logItem = LOG_SET_DUAL_INJECTION.parse(logDataToHexString)
+                    LogSetDualInjection.LOG_KIND -> {
+                        val logItem = LogSetDualInjection.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -405,8 +405,8 @@ class BigLogInquireResponsePacket(
                         status = "DUAL_EXTENDED_START " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_INJECTION_DUAL_NORMAL.LOG_KIND   -> {
-                        val logItem = LOG_INJECTION_DUAL_NORMAL.parse(logDataToHexString)
+                    LogInjectionDualNormal.LOG_KIND -> {
+                        val logItem = LogInjectionDualNormal.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -445,8 +445,8 @@ class BigLogInquireResponsePacket(
                         status = "DUAL_BOLUS" + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_INJECT_DUAL_SUCCESS.LOG_KIND     -> {
-                        val logItem = LOG_INJECT_DUAL_SUCCESS.parse(logDataToHexString)
+                    LogInjectDualSuccess.LOG_KIND -> {
+                        val logItem = LogInjectDualSuccess.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -464,8 +464,8 @@ class BigLogInquireResponsePacket(
                         status = "DUAL_BOLUS_SQUARE_SUCCESS " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_INJECT_DUAL_FAIL.LOG_KIND        -> {
-                        val logItem = LOG_INJECT_DUAL_FAIL.parse(logDataToHexString)
+                    LogInjectDualFail.LOG_KIND -> {
+                        val logItem = LogInjectDualFail.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -493,8 +493,8 @@ class BigLogInquireResponsePacket(
                         status = "DUAL_BOLUS FAIL " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_INJECTION_1HOUR_BASAL.LOG_KIND   -> {
-                        val logItem = LOG_INJECTION_1HOUR_BASAL.parse(logDataToHexString)
+                    LogInjection1HourBasal.LOG_KIND -> {
+                        val logItem = LogInjection1HourBasal.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -509,8 +509,8 @@ class BigLogInquireResponsePacket(
                         status = "1HOUR BASAL " + dateUtil.dateAndTimeString(logDateTime)
                     }
 
-                    LOG_SUSPEND_V2.LOG_KIND              -> {
-                        val logItem = LOG_SUSPEND_V2.parse(logDataToHexString)
+                    LogSuspendV2.LOG_KIND -> {
+                        val logItem = LogSuspendV2.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -524,8 +524,8 @@ class BigLogInquireResponsePacket(
                         status = "SUSPEND " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_SUSPEND_RELEASE_V2.LOG_KIND      -> {
-                        val logItem = LOG_SUSPEND_RELEASE_V2.parse(logDataToHexString)
+                    LogSuspendReleaseV2.LOG_KIND -> {
+                        val logItem = LogSuspendReleaseV2.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -539,8 +539,8 @@ class BigLogInquireResponsePacket(
                         status = "SUSPEND_RELEASE " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_CHANGE_INJECTOR_SUCCESS.LOG_KIND -> {
-                        val logItem = LOG_CHANGE_INJECTOR_SUCCESS.parse(logDataToHexString)
+                    LogChangeInjectorSuccess.LOG_KIND -> {
+                        val logItem = LogChangeInjectorSuccess.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -568,8 +568,8 @@ class BigLogInquireResponsePacket(
                         status = "INSULIN_CHANGE " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_CHANGE_TUBE_SUCCESS.LOG_KIND     -> {
-                        val logItem = LOG_CHANGE_TUBE_SUCCESS.parse(logDataToHexString)
+                    LogChangeTubeSuccess.LOG_KIND -> {
+                        val logItem = LogChangeTubeSuccess.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -600,8 +600,8 @@ class BigLogInquireResponsePacket(
                         status = "TUBE_CHANGE " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_INJECTION_1DAY.LOG_KIND          -> { // Daily Bolus Log
-                        val logItem = LOG_INJECTION_1DAY.parse(logDataToHexString)
+                    LogInjection1Day.LOG_KIND -> { // Daily Bolus Log
+                        val logItem = LogInjection1Day.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -649,8 +649,8 @@ class BigLogInquireResponsePacket(
                         status = "DAILY_BOLUS " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_INJECTION_1DAY_BASAL.LOG_KIND    -> { // Daily Basal Log
-                        val logItem = LOG_INJECTION_1DAY_BASAL.parse(logDataToHexString)
+                    LogInjection1DayBasal.LOG_KIND -> { // Daily Basal Log
+                        val logItem = LogInjection1DayBasal.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -698,8 +698,8 @@ class BigLogInquireResponsePacket(
                         status = "DAILY_BASAL " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_CHANGE_NEEDLE_SUCCESS.LOG_KIND   -> {
-                        val logItem = LOG_CHANGE_NEEDLE_SUCCESS.parse(logDataToHexString)
+                    LogChangeNeedleSuccess.LOG_KIND -> {
+                        val logItem = LogChangeNeedleSuccess.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -728,8 +728,8 @@ class BigLogInquireResponsePacket(
                         status = "NEEDLE_CHANGE " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_TB_START_V3.LOG_KIND             -> {
-                        val logItem = LOG_TB_START_V3.parse(logDataToHexString)
+                    LogTbStartV3.LOG_KIND -> {
+                        val logItem = LogTbStartV3.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
 
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
@@ -772,8 +772,8 @@ class BigLogInquireResponsePacket(
                         status = "TEMP_START " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_TB_STOP_V3.LOG_KIND              -> {
-                        val logItem = LOG_TB_STOP_V3.parse(logDataToHexString)
+                    LogTbStopV3.LOG_KIND -> {
+                        val logItem = LogTbStopV3.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -806,8 +806,8 @@ class BigLogInquireResponsePacket(
                         status = "TEMP_STOP " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_ALARM_BATTERY.LOG_KIND           -> { // BATTERY SHORTAGE ALARM
-                        val logItem = LOG_ALARM_BATTERY.parse(logDataToHexString)
+                    LogAlarmBattery.LOG_KIND -> { // BATTERY SHORTAGE ALARM
+                        val logItem = LogAlarmBattery.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
                         val logDateTime = logStartDate.time
@@ -822,8 +822,8 @@ class BigLogInquireResponsePacket(
                         status = "BATTERY_ALARM " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_ALARM_BLOCK.LOG_KIND             -> { // INJECTION BLOCKED ALARM
-                        val logItem = LOG_ALARM_BLOCK.parse(logDataToHexString)
+                    LogAlarmBlock.LOG_KIND -> { // INJECTION BLOCKED ALARM
+                        val logItem = LogAlarmBlock.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
 
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
@@ -840,8 +840,8 @@ class BigLogInquireResponsePacket(
                         status = "BLOCK_ALARM " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_ALARM_SHORTAGE.LOG_KIND          -> { // INSULIN SHORTAGE ALARM
-                        val logItem = LOG_ALARM_SHORTAGE.parse(logDataToHexString)
+                    LogAlarmShortAge.LOG_KIND -> { // INSULIN SHORTAGE ALARM
+                        val logItem = LogAlarmShortAge.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
 
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")
@@ -858,8 +858,8 @@ class BigLogInquireResponsePacket(
                         status = "SHORT_AGE_ALARM " + dateUtil.timeString(logDateTime)
                     }
 
-                    LOG_RESET_SYS_V3.LOG_KIND            -> {
-                        val logItem = LOG_RESET_SYS_V3.parse(logDataToHexString)
+                    LogResetSysV3.LOG_KIND -> {
+                        val logItem = LogResetSysV3.parse(logDataToHexString)
                         aapsLogger.debug(LTag.PUMPCOMM, "$logItem ")
 
                         val logStartDate = DateUtils.parseDate(logItem.dttm, "yyyy-MM-dd HH:mm:ss")

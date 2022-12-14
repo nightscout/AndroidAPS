@@ -28,7 +28,7 @@ import java.util.HashMap;
 
 @SuppressWarnings({"unused", "rawtypes", "SuspiciousMethodCalls", "unchecked"})
 public final class BundleMock {
-
+/*
     public static Bundle mock() {
         return mock(new HashMap<>());
     }
@@ -180,4 +180,5 @@ public final class BundleMock {
 
         return bundle;
     }
+ */
 }

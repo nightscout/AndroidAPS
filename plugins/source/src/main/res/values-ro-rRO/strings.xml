@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Descarcă datele despre glicemii din Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Primește valorile glicemiei din xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Primește valori de glicemie de la aplicația Dexcom modificată.</string>
+    <string name="eversense">Aplicația Eversense (modificată)</string>
+    <string name="description_source_eversense">Primește valorile glicemiei din aplicația Eversense modificată.</string>
+    <string name="description_source_glimp">Primește valorile glicemiei din aplicația Glimp.</string>
+    <string name="description_source_mm640g">Primește valorile glicemiei din aplicația 600SeriesAndroidUploader (Medtronic).</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Citire a valorii glicemiei din aplicația Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Primiți glicemii de la aplicația Glunovo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Înregistrează valorile glicemiei din aplicația Tomato (dispozitiv MiaoMIao)</string>
+    <string name="bgsource_upload">Setări înregistrare glicemie</string>
+</resources>

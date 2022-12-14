@@ -7,7 +7,6 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.extensions.target
-import info.nightscout.core.iob.iobCobCalculator.data.AutosensDataObject
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
@@ -20,10 +19,10 @@ import info.nightscout.interfaces.aps.AutosensData
 import info.nightscout.interfaces.aps.SMBDefaults
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.plugins.iob.iobCobCalculator.fromCarbs
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventAutosensCalculationFinished
@@ -57,6 +56,7 @@ class IobCobOref1Worker(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
+    @Inject lateinit var instantiator: Instantiator
 
     class IobCobOref1WorkerData(
         val injector: HasAndroidInjector,
@@ -115,7 +115,7 @@ class IobCobOref1Worker(
                 }
                 aapsLogger.debug(LTag.AUTOSENS, "Processing calculation thread: ${data.reason} ($i/${bucketedData.size})")
                 val sens = profile.getIsfMgdl(bgTime)
-                val autosensData = AutosensDataObject(data.injector)
+                val autosensData = instantiator.provideAutosensDataObject()
                 autosensData.time = bgTime
                 if (previous != null) autosensData.activeCarbsList = previous.cloneCarbsList() else autosensData.activeCarbsList = ArrayList()
 

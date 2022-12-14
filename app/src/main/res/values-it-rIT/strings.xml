@@ -46,7 +46,6 @@
     <string name="authorizationfailed">Autorizzazione fallita</string>
     <string name="copytolocalprofile_invalid">Impossibile creare il profilo. Il profilo non è valido.</string>
     <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
-    <string name="time_to_eat">Tempo di mangiare!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
     <string name="clear_filter">Cancella filtro</string>
     <string name="cannula">Cannula</string>

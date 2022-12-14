@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Changement d\'heure dans moins de 24 heures</string>
+    <string name="dst_loop_disabled_warning">Changement d\'heure dans moins de 3 heures - Boucle fermée désactivée</string>
+    <!-- Storage constraint -->
+    <string name="disk_full">Boucle désactivée ! Libérez au moins %1$d Mo du stockage interne !</string>
+    <!-- Version Checker -->
+    <string name="old_version">ancienne version</string>
+    <string name="very_old_version">très ancienne version</string>
+    <string name="application_expired">Application expirée</string>
+    <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>
+    <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
+    <string name="versionavailable">Version %1$s disponible</string>
+    <string name="version_expire">La version %1$s expire le %2$s</string>
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="recalculated_data_used">Données recalculées utilisées</string>
+    <string name="bg_too_close">Gly trop proche :\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">recalculé</string>
+    <string name="a11y_bg_quality_doubles">entrées doubles</string>
+    <string name="a11y_bg_quality_flat">Données plates. Considérées comme incorrectes</string>
+    <!-- Safety -->
+    <string name="limitingextendedbolus">Bolus étendu limité à %1$.1f U à cause de %2$s</string>
+    <string name="limitingcarbs">Limiter les glucides %1$d g à cause de %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pompe n’est pas capable de basals temporaires</string>
+    <string name="closedmodedisabledinpreferences">Mode de Boucle Fermée désactivé dans les préférences</string>
+    <string name="closed_loop_disabled_on_dev_branch">Version Dev. La Boucle Fermée est désactivée.</string>
+    <string name="closed_loop_disabled_with_eb">Boucle fermée désactivée à cause du bolus étendu</string>
+    <string name="smbalwaysdisabled">SMB toujours et post-ingestion de glucides désactivé car la source de glycémies actuelle ne supporte pas de filtrage avancé</string>
+    <string name="smbnotallowedinopenloopmode">SMB non autorisé en mode boucle ouverte</string>
+    <string name="maxvalueinpreferences">valeur Max dans les préférences</string>
+    <string name="hardlimit">limite fixée</string>
+    <string name="treatmentssafety_title">Sécurité des traitements</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Terminé, félicitations !</string>
+    <string name="not_completed_yet">Pas encore terminé</string>
+    <string name="time_elapsed">Temps écoulé</string>
+    <string name="maxiobset">Maximum IA réglé correctement</string>
+    <string name="hasbgdata">Glycémie disponible depuis la source sélectionnée</string>
+    <string name="synchaswritepermission">Le service de synchronisation a l\'autorisation d\'écriture</string>
+    <string name="loopenabled">Boucle activée</string>
+    <string name="apsselected">APS Sélectionné</string>
+    <string name="closedmodeenabled">Mode boucle fermée activé</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">Programme d’apprentissage</string>
+    <string name="doyouwantresetstart">Voulez-vous réinitialiser le début de l\'objectif ? Vous risquez de perdre vos progrès.</string>
+    <string name="objectives_next_button">Suivant</string>
+    <string name="objectives_previous_button">Préc</string>
+    <string name="objectives_button_unfinish">Refaire l\'objectif</string>
+    <string name="objectives_button_unstart">Suppression démarrée</string>
+</resources>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="description_source_ns_client">Downloader BG data fra Nightscout</string>
+    <string name="xdrip">xDrip+</string>
+    <string name="description_source_xdrip">Modtag BG-værdier fra xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Modtag BS-værdier fra \'Byg din egen Dexcom App\'.</string>
+    <string name="eversense">Eversense App (patched)</string>
+    <string name="description_source_eversense">Modtag BG værdier fra den patchede Eversense app.</string>
+    <string name="description_source_glimp">Modtag BG-værdier fra Glimp.</string>
+    <string name="description_source_mm640g">Modtag BG-værdier fra 600SeriesAndroidUploader.</string>
+    <string name="poctech">Poctech</string>
+    <string name="description_source_poctech">Modtag BS-værdier fra Poctech app</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Modtag værdier fra Glunovo app</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Modtag værdier fra Intelligo-appen</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Modtag BS-værdier fra Tomato-appen (MiaoMiao enhed)</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Modtag BG-værdier fra GlucoRx Aidex CGMS.</string>
+    <string name="bgsource_upload">BS upload indstillinger</string>
+</resources>

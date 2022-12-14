@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="description_insulin_rapid">Unapred podešena postavka insulina za Humalog i NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Unapred podešena postavka insulina za Fiasp</string>
+    <string name="description_insulin_lyumjev">Unapred podešena postavka insulina za Lyumjev</string>
+    <string name="description_insulin_free_peak">Omogućava definisanje vrhunca aktivnosti insulina i trebaju ga koriste samo napredni korisnici</string>
+</resources>

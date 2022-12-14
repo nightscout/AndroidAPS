@@ -46,11 +46,6 @@
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
-    <!-- Insulin -->
-    <string name="description_insulin_rapid">Unapred podešena postavka insulina za Humalog i NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Unapred podešena postavka insulina za Fiasp</string>
-    <string name="description_insulin_lyumjev">Unapred podešena postavka insulina za Lyumjev</string>
-    <string name="description_insulin_free_peak">Omogućava definisanje vrhunca aktivnosti insulina i trebaju ga koriste samo napredni korisnici</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="description_xdrip_status_line">Prikažite informacije o tvom loop-u na tvom xDrip+ satu.</string>
@@ -62,16 +57,12 @@
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="description_profile_local">Definiši profil koji je dostupan bez internet veze.</string>
-    <!-- Objectives -->
-    <string name="description_objectives">Program učenja</string>
     <!-- Actions -->
     <string name="description_actions">Neke tipke za brzi pristup uobičajenim funkcijama</string>
     <string name="tempbasal_button">Privremeni Basal</string>
     <string name="extended_bolus_button">Produženi Bolus</string>
     <string name="sensor_label">Senzor</string>
     <string name="insulin_label">Insulin</string>
-    <!-- Safety -->
-    <string name="treatmentssafety_title">Sigurnost tretmana</string>
     <!-- Overview -->
     <string name="a11y_insulin_label">insulin</string>
     <string name="set_basal_question">Prihvatite novi privremeni bazal:</string>
@@ -89,17 +80,6 @@
     <string name="treatments">Tretmani</string>
     <!--    OverviewMenu-->
     <string name="overview_show_treatments">Tretmani</string>
-    <!-- VirtualPump -->
-    <string name="description_pump_virtual">Integracija pumpe za pumpe koje još uvek nemaju upravljački program (Open Loop)</string>
-    <string name="virtual_pump_label">VIRTUALNA PUMPA</string>
-    <!-- Source -->
-    <string name="description_source_ns_client">Preuzimajte podatke GUK sa Nightscout-a</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Preuzimajte vrijednosti GUK od xDrip+.</string>
-    <string name="description_source_eversense">Preuzimajte vrednosti GUK iz zakrpljene aplikacije Eversense.</string>
-    <string name="description_source_glimp">Preuzimajte vrednosti GUK od Glimp-a.</string>
-    <string name="description_source_mm640g">Preuzimajte vrednosti GUK od 600SeriesAndroidUploader-a.</string>
-    <string name="random_bg_short">GUK</string>
     <!-- Skins -->
     <!--    DataBroadcast-->
     <!--    Iob-->

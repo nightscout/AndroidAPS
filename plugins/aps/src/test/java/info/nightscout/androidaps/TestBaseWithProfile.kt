@@ -38,6 +38,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var context: Context
 
     lateinit var dateUtil: DateUtil
+    lateinit var testPumpPlugin: TestPumpPlugin
     val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
     val profileInjector = HasAndroidInjector { AndroidInjector { } }
@@ -56,6 +57,8 @@ open class TestBaseWithProfile : TestBase() {
         dateUtil = Mockito.spy(DateUtil(context))
         `when`(dateUtil.now()).thenReturn(1656358822000)
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!)
+        testPumpPlugin = TestPumpPlugin(profileInjector)
+        `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         effectiveProfileSwitch = EffectiveProfileSwitch(
             timestamp = dateUtil.now(),
             basalBlocks = validProfile.basalBlocks,

@@ -126,4 +126,6 @@
     <string name="friday_short">F</string>
     <string name="saturday_short">S</string>
     <string name="sunday_short">S</string>
+    <!--    Reminders-->
+    <string name="time_to_bolus">Tijd om te bolussen!\nVoer de boluswizard uit en maak de berekening opnieuw.</string>
 </resources>

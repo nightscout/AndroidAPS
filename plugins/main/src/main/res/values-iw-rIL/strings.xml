@@ -98,21 +98,6 @@
     <string name="sms_profile_switch_created">נוצרה החלפת פרופיל</string>
     <string name="sms_wrong_tbr_duration">משך הבזאלי הזמני חייב להיות כפולה של %1$d דקות ויותר מ-0.</string>
     <string name="a11y_otp_qr_code">ברקוד QR ליצירת סיסמה חד פעמית</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">הגדרת אינסולין ל-Humalog ו- NovoRapid / Novolog</string>
-    <string name="description_insulin_ultra_rapid">הגדרת אינסולין מסוג Fiasp</string>
-    <string name="description_insulin_lyumjev">הגדרת אינסולין מסוג Lyumjev</string>
-    <string name="description_insulin_free_peak">מאפשר להגדיר את שיא פעילות האינסולין, לשימוש על ידי משתמשים מתקדמים בלבד</string>
-    <string name="insulin_shortname">אינסולין</string>
-    <string name="insulin_oref_peak">שעת שיא של עקומת IOB</string>
-    <string name="insulin_peak_time">זמן שיא [min]</string>
-    <string name="free_peak_oref">Oref שיא חופשי</string>
-    <string name="rapid_acting_oref">Oref אינסולין מהיר</string>
-    <string name="ultra_rapid_oref">Oref אינסולין אולטרה מהיר</string>
-    <string name="dia_too_short">DIA במשך %1$f הוא קצר מדי - משתמש ב-%2$f במקום!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">שורת מצב xDrip (שעון)</string>
@@ -168,22 +153,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">ע\' מטרה</string>
     <string name="basal_short">בזאלי</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">הושלם, כל הכבוד!</string>
-    <string name="not_completed_yet">עוד לא הושלם</string>
-    <string name="time_elapsed">זמן שחלף</string>
-    <string name="maxiobset">ערך IOB מקסימלי הוגדר כראוי</string>
-    <string name="hasbgdata">ערכי סוכר זמינים מהמקור הנבחר</string>
-    <string name="loopenabled">הלולאה פעילה</string>
-    <string name="apsselected">נבחר APS</string>
-    <string name="closedmodeenabled">מצב סגור מופעל</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">תוכנית הלימוד</string>
-    <string name="doyouwantresetstart">האם ברצונכם לאפס את התחלת המשימה? אתם עלולים לאבד את התקדמותכם במשימה.</string>
-    <string name="objectives_next_button">הבא</string>
-    <string name="objectives_previous_button">הקודם</string>
-    <string name="objectives_button_unfinish">ביטול השלמה</string>
-    <string name="objectives_button_unstart">ביטול התחלה</string>
     <!-- Actions -->
     <string name="actions">פעולות</string>
     <string name="description_actions">לחצנים לגישה מהירה לפונקציות שימושיות</string>
@@ -203,18 +172,6 @@
     <string name="statuslights_cannula_age">גיל הצינורית</string>
     <string name="statuslights_patch_pump_age">גיל משאבה</string>
     <string name="patch_pump">משאבה ללא צינורית</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">הגבלת בולוס ממושך ל- %1$.1f יח\' בגלל %2$s</string>
-    <string name="limitingcarbs">הגבלת פחמימות ל-%1$d גר\' בגלל %2$s</string>
-    <string name="pumpisnottempbasalcapable">המשאבה אינה מסוגלת לבצע בזאלי זמני</string>
-    <string name="closedmodedisabledinpreferences">מצב לולאה סגור מושבת בהעדפות</string>
-    <string name="closed_loop_disabled_on_dev_branch">זוהי גרסת פיתוח. לולאה סגורה אינה מורשת.</string>
-    <string name="closed_loop_disabled_with_eb">הלולאה הסגורה מופסקת עקב מתן בולוס ממושך</string>
-    <string name="smbalwaysdisabled">SMB תמידי ו-SMB לאחר פחמימות מושבתים כיוון שמקור ערכי הסוכר הפעיל אינו תומך בסינון נתונים מתקדם</string>
-    <string name="smbnotallowedinopenloopmode">SMB אינו פעיל במצב לולאה פתוחה</string>
-    <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
-    <string name="hardlimit">מגבלה קשיחה</string>
-    <string name="treatmentssafety_title">בטיחות טיפולים</string>
     <!-- Overview -->
     <string name="show_statuslights">הצגת אורות חיווי במסך הבית</string>
     <string name="statuslights_iage_warning">סף התראה לתוקף האינסולין [h]</string>
@@ -340,50 +297,6 @@
     <string name="sensitivity_shortname">רגישות</string>
     <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="graph_menu_divider_header">גרף</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">סוג משאבה וירטואלית</string>
-    <string name="virtual_pump_definition">הגדרת משאבה</string>
-    <string name="virtual_pump_pump_def">בולוס: צעד=%1$s\nבולוס ממושך: [צעד=%2$s, משך=%3$s מינ\'-%4$sש\']\nבזאלי: צעד=%5$s\nבזאלי זמני: %6$s (עם %7$s), משך=%8$s מינ\'-%9$sש\'\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUMP</string>
-    <string name="description_pump_virtual">שימוש במשאבות אשר עדיין אין להם מנהל התקן כלשהו (לולאה פתוחה)</string>
-    <string name="virtual_pump_label">משאבה וירטואלית</string>
-    <string name="virtualpump_settings">הגדרות משאבה וירטואלית</string>
-    <string name="virtualpump_uploadstatus_title">טוען מצב ל-Nightscout</string>
-    <!-- Source -->
-    <string name="ns_client_bg">נתוני סוכר מ-NSClient</string>
-    <string name="ns_client_bg_short">סוכר NS</string>
-    <string name="description_source_ns_client">הורדת ערכי סוכר בדם מ-Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">קבלת ערכי סוכר מ-xDrip.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">השתמש בנתוני הסוכר מאפליקציית \"בנה לעצמך דקסקום\" (BYODA).</string>
-    <string name="eversense">אפליקלציית Eversense (עם פאץ\')</string>
-    <string name="description_source_eversense">קבלת ערכי רמת סוכר מאפליקציית Eversense עם פאץ\'.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">קבלת ערכי סוכר בדם מאפליקציית Glimp.</string>
-    <string name="mm640g">Minimed 640G</string>
-    <string name="description_source_mm640g">קבלת ערכי סוכר בדם מ-600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">קבלת ערכי סוכר מיישום Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">קבלת ערכי סוכר מיישום Glunovo</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">קבלת ערכי סוכר מיישום Intelligo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">קבלת ערכי סוכר מאפליקציית Tomato (התקן MiaoMiao)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">קבלת נתוני סוכר מחיישני GlucoRx Aidex.</string>
-    <string name="random_bg">נתוני סוכר אקראיים</string>
-    <string name="description_source_random_bg">הפקת נתוני גלוקוז אקראיים (מצב הדגמה בלבד)</string>
-    <string name="random_bg_short">BG</string>
-    <string name="do_xdrip_upload_title">שליחת נתוני סוכר אל xDrip</string>
-    <string name="do_xdrip_upload_summary">ב-xDrip בחרו 640g/Eversense כמקור נתונים</string>
-    <string name="bgsource_upload">הגדרות העלאת ערכי סוכר בדם</string>
-    <string name="dexcom_log_ns_sensor_change_title">רישום החלפת סנסור ב-Nightscout</string>
-    <string name="dexcom_log_ns_sensor_change_summary">רישום אירוע \"החלפת סנסור\" ב-Nightscout באופן אוטומטי בעת הפעלת החיישן</string>
     <!-- Skins -->
     <string name="classic_description">סקין מקורי</string>
     <string name="lowres_description">סקין רזולוציה נמוכה</string>

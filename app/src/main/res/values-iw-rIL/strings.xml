@@ -46,7 +46,6 @@
     <string name="authorizationfailed">ההרשאה נכשלה</string>
     <string name="copytolocalprofile_invalid">לא ניתן ליצור פרופיל מקומי. הפרופיל אינו חוקי.</string>
     <string name="cta_dont_kill_my_app_info">איך לא להשבית את האפליקציה שלי?</string>
-    <string name="time_to_eat">זמן לאכול!\nהפעילו את אשף הבולוסים וחשבו בולוס חדש.</string>
     <string name="fabric_upload_disabled">העלאת רשומות קריסה מושבתת!</string>
     <string name="clear_filter">נקה סינון</string>
     <string name="cannula">צינורית</string>

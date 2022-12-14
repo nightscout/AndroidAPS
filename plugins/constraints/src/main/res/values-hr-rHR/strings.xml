@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="treatmentssafety_title">Sigurnosne postavke medikacije</string>
+    <!-- Objectives -->
+    <string name="completed_well_done">Dovršeno, bravo!</string>
+    <string name="not_completed_yet">Nije još dovršeno</string>
+    <string name="time_elapsed">Prošlo vrijeme</string>
+    <string name="description_objectives">Program učenja</string>
+</resources>

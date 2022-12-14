@@ -81,7 +81,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.Maintenance         -> info.nightscout.core.ui.R.drawable.ic_maintenance
         Sources.NSClient            -> info.nightscout.core.ui.R.drawable.ic_nightscout_syncs
         Sources.NSProfile           -> R.drawable.ic_nightscout_profile
-        Sources.Objectives          -> R.drawable.ic_graduation
+        Sources.Objectives          -> info.nightscout.core.ui.R.drawable.ic_graduation
         Sources.Pump                -> info.nightscout.core.ui.R.drawable.ic_generic_icon
         Sources.Dana                -> info.nightscout.core.ui.R.drawable.ic_danars_128
         Sources.DanaR               -> info.nightscout.core.ui.R.drawable.ic_danars_128

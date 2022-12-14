@@ -5,6 +5,7 @@ import info.nightscout.core.extensions.getCustomizedName
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.ProfileSwitch
+import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.utils.JsonHelper
@@ -23,7 +24,7 @@ fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
         .put("created_at", dateUtil.toISOString(timestamp))
         .put("enteredBy", "openaps://" + "AndroidAPS")
         .put("isValid", isValid)
-        .put("eventType", info.nightscout.database.entities.TherapyEvent.Type.PROFILE_SWITCH.text)
+        .put("eventType", TherapyEvent.Type.PROFILE_SWITCH.text)
         .also { // remove customization to store original profileJson in toPureNsJson call
             timeshift = 0
             percentage = 100

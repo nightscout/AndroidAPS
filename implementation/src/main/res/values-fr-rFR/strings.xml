@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ n\'est pas installé</string>
     <string name="calibration_sent">Étalonnage envoyé à xDrip+</string>
     <string name="bg_label">Gly</string>
-    <string name="time_to_eat">Il est temps de manger</string>
-    <string name="time_to_bolus">Il est temps de faire le bolus !\nExécutez l\'Assistant et faites de nouveau le calcul.</string>
     <string name="executing_right_now">Commande exécutée à l\'instant</string>
     <string name="basal_value_below_minimum">Le débit Basal est inférieur au minimum autorisé. Profil non accepté !</string>
     <string name="permission">Autorisation</string>

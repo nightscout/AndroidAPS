@@ -97,4 +97,7 @@
     <string name="remove_all">Удалить всё</string>
     <string name="reset_start">Перезапустить старт</string>
     <string name="upload_now">Выгрузить (передать данные) сейчас</string>
+    <string name="not_connected">Нет подключения</string>
+    <string name="read_only">Только чтение</string>
+    <string name="working">Обработка</string>
 </resources>

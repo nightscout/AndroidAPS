@@ -16,7 +16,7 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import javax.inject.Inject
 
-class AuthRequest internal constructor(
+class AuthRequest(
     injector: HasAndroidInjector,
     var requester: Sms,
     requestText: String,

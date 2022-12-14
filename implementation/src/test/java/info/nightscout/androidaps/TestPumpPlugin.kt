@@ -26,7 +26,7 @@ class TestPumpPlugin(val injector: HasAndroidInjector) : Pump {
     val lastData = 0L
 
     val baseBasal = 0.0
-    override val pumpDescription = PumpDescription()
+    override var pumpDescription = PumpDescription()
 
     override fun isInitialized(): Boolean = true
     override fun isSuspended(): Boolean = false

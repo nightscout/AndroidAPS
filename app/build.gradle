@@ -111,7 +111,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "3.1.0.3-dev-d"
+        version "3.1.0.3-dev-e"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -198,10 +198,12 @@ dependencies {
     implementation project(':plugins:aps')
     implementation project(':plugins:automation')
     implementation project(':plugins:configuration')
+    implementation project(':plugins:constraints')
+    implementation project(':plugins:insulin')
     implementation project(':plugins:main')
     implementation project(':plugins:openhumans')
     implementation project(':plugins:sensitivity')
-    implementation project(':plugins:support')
+    implementation project(':plugins:source')
     implementation project(':plugins:sync')
     implementation project(':implementation')
     implementation project(':database:entities')
@@ -217,10 +219,11 @@ dependencies {
     implementation project(':pump:medtronic')
     implementation project(':pump:pump-common')
     implementation project(':pump:pump-core')
-    implementation project(':pump:rileylink')
     implementation project(':pump:omnipod-common')
     implementation project(':pump:omnipod-eros')
     implementation project(':pump:omnipod-dash')
+    implementation project(':pump:rileylink')
+    implementation project(':pump:virtual')
     implementation project(':workflow')
 
     implementation fileTree(include: ['*.jar'], dir: 'libs')

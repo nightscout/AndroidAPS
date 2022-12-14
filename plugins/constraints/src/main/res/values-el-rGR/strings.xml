@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">Περιορίζονται οι υδατάνθρακες σε %1$d g λόγω %2$s</string>
+    <string name="pumpisnottempbasalcapable">Η αντλία δεν υποστηρίζει προσωρινό βασικό ρυθμό</string>
+    <string name="closedmodedisabledinpreferences">Το κλειστό κύκλωμα είναι απενεργοποιημένο στις Επιλογές</string>
+    <string name="closed_loop_disabled_on_dev_branch">Εκτελείται έκδοση Dev. Το κλειστό κύκλωμα είναι απενεργοποιημένο.</string>
+    <string name="smbalwaysdisabled">Το SMB πάντα και μετά το γεύμα απενεργοποιείται επειδή η ενεργή πηγή BG δεν υποστηρίζει προηγμένο φιλτράρισμα</string>
+    <string name="smbnotallowedinopenloopmode">To SMB δεν επιτρέπεται σε λειτουργία ανοιχτού κυκλώματος</string>
+    <string name="maxvalueinpreferences">μέγιστη τιμή στις Επιλογές</string>
+    <string name="hardlimit">σταθερό όριο</string>
+    <string name="treatmentssafety_title">Ασφάλεια Θεραπειών</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">Δεν ολοκληρώθηκε ακόμη</string>
+    <string name="time_elapsed">Ο χρόνος που πέρασε</string>
+    <string name="maxiobset">Το μέγιστο IOB έχει ρυθμιστεί σωστά</string>
+    <string name="hasbgdata">BG διαθέσιμη από επιλεγμένη πηγή</string>
+    <string name="loopenabled">Κύκλωμα ενεργοποιημένο</string>
+    <string name="apsselected">Επιλέχθηκε APS</string>
+    <string name="closedmodeenabled">Ενεργοποιήθηκε η κλειστή λειτουργία</string>
+    <string name="objectives_shortname">ΣΤΟΧΟΙ</string>
+    <string name="description_objectives">Πρόγραμμα εκμάθησης</string>
+</resources>

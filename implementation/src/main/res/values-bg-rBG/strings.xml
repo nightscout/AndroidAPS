@@ -3,8 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ не е инсталиран</string>
     <string name="calibration_sent">Калибрацията е изпратена към xDrip+</string>
     <string name="bg_label">КЗ</string>
-    <string name="time_to_eat">Време е за ядене</string>
-    <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>
     <string name="executing_right_now">Командата се изпълнява в момента</string>
     <string name="basal_value_below_minimum">Базалните стойности са под минимума. Не е зададен профил!</string>
     <string name="permission">Разрешение</string>

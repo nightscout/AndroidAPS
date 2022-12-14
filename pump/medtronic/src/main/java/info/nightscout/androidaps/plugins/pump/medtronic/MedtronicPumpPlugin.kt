@@ -216,10 +216,6 @@ class MedtronicPumpPlugin @Inject constructor(
         }
     }
 
-    override fun hasService(): Boolean {
-        return true
-    }
-
     override fun onStartScheduledPumpActions() {
 
         // check status every minute (if any status needs refresh we send readStatus command)

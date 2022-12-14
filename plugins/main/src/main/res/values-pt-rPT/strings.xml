@@ -97,21 +97,6 @@
     <string name="sms_read_status_failed">Erro na leitura de estado</string>
     <string name="sms_profile_switch_created">Troca de perfil criada</string>
     <string name="sms_wrong_tbr_duration">A duração do DBT deve ser de um múltiplo de %1$d minutos e maior que 0.</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Predefinição de Insulina Humalog e NovoRapid / NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Predefinição de Insulina Fiasp</string>
-    <string name="description_insulin_lyumjev">Predefinição para Insulina Lyumjev</string>
-    <string name="description_insulin_free_peak">Permite definir o pico de atividade da insulina e deve ser usado somente por usuários avançados</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">Tempo do Pico da curva de IA</string>
-    <string name="insulin_peak_time">Tempo Pico [min]</string>
-    <string name="free_peak_oref">Oref Pico-Livre</string>
-    <string name="rapid_acting_oref">Oref Acção-Rápida</string>
-    <string name="ultra_rapid_oref">Oref Ultra-Rápida</string>
-    <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">Linha Estado xDrip+ (relógio)</string>
@@ -158,22 +143,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">ALV</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Terminado, parabéns!</string>
-    <string name="not_completed_yet">Não concluído ainda</string>
-    <string name="time_elapsed">Tempo decorrido</string>
-    <string name="maxiobset">IA máxima definida corretamente</string>
-    <string name="hasbgdata">Glicose disponível da fonte seleccionada</string>
-    <string name="loopenabled">Loop activado</string>
-    <string name="apsselected">APS seleccionado</string>
-    <string name="closedmodeenabled">Modo fechado ativado</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Programa de aprendizagem</string>
-    <string name="doyouwantresetstart">Deseja reiniciar o objectivo? Pode perder seu progresso.</string>
-    <string name="objectives_next_button">Seguinte</string>
-    <string name="objectives_previous_button">Anterior</string>
-    <string name="objectives_button_unfinish">Limpar terminado</string>
-    <string name="objectives_button_unstart">Limpar iniciado</string>
     <!-- Actions -->
     <string name="actions">Acções</string>
     <string name="description_actions">Alguns botões para aceder rapidamente a funções comuns</string>
@@ -190,18 +159,6 @@
     <string name="pb_label">Bateria da Bomba</string>
     <string name="cannula">Cânula</string>
     <string name="ebstopsloop">O uso do Bólus Prolongado irá parar o modo Loop Fechado durante o tempo do bólus prolongado. Quer realmente isso?</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">A limitar bólus prolongado para %1$.1f U porque %2$s</string>
-    <string name="limitingcarbs">A limitar hidratos para %1$d g porque %2$s</string>
-    <string name="pumpisnottempbasalcapable">A bomba não é capaz de basais temporárias</string>
-    <string name="closedmodedisabledinpreferences">Loop fechado desativado nas preferências</string>
-    <string name="closed_loop_disabled_on_dev_branch">A correr a versão dev. O Loop fechado está desativado.</string>
-    <string name="closed_loop_disabled_with_eb">Loop Fechado desativado por causa da execução do Bólus Prolongado</string>
-    <string name="smbalwaysdisabled">SMB sempre e depois dos hidratos desactivado por fonte da Glicose activa não suportar filtro avançado</string>
-    <string name="smbnotallowedinopenloopmode">SMB não permitido no modo open loop</string>
-    <string name="maxvalueinpreferences">valor máx nas preferências</string>
-    <string name="hardlimit">limite rígido</string>
-    <string name="treatmentssafety_title">Segurança de Tratamentos</string>
     <!-- Overview -->
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
     <string name="statuslights_iage_warning">Limite aviso idade insulina [h]</string>
@@ -318,44 +275,6 @@
     <string name="treatments_shortname">TRATA</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_menu_divider_header">Gráfico</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Tipo da Bomba Virtual</string>
-    <string name="virtual_pump_definition">Definição da Bomba</string>
-    <string name="virtual_pump_pump_def">Bólus: Passo=%1$s\nBólus Prolongado: [Passo=%2$s, Duração=%3$smin -%4$sh] \nBasal: Passo=%5$s\ nDBT: %6$s (por %7$s), Duração=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">BOMBAV</string>
-    <string name="description_pump_virtual">Integração para as bombas que não têm qualquer driver ainda (Open Loop)</string>
-    <string name="virtual_pump_label">BOMBA VIRTUAL</string>
-    <string name="virtualpump_settings">Definições da bomba virtual</string>
-    <string name="virtualpump_uploadstatus_title">Enviar estado para NS</string>
-    <!-- Source -->
-    <string name="ns_client_bg">Glicose ClienteNS</string>
-    <string name="ns_client_bg_short">Glicemia do NS</string>
-    <string name="description_source_ns_client">Descarrega dados Glicose do Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Receber valores Glicose do xDrip+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Receber valores de glicemia do aplicativo BYODA.</string>
-    <string name="eversense">Aplicação Eversense (com patch)</string>
-    <string name="description_source_eversense">Receber valores Glicose da aplicação Eversense modificada.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Receber valores Glicose do Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Receber valores Glicose do 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Receber valores Glucose da app Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Receber valores do aplicativo Glunovo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Receber valores de Glicose da app Tomato (dispositivo MiaoMiao)</string>
-    <string name="random_bg">Glicose Aleatória</string>
-    <string name="description_source_random_bg">Gerar dados de Glic. aleatórios (Somente modo de Demonstração)</string>
-    <string name="random_bg_short">GLIC</string>
-    <string name="do_xdrip_upload_title">Enviar dados Glicose para xDrip+</string>
-    <string name="do_xdrip_upload_summary">Seleccionar 640g/Eversense como fonte no xDrip+</string>
-    <string name="bgsource_upload">Definições de Envio da Glicose</string>
-    <string name="dexcom_log_ns_sensor_change_title">Registar mudança de sensor para NS</string>
     <!-- Skins -->
     <string name="classic_description">Tema Gráfico Original</string>
     <string name="lowres_description">Design de Baixa Resolução</string>

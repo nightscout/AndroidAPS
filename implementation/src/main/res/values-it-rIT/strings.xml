@@ -3,7 +3,6 @@
     <string name="xdrip_not_installed">xDrip+ non installato</string>
     <string name="calibration_sent">Calibrazione inviata a xDrip+</string>
     <string name="bg_label">BG</string>
-    <string name="time_to_bolus">Tempo di fare un bolo!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="executing_right_now">Il comando sarà eseguito ora</string>
     <string name="basal_value_below_minimum">Valore basale inferiore al minimo. Profilo non impostato!</string>
     <string name="permission">Autorizzazione</string>

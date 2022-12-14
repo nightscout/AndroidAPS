@@ -145,5 +145,8 @@
     <string name="key_protection_timeout" translatable="false">protection_timeout</string>
     <string name="key_objectiveuseloop" translatable="false">ObjectivesLoopUsed</string>
     <string name="key_ObjectivesmanualEnacts" translatable="false">ObjectivesmanualEnacts</string>
+    <string name="key_objectiveuseactions" translatable="false">ObjectivesActionsUsed</string>
+    <string name="key_objectiveusescale" translatable="false">ObjectivesScaleUsed</string>
+    <string name="key_virtual_pump_upload_status" translatable="false">virtualpump_uploadstatus</string>
 
 </resources>

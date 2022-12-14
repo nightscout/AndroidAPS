@@ -156,6 +156,9 @@
     <string name="dia">משך פעילות אינסולין</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="virtualpump_uploadstatus_title">טוען מצב ל-Nightscout</string>
+    <string name="suspendloop_label">השבתת \\ השהיית לולאה</string>
+    <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">סיסמה שגויה</string>
     <string name="wrongpin">קוד PIN שגוי</string>

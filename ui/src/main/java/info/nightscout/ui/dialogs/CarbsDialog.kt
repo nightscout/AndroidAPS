@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.google.common.base.Joiner
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.extensions.formatColor
@@ -18,14 +17,14 @@ import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
-import info.nightscout.interfaces.BolusTimer
-import info.nightscout.interfaces.CarbTimer
 import info.nightscout.interfaces.Constants.CARBS_FAV1_DEFAULT
 import info.nightscout.interfaces.Constants.CARBS_FAV2_DEFAULT
 import info.nightscout.interfaces.Constants.CARBS_FAV3_DEFAULT
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.automation.Automation
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.profile.DefaultValueHelper
@@ -62,8 +61,7 @@ class CarbsDialog : DialogFragmentWithDate() {
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var carbTimer: CarbTimer
-    @Inject lateinit var bolusTimer: BolusTimer
+    @Inject lateinit var automation: Automation
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var protectionCheck: ProtectionCheck
@@ -372,16 +370,16 @@ class CarbsDialog : DialogFragmentWithDate() {
                                 ValueWithUnit.Hour(duration).takeIf { duration != 0 })
                         commandQueue.bolus(detailedBolusInfo, object : Callback() {
                             override fun run() {
-                                carbTimer.removeAutomationEventEatReminder()
+                                automation.removeAutomationEventEatReminder()
                                 if (!result.success) {
                                     uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror), info.nightscout.core.ui.R.raw.boluserror)
                                 } else if (sp.getBoolean(info.nightscout.core.utils.R.string.key_usebolusreminder, false) && remindBolus)
-                                    bolusTimer.scheduleAutomationEventBolusReminder()
+                                    automation.scheduleAutomationEventBolusReminder()
                             }
                         })
                     }
                     if (useAlarm && carbs > 0 && timeOffset > 0) {
-                        carbTimer.scheduleTimeToEatReminder(T.mins(timeOffset.toLong()).secs().toInt())
+                        automation.scheduleTimeToEatReminder(T.mins(timeOffset.toLong()).secs().toInt())
                     }
                 }, null)
             }

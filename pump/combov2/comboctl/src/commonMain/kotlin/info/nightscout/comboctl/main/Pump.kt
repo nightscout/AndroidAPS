@@ -1167,6 +1167,19 @@ class Pump(
     val setTbrProgressFlow = setTbrProgressReporter.progressFlow
 
     /**
+     * Detail about the outcome of a successful [setTbr] call.
+     *
+     * Note that all of these describe a success. In case of failure,
+     * [setTbr] throws an exception.
+     */
+    enum class SetTbrOutcome {
+        SET_NORMAL_TBR,
+        SET_EMULATED_100_TBR,
+        LETTING_EMULATED_100_TBR_FINISH,
+        IGNORED_REDUNDANT_100_TBR
+    }
+
+    /**
      * Sets the Combo's current temporary basal rate (TBR) via the remote terminal (RT) mode.
      *
      * This function suspends until the TBR is fully set. The [tbrProgressFlow]
@@ -1199,6 +1212,9 @@ class Pump(
      * via the [onEvent] callback. Likewise, when a TBR finishes or is cancelled,
      * [Event.TbrEnded] is emitted.
      *
+     * When this function finishes successfully, it informs about the exact
+     * outcome through its return value.
+     *
      * @param percentage TBR percentage to set.
      * @param durationInMinutes TBR duration in minutes to set.
      *   This argument is not used if [percentage] is 100.
@@ -1209,6 +1225,7 @@ class Pump(
      *   cancelling an ongoing TBR, which produces a W6 warning) or to fake a
      *   100% TBR by setting 90% / 110% TBRs (see above).
      *   This argument is only used if [percentage] is 100.
+     * @return The specific outcome if setting the TBR succeeds.
      * @throws IllegalArgumentException if the percentage is not in the 0-500 range,
      *   or if the percentage value is not an integer multiple of 10, or if
      *   the duration is <15 or not an integer multiple of 15 (see the note
@@ -1244,6 +1261,7 @@ class Pump(
         val currentStatus = statusFlow.value ?: throw IllegalStateException("Cannot start TBR without a known pump status")
         var expectedTbrPercentage: Int
         var expectedTbrDuration: Int
+        val result: SetTbrOutcome
 
         // In the code below, we always create a Tbr object _before_ calling
         // setCurrentTbr to make use of the checks in the Tbr constructor.
@@ -1258,6 +1276,20 @@ class Pump(
                     reportOngoingTbrAsStopped()
                     expectedTbrPercentage = 100
                     expectedTbrDuration = 0
+                    result = SetTbrOutcome.SET_NORMAL_TBR
+                } else if ((currentStatus.tbrPercentage in 90..110) && (currentStatus.remainingTbrDurationInMinutes <= 15)) {
+                    // If the current TBR is in the 90-110% range, it is pretty much a fake 100% TBR.
+                    // So, if that fake TBR is done within 15 minutes, we don't actually set anything.
+                    // Instead, we just let it run. That way, the pump can actually reach 100% TBR,
+                    // and the amount of TBR adjustments is reduced.
+                    expectedTbrPercentage = currentStatus.tbrPercentage
+                    expectedTbrDuration = currentStatus.remainingTbrDurationInMinutes
+                    result = SetTbrOutcome.LETTING_EMULATED_100_TBR_FINISH
+                    logger(LogLevel.INFO) {
+                        "Current TBR percentage is in the 90-110% range (${currentStatus.tbrPercentage}%)," +
+                        "and it will finish in ${currentStatus.remainingTbrDurationInMinutes} minute(s); " +
+                        "letting it finish and faking a successful TBR set operation"
+                    }
                 } else {
                     val newPercentage = if (currentStatus.tbrPercentage < 100) 110 else 90
                     val tbr = Tbr(
@@ -1270,6 +1302,7 @@ class Pump(
                     reportStartedTbr(tbr)
                     expectedTbrPercentage = newPercentage
                     expectedTbrDuration = 15
+                    result = SetTbrOutcome.SET_EMULATED_100_TBR
                 }
             } else {
                 // Current status shows that there is no TBR ongoing. This is
@@ -1278,6 +1311,7 @@ class Pump(
                 expectedTbrPercentage = 100
                 expectedTbrDuration = 0
                 logger(LogLevel.INFO) { "TBR was already cancelled" }
+                result = SetTbrOutcome.IGNORED_REDUNDANT_100_TBR
             }
         } else {
             val tbr = Tbr(
@@ -1291,6 +1325,7 @@ class Pump(
             reportStartedTbr(tbr)
             expectedTbrPercentage = percentage
             expectedTbrDuration = durationInMinutes
+            result = SetTbrOutcome.SET_NORMAL_TBR
         }
 
         // We just set the TBR. Now check the main screen contents to see if
@@ -1314,9 +1349,12 @@ class Pump(
                 throw ExtendedOrMultiwaveBolusActiveException(mainScreenContent)
 
             is MainScreenContent.Normal -> {
-                if (expectedTbrPercentage != 100) {
+                if ((expectedTbrPercentage != 100) && (expectedTbrDuration >= 2)) {
                     // We expected a TBR to be active, but there isn't any;
                     // we aren't seen any TBR main screen contents.
+                    // Only consider this an error if the duration is >2 minutes.
+                    // Otherwise, this was a TBR that was about to end, so it
+                    // might have ended while these checks here were running.
                     throw UnexpectedTbrStateException(
                         expectedTbrPercentage = expectedTbrPercentage,
                         expectedTbrDuration = expectedTbrDuration,
@@ -1349,6 +1387,8 @@ class Pump(
                 }
             }
         }
+
+        return@executeCommand result
     }
 
     /**
@@ -2703,14 +2743,17 @@ class Pump(
                     )
                 }
 
-                numObservedScreens++
-
                 val factorIndexOnScreen = parsedScreen.beginTime.hour
 
                 // numUnits null means the basal profile factor
                 // is currently not shown due to blinking.
                 if (parsedScreen.numUnits == null)
                     return@longPressRTButtonUntil LongPressRTButtonsCommand.ContinuePressingButton
+
+                // Increase this _after_ checking for a blinking screen
+                // to not accidentally count the blinking and non-blinking
+                // screens as two separate ones.
+                numObservedScreens++
 
                 // If the factor in the profile is >= 0,
                 // it means it was already read earlier.
@@ -2719,13 +2762,15 @@ class Pump(
 
                 val factor = parsedScreen.numUnits
                 basalProfileFactors[factorIndexOnScreen] = factor
-                logger(LogLevel.DEBUG) { "Got basal profile factor #$factorIndexOnScreen : $factor" }
+
+                numRetrievedFactors++
+                logger(LogLevel.DEBUG) {
+                    "Got basal profile factor #$factorIndexOnScreen : $factor; $numRetrievedFactors factor(s) read and $numObservedScreens screen(s) observed thus far"
+                }
 
                 getBasalProfileReporter.setCurrentProgressStage(
                     RTCommandProgressStage.GettingBasalProfile(numRetrievedFactors)
                 )
-
-                numRetrievedFactors++
 
                 return@longPressRTButtonUntil if (numObservedScreens >= NUM_COMBO_BASAL_PROFILE_FACTORS)
                     LongPressRTButtonsCommand.ReleaseButton
@@ -2779,21 +2824,19 @@ class Pump(
                         }
                     }
 
+                    numRetrievedFactors++
                     getBasalProfileReporter.setCurrentProgressStage(
                         RTCommandProgressStage.GettingBasalProfile(numRetrievedFactors)
                     )
-                    numRetrievedFactors++
                 }
             }
 
-            // All factors retrieved. Press CHECK once to get back to the total
-            // basal rate screen, and then CHECK again to return to the main menu.
-
-            rtNavigationContext.shortPressButton(RTNavigationButton.CHECK)
-            waitUntilScreenAppears(rtNavigationContext, ParsedScreen.BasalRateTotalScreen::class)
-
-            rtNavigationContext.shortPressButton(RTNavigationButton.CHECK)
-            waitUntilScreenAppears(rtNavigationContext, ParsedScreen.MainScreen::class)
+            // All factors retrieved. Press BACK repeatedly until we are back at the main menu.
+            cycleToRTScreen(
+                rtNavigationContext,
+                RTNavigationButton.BACK,
+                ParsedScreen.MainScreen::class
+            )
 
             getBasalProfileReporter.setCurrentProgressStage(BasicProgressStage.Finished)
 

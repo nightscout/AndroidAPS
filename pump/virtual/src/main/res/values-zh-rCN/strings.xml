@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">与我们还没有其驱动的泵集成（开环）</string>
+    <string name="virtualpump_settings">虚拟泵设置</string>
+</resources>

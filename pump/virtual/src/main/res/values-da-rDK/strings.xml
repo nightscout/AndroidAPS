@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- VirtualPump -->
+    <string name="description_pump_virtual">Pumpeintegration til pumper, som endnu ikke har nogen driver (Åbent Loop)</string>
+    <string name="virtualpump_settings">Indstillinger for virtuel pumpe</string>
+</resources>

@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory android:title="@string/category_alerts">
+    <PreferenceCategory
+        android:title="@string/eopatch"
+        app:initialExpandedChildrenCount="0">
+
         <ListPreference
             android:defaultValue="10"
             android:entries="@array/lowReservoirArray"
@@ -20,5 +24,7 @@
             android:defaultValue="false"
             android:key="@string/key_eopatch_patch_buzzer_reminders"
             android:title="@string/patch_buzzer_reminders" />
+
     </PreferenceCategory>
+
 </androidx.preference.PreferenceScreen>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Source -->
+    <string name="eversense">Eversense App (parchada)</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Recibir los valores de glucosa de la aplicación Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Recibir los valores de glucosa de Intelligo</string>
+    <string name="tomato">Tomato (MiaoMiao)</string>
+    <string name="tomato_short">Tomato</string>
+    <string name="description_source_tomato">Recibir los valores de glucosa de Tomato App (MiaoMiao) </string>
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Recibir los valores de glucosa de GlucoRx Aidex CGMS</string>
+    <string name="random_bg">Glucosa aleatoria</string>
+    <string name="description_source_random_bg">Generar datos aleatorios de glucosa (sólo modo Demo)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="do_xdrip_upload_title">Enviar datos de glucosa a xDrip+</string>
+    <string name="do_xdrip_upload_summary">En xDrip+, selecciona 640G/Eversense como fuente de datos</string>
+    <string name="bgsource_upload">Ajuste de subida de datos de glucosa</string>
+    <string name="dexcom_log_ns_sensor_change_title">Registro de cambio de sensor en Nightscout</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Crear evento \"Cambio de sensor\" en Nightscout automáticamente al iniciar el sensor</string>
+    <string name="direction">dirección</string>
+</resources>

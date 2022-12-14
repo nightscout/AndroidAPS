@@ -117,4 +117,6 @@
     <string name="friday_short">Dv</string>
     <string name="saturday_short">Ds</string>
     <string name="sunday_short">Dg</string>
+    <!--    Reminders-->
+    <string name="time_to_bolus">Hora d’aplicar bolus!\nExecuteu l\'assistent de bolus i torneu a fer els càlculs.</string>
 </resources>

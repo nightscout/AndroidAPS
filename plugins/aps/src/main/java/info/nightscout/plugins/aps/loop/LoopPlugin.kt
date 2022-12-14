@@ -782,6 +782,7 @@ class LoopPlugin @Inject constructor(
             configuration = runningConfiguration.configuration().toString()
         )
     }
+
     companion object {
 
         private const val CHANNEL_ID = "AAPS-OpenLoop"

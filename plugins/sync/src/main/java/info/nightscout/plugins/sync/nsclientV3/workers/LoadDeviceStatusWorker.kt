@@ -1,6 +1,9 @@
 package info.nightscout.plugins.sync.nsclientV3.workers
 
 import android.content.Context
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import info.nightscout.core.utils.receivers.DataWorkerStorage
@@ -40,6 +43,12 @@ class LoadDeviceStatusWorker(
                 } else {
                     rxBus.send(EventNSClientNewLog("END", "No DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
                 }
+                WorkManager.getInstance(context)
+                    .enqueueUniqueWork(
+                        NSClientV3Plugin.JOB_NAME,
+                        ExistingWorkPolicy.APPEND_OR_REPLACE,
+                        OneTimeWorkRequest.Builder(DataSyncWorker::class.java).build()
+                    )
             } catch (error: Exception) {
                 aapsLogger.error("Error: ", error)
                 ret = Result.failure(workDataOf("Error" to error.toString()))

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">הגבלת פחמימות ל-%1$d גר\' בגלל %2$s</string>
+    <string name="pumpisnottempbasalcapable">המשאבה אינה מסוגלת לבצע בזאלי זמני</string>
+    <string name="closedmodedisabledinpreferences">מצב לולאה סגור מושבת בהעדפות</string>
+    <string name="closed_loop_disabled_on_dev_branch">זוהי גרסת פיתוח. לולאה סגורה אינה מורשת.</string>
+    <string name="closed_loop_disabled_with_eb">הלולאה הסגורה מופסקת עקב מתן בולוס ממושך</string>
+    <string name="smbalwaysdisabled">SMB תמידי ו-SMB לאחר פחמימות מושבתים כיוון שמקור ערכי הסוכר הפעיל אינו תומך בסינון נתונים מתקדם</string>
+    <string name="smbnotallowedinopenloopmode">SMB אינו פעיל במצב לולאה פתוחה</string>
+    <string name="maxvalueinpreferences">ערך מקסימלי בהעדפות</string>
+    <string name="hardlimit">מגבלה קשיחה</string>
+    <string name="treatmentssafety_title">בטיחות טיפולים</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">עוד לא הושלם</string>
+    <string name="time_elapsed">זמן שחלף</string>
+    <string name="maxiobset">ערך IOB מקסימלי הוגדר כראוי</string>
+    <string name="hasbgdata">ערכי סוכר זמינים מהמקור הנבחר</string>
+    <string name="loopenabled">הלולאה פעילה</string>
+    <string name="apsselected">נבחר APS</string>
+    <string name="closedmodeenabled">מצב סגור מופעל</string>
+    <string name="objectives_shortname">OBJ</string>
+    <string name="description_objectives">תוכנית הלימוד</string>
+    <string name="doyouwantresetstart">האם ברצונכם לאפס את התחלת המשימה? אתם עלולים לאבד את התקדמותכם במשימה.</string>
+    <string name="objectives_button_unfinish">ביטול השלמה</string>
+    <string name="objectives_button_unstart">ביטול התחלה</string>
+</resources>

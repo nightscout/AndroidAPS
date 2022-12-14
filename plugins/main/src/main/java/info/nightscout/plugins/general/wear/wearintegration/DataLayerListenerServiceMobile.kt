@@ -15,7 +15,6 @@ import com.google.android.gms.wearable.PutDataMapRequest
 import com.google.android.gms.wearable.Wearable
 import com.google.android.gms.wearable.WearableListenerService
 import dagger.android.AndroidInjection
-import info.nightscout.androidaps.plugins.general.wear.events.EventWearUpdateGui
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
@@ -27,6 +26,7 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.wear.WearPlugin
+import info.nightscout.plugins.general.wear.events.EventWearUpdateGui
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileToWear

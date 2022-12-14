@@ -11,7 +11,6 @@ import androidx.annotation.StringRes
 import com.google.common.base.Joiner
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.fromConstant
-import info.nightscout.core.iob.iobCobCalculator.GlucoseStatusProvider
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.UserEntry
@@ -21,6 +20,7 @@ import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyE
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.Translator
+import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction

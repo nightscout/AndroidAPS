@@ -8,7 +8,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
-import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
+import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
@@ -26,21 +26,21 @@ class LoadTreatmentsWorker(
     @Inject lateinit var context: Context
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var storeDataForDb: StoreDataForDbImpl
+    @Inject lateinit var storeDataForDb: StoreDataForDb
 
     override fun doWorkAndLog(): Result {
         var ret = Result.success()
 
         runBlocking {
-            if ((nsClientV3Plugin.lastModified?.collections?.treatments ?: Long.MAX_VALUE) > nsClientV3Plugin.lastFetched.collections.treatments)
+            if ((nsClientV3Plugin.newestDataOnServer?.collections?.treatments ?: Long.MAX_VALUE) > nsClientV3Plugin.lastLoadedSrvModified.collections.treatments)
                 try {
-                    val treatments = nsClientV3Plugin.nsAndroidClient.getTreatmentsModifiedSince(nsClientV3Plugin.lastFetched.collections.treatments, 500)
+                    val treatments = nsClientV3Plugin.nsAndroidClient.getTreatmentsModifiedSince(nsClientV3Plugin.lastLoadedSrvModified.collections.treatments, 500)
                     aapsLogger.debug("TREATMENTS: $treatments")
-                    if (treatments.isNotEmpty()) {
+                    if (treatments.values.isNotEmpty()) {
                         rxBus.send(
                             EventNSClientNewLog(
                                 "RCV",
-                                "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}"
+                                "${treatments.values.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastLoadedSrvModified.collections.treatments)}"
                             )
                         )
                         // Schedule processing of fetched data and continue of loading
@@ -56,7 +56,7 @@ class LoadTreatmentsWorker(
                     } else {
                         rxBus.send(
                             EventNSClientNewLog(
-                                "END", "No TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}"
+                                "END", "No TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastLoadedSrvModified.collections.treatments)}"
                             )
                         )
                         storeDataForDb.storeTreatmentsToDb()
@@ -72,7 +72,7 @@ class LoadTreatmentsWorker(
                     ret = Result.failure(workDataOf("Error" to error.toString()))
                 }
             else {
-                rxBus.send(EventNSClientNewLog("END", "No new TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastFetched.collections.treatments)}"))
+                rxBus.send(EventNSClientNewLog("END", "No new TRs from ${dateUtil.dateAndTimeAndSecondsString(nsClientV3Plugin.lastLoadedSrvModified.collections.treatments)}"))
                 storeDataForDb.storeTreatmentsToDb()
                 WorkManager.getInstance(context)
                     .enqueueUniqueWork(

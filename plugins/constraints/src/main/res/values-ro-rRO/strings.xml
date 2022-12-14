@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">Se limitează carbohidrații %1$d g datorită %2$s</string>
+    <string name="pumpisnottempbasalcapable">Pompa nu suportă bazale temporare</string>
+    <string name="closedmodedisabledinpreferences">Modul buclă închisă dezactivat în preferințe</string>
+    <string name="closed_loop_disabled_on_dev_branch">Se folosește versiunea dev. Bucla închisă este dezactivată.</string>
+    <string name="closed_loop_disabled_with_eb">Bucla închisă dezactivată din cauza livrării bolusului extins</string>
+    <string name="smbalwaysdisabled">SMB dezactivat întotdeauna și după carbohidrați, deoarece sursa glicemiei nu suportă filtrare avansată</string>
+    <string name="smbnotallowedinopenloopmode">SMB nu este permis în mod buclă deschisă</string>
+    <string name="maxvalueinpreferences">valoare maximă în preferințe</string>
+    <string name="hardlimit">limită fizică</string>
+    <string name="treatmentssafety_title">Setări siguranță tratament</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">Încă incomplet</string>
+    <string name="time_elapsed">Timp scurs</string>
+    <string name="maxiobset">IOB maxim configurat corect</string>
+    <string name="hasbgdata">Glicemie disponibilă din sursa selectată</string>
+    <string name="loopenabled">Buclă activată</string>
+    <string name="apsselected">APS selectat</string>
+    <string name="closedmodeenabled">Mod buclă închisă activat</string>
+    <string name="objectives_shortname">OBI</string>
+    <string name="description_objectives">Program de învăţare</string>
+    <string name="doyouwantresetstart">Doriți să reîncepeți obiectivul? Vă puteți pierde progresul.</string>
+    <string name="objectives_button_unfinish">Șterge starea \"Terminat\"</string>
+    <string name="objectives_button_unstart">Șterge starea \"Început\"</string>
+</resources>

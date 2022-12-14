@@ -101,21 +101,6 @@
     <string name="sms_profile_switch_created">Přepnutí profilu vytvořeno</string>
     <string name="sms_wrong_tbr_duration">Trvání dočasného bazálu musí být násobkem %1$d minut a musí být větší než 0.</string>
     <string name="a11y_otp_qr_code">QR kód pro nastavení jednorázového hesla</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Předvolba pro Novorapid</string>
-    <string name="description_insulin_ultra_rapid">Předvolba pro Fiasp</string>
-    <string name="description_insulin_lyumjev">Předvolba pro Lyumjev</string>
-    <string name="description_insulin_free_peak">Možnost definice vrcholu účinnosti inzulínu pro pokročilé uživatele</string>
-    <string name="insulin_shortname">INZ</string>
-    <string name="insulin_oref_peak">Čas vrcholu IOB křivky</string>
-    <string name="insulin_peak_time">Vrchol křivky [min]</string>
-    <string name="free_peak_oref">Volitelný vrchol - Oref</string>
-    <string name="rapid_acting_oref">Rychle působící - Oref</string>
-    <string name="ultra_rapid_oref">Ultra rychlý - Oref</string>
-    <string name="dia_too_short">DIA %1$f je příliš krátké - použito %2$f !</string>
-    <string name="fast_acting_insulin_comment">Novorapid</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">Stavová řádka xDrip+ (hodinky)</string>
@@ -171,23 +156,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">CÍL</string>
     <string name="basal_short">BAZ</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Hotovo, gratulujeme!</string>
-    <string name="not_completed_yet">Nedokončeno</string>
-    <string name="time_elapsed">Čas</string>
-    <string name="maxiobset">Maximální IOB nastaveno správně</string>
-    <string name="hasbgdata">Glykémie dostupné z vybraného zdroje</string>
-    <string name="synchaswritepermission">Služba synchronizace má oprávnění k zápisu</string>
-    <string name="loopenabled">Smyčka povolena</string>
-    <string name="apsselected">APS vybráno</string>
-    <string name="closedmodeenabled">Uzavřená smyčka povolena</string>
-    <string name="objectives_shortname">CÍLE</string>
-    <string name="description_objectives">Výukový program</string>
-    <string name="doyouwantresetstart">Chcete resetovat začátek cíle? Můžete přijít o svůj pokrok.</string>
-    <string name="objectives_next_button">Další</string>
-    <string name="objectives_previous_button">Zpět</string>
-    <string name="objectives_button_unfinish">Vymazat dokončeno</string>
-    <string name="objectives_button_unstart">Vymazat start</string>
     <!-- Actions -->
     <string name="actions">Akce</string>
     <string name="description_actions">Tlačítka k běžně používaným úkonům</string>
@@ -198,7 +166,7 @@
     <string name="tools">Nástroje</string>
     <string name="nav_history_browser">Prohlížeč historie</string>
     <string name="sensor_label">Senzor</string>
-    <string name="age_label">věk:</string>
+    <string name="age_label">stáří:</string>
     <string name="level_label">úroveň:</string>
     <string name="insulin_label">Inzulín</string>
     <string name="pb_label">Baterie pumpy</string>
@@ -207,18 +175,6 @@
     <string name="statuslights_cannula_age">stáří kanyly</string>
     <string name="statuslights_patch_pump_age">stáří náplasťové pumpy</string>
     <string name="patch_pump">Náplasťová pumpa</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Prodloužený bolus omezen na %1$.1f U: %2$s</string>
-    <string name="limitingcarbs">Sacharidy omezeny na %1$d g: %2$s</string>
-    <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
-    <string name="closedmodedisabledinpreferences">Uzavřená smyčka zakázána v nastavení</string>
-    <string name="closed_loop_disabled_on_dev_branch">Běží DEV verze. Uzavřená smyčka je zakázána.</string>
-    <string name="closed_loop_disabled_with_eb">Uzavřená smyčka je zastavena kvůli běžícímu prodlouženému bolusu</string>
-    <string name="smbalwaysdisabled">\"SMB vždy\" a \"po jídle\" zakázáno protože zdroj glykémie nepodporuje rozšířené filtrování</string>
-    <string name="smbnotallowedinopenloopmode">SBM není povoleno v otevřené smyčce</string>
-    <string name="maxvalueinpreferences">maximální hodnota v nastavení</string>
-    <string name="hardlimit">pevný limit</string>
-    <string name="treatmentssafety_title">Bezpečnost zadání ošetřeni</string>
     <!-- Overview -->
     <string name="show_statuslights">Zobrazit stavové indikátory na domovské obrazovce</string>
     <string name="statuslights_cage_warning">Úroveň varování stáří kanyly [h]</string>
@@ -345,50 +301,6 @@
     <string name="sensitivity_shortname">SENZ</string>
     <string name="graph_scale">Měřítko grafu</string>
     <string name="graph_menu_divider_header">Graf</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Typ virtuální pumpy</string>
-    <string name="virtual_pump_definition">Definice pumpy</string>
-    <string name="virtual_pump_pump_def">Bolus: Krok =%1$s\nProdl. bolus: [Krok=%2$s, Délka=%3$smin-%4$sh]\nBazál: Krok=%5$s\nDoč. bazál: %6$s (%7$s), Délka=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">VPUM</string>
-    <string name="description_pump_virtual">Ovladač pumpy pro uživatele bez podporované pumpy (Otevřená smyčka)</string>
-    <string name="virtual_pump_label">VIRTUÁLNÍ PUMPA</string>
-    <string name="virtualpump_settings">Nastavení virtuální pumpy</string>
-    <string name="virtualpump_uploadstatus_title">Nahrávat status do NS</string>
-    <!-- Source -->
-    <string name="ns_client_bg">Glykémie z NS</string>
-    <string name="ns_client_bg_short">NSGL</string>
-    <string name="description_source_ns_client">Příjem glykémií z Nightscoutu</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Příjem glykémií z xDripu+.</string>
-    <string name="dexcom_app_patched">BYODA</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Příjem hodnot glykémií z upravené aplikace Dexcom (BYODA).</string>
-    <string name="eversense">Eversense aplikace (upravená)</string>
-    <string name="description_source_eversense">Příjem glykémií z modifikované Eversense aplikace.</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Příjem glykémií z Glimpu.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Příjem glykémií z Uploaderu 640G.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Získávat glykémie z aplikace Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Získávat glykémie z aplikace Glunovo</string>
-    <string name="intelligo">Intelligo</string>
-    <string name="description_source_intelligo">Přijímat hodnoty z aplikace Intelligo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Přijímat hodnoty glykémií z Tomato aplikace (MiaoMiao zařízení)</string>
-    <string name="aidex">GlucoRx Aidex</string>
-    <string name="aidex_short">Aidex</string>
-    <string name="description_source_aidex">Přijímat hodnoty glykémie ze senzoru GlucoRx Aidex.</string>
-    <string name="random_bg">Náhodná glykémie</string>
-    <string name="description_source_random_bg">Generovat náhodná data glykémie (pouze režim Demo)</string>
-    <string name="random_bg_short">Gly</string>
-    <string name="do_xdrip_upload_title">Odesílat data do xDrip+</string>
-    <string name="do_xdrip_upload_summary">V xDrip+ vyberte zdroj dat 640g/Eversense</string>
-    <string name="bgsource_upload">Nastavení nahrávání glykémií</string>
-    <string name="dexcom_log_ns_sensor_change_title">Zaznamenávat výměnu senzoru do NS</string>
-    <string name="dexcom_log_ns_sensor_change_summary">Vytvořit událost \"Výměna senzoru\" v NS automaticky po spuštění senzoru</string>
     <!-- Skins -->
     <string name="classic_description">Původní vzhled</string>
     <string name="lowres_description">Vzhled pro nízké rozlišení</string>

@@ -5,7 +5,7 @@ import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.pump.diaconn.DiaconnG8Pump
 import info.nightscout.pump.diaconn.R
-import info.nightscout.pump.diaconn.pumplog.PumplogUtil
+import info.nightscout.pump.diaconn.pumplog.PumpLogUtil
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -213,7 +213,7 @@ class BigMainInfoInquireResponsePacket(
         diaconnG8Pump.pumpProfiles!![diaconnG8Pump.activeProfile][23] = diaconnG8Pump.baseAmount24
 
         //incarnation no 처리
-        diaconnG8Pump.isPumpVersionGe2_63 = PumplogUtil.isPumpVersionGe(sp.getString(rh.gs(R.string.pumpversion), ""), 2, 63)
+        diaconnG8Pump.isPumpVersionGe2_63 = PumpLogUtil.isPumpVersionGe(sp.getString(rh.gs(R.string.pumpversion), ""), 2, 63)
 
         aapsLogger.debug(LTag.PUMPCOMM, "result > " + diaconnG8Pump.result)
         aapsLogger.debug(LTag.PUMPCOMM, "systemRemainInsulin > " + diaconnG8Pump.systemRemainInsulin)

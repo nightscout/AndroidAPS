@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <!-- Safety -->
+    <string name="limitingcarbs">Ограничаване на въглехидрати до %1$d гр. поради %2$s</string>
+    <string name="pumpisnottempbasalcapable">Помпата не поддържа временен базал</string>
+    <string name="closedmodedisabledinpreferences">Затворения кръг е забранен в настройките</string>
+    <string name="closed_loop_disabled_on_dev_branch">Използвате dev версия. Затворения кръг е недостъпен за Вас.</string>
+    <string name="closed_loop_disabled_with_eb">Затворен цикъл е недостъпен поради стартиран Удължен болус</string>
+    <string name="smbalwaysdisabled">SMB \"винаги включен\" и \"след въглехидрати\" е забранен, защото е активен източник на КЗ, който не поддържа необходимата филтрация</string>
+    <string name="smbnotallowedinopenloopmode">SMB не е позволен в режим Отворен кръг</string>
+    <string name="maxvalueinpreferences">макс. стойност в настройките</string>
+    <string name="hardlimit">твърд лимит</string>
+    <string name="treatmentssafety_title">Настройки на сигурността</string>
+    <!-- Objectives -->
+    <string name="not_completed_yet">Все още не сме неприключили</string>
+    <string name="time_elapsed">Изминало време</string>
+    <string name="maxiobset">Максимален IOB е зададен правилно</string>
+    <string name="hasbgdata">Има данни за КЗ от избрания източник</string>
+    <string name="loopenabled">APS разрешен</string>
+    <string name="apsselected">Избран APS</string>
+    <string name="closedmodeenabled">APS - Затворен кръг е позволен</string>
+    <string name="objectives_shortname">Цел</string>
+    <string name="description_objectives">Разучаване на програмата</string>
+    <string name="doyouwantresetstart">Искате ли да нулирате прогреса си?</string>
+    <string name="objectives_button_unfinish">Изчисти приключение</string>
+    <string name="objectives_button_unstart">Изчисти стартираните</string>
+</resources>

@@ -97,21 +97,6 @@
     <string name="sms_read_status_failed">Error en llegir estat</string>
     <string name="sms_profile_switch_created">Canvi de perfil creat</string>
     <string name="sms_wrong_tbr_duration">La durada d\'una TBR ha de ser múltiple de %1$d minuts i més gran que 0.</string>
-    <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
-    <string name="description_insulin_rapid">Configuració preestablerta per insulina Humalog i NovoRapid/NovoLog</string>
-    <string name="description_insulin_ultra_rapid">Configuració preestablerta per insulina Fiasp</string>
-    <string name="description_insulin_lyumjev">Configuració preestablerta per insulina Lyumjev</string>
-    <string name="description_insulin_free_peak">Permet definir el pic d\'activitat de la insulina. A utilitzar només per usuaris avançats</string>
-    <string name="insulin_shortname">INS</string>
-    <string name="insulin_oref_peak">Pic de la corba IOB</string>
-    <string name="insulin_peak_time">Temps del pic [min]</string>
-    <string name="free_peak_oref">Oref sense pic</string>
-    <string name="rapid_acting_oref">Oref ràpida</string>
-    <string name="ultra_rapid_oref">Oref ultra ràpida</string>
-    <string name="dia_too_short">DIA de %1$f massa curt - utilitzant %2$f!</string>
-    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
-    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
     <!-- xDrip status line -->
     <!-- StatusLine -->
     <string name="xdrip_status">Línia d\'estat d\'xDrip+ (rellotge)</string>
@@ -158,22 +143,6 @@
     <string name="dia_short">DIA</string>
     <string name="target_short">OBJ</string>
     <string name="basal_short">BAS</string>
-    <!-- Objectives -->
-    <string name="completed_well_done">Enllestit, ben fet!</string>
-    <string name="not_completed_yet">No finalitzat encara</string>
-    <string name="time_elapsed">Temps transcorregut</string>
-    <string name="maxiobset">Màx IOB correctament configurada</string>
-    <string name="hasbgdata">Glucèmia disponible des de la font seleccionada</string>
-    <string name="loopenabled">Llaç activat</string>
-    <string name="apsselected">APS seleccionat</string>
-    <string name="closedmodeenabled">Llaç tancat activat</string>
-    <string name="objectives_shortname">OBJ</string>
-    <string name="description_objectives">Programa d\'aprenentatge</string>
-    <string name="doyouwantresetstart">Voleu reiniciar l\'objectiu? Podeu perdre el vostre progrés.</string>
-    <string name="objectives_next_button">Següent</string>
-    <string name="objectives_previous_button">Previ</string>
-    <string name="objectives_button_unfinish">Cancel·lar finalització</string>
-    <string name="objectives_button_unstart">Cancel·lar inici</string>
     <!-- Actions -->
     <string name="actions">Accions</string>
     <string name="description_actions">Alguns botons per accedir ràpid a funcions habituals</string>
@@ -190,18 +159,6 @@
     <string name="pb_label">Pila de la bomba</string>
     <string name="cannula">Cànula</string>
     <string name="ebstopsloop">L\'ús d\'un bolus estès aturarà el mode llaç tancat mentre duri el bolus. Esteu segurs que voleu això?</string>
-    <!-- Safety -->
-    <string name="limitingextendedbolus">Limitant bolus estès a %1$.1f U a causa de %2$s</string>
-    <string name="limitingcarbs">Limitant carbs a %1$d g a causa de %2$s</string>
-    <string name="pumpisnottempbasalcapable">La bomba no té la funcionalitat de basals temporals</string>
-    <string name="closedmodedisabledinpreferences">Mode llaç tancat desactivat a la configuració</string>
-    <string name="closed_loop_disabled_on_dev_branch">Executant versió de desenvolupament. Llaç tancat no disponible.</string>
-    <string name="closed_loop_disabled_with_eb">Llaç tancat desactivat degut a bolus estès actiu</string>
-    <string name="smbalwaysdisabled">Les funcions \"SMB sempre\" i \"SMB després de carbohidrats\" estan desactivades pq la font de glucèmia no fa filtrat avançat</string>
-    <string name="smbnotallowedinopenloopmode">SMB no permès en mode llaç obert</string>
-    <string name="maxvalueinpreferences">valor màxim a la configuració</string>
-    <string name="hardlimit">límit estricte</string>
-    <string name="treatmentssafety_title">Seguretat tractaments</string>
     <!-- Overview -->
     <string name="show_statuslights">Mostrar indicadors d\'estat a la pantalla d\'inici</string>
     <string name="statuslights_iage_warning">Llindar per avís d\'edat de l\'insulina [h]</string>
@@ -313,44 +270,6 @@
     <string name="treatments_shortname">TRACT</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_menu_divider_header">Gràfica</string>
-    <!-- VirtualPump -->
-    <string name="virtual_pump_type">Tipus de bomba virtual</string>
-    <string name="virtual_pump_definition">Definició de bomba</string>
-    <string name="virtual_pump_pump_def">Bolus: Pas=%1$s\nBolus estès: [Pas=%2$s, Durada=%3$smin-%4$sh]\nBasal: Pas=%5$s\nTBR: %6$s (per %7$s), Durada=%8$smin-%9$sh\n%10$s</string>
-    <string name="virtual_pump_shortname">BOMBAV</string>
-    <string name="description_pump_virtual">Integració de bombes d\'insulina per les quals encara no existeix driver/controlador (Llaç obert)</string>
-    <string name="virtual_pump_label">BOMBA VIRTUAL</string>
-    <string name="virtualpump_settings">Configuració bomba virtual</string>
-    <string name="virtualpump_uploadstatus_title">Enviar estat a NS</string>
-    <!-- Source -->
-    <string name="ns_client_bg">Glucèmia NSClient</string>
-    <string name="ns_client_bg_short">Glucèmia NS</string>
-    <string name="description_source_ns_client">Descarrega dades de glucèmia des de Nightscout</string>
-    <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Rebre valors de glucèmia de xDrip+.</string>
-    <string name="dexcom_app_patched">Dexcom (BYODA)</string>
-    <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Rebre els valors de glucosa de l\'aplicació Dexcom \'Build Your Own Device\'.</string>
-    <string name="eversense">App Eversense (\"parxejada\")</string>
-    <string name="description_source_eversense">Rebre valors de glucèmia de l\'app Eversense \"parxejada\".</string>
-    <string name="glimp">Glimp</string>
-    <string name="description_source_glimp">Rebre valors de glucèmia de Glimp.</string>
-    <string name="mm640g">MM640g</string>
-    <string name="description_source_mm640g">Rebre valors de glucèmia del 600SeriesAndroidUploader.</string>
-    <string name="poctech">Poctech</string>
-    <string name="description_source_poctech">Rebre valors de glucèmia de l\'app Poctech</string>
-    <string name="glunovo">Glunovo</string>
-    <string name="description_source_glunovo">Rebre valors de l\'app Glunovo</string>
-    <string name="tomato">Tomato (MiaoMiao)</string>
-    <string name="tomato_short">Tomato</string>
-    <string name="description_source_tomato">Rebre valors de glucèmia de l\'app Tomato (dispositiu MiaoMiao)</string>
-    <string name="random_bg">Glucèmia aleatòria</string>
-    <string name="description_source_random_bg">Generar dades de glucèmia aleatòries (Només mode demo)</string>
-    <string name="random_bg_short">Glucèmia</string>
-    <string name="do_xdrip_upload_title">Enviar dades de glucèmia a xDrip+</string>
-    <string name="do_xdrip_upload_summary">A xDrip+ seleccionar font de dades 640g/Eversense</string>
-    <string name="bgsource_upload">Configuració enviament dades glucèmia</string>
-    <string name="dexcom_log_ns_sensor_change_title">Enregistrar canvi de sensor a NS</string>
     <!-- Skins -->
     <string name="classic_description">Tema original</string>
     <string name="lowres_description">Tema baixa resolució</string>

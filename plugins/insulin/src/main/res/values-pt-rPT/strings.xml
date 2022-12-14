@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Insulin -->
+    <string name="lyumjev">Lyumjev</string>
+    <string name="description_insulin_rapid">Predefinição de Insulina Humalog e NovoRapid / NovoLog</string>
+    <string name="description_insulin_ultra_rapid">Predefinição de Insulina Fiasp</string>
+    <string name="description_insulin_lyumjev">Predefinição para Insulina Lyumjev</string>
+    <string name="description_insulin_free_peak">Permite definir o pico de atividade da insulina e deve ser usado somente por usuários avançados</string>
+    <string name="insulin_shortname">INS</string>
+    <string name="insulin_oref_peak">Tempo do Pico da curva de IA</string>
+    <string name="insulin_peak_time">Tempo Pico [min]</string>
+    <string name="free_peak_oref">Oref Pico-Livre</string>
+    <string name="rapid_acting_oref">Oref Acção-Rápida</string>
+    <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
+</resources>

@@ -1,7 +1,7 @@
 package info.nightscout.ui.activities
 
 import android.os.Bundle
-import info.nightscout.core.services.AlarmSoundService
+import info.nightscout.ui.services.AlarmSoundService
 import info.nightscout.core.ui.activities.DialogAppCompatActivity
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction

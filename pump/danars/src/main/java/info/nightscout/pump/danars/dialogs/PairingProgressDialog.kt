@@ -53,7 +53,6 @@ class PairingProgressDialog : DaggerDialogFragment() {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = false
         dialog?.setCanceledOnTouchOutside(false)
-        setViews()
         return binding.root
     }
 
@@ -84,6 +83,7 @@ class PairingProgressDialog : DaggerDialogFragment() {
                 _binding?.ok?.visibility = View.VISIBLE
             }
         }
+        setViews()
     }
 
     override fun dismiss() {

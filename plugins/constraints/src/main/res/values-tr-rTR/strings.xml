@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- PhoneChecker -->
+    <!-- DST Helper -->
+    <!-- Storage constraint -->
+    <!-- Version Checker -->
+    <!-- Signature verifier -->
+    <!-- BG Quality -->
+    <string name="a11y_bg_quality_flat">Düz veri. Yanlış kabul edildi</string>
+    <!-- Safety -->
+    <string name="limitingcarbs">%2$s\'den dolayı karbonhidratlar %1$d g ile sınırlandırılıyor</string>
+    <string name="pumpisnottempbasalcapable">Pompa geçici bazal özellikli değil</string>
+    <string name="closedmodedisabledinpreferences">Kapalı Döngü tercihlerde devre dışı bırakıldı</string>
+    <string name="closed_loop_disabled_on_dev_branch">Geliştirici sürümü çalışıyor. Kapalı Döngü devre dışı.</string>
+    <string name="closed_loop_disabled_with_eb">Yayma bolus çalıştığı için kapalı döngü devre dışı bırakıldı</string>
+    <string name="smbalwaysdisabled">Aktif KŞ kaynağı gelişmiş filtrelemeyi desteklemediği için SMB (Super Micro Bolus) her zaman ve karbonhidratlardan sonra devre dışı bırakıldı</string>
+    <string name="smbnotallowedinopenloopmode">Açık Döngü modunda SMB\'ye (Super Micro Bolus) izin verilmiyor</string>
+    <string name="maxvalueinpreferences">tercihlerde maksimum değer</string>
+    <!-- Objectives -->
+</resources>
