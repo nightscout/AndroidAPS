@@ -4,7 +4,7 @@ import android.content.Context
 import info.nightscout.sdk.exceptions.DateHeaderOutOfToleranceException
 import info.nightscout.sdk.exceptions.InvalidAccessTokenException
 import info.nightscout.sdk.exceptions.InvalidFormatNightscoutException
-import info.nightscout.sdk.exceptions.TodoNightscoutException
+import info.nightscout.sdk.exceptions.UnsuccessfullNightscoutException
 import info.nightscout.sdk.exceptions.UnknownResponseNightscoutException
 import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.Status
@@ -101,9 +101,9 @@ class NSAndroidClientImpl(
 
         val response = api.lastModified()
         if (response.isSuccessful) {
-            return@callWrapper response.body()?.result ?: throw TodoNightscoutException()
+            return@callWrapper response.body()?.result ?: throw UnsuccessfullNightscoutException()
         } else {
-            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+            throw UnsuccessfullNightscoutException()
         }
     }
 
@@ -114,17 +114,19 @@ class NSAndroidClientImpl(
         if (response.isSuccessful) {
             return@callWrapper response.body()?.result?.map(RemoteEntry::toSgv).toNotNull()
         } else {
-            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+            throw UnsuccessfullNightscoutException()
         }
     }
 
-    override suspend fun getSgvsModifiedSince(from: Long): List<NSSgvV3> = callWrapper(dispatcher) {
+    override suspend fun getSgvsModifiedSince(from: Long, limit: Long): NSAndroidClient.ReadResponse<List<NSSgvV3>> = callWrapper(dispatcher) {
 
-        val response = api.getSgvsModifiedSince(from)
+        val response = api.getSgvsModifiedSince(from, limit)
+        val eTagString = response.headers()["ETag"]
+        val eTag = eTagString?.substring(3, eTagString.length - 1)?.toLong() ?: throw UnsuccessfullNightscoutException()
         if (response.isSuccessful) {
-            return@callWrapper response.body()?.result?.map(RemoteEntry::toSgv).toNotNull()
+            return@callWrapper NSAndroidClient.ReadResponse(eTag, response.body()?.result?.map(RemoteEntry::toSgv).toNotNull())
         } else {
-            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+            throw UnsuccessfullNightscoutException()
         }
     }
 
@@ -134,7 +136,17 @@ class NSAndroidClientImpl(
         if (response.isSuccessful) {
             return@callWrapper response.body()?.result?.map(RemoteEntry::toSgv).toNotNull()
         } else {
-            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+            throw UnsuccessfullNightscoutException()
+        }
+    }
+
+    override suspend fun getTreatmentsNewerThan(from: Long, limit: Long): List<NSTreatment> = callWrapper(dispatcher) {
+
+        val response = api.getTreatmentsNewerThan(from, limit)
+        if (response.isSuccessful) {
+            return@callWrapper response.body()?.result?.map(RemoteTreatment::toTreatment).toNotNull()
+        } else {
+            throw UnsuccessfullNightscoutException()
         }
     }
 
@@ -142,11 +154,11 @@ class NSAndroidClientImpl(
 
         val response = api.getTreatmentsModifiedSince(from, limit)
         val eTagString = response.headers()["ETag"]
-        val eTag = eTagString?.substring(3, eTagString.length - 1)?.toLong() ?: throw TodoNightscoutException()
+        val eTag = eTagString?.substring(3, eTagString.length - 1)?.toLong() ?: throw UnsuccessfullNightscoutException()
         if (response.isSuccessful) {
             return@callWrapper NSAndroidClient.ReadResponse(eTag, response.body()?.result?.map(RemoteTreatment::toTreatment).toNotNull())
         } else {
-            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+            throw UnsuccessfullNightscoutException()
         }
     }
 
@@ -156,7 +168,7 @@ class NSAndroidClientImpl(
         if (response.isSuccessful) {
             return@callWrapper response.body()?.result.toNotNull()
         } else {
-            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+            throw UnsuccessfullNightscoutException()
         }
     }
 
@@ -174,7 +186,7 @@ class NSAndroidClientImpl(
                 lastModified = response.body()?.result?.lastModified
             )
         } else {
-            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+            throw UnsuccessfullNightscoutException()
         }
     }
 
@@ -191,7 +203,7 @@ class NSAndroidClientImpl(
                 lastModified = response.body()?.result?.lastModified
             )
         } else {
-            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+            throw UnsuccessfullNightscoutException()
         }
     }
 

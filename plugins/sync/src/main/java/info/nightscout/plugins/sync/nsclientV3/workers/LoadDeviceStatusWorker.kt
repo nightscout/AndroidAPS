@@ -40,8 +40,9 @@ class LoadDeviceStatusWorker(
                 if (deviceStatuses.isNotEmpty()) {
                     rxBus.send(EventNSClientNewLog("RCV", "${deviceStatuses.size} DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
                     nsDeviceStatusHandler.handleNewData(deviceStatuses.toTypedArray())
+                    rxBus.send(EventNSClientNewLog("DONE DS", ""))
                 } else {
-                    rxBus.send(EventNSClientNewLog("END", "No DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
+                    rxBus.send(EventNSClientNewLog("RCV END", "No DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
                 }
                 WorkManager.getInstance(context)
                     .enqueueUniqueWork(

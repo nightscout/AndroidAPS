@@ -54,6 +54,7 @@ import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.logging.AAPSLogger
