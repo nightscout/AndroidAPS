@@ -34,6 +34,7 @@ import info.nightscout.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.plugins.sync.nsclient.NsClientReceiverDelegate
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSBolus
+import info.nightscout.plugins.sync.nsclientV3.extensions.toNSEffectiveProfileSwitch
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadStatusWorker
@@ -43,6 +44,8 @@ import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventChargingState
 import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.events.EventNetworkChange
+import info.nightscout.rx.events.EventNewBG
+import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventSWSyncStatus
 import info.nightscout.rx.logging.AAPSLogger
@@ -59,6 +62,9 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -170,6 +176,14 @@ class NSClientV3Plugin @Inject constructor(
             .toObservable(EventNSClientResend::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event -> resend(event.reason) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventNewBG::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleExecution() }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventNewHistoryData::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ scheduleExecution() }, fabricPrivacy::logException)
 
         runLoop = Runnable {
             handler.postDelayed(runLoop, REFRESH_INTERVAL)
@@ -314,7 +328,7 @@ class NSClientV3Plugin @Inject constructor(
             // is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
             // is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
             // is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(false, dateUtil)
-            // is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toNSEffectiveProfileSwitch(dateUtil)
             // is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)
             else                          -> null
         }?.let { data ->
@@ -353,7 +367,14 @@ class NSClientV3Plugin @Inject constructor(
                             // is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
                             // is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
                             // is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(false, dateUtil)
-                            // is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(false, dateUtil)
+                            is DataSyncSelector.PairEffectiveProfileSwitch -> {
+                                if (result.response == 201) { // created
+                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                    storeDataForDb.nsIdEffectiveProfileSwitches.add(dataPair.value)
+                                    storeDataForDb.scheduleNsIdUpdate()
+                                }
+                                dataSyncSelector.confirmLastEffectiveProfileSwitchIdIfGreater(dataPair.id)
+                            }
                             // is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)
                         }
                     } catch (e: Exception) {
@@ -414,5 +435,21 @@ class NSClientV3Plugin @Inject constructor(
                 if (workInfo.state == WorkInfo.State.BLOCKED || workInfo.state == WorkInfo.State.ENQUEUED || workInfo.state == WorkInfo.State.RUNNING)
                     return true
         return false
+    }
+
+    private val eventWorker = Executors.newSingleThreadScheduledExecutor()
+    private var scheduledEventPost: ScheduledFuture<*>? = null
+    fun scheduleExecution() {
+        class PostRunnable : Runnable {
+
+            override fun run() {
+                scheduledEventPost = null
+                executeLoop()
+            }
+        }
+        // cancel waiting task to prevent sending multiple posts
+        scheduledEventPost?.cancel(false)
+        val task: Runnable = PostRunnable()
+        scheduledEventPost = eventWorker.schedule(task, 10, TimeUnit.SECONDS)
     }
 }
