@@ -6,7 +6,7 @@ import org.json.JSONObject
 data class NSProfileSwitch(
     override val date: Long,
     override val device: String?,
-    override val identifier: String,
+    override val identifier: String?,
     override val units: NsUnits?,
     override val srvModified: Long?,
     override val srvCreated: Long?,
@@ -20,6 +20,7 @@ data class NSProfileSwitch(
     override val endId: Long?,
     override val pumpType: String?,
     override val pumpSerial: String?,
+    override var app: String? = null,
     val profileJson: JSONObject?,
     val profileName: String,
     val originalProfileName: String?,

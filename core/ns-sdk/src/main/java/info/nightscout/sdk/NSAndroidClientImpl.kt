@@ -138,11 +138,13 @@ class NSAndroidClientImpl(
         }
     }
 
-    override suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): List<NSTreatment> = callWrapper(dispatcher) {
+    override suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): NSAndroidClient.ReadResponse<List<NSTreatment>> = callWrapper(dispatcher) {
 
         val response = api.getTreatmentsModifiedSince(from, limit)
+        val eTagString = response.headers()["ETag"]
+        val eTag = eTagString?.substring(3, eTagString.length - 1)?.toLong() ?: throw TodoNightscoutException()
         if (response.isSuccessful) {
-            return@callWrapper response.body()?.result?.map(RemoteTreatment::toTreatment).toNotNull()
+            return@callWrapper NSAndroidClient.ReadResponse(eTag, response.body()?.result?.map(RemoteTreatment::toTreatment).toNotNull())
         } else {
             throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
         }
@@ -161,9 +163,28 @@ class NSAndroidClientImpl(
     override suspend fun createTreatment(nsTreatment: NSTreatment): CreateUpdateResponse = callWrapper(dispatcher) {
 
         val remoteTreatment = nsTreatment.toRemoteTreatment() ?: throw InvalidFormatNightscoutException()
+        remoteTreatment.app = "AAPS"
         val response = api.createTreatment(remoteTreatment)
         if (response.isSuccessful) {
             return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = response.body()?.result?.identifier ?: throw UnknownResponseNightscoutException(),
+                isDeduplication = response.body()?.result?.isDeduplication ?: false,
+                deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,
+                lastModified = response.body()?.result?.lastModified
+            )
+        } else {
+            throw TodoNightscoutException() // TODO: react to response errors (offline, ...)
+        }
+    }
+
+    override suspend fun updateTreatment(nsTreatment: NSTreatment): CreateUpdateResponse = callWrapper(dispatcher) {
+
+        val remoteTreatment = nsTreatment.toRemoteTreatment() ?: throw InvalidFormatNightscoutException()
+        val response = api.updateTreatment(remoteTreatment)
+        if (response.isSuccessful) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
                 identifier = response.body()?.result?.identifier ?: throw UnknownResponseNightscoutException(),
                 isDeduplication = response.body()?.result?.isDeduplication ?: false,
                 deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,

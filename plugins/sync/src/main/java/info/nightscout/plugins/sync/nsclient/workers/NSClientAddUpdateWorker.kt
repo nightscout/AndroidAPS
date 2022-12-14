@@ -11,11 +11,11 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.logging.UserEntryLogger
+import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
-import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclient.extensions.bolusFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.carbsFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.effectiveProfileSwitchFromJson
@@ -46,7 +46,7 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var xDripBroadcast: XDripBroadcast
-    @Inject lateinit var storeDataForDb: StoreDataForDbImpl
+    @Inject lateinit var storeDataForDb: StoreDataForDb
 
     override fun doWorkAndLog(): Result {
         val treatments = dataWorkerStorage.pickupJSONArray(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))

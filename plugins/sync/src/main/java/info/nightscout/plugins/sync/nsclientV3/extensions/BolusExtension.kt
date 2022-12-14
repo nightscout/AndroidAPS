@@ -1,7 +1,9 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
+import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSBolus
 
 fun NSBolus.toBolus(): Bolus =
@@ -21,4 +23,28 @@ fun NSBolus.BolusType?.toBolusType(): Bolus.Type =
         NSBolus.BolusType.SMB     -> Bolus.Type.SMB
         NSBolus.BolusType.PRIMING -> Bolus.Type.PRIMING
         null                      -> Bolus.Type.NORMAL
+    }
+
+fun Bolus.toNSBolus(): NSBolus =
+    NSBolus(
+        eventType = EventType.fromString(if (type == Bolus.Type.SMB) TherapyEvent.Type.CORRECTION_BOLUS.text else TherapyEvent.Type.MEAL_BOLUS.text),
+        isValid = isValid,
+        date = timestamp,
+        utcOffset = utcOffset,
+        insulin = amount,
+        type = type.toBolusType(),
+        notes = notes,
+        identifier = interfaceIDs.nightscoutId,
+        pumpId = interfaceIDs.pumpId,
+        pumpType = interfaceIDs.pumpType?.name,
+        pumpSerial = interfaceIDs.pumpSerial,
+        endId = interfaceIDs.endId
+    )
+
+fun Bolus.Type?.toBolusType(): NSBolus.BolusType =
+    when (this) {
+        Bolus.Type.NORMAL  -> NSBolus.BolusType.NORMAL
+        Bolus.Type.SMB     -> NSBolus.BolusType.SMB
+        Bolus.Type.PRIMING -> NSBolus.BolusType.PRIMING
+        null               -> NSBolus.BolusType.NORMAL
     }

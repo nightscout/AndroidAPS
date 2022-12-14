@@ -6,7 +6,7 @@ import androidx.work.workDataOf
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.interfaces.Config
-import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
+import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.plugins.sync.nsclient.data.NSMbg
 import info.nightscout.plugins.sync.nsclient.extensions.therapyEventFromNsMbg
 import info.nightscout.shared.sharedPreferences.SP
@@ -20,7 +20,7 @@ class NSClientMbgWorker(
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var sp: SP
     @Inject lateinit var config: Config
-    @Inject lateinit var storeDataForDb: StoreDataForDbImpl
+    @Inject lateinit var storeDataForDb: StoreDataForDb
 
     override fun doWorkAndLog(): Result {
         val ret = Result.success()
