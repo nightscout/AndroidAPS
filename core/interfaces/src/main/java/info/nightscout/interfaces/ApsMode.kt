@@ -8,6 +8,6 @@ enum class ApsMode() {
 
     companion object {
 
-        fun fromString(stringValue: String?) = values().firstOrNull { it.name == (stringValue?.uppercase() ?: UNDEFINED.name) } ?: UNDEFINED
+        fun fromString(stringValue: String?) = values().firstOrNull { it.name == stringValue?.uppercase() } ?: UNDEFINED
     }
 }
