@@ -111,14 +111,14 @@ class NSClientV3Plugin @Inject constructor(
             when {
                 sp.getBoolean(R.string.key_ns_client_paused, false)          -> rh.gs(info.nightscout.core.ui.R.string.paused)
                 isAllowed.not()                                              -> blockingReason
-                nsAndroidClient.lastStatus == null                           -> rh.gs(R.string.not_connected)
+                nsAndroidClient?.lastStatus == null                           -> rh.gs(R.string.not_connected)
                 workIsRunning(arrayOf(JOB_NAME))                             -> rh.gs(R.string.working)
-                nsAndroidClient.lastStatus?.apiPermissions?.isFull() == true -> rh.gs(info.nightscout.shared.R.string.connected)
-                nsAndroidClient.lastStatus?.apiPermissions?.isRead() == true -> rh.gs(R.string.read_only)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true -> rh.gs(info.nightscout.shared.R.string.connected)
+                nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true -> rh.gs(R.string.read_only)
                 else                                                         -> rh.gs(info.nightscout.core.ui.R.string.unknown)
             }
 
-    internal lateinit var nsAndroidClient: NSAndroidClient
+    internal var nsAndroidClient: NSAndroidClient? = null
 
     private val isAllowed get() = nsClientReceiverDelegate.allowed
     private val blockingReason get() = nsClientReceiverDelegate.blockingReason
@@ -211,8 +211,8 @@ class NSClientV3Plugin @Inject constructor(
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = config.isEngineeringMode()
     }
 
-    override val hasWritePermission: Boolean get() = nsAndroidClient.lastStatus?.apiPermissions?.isFull() ?: false
-    override val connected: Boolean get() = nsAndroidClient.lastStatus != null
+    override val hasWritePermission: Boolean get() = nsAndroidClient?.lastStatus?.apiPermissions?.isFull() ?: false
+    override val connected: Boolean get() = nsAndroidClient?.lastStatus != null
     override fun clearLog() {
         handler.post {
             synchronized(listLog) { listLog.clear() }
@@ -314,8 +314,8 @@ class NSClientV3Plugin @Inject constructor(
     private val gson: Gson = GsonBuilder().create()
     private fun dbOperation(collection: String, dataPair: DataSyncSelector.DataPair, progress: String, operation: Operation) {
         val call = when (operation) {
-            Operation.CREATE -> nsAndroidClient::createTreatment
-            Operation.UPDATE -> nsAndroidClient::updateTreatment
+            Operation.CREATE -> nsAndroidClient?.let { return@let it::createTreatment }
+            Operation.UPDATE -> nsAndroidClient?.let { return@let it::updateTreatment }
         }
         when (dataPair) {
             is DataSyncSelector.PairBolus -> dataPair.value.toNSBolus()
@@ -348,34 +348,35 @@ class NSClientV3Plugin @Inject constructor(
                                 }
                             )
                         )
-                        val result = call(data)
-                        when (dataPair) {
-                            is DataSyncSelector.PairBolus -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdBoluses.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
+                        call?.let { it(data) }?.let { result ->
+                            when (dataPair) {
+                                is DataSyncSelector.PairBolus                  -> {
+                                    if (result.response == 201) { // created
+                                        dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                        storeDataForDb.nsIdBoluses.add(dataPair.value)
+                                        storeDataForDb.scheduleNsIdUpdate()
+                                    }
+                                    dataSyncSelector.confirmLastBolusIdIfGreater(dataPair.id)
                                 }
-                                dataSyncSelector.confirmLastBolusIdIfGreater(dataPair.id)
-                            }
-                            // is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(false, dateUtil)
-                            // is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(false, dateUtil, profileFunction)
-                            // is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(false, profileFunction.getUnits(), dateUtil)
-                            // is DataSyncSelector.PairFood                   -> dataPair.value.toJson(false)
-                            // is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(false, dateUtil)
-                            // is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(false, dateUtil)
-                            // is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
-                            // is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
-                            // is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(false, dateUtil)
-                            is DataSyncSelector.PairEffectiveProfileSwitch -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdEffectiveProfileSwitches.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
+                                // is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(false, dateUtil)
+                                // is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(false, dateUtil, profileFunction)
+                                // is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(false, profileFunction.getUnits(), dateUtil)
+                                // is DataSyncSelector.PairFood                   -> dataPair.value.toJson(false)
+                                // is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(false, dateUtil)
+                                // is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(false, dateUtil)
+                                // is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+                                // is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+                                // is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(false, dateUtil)
+                                is DataSyncSelector.PairEffectiveProfileSwitch -> {
+                                    if (result.response == 201) { // created
+                                        dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                        storeDataForDb.nsIdEffectiveProfileSwitches.add(dataPair.value)
+                                        storeDataForDb.scheduleNsIdUpdate()
+                                    }
+                                    dataSyncSelector.confirmLastEffectiveProfileSwitchIdIfGreater(dataPair.id)
                                 }
-                                dataSyncSelector.confirmLastEffectiveProfileSwitchIdIfGreater(dataPair.id)
+                                // is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)
                             }
-                            // is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)
                         }
                     } catch (e: Exception) {
                         aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
@@ -439,7 +440,7 @@ class NSClientV3Plugin @Inject constructor(
 
     private val eventWorker = Executors.newSingleThreadScheduledExecutor()
     private var scheduledEventPost: ScheduledFuture<*>? = null
-    fun scheduleExecution() {
+    private fun scheduleExecution() {
         class PostRunnable : Runnable {
 
             override fun run() {

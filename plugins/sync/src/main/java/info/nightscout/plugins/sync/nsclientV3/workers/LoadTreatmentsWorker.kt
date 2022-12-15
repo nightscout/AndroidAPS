@@ -33,6 +33,7 @@ class LoadTreatmentsWorker(
     @Inject lateinit var storeDataForDb: StoreDataForDb
 
     override fun doWorkAndLog(): Result {
+        val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
         var ret = Result.success()
 
         val isFirstLoad = nsClientV3Plugin.isFirstLoad(NsClient.Collection.TREATMENTS)
@@ -45,11 +46,11 @@ class LoadTreatmentsWorker(
                     val treatments: List<NSTreatment>
                     val response: NSAndroidClient.ReadResponse<List<NSTreatment>>?
                     if (isFirstLoad) {
-                        treatments = nsClientV3Plugin.nsAndroidClient.getTreatmentsNewerThan(lastLoaded, 500)
+                        treatments = nsAndroidClient.getTreatmentsNewerThan(lastLoaded, 500)
                         response = NSAndroidClient.ReadResponse(0, treatments)
                     }
                     else {
-                        response = nsClientV3Plugin.nsAndroidClient.getTreatmentsModifiedSince(lastLoaded, 500)
+                        response = nsAndroidClient.getTreatmentsModifiedSince(lastLoaded, 500)
                         treatments = response.values
                         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = response.lastServerModified
                         nsClientV3Plugin.storeLastFetched()

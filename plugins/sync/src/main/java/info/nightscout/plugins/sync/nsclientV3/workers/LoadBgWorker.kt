@@ -40,6 +40,7 @@ class LoadBgWorker(
     }
 
     override fun doWorkAndLog(): Result {
+        val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
         var ret = Result.success()
         val isFirstLoad = nsClientV3Plugin.isFirstLoad(NsClient.Collection.ENTRIES)
         val lastLoaded =
@@ -50,9 +51,9 @@ class LoadBgWorker(
                 try {
                     val sgvs: List<NSSgvV3>
                     val response: NSAndroidClient.ReadResponse<List<NSSgvV3>>?
-                    if (isFirstLoad) sgvs = nsClientV3Plugin.nsAndroidClient.getSgvsNewerThan(lastLoaded, 500)
+                    if (isFirstLoad) sgvs = nsAndroidClient.getSgvsNewerThan(lastLoaded, 500)
                     else {
-                        response = nsClientV3Plugin.nsAndroidClient.getSgvsModifiedSince(lastLoaded, 500)
+                        response = nsAndroidClient.getSgvsModifiedSince(lastLoaded, 500)
                         sgvs = response.values
                         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = response.lastServerModified
                         nsClientV3Plugin.storeLastFetched()

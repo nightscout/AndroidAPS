@@ -30,12 +30,13 @@ class LoadDeviceStatusWorker(
     @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
 
     override fun doWorkAndLog(): Result {
+        val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
         var ret = Result.success()
 
         runBlocking {
             try {
                 val from = dateUtil.now() - T.mins(7).msecs()
-                val deviceStatuses = nsClientV3Plugin.nsAndroidClient.getDeviceStatusModifiedSince(from)
+                val deviceStatuses = nsAndroidClient.getDeviceStatusModifiedSince(from)
                 aapsLogger.debug("DEVICESTATUSES: $deviceStatuses")
                 if (deviceStatuses.isNotEmpty()) {
                     rxBus.send(EventNSClientNewLog("RCV", "${deviceStatuses.size} DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
