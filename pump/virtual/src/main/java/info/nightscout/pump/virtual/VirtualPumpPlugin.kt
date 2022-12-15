@@ -12,6 +12,7 @@ import info.nightscout.core.utils.fabric.InstanceId
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.notifications.Notification
+import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
@@ -62,7 +63,8 @@ open class VirtualPumpPlugin @Inject constructor(
     commandQueue: CommandQueue,
     private val pumpSync: PumpSync,
     private val config: Config,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val processedDeviceStatusData: ProcessedDeviceStatusData
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -169,7 +171,9 @@ open class VirtualPumpPlugin @Inject constructor(
         get() = profileFunction.getProfile()?.getBasal() ?: 0.0
 
     override val reservoirLevel: Double
-        get() = reservoirInUnits.toDouble()
+        get() =
+            if (config.NSCLIENT) processedDeviceStatusData.pumpData?.reservoir ?: -1.0
+            else reservoirInUnits.toDouble()
 
     override val batteryLevel: Int
         get() = batteryPercent
