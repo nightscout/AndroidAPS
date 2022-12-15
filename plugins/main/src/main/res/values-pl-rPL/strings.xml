@@ -85,9 +85,6 @@
     <string name="smscommunicator_message_body">Błędny tekst wiadomości</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Wyślij SMS, jeśli wyzwolone jest zdarzenie pompy nieosiągalnej</string>
     <string name="smscommunicator_pump_unreachable">Zgłoś nieosiągalną pompę</string>
-    <string name="smscommunicator_set_lgs_reply_with_code">Aby przełączyć pętlę w tryb LGS (zawieszenie przy niskiej glikemii) wprowadź kod %1$s</string>
-    <string name="smscommunicator_set_closed_loop_reply_with_code">Aby przełączyć pętlę w tryb pętli zamkniętej wprowadź kod %1$s</string>
-    <string name="smscommunicator_current_loop_mode">Obecny tryb pętli: %1$s</string>
     <string name="wrong_format">Błędny format</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">Ostatnia BG:</string>
