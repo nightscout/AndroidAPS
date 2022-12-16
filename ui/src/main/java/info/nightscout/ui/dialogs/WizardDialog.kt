@@ -103,7 +103,9 @@ class WizardDialog : DaggerDialogFragment() {
 
     private val timeTextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
-            binding.alarm.isChecked = binding.carbTimeInput.value > 0
+            _binding?.let { binding ->
+                binding.alarm.isChecked = binding.carbTimeInput.value > 0
+            }
         }
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
