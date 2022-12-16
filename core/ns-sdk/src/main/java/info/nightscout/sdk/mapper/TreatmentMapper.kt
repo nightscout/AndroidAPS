@@ -210,7 +210,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
                 profileJson = this.profileJson?.let { JSONObject(this.profileJson) },
-                profileName = this.profile,
+                profile = this.profile,
                 originalProfileName = this.originalProfileName,
                 originalDuration = this.originalDuration,
                 duration = this.duration,
@@ -496,7 +496,7 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             pumpType = pumpType,
             pumpSerial = pumpSerial,
             profileJson = profileJson.toString(), // must be de-customized
-            profile = profileName,
+            profile = profile,
             originalProfileName = originalProfileName,
             originalDuration = originalDuration,
             duration = duration,
