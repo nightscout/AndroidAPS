@@ -58,7 +58,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
                 else                                                                                                                   -> ProcessedDeviceStatusData.Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
-            val insulinUnit = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
+            // val insulinUnit = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
             val fields = nsSettingsStatus.pumpExtendedSettingsFields()
             // Removed here. Same value is in StatusLights
             // if (pumpData.reservoirDisplayOverride != "") string.append(pumpData.reservoirDisplayOverride).append("$insulinUnit ")
