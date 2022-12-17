@@ -53,5 +53,17 @@
 
     <string name="unconfirmed_command" comment="26 characters max for translation">Unconfirmed command</string>
     <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
+    <string name="profile_set_ok">Profile set OK</string>
+    <string name="suspend_delivery_is_unconfirmed">Suspend delivery is unconfirmed! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
+    <string name="insulin_delivery_suspended">Insulin delivery suspended</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Timezone on pod is different from the timezone on phone. Basal rate is incorrect. Switch profile to fix</string>
+    <string name="failed_to_set_the_new_basal_profile">Failed to set the new basal profile. Delivery suspended</string>
+    <string name="setting_basal_profile_might_have_failed">Setting basal profile might have failed. Delivery might be suspended! Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.</string>
+    <string name="bolus_delivery_status_uncertain">Bolus delivery status uncertain. Refresh pod status to confirm or deny.</string>
+    <string name="checking_delivery_status">Checking delivery status</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Setting temp basal might have basal failed. If a temp basal was previously running, it has been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Cancel temp basal result is uncertain</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Unconfirmed resumeDelivery command. Please refresh pod status</string>
+    <string name="cancelling_temp_basal_might_have_failed">Cancelling temp basal might have failed. If a temp basal was previously running, it might have been cancelled. Please manually refresh the Pod status from the Omnipod tab.</string>
 
 </resources>
