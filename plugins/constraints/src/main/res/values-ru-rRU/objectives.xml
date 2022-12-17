@@ -38,6 +38,9 @@
     <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Если у вас есть хотя бы три месяца опыта работы с замкнутым циклом на других системах, то можно получить код пропуска. Подробности смотрите по адресу https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives.</string>
     <string name="objectives_exam_objective">Подтвердите ваши знания</string>
     <string name="objectives_exam_gate">Изучите вопросы. Вам дано четыре возможных ответа на каждый вопрос. Может быть более одного правильного ответа. Проверьте все правильные ответы и подтвердите выбор.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS может работать в автономном режиме.</string>
+    <string name="objectives_exam_learned_breadgrams">Ввод углеводов допускается только в граммах.</string>
+    <string name="objectives_exam_learned_ecarbs">E-carbs - это эквивалент пролонгированного болюса на помпах.</string>
     <string name="answerdisabledto">Ответы отключены до: %1$s</string>
     <string name="wronganswer">Неверный ответ!</string>
     <string name="unfinshed_button">Следующий незавершенный</string>
