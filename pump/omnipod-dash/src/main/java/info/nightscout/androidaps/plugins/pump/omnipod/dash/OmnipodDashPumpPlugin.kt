@@ -191,7 +191,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 if (podStateManager.isSuspended) {
                     showNotification(
                         Notification.OMNIPOD_POD_SUSPENDED,
-                        "Insulin delivery suspended",
+                        rh.gs(R.string.insulin_delivery_suspended),
                         Notification.NORMAL,
                         info.nightscout.core.ui.R.raw.boluserror
                     )
@@ -200,9 +200,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     if (!podStateManager.sameTimeZone) {
                         uiInteraction.addNotification(
                             Notification.OMNIPOD_TIME_OUT_OF_SYNC,
-                            "Timezone on pod is different from the timezone on phone. " +
-                                "Basal rate is incorrect" +
-                                "Switch profile to fix",
+                            rh.gs(R.string.timezone_on_pod_is_different_from_the_timezone),
                             Notification.NORMAL
                         )
                     }
@@ -425,22 +423,21 @@ class OmnipodDashPumpPlugin @Inject constructor(
             if (deliverySuspended) {
                 showNotification(
                     Notification.FAILED_UPDATE_PROFILE,
-                    "Failed to set the new basal profile. Delivery suspended",
+                    rh.gs(R.string.failed_to_set_the_new_basal_profile),
                     Notification.URGENT,
                     info.nightscout.core.ui.R.raw.boluserror
                 )
             } else {
                 showNotification(
                     Notification.FAILED_UPDATE_PROFILE,
-                    "Setting basal profile might have failed. Delivery might be suspended!" +
-                        " Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.",
+                    rh.gs(R.string.setting_basal_profile_might_have_failed),
                     Notification.URGENT,
                     info.nightscout.core.ui.R.raw.boluserror
                 )
             }
             Completable.error(java.lang.IllegalStateException("Command not confirmed"))
         } else {
-            showNotification(Notification.PROFILE_SET_OK, "Profile set OK", Notification.INFO, null)
+            showNotification(Notification.PROFILE_SET_OK, rh.gs(R.string.profile_set_ok), Notification.INFO, null)
 
             Completable.complete()
         }
@@ -466,8 +463,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             ).doOnComplete {
                 notifyOnUnconfirmed(
                     Notification.FAILED_UPDATE_PROFILE,
-                    "Suspend delivery is unconfirmed! " +
-                        "Please manually refresh the Pod status from the Omnipod tab and resume delivery if needed.",
+                    rh.gs(R.string.suspend_delivery_is_unconfirmed),
                     info.nightscout.core.ui.R.raw.boluserror,
                 )
             }
@@ -644,7 +640,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                             ) info.nightscout.core.ui.R.raw.boluserror
                             else 0
 
-                        showErrorDialog("Bolus delivery status uncertain. Refresh pod status to confirm or deny.", sound)
+                        showErrorDialog(rh.gs(R.string.bolus_delivery_status_uncertain), sound)
                     }
                 }
             }.toSingle {
@@ -724,7 +720,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
 
         for (tryNumber in 1..BOLUS_RETRIES) {
-            updateBolusProgressDialog("Checking delivery status", 100)
+            updateBolusProgressDialog(rh.gs(R.string.checking_delivery_status), 100)
 
             val cmd = if (bolusCanceled)
                 cancelBolus()
@@ -856,8 +852,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         ).doOnComplete {
             notifyOnUnconfirmed(
                 Notification.OMNIPOD_TBR_ALERTS,
-                "Setting temp basal might have basal failed. If a temp basal was previously running, " +
-                    "it has been cancelled. Please manually refresh the Pod status from the Omnipod tab.",
+                rh.gs(R.string.setting_temp_basal_might_have_basal_failed),
                 info.nightscout.core.ui.R.raw.boluserror,
             )
         }.toPumpEnactResultImpl()
@@ -917,9 +912,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 ).doOnComplete {
                     notifyOnUnconfirmed(
                         Notification.OMNIPOD_TBR_ALERTS,
-                        "Cancelling temp basal might have failed." +
-                            "If a temp basal was previously running, it might have been cancelled." +
-                            "Please manually refresh the Pod status from the Omnipod tab.", // TODO: i8n
+                        rh.gs(R.string.cancelling_temp_basal_might_have_failed),
                         info.nightscout.core.ui.R.raw.boluserror,
                     )
                 }
@@ -967,7 +960,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         ).doOnComplete {
             notifyOnUnconfirmed(
                 Notification.OMNIPOD_TBR_ALERTS,
-                "Cancel temp basal result is uncertain", // TODO: i8n,
+                rh.gs(R.string.cancel_temp_basal_result_is_uncertain),
                 info.nightscout.core.ui.R.raw.boluserror, // TODO: add setting for this
             )
         }.toPumpEnactResultImpl()
@@ -1188,7 +1181,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             ).doFinally {
                 notifyOnUnconfirmed(
                     Notification.FAILED_UPDATE_PROFILE,
-                    "Unconfirmed resumeDelivery command. Please refresh pod status",
+                    rh.gs(R.string.unconfirmed_resumedelivery_command_please_refresh_pod_status),
                     info.nightscout.core.ui.R.raw.boluserror
                 )
             }.toPumpEnactResultImpl()
