@@ -217,6 +217,8 @@
     <string name="careportal_tempbasalend">TBR Ende</string>
     <string name="careportal_carbscorrection">Kohlenhydrat-Korrektur</string>
     <string name="careportal_openapsoffline">OpenAPS offline</string>
+    <string name="pump_battery_change">Pumpenbatterie-Wechsel</string>
+    <string name="temporary_target">Temporäres Ziel</string>
     <string name="careportal_temporarytargetvalue">Temporärer Zielwert</string>
     <string name="careportal_temporarytargetcancel">Temporäres Ziel abbrechen</string>
     <string name="boluswizard">Bolus-Rechner</string>
@@ -245,6 +247,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g zusätzliche Kohlenhydrate innerhalb von %2$d Minuten erforderlich</string>
     <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">Kumulative TDD</string>
     <string name="expweight">Exponentiell gewichtete TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
@@ -434,6 +437,8 @@
     <string name="autotune_update_local_profile_message">Anpassen %1$s Profile mit dem Autotune Profile?</string>
     <string name="autotune_revert_local_profile_message">%1$s Profil mit Eingabeprofil zurücksetzen?</string>
     <string name="autotune_profile_invalid">Profil ungültig</string>
+    <string name="autotune_run_without_autoswitch">Autotune wurde ohne Profilwechsel ausgeführt</string>
+    <string name="autotune_run_with_autoswitch">Autotune ausgeführt und Profil wurde automatisch gewechselt</string>
     <string name="autotune_run_with_error">Fehler beim letzten Autotune Lauf</string>
     <string name="autotune_run_cancelled">Ein weiterer Lauf von Autotune wurde erkannt, Lauf abgebrochen</string>
     <!-- Alerts -->
@@ -441,9 +446,13 @@
     <string name="urgent_alarm">Wichtiger Alarm</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Bolus-Rechner</string>
+    <string name="bolus_advisor_message">Deine BZ-Werte sind hoch. Statt jetzt zu essen solltest Du abwarten, bis die Werte gesunken sind. Willst du jetzt einen Korrekturbolus abgeben und erinnert werden, wenn es Zeit zum Essen ist? In diesem Fall werden die Kohlenhydrate nicht übernommen und Du musst nach der Erinnerung den Bolus-Rechner erneut verwenden.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
     <string name="partialboluswizard">Abgabe von [%] des Ergebnisses des Bolus-Rechners</string>
+    <string name="bolus_constraint_applied_warn">Bolus Einschränkung angewendet: %1$.2f U bis %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolus wird nur aufgezeichnet (Die Pumpe gibt kein Insulin ab!)</string>
     <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
     <string name="no_action_selected">Keine Aktion ausgewählt, nichts wird geschehen.</string>
     <string name="wizard_no_actual_bg">Kein aktueller BG liegt als Basis zur Berechnung vor!</string>
@@ -463,9 +472,14 @@
     <string name="wizard_explain_tt_to">%1$s zu %2$s</string>
     <string name="wizard_pump_not_available">Keine Pumpe verfügbar!</string>
     <!--    Preferences-->
+    <string name="child">Kind</string>
     <string name="teenage">Teenager</string>
     <string name="adult">Erwachsener</string>
+    <string name="resistant_adult">Insulinresistenter Erwachsener</string>
     <string name="pregnant">Schwangerschaft</string>
+    <string name="patient_age_summary">Bitte wähle den Patiententyp, um die Sicherheits-Limits festzulegen</string>
+    <string name="max_bolus_title">Max. erlaubter Bolus [IE]</string>
+    <string name="patient_type">Patiententyp</string>
     <!--    Protection-->
     <string name="unlock_settings">Einstellungen freischalten</string>
     <!--    Pumps -->
