@@ -14,6 +14,7 @@
     <string name="pump_base_basal_rate">%1$.2f IE/h</string>
     <string name="pump_not_initialized_profile_not_set">Pumpe nicht initialisiert, Profil nicht gesetzt!</string>
     <string name="failed_update_basal_profile">Fehler beim Aktualisieren des Basalprofils</string>
+    <string name="bolus_delivered_successfully">Bolus %1$.2f IE erfolgreich abgegeben</string>
     <string name="no_valid_basal_rate">Von der Pumpe konnte keine gültige Basalrate eingelesen werden.</string>
     <string name="limiting_iob">Begrenze IOB auf %1$.1f IE wegen %2$s</string>
     <string name="loop_disabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
@@ -46,11 +47,13 @@
     <string name="success">Erfolgreich</string>
     <string name="advancedsettings_title">Erweiterte Einstellungen</string>
     <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verzögerten Bolus</string>
+    <string name="aps_mode_title">APS-Modus</string>
     <string name="extended_bolus">Verzögerter Bolus</string>
     <string name="paused">Pausiert</string>
     <string name="tdd_total">TDD Gesamt</string>
     <string name="goingtodeliver">Werde %1$.2f IE abgeben</string>
     <string name="waitingforpump">Warte auf Pumpe</string>
+    <string name="androidaps_start">AAPS gestartet</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
@@ -59,6 +62,8 @@
     <string name="please_wait">Bitte warten…</string>
     <string name="stop">Stopp</string>
     <string name="carbs">Kohlenhydrate</string>
+    <string name="invalid_profile">Ungültiges Profil!</string>
+    <string name="no_profile_set">KEIN PROFIL GESETZT</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Datum</string>
     <string name="units_label">Einheiten</string>
@@ -148,6 +153,7 @@
     <string name="treatments_wizard_basaliob_label">Basal-IOB</string>
     <string name="invalid">Ungültig</string>
     <string name="login">Login</string>
+    <string name="prime_fill">Nadelwechsel/Füllen</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="stoptemptarget">Temporäres Ziel (TT) stoppen</string>
     <string name="closedloop">Closed Loop</string>
@@ -156,6 +162,7 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="canceling_tbr_failed">Abbruch der temporären Basalrate fehlgeschlagen</string>
     <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
     <string name="suspendloop_label">Deaktiviere/Pausiere den Loop</string>
     <string name="iob_label">Aktives Insulin (IOB)</string>
@@ -174,6 +181,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Profil %1$d%% für %2$d Min. starten</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Temporäre Basalrate abbrechen</string>
     <string name="let_temp_basal_run">Temporäre Basalrate aktiv lassen</string>
     <string name="rate">Rate</string>
     <string name="duration">Dauer</string>
@@ -195,9 +203,11 @@
     <string name="careportal_note_message">Hinweis : %1$s</string>
     <string name="careportal_question_message">Frage : %1$s</string>
     <string name="careportal_exercise_message">Bewegung : %1$s</string>
+    <string name="careportal_pump_site_change">Pumpenkatheter-Wechsel</string>
     <string name="careportal_cgmsensorstart">CGM-Sensor Start</string>
     <string name="careportal_cgm_sensor_stop">CGM-Sensor-Stopp</string>
     <string name="careportal_dad_alert">D.A.D. Warnung</string>
+    <string name="careportal_insulin_cartridge_change">Insulin Ampullenwechsel</string>
     <string name="careportal_profileswitch">Profilwechsel</string>
     <string name="careportal_snackbolus">Snack-Bolus</string>
     <string name="careportal_mealbolus">Mahlzeiten-Bolus</string>
