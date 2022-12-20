@@ -6,6 +6,7 @@
     <string name="executing_right_now">Befehl wird zurzeit ausgeführt</string>
     <string name="basal_value_below_minimum">Wert der Basalrate unter Minimum. Profil nicht gesetzt!</string>
     <string name="permission">Berechtigung</string>
+    <string name="need_whitelisting">%1$s benötigt eine deaktivierte Akku-Leistungsoptimierung, um korrekt arbeiten zu können</string>
     <string name="need_location_permission">Die App benötigt die Berechtigung für den Standort, um Bluetooth und WLAN nutzen zu können</string>
     <string name="need_storage_permission">Die App benötigt Zugriffsrechte für den Speicher um Log-Dateien zu sichern und die Einstellungen zu exportieren.</string>
     <!--       Stats -->
@@ -21,4 +22,5 @@
     <string name="detailed_14_days">Detaillierte 14 Tage</string>
     <string name="day_tir">Tages TIR</string>
     <string name="night_tir">Nacht TIR</string>
+    <string name="carbs_short" comment="max 6 characters">KHs</string>
 </resources>
