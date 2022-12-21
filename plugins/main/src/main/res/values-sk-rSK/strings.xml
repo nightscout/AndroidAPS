@@ -88,6 +88,9 @@
     <string name="smscommunicator_message_body">Neplatný obsah správy</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Odoslať SMS, pokiaľ pumpa nie je dostupná</string>
     <string name="smscommunicator_pump_unreachable">Nahlásiť nedostupnú pumpu</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Ak chcete prepnúť režim okruhu na LGS (Low Glucose Suspend) odpovedzte kódom %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Ak chcete prepnúť režim okruhu na uzavretý okruh, odpovedzte kódom %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Aktuálny režim okruhu: %1$s</string>
     <string name="wrong_format">Chybný formát</string>
     <string name="sms_actual_bg">Glykémia:</string>
     <string name="sms_last_bg">Posledná glykémia:</string>
