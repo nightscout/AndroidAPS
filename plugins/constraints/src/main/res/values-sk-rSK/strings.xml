@@ -19,7 +19,10 @@
     <string name="recalculated_data_used">Použité prepočítané dáta</string>
     <string name="bg_too_close">Glykémia je príliš blízko:\n%1$s\n%2$s</string>
     <string name="a11y_bg_quality_recalculated">prepočítané</string>
+    <string name="a11y_bg_quality_doubles">dvojité zápisy</string>
+    <string name="a11y_bg_quality_flat">\"Ploché\" dáta. Považujú sa za nesprávne.</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">Predĺžený bolus obmedzený na %1$.1f JI z dôvodu %2$s</string>
     <string name="limitingcarbs">Sacharidy obmedzené na %1$d g: %2$s</string>
     <string name="pumpisnottempbasalcapable">Pumpa nepodporuje dočasné bazály</string>
     <string name="closedmodedisabledinpreferences">Uzavretý okruh zakázaný v nastaveniach</string>
