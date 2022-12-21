@@ -39,4 +39,16 @@
     <string name="omnipod_dash_not_enough_insulin">Nedostatok inzulínu v zásobníku</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Nepotvrdený príkaz</string>
     <string name="requested_by_user" comment="26 characters max for translation">Požadované používateľom</string>
+    <string name="profile_set_ok">Profil nastavený úspešne</string>
+    <string name="suspend_delivery_is_unconfirmed">Pozastavenie podávania inzulínu je nepotvrdené! Prosím aktualizujte stav Podu zo záložky Omnipod a ak je to potrebné, obnovte podávanie inzulínu.</string>
+    <string name="insulin_delivery_suspended">Podávanie inzulínu je pozastavené</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Časové pásmo Podu je rozdielne s s časovým pásmom telefónu. Bazálna dávka je nesprávna. Pre nápravu prepnite profil</string>
+    <string name="failed_to_set_the_new_basal_profile">Chyba pri potvrdení nového profilu. Podávanie inzulínu pozastavené</string>
+    <string name="setting_basal_profile_might_have_failed">Nastavenie bazálneho profilu pravdepodobne zlyhalo. Podávanie inzulínu môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a pokračujte v podávaní inzulínu, ak je to potrebné.</string>
+    <string name="bolus_delivery_status_uncertain">Stav podávania inzulínu je neurčitý. Na potvrdenie, alebo zamietnutie aktualizujte stav Podu.</string>
+    <string name="checking_delivery_status">Kontrola stavu podávania inzulínu</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Nastavenie dočasného bazálu mohlo byť neúspešné. Ak bol predtým spustený dočasný bazál, mohol byť zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Výsledok zrušenia dočasného bazálu je neurčitý</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Nepotvrdený príkaz obnovenia podávania inzulínu. Prosím obnovte stav Podu</string>
+    <string name="cancelling_temp_basal_might_have_failed">Zrušenie dočasného bazálu pravdepodobne zlyhalo. Ak bol predtým spustený dočasný bazál, mohol byť zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
 </resources>
