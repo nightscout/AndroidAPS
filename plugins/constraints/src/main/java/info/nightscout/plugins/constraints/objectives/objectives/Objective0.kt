@@ -39,11 +39,13 @@ class Objective0(injector: HasAndroidInjector) : Objective(injector, "config", R
                 return !virtualPumpPlugin.isEnabled()
             }
         })
-        tasks.add(object : Task(this, R.string.objectives_pumpstatusavailableinns) {
-            override fun isCompleted(): Boolean {
-                return sp.getBoolean(info.nightscout.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, false)
-            }
-        })
+        tasks.add(
+            object : Task(this, R.string.objectives_pumpstatusavailableinns) {
+                override fun isCompleted(): Boolean {
+                    return sp.getBoolean(info.nightscout.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, false)
+                }
+            }.learned(Learned(R.string.objectives_0_learned))
+        )
         tasks.add(object : Task(this, R.string.hasbgdata) {
             override fun isCompleted(): Boolean {
                 return iobCobCalculator.ads.lastBg() != null

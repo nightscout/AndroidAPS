@@ -18,7 +18,7 @@
     <string name="objectives_maxbasal_learned">Take care about safety features and adjust safety parameters when necessary.</string>
     <string name="objectives_maxiobzero_objective">Starting to close the loop with Low Glucose Suspend</string>
     <string name="objectives_maxiobzero_gate">Run in closed loop with max IOB = 0 for a few days without too many LGS events</string>
-    <string name="objectives_maxiobzero_learned">Setting MaxIOB to prevents you from hypo and will not add more insulin above basal rate (except situation with negative IOB)</string>
+    <string name="objectives_maxiobzero_learned">Setting MaxIOB to zero prevents you from hypo and will not add more insulin above basal rate (except situation with negative IOB)</string>
     <string name="objectives_maxiob_objective">Tuning the closed loop, raising max IOB above 0 and gradually lowering BG targets</string>
     <string name="objectives_maxiob_gate">Run for a few days, and at least one night with no low BG alarms, before dropping BG</string>
     <string name="objectives_maxiob_learned">Update MaxIOB as a child grows. Do not allow to the system give you more insulin than you can cover by food = really high value is a bad idea.</string>
@@ -45,11 +45,9 @@
     <string name="objectives_useactions">In Config Builder enable Actions plugin, make it visible and display its content from top menu</string>
     <string name="objectives_useloop">Display content of Loop plugin</string>
     <string name="objectives_usescale">Use scale function by long-pressing BG chart</string>
-    <string name="objectives_button_enter">Enter</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">If you have at least 3 months of closed loop experience with other systems you might qualify for a code to skip objectives. See https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for details.</string>
     <string name="objectives_exam_objective">Prove your knowledge</string>
     <string name="objectives_exam_gate">Study the questions.  You are given four possible answers for each question. There may be more than one correct answer. Please check all those that are correct and select VERIFY.</string>
-    <string name="objectives_exam_learned_prerequisites">You don\'t need to be a developer but you need NS to pass Objectives, compatible pump and computer to build AAPS for the first time and for every update update.</string>
+    <string name="objectives_exam_learned_prerequisites">You don\'t need to be a developer but you need NS to pass Objectives, compatible pump and computer to build AAPS for the first time and for every update.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS can be run offline.</string>
     <string name="objectives_exam_learned_basaltest">Profile should be reviewed and updated. Better profile = better results.</string>
     <string name="objectives_exam_learned_dia">DIA in looping has different meaning (time until all insulin is absorbed) then in classic pump therapy (time until most insulin is absorbed).</string>
@@ -66,7 +64,7 @@
     <string name="objectives_exam_learned_insulin">Letting know which insulin is in pump is necessary because it does affect IOB calculation.</string>
     <string name="objectives_exam_learned_sensitivity">Sensitivity detection is part of the algorithm which allows adapt insulin dosage to different situations.</string>
     <string name="objectives_exam_learned_objectives">Your progress in Objectives is stored along with other settings and it should be backed up.</string>
-    <string name="objectives_exam_learned_objectives2">Always keep exported settings, generated APK also outside phone. Phone can be lost, damaged etc. Good place can be any cloud accessible from phone. In this case you can restore AAPS on another device in a few minutes. Good practice is store used master password on a safe place too. Without it is your backup useless. The same is valid for signing keys (.jks file) and passwords used to build AAPS. The rest is not important - it can be anytime downloaded from internet again.</string>
+    <string name="objectives_exam_learned_objectives2">Always keep exported settings and generated APK also outside phone. Phone can be lost, damaged etc. Good place can be any cloud accessible from phone. In this case you can restore AAPS on another device in a few minutes. Good practice is store used master password on a safe place too. Without it is your backup useless. The same is valid for signing keys (.jks file) and passwords used to build AAPS. The rest is not important - it can be anytime downloaded from internet again.</string>
     <string name="objectives_exam_learned_wrongcarbs">If you made wrong input to AAPS or it doesn\'t match reality, resolve it asap. It could lead to overdosing. AAPS should be always informed the best possible way about carbs, insulin etc.</string>
     <string name="objectives_exam_learned_iob">If you analyze if AAPS is working well for you watching IOB graph can give you a lof of useful information.</string>
     <string name="objectives_exam_learned_cob">COB calculation depends on relation between ISF an IC. Increasing ISF or decreasing IC will lead to longer absorption times. But profile switch with percentage change both values at the same time and absorption time is not affected.</string>
@@ -85,5 +83,6 @@
     <string name="notconnected">Not connected to the internet</string>
     <string name="failedretrievetime">Failed retrieve time</string>
     <string name="requirementnotmet">Objective requirements not met</string>
+    <string name="what_i_ve_learned">What I\'ve learned:</string>
 
 </resources>

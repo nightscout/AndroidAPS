@@ -25,6 +25,7 @@ class Objective6(injector: HasAndroidInjector) : Objective(injector, "maxiob", R
                     val maxIOB = constraintChecker.getMaxIOBAllowed().value()
                     return maxIOB > 0
                 }
-            })
+            }.learned(Learned(R.string.objectives_maxiob_learned))
+        )
     }
 }
