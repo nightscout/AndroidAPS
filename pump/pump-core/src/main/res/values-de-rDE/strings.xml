@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
-    <string name="pump_status_never_contacted">Nie verbunden</string>
+    <string name="pump_status_never_contacted">Noch nie verbunden</string>
+    <string name="pump_status_sleeping">Schlafen</string>
     <string name="pump_status_waking_up">Aufwecken</string>
     <string name="pump_status_active">Aktiv</string>
     <string name="pump_status_error_comm">Fehler bei der Kommunikation</string>
