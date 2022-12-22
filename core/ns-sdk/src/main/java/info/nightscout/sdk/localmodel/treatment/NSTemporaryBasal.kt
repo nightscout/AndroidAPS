@@ -1,7 +1,6 @@
 package info.nightscout.sdk.localmodel.treatment
 
 import info.nightscout.sdk.localmodel.entry.NsUnits
-import org.json.JSONObject
 
 data class NSTemporaryBasal(
     override val date: Long,
@@ -20,6 +19,7 @@ data class NSTemporaryBasal(
     override val endId: Long?,
     override val pumpType: String?,
     override val pumpSerial: String?,
+    override var app: String? = null,
     val duration: Long,
     val rate: Double,            // when sending to NS always convertedToAbsolute(timestamp, profile)
     val isAbsolute: Boolean,

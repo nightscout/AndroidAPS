@@ -15,13 +15,14 @@ class LoadLastModificationWorker(
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
 
     override fun doWorkAndLog(): Result {
+        val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
         var ret = Result.success()
 
         runBlocking {
             try {
-                val lm = nsClientV3Plugin.nsAndroidClient.getLastModified()
-                nsClientV3Plugin.lastModified = lm
-                aapsLogger.debug("LAST MODIFIED: ${nsClientV3Plugin.lastModified}")
+                val lm = nsAndroidClient.getLastModified()
+                nsClientV3Plugin.newestDataOnServer = lm
+                aapsLogger.debug("LAST MODIFIED: ${nsClientV3Plugin.newestDataOnServer}")
             } catch (error: Exception) {
                 aapsLogger.error("Error: ", error)
                 ret = Result.failure(workDataOf("Error" to error.toString()))

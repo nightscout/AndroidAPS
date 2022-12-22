@@ -151,7 +151,7 @@
             android:title="@string/connection_settings_title">
 
             <SwitchPreference
-                android:defaultValue="false"
+                android:defaultValue="true"
                 android:key="@string/key_ns_cellular"
                 android:title="@string/ns_cellular" />
 

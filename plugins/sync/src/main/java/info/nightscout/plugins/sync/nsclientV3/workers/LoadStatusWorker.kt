@@ -15,11 +15,12 @@ class LoadStatusWorker(
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
 
     override fun doWorkAndLog(): Result {
+        val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
         var ret = Result.success()
 
         runBlocking {
             try {
-                val status = nsClientV3Plugin.nsAndroidClient.getStatus()
+                val status = nsAndroidClient.getStatus()
                 aapsLogger.debug("STATUS: $status")
             } catch (error: Exception) {
                 aapsLogger.error("Error: ", error)

@@ -19,6 +19,7 @@ interface NSTreatment {
     val endId: Long?
     val pumpType: String?
     val pumpSerial: String?
+    var app: String?
 
     fun Double.asMgdl() =
         when (units) {

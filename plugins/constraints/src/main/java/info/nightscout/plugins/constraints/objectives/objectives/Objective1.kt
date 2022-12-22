@@ -44,10 +44,13 @@ class Objective1 @Inject constructor(injector: HasAndroidInjector) : Objective(i
                 return sp.getBoolean(info.nightscout.core.utils.R.string.key_objectiveuseloop, false)
             }
         }.hint(Hint(R.string.useaction_hint)))
-        tasks.add(object : Task(this, R.string.objectives_usescale) {
-            override fun isCompleted(): Boolean {
-                return sp.getBoolean(info.nightscout.core.utils.R.string.key_objectiveusescale, false)
-            }
-        }.hint(Hint(R.string.usescale_hint)))
+        tasks.add(
+            object : Task(this, R.string.objectives_usescale) {
+                override fun isCompleted(): Boolean {
+                    return sp.getBoolean(info.nightscout.core.utils.R.string.key_objectiveusescale, false)
+                }
+            }.hint(Hint(R.string.usescale_hint))
+                .learned(Learned(R.string.objectives_usage_learned))
+        )
     }
 }

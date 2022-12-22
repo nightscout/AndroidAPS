@@ -5,6 +5,7 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
@@ -31,12 +32,17 @@ class VirtualPumpPluginUTest : TestBase() {
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var config: Config
+    @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     private lateinit var virtualPumpPlugin: VirtualPumpPlugin
 
     @BeforeEach
     fun prepareMocks() {
-        virtualPumpPlugin = VirtualPumpPlugin({ AndroidInjector { } }, aapsLogger, rxBus, fabricPrivacy, rh, aapsSchedulers, sp, profileFunction, iobCobCalculator, commandQueue, pumpSync, config, dateUtil)
+        virtualPumpPlugin = VirtualPumpPlugin(
+            { AndroidInjector { } },
+            aapsLogger, rxBus, fabricPrivacy, rh, aapsSchedulers, sp, profileFunction, iobCobCalculator,
+            commandQueue, pumpSync, config, dateUtil, processedDeviceStatusData
+        )
     }
 
     @Test

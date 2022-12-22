@@ -1,6 +1,9 @@
 package info.nightscout.plugins.sync.nsclientV3.workers
 
 import android.content.Context
+import androidx.work.ExistingWorkPolicy
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import info.nightscout.core.utils.receivers.DataWorkerStorage
@@ -27,19 +30,27 @@ class LoadDeviceStatusWorker(
     @Inject lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
 
     override fun doWorkAndLog(): Result {
+        val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
         var ret = Result.success()
 
         runBlocking {
             try {
                 val from = dateUtil.now() - T.mins(7).msecs()
-                val deviceStatuses = nsClientV3Plugin.nsAndroidClient.getDeviceStatusModifiedSince(from)
+                val deviceStatuses = nsAndroidClient.getDeviceStatusModifiedSince(from)
                 aapsLogger.debug("DEVICESTATUSES: $deviceStatuses")
                 if (deviceStatuses.isNotEmpty()) {
                     rxBus.send(EventNSClientNewLog("RCV", "${deviceStatuses.size} DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
                     nsDeviceStatusHandler.handleNewData(deviceStatuses.toTypedArray())
+                    rxBus.send(EventNSClientNewLog("DONE DS", ""))
                 } else {
-                    rxBus.send(EventNSClientNewLog("END", "No DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
+                    rxBus.send(EventNSClientNewLog("RCV END", "No DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
                 }
+                WorkManager.getInstance(context)
+                    .enqueueUniqueWork(
+                        NSClientV3Plugin.JOB_NAME,
+                        ExistingWorkPolicy.APPEND_OR_REPLACE,
+                        OneTimeWorkRequest.Builder(DataSyncWorker::class.java).build()
+                    )
             } catch (error: Exception) {
                 aapsLogger.error("Error: ", error)
                 ret = Result.failure(workDataOf("Error" to error.toString()))

@@ -7,9 +7,9 @@ import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.sync.DataSyncSelector
+import info.nightscout.plugins.sync.nsShared.DataSyncSelectorImplementation
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
-import info.nightscout.plugins.sync.nsclient.DataSyncSelectorImplementation
 import info.nightscout.plugins.sync.nsclient.data.NSSettingsStatusImpl
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusDataImpl
 import info.nightscout.plugins.sync.nsclient.services.NSClientService
@@ -17,6 +17,7 @@ import info.nightscout.plugins.sync.nsclient.workers.NSClientAddAckWorker
 import info.nightscout.plugins.sync.nsclient.workers.NSClientAddUpdateWorker
 import info.nightscout.plugins.sync.nsclient.workers.NSClientMbgWorker
 import info.nightscout.plugins.sync.nsclient.workers.NSClientUpdateRemoveAckWorker
+import info.nightscout.plugins.sync.nsclientV3.workers.DataSyncWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadDeviceStatusWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
@@ -49,6 +50,7 @@ abstract class SyncModule {
     @ContributesAndroidInjector abstract fun contributesTreatmentWorker(): LoadTreatmentsWorker
     @ContributesAndroidInjector abstract fun contributesProcessTreatmentsWorker(): ProcessTreatmentsWorker
     @ContributesAndroidInjector abstract fun contributesLoadDeviceStatusWorker(): LoadDeviceStatusWorker
+    @ContributesAndroidInjector abstract fun contributesDataSyncWorker(): DataSyncWorker
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
 

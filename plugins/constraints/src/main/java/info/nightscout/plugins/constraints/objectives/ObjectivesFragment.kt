@@ -1,6 +1,7 @@
 package info.nightscout.plugins.constraints.objectives
 
 import android.annotation.SuppressLint
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
@@ -159,13 +160,13 @@ class ObjectivesFragment : DaggerFragment() {
             if (objective.objective != 0) {
                 holder.binding.objective.visibility = View.VISIBLE
                 holder.binding.objective.text = rh.gs(objective.objective)
-            } else
-                holder.binding.objective.visibility = View.GONE
+            } else holder.binding.objective.visibility = View.GONE
+
             if (objective.gate != 0) {
                 holder.binding.gate.visibility = View.VISIBLE
                 holder.binding.gate.text = rh.gs(objective.gate)
-            } else
-                holder.binding.gate.visibility = View.GONE
+            } else holder.binding.gate.visibility = View.GONE
+
             if (!objective.isStarted) {
                 holder.binding.gate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                 holder.binding.verify.visibility = View.GONE
@@ -173,6 +174,8 @@ class ObjectivesFragment : DaggerFragment() {
                 holder.binding.accomplished.visibility = View.GONE
                 holder.binding.unfinish.visibility = View.GONE
                 holder.binding.unstart.visibility = View.GONE
+                holder.binding.learnedLabel.visibility = View.GONE
+                holder.binding.learned.removeAllViews()
                 if (position == 0 || objectivesPlugin.allPriorAccomplished(position))
                     holder.binding.start.visibility = View.VISIBLE
                 else
@@ -185,6 +188,14 @@ class ObjectivesFragment : DaggerFragment() {
                 holder.binding.accomplished.visibility = View.VISIBLE
                 holder.binding.unfinish.visibility = View.VISIBLE
                 holder.binding.unstart.visibility = View.GONE
+                holder.binding.learnedLabel.visibility = View.VISIBLE
+                holder.binding.learned.removeAllViews()
+                for (task in objective.tasks) {
+                    if (task.shouldBeIgnored()) continue
+                    for (learned in task.learned) {
+                        holder.binding.learned.addView(TextView(context).also { it.text = rh.gs(learned.learned) })
+                    }
+                }
             } else if (objective.isStarted) {
                 holder.binding.gate.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                 holder.binding.verify.visibility = View.VISIBLE
@@ -195,12 +206,14 @@ class ObjectivesFragment : DaggerFragment() {
                 holder.binding.unstart.visibility = View.VISIBLE
                 holder.binding.progress.visibility = View.VISIBLE
                 holder.binding.progress.removeAllViews()
+                holder.binding.learnedLabel.visibility = View.GONE
+                holder.binding.learned.removeAllViews()
                 for (task in objective.tasks) {
                     if (task.shouldBeIgnored()) continue
                     // name
                     val name = TextView(holder.binding.progress.context)
                     name.text = "${rh.gs(task.task)}:"
-                    name.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor) )
+                    name.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.defaultTextColor))
                     holder.binding.progress.addView(name, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT)
                     // hint
                     task.hints.forEach { h ->
@@ -225,6 +238,16 @@ class ObjectivesFragment : DaggerFragment() {
                             ObjectivesExamDialog.objective = objective
                             dialog.show(childFragmentManager, "ObjectivesFragment")
                         }
+                    }
+                    if (task.isCompleted()) {
+                        if (task.learned.isNotEmpty())
+                            holder.binding.progress.addView(
+                                TextView(context).also {
+                                    it.text = rh.gs(R.string.what_i_ve_learned)
+                                    it.setTypeface(it.typeface, Typeface.BOLD)
+                                })
+                        for (learned in task.learned)
+                            holder.binding.progress.addView(TextView(context).also { it.text = rh.gs(learned.learned) })
                     }
                     // horizontal line
                     val separator = View(holder.binding.progress.context)
@@ -324,26 +347,6 @@ class ObjectivesFragment : DaggerFragment() {
                 scrollToCurrentObjective()
                 rxBus.send(EventObjectivesUpdateGui())
                 rxBus.send(EventSWUpdate(false))
-            }
-            if (objective.hasSpecialInput && !objective.isAccomplished && objective.isStarted && objective.specialActionEnabled()) {
-                // generate random request code if none exists
-                val request = sp.getString(R.string.key_objectives_request_code, String.format("%1$05d", (Math.random() * 99999).toInt()))
-                sp.putString(R.string.key_objectives_request_code, request)
-                holder.binding.requestcode.text = rh.gs(R.string.requestcode, request)
-                holder.binding.requestcode.visibility = View.VISIBLE
-                holder.binding.enterbutton.visibility = View.VISIBLE
-                holder.binding.input.visibility = View.VISIBLE
-                holder.binding.inputhint.visibility = View.VISIBLE
-                holder.binding.enterbutton.setOnClickListener {
-                    val input = holder.binding.input.text.toString()
-                    activity?.let { activity -> objective.specialAction(activity, input) }
-                    rxBus.send(EventObjectivesUpdateGui())
-                }
-            } else {
-                holder.binding.enterbutton.visibility = View.GONE
-                holder.binding.input.visibility = View.GONE
-                holder.binding.inputhint.visibility = View.GONE
-                holder.binding.requestcode.visibility = View.GONE
             }
         }
 

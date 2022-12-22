@@ -8,6 +8,7 @@ import info.nightscout.core.utils.extensions.storeDouble
 import info.nightscout.core.utils.extensions.storeInt
 import info.nightscout.core.utils.extensions.storeString
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.constraints.Safety
@@ -67,8 +68,8 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun isClosedLoopAllowed(value: Constraint<Boolean>): Constraint<Boolean> {
-        val mode = sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")
-        if (mode == "open") value.set(aapsLogger, false, rh.gs(R.string.closedmodedisabledinpreferences), this)
+        val mode = ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
+        if (mode == ApsMode.OPEN) value.set(aapsLogger, false, rh.gs(R.string.closedmodedisabledinpreferences), this)
         if (!config.isEngineeringModeOrRelease()) {
             if (value.value()) {
                 uiInteraction.addNotification(Notification.TOAST_ALARM, rh.gs(R.string.closed_loop_disabled_on_dev_branch), Notification.NORMAL)
@@ -159,8 +160,8 @@ class SafetyPlugin @Inject constructor(
     }
 
     override fun applyMaxIOBConstraints(maxIob: Constraint<Double>): Constraint<Double> {
-        val apsMode = sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")
-        if (apsMode == "lgs") maxIob.setIfSmaller(aapsLogger, HardLimits.MAX_IOB_LGS, rh.gs(info.nightscout.core.ui.R.string.limiting_iob, HardLimits.MAX_IOB_LGS, rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)), this)
+        val apsMode = ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
+        if (apsMode == ApsMode.LGS) maxIob.setIfSmaller(aapsLogger, HardLimits.MAX_IOB_LGS, rh.gs(info.nightscout.core.ui.R.string.limiting_iob, HardLimits.MAX_IOB_LGS, rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)), this)
         return maxIob
     }
 

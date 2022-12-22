@@ -31,6 +31,7 @@ import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineE
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
+import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.aps.Loop.LastRun
@@ -182,10 +183,10 @@ class LoopPlugin @Inject constructor(
         get() {
             val closedLoopEnabled = constraintChecker.isClosedLoopAllowed()
             val maxIobAllowed = constraintChecker.getMaxIOBAllowed().value()
-            val apsMode = sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")
+            val apsMode = ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))
             val pump = activePlugin.activePump
             var isLGS = false
-            if (!isSuspended && !pump.isSuspended()) if (closedLoopEnabled.value()) if (maxIobAllowed == HardLimits.MAX_IOB_LGS || apsMode == "lgs") isLGS = true
+            if (!isSuspended && !pump.isSuspended()) if (closedLoopEnabled.value()) if (maxIobAllowed == HardLimits.MAX_IOB_LGS || apsMode == ApsMode.LGS) isLGS = true
             return isLGS
         }
 

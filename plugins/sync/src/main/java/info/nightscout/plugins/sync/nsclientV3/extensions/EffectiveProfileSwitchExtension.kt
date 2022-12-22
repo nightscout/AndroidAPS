@@ -5,6 +5,7 @@ import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.plugins.sync.nsclient.extensions.fromConstant
+import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
 import info.nightscout.shared.utils.DateUtil
 
@@ -31,3 +32,24 @@ fun NSEffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil): Effec
         interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
     )
 }
+
+fun EffectiveProfileSwitch.toNSEffectiveProfileSwitch(dateUtil: DateUtil) : NSEffectiveProfileSwitch =
+    NSEffectiveProfileSwitch(
+        eventType = EventType.NOTE,
+        isValid = isValid,
+        date = timestamp,
+        utcOffset = utcOffset,
+        profileJson = ProfileSealed.EPS(this).toPureNsJson(dateUtil),
+        originalProfileName = originalProfileName,
+        originalCustomizedName = originalCustomizedName,
+        originalTimeshift = originalTimeshift,
+        originalPercentage = originalPercentage,
+        originalDuration = originalDuration,
+        originalEnd = originalEnd,
+        notes = originalCustomizedName,
+        identifier = interfaceIDs.nightscoutId,
+        pumpId = interfaceIDs.pumpId,
+        pumpType = interfaceIDs.pumpType?.name,
+        pumpSerial = interfaceIDs.pumpSerial,
+        endId = interfaceIDs.endId
+    )

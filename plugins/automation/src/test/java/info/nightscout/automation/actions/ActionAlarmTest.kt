@@ -9,7 +9,7 @@ import info.nightscout.automation.elements.InputString
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.utils.TimerUtil
+import info.nightscout.automation.ui.TimerUtil
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil

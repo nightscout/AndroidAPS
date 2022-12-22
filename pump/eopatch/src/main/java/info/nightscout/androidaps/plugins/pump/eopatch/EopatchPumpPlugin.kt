@@ -27,6 +27,7 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -44,6 +45,7 @@ import io.reactivex.rxjava3.subjects.BehaviorSubject
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 
@@ -311,10 +313,10 @@ class EopatchPumpPlugin @Inject constructor(
 
             disposable.dispose()
 
-            return if (isSuccess && askedInsulin == detailedBolusInfo.insulin)
-                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin)
+            return if (isSuccess && abs(askedInsulin - detailedBolusInfo.insulin) < pumpDescription.bolusStep)
+                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(askedInsulin)
             else
-                PumpEnactResult(injector).success(false)/*.enacted(false)*/.bolusDelivered(detailedBolusInfo.insulin)
+                PumpEnactResult(injector).success(false)/*.enacted(false)*/.bolusDelivered(Round.roundTo(detailedBolusInfo.insulin, 0.01))
 
         } else {
             // no bolus required

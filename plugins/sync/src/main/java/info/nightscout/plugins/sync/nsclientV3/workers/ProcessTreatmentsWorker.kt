@@ -25,6 +25,7 @@ import info.nightscout.plugins.sync.nsclientV3.extensions.toTemporaryTarget
 import info.nightscout.plugins.sync.nsclientV3.extensions.toTherapyEvent
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.LTag
+import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.treatment.NSBolus
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
@@ -58,19 +59,14 @@ class ProcessTreatmentsWorker(
 
     override fun doWorkAndLog(): Result {
         @Suppress("UNCHECKED_CAST")
-        val treatments = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as List<NSTreatment>?
+        val treatments = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as NSAndroidClient.ReadResponse<List<NSTreatment>>?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
+        var latestDateInReceivedData: Long = 0
         val ret = Result.success()
-        var latestDateInReceivedData = 0L
-
-        for (treatment in treatments) {
+        for (treatment in treatments.values) {
             aapsLogger.debug(LTag.DATABASE, "Received NS treatment: $treatment")
-
-            //Find latest date in treatment
-            val mills = treatment.date
-            if (mills != 0L && mills < dateUtil.now())
-                if (mills > latestDateInReceivedData) latestDateInReceivedData = mills
+            if (treatment.date > latestDateInReceivedData) latestDateInReceivedData = treatment.date
 
             when (treatment) {
                 is NSBolus                  ->

@@ -72,7 +72,9 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
-            validateInputs()
+            _binding?.let {
+                validateInputs()
+            }
         }
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
