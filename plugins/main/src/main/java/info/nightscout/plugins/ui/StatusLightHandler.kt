@@ -134,11 +134,10 @@ class StatusLightHandler @Inject constructor(
     private fun handleUsage(view: TextView?, units: String) {
         handler.post {
             val therapyEvent = repository.getLastTherapyRecordUpToNow(TherapyEvent.Type.CANNULA_CHANGE).blockingGet()
-            var usage = 0.0
-            if (therapyEvent is ValueWrapper.Existing) {
-                val tdd = tddCalculator.calculate(therapyEvent.value.timestamp, dateUtil.now())
-                usage = tdd.totalAmount
-            }
+            var usage =
+                if (therapyEvent is ValueWrapper.Existing) {
+                    tddCalculator.calculate(therapyEvent.value.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
+                } else 0.0
             runOnUiThread {
                 view?.text = DecimalFormatter.to0Decimal(usage, units)
             }
