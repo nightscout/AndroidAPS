@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">SMS-Kommunikator</string>
+    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">AndroidAPS mit SMS-Befehlen fernsteuern.</string>
+    <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">von der Authenticator App für: %1$s gefolgt von der PIN</string>
+    <string name="smscommunicator_otp_pin">Zusätzliche obligatorische PIN am Token-Ende</string>
+    <string name="smscommunicator_otp_pin_summary">Zusätzliche Ziffern, die auswendig gelernt und am Ende jedes generierten Einmal-Passworts angehängt werden sollten.</string>
+    <string name="smscommunicator_code_verify_label">Zu prüfender Code:</string>
+    <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
+    <string name="smscommunicator_code_verify_info">Der Verifizierungscode besteht aus 6 Ziffern, die von Authenticator App (auch OTP genannt) angezeigt werden, gefolgt von 3 oder mehr Ziffern der obligatorischen PIN.</string>
+    <string name="smscommunicator_otp_reset_successful">Neuer Authentifizierungsschlüssel generiert! Bitte verwende den aktualisierten QR-Code für die Bereitstellung von Authentifikatoren.</string>
+    <string name="smscommunicator_otp_export_title">OTP-Secret exportieren</string>
     <string name="smscommunicator_otp_export_prompt">Willst Du wirklich das OTP Secret in die Zwischenablage kopieren?\n\nDas ist nur erforderlich, wenn Deine Authentifizierungs-App Probleme mit dem Scannen des QR-Codes hat. Du kannst es auch manuell eingeben oder einen Hardware-OTP-Token mit einer bestimmten App verwenden.</string>
     <string name="smscommunicator_otp_export_successful">OTP Secret (im Base32 Format) exportiert und in die Zwischenablage kopiert. Setze es von dort in Deine Authentifizierungs-App ein.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Authentifikator installieren</string>
