@@ -49,7 +49,7 @@ data class Bolus(
     var insulinConfiguration: InsulinConfiguration? = null
 ) : TraceableDBEntry, DBEntryWithTime {
 
-    private fun contentEqualsTo(other: Bolus): Boolean =
+    fun contentEqualsTo(other: Bolus): Boolean =
         isValid == other.isValid &&
             timestamp == other.timestamp &&
             utcOffset == other.utcOffset &&
@@ -57,6 +57,16 @@ data class Bolus(
             type == other.type &&
             notes == other.notes &&
             isBasalInsulin == other.isBasalInsulin
+
+    fun interfaceIdsEqualsTo(other: Bolus): Boolean =
+        interfaceIDs.nightscoutId == interfaceIDs.nightscoutId &&
+        interfaceIDs.nightscoutSystemId == interfaceIDs.nightscoutSystemId &&
+        interfaceIDs.pumpType == interfaceIDs.pumpType &&
+        interfaceIDs.pumpSerial == interfaceIDs.pumpSerial &&
+        interfaceIDs.temporaryId == interfaceIDs.temporaryId &&
+        interfaceIDs.pumpId == interfaceIDs.pumpId &&
+        interfaceIDs.startId == interfaceIDs.startId &&
+        interfaceIDs.endId == interfaceIDs.endId
 
     fun onlyNsIdAdded(previous: Bolus): Boolean =
         previous.id != id &&
