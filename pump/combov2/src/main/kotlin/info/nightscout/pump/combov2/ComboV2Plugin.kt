@@ -95,6 +95,8 @@ import info.nightscout.comboctl.base.Tbr as ComboCtlTbr
 import info.nightscout.comboctl.main.Pump as ComboCtlPump
 import info.nightscout.comboctl.main.PumpManager as ComboCtlPumpManager
 
+internal const val PUMP_ERROR_TIMEOUT_INTERVAL_MSECS = 1000L * 60 * 5
+
 @Singleton
 class ComboV2Plugin @Inject constructor (
     injector: HasAndroidInjector,
@@ -161,6 +163,13 @@ class ComboV2Plugin @Inject constructor (
     private var lastConnectionTimestamp = 0L
     private var lastComboAlert: AlertScreenContent? = null
 
+    // States for when the pump reports an error. We then want isInitialized()
+    // to return false until either the user presses the Refresh button or the
+    // pumpErrorTimeoutJob expires. That way, the loop won't run until then,
+    // giving the user a chance to handle the error.
+    private var pumpErrorObserved = false
+    private var pumpErrorTimeoutJob: Job? = null
+
     // Set to true if a disconnect request came in while the driver
     // was in the Connecting, CheckingPump, or ExecutingCommand
     // state (in other words, while isBusy() was returning true).
@@ -183,7 +192,7 @@ class ComboV2Plugin @Inject constructor (
     private var activeBasalProfile: BasalProfile? = null
     // This is used for checking that the correct basal profile is
     // active in the Combo. If not, loop invocation is disallowed.
-    // This is _not_ reset by disconect(). That's on purpose; it
+    // This is _not_ reset by disconnect(). That's on purpose; it
     // is read by isLoopInvocationAllowed(), which is called even
     // if the pump is not connected.
     private var lastActiveBasalProfileNumber: Int? = null
@@ -381,7 +390,7 @@ class ComboV2Plugin @Inject constructor (
     }
 
     override fun isInitialized(): Boolean =
-        isPaired() && (driverStateFlow.value != DriverState.NotInitialized)
+        isPaired() && (driverStateFlow.value != DriverState.NotInitialized) && !pumpErrorObserved
 
     override fun isSuspended(): Boolean =
         when (driverStateUIFlow.value) {
@@ -429,6 +438,16 @@ class ComboV2Plugin @Inject constructor (
 
         if (unpairing) {
             aapsLogger.debug(LTag.PUMP, "Aborting connect attempt since we are currently unpairing")
+            return
+        }
+
+        if (pumpErrorObserved) {
+            aapsLogger.debug(LTag.PUMP, "Aborting connect attempt since the pumpErrorObserved flag is set")
+            uiInteraction.addNotification(
+                Notification.COMBO_PUMP_ALARM,
+                text = rh.gs(R.string.combov2_cannot_connect_pump_error_observed),
+                level = Notification.NORMAL
+            )
             return
         }
 
@@ -1398,6 +1417,14 @@ class ComboV2Plugin @Inject constructor (
         commandQueue.readStatus(reason, null)
     }
 
+    fun clearPumpErrorObservedFlag() {
+        stopPumpErrorTimeout()
+        if (pumpErrorObserved) {
+            aapsLogger.info(LTag.PUMP, "Clearing pumpErrorObserved flag")
+            pumpErrorObserved = false
+        }
+    }
+
     /*** Loop constraints ***/
     // These restrict the function of the loop in case of an event
     // that makes running a loop too risky, for example because something
@@ -1549,6 +1576,8 @@ class ComboV2Plugin @Inject constructor (
         _baseBasalRateUIFlow.value = null
         _serialNumberUIFlow.value = ""
         _bluetoothAddressUIFlow.value = ""
+
+        clearPumpErrorObservedFlag()
 
         // The unpairing variable is set to false in
         // the PumpManager onPumpUnpaired callback.
@@ -1746,6 +1775,23 @@ class ComboV2Plugin @Inject constructor (
                 throw e
             }
         }
+    }
+
+    private fun startPumpErrorTimeout() {
+        if (pumpErrorTimeoutJob != null)
+            return
+
+        pumpErrorTimeoutJob = pumpCoroutineScope.launch {
+            delay(PUMP_ERROR_TIMEOUT_INTERVAL_MSECS)
+            aapsLogger.info(LTag.PUMP, "Clearing pumpErrorObserved flag after timeout was reached")
+            pumpErrorObserved = false
+            commandQueue.readStatus(rh.gs(R.string.combov2_refresh_pump_status_after_error), null)
+        }
+    }
+
+    private fun stopPumpErrorTimeout() {
+        pumpErrorTimeoutJob?.cancel()
+        pumpErrorTimeoutJob = null
     }
 
     private fun updateBaseBasalRateUI() {
@@ -2142,6 +2188,12 @@ class ComboV2Plugin @Inject constructor (
         }
 
     private fun notifyAboutComboAlert(alert: AlertScreenContent) {
+        if (alert is AlertScreenContent.Error) {
+            aapsLogger.info(LTag.PUMP, "Error screen observed - setting pumpErrorObserved flag")
+            pumpErrorObserved = true
+            startPumpErrorTimeout()
+        }
+
         uiInteraction.addNotification(
             Notification.COMBO_PUMP_ALARM,
             text = "${rh.gs(R.string.combov2_combo_alert)}: ${getAlertDescription(alert)}",
