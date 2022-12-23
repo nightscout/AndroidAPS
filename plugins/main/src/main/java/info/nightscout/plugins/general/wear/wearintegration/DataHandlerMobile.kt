@@ -34,6 +34,7 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
+import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
@@ -744,8 +745,9 @@ class DataHandlerMobile @Inject constructor(
             )
         )
         // GraphData
-        val startTime = System.currentTimeMillis() - (60000 * 60 * 5.5).toLong()
-        rxBus.send(EventMobileToWear(EventData.GraphData(ArrayList(repository.compatGetBgReadingsDataFromTime(startTime, true).blockingGet().map { getSingleBG(it) }))))
+        iobCobCalculator.ads.getBucketedDataTableCopy()?.let { bucketedData ->
+            rxBus.send(EventMobileToWear(EventData.GraphData(ArrayList(bucketedData.map { getSingleBG(it) }))))
+        }
         // Treatments
         sendTreatments()
         // Status
@@ -933,7 +935,7 @@ class DataHandlerMobile @Inject constructor(
         return deltaString
     }
 
-    private fun getSingleBG(glucoseValue: GlucoseValue): EventData.SingleBg {
+    private fun getSingleBG(glucoseValue: InMemoryGlucoseValue): EventData.SingleBg {
         val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
         val units = profileFunction.getUnits()
         val lowLine = Profile.toMgdl(defaultValueHelper.determineLowLine(), units)

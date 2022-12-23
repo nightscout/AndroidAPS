@@ -71,22 +71,24 @@ class AutosensDataStoreObject : AutosensDataStore {
     }
 
     /**
-     * Return last valid (>39) GlucoseValue from database or null if db is empty
+     * Return last valid (>39) InMemoryGlucoseValue from bucketed data or null if db is empty
      *
-     * @return GlucoseValue or null
+     * @return InMemoryGlucoseValue or null
      */
-    override fun lastBg(): GlucoseValue? =
+    override fun lastBg(): InMemoryGlucoseValue? =
         synchronized(dataLock) {
-            if (bgReadings.isNotEmpty()) bgReadings[0]
-            else null
+            bucketedData?.let { bucketedData ->
+                if (bucketedData.isNotEmpty()) bucketedData[0]
+                else null
+            }
         }
 
     /**
-     * Provide last GlucoseValue or null if none exists within the last 9 minutes
+     * Provide last bucketed InMemoryGlucoseValue or null if none exists within the last 9 minutes
      *
-     * @return GlucoseValue or null
+     * @return InMemoryGlucoseValue or null
      */
-    override fun actualBg(): GlucoseValue? {
+    override fun actualBg(): InMemoryGlucoseValue? {
         val lastBg = lastBg() ?: return null
         return if (lastBg.timestamp > System.currentTimeMillis() - T.mins(9).msecs()) lastBg else null
     }

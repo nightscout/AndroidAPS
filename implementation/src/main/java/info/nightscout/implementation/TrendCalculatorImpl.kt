@@ -20,6 +20,13 @@ class TrendCalculatorImpl @Inject constructor(
         when {
             glucoseValue?.trendArrow == null                        -> GlucoseValue.TrendArrow.NONE
             glucoseValue.trendArrow != GlucoseValue.TrendArrow.NONE -> glucoseValue.trendArrow
+            else                                                    -> calculateDirection(InMemoryGlucoseValue(glucoseValue))
+        }
+
+    override fun getTrendArrow(glucoseValue: InMemoryGlucoseValue?): GlucoseValue.TrendArrow =
+        when {
+            glucoseValue?.trendArrow == null                        -> GlucoseValue.TrendArrow.NONE
+            glucoseValue.trendArrow != GlucoseValue.TrendArrow.NONE -> glucoseValue.trendArrow
             else                                                    -> calculateDirection(glucoseValue)
         }
 
@@ -36,7 +43,7 @@ class TrendCalculatorImpl @Inject constructor(
             else                                    -> rh.gs(info.nightscout.core.ui.R.string.a11y_arrow_unknown)
         }
 
-    private fun calculateDirection(glucoseValue: GlucoseValue): GlucoseValue.TrendArrow {
+    private fun calculateDirection(glucoseValue: InMemoryGlucoseValue): GlucoseValue.TrendArrow {
 
         val toTime = glucoseValue.timestamp
         val readings = repository.compatGetBgReadingsDataFromTime(toTime - T.mins(10).msecs(), toTime, false).blockingGet()
