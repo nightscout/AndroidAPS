@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="bolus_constraint_applied">Bolus-Beschränkung erreicht</string>
     <string name="carbs_constraint_applied">Kohlenhydrat-Beschränkung erreicht</string>
     <string name="temp_target_short">TT</string>
     <string name="dialog_canceled">Dialog abgebrochen</string>
