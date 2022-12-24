@@ -2,6 +2,7 @@
 <resources>
     <string name="dia_whatmeansdia">Welche Aussagen zum DIA stimmen?</string>
     <string name="dia_label_exam">Insulinwirkdauer (DIA)</string>
+    <string name="dia_profile">Setze den DIA-Wert in Deinem Profil.</string>
     <string name="dia_minimumis5h">Der minimal zulässige Wert ist 5 Stunden.</string>
     <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Configuration/Config-Builder.html#insulin</string>
     <string name="dia_meaningisequaltodiapump">Wenn Du mit dem DIA zufrieden warst, bevor Du AndroidAPS verwendet hast, dann musst Du ihn nicht ändern, wenn Du anfängst zu loopen.</string>
@@ -100,7 +101,9 @@
     <string name="update_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Installing-AndroidAPS/Update-to-new-version.html</string>
     <string name="troubleshooting_label">Problembehandlung</string>
     <string name="troubleshooting_wheretoask">Wo können Sie nach Hilfe bei AAPS suchen?</string>
+    <string name="troubleshooting_fb">Du kannst in der \"AAPS Users\" Facebookgruppe um Rat bitten.</string>
     <string name="troubleshooting_wiki">Du solltest die AndroidAPS-Dokumentation lesen (und wiederholt lesen).</string>
+    <string name="troubleshooting_gitter">Im Discord Channel \"AAPS\" kannst Du bei technischen Problemen oder Fragestellungen um Hilfe bitten.</string>
     <string name="troubleshooting_yourendo">Du solltest Deine Diabetesklinik / Deinen Diabetologen fragen.</string>
     <string name="troubleshooting_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Installing-AndroidAPS/Update-to-new-version.html#problembehandlung</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/loopedDE/</string>
@@ -166,12 +169,14 @@
     <string name="nsclient_howcanyou">Wie kann man AAPS (zum Beispiel für ein Kind) aus der Ferne kontrollieren?</string>
     <string name="nsclient_nightscout">AAPSClient App, Nightscout App und die Nightscout Webseite ermöglichen es, AndroidAPS aus der Ferne zu verfolgen.</string>
     <string name="nsclient_dexcomfollow">Andere Apps (z. B. Dexcom Follow, xDrip+ im Follow-Modus) ermöglichen es, einige Parameter (z. B. Blutzucker-/Sensorwerte) aus der Ferne zu verfolgen, verwenden jedoch andere Algorithmen und können daher ungenaue IOB- oder COB-Werte aufweisen.</string>
+    <string name="nsclient_data">Um AAPS aus der Ferne zu verfolgen, müssen beide Geräte über einen Internetzugang verfügen (z. B. über WLAN oder Mobilfunkdaten).</string>
     <string name="nsclient_fullcontrol">Der AAPSClient, der als Remote Follower verwendet wird, kann AAPS sowohl überwachen als auch die volle Kontrolle darüber übernehmen.</string>
     <string name="nsclient_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Children/Children.html</string>
     <string name="isf_label_exam">Insulinsensibilitätsfaktor (ISF)</string>
     <string name="isf_increasingvalue">Eine Erhöhung der ISF-Werte führt zu einer höheren Insulinabgabe, um eine bestimmte Menge an Kohlenhydraten abzudecken.</string>
     <string name="isf_decreasingvalue">Reduzierte ISF-Werte führen zu einer höheren Insulinabgabe zur Korrektur eines über dem Zielwert liegenden Blutzuckers.</string>
     <string name="isf_noeffect">Das Erhöhen oder Senken des ISF hat keinen Einfluss auf die Insulinabgabe, wenn der Blutzuckerspiegel unter dem Zielwert liegt.</string>
+    <string name="isf_preferences">ISF sollte in den AAPS -Einstellungen gesetzt werden.</string>
     <string name="isf_profile">Wenn Du einen ISF-Wert im Profil änderst, wird dies sofort vom Loop berücksichtigt.</string>
     <string name="isf_hint1">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Getting-Started/FAQ.html#korrekturfaktor-isf-mg-dl-ie-oder-mmol-l-ie</string>
     <string name="isf_hint2">https://androidaps.readthedocs.io/en/latest/CROWDIN/de/Usage/Profiles.html</string>
