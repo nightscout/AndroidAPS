@@ -8,6 +8,7 @@
     <string name="settings_password">Passwort für Einstellungen</string>
     <string name="settings_pin">Einstellungs-PIN</string>
     <string name="application_password">Anwendungspasswort</string>
+    <string name="application_pin">Anwendungs-PIN</string>
     <string name="bolus_password">Passwort für Bolus</string>
     <string name="bolus_pin">Bolus PIN</string>
     <string name="protection_timeout_title">Passwort und PIN Sperrung [s]</string>
@@ -19,6 +20,7 @@
     <string name="unsecure_fallback_biometric">Unsicherer Fallback</string>
     <string name="unsecure_fallback_descriotion_biometric">Zur Absicherung braucht der biometrischer Schutz ein Masterpasswort als Fallback.\n\nBitte gib ein Master-Passwort ein!</string>
     <string name="password_set">Passwort festgelegt!</string>
+    <string name="pin_set">PIN festgelegt!</string>
     <string name="password_not_set">Passwort nicht festgelegt</string>
     <string name="pin_not_set">Keine PIN gesetzt</string>
     <string name="password_not_changed">Passwort nicht geändert</string>
