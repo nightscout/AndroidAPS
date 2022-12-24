@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Native Pumpen-Integration für Accu-Chek Combo Pumpen</string>
     <string name="combov2_could_not_connect">Konnte keine Verbindung zur Pumpe herstellen</string>
     <string name="combov2_not_paired">Nicht mit einer Pumpe gepaart</string>
+    <string name="combov2_pump_terminated_connection">Pumpe hat die Verbindung beendet</string>
     <string name="combov2_warning">Combo-Warnung</string>
     <string name="combov2_error">Combo-Fehler</string>
     <string name="combov2_warning_4">Hotline für Update anrufen</string>
+    <string name="combov2_warning_10">Bluetooth-Fehler; Wiederhole das Pairing</string>
     <string name="combov2_error_1">Pumpenreservoir leer</string>
     <string name="combov2_error_2">Batterie leer</string>
     <string name="combov2_error_4">Verstopfung</string>
@@ -67,12 +71,21 @@ Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
     <string name="combov2_fetching_tdd_history_cmddesc">TDD-Verlauf wird abgerufen</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Aktualisiere Pumpenzeit und -datum</string>
     <string name="combov2_updating_pump_status_cmddesc">Pumpenstatus wird aktualisiert</string>
+    <string name="combov2_pairing_pin_failure">PIN hat nicht funktioniert. Überprüfe, ob es einen Tippfehler gab. Wenn dies weiterhin geschieht, brich ab und versuche es erneut.</string>
+    <string name="combov2_discovery_duration">Suchzeit (in Sekunden)</string>
+    <string name="combov2_verbose_logging">Ausführliche Combo-Protokollierung aktivieren</string>
     <string name="combov2_getting_basal_profile">Basalprofil wird abgerufen; %1$d Faktor(en) gelesen</string>
     <string name="combov2_setting_basal_profile">Basalprofil einstellen; %1$d Faktor(en) geschrieben</string>
     <string name="combov2_delivering_bolus">Liefert Bolus (%1$.1f von %2$.1f IE geliefert)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">Behandlung kann nicht geliefert werden - Pumpe ist getrennt</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Nicht ausreichend Insulin im Reservoir</string>
     <string name="combov2_bolus_cancelled">Bolus-Abbruch</string>
     <string name="combov2_bolus_delivery_failed">Die Bolusabgabe ist fehlgeschlagen: Es wurde scheinbar kein Bolus abgegeben. Bitte prüfe auf der Pumpe, ob ein Bolus abgegeben wurde. Um doppelte Boli durch Programmfehler zu vermeiden, werden Boli nicht automatisch wiederholt.</string>
+    <string name="combov2_bolus_not_delivered">Bolus nicht abgegeben</string>
     <string name="combov2_cannot_access_pump_data">Zugriff auf Pumpendaten nicht möglich; die Pumpe muss wieder gekoppelt werden</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Ungeklärte Bolus Lieferungen wurden erkannt. Bolus wird aus Sicherheitsgründen abgebrochen.</string>
+    <string name="combov2_incorrect_active_basal_profile">Falsches Basalprofil; Profil 1 muss aktiviert sein, nicht Profil %1$d</string>
+    <string name="combov2_unrecognized_alert">Unbekannter Combo-Alarm</string>
     <string name="combov2_combo_alert">Combo-Alarm</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min verbleibend)</string>
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (weniger als 1 min verbleibend)</string>
@@ -80,8 +93,16 @@ Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
     <string name="combov2_retrieving_tdds_failed">Abrufen von TDDs fehlgeschlagen</string>
     <string name="combov2_battery_low_warning">Die Batterie in der Pumpe ist fast leer</string>
     <string name="combov2_reservoir_low_warning">Das Reservoir in der Pumpe ist fast leer</string>
+    <string name="combov2_setting_tbr_succeeded">Das Setzen der TBR war erfolgreich</string>
+    <string name="combov2_setting_tbr_failed">Das Setzen der TBR wurde abgebrochen</string>
     <string name="combov2_set_emulated_100_tbr">Emulierte 100% TBR festlegen</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Lass die laufende Emulation der 100% TBR abschließen</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignoriere redundante 100% TBR-Anfrage</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Unerwartetes Limit beim Anpassen des TBR gefunden: Ziel Prozentsatz war %1$d%%, Limit bei %1$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Absolute TBR kann nicht gesetzt werden, wenn die Basisbasalrate 0 ist</string>
+    <string name="combov2_pair_with_pump_summary">Verbinde AndroidAPS und Android mit einer derzeit nicht verbundenen Accu-Chek Combo Pumpe</string>
+    <string name="combov2_unpair_pump_summary">Trenne AndroidAPS und Android von der aktuell verbundenen Accu-Chek Combo Pumpe</string>
+    <string name="combov2_unknown_tbr_detected">Unbekannte TBR wurde erkannt und gestoppt; Prozentsatz: %1$d%%; verbleibende Dauer: %2$s</string>
     <string name="combov2_connection_error">Verbindungsfehler :%1$</string>
     <string name="combov2_short_status_last_connection">Letzte Verb.: vor %1$d min</string>
     <string name="combov2_short_status_alert">Alarm: %s</string>
@@ -92,7 +113,10 @@ Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
     <string name="combov2_short_status_battery_state_low">niedrig</string>
     <string name="combov2_short_status_battery_state_full">voll</string>
     <string name="combov2_short_status_battery_state">Batterie: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Insulinreservoirwechsel automatisch erkennen und eingeben</string>
     <string name="combov2_automatic_battery_entry">Akkuwechsel automatisch erkennen und eingeben</string>
+    <string name="combov2_note_reservoir_change">Insulinreservoirwechsel automatisch durch Combov2-Treiber setzen</string>
+    <string name="combov2_note_battery_change">Batteriewechsel automatisch durch Combov2-Treiber setzen</string>
     <string name="combov2_timezone_changed">Zeitzone geändert</string>
     <string name="combov2_datetime_changed">Datum und/oder Uhrzeit geändert</string>
     <string name="combov2_dst_started">Sommerzeit (DST) begonnen</string>
