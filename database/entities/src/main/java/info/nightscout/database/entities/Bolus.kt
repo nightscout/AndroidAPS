@@ -58,16 +58,6 @@ data class Bolus(
             notes == other.notes &&
             isBasalInsulin == other.isBasalInsulin
 
-    fun interfaceIdsEqualsTo(other: Bolus): Boolean =
-        interfaceIDs.nightscoutId == interfaceIDs.nightscoutId &&
-        interfaceIDs.nightscoutSystemId == interfaceIDs.nightscoutSystemId &&
-        interfaceIDs.pumpType == interfaceIDs.pumpType &&
-        interfaceIDs.pumpSerial == interfaceIDs.pumpSerial &&
-        interfaceIDs.temporaryId == interfaceIDs.temporaryId &&
-        interfaceIDs.pumpId == interfaceIDs.pumpId &&
-        interfaceIDs.startId == interfaceIDs.startId &&
-        interfaceIDs.endId == interfaceIDs.endId
-
     fun onlyNsIdAdded(previous: Bolus): Boolean =
         previous.id != id &&
             contentEqualsTo(previous) &&
