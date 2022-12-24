@@ -7,6 +7,7 @@
     <!-- Storage constraint -->
     <string name="disk_full">Gib bitte %1$d MB internen Speicher frei! Loop abgeschaltet!</string>
     <!-- Version Checker -->
+    <string name="old_version">Veraltete Version</string>
     <string name="very_old_version">sehr alte Version</string>
     <string name="application_expired">Anwendung abgelaufen</string>
     <string name="new_version_warning">Neue Version seit mindestens %1$d Tagen verfügbar! Rückfall zur Unterzucker-vermeidenden Pumpentherapie nach %2$d Tagen, Loop wird nach %3$d Tagen deaktiviert.</string>
