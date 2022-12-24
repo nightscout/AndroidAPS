@@ -105,6 +105,7 @@
     <string name="last_run_label">Letzte Ausführung</string>
     <string name="loop_aps_label">APS</string>
     <string name="request_label">Anfrage</string>
+    <string name="loop_constraints_processed_label">Beschränkungen angewendet</string>
     <string name="loop_tbr_request_time_label">Temp. BR Anfragezeit</string>
     <string name="loop_tbr_execution_time_label">Temp. BR Ausführungszeit</string>
     <string name="loop_tbr_set_by_pump_label">TBR der Pumpe</string>
