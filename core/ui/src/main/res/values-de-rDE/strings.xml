@@ -163,6 +163,7 @@
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Abbruch der temporären Basalrate fehlgeschlagen</string>
+    <string name="canceling_eb_failed">Der Abbruch des erweiterten Bolus ist fehlgeschlagen</string>
     <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
     <string name="suspendloop_label">Deaktiviere/Pausiere den Loop</string>
     <string name="iob_label">Aktives Insulin (IOB)</string>
@@ -204,6 +205,7 @@
     <string name="careportal_question_message">Frage : %1$s</string>
     <string name="careportal_exercise_message">Bewegung : %1$s</string>
     <string name="careportal_pump_site_change">Pumpenkatheter-Wechsel</string>
+    <string name="cgm_sensor_insert">CGM-Sensor gesetzt</string>
     <string name="careportal_cgmsensorstart">CGM-Sensor Start</string>
     <string name="careportal_cgm_sensor_stop">CGM-Sensor-Stopp</string>
     <string name="careportal_dad_alert">D.A.D. Warnung</string>
@@ -479,6 +481,7 @@
     <string name="pregnant">Schwangerschaft</string>
     <string name="patient_age_summary">Bitte wähle den Patiententyp, um die Sicherheits-Limits festzulegen</string>
     <string name="max_bolus_title">Max. erlaubter Bolus [IE]</string>
+    <string name="max_carbs_title">Max erlaubte KH [g]</string>
     <string name="patient_type">Patiententyp</string>
     <!--    Protection-->
     <string name="unlock_settings">Einstellungen freischalten</string>
