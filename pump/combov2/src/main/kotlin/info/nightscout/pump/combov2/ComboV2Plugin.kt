@@ -25,6 +25,8 @@ import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.ReservoirState
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
+import info.nightscout.interfaces.AndroidPermission
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.notifications.Notification
@@ -109,7 +111,9 @@ class ComboV2Plugin @Inject constructor (
     private val sp: SP,
     private val pumpSync: PumpSync,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val androidPermission: AndroidPermission,
+    private val config: Config
 ) :
     PumpPluginBase(
         PluginDescription()
@@ -286,32 +290,46 @@ class ComboV2Plugin @Inject constructor (
         aapsLogger.debug(LTag.PUMP, "Creating bluetooth interface")
         bluetoothInterface = AndroidBluetoothInterface(context)
 
-        aapsLogger.debug(LTag.PUMP, "Setting up bluetooth interface")
-        bluetoothInterface!!.setup()
+        // Continue initialization in a separate coroutine. This allows us to call
+        // runWithPermissionCheck(), which will keep trying to run the code block
+        // until either the necessary Bluetooth permissios are granted, or the
+        // coroutine is cancelled (see onStop() below).
+        pumpCoroutineScope.launch {
+            runWithPermissionCheck(
+                context, config, aapsLogger, androidPermission,
+                permissionsToCheckFor = listOf("android.permission.BLUETOOTH_CONNECT")
+            ) {
+                aapsLogger.debug(LTag.PUMP, "Setting up bluetooth interface")
+                bluetoothInterface!!.setup()
 
-        aapsLogger.debug(LTag.PUMP, "Setting up pump manager")
-        pumpManager = ComboCtlPumpManager(bluetoothInterface!!, pumpStateStore)
-        pumpManager!!.setup {
-            _pairedStateUIFlow.value = false
-            unpairing = false
+                aapsLogger.debug(LTag.PUMP, "Setting up pump manager")
+                pumpManager = ComboCtlPumpManager(bluetoothInterface!!, pumpStateStore)
+                pumpManager!!.setup {
+                    _pairedStateUIFlow.value = false
+                    unpairing = false
+                }
+
+                // UI flows that must have defined values right
+                // at start are initialized here.
+
+                // The paired state UI flow is special in that it is also
+                // used as the backing store for the isPaired() function,
+                // so setting up that UI state flow equals updating that
+                // paired state.
+                val paired = pumpManager!!.getPairedPumpAddresses().isNotEmpty()
+                _pairedStateUIFlow.value = paired
+
+                setDriverState(DriverState.Disconnected)
+
+                // NOTE: EventInitializationChanged is sent in getPumpStatus() .
+            }
         }
-
-        // UI flows that must have defined values right
-        // at start are initialized here.
-
-        // The paired state UI flow is special in that it is also
-        // used as the backing store for the isPaired() function,
-        // so setting up that UI state flow equals updating that
-        // paired state.
-        val paired = pumpManager!!.getPairedPumpAddresses().isNotEmpty()
-        _pairedStateUIFlow.value = paired
-
-        setDriverState(DriverState.Disconnected)
-
-        // NOTE: EventInitializationChanged is sent in getPumpStatus() .
     }
 
     override fun onStop() {
+        // Cancel any ongoing background coroutines. This includes an ongoing
+        // unfinished initialization that still waits for the user to grant
+        // Bluetooth permissions.
         pumpCoroutineScope.cancel()
 
         runBlocking {
@@ -580,10 +598,15 @@ class ComboV2Plugin @Inject constructor (
                 var forciblyDisconnectDueToError = false
 
                 try {
-                    // Set maxNumAttempts to null to turn off the connection attempt limit inside the connect() call.
-                    // The AAPS queue thread will anyway cause the connectionSetupJob to be canceled when its
-                    // connection timeout expires, so the Pump class' own connection attempt limiter is redundant.
-                    pump?.connect(maxNumAttempts = null)
+                    runWithPermissionCheck(
+                        context, config, aapsLogger, androidPermission,
+                        permissionsToCheckFor = listOf("android.permission.BLUETOOTH_CONNECT")
+                    ) {
+                        // Set maxNumAttempts to null to turn off the connection attempt limit inside the connect() call.
+                        // The AAPS queue thread will anyway cause the connectionSetupJob to be canceled when its
+                        // connection timeout expires, so the Pump class' own connection attempt limiter is redundant.
+                        pump?.connect(maxNumAttempts = null)
+                    }
 
                     // No need to set the driver state here, since the pump's stateFlow will announce that.
 
@@ -1486,15 +1509,22 @@ class ComboV2Plugin @Inject constructor (
 
         pairingJob = pumpCoroutineScope.async {
             try {
-                val pairingResult = pumpManager?.pairWithNewPump(discoveryDuration) { newPumpAddress, previousAttemptFailed ->
-                    aapsLogger.info(
-                        LTag.PUMP,
-                        "New pairing PIN request from Combo pump with Bluetooth " +
-                            "address $newPumpAddress (previous attempt failed: $previousAttemptFailed)"
-                    )
-                    _previousPairingAttemptFailedFlow.value = previousAttemptFailed
-                    newPINChannel.receive()
-                } ?: throw IllegalStateException("Attempting to access uninitialized pump manager")
+                // Do the pairing attempt within runWithPermissionCheck()
+                // since pairing requires Bluetooth permissions.
+                val pairingResult = runWithPermissionCheck(
+                    context, config, aapsLogger, androidPermission,
+                    permissionsToCheckFor = listOf("android.permission.BLUETOOTH_CONNECT")
+                ) {
+                    pumpManager?.pairWithNewPump(discoveryDuration) { newPumpAddress, previousAttemptFailed ->
+                        aapsLogger.info(
+                            LTag.PUMP,
+                            "New pairing PIN request from Combo pump with Bluetooth " +
+                                "address $newPumpAddress (previous attempt failed: $previousAttemptFailed)"
+                        )
+                        _previousPairingAttemptFailedFlow.value = previousAttemptFailed
+                        newPINChannel.receive()
+                    } ?: throw IllegalStateException("Attempting to access uninitialized pump manager")
+                }
 
                 if (pairingResult !is ComboCtlPumpManager.PairingResult.Success)
                     return@async
