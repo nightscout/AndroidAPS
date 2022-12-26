@@ -16,7 +16,6 @@
     <string name="objectives_maxbasal_learned">Dávajte pozor na bezpečnostné prvky a nastavte bezpečnotné parametre, pokiaľ je to potrebné.</string>
     <string name="objectives_maxiobzero_objective">Spustiť uzavretý okruh iba zo zastavovaním pri nízkej glykémii</string>
     <string name="objectives_maxiobzero_gate">Spustiť uzavretý okruh s max IOB = 0 na niekoľko dní s minimom nutných korekcií na nízku glykémiu</string>
-    <string name="objectives_maxiobzero_learned">Nastavte MaxIOB, aby ste predišli hypoglykémii a nebol pridávaný inzulín nad štandardnú bazálnu dávku (s výnimkou situácií, kedy je IOB negatívne)</string>
     <string name="objectives_maxiob_objective">Zapnúť uzavretý okruh, zvyšovať max IOB nad 0 a znižovať cieľovou glykémii</string>
     <string name="objectives_maxiob_gate">Používať uzavretý okruh niekoľko dní s aspoň jednou nocou bez alarmov na nízku glykémiu</string>
     <string name="objectives_maxiob_learned">Aktualizujte MaxIOB počas rastu dieťaťa. Nedovoľte systému, aby podal viac inzulínu, ako ste v skutočnosti schopní pokryť jedlom = skutočne vysoká hodnota je zlý nápad.</string>
@@ -43,11 +42,8 @@
     <string name="objectives_useactions">V Konfigurácii povoľte modul Akcie, aktivujte jeho zobrazenie a zobrazte jeho obsah z hornej ponuky</string>
     <string name="objectives_useloop">Zobrazte obsah modulu uzavretý okruh</string>
     <string name="objectives_usescale">Prepnite režim zobrazenia dlhým stlačením grafu glykémie</string>
-    <string name="objectives_button_enter">Zadať</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Pokiaľ máte aspoň 3 mesiace skúseností s uzavretým okruhom na iných systémoch, môžete získať kód, ktorý vám umožní preskočiť ciele. Viac informácií nájdete na https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Usage/Objectives.html#skip-objectives.</string>
     <string name="objectives_exam_objective">Preukážte svoje znalosti</string>
     <string name="objectives_exam_gate">Preštudujte si otázky. Dostali ste štyri možné odpovede na každú otázku. Môže existovať viac ako jedna správna odpoveď. Zaškrtnite všetky správne odpovede a potvrďte voľbou KONTROLA.</string>
-    <string name="objectives_exam_learned_prerequisites">Nemusíte byť vývojár, ale potrebujete NS na prejdenie cieľov, kompatibilnú pumpu a počítač na prvotné vytvorenie AAPS a pre každú jeho aktualizáciu.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS može fungovať offline.</string>
     <string name="objectives_exam_learned_basaltest">Profil by mal byť kontrolovaný a aktualizovaný. Lepší profil = lepšie výsledky.</string>
     <string name="objectives_exam_learned_dia">DIA pri uzavretom okruhu má iný význam (čas, kým sa vstrebá všetok inzulín), než pri klasickej liečbe pumpou (čas, kým sa vstrebá vačšina inzulínu).</string>
@@ -64,7 +60,6 @@
     <string name="objectives_exam_learned_insulin">Je potrebné veideť, aký inzulín je v pumpe, pretože to ovplyvňuje výpočet IOB.</string>
     <string name="objectives_exam_learned_sensitivity">Detekcia citlivosti je časť algoritmu, ktorá dovoľuje prispôsobovať dávkovanie inzulínu rôznym situáciam.</string>
     <string name="objectives_exam_learned_objectives">Váš pokrok v cieľoch je ukladaný spolu s ostatnými nastaveniami a mal by sa pravidelne zálohovať.</string>
-    <string name="objectives_exam_learned_objectives2">Vždy držte exportované nastavenia aj vygenerovaný APK mimo telefónu. Telefón sa môže stratiť, poškodiť atď. Dobré miesto môže byť akýkoľvek cloud prístupný z telefónu. V tomto prípade môžete AAPS obnoviť z iného zariadenia za pár minút. Dobrým zvykom je uložiť na bezpečnom mieste aj použité hlavné heslo. Bez neho je Vaša záloha nepoužiteľná. To isté platí aj pre podpisové kľúče (.jks súbory) a heslá použité na vytvorenie AAPS. Zvyšok nie je dôležitý - dá sa kedykoľvek stiahnuť znovu z internetu.</string>
     <string name="objectives_exam_learned_wrongcarbs">Ak ste do AAPS niečo zadali nesprávne, alebo sa to nezhoduje so skutočnosťou, vyriešte to čo možno najskôr. Pretože by to mohlo viesť k predávkovaniu. AAPS by mala byť vždy najlepšie informovaná o množstve sacharidov, inzulínu atď.</string>
     <string name="objectives_exam_learned_iob">Ak chcete analyzovať, či Vám AAPS funguje dobre, graf IOB Vám môže poskytnúť množstvo užitočných informácii.</string>
     <string name="objectives_exam_learned_cob">Výpočet COB závisí od vzťahu medzi ISF a IC. Zvýšenie ISF, alebo zníženie IC vedie k dlhším časom vstrebávania. Ale percentuálne prepnutie profilu zmení obe tieto hodnoty v rovnakom čase a doba vstrebávania sa nemení.</string>
