@@ -23,7 +23,6 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
@@ -155,8 +154,7 @@ class KeepAliveWorker(
         var shouldUploadStatus = false
         if (config.NSCLIENT) return
         if (config.PUMPCONTROL) shouldUploadStatus = true
-        else if (!(loop as PluginBase).isEnabled() || iobCobCalculator.ads.actualBg() == null)
-            shouldUploadStatus = true
+        else if (!loop.isEnabled() || iobCobCalculator.ads.actualBg() == null) shouldUploadStatus = true
         else if (dateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
         if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
             lastIobUpload = dateUtil.now()

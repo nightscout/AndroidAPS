@@ -34,6 +34,7 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
+import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
@@ -744,8 +745,9 @@ class DataHandlerMobile @Inject constructor(
             )
         )
         // GraphData
-        val startTime = System.currentTimeMillis() - (60000 * 60 * 5.5).toLong()
-        rxBus.send(EventMobileToWear(EventData.GraphData(ArrayList(repository.compatGetBgReadingsDataFromTime(startTime, true).blockingGet().map { getSingleBG(it) }))))
+        iobCobCalculator.ads.getBucketedDataTableCopy()?.let { bucketedData ->
+            rxBus.send(EventMobileToWear(EventData.GraphData(ArrayList(bucketedData.map { getSingleBG(it) }))))
+        }
         // Treatments
         sendTreatments()
         // Status
@@ -933,7 +935,7 @@ class DataHandlerMobile @Inject constructor(
         return deltaString
     }
 
-    private fun getSingleBG(glucoseValue: GlucoseValue): EventData.SingleBg {
+    private fun getSingleBG(glucoseValue: InMemoryGlucoseValue): EventData.SingleBg {
         val glucoseStatus = glucoseStatusProvider.getGlucoseStatusData(true)
         val units = profileFunction.getUnits()
         val lowLine = Profile.toMgdl(defaultValueHelper.determineLowLine(), units)
@@ -946,8 +948,8 @@ class DataHandlerMobile @Inject constructor(
             slopeArrow = trendCalculator.getTrendArrow(glucoseValue).symbol,
             delta = glucoseStatus?.let { deltaString(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             avgDelta = glucoseStatus?.let { deltaString(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
-            sgvLevel = if (glucoseValue.value > highLine) 1L else if (glucoseValue.value < lowLine) -1L else 0L,
-            sgv = glucoseValue.value,
+            sgvLevel = if (glucoseValue.recalculated > highLine) 1L else if (glucoseValue.recalculated < lowLine) -1L else 0L,
+            sgv = glucoseValue.recalculated,
             high = highLine,
             low = lowLine,
             color = 0

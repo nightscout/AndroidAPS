@@ -21,6 +21,7 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.CobInfo
+import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -68,7 +69,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Mock lateinit var autosensDataStore: AutosensDataStore
     @Mock lateinit var smsManager: SmsManager
 
-    var injector: HasAndroidInjector = HasAndroidInjector {
+    private var injector: HasAndroidInjector = HasAndroidInjector {
         AndroidInjector {
             if (it is PumpEnactResult) {
                 it.context = context
@@ -98,7 +99,7 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         `when`(iobCobCalculator.getCobInfo(false, "SMS COB")).thenReturn(CobInfo(0, 10.0, 2.0))
         `when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        `when`(autosensDataStore.lastBg()).thenReturn(reading)
+        `when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(reading))
 
         `when`(sp.getString(R.string.key_smscommunicator_allowednumbers, "")).thenReturn("1234;5678")
 

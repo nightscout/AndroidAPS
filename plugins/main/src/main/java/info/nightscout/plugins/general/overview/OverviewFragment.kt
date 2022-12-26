@@ -80,10 +80,10 @@ import info.nightscout.plugins.ui.StatusLightHandler
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAcceptOpenLoopChange
+import info.nightscout.rx.events.EventBucketedDataCreated
 import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.rx.events.EventExtendedBolusChange
 import info.nightscout.rx.events.EventMobileToWear
-import info.nightscout.rx.events.EventNewBG
 import info.nightscout.rx.events.EventNewOpenLoopNotification
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventPumpStatusChanged
@@ -99,6 +99,7 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.extensions.runOnUiThread
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibilityKeepSpace
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -275,7 +276,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                            sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusescale, true)
                        }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventNewBG::class.java)
+            .toObservable(EventBucketedDataCreated::class.java)
             .debounce(1L, TimeUnit.SECONDS)
             .observeOn(aapsSchedulers.io)
             .subscribe({ updateBg() }, fabricPrivacy::logException)
@@ -777,19 +778,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @SuppressLint("SetTextI18n")
     fun updateBg() {
         val units = profileFunction.getUnits()
-        val lastBg = overviewData.lastBg
-        val lastBgColor = overviewData.lastBgColor(context)
-        val isActualBg = overviewData.isActualBg
+        val lastBg = overviewData.lastBg(iobCobCalculator.ads)
+        val lastBgColor = overviewData.lastBgColor(context, iobCobCalculator.ads)
+        val isActualBg = overviewData.isActualBg(iobCobCalculator.ads)
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
-        val trendDescription = trendCalculator.getTrendDescription(lastBg)
-        val trendArrow = trendCalculator.getTrendArrow(lastBg)
-        val lastBgDescription = overviewData.lastBgDescription
+        val trendDescription = trendCalculator.getTrendDescription(iobCobCalculator.ads)
+        val trendArrow = trendCalculator.getTrendArrow(iobCobCalculator.ads)
+        val lastBgDescription = overviewData.lastBgDescription(iobCobCalculator.ads)
         runOnUiThread {
             _binding ?: return@runOnUiThread
-            binding.infoLayout.bg.text = lastBg?.valueToUnitsString(units)
-                ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
+            binding.infoLayout.bg.text = lastBg?.valueToUnitsString(units) ?: ""
             binding.infoLayout.bg.setTextColor(lastBgColor)
-            binding.infoLayout.arrow.setImageResource(trendArrow.directionToIcon())
+            trendArrow?.let { binding.infoLayout.arrow.setImageResource(it.directionToIcon()) }
+            binding.infoLayout.arrow.visibility = (trendArrow != null).toVisibilityKeepSpace()
             binding.infoLayout.arrow.setColorFilter(lastBgColor)
             binding.infoLayout.arrow.contentDescription = lastBgDescription + " " + rh.gs(info.nightscout.core.ui.R.string.and) + " " + trendDescription
 
