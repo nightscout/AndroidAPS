@@ -21,8 +21,6 @@ import java.util.concurrent.TimeUnit
  * Convert to [RemoteTreatment] and back to [NSTreatment]
  * testing purpose only
  *
- * @param treatment original
- *
  * @return treatment after double conversion
  */
 fun NSTreatment.convertToRemoteAndBack(): NSTreatment? =
@@ -461,7 +459,7 @@ internal fun NSTreatment.toRemoteTreatment(): RemoteTreatment? =
             durationInMilliseconds = duration,
             absolute = absolute,
             percent = percent,
-            rate = absolute,
+            rate = rate,
             type = type.name
         )
 
