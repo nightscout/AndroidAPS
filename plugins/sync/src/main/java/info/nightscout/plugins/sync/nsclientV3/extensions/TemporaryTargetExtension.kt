@@ -19,15 +19,7 @@ fun NSTemporaryTarget.toTemporaryTarget(): TemporaryTarget =
     )
 
 fun NSTemporaryTarget.Reason?.toReason(): TemporaryTarget.Reason =
-    when (this) {
-        NSTemporaryTarget.Reason.CUSTOM       -> TemporaryTarget.Reason.CUSTOM
-        NSTemporaryTarget.Reason.HYPOGLYCEMIA -> TemporaryTarget.Reason.HYPOGLYCEMIA
-        NSTemporaryTarget.Reason.ACTIVITY     -> TemporaryTarget.Reason.ACTIVITY
-        NSTemporaryTarget.Reason.EATING_SOON  -> TemporaryTarget.Reason.EATING_SOON
-        NSTemporaryTarget.Reason.AUTOMATION   -> TemporaryTarget.Reason.AUTOMATION
-        NSTemporaryTarget.Reason.WEAR         -> TemporaryTarget.Reason.WEAR
-        null                                  -> TemporaryTarget.Reason.CUSTOM
-    }
+    TemporaryTarget.Reason.fromString(this?.text)
 
 fun TemporaryTarget.toNSTemporaryTarget(): NSTemporaryTarget =
     NSTemporaryTarget(
@@ -48,12 +40,4 @@ fun TemporaryTarget.toNSTemporaryTarget(): NSTemporaryTarget =
     )
 
 fun TemporaryTarget.Reason?.toReason(): NSTemporaryTarget.Reason =
-    when (this) {
-        TemporaryTarget.Reason.CUSTOM       -> NSTemporaryTarget.Reason.CUSTOM
-        TemporaryTarget.Reason.HYPOGLYCEMIA -> NSTemporaryTarget.Reason.HYPOGLYCEMIA
-        TemporaryTarget.Reason.ACTIVITY     -> NSTemporaryTarget.Reason.ACTIVITY
-        TemporaryTarget.Reason.EATING_SOON  -> NSTemporaryTarget.Reason.EATING_SOON
-        TemporaryTarget.Reason.AUTOMATION   -> NSTemporaryTarget.Reason.AUTOMATION
-        TemporaryTarget.Reason.WEAR         -> NSTemporaryTarget.Reason.WEAR
-        null                                -> NSTemporaryTarget.Reason.CUSTOM
-    }
+    NSTemporaryTarget.Reason.fromString(this?.text)

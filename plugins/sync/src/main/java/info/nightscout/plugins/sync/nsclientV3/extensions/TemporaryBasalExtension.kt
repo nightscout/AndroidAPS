@@ -20,14 +20,7 @@ fun NSTemporaryBasal.toTemporaryBasal(): TemporaryBasal =
     )
 
 fun NSTemporaryBasal.Type?.toType(): TemporaryBasal.Type =
-    when (this) {
-        NSTemporaryBasal.Type.NORMAL                -> TemporaryBasal.Type.NORMAL
-        NSTemporaryBasal.Type.EMULATED_PUMP_SUSPEND -> TemporaryBasal.Type.EMULATED_PUMP_SUSPEND
-        NSTemporaryBasal.Type.PUMP_SUSPEND          -> TemporaryBasal.Type.PUMP_SUSPEND
-        NSTemporaryBasal.Type.SUPERBOLUS            -> TemporaryBasal.Type.SUPERBOLUS
-        NSTemporaryBasal.Type.FAKE_EXTENDED         -> TemporaryBasal.Type.FAKE_EXTENDED
-        null                                        -> TemporaryBasal.Type.NORMAL
-    }
+    TemporaryBasal.Type.fromString(this?.name)
 
 fun TemporaryBasal.toNSTemporaryBasal(profile: Profile): NSTemporaryBasal =
     NSTemporaryBasal(
@@ -49,11 +42,4 @@ fun TemporaryBasal.toNSTemporaryBasal(profile: Profile): NSTemporaryBasal =
     )
 
 fun TemporaryBasal.Type?.toType(): NSTemporaryBasal.Type =
-    when (this) {
-        TemporaryBasal.Type.NORMAL                -> NSTemporaryBasal.Type.NORMAL
-        TemporaryBasal.Type.EMULATED_PUMP_SUSPEND -> NSTemporaryBasal.Type.EMULATED_PUMP_SUSPEND
-        TemporaryBasal.Type.PUMP_SUSPEND          -> NSTemporaryBasal.Type.PUMP_SUSPEND
-        TemporaryBasal.Type.SUPERBOLUS            -> NSTemporaryBasal.Type.SUPERBOLUS
-        TemporaryBasal.Type.FAKE_EXTENDED         -> NSTemporaryBasal.Type.FAKE_EXTENDED
-        null                                      -> NSTemporaryBasal.Type.NORMAL
-    }
+    NSTemporaryBasal.Type.fromString(this?.name)

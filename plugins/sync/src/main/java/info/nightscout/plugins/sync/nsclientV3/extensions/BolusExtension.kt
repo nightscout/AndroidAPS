@@ -18,12 +18,7 @@ fun NSBolus.toBolus(): Bolus =
     )
 
 fun NSBolus.BolusType?.toBolusType(): Bolus.Type =
-    when (this) {
-        NSBolus.BolusType.NORMAL  -> Bolus.Type.NORMAL
-        NSBolus.BolusType.SMB     -> Bolus.Type.SMB
-        NSBolus.BolusType.PRIMING -> Bolus.Type.PRIMING
-        null                      -> Bolus.Type.NORMAL
-    }
+    Bolus.Type.fromString(this?.name)
 
 fun Bolus.toNSBolus(): NSBolus =
     NSBolus(
@@ -43,9 +38,4 @@ fun Bolus.toNSBolus(): NSBolus =
     )
 
 fun Bolus.Type?.toBolusType(): NSBolus.BolusType =
-    when (this) {
-        Bolus.Type.NORMAL  -> NSBolus.BolusType.NORMAL
-        Bolus.Type.SMB     -> NSBolus.BolusType.SMB
-        Bolus.Type.PRIMING -> NSBolus.BolusType.PRIMING
-        null               -> NSBolus.BolusType.NORMAL
-    }
+    NSBolus.BolusType.fromString(this?.name)
