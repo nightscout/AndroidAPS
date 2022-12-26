@@ -32,8 +32,6 @@
     <string name="objectives_useactions">在配置生成器中启用Actions(常用操作) 插件，使其可视并在顶部菜单显示其内容</string>
     <string name="objectives_useloop">显示闭环插件的内容</string>
     <string name="objectives_usescale">长按血糖图来使用缩放功能</string>
-    <string name="objectives_button_enter">输入</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">如果您有至少3个月的其他系统闭环经验，您可能有资格获得跳过学习目标的代码。参见 https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for details。</string>
     <string name="objectives_exam_objective">证明你的知识</string>
     <string name="objectives_exam_gate">研究这些问题。每个问题都有四个可能的答案。答案可能不止一个。请选择所有正确的选项，然后点击验证。</string>
     <string name="answerdisabledto">禁止答题，直到： %1$s</string>
