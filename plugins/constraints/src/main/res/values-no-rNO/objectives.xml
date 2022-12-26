@@ -34,8 +34,6 @@
     <string name="objectives_useactions">I Konfigurasjonsverktøyet aktiverer du Hendelser plugin, og gjør det synlig og viser innholdet fra menyen i øverste linje</string>
     <string name="objectives_useloop">Vis innholdet i Loop plugin</string>
     <string name="objectives_usescale">Test skaleringsfunksjonen ved et langt trykk på BS grafen</string>
-    <string name="objectives_button_enter">Angi</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Om du kan dokumentere minst 3 måneders erfaring med et annet lukket loop system så kan det hende du kvalifiserer for å hoppe over læringsmålene. Se https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for flere detaljer.</string>
     <string name="objectives_exam_objective">Bevis kunnskapen din</string>
     <string name="objectives_exam_gate">Studer spørsmålene. Hvert spørsmål har fire svaralternativer. Det kan være flere enn ett riktig svar. Marker alle riktige svar og velg KONTROLLER.</string>
     <string name="answerdisabledto">Besvarelser deaktivert til: %1$s</string>
