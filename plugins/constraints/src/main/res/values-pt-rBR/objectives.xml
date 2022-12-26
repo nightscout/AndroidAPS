@@ -34,8 +34,6 @@
     <string name="objectives_useactions">No Configurador ative o plugin de Ações, torne-o visível e exiba o seu conteúdo no menu superior</string>
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
     <string name="objectives_usescale">Ajuste a escala ao pressionar por um tempo o gráfico da glicemia</string>
-    <string name="objectives_button_enter">Inserir</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se você tiver pelo menos 3 meses de experiência com sistemas Closed Loop com outros aplicativos, pode-se qualificar por um código para pular os objetivos. Vê https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives para mais detalhes.</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>
     <string name="objectives_exam_gate">Estude as perguntas.  Haverá quatro respostas possíveis para cada pergunta.  Pode ter mais do que uma resposta correta. Por favor, marque todas as que estão corretas e selecione VERIFICAR.</string>
     <string name="answerdisabledto">Resposta desativada até: %1$s</string>
