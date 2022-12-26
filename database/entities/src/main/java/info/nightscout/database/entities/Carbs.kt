@@ -38,7 +38,7 @@ data class Carbs(
     var notes: String? = null
 ) : TraceableDBEntry, DBEntryWithTimeAndDuration {
 
-    private fun contentEqualsTo(other: Carbs): Boolean =
+    fun contentEqualsTo(other: Carbs): Boolean =
         isValid == other.isValid &&
             timestamp == other.timestamp &&
             utcOffset == other.utcOffset &&

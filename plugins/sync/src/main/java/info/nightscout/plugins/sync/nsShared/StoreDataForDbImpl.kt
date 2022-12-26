@@ -611,6 +611,7 @@ class StoreDataForDbImpl @Inject constructor(
                 }
                 .blockingGet()
                 .also { result ->
+                    offlineEvents.clear()
                     result.inserted.forEach { oe ->
                         if (config.NSCLIENT.not()) userEntries.add(
                             UserEntry(
@@ -679,6 +680,7 @@ class StoreDataForDbImpl @Inject constructor(
                 }
                 .blockingGet()
                 .also { result ->
+                    extendedBoluses.clear()
                     result.inserted.forEach {
                         if (config.NSCLIENT.not()) userEntries.add(
                             UserEntry(
@@ -775,6 +777,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdTemporaryTargets.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of TemporaryTarget $it")
                     nsIdUpdated.inc(TemporaryTarget::class.java.simpleName)
@@ -787,6 +790,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdGlucoseValues.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of GlucoseValue $it")
                     nsIdUpdated.inc(GlucoseValue::class.java.simpleName)
@@ -799,6 +803,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdFoods.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of Food $it")
                     nsIdUpdated.inc(Food::class.java.simpleName)
@@ -811,6 +816,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdTherapyEvents.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of TherapyEvent $it")
                     nsIdUpdated.inc(TherapyEvent::class.java.simpleName)
@@ -823,6 +829,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdBoluses.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of Bolus $it")
                     nsIdUpdated.inc(Bolus::class.java.simpleName)
@@ -835,6 +842,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdCarbs.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of Carbs $it")
                     nsIdUpdated.inc(Carbs::class.java.simpleName)
@@ -847,6 +855,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdBolusCalculatorResults.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of BolusCalculatorResult $it")
                     nsIdUpdated.inc(BolusCalculatorResult::class.java.simpleName)
@@ -859,6 +868,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdTemporaryBasals.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of TemporaryBasal $it")
                     nsIdUpdated.inc(TemporaryBasal::class.java.simpleName)
@@ -871,6 +881,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdExtendedBoluses.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of ExtendedBolus $it")
                     nsIdUpdated.inc(ExtendedBolus::class.java.simpleName)
@@ -883,6 +894,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdProfileSwitches.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of ProfileSwitch $it")
                     nsIdUpdated.inc(ProfileSwitch::class.java.simpleName)
@@ -895,6 +907,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdEffectiveProfileSwitches.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of EffectiveProfileSwitch $it")
                     nsIdUpdated.inc(EffectiveProfileSwitch::class.java.simpleName)
@@ -907,6 +920,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdDeviceStatuses.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of DeviceStatus $it")
                     nsIdUpdated.inc(DeviceStatus::class.java.simpleName)
@@ -919,6 +933,7 @@ class StoreDataForDbImpl @Inject constructor(
             }
             .blockingGet()
             .also { result ->
+                nsIdOfflineEvents.clear()
                 result.updatedNsId.forEach {
                     aapsLogger.debug(LTag.DATABASE, "Updated nsId of OfflineEvent $it")
                     nsIdUpdated.inc(OfflineEvent::class.java.simpleName)

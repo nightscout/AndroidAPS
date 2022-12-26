@@ -49,7 +49,7 @@ data class Bolus(
     var insulinConfiguration: InsulinConfiguration? = null
 ) : TraceableDBEntry, DBEntryWithTime {
 
-    private fun contentEqualsTo(other: Bolus): Boolean =
+    fun contentEqualsTo(other: Bolus): Boolean =
         isValid == other.isValid &&
             timestamp == other.timestamp &&
             utcOffset == other.utcOffset &&

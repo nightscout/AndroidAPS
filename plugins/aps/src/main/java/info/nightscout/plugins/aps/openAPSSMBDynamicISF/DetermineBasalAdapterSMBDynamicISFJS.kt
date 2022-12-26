@@ -262,23 +262,11 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.mealData.put("lastBolusTime", mealData.lastBolusTime)
         this.mealData.put("lastCarbTime", mealData.lastCarbTime)
 
-        val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(1))?.totalAmount
-        val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(7))?.totalAmount
-        val tddLast24H = tddCalculator.calculateDaily(-24, 0).totalAmount
-        val tddLast4H = tddCalculator.calculateDaily(-4, 0).totalAmount
-        val tddLast8to4H = tddCalculator.calculateDaily(-8, -4).totalAmount
-
-        val tddWeightedFromLast8H = ((1.4 * tddLast4H) + (0.6 * tddLast8to4H)) * 3
-//        console.error("Rolling 8 hours weight average: " + tdd_last8_wt + "; ");
-//        console.error("1-day average TDD is: " + tdd1 + "; ");
-//        console.error("7-day average TDD is: " + tdd7 + "; ");
-
-        var tdd =
-            if (tdd1D != null && tdd7D != null) (tddWeightedFromLast8H * 0.33) + (tdd7D * 0.34) + (tdd1D * 0.33)
-            else tddWeightedFromLast8H
-//        console.log("TDD = " + TDD + " using average of 7-day, 1-day and weighted 8hr average");
-
-//        console.log("Insulin Peak = " + insulin.peak + "; ");
+        val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(1, allowMissingDays = false))?.totalAmount
+        val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(7, allowMissingDays = false))?.totalAmount
+        val tddLast24H = tddCalculator.calculateDaily(-24, 0)?.totalAmount
+        val tddLast4H = tddCalculator.calculateDaily(-4, 0)?.totalAmount
+        val tddLast8to4H = tddCalculator.calculateDaily(-8, -4)?.totalAmount
 
         val insulin = activePlugin.activeInsulin
         val insulinDivisor = when {
@@ -286,25 +274,35 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
             insulin.peak > 50 -> 65 // ultra rapid peak: 55
             else              -> 75 // rapid peak: 75
         }
-//        console.log("For " + insulin.friendlyName + " (insulin peak: " + insulin.peak + ") insulin divisor is: " + ins_val + "; ");
 
-        val dynISFadjust = SafeParse.stringToDouble(sp.getString(R.string.key_DynISFAdjust, "100")) / 100.0
-        tdd *= dynISFadjust
+        var tdd: Double? = null
+        var variableSensitivity: Double
+        if (tddLast24H != null && tddLast4H != null && tddLast8to4H != null) {
+            val tddWeightedFromLast8H = ((1.4 * tddLast4H) + (0.6 * tddLast8to4H)) * 3
+//        console.error("Rolling 8 hours weight average: " + tdd_last8_wt + "; ");
+//        console.error("1-day average TDD is: " + tdd1 + "; ");
+//        console.error("7-day average TDD is: " + tdd7 + "; ");
 
-        var variableSensitivity = 1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1)))
-        variableSensitivity = Round.roundTo(variableSensitivity, 0.1)
+            tdd =
+                if (tdd1D != null && tdd7D != null) (tddWeightedFromLast8H * 0.33) + (tdd7D * 0.34) + (tdd1D * 0.33)
+                else tddWeightedFromLast8H
+//        console.log("TDD = " + TDD + " using average of 7-day, 1-day and weighted 8hr average");
 
-        if (dynISFadjust != 1.0) {
-//            console.log("TDD adjusted to " + TDD + " using adjustment factor of " + dynISFadjust + "; ");
+            val dynISFadjust = SafeParse.stringToDouble(sp.getString(R.string.key_DynISFAdjust, "100")) / 100.0
+            tdd *= dynISFadjust
+
+            variableSensitivity = 1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1)))
+            variableSensitivity = Round.roundTo(variableSensitivity, 0.1)
+        } else {
+            variableSensitivity = profile.getIsfMgdl()
         }
-//        console.log("Current sensitivity for predictions is " + variable_sens + " based on current bg");
 
         this.profile.put("variable_sens", variableSensitivity)
         this.profile.put("insulinDivisor", insulinDivisor)
-        this.profile.put("TDD", tdd)
+        tdd?.let { this.profile.put("TDD", tdd) }
 
 
-        if (sp.getBoolean(R.string.key_adjust_sensitivity, false) && tdd7D != null && tdd7D != 0.0)
+        if (sp.getBoolean(R.string.key_adjust_sensitivity, false) && tdd7D != null && tddLast24H != null)
             autosensData.put("ratio", tddLast24H / tdd7D)
         else
             autosensData.put("ratio", 1.0)

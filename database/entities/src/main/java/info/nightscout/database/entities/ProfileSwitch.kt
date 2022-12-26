@@ -52,7 +52,25 @@ data class ProfileSwitch(
     var insulinConfiguration: InsulinConfiguration
 ) : TraceableDBEntry, DBEntryWithTimeAndDuration {
 
-    private fun contentEqualsTo(other: ProfileSwitch): Boolean =
+    fun copy(): ProfileSwitch =
+        ProfileSwitch(
+            isValid = isValid,
+            timestamp = timestamp,
+            utcOffset = utcOffset,
+            basalBlocks = basalBlocks,
+            isfBlocks = isfBlocks,
+            icBlocks = icBlocks,
+            targetBlocks = targetBlocks,
+            glucoseUnit = glucoseUnit,
+            profileName = profileName,
+            timeshift = timeshift,
+            percentage = percentage,
+            duration = duration,
+            insulinConfiguration = insulinConfiguration,
+            interfaceIDs_backing = interfaceIDs_backing
+        )
+
+    fun contentEqualsTo(other: ProfileSwitch): Boolean =
         isValid == other.isValid &&
             timestamp == other.timestamp &&
             utcOffset == other.utcOffset &&
