@@ -34,8 +34,6 @@
     <string name="objectives_useactions">Konfigürasyon oluşturucuda, Eylemler eklentisini etkinleştirin, görünür yapın ve içeriğini üst menüden görüntüleyin</string>
     <string name="objectives_useloop">Döngü eklentisinin içeriğini görüntüle</string>
     <string name="objectives_usescale">KŞ tablosuna uzun basarak ölçeği değiştirebilirsiniz</string>
-    <string name="objectives_button_enter">Giriş</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Diğer sistemlerde en az 3 aylık kapalı döngü deneyiminiz varsa, hedefleri atlamak için bir kod almaya hak kazanabilirsiniz. Ayrıntılar için https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives adresine bakın.</string>
     <string name="objectives_exam_objective">Bilginizi sınayın</string>
     <string name="objectives_exam_gate">Sorulara çalışın. Her soru için size dört olası cevap verilir. Birden fazla doğru cevap olabilir. Lütfen doğru olanların hepsini kontrol edin ve DOĞRULA\'yı seçin.</string>
     <string name="answerdisabledto">Yanıtlama devre dışı bırakıldı: %1$s</string>
