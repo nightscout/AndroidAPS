@@ -32,8 +32,6 @@
     <string name="objectives_useactions">I Konfigurationsverktyget, aktivera insticksprogrammet Åtgärder, gör det synligt och visa dess innehåll från övre menyn</string>
     <string name="objectives_useloop">Visa innehållet i insticksprogrammet \"Loop\"</string>
     <string name="objectives_usescale">Testa skala om BG-grafen genom att trycka och hålla in fingret på den</string>
-    <string name="objectives_button_enter">Enter</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Om du har minst 3 månaders erfarenhet av closed loop med andra system kan du kvalificera dig för en kod för att hoppa över mål. Se https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives för mer info.</string>
     <string name="objectives_exam_objective">Bevisa dina kunskaper</string>
     <string name="objectives_exam_gate">Studera frågorna.  Ni får fyra möjliga svar på varje fråga. Det kan finnas mer än ett korrekt svar. Kontrollera alla de som är korrekta och välj Kontrollera.</string>
     <string name="answerdisabledto">Svarsfunktionen inaktiverad till: %1$s</string>
