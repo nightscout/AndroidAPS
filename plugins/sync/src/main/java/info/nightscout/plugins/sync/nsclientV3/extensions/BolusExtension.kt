@@ -1,7 +1,6 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSBolus
@@ -28,7 +27,7 @@ fun NSBolus.BolusType?.toBolusType(): Bolus.Type =
 
 fun Bolus.toNSBolus(): NSBolus =
     NSBolus(
-        eventType = EventType.fromString(if (type == Bolus.Type.SMB) TherapyEvent.Type.CORRECTION_BOLUS.text else TherapyEvent.Type.MEAL_BOLUS.text),
+        eventType = if (type == Bolus.Type.SMB) EventType.CORRECTION_BOLUS else EventType.MEAL_BOLUS,
         isValid = isValid,
         date = timestamp,
         utcOffset = utcOffset,

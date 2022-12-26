@@ -2,7 +2,6 @@ package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.sdk.localmodel.treatment.EventType
@@ -32,7 +31,7 @@ fun NSTemporaryBasal.Type?.toType(): TemporaryBasal.Type =
 
 fun TemporaryBasal.toNSTemporaryBasal(profile: Profile): NSTemporaryBasal =
     NSTemporaryBasal(
-        eventType = EventType.fromString(TherapyEvent.Type.TEMPORARY_BASAL.text),
+        eventType = EventType.TEMPORARY_BASAL,
         isValid = isValid,
         date = timestamp,
         utcOffset = utcOffset,

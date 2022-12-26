@@ -5,7 +5,6 @@ import info.nightscout.core.extensions.getCustomizedName
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.ProfileSwitch
-import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.sdk.localmodel.treatment.EventType
@@ -46,7 +45,7 @@ fun ProfileSwitch.toNSProfileSwitch(dateUtil: DateUtil): NSProfileSwitch {
     notCustomized.percentage = 100
 
     return NSProfileSwitch(
-        eventType = EventType.fromString(TherapyEvent.Type.PROFILE_SWITCH.text),
+        eventType = EventType.PROFILE_SWITCH,
         isValid = isValid,
         date = timestamp,
         utcOffset = utcOffset,

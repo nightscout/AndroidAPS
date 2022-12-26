@@ -39,6 +39,7 @@ import info.nightscout.plugins.sync.nsclientV3.extensions.toNSCarbs
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSEffectiveProfileSwitch
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSProfileSwitch
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSTemporaryBasal
+import info.nightscout.plugins.sync.nsclientV3.extensions.toNSTemporaryTarget
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadStatusWorker
@@ -326,7 +327,7 @@ class NSClientV3Plugin @Inject constructor(
             is DataSyncSelector.PairBolus                  -> dataPair.value.toNSBolus()
             is DataSyncSelector.PairCarbs                  -> dataPair.value.toNSCarbs()
             // is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(false, dateUtil, profileFunction)
-            // is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(false, profileFunction.getUnits(), dateUtil)
+            is DataSyncSelector.PairTemporaryTarget -> dataPair.value.toNSTemporaryTarget()
             // is DataSyncSelector.PairFood                   -> dataPair.value.toJson(false)
             // is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(false, dateUtil)
             // is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(false, dateUtil)
@@ -370,6 +371,7 @@ class NSClientV3Plugin @Inject constructor(
                                     }
                                     dataSyncSelector.confirmLastBolusIdIfGreater(dataPair.id)
                                 }
+
                                 is DataSyncSelector.PairCarbs                  -> {
                                     if (result.response == 201) { // created
                                         dataPair.value.interfaceIDs.nightscoutId = result.identifier
@@ -379,11 +381,18 @@ class NSClientV3Plugin @Inject constructor(
                                     dataSyncSelector.confirmLastCarbsIdIfGreater(dataPair.id)
                                 }
                                 // is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(false, dateUtil, profileFunction)
-                                // is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toJson(false, profileFunction.getUnits(), dateUtil)
+                                is DataSyncSelector.PairTemporaryTarget        -> {
+                                    if (result.response == 201) { // created
+                                        dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                        storeDataForDb.nsIdTemporaryTargets.add(dataPair.value)
+                                        storeDataForDb.scheduleNsIdUpdate()
+                                    }
+                                    dataSyncSelector.confirmLastTempTargetsIdIfGreater(dataPair.id)
+                                }
                                 // is DataSyncSelector.PairFood                   -> dataPair.value.toJson(false)
                                 // is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(false, dateUtil)
                                 // is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(false, dateUtil)
-                                is DataSyncSelector.PairTemporaryBasal          -> {
+                                is DataSyncSelector.PairTemporaryBasal         -> {
                                     if (result.response == 201) { // created
                                         dataPair.value.interfaceIDs.nightscoutId = result.identifier
                                         storeDataForDb.nsIdTemporaryBasals.add(dataPair.value)
