@@ -19,12 +19,16 @@
     <string name="objectives_maxiobzero_learned">Установка MaxIOB на нуль предотвращает от гипо и не добавит инсулина выше базальной скорости (за исключением отрицательных значений IOB)</string>
     <string name="objectives_maxiob_objective">Настройка замкнутого цикла с поднятием макс величины IOB выше 0 и постепенным понижением целевой ГК</string>
     <string name="objectives_maxiob_gate">Работа несколько дней и по кр мере одну ночь без срабатывания оповещений о низкой ГК</string>
+    <string name="objectives_maxiob_learned">Обновляйте MaxIOB по мере взросления ребенка. Не допускайте, чтобы система подавала больше инсулина, чем вы можете покрыть едой = действительно, плохая идея выставлять высокие значения.</string>
     <string name="objectives_autosens_objective">Настраиваем базал и коэффициенты с последующей активацией auto-sens</string>
     <string name="objectives_autosens_gate">1 неделя успешной дневной работы с регулярным введением углеводов</string>
+    <string name="objectives_autosens_learned">Если результаты autosense не колеблются около 100%, то возможно ваш профиль неверный.</string>
     <string name="objectives_smb_objective">Активация таких доп функций для дневного времени как супер микро болюс SMB</string>
     <string name="objectives_smb_gate">Прочтите wiki и увеличьте maxIOB чтобы супер микро болюс SMB заработал как положено! Хорошее начало – maxIOB = средний болюс на еду + троекратный максимальный суточный базал</string>
+    <string name="objectives_smb_learned">Ваша цель - это использование СМБ. Алгоритм Oref1 предназначен также, чтобы помочь вам с болюсами. Вы не должны подавать полный болюс на еду, а только часть его, предоставив AAPS подать при необходимости остальную часть болюса. Таким образом вы можете иметь большее пространство для ошибки в подсчетах углеводов. Вы знаете, что можно установить проценты для уменьшения размера болюса?</string>
     <string name="objectives_auto_objective">Включение автоматизации</string>
     <string name="objectives_auto_gate">Прочтите документацию по автоматизации. Настройте свои первые простые правила. Вместо действия позвольте AAPS только выводить уведомления. Если вы уверены, что автоматизация инициируется в нужное время, замените уведомление реальными действиями. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">Автоматизация может быть хорошим слугой, но плохим хозяином. Не полагайтесь на нее сверх меры. Не пытайтесь заменить лежащий в основе алгоритм. Проверяйте перед использованием.</string>
     <string name="objectives_bgavailableinns">гликемия доступна в NS</string>
     <string name="objectives_pumpstatusavailableinns">Статус помпы доступен в NS</string>
     <string name="objectives_manualenacts">Ввод вручную</string>
