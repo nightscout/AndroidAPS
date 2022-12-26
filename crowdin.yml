@@ -27,6 +27,10 @@ files:
     translation: /plugins/insulin/src/main/res/values-%android_code%/strings.xml
   - source: /plugins/configuration/src/main/res/values/strings.xml
     translation: /plugins/configuration/src/main/res/values-%android_code%/strings.xml
+  - source: /plugins/smoothing/src/main/res/values/strings.xml
+    translation: /plugins/smoothing/src/main/res/values-%android_code%/strings.xml
+    translate_attributes: 0
+    content_segmentation: 0
   - source: /plugins/sync/src/main/res/values/strings.xml
     translation: /plugins/sync/src/main/res/values-%android_code%/strings.xml
     translate_attributes: 0
