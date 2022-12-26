@@ -115,7 +115,7 @@ class DataBroadcastPlugin @Inject constructor(
         val lastBG = iobCobCalculator.ads.lastBg() ?: return
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData ?: return
 
-        bundle.putDouble("glucoseMgdl", lastBG.value)   // last BG in mgdl
+        bundle.putDouble("glucoseMgdl", lastBG.recalculated)   // last BG in mgdl
         bundle.putLong("glucoseTimeStamp", lastBG.timestamp) // timestamp
         bundle.putString("units", profileFunction.getUnits().asText) // units used in AAPS "mg/dl" or "mmol"
         bundle.putString("slopeArrow", lastBG.trendArrow.text) // direction arrow as string

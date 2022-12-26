@@ -948,8 +948,8 @@ class DataHandlerMobile @Inject constructor(
             slopeArrow = trendCalculator.getTrendArrow(glucoseValue).symbol,
             delta = glucoseStatus?.let { deltaString(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             avgDelta = glucoseStatus?.let { deltaString(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
-            sgvLevel = if (glucoseValue.value > highLine) 1L else if (glucoseValue.value < lowLine) -1L else 0L,
-            sgv = glucoseValue.value,
+            sgvLevel = if (glucoseValue.recalculated > highLine) 1L else if (glucoseValue.recalculated < lowLine) -1L else 0L,
+            sgv = glucoseValue.recalculated,
             high = highLine,
             low = lowLine,
             color = 0
