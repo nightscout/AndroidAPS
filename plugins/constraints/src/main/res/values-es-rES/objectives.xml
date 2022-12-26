@@ -34,8 +34,6 @@
     <string name="objectives_useactions">En Config Builder habilitar el plugin Acciones, hágalo visible y muestre su contenido desde el menú superior</string>
     <string name="objectives_useloop">Mostrar contenido del plugin Loop</string>
     <string name="objectives_usescale">Usar función de escala mediante un gráfico BG pulsado largo</string>
-    <string name="objectives_button_enter">Intro</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si tienes al menos 3 meses de experiencia con el bucle cerrado de otros sistemas puedes cualificarte para obtener un código para saltarte los objetivos. Para información detallada (en inglés): https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives.</string>
     <string name="objectives_exam_objective">Compruebe su conocimiento</string>
     <string name="objectives_exam_gate">Estudia las preguntas. Se te dan cuatro respuestas posibles para cada pregunta. Puede haber más de una respuesta correcta. Por favor, marca todas las que son correctas y seleccione VERIFICAR.</string>
     <string name="answerdisabledto">Respuesta deshabilitada a: %1$s</string>
