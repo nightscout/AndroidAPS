@@ -41,8 +41,6 @@
     <string name="objectives_useactions">Dans la Configuration, activez le plugin Actions, rendez le visible et affichez son contenu dans le menu supérieur</string>
     <string name="objectives_useloop">Affichage du contenu du plugin Boucle</string>
     <string name="objectives_usescale">Modification de l\'échelle du graphique par un appui long sur la courbe de glycémie</string>
-    <string name="objectives_button_enter">Entrer</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si vous avez au moins 3 mois d\'expérience de boucle fermée avec d\'autres systèmes, vous pourriez avoir droit à un code permettant d\'ignorer les objectifs. Voir https://androidaps.readthedocs.io/fr/latest/Usage/Objectives.html#ignorer-les-objectifs pour plus de détails.</string>
     <string name="objectives_exam_objective">Prouver ses connaissances</string>
     <string name="objectives_exam_gate">Étudiez les questions. Vous avez quatre réponses possibles pour chaque question. Il peut y avoir plusieurs réponses correctes. Veuillez vérifier celles qui sont correctes et sélectionnez VÉRIFIER.</string>
     <string name="answerdisabledto">Réponse désactivée jusqu\'à : %1$s</string>
