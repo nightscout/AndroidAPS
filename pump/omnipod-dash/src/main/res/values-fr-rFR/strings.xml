@@ -50,4 +50,5 @@
     <string name="setting_temp_basal_might_have_basal_failed">Le paramétrage du basal temporaire a peut-être échoué. Si un basal temporaire était en cours d\'exécution, il a été annulé. Veuillez actualiser manuellement l\'état du Pod à partir de l\'onglet Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">L\'annulation du basal temporaire est incertaine</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Commande reprise injection non confirmée. Veuillez actualiser le statut du pod</string>
+    <string name="cancelling_temp_basal_might_have_failed">L\'annulation du basal temporaire pourrait avoir échoué. Si un basal temporaire était déjà en cours d\'exécution, il pourrait avoir été annulé. Veuillez actualiser manuellement le statut du Pod depuis l\'onglet Omnipod.</string>
 </resources>
