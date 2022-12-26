@@ -86,7 +86,6 @@ class TddCalculatorImpl @Inject constructor(
     }
 
     override fun calculate(startTime: Long, endTime: Long, allowMissingData: Boolean): TotalDailyDose? {
-        val isWholeDay = (endTime - startTime) >= T.days(1).msecs()
         val startTimeAligned = startTime - startTime % (5 * 60 * 1000)
         val endTimeAligned = endTime - endTime % (5 * 60 * 1000)
         val tdd = TotalDailyDose(timestamp = startTimeAligned)

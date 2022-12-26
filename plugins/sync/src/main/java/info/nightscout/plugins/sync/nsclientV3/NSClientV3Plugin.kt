@@ -40,6 +40,7 @@ import info.nightscout.plugins.sync.nsclientV3.extensions.toNSEffectiveProfileSw
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSProfileSwitch
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSTemporaryBasal
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSTemporaryTarget
+import info.nightscout.plugins.sync.nsclientV3.extensions.toNSTherapyEvent
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadStatusWorker
@@ -327,10 +328,11 @@ class NSClientV3Plugin @Inject constructor(
             is DataSyncSelector.PairBolus                  -> dataPair.value.toNSBolus()
             is DataSyncSelector.PairCarbs                  -> dataPair.value.toNSCarbs()
             // is DataSyncSelector.PairBolusCalculatorResult  -> dataPair.value.toJson(false, dateUtil, profileFunction)
-            is DataSyncSelector.PairTemporaryTarget -> dataPair.value.toNSTemporaryTarget()
+            is DataSyncSelector.PairTemporaryTarget        -> dataPair.value.toNSTemporaryTarget()
             // is DataSyncSelector.PairFood                   -> dataPair.value.toJson(false)
             // is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(false, dateUtil)
-            // is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(false, dateUtil)
+            is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toNSTherapyEvent()
+
             is DataSyncSelector.PairTemporaryBasal         -> {
                 val profile = profileFunction.getProfile(dataPair.value.timestamp)
                 if (profile == null) {
@@ -391,7 +393,15 @@ class NSClientV3Plugin @Inject constructor(
                                 }
                                 // is DataSyncSelector.PairFood                   -> dataPair.value.toJson(false)
                                 // is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(false, dateUtil)
-                                // is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(false, dateUtil)
+                                is DataSyncSelector.PairTherapyEvent           -> {
+                                    if (result.response == 201) { // created
+                                        dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                        storeDataForDb.nsIdTherapyEvents.add(dataPair.value)
+                                        storeDataForDb.scheduleNsIdUpdate()
+                                    }
+                                    dataSyncSelector.confirmLastTherapyEventIdIfGreater(dataPair.id)
+                                }
+
                                 is DataSyncSelector.PairTemporaryBasal         -> {
                                     if (result.response == 201) { // created
                                         dataPair.value.interfaceIDs.nightscoutId = result.identifier
