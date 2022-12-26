@@ -33,8 +33,6 @@
     <string name="objectives_useactions">Konfigūracijoje įjunkite Veiksmų įskiepį, nustatykite jį matomą ir jo turinio rodymą viršutiniame meniu</string>
     <string name="objectives_useloop">Parodyti Ciklo įskiepio turinį</string>
     <string name="objectives_usescale">Panaudokite vaizdo dydžio keitimo funkciją ilgai spaudžiant ant glikemijos kreivės</string>
-    <string name="objectives_button_enter">Įeiti</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Jei turite bent 3 mėnesių uždaro ciklo patirties kitose sistemose, galite gauti kodą, leidžiantį praleisti tikslus. Visą informaciją galite rasti čia: https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives.</string>
     <string name="objectives_exam_objective">Patvirtinkite savo žinias</string>
     <string name="objectives_exam_gate">Išanalizuokite klausimus.  Į kiekvieną klausimą jums pateikiami keturi galimi atsakymai. Teisingų atsakymų gali būti daugiau nei vienas. Pažymėkite visus teisingus ir pasirinkite PATVIRTINTI.</string>
     <string name="answerdisabledto">Atsakymas sustabdytas: %1$s</string>
