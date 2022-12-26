@@ -20,7 +20,7 @@ dependencies {
     implementation project(':core:utils')
     implementation project(':app-wear-shared:shared')
 
-    implementation('com.thoughtworks.xstream:xstream:1.4.19') {
+    implementation('com.thoughtworks.xstream:xstream:1.4.20') {
         exclude group: 'xmlpull', module: 'xmlpull'
     }
 
