@@ -7,12 +7,16 @@
     <string name="objectivenotfinished">Цель %1$d не завершена</string>
     <string name="objectives_0_objective">Настройка визуализации и мониторинга, анализ базала и коэффициентов</string>
     <string name="objectives_0_gate">Убедитесь, что величина ГК и данные по инсулину помпы передаются в Nightscout</string>
+    <string name="objectives_0_learned">Вы сделали базовую настройку экосистемы AAPS. Nightscout не нужен для работы AAPS, но может быть полезен для отчетов и мониторинга других пациентов. Необходимости в постоянном подключении к NS нет, если вы используете NS только для себя. Вы можете установить загрузку, например, только на домашний wifi, чтобы сэкономить заряд батареи.</string>
     <string name="objectives_openloop_objective">Старт незамкнутого цикла</string>
     <string name="objectives_openloop_gate">Начинайте работу в режиме незамкнутого цикла и ручной подстройки величины временного базала. Установите и применяйте временные цели и временные цели по умолчанию (напр. углеводы при нагрузке или купировании гипо)</string>
+    <string name="objectives_openloop_learned">Открытый цикл может быть использован для получения рекомендаций, если у вас нет совместимой помпы или если вы не готовы закрыть цикл.</string>
     <string name="objectives_maxbasal_objective">Глубже понимаем работу системы в режиме незамкнутого цикла, включая ее рекомендации по временным базалам</string>
     <string name="objectives_maxbasal_gate">На основе накопленного опыта, определяем максимальную величину базала и задаем ее в помпе и в настройки AndroidAPS</string>
+    <string name="objectives_maxbasal_learned">Примите меры предосторожности и корректируйте, если необходимо, параметры безопасности.</string>
     <string name="objectives_maxiobzero_objective">Начинаем замыкать цикл с прекращением подачи инсулина при низком значении Ск (режим Low Glucose Suspend)</string>
     <string name="objectives_maxiobzero_gate">Работа в замкнутом цикле с макс активным инсулином IOB = 0 на протяжении нескольких дней избегая событий типа приостановка на низких ГК Low Suspend</string>
+    <string name="objectives_maxiobzero_learned">Установка MaxIOB на нуль предотвращает от гипо и не добавит инсулина выше базальной скорости (за исключением отрицательных значений IOB)</string>
     <string name="objectives_maxiob_objective">Настройка замкнутого цикла с поднятием макс величины IOB выше 0 и постепенным понижением целевой ГК</string>
     <string name="objectives_maxiob_gate">Работа несколько дней и по кр мере одну ночь без срабатывания оповещений о низкой ГК</string>
     <string name="objectives_autosens_objective">Настраиваем базал и коэффициенты с последующей активацией auto-sens</string>
