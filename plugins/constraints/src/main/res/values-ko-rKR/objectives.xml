@@ -33,8 +33,6 @@
     <string name="objectives_useactions">구성관리자에서 실행 플러그인을 활성화하고 메뉴에서 표시되게 합니다</string>
     <string name="objectives_useloop">Loop 플러그인 내용을 표시합니다</string>
     <string name="objectives_usescale">홈의 혈당 차트를 길게 눌러 차트 시간을 변경하세요</string>
-    <string name="objectives_button_enter">입력</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">다른 시스템에서 closed loop을 적어도 3개월 동안 사용한 경우 목표를 건너뛸 수 있는 코드를 받을 수 있습니다. 자세한 정보는 https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives를 참고하십시오.</string>
     <string name="objectives_exam_objective">당신의 지식을 확인해봅니다</string>
     <string name="objectives_exam_gate">문제들에 대한 공부. 각각의 질문에 네 개의 답변이 주어집니다. 한 개 이상의 정답이 있을 수 있습니다. 올바른 것을 모두 체크하고, 확인을 선택하십시오.</string>
     <string name="answerdisabledto">다음 시간까지 답변 불가능: %1$s</string>
