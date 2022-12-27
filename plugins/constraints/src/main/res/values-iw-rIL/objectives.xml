@@ -18,8 +18,8 @@
     <string name="objectives_autosens_objective">במידת הצורך, בצעו התאמת בזאלי ויחסים, ולאחר מכן הפעילו את Autosens</string>
     <string name="objectives_autosens_gate">שבוע של הפעלה מוצלחת של הלולאה במשך שעות היום, עם רישום ערכי פחמימות בקביעות</string>
     <string name="objectives_smb_objective">הפעלת פונקציות נוספות לשימוש במשך היום, כגון סופר מיקרו בולוסים (SMB)</string>
-    <string name="objectives_auto_objective">הפעלת אוטומציה</string>
     <string name="objectives_smb_gate">חובה לקרוא את הויקי ולהעלות את ערך ה-maxIOB כדי להפעיל את ה- SMB כראוי. התחלה טובה תהיה maxIOB=בולוס ממוצע + 3 פעמים ערך הבזאלי היומי המקסימלי</string>
+    <string name="objectives_auto_objective">הפעלת אוטומציה</string>
     <string name="objectives_auto_gate">קראו את המסמכים על כיצד האוטומציה פועלת. הגדירו את הכללים הפשוטים הראשונים שלכם. במקום פעולה, תנו ל-AAPS להציג הודעה בלבד. כאשר אתם בטוחים שהאוטומציה מופעלת כראוי, החליפו את ההודעה בפעולה אמיתית. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">ערך הסוכר זמין ב-Nightscout</string>
     <string name="objectives_pumpstatusavailableinns">סטטוס המשאבה זמין ב-Nightscout</string>
@@ -34,10 +34,6 @@
     <string name="objectives_useactions">ב-בונה התצורה יש להפעיל את תוסף הפעולות, להפוך אותו לגלוי ולהציג את תוכנו בתפריט העליון</string>
     <string name="objectives_useloop">הצג תוכן של תוסף לולאה</string>
     <string name="objectives_usescale">השתמשו בפונקציית קנה המידה ע\"י לחיצה ארוכה על תרשים הסוכר</string>
-    <string name="objectives_button_enter">הכנס</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">אם השתמשתם בלולאה סגורה במשך שלושה חודשים לפחות עם מערכות אחרות, תוכלו לבקש קוד לדילוג על המטרות. ראו: https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives לפרטים נוספים.</string>
-    <string name="codeaccepted">קוד אושר</string>
-    <string name="codeinvalid">קוד בלתי חוקי</string>
     <string name="objectives_exam_objective">הוכיחו את הידע שלכם\\ן</string>
     <string name="objectives_exam_gate">למדו לקראת מענה על השאלות.  קיימות ארבע תשובות אפשריות לכל שאלה. ייתכן שיש יותר מתשובה נכונה אחת. בחרו את כל התשובות הנכונות ובחרו אישור.</string>
     <string name="answerdisabledto">לא ניתן לענות עד: %1$s</string>
