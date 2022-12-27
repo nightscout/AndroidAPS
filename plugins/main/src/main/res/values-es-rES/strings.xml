@@ -88,6 +88,9 @@
     <string name="smscommunicator_message_body">El cuerpo del mensaje es inválido</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Enviar SMS si se activa un evento de bomba inaccesible</string>
     <string name="smscommunicator_pump_unreachable">Reportar bomba inalcanzable</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Para cambiar el modo lazo a LGS (Suspensión por glucosa baja) responde con el código %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Para cambiar el modo lazo a lazo cerrado, responde con código %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Modo lazo actual: %1$s</string>
     <string name="wrong_format">Formato incorrecto</string>
     <string name="sms_actual_bg">Glucosa:</string>
     <string name="sms_last_bg">Última Glucosa:</string>
