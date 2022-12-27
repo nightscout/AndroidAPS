@@ -88,6 +88,9 @@
     <string name="smscommunicator_message_body">Message invalide</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Envoyer un SMS si l\'événement Pompe hors de portée est déclenché</string>
     <string name="smscommunicator_pump_unreachable">Signaler Pompe hors de portée</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Afin de basculer du mode Boucle vers AGB (Arrêt pour Glycémie Basse) répondre avec le code %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Afin de basculer en mode Boucle Fermée répondre avec le code %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Mode de boucle actuelle: %1$s</string>
     <string name="wrong_format">Format incorrect</string>
     <string name="sms_actual_bg">Gly:</string>
     <string name="sms_last_bg">Dernière Gly:</string>
