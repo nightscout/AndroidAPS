@@ -48,7 +48,6 @@ class IobCobOrefWorker @Inject internal constructor(
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
     @Inject lateinit var profiler: Profiler
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage

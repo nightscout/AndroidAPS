@@ -56,7 +56,6 @@ class KeepAliveWorker(
     @Inject lateinit var receiverStatusStore: ReceiverStatusStore
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var commandQueue: CommandQueue
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
