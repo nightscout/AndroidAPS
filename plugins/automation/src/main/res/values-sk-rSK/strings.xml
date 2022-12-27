@@ -127,5 +127,7 @@
     <string name="saturday_short">So</string>
     <string name="sunday_short">Ne</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Čas na jedlo!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
     <string name="time_to_bolus">Čas na bolus!\nSpustite Bolusovú kalkulačku a urobte výpočet znova.</string>
+    <string name="error_setting_reminder">Chyba pri nastavovaní budúceho upozornenia</string>
 </resources>
