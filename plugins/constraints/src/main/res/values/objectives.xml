@@ -54,7 +54,7 @@
     <string name="objectives_exam_learned_isf">You learned meaning of ISF value and it affects amount of insulin used for BG correction.</string>
     <string name="objectives_exam_learned_ic">You learned meaning of IC value and it affects amount of insulin needed to cover carbs.</string>
     <string name="objectives_exam_learned_hypott">Hypo temp target is used only to prevent overcorrection after hypo, when there is usually stacked negative IOB. Additional actions should be evaluated to prevent this situation again in the future.</string>
-    <string name="objectives_exam_learned_profileswitch">Using percentage doesn\'t affect targets BGs but basal, ISF and IC are adjusted to give more insulin (above 100%) or less insulin (under 100%).</string>
+    <string name="objectives_exam_learned_profileswitch">Using percentage doesn\'t affect targets BGs but basal, ISF and IC are adjusted to give more insulin (above 100%%) or less insulin (under 100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">By using timeshift in profile switch you can adapt circadian profile to irregularities like late wake up.</string>
     <string name="objectives_exam_learned_profileswitch4">Editing profile itself is not sufficient to make a change. You still need to do a profile switch to activate changes.</string>
     <string name="objectives_exam_learned_exercise">You should reduce amount of insulin in the body at least 1 hour before starting exercise by selecting profile under 100%.</string>
