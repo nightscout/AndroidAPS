@@ -30,9 +30,6 @@
     <string name="objectives_useactions">In die konfig Bouer aktiveer Aksies plugin, maak dit sigbaar en vertoon die inhoud van die top menu</string>
     <string name="objectives_useloop">Vertoon die inhoud van die Lus plugin</string>
     <string name="objectives_usescale">Gebruik skaal funksie deur\'n lang druk op BG grafiek</string>
-    <string name="objectives_button_enter">Enter</string>
-    <string name="codeaccepted">Kode aanvaar</string>
-    <string name="codeinvalid">Kode ongeldig</string>
     <string name="objectives_exam_objective">Bewys jou kennis</string>
     <string name="answerdisabledto">Beantwoording opgeskort tot: %1$s</string>
     <string name="wronganswer">Verkeerde antwoord!</string>
