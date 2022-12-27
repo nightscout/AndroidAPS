@@ -47,6 +47,16 @@
     <string name="objectives_exam_learned_prerequisites">Vous n\'avez pas besoin d\'être un développeur mais vous avez besoin de NS pour passer des objectifs, d\'une pompe et d\'un ordinateur compatibles pour construire AAPS pour la première fois ainsi que pour chaque mise à jour.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS peut être exécuté hors ligne.</string>
     <string name="objectives_exam_learned_basaltest">Le profil doit être ajusté et mis à jour. Un meilleur profil = de meilleurs résultats.</string>
+    <string name="objectives_exam_learned_dia">La DAI avec une boucle a une signification différente (temps jusqu\'à ce que l\'insuline soit absorbée en totalité) comparé au thérapie par pompe classique (temps jusqu\'à ce que la majeure partie de l\'insuline soit absorbée).</string>
+    <string name="objectives_exam_learned_isf">Vous avez appris la signification de la valeur SI et comment elle impacte la quantité d\'insuline utilisée pour corriger la glycémie.</string>
+    <string name="objectives_exam_learned_ic">Vous avez appris la signification de la valeur G/I et comment elle impacte la quantité d\'insuline nécessaire pour couvrir les glucides.</string>
+    <string name="objectives_exam_learned_exercise">Vous devriez réduire la quantité d\'insuline dans le corps au moins 1 heure avant de commencer l\'exercice en sélectionnant un profil inférieur à 100%.</string>
+    <string name="objectives_exam_learned_noisycgm">Si vous ne pouvez pas faire confiance aux valeurs MGC, vous ne devriez pas utiliser de boucle sans surveillance.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS doit savoir si la pompe n\'est pas connectée pour comptabiliser correctement l\'IA (IOB).</string>
+    <string name="objectives_exam_learned_insulin">Il est nécessaire d\'indiquer quelle insuline est dans la pompe, car elle affecte le calcul de l\'IA.</string>
+    <string name="objectives_exam_learned_breadgrams">Seuls les grammes sont autorisés pour l\'entrée des glucides.</string>
+    <string name="objectives_exam_learned_ecarbs">Les E-glucides remplacent les bolus étendus dans le monde de la pompe.</string>
+    <string name="objectives_exam_learned_nsclient">La surveillance et le contrôle à distance sont possibles mais toutes les fonctionnalités ne doivent pas être disponibles à distance.</string>
     <string name="answerdisabledto">Réponse désactivée jusqu\'à : %1$s</string>
     <string name="wronganswer">Mauvaise réponse !</string>
     <string name="unfinshed_button">Prochain non terminé</string>
@@ -59,4 +69,5 @@
     <string name="notconnected">Non connecté à Internet</string>
     <string name="failedretrievetime">Échec de la récupération de l\'heure</string>
     <string name="requirementnotmet">Exigences de l\'objectif non atteintes</string>
+    <string name="what_i_ve_learned">Ce que j\'ai appris :</string>
 </resources>
