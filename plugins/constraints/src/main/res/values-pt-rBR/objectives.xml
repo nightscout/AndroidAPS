@@ -18,8 +18,8 @@
     <string name="objectives_autosens_objective">Ajuste as basais e os parâmetros, se necessário, e, em seguida, ative o auto-sens</string>
     <string name="objectives_autosens_gate">1 semana de looping durante o dia com sucesso com entrada regular de carboidratos</string>
     <string name="objectives_smb_objective">Activando recursos adicionais para uso durante o dia, como SMB</string>
-    <string name="objectives_auto_objective">Ativando a automação</string>
     <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a IA máx para que os SMBs funcionem corretamente! Inicialmente poderá considerar maxIA=média dos bólus + 3 x a basal diária máxima</string>
+    <string name="objectives_auto_objective">Ativando a automação</string>
     <string name="objectives_auto_gate">Leia os documentos de como a automação funciona. Configure suas primeiras regras simples. Em vez de efetuar uma ação deixe AAPS apresentar apenas uma notificação. Quando você tiver certeza de que a automação é acionada no momento certo substitua a notificação por uma ação real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glicose disponível no NS</string>
     <string name="objectives_pumpstatusavailableinns">Status da Bomba disponível no NS</string>
@@ -34,10 +34,6 @@
     <string name="objectives_useactions">No Configurador ative o plugin de Ações, torne-o visível e exiba o seu conteúdo no menu superior</string>
     <string name="objectives_useloop">Mostrar conteúdo do plugin Loop</string>
     <string name="objectives_usescale">Ajuste a escala ao pressionar por um tempo o gráfico da glicemia</string>
-    <string name="objectives_button_enter">Inserir</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Se você tiver pelo menos 3 meses de experiência com sistemas Closed Loop com outros aplicativos, pode-se qualificar por um código para pular os objetivos. Vê https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives para mais detalhes.</string>
-    <string name="codeaccepted">Código aceito</string>
-    <string name="codeinvalid">Código inválido</string>
     <string name="objectives_exam_objective">Prove seu conhecimento</string>
     <string name="objectives_exam_gate">Estude as perguntas.  Haverá quatro respostas possíveis para cada pergunta.  Pode ter mais do que uma resposta correta. Por favor, marque todas as que estão corretas e selecione VERIFICAR.</string>
     <string name="answerdisabledto">Resposta desativada até: %1$s</string>
