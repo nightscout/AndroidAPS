@@ -90,14 +90,28 @@
     <!--    Autotune   -->
     <string name="insulin_peak">Gipfel</string>
     <!--    Loop -->
+    <string name="run_now">Jetzt ausführen</string>
     <string name="smb_frequency_exceeded">Aufgrund eines Bolus in den letzten 3 Minuten wird kein SMB abgegeben</string>
     <string name="pump_not_initialized">Pumpe nicht initialisiert!</string>
     <string name="loop_shortname">LOOP</string>
     <string name="description_loop">Aktiviere oder deaktiviere die Anwendung, die den Loop ausführt.</string>
+    <string name="no_aps_selected">KEIN APS AUSGEWÄHLT ODER KEIN ERGEBNIS VORHANDEN</string>
     <string name="ignore5m">5 Min. ignorieren</string>
     <string name="ignore15m">15 Min. ignorieren</string>
     <string name="ignore30m">30 Min. ignorieren</string>
+    <string name="carbs_suggestion">KH-Vorschlag</string>
     <string name="open_loop_new_suggestion">Neue Empfehlung verfügbar</string>
     <string name="basal_set_correctly">Basalrate richtig eingestellt</string>
+    <string name="last_run_label">Letzte Ausführung</string>
     <string name="loop_aps_label">APS</string>
+    <string name="request_label">Anfrage</string>
+    <string name="loop_constraints_processed_label">Beschränkungen angewendet</string>
+    <string name="loop_tbr_request_time_label">Temp. BR Anfragezeit</string>
+    <string name="loop_tbr_execution_time_label">Temp. BR Ausführungszeit</string>
+    <string name="loop_tbr_set_by_pump_label">TBR der Pumpe</string>
+    <string name="loop_smb_request_time_label">SMB Anfragezeit</string>
+    <string name="loop_smb_execution_time_label">SMB Ausführungszeit</string>
+    <string name="loop_smb_set_by_pump_label">SMB von Pumpe eingestellt</string>
+    <string name="loop_open_mode_min_change">Minimaler Wert zur Anfrage einer Änderung [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop schlägt neue Änderungen nur dann vor, wenn die Änderung größer als dieser Wert ist. Der Standard-Wert ist 20%.</string>
 </resources>

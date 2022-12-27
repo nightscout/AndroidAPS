@@ -88,6 +88,9 @@
     <string name="smscommunicator_message_body">Neplatné tělo zprávy</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Odeslat SMS, pokud je detekována nedostupná pumpa</string>
     <string name="smscommunicator_pump_unreachable">Nahlásit nedostupnou pumpu</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Pro přepnutí režimu smyčky na LGS (Pozastavení nízké glykémie) odpovězte kódem %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Pro přepnutí režimu smyčky na uzavřenou smyčku odpovězte kódem %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Aktuální režim smyčky: %1$s</string>
     <string name="wrong_format">Chybný formát</string>
     <string name="sms_actual_bg">Glykémie:</string>
     <string name="sms_last_bg">Poslední glykémie:</string>

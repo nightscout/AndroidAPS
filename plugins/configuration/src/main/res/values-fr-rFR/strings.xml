@@ -73,6 +73,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="configbuilder_insulin_description">Quel type d\'insuline utilisez-vous ?</string>
     <string name="configbuilder_bgsource">Source des glycémies</string>
     <string name="configbuilder_bgsource_description">Quelle source de données doit être utilisée par AAPS ?</string>
+    <string name="configbuilder_smoothing">Lissage</string>
+    <string name="configbuilder_smoothing_description">Choisissez l\'algorithme de lissage</string>
     <string name="configbuilder_sensitivity">Estimation de Sensibilité</string>
     <string name="configbuilder_sensitivity_description">Quel algorithme de Sensibilité doit être utilisé ?</string>
     <string name="config_builder_shortname">CONF</string>

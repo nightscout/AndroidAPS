@@ -129,4 +129,5 @@
     <!--    Reminders-->
     <string name="time_to_eat">Пора есть!\n Запустите помощник болюса снова для подсчета.</string>
     <string name="time_to_bolus">Пора дать болюс!\nЗапустите помощник болюса и повторите расчет.</string>
+    <string name="error_setting_reminder">Ошибка при настройке будущего оповещения</string>
 </resources>

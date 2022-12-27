@@ -39,4 +39,7 @@
     <string name="omnipod_dash_not_enough_insulin">V zásobníku nezbývá dostatek inzulínu</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Nepotvrzený příkaz</string>
     <string name="requested_by_user" comment="26 characters max for translation">Vyžádáno uživatelem</string>
+    <string name="profile_set_ok">Profil nastaven OK</string>
+    <string name="insulin_delivery_suspended">Výdej inzulínu pozastaven</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Zrušení dočasného bazálu je nejisté</string>
 </resources>
