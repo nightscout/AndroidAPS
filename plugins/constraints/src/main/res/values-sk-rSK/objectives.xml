@@ -50,7 +50,6 @@
     <string name="objectives_exam_learned_isf">Naučili ste sa význam hodnoty ISF a jej efekt na množstvo inzulínu, použitého pre korekcie glykémie.</string>
     <string name="objectives_exam_learned_ic">Naučili ste sa význam hodnoty IC a jej efekt na množstvo inzulínu, potrebného na pokrytie sacharidov.</string>
     <string name="objectives_exam_learned_hypott">Dočasný cieľ Hypoglykémia je používaný iba na zabránenie nadmernej korekcii po hype, kedy sa zväčša nakumuluje negatívne IOB.</string>
-    <string name="objectives_exam_learned_profileswitch">Používanie percenta neovplyvňuje cieľovú glykémiu, ale bazál, citlivosť a sacharidovo-inzulínové prevody sú prispôsobené, aby bolo použitého viac inzulínu (nad 100%), alebo menej inzulínu (pod 100%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Pri používani posunu času pri prepínaní profilu, môžete prispôsobiť cirkadiánny profil na nezrovnalosti, ako napríklad neskoršie zobudenie.</string>
     <string name="objectives_exam_learned_profileswitch4">Úprava samotného profilu na vykonanie zmien nepostačuje. Pre aktiváciu zmien, potrebujete stále urobiť prepnutie profilu.</string>
     <string name="objectives_exam_learned_exercise">Množstvo inzulínu v tele, by ste mali znížiť aspoň 1 hodinu pred začiatkom cvičenia, výberom profilu pod 100%.</string>
