@@ -222,7 +222,9 @@ class AutosensDataStoreObject : AutosensDataStore {
             return
         }
         val newBucketedData = ArrayList<InMemoryGlucoseValue>()
-        var currentTime = bgReadings[0].timestamp - bgReadings[0].timestamp % T.mins(5).msecs()
+
+        // Round time to 1 minute, This sets timestamp a bit in the past, but not much longer that it is noticable
+        var currentTime = bgReadings[0].timestamp - bgReadings[0].timestamp % T.mins(1).msecs()
         val adjustedTime = adjustToReferenceTime(currentTime)
         // after adjusting time may be newer. In this case use T-5min
         currentTime = if (adjustedTime > currentTime) adjustedTime - T.mins(5).msecs() else adjustedTime
