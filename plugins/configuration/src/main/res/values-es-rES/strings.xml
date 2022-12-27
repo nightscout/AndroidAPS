@@ -72,6 +72,8 @@
     <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
     <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>
+    <string name="configbuilder_smoothing">Suavizado</string>
+    <string name="configbuilder_smoothing_description">Elegir algoritmo de suavizado</string>
     <string name="configbuilder_sensitivity">Detección de sensibilidad</string>
     <string name="configbuilder_sensitivity_description">¿Qué algoritmo de sensibilidad debería usar?</string>
     <string name="config_builder_shortname">CONF</string>
