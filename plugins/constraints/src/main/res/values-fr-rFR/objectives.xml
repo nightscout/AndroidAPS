@@ -34,6 +34,7 @@
     <string name="accomplished">Accompli : %1$s</string>
     <string name="objectives_usage_objective">Apprendre comment contrôler AAPS</string>
     <string name="objectives_usage_gate">Effectuer différentes actions dans AAPS</string>
+    <string name="objectives_usage_learned">Vous avez appris à gérer les bases de AAPS. Les commandes principales se trouvent dans l\'écran Aperçu et sont accessibles par clic ou par clic long. Il y a des contrôles complémentaires dans l\'écran Action. Vous devriez savoir comment mettre un plugin dans la barre de menu du haut ou le laisser affiché dans la liste des plugins activés du menu hamburger en haut à gauche de l\'écran.</string>
     <string name="objectives_useprofileswitch">Sélection du profil à 90% pendant 10 min (appui long sur le nom du profil à l\'Accueil)</string>
     <string name="objectives_usedisconnectpump">Simulation d\'une douche. Déconnectez la pompe pendant 1h (Appui long sur Boucle Ouverte)</string>
     <string name="objectives_usereconnectpump">... et reconnectez la pompe de la même façon</string>
@@ -43,6 +44,9 @@
     <string name="objectives_usescale">Modification de l\'échelle du graphique par un appui long sur la courbe de glycémie</string>
     <string name="objectives_exam_objective">Prouver ses connaissances</string>
     <string name="objectives_exam_gate">Étudiez les questions. Vous avez quatre réponses possibles pour chaque question. Il peut y avoir plusieurs réponses correctes. Veuillez vérifier celles qui sont correctes et sélectionnez VÉRIFIER.</string>
+    <string name="objectives_exam_learned_prerequisites">Vous n\'avez pas besoin d\'être un développeur mais vous avez besoin de NS pour passer des objectifs, d\'une pompe et d\'un ordinateur compatibles pour construire AAPS pour la première fois ainsi que pour chaque mise à jour.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS peut être exécuté hors ligne.</string>
+    <string name="objectives_exam_learned_basaltest">Le profil doit être ajusté et mis à jour. Un meilleur profil = de meilleurs résultats.</string>
     <string name="answerdisabledto">Réponse désactivée jusqu\'à : %1$s</string>
     <string name="wronganswer">Mauvaise réponse !</string>
     <string name="unfinshed_button">Prochain non terminé</string>
