@@ -59,4 +59,5 @@
     <string name="notconnected">Нет подключения к Интернету</string>
     <string name="failedretrievetime">Не удалось загрузить время</string>
     <string name="requirementnotmet">Требования к цели не выполнены</string>
+    <string name="what_i_ve_learned">Мной усвоено:</string>
 </resources>
