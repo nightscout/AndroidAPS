@@ -14,6 +14,7 @@
     <string name="pump_base_basal_rate">%1$.2f IE/h</string>
     <string name="pump_not_initialized_profile_not_set">Pumpe nicht initialisiert, Profil nicht gesetzt!</string>
     <string name="failed_update_basal_profile">Fehler beim Aktualisieren des Basalprofils</string>
+    <string name="bolus_delivered_successfully">Bolus %1$.2f IE erfolgreich abgegeben</string>
     <string name="no_valid_basal_rate">Von der Pumpe konnte keine gültige Basalrate eingelesen werden.</string>
     <string name="limiting_iob">Begrenze IOB auf %1$.1f IE wegen %2$s</string>
     <string name="loop_disabled">LOOP DEAKTIVIERT DURCH BESCHRÄNKUNGEN</string>
@@ -46,11 +47,13 @@
     <string name="success">Erfolgreich</string>
     <string name="advancedsettings_title">Erweiterte Einstellungen</string>
     <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verzögerten Bolus</string>
+    <string name="aps_mode_title">APS-Modus</string>
     <string name="extended_bolus">Verzögerter Bolus</string>
     <string name="paused">Pausiert</string>
     <string name="tdd_total">TDD Gesamt</string>
     <string name="goingtodeliver">Werde %1$.2f IE abgeben</string>
     <string name="waitingforpump">Warte auf Pumpe</string>
+    <string name="androidaps_start">AAPS gestartet</string>
     <string name="formatsignedinsulinunits">%1$+.2f IE</string>
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
@@ -59,6 +62,8 @@
     <string name="please_wait">Bitte warten…</string>
     <string name="stop">Stopp</string>
     <string name="carbs">Kohlenhydrate</string>
+    <string name="invalid_profile">Ungültiges Profil!</string>
+    <string name="no_profile_set">KEIN PROFIL GESETZT</string>
     <string name="active"><![CDATA[<Aktiv>]]></string>
     <string name="date">Datum</string>
     <string name="units_label">Einheiten</string>
@@ -148,6 +153,7 @@
     <string name="treatments_wizard_basaliob_label">Basal-IOB</string>
     <string name="invalid">Ungültig</string>
     <string name="login">Login</string>
+    <string name="prime_fill">Nadelwechsel/Füllen</string>
     <string name="overview_insulin_label">Insulin</string>
     <string name="stoptemptarget">Temporäres Ziel (TT) stoppen</string>
     <string name="closedloop">Closed Loop</string>
@@ -156,6 +162,8 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="canceling_tbr_failed">Abbruch der temporären Basalrate fehlgeschlagen</string>
+    <string name="canceling_eb_failed">Der Abbruch des erweiterten Bolus ist fehlgeschlagen</string>
     <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
     <string name="suspendloop_label">Deaktiviere/Pausiere den Loop</string>
     <string name="iob_label">Aktives Insulin (IOB)</string>
@@ -174,6 +182,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Profil %1$d%% für %2$d Min. starten</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Temporäre Basalrate abbrechen</string>
     <string name="let_temp_basal_run">Temporäre Basalrate aktiv lassen</string>
     <string name="rate">Rate</string>
     <string name="duration">Dauer</string>
@@ -195,9 +204,12 @@
     <string name="careportal_note_message">Hinweis : %1$s</string>
     <string name="careportal_question_message">Frage : %1$s</string>
     <string name="careportal_exercise_message">Bewegung : %1$s</string>
+    <string name="careportal_pump_site_change">Pumpenkatheter-Wechsel</string>
+    <string name="cgm_sensor_insert">CGM-Sensor gesetzt</string>
     <string name="careportal_cgmsensorstart">CGM-Sensor Start</string>
     <string name="careportal_cgm_sensor_stop">CGM-Sensor-Stopp</string>
     <string name="careportal_dad_alert">D.A.D. Warnung</string>
+    <string name="careportal_insulin_cartridge_change">Insulin Ampullenwechsel</string>
     <string name="careportal_profileswitch">Profilwechsel</string>
     <string name="careportal_snackbolus">Snack-Bolus</string>
     <string name="careportal_mealbolus">Mahlzeiten-Bolus</string>
@@ -207,6 +219,8 @@
     <string name="careportal_tempbasalend">TBR Ende</string>
     <string name="careportal_carbscorrection">Kohlenhydrat-Korrektur</string>
     <string name="careportal_openapsoffline">OpenAPS offline</string>
+    <string name="pump_battery_change">Pumpenbatterie-Wechsel</string>
+    <string name="temporary_target">Temporäres Ziel</string>
     <string name="careportal_temporarytargetvalue">Temporärer Zielwert</string>
     <string name="careportal_temporarytargetcancel">Temporäres Ziel abbrechen</string>
     <string name="boluswizard">Bolus-Rechner</string>
@@ -235,6 +249,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g zusätzliche Kohlenhydrate innerhalb von %2$d Minuten erforderlich</string>
     <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">Kumulative TDD</string>
     <string name="expweight">Exponentiell gewichtete TDD</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bolus</string>
@@ -424,6 +439,8 @@
     <string name="autotune_update_local_profile_message">Anpassen %1$s Profile mit dem Autotune Profile?</string>
     <string name="autotune_revert_local_profile_message">%1$s Profil mit Eingabeprofil zurücksetzen?</string>
     <string name="autotune_profile_invalid">Profil ungültig</string>
+    <string name="autotune_run_without_autoswitch">Autotune wurde ohne Profilwechsel ausgeführt</string>
+    <string name="autotune_run_with_autoswitch">Autotune ausgeführt und Profil wurde automatisch gewechselt</string>
     <string name="autotune_run_with_error">Fehler beim letzten Autotune Lauf</string>
     <string name="autotune_run_cancelled">Ein weiterer Lauf von Autotune wurde erkannt, Lauf abgebrochen</string>
     <!-- Alerts -->
@@ -431,9 +448,13 @@
     <string name="urgent_alarm">Wichtiger Alarm</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Bolus-Rechner</string>
+    <string name="bolus_advisor_message">Deine BZ-Werte sind hoch. Statt jetzt zu essen solltest Du abwarten, bis die Werte gesunken sind. Willst du jetzt einen Korrekturbolus abgeben und erinnert werden, wenn es Zeit zum Essen ist? In diesem Fall werden die Kohlenhydrate nicht übernommen und Du musst nach der Erinnerung den Bolus-Rechner erneut verwenden.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
     <string name="partialboluswizard">Abgabe von [%] des Ergebnisses des Bolus-Rechners</string>
+    <string name="bolus_constraint_applied_warn">Bolus Einschränkung angewendet: %1$.2f U bis %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolus wird nur aufgezeichnet (Die Pumpe gibt kein Insulin ab!)</string>
     <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>
     <string name="no_action_selected">Keine Aktion ausgewählt, nichts wird geschehen.</string>
     <string name="wizard_no_actual_bg">Kein aktueller BG liegt als Basis zur Berechnung vor!</string>
@@ -453,9 +474,15 @@
     <string name="wizard_explain_tt_to">%1$s zu %2$s</string>
     <string name="wizard_pump_not_available">Keine Pumpe verfügbar!</string>
     <!--    Preferences-->
+    <string name="child">Kind</string>
     <string name="teenage">Teenager</string>
     <string name="adult">Erwachsener</string>
+    <string name="resistant_adult">Insulinresistenter Erwachsener</string>
     <string name="pregnant">Schwangerschaft</string>
+    <string name="patient_age_summary">Bitte wähle den Patiententyp, um die Sicherheits-Limits festzulegen</string>
+    <string name="max_bolus_title">Max. erlaubter Bolus [IE]</string>
+    <string name="max_carbs_title">Max erlaubte KH [g]</string>
+    <string name="patient_type">Patiententyp</string>
     <!--    Protection-->
     <string name="unlock_settings">Einstellungen freischalten</string>
     <!--    Pumps -->
