@@ -18,8 +18,8 @@
     <string name="objectives_autosens_objective">Justera basaler och kvoter om det behövs. Aktivera sedan autosens</string>
     <string name="objectives_autosens_gate">1 veckas lyckad looping dagtid, där alla måltider lagts in</string>
     <string name="objectives_smb_objective">Aktiverar ytterligare funktioner för användning dagtid, t ex SMB</string>
-    <string name="objectives_auto_objective">Aktivera automatisering</string>
     <string name="objectives_smb_gate">Du måste läsa på wikin och öka max IOB för att få SMB att fungera bra. En bra start är att sätta max IOB till din genomsnittliga måltidsbolus plus 3 gånger den högsta basalen du har under ett dygn</string>
+    <string name="objectives_auto_objective">Aktivera automatisering</string>
     <string name="objectives_auto_gate">Läs dokumentationen hur automatisering fungerar. Konfigurera dina första enkla regler. I stället för att ange en åtgärd, låt bara AAPS visa en avisering. När du är säker på att automatisering utlöses vid rätt tidpunkt kan du ersätta aviseringen med verklig åtgärd. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BG är tillängligt i Nightscout</string>
     <string name="objectives_pumpstatusavailableinns">Pumpstatus tillgängligt i Nightscout</string>
@@ -32,10 +32,6 @@
     <string name="objectives_useactions">I Konfigurationsverktyget, aktivera insticksprogrammet Åtgärder, gör det synligt och visa dess innehåll från övre menyn</string>
     <string name="objectives_useloop">Visa innehållet i insticksprogrammet \"Loop\"</string>
     <string name="objectives_usescale">Testa skala om BG-grafen genom att trycka och hålla in fingret på den</string>
-    <string name="objectives_button_enter">Enter</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Om du har minst 3 månaders erfarenhet av closed loop med andra system kan du kvalificera dig för en kod för att hoppa över mål. Se https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives för mer info.</string>
-    <string name="codeaccepted">Koden godkänd</string>
-    <string name="codeinvalid">Koden är felaktig</string>
     <string name="objectives_exam_objective">Bevisa dina kunskaper</string>
     <string name="objectives_exam_gate">Studera frågorna.  Ni får fyra möjliga svar på varje fråga. Det kan finnas mer än ett korrekt svar. Kontrollera alla de som är korrekta och välj Kontrollera.</string>
     <string name="answerdisabledto">Svarsfunktionen inaktiverad till: %1$s</string>
