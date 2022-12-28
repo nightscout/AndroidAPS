@@ -20,7 +20,6 @@
     <string name="objectives_smb_objective">Aktiver ekstra funksjoner for bruk på dagtid, slik som SMB (Super Micro Bolus)</string>
     <string name="objectives_smb_gate">Du må lese wiki og øke din maxIOB for å få SMB til å fungere. Et godt utgangspunkt er maxIOB = gjennomsnittlig måltidsbolus + 3*max daglig basal</string>
     <string name="objectives_auto_objective">Aktiver Automatisering</string>
-    <string name="objectives_auto_gate">Les dokumentasjonen på hvordan Automatisering virker. La din første regel være enkel. I stedet for å utføre en behandling, få AAPS til å vise en melding i stedet. Kun når du er sikker på at Automatisering aktiveres korrekt kan du erstatte meldingsvarselet med en behandlingskommando. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BS tilgjengelig i NS</string>
     <string name="objectives_pumpstatusavailableinns">Pumpe status tilgjengelig i NS</string>
     <string name="objectives_manualenacts">Manuell kommando</string>
@@ -41,10 +40,6 @@
     <string name="unfinshed_button">Neste uferdig</string>
     <string name="requestcode">Be om kode: %1$s</string>
     <string name="objectives_hint">(kontroller alle riktige svar)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Ikke koblet til Internett</string>
     <string name="failedretrievetime">Feil ved henting av tid</string>
     <string name="requirementnotmet">Læringmålets krav er ikke oppfylt</string>
