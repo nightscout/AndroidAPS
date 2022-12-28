@@ -1264,7 +1264,7 @@ class AutosensDataStoreTest : TestBase() {
         Assertions.assertEquals(67.0, autosensDataStore.bucketedData!![3].value, 1.0) // Recalculated data to 30min
         Assertions.assertEquals(45.0, autosensDataStore.bucketedData!![5].value, 1.0) // Recalculated data to 20min
 
-        // non 5min data without referenceTime set, shoud allign the data to the time of the last reading
+        // non 5min data without referenceTime set, should allign the data to the time of the last reading
         autosensDataStore.referenceTime = -1
         bgReadingList.clear()
         bgReadingList.add(
