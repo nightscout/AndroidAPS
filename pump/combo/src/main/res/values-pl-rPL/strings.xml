@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Dawka podstawowa zmieniła się na pompie, ale jej odczyt nie powiódł się</string>
     <string name="combo_activity_checking_for_history_changes">Sprawdzanie zmian w historii</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Wielokrotne bolusy o tej samej wielkości w tej samej minucie zostały właśnie zaimportowane. Do leczenia można dodać tylko jeden taki rekord. Sprawdź pompę i ręcznie dodaj zapis bolusa za pomocą zakładki PortalOpieki. Upewnij się, że tworzysz bolus z czasem, którego nie używa żaden inny bolus.</string>
-    <string name="about_link_urls">\n\ndokumentacja:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Ostatni bolus jest starszy niż 24 godziny lub jest w przyszłości. Sprawdź, czy data na pompie jest ustawiona prawidłowo.</string>
     <string name="combo_suspious_bolus_time">Czas/data dostarczonego bolusa na pompie wydaje się błędna, IOB jest prawdopodobnie niepoprawny. Sprawdź czas/datę pompy.</string>
     <string name="combo_bolus_count">Obliczenia Bolusa</string>
