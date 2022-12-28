@@ -5,9 +5,9 @@
     <dimen name="watch_face_svg_text_size">50sp</dimen>
     <dimen name="watch_face_delta_text_size">25sp</dimen>
     <dimen name="watch_face_time_text_size">45sp</dimen>
-    <dimen name="watch_face_timestamp_text_size">25sp</dimen>
+    <dimen name="watch_face_timestamp_text_size">23sp</dimen>
     <dimen name="watch_face_time_period_text_size">12sp</dimen>
-    <dimen name="watch_face_status_text_size">18sp</dimen>
+    <dimen name="watch_face_status_text_size">17sp</dimen>
 
     <!--    Watch face specific-->
     <dimen name="watch_face_no_chart_status_size">24sp</dimen>
