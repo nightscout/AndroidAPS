@@ -5,7 +5,6 @@ import info.nightscout.androidaps.databinding.ActivityHomeLargeBinding
 import info.nightscout.androidaps.databinding.ActivityHome2Binding
 import info.nightscout.androidaps.databinding.ActivityHomeBinding
 import info.nightscout.androidaps.databinding.ActivityBigchartBinding
-import info.nightscout.androidaps.databinding.ActivityBigchartSmallBinding
 import info.nightscout.androidaps.databinding.ActivityCockpitBinding
 import info.nightscout.androidaps.databinding.ActivityDigitalstyleBinding
 import info.nightscout.androidaps.databinding.ActivityNochartBinding
@@ -20,7 +19,6 @@ class WatchfaceViewAdapter(
     a2: ActivityHome2Binding? = null,
     aa: ActivityHomeBinding? = null,
     bC: ActivityBigchartBinding? = null,
-    bCs: ActivityBigchartSmallBinding? = null,
     cp: ActivityCockpitBinding? = null,
     ds: ActivityDigitalstyleBinding? = null,
     nC: ActivityNochartBinding? = null,
@@ -28,7 +26,7 @@ class WatchfaceViewAdapter(
 ) {
 
     init {
-        if (aL == null && a2 == null && aa == null && bC == null && bCs == null && cp == null && ds == null && nC == null && sP == null) {
+        if (aL == null && a2 == null && aa == null && bC == null && cp == null && ds == null && nC == null && sP == null) {
             throw IllegalArgumentException("Require at least on Binding parameter")
         }
     }
@@ -67,7 +65,7 @@ class WatchfaceViewAdapter(
     val iob2 = a2?.iob2 ?: cp?.iob2 ?: ds?.iob2 ?: sP?.iob2
     val chart = a2?.chart ?: aa?.chart ?: bC?.chart ?: bC?.chart ?: ds?.chart ?: sP?.chart
     val status = aL?.status ?: aa?.status ?: bC?.status ?: bC?.status ?: nC?.status
-    val timePeriod = ds?.timePeriod
+    val timePeriod = ds?.timePeriod ?: aL?.timePeriod ?: nC?.timePeriod ?: bC?.timePeriod
     val dayName = ds?.dayName
     val mainMenuTap = ds?.mainMenuTap ?: sP?.mainMenuTap
     val chartZoomTap = ds?.chartZoomTap ?: sP?.chartZoomTap
@@ -89,11 +87,10 @@ class WatchfaceViewAdapter(
                 is ActivityHome2Binding         -> WatchfaceViewAdapter(null, bindLayout)
                 is ActivityHomeBinding          -> WatchfaceViewAdapter(null, null, bindLayout)
                 is ActivityBigchartBinding      -> WatchfaceViewAdapter(null, null, null, bindLayout)
-                is ActivityBigchartSmallBinding -> WatchfaceViewAdapter(null, null, null, null, bindLayout)
-                is ActivityCockpitBinding       -> WatchfaceViewAdapter(null, null, null, null, null, bindLayout)
-                is ActivityDigitalstyleBinding  -> WatchfaceViewAdapter(null, null, null, null, null, null, bindLayout)
-                is ActivityNochartBinding       -> WatchfaceViewAdapter(null, null, null, null, null, null, null, bindLayout)
-                is ActivitySteampunkBinding     -> WatchfaceViewAdapter(null, null, null, null, null, null, null, null, bindLayout)
+                is ActivityCockpitBinding       -> WatchfaceViewAdapter(null, null, null, null, bindLayout)
+                is ActivityDigitalstyleBinding  -> WatchfaceViewAdapter(null, null, null, null, null,  bindLayout)
+                is ActivityNochartBinding       -> WatchfaceViewAdapter(null, null, null, null, null,  null, bindLayout)
+                is ActivitySteampunkBinding     -> WatchfaceViewAdapter(null, null, null, null, null, null, null, bindLayout)
                 else                            -> throw IllegalArgumentException("ViewBinding is not implement in WatchfaceViewAdapter")
             }
         }

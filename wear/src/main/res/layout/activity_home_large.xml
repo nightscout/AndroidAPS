@@ -1,24 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
-    android:orientation="vertical"
-    android:textAlignment="center"
-    tools:context=".watchfaces.AapsWatchface"
-    tools:deviceIds="wear_round"
-    tools:ignore="MissingDefaultResource">
+    tools:context=".watchfaces.AapsLargeWatchface">
 
     <LinearLayout
-        android:layout_width="147dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_vertical|center_horizontal"
-        android:orientation="horizontal"
-        android:paddingTop="30dp"
-        android:textAlignment="center">
+        app:layout_constraintBottom_toTopOf="@+id/secondary_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <TextView
             android:id="@+id/sgv"
@@ -26,45 +20,29 @@
             android:layout_height="wrap_content"
             android:paddingStart="0dp"
             android:paddingEnd="10dp"
-            android:paddingBottom="3dp"
-            android:text="8.8"
-            android:textColor="@color/white"
             android:textSize="50sp"
-            tools:ignore="HardcodedText" />
+            tools:text="18.8" />
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_gravity="center_horizontal"
-            android:baselineAligned="false"
-            android:orientation="vertical"
-            android:textAlignment="center"
-            android:weightSum="1">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/direction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:gravity="center_horizontal|bottom"
-                android:paddingTop="1dp"
-                android:text="--"
-                android:textAlignment="center"
-                android:textColor="@color/white"
                 android:textSize="27sp"
                 android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+                tools:text="--" />
 
             <TextView
                 android:id="@+id/delta"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
                 android:gravity="center_horizontal"
-                android:text="@string/delta_na"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                tools:ignore="SmallSp" />
+                android:textSize="11sp"
+                tools:text="@string/delta_na" />
 
         </LinearLayout>
 
@@ -72,23 +50,23 @@
 
     <LinearLayout
         android:id="@+id/secondary_layout"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:background="@color/light_grey"
+        android:background="?android:colorForeground"
         android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:padding="2dp">
+        android:padding="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="--'"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            tools:ignore="HardcodedText" />
+            android:textColor="?android:textColorPrimaryInverse"
+            android:textSize="@dimen/watch_face_large_status_size"
+            tools:text="--'" />
 
         <TextView
             android:id="@+id/uploader_battery"
@@ -96,10 +74,9 @@
             android:layout_height="wrap_content"
             android:paddingStart="10sp"
             android:paddingEnd="0sp"
-            android:text="@string/uploader_na"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textColor="?android:textColorPrimaryInverse"
+            android:textSize="@dimen/watch_face_large_status_size"
+            tools:text="@string/uploader_na" />
 
         <TextView
             android:id="@+id/raw"
@@ -107,10 +84,9 @@
             android:layout_height="wrap_content"
             android:paddingStart="10sp"
             android:paddingEnd="0sp"
-            android:text=""
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textColor="?android:textColorPrimaryInverse"
+            android:textSize="@dimen/watch_face_large_status_size"
+            tools:text="" />
 
         <TextView
             android:id="@+id/status"
@@ -118,21 +94,36 @@
             android:layout_height="wrap_content"
             android:paddingStart="10sp"
             android:paddingEnd="0sp"
-            android:text="@string/no_status"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="14sp" />
+            android:textColor="?android:textColorPrimaryInverse"
+            android:textSize="14sp"
+            tools:text="@string/no_status" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/time"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="55sp"
-        tools:text="12:00" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/secondary_layout">
 
-</LinearLayout>
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/watch_face_large_time_text_size"
+            tools:text="01:00" />
+
+        <TextView
+            android:id="@+id/timePeriod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="15sp"
+            android:layout_gravity="start"
+            android:textSize="@dimen/watch_face_large_time_period_text_size"
+            android:textStyle="bold"
+            tools:text="AM" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

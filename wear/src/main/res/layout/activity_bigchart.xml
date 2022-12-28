@@ -1,60 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     android:orientation="vertical"
     android:textAlignment="center"
-    tools:context=".watchfaces.AapsWatchface"
-    tools:deviceIds="wear_square"
-    tools:ignore="MissingDefaultResource">
+    tools:context=".watchfaces.BigChartWatchface">
 
     <LinearLayout
+        android:id="@+id/linearLayout3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="-2dp"
-        android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:paddingTop="5dp"
-        android:textAlignment="center">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/delta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginEnd="5dp"
-            android:gravity="center_horizontal|bottom"
-            android:text="---"
-            android:textColor="@color/white"
-            android:textSize="30sp"
-            tools:ignore="HardcodedText" />
+            android:gravity="bottom"
+            android:textSize="@dimen/watch_face_big_chart_delta_text_size"
+            tools:text="---" />
 
         <TextView
             android:id="@+id/sgv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center_horizontal"
-            android:text="---"
-            android:textColor="@color/white"
-            android:textSize="41sp"
-            tools:ignore="HardcodedText" />
+            android:layout_marginHorizontal="4dp"
+            android:textSize="@dimen/watch_face_big_chart_svg_text_size"
+            tools:text="---" />
 
         <TextView
             android:id="@+id/avg_delta"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginStart="5dp"
-            android:gravity="center_horizontal|bottom"
-            android:text="---"
-            android:textColor="@color/white"
-            android:textSize="30sp"
-            tools:ignore="HardcodedText" />
+            android:textSize="@dimen/watch_face_big_chart_delta_text_size"
+            tools:text="---" />
 
     </LinearLayout>
 
@@ -62,46 +48,63 @@
         android:id="@+id/chart"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_gravity="bottom"
-        android:layout_weight="1"
-        android:gravity="center_horizontal" />
+        app:layout_constraintBottom_toTopOf="@+id/status"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout3" />
 
     <TextView
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:textAlignment="center"
-        android:textColor="@color/white"
-        android:textSize="18sp"
+        android:layout_marginBottom="-5dp"
+        android:textSize="@dimen/watch_face_status_text_size"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         tools:text="E xU/h  IOB: x (x+x)" />
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:paddingBottom="6dp"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <TextView
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginEnd="6dp"
-            android:textColor="@color/white"
-            android:textSize="35sp"
+            android:layout_marginEnd="5dp"
+            android:textSize="@dimen/watch_face_time_text_size"
             tools:text="12:00" />
 
-        <TextView
-            android:id="@+id/timestamp"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="-- '"
-            android:textColor="@color/white"
-            android:textSize="26sp"
-            tools:ignore="HardcodedText" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/timestamp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:maxLines="1"
+                android:textSize="@dimen/watch_face_timestamp_text_size"
+                tools:text="5'" />
+
+            <TextView
+                android:id="@+id/timePeriod"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginTop="-4dp"
+                android:textSize="@dimen/watch_face_time_period_text_size"
+                android:textStyle="bold"
+                tools:text="AM" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

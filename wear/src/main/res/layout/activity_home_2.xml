@@ -1,96 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     android:orientation="vertical"
-    android:textAlignment="center"
-    android:weightSum="1.1"
-    tools:context=".watchfaces.AapsV2Watchface"
-    tools:deviceIds="wear_round"
-    tools:ignore="MissingDefaultResource">
-
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="0px"
-        android:layout_weight="0.05"
-        android:orientation="vertical" />
+    tools:context=".watchfaces.AapsV2Watchface">
 
     <LinearLayout
         android:id="@+id/primary_layout"
-        android:layout_width="fill_parent"
-        android:layout_height="0px"
-        android:layout_gravity="center_horizontal"
-        android:layout_weight="0.27"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:gravity="center_horizontal"
-        android:orientation="horizontal"
-        android:textAlignment="center">
+        app:layout_constraintBottom_toTopOf="@+id/secondary_layout"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/loop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
+            android:layout_gravity="bottom"
             android:background="@drawable/loop_grey_25"
             android:gravity="center"
-            android:text="--'"
-            android:textAlignment="center"
-            android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold"
-            tools:ignore="HardcodedText" />
+            tools:text="--'" />
 
         <TextView
             android:id="@+id/sgv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|bottom"
+            android:layout_gravity=""
             android:layout_marginBottom="-2dp"
-            android:gravity="bottom|end"
-            android:paddingStart="5dp"
-            android:paddingTop="-2dp"
-            android:paddingEnd="5dp"
-            android:text="---"
-            android:textColor="@color/white"
+            android:paddingHorizontal="5dp"
             android:textSize="38sp"
-            tools:ignore="HardcodedText" />
+            tools:text="---" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:layout_gravity="center_horizontal"
-            android:baselineAligned="false"
-            android:gravity="center_vertical"
-            android:orientation="vertical"
-            android:paddingStart="0dp"
-            android:paddingEnd="4dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/direction"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|bottom"
-                android:gravity="center_horizontal|bottom"
-                android:text="--"
-                android:textAlignment="center"
-                android:textColor="@color/white"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+                tools:text="--" />
 
             <TextView
                 android:id="@+id/timestamp"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="2dp"
                 android:gravity="center"
-                android:text="--'"
-                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+                tools:text="--'" />
 
         </LinearLayout>
 
@@ -99,50 +67,39 @@
     <LinearLayout
         android:id="@+id/secondary_layout"
         android:layout_width="fill_parent"
-        android:layout_height="0px"
-        android:layout_gravity="center"
-        android:layout_weight="0.10"
-        android:background="@color/light_grey"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="1dp">
+        android:layout_height="wrap_content"
+        android:background="?android:colorForeground"
+        android:paddingVertical="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/tertiary_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingStart="5dp"
-            android:paddingEnd="5dp"
-            android:textAlignment="center">
+            android:paddingHorizontal="5dp">
 
             <TextView
                 android:id="@+id/delta"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="+/-"
-                android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="?android:textColorPrimaryInverse"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+                tools:text="+/-" />
 
             <TextView
                 android:id="@+id/avg_delta"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/abbreviation_average"
-                android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="?android:textColorPrimaryInverse"
                 android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="@string/abbreviation_average" />
 
             <TextView
                 android:id="@+id/uploader_battery"
@@ -151,12 +108,11 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="--%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="?android:textColorPrimaryInverse"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                tools:ignore="HardcodedText" />
+                tools:text="--%" />
 
             <TextView
                 android:id="@+id/rig_battery"
@@ -165,39 +121,34 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="--%"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="?android:textColorPrimaryInverse"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                android:visibility="gone"
-                tools:ignore="HardcodedText" />
+                android:visibility="visible"
+                tools:text="--%" />
 
             <TextView
                 android:id="@+id/basalRate"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="1.7"
                 android:gravity="center"
-                android:text="@string/no_tmp_basal_u_h"
-                android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="?android:textColorPrimaryInverse"
                 android:textSize="13sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="@string/no_tmp_basal_u_h" />
 
             <TextView
                 android:id="@+id/bgi"
                 android:layout_width="0px"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="?android:textColorPrimaryInverse"
                 android:textSize="13sp"
                 android:textStyle="bold"
-                android:visibility="gone"
+                android:visibility="visible"
                 tools:text="bgi" />
 
             <View
@@ -213,46 +164,30 @@
     <LinearLayout
         android:id="@+id/tertiary_layout"
         android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_gravity="center"
-        android:layout_weight="0.22"
-        android:background="@color/black"
-        android:baselineAligned="false"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="1dp"
-        android:weightSum="7">
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:weightSum="7"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:baselineAligned="false"
             android:gravity="center"
-            android:orientation="vertical"
-            android:textAlignment="center">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/cob1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
                 android:text="@string/activity_carb"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                tools:ignore="SmallSp" />
+                android:textSize="11sp" />
 
             <TextView
                 android:id="@+id/cob2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:gravity="center"
                 android:text="@string/no_cob_g"
-                android:textAlignment="center"
-                android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -268,10 +203,7 @@
             android:id="@+id/time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
             android:textAlignment="center"
-            android:textColor="@color/white"
             android:textSize="30sp"
             tools:text="12:00" />
 
@@ -279,10 +211,8 @@
             android:id="@+id/date_time"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_gravity="center"
             android:gravity="center"
             android:orientation="vertical"
-            android:textAlignment="center"
             android:visibility="gone">
 
             <TextView
@@ -292,7 +222,6 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textAlignment="center"
-                android:textColor="@color/white"
                 android:textSize="12sp"
                 tools:text="day" />
 
@@ -302,7 +231,6 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:textColor="@color/white"
                 android:textSize="12sp"
                 tools:text="mth" />
 
@@ -327,12 +255,9 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/activity_IOB"
                 android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textSize="10sp"
-                android:textStyle="bold"
-                tools:ignore="SmallSp" />
+                android:textSize="11sp"
+                tools:text="@string/activity_IOB" />
 
             <TextView
                 android:id="@+id/iob2"
@@ -340,28 +265,21 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:text="@string/no_iob_u"
-                android:textColor="@color/white"
                 android:textSize="14sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                tools:text="@string/no_iob_u" />
 
         </LinearLayout>
-
 
     </LinearLayout>
 
     <lecho.lib.hellocharts.view.LineChartView
         android:id="@+id/chart"
         android:layout_width="match_parent"
-        android:layout_height="0px"
-        android:layout_gravity="bottom"
-        android:layout_weight="0.41"
-        android:gravity="center_horizontal|top" />
+        android:layout_height="0dp"
+        android:layout_marginTop="-5dp"
+        android:layout_marginBottom="7dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tertiary_layout" />
 
-    <View
-        android:layout_width="wrap_content"
-        android:layout_height="0px"
-        android:layout_weight="0.05"
-        android:orientation="vertical" />
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

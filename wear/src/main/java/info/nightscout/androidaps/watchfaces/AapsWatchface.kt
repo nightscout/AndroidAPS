@@ -19,6 +19,7 @@ class AapsWatchface : BaseWatchFace() {
     }
 
     override fun setColorDark() {
+        binding.mainLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background))
         binding.secondaryLayout.setBackgroundColor(ContextCompat.getColor(this, if (dividerMatchesBg) R.color.dark_background else R.color.dark_statusView))
         binding.time.setTextColor(ContextCompat.getColor(this, R.color.dark_mTime))
         val color = when (singleBg.sgvLevel) {
