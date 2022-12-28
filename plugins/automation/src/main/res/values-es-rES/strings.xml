@@ -129,4 +129,5 @@
     <!--    Reminders-->
     <string name="time_to_eat">¡Hora de comer!\nEjecuta el asistente de bolo y calcula de nuevo.</string>
     <string name="time_to_bolus">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
+    <string name="error_setting_reminder">Error al configurar la alarma en el futuro</string>
 </resources>

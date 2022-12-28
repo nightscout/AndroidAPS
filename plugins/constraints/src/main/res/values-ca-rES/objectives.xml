@@ -18,8 +18,8 @@
     <string name="objectives_autosens_objective">Ajustar basals i ràtios si cal, i després activar auto-sens</string>
     <string name="objectives_autosens_gate">1 setmana d\'èxit en mode llaç tancat durant el dia, amb introducció regular de carbohidrats</string>
     <string name="objectives_smb_objective">Activant funcions addicionals d\'ús diurn, com l\'SMB (super micro bolus)</string>
-    <string name="objectives_auto_objective">Activant l\'automatització</string>
     <string name="objectives_smb_gate">Heu de llegir la wiki i augmentar la maxIOB per a què l\'SMB funcioni correctament! Una bona manera de començar és amb maxIOB = bolus d\'àpat mig + 3 x màxima basal diària</string>
+    <string name="objectives_auto_objective">Activant l\'automatització</string>
     <string name="objectives_auto_gate">Llegiu els documents sobre com funciona l\'automatització. Configureu les vostres primeres regles. Enlloc de fer l\'acció, feu que AAPS només mostri un avís. Quan esteu segurs que l\'automatització s\'activa en el moment correcte, substituïu la notificació per l\'acció real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glucèmia disponible a NS</string>
     <string name="objectives_pumpstatusavailableinns">Estat de la bomba disponible a NS</string>
@@ -32,10 +32,6 @@
     <string name="objectives_useactions">Al Configurador, activeu el plugin Accions, feu-lo visible i mostreu el seu contingut des del menú superior</string>
     <string name="objectives_useloop">Mostreu el contingut del plugin Loop (llaç)</string>
     <string name="objectives_usescale">Utilitzeu la funció d\'escala fent pulsació llarga sobre la gràfica de glucèmia</string>
-    <string name="objectives_button_enter">Acceptar</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si teniu almenys 3 mesos d\'experiència en llaç tancat amb altres sistemes, és possible que compliu els requisits per obtenir un codi que us permeti saltar-vos objectius. Veure https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives per més detalls.</string>
-    <string name="codeaccepted">Codi acceptat</string>
-    <string name="codeinvalid">Codi no vàlid</string>
     <string name="objectives_exam_objective">Demostreu els vostres coneixements</string>
     <string name="objectives_exam_gate">Estudieu les preguntes. Se us donen quatre possibles respostes a cada pregunta. Pot haver-hi més d\'una resposta correcta. Marqueu totes les correctes i seleccioneu VERIFICAR.</string>
     <string name="answerdisabledto">Resposta deshabilitada fins: %1$s</string>

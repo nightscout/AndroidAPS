@@ -18,8 +18,8 @@
     <string name="objectives_autosens_objective">必要时调整胰岛素基础率和比率，然后再启用auto-sens胰岛素敏感系数自动调整功能</string>
     <string name="objectives_autosens_gate">规律的进行碳水记录，成功在一个星期的白天开启闭环</string>
     <string name="objectives_smb_objective">在白天启用额外的功能，例如微型大剂量 SMB</string>
-    <string name="objectives_auto_objective">启用自动操作功能插件</string>
     <string name="objectives_smb_gate">你应该阅读wiki指南，以调整 maxIOB(活性胰岛素的最大值) 设置，让SMB(微型大剂量) 更好的工作。建议是 maxIOB值=餐时剂量的平均值+基础率的最大值的3倍。</string>
+    <string name="objectives_auto_objective">启用自动操作功能插件</string>
     <string name="objectives_auto_gate">阅读有关自动操作插件的说明文档，设定你的第一个简单规则。让AAPS只显示通知，而不是操作。当您确定自动操作在正确的时间触发时，用真实操作代替通知。(https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">血糖在NS中可用</string>
     <string name="objectives_pumpstatusavailableinns">泵状态在 NS 中可用</string>
@@ -32,10 +32,6 @@
     <string name="objectives_useactions">在配置生成器中启用Actions(常用操作) 插件，使其可视并在顶部菜单显示其内容</string>
     <string name="objectives_useloop">显示闭环插件的内容</string>
     <string name="objectives_usescale">长按血糖图来使用缩放功能</string>
-    <string name="objectives_button_enter">输入</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">如果您有至少3个月的其他系统闭环经验，您可能有资格获得跳过学习目标的代码。参见 https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for details。</string>
-    <string name="codeaccepted">已接受代码</string>
-    <string name="codeinvalid">代码无效</string>
     <string name="objectives_exam_objective">证明你的知识</string>
     <string name="objectives_exam_gate">研究这些问题。每个问题都有四个可能的答案。答案可能不止一个。请选择所有正确的选项，然后点击验证。</string>
     <string name="answerdisabledto">禁止答题，直到： %1$s</string>

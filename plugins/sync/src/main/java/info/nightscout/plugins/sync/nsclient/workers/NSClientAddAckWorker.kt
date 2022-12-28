@@ -48,7 +48,11 @@ class NSClientAddAckWorker(
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         if (sp.getBoolean(R.string.key_ns_sync_slow, false)) SystemClock.sleep(1000)
-        val ret = Result.success(workDataOf("ProcessedData" to ack.originalObject.toString()))
+        val ret = try {
+            Result.success(workDataOf("ProcessedData" to ack.originalObject.toString()))
+        } catch (e: Exception) {
+            Result.success(workDataOf("ProcessedData" to "huge record"))
+        }
 
         when (ack.originalObject) {
             is PairTemporaryTarget        -> {

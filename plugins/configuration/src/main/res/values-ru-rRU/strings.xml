@@ -72,6 +72,8 @@
     <string name="configbuilder_insulin_description">Какой тип инсулина вы используете?</string>
     <string name="configbuilder_bgsource">источник СК</string>
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AAPS?</string>
+    <string name="configbuilder_smoothing">Сглаживание</string>
+    <string name="configbuilder_smoothing_description">Выберите алгоритм сглаживания</string>
     <string name="configbuilder_sensitivity">определение чувствительности</string>
     <string name="configbuilder_sensitivity_description">Какой алгоритм чувствительности следует использовать?</string>
     <string name="config_builder_shortname">КОНФ</string>

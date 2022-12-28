@@ -12,6 +12,7 @@
     <string name="only_upload_if_charging">Nur beim Laden hochladen</string>
     <string name="open_humans_uploading">Upload zu Open Humans läuft...</string>
     <string name="open_humans_notifications">Open Humans Benachrichtigungen</string>
+    <string name="uploading_to_open_humans">AndroidAPS lädt zu Open Humans hoch. Dies kann eine Weile dauern.</string>
     <string name="you_have_been_signed_out_of_open_humans">Du wurdest von Open Humans abgemeldet.</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Klicke hier, um Dich erneut anzumelden, falls dies versehentlich passiert ist.</string>
     <string name="next">Weiter</string>

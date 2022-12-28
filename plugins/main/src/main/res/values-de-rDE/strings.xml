@@ -3,24 +3,27 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS-Kommunikator</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">AndroidAPS mit SMS-Befehlen fernsteuern.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">von der Authenticator App für: %1$s gefolgt von der PIN</string>
     <string name="smscommunicator_otp_pin">Zusätzliche obligatorische PIN am Token-Ende</string>
     <string name="smscommunicator_otp_pin_summary">Zusätzliche Ziffern, die auswendig gelernt und am Ende jedes generierten Einmal-Passworts angehängt werden sollten.</string>
-    <string name="smscommunicator_tab_otp_label">Konfiguration des Authentifikators</string>
+    <string name="smscommunicator_tab_otp_label">Konfiguration der Authenticator App</string>
     <string name="smscommunicator_code_verify_label">Zu prüfender Code:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Der Verifizierungscode besteht aus 6 Ziffern, die von Authenticator App (auch OTP genannt) angezeigt werden, gefolgt von 3 oder mehr Ziffern der obligatorischen PIN.</string>
-    <string name="smscommunicator_otp_reset_btn">Authentifikators zurücksetzen</string>
-    <string name="smscommunicator_otp_reset_title">Authentifikatorschlüssel zurücksetzen</string>
-    <string name="smscommunicator_otp_reset_prompt">Willst Du wirklich den Authentifikatorschlüssel zurücksetzen? Dies wird alle momentan genutzten Authentifikatoren ungültig machen und Du musst sie neu einrichten.</string>
+    <string name="smscommunicator_otp_reset_btn">Authentifikatoren zurücksetzen</string>
+    <string name="smscommunicator_otp_reset_title">Authentifikationsschlüssel zurücksetzen</string>
+    <string name="smscommunicator_otp_reset_prompt">Willst du wirklich den Authentifikationsschlüssel zurücksetzen? Dies wird alle momentan genutzten Authentifikatoren ungültig machen und Du musst sie neu einrichten.</string>
     <string name="smscommunicator_otp_reset_successful">Neuer Authentifizierungsschlüssel generiert! Bitte verwende den aktualisierten QR-Code für die Bereitstellung von Authentifikatoren.</string>
     <string name="smscommunicator_otp_export_title">OTP-Secret exportieren</string>
     <string name="smscommunicator_otp_export_prompt">Willst Du wirklich das OTP Secret in die Zwischenablage kopieren?\n\nDas ist nur erforderlich, wenn Deine Authentifizierungs-App Probleme mit dem Scannen des QR-Codes hat. Du kannst es auch manuell eingeben oder einen Hardware-OTP-Token mit einer bestimmten App verwenden.</string>
     <string name="smscommunicator_otp_export_successful">OTP Secret (im Base32 Format) exportiert und in die Zwischenablage kopiert. Setze es von dort in Deine Authentifizierungs-App ein.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Authentifikator installieren</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scanne den Code zum Einrichten von AndroidAPS OTP-Codes</string>
     <string name="smscommunicator_otp_step3_test_header">3. Teste das Einmal-Passwort</string>
     <string name="smscommunicator_otp_reset_header">Authentifikators zurücksetzen</string>
     <string name="smscommunicator_otp_install_info">Installiere auf jedem Follower-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Wenn Du den Authentifikator zurücksetzt, werden alle bestehenden Authentifikatoren ungültig. Du musst sie dann neu einrichten!</string>
     <string name="sms_wrong_code">Falscher Code. Befehl wurde abgebrochen.</string>
     <string name="sms_timeout_while_waiting">Zeitüberschreitung beim Warten auf das Ende der vorherigen Kommunikation mit der Pumpe</string>
     <string name="smscommunicator_allowednumbers">Erlaubte Telefonnummern</string>
@@ -85,6 +88,9 @@
     <string name="smscommunicator_message_body">Ungültiger Inhalt</string>
     <string name="smscommunicator_report_pump_unreachable_summary">SMS senden, wenn Pumpe nicht erreichbar</string>
     <string name="smscommunicator_pump_unreachable">Hinweis Pumpe nicht erreichbar</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Um den Loop Modus auf LGS (Low Glucose Suspend) zu wechseln, antworte mit dem Code %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Um den Loop-Modus auf Closed Loop zu setzen, antworte mit Code %1$s.</string>
+    <string name="smscommunicator_current_loop_mode">Aktueller Loop Modus: %1$s</string>
     <string name="wrong_format">Falsches Format</string>
     <string name="sms_actual_bg">BZ:</string>
     <string name="sms_last_bg">Letzter BZ:</string>
@@ -174,6 +180,8 @@
     <string name="patch_pump">Patch-Pumpe</string>
     <!-- Overview -->
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
+    <string name="statuslights_cage_warning">Warnschwelle Kanülenalter [h]</string>
+    <string name="statuslights_cage_critical">Warnschwelle kritisches Kanülenalter [h]</string>
     <string name="statuslights_iage_warning">Warnschwelle Insulinalter [h]</string>
     <string name="statuslights_iage_critical">Warnschwelle kritisches Insulinalter [h]</string>
     <string name="statuslights_sage_warning">Warnschwelle Sensoralter [h]</string>
@@ -312,6 +320,7 @@ Unerwartetes Verhalten.</string>
     <string name="wear_shortname">UHR</string>
     <string name="description_wear">Überwache und steuere AndroidAPS mit Deiner WearOS-Smartwatch.</string>
     <string name="no_watch_connected">(keine Uhr verbunden)</string>
+    <string name="pump_status">Status der Pumpe</string>
     <string name="loop_status">Loop Status</string>
     <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">Ausgewählter Quickwizard nicht mehr verfügbar, bitte aktualisiere die Kachel</string>

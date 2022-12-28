@@ -18,8 +18,8 @@
     <string name="objectives_autosens_objective">Justér om nødvendigt basaler og forhold og aktivér derefter auto-sens</string>
     <string name="objectives_autosens_gate">1 uges vellykket looping i dagtimerne med alle måltider tastet ind</string>
     <string name="objectives_smb_objective">Aktivering af yderligere funktioner til brug i dagtimerne, såsom SMB</string>
-    <string name="objectives_auto_objective">Aktiverer automatisering</string>
     <string name="objectives_smb_gate">Du skal læse wikien og hæve maxIOB for at få SMB\'er til at fungere fint! En god start er maxIOB=gennemsnitlig måltidsbolus + 3 x max daglig basal</string>
+    <string name="objectives_auto_objective">Aktiverer automatisering</string>
     <string name="objectives_auto_gate">Læs dokumentationen om hvordan automatisering virker. Opsæt dine første enkle regler. I stedet for handling lad kun AAPS vise notifikation. Når du er sikker på, at automatisering udløses på det rigtige tidspunkt, skal du erstatte notifikationen med reel handling. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BG tilgængelig i NS</string>
     <string name="objectives_pumpstatusavailableinns">Pumpestatus tilgængelig i NS</string>
@@ -34,10 +34,6 @@
     <string name="objectives_useactions">I Konfigurations bygger, aktivér Handlings plugin, gør det synligt og vis dets indhold fra top menuen</string>
     <string name="objectives_useloop">Vis indhold af Loop plugin</string>
     <string name="objectives_usescale">Brug skala-funktion ved at trykke på BG-diagrammet længe</string>
-    <string name="objectives_button_enter">Indtast</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Hvis du har mindst 3 måneders lukket loop erfaring med andre systemer, kan du kvalificere dig til en kode til at springe quizen over. Se https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives for detaljer.</string>
-    <string name="codeaccepted">Kode accepteret</string>
-    <string name="codeinvalid">Kode ugyldig</string>
     <string name="objectives_exam_objective">Bevis din viden</string>
     <string name="objectives_exam_gate">Undersøg spørgsmålene. Du får fire mulige svar på hvert spørgsmål. Der kan være mere end et korrekt svar. Tjek alle dem, der er korrekte, og vælg GODKEND.</string>
     <string name="answerdisabledto">Svar deaktiveret indtil: %1$s</string>

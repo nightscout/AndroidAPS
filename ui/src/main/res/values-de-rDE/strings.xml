@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="bolus_constraint_applied">Bolus-Beschränkung angewendet</string>
+    <string name="bolus_constraint_applied">Bolus-Beschränkung erreicht</string>
     <string name="carbs_constraint_applied">Kohlenhydrat-Beschränkung erreicht</string>
     <string name="temp_target_short">TT</string>
     <string name="dialog_canceled">Dialog abgebrochen</string>
@@ -17,6 +17,7 @@
     <!--     Activities-->
     <string name="activity_monitor">Aktivitätsmonitor</string>
     <string name="do_you_want_reset_stats">Willst Du die Aktivitätsstatistik zurücksetzen?</string>
+    <string name="do_you_want_reset_tdd_stats">Willst Du die TDD Statistik zurücksetzen?</string>
     <string name="statistics">Statistiken</string>
     <string name="calculation_in_progress">Kalkulation wird gerade durchgeführt</string>
     <string name="invalid_age">Ungültige Altersangabe</string>
@@ -26,6 +27,7 @@
     <string name="age">Alter</string>
     <string name="weight_label">Gewicht</string>
     <string name="most_common_profile">Meistgenutztes Profil:</string>
+    <string name="survey_comment">Hinweis: Nur Daten, die auf diesem Bildschirm sichtbar sind, werden anonym hochgeladen. Die ID wird dieser Installation von AndroidAPS zugeordnet. Du kannst erneut Daten senden, wenn sich Dein Hauptprofil geändert hat. Lasse es aber es mindestens eine Woche lang laufen, damit dessen Ergebnis in der Time in Range sichtbar wird. Danke für Deine Unterstützung.</string>
     <string name="glucose_type">Glukoseart</string>
     <string name="bg_other">Anderes</string>
     <string name="bg_meter">Messgerät</string>

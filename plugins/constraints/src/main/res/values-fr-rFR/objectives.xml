@@ -7,26 +7,34 @@
     <string name="objectivenotfinished">Objectif %1$d non terminé</string>
     <string name="objectives_0_objective">Paramétrage de la visualisation et la surveillance des données, analyse des débits Basal et des ratios</string>
     <string name="objectives_0_gate">Vérifiez que la Glycémie est disponible sur Nightscout et que les données d’insuline ont été téléchargées de la pompe</string>
+    <string name="objectives_0_learned">Vous avez fait la configuration de base de l\'écosystème AAPS. Nightscout n\'est pas nécessaire pour que AAPS puisse fonctionner, mais il est très utile pour signaler ou surveiller d\'autres patients. Il n\'est pas nécessaire d\'être connecté à NS tout le temps si vous n\'utilisez NS que pour vous-même. Vous pouvez configurer pour télécharger par exemple uniquement sur le wifi de la maison et économiser la batterie.</string>
     <string name="objectives_openloop_objective">Démarrage de la boucle ouverte</string>
     <string name="objectives_openloop_gate">Utilisez votre boucle ouverte pendant plusieurs jours et lancez manuellement plusieurs débits Basal temporaires. Définissez et utilisez les cibles temporaires et celles par défaut (ex : sport ou resucrage suite à une hypo)</string>
+    <string name="objectives_openloop_learned">La boucle ouverte peut être utilisée pour les recommandations si vous n\'avez pas de pompe compatible ou si vous n\'êtes pas prêt à fermer la boucle.</string>
     <string name="objectives_maxbasal_objective">Compréhension de la Boucle Ouverte, y compris les propositions de débits Basal temporaires</string>
     <string name="objectives_maxbasal_gate">Partant de ce constat, décidez quel doit être le débit de base maximum, et entrez le dans la pompe et les préférences</string>
+    <string name="objectives_maxbasal_learned">Faites attention aux dispositifs de sécurité et réglez les paramètres de sécurité si nécessaire.</string>
     <string name="objectives_maxiobzero_objective">Démarrage de la boucle fermée avec le système AGB ( Arrêt pour Glycémie Basse )</string>
     <string name="objectives_maxiobzero_gate">Activez la boucle fermée avec le paramètre max IOB = 0 pendant plusieurs jours sans avoir un trop grand nombre d\'AGB (Arrêt pour Glycémie Basse)</string>
     <string name="objectives_maxiob_objective">Réglage de la Boucle Fermée, augmentation de l\'IA (Insuline Active) maximale au dessus de 0 et abaissement progressif des cibles glycémiques</string>
     <string name="objectives_maxiob_gate">Utilisez pendant plusieurs jours, et au moins une nuit sans alarme d’hypoglycémie, avant d\'abaisser les cibles glycémiques</string>
+    <string name="objectives_maxiob_learned">Mettez à jour IAMax au fur et à mesure que l\'enfant grandit. Ne permettez pas au système de vous donner plus d\'insuline que ce que vous pouvez couvrir par la nourriture = une valeur vraiment élevée est une mauvaise idée.</string>
     <string name="objectives_autosens_objective">Ajustement des débits Basal et des ratios si nécessaire, puis activation de la fonction auto-sens</string>
     <string name="objectives_autosens_gate">1 semaine de Boucle Fermée en journée en saisissant régulièrement les glucides</string>
+    <string name="objectives_autosens_learned">Si le résultat de votre autosens n\'est pas autour de 100%, votre profil est probablement erroné.</string>
     <string name="objectives_smb_objective">Activation de fonctionnalités supplémentaires pour l\'utilisation en journée, telles que la fonction SMB</string>
-    <string name="objectives_auto_objective">Activation de l\'automatisation</string>
     <string name="objectives_smb_gate">Lisez le wiki et augmentez le maxIA pour que les SMBs fonctionnent correctement ! Un bon début est maxIA = moyenne des Bolus Repas + 3 x maximum débit Basal quotidien</string>
+    <string name="objectives_smb_learned">L\'utilisation de SMB est votre objectif. L\'algorithme Oref1 a été conçu pour vous aider également avec vos bolus. Vous ne devriez pas donner un bolus complet pour votre nourriture, mais seulement une partie de celui-ci et laisser AAPS vous donner le reste si nécessaire. De cette façon, vous avez plus de latitude pour les glucides mal calculés. Saviez-vous que vous pouvez définir un pourcentage à appliquer au résultat de la calculatrice de bolus pour réduire la taille du bolus ?</string>
+    <string name="objectives_auto_objective">Activation de l\'automatisation</string>
     <string name="objectives_auto_gate">Lisez la documentation comment l\'automatisation fonctionne. Configurez vos premières règles simples. Au lieu de mettre une action, configurez une notification. Quand vous êtes sûr que l\'automatisation est déclenchée au bon moment, remplacez la notification par une action réelle. (https://androidaps.readthedocs.io/fr/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">L\'automatisation peut être un bon serviteur mais un mauvais maître. Ne l\'utilisez pas de manière excessive. N\'essayez pas de remplacer l\'algorithme sous-jacent. Testez la règle avec uniquement un message avant l\'utilisation. Le résultat dépend de l\'ordre.</string>
     <string name="objectives_bgavailableinns">Glycémie disponible sur NS</string>
     <string name="objectives_pumpstatusavailableinns">Statut de la pompe disponible sur NS</string>
     <string name="objectives_manualenacts">Activation manuelle</string>
     <string name="accomplished">Accompli : %1$s</string>
     <string name="objectives_usage_objective">Apprendre comment contrôler AAPS</string>
     <string name="objectives_usage_gate">Effectuer différentes actions dans AAPS</string>
+    <string name="objectives_usage_learned">Vous avez appris à gérer les bases de AAPS. Les commandes principales se trouvent dans l\'écran Aperçu et sont accessibles par clic ou par clic long. Il y a des contrôles complémentaires dans l\'écran Action. Vous devriez savoir comment mettre un plugin dans la barre de menu du haut ou le laisser affiché dans la liste des plugins activés du menu hamburger en haut à gauche de l\'écran.</string>
     <string name="objectives_useprofileswitch">Sélection du profil à 90% pendant 10 min (appui long sur le nom du profil à l\'Accueil)</string>
     <string name="objectives_usedisconnectpump">Simulation d\'une douche. Déconnectez la pompe pendant 1h (Appui long sur Boucle Ouverte)</string>
     <string name="objectives_usereconnectpump">... et reconnectez la pompe de la même façon</string>
@@ -34,12 +42,21 @@
     <string name="objectives_useactions">Dans la Configuration, activez le plugin Actions, rendez le visible et affichez son contenu dans le menu supérieur</string>
     <string name="objectives_useloop">Affichage du contenu du plugin Boucle</string>
     <string name="objectives_usescale">Modification de l\'échelle du graphique par un appui long sur la courbe de glycémie</string>
-    <string name="objectives_button_enter">Entrer</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Si vous avez au moins 3 mois d\'expérience de boucle fermée avec d\'autres systèmes, vous pourriez avoir droit à un code permettant d\'ignorer les objectifs. Voir https://androidaps.readthedocs.io/fr/latest/Usage/Objectives.html#ignorer-les-objectifs pour plus de détails.</string>
-    <string name="codeaccepted">Code accepté</string>
-    <string name="codeinvalid">Code invalide</string>
     <string name="objectives_exam_objective">Prouver ses connaissances</string>
     <string name="objectives_exam_gate">Étudiez les questions. Vous avez quatre réponses possibles pour chaque question. Il peut y avoir plusieurs réponses correctes. Veuillez vérifier celles qui sont correctes et sélectionnez VÉRIFIER.</string>
+    <string name="objectives_exam_learned_prerequisites">Vous n\'avez pas besoin d\'être un développeur mais vous avez besoin de NS pour passer des objectifs, d\'une pompe et d\'un ordinateur compatibles pour construire AAPS pour la première fois ainsi que pour chaque mise à jour.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS peut être exécuté hors ligne.</string>
+    <string name="objectives_exam_learned_basaltest">Le profil doit être ajusté et mis à jour. Un meilleur profil = de meilleurs résultats.</string>
+    <string name="objectives_exam_learned_dia">La DAI avec une boucle a une signification différente (temps jusqu\'à ce que l\'insuline soit absorbée en totalité) comparé au thérapie par pompe classique (temps jusqu\'à ce que la majeure partie de l\'insuline soit absorbée).</string>
+    <string name="objectives_exam_learned_isf">Vous avez appris la signification de la valeur SI et comment elle impacte la quantité d\'insuline utilisée pour corriger la glycémie.</string>
+    <string name="objectives_exam_learned_ic">Vous avez appris la signification de la valeur G/I et comment elle impacte la quantité d\'insuline nécessaire pour couvrir les glucides.</string>
+    <string name="objectives_exam_learned_exercise">Vous devriez réduire la quantité d\'insuline dans le corps au moins 1 heure avant de commencer l\'exercice en sélectionnant un profil inférieur à 100%.</string>
+    <string name="objectives_exam_learned_noisycgm">Si vous ne pouvez pas faire confiance aux valeurs MGC, vous ne devriez pas utiliser de boucle sans surveillance.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS doit savoir si la pompe n\'est pas connectée pour comptabiliser correctement l\'IA (IOB).</string>
+    <string name="objectives_exam_learned_insulin">Il est nécessaire d\'indiquer quelle insuline est dans la pompe, car elle affecte le calcul de l\'IA.</string>
+    <string name="objectives_exam_learned_breadgrams">Seuls les grammes sont autorisés pour l\'entrée des glucides.</string>
+    <string name="objectives_exam_learned_ecarbs">Les E-glucides remplacent les bolus étendus dans le monde de la pompe.</string>
+    <string name="objectives_exam_learned_nsclient">La surveillance et le contrôle à distance sont possibles mais toutes les fonctionnalités ne doivent pas être disponibles à distance.</string>
     <string name="answerdisabledto">Réponse désactivée jusqu\'à : %1$s</string>
     <string name="wronganswer">Mauvaise réponse !</string>
     <string name="unfinshed_button">Prochain non terminé</string>
@@ -52,4 +69,5 @@
     <string name="notconnected">Non connecté à Internet</string>
     <string name="failedretrievetime">Échec de la récupération de l\'heure</string>
     <string name="requirementnotmet">Exigences de l\'objectif non atteintes</string>
+    <string name="what_i_ve_learned">Ce que j\'ai appris :</string>
 </resources>
