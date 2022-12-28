@@ -752,7 +752,7 @@ class AutosensDataStoreTest : TestBase() {
         Assertions.assertEquals(7, autosensDataStore.bucketedData!!.size.toLong())
         Assertions.assertEquals(100.0, autosensDataStore.bucketedData!![0].value, 1.0) // Recalculated data to 48min
         Assertions.assertEquals(98.0, autosensDataStore.bucketedData!![1].value, 1.0)  // Recalculated data to 43min
-        Assertions.assertEquals(67.0, autosensDataStore.bucketedData!![3].value, 1.0)  // Recalculated data to 33min
+        Assertions.assertEquals(74.0, autosensDataStore.bucketedData!![3].value, 1.0)  // Recalculated data to 33min
         Assertions.assertEquals(40.0, autosensDataStore.bucketedData!![6].value, 1.0)  // Recalculated data to 18min
     }
 
