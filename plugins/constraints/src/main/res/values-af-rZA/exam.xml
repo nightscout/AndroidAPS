@@ -1,21 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">Wat is waar oor DIA?</string>
-    <string name="dia_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html?#insulin</string>
-    <string name="hypott_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Watter profiel kan gebruik en ingestel word van lyn af?</string>
     <string name="offlineprofile_label">Onderwerp: Aflyn Profiel</string>
     <string name="offlineprofile_nsprofile">NS-Profiel kan gebruik word, maar nie ingestel.</string>
-    <string name="offlineprofile_hint1">https://androidaps.readthedocs.io/en/latest/EN/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_whattodo">Wat moet gedoen word wanneer pomp ontkoppel word?</string>
-    <string name="pumpdisconnect_hint1">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#other-settings</string>
-    <string name="objectives_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/ExportImportSettings.html</string>
-    <string name="objectives_hint2">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_whattodo">Wat moet gedoen word as CGM data raserig is?</string>
-    <string name="noisycgm_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/Smoothing-Blood-Glucose-Data-in-xDrip.html#smoothing-blood-glucose-data</string>
-    <string name="exercise_hint1">https://androidaps.readthedocs.io/en/latest/EN/Usage/temptarget.html#activity-temp-target</string>
     <string name="prerequisites_googleaccount">\'n Google-rekening.</string>
     <string name="prerequisites_githubaccount">\'n Github rekening.</string>
     <string name="prerequisites_smartwatch">\'n Slimhorlosie.</string>
-    <string name="profileswitch_hint1" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Usage/Profiles.html?highlight=profile%20switch#profile-switch</string>
 </resources>
