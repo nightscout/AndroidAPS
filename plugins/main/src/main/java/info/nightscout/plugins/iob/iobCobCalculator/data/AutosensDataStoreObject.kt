@@ -153,6 +153,7 @@ class AutosensDataStoreObject : AutosensDataStore {
         var diff = abs(someTime - referenceTime)
         diff %= T.mins(5).msecs()
         if (diff > T.mins(2).plus(T.secs(30)).msecs()) diff -= T.mins(5).msecs()
+        diff = abs(diff)
         return someTime + diff
     }
 
