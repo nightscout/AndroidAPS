@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">泵上的基础率改变了，但是读取失败</string>
     <string name="combo_activity_checking_for_history_changes">检查历史记录变化</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">在同一分钟内使用相同数量的多个大剂量记录被导入的。治疗中只能增加一项记录。请手动检查泵并使用记录标签手动添加一个大剂量记录。确保创建一个和其他大剂量记录时间不重复的大剂量记录.</string>
-    <string name="about_link_urls">\n\n文档:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">最后一次大剂量的输注时间是在24个小时以前或者在未来的时间，请检查泵上的日期设置的的是否正确</string>
     <string name="combo_suspious_bolus_time">输注过的大剂量的时间／日期看着好像错了，活性胰岛素可能不准确。请检查泵的时间／日期</string>
     <string name="combo_bolus_count">大剂量 计数</string>
