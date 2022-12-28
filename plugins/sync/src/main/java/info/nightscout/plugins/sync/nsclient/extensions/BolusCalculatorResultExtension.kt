@@ -1,4 +1,4 @@
-package info.nightscout.core.extensions
+package info.nightscout.plugins.sync.nsclient.extensions
 
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException

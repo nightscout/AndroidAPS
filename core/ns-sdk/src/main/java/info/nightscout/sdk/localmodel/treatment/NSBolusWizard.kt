@@ -21,5 +21,5 @@ data class NSBolusWizard(
     override val pumpSerial: String?,
     override var app: String? = null,
     val bolusCalculatorResult: String?,
-    val glucose: Double?,
+    val glucose: Double?
 ) : NSTreatment
