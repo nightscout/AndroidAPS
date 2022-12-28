@@ -46,7 +46,7 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Basal rate changed on pump, but reading it failed</string>
     <string name="combo_activity_checking_for_history_changes">Checking for history changes</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Multiple boluses with the same amount within the same minute were just imported. Only one record could be added to treatments. Please check the pump and manually add a bolus record using the Careportal tab. Make sure to create a bolus with a time no other bolus uses.</string>
-    <string name="about_link_urls">\n\ndocumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
+    <string name="about_link_urls">\n\ndocumentation:\nhttps://wiki.aaps.app\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">The last bolus is older than 24 hours or is in the future. Please check the date on the pump is set correctly.</string>
     <string name="combo_suspious_bolus_time">Time/date of the delivered bolus on pump seems wrong, IOB is likely incorrect. Please check pump time/date.</string>
     <string name="combo_bolus_count">Bolus count</string>
