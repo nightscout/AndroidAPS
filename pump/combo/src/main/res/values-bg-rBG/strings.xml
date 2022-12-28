@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Базалният процент е променен в помпата, но прочитането е неуспешно</string>
     <string name="combo_activity_checking_for_history_changes">Проверка за промени в историята на помпата</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Бяха внесени няколко болуса със същото количество в рамките на една и съща минута. Само един запис може да бъде добавен към лечението. Моля, проверете помпата и ръчно добавете болус запис, като използвате раздела Careportal . Уверете се, че сте създали болус и нямате друг болус за същото време.</string>
-    <string name="about_link_urls">\n\nдокументация:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Последният болус е с време от преди 24 часа или е в бъдеще. Моля, проверете дали датата на помпата е зададена правилно.</string>
     <string name="combo_suspious_bolus_time">Времето/датата на доставения болус на помпата изглежда погрешно, IOB вероятно е неправилно. Моля, проверете часа/датата на помпата.</string>
     <string name="combo_bolus_count">Брой болуси</string>
