@@ -16,7 +16,7 @@ interface NsClient : Sync {
     fun textLog(): Spanned
     fun clearLog()
 
-    enum class Collection { ENTRIES, TREATMENTS}
+    enum class Collection { ENTRIES, TREATMENTS, FOODS }
     /**
      * NSC v3 does first load of all data
      * next loads are using srvModified property for sync

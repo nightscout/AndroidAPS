@@ -34,6 +34,7 @@ enum class EventType(val text: String) {
     @SerializedName("Temp Basal Start") TEMPORARY_BASAL_START("Temp Basal Start"),
     @SerializedName("Temp Basal End") TEMPORARY_BASAL_END("Temp Basal End"),
 
+    @SerializedName("") ERROR(""),
     @SerializedName("<none>") NONE("<none>");
 
     companion object {

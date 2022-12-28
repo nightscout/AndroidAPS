@@ -6,6 +6,7 @@ import info.nightscout.sdk.remotemodel.NSResponse
 import info.nightscout.sdk.remotemodel.RemoteCreateUpdateResponse
 import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
 import info.nightscout.sdk.remotemodel.RemoteEntry
+import info.nightscout.sdk.remotemodel.RemoteFood
 import info.nightscout.sdk.remotemodel.RemoteStatusResponse
 import info.nightscout.sdk.remotemodel.RemoteTreatment
 import retrofit2.Response
@@ -48,7 +49,7 @@ internal interface NightscoutRemoteService {
     suspend fun getSgvsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Long): Response<NSResponse<List<RemoteEntry>>>
 
     @GET("v3/treatments")
-    suspend fun getTreatmentsNewerThan(@Query(value = "date\$gt", encoded = true) date: Long, @Query("limit") limit: Long): Response<NSResponse<List<RemoteTreatment>>>
+    suspend fun getTreatmentsNewerThan(@Query(value = "created_at\$gt", encoded = true) createdAt: String, @Query("limit") limit: Long): Response<NSResponse<List<RemoteTreatment>>>
 
     @GET("v3/treatments/history/{from}")
     suspend fun getTreatmentsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Long): Response<NSResponse<List<RemoteTreatment>>>
@@ -61,5 +62,17 @@ internal interface NightscoutRemoteService {
 
     @PUT("v3/treatments")
     suspend fun updateTreatment(@Body remoteTreatment: RemoteTreatment): Response<NSResponse<RemoteCreateUpdateResponse>>
+
+    @GET("v3/food")
+    suspend fun getFoods(@Query("limit") limit: Long): Response<NSResponse<List<RemoteFood>>>
+/*
+    @GET("v3/food/history/{from}")
+    suspend fun getFoodsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Long): Response<NSResponse<List<RemoteFood>>>
+*/
+    @POST("v3/food")
+    suspend fun createFood(@Body remoteFood: RemoteFood): Response<NSResponse<RemoteCreateUpdateResponse>>
+
+    @PUT("v3/food")
+    suspend fun updateFood(@Body remoteFood: RemoteFood): Response<NSResponse<RemoteCreateUpdateResponse>>
 
 }

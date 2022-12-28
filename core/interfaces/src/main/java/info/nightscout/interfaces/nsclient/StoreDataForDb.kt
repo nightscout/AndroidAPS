@@ -27,11 +27,11 @@ interface StoreDataForDb {
     val temporaryBasals: MutableList<TemporaryBasal>
     val profileSwitches: MutableList<ProfileSwitch>
     val offlineEvents: MutableList<OfflineEvent>
+    val foods: MutableList<Food>
 
     val nsIdGlucoseValues: MutableList<GlucoseValue>
     val nsIdBoluses: MutableList<Bolus>
     val nsIdCarbs: MutableList<Carbs>
-    val nsIdFoods: MutableList<Food>
     val nsIdTemporaryTargets: MutableList<TemporaryTarget>
     val nsIdEffectiveProfileSwitches: MutableList<EffectiveProfileSwitch>
     val nsIdBolusCalculatorResults: MutableList<BolusCalculatorResult>
@@ -41,8 +41,10 @@ interface StoreDataForDb {
     val nsIdProfileSwitches: MutableList<ProfileSwitch>
     val nsIdOfflineEvents: MutableList<OfflineEvent>
     val nsIdDeviceStatuses: MutableList<DeviceStatus>
+    val nsIdFoods: MutableList<Food>
 
     fun storeTreatmentsToDb()
     fun storeGlucoseValuesToDb()
+    fun storeFoodsToDb()
     fun scheduleNsIdUpdate()
 }
