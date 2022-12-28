@@ -152,9 +152,11 @@ class AutosensDataStoreObject : AutosensDataStore {
         }
         var diff = abs(someTime - referenceTime)
         diff %= T.mins(5).msecs()
-        if (diff > T.mins(2).plus(T.secs(30)).msecs()) diff -= T.mins(5).msecs()
-        diff = abs(diff)
-        return someTime + diff
+        if (diff > T.mins(2).plus(T.secs(30)).msecs()){
+            return someTime + abs(diff - T.mins(5).msecs()) // Adjust to the future
+        } else {
+            return someTime - diff // adjust to the past
+        }
     }
 
     fun isAbout5minData(aapsLogger: AAPSLogger): Boolean {
