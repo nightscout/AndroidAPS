@@ -20,7 +20,6 @@
     <string name="objectives_smb_objective">Povolit další funkce pro běžné používání jako SMB</string>
     <string name="objectives_smb_gate">Přečíst si dokumentaci a zvýšit maximální IOB, aby mohlo SMB fungovat. Pro začátek se dá použít velikost běžného bolusu + 3x maximální denní bazál</string>
     <string name="objectives_auto_objective">Povolení automatizace</string>
-    <string name="objectives_auto_gate">Přečtěte si na wiki, jak automatizace funguje. Nejdříve nastavte pouze jednoduchá pravidla. Namísto provádění akcí nechte AAPS zobrazovat pouze oznámení. Pokud jste si jistí, že je automatizace spouštěna v pravý čas, můžete oznámení nahradit prováděním akce. (https://androidaps.readdocs.io/en/latest/CROWDIN/cs/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glykémie dostupná v NS</string>
     <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
     <string name="objectives_manualenacts">Ručně spuštěno</string>
@@ -41,10 +40,6 @@
     <string name="unfinshed_button">Další nedokončená</string>
     <string name="requestcode">Kód žádosti: %1$s</string>
     <string name="objectives_hint">(zatrhněte všechny správné odpovědi)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/FAQ.html#co-delat-pri-sprchovani-a-koupani</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/Screenshots.html#hlavni-stranka</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/Screenshots.html#konfigurace</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/cs/Getting-Started/Screenshots.html#hlavni-stranka</string>
     <string name="notconnected">Chybí připojení k internetu</string>
     <string name="failedretrievetime">Nepodařilo se načíst čas</string>
     <string name="requirementnotmet">Požadavky cíle nejsou splněny</string>
