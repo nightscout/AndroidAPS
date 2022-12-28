@@ -66,7 +66,7 @@ data class BolusCalculatorResult(
     var note: String
 ) : TraceableDBEntry, DBEntryWithTime {
 
-    private fun contentEqualsTo(other: BolusCalculatorResult): Boolean =
+    fun contentEqualsTo(other: BolusCalculatorResult): Boolean =
         isValid == other.isValid &&
             timestamp == other.timestamp &&
             utcOffset == other.utcOffset &&
