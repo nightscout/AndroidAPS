@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">המינון הבזאלי במשאבה השתנה אך קריאתו נכשלה</string>
     <string name="combo_activity_checking_for_history_changes">בודק שינויים בהיסטוריה</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">בולוסים מרובים באותו הגודל הוזרקו בתוך אותה דקה. ניתן להוסיף רק רשומה אחת לטיפולים. בדקו את המשאבה והוסיפו באופן ידני רשומת בולוס בלשונית פורטל הטיפולים. יש ליצור רשומות בולוס עם זמנים שונים מבולוסים אחרים.</string>
-    <string name="about_link_urls">\n\nתיעוד:\nhttps://androidaps.readthedocs.io\n\nפייסבוק:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">הבולוס האחרון נרשם לפני 24 שעות או בזמן עתידי, נא לבדוק את כיוון השעון והתאריך במשאבה.</string>
     <string name="combo_suspious_bolus_time">זמן\\תאריך הבולוס שהוזרק מהמשאבה נראה לא נכון, IOB כנראה שגוי, בדקו את השעון ואת התאריך במשאבה.</string>
     <string name="combo_bolus_count">ספירת בולוסים</string>
