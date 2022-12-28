@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Valandinė bazė pompoje pasikeitė, bet nuskaityti nepavyko</string>
     <string name="combo_activity_checking_for_history_changes">Tikrinami istorijos pokyčiai</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Keletas bolusų su tuo pačiu kiekiu buvo importuoti per tą pačią minutę. Tik vienas įrašas gali būti pridėtas. Prašome patikrinti pompą ir rankiniu būdu įveskite bolusą, naudojant Priežiūra skiltį. Įsitikinkite, kad boluso įrašo laikas nesutampa su kitais įrašais.</string>
-    <string name="about_link_urls">\n\ndokumentacija:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Paskutinis bolusas įrašytas anksčiau nei prieš 24 val. arba yra ateityje. Prašome patikrinti, ar data pompoje nustatyta teisingai.</string>
     <string name="combo_suspious_bolus_time">Suleisto boluso laikas/data pompoje yra neteisingas, AIO panašu yra nekorektiškas. Prašome patikrinti pompos laiką/datą.</string>
     <string name="combo_bolus_count">Bolusų skaičius</string>
