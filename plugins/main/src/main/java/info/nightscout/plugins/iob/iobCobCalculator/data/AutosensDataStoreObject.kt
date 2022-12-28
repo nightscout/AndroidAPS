@@ -152,8 +152,11 @@ class AutosensDataStoreObject : AutosensDataStore {
         }
         var diff = abs(someTime - referenceTime)
         diff %= T.mins(5).msecs()
-        if (diff > T.mins(2).plus(T.secs(30)).msecs()) diff -= T.mins(5).msecs()
-        return someTime + diff
+        if (diff > T.mins(2).plus(T.secs(30)).msecs()){
+            return someTime + abs(diff - T.mins(5).msecs()) // Adjust to the future
+        } else {
+            return someTime - diff // adjust to the past
+        }
     }
 
     fun isAbout5minData(aapsLogger: AAPSLogger): Boolean {
@@ -222,7 +225,7 @@ class AutosensDataStoreObject : AutosensDataStore {
             return
         }
         val newBucketedData = ArrayList<InMemoryGlucoseValue>()
-        var currentTime = bgReadings[0].timestamp - bgReadings[0].timestamp % T.mins(5).msecs()
+        var currentTime = bgReadings[0].timestamp
         val adjustedTime = adjustToReferenceTime(currentTime)
         // after adjusting time may be newer. In this case use T-5min
         currentTime = if (adjustedTime > currentTime) adjustedTime - T.mins(5).msecs() else adjustedTime
