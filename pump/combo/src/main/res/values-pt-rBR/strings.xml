@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Taxa de basal alterada na bomba, mas a leitura falhou</string>
     <string name="combo_activity_checking_for_history_changes">Verificando mudanças do histórico</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Bólus múltiplos, com a mesma quantidade dentro do mesmo minuto acabaram de ser importados. Apenas um registro pode ser adicionado aos tratamentos. Por favor, verifique a bomba e adicione manualmente um bólus record utilizando a aba Careportal. Certifique-se de criar um bolus com o tempo em que nenhum outro bolus usa.</string>
-    <string name="about_link_urls">\n\ndocumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">O último bólus tem mais de 24 horas ou está no futuro. Por favor, verifique se a data está definida corretamente.</string>
     <string name="combo_suspious_bolus_time">Hora/data da entrega do bólus na bomba parece errado, insulina ativa parece estar provavelmente incorreto. Verifique hora/data na bomba.</string>
     <string name="combo_bolus_count">Contagem Bólus</string>
