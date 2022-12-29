@@ -120,4 +120,6 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_datetime_changed">Datum a/nebo čas změněn</string>
     <string name="combov2_dst_started">Začal letní čas (DST)</string>
     <string name="combov2_dst_ended">Letní čas (DST) skončil</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Nelze se připojit k pumpě, protože pumpa nahlásila chybu. Uživatel musí zpracovat chybu a poté počkat 5 minut nebo stisknout tlačítko Obnovit na kartě ovladače.</string>
+    <string name="combov2_refresh_pump_status_after_error">Obnovování stavu pumpy po nahlášení chyby</string>
 </resources>
