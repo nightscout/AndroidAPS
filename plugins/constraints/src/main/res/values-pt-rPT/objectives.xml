@@ -20,7 +20,6 @@
     <string name="objectives_smb_objective">Activando recursos adicionais para uso durante o dia, como SMB</string>
     <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a IA máx para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIA=média dos bólus + 3 x a basal máxima</string>
     <string name="objectives_auto_objective">A ativar a automatização</string>
-    <string name="objectives_auto_gate">Leia a documentação de como a automatização funciona. Configure primeiro regras simples. Em vez de ação, deixe AAPS apresentar apenas a notificação. Quando tem certeza de automação é acionada no momento certo substitua a notificação por ação real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glicose disponível no NS</string>
     <string name="objectives_pumpstatusavailableinns">Estado da Bomba disponível no NS</string>
     <string name="objectives_manualenacts">Execução manual</string>
@@ -39,10 +38,6 @@
     <string name="unfinshed_button">Seguinte inacabado</string>
     <string name="requestcode">Pedir Código: %1$s</string>
     <string name="objectives_hint">(marque todas as respostas correctas)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Não está ligado à internet</string>
     <string name="failedretrievetime">Falha ao recuperar tempo</string>
     <string name="requirementnotmet">Requisitos de objectivo não cumpridos</string>
