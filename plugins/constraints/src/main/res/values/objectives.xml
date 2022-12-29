@@ -59,7 +59,7 @@
     <string name="objectives_exam_learned_profileswitch4">Editing profile itself is not sufficient to make a change. You still need to do a profile switch to activate changes.</string>
     <string name="objectives_exam_learned_exercise">You should reduce amount of insulin in the body at least 1 hour before starting exercise by selecting profile under 100%.</string>
     <string name="objectives_exam_learned_exercise2">Setting of higher temp target at least 1 hour before exercise helps with reducing of amount of insulin in the body as well.</string>
-    <string name="objectives_exam_learned_noisycgm">Wen you cannot trust CGM values you should not use loop unattended.</string>
+    <string name="objectives_exam_learned_noisycgm">When you cannot trust CGM values you should not use loop unattended.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS must know that pump is not connected to count IOB correctly.</string>
     <string name="objectives_exam_learned_insulin">Letting know which insulin is in pump is necessary because it does affect IOB calculation.</string>
     <string name="objectives_exam_learned_sensitivity">Sensitivity detection is part of the algorithm which allows adapt insulin dosage to different situations.</string>
