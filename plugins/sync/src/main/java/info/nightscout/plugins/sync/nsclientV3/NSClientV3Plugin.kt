@@ -39,6 +39,7 @@ import info.nightscout.plugins.sync.nsclientV3.extensions.toNSBolusWizard
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSCarbs
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSEffectiveProfileSwitch
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSFood
+import info.nightscout.plugins.sync.nsclientV3.extensions.toNSOfflineEvent
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSProfileSwitch
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSTemporaryBasal
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSTemporaryTarget
@@ -389,7 +390,7 @@ class NSClientV3Plugin @Inject constructor(
                 // is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
                 is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toNSProfileSwitch(dateUtil)
                 is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toNSEffectiveProfileSwitch(dateUtil)
-                // is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)
+                is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toNSOfflineEvent()
                 else                                           -> null
             }?.let { data ->
                 runBlocking {
@@ -480,7 +481,15 @@ class NSClientV3Plugin @Inject constructor(
                                     }
                                     dataSyncSelector.confirmLastEffectiveProfileSwitchIdIfGreater(dataPair.id)
                                 }
-                                // is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)
+
+                                is DataSyncSelector.PairOfflineEvent -> {
+                                    if (result.response == 201) { // created
+                                        dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                        storeDataForDb.nsIdOfflineEvents.add(dataPair.value)
+                                        storeDataForDb.scheduleNsIdUpdate()
+                                    }
+                                    dataSyncSelector.confirmLastOfflineEventIdIfGreater(dataPair.id)
+                                }
                             }
                         }
                     } catch (e: Exception) {

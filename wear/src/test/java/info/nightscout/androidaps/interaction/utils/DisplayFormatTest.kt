@@ -1,5 +1,6 @@
 package info.nightscout.androidaps.interaction.utils
 
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.TestBase
 import info.nightscout.androidaps.data.RawDisplayData
 import info.nightscout.androidaps.testing.mockers.RawDataMocker
@@ -24,7 +25,11 @@ class DisplayFormatTest : TestBase() {
         displayFormat = DisplayFormat()
         displayFormat.wearUtil = wearUtil
         displayFormat.sp = sp
+        displayFormat.context = context
         Mockito.`when`(sp.getBoolean("complication_unicode", true)).thenReturn(true)
+        Mockito.`when`(context.getString(R.string.hour_short)).thenReturn("h")
+        Mockito.`when`(context.getString(R.string.day_short)).thenReturn("d")
+        Mockito.`when`(context.getString(R.string.week_short)).thenReturn("w")
     }
 
     @Test fun shortTimeSinceTest() {
