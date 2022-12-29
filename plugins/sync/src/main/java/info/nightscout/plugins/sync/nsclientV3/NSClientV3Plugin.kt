@@ -38,6 +38,7 @@ import info.nightscout.plugins.sync.nsclientV3.extensions.toNSBolus
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSBolusWizard
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSCarbs
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSEffectiveProfileSwitch
+import info.nightscout.plugins.sync.nsclientV3.extensions.toNSExtendedBolus
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSFood
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSOfflineEvent
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSProfileSwitch
@@ -387,7 +388,14 @@ class NSClientV3Plugin @Inject constructor(
                     }
                     dataPair.value.toNSTemporaryBasal(profile)
                 }
-                // is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+                is DataSyncSelector.PairExtendedBolus          -> {
+                    val profile = profileFunction.getProfile(dataPair.value.timestamp)
+                    if (profile == null) {
+                        dataSyncSelector.confirmLastExtendedBolusIdIfGreater(dataPair.id)
+                        return
+                    }
+                    dataPair.value.toNSExtendedBolus(profile)
+                }
                 is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toNSProfileSwitch(dateUtil)
                 is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toNSEffectiveProfileSwitch(dateUtil)
                 is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toNSOfflineEvent()
@@ -463,7 +471,15 @@ class NSClientV3Plugin @Inject constructor(
                                     }
                                     dataSyncSelector.confirmLastTemporaryBasalIdIfGreater(dataPair.id)
                                 }
-                                // is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+                                is DataSyncSelector.PairExtendedBolus          -> {
+                                    if (result.response == 201) { // created
+                                        dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                        storeDataForDb.nsIdExtendedBoluses.add(dataPair.value)
+                                        storeDataForDb.scheduleNsIdUpdate()
+                                    }
+                                    dataSyncSelector.confirmLastExtendedBolusIdIfGreater(dataPair.id)
+                                }
+
                                 is DataSyncSelector.PairProfileSwitch          -> {
                                     if (result.response == 201) { // created
                                         dataPair.value.interfaceIDs.nightscoutId = result.identifier

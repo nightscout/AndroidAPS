@@ -74,7 +74,7 @@ internal data class RemoteTreatment(
     @SerializedName("isEmulatingTempBasal") val isEmulatingTempBasal: Boolean? = null,  // boolean "Combo Bolus", "extendedEmulated" (not in doc see below)
     @SerializedName("isAnnouncement") val isAnnouncement: Boolean? = null,      // boolean "Announcement"
     @SerializedName("rate") val rate: Double? = null,                          // Double "Temp Basal" absolute rate (could be calculated with percent and profile information...)
-    @SerializedName("extendedEmulated") val extendedEmulated: RemoteTreatment? = null,  // Gson of emulated EB
+    @SerializedName("extendedEmulated") var extendedEmulated: RemoteTreatment? = null,  // Gson of emulated EB
     @SerializedName("timeshift") val timeshift: Long? = null,                   // integer "Profile Switch"
     @SerializedName("percentage") val percentage: Int? = null,                 // integer "Profile Switch"
     @SerializedName("isBasalInsulin") val isBasalInsulin: Boolean? = null      // boolean "Bolus"

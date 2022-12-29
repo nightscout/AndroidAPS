@@ -25,7 +25,8 @@ data class NSTemporaryBasal(
     val isAbsolute: Boolean,
     val type: Type,
     val percent: Double? = null, // when sending to NS (rate - 100)
-    val absolute: Double? = null // when sending to NS (rate)
+    val absolute: Double? = null, // when sending to NS (rate)
+    var extendedEmulated: NSExtendedBolus? = null
 ) : NSTreatment {
 
     enum class Type {
