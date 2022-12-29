@@ -21,7 +21,6 @@
     <string name="troubleshooting_wiki">Trebali biste pročitati (i ponovno pročitati) AAPS dokumentaciju.</string>
     <string name="troubleshooting_gitter">Možete zatražiti savjet i prijaviti tehničke probleme ili probleme u AAPS Discord.</string>
     <string name="sensitivity_adjust">Dodaci za osjetljivost omogućuju AAPS-u da se prilagodi privremenim ili kratkotrajnim promjenama u osjetljivosti na inzulin (na primjer, hormonalne promjene ili problemi s apsorpcijom na mjestu infuzije).</string>
-    <string name="sensitivity_hint2">https://androidaps.readthedocs.io/en/latest/Usage/Open-APS-features.html?highlight=Autosens#autosens</string>
     <string name="wrongcarbs_donothing">Ne poduzimati ništa – AAPS će izvršiti odgovarajuće prilagodbe.</string>
     <string name="wronginsulin_compare">Usporedite vrijednosti u AAPS i povijesti pumpe (ako pumpa to podržava).</string>
     <string name="wronginsulin_donothing">Ne poduzimajte ništa i dopustite APPS-u da ispravi sve rezultirajuće visoke razine glukoze u krvi.</string>

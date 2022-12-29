@@ -20,7 +20,6 @@
     <string name="objectives_smb_objective">Włączanie dodatkowych funkcji do użytku, jak SMB (Super Mikro Bolusy)</string>
     <string name="objectives_smb_gate">Musisz przeczytać wiki i zwiększyć maxIOB, aby SMB działało dobrze! Dobrym początkiem jest maxIOB = średni bolus + 3 x maks. dzienna dawka bazowa</string>
     <string name="objectives_auto_objective">Włączanie automatyzacji</string>
-    <string name="objectives_auto_gate">Przeczytaj dokumentację dotyczącą działania automatyzacji. Skonfiguruj swoje pierwsze proste zasady. Zamiast działania niech AAPS wyświetli tylko powiadomienie. Gdy masz pewność, że automatyzacja zostaje uruchomiona we właściwym czasie, zastąp powiadomienie rzeczywistą akcją. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BG dostępne w NS</string>
     <string name="objectives_pumpstatusavailableinns">Status pompy dostępny w NS</string>
     <string name="objectives_manualenacts">Ręczne zarządzanie</string>
@@ -39,10 +38,6 @@
     <string name="unfinshed_button">Następny niedokończony</string>
     <string name="requestcode">Kod zapytania: %1$s</string>
     <string name="objectives_hint">(zaznacz wszystkie poprawne odpowiedzi)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Brak połączenia z Internetem</string>
     <string name="failedretrievetime">Nie udało się odzyskać</string>
     <string name="requirementnotmet">Wymagania celu nie zostały spełnione</string>

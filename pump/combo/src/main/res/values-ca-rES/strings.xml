@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Ràtio de basal canviada a la bomba, però s\'ha produït error en llegir-la</string>
     <string name="combo_activity_checking_for_history_changes">Comprovant canvis historial</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">S\'han importat múltiples bolus de la mateixa quantitat el mateix minut. Només un s\'ha pogut afegir als tractaments. Si us plau, comproveu la bomba i, si cal, afegiu bolus manualment des del Portal de cures. Important: a l\'introduir un bolus indiqueu una hora que cap altre tingui.</string>
-    <string name="about_link_urls">\n\ndocumentació:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">El darrer bolus és de fa més de 24 hores o està en el futur. Comproveu que la data està ben definida a la bomba.</string>
     <string name="combo_suspious_bolus_time">Data/hora del bolus lliurat a la bomba semblen incorrectes. Probablement l\'IOB és incorrecte. Comproveu data/hora de la bomba.</string>
     <string name="combo_bolus_count">Nr. de bolus</string>

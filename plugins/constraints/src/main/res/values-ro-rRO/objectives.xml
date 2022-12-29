@@ -20,7 +20,6 @@
     <string name="objectives_smb_objective">Se activează opțiuni pentru uzul în timpul zilei, cum ar fi SMB</string>
     <string name="objectives_smb_gate">Trebuie sa citiți wiki și să măriți maxIOB pentru a obține SMB corect! Un start bun este maxIOB=media bolusurilor + 3x maxima bazalei din zi</string>
     <string name="objectives_auto_objective">Activarea automatizării</string>
-    <string name="objectives_auto_gate">Citiți documentația despre cum funcționează automatizarea. Setați primele reguli simple. În loc de a acționa, lăsați AAPS doar să afișeze notificări. Când sunteți siguri ca automatizarea acționează la momentul potrivit, înlocuiți notificările cu acțiuni reale.(https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glicemie disponibilă în NS</string>
     <string name="objectives_pumpstatusavailableinns">Starea pompei disponibilă în NS</string>
     <string name="objectives_manualenacts">Acțiuni manuale</string>
@@ -39,10 +38,6 @@
     <string name="unfinshed_button">Următoarea nefinalizată</string>
     <string name="requestcode">Solicită codul: %1$s</string>
     <string name="objectives_hint">(bifați toate răspunsurile corecte)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Nu există conexiune la internet</string>
     <string name="failedretrievetime">Nu s-a reușit preluarea timpului</string>
     <string name="requirementnotmet">Nu au fost îndeplinite cerințele obiectivului</string>

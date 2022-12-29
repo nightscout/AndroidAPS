@@ -350,4 +350,30 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
+    <string name="pump_fetching_data">tentative de récupération des données de la pompe.</string>
+    <string name="pump_old_data">DTQ: Données encore anciennes ! Impossible de charger depuis la pompe.</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">h</string>
+    <string name="no_active_profile">Aucun profil actif!</string>
+    <string name="profile_message">Profil :\n\nDécalage: %1$\nPourcentage : %2$d%\"</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%</string>
+    <string name="no_profile">Aucun profil séléctionné</string>
+    <string name="aps_only">S\'applique uniquement en mode APS!</string>
+    <string name="last_aps_result_na">Dernier résultat non disponible!</string>
+    <string name="loop_status_closed">BOUCLE FERMÉE</string>
+    <string name="loop_status_open">BOUCLE OUVERTE</string>
+    <string name="loop_status_disabled">BOUCLE DÉSACTIVÉE</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Dernière exécution</string>
+    <string name="last_enact">Dernière injection</string>
+    <string name="today">Aujourd’hui</string>
+    <string name="weighted">pondération</string>
+    <string name="target_only_aps_mode">Les cibles ne s\'appliquent qu\'en mode APS!</string>
+    <string name="no_history">Aucune donnée d\'historique!</string>
+    <string name="units_short">U</string>
+    <string name="temp_target">Cibles Temp</string>
+    <string name="until">jusqu\'à</string>
+    <string name="default_range">PLAGE PAR DEFAUT</string>
+    <string name="target">cible</string>
+    <string name="rate_duration">Taux: %1$.2fU/h (%2$.2f%) \nDurée: %3$d% min</string>
 </resources>

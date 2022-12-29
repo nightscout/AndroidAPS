@@ -20,7 +20,6 @@
     <string name="objectives_smb_objective">在白天启用额外的功能，例如微型大剂量 SMB</string>
     <string name="objectives_smb_gate">你应该阅读wiki指南，以调整 maxIOB(活性胰岛素的最大值) 设置，让SMB(微型大剂量) 更好的工作。建议是 maxIOB值=餐时剂量的平均值+基础率的最大值的3倍。</string>
     <string name="objectives_auto_objective">启用自动操作功能插件</string>
-    <string name="objectives_auto_gate">阅读有关自动操作插件的说明文档，设定你的第一个简单规则。让AAPS只显示通知，而不是操作。当您确定自动操作在正确的时间触发时，用真实操作代替通知。(https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">血糖在NS中可用</string>
     <string name="objectives_pumpstatusavailableinns">泵状态在 NS 中可用</string>
     <string name="objectives_manualenacts">手动执行</string>
@@ -39,10 +38,6 @@
     <string name="unfinshed_button">下一个未完成的</string>
     <string name="requestcode">请求码： %1$s</string>
     <string name="objectives_hint">(选择所有正确的答案)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">未连接到网络</string>
     <string name="failedretrievetime">时间同步失败</string>
     <string name="requirementnotmet">未满足目标要求。</string>

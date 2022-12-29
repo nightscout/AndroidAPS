@@ -40,4 +40,16 @@
     <string name="omnipod_dash_not_enough_insulin">No queda suficiente insulina en el reservorio</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Comando no confirmado</string>
     <string name="requested_by_user" comment="26 characters max for translation">Solicitado por el usuario</string>
+    <string name="profile_set_ok">Perfil configurado correctamente</string>
+    <string name="suspend_delivery_is_unconfirmed">¡La entrega de insulina no está confirmada! Por favor, actualica manualmente el estado del Pod desde la pestaña Omnipod y reanúdela si es necesario.</string>
+    <string name="insulin_delivery_suspended">Suspensión de la administración de insulina</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">La zona horaria en pod es diferente de la zona horaria del teléfono. La tasa basal no es correcta. Se debe cambiar el perfil para corregirlo</string>
+    <string name="failed_to_set_the_new_basal_profile">Error al establecer el nuevo perfil basal. Entrega suspendida</string>
+    <string name="setting_basal_profile_might_have_failed">El ajuste del perfil basal puede haber fallado. Es posible que se haya suspendido el suministro. Actualice manualmente el estado del Pod desde la pestaña Omnipod y reanude el suministro si es necesario</string>
+    <string name="bolus_delivery_status_uncertain">Estado de entrega de bolo incierto. Actualice el estado del bolo para confirmarlo o rechazarlo</string>
+    <string name="checking_delivery_status">Comprobando el estado de la entrega</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Establecer la basal temporal podría haber fallado. Si se estaba ejecutando una basal temporal, se ha cancelado. Actualice manualmente el estado del Pod desde la pestaña Omnipod</string>
+    <string name="cancel_temp_basal_result_is_uncertain">El resultado de cancelar la basal temporal es incierto</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">El comando \"ContinuarEntrega\" no se encuentra confirmado. Por favor, actualice el estado del pod</string>
+    <string name="cancelling_temp_basal_might_have_failed">Puede que haya fallado la cancelación de la basal temporal. Si anteriormente se estaba ejecutando una basal temporal, es posible que se haya cancelado. Actualice manualmente el estado del Pod desde la pestaña Omnipod.</string>
 </resources>

@@ -34,7 +34,6 @@
     <string name="doprofileswitch">Profilio keitimas</string>
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
-    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Sukonfigūruokite RileyLink žemiau. Pasirinkę RileyLink, galėsite tęsti diegimą, kai tik RileyLink būsena bus „Prisijungta“. Tai gali užtrukti minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galite tęsti, kai tik inicijuojama pompa.\n</string>

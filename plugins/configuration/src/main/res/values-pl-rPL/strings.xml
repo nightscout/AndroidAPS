@@ -34,7 +34,6 @@
     <string name="doprofileswitch">Zmień profil</string>
     <string name="exitwizard">Pomiń Kreatora konfiguracji</string>
     <string name="setupwizard_sensitivity_description">Wtyczka wrażliwości używana jest w celu określenia wrażliwości i kalkulacji COB. Więcej informacji na:</string>
-    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Wybierz jeden z dostępnych algorytmów. Ułożone są one od najstarszych do najnowszych. Nowszy algorytm jest zazwyczaj bardziej wydajny i agresywny. Jeśli jesteś nowym użytkownikiem, lepiej zacznij od zaawansowanego asystenta posiłku AMA, a nie od najnowszego algorytmu. Zapoznaj się koniecznie z dokumentacją OpenAPS przed wybraniem odpowiedniego algorytmu i jego konfiguracją.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Proszę skonfigurować RileyLink poniżej. Po wybraniu RileyLink, możliwe będzie kontynuowanie konfiguracji, gdy status RileyLink będzie \"Połączony\". To może zająć minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Uwaga:</b> Możesz kontynuować konfigurację po skonfigurowaniu pompy.\n</string>

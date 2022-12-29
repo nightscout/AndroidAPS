@@ -20,7 +20,6 @@
     <string name="objectives_smb_objective">Aktivering af yderligere funktioner til brug i dagtimerne, såsom SMB</string>
     <string name="objectives_smb_gate">Du skal læse wikien og hæve maxIOB for at få SMB\'er til at fungere fint! En god start er maxIOB=gennemsnitlig måltidsbolus + 3 x max daglig basal</string>
     <string name="objectives_auto_objective">Aktiverer automatisering</string>
-    <string name="objectives_auto_gate">Læs dokumentationen om hvordan automatisering virker. Opsæt dine første enkle regler. I stedet for handling lad kun AAPS vise notifikation. Når du er sikker på, at automatisering udløses på det rigtige tidspunkt, skal du erstatte notifikationen med reel handling. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">BG tilgængelig i NS</string>
     <string name="objectives_pumpstatusavailableinns">Pumpestatus tilgængelig i NS</string>
     <string name="objectives_manualenacts">Manuelle handlinger</string>
@@ -41,10 +40,6 @@
     <string name="unfinshed_button">Næste uafsluttede</string>
     <string name="requestcode">Anmod om kode: %1$s</string>
     <string name="objectives_hint">(tjek alle de korrekte svar)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Ingen forbindelse til internettet</string>
     <string name="failedretrievetime">Tid kunne ikke hentes</string>
     <string name="requirementnotmet">Quiz krav ikke opfyldt</string>

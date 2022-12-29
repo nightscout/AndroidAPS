@@ -176,9 +176,6 @@
     <string name="no_iob_u">--IE</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--E/t</string>
-    <string name="uploader_na">Uploader: ---%</string>
-    <string name="no_status">S: ingen status</string>
-    <string name="time_stamp_na_min_ago">-- Minutter siden</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Ingen Loop Status</string>
     <string name="cob_000g">000g</string>

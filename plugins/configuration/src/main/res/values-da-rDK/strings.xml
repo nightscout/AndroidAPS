@@ -35,7 +35,6 @@
     <string name="exitwizard">Spring opsætningsguiden over</string>
     <string name="setupwizard_loop_description">Tryk på knappen nedenfor for at aktivere at AAPS foreslår/foretager basale ændringer</string>
     <string name="setupwizard_sensitivity_description">Følsomhedsplugin bruges til detektering af følsomhed og COB beregning. For mere info besøg:</string>
-    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Vælg en fra tilgængelige algoritmer. De er sorteret fra ældste til nyeste. Nyere algoritme er normalt mere kraftfulde og mere aggressive. Så hvis du er ny looper bør du sandsynligvis starte med AMA og ikke med den nyeste. Glem ikke at læse OpenAPS dokumentationen og konfigurere den før brug.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurer venligst din RileyLink nedenfor. Når du har valgt en RileyLink, vil det være muligt at fortsætte opsætningen, når RileyLink-status er \"Tilsluttet\". Dette kan tage et minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Bemærk:</b> Du kan fortsætte opsætningen, når pumpen er konfigureret.\n</string>

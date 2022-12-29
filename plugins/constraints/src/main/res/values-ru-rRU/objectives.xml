@@ -27,7 +27,6 @@
     <string name="objectives_smb_gate">Прочтите wiki и увеличьте maxIOB чтобы супер микро болюс SMB заработал как положено! Хорошее начало – maxIOB = средний болюс на еду + троекратный максимальный суточный базал</string>
     <string name="objectives_smb_learned">Ваша цель - это использование СМБ. Алгоритм Oref1 предназначен также, чтобы помочь вам с болюсами. Вы не должны подавать полный болюс на еду, а только часть его, предоставив AAPS подать при необходимости остальную часть болюса. Таким образом вы можете иметь большее пространство для ошибки в подсчетах углеводов. Вы знаете, что можно установить проценты для уменьшения размера болюса?</string>
     <string name="objectives_auto_objective">Включение автоматизации</string>
-    <string name="objectives_auto_gate">Прочтите документацию по автоматизации. Настройте свои первые простые правила. Вместо действия позвольте AAPS только выводить уведомления. Если вы уверены, что автоматизация инициируется в нужное время, замените уведомление реальными действиями. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Автоматизация может быть хорошим слугой, но плохим хозяином. Не полагайтесь на нее сверх меры. Не пытайтесь заменить лежащий в основе алгоритм. Проверяйте перед использованием.</string>
     <string name="objectives_bgavailableinns">гликемия доступна в NS</string>
     <string name="objectives_pumpstatusavailableinns">Статус помпы доступен в NS</string>
@@ -52,10 +51,6 @@
     <string name="unfinshed_button">Следующий незавершенный</string>
     <string name="requestcode">Код запроса: %1$s</string>
     <string name="objectives_hint">(отметьте все правильные ответы)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Нет подключения к Интернету</string>
     <string name="failedretrievetime">Не удалось загрузить время</string>
     <string name="requirementnotmet">Требования к цели не выполнены</string>
