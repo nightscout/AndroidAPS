@@ -48,12 +48,16 @@
     <string name="objectives_exam_learned_prerequisites">Nemusíte být vývojář, ale potřebujete NS pro splnění cílů, kompatibilní pumpu a počítač k prvnímu sestavení AAPS a pro každou aktualizaci.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS lze spustit offline.</string>
     <string name="objectives_exam_learned_basaltest">Profil by měl být kontrolován a aktualizován. Lepší profil = lepší výsledky.</string>
+    <string name="objectives_exam_learned_dia">DIA ve smyčce má jiný význam (čas, dokud není veškerý inzulin absorbován) než v klasické terapii pumpou (čas, dokud není většina inzulinu absorbována).</string>
+    <string name="objectives_exam_learned_isf">Zjistili jste význam hodnoty citlivosti a toho, jak ovlivňuje množství inzulínu použitého pro korekci glykémie.</string>
+    <string name="objectives_exam_learned_ic">Naučili jste se význam hodnoty IC a toho, jak ovlivňuje množství inzulinu potřebné k pokrytí sacharidů.</string>
     <string name="objectives_exam_learned_hypott">Dočasný cíl Hypo se používá pouze k zabránění nadměrné korekce po hypoglykémii, když je obvykle nakumulováno negativní IOB. Měla by být provedena další opatření s cílem zabránit této situaci v budoucnosti.</string>
     <string name="objectives_exam_learned_profileswitch">Použití procenta nemá vliv na cílové glykémie, ale bazál, ISF a IC jsou upraveny tak, aby dávaly více inzulínu (nad 100%%) nebo méně inzulínu (pod 100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Používáním posunu času v profilu se můžete adaptovat na nepravidelný cirkadiální profil, jako je třeba pozdní probuzení.</string>
     <string name="objectives_exam_learned_profileswitch4">Úprava profilu sama o sobě nestačí k provedení změny. Stále musíte provést přepnutí profilu pro aktivaci změn.</string>
     <string name="objectives_exam_learned_exercise">Měli byste snížit množství inzulínu v těle alespoň 1 hodinu před zahájením cvičení výběrem profilu pod 100 %.</string>
     <string name="objectives_exam_learned_exercise2">Nastavení vyššího dočasného cíle alespoň 1 hodinu před cvičením pomáhá snížit také množství inzulínu v těle.</string>
+    <string name="objectives_exam_learned_noisycgm">Pokud nemůžete důvěřovat hodnotám CGM, neměli byste používat smyčku bez dozoru.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS musí vědět, že pumpa není připojena pro správné počítání IOB.</string>
     <string name="objectives_exam_learned_insulin">Vědět, který inzulin je v pumpě nainstalovaný je nutné, protože to má vliv na výpočet IOB.</string>
     <string name="objectives_exam_learned_sensitivity">Detekce citlivosti je součástí algoritmu umožňující přizpůsobit dávkování inzulinu různým situacím.</string>
@@ -61,6 +65,7 @@
     <string name="objectives_exam_learned_objectives2">Vždy uchovejte exportovaná nastavení a vygenerovaný APK také mimo telefon. Telefon může být ztracen, poškozen atd. Dobrým místem může být libovolný cloud dostupný z telefonu. V tomto případě můžete obnovit AAPS na jiném zařízení během několika minut. Správnou praxí je i uložit hlavní heslo na bezpečném místě. Bez něj je Vaše záloha zbytečná. Totéž platí pro podepisovací klíče (soubor .jks) a hesla použitá pro sestavení AAPS. Zbytek není důležitý - může být kdykoliv znovu stažen z internetu.</string>
     <string name="objectives_exam_learned_wrongcarbs">Pokud jste nejaký údaj špatně zadali do AAPS nebo to neodpovídá realitě, vyřešte to. Může to vést k předávkování. AAPS by měl být vždy informován o sacharidech, inzulinu atd. jak nejlépe je to možné.</string>
     <string name="objectives_exam_learned_iob">Pokud analyzujete, zda AAPS funguje dobře, sledování grafu IOB Vám můžete poskytnout hodně užitečných informací.</string>
+    <string name="objectives_exam_learned_cob">Výpočet COB závisí na vztahu mezi ISF a IC. Zvyšování ISF nebo zmenšování IC povede k delšímu období absorpce. Ale percentuální přepnutí profilu změní obě hodnoty současně a čas absorpce nebude ovlivněn.</string>
     <string name="objectives_exam_learned_breadgrams">Pro zadávání sacharidů jsou povoleny pouze gramy.</string>
     <string name="objectives_exam_learned_ecarbs">E-sacharidy je náhrada prodlouženého bolusu ve světě pump.</string>
     <string name="objectives_exam_learned_nsclient">Vzdálené monitorování a ovládání je možné, ale ne všechny funkce musí být k dispozici na dálku.</string>
