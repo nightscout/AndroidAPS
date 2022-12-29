@@ -37,7 +37,6 @@
     <string name="exitwizard">Kurulum sihirbazını atla</string>
     <string name="setupwizard_loop_description">AAPS\'ın bazal değişiklikleri önerme/yapmasını sağlamak için aşağıdaki düğmeye basın</string>
     <string name="setupwizard_sensitivity_description">Duyarlılık eklentisi, duyarlılık tespiti ve AKRB hesaplaması için kullanılır. Daha fazla bilgi için ziyaret edin:</string>
-    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Mevcut algoritmalardan birini seçin. En eskiden en yeniye doğru sıralanırlar. Yeni algoritma genellikle daha güçlü ve daha agresiftir. Bu nedenle, yeni bir kullanıcı iseniz, muhtemelen en sonuncusu ile değil, AMA ile başlayabilirsiniz. OpenAPS belgelerini okumayı ve kullanmadan önce yapılandırmayı unutmayın.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Lütfen aşağıda RileyLink\'inizi yapılandırın. Bir RileyLink seçtikten sonra, RileyLink durumu \"Bağlandı\" olduğunda kuruluma devam etmek mümkün olacaktır. Bu bir dakika sürebilir.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Not:</b> Pompa kurulduktan sonra kuruluma devam edebilirsiniz.\n</string>
