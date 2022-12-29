@@ -20,7 +20,6 @@
     <string name="objectives_smb_objective">הפעלת פונקציות נוספות לשימוש במשך היום, כגון סופר מיקרו בולוסים (SMB)</string>
     <string name="objectives_smb_gate">חובה לקרוא את הויקי ולהעלות את ערך ה-maxIOB כדי להפעיל את ה- SMB כראוי. התחלה טובה תהיה maxIOB=בולוס ממוצע + 3 פעמים ערך הבזאלי היומי המקסימלי</string>
     <string name="objectives_auto_objective">הפעלת אוטומציה</string>
-    <string name="objectives_auto_gate">קראו את המסמכים על כיצד האוטומציה פועלת. הגדירו את הכללים הפשוטים הראשונים שלכם. במקום פעולה, תנו ל-AAPS להציג הודעה בלבד. כאשר אתם בטוחים שהאוטומציה מופעלת כראוי, החליפו את ההודעה בפעולה אמיתית. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">ערך הסוכר זמין ב-Nightscout</string>
     <string name="objectives_pumpstatusavailableinns">סטטוס המשאבה זמין ב-Nightscout</string>
     <string name="objectives_manualenacts">קביעות ידניות</string>
@@ -41,10 +40,6 @@
     <string name="unfinshed_button">הבא שלא נענה</string>
     <string name="requestcode">בקשת קוד: %1$s</string>
     <string name="objectives_hint">(סמנו את כל התשובות הנכונות)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">אין חיבור לאינטרנט</string>
     <string name="failedretrievetime">אחזור השעה נכשל</string>
     <string name="requirementnotmet">דרישות המשימה לא נענו</string>
