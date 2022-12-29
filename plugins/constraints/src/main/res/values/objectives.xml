@@ -50,16 +50,16 @@
     <string name="objectives_exam_learned_prerequisites">You don\'t need to be a developer but you need NS to pass Objectives, compatible pump and computer to build AAPS for the first time and for every update.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS can be run offline.</string>
     <string name="objectives_exam_learned_basaltest">Profile should be reviewed and updated. Better profile = better results.</string>
-    <string name="objectives_exam_learned_dia">DIA in looping has different meaning (time until all insulin is absorbed) then in classic pump therapy (time until most insulin is absorbed).</string>
-    <string name="objectives_exam_learned_isf">You learned meaning of ISF value and it affects amount of insulin used for BG correction.</string>
-    <string name="objectives_exam_learned_ic">You learned meaning of IC value and it affects amount of insulin needed to cover carbs.</string>
+    <string name="objectives_exam_learned_dia">DIA in looping has different meaning (time until all insulin is absorbed) than in classic pump therapy (time until most insulin is absorbed).</string>
+    <string name="objectives_exam_learned_isf">You learned meaning of ISF value and how it affects amount of insulin used for BG correction.</string>
+    <string name="objectives_exam_learned_ic">You learned meaning of IC value and how it affects amount of insulin needed to cover carbs.</string>
     <string name="objectives_exam_learned_hypott">Hypo temp target is used only to prevent overcorrection after hypo, when there is usually stacked negative IOB. Additional actions should be evaluated to prevent this situation again in the future.</string>
     <string name="objectives_exam_learned_profileswitch">Using percentage doesn\'t affect targets BGs but basal, ISF and IC are adjusted to give more insulin (above 100%%) or less insulin (under 100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">By using timeshift in profile switch you can adapt circadian profile to irregularities like late wake up.</string>
     <string name="objectives_exam_learned_profileswitch4">Editing profile itself is not sufficient to make a change. You still need to do a profile switch to activate changes.</string>
     <string name="objectives_exam_learned_exercise">You should reduce amount of insulin in the body at least 1 hour before starting exercise by selecting profile under 100%.</string>
     <string name="objectives_exam_learned_exercise2">Setting of higher temp target at least 1 hour before exercise helps with reducing of amount of insulin in the body as well.</string>
-    <string name="objectives_exam_learned_noisycgm">Wen you cannot trust CGM values you should not use loop unattended.</string>
+    <string name="objectives_exam_learned_noisycgm">When you cannot trust CGM values you should not use loop unattended.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS must know that pump is not connected to count IOB correctly.</string>
     <string name="objectives_exam_learned_insulin">Letting know which insulin is in pump is necessary because it does affect IOB calculation.</string>
     <string name="objectives_exam_learned_sensitivity">Sensitivity detection is part of the algorithm which allows adapt insulin dosage to different situations.</string>
@@ -67,7 +67,7 @@
     <string name="objectives_exam_learned_objectives2">Always keep exported settings and generated APK also outside phone. Phone can be lost, damaged etc. Good place can be any cloud accessible from phone. In this case you can restore AAPS on another device in a few minutes. Good practice is store used master password on a safe place too. Without it is your backup useless. The same is valid for signing keys (.jks file) and passwords used to build AAPS. The rest is not important - it can be anytime downloaded from internet again.</string>
     <string name="objectives_exam_learned_wrongcarbs">If you made wrong input to AAPS or it doesn\'t match reality, resolve it asap. It could lead to overdosing. AAPS should be always informed the best possible way about carbs, insulin etc.</string>
     <string name="objectives_exam_learned_iob">If you analyze if AAPS is working well for you watching IOB graph can give you a lof of useful information.</string>
-    <string name="objectives_exam_learned_cob">COB calculation depends on relation between ISF an IC. Increasing ISF or decreasing IC will lead to longer absorption times. But profile switch with percentage change both values at the same time and absorption time is not affected.</string>
+    <string name="objectives_exam_learned_cob">COB calculation depends on relation between ISF a IC. Increasing ISF or decreasing IC will lead to longer absorption times. But profile switch with percentage change both values at the same time and absorption time is not affected.</string>
     <string name="objectives_exam_learned_breadgrams">Only grams are allowed for entry of carbohydrates.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs is a replacement for extended bolus in pump world.</string>
     <string name="objectives_exam_learned_nsclient">Remote monitoring and control is possible but not all features must be available remotely.</string>
