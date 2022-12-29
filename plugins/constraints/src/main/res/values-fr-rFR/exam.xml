@@ -195,6 +195,7 @@
     <string name="profileswitch_isfhigher">La valeur de SI sera augmentée de 10%.</string>
     <string name="profileswitch_iclower">La valeur du ratio G/I sera un nombre 10% inférieur.</string>
     <string name="profileswitch_unchanged">Les ratios SI et G/I seront inchangés.</string>
+    <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/fr/latest/Usage/Profiles.html#changement-de-profil</string>
     <string name="profileswitch2_label">Changement de profil</string>
     <string name="profileswitch2_pctwillchange">Quand vous spécifiez un changement de profil à 120%, quelles réponses sont vraies ?</string>
     <string name="profileswitch2_bghigher">La glycémie cible sera 20% plus élevée.</string>
@@ -207,11 +208,13 @@
     <string name="profileswitchtime__2">Faites un changement de profil avec un décalage horaire de -2</string>
     <string name="profileswitchtime_tt">Fixez une cible temporaire repas imminent.</string>
     <string name="profileswitchtime_100">Faites un changement de profil à plus de 100 %.</string>
+    <string name="profileswitchtime_hint1">https://wiki.aaps.app/fr/latest/Usage/Profiles.html#decalage-horaire</string>
     <string name="profileswitch4_label">Changements de profils</string>
     <string name="profileswitch4_rates">Les débits de basal, SI, ratios G/I, etc. doivent être définis dans les profils.</string>
     <string name="profileswitch4_internet">L\'activation des modifications apportées à votre profil Nightscout nécessite que votre téléphone AAPS soit connecté à Internet.</string>
     <string name="profileswitch4_sufficient">Modifier les profils pour changer des valeurs est suffisant pour mettre en œuvre toutes les modifications effectuées.</string>
     <string name="profileswitch4_multi">Plusieurs profils peuvent être définis et sélectionnés pour s\'adapter à des circonstances changeantes (par ex. changements hormonaux, changement de poste de travail, jours de semaine/week-end).</string>
+    <string name="basalhelp_hint1">https://wiki.aaps.app/fr/latest/Module/module.html#un-bon-algorithme-de-dosage-individuel-pour-votre-diabete</string>
     <string name="basalhelp_label">Aide sur les débits de basal</string>
     <string name="basalhelp_where">Où aller pour avoir de l\'aide avec le débit Basal etc.</string>
     <string name="basalhelp_diabetesteam">Votre équipe médicale</string>
