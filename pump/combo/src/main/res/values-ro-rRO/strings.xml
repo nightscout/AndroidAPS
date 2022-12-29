@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Rata bazală schimbată în pompă, dar nu s-a putut actualiza</string>
     <string name="combo_activity_checking_for_history_changes">Se verifică schimbările în istoric</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Mai multe bolusuri de aceeași valoare au fost importate. Doar o singură înregistrare va fi adăugată în tratamente. Verifcați manual în pompă și adăugați înregistrările folosind Careportal. Asigurați-vă că veți crea un bolus care nu se suprapune peste altul în timp.</string>
-    <string name="about_link_urls">\n\ndocumentație:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Ultimul bolus este mai vechi de 24 ore sau este în viitor. Verificați ca data să fie configurată corect în pompă.</string>
     <string name="combo_suspious_bolus_time">Ora/data bolusului livrat de pompă pare eronat, IOB este probabil incorect. Verificați ora/data pompei.</string>
     <string name="combo_bolus_count">Total bolusuri</string>
