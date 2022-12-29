@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Bazal oranı pompada değiştirildi, ancak okuma başarısız oldu</string>
     <string name="combo_activity_checking_for_history_changes">Geçmiş değişiklikleri kontrol ediliyor</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Aynı dakika içinde aynı miktarda birden fazla bolus içe aktarıldı. Tedavilere sadece bir kayıt eklenebildi. Lütfen pompayı kontrol edin ve Careportal sekmesini kullanarak manuel olarak bir bolus kaydı ekleyin. Diğer boluslardan farklı zamana sahip bir bolus kaydı eklediğinizden emin olun.</string>
-    <string name="about_link_urls">\n\ndocumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Son bolus 24 saatten eski veya ileri tarihli. Lütfen pompa üzerindeki tarihin doğru ayarlandığını kontrol edin.</string>
     <string name="combo_suspious_bolus_time">Pompada iletilen bolusun saati/tarihi yanlış görünüyor, AİNS büyük olasılıkla yanlış. Lütfen pompa saatini/tarihini kontrol edin.</string>
     <string name="combo_bolus_count">Bolus Sayımı</string>
