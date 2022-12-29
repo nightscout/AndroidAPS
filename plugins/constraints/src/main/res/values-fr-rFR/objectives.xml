@@ -76,7 +76,7 @@
     <string name="objectives_hint">(Sélectionnez toutes les bonnes réponses)</string>
     <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/fr/latest/Getting-Started/FAQ.html#que-faire-pour-prendre-une-douche-ou-un-bain</string>
     <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/fr/latest/Getting-Started/Screenshots.html#ecran-d-accueil</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/fr/latest/Getting-Started/Screenshots.html#onglet-actions</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/fr/latest/Configuration/Config-Builder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/fr/latest/Getting-Started/Screenshots.html#ecran-d-accueil</string>
     <string name="notconnected">Non connecté à Internet</string>
     <string name="failedretrievetime">Échec de la récupération de l\'heure</string>
