@@ -20,7 +20,6 @@
     <string name="objectives_smb_objective">Activant funcions addicionals d\'ús diurn, com l\'SMB (super micro bolus)</string>
     <string name="objectives_smb_gate">Heu de llegir la wiki i augmentar la maxIOB per a què l\'SMB funcioni correctament! Una bona manera de començar és amb maxIOB = bolus d\'àpat mig + 3 x màxima basal diària</string>
     <string name="objectives_auto_objective">Activant l\'automatització</string>
-    <string name="objectives_auto_gate">Llegiu els documents sobre com funciona l\'automatització. Configureu les vostres primeres regles. Enlloc de fer l\'acció, feu que AAPS només mostri un avís. Quan esteu segurs que l\'automatització s\'activa en el moment correcte, substituïu la notificació per l\'acció real. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">Glucèmia disponible a NS</string>
     <string name="objectives_pumpstatusavailableinns">Estat de la bomba disponible a NS</string>
     <string name="objectives_manualenacts">Activació manual</string>
@@ -39,10 +38,6 @@
     <string name="unfinshed_button">Següent no finalitzada</string>
     <string name="requestcode">Sol·licitar codi: %1$s</string>
     <string name="objectives_hint">(marqueu totes les respostes correctes)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">No hi ha connexió a internet</string>
     <string name="failedretrievetime">Errada en recuperar l\'hora</string>
     <string name="requirementnotmet">No es compleixen els requeriments de l\'objectiu</string>
