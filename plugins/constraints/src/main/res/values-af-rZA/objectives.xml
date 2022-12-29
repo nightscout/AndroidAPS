@@ -36,10 +36,6 @@
     <string name="unfinshed_button">Volgende onvoltooide</string>
     <string name="requestcode">Versoek kode: %1$s</string>
     <string name="objectives_hint">(kyk al die korrekte antwoorde)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Nie aan internet gekoppel nie</string>
     <string name="failedretrievetime">Misluk haal tyd</string>
     <string name="requirementnotmet">Objektiewe vereistes nie nagekom nie</string>
