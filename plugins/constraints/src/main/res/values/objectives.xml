@@ -51,8 +51,8 @@
     <string name="objectives_exam_learned_prerequisites2">AAPS can be run offline.</string>
     <string name="objectives_exam_learned_basaltest">Profile should be reviewed and updated. Better profile = better results.</string>
     <string name="objectives_exam_learned_dia">DIA in looping has different meaning (time until all insulin is absorbed) than in classic pump therapy (time until most insulin is absorbed).</string>
-    <string name="objectives_exam_learned_isf">You learned meaning of ISF value and it affects amount of insulin used for BG correction.</string>
-    <string name="objectives_exam_learned_ic">You learned meaning of IC value and it affects amount of insulin needed to cover carbs.</string>
+    <string name="objectives_exam_learned_isf">You learned meaning of ISF value and how it affects amount of insulin used for BG correction.</string>
+    <string name="objectives_exam_learned_ic">You learned meaning of IC value and how it affects amount of insulin needed to cover carbs.</string>
     <string name="objectives_exam_learned_hypott">Hypo temp target is used only to prevent overcorrection after hypo, when there is usually stacked negative IOB. Additional actions should be evaluated to prevent this situation again in the future.</string>
     <string name="objectives_exam_learned_profileswitch">Using percentage doesn\'t affect targets BGs but basal, ISF and IC are adjusted to give more insulin (above 100%%) or less insulin (under 100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">By using timeshift in profile switch you can adapt circadian profile to irregularities like late wake up.</string>
