@@ -176,9 +176,6 @@
     <string name="no_iob_u">-- יח\'</string>
     <string name="no_cob_g">-- גר\'</string>
     <string name="no_tmp_basal_u_h">-.--יח\' לשעה</string>
-    <string name="uploader_na">מעלה: --- %</string>
-    <string name="no_status">אין סטטוס</string>
-    <string name="time_stamp_na_min_ago">לפני -- דקות</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">חסר סטטוס לולאה</string>
     <string name="cob_000g">000 גר\'</string>
