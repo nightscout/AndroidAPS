@@ -5,18 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black"
-    tools:deviceIds="wear_round"
-    tools:ignore="MissingDefaultResource">
+    tools:context=".watchfaces.DigitalStyleWatchface">
 
     <!-- background-image with shapes elements-->
     <LinearLayout
         android:id="@+id/shapes_elements"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/digitalstyle_bg_full_round"
-        android:contentDescription="round-shape-elements"
-        android:orientation="horizontal"
-        tools:ignore="HardcodedText"  />
+        android:background="@drawable/digital_style_bg_full"
+        android:orientation="horizontal" />
 
     <!-- root-element-->
     <LinearLayout
@@ -66,6 +63,7 @@
                         android:id="@+id/cob1"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_marginTop="1dp"
                         android:layout_weight="2"
                         android:fontFamily="@font/roboto_slab_light"
                         android:gravity="bottom|center_horizontal"
@@ -78,6 +76,7 @@
                         android:id="@+id/cob2"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_marginTop="-1dp"
                         android:layout_weight="3"
                         android:fontFamily="@font/roboto_slab_light"
                         android:gravity="top|center_horizontal"
@@ -85,7 +84,7 @@
                         android:lines="1"
                         android:text="@string/cob_000g"
                         android:textColor="@color/white"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/watch_face_digital_sub_text_size" />
 
                 </LinearLayout>
 
@@ -150,7 +149,7 @@
                             android:text="--"
                             android:textAlignment="center"
                             android:textColor="@color/white"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/watch_face_digital_direction_text_size"
                             android:textStyle="bold"
                             tools:ignore="HardcodedText" />
 
@@ -163,9 +162,10 @@
                             android:layout_marginBottom="2dp"
                             android:layout_weight="3"
                             android:fontFamily="sans-serif-condensed-light"
+                            android:maxLines="1"
                             android:text="--'"
                             android:textColor="@color/light_grey"
-                            android:textSize="10sp"
+                            android:textSize="@dimen/watch_face_digital_timestamp_text_size"
                             tools:ignore="HardcodedText,SmallSp" />
 
                         <View
@@ -196,7 +196,7 @@
                             android:lines="1"
                             android:text="@string/svg_00_0"
                             android:textColor="@color/white"
-                            android:textSize="20sp"
+                            android:textSize="@dimen/watch_face_digital_svg_text_size"
                             android:textStyle="bold" />
 
                     </LinearLayout>
@@ -240,6 +240,7 @@
                         android:id="@+id/iob1"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_marginTop="1dp"
                         android:layout_weight="2"
                         android:fontFamily="@font/roboto_slab_light"
                         android:gravity="bottom|center_horizontal"
@@ -252,14 +253,16 @@
                         android:id="@+id/iob2"
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
+                        android:layout_marginTop="-1dp"
                         android:layout_weight="3"
                         android:fontFamily="@font/roboto_slab_light"
                         android:gravity="top|center_horizontal"
+
                         android:letterSpacing="-0.075"
                         android:lines="1"
                         android:text="@string/iob_0_00u"
                         android:textColor="@color/white"
-                        android:textSize="14sp" />
+                        android:textSize="@dimen/watch_face_digital_sub_text_size" />
 
                 </LinearLayout>
 
@@ -342,7 +345,6 @@
                             android:textColor="@color/light_grey"
                             android:textFontWeight="400"
                             android:textSize="18sp"
-                            android:visibility="gone"
                             tools:text="ww" />
 
                         <View
@@ -439,8 +441,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="start"
-                            android:layout_marginStart="6sp"
-                            android:layout_marginBottom="-8sp"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginTop="-2dp"
+                            android:layout_marginBottom="-8dp"
                             android:fontFamily="@font/roboto_condensed_bold"
                             android:textColor="@color/light_grey"
                             android:textSize="26sp"
@@ -452,7 +455,7 @@
                             android:id="@+id/timePeriod"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8sp"
+                            android:layout_marginStart="8dp"
                             android:fontFamily="@font/roboto_condensed_bold"
                             android:gravity="top"
                             android:textColor="@color/light_grey"

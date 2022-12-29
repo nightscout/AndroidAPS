@@ -423,7 +423,7 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     private fun setDateAndTime() {
-        binding.time?.text = dateUtil.timeString()
+        binding.time?.text = if(binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString()
         binding.hour?.text = dateUtil.hourString()
         binding.minute?.text = dateUtil.minuteString()
         binding.dateTime?.visibility = sp.getBoolean(R.string.key_show_date, false).toVisibility()
@@ -524,6 +524,5 @@ abstract class BaseWatchFace : WatchFace() {
         var iFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
         val NORMAL_TYPEFACE: Typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL)
         val BOLD_TYPEFACE: Typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
-        const val SCREEN_SIZE_SMALL = 280
     }
 }

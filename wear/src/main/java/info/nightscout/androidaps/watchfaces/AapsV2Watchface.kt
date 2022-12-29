@@ -52,7 +52,7 @@ class AapsV2Watchface : BaseWatchFace() {
         binding.rigBattery.setTextColor(dividerTxtColor)
         binding.delta.setTextColor(dividerTxtColor)
         binding.avgDelta.setTextColor(dividerTxtColor)
-        binding.basalRate?.setTextColor(dividerTxtColor)
+        binding.basalRate.setTextColor(dividerTxtColor)
         binding.bgi.setTextColor(dividerTxtColor)
         when (loopLevel) {
             -1   -> binding.loop.setBackgroundResource(R.drawable.loop_grey_25)
@@ -85,7 +85,7 @@ class AapsV2Watchface : BaseWatchFace() {
         binding.avgDelta.setTextColor(dividerTxtColor)
         binding.rigBattery.setTextColor(dividerTxtColor)
         binding.uploaderBattery.setTextColor(dividerTxtColor)
-        binding.basalRate?.setTextColor(dividerTxtColor)
+        binding.basalRate.setTextColor(dividerTxtColor)
         binding.bgi.setTextColor(dividerTxtColor)
         binding.iob1.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
         binding.iob2.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
@@ -138,7 +138,7 @@ class AapsV2Watchface : BaseWatchFace() {
             binding.rigBattery.setTextColor(dividerTxtColor)
             binding.delta.setTextColor(dividerTxtColor)
             binding.avgDelta.setTextColor(dividerTxtColor)
-            binding.basalRate?.setTextColor(dividerTxtColor)
+            binding.basalRate.setTextColor(dividerTxtColor)
             binding.bgi.setTextColor(dividerTxtColor)
             when (loopLevel) {
                 -1   -> binding.loop.setBackgroundResource(R.drawable.loop_grey_25)
