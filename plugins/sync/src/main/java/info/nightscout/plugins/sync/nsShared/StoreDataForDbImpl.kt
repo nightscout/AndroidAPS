@@ -26,6 +26,7 @@ import info.nightscout.database.impl.transactions.SyncNsBolusTransaction
 import info.nightscout.database.impl.transactions.SyncNsCarbsTransaction
 import info.nightscout.database.impl.transactions.SyncNsEffectiveProfileSwitchTransaction
 import info.nightscout.database.impl.transactions.SyncNsExtendedBolusTransaction
+import info.nightscout.database.impl.transactions.SyncNsFoodTransaction
 import info.nightscout.database.impl.transactions.SyncNsOfflineEventTransaction
 import info.nightscout.database.impl.transactions.SyncNsProfileSwitchTransaction
 import info.nightscout.database.impl.transactions.SyncNsTemporaryBasalTransaction
@@ -92,11 +93,11 @@ class StoreDataForDbImpl @Inject constructor(
     override val temporaryBasals: MutableList<TemporaryBasal> = mutableListOf()
     override val profileSwitches: MutableList<ProfileSwitch> = mutableListOf()
     override val offlineEvents: MutableList<OfflineEvent> = mutableListOf()
+    override val foods: MutableList<Food> = mutableListOf()
 
     override val nsIdGlucoseValues: MutableList<GlucoseValue> = mutableListOf()
     override val nsIdBoluses: MutableList<Bolus> = mutableListOf()
     override val nsIdCarbs: MutableList<Carbs> = mutableListOf()
-    override val nsIdFoods: MutableList<Food> = mutableListOf()
     override val nsIdTemporaryTargets: MutableList<TemporaryTarget> = mutableListOf()
     override val nsIdEffectiveProfileSwitches: MutableList<EffectiveProfileSwitch> = mutableListOf()
     override val nsIdBolusCalculatorResults: MutableList<BolusCalculatorResult> = mutableListOf()
@@ -106,6 +107,7 @@ class StoreDataForDbImpl @Inject constructor(
     override val nsIdProfileSwitches: MutableList<ProfileSwitch> = mutableListOf()
     override val nsIdOfflineEvents: MutableList<OfflineEvent> = mutableListOf()
     override val nsIdDeviceStatuses: MutableList<DeviceStatus> = mutableListOf()
+    override val nsIdFoods: MutableList<Food> = mutableListOf()
 
     private val userEntries: MutableList<UserEntry> = mutableListOf()
 
@@ -127,6 +129,19 @@ class StoreDataForDbImpl @Inject constructor(
 
         override fun doWorkAndLog(): Result {
             storeDataForDb.storeGlucoseValuesToDb()
+            return Result.success()
+        }
+    }
+
+    class StoreFoodWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : LoggingWorker(context, params) {
+
+        @Inject lateinit var storeDataForDb: StoreDataForDb
+
+        override fun doWorkAndLog(): Result {
+            storeDataForDb.storeFoodsToDb()
             return Result.success()
         }
     }
@@ -169,6 +184,36 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("GlucoseValue", GlucoseValue::class.java.simpleName)
         SystemClock.sleep(pause)
         rxBus.send(EventNSClientNewLog("DONE BG", ""))
+    }
+
+    override fun storeFoodsToDb() {
+        rxBus.send(EventNSClientNewLog("PROCESSING FOOD", ""))
+
+        if (foods.isNotEmpty())
+            repository.runTransactionForResult(SyncNsFoodTransaction(foods))
+                .doOnError {
+                    aapsLogger.error(LTag.DATABASE, "Error while saving foods", it)
+                }
+                .blockingGet()
+                .also { result ->
+                    foods.clear()
+                    result.updated.forEach {
+                        aapsLogger.debug(LTag.DATABASE, "Updated food $it")
+                        updated.inc(Food::class.java.simpleName)
+                    }
+                    result.inserted.forEach {
+                        aapsLogger.debug(LTag.DATABASE, "Inserted food $it")
+                        inserted.inc(Food::class.java.simpleName)
+                    }
+                    result.invalidated.forEach {
+                        aapsLogger.debug(LTag.DATABASE, "Invalidated food $it")
+                        nsIdUpdated.inc(Food::class.java.simpleName)
+                    }
+                }
+
+        sendLog("Food", Food::class.java.simpleName)
+        SystemClock.sleep(pause)
+        rxBus.send(EventNSClientNewLog("DONE FOOD", ""))
     }
 
     override fun storeTreatmentsToDb() {

@@ -11,11 +11,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_margin="10sp"
+        android:layout_margin="10dp"
         android:background="@drawable/circle"
         android:backgroundTint="@color/white"
         android:contentDescription="@string/action_confirm"
-        android:padding="25sp"
+        android:padding="25dp"
         android:src="@drawable/ic_confirm"
         app:tint="@color/white" />
 

@@ -4,9 +4,7 @@
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".watchfaces.SteampunkWatchface"
-    tools:deviceIds="wear_round"
-    tools:ignore="MissingDefaultResource">
+    tools:context=".watchfaces.SteampunkWatchface">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -173,14 +171,14 @@
             <View
                 android:layout_width="0px"
                 android:layout_height="match_parent"
-                android:layout_weight="0.25"
+                android:layout_weight="0.2"
                 tools:ignore="NestedWeights" />
 
             <lecho.lib.hellocharts.view.LineChartView
                 android:id="@+id/chart"
                 android:layout_width="0px"
                 android:layout_height="match_parent"
-                android:layout_weight="0.5" />
+                android:layout_weight="0.55" />
 
             <View
                 android:layout_width="0px"

@@ -1,8 +1,16 @@
 package info.nightscout.pump.combov2
 
+import android.content.Context
+import android.os.Build
+import info.nightscout.comboctl.android.AndroidBluetoothPermissionException
 import info.nightscout.comboctl.main.BasalProfile
 import info.nightscout.comboctl.main.NUM_COMBO_BASAL_PROFILE_FACTORS
+import info.nightscout.interfaces.AndroidPermission
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.profile.Profile as AAPSProfile
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
+import kotlinx.coroutines.delay
 
 // Utility extension functions for clearer conversion between
 // ComboCtl units and AAPS units. ComboCtl uses integer-encoded
@@ -22,4 +30,37 @@ fun AAPSProfile.toComboCtlBasalProfile(): BasalProfile {
         (this.getBasalTimeFromMidnight(hour * 60 * 60) * 1000.0).toInt()
     }
     return BasalProfile(factors)
+}
+
+suspend fun <T> runWithPermissionCheck(
+    context: Context,
+    config: Config,
+    aapsLogger: AAPSLogger,
+    androidPermission: AndroidPermission,
+    permissionsToCheckFor: Collection<String>,
+    block: suspend () -> T
+): T {
+    var permissions = permissionsToCheckFor
+    while (true) {
+        try {
+            if (config.PUMPDRIVERS && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                val notAllPermissionsGranted = permissions.fold(initial = false) { currentResult, permission ->
+                    return@fold if (androidPermission.permissionNotGranted(context, permission)) {
+                        aapsLogger.debug(LTag.PUMP, "permission $permission was not granted by the user")
+                        true
+                    } else
+                        currentResult
+                }
+
+                if (notAllPermissionsGranted) {
+                    delay(1000) // Wait a little bit before retrying to avoid 100% CPU usage
+                    continue
+                }
+            }
+
+            return block.invoke()
+        } catch (e: AndroidBluetoothPermissionException) {
+            permissions = permissionsToCheckFor union e.missingPermissions
+        }
+    }
 }

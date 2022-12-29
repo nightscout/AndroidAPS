@@ -18,6 +18,7 @@ data class LastModified(
         @SerializedName("devicestatus") var devicestatus: Long = 0, // devicestatus collection
         @SerializedName("entries") var entries: Long = 0,           // entries collection
         @SerializedName("profile") var profile: Long = 0,           // profile collection
-        @SerializedName("treatments") var treatments: Long = 0      // treatments collection
+        @SerializedName("treatments") var treatments: Long = 0,     // treatments collection
+        @SerializedName("foods") var foods: Long = 0                // foods collection
     )
 }

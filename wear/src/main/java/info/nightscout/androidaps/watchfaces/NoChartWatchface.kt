@@ -6,9 +6,7 @@ import androidx.viewbinding.ViewBinding
 import com.ustwo.clockwise.common.WatchMode
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityBigchartBinding
-import info.nightscout.androidaps.databinding.ActivityBigchartSmallBinding
 import info.nightscout.androidaps.databinding.ActivityNochartBinding
-import info.nightscout.androidaps.databinding.ActivityNochartSmallBinding
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
 import info.nightscout.androidaps.watchfaces.utils.WatchfaceViewAdapter
 
@@ -17,11 +15,6 @@ class NoChartWatchface : BaseWatchFace() {
     private lateinit var binding: WatchfaceViewAdapter
 
     override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
-        if (resources.displayMetrics.widthPixels < SCREEN_SIZE_SMALL || resources.displayMetrics.heightPixels < SCREEN_SIZE_SMALL) {
-            val layoutBinding = ActivityNochartSmallBinding.inflate(inflater)
-            binding = WatchfaceViewAdapter.getBinding(layoutBinding)
-            return layoutBinding
-        }
         val layoutBinding = ActivityNochartBinding.inflate(inflater)
         binding = WatchfaceViewAdapter.getBinding(layoutBinding)
         return layoutBinding
@@ -35,6 +28,7 @@ class NoChartWatchface : BaseWatchFace() {
         binding.delta?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
         binding.avgDelta?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
         binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_Timestamp))
+        binding.timePeriod?.setTextColor(ContextCompat.getColor(this, R.color.dark_Timestamp))
     }
 
     override fun setColorDark() {
@@ -52,6 +46,7 @@ class NoChartWatchface : BaseWatchFace() {
         binding.avgDelta?.setTextColor(ContextCompat.getColor(this, color))
         val colorTime = if (ageLevel == 1) R.color.dark_Timestamp else R.color.dark_TimestampOld
         binding.timestamp.setTextColor(ContextCompat.getColor(this, colorTime))
+        binding.timePeriod?.setTextColor(ContextCompat.getColor(this, colorTime))
     }
 
     override fun setColorBright() {
@@ -70,6 +65,7 @@ class NoChartWatchface : BaseWatchFace() {
             binding.avgDelta?.setTextColor(ContextCompat.getColor(this, color))
             val colorTime = if (ageLevel == 1) R.color.light_mTimestamp1 else R.color.light_mTimestamp
             binding.timestamp.setTextColor(ContextCompat.getColor(this, colorTime))
+            binding.timePeriod?.setTextColor(ContextCompat.getColor(this, colorTime))
 
         } else {
             setColorDark()

@@ -46,7 +46,8 @@ class LoadTreatmentsWorker(
                     val treatments: List<NSTreatment>
                     val response: NSAndroidClient.ReadResponse<List<NSTreatment>>?
                     if (isFirstLoad) {
-                        treatments = nsAndroidClient.getTreatmentsNewerThan(lastLoaded, 500)
+                        val lastLoadedIso = dateUtil.toISOString(lastLoaded)
+                        treatments = nsAndroidClient.getTreatmentsNewerThan(lastLoadedIso, 500)
                         response = NSAndroidClient.ReadResponse(0, treatments)
                     }
                     else {
@@ -75,14 +76,13 @@ class LoadTreatmentsWorker(
                             nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = lastLoaded
                             nsClientV3Plugin.storeLastFetched()
                         }
-                        rxBus.send(EventNSClientNewLog("RCV END", "No TRs from ${dateUtil
-                            .dateAndTimeAndSecondsString(lastLoaded)}"))
+                        rxBus.send(EventNSClientNewLog("RCV END", "No TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                         storeDataForDb.storeTreatmentsToDb()
                         WorkManager.getInstance(context)
                             .enqueueUniqueWork(
                                 NSClientV3Plugin.JOB_NAME,
                                 ExistingWorkPolicy.APPEND_OR_REPLACE,
-                                OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build()
+                                OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build()
                             )
                     }
                 } catch (error: Exception) {
@@ -95,14 +95,13 @@ class LoadTreatmentsWorker(
                     nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = lastLoaded
                     nsClientV3Plugin.storeLastFetched()
                 }
-                rxBus.send(EventNSClientNewLog("RCV END", "No new TRs from ${dateUtil
-                    .dateAndTimeAndSecondsString(lastLoaded)}"))
+                rxBus.send(EventNSClientNewLog("RCV END", "No new TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                 storeDataForDb.storeTreatmentsToDb()
                 WorkManager.getInstance(context)
                     .enqueueUniqueWork(
                         NSClientV3Plugin.JOB_NAME,
                         ExistingWorkPolicy.APPEND_OR_REPLACE,
-                        OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build()
+                        OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build()
                     )
             }
         }

@@ -41,6 +41,7 @@ class ComboV2Fragment : DaggerFragment() {
 
         binding.combov2RefreshButton.setOnClickListener {
             binding.combov2RefreshButton.isEnabled = false
+            combov2Plugin.clearPumpErrorObservedFlag()
             commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.user_request), null)
         }
 

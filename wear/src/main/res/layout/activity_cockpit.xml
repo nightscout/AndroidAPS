@@ -5,9 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/airplane_cockpit_outside_clouds"
-    tools:context=".watchfaces.CockpitWatchface"
-    tools:deviceIds="wear_round"
-    tools:ignore="MissingDefaultResource">
+    tools:context=".watchfaces.CockpitWatchface">
 
     <LinearLayout
         android:id="@+id/inside"

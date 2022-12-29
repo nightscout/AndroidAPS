@@ -1151,6 +1151,177 @@ class AutosensDataStoreTest : TestBase() {
     }
 
     @Test
+    fun createBucketedData5minTest3() {
+        val bgReadingList: MutableList<GlucoseValue> = ArrayList()
+
+        // non 5min data not aligned to referenceTime should be recalculated to referenceTime
+        autosensDataStore.referenceTime = T.mins(5).msecs()
+        bgReadingList.clear()
+        bgReadingList.add(
+            GlucoseValue(
+                raw = 0.0,
+                noise = 0.0,
+                value = 100.0,
+                timestamp = T.mins(48).msecs(),
+                sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+                trendArrow = GlucoseValue.TrendArrow.FLAT
+            )
+        )
+        bgReadingList.add(
+            GlucoseValue(
+                raw = 0.0,
+                noise = 0.0,
+                value = 98.0,
+                timestamp = T.mins(42).msecs(),
+                sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+                trendArrow = GlucoseValue.TrendArrow.FLAT
+            )
+        )
+        bgReadingList.add(
+            GlucoseValue(
+                raw = 0.0,
+                noise = 0.0,
+                value = 90.0,
+                timestamp = T.mins(40).msecs(),
+                sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+                trendArrow = GlucoseValue.TrendArrow.FLAT
+            )
+        )
+        bgReadingList.add(
+            GlucoseValue(
+                raw = 0.0,
+                noise = 0.0,
+                value = 40.0,
+                timestamp = T.mins(18).msecs(),
+                sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+                trendArrow = GlucoseValue.TrendArrow.FLAT
+            )
+        )
+        autosensDataStore.bgReadings = bgReadingList
+        Assertions.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assertions.assertEquals(T.mins(45).msecs(), autosensDataStore.bucketedData!![0].timestamp)
+        Assertions.assertEquals(T.mins(35).msecs(), autosensDataStore.bucketedData!![2].timestamp)
+        Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.bucketedData!![5].timestamp)
+        Assertions.assertEquals(6, autosensDataStore.bucketedData!!.size.toLong())
+        Assertions.assertEquals(99.0, autosensDataStore.bucketedData!![0].value, 1.0) // Recalculated data to 45min
+        Assertions.assertEquals(90.0, autosensDataStore.bucketedData!![1].value, 1.0) // Recalculated data to 40min
+        Assertions.assertEquals(67.0, autosensDataStore.bucketedData!![3].value, 1.0) // Recalculated data to 30min
+        Assertions.assertEquals(45.0, autosensDataStore.bucketedData!![5].value, 1.0) // Recalculated data to 20min
+
+        // non 5min data not aligned to referenceTime should be recalculated to referenceTime
+        autosensDataStore.referenceTime = T.mins(5).msecs()
+        bgReadingList.clear()
+        bgReadingList.add(
+            GlucoseValue(
+                raw = 0.0,
+                noise = 0.0,
+                value = 100.0,
+                timestamp = T.mins(46).msecs(),
+                sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+                trendArrow = GlucoseValue.TrendArrow.FLAT
+            )
+        )
+        bgReadingList.add(
+            GlucoseValue(
+                raw = 0.0,
+                noise = 0.0,
+                value = 98.0,
+                timestamp = T.mins(42).msecs(),
+                sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+                trendArrow = GlucoseValue.TrendArrow.FLAT
+            )
+        )
+        bgReadingList.add(
+            GlucoseValue(
+                raw = 0.0,
+                noise = 0.0,
+                value = 90.0,
+                timestamp = T.mins(40).msecs(),
+                sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+                trendArrow = GlucoseValue.TrendArrow.FLAT
+            )
+        )
+        bgReadingList.add(
+            GlucoseValue(
+                raw = 0.0,
+                noise = 0.0,
+                value = 40.0,
+                timestamp = T.mins(18).msecs(),
+                sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+                trendArrow = GlucoseValue.TrendArrow.FLAT
+            )
+        )
+        autosensDataStore.bgReadings = bgReadingList
+        Assertions.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assertions.assertEquals(T.mins(45).msecs(), autosensDataStore.bucketedData!![0].timestamp)
+        Assertions.assertEquals(T.mins(35).msecs(), autosensDataStore.bucketedData!![2].timestamp)
+        Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.bucketedData!![5].timestamp)
+        Assertions.assertEquals(6, autosensDataStore.bucketedData!!.size.toLong())
+        Assertions.assertEquals(99.0, autosensDataStore.bucketedData!![0].value, 1.0) // Recalculated data to 45min
+        Assertions.assertEquals(90.0, autosensDataStore.bucketedData!![1].value, 1.0) // Recalculated data to 40min
+        Assertions.assertEquals(67.0, autosensDataStore.bucketedData!![3].value, 1.0) // Recalculated data to 30min
+        Assertions.assertEquals(45.0, autosensDataStore.bucketedData!![5].value, 1.0) // Recalculated data to 20min
+
+        // non 5min data without referenceTime set, should allign the data to the time of the last reading
+        autosensDataStore.referenceTime = -1
+        bgReadingList.clear()
+        bgReadingList.add(
+            GlucoseValue(
+                raw = 0.0,
+                noise = 0.0,
+                value = 100.0,
+                timestamp = T.mins(48).msecs(),
+                sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+                trendArrow = GlucoseValue.TrendArrow.FLAT
+            )
+        )
+        bgReadingList.add(
+            GlucoseValue(
+                raw = 0.0,
+                noise = 0.0,
+                value = 98.0,
+                timestamp = T.mins(42).msecs(),
+                sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+                trendArrow = GlucoseValue.TrendArrow.FLAT
+            )
+        )
+        bgReadingList.add(
+            GlucoseValue(
+                raw = 0.0,
+                noise = 0.0,
+                value = 90.0,
+                timestamp = T.mins(40).msecs(),
+                sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+                trendArrow = GlucoseValue.TrendArrow.FLAT
+            )
+        )
+        bgReadingList.add(
+            GlucoseValue(
+                raw = 0.0,
+                noise = 0.0,
+                value = 40.0,
+                timestamp = T.mins(18).msecs(),
+                sourceSensor = GlucoseValue.SourceSensor.UNKNOWN,
+                trendArrow = GlucoseValue.TrendArrow.FLAT
+            )
+        )
+        autosensDataStore.bgReadings = bgReadingList
+        Assertions.assertEquals(false, autosensDataStore.isAbout5minData(aapsLogger))
+        autosensDataStore.createBucketedData(aapsLogger, dateUtil)
+        Assertions.assertEquals(T.mins(48).msecs(), autosensDataStore.bucketedData!![0].timestamp)
+        Assertions.assertEquals(T.mins(43).msecs(), autosensDataStore.bucketedData!![1].timestamp)
+        Assertions.assertEquals(T.mins(33).msecs(), autosensDataStore.bucketedData!![3].timestamp)
+        Assertions.assertEquals(T.mins(18).msecs(), autosensDataStore.bucketedData!![6].timestamp)
+        Assertions.assertEquals(7, autosensDataStore.bucketedData!!.size.toLong())
+        Assertions.assertEquals(100.0, autosensDataStore.bucketedData!![0].value, 1.0) // Recalculated data to 48min
+        Assertions.assertEquals(98.0, autosensDataStore.bucketedData!![1].value, 1.0)  // Recalculated data to 43min
+        Assertions.assertEquals(74.0, autosensDataStore.bucketedData!![3].value, 1.0)  // Recalculated data to 33min
+        Assertions.assertEquals(40.0, autosensDataStore.bucketedData!![6].value, 1.0)  // Recalculated data to 18min
+    }
+
+    @Test
     fun bgReadingsTest() {
         val bgReadingList: List<GlucoseValue> = ArrayList()
         autosensDataStore.bgReadings = bgReadingList
