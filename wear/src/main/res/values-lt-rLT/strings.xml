@@ -176,9 +176,6 @@
     <string name="no_iob_u">--v</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--v/val</string>
-    <string name="uploader_na">Uploader: ---%</string>
-    <string name="no_status">S: nėra statuso</string>
-    <string name="time_stamp_na_min_ago">Prieš -- min.</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Ciklo būsena nežinoma</string>
     <string name="cob_000g">000g</string>
