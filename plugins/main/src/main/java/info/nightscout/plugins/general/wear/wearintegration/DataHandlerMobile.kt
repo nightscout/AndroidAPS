@@ -16,13 +16,7 @@ import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.Bolus
-import info.nightscout.database.entities.GlucoseValue
-import info.nightscout.database.entities.TemporaryBasal
-import info.nightscout.database.entities.TemporaryTarget
-import info.nightscout.database.entities.TotalDailyDose
-import info.nightscout.database.entities.UserEntry
-import info.nightscout.database.entities.ValueWithUnit
+import info.nightscout.database.entities.*
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
@@ -66,9 +60,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.LinkedList
-import java.util.Locale
+import java.util.*
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 import javax.inject.Inject
@@ -317,14 +309,14 @@ class DataHandlerMobile @Inject constructor(
             if (activePump.isBusy()) {
                 message += rh.gs(info.nightscout.core.ui.R.string.pump_busy)
             } else {
-                message += "trying to fetch data from pump."
+                message += rh.gs(R.string.pump_fetching_data)
                 commandQueue.loadTDDs(object : Callback() {
                     override fun run() {
                         val dummies1: MutableList<TotalDailyDose> = LinkedList()
                         val historyList1 = getTDDList(dummies1)
                         val reloadMessage =
                             if (isOldData(historyList1))
-                                "TDD: Still old data! Cannot load from pump.\n" + generateTDDMessage(historyList1, dummies1)
+                                rh.gs(R.string.pump_old_data) + "\n" + generateTDDMessage(historyList1, dummies1)
                             else
                                 generateTDDMessage(historyList1, dummies1)
                         rxBus.send(
@@ -491,8 +483,8 @@ class DataHandlerMobile @Inject constructor(
             return
         }
         var message = ""
-        message += rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + insulinAfterConstraints + "U\n"
-        message += rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + "g"
+        message += rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short) + "\n"
+        message += rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + rh.gs(R.string.grams_short)
         if (insulinAfterConstraints - command.insulin != 0.0 || carbsAfterConstraints - command.carbs != 0)
             message += "\n" + rh.gs(info.nightscout.core.ui.R.string.constraint_applied)
         rxBus.send(
@@ -508,9 +500,9 @@ class DataHandlerMobile @Inject constructor(
     private fun handleECarbsPreCheck(command: EventData.ActionECarbsPreCheck) {
         val startTimeStamp = System.currentTimeMillis() + T.mins(command.carbsTimeShift.toLong()).msecs()
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(command.carbs)).value()
-        var message = rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + "g" +
+        var message = rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + carbsAfterConstraints + rh.gs(R.string.grams_short) +
             "\n" + rh.gs(info.nightscout.core.ui.R.string.time) + ": " + dateUtil.timeString(startTimeStamp) +
-            "\n" + rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + command.duration + "h"
+            "\n" + rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + command.duration + rh.gs(R.string.hour_short)
         if (carbsAfterConstraints - command.carbs != 0) {
             message += "\n" + rh.gs(info.nightscout.core.ui.R.string.constraint_applied)
         }
@@ -536,7 +528,7 @@ class DataHandlerMobile @Inject constructor(
             else -> return
         }
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(amount)).value()
-        var message = rh.gs(info.nightscout.core.ui.R.string.prime_fill) + ": " + insulinAfterConstraints + "U"
+        var message = rh.gs(info.nightscout.core.ui.R.string.prime_fill) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short)
         if (insulinAfterConstraints - amount != 0.0) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
@@ -550,7 +542,7 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleFillPreCheck(command: EventData.ActionFillPreCheck) {
         val insulinAfterConstraints = constraintChecker.applyBolusConstraints(Constraint(command.insulin)).value()
-        var message = rh.gs(info.nightscout.core.ui.R.string.prime_fill) + ": " + insulinAfterConstraints + "U"
+        var message = rh.gs(info.nightscout.core.ui.R.string.prime_fill) + ": " + insulinAfterConstraints + rh.gs(R.string.units_short)
         if (insulinAfterConstraints - command.insulin != 0.0) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.constraint_applied)
         rxBus.send(
             EventMobileToWear(
@@ -569,7 +561,7 @@ class DataHandlerMobile @Inject constructor(
                 EventMobileToWear(EventData.ActionProfileSwitchOpenActivity(T.msecs(activeProfileSwitch.value.originalTimeshift).hours().toInt(), activeProfileSwitch.value.originalPercentage))
             )
         } else {
-            sendError("No active profile switch!")
+            sendError(rh.gs(R.string.no_active_profile))
             return
         }
 
@@ -578,7 +570,7 @@ class DataHandlerMobile @Inject constructor(
     private fun handleProfileSwitchPreCheck(command: EventData.ActionProfileSwitchPreCheck) {
         val activeProfileSwitch = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
         if (activeProfileSwitch is ValueWrapper.Absent) {
-            sendError("No active profile switch!")
+            sendError(rh.gs(R.string.no_active_profile))
         }
         if (command.percentage < Constants.CPP_MIN_PERCENTAGE || command.percentage > Constants.CPP_MAX_PERCENTAGE) {
             sendError(rh.gs(info.nightscout.core.ui.R.string.valueoutofrange, "Profile-Percentage"))
@@ -586,9 +578,7 @@ class DataHandlerMobile @Inject constructor(
         if (command.timeShift < 0 || command.timeShift > 23) {
             sendError(rh.gs(info.nightscout.core.ui.R.string.valueoutofrange, "Profile-Timeshift"))
         }
-        val message = "Profile:" + "\n\n" +
-            "Timeshift: " + command.timeShift + "\n" +
-            "Percentage: " + command.percentage + "%"
+        val message = rh.gs(R.string.profile_message, command.timeShift, command.percentage)
         rxBus.send(
             EventMobileToWear(
                 EventData.ConfirmAction(
@@ -854,7 +844,7 @@ class DataHandlerMobile @Inject constructor(
         repository.getCarbsDataFromTimeExpanded(startTimeWindow, true).blockingGet()
             .forEach { (_, _, _, isValid, _, _, timestamp, _, _, amount) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, 0.0, amount, false, isValid)) }
         val finalLastRun = loop.lastRun
-        if (sp.getBoolean("wear_predictions", true) && finalLastRun?.request?.hasPredictions == true && finalLastRun.constraintsProcessed != null) {
+        if (sp.getBoolean(rh.gs(R.string.key_wear_predictions), true) && finalLastRun?.request?.hasPredictions == true && finalLastRun.constraintsProcessed != null) {
             val predArray = finalLastRun.constraintsProcessed!!.predictions
                 .stream().map { bg: GlucoseValue -> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh) }
                 .collect(Collectors.toList())
@@ -888,7 +878,8 @@ class DataHandlerMobile @Inject constructor(
             iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)
             iobDetail = "(${DecimalFormatter.to2Decimal(bolusIob.iob)}|${DecimalFormatter.to2Decimal(basalIob.basaliob)})"
             cobString = iobCobCalculator.getCobInfo(false, "WatcherUpdaterService").generateCOBString()
-            currentBasal = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort() ?: rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
+            currentBasal =
+                iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort() ?: rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
 
             //bgi
             val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits())
@@ -962,22 +953,23 @@ class DataHandlerMobile @Inject constructor(
         get() {
             var ret = ""
             if (!config.APS) {
-                return "Targets only apply in APS mode!"
+                return rh.gs(R.string.target_only_aps_mode)
             }
-            val profile = profileFunction.getProfile() ?: return "No profile set :("
+            val profile = profileFunction.getProfile() ?: return rh.gs(R.string.no_profile)
             //Check for Temp-Target:
             val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
             if (tempTarget is ValueWrapper.Existing) {
-                ret += "Temp Target: " + Profile.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.lowTarget, GlucoseUnit.MGDL, profileFunction.getUnits())
-                ret += "\nuntil: " + dateUtil.timeString(tempTarget.value.end)
+                val target = Profile.toTargetRangeString(tempTarget.value.lowTarget, tempTarget.value.lowTarget, GlucoseUnit.MGDL, profileFunction.getUnits())
+                ret += rh.gs(R.string.temp_target) + ": " + target
+                ret += "\n"+ rh.gs(R.string.until) + ": " + dateUtil.timeString(tempTarget.value.end)
                 ret += "\n\n"
             }
-            ret += "DEFAULT RANGE: "
+            ret += rh.gs(R.string.default_range) + ": "
             ret += Profile.fromMgdlToUnits(profile.getTargetLowMgdl(), profileFunction.getUnits()).toString() + " - " + Profile.fromMgdlToUnits(
                 profile.getTargetHighMgdl(),
                 profileFunction.getUnits()
             )
-            ret += " target: " + Profile.fromMgdlToUnits(profile.getTargetMgdl(), profileFunction.getUnits())
+            ret += " " + rh.gs(R.string.target) + ": " + Profile.fromMgdlToUnits(profile.getTargetMgdl(), profileFunction.getUnits())
             return ret
         }
 
@@ -986,17 +978,15 @@ class DataHandlerMobile @Inject constructor(
         get() {
             var ret = ""
             if (!config.APS)
-                return "Only apply in APS mode!"
+                return rh.gs(R.string.aps_only)
             val usedAPS = activePlugin.activeAPS
-            val result = usedAPS.lastAPSResult ?: return "Last result not available!"
+            val result = usedAPS.lastAPSResult ?: return rh.gs(R.string.last_aps_result_na)
             ret += if (!result.isChangeRequested) {
                 rh.gs(info.nightscout.core.ui.R.string.nochangerequested) + "\n"
             } else if (result.rate == 0.0 && result.duration == 0) {
                 rh.gs(info.nightscout.core.ui.R.string.cancel_temp) + "\n"
             } else {
-                rh.gs(info.nightscout.core.ui.R.string.rate) + ": " + DecimalFormatter.to2Decimal(result.rate) + " U/h " +
-                    "(" + DecimalFormatter.to2Decimal(result.rate / activePlugin.activePump.baseBasalRate * 100) + "%)\n" +
-                    rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + DecimalFormatter.to0Decimal(result.duration.toDouble()) + " min\n"
+                rh.gs(R.string.rate_duration, result.rate, result.rate / activePlugin.activePump.baseBasalRate * 100, result.duration) + "\n"
             }
             ret += "\n" + rh.gs(info.nightscout.core.ui.R.string.reason) + ": " + result.reason
             return ret
@@ -1010,19 +1000,19 @@ class DataHandlerMobile @Inject constructor(
             // decide if enabled/disabled closed/open; what Plugin as APS?
             if ((loop as PluginBase).isEnabled()) {
                 ret += if (constraintChecker.isClosedLoopAllowed().value()) {
-                    "CLOSED LOOP\n"
+                    rh.gs(R.string.loop_status_closed) + "\n"
                 } else {
-                    "OPEN LOOP\n"
+                    rh.gs(R.string.loop_status_open) + "\n"
                 }
                 val aps = activePlugin.activeAPS
-                ret += "APS: " + (aps as PluginBase).name
+                ret += rh.gs(R.string.aps) + ": " + (aps as PluginBase).name
                 val lastRun = loop.lastRun
                 if (lastRun != null) {
-                    ret += "\nLast Run: " + dateUtil.timeString(lastRun.lastAPSRun)
-                    if (lastRun.lastTBREnact != 0L) ret += "\nLast Enact: " + dateUtil.timeString(lastRun.lastTBREnact)
+                    ret += "\n" + rh.gs(R.string.last_run) + ": " + dateUtil.timeString(lastRun.lastAPSRun)
+                    if (lastRun.lastTBREnact != 0L) ret += "\n" + rh.gs(R.string.last_enact) + ": " + dateUtil.timeString(lastRun.lastTBREnact)
                 }
             } else {
-                ret += "LOOP DISABLED\n"
+                ret += rh.gs(R.string.loop_status_disabled) + "\n"
             }
             return ret
         }
@@ -1037,7 +1027,7 @@ class DataHandlerMobile @Inject constructor(
         var historyList = repository.getLastTotalDailyDoses(10, false).blockingGet().toMutableList()
         //var historyList = databaseHelper.getTDDs().toMutableList()
         historyList = historyList.subList(0, min(10, historyList.size))
-        //fill single gaps - only needed for Dana*R data
+        // fill single gaps - only needed for Dana*R data
         val dummies: MutableList<TotalDailyDose> = returnDummies
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         for (i in 0 until historyList.size - 1) {
@@ -1059,9 +1049,9 @@ class DataHandlerMobile @Inject constructor(
         get() = if (totalAmount > 0) totalAmount else basalAmount + bolusAmount
 
     private fun generateTDDMessage(historyList: MutableList<TotalDailyDose>, dummies: MutableList<TotalDailyDose>): String {
-        val profile = profileFunction.getProfile() ?: return "No profile loaded :("
+        val profile = profileFunction.getProfile() ?: return rh.gs(R.string.no_profile)
         if (historyList.isEmpty()) {
-            return "No history data!"
+            return rh.gs(R.string.no_history)
         }
         val df: DateFormat = SimpleDateFormat("dd.MM.", Locale.getDefault())
         var message = ""
@@ -1069,7 +1059,8 @@ class DataHandlerMobile @Inject constructor(
         if (df.format(Date(historyList[0].timestamp)) == df.format(Date())) {
             val tdd = historyList[0].total
             historyList.removeAt(0)
-            message += "Today: " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + "\n"
+
+            message += rh.gs(R.string.today) + ": " + rh.gs(R.string.tdd_line, tdd, 100 * tdd / refTDD) + "\n"
             message += "\n"
         }
         var weighted03 = 0.0
@@ -1088,19 +1079,17 @@ class DataHandlerMobile @Inject constructor(
                 weighted03 = weighted03 * 0.7 + tdd * 0.3
             }
         }
-        message += "weighted:\n"
-        message += "0.3: " + DecimalFormatter.to2Decimal(weighted03) + "U " + (DecimalFormatter.to0Decimal(100 * weighted03 / refTDD) + "%") + "\n"
-        message += "0.5: " + DecimalFormatter.to2Decimal(weighted05) + "U " + (DecimalFormatter.to0Decimal(100 * weighted05 / refTDD) + "%") + "\n"
-        message += "0.7: " + DecimalFormatter.to2Decimal(weighted07) + "U " + (DecimalFormatter.to0Decimal(100 * weighted07 / refTDD) + "%") + "\n"
+        message += rh.gs(R.string.weighted) + ":\n"
+        message += "0.3: " + rh.gs(R.string.tdd_line, weighted03, 100 * weighted03 / refTDD) + "\n"
+        message += "0.5: " + rh.gs(R.string.tdd_line, weighted05, 100 * weighted05 / refTDD) + "\n"
+        message += "0.7: " + rh.gs(R.string.tdd_line, weighted07, 100 * weighted07 / refTDD) + "\n"
         message += "\n"
         historyList.reverse()
-        //add TDDs:
+        // add TDDs:
         for (record in historyList) {
             val tdd = record.total
-            message += df.format(Date(record.timestamp)) + " " + DecimalFormatter.to2Decimal(tdd) + "U " + (DecimalFormatter.to0Decimal(100 * tdd / refTDD) + "%") + (if (dummies.contains(
-                    record
-                )
-            ) "x" else "") + "\n"
+            message += df.format(Date(record.timestamp)) + " " + rh.gs(R.string.tdd_line, tdd, 100 * tdd / refTDD)
+            message += (if (dummies.contains(record)) "x" else "") + "\n"
         }
         return message
     }
@@ -1112,11 +1101,11 @@ class DataHandlerMobile @Inject constructor(
 
         val iobString =
             if (sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_detailediob, false)) "$iobSum $iobDetail"
-            else iobSum + "U"
+            else iobSum + rh.gs(R.string.units_short)
 
         status += "$currentBasal $iobString"
 
-        //add BGI if shown, otherwise return
+        // add BGI if shown, otherwise return
         if (sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_showbgi, false)) status += " $bgiString"
         return status
     }
