@@ -135,4 +135,6 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_datetime_changed">Date and/or time changed</string>
     <string name="combov2_dst_started">Daylight savings time (DST) started</string>
     <string name="combov2_dst_ended">Daylight savings time (DST) ended</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Cannot connect to pump because the pump reported an error. User must handle the error and then either wait 5 minutes or press the Refresh button in the driver tab.</string>
+    <string name="combov2_refresh_pump_status_after_error">Refreshing pump status after the pump reported an error</string>
 </resources>
