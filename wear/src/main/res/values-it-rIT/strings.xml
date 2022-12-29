@@ -176,9 +176,6 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
-    <string name="uploader_na">Caricamento: ---%</string>
-    <string name="no_status">S: nessuno stato</string>
-    <string name="time_stamp_na_min_ago">-- Minuti fa</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Nessun stato di loop</string>
     <string name="cob_000g">000g</string>
