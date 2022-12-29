@@ -176,6 +176,7 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.-- U/h</string>
+    <string name="time_stamp_na_min_ago">Il y a -- min.</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Aucun statut de la boucle</string>
     <string name="cob_000g">000 g</string>
@@ -183,4 +184,9 @@
     <string name="iob_0_00u">0,00 U</string>
     <string name="snooze_alert">AAPS Mise en veille Alerte</string>
     <string name="sending_snooze">Envoi Mise en veille à AAPS</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">s</string>
+    <string name="day_short">j</string>
+    <string name="hour_short">h</string>
+    <string name="error">!err!</string>
 </resources>
