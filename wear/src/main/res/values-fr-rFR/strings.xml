@@ -176,6 +176,8 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.-- U/h</string>
+    <string name="uploader_na">T: --%</string>
+    <string name="no_status">É: --</string>
     <string name="time_stamp_na_min_ago">Il y a -- min.</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Aucun statut de la boucle</string>
@@ -188,5 +190,7 @@
     <string name="week_short">s</string>
     <string name="day_short">j</string>
     <string name="hour_short">h</string>
+    <string name="old">ancien</string>
+    <string name="old_warning">!ancien!</string>
     <string name="error">!err!</string>
 </resources>
