@@ -176,9 +176,6 @@
     <string name="no_iob_u">--ед</string>
     <string name="no_cob_g">--г</string>
     <string name="no_tmp_basal_u_h">-.--ед/ч</string>
-    <string name="uploader_na">Загрузчик: --%</string>
-    <string name="no_status">S: статус отсутствует</string>
-    <string name="time_stamp_na_min_ago">-- Минут назад</string>
     <string name="delta_na">--- мг/дл</string>
     <string name="no_loop_status">Нет статуса</string>
     <string name="cob_000g">000г</string>
