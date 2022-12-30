@@ -27,6 +27,7 @@
     <string name="objectives_smb_gate">Прочтите wiki и увеличьте maxIOB чтобы супер микро болюс SMB заработал как положено! Хорошее начало – maxIOB = средний болюс на еду + троекратный максимальный суточный базал</string>
     <string name="objectives_smb_learned">Ваша цель - это использование СМБ. Алгоритм Oref1 предназначен также, чтобы помочь вам с болюсами. Вы не должны подавать полный болюс на еду, а только часть его, предоставив AAPS подать при необходимости остальную часть болюса. Таким образом вы можете иметь большее пространство для ошибки в подсчетах углеводов. Вы знаете, что можно установить проценты для уменьшения размера болюса?</string>
     <string name="objectives_auto_objective">Включение автоматизации</string>
+    <string name="objectives_auto_gate">Прочтите документацию по автоматизации. Настройте свои первые простые правила. Вместо действия позвольте AAPS только выводить уведомления. Если вы уверены, что автоматизация инициируется в нужное время, замените уведомление реальными действиями. (https://wiki.aaps.app/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Автоматизация может быть хорошим слугой, но плохим хозяином. Не полагайтесь на нее сверх меры. Не пытайтесь заменить лежащий в основе алгоритм. Проверяйте перед использованием.</string>
     <string name="objectives_bgavailableinns">гликемия доступна в NS</string>
     <string name="objectives_pumpstatusavailableinns">Статус помпы доступен в NS</string>
@@ -34,6 +35,7 @@
     <string name="accomplished">Выполнено: %1$s</string>
     <string name="objectives_usage_objective">Научитесь контролировать AAPS</string>
     <string name="objectives_usage_gate">Выполняйте различные действия в AAPS</string>
+    <string name="objectives_usage_learned">Вы узнали, как работать с основами AAPS. Главные элементы управления находятся на экране Обзора, доступном по нажатию или долгому нажатию, больше элементов управления на вкладке Действия. Следует научится, как поместить экран расширения (плагина) в верхнее прокручиваемое меню или оставить его в левом верхнем списке включённых расширений.</string>
     <string name="objectives_useprofileswitch">Установите профиль 90% на 10 мин (Долгое нажатие на имя профиля на главном экране)</string>
     <string name="objectives_usedisconnectpump">Имитация душа. Отключите помпу на 1ч (Долгое нажатие на Открытый цикл Open Loop)</string>
     <string name="objectives_usereconnectpump">... и обратное подключение таким же способом</string>
@@ -43,6 +45,7 @@
     <string name="objectives_usescale">Применить функцию масштабирования по долгому нажатию на диаграмму ГК</string>
     <string name="objectives_exam_objective">Подтвердите ваши знания</string>
     <string name="objectives_exam_gate">Изучите вопросы. Вам дано четыре возможных ответа на каждый вопрос. Может быть более одного правильного ответа. Проверьте все правильные ответы и подтвердите выбор.</string>
+    <string name="objectives_exam_learned_prerequisites">Вам не нужно быть программистом, но вам понадобится свой сайт Nightscout для прохождения целей, совместимая помпа и компьютер для сборки AAPS и обновлений.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS может работать в автономном режиме.</string>
     <string name="objectives_exam_learned_breadgrams">Ввод углеводов допускается только в граммах.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs - это эквивалент пролонгированного болюса на помпах.</string>
@@ -51,6 +54,7 @@
     <string name="unfinshed_button">Следующий незавершенный</string>
     <string name="requestcode">Код запроса: %1$s</string>
     <string name="objectives_hint">(отметьте все правильные ответы)</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/EN/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Нет подключения к Интернету</string>
     <string name="failedretrievetime">Не удалось загрузить время</string>
     <string name="requirementnotmet">Требования к цели не выполнены</string>
