@@ -47,6 +47,8 @@
     <string name="objectives_exam_gate">Изучите вопросы. Вам дано четыре возможных ответа на каждый вопрос. Может быть более одного правильного ответа. Проверьте все правильные ответы и подтвердите выбор.</string>
     <string name="objectives_exam_learned_prerequisites">Вам не нужно быть программистом, но вам понадобится свой сайт Nightscout для прохождения целей, совместимая помпа и компьютер для сборки AAPS и обновлений.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS может работать в автономном режиме.</string>
+    <string name="objectives_exam_learned_basaltest">Следует пересмотреть и обновить профиль. Лучший профиль = лучшие результаты.</string>
+    <string name="objectives_exam_learned_dia">Продолжительность действия инсулина DIA в AAPS имеет иное значение (время до полного поглощения инсулина), чем в классической помповой терапии (время до поглощения основной массы инсулина).</string>
     <string name="objectives_exam_learned_breadgrams">Ввод углеводов допускается только в граммах.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs - это эквивалент пролонгированного болюса на помпах.</string>
     <string name="answerdisabledto">Ответы отключены до: %1$s</string>
