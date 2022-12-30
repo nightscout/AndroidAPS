@@ -7,12 +7,12 @@ import info.nightscout.comboctl.base.testUtils.TestRefPacketItem
 import info.nightscout.comboctl.base.testUtils.checkTestPacketSequence
 import info.nightscout.comboctl.base.testUtils.produceTpLayerPacket
 import info.nightscout.comboctl.base.testUtils.runBlockingWithWatchdog
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlinx.coroutines.delay
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.UtcOffset
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class PumpIOTest {
     // Common test code.

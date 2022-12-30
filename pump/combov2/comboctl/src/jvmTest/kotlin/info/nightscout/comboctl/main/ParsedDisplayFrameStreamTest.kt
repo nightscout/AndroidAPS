@@ -20,17 +20,17 @@ import info.nightscout.comboctl.parser.testFrameW6CancelTbrWarningScreen
 import info.nightscout.comboctl.parser.testTimeAndDateSettingsHourPolishScreen
 import info.nightscout.comboctl.parser.testTimeAndDateSettingsHourRussianScreen
 import info.nightscout.comboctl.parser.testTimeAndDateSettingsHourTurkishScreen
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeAll
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.BeforeAll
 
 class ParsedDisplayFrameStreamTest {
     companion object {

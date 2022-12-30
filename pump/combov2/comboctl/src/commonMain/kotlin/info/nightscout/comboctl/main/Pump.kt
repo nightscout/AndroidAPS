@@ -29,10 +29,6 @@ import info.nightscout.comboctl.parser.BatteryState
 import info.nightscout.comboctl.parser.MainScreenContent
 import info.nightscout.comboctl.parser.ParsedScreen
 import info.nightscout.comboctl.parser.ReservoirState
-import kotlin.math.absoluteValue
-import kotlin.time.Duration
-import kotlin.time.DurationUnit
-import kotlin.time.toDuration
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.NonCancellable
@@ -53,6 +49,10 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.offsetAt
 import kotlinx.datetime.toInstant
 import kotlinx.datetime.toLocalDateTime
+import kotlin.math.absoluteValue
+import kotlin.time.Duration
+import kotlin.time.DurationUnit
+import kotlin.time.toDuration
 
 private val logger = Logger.get("Pump")
 
@@ -1747,7 +1747,10 @@ class Pump(
             // the button, meaning that it will always press the button at least initially,
             // moving to entry #2 in the TDD history. Thus, if we don't look at the screen now,
             // we miss entry #1, which is the current day.
-            val firstTDDScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.MyDataDailyTotalsScreen::class, pumpSuspended) as ParsedScreen.MyDataDailyTotalsScreen
+            val firstTDDScreen = navigateToRTScreen(
+                rtNavigationContext,
+                ParsedScreen.MyDataDailyTotalsScreen::class,
+                pumpSuspended) as ParsedScreen.MyDataDailyTotalsScreen
             processTDDScreen(firstTDDScreen)
 
             longPressRTButtonUntil(rtNavigationContext, RTNavigationButton.DOWN) { parsedScreen ->
@@ -2523,7 +2526,8 @@ class Pump(
                         val expectedCurrentTbrPercentage = currentTbrState.tbr.percentage
                         val actualCurrentTbrPercentage = status.tbrPercentage
                         val elapsedTimeSinceTbrStart = now - currentTbrState.tbr.timestamp
-                        val expectedRemainingDurationInMinutes = currentTbrState.tbr.durationInMinutes - elapsedTimeSinceTbrStart.inWholeMinutes.toInt()
+                        val expectedRemainingDurationInMinutes =
+                            currentTbrState.tbr.durationInMinutes - elapsedTimeSinceTbrStart.inWholeMinutes.toInt()
                         val actualRemainingDurationInMinutes = status.remainingTbrDurationInMinutes
 
                         // The remaining duration check uses a tolerance range of 10 minutes, since
@@ -2765,7 +2769,8 @@ class Pump(
 
                 numRetrievedFactors++
                 logger(LogLevel.DEBUG) {
-                    "Got basal profile factor #$factorIndexOnScreen : $factor; $numRetrievedFactors factor(s) read and $numObservedScreens screen(s) observed thus far"
+                    "Got basal profile factor #$factorIndexOnScreen : $factor; $numRetrievedFactors " +
+                    "factor(s) read and $numObservedScreens screen(s) observed thus far"
                 }
 
                 getBasalProfileReporter.setCurrentProgressStage(

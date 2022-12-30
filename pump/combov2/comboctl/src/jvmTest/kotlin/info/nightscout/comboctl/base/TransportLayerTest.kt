@@ -5,6 +5,8 @@ import info.nightscout.comboctl.base.testUtils.TestPumpStateStore
 import info.nightscout.comboctl.base.testUtils.WatchdogTimeoutException
 import info.nightscout.comboctl.base.testUtils.coroutineScopeWithWatchdog
 import info.nightscout.comboctl.base.testUtils.runBlockingWithWatchdog
+import kotlinx.coroutines.Job
+import kotlinx.datetime.UtcOffset
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -13,8 +15,6 @@ import kotlin.test.assertIs
 import kotlin.test.assertNotEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
-import kotlinx.coroutines.Job
-import kotlinx.datetime.UtcOffset
 
 class TransportLayerTest {
     @Test

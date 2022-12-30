@@ -422,7 +422,7 @@ suspend fun longPressRTButtonUntil(
         // that is documented in TransportLayer.IO.sendInternal().)
         val elapsedTime = getElapsedTimeInMs() - timestampBeforeDisplayFrameRetrieval
         if (elapsedTime < MINIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS) {
-            val waitingPeriodInMs =  MINIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS - elapsedTime
+            val waitingPeriodInMs = MINIMUM_WAIT_PERIOD_DURING_LONG_RT_BUTTON_PRESS_IN_MS - elapsedTime
             logger(LogLevel.VERBOSE) { "Waiting $waitingPeriodInMs milliseconds before continuing button long-press" }
             delay(timeMillis = waitingPeriodInMs)
         }
@@ -449,8 +449,7 @@ suspend fun longPressRTButtonUntil(
             // Record the screen we just saw so we can return it.
             lastParsedScreen = parsedScreen
             return@startLongButtonPress false
-        }
-        else
+        } else
             return@startLongButtonPress true
     }
 

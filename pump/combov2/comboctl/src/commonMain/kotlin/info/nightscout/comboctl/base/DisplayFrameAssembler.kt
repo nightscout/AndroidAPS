@@ -138,7 +138,7 @@ class DisplayFrameAssembler {
         // frame, this means it contains 8 pixel rows. This in turn means that this
         // layout stores one byte per column. So, the first byte in the display frame row
         // contains the pixels from (x 95 y 0) to (x 95 y 7). The second byte contains
-        // pixels from (x 94 y 0) to (x 94 y 7) etc. 
+        // pixels from (x 94 y 0) to (x 94 y 7) etc.
         for (row in 0 until 4) {
             val rtDisplayFrameRow = rtDisplayFrameRows[row]!!
             for (column in 0 until DISPLAY_FRAME_WIDTH) {
