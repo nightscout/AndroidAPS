@@ -48,7 +48,6 @@ class IobCobOrefWorker @Inject internal constructor(
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
     @Inject lateinit var profiler: Profiler
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
@@ -117,14 +116,14 @@ class IobCobOrefWorker @Inject internal constructor(
                 //console.error(bgTime , bucketed_data[i].glucose);
                 var avgDelta: Double
                 var delta: Double
-                val bg: Double = bucketedData[i].value
-                if (bg < 39 || bucketedData[i + 3].value < 39) {
+                val bg: Double = bucketedData[i].recalculated
+                if (bg < 39 || bucketedData[i + 3].recalculated < 39) {
                     aapsLogger.error("! value < 39")
                     continue
                 }
                 autosensData.bg = bg
-                delta = bg - bucketedData[i + 1].value
-                avgDelta = (bg - bucketedData[i + 3].value) / 3
+                delta = bg - bucketedData[i + 1].recalculated
+                avgDelta = (bg - bucketedData[i + 3].recalculated) / 3
                 val iob = data.iobCobCalculator.calculateFromTreatmentsAndTemps(bgTime, profile)
                 val bgi = -iob.activity * sens * 5
                 val deviation = delta - bgi

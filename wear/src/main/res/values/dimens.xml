@@ -1,8 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 
+<!--Watch Resources list of common watches with DP
+Screen density = Screen width (or height) in pixels / Screen width (or height) in inches
+dp = (width in pixels * 160) / screen density
+
+Galaxy Watch 4 40mm:  1.2", 396 x 396 px = 192 dp
+Galaxy Watch 4 44mm: 1.4", 450 x 450 px = 224 dp
+Galaxy Watch 4 Classic 42mm: 1.19", 396 x 396 px = 190 dp
+Galaxy Watch 4 Classic 46mm: 1.4", 450 x 450 px = 224 dp
+Samsung Galaxy Watch 5 40mm: 1.2", 396 x 396 px = 192 dp
+Samsung Galaxy Watch 5 44mm: 1.4", 450 x 450 px = 224 dp
+TicWatch Pro 3:  1.39", 454 x 454 px = 222.4 dp
+Fossil  Gen 5: 1.28", 416 x 416 px = 204.8
+Google Pixel Watch: 1.2", 450 x 450 px =  192 dp
+-->
+
 <resources>
     <dimen name="simple_ui_svg_text_size">50sp</dimen>
     <dimen name="simple_ui_direction_text_size">35sp</dimen>
     <dimen name="simple_ui_time_text_size">35sp</dimen>
     <dimen name="simple_ui_y_offset">5dp</dimen>
+
+    <!-- Watch face sizes for small screen sizes   -->
+    <dimen name="watch_face_svg_text_size">40sp</dimen>
+    <dimen name="watch_face_delta_text_size">20sp</dimen>
+    <dimen name="watch_face_time_text_size">35sp</dimen>
+    <dimen name="watch_face_timestamp_text_size">17sp</dimen>
+    <dimen name="watch_face_time_period_text_size">11sp</dimen>
+    <dimen name="watch_face_status_text_size">15sp</dimen>
+    <!--    Watch face specific-->
+    <dimen name="watch_face_no_chart_status_size">20sp</dimen>
+    <dimen name="watch_face_big_chart_svg_text_size">30sp</dimen>
+    <dimen name="watch_face_big_chart_delta_text_size">25sp</dimen>
+
+    <dimen name="watch_face_digital_svg_text_size">20sp</dimen>
+    <dimen name="watch_face_digital_direction_text_size">16sp</dimen>
+    <dimen name="watch_face_digital_timestamp_text_size">10sp</dimen>
+    <dimen name="watch_face_digital_sub_text_size">14sp</dimen>
+
+    <dimen name="watch_face_large_svg_text_size">50sp</dimen>
+    <dimen name="watch_face_large_direction_text_size">27sp</dimen>
+    <dimen name="watch_face_large_delta_text_size">11sp</dimen>
+    <dimen name="watch_face_large_time_text_size">50sp</dimen>
+    <dimen name="watch_face_large_time_period_text_size">11sp</dimen>
+    <dimen name="watch_face_large_status_size">14sp</dimen>
+
 </resources>

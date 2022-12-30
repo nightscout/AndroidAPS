@@ -8,6 +8,7 @@ import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.source.BgSource
@@ -218,7 +219,7 @@ class BgQualityCheckPluginTest : TestBase() {
         flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-40).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         flatData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-45).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(flatData)
-        `when`(iobCobCalculator.ads.lastBg()).thenReturn(flatData[0])
+        `when`(iobCobCalculator.ads.lastBg()).thenReturn(InMemoryGlucoseValue(flatData[0]))
 
         // Test non-dexcom plugin on flat data
         class OtherPlugin : BgSource {
@@ -247,7 +248,7 @@ class BgQualityCheckPluginTest : TestBase() {
         incompleteData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(0).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         incompleteData.add(GlucoseValue(raw = 0.0, noise = 0.0, value = 100.0, timestamp = now + T.mins(-5).msecs(), sourceSensor = GlucoseValue.SourceSensor.UNKNOWN, trendArrow = GlucoseValue.TrendArrow.FLAT))
         `when`(autosensDataStore.getBgReadingsDataTableCopy()).thenReturn(incompleteData)
-        `when`(iobCobCalculator.ads.lastBg()).thenReturn(incompleteData[0])
+        `when`(iobCobCalculator.ads.lastBg()).thenReturn(InMemoryGlucoseValue(incompleteData[0]))
         `when`(activePlugin.activeBgSource).thenReturn(OtherPlugin())
         plugin.processBgData()// must be more than 5 values
         Assertions.assertNotEquals(BgQualityCheck.State.FLAT, plugin.state)

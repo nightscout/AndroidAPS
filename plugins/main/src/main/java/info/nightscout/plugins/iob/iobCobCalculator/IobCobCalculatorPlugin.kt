@@ -155,7 +155,7 @@ class IobCobCalculatorPlugin @Inject constructor(
             overviewData = overviewData,
             reason = reason,
             end = System.currentTimeMillis(),
-            bgDataReload = false,
+            bgDataReload = true,
             cause = event
         )
     }

@@ -85,6 +85,7 @@ class PrepareIobAutosensGraphDataWorker(
         override val duration = 0L
         override val shape = PointsWithLabelGraphSeries.Shape.IOB_PREDICTION
         override val size = 0.5f
+        override val paintStyle: Paint.Style = Paint.Style.FILL
 
         override fun color(context: Context?): Int = color
         fun setColor(color: Int): IobTotalDataPoint {
@@ -107,6 +108,7 @@ class PrepareIobAutosensGraphDataWorker(
         override val duration = 0L
         override val shape = PointsWithLabelGraphSeries.Shape.COB_FAIL_OVER
         override val size = 0.5f
+        override val paintStyle: Paint.Style = Paint.Style.FILL
         override fun color(context: Context?): Int {
             return rh.gac(context, info.nightscout.core.ui.R.attr.cobColor)
         }

@@ -39,4 +39,16 @@
     <string name="omnipod_dash_not_enough_insulin">В резервуаре недостаточно инсулина</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Неподтвержденная команда</string>
     <string name="requested_by_user" comment="26 characters max for translation">Запрошено пользователем</string>
+    <string name="profile_set_ok">Профиль успешно установлен</string>
+    <string name="suspend_delivery_is_unconfirmed">Приостановка подачи не подтверждена! Обновите статус Pod вручную на вкладке Omnipod и, при необходимости, возобновите подачу.</string>
+    <string name="insulin_delivery_suspended">Введение инсулина приостановлено</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Часовой пояс Pod отличается от часового пояса на телефоне. Базальная скорость неверна. Переключите профиль для исправления</string>
+    <string name="failed_to_set_the_new_basal_profile">Не удалось установить новый базовый профиль. Подача инсулина приостановлена</string>
+    <string name="setting_basal_profile_might_have_failed">Возможно не удалось задать базальный профиль. Подача инсулина может быть приостановлена! Обновите вручную состояние Pod на вкладке Omnipod и при необходимости возобновите процесс подачи.</string>
+    <string name="bolus_delivery_status_uncertain">Статус подачи болюса неясен. Обновите статус pod, чтобы подтвердить или отклонить.</string>
+    <string name="checking_delivery_status">Выполняется проверка статуса подачи</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Установка врем базала могла иметь сбой. Если временный базал запущен ранее, он был отменен. Вручную обновите статус Pod на вкладке Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Результат отмены временного базала неясен</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Неподтвержденная команда возобновления болюса. Обновите статус pod</string>
+    <string name="cancelling_temp_basal_might_have_failed">Установка врем базала могла иметь сбой. Если врем базал запущен ранее, он возможно отменен. Вручную обновите статус Pod из вкладки Omnipod.</string>
 </resources>

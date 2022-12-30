@@ -7,20 +7,28 @@
     <string name="objectivenotfinished">Цель %1$d не завершена</string>
     <string name="objectives_0_objective">Настройка визуализации и мониторинга, анализ базала и коэффициентов</string>
     <string name="objectives_0_gate">Убедитесь, что величина ГК и данные по инсулину помпы передаются в Nightscout</string>
+    <string name="objectives_0_learned">Вы сделали базовую настройку экосистемы AAPS. Nightscout не нужен для работы AAPS, но может быть полезен для отчетов и мониторинга других пациентов. Необходимости в постоянном подключении к NS нет, если вы используете NS только для себя. Вы можете установить загрузку, например, только на домашний wifi, чтобы сэкономить заряд батареи.</string>
     <string name="objectives_openloop_objective">Старт незамкнутого цикла</string>
     <string name="objectives_openloop_gate">Начинайте работу в режиме незамкнутого цикла и ручной подстройки величины временного базала. Установите и применяйте временные цели и временные цели по умолчанию (напр. углеводы при нагрузке или купировании гипо)</string>
+    <string name="objectives_openloop_learned">Открытый цикл может быть использован для получения рекомендаций, если у вас нет совместимой помпы или если вы не готовы закрыть цикл.</string>
     <string name="objectives_maxbasal_objective">Глубже понимаем работу системы в режиме незамкнутого цикла, включая ее рекомендации по временным базалам</string>
     <string name="objectives_maxbasal_gate">На основе накопленного опыта, определяем максимальную величину базала и задаем ее в помпе и в настройки AndroidAPS</string>
+    <string name="objectives_maxbasal_learned">Примите меры предосторожности и корректируйте, если необходимо, параметры безопасности.</string>
     <string name="objectives_maxiobzero_objective">Начинаем замыкать цикл с прекращением подачи инсулина при низком значении Ск (режим Low Glucose Suspend)</string>
     <string name="objectives_maxiobzero_gate">Работа в замкнутом цикле с макс активным инсулином IOB = 0 на протяжении нескольких дней избегая событий типа приостановка на низких ГК Low Suspend</string>
+    <string name="objectives_maxiobzero_learned">Установка MaxIOB на нуль предотвращает от гипо и не добавит инсулина выше базальной скорости (за исключением отрицательных значений IOB)</string>
     <string name="objectives_maxiob_objective">Настройка замкнутого цикла с поднятием макс величины IOB выше 0 и постепенным понижением целевой ГК</string>
     <string name="objectives_maxiob_gate">Работа несколько дней и по кр мере одну ночь без срабатывания оповещений о низкой ГК</string>
+    <string name="objectives_maxiob_learned">Обновляйте MaxIOB по мере взросления ребенка. Не допускайте, чтобы система подавала больше инсулина, чем вы можете покрыть едой = действительно, плохая идея выставлять высокие значения.</string>
     <string name="objectives_autosens_objective">Настраиваем базал и коэффициенты с последующей активацией auto-sens</string>
     <string name="objectives_autosens_gate">1 неделя успешной дневной работы с регулярным введением углеводов</string>
+    <string name="objectives_autosens_learned">Если результаты autosense не колеблются около 100%, то возможно ваш профиль неверный.</string>
     <string name="objectives_smb_objective">Активация таких доп функций для дневного времени как супер микро болюс SMB</string>
-    <string name="objectives_auto_objective">Включение автоматизации</string>
     <string name="objectives_smb_gate">Прочтите wiki и увеличьте maxIOB чтобы супер микро болюс SMB заработал как положено! Хорошее начало – maxIOB = средний болюс на еду + троекратный максимальный суточный базал</string>
+    <string name="objectives_smb_learned">Ваша цель - это использование СМБ. Алгоритм Oref1 предназначен также, чтобы помочь вам с болюсами. Вы не должны подавать полный болюс на еду, а только часть его, предоставив AAPS подать при необходимости остальную часть болюса. Таким образом вы можете иметь большее пространство для ошибки в подсчетах углеводов. Вы знаете, что можно установить проценты для уменьшения размера болюса?</string>
+    <string name="objectives_auto_objective">Включение автоматизации</string>
     <string name="objectives_auto_gate">Прочтите документацию по автоматизации. Настройте свои первые простые правила. Вместо действия позвольте AAPS только выводить уведомления. Если вы уверены, что автоматизация инициируется в нужное время, замените уведомление реальными действиями. (https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">Автоматизация может быть хорошим слугой, но плохим хозяином. Не полагайтесь на нее сверх меры. Не пытайтесь заменить лежащий в основе алгоритм. Проверяйте перед использованием.</string>
     <string name="objectives_bgavailableinns">гликемия доступна в NS</string>
     <string name="objectives_pumpstatusavailableinns">Статус помпы доступен в NS</string>
     <string name="objectives_manualenacts">Ввод вручную</string>
@@ -34,12 +42,11 @@
     <string name="objectives_useactions">В Конфигураторе активируйте модуль Действия Actions, сделав его видимым и показав содержимое верхнего меню</string>
     <string name="objectives_useloop">Просмотр содержимого модуля Цикл Loop</string>
     <string name="objectives_usescale">Применить функцию масштабирования по долгому нажатию на диаграмму ГК</string>
-    <string name="objectives_button_enter">Ввод</string>
-    <string name="enter_code_obtained_from_developers_to_bypass_the_rest_of_objectives">Если у вас есть хотя бы три месяца опыта работы с замкнутым циклом на других системах, то можно получить код пропуска. Подробности смотрите по адресу https://androidaps.readthedocs.io/en/latest/EN/Usage/Objectives.html#skip-objectives.</string>
-    <string name="codeaccepted">Код принят</string>
-    <string name="codeinvalid">Неверный код</string>
     <string name="objectives_exam_objective">Подтвердите ваши знания</string>
     <string name="objectives_exam_gate">Изучите вопросы. Вам дано четыре возможных ответа на каждый вопрос. Может быть более одного правильного ответа. Проверьте все правильные ответы и подтвердите выбор.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS может работать в автономном режиме.</string>
+    <string name="objectives_exam_learned_breadgrams">Ввод углеводов допускается только в граммах.</string>
+    <string name="objectives_exam_learned_ecarbs">E-carbs - это эквивалент пролонгированного болюса на помпах.</string>
     <string name="answerdisabledto">Ответы отключены до: %1$s</string>
     <string name="wronganswer">Неверный ответ!</string>
     <string name="unfinshed_button">Следующий незавершенный</string>
@@ -52,4 +59,5 @@
     <string name="notconnected">Нет подключения к Интернету</string>
     <string name="failedretrievetime">Не удалось загрузить время</string>
     <string name="requirementnotmet">Требования к цели не выполнены</string>
+    <string name="what_i_ve_learned">Мной усвоено:</string>
 </resources>

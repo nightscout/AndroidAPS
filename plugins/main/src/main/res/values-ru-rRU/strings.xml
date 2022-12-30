@@ -88,6 +88,9 @@
     <string name="smscommunicator_message_body">Недопустимое тело сообщения</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Отправить SMS, если инициируется запись о недоступности помпы</string>
     <string name="smscommunicator_pump_unreachable">Сообщить о недоступности помпы</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Чтобы переключиться в режим LGS (Low Glucose Suspend, приостановка цикла при низкой гликемии) ответьте кодом %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Чтобы переключиться на замкнутый цикл, ответьте кодом %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Текущий режим цикла: %1$s</string>
     <string name="wrong_format">Неверный формат</string>
     <string name="sms_actual_bg">ГК:</string>
     <string name="sms_last_bg">Предыдущая ГК:</string>

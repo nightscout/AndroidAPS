@@ -97,4 +97,7 @@
     <string name="remove_all">Odstrániť všetko</string>
     <string name="reset_start">Resetovať štart</string>
     <string name="upload_now">Nahrať teraz</string>
+    <string name="not_connected">Nepripojené</string>
+    <string name="read_only">Iba na čítanie</string>
+    <string name="working">Pracujem</string>
 </resources>

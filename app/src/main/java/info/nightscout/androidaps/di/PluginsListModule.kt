@@ -51,6 +51,9 @@ import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.sensitivity.SensitivityOref1Plugin
 import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
+import info.nightscout.smoothing.ExponentialSmoothingPlugin
+import info.nightscout.smoothing.AvgSmoothingPlugin
+import info.nightscout.smoothing.NoSmoothingPlugin
 import info.nightscout.source.AidexPlugin
 import info.nightscout.source.DexcomPlugin
 import info.nightscout.source.GlimpPlugin
@@ -433,6 +436,24 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(500)
     abstract fun bindThemeSwitcherPlugin(plugin: ThemeSwitcherPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(600)
+    abstract fun bindNoSmoothingPlugin(plugin: NoSmoothingPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(605)
+    abstract fun bindExponentialSmoothingPlugin(plugin: ExponentialSmoothingPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(610)
+    abstract fun bindAvgSmoothingPlugin(plugin: AvgSmoothingPlugin): PluginBase
 
     @Qualifier
     annotation class AllConfigs

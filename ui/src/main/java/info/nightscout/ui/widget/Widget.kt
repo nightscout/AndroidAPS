@@ -35,6 +35,7 @@ import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibilityKeepSpace
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -125,20 +126,23 @@ class Widget : AppWidgetProvider() {
 
     private fun updateBg(views: RemoteViews) {
         val units = profileFunction.getUnits()
-        views.setTextViewText(R.id.bg, overviewData.lastBg?.valueToUnitsString(units) ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short))
+        views.setTextViewText(R.id.bg, overviewData.lastBg(iobCobCalculator.ads)?.valueToUnitsString(units) ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short))
         views.setTextColor(
             R.id.bg, when {
-                overviewData.isLow  -> rh.gc(info.nightscout.core.ui.R.color.widget_low)
-                overviewData.isHigh -> rh.gc(info.nightscout.core.ui.R.color.widget_high)
-                else                -> rh.gc(info.nightscout.core.ui.R.color.widget_inrange)
+                overviewData.isLow(iobCobCalculator.ads)  -> rh.gc(info.nightscout.core.ui.R.color.widget_low)
+                overviewData.isHigh(iobCobCalculator.ads) -> rh.gc(info.nightscout.core.ui.R.color.widget_high)
+                else                                      -> rh.gc(info.nightscout.core.ui.R.color.widget_inrange)
             }
         )
-        views.setImageViewResource(R.id.arrow, trendCalculator.getTrendArrow(overviewData.lastBg).directionToIcon())
+        trendCalculator.getTrendArrow(iobCobCalculator.ads)?.let {
+            views.setImageViewResource(R.id.arrow, it.directionToIcon())
+        }
+        views.setViewVisibility(R.id.arrow, (trendCalculator.getTrendArrow(iobCobCalculator.ads) != null).toVisibilityKeepSpace())
         views.setInt(
             R.id.arrow, "setColorFilter", when {
-                overviewData.isLow  -> rh.gc(info.nightscout.core.ui.R.color.widget_low)
-                overviewData.isHigh -> rh.gc(info.nightscout.core.ui.R.color.widget_high)
-                else                -> rh.gc(info.nightscout.core.ui.R.color.widget_inrange)
+                overviewData.isLow(iobCobCalculator.ads)  -> rh.gc(info.nightscout.core.ui.R.color.widget_low)
+                overviewData.isHigh(iobCobCalculator.ads) -> rh.gc(info.nightscout.core.ui.R.color.widget_high)
+                else                                      -> rh.gc(info.nightscout.core.ui.R.color.widget_inrange)
             }
         )
 
@@ -154,10 +158,10 @@ class Widget : AppWidgetProvider() {
         }
 
         // strike through if BG is old
-        if (!overviewData.isActualBg) views.setInt(R.id.bg, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
+        if (!overviewData.isActualBg(iobCobCalculator.ads)) views.setInt(R.id.bg, "setPaintFlags", Paint.STRIKE_THRU_TEXT_FLAG or Paint.ANTI_ALIAS_FLAG)
         else views.setInt(R.id.bg, "setPaintFlags", Paint.ANTI_ALIAS_FLAG)
 
-        views.setTextViewText(R.id.time_ago, dateUtil.minAgo(rh, overviewData.lastBg?.timestamp))
+        views.setTextViewText(R.id.time_ago, dateUtil.minAgo(rh, overviewData.lastBg(iobCobCalculator.ads)?.timestamp))
         //views.setTextViewText(R.id.time_ago_short, "(" + dateUtil.minAgoShort(overviewData.lastBg?.timestamp) + ")")
     }
 

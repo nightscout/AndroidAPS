@@ -8,6 +8,7 @@ import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventBucketedDataCreated
 import info.nightscout.rx.logging.AAPSLogger
@@ -25,6 +26,7 @@ class LoadBgDataWorker(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var activePlugin: ActivePlugin
 
     class LoadBgData(
         val iobCobCalculator: IobCobCalculator,
@@ -32,7 +34,7 @@ class LoadBgDataWorker(
     )
 
 
-    private fun AutosensDataStore.loadBgData(to: Long, repository: AppRepository, aapsLogger: AAPSLogger, dateUtil: DateUtil, rxBus: RxBus) {
+    private fun AutosensDataStore.loadBgData(to: Long, repository: AppRepository, aapsLogger: AAPSLogger, dateUtil: DateUtil) {
         synchronized(dataLock) {
             val start = to - T.hours((24 + 10 /* max dia */).toLong()).msecs()
             // there can be some readings with time in close future (caused by wrong time setting on sensor)
@@ -43,7 +45,15 @@ class LoadBgDataWorker(
                 .filter { it.value >= 39 }
             aapsLogger.debug(LTag.AUTOSENS) { "BG data loaded. Size: ${bgReadings.size} Start date: ${dateUtil.dateAndTimeString(start)} End date: ${dateUtil.dateAndTimeString(to)}" }
             createBucketedData(aapsLogger, dateUtil)
-            rxBus.send(EventBucketedDataCreated())
+        }
+    }
+
+    private fun AutosensDataStore.smoothData(activePlugin: ActivePlugin) {
+        synchronized(dataLock) {
+            bucketedData?.let {
+                val smoothedData = activePlugin.activeSmoothing.smooth(it)
+                bucketedData = smoothedData
+            }
         }
     }
 
@@ -52,7 +62,9 @@ class LoadBgDataWorker(
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as LoadBgData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
-        data.iobCobCalculator.ads.loadBgData(data.end, repository, aapsLogger, dateUtil, rxBus)
+        data.iobCobCalculator.ads.loadBgData(data.end, repository, aapsLogger, dateUtil)
+        data.iobCobCalculator.ads.smoothData(activePlugin)
+        rxBus.send(EventBucketedDataCreated())
         data.iobCobCalculator.clearCache()
         return Result.success()
     }

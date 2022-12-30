@@ -15,11 +15,4 @@ fun NSOfflineEvent.toOfflineEvent(): OfflineEvent =
     )
 
 fun NSOfflineEvent.Reason?.toReason(): OfflineEvent.Reason =
-    when (this) {
-        NSOfflineEvent.Reason.DISCONNECT_PUMP -> OfflineEvent.Reason.DISCONNECT_PUMP
-        NSOfflineEvent.Reason.SUSPEND         -> OfflineEvent.Reason.SUSPEND
-        NSOfflineEvent.Reason.DISABLE_LOOP    -> OfflineEvent.Reason.DISABLE_LOOP
-        NSOfflineEvent.Reason.SUPER_BOLUS     -> OfflineEvent.Reason.SUPER_BOLUS
-        NSOfflineEvent.Reason.OTHER           -> OfflineEvent.Reason.OTHER
-        null                                  -> OfflineEvent.Reason.OTHER
-    }
+    OfflineEvent.Reason.fromString(this?.name)

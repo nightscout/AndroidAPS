@@ -12,7 +12,7 @@ interface NSAndroidRxClient {
     fun getVersion(): Single<String>
     fun getStatus(): Single<Status>
     fun getLastModified(): Single<LastModified>
-    fun getSgvsModifiedSince(from: Long): Single<List<NSSgvV3>>
+    fun getSgvsModifiedSince(from: Long, limit: Long): Single<NSAndroidClient.ReadResponse<List<NSSgvV3>>>
     fun getTreatmentsModifiedSince(from: Long, limit: Long): Single<NSAndroidClient.ReadResponse<List<NSTreatment>>>
     fun getDeviceStatusModifiedSince(from: Long): Single<List<RemoteDeviceStatus>>
 }

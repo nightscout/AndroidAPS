@@ -41,7 +41,7 @@
     <string name="setupwizard_loop_description">Press the button below to enable AAPS to suggest/make basal changes</string>
     <string name="key_setupwizard_processed" translatable="false">startupwizard_processed</string>
     <string name="setupwizard_sensitivity_description">Sensitivity plugin is used for sensitivity detection and COB calculation. For more info visit:</string>
-    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Select one from availables algorithms. They are sorted from oldest to newest. Newer algorithm is usually more powerful and more aggressive. Thus if you are new looper you may probably start with AMA and not with latest one. Do not forget to read the OpenAPS documentation and configure it before use.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Please configure your RileyLink below. After selecting a RileyLink, it will be possible to continue setup once the RileyLink status is \"Connected\". This might take a minute.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Note:</b> You can continue setup once the pump has been set up.\n</string>
@@ -77,6 +77,8 @@
     <string name="configbuilder_insulin_description">Which type of insulin are you using?</string>
     <string name="configbuilder_bgsource">BG Source</string>
     <string name="configbuilder_bgsource_description">Where should AAPS gain  it\'s data from?</string>
+    <string name="configbuilder_smoothing">Smoothing</string>
+    <string name="configbuilder_smoothing_description">Choose smoothing algorithm</string>
     <string name="configbuilder_sensitivity">Sensitivity detection</string>
     <string name="configbuilder_sensitivity_description">Which sensitivity algorithm should be used?</string>
     <string name="config_builder_shortname">CONF</string>

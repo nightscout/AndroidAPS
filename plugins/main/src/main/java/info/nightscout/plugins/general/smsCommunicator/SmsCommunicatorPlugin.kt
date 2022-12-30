@@ -29,6 +29,7 @@ import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAny
 import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
@@ -125,7 +126,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     val commands = mapOf(
         "BG" to "BG",
-        "LOOP" to "LOOP STOP/DISABLE/START/ENABLE/RESUME/STATUS\nLOOP SUSPEND 20",
+        "LOOP" to "LOOP STOP/DISABLE/START/ENABLE/RESUME/STATUS/CLOSED/LGS\nLOOP SUSPEND 20",
         "NSCLIENT" to "NSCLIENT RESTART",
         "PUMP" to "PUMP\nPUMP CONNECT\nPUMP DISCONNECT 30\n",
         "BASAL" to "BASAL STOP/CANCEL\nBASAL 0.3\nBASAL 0.3 20\nBASAL 30%\nBASAL 30% 20\n",
@@ -416,10 +417,10 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
             }
 
-            "STATUS"          -> {
+            "STATUS"  -> {
                 val reply = if (loop.enabled) {
                     if (loop.isSuspended) rh.gs(R.string.sms_loop_suspended_for, loop.minutesToEndOfSuspend())
-                    else rh.gs(R.string.smscommunicator_loop_is_enabled)
+                    else rh.gs(R.string.smscommunicator_loop_is_enabled) + " - " + getApsModeText()
                 } else
                     rh.gs(info.nightscout.core.ui.R.string.loopisdisabled)
                 sendSMS(Sms(receivedSms.phoneNumber, reply))
@@ -454,7 +455,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 })
             }
 
-            "SUSPEND"         -> {
+            "SUSPEND" -> {
                 var duration = 0
                 if (divided.size == 3) duration = SafeParse.stringToInt(divided[2])
                 duration = max(0, duration)
@@ -502,7 +503,37 @@ class SmsCommunicatorPlugin @Inject constructor(
                 }
             }
 
-            else              -> sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
+            "LGS"     -> {
+                val passCode = generatePassCode()
+                val reply = rh.gs(R.string.smscommunicator_set_lgs_reply_with_code, passCode)
+                receivedSms.processed = true
+                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
+                    override fun run() {
+                        uel.log(Action.LGS_LOOP_MODE, Sources.SMS)
+                        sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.LGS.name)
+                        rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)))
+                        val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
+                        sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                    }
+                })
+            }
+
+            "CLOSED"  -> {
+                val passCode = generatePassCode()
+                val reply = rh.gs(R.string.smscommunicator_set_closed_loop_reply_with_code, passCode)
+                receivedSms.processed = true
+                messageToConfirm = AuthRequest(injector, receivedSms, reply, passCode, object : SmsAction(pumpCommand = false) {
+                    override fun run() {
+                        uel.log(Action.CLOSED_LOOP_MODE, Sources.SMS)
+                        sp.putString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.CLOSED.name)
+                        rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.ui.R.string.closedloop)))
+                        val replyText = rh.gs(R.string.smscommunicator_current_loop_mode, getApsModeText())
+                        sendSMSToAllNumbers(Sms(receivedSms.phoneNumber, replyText))
+                    }
+                })
+            }
+
+            else      -> sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
         }
     }
 
@@ -1251,4 +1282,12 @@ class SmsCommunicatorPlugin @Inject constructor(
             knownNumbers.size > 1
         } ?: false
     }
+
+    private fun getApsModeText(): String =
+        when (ApsMode.fromString(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name))) {
+            ApsMode.OPEN   -> rh.gs(info.nightscout.core.ui.R.string.openloop)
+            ApsMode.CLOSED -> rh.gs(info.nightscout.core.ui.R.string.closedloop)
+            ApsMode.LGS    -> rh.gs(info.nightscout.core.ui.R.string.lowglucosesuspend)
+            else           -> rh.gs(info.nightscout.core.ui.R.string.unknown)
+        }
 }

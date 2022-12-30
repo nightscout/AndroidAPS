@@ -67,18 +67,17 @@ class DigitalStyleWatchface : BaseWatchFace() {
         /* frame styles*/
         val mShapesElements = layoutView?.findViewById<LinearLayout>(R.id.shapes_elements)
         if (mShapesElements != null) {
-            val displayFormatType = if (mShapesElements.contentDescription.toString().startsWith("round")) "round" else "rect"
             val displayStyle = sp.getString(R.string.key_digital_style_frame_style, "full")
             val displayFrameColor = sp.getString(R.string.key_digital_style_frame_color, "red")
             val displayFrameColorSaturation = sp.getString(R.string.key_digital_style_frame_color_saturation, "500")
             val displayFrameColorOpacity = sp.getString(R.string.key_digital_style_frame_color_opacity, "1")
 
             // Load image with shapes
-            val styleDrawableName = "digitalstyle_bg_" + displayStyle + "_" + displayFormatType
+            val styleDrawableName = "digital_style_bg_" + displayStyle
             try {
                 mShapesElements.background = ContextCompat.getDrawable(this, resources.getIdentifier(styleDrawableName, "drawable", this.packageName))
             } catch (e: Exception) {
-                aapsLogger.error("digitalstyle_frameStyle", "RESOURCE NOT FOUND >> $styleDrawableName")
+                aapsLogger.error("digital_style_frameStyle", "RESOURCE NOT FOUND >> $styleDrawableName")
             }
 
             // set background-tint-color
@@ -86,13 +85,13 @@ class DigitalStyleWatchface : BaseWatchFace() {
                 mShapesElements.backgroundTintList = null
             } else {
                 val strColorName = if (displayFrameColor == "white" || displayFrameColor == "black") displayFrameColor else displayFrameColor + "_" + displayFrameColorSaturation
-                aapsLogger.debug(LTag.WEAR, "digitalstyle_strColorName", strColorName)
+                aapsLogger.debug(LTag.WEAR, "digital_style_strColorName", strColorName)
                 try {
                     val colorStateList = ContextCompat.getColorStateList(this, resources.getIdentifier(strColorName, "color", this.packageName))
                     mShapesElements.backgroundTintList = colorStateList
                 } catch (e: Exception) {
                     mShapesElements.backgroundTintList = null
-                    aapsLogger.error("digitalstyle_colorName", "COLOR NOT FOUND >> $strColorName")
+                    aapsLogger.error("digital_style_colorName", "COLOR NOT FOUND >> $strColorName")
                 }
             }
 

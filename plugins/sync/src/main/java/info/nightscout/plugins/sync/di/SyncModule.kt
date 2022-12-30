@@ -20,9 +20,11 @@ import info.nightscout.plugins.sync.nsclient.workers.NSClientUpdateRemoveAckWork
 import info.nightscout.plugins.sync.nsclientV3.workers.DataSyncWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadDeviceStatusWorker
+import info.nightscout.plugins.sync.nsclientV3.workers.LoadFoodsWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
+import info.nightscout.plugins.sync.nsclientV3.workers.ProcessFoodWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.ProcessTreatmentsWorker
 import info.nightscout.plugins.sync.tidepool.TidepoolFragment
 
@@ -46,11 +48,14 @@ abstract class SyncModule {
     @ContributesAndroidInjector abstract fun contributesLoadStatusWorker(): LoadStatusWorker
     @ContributesAndroidInjector abstract fun contributesLoadLastModificationWorker(): LoadLastModificationWorker
     @ContributesAndroidInjector abstract fun contributesLoadBgWorker(): LoadBgWorker
+    @ContributesAndroidInjector abstract fun contributesLoadFoodsWorker(): LoadFoodsWorker
     @ContributesAndroidInjector abstract fun contributesStoreBgWorker(): StoreDataForDbImpl.StoreBgWorker
+    @ContributesAndroidInjector abstract fun contributesStoreFoodWorker(): StoreDataForDbImpl.StoreFoodWorker
     @ContributesAndroidInjector abstract fun contributesTreatmentWorker(): LoadTreatmentsWorker
     @ContributesAndroidInjector abstract fun contributesProcessTreatmentsWorker(): ProcessTreatmentsWorker
     @ContributesAndroidInjector abstract fun contributesLoadDeviceStatusWorker(): LoadDeviceStatusWorker
     @ContributesAndroidInjector abstract fun contributesDataSyncWorker(): DataSyncWorker
+    @ContributesAndroidInjector abstract fun contributesFoodWorker(): ProcessFoodWorker
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
 

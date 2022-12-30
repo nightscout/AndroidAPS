@@ -30,9 +30,6 @@
     <string name="objectives_useactions">Στην Διαμόρφωση ενεργοποιήστε την προσθήκη Ενέργειες, κάντε την ορατή ώστε να την βλέπετε από το δικό της tab</string>
     <string name="objectives_useloop">Εμφάνιση περιεχομένου της προσθήκης Κύκλωμα</string>
     <string name="objectives_usescale">Χρησιμοποιήστε τη λειτουργία κλίμακας πατώντας παρατεταμένα το διάγραμμα BG</string>
-    <string name="objectives_button_enter">Εισαγωγή</string>
-    <string name="codeaccepted">Κωδικός αποδεκτός</string>
-    <string name="codeinvalid">Μη έγκυρος κωδικός</string>
     <string name="objectives_exam_objective">Αποδείξτε τις γνώσεις σας</string>
     <string name="answerdisabledto">Οι απαντήσεις εμφανίζονται στο: %1$s</string>
     <string name="wronganswer">Λάθος απάντηση!</string>

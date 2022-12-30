@@ -53,7 +53,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.interfaces.utils.TimerUtil
+import info.nightscout.automation.ui.TimerUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventBTChange

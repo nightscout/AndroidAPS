@@ -88,6 +88,9 @@
     <string name="smscommunicator_message_body">El cuerpo del mensaje es inválido</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Enviar SMS si se activa un evento de bomba inaccesible</string>
     <string name="smscommunicator_pump_unreachable">Reportar bomba inalcanzable</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Para cambiar el modo lazo a LGS (Suspensión por glucosa baja) responde con el código %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Para cambiar el modo lazo a lazo cerrado, responde con código %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Modo lazo actual: %1$s</string>
     <string name="wrong_format">Formato incorrecto</string>
     <string name="sms_actual_bg">Glucosa:</string>
     <string name="sms_last_bg">Última Glucosa:</string>
@@ -172,8 +175,8 @@
     <string name="pb_label">Batería de la bomba</string>
     <string name="cannula">Cánula</string>
     <string name="ebstopsloop">El uso de la función de bolo extendido detendrá el modo de bucle cerrado durante el tiempo de ejecución del bolo extendido. ¿Realmente quieres esto?</string>
-    <string name="statuslights_cannula_age">edad de la cánula</string>
-    <string name="statuslights_patch_pump_age">edad del parche de la bomba</string>
+    <string name="statuslights_cannula_age">Edad de la cánula</string>
+    <string name="statuslights_patch_pump_age">Edad de la bomba parche</string>
     <string name="patch_pump">Bomba parche</string>
     <!-- Overview -->
     <string name="show_statuslights">Mostrar luces de estado en la pantalla de inicio</string>
@@ -309,7 +312,7 @@
     <string name="largedisplay_description">Pantalla grande</string>
     <string name="skin">Tema</string>
     <!--    DataBroadcast-->
-    <string name="cannula_usage">uso:</string>
+    <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
     <string name="send_logfiles">Enviar los archivos de registro de hoy a los desarrolladores. Situación inesperada.</string>
     <!--    Wear-->

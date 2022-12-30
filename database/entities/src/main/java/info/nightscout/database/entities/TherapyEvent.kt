@@ -46,7 +46,7 @@ data class TherapyEvent(
     var glucoseUnit: GlucoseUnit,
 ) : TraceableDBEntry, DBEntryWithTimeAndDuration {
 
-    private fun contentEqualsTo(other: TherapyEvent): Boolean =
+    fun contentEqualsTo(other: TherapyEvent): Boolean =
         isValid == other.isValid &&
             timestamp == other.timestamp &&
             utcOffset == other.utcOffset &&
@@ -79,7 +79,7 @@ data class TherapyEvent(
 
         companion object {
 
-            fun fromString(text: String?) = values().firstOrNull { it.text == text } ?: MANUAL
+            fun fromString(text: String?) = values().firstOrNull { it.text == text }
         }
     }
 

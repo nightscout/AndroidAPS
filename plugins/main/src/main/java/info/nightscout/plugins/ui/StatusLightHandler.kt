@@ -112,7 +112,8 @@ class StatusLightHandler @Inject constructor(
     private fun handleLevel(view: TextView?, criticalSetting: Int, criticalDefaultValue: Double, warnSetting: Int, warnDefaultValue: Double, level: Double, units: String) {
         val resUrgent = sp.getDouble(criticalSetting, criticalDefaultValue)
         val resWarn = sp.getDouble(warnSetting, warnDefaultValue)
-        view?.text = " " + DecimalFormatter.to0Decimal(level, units)
+        if (level > 0) view?.text = " " + DecimalFormatter.to0Decimal(level, units)
+        else view?.text = ""
         warnColors.setColorInverse(view, level, resWarn, resUrgent)
     }
 
@@ -133,11 +134,10 @@ class StatusLightHandler @Inject constructor(
     private fun handleUsage(view: TextView?, units: String) {
         handler.post {
             val therapyEvent = repository.getLastTherapyRecordUpToNow(TherapyEvent.Type.CANNULA_CHANGE).blockingGet()
-            var usage = 0.0
-            if (therapyEvent is ValueWrapper.Existing) {
-                val tdd = tddCalculator.calculate(therapyEvent.value.timestamp, dateUtil.now())
-                usage = tdd.totalAmount
-            }
+            var usage =
+                if (therapyEvent is ValueWrapper.Existing) {
+                    tddCalculator.calculate(therapyEvent.value.timestamp, dateUtil.now(), allowMissingData = false)?.totalAmount ?: 0.0
+                } else 0.0
             runOnUiThread {
                 view?.text = DecimalFormatter.to0Decimal(usage, units)
             }

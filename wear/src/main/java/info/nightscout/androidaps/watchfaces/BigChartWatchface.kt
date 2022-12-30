@@ -9,7 +9,6 @@ import androidx.viewbinding.ViewBinding
 import com.ustwo.clockwise.common.WatchMode
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityBigchartBinding
-import info.nightscout.androidaps.databinding.ActivityBigchartSmallBinding
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
 import info.nightscout.androidaps.watchfaces.utils.WatchfaceViewAdapter
 
@@ -18,11 +17,6 @@ class BigChartWatchface : BaseWatchFace() {
     private lateinit var binding: WatchfaceViewAdapter
 
     override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
-        if (resources.displayMetrics.widthPixels < SCREEN_SIZE_SMALL || resources.displayMetrics.heightPixels < SCREEN_SIZE_SMALL) {
-            val layoutBinding = ActivityBigchartSmallBinding.inflate(inflater)
-            binding = WatchfaceViewAdapter.getBinding(layoutBinding)
-            return layoutBinding
-        }
         val layoutBinding = ActivityBigchartBinding.inflate(inflater)
         binding = WatchfaceViewAdapter.getBinding(layoutBinding)
         return layoutBinding
@@ -42,6 +36,7 @@ class BigChartWatchface : BaseWatchFace() {
         binding.delta?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
         binding.avgDelta?.setTextColor(ContextCompat.getColor(this, R.color.dark_midColor))
         binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_Timestamp))
+        binding.timePeriod?.setTextColor(ContextCompat.getColor(this, R.color.dark_Timestamp))
 
         highColor = ContextCompat.getColor(this, R.color.dark_midColor)
         lowColor = ContextCompat.getColor(this, R.color.dark_midColor)
@@ -69,6 +64,7 @@ class BigChartWatchface : BaseWatchFace() {
 
         val colorTime = if (ageLevel == 1) R.color.dark_Timestamp else R.color.dark_TimestampOld
         binding.timestamp.setTextColor(ContextCompat.getColor(this, colorTime))
+        binding.timePeriod?.setTextColor(ContextCompat.getColor(this, colorTime))
 
         highColor = ContextCompat.getColor(this, R.color.dark_highColor)
         lowColor = ContextCompat.getColor(this, R.color.dark_lowColor)
@@ -97,6 +93,7 @@ class BigChartWatchface : BaseWatchFace() {
 
             val colorTime = if (ageLevel == 1) R.color.light_mTimestamp1 else R.color.light_mTimestamp
             binding.timestamp.setTextColor(ContextCompat.getColor(this, colorTime))
+            binding.timePeriod?.setTextColor(ContextCompat.getColor(this, colorTime))
 
             highColor = ContextCompat.getColor(this, R.color.light_highColor)
             lowColor = ContextCompat.getColor(this, R.color.light_lowColor)

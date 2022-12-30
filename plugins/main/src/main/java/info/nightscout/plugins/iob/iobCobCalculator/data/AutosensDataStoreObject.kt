@@ -71,22 +71,24 @@ class AutosensDataStoreObject : AutosensDataStore {
     }
 
     /**
-     * Return last valid (>39) GlucoseValue from database or null if db is empty
+     * Return last valid (>39) InMemoryGlucoseValue from bucketed data or null if db is empty
      *
-     * @return GlucoseValue or null
+     * @return InMemoryGlucoseValue or null
      */
-    override fun lastBg(): GlucoseValue? =
+    override fun lastBg(): InMemoryGlucoseValue? =
         synchronized(dataLock) {
-            if (bgReadings.isNotEmpty()) bgReadings[0]
-            else null
+            bucketedData?.let { bucketedData ->
+                if (bucketedData.isNotEmpty()) bucketedData[0]
+                else null
+            }
         }
 
     /**
-     * Provide last GlucoseValue or null if none exists within the last 9 minutes
+     * Provide last bucketed InMemoryGlucoseValue or null if none exists within the last 9 minutes
      *
-     * @return GlucoseValue or null
+     * @return InMemoryGlucoseValue or null
      */
-    override fun actualBg(): GlucoseValue? {
+    override fun actualBg(): InMemoryGlucoseValue? {
         val lastBg = lastBg() ?: return null
         return if (lastBg.timestamp > System.currentTimeMillis() - T.mins(9).msecs()) lastBg else null
     }
@@ -150,8 +152,11 @@ class AutosensDataStoreObject : AutosensDataStore {
         }
         var diff = abs(someTime - referenceTime)
         diff %= T.mins(5).msecs()
-        if (diff > T.mins(2).plus(T.secs(30)).msecs()) diff -= T.mins(5).msecs()
-        return someTime + diff
+        if (diff > T.mins(2).plus(T.secs(30)).msecs()){
+            return someTime + abs(diff - T.mins(5).msecs()) // Adjust to the future
+        } else {
+            return someTime - diff // adjust to the past
+        }
     }
 
     fun isAbout5minData(aapsLogger: AAPSLogger): Boolean {
@@ -220,7 +225,7 @@ class AutosensDataStoreObject : AutosensDataStore {
             return
         }
         val newBucketedData = ArrayList<InMemoryGlucoseValue>()
-        var currentTime = bgReadings[0].timestamp - bgReadings[0].timestamp % T.mins(5).msecs()
+        var currentTime = bgReadings[0].timestamp
         val adjustedTime = adjustToReferenceTime(currentTime)
         // after adjusting time may be newer. In this case use T-5min
         currentTime = if (adjustedTime > currentTime) adjustedTime - T.mins(5).msecs() else adjustedTime
@@ -237,7 +242,7 @@ class AutosensDataStoreObject : AutosensDataStore {
                 val bgDelta = newer.value - older.value
                 val timeDiffToNew = newer.timestamp - currentTime
                 val currentBg = newer.value - timeDiffToNew.toDouble() / (newer.timestamp - older.timestamp) * bgDelta
-                val newBgReading = InMemoryGlucoseValue(currentTime, currentBg.roundToLong().toDouble(), true)
+                val newBgReading = InMemoryGlucoseValue(currentTime, currentBg.roundToLong().toDouble())
                 newBucketedData.add(newBgReading)
                 //log.debug("BG: " + newBgReading.value + " (" + new Date(newBgReading.date).toLocaleString() + ") Prev: " + older.value + " (" + new Date(older.date).toLocaleString() + ") Newer: " + newer.value + " (" + new Date(newer.date).toLocaleString() + ")");
             }
@@ -273,7 +278,7 @@ class AutosensDataStoreObject : AutosensDataStore {
                         val gapDelta = bgReadings[i].value - lastBg
                         //console.error(gapDelta, lastBg, elapsed_minutes);
                         val nextBg = lastBg + 5.0 / elapsedMinutes * gapDelta
-                        val newBgReading = InMemoryGlucoseValue(nextBgTime, nextBg.roundToLong().toDouble(), true)
+                        val newBgReading = InMemoryGlucoseValue(nextBgTime, nextBg.roundToLong().toDouble())
                         //console.error("Interpolated", bData[j]);
                         bData.add(newBgReading)
                         aapsLogger.debug(LTag.AUTOSENS) { "Adding. bgTime: ${dateUtil.toISOString(bgTime)} lastBgTime: ${dateUtil.toISOString(lastBgTime)} $newBgReading" }

@@ -37,8 +37,6 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
 
     var tasks: MutableList<Task> = ArrayList()
 
-    var hasSpecialInput = false
-
     val isCompleted: Boolean
         get() {
             for (task in tasks) {
@@ -81,6 +79,7 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
     abstract inner class Task(var objective: Objective, @StringRes val task: Int) {
 
         var hints = ArrayList<Hint>()
+        var learned = ArrayList<Learned>()
 
         abstract fun isCompleted(): Boolean
 
@@ -91,6 +90,11 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
 
         fun hint(hint: Hint): Task {
             hints.add(hint)
+            return this
+        }
+
+        fun learned(learned: Learned): Task {
+            this.learned.add(learned)
             return this
         }
 
@@ -176,6 +180,16 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
             textView.linksClickable = true
             textView.setLinkTextColor(rh.gac(context, com.google.android.material.R.attr.colorSecondary))
             Linkify.addLinks(textView, Linkify.WEB_URLS)
+            return textView
+        }
+    }
+
+   inner class Learned internal constructor(@StringRes var learned: Int) {
+
+        fun generate(context: Context): TextView {
+            val textView = TextView(context)
+            textView.setText(learned)
+            textView.setLinkTextColor(rh.gac(context, com.google.android.material.R.attr.colorSecondary))
             return textView
         }
     }

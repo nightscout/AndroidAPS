@@ -26,6 +26,7 @@ dependencies {
     implementation project(':core:utils')
     implementation project(':core:validators')
 
+    testImplementation project(':implementation')
 
     // NSClient, Tidepool
     api("io.socket:socket.io-client:1.0.2") {

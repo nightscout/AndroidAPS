@@ -9,6 +9,7 @@ import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.smoothing.Smoothing
 import info.nightscout.interfaces.source.BgSource
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
@@ -73,6 +74,11 @@ interface ActivePlugin {
      *  Objectives plugin
      */
     val activeObjectives: Objectives?
+
+    /**
+     *  Smoothing plugin
+     */
+    val activeSmoothing: Smoothing
 
     /**
      *  Currently selected NsClient plugin

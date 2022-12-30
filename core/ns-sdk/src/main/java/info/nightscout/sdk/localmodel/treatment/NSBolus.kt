@@ -21,7 +21,8 @@ data class NSBolus(
     override val pumpSerial: String?,
     override var app: String? = null,
     val insulin: Double,
-    val type: BolusType
+    val type: BolusType,
+    val isBasalInsulin: Boolean
 
 ) : NSTreatment {
     enum class BolusType {
