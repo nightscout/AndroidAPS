@@ -350,4 +350,30 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
     <string name="old_data">старые данные</string>
+    <string name="pump_fetching_data">пытаюсь получить данные с помпы.</string>
+    <string name="pump_old_data">TDD: До сих пор старые данные! Невозможно загрузить с помпы.</string>
+    <string name="grams_short">г</string>
+    <string name="hour_short">ч</string>
+    <string name="no_active_profile">Активный профиль не установлен!</string>
+    <string name="profile_message">Профиль:\n\nСдвиг по времени: %1$\nПроцент: %2$d%\"</string>
+    <string name="tdd_line">%1$.2fед%1$.0f%</string>
+    <string name="no_profile">Профиль не загружен</string>
+    <string name="aps_only">Применять только в режиме APS!</string>
+    <string name="last_aps_result_na">Последний результат недоступен!</string>
+    <string name="loop_status_closed">ЗАМКНУТЫЙ ЦИКЛ</string>
+    <string name="loop_status_open">ОТКРЫТЫЙ ЦИКЛ</string>
+    <string name="loop_status_disabled">ЦИКЛ ВЫКЛЮЧЕН</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Предыдущее выполнение</string>
+    <string name="last_enact">Предыдущая активация</string>
+    <string name="today">Сегодня</string>
+    <string name="weighted">взвешенный</string>
+    <string name="target_only_aps_mode">Цели применяются только в режиме APS!</string>
+    <string name="no_history">Нет данных истории!</string>
+    <string name="units_short">Ед</string>
+    <string name="temp_target">Врем. цель</string>
+    <string name="until">до</string>
+    <string name="default_range">ДИАПАЗОН ПО УМОЛЧАНИЮ</string>
+    <string name="target">целевое значение ГК:</string>
+    <string name="rate_duration">Скорость: %1$.2fед/ч (%2$.2f%) \nПродолжительность %3$d% мин</string>
 </resources>
