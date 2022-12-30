@@ -26,8 +26,9 @@ class InsightAlertActivity : DaggerAppCompatActivity() {
 
     private val serviceConnection: ServiceConnection = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName, binder: IBinder) {
-            alertService = (binder as InsightAlertService.LocalBinder).service
-            alertService!!.alertLiveData.observe(this@InsightAlertActivity, { alert: Alert? -> if (alert == null) finish() else update(alert) })
+            alertService = (binder as InsightAlertService.LocalBinder).service.also {
+                it.alertLiveData.observe(this@InsightAlertActivity, { alert: Alert? -> if (alert == null) finish() else update(alert) })
+            }
         }
 
         override fun onServiceDisconnected(name: ComponentName) {
@@ -40,7 +41,15 @@ class InsightAlertActivity : DaggerAppCompatActivity() {
         binding = ActivityInsightAlertBinding.inflate(layoutInflater)
         setContentView(binding.root)
         bindService(Intent(this, InsightAlertService::class.java), serviceConnection, BIND_AUTO_CREATE)
-
+        binding.mute.setOnClickListener() {
+            binding.mute.isEnabled = false
+            alertService?.mute()
+        }
+        binding.confirm.setOnClickListener() {
+            binding.mute.isEnabled = false
+            binding.confirm.isEnabled = false
+            alertService?.confirm()
+        }
         setFinishOnTouchOutside(false)
         setShowWhenLocked(true)
         setTurnScreenOn(true)
@@ -65,16 +74,5 @@ class InsightAlertActivity : DaggerAppCompatActivity() {
             binding.errorDescription.visibility = View.VISIBLE
             binding.errorDescription.text = fromHtml(description)
         }
-    }
-
-    fun muteClicked() {
-        binding.mute.isEnabled = false
-        alertService!!.mute()
-    }
-
-    fun confirmClicked() {
-        binding.mute.isEnabled = false
-        binding.confirm.isEnabled = false
-        alertService!!.confirm()
     }
 }

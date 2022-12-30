@@ -242,7 +242,7 @@ class InsightAlertService : DaggerService(), InsightConnectionService.StateCallb
         }).start()
     }
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint("MissingPermission", "UnspecifiedImmutableFlag")
     private fun showNotification(alert: Alert) {
         val notificationBuilder = NotificationCompat.Builder(this, LocalInsightPlugin.ALERT_CHANNEL_ID)
         notificationBuilder.priority = NotificationCompat.PRIORITY_MAX

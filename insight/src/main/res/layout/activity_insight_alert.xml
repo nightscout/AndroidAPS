@@ -60,7 +60,6 @@
             style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="muteClicked"
             android:text="@string/mute" />
 
         <com.google.android.material.button.MaterialButton
@@ -68,7 +67,6 @@
             style="@style/OkCancelButton.Text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="confirmClicked"
             android:text="@string/confirm" />
 
     </LinearLayout>
