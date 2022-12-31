@@ -62,7 +62,13 @@
     <string name="objectives_exam_learned_insulin">Es necesario saber qué insulina hay en la bomba, porque afecta al cálculo de la insulina activa (IOB)</string>
     <string name="objectives_exam_learned_sensitivity">La detección de la sensibilidad forma parte del algoritmo, que permite adaptar la dosis de insulina a diferentes situaciones</string>
     <string name="objectives_exam_learned_objectives">Tu progreso en los objetivos se almacena junto con otras configuraciones y debe ser respaldado</string>
+    <string name="objectives_exam_learned_objectives2">Mantén siempre los ajustes exportados y la APK generada fuera del teléfono. El teléfono se puede perder, dañar, etc. Un buen lugar puede ser cualquier nube accesible desde el teléfono. En este caso se puede restaurar AAPS en otro dispositivo en pocos minutos. Una buena práctica es almacenar la contraseña maestra usada en un lugar seguro. Sin ella, su copia de seguridad es inútil. Lo mismo es válido para las claves de firma (archivo .jks) y las contraseñas utilizadas para construir AAPS. El resto no es importante - se puede descargar en cualquier momento de Internet</string>
+    <string name="objectives_exam_learned_wrongcarbs">Si has introducido datos erróneos en AAPS, o no se ajustan a la realidad, resuélvelo lo antes posible. Podría provocar una sobredosis. AAPS debe estar siempre informado de la mejor manera posible sobre carbohidratos, insulina, etc.</string>
+    <string name="objectives_exam_learned_iob">Si analizas que AAPS está funcionando bien, ver el gráfico de IOB puede darte mucha información útil</string>
     <string name="objectives_exam_learned_cob">El cálculo del COB depende de la relación entre ISF e IC. Aumentar el ISF o disminuir el IC conducirá a tiempos de absorción más largos. Pero el cambio de perfil con cambios porcentuales no afecta al tiempo de absorción</string>
+    <string name="objectives_exam_learned_breadgrams">Sólo se permiten gramos para la entrada de carbohidratos</string>
+    <string name="objectives_exam_learned_ecarbs">Los eCarbs son un reemplazo del bolo extendido, en el mundo de las bombas</string>
+    <string name="objectives_exam_learned_nsclient">La supervisión y el control remotos son posibles, pero no todas las funcionalidades están disponibles de forma remota</string>
     <string name="answerdisabledto">Respuesta deshabilitada a: %1$s</string>
     <string name="wronganswer">Respuesta incorrecta!</string>
     <string name="unfinshed_button">Siguien&amp;te sin terminar</string>
@@ -75,4 +81,5 @@
     <string name="notconnected">Sin conexión a Internet</string>
     <string name="failedretrievetime">Fallo tiempo de recuperación</string>
     <string name="requirementnotmet">No se cumplen los requisitos de objetivo</string>
+    <string name="what_i_ve_learned">Lo que he aprendido:</string>
 </resources>
