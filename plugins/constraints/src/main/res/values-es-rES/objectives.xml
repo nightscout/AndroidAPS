@@ -45,7 +45,16 @@
     <string name="objectives_usescale">Usar función de escala mediante un gráfico BG pulsado largo</string>
     <string name="objectives_exam_objective">Compruebe su conocimiento</string>
     <string name="objectives_exam_gate">Estudia las preguntas. Se te dan cuatro respuestas posibles para cada pregunta. Puede haber más de una respuesta correcta. Por favor, marca todas las que son correctas y seleccione VERIFICAR.</string>
+    <string name="objectives_exam_learned_prerequisites">No necesitas ser desarrollador, pero necesitas Nightscout para pasar los objetivos, una bomba compatible y un ordenador para construir AAPS por primera vez y para futuras actualizaciones</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS puede funcionar sin conexión a Internet</string>
+    <string name="objectives_exam_learned_basaltest">El perfil debe ser revisado y actualizado. Un mejor perfil significa obtener mejores resultados</string>
+    <string name="objectives_exam_learned_dia">DIA en lazo cerrado, tiene un significado diferente (tiempo hasta que se absorbe toda la insulina), comparado con la terapia clásica con bomba (tiempo hasta que se absorbe la mayor parte de la insulina)</string>
+    <string name="objectives_exam_learned_isf">Has aprendido el significado del valor ISF y cómo afecta a la cantidad de insulina utilizada para corregir la glucemia</string>
+    <string name="objectives_exam_learned_ic">Has aprendido el significado del valor IC y cómo afecta a la cantidad de insulina necesaria para cubrir los carbohidratos</string>
+    <string name="objectives_exam_learned_hypott">El objetivo temporal de hipoglucemia sólo se utiliza para evitar la sobrecorrección tras una hipo, cuando suele haber IOB negativa acumulada. Deben evaluarse acciones adicionales para evitar que esta situación se repita en el futuro.</string>
     <string name="objectives_exam_learned_profileswitch">El uso del porcentaje no afecta a los objetivos de glucemia, pero la basal, el ISF y el IC se ajustan para administrar más insulina (por encima del 100%%) o menos insulina (por debajo del 100%%)</string>
+    <string name="objectives_exam_learned_noisycgm">Cuando no puedas confiar en los valores del MCG, no debes utilizar el lazo sin supervisión</string>
+    <string name="objectives_exam_learned_cob">El cálculo del COB depende de la relación entre ISF e IC. Aumentar el ISF o disminuir el IC conducirá a tiempos de absorción más largos. Pero el cambio de perfil con cambios porcentuales no afecta al tiempo de absorción</string>
     <string name="answerdisabledto">Respuesta deshabilitada a: %1$s</string>
     <string name="wronganswer">Respuesta incorrecta!</string>
     <string name="unfinshed_button">Siguien&amp;te sin terminar</string>
