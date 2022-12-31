@@ -53,7 +53,15 @@
     <string name="objectives_exam_learned_ic">Has aprendido el significado del valor IC y cómo afecta a la cantidad de insulina necesaria para cubrir los carbohidratos</string>
     <string name="objectives_exam_learned_hypott">El objetivo temporal de hipoglucemia sólo se utiliza para evitar la sobrecorrección tras una hipo, cuando suele haber IOB negativa acumulada. Deben evaluarse acciones adicionales para evitar que esta situación se repita en el futuro.</string>
     <string name="objectives_exam_learned_profileswitch">El uso del porcentaje no afecta a los objetivos de glucemia, pero la basal, el ISF y el IC se ajustan para administrar más insulina (por encima del 100%%) o menos insulina (por debajo del 100%%)</string>
+    <string name="objectives_exam_learned_profileswitchtime">Utilizar el cambio de hora en el cambio de perfil, puede adaptar el perfil circadiano a irregularidades como despertarse tarde.</string>
+    <string name="objectives_exam_learned_profileswitch4">Editar perfil en sí mismo no es suficiente para hacer un cambio. Aún necesitas activar el perfil para aplicar los cambios</string>
+    <string name="objectives_exam_learned_exercise">Debe reducir la cantidad de insulina en el cuerpo al menos 1 hora antes de comenzar el ejercicio, seleccionando el perfil por debajo del 100%</string>
+    <string name="objectives_exam_learned_exercise2">Establecer un objetivo temporal más alto al menos 1 hora antes del ejercicio, también ayuda a reducir la cantidad de insulina en el cuerpo</string>
     <string name="objectives_exam_learned_noisycgm">Cuando no puedas confiar en los valores del MCG, no debes utilizar el lazo sin supervisión</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS debe saber que la bomba no está conectada para contar correctamente la insulina activa (IOB)</string>
+    <string name="objectives_exam_learned_insulin">Es necesario saber qué insulina hay en la bomba, porque afecta al cálculo de la insulina activa (IOB)</string>
+    <string name="objectives_exam_learned_sensitivity">La detección de la sensibilidad forma parte del algoritmo, que permite adaptar la dosis de insulina a diferentes situaciones</string>
+    <string name="objectives_exam_learned_objectives">Tu progreso en los objetivos se almacena junto con otras configuraciones y debe ser respaldado</string>
     <string name="objectives_exam_learned_cob">El cálculo del COB depende de la relación entre ISF e IC. Aumentar el ISF o disminuir el IC conducirá a tiempos de absorción más largos. Pero el cambio de perfil con cambios porcentuales no afecta al tiempo de absorción</string>
     <string name="answerdisabledto">Respuesta deshabilitada a: %1$s</string>
     <string name="wronganswer">Respuesta incorrecta!</string>
