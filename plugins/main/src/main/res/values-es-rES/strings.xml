@@ -351,4 +351,5 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
     <string name="old_data">DATOS CADUCADOS</string>
+    <string name="profile_message">Perfil:\n\nCambio de hora: %1$\nPorcentaje: %2$d%\"</string>
 </resources>
