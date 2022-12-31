@@ -351,5 +351,30 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu lazo</string>
     <string name="old_data">DATOS CADUCADOS</string>
+    <string name="pump_fetching_data">tratando de obtener datos de la bomba.</string>
+    <string name="pump_old_data">TDD: ¡Siguen siendo datos antiguos! No se puede cargar desde la bomba</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">h</string>
+    <string name="no_active_profile">Sin cambio de perfil activo</string>
     <string name="profile_message">Perfil:\n\nCambio de hora: %1$\nPorcentaje: %2$d%\"</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%</string>
+    <string name="no_profile">Ningún perfil cargado</string>
+    <string name="aps_only">Sólo se aplica en modo APS</string>
+    <string name="last_aps_result_na">¡Último resultado no disponible!</string>
+    <string name="loop_status_closed">LAZO CERRADO</string>
+    <string name="loop_status_open">LAZO ABIERTO</string>
+    <string name="loop_status_disabled">LAZO DESACTIVADO</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Última ejecución</string>
+    <string name="last_enact">Último acto</string>
+    <string name="today">Hoy</string>
+    <string name="weighted">ponderado</string>
+    <string name="target_only_aps_mode">¡Los objetivos sólo se aplican en modo APS!</string>
+    <string name="no_history">No hay datos históricos</string>
+    <string name="units_short">U</string>
+    <string name="temp_target">Objetivo temporal</string>
+    <string name="until">hasta</string>
+    <string name="default_range">RANGO POR DEFECTO</string>
+    <string name="target">objetivo</string>
+    <string name="rate_duration">Ratio: %1$.2fU/h (%2$.2f%) \nDuración %3$d% min</string>
 </resources>
