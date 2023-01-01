@@ -1,6 +1,7 @@
 package info.nightscout.comboctl.main
 
 import info.nightscout.comboctl.base.ApplicationLayer
+import info.nightscout.comboctl.base.ApplicationLayer.CMDDeliverBolusType
 import info.nightscout.comboctl.base.ApplicationLayer.CMDHistoryEventDetail
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothAddress
@@ -101,11 +102,11 @@ object RTCommandProgressStage {
      *
      * The amounts are given in 0.1 IU units. For example, "57" means 5.7 IU.
      *
-     * @property deliveredAmount How many units have been delivered so far.
+     * @property deliveredImmediateAmount How many units have been delivered so far.
      *           This is always <= totalAmount.
-     * @property totalAmount Total amount of bolus units.
+     * @property totalImmediateAmount Total amount of bolus units.
      */
-    data class DeliveringBolus(val deliveredAmount: Int, val totalAmount: Int) : ProgressStage("deliveringBolus")
+    data class DeliveringBolus(val deliveredImmediateAmount: Int, val totalImmediateAmount: Int) : ProgressStage("deliveringBolus")
 
     /**
      * TDD fetching history stage.
@@ -297,7 +298,7 @@ class Pump(
             BasicProgressStage.Finished,
             is BasicProgressStage.Aborted -> 1.0
             is RTCommandProgressStage.DeliveringBolus ->
-                stage.deliveredAmount.toDouble() / stage.totalAmount.toDouble()
+                stage.deliveredImmediateAmount.toDouble() / stage.totalImmediateAmount.toDouble()
             else -> 0.0
         }
     }
@@ -369,8 +370,11 @@ class Pump(
         val force100Percent: Boolean
     ) : CommandDescription()
     class DeliveringBolusCommandDesc(
-        val bolusAmount: Int,
-        val bolusReason: StandardBolusReason
+        val totalBolusAmount: Int,
+        val immediateBolusAmount: Int,
+        val durationInMinutes: Int,
+        val standardBolusReason: StandardBolusReason,
+        val bolusType: ApplicationLayer.CMDDeliverBolusType
     ) : CommandDescription()
 
     /**
@@ -410,27 +414,27 @@ class Pump(
     /**
      * Exception thrown when the bolus delivery was cancelled.
      *
-     * @param deliveredAmount Bolus amount that was delivered before the bolus was cancelled. In 0.1 IU units.
-     * @param totalAmount Total bolus amount that was supposed to be delivered. In 0.1 IU units.
+     * @param deliveredImmediateAmount Bolus amount that was delivered before the bolus was cancelled. In 0.1 IU units.
+     * @param totalImmediateAmount Total bolus amount that was supposed to be delivered. In 0.1 IU units.
      */
-    class BolusCancelledByUserException(val deliveredAmount: Int, totalAmount: Int) :
+    class BolusCancelledByUserException(val deliveredImmediateAmount: Int, totalImmediateAmount: Int) :
         BolusDeliveryException(
-            totalAmount,
-            "Bolus cancelled (delivered amount: ${deliveredAmount.toStringWithDecimal(1)} IU  " +
-            "total programmed amount: ${totalAmount.toStringWithDecimal(1)} IU"
+            totalImmediateAmount,
+            "Bolus cancelled (delivered amount: ${deliveredImmediateAmount.toStringWithDecimal(1)} IU  " +
+            "total programmed amount: ${totalImmediateAmount.toStringWithDecimal(1)} IU"
         )
 
     /**
      * Exception thrown when the bolus delivery was aborted due to an error.
      *
-     * @param deliveredAmount Bolus amount that was delivered before the bolus was aborted. In 0.1 IU units.
-     * @param totalAmount Total bolus amount that was supposed to be delivered.
+     * @param deliveredImmediateAmount Bolus amount that was delivered before the bolus was aborted. In 0.1 IU units.
+     * @param totalImmediateAmount Total bolus amount that was supposed to be delivered.
      */
-    class BolusAbortedDueToErrorException(deliveredAmount: Int, totalAmount: Int) :
+    class BolusAbortedDueToErrorException(deliveredImmediateAmount: Int, totalImmediateAmount: Int) :
         BolusDeliveryException(
-            totalAmount,
-            "Bolus aborted due to an error (delivered amount: ${deliveredAmount.toStringWithDecimal(1)} IU  " +
-            "total programmed amount: ${totalAmount.toStringWithDecimal(1)} IU"
+            totalImmediateAmount,
+            "Bolus aborted due to an error (delivered amount: ${deliveredImmediateAmount.toStringWithDecimal(1)} IU  " +
+            "total programmed amount: ${totalImmediateAmount.toStringWithDecimal(1)} IU"
         )
 
     /**
@@ -1409,51 +1413,94 @@ class Pump(
     val bolusDeliveryProgressFlow = bolusDeliveryProgressReporter.progressFlow
 
     /**
-     * Instructs the pump to deliver the specified bolus amount.
+     * Instructs the pump to deliver a standard bolus with the specified amount.
      *
-     * This function only delivers a standard bolus, no multi-wave / extended ones.
-     * It is currently not known how to command the Combo to deliver those types.
+     * This is equivalent to calling the full [deliverBolus] function with the bolus
+     * type set to [ApplicationLayer.CMDDeliverBolusType.STANDARD_BOLUS], a total
+     * bolus amount that is set to [bolusAmount], and the immediate amount and
+     * duration both set to 0.
      *
-     * The function suspends until the bolus was fully delivered or an error occurred.
-     * In the latter case, an exception is thrown. During the delivery, the current
-     * status is periodically retrieved from the pump. [bolusStatusUpdateIntervalInMs]
-     * controls the status update interval. At each update, the bolus state is checked
-     * (that is, whether it is delivering, or it is done, or an error occurred etc.)
-     * The bolus amount that was delivered by that point is communicated via the
-     * [bolusDeliveryProgressFlow].
-     *
-     * To cancel the bolus, simply cancel the coroutine that is suspended by this function.
-     *
-     * Prior to the delivery, the number of units available in the reservoir is checked
-     * by looking at [statusFlow]. If there aren't enough IU in the reservoir, this
-     * function throws [InsufficientInsulinAvailableException].
-     *
-     * After the delivery, this function looks at the Combo's bolus history delta. That
-     * delta is expected to contain exactly one entry - the bolus that was just delivered.
-     * The details in that history delta entry are then emitted as
-     * [Event.StandardBolusInfused] via [onEvent].
-     * If there is no entry, [BolusNotDeliveredException] is thrown. If more than one
-     * bolus entry is detected, [UnaccountedBolusDetectedException] is thrown (this
-     * second case is not expected to ever happen, but is possible in theory). The
-     * history delta is looked at even if an exception is thrown (unless it is one
-     * of the exceptions that were just mentioned). This is because if there is an
-     * error _during_ a bolus delivery, then some insulin might have still be
-     * delivered, and there will be a [Event.StandardBolusInfused] history entry,
-     * probably just not with the insulin amount that was originally planned.
-     * It is still important to report that (partial) delivery, which is done
-     * via [onEvent] just as described above.
-     *
-     * Once that is completed, this function calls [updateStatus] to make sure the
-     * contents of [statusFlow] are up-to-date. A bolus delivery will at least
-     * change the value of [Status.availableUnitsInReservoir] (unless perhaps it
-     * is a very small bolus like 0.1 IU, since that value is given in whole IU units).
-     *
-     * @param bolusAmount Bolus amount to deliver. Note that this is given
-     *   in 0.1 IU units, so for example, "57" means 5.7 IU. Valid range
-     *   is 0.0 IU to 25.0 IU (that is, integer values 0-250).
+     * @param bolusAmount Amount of insulin units the standard bolus shall deliver.
      * @param bolusReason Reason for this standard bolus.
      * @param bolusStatusUpdateIntervalInMs Interval between status updates,
      *   in milliseconds. Must be at least 1
+     */
+    suspend fun deliverBolus(
+        bolusAmount: Int,
+        bolusReason: StandardBolusReason,
+        bolusStatusUpdateIntervalInMs: Long = 250
+    ) = deliverBolus(
+        totalBolusAmount = bolusAmount,
+        immediateBolusAmount = 0,
+        durationInMinutes = 0,
+        standardBolusReason = bolusReason,
+        bolusType = ApplicationLayer.CMDDeliverBolusType.STANDARD_BOLUS,
+        bolusStatusUpdateIntervalInMs = bolusStatusUpdateIntervalInMs
+    )
+
+    /**
+     * Instructs the pump to deliver a bolus.
+     *
+     * The function suspends until the immediate portion of the bolus was fully delivered,
+     * or when an error occurred. In the latter case, an exception is thrown.
+     *
+     * The bolus delivey is split in two parts: the immediate portion and the extended
+     * portion. The immediate portion is infused right away, as fast as the Combo is able
+     * to do so. The extended portion is delivered over the specified [durationInMinutes],
+     * and behaves much like a TBR.
+     *
+     * During the delivery of the immediate portion, the current status is periodically
+     * retrieved from the pump. [bolusStatusUpdateIntervalInMs] controls the status update
+     * interval. At each update, the bolus state is checked (that is, whether it is delivering,
+     * or whethr it is done, or an error occurred etc.) The bolus amount that was delivered
+     * by that point is communicated via the [bolusDeliveryProgressFlow].
+     *
+     * To cancel the immediate delivery of the bolus, simply cancel the coroutine that is
+     * suspended by this function.
+     *
+     * IMPORTANT: The extended portion _cannot_ be canceled that way; there is no way of
+     * doing that other than for the Combo to be stopped and started again.
+     *
+     * Prior to the delivery, the number of units available in the reservoir is checked
+     * by looking at [statusFlow] and compared against [totalBolusAmount]. If there aren't
+     * enough IU in the reservoir, this function throws [InsufficientInsulinAvailableException].
+     *
+     * After the delivery, this function looks at the Combo's bolus history delta. That
+     * delta is expected to contain exactly one entry - the bolus that was just delivered
+     * or started (depending on the bolus type). The details in that history delta entry
+     * are then emitted via [onEvent] as [Event.StandardBolusInfused] for a standard bolus.
+     * Extended boluses generate [Event.ExtendedBolusStarted]. Likewise, multiwave boluses
+     * generate [Event.MultiwaveBolusStarted].
+     *
+     * If there is no entry, [BolusNotDeliveredException] is thrown. If a standard bolus
+     * was delivered, and more than one bolus entry is detected, [UnaccountedBolusDetectedException]
+     * is thrown. The history delta is looked at even if an exception is thrown (unless
+     * it is one of the exceptions that were just mentioned). This is because if there is
+     * an error _during_ an immediate delivery, then some insulin might have still been
+     * delivered, and there will be a corresponding history entry, probably just not with
+     * the insulin amount that was originally planned. It is still important to report
+     * that (partial) delivery, which is done with [onEvent] just as described above.
+     *
+     * Once that is completed, this function calls [updateStatus] to make sure the contents
+     * of [statusFlow] are up-to-date. A bolus delivery will at least change the value of
+     * [Status.availableUnitsInReservoir] (unless perhaps it is a very small bolus like
+     * 0.1 IU, since the reservoir level is given inwhole IU units).
+     *
+     * @param totalBolusAmount Total bolus amount to deliver (that is, the sum of the immediate
+     * and extended portions). Note that this is given in 0.1 IU units, so for example,
+     *   "57" means 5.7 IU. Valid range is 0.0 IU to 25.0 IU (that is, integer values 0-250).
+     * @param immediateBolusAmount The amount to deliver immediately. This is only used
+     *   [bolusType] is [CMDDeliverBolusType.MULTIWAVE_BOLUS], and is ignored otherwise.
+     *   When delivering a multiwave bolus, this value must be >= 1 and < [totalBolusAmount].
+     * @param durationInMinutes The duration of the extended bolus or the extended portion
+     *   of the multiwave bolus. If [bolusType] is set to [CMDDeliverBolusType.STANDARD_BOLUS],
+     *   this value is ignored. Otherwise, it must be at least 15. Maximum possible value
+     *   is 720 (= 12 hours).
+     * @param standardBolusReason Reason for the standard bolus. If [bolusType] is not
+     *   [CMDDeliverBolusType.STANDARD_BOLUS], this value is ignored.
+     * @param bolusType Type of the bolus.
+     * @param bolusStatusUpdateIntervalInMs Interval between status updates,
+     *   in milliseconds. Must be at least 1.
      * @throws BolusNotDeliveredException if the pump did not deliver the bolus.
      *   This typically happens because the pump is currently stopped.
      * @throws BolusCancelledByUserException when the bolus was cancelled by the user.
@@ -1463,26 +1510,75 @@ class Pump(
      *   more than one bolus is reported in the Combo's bolus history delta.
      * @throws InsufficientInsulinAvailableException if the reservoir does not
      *   have enough IUs left for this bolus.
-     * @throws IllegalArgumentException if [bolusAmount] is not in the 0-250 range,
-     *   or if [bolusStatusUpdateIntervalInMs] is less than 1.
+     * @throws IllegalArgumentException if [totalBolusAmount] is not in the 0-250 range, or
+     *   if [bolusStatusUpdateIntervalInMs] is less than 1, or if [immediateBolusAmount] exceeds
+     *   [totalBolusAmount] when delivering a multiwave bolus, or if [durationInMinutes] is <15
+     *   when [bolusType] is set to anything other than [CMDDeliverBolusType.STANDARD_BOLUS].
      * @throws IllegalStateException if the current state is not
      *   [State.ReadyForCommands].
      * @throws AlertScreenException if alerts occurs during this call, and they
      *   aren't a W6 warning (those are handled by this function).
      */
-    suspend fun deliverBolus(bolusAmount: Int, bolusReason: StandardBolusReason, bolusStatusUpdateIntervalInMs: Long = 250) = executeCommand(
+    suspend fun deliverBolus(
+        totalBolusAmount: Int,
+        immediateBolusAmount: Int,
+        durationInMinutes: Int,
+        standardBolusReason: StandardBolusReason,
+        bolusType: ApplicationLayer.CMDDeliverBolusType,
+        bolusStatusUpdateIntervalInMs: Long = 250
+    ) = executeCommand(
         // Instruct executeCommand() to not set the mode on its own.
         // This function itself switches manually between the
         // command and remote terminal modes.
         pumpMode = null,
         isIdempotent = false,
-        description = DeliveringBolusCommandDesc(bolusAmount, bolusReason)
+        description = DeliveringBolusCommandDesc(
+            totalBolusAmount,
+            immediateBolusAmount,
+            durationInMinutes,
+            standardBolusReason,
+            bolusType
+        )
     ) {
-        require((bolusAmount > 0) && (bolusAmount <= 250)) {
-            "Invalid bolus amount $bolusAmount (${bolusAmount.toStringWithDecimal(1)} IU)"
+        require((totalBolusAmount > 0) && (totalBolusAmount <= 250)) {
+            "Invalid bolus amount $totalBolusAmount (${totalBolusAmount.toStringWithDecimal(1)} IU)"
         }
         require(bolusStatusUpdateIntervalInMs >= 1) {
             "Invalid bolus status update interval $bolusStatusUpdateIntervalInMs"
+        }
+
+        when (bolusType) {
+            CMDDeliverBolusType.STANDARD_BOLUS -> Unit
+
+            CMDDeliverBolusType.EXTENDED_BOLUS ->
+                require(
+                    (durationInMinutes >= 15) &&
+                    (durationInMinutes <= 720) &&
+                    ((durationInMinutes % 15) == 0)
+                ) {
+                    "extended bolus duration must be in the 15-720 range and an integer multiple of 15; " +
+                    "actual duration: $durationInMinutes"
+                }
+
+            CMDDeliverBolusType.MULTIWAVE_BOLUS -> {
+                require(
+                    (durationInMinutes >= 15) &&
+                    (durationInMinutes <= 720) &&
+                    ((durationInMinutes % 15) == 0)
+                ) {
+                    "multiwave bolus duration must be in the 15-720 range and an integer multiple of 15; " +
+                    "actual duration: $durationInMinutes"
+                }
+                require(immediateBolusAmount >= 1) {
+                    "immediate bolus portion of multiwave bolus must be at least 0.1 IU; actual" +
+                    "amount: ${immediateBolusAmount.toStringWithDecimal(1)}"
+                }
+                require(immediateBolusAmount < totalBolusAmount) {
+                    "immediate bolus duration must be < total bolus amount; actual immediate/total " +
+                    "amount: ${immediateBolusAmount.toStringWithDecimal(1)}" +
+                    " / ${totalBolusAmount.toStringWithDecimal(1)}"
+                }
+            }
         }
 
         // Check that there's enough insulin in the reservoir.
@@ -1495,25 +1591,30 @@ class Pump(
             // IU units, we'd truncate the 0.3 IU from the bolus, and the check
             // would think that it's OK, because the reservoir has 1 IU. If we instead
             // round up, any fractional IU will be taken into account correctly.
-            val roundedBolusIU = (bolusAmount + 9) / 10
+            val roundedBolusIU = (totalBolusAmount + 9) / 10
             logger(LogLevel.DEBUG) {
                 "Checking if there is enough insulin in reservoir; reservoir fill level: " +
-                "${status.availableUnitsInReservoir} IU; bolus amount: ${bolusAmount.toStringWithDecimal(1)} IU" +
+                "${status.availableUnitsInReservoir} IU; bolus amount: ${totalBolusAmount.toStringWithDecimal(1)} IU" +
                 "(rounded: $roundedBolusIU IU)"
             }
             if (status.availableUnitsInReservoir < roundedBolusIU)
-                throw InsufficientInsulinAvailableException(bolusAmount, status.availableUnitsInReservoir)
+                throw InsufficientInsulinAvailableException(totalBolusAmount, status.availableUnitsInReservoir)
         } ?: throw IllegalStateException("Cannot deliver bolus without a known pump status")
 
         // Switch to COMMAND mode for the actual bolus delivery
         // and for tracking the bolus progress below.
         pumpIO.switchMode(PumpIO.Mode.COMMAND)
 
-        logger(LogLevel.DEBUG) { "Beginning bolus delivery of ${bolusAmount.toStringWithDecimal(1)} IU" }
-        val didDeliver = pumpIO.deliverCMDStandardBolus(bolusAmount)
+        logger(LogLevel.DEBUG) { "Beginning bolus delivery of ${totalBolusAmount.toStringWithDecimal(1)} IU" }
+        val didDeliver = pumpIO.deliverCMDStandardBolus(
+            totalBolusAmount,
+            immediateBolusAmount,
+            durationInMinutes,
+            bolusType
+        )
         if (!didDeliver) {
             logger(LogLevel.ERROR) { "Bolus delivery did not commence" }
-            throw BolusNotDeliveredException(bolusAmount)
+            throw BolusNotDeliveredException(totalBolusAmount)
         }
 
         bolusDeliveryProgressReporter.reset(Unit)
@@ -1522,47 +1623,59 @@ class Pump(
 
         var bolusFinishedCompletely = false
 
-        // The Combo does not send bolus progress information on its own. Instead,
-        // we have to regularly poll the current bolus status. Do that in this loop.
-        // The bolusStatusUpdateIntervalInMs value controls how often we poll.
         try {
-            while (true) {
-                delay(bolusStatusUpdateIntervalInMs)
+            // The Combo does not send immediate bolus delivery information on its own.
+            // Instead, we have to regularly poll the current bolus status. Do that in
+            // this loop. The bolusStatusUpdateIntervalInMs value controls how often we
+            // poll. Only do this for standard and multiwave boluses, since the extended
+            // bolus has no immediate delivery portion.
 
-                val status = pumpIO.getCMDCurrentBolusDeliveryStatus()
+            if (bolusType != CMDDeliverBolusType.EXTENDED_BOLUS) {
+                val expectedImmediateAmount = if (bolusType == CMDDeliverBolusType.STANDARD_BOLUS)
+                    totalBolusAmount
+                else
+                    immediateBolusAmount
 
-                logger(LogLevel.VERBOSE) { "Got current bolus delivery status: $status" }
+                while (true) {
+                    delay(bolusStatusUpdateIntervalInMs)
 
-                val deliveredAmount = when (status.deliveryState) {
-                    ApplicationLayer.CMDBolusDeliveryState.DELIVERING -> bolusAmount - status.remainingAmount
-                    ApplicationLayer.CMDBolusDeliveryState.DELIVERED -> bolusAmount
-                    ApplicationLayer.CMDBolusDeliveryState.CANCELLED_BY_USER -> {
-                        logger(LogLevel.DEBUG) { "Bolus cancelled by user" }
-                        throw BolusCancelledByUserException(
-                            deliveredAmount = bolusAmount - status.remainingAmount,
-                            totalAmount = bolusAmount
-                        )
+                    val status = pumpIO.getCMDCurrentBolusDeliveryStatus()
+
+                    logger(LogLevel.VERBOSE) { "Got current bolus delivery status: $status" }
+
+                    val deliveredAmount = when (status.deliveryState) {
+                        ApplicationLayer.CMDBolusDeliveryState.DELIVERING -> expectedImmediateAmount - status.remainingAmount
+                        ApplicationLayer.CMDBolusDeliveryState.DELIVERED -> expectedImmediateAmount
+                        ApplicationLayer.CMDBolusDeliveryState.CANCELLED_BY_USER -> {
+                            logger(LogLevel.DEBUG) { "Bolus cancelled by user" }
+                            throw BolusCancelledByUserException(
+                                deliveredImmediateAmount = expectedImmediateAmount - status.remainingAmount,
+                                totalImmediateAmount = expectedImmediateAmount
+                            )
+                        }
+
+                        ApplicationLayer.CMDBolusDeliveryState.ABORTED_DUE_TO_ERROR -> {
+                            logger(LogLevel.ERROR) { "Bolus aborted due to a delivery error" }
+                            throw BolusAbortedDueToErrorException(
+                                deliveredImmediateAmount = expectedImmediateAmount - status.remainingAmount,
+                                totalImmediateAmount = expectedImmediateAmount
+                            )
+                        }
+
+                        else -> continue
                     }
-                    ApplicationLayer.CMDBolusDeliveryState.ABORTED_DUE_TO_ERROR -> {
-                        logger(LogLevel.ERROR) { "Bolus aborted due to a delivery error" }
-                        throw BolusAbortedDueToErrorException(
-                            deliveredAmount = bolusAmount - status.remainingAmount,
-                            totalAmount = bolusAmount
-                        )
-                    }
-                    else -> continue
-                }
 
-                bolusDeliveryProgressReporter.setCurrentProgressStage(
-                    RTCommandProgressStage.DeliveringBolus(
-                        deliveredAmount = deliveredAmount,
-                        totalAmount = bolusAmount
+                    bolusDeliveryProgressReporter.setCurrentProgressStage(
+                        RTCommandProgressStage.DeliveringBolus(
+                            deliveredImmediateAmount = deliveredAmount,
+                            totalImmediateAmount = expectedImmediateAmount
+                        )
                     )
-                )
 
-                if (deliveredAmount >= bolusAmount) {
-                    bolusDeliveryProgressReporter.setCurrentProgressStage(BasicProgressStage.Finished)
-                    break
+                    if (deliveredAmount >= expectedImmediateAmount) {
+                        bolusDeliveryProgressReporter.setCurrentProgressStage(BasicProgressStage.Finished)
+                        break
+                    }
                 }
             }
 
@@ -1612,37 +1725,68 @@ class Pump(
                 if (historyDelta.isEmpty()) {
                     if (bolusFinishedCompletely) {
                         logger(LogLevel.ERROR) { "Bolus delivery did not actually occur" }
-                        throw BolusNotDeliveredException(bolusAmount)
+                        throw BolusNotDeliveredException(totalBolusAmount)
                     }
                 } else {
-                    var numStandardBolusInfusedEntries = 0
+                    var numRelevantBolusEntries = 0
                     var unexpectedBolusEntriesDetected = false
                     scanHistoryDeltaForBolusToEmit(
                         historyDelta,
-                        reasonForLastStandardBolusInfusion = bolusReason
+                        reasonForLastStandardBolusInfusion = standardBolusReason
                     ) { entry ->
-                        when (val detail = entry.detail) {
-                            is CMDHistoryEventDetail.StandardBolusInfused -> {
-                                numStandardBolusInfusedEntries++
-                                if (numStandardBolusInfusedEntries > 1)
-                                    unexpectedBolusEntriesDetected = true
-                            }
+                        when (bolusType) {
+                            CMDDeliverBolusType.STANDARD_BOLUS ->
+                                when (val detail = entry.detail) {
+                                    is CMDHistoryEventDetail.StandardBolusInfused -> {
+                                        numRelevantBolusEntries++
+                                        if (numRelevantBolusEntries > 1)
+                                            unexpectedBolusEntriesDetected = true
+                                    }
 
-                            // We ignore this. It always accompanies StandardBolusInfused.
-                            is CMDHistoryEventDetail.StandardBolusRequested ->
-                                Unit
+                                    // We ignore this. It always accompanies StandardBolusInfused.
+                                    is CMDHistoryEventDetail.StandardBolusRequested ->
+                                        Unit
 
-                            else -> {
-                                if (detail.isBolusDetail)
-                                    unexpectedBolusEntriesDetected = true
-                            }
+                                    else -> {
+                                        if (detail.isBolusDetail)
+                                            unexpectedBolusEntriesDetected = true
+                                    }
+                                }
+
+                            CMDDeliverBolusType.EXTENDED_BOLUS ->
+                                when (val detail = entry.detail) {
+                                    is CMDHistoryEventDetail.ExtendedBolusStarted -> {
+                                        numRelevantBolusEntries++
+                                        if (numRelevantBolusEntries > 1)
+                                            unexpectedBolusEntriesDetected = true
+                                    }
+
+                                    else -> {
+                                        if (detail.isBolusDetail)
+                                            unexpectedBolusEntriesDetected = true
+                                    }
+                                }
+
+                            CMDDeliverBolusType.MULTIWAVE_BOLUS ->
+                                when (val detail = entry.detail) {
+                                    is CMDHistoryEventDetail.MultiwaveBolusStarted -> {
+                                        numRelevantBolusEntries++
+                                        if (numRelevantBolusEntries > 1)
+                                            unexpectedBolusEntriesDetected = true
+                                    }
+
+                                    else -> {
+                                        if (detail.isBolusDetail)
+                                            unexpectedBolusEntriesDetected = true
+                                    }
+                                }
                         }
                     }
 
                     if (bolusFinishedCompletely) {
-                        if (numStandardBolusInfusedEntries == 0) {
-                            logger(LogLevel.ERROR) { "History delta did not contain an entry about bolus infusion" }
-                            throw BolusNotDeliveredException(bolusAmount)
+                        if (numRelevantBolusEntries == 0) {
+                            logger(LogLevel.ERROR) { "History delta did not contain an entry about bolus delivery" }
+                            throw BolusNotDeliveredException(totalBolusAmount)
                         } else if (unexpectedBolusEntriesDetected) {
                             logger(LogLevel.ERROR) { "History delta contained unexpected additional bolus entries" }
                             throw UnaccountedBolusDetectedException()
