@@ -1004,7 +1004,9 @@ suspend fun navigateToRTScreen(
         // when remaining TBR duration is shown on the main screen and the
         // duration happens to change during this loop. If this occurs,
         // skip the redundant screen.
-        if ((previousScreenType != null) && (previousScreenType == parsedScreen::class)) {
+        if ((parsedScreen::class != ParsedScreen.UnrecognizedScreen::class) &&
+            (previousScreenType != null) &&
+            (previousScreenType == parsedScreen::class)) {
             logger(LogLevel.DEBUG) { "Got a screen of the same type ${parsedScreen::class}; skipping" }
             continue
         }
