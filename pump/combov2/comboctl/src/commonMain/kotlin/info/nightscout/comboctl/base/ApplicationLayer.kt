@@ -394,21 +394,25 @@ object ApplicationLayer {
         ) : CMDHistoryEventDetail(isBolusDetail = true)
         data class ExtendedBolusStarted(
             val totalBolusAmount: Int,
-            val totalDurationMinutes: Int
+            val totalDurationMinutes: Int,
+            val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
         data class ExtendedBolusEnded(
             val totalBolusAmount: Int,
-            val totalDurationMinutes: Int
+            val totalDurationMinutes: Int,
+            val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
         data class MultiwaveBolusStarted(
             val totalBolusAmount: Int,
             val immediateBolusAmount: Int,
-            val totalDurationMinutes: Int
+            val totalDurationMinutes: Int,
+            val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
         data class MultiwaveBolusEnded(
             val totalBolusAmount: Int,
             val immediateBolusAmount: Int,
-            val totalDurationMinutes: Int
+            val totalDurationMinutes: Int,
+            val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
         data class NewDateTimeSet(val dateTime: LocalDateTime) : CMDHistoryEventDetail(isBolusDetail = false)
     }
@@ -1382,6 +1386,11 @@ object ApplicationLayer {
             // All bolus amounts are recorded as an integer that got multiplied by 10.
             // For example, an amount of 3.7 IU is recorded as the 16-bit integer 37.
 
+            // NOTE: "Manual" means that the user manually administered the bolus
+            // on the pump itself, with the pump's buttons. So, manual == false
+            // specifies that the bolus was given off programmatically (that is,
+            // through the CMD_DELIVER_BOLUS command).
+
             val eventDetail = when (eventTypeId) {
                 // Quick bolus.
                 4, 5 -> {
@@ -1406,34 +1415,38 @@ object ApplicationLayer {
                 }
 
                 // Extended bolus.
-                8, 9 -> {
+                8, 9, 16, 17 -> {
                     // Total bolus amount is recorded in the first 2 detail bytes as a 16-bit little endian integer.
                     val totalBolusAmount = (detailBytes[1].toPosInt() shl 8) or detailBytes[0].toPosInt()
                     // Total duration in minutes is recorded in the next 2 detail bytes as a 16-bit little endian integer.
                     val totalDurationMinutes = (detailBytes[3].toPosInt() shl 8) or detailBytes[2].toPosInt()
-                    // Event type ID 8 = bolus started. ID 9 = bolus ended.
-                    val started = (eventTypeId == 8)
+                    // Event type IDs 8 or 16 = bolus started. IDs 9 or 17 = bolus ended.
+                    val started = (eventTypeId == 8) || (eventTypeId == 16)
+                    val manual = (eventTypeId == 8) || (eventTypeId == 9)
 
                     logger(LogLevel.DEBUG) {
-                        "Detail info: got history event \"extended bolus ${if (started) "started" else "ended"}\" " +
-                                "with total amount of ${totalBolusAmount.toFloat() / 10} IU and " +
-                                "total duration of $totalDurationMinutes minutes"
+                        "Detail info: got history event \"${if (manual) "manual" else "automatic"} " +
+                        "extended bolus ${if (started) "started" else "ended"}\" " +
+                        "with total amount of ${totalBolusAmount.toFloat() / 10} IU and " +
+                        "total duration of $totalDurationMinutes minutes"
                     }
 
                     if (started)
                         CMDHistoryEventDetail.ExtendedBolusStarted(
                             totalBolusAmount = totalBolusAmount,
-                            totalDurationMinutes = totalDurationMinutes
+                            totalDurationMinutes = totalDurationMinutes,
+                            manual = manual
                         )
                     else
                         CMDHistoryEventDetail.ExtendedBolusEnded(
                             totalBolusAmount = totalBolusAmount,
-                            totalDurationMinutes = totalDurationMinutes
+                            totalDurationMinutes = totalDurationMinutes,
+                            manual = manual
                         )
                 }
 
                 // Multiwave bolus.
-                10, 11 -> {
+                10, 11, 18, 19 -> {
                     // All 8 bits of first byte + 2 LSB of second byte: bolus amount.
                     // 6 MSB of second byte + 4 LSB of third byte: immediate bolus amount.
                     // 4 MSB of third byte + all 8 bits of fourth byte: duration in minutes.
@@ -1442,27 +1455,31 @@ object ApplicationLayer {
                             ((detailBytes[1].toPosInt() and 0b11111100) ushr 2)
                     val totalDurationMinutes = (detailBytes[3].toPosInt() shl 4) or
                             ((detailBytes[2].toPosInt() and 0b11110000) ushr 4)
-                    // Event type ID 10 = bolus started. ID 11 = bolus ended.
-                    val started = (eventTypeId == 10)
+                    // Event type IDs 10 or 18 = bolus started. IDs 11 or 19 = bolus ended.
+                    val started = (eventTypeId == 10) || (eventTypeId == 18)
+                    val manual = (eventTypeId == 10) || (eventTypeId == 11)
 
                     logger(LogLevel.DEBUG) {
-                        "Detail info: got history event \"multiwave bolus ${if (started) "started" else "ended"}\" " +
-                                "with total amount of ${totalBolusAmount.toFloat() / 10} IU, " +
-                                "immediate amount of ${immediateBolusAmount.toFloat() / 10} IU, " +
-                                "and total duration of $totalDurationMinutes minutes"
+                        "Detail info: got history event \"${if (manual) "manual" else "automatic"} " +
+                        "multiwave bolus ${if (started) "started" else "ended"}\" " +
+                        "with total amount of ${totalBolusAmount.toFloat() / 10} IU, " +
+                        "immediate amount of ${immediateBolusAmount.toFloat() / 10} IU, " +
+                        "and total duration of $totalDurationMinutes minutes"
                     }
 
                     if (started)
                         CMDHistoryEventDetail.MultiwaveBolusStarted(
                             totalBolusAmount = totalBolusAmount,
                             immediateBolusAmount = immediateBolusAmount,
-                            totalDurationMinutes = totalDurationMinutes
+                            totalDurationMinutes = totalDurationMinutes,
+                            manual = manual
                         )
                     else
                         CMDHistoryEventDetail.MultiwaveBolusEnded(
                             totalBolusAmount = totalBolusAmount,
                             immediateBolusAmount = immediateBolusAmount,
-                            totalDurationMinutes = totalDurationMinutes
+                            totalDurationMinutes = totalDurationMinutes,
+                            manual = manual
                         )
                 }
 
@@ -1471,10 +1488,6 @@ object ApplicationLayer {
                     // Bolus amount is recorded in the first 2 detail bytes as a 16-bit little endian integer.
                     val bolusAmount = (detailBytes[1].toPosInt() shl 8) or detailBytes[0].toPosInt()
                     // Events with type IDs 6 and 7 indicate manual infusion.
-                    // NOTE: "Manual" means that the user manually administered the bolus
-                    // on the pump itself, with the pump's buttons. So, manual == false
-                    // specifies that the bolus was given off programmatically (that is,
-                    // through the CMD_DELIVER_BOLUS command).
                     val manual = (eventTypeId == 6) || (eventTypeId == 7)
                     // Events with type IDs 6 and 14 indicate that a bolus was requested, while
                     // events with type IDs 7 and 15 indicate that a bolus was infused (= finished).
