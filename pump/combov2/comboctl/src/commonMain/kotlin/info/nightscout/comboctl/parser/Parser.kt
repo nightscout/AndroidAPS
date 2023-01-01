@@ -1416,7 +1416,7 @@ class ExtendedAndMultiwaveBolusMainScreenParser : Parser() {
         }
 
         val batteryState = batteryStateFromSymbol(
-            if (parseResult.size >= 7) parseResult.valueAt<Glyph.SmallSymbol>(5).symbol else null
+            if (parseResult.size >= 7) parseResult.valueAt<Glyph.SmallSymbol>(6).symbol else null
         )
 
         val remainingBolusDuration = parseResult.valueAt<LocalDateTime>(0)
