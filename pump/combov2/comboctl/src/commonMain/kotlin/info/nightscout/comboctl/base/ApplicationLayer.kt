@@ -524,14 +524,18 @@ object ApplicationLayer {
     )
 
     /**
-     * Possible bolus types used in COMMAND mode commands.
+     * Possible immediate bolus types used in COMMAND mode commands.
+     *
+     * "Immediate" means that the bolus gets delivered immediately once the command is sent.
+     * A standard bolus only has an immediate delivery, an extended bolus has none, and
+     * a multiwave bolus is partially made up of an immediate and an extended delivery.
      */
-    enum class CMDBolusType(val id: Int) {
+    enum class CMDImmediateBolusType(val id: Int) {
         STANDARD(0x47),
         MULTI_WAVE(0xB7);
 
         companion object {
-            private val values = CMDBolusType.values()
+            private val values = CMDImmediateBolusType.values()
             fun fromInt(value: Int) = values.firstOrNull { it.id == value }
         }
     }
@@ -565,7 +569,7 @@ object ApplicationLayer {
      *            "57" means 5.7 IU.
      */
     data class CMDBolusDeliveryStatus(
-        val bolusType: CMDBolusType,
+        val bolusType: CMDImmediateBolusType,
         val deliveryState: CMDBolusDeliveryState,
         val remainingAmount: Int
     )
@@ -1068,7 +1072,7 @@ object ApplicationLayer {
      * @param bolusType The type of the bolus to cancel.
      * @return The produced packet.
      */
-    fun createCMDCancelBolusPacket(bolusType: CMDBolusType) = Packet(
+    fun createCMDCancelBolusPacket(bolusType: CMDImmediateBolusType) = Packet(
         command = Command.CMD_CANCEL_BOLUS,
         payload = byteArrayListOfInts(bolusType.id)
     )
@@ -1477,7 +1481,7 @@ object ApplicationLayer {
         val payload = packet.payload
 
         val bolusTypeInt = payload[2].toPosInt()
-        val bolusType = CMDBolusType.fromInt(bolusTypeInt)
+        val bolusType = CMDImmediateBolusType.fromInt(bolusTypeInt)
             ?: throw PayloadDataCorruptionException(
                 packet,
                 "Invalid bolus type ${bolusTypeInt.toHexString(2, true)}"

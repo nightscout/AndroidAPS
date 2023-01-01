@@ -1038,7 +1038,7 @@ class PumpIO(
         // TODO: Test that this function does the expected thing
         // when no bolus is actually ongoing.
         val packet = sendPacketWithResponse(
-            ApplicationLayer.createCMDCancelBolusPacket(ApplicationLayer.CMDBolusType.STANDARD),
+            ApplicationLayer.createCMDCancelBolusPacket(ApplicationLayer.CMDImmediateBolusType.STANDARD),
             ApplicationLayer.Command.CMD_CANCEL_BOLUS_RESPONSE
         )
 
