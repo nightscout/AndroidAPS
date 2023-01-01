@@ -1000,8 +1000,18 @@ object ApplicationLayer {
         command = Command.CMD_GET_BOLUS_STATUS
     )
 
+    enum class CMDDeliverBolusType {
+        STANDARD_BOLUS,
+        EXTENDED_BOLUS,
+        MULTIWAVE_BOLUS
+    }
+
     /**
-     * Creates a CMD_DELIVER_BOLUS packet.
+     * Creates a CMD_DELIVER_BOLUS packet for a standard bolus.
+     *
+     * This is equivalent to calling the full [createCMDDeliverBolusPacket] function
+     * with bolusType set to [CMDDeliverBolusType.STANDARD_BOLUS]. The [bolusAmount]
+     * argument here is passed as the full function's totalBolusAmount argument.
      *
      * The command mode must have been activated before this can be sent to the Combo.
      *
@@ -1012,45 +1022,124 @@ object ApplicationLayer {
      *        "57" means 5.7 IU.
      * @return The produced packet.
      */
-    fun createCMDDeliverBolusPacket(bolusAmount: Int): Packet {
+    fun createCMDDeliverBolusPacket(bolusAmount: Int) =
+        createCMDDeliverBolusPacket(
+            totalBolusAmount = bolusAmount,
+            immediateBolusAmount = 0,
+            durationInMinutes = 0,
+            bolusType = CMDDeliverBolusType.STANDARD_BOLUS
+        )
+
+    /**
+     * Creates a CMD_DELIVER_BOLUS packet.
+     *
+     * The command mode must have been activated before this can be sent to the Combo.
+     *
+     * See the combo-comm-spec.adoc file for details about this packet.
+     *
+     * @param totalBolusAmount Total amount of insulin to use for the bolus.
+     *   Note that this is given in 0.1 IU units, so for example, "57" means 5.7 IU.
+     * @param immediateBolusAmount The amount of insulin units to use for the
+     *   immediate portion of a multiwave bolus. This value is only used if
+     *   [bolusType] is [CMDDeliverBolusType.MULTIWAVE_BOLUS]. This
+     *   value must be <= [totalBolusAmount].
+     * @param durationInMinutes The duration of the extended bolus or the
+     *   extended portion of the multiwave bolus. If [bolusType] is set to
+     *   [CMDDeliverBolusType.STANDARD_BOLUS], this value is ignored.
+     *   Otherwise, it must be at least 15.
+     * @param bolusType Type of the bolus.
+     * @return The produced packet.
+     * @throws IllegalArgumentException if [immediateBolusAmount] exceeds
+     *   [totalBolusAmount], or if [durationInMinutes] is <15 when [bolusType]
+     *   is set to anything other than [CMDDeliverBolusType.STANDARD_BOLUS].
+     */
+    fun createCMDDeliverBolusPacket(
+        totalBolusAmount: Int,
+        immediateBolusAmount: Int,
+        durationInMinutes: Int,
+        bolusType: CMDDeliverBolusType
+    ): Packet {
+        // Values that aren't used for the particular bolus type are set to 0
+        // since we don't know what happens if we transmit a nonzero value to
+        // the Combo with these bolus types.
+        val (effectiveImmediateBolusAmount, effectiveDurationInMinutes) = when (bolusType) {
+            CMDDeliverBolusType.STANDARD_BOLUS -> Pair(0, 0)
+            CMDDeliverBolusType.EXTENDED_BOLUS -> Pair(0, durationInMinutes)
+            CMDDeliverBolusType.MULTIWAVE_BOLUS -> Pair(immediateBolusAmount, durationInMinutes)
+        }
+
+        // Apply argument requirement checks, depending on the bolus type.
+        when (bolusType) {
+            CMDDeliverBolusType.STANDARD_BOLUS -> Unit
+
+            CMDDeliverBolusType.EXTENDED_BOLUS ->
+                require(effectiveDurationInMinutes >= 15) {
+                    "extended bolus duration must be at least 15; actual duration: $effectiveDurationInMinutes"
+                }
+
+            CMDDeliverBolusType.MULTIWAVE_BOLUS -> {
+                require(effectiveDurationInMinutes >= 15) {
+                    "multiwave bolus duration must be at least 15; actual duration: $effectiveDurationInMinutes"
+                }
+                require(immediateBolusAmount <= totalBolusAmount) {
+                    "immediate bolus duration must be <= total bolus amount; actual immediate/total amount: " +
+                    "$effectiveImmediateBolusAmount / $totalBolusAmount"
+                }
+            }
+        }
+
         // Need to convert the bolus amount to a 32-bit floating point, and
         // then convert that into a form that can be stored below as 4 bytes
         // in little-endian order.
-        val bolusAmountAsFloatBits = bolusAmount.toFloat().toBits().toPosLong()
+        val totalBolusAmountAsFloatBits = totalBolusAmount.toFloat().toBits().toPosLong()
+        val effectiveImmediateBolusAmountAsFloatBits = effectiveImmediateBolusAmount.toFloat().toBits().toPosLong()
+        val effectiveDurationInMinutesAsFloatBits = effectiveDurationInMinutes.toFloat().toBits().toPosLong()
 
-        // TODO: It is currently unknown why the 0x55 and 0x59 bytes encode
-        // a standard bolus, why the same bolus parameters have to be added
-        // twice (once as 16-bit integers and once as 32-bit floats), or
-        // how to program in multi-wave and extended bolus types.
+        // TODO: It is currently unknown why the same bolus parameters have to
+        // be added twice (once as 16-bit integers and once as 32-bit floats).
+
+        // NOTE: The 0x55, 0x59, 0x65 etc. values have been found empirically.
+        val bolusTypeIDBytes = when (bolusType) {
+            CMDDeliverBolusType.STANDARD_BOLUS -> intArrayOf(0x55, 0x59)
+            CMDDeliverBolusType.EXTENDED_BOLUS -> intArrayOf(0x65, 0x69)
+            CMDDeliverBolusType.MULTIWAVE_BOLUS -> intArrayOf(0xA5, 0xA9)
+        }
 
         val payload = byteArrayListOfInts(
-            // This specifies a standard bolus.
-            0x55, 0x59,
+            bolusTypeIDBytes[0], bolusTypeIDBytes[1],
 
             // Total bolus amount, encoded as a 16-bit little endian integer.
-            (bolusAmount and 0x00FF) ushr 0,
-            (bolusAmount and 0xFF00) ushr 8,
+            (totalBolusAmount and 0x00FF) ushr 0,
+            (totalBolusAmount and 0xFF00) ushr 8,
             // Duration in minutes, encoded as a 16-bit little endian integer.
             // (Only relevant for multi-wave and extended bolus.)
-            0x00, 0x00,
+            (effectiveDurationInMinutes and 0x00FF) ushr 0,
+            (effectiveDurationInMinutes and 0xFF00) ushr 8,
             // Immediate bolus amount encoded as a 16-bit little endian integer.
             // (Only relevant for multi-wave bolus.)
-            0x00, 0x00,
+            (effectiveImmediateBolusAmount and 0x00FF) ushr 0,
+            (effectiveImmediateBolusAmount and 0xFF00) ushr 8,
 
             // Total bolus amount, encoded as a 32-bit little endian float point.
-            ((bolusAmountAsFloatBits and 0x000000FFL) ushr 0).toInt(),
-            ((bolusAmountAsFloatBits and 0x0000FF00L) ushr 8).toInt(),
-            ((bolusAmountAsFloatBits and 0x00FF0000L) ushr 16).toInt(),
-            ((bolusAmountAsFloatBits and 0xFF000000L) ushr 24).toInt(),
+            ((totalBolusAmountAsFloatBits and 0x000000FFL) ushr 0).toInt(),
+            ((totalBolusAmountAsFloatBits and 0x0000FF00L) ushr 8).toInt(),
+            ((totalBolusAmountAsFloatBits and 0x00FF0000L) ushr 16).toInt(),
+            ((totalBolusAmountAsFloatBits and 0xFF000000L) ushr 24).toInt(),
             // Duration in minutes, encoded as a 32-bit little endian float point.
             // (Only relevant for multi-wave and extended bolus.)
-            0x00, 0x00, 0x00, 0x00,
+            ((effectiveDurationInMinutesAsFloatBits and 0x000000FFL) ushr 0).toInt(),
+            ((effectiveDurationInMinutesAsFloatBits and 0x0000FF00L) ushr 8).toInt(),
+            ((effectiveDurationInMinutesAsFloatBits and 0x00FF0000L) ushr 16).toInt(),
+            ((effectiveDurationInMinutesAsFloatBits and 0xFF000000L) ushr 24).toInt(),
             // Immediate bolus amount encoded as a 32-bit little endian float point.
             // (Only relevant for multi-wave bolus.)
-            0x00, 0x00, 0x00, 0x00
+            ((effectiveImmediateBolusAmountAsFloatBits and 0x000000FFL) ushr 0).toInt(),
+            ((effectiveImmediateBolusAmountAsFloatBits and 0x0000FF00L) ushr 8).toInt(),
+            ((effectiveImmediateBolusAmountAsFloatBits and 0x00FF0000L) ushr 16).toInt(),
+            ((effectiveImmediateBolusAmountAsFloatBits and 0xFF000000L) ushr 24).toInt(),
         )
 
-        // Add a CRC16 checksum for all of the parameters
+        // Add a CRC16 checksum for all the parameters
         // stored in the payload above.
         val crcChecksum = calculateCRC16MCRF4XX(payload)
         payload.add(((crcChecksum and 0x00FF) ushr 0).toByte())
