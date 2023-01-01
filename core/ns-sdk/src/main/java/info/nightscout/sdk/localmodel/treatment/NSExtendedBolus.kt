@@ -3,13 +3,13 @@ package info.nightscout.sdk.localmodel.treatment
 import info.nightscout.sdk.localmodel.entry.NsUnits
 
 data class NSExtendedBolus(
-    override val date: Long,
+    override var date: Long?,
     override val device: String? = null,
     override val identifier: String?,
     override val units: NsUnits? = null,
     override val srvModified: Long? = null,
     override val srvCreated: Long? = null,
-    override val utcOffset: Long,
+    override var utcOffset: Long?,
     override val subject: String? = null,
     override var isReadOnly: Boolean = false,
     override val isValid: Boolean,

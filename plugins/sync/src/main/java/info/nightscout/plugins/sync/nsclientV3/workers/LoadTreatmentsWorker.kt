@@ -54,7 +54,7 @@ class LoadTreatmentsWorker(
                         response = nsAndroidClient.getTreatmentsModifiedSince(lastLoaded, 500)
                         treatments = response.values
                         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = response.lastServerModified
-                        nsClientV3Plugin.storeLastFetched()
+                        nsClientV3Plugin.storeLastLoadedSrvModified()
                     }
                     aapsLogger.debug("TREATMENTS: $treatments")
                     if (treatments.isNotEmpty()) {
@@ -74,7 +74,7 @@ class LoadTreatmentsWorker(
                         // End first load
                         if (isFirstLoad) {
                             nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = lastLoaded
-                            nsClientV3Plugin.storeLastFetched()
+                            nsClientV3Plugin.storeLastLoadedSrvModified()
                         }
                         rxBus.send(EventNSClientNewLog("RCV END", "No TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                         storeDataForDb.storeTreatmentsToDb()
@@ -93,7 +93,7 @@ class LoadTreatmentsWorker(
                 // End first load
                 if (isFirstLoad) {
                     nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = lastLoaded
-                    nsClientV3Plugin.storeLastFetched()
+                    nsClientV3Plugin.storeLastLoadedSrvModified()
                 }
                 rxBus.send(EventNSClientNewLog("RCV END", "No new TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                 storeDataForDb.storeTreatmentsToDb()

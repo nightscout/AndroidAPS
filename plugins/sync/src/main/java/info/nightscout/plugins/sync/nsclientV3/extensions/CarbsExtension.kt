@@ -4,12 +4,13 @@ import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
+import java.security.InvalidParameterException
 
 fun NSCarbs.toCarbs(): Carbs =
     Carbs(
         isValid = isValid,
-        timestamp = date,
-        utcOffset = utcOffset,
+        timestamp = date ?: throw InvalidParameterException(),
+        utcOffset = utcOffset ?: 0L,
         amount = carbs,
         notes = notes,
         duration = duration ?: 0L,

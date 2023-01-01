@@ -4,12 +4,13 @@ import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSOfflineEvent
+import java.security.InvalidParameterException
 
 fun NSOfflineEvent.toOfflineEvent(): OfflineEvent =
     OfflineEvent(
         isValid = isValid,
-        timestamp = date,
-        utcOffset = utcOffset,
+        timestamp = date ?: throw InvalidParameterException(),
+        utcOffset = utcOffset ?: 0L,
         duration = duration,
         reason = reason.toReason(),
         interfaceIDs_backing = InterfaceIDs(nightscoutId = identifier, pumpId = pumpId, pumpType = InterfaceIDs.PumpType.fromString(pumpType), pumpSerial = pumpSerial, endId = endId)
