@@ -454,26 +454,24 @@ class Pump(
      *
      * If no TBR is active, [actualTbrDuration] is 0. If no TBR was expected to be active,
      * [expectedTbrDuration] is 0.
+     *
+     * [actualTbrPercentage] and [actualTbrDuration] are both null if a multiwave or extended
+     * bolus is active because the exact TBR percentage / duration are not shown on screen then.
      */
     class UnexpectedTbrStateException(
         val expectedTbrPercentage: Int,
         val expectedTbrDuration: Int,
-        val actualTbrPercentage: Int,
-        val actualTbrDuration: Int
+        val actualTbrPercentage: Int?,
+        val actualTbrDuration: Int?
     ) : ComboException(
-        "Expected TBR: $expectedTbrPercentage% $expectedTbrDuration minutes ; " +
-        "actual TBR: $actualTbrPercentage% $actualTbrDuration minutes"
+        if (actualTbrPercentage != null)
+            "Expected TBR: $expectedTbrPercentage% $expectedTbrDuration minutes ; " +
+            "actual TBR: $actualTbrPercentage% $actualTbrDuration minutes"
+        else if (expectedTbrPercentage == 100)
+            "Did not expect a TBR during active extended/multiwave bolus, observed one"
+        else
+            "Expected a TBR during active extended/multiwave bolus, did not observe one"
     )
-
-    /**
-     * Exception thrown when the main screen shows information about an active extended / multiwave bolus.
-     *
-     * These bolus type are currently not supported and cannot be handled properly.
-     *
-     * @property bolusInfo Information about the detected extended / multiwave bolus.
-     */
-    class ExtendedOrMultiwaveBolusActiveException(val bolusInfo: MainScreenContent.ExtendedOrMultiwaveBolus) :
-        ComboException("Extended or multiwave bolus is active; bolus info: $bolusInfo")
 
     /**
      * Reason for a standard bolus delivery.
@@ -894,8 +892,6 @@ class Pump(
      * @throws SettingPumpDatetimeFailedException if during the checks,
      *   the pump's datetime was found to be deviating too much from the
      *   actual current datetime, and adjusting the pump's datetime failed.
-     * @throws ExtendedOrMultiwaveBolusActiveException if an extended / multiwave
-     *   bolus is active (these are shown on the main screen).
      */
     suspend fun connect(maxNumAttempts: Int? = DEFAULT_MAX_NUM_REGULAR_CONNECT_ATTEMPTS) {
         check(stateFlow.value == State.Disconnected) { "Attempted to connect to pump in the ${stateFlow.value} state" }
@@ -933,7 +929,6 @@ class Pump(
                     // failed. That's because these exceptions indicate hard errors that
                     // must be reported ASAP and disallow more connection attempts, at
                     // least attempts without notifying the user.
-                    is ExtendedOrMultiwaveBolusActiveException,
                     is SettingPumpDatetimeFailedException,
                     is AlertScreenException -> {
                         setState(State.Error(throwable = e, "Connection error"))
@@ -1233,10 +1228,6 @@ class Pump(
      * @throws UnexpectedTbrStateException if the TBR that is actually active
      *   after this function finishes does not match the specified percentage
      *   and duration.
-     * @throws ExtendedOrMultiwaveBolusActiveException if an extended / multiwave
-     *   bolus is active after setting the TBR. (This should not normally happen,
-     *   since it is not possible for users to set such a bolus while also setting
-     *   the TBR, but is included for completeness.)
      * @throws IllegalStateException if the current state is not
      *   [State.ReadyForCommands], or if the pump is suspended after setting the TBR.
      * @throws AlertScreenException if alerts occurs during this call, and they
@@ -1306,7 +1297,7 @@ class Pump(
                 }
             } else {
                 // Current status shows that there is no TBR ongoing. This is
-                // therefore a redunant call. Handle this by expecting a 100%
+                // therefore a redundant call. Handle this by expecting a 100%
                 // basal rate to make sure the checks below don't throw anything.
                 expectedTbrPercentage = 100
                 expectedTbrDuration = 0
@@ -1337,55 +1328,76 @@ class Pump(
             is ParsedScreen.MainScreen -> mainScreen.content
             else -> throw NoUsableRTScreenException()
         }
-        logger(LogLevel.DEBUG) {
-            "Main screen content after setting TBR: $mainScreenContent; expected TBR " +
-            "percentage / duration: $expectedTbrPercentage / $expectedTbrDuration"
-        }
-        when (mainScreenContent) {
+
+        val (actualTbrPercentage, actualTbrDuration) = when (mainScreenContent) {
             is MainScreenContent.Stopped ->
+                // This should never be reached. The Combo can switch to the Stopped
+                // state on its own, but only if an error occurs, and errors are
+                // already caught by ParsedDisplayFrameStream.getParsedDisplayFrame().
                 throw IllegalStateException("Combo is in the stopped state after setting TBR")
 
-            is MainScreenContent.ExtendedOrMultiwaveBolus ->
-                throw ExtendedOrMultiwaveBolusActiveException(mainScreenContent)
-
-            is MainScreenContent.Normal -> {
-                if ((expectedTbrPercentage != 100) && (expectedTbrDuration >= 2)) {
-                    // We expected a TBR to be active, but there isn't any;
-                    // we aren't seen any TBR main screen contents.
-                    // Only consider this an error if the duration is >2 minutes.
-                    // Otherwise, this was a TBR that was about to end, so it
-                    // might have ended while these checks here were running.
-                    throw UnexpectedTbrStateException(
-                        expectedTbrPercentage = expectedTbrPercentage,
-                        expectedTbrDuration = expectedTbrDuration,
-                        actualTbrPercentage = 100,
-                        actualTbrDuration = 0
-                    )
+            is MainScreenContent.ExtendedOrMultiwaveBolus -> {
+                if (mainScreenContent.tbrIsActive) {
+                    // We have to go into the TBR menu to get details about the active TBR;
+                    // the main screen does not show them when an extended/multiwave bolus
+                    // is currently ongoing.
+                    lookupActiveTbrDetails()
+                } else {
+                    Pair(100, 0)
                 }
             }
 
-            is MainScreenContent.Tbr -> {
-                if (expectedTbrPercentage == 100) {
-                    // We expected the TBR to be cancelled, but it isn't.
-                    throw UnexpectedTbrStateException(
-                        expectedTbrPercentage = 100,
-                        expectedTbrDuration = 0,
-                        actualTbrPercentage = mainScreenContent.tbrPercentage,
-                        actualTbrDuration = mainScreenContent.remainingTbrDurationInMinutes
-                    )
-                } else if ((expectedTbrDuration - mainScreenContent.remainingTbrDurationInMinutes) > 2) {
-                    // The current TBR duration does not match the programmed one.
-                    // We allow a tolerance range of 2 minutes since a little while
-                    // may have passed between setting the TBR and reaching this
-                    // location in the code.
-                    throw UnexpectedTbrStateException(
-                        expectedTbrPercentage = expectedTbrPercentage,
-                        expectedTbrDuration = expectedTbrDuration,
-                        actualTbrPercentage = mainScreenContent.tbrPercentage,
-                        actualTbrDuration = mainScreenContent.remainingTbrDurationInMinutes
-                    )
+            is MainScreenContent.Normal ->
+                Pair(100, 0)
+
+            is MainScreenContent.Tbr ->
+                Pair(mainScreenContent.tbrPercentage, mainScreenContent.remainingTbrDurationInMinutes)
+        }
+
+        logger(LogLevel.DEBUG) {
+            "Main screen content after setting TBR: $mainScreenContent; expected TBR " +
+                    "percentage / duration: $expectedTbrPercentage / $expectedTbrDuration"
+        }
+
+        val tbrVisibleOnMainScreen = when (mainScreenContent) {
+            is MainScreenContent.Tbr -> true
+            is MainScreenContent.ExtendedOrMultiwaveBolus -> mainScreenContent.tbrIsActive
+            else -> false
+        }
+
+        // Verify that the TBR state is OK according to these criteria:
+        //
+        // 1. TBR percentages match and the different between expected and actual duration is <= 4 minutes.
+        //    (Allow for the 4-minute tolerance since a little while may have passed between setting the
+        //    TBR and reaching this location in the code.)
+        // 2. We expected a TBR to be active, but the main screen shows no TBR. If the expected TBR
+        //    duration is <2 minutes, then this is still considered OK. That's because the TBR might
+        //    have been one that was about to end, so while this code was ongoing, it may have ended.
+        //
+        // In any other case, assume that the TBR that is active is not OK.
+        val tbrStateIsOk =
+            if ((expectedTbrPercentage == actualTbrPercentage) && ((expectedTbrDuration - actualTbrDuration).absoluteValue <= 4)) {
+                logger(LogLevel.DEBUG) { "TBR percentages and durations match" }
+                true
+            } else if (!tbrVisibleOnMainScreen && (expectedTbrPercentage != 100) && (expectedTbrDuration < 2)) {
+                logger(LogLevel.DEBUG) { "Almost-expired TBR no longer visible on screen; assumed to have ended in the meantime" }
+                true
+            } else {
+                logger(LogLevel.ERROR) {
+                    "Mismatch between expected TBR and actually active TBR; " +
+                    "expected TBR percentage / duration: $expectedTbrPercentage / $expectedTbrDuration; " +
+                    "actual TBR: percentage / remaining duration: $actualTbrPercentage / $actualTbrDuration"
                 }
+                false
             }
+
+        if (!tbrStateIsOk) {
+            throw UnexpectedTbrStateException(
+                expectedTbrPercentage = expectedTbrPercentage,
+                expectedTbrDuration = expectedTbrDuration,
+                actualTbrPercentage = actualTbrPercentage,
+                actualTbrDuration = actualTbrDuration
+            )
         }
 
         return@executeCommand result
@@ -1457,11 +1469,6 @@ class Pump(
      *   [State.ReadyForCommands].
      * @throws AlertScreenException if alerts occurs during this call, and they
      *   aren't a W6 warning (those are handled by this function).
-     * @throws ExtendedOrMultiwaveBolusActiveException if an extended / multiwave
-     *   bolus is active after delivering this standard bolus. (This should not
-     *   normally happen, since it is not possible for users to set such a bolus
-     *   while also delivering a standard bolus the TBR, but is included for
-     *   completeness.)
      */
     suspend fun deliverBolus(bolusAmount: Int, bolusReason: StandardBolusReason, bolusStatusUpdateIntervalInMs: Long = 250) = executeCommand(
         // Instruct executeCommand() to not set the mode on its own.
@@ -1791,8 +1798,6 @@ class Pump(
      *   [State.Suspended] or [State.ReadyForCommands].
      * @throws AlertScreenException if alerts occurs during this call, and
      *   they aren't a W6 warning (those are handled by this function).
-     * @throws ExtendedOrMultiwaveBolusActiveException if an extended / multiwave
-     *   bolus is active (these are shown on the main screen).
      */
     suspend fun updateStatus() = updateStatusImpl(
         allowExecutionWhileSuspended = true,
@@ -3197,6 +3202,23 @@ class Pump(
         }
     }
 
+    private suspend fun lookupActiveTbrDetails(): Pair<Int, Int> {
+        // Go to the TBR percentage screen, which shows both percentage and remaining duration.
+        val tbrPercentageScreen = navigateToRTScreen(
+            rtNavigationContext,
+            ParsedScreen.TemporaryBasalRatePercentageScreen::class,
+            pumpSuspended
+        ) as? ParsedScreen.TemporaryBasalRatePercentageScreen ?: throw NoUsableRTScreenException()
+        // The getParsedDisplayFrame() calls inside navigateToRTScreen()
+        // should already filter out blinked-out screens.
+        check(!tbrPercentageScreen.isBlinkedOut)
+
+        // Now get back to the main menu to return back to the initial state.
+        navigateToRTScreen(rtNavigationContext, ParsedScreen.MainScreen::class, pumpSuspended)
+
+        return Pair(tbrPercentageScreen.percentage ?: 100, tbrPercentageScreen.remainingDurationInMinutes ?: 0)
+    }
+
     private suspend fun updateStatusByReadingMainAndQuickinfoScreens(switchStatesIfNecessary: Boolean) {
         val mainScreen = navigateToRTScreen(rtNavigationContext, ParsedScreen.MainScreen::class, pumpSuspended)
 
@@ -3270,8 +3292,27 @@ class Pump(
                 )
             }
 
-            is MainScreenContent.ExtendedOrMultiwaveBolus ->
-                throw ExtendedOrMultiwaveBolusActiveException(mainScreenContent)
+            is MainScreenContent.ExtendedOrMultiwaveBolus -> {
+                val (tbrPercentage, remainingTbrDurationInMinutes) = if (mainScreenContent.tbrIsActive) {
+                    lookupActiveTbrDetails()
+                } else {
+                    Pair(100, 0)
+                }
+
+                Status(
+                    availableUnitsInReservoir = quickinfo.availableUnits,
+                    activeBasalProfileNumber = mainScreenContent.activeBasalProfileNumber,
+                    currentBasalRateFactor = if (tbrPercentage != 0)
+                        mainScreenContent.currentBasalRateFactor * 100 / tbrPercentage
+                    else
+                        0,
+                    tbrOngoing = (tbrPercentage != 100),
+                    remainingTbrDurationInMinutes = remainingTbrDurationInMinutes,
+                    tbrPercentage = tbrPercentage,
+                    reservoirState = quickinfo.reservoirState,
+                    batteryState = mainScreenContent.batteryState
+                )
+            }
         }
 
         if (switchStatesIfNecessary) {
