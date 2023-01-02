@@ -26,6 +26,7 @@ dependencies {
     implementation project(':core:utils')
     implementation project(':core:validators')
 
+    testImplementation "androidx.work:work-testing:$work_version"
     testImplementation project(':implementation')
 
     // NSClient, Tidepool
