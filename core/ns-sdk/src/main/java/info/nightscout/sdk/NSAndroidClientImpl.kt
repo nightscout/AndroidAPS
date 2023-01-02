@@ -105,7 +105,6 @@ class NSAndroidClientImpl(
         }
     }
 
-    // TODO: parameters like count?
     override suspend fun getSgvs(): List<NSSgvV3> = callWrapper(dispatcher) {
 
         val response = api.getSgvs()
@@ -143,27 +142,36 @@ class NSAndroidClientImpl(
         val remoteEntry = nsSgvV3.toRemoteEntry()
         remoteEntry.app = "AAPS"
         val response = api.createEntry(remoteEntry)
-        if (response.isSuccessful) {
-            if (response.code() == 200) {
-                return@callWrapper CreateUpdateResponse(
-                    response = response.code(),
-                    identifier = null,
-                    isDeduplication = true,
-                    deduplicatedIdentifier = null,
-                    lastModified = null
-                )
-            } else if (response.code() == 201) {
-                return@callWrapper CreateUpdateResponse(
-                    response = response.code(),
-                    identifier = response.body()?.result?.identifier ?: throw UnknownResponseNightscoutException(),
-                    isDeduplication = response.body()?.result?.isDeduplication ?: false,
-                    deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,
-                    lastModified = response.body()?.result?.lastModified
-                )
-            } else throw UnsuccessfullNightscoutException()
-        } else {
-            throw UnsuccessfullNightscoutException()
-        }
+        val errorResponse = response.errorBody()?.string()
+        if (response.code() == 200) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                isDeduplication = true
+            )
+        } else if (response.code() == 201) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = response.body()?.result?.identifier
+                    ?: throw UnknownResponseNightscoutException(),
+                isDeduplication = response.body()?.result?.isDeduplication ?: false,
+                deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,
+                lastModified = response.body()?.result?.lastModified
+            )
+        } else if (response.code() == 400 && errorResponse?.contains("Bad or missing utcOffset field") == true && nsSgvV3.utcOffset != 0L) {
+            // Record can be originally uploaded without utcOffset
+            // because utcOffset is mandatory and cannot be change, try 0
+            nsSgvV3.utcOffset = 0
+            return@callWrapper createSvg(nsSgvV3)
+        } else if (response.code() == 400 && errorResponse?.contains("Field utcOffset cannot be modified by the client") == true) {
+            // there is different utcOffset than in AAPS and zero
+            // not possible to upload
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = errorResponse
+            )
+        } else throw UnknownResponseNightscoutException()
     }
 
     override suspend fun updateSvg(nsSgvV3: NSSgvV3): CreateUpdateResponse = callWrapper(dispatcher) {
@@ -225,28 +233,36 @@ class NSAndroidClientImpl(
         val remoteTreatment = nsTreatment.toRemoteTreatment() ?: throw InvalidFormatNightscoutException()
         remoteTreatment.app = "AAPS"
         val response = api.createTreatment(remoteTreatment)
-        if (response.isSuccessful) {
-            if (response.code() == 200) {
-                return@callWrapper CreateUpdateResponse(
-                    response = response.code(),
-                    identifier = null,
-                    isDeduplication = true,
-                    deduplicatedIdentifier = null,
-                    lastModified = null
-                )
-            } else if (response.code() == 201) {
-                return@callWrapper CreateUpdateResponse(
-                    response = response.code(),
-                    identifier = response.body()?.result?.identifier
-                        ?: throw UnknownResponseNightscoutException(),
-                    isDeduplication = response.body()?.result?.isDeduplication ?: false,
-                    deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,
-                    lastModified = response.body()?.result?.lastModified
-                )
-            } else throw UnknownResponseNightscoutException()
-        } else {
-            throw UnsuccessfullNightscoutException()
-        }
+        val errorResponse = response.errorBody()?.string()
+        if (response.code() == 200) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                isDeduplication = true
+            )
+        } else if (response.code() == 201) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = response.body()?.result?.identifier
+                    ?: throw UnknownResponseNightscoutException(),
+                isDeduplication = response.body()?.result?.isDeduplication ?: false,
+                deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,
+                lastModified = response.body()?.result?.lastModified
+            )
+        } else if (response.code() == 400 && errorResponse?.contains("Bad or missing utcOffset field") == true && nsTreatment.utcOffset != 0L) {
+            // Record can be originally uploaded without utcOffset
+            // because utcOffset is mandatory and cannot be change, try 0
+            nsTreatment.utcOffset = 0
+            return@callWrapper createTreatment(nsTreatment)
+        } else if (response.code() == 400 && errorResponse?.contains("Field utcOffset cannot be modified by the client") == true) {
+            // there is different utcOffset than in AAPS and zero
+            // not possible to upload
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = errorResponse
+            )
+        } else throw UnknownResponseNightscoutException()
     }
 
     override suspend fun updateTreatment(nsTreatment: NSTreatment): CreateUpdateResponse = callWrapper(dispatcher) {
