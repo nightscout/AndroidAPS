@@ -121,4 +121,6 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_datetime_changed">Dato og/eller klokkeslett endret</string>
     <string name="combov2_dst_started">Sommertid (DST) er startet</string>
     <string name="combov2_dst_ended">Sommertid (DST) er avsluttet</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Kan ikke koble til pumpen fordi pumpen har rapportert om feil. Brukeren må håndtere feilen, og deretter vente 5 minutter eller trykk på Oppdater-knappen i driver-fanen.</string>
+    <string name="combov2_refresh_pump_status_after_error">Oppdaterer pumpestatus etter at pumpen tidligere har rapportert en feil</string>
 </resources>
