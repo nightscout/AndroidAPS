@@ -146,6 +146,10 @@ is much simpler, and builds ComboCtl as a kotlin-android project, not a Kotlin M
 This simplifies integration into AndroidAPS, and avoids multiplatform problems (after all,
 Kotlin Multiplatform is still marked as an alpha version feature).
 
+The `comboctl/src/androidMain/AndroidManifest.xml` file also differs in that the `ComboCtl` version
+contains `package="info.nightscout.comboctl.android"` in its `<manifest>` tag, while the AndroidAPS
+version doesn't.
+
 When updating ComboCtl, it is important to keep these differences in mind.
 
 Differences between the copy in `comboctl/` and the original ComboCtl code must be kept as little
