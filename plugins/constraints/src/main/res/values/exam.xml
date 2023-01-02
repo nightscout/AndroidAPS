@@ -4,7 +4,7 @@
     <string name="dia_label_exam">Duration of Insulin Action (DIA)</string>
     <string name="dia_profile">You should set the value for DIA in your profile.</string>
     <string name="dia_minimumis5h">The minimum allowed value is 5 hours.</string>
-    <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html?#insulin</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="dia_meaningisequaltodiapump">If you are satisfied that the value for DIA that you used in your pump prior to AAPS worked well, there is no need to change this when you start looping.</string>
     <string name="dia_valuemustbedetermined">You should determine for yourself the appropriate value for DIA.</string>
     <string name="hypott_label">Hypo Temp-Target</string>
