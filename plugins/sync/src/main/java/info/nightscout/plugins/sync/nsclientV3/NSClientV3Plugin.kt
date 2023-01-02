@@ -70,6 +70,10 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
@@ -115,6 +119,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     private val disposable = CompositeDisposable()
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private lateinit var runLoop: Runnable
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val listLog: MutableList<EventNSClientNewLog> = ArrayList()
@@ -141,7 +146,6 @@ class NSClientV3Plugin @Inject constructor(
     internal var firstLoadContinueTimestamp = LastModified(LastModified.Collections()) // timestamp of last fetched data for every collection during initial load
 
     override fun onStart() {
-//        context.bindService(Intent(context, NSClientService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         super.onStart()
 
         lastLoadedSrvModified = Json.decodeFromString(
@@ -221,6 +225,7 @@ class NSClientV3Plugin @Inject constructor(
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
         }
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = config.isEngineeringMode()
+        preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_api_secret))?.isVisible = false
     }
 
     override val hasWritePermission: Boolean get() = nsAndroidClient?.lastStatus?.apiPermissions?.isFull() ?: false
@@ -335,7 +340,7 @@ class NSClientV3Plugin @Inject constructor(
                 is DataSyncSelector.PairGlucoseValue -> dataPair.value.toNSSvgV3()
                 else                                 -> null
             }?.let { data ->
-                runBlocking {
+                scope.launch {
                     try {
                         val id = if (dataPair.value is TraceableDBEntry) (dataPair.value as TraceableDBEntry).interfaceIDs.nightscoutId else ""
                         rxBus.send(
@@ -354,10 +359,11 @@ class NSClientV3Plugin @Inject constructor(
                             when (result.response) {
                                 200  -> rxBus.send(EventNSClientNewLog("UPDATED", "OK ${dataPair.value.javaClass.simpleName}"))
                                 201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName} ${result.identifier}"))
+                                400  -> rxBus.send(EventNSClientNewLog("FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                                 else -> {
                                     rxBus.send(EventNSClientNewLog("ERROR", "${dataPair.value.javaClass.simpleName} "))
-                                    return@runBlocking
+                                    return@launch
                                 }
                             }
                             when (dataPair) {
@@ -387,7 +393,7 @@ class NSClientV3Plugin @Inject constructor(
                 is DataSyncSelector.PairFood -> dataPair.value.toNSFood()
                 else                         -> null
             }?.let { data ->
-                runBlocking {
+                scope.launch {
                     try {
                         val id = if (dataPair.value is TraceableDBEntry) (dataPair.value as TraceableDBEntry).interfaceIDs.nightscoutId else ""
                         rxBus.send(
@@ -406,10 +412,11 @@ class NSClientV3Plugin @Inject constructor(
                             when (result.response) {
                                 200  -> rxBus.send(EventNSClientNewLog("UPDATED", "OK ${dataPair.value.javaClass.simpleName}"))
                                 201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName} ${result.identifier}"))
+                                400  -> rxBus.send(EventNSClientNewLog("FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                                 else -> {
                                     rxBus.send(EventNSClientNewLog("ERROR", "${dataPair.value.javaClass.simpleName} "))
-                                    return@runBlocking
+                                    return@launch
                                 }
                             }
                             when (dataPair) {
@@ -465,7 +472,7 @@ class NSClientV3Plugin @Inject constructor(
                 is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toNSOfflineEvent()
                 else                                           -> null
             }?.let { data ->
-                runBlocking {
+                scope.launch {
                     try {
                         val id = if (dataPair.value is TraceableDBEntry) (dataPair.value as TraceableDBEntry).interfaceIDs.nightscoutId else ""
                         rxBus.send(
@@ -484,10 +491,11 @@ class NSClientV3Plugin @Inject constructor(
                             when (result.response) {
                                 200  -> rxBus.send(EventNSClientNewLog("UPDATED", "OK ${dataPair.value.javaClass.simpleName}"))
                                 201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName} ${result.identifier}"))
+                                400  -> rxBus.send(EventNSClientNewLog("FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                                 else -> {
                                     rxBus.send(EventNSClientNewLog("ERROR", "${dataPair.value.javaClass.simpleName} "))
-                                    return@runBlocking
+                                    return@launch
                                 }
                             }
                             when (dataPair) {
