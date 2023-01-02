@@ -350,4 +350,30 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="old_data">ZASTARALÉ</string>
+    <string name="pump_fetching_data">pokus o načtení dat z pumpy.</string>
+    <string name="pump_old_data">CDD: Stále stará data! Nelze načíst z pumpy.</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">h</string>
+    <string name="no_active_profile">Není nastaven žádný aktivní profil!</string>
+    <string name="profile_message">Profil:\n\nPosunutí: %1$\nprocento: %2$d%\"</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%</string>
+    <string name="no_profile">Není vybrán žádný profil</string>
+    <string name="aps_only">Použít pouze v APS módu!</string>
+    <string name="last_aps_result_na">Poslední výsledek není k dispozici!</string>
+    <string name="loop_status_closed">UZAVŘENÁ SMYČKA</string>
+    <string name="loop_status_open">OTEVŘENÁ SMYČKA</string>
+    <string name="loop_status_disabled">SMYČKA ZAKÁZÁNA</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Poslední spuštění</string>
+    <string name="last_enact">Poslední provedení</string>
+    <string name="today">Dnes</string>
+    <string name="weighted">vážený</string>
+    <string name="target_only_aps_mode">Cíle se použijí pouze v režimu APS!</string>
+    <string name="no_history">Žádné údaje o historii!</string>
+    <string name="units_short">U</string>
+    <string name="temp_target">Dočasný cíl</string>
+    <string name="until">až do</string>
+    <string name="default_range">VÝCHOZÍ ROZSAH</string>
+    <string name="target">cíl</string>
+    <string name="rate_duration">Rychlost: %1$.2fU/h (%2$.2f%) \nTrvání %3$d% min</string>
 </resources>

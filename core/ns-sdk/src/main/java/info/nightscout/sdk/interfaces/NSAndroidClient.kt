@@ -18,12 +18,12 @@ interface NSAndroidClient {
     val lastStatus: Status?
     suspend fun getVersion(): String
     suspend fun getStatus(): Status
-    suspend fun getEntries(): String
-
     suspend fun getLastModified(): LastModified
     suspend fun getSgvs(): List<NSSgvV3>
     suspend fun getSgvsModifiedSince(from: Long, limit: Long): ReadResponse<List<NSSgvV3>>
     suspend fun getSgvsNewerThan(from: Long, limit: Long): List<NSSgvV3>
+    suspend fun createSvg(nsSgvV3: NSSgvV3): CreateUpdateResponse
+    suspend fun updateSvg(nsSgvV3: NSSgvV3): CreateUpdateResponse
     suspend fun getTreatmentsNewerThan(createdAt: String, limit: Long): List<NSTreatment>
     suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): ReadResponse<List<NSTreatment>>
     suspend fun getDeviceStatusModifiedSince(from: Long): List<RemoteDeviceStatus>

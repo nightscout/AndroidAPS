@@ -3,14 +3,14 @@ package info.nightscout.sdk.localmodel.treatment
 import info.nightscout.sdk.localmodel.entry.NsUnits
 
 interface NSTreatment {
-    val date: Long
+    var date: Long?
     val device: String?
     val identifier: String?
     val units: NsUnits?
     val eventType: EventType
     val srvModified: Long?
     val srvCreated: Long?
-    val utcOffset: Long
+    var utcOffset: Long?
     val subject: String?
     var isReadOnly: Boolean
     val isValid: Boolean

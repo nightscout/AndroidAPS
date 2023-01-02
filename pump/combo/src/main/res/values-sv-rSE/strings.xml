@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Basalen ändrad i pumpen, men det gick inte att läsa till vad</string>
     <string name="combo_activity_checking_for_history_changes">Letar efter förändringar i historiken</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Flera bolusar med samma mängd insulin importerades just. Endast en kan läggas till i Careportal. Vänligen kontrollera pumpen och gör ändringar i Careportal manuellt vid behov. Observera att man bara kan ha en bolus per klockslag.</string>
-    <string name="about_link_urls">\n\ndokumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Den senaste bolusen är äldre än 24 timmar eller i framtiden. Vänligen kontrollera tid och datum i pumpen.</string>
     <string name="combo_suspious_bolus_time">Tid/datum för bolusen verkar fel. IOB är troligen missvisande. Vänligen kontrollera tid och datum i pumpen.</string>
     <string name="combo_bolus_count">Antal bolus</string>

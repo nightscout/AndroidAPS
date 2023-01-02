@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Basal rate ændret på pumpe, men aflæsning mislykkedes</string>
     <string name="combo_activity_checking_for_history_changes">Søger efter historik ændringer</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Flere bolusser med samme mængde inden for samme minut er lige blevet importeret. Kun én registrering kunne tilføjes til behandlinger. Kontroller pumpen og tilføj manuelt en bolus registrering ved hjælp af behandlingsportal fanen. Sørg for at oprette en bolus med en tid ingen andre bolus anvender.</string>
-    <string name="about_link_urls">\n\ndocumentation:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Den sidste bolus er ældre end 24 timer eller er i fremtiden. Kontroller datoen på pumpen er angivet korrekt.</string>
     <string name="combo_suspious_bolus_time">Tid/dato for leveret bolus på pumpen synes forkert, IOB er sandsynligvis forkert. Tjek venligst pumpetid/dato.</string>
     <string name="combo_bolus_count">Bolus Mængde</string>

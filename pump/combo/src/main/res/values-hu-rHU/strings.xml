@@ -30,7 +30,6 @@
     <string name="combo_actvity_reading_basal_profile">Bázisprofil lekérése</string>
     <string name="combo_activity_checking_pump_state">Pumpa állapot frissítése</string>
     <string name="combo_activity_checking_for_history_changes">Változások előzményekben ellenőrzése</string>
-    <string name="about_link_urls">\n\ndokumentáció:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_bolus_count">Bólusok száma</string>
     <string name="combo_tbr_count">ÁB-k száma</string>
     <string name="bolusstopped">Bólus leállítva</string>

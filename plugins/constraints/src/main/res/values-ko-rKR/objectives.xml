@@ -20,8 +20,6 @@
     <string name="objectives_smb_objective">낮시간대에 SMB(Super Micro Bolus)같은 추가기능을 활성화해 사용해봅니다</string>
     <string name="objectives_smb_gate">SMB가 잘 작동하게 하기위해서 wiki를 반드시 읽은 다음 maxIOB 값을 올려보세요! maxIOB=평균 식사 Bolus + 3 x 최대하루 Basal이면 적당한 시작값입니다</string>
     <string name="objectives_auto_objective">자동화 사용</string>
-    <string name="objectives_auto_gate">자동화가 어떻게 작동하는지 설명서를 확인하세요. 간단한 첫 번째 규칙을 만들어 보십시오. 실행하기 전에 AAPS가 알림을 보여주도록 설정합니다. 자동화가 적시에 잘 작동하는 것을 확인하면 알림을 실제 실행으로 변경하십시오.
-(https://androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
     <string name="objectives_bgavailableinns">NS에서 혈당이 확인 가능합니다</string>
     <string name="objectives_pumpstatusavailableinns">NS에서 펌프상태가 확인 가능합니다</string>
     <string name="objectives_manualenacts">수동 주입</string>
@@ -40,10 +38,6 @@
     <string name="unfinshed_button">다음 미답변</string>
     <string name="requestcode">요청 코드: %1$s</string>
     <string name="objectives_hint">(올바른 답변을 모두 체크하세요)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Getting-Started/Screenshots.html#the-homescreen</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Getting-Started/Screenshots.html#config-builder</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/en/latest/CROWDIN/ko/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">인터넷에 연결되지 않음</string>
     <string name="failedretrievetime">시간을 가져오지 못했습니다</string>
     <string name="requirementnotmet">목표 요구 사항이 충족되지 않음</string>

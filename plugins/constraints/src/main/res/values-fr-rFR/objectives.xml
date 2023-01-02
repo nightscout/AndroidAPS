@@ -16,6 +16,7 @@
     <string name="objectives_maxbasal_learned">Faites attention aux dispositifs de sécurité et réglez les paramètres de sécurité si nécessaire.</string>
     <string name="objectives_maxiobzero_objective">Démarrage de la boucle fermée avec le système AGB ( Arrêt pour Glycémie Basse )</string>
     <string name="objectives_maxiobzero_gate">Activez la boucle fermée avec le paramètre max IOB = 0 pendant plusieurs jours sans avoir un trop grand nombre d\'AGB (Arrêt pour Glycémie Basse)</string>
+    <string name="objectives_maxiobzero_learned">Définir l\'IAMax à zéro vous préviendra des hypo et n\'ajoutera pas plus d\'insuline que le débit de basal (sauf dans le cas d\'IA négative)</string>
     <string name="objectives_maxiob_objective">Réglage de la Boucle Fermée, augmentation de l\'IA (Insuline Active) maximale au dessus de 0 et abaissement progressif des cibles glycémiques</string>
     <string name="objectives_maxiob_gate">Utilisez pendant plusieurs jours, et au moins une nuit sans alarme d’hypoglycémie, avant d\'abaisser les cibles glycémiques</string>
     <string name="objectives_maxiob_learned">Mettez à jour IAMax au fur et à mesure que l\'enfant grandit. Ne permettez pas au système de vous donner plus d\'insuline que ce que vous pouvez couvrir par la nourriture = une valeur vraiment élevée est une mauvaise idée.</string>
@@ -26,7 +27,7 @@
     <string name="objectives_smb_gate">Lisez le wiki et augmentez le maxIA pour que les SMBs fonctionnent correctement ! Un bon début est maxIA = moyenne des Bolus Repas + 3 x maximum débit Basal quotidien</string>
     <string name="objectives_smb_learned">L\'utilisation de SMB est votre objectif. L\'algorithme Oref1 a été conçu pour vous aider également avec vos bolus. Vous ne devriez pas donner un bolus complet pour votre nourriture, mais seulement une partie de celui-ci et laisser AAPS vous donner le reste si nécessaire. De cette façon, vous avez plus de latitude pour les glucides mal calculés. Saviez-vous que vous pouvez définir un pourcentage à appliquer au résultat de la calculatrice de bolus pour réduire la taille du bolus ?</string>
     <string name="objectives_auto_objective">Activation de l\'automatisation</string>
-    <string name="objectives_auto_gate">Lisez la documentation comment l\'automatisation fonctionne. Configurez vos premières règles simples. Au lieu de mettre une action, configurez une notification. Quand vous êtes sûr que l\'automatisation est déclenchée au bon moment, remplacez la notification par une action réelle. (https://androidaps.readthedocs.io/fr/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_gate">Lisez la documentation sur le fonctionnement de l\'automatisation fonctionne. Configurez vos premières règles simples. Au lieu de mettre une action, configurez une notification. Quand vous êtes sûr que l\'automatisation est déclenchée au bon moment, remplacez la notification par une action réelle. (https://wiki.aaps.app/fr/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">L\'automatisation peut être un bon serviteur mais un mauvais maître. Ne l\'utilisez pas de manière excessive. N\'essayez pas de remplacer l\'algorithme sous-jacent. Testez la règle avec uniquement un message avant l\'utilisation. Le résultat dépend de l\'ordre.</string>
     <string name="objectives_bgavailableinns">Glycémie disponible sur NS</string>
     <string name="objectives_pumpstatusavailableinns">Statut de la pompe disponible sur NS</string>
@@ -47,13 +48,24 @@
     <string name="objectives_exam_learned_prerequisites">Vous n\'avez pas besoin d\'être un développeur mais vous avez besoin de NS pour passer des objectifs, d\'une pompe et d\'un ordinateur compatibles pour construire AAPS pour la première fois ainsi que pour chaque mise à jour.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS peut être exécuté hors ligne.</string>
     <string name="objectives_exam_learned_basaltest">Le profil doit être ajusté et mis à jour. Un meilleur profil = de meilleurs résultats.</string>
-    <string name="objectives_exam_learned_dia">La DAI avec une boucle a une signification différente (temps jusqu\'à ce que l\'insuline soit absorbée en totalité) comparé au thérapie par pompe classique (temps jusqu\'à ce que la majeure partie de l\'insuline soit absorbée).</string>
+    <string name="objectives_exam_learned_dia">La DAI avec une boucle a une signification différente (temps jusqu\'à ce que l\'insuline soit absorbée en totalité) comparé à la thérapie par pompe classique (temps jusqu\'à ce que la majeure partie de l\'insuline soit absorbée).</string>
     <string name="objectives_exam_learned_isf">Vous avez appris la signification de la valeur SI et comment elle impacte la quantité d\'insuline utilisée pour corriger la glycémie.</string>
     <string name="objectives_exam_learned_ic">Vous avez appris la signification de la valeur G/I et comment elle impacte la quantité d\'insuline nécessaire pour couvrir les glucides.</string>
+    <string name="objectives_exam_learned_hypott">La cible temp Hypo est utilisée uniquement pour prévenir la surcorrection après une hypo, lorsqu\'il y a généralement des IA négatives. Des actions supplémentaires devraient être évaluées afin d\'éviter que cette situation ne se reproduise à l\'avenir.</string>
+    <string name="objectives_exam_learned_profileswitch">L\'utilisation du pourcentage n\'affecte pas les cibles glycémiques, mais la basale, la SI et le G/I sont ajustés pour donner plus d\'insuline (supérieure à 100%%) ou moins d\'insuline (inférieure à 100%%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">En utilisant le décalage horaire dans le changement de profil, vous pouvez adapter le profil circadien aux irrégularités comme un réveil tardif.</string>
+    <string name="objectives_exam_learned_profileswitch4">Modifier seulement le profil n\'est pas suffisant pour effectuer un changement. Vous devez toujours effectuer un changement de profil pour activer les modifications.</string>
     <string name="objectives_exam_learned_exercise">Vous devriez réduire la quantité d\'insuline dans le corps au moins 1 heure avant de commencer l\'exercice en sélectionnant un profil inférieur à 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Fixer une cible temp plus élevée au moins 1 heure avant l\'exercice aide également à réduire la quantité d\'insuline dans le corps.</string>
     <string name="objectives_exam_learned_noisycgm">Si vous ne pouvez pas faire confiance aux valeurs MGC, vous ne devriez pas utiliser de boucle sans surveillance.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS doit savoir si la pompe n\'est pas connectée pour comptabiliser correctement l\'IA (IOB).</string>
     <string name="objectives_exam_learned_insulin">Il est nécessaire d\'indiquer quelle insuline est dans la pompe, car elle affecte le calcul de l\'IA.</string>
+    <string name="objectives_exam_learned_sensitivity">La détection de sensibilité fait partie de l\'algorithme qui permet d\'adapter la posologie de l\'insuline à différentes situations.</string>
+    <string name="objectives_exam_learned_objectives">Votre progression dans les objectifs est enregistrée avec les autres paramètres et elle doit être sauvegardée.</string>
+    <string name="objectives_exam_learned_objectives2">Gardez toujours les paramètres exportés et l\'APK généré ailleurs que sur le téléphone. Le téléphone peut être perdu, endommagé, etc. Un bon endroit peut être n\'importe quel disque sur le cloud accessible depuis le téléphone. Dans ce cas, vous pourrez restaurer AAPS sur un autre appareil en quelques minutes. La bonne pratique est aussi de stocker le mot de passe maître utilisé dans un endroit sûr. Sans cela, votre sauvegarde est inutile, il en va de même pour les clés de signature (fichier .jks) et les mots de passe utilisés pour construire AAPS. Le reste n\'est pas important - cela peut être téléchargé à tout moment à partir d\'Internet à nouveau.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Si vous avez fait une entrée incorrecte dans AAPS ou si cela ne correspond pas à la réalité, résolvez-la dès que possible. Cela pourrait conduire à un surdosage. AAPS doit toujours être informé de la meilleure façon possible sur les glucides, l\'insuline, etc.</string>
+    <string name="objectives_exam_learned_iob">Si vous analysez si AAPS fonctionne bien pour vous, regarder le graphique IA peut vous donner un tas d\'informations utiles.</string>
+    <string name="objectives_exam_learned_cob">Le calcul des GA dépend de la relation entre la SI et le G/I. L\'augmentation de la SI ou la diminution du G/I entraînera des temps d\'absorption plus longs. Mais le changement de profil avec la modification du pourcentage change les deux valeurs en même temps et la durée d\'absorption n\'est pas affectée.</string>
     <string name="objectives_exam_learned_breadgrams">Seuls les grammes sont autorisés pour l\'entrée des glucides.</string>
     <string name="objectives_exam_learned_ecarbs">Les E-glucides remplacent les bolus étendus dans le monde de la pompe.</string>
     <string name="objectives_exam_learned_nsclient">La surveillance et le contrôle à distance sont possibles mais toutes les fonctionnalités ne doivent pas être disponibles à distance.</string>
@@ -62,10 +74,10 @@
     <string name="unfinshed_button">Prochain non terminé</string>
     <string name="requestcode">Code requis : %1$s</string>
     <string name="objectives_hint">(Sélectionnez toutes les bonnes réponses)</string>
-    <string name="disconnectpump_hint" formatted="false">https://androidaps.readthedocs.io/fr/latest/Getting-Started/FAQ.html#que-faire-pour-prendre-une-douche-ou-un-bain</string>
-    <string name="usetemptarget_hint" formatted="false">https://androidaps.readthedocs.io/fr/latest/Getting-Started/Screenshots.html</string>
-    <string name="useaction_hint" formatted="false">https://androidaps.readthedocs.io/fr/latest/Configuration/Config-Builder.html</string>
-    <string name="usescale_hint" formatted="false">https://androidaps.readthedocs.io/fr/latest/Getting-Started/Screenshots.html</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/fr/latest/Getting-Started/FAQ.html#que-faire-pour-prendre-une-douche-ou-un-bain</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/fr/latest/Getting-Started/Screenshots.html#ecran-d-accueil</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/fr/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/fr/latest/Getting-Started/Screenshots.html#ecran-d-accueil</string>
     <string name="notconnected">Non connecté à Internet</string>
     <string name="failedretrievetime">Échec de la récupération de l\'heure</string>
     <string name="requirementnotmet">Exigences de l\'objectif non atteintes</string>

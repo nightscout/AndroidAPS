@@ -5,12 +5,13 @@ import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.entry.NsUnits
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSTherapyEvent
+import java.security.InvalidParameterException
 
 fun NSTherapyEvent.toTherapyEvent(): TherapyEvent =
     TherapyEvent(
         isValid = isValid,
-        timestamp = date,
-        utcOffset = utcOffset,
+        timestamp = date ?: throw InvalidParameterException(),
+        utcOffset = utcOffset ?: 0L,
         glucoseUnit = units.toUnits(),
         type = eventType.toType(),
         note = notes,

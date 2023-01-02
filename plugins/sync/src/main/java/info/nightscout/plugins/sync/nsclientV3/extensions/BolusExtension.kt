@@ -4,12 +4,13 @@ import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSBolus
+import java.security.InvalidParameterException
 
 fun NSBolus.toBolus(): Bolus =
     Bolus(
         isValid = isValid,
-        timestamp = date,
-        utcOffset = utcOffset,
+        timestamp = date ?: throw InvalidParameterException(),
+        utcOffset = utcOffset ?: 0L,
         amount = insulin,
         type = type.toBolusType(),
         notes = notes,

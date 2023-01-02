@@ -24,6 +24,7 @@ class SimpleUi @Inject constructor(
     private val sp: SP,
     private val dateUtil: DateUtil
 ) {
+
     private var batteryReceiver: BroadcastReceiver? = null
     private var mBackgroundPaint = Paint()
     private lateinit var mTimePaint: Paint
@@ -89,19 +90,15 @@ class SimpleUi @Inject constructor(
         }
     }
 
-    private fun isOutdated(singleBg: EventData.SingleBg): Boolean {
-        val timeSince = (System.currentTimeMillis() - singleBg.timeStamp).toDouble()
-        return singleBg.timeStamp > 0 && (timeSince <= 1000 * 60 * 12)
-    }
+    private fun isOutdated(singleBg: EventData.SingleBg): Boolean =
+        singleBg.timeStamp > 0 && (System.currentTimeMillis() - singleBg.timeStamp) > 1000 * 60 * 12
 
-    private fun getBgColour(level: Long): Int {
-        if (level == 1L) {
-            return colorDarkHigh
+    private fun getBgColour(level: Long): Int =
+        when (level) {
+            1L   -> colorDarkHigh
+            0L   -> colorDarkMid
+            else -> colorDarkLow
         }
-        return if (level == 0L) {
-            colorDarkMid
-        } else colorDarkLow
-    }
 
     private val isCharging: Boolean
         get() {

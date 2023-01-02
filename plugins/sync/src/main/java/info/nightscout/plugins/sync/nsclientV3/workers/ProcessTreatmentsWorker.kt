@@ -66,7 +66,8 @@ class ProcessTreatmentsWorker(
         val ret = Result.success()
         for (treatment in treatments.values) {
             aapsLogger.debug(LTag.DATABASE, "Received NS treatment: $treatment")
-            if (treatment.date > latestDateInReceivedData) latestDateInReceivedData = treatment.date
+            val date = treatment.date ?: continue
+            if (date > latestDateInReceivedData) latestDateInReceivedData = date
 
             when (treatment) {
                 is NSBolus                  ->

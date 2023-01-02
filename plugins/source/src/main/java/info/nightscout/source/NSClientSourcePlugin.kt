@@ -32,6 +32,7 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.json.JSONArray
 import org.json.JSONObject
+import java.security.InvalidParameterException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -113,11 +114,11 @@ class NSClientSourcePlugin @Inject constructor(
 
         private fun toGv(sgv: NSSgvV3): TransactionGlucoseValue {
             return TransactionGlucoseValue(
-                timestamp = sgv.date,
+                timestamp = sgv.date ?: throw InvalidParameterException(),
                 value = sgv.sgv,
                 noise = sgv.noise?.toDouble(),
                 raw = sgv.filtered,
-                trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction.nsName),
+                trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction?.nsName),
                 nightscoutId = sgv.identifier,
                 sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device),
                 isValid = sgv.isValid

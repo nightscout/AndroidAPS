@@ -176,9 +176,6 @@
     <string name="no_iob_u">--Ü</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--Ü/sa</string>
-    <string name="uploader_na">Yükleyici: ---%</string>
-    <string name="no_status">S: durum yok</string>
-    <string name="time_stamp_na_min_ago">-- Dakika önce</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Döngü Durumu Yok</string>
     <string name="cob_000g">000g</string>
