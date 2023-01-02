@@ -1768,8 +1768,8 @@ class ComboV2Plugin @Inject constructor (
                                 is RTCommandProgressStage.DeliveringBolus ->
                                     rh.gs(
                                         R.string.combov2_delivering_bolus,
-                                        stage.deliveredAmount.cctlBolusToIU(),
-                                        stage.totalAmount.cctlBolusToIU()
+                                        stage.deliveredImmediateAmount .cctlBolusToIU(),
+                                        stage.totalImmediateAmount.cctlBolusToIU()
                                     )
                                 else -> ""
                             }
