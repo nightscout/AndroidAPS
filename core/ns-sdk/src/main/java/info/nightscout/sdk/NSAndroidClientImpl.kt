@@ -120,7 +120,7 @@ class NSAndroidClientImpl(
         val response = api.getSgvsModifiedSince(from, limit)
         if (response.isSuccessful) {
             val eTagString = response.headers()["ETag"]
-            val eTag = eTagString?.substring(3, eTagString.length - 1)?.toLong() ?: throw UnsuccessfullNightscoutException()
+            val eTag = eTagString?.substring(3, eTagString.length - 1)?.toLong()
             return@callWrapper NSAndroidClient.ReadResponse(eTag, response.body()?.result?.map(RemoteEntry::toSgv).toNotNull())
         } else {
             throw UnsuccessfullNightscoutException()
@@ -142,6 +142,7 @@ class NSAndroidClientImpl(
         val remoteEntry = nsSgvV3.toRemoteEntry()
         remoteEntry.app = "AAPS"
         val response = api.createEntry(remoteEntry)
+        val responseBody = response.body()
         val errorResponse = response.errorBody()?.string()
         if (response.code() == 200) {
             return@callWrapper CreateUpdateResponse(
@@ -152,11 +153,10 @@ class NSAndroidClientImpl(
         } else if (response.code() == 201) {
             return@callWrapper CreateUpdateResponse(
                 response = response.code(),
-                identifier = response.body()?.result?.identifier
-                    ?: throw UnknownResponseNightscoutException(),
-                isDeduplication = response.body()?.result?.isDeduplication ?: false,
-                deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,
-                lastModified = response.body()?.result?.lastModified
+                identifier = responseBody?.result?.identifier,
+                isDeduplication = responseBody?.result?.isDeduplication ?: false,
+                deduplicatedIdentifier = responseBody?.result?.deduplicatedIdentifier,
+                lastModified = responseBody?.result?.lastModified
             )
         } else if (response.code() == 400 && errorResponse?.contains("Bad or missing utcOffset field") == true && nsSgvV3.utcOffset != 0L) {
             // Record can be originally uploaded without utcOffset
@@ -211,7 +211,6 @@ class NSAndroidClientImpl(
         if (response.isSuccessful) {
             val eTagString = response.headers()["ETag"]
             val eTag = eTagString?.substring(3, eTagString.length - 1)?.toLong()
-                ?: throw UnsuccessfullNightscoutException()
             return@callWrapper NSAndroidClient.ReadResponse(eTag, response.body()?.result?.map(RemoteTreatment::toTreatment).toNotNull())
         } else {
             throw UnsuccessfullNightscoutException()
@@ -243,8 +242,7 @@ class NSAndroidClientImpl(
         } else if (response.code() == 201) {
             return@callWrapper CreateUpdateResponse(
                 response = response.code(),
-                identifier = response.body()?.result?.identifier
-                    ?: throw UnknownResponseNightscoutException(),
+                identifier = response.body()?.result?.identifier,
                 isDeduplication = response.body()?.result?.isDeduplication ?: false,
                 deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,
                 lastModified = response.body()?.result?.lastModified
@@ -326,7 +324,7 @@ class NSAndroidClientImpl(
             } else if (response.code() == 201) {
                 return@callWrapper CreateUpdateResponse(
                     response = response.code(),
-                    identifier = response.body()?.result?.identifier ?: throw UnknownResponseNightscoutException(),
+                    identifier = response.body()?.result?.identifier,
                     isDeduplication = response.body()?.result?.isDeduplication ?: false,
                     deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,
                     lastModified = response.body()?.result?.lastModified
@@ -361,7 +359,8 @@ class NSAndroidClientImpl(
                 delayBetweenRetries = RETRY_DELAY,
                 excludedExceptions = listOf(
                     InvalidAccessTokenException::class,
-                    DateHeaderOutOfToleranceException::class
+                    DateHeaderOutOfToleranceException::class,
+                    InvalidFormatNightscoutException::class
                 )
             ) {
                 block.invoke()

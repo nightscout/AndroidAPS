@@ -11,7 +11,7 @@ import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
 interface NSAndroidClient {
 
     class ReadResponse<T>(
-        val lastServerModified: Long,
+        val lastServerModified: Long?,
         val values: T
     )
 

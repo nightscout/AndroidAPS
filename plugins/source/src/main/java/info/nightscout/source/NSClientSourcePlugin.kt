@@ -121,7 +121,8 @@ class NSClientSourcePlugin @Inject constructor(
                 trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction?.nsName),
                 nightscoutId = sgv.identifier,
                 sourceSensor = GlucoseValue.SourceSensor.fromString(sgv.device),
-                isValid = sgv.isValid
+                isValid = sgv.isValid,
+                utcOffset = T.mins(sgv.utcOffset ?: 0L).msecs()
             )
         }
 

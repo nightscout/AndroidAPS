@@ -53,7 +53,7 @@ class LoadTreatmentsWorker(
                     else {
                         response = nsAndroidClient.getTreatmentsModifiedSince(lastLoaded, 500)
                         treatments = response.values
-                        nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = response.lastServerModified
+                        response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = it }
                         nsClientV3Plugin.storeLastLoadedSrvModified()
                     }
                     aapsLogger.debug("TREATMENTS: $treatments")

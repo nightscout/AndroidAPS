@@ -4,13 +4,14 @@ import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSBolus
+import info.nightscout.shared.utils.T
 import java.security.InvalidParameterException
 
 fun NSBolus.toBolus(): Bolus =
     Bolus(
         isValid = isValid,
         timestamp = date ?: throw InvalidParameterException(),
-        utcOffset = utcOffset ?: 0L,
+        utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         amount = insulin,
         type = type.toBolusType(),
         notes = notes,
@@ -26,7 +27,7 @@ fun Bolus.toNSBolus(): NSBolus =
         eventType = if (type == Bolus.Type.SMB) EventType.CORRECTION_BOLUS else EventType.MEAL_BOLUS,
         isValid = isValid,
         date = timestamp,
-        utcOffset = utcOffset,
+        utcOffset = T.msecs(utcOffset).mins(),
         insulin = amount,
         type = type.toBolusType(),
         notes = notes,

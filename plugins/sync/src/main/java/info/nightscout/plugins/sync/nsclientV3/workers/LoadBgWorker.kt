@@ -55,7 +55,7 @@ class LoadBgWorker(
                     else {
                         response = nsAndroidClient.getSgvsModifiedSince(lastLoaded, 500)
                         sgvs = response.values
-                        nsClientV3Plugin.lastLoadedSrvModified.collections.entries = response.lastServerModified
+                        response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.entries = it }
                         nsClientV3Plugin.storeLastLoadedSrvModified()
                     }
                     aapsLogger.debug("SGVS: $sgvs")

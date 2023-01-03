@@ -5,13 +5,14 @@ import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.entry.NsUnits
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryTarget
+import info.nightscout.shared.utils.T
 import java.security.InvalidParameterException
 
 fun NSTemporaryTarget.toTemporaryTarget(): TemporaryTarget =
     TemporaryTarget(
         isValid = isValid,
         timestamp = date ?: throw InvalidParameterException(),
-        utcOffset = utcOffset ?: 0L,
+        utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         reason = reason.toReason(),
         highTarget = targetTop.asMgdl(),
         lowTarget = targetBottom.asMgdl(),
@@ -27,7 +28,7 @@ fun TemporaryTarget.toNSTemporaryTarget(): NSTemporaryTarget =
         eventType = EventType.TEMPORARY_TARGET,
         isValid = isValid,
         date = timestamp,
-        utcOffset = utcOffset,
+        utcOffset = T.msecs(utcOffset).mins(),
         reason = reason.toReason(),
         targetTop = highTarget,
         targetBottom = lowTarget,

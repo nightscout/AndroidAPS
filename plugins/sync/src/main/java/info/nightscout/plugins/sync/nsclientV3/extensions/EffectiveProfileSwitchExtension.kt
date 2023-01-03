@@ -8,6 +8,7 @@ import info.nightscout.plugins.sync.nsclient.extensions.fromConstant
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSEffectiveProfileSwitch
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import java.security.InvalidParameterException
 
 fun NSEffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil): EffectiveProfileSwitch? {
@@ -17,7 +18,7 @@ fun NSEffectiveProfileSwitch.toEffectiveProfileSwitch(dateUtil: DateUtil): Effec
     return EffectiveProfileSwitch(
         isValid = isValid,
         timestamp = date ?: throw InvalidParameterException(),
-        utcOffset = utcOffset ?: 0L,
+        utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         basalBlocks = profileSealed.basalBlocks,
         isfBlocks = profileSealed.isfBlocks,
         icBlocks = profileSealed.icBlocks,
@@ -39,7 +40,7 @@ fun EffectiveProfileSwitch.toNSEffectiveProfileSwitch(dateUtil: DateUtil) : NSEf
         eventType = EventType.NOTE,
         isValid = isValid,
         date = timestamp,
-        utcOffset = utcOffset,
+        utcOffset = T.msecs(utcOffset).mins(),
         profileJson = ProfileSealed.EPS(this).toPureNsJson(dateUtil),
         originalProfileName = originalProfileName,
         originalCustomizedName = originalCustomizedName,

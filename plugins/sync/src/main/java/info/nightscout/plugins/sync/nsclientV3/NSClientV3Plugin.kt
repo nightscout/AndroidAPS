@@ -358,7 +358,7 @@ class NSClientV3Plugin @Inject constructor(
                         call?.let { it(data) }?.let { result ->
                             when (result.response) {
                                 200  -> rxBus.send(EventNSClientNewLog("UPDATED", "OK ${dataPair.value.javaClass.simpleName}"))
-                                201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName} ${result.identifier}"))
+                                201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName}"))
                                 400  -> rxBus.send(EventNSClientNewLog("FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                                 else -> {
@@ -411,7 +411,7 @@ class NSClientV3Plugin @Inject constructor(
                         call?.let { it(data) }?.let { result ->
                             when (result.response) {
                                 200  -> rxBus.send(EventNSClientNewLog("UPDATED", "OK ${dataPair.value.javaClass.simpleName}"))
-                                201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName} ${result.identifier}"))
+                                201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName}"))
                                 400  -> rxBus.send(EventNSClientNewLog("FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                                 else -> {
@@ -490,7 +490,7 @@ class NSClientV3Plugin @Inject constructor(
                         call?.let { it(data) }?.let { result ->
                             when (result.response) {
                                 200  -> rxBus.send(EventNSClientNewLog("UPDATED", "OK ${dataPair.value.javaClass.simpleName}"))
-                                201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName} ${result.identifier}"))
+                                201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName}"))
                                 400  -> rxBus.send(EventNSClientNewLog("FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                                 else -> {

@@ -5,6 +5,7 @@ import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.sdk.localmodel.entry.Direction
 import info.nightscout.sdk.localmodel.entry.NSSgvV3
 import info.nightscout.sdk.localmodel.entry.NsUnits
+import info.nightscout.shared.utils.T
 import java.security.InvalidParameterException
 
 // copy of NSClientSourcePlugin for testing
@@ -12,12 +13,13 @@ fun NSSgvV3.toTransactionGlucoseValue(): TransactionGlucoseValue {
     return TransactionGlucoseValue(
         timestamp = date ?: throw InvalidParameterException(),
         value = sgv,
-        noise = noise?.toDouble(),
+        noise = noise,
         raw = filtered,
         trendArrow = GlucoseValue.TrendArrow.fromString(direction?.nsName),
         nightscoutId = identifier,
         sourceSensor = GlucoseValue.SourceSensor.fromString(device),
-        isValid = isValid
+        isValid = isValid,
+        utcOffset = T.mins(utcOffset ?: 0L).msecs()
     )
 }
 
@@ -30,7 +32,8 @@ fun TransactionGlucoseValue.toGlucoseValue() =
         noise = noise,
         trendArrow = trendArrow,
         sourceSensor = sourceSensor,
-        isValid = isValid
+        isValid = isValid,
+        utcOffset = utcOffset
     ).also { gv ->
         gv.interfaceIDs.nightscoutId = nightscoutId
     }
@@ -39,7 +42,7 @@ fun GlucoseValue.toNSSvgV3(): NSSgvV3 =
     NSSgvV3(
         isValid = isValid,
         date = timestamp,
-        utcOffset = utcOffset,
+        utcOffset = T.msecs(utcOffset).mins(),
         filtered = raw,
         unfiltered = 0.0,
         sgv = value,
