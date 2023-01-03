@@ -15,6 +15,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.database.entities.interfaces.TraceableDBEntry
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
@@ -74,7 +75,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import java.util.concurrent.Executors
@@ -225,7 +225,7 @@ class NSClientV3Plugin @Inject constructor(
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
         }
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = config.isEngineeringMode()
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_api_secret))?.isVisible = false
+        preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_api_secret))?.isVisible = false
     }
 
     override val hasWritePermission: Boolean get() = nsAndroidClient?.lastStatus?.apiPermissions?.isFull() ?: false

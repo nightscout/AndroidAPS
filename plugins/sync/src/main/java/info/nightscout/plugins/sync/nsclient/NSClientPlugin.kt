@@ -14,6 +14,7 @@ import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.toJson
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.nsclient.NSAlarm
@@ -153,7 +154,7 @@ class NSClientPlugin @Inject constructor(
         if (activePlugin.activeBgSource is DoingOwnUploadSource) {
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_do_ns_upload))?.isVisible = false
         }
-        preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_client_token))?.isVisible = false
+        preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(R.string.key_ns_client_token))?.isVisible = false
     }
 
     override val hasWritePermission: Boolean get() = nsClientService?.hasWriteAuth ?: false
