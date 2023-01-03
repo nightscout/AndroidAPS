@@ -4,14 +4,14 @@ import info.nightscout.comboctl.base.Cipher
 import info.nightscout.comboctl.base.ComboException
 import info.nightscout.comboctl.base.Nonce
 import info.nightscout.comboctl.base.TransportLayer
-import kotlin.coroutines.CoroutineContext
-import kotlin.coroutines.EmptyCoroutineContext
-import kotlin.test.fail
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlin.coroutines.CoroutineContext
+import kotlin.coroutines.EmptyCoroutineContext
+import kotlin.test.fail
 
 // Utility function to combine runBlocking() with a watchdog.
 // A coroutine is started with runBlocking(), and inside that

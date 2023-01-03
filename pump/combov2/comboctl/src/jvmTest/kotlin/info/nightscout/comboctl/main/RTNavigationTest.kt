@@ -13,13 +13,6 @@ import info.nightscout.comboctl.parser.MainScreenContent
 import info.nightscout.comboctl.parser.ParsedScreen
 import info.nightscout.comboctl.parser.Quickinfo
 import info.nightscout.comboctl.parser.ReservoirState
-import kotlin.reflect.KClassifier
-import kotlin.test.Test
-import kotlin.test.assertContentEquals
-import kotlin.test.assertEquals
-import kotlin.test.assertIs
-import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
@@ -29,7 +22,14 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.datetime.LocalDateTime
 import org.junit.jupiter.api.BeforeAll
+import kotlin.reflect.KClassifier
+import kotlin.test.Test
+import kotlin.test.assertContentEquals
+import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
+import kotlin.test.assertIs
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 class RTNavigationTest {
     /* RTNavigationContext implementation for testing out RTNavigation functionality.
@@ -360,7 +360,6 @@ class RTNavigationTest {
             decrementButton = RTNavigationButton.DOWN
         )
         assertEquals(Pair(0, RTNavigationButton.CHECK), result)
-
     }
 
     @Test

@@ -7,12 +7,12 @@ import info.nightscout.comboctl.base.testUtils.TestRefPacketItem
 import info.nightscout.comboctl.base.testUtils.checkTestPacketSequence
 import info.nightscout.comboctl.base.testUtils.produceTpLayerPacket
 import info.nightscout.comboctl.base.testUtils.runBlockingWithWatchdog
-import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 import kotlinx.coroutines.delay
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.UtcOffset
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class PumpIOTest {
     // Common test code.
@@ -599,23 +599,23 @@ class PumpIOTest {
                 ApplicationLayer.CMDHistoryEvent(
                     LocalDateTime(year = 2021, monthNumber = 2, dayOfMonth = 9, hour = 17, minute = 0, second = 19),
                     80666,
-                    ApplicationLayer.CMDHistoryEventDetail.ExtendedBolusStarted(177, 15)
+                    ApplicationLayer.CMDHistoryEventDetail.ExtendedBolusStarted(177, 15, true)
                 ),
                 ApplicationLayer.CMDHistoryEvent(
                     LocalDateTime(year = 2021, monthNumber = 2, dayOfMonth = 9, hour = 17, minute = 15, second = 18),
                     80668,
-                    ApplicationLayer.CMDHistoryEventDetail.ExtendedBolusEnded(177, 15)
+                    ApplicationLayer.CMDHistoryEventDetail.ExtendedBolusEnded(177, 15, true)
                 ),
 
                 ApplicationLayer.CMDHistoryEvent(
                     LocalDateTime(year = 2021, monthNumber = 2, dayOfMonth = 9, hour = 17, minute = 21, second = 31),
                     80670,
-                    ApplicationLayer.CMDHistoryEventDetail.MultiwaveBolusStarted(193, 37, 30)
+                    ApplicationLayer.CMDHistoryEventDetail.MultiwaveBolusStarted(193, 37, 30, true)
                 ),
                 ApplicationLayer.CMDHistoryEvent(
                     LocalDateTime(year = 2021, monthNumber = 2, dayOfMonth = 9, hour = 17, minute = 51, second = 8),
                     80672,
-                    ApplicationLayer.CMDHistoryEventDetail.MultiwaveBolusEnded(193, 37, 30)
+                    ApplicationLayer.CMDHistoryEventDetail.MultiwaveBolusEnded(193, 37, 30, true)
                 ),
 
                 ApplicationLayer.CMDHistoryEvent(

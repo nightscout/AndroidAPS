@@ -2,12 +2,12 @@ package info.nightscout.comboctl.parser
 
 import info.nightscout.comboctl.base.DisplayFrame
 import info.nightscout.comboctl.base.timeWithoutDate
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.fail
-import kotlinx.datetime.LocalDate
-import kotlinx.datetime.LocalDateTime
 
 class ParserTest {
     class TestContext(displayFrame: DisplayFrame, tokenOffset: Int, skipTitleString: Boolean = false, parseTopLeftTime: Boolean = false) {
