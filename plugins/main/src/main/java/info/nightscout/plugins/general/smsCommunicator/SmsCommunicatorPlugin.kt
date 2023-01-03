@@ -259,7 +259,7 @@ class SmsCommunicatorPlugin @Inject constructor(
         val pump = activePlugin.activePump
         messages.add(receivedSms)
         aapsLogger.debug(LTag.SMS, receivedSms.toString())
-        val divided = receivedSms.text.split(Regex("\\s+")).toTypedArray()
+        val divided = receivedSms.text.trim().split(Regex("\\s+")).toTypedArray()
         val remoteCommandsAllowed = sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)
 
         val minDistance =
@@ -1226,6 +1226,7 @@ class SmsCommunicatorPlugin @Inject constructor(
 
     override fun sendSMS(sms: Sms): Boolean {
         sms.text = stripAccents(sms.text)
+
         try {
             aapsLogger.debug(LTag.SMS, "Sending SMS to " + sms.phoneNumber + ": " + sms.text)
             if (sms.text.toByteArray().size <= 140) smsManager?.sendTextMessage(sms.phoneNumber, null, sms.text, null, null)
