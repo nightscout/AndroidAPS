@@ -244,7 +244,7 @@ class NSClientPlugin @Inject constructor(
         dataSyncSelector.resetToNextFullSync()
     }
 
-    override fun dbAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+    override fun nsAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
         when (dataPair) {
             is DataSyncSelector.PairBolus                  -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(true, dateUtil)
@@ -266,7 +266,7 @@ class NSClientPlugin @Inject constructor(
         }
     }
 
-    override fun dbUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+    override fun nsUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
         val id = when (dataPair) {
             is DataSyncSelector.PairBolus                  -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairCarbs                  -> dataPair.value.interfaceIDs.nightscoutId

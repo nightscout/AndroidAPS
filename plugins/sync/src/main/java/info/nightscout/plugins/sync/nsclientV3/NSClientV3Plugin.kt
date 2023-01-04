@@ -120,7 +120,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     private val disposable = CompositeDisposable()
-    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
+    var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private lateinit var runLoop: Runnable
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val listLog: MutableList<EventNSClientNewLog> = ArrayList()
@@ -320,11 +320,11 @@ class NSClientV3Plugin @Inject constructor(
         storeLastLoadedSrvModified()
     }
 
-    override fun dbAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+    override fun nsAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
         dbOperation(collection, dataPair, progress, Operation.CREATE)
     }
 
-    override fun dbUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+    override fun nsUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
         dbOperation(collection, dataPair, progress, Operation.UPDATE)
     }
 

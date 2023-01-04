@@ -1,5 +1,6 @@
 package info.nightscout.plugins.sync.nsclient
 
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.plugins.sync.R
 import info.nightscout.rx.bus.RxBus
@@ -11,6 +12,7 @@ import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
 class NsClientReceiverDelegate @Inject constructor(
     private val rxBus: RxBus,

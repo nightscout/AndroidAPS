@@ -26,6 +26,7 @@ dependencies {
     implementation project(':core:utils')
     implementation project(':core:validators')
 
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
     testImplementation "androidx.work:work-testing:$work_version"
     testImplementation project(':implementation')
     testImplementation project(':plugins:aps')

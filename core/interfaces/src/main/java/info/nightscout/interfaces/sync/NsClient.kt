@@ -46,6 +46,6 @@ interface NsClient : Sync {
 
     fun resetToFullSync()
 
-    fun dbAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String)
-    fun dbUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String)
+    fun nsAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String)
+    fun nsUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String)
 }
