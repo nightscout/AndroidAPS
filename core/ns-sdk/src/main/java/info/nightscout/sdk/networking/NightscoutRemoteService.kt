@@ -56,14 +56,17 @@ internal interface NightscoutRemoteService {
     @GET("v3/treatments/history/{from}")
     suspend fun getTreatmentsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Long): Response<NSResponse<List<RemoteTreatment>>>
 
-    @GET("v3/devicestatus/history/{from}")
-    suspend fun getDeviceStatusModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteDeviceStatus>>>
-
     @POST("v3/treatments")
     suspend fun createTreatment(@Body remoteTreatment: RemoteTreatment): Response<NSResponse<RemoteCreateUpdateResponse>>
 
     @PATCH("v3/treatments/{identifier}")
     suspend fun updateTreatment(@Body remoteTreatment: RemoteTreatment, @Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
+
+    @POST("v3/devicestatus")
+    suspend fun createDeviceStatus(@Body remoteDeviceStatus: RemoteDeviceStatus): Response<NSResponse<RemoteCreateUpdateResponse>>
+
+    @GET("v3/devicestatus/history/{from}")
+    suspend fun getDeviceStatusModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteDeviceStatus>>>
 
     @GET("v3/food")
     suspend fun getFoods(@Query("limit") limit: Long): Response<NSResponse<List<RemoteFood>>>

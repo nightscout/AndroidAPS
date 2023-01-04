@@ -28,6 +28,7 @@ dependencies {
 
     testImplementation "androidx.work:work-testing:$work_version"
     testImplementation project(':implementation')
+    testImplementation project(':plugins:aps')
 
     // NSClient, Tidepool
     api("io.socket:socket.io-client:1.0.2") {

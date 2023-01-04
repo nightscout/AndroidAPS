@@ -11,10 +11,12 @@ import org.json.JSONObject
  **/
 @Serializable
 data class RemoteDeviceStatus(
-    @SerializedName("identifier") val identifier: String?,       // string Main addressing, required field that identifies document in the collection. The client should not create the identifier, the server automatically assigns it when the document is inserted.
-    @SerializedName("srvCreated") val srvCreated: Long?,         // integer($int64) example: 1525383610088 The server's timestamp of document insertion into the database (Unix epoch in ms). This field appears only for documents which were inserted by API v3.
-    @SerializedName("srvModified") val srvModified: Long?,       // integer($int64) example: 1525383610088 The server's timestamp of the last document modification in the database (Unix epoch in ms). This field appears only for documents which were somehow modified by API v3 (inserted, updated or deleted).
-    @SerializedName("created_at") val createdAt: String?,        // string or string timestamp on previous version of api, in my examples, a lot of treatments don't have date, only created_at, some of them with string others with long...
+    @SerializedName("app") var app: String? = null,
+    @SerializedName("identifier") val identifier: String? = null, // string Main addressing, required field that identifies document in the collection. The client should not create the identifier, the server automatically assigns it when the document is inserted.
+    @SerializedName("srvCreated") val srvCreated: Long? = null,   // integer($int64) example: 1525383610088 The server's timestamp of document insertion into the database (Unix epoch in ms). This field appears only for documents which were inserted by API v3.
+    @SerializedName("srvModified") val srvModified: Long? = null, // integer($int64) example: 1525383610088 The server's timestamp of the last document modification in the database (Unix epoch in ms). This field appears only for documents which were somehow modified by API v3 (inserted, updated or deleted).
+    @SerializedName("created_at") val createdAt: String? = null,  // string or string timestamp on previous version of api, in my examples, a lot of treatments don't have date, only created_at, some of them with string others with long...
+    @SerializedName("date") val date: Long?,                     // date as milliseconds
     @SerializedName("uploaderBattery") val uploaderBattery: Int?,// integer($int64)
     @SerializedName("device") val device: String?,               // "openaps://samsung SM-G970F"
 

@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 @Suppress("SpellCheckingInspection")
-internal class OfflineEventKtTest {
+internal class OfflineEventExtensionKtTest {
 
     @Test
     fun toOfflineEvent() {

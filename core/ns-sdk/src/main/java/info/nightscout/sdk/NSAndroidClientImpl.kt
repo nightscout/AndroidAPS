@@ -227,6 +227,34 @@ class NSAndroidClientImpl(
         }
     }
 
+    override suspend fun createDeviceStatus(remoteDeviceStatus: RemoteDeviceStatus): CreateUpdateResponse = callWrapper(dispatcher) {
+
+        remoteDeviceStatus.app = "AAPS"
+        val response = api.createDeviceStatus(remoteDeviceStatus)
+        if (response.isSuccessful) {
+            if (response.code() == 200) {
+                return@callWrapper CreateUpdateResponse(
+                    response = response.code(),
+                    identifier = null,
+                    isDeduplication = true,
+                    deduplicatedIdentifier = null,
+                    lastModified = null
+                )
+            } else if (response.code() == 201) {
+                return@callWrapper CreateUpdateResponse(
+                    response = response.code(),
+                    identifier = response.body()?.result?.identifier
+                        ?: throw UnknownResponseNightscoutException(),
+                    isDeduplication = response.body()?.result?.isDeduplication ?: false,
+                    deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,
+                    lastModified = response.body()?.result?.lastModified
+                )
+            } else throw UnknownResponseNightscoutException()
+        } else {
+            throw UnsuccessfullNightscoutException()
+        }
+    }
+
     override suspend fun createTreatment(nsTreatment: NSTreatment): CreateUpdateResponse = callWrapper(dispatcher) {
 
         val remoteTreatment = nsTreatment.toRemoteTreatment() ?: throw InvalidFormatNightscoutException()
