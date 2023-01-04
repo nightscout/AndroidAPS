@@ -43,43 +43,43 @@ interface DataSyncSelector {
     fun resetToNextFullSync()
 
     fun confirmLastBolusIdIfGreater(lastSynced: Long)
-    fun processChangedBolusesCompat()
+    fun processChangedBoluses()
 
     fun confirmLastCarbsIdIfGreater(lastSynced: Long)
-    fun processChangedCarbsCompat()
+    fun processChangedCarbs()
 
     fun confirmLastBolusCalculatorResultsIdIfGreater(lastSynced: Long)
-    fun processChangedBolusCalculatorResultsCompat()
+    fun processChangedBolusCalculatorResults()
 
     fun confirmLastTempTargetsIdIfGreater(lastSynced: Long)
-    fun processChangedTempTargetsCompat()
+    fun processChangedTempTargets()
 
     fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long)
-    fun processChangedGlucoseValuesCompat()
+    fun processChangedGlucoseValues()
 
     fun confirmLastTherapyEventIdIfGreater(lastSynced: Long)
-    fun processChangedTherapyEventsCompat()
+    fun processChangedTherapyEvents()
 
     fun confirmLastFoodIdIfGreater(lastSynced: Long)
-    fun processChangedFoodsCompat()
+    fun processChangedFoods()
 
     fun confirmLastDeviceStatusIdIfGreater(lastSynced: Long)
-    fun processChangedDeviceStatusesCompat()
+    fun processChangedDeviceStatuses()
 
     fun confirmLastTemporaryBasalIdIfGreater(lastSynced: Long)
-    fun processChangedTemporaryBasalsCompat()
+    fun processChangedTemporaryBasals()
 
     fun confirmLastExtendedBolusIdIfGreater(lastSynced: Long)
-    fun processChangedExtendedBolusesCompat()
+    fun processChangedExtendedBoluses()
 
     fun confirmLastProfileSwitchIdIfGreater(lastSynced: Long)
-    fun processChangedProfileSwitchesCompat()
+    fun processChangedProfileSwitches()
 
     fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long)
-    fun processChangedEffectiveProfileSwitchesCompat()
+    fun processChangedEffectiveProfileSwitches()
 
     fun confirmLastOfflineEventIdIfGreater(lastSynced: Long)
-    fun processChangedOfflineEventsCompat()
+    fun processChangedOfflineEvents()
 
     fun confirmLastProfileStore(lastSynced: Long)
     fun processChangedProfileStore()

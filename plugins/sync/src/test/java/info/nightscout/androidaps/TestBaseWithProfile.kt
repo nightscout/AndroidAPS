@@ -48,7 +48,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var insulin: Insulin
 
-    lateinit var profileFunction: ProfileFunction
+    open lateinit var profileFunction: ProfileFunction
     lateinit var dateUtil: DateUtil
     var insulinConfiguration: InsulinConfiguration = InsulinConfiguration("Insulin", 360 * 60 * 1000, 60 * 60 * 1000)
     val rxBus = RxBus(aapsSchedulers, aapsLogger)

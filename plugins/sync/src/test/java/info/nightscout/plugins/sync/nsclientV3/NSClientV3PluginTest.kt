@@ -1,13 +1,23 @@
 package info.nightscout.plugins.sync.nsclientV3
 
-import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
-import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.androidaps.TestBaseWithProfile
+import info.nightscout.core.extensions.fromConstant
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.BolusCalculatorResult
+import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.DeviceStatus
-import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.Config
+import info.nightscout.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.entities.ExtendedBolus
+import info.nightscout.database.entities.Food
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.entities.OfflineEvent
+import info.nightscout.database.entities.ProfileSwitch
+import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.nsclient.StoreDataForDb
@@ -18,43 +28,32 @@ import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclient.NsClientReceiverDelegate
-import info.nightscout.rx.bus.RxBus
+import info.nightscout.plugins.sync.nsclient.extensions.fromConstant
 import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.treatment.CreateUpdateResponse
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.Mockito.anyLong
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 import org.mockito.internal.verification.Times
 
 @Suppress("SpellCheckingInspection")
-internal class NSClientV3PluginTest : TestBase() {
+internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var rxBus: RxBus
-    @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var context: Context
-    @Mock lateinit var fabricPrivacy: FabricPrivacy
-    @Mock lateinit var sp: SP
     @Mock lateinit var nsClientReceiverDelegate: NsClientReceiverDelegate
-    @Mock lateinit var config: Config
-    @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var dataSyncSelector: DataSyncSelector
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var nsAndroidClient: NSAndroidClient
-    @Mock lateinit var repository: AppRepository
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var xDripBroadcast: XDripBroadcast
     @Mock lateinit var virtualPump: VirtualPump
+    @Mock lateinit var mockedProfileFunction: ProfileFunction
 
     private lateinit var storeDataForDb: StoreDataForDb
     private lateinit var sut: NSClientV3Plugin
@@ -70,9 +69,10 @@ internal class NSClientV3PluginTest : TestBase() {
         sut =
             NSClientV3Plugin(
                 injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-                sp, nsClientReceiverDelegate, config, dateUtil, uiInteraction, storeDataForDb, dataSyncSelector, profileFunction
+                sp, nsClientReceiverDelegate, config, dateUtil, uiInteraction, storeDataForDb, dataSyncSelector, mockedProfileFunction
             )
         sut.nsAndroidClient = nsAndroidClient
+        `when`(mockedProfileFunction.getProfile(anyLong())).thenReturn(validProfile)
     }
 
     @Test
@@ -92,10 +92,431 @@ internal class NSClientV3PluginTest : TestBase() {
             configuration = "{\"insulin\":5,\"insulinConfiguration\":{},\"sensitivity\":2,\"sensitivityConfiguration\":{\"openapsama_min_5m_carbimpact\":8,\"absorption_cutoff\":4,\"autosens_max\":1.2,\"autosens_min\":0.7},\"overviewConfiguration\":{\"units\":\"mmol\",\"QuickWizard\":\"[]\",\"eatingsoon_duration\":60,\"eatingsoon_target\":4,\"activity_duration\":180,\"activity_target\":7.5,\"hypo_duration\":90,\"hypo_target\":8,\"low_mark\":3.9,\"high_mark\":10,\"statuslights_cage_warning\":72,\"statuslights_cage_critical\":96,\"statuslights_iage_warning\":120,\"statuslights_iage_critical\":150,\"statuslights_sage_warning\":168,\"statuslights_sage_critical\":336,\"statuslights_sbat_warning\":25,\"statuslights_sbat_critical\":5,\"statuslights_bage_warning\":720,\"statuslights_bage_critical\":800,\"statuslights_res_warning\":30,\"statuslights_res_critical\":10,\"statuslights_bat_warning\":50,\"statuslights_bat_critical\":25,\"boluswizard_percentage\":70},\"safetyConfiguration\":{\"age\":\"resistantadult\",\"treatmentssafety_maxbolus\":10,\"treatmentssafety_maxcarbs\":70}}"
         )
         val dataPair = DataSyncSelector.PairDeviceStatus(deviceStatus, 1000)
+        // create
         `when`(nsAndroidClient.createDeviceStatus(anyObject())).thenReturn(CreateUpdateResponse(201, null))
         sut.nsAdd("devicestatus", dataPair, "1/3")
-        Assertions.assertEquals(1, storeDataForDb.nsIdDeviceStatuses.size)
+        // Assertions.assertEquals(1, storeDataForDb.nsIdDeviceStatuses.size)
         verify(dataSyncSelector, Times(1)).confirmLastDeviceStatusIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedDeviceStatusesCompat()
+        verify(dataSyncSelector, Times(1)).processChangedDeviceStatuses()
+        // update
+        `when`(nsAndroidClient.createDeviceStatus(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsAdd("devicestatus", dataPair, "1/3")
+        // Assertions.assertEquals(1, storeDataForDb.nsIdDeviceStatuses.size) // still only 1
+        verify(dataSyncSelector, Times(2)).confirmLastDeviceStatusIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedDeviceStatuses()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddEntries() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val glucoseValue = GlucoseValue(
+            timestamp = 10000,
+            isValid = true,
+            raw = 101.0,
+            value = 99.0,
+            trendArrow = GlucoseValue.TrendArrow.DOUBLE_UP,
+            noise = 1.0,
+            sourceSensor = GlucoseValue.SourceSensor.DEXCOM_G4_WIXEL,
+            interfaceIDs_backing = InterfaceIDs(
+                nightscoutId = "nightscoutId"
+            )
+        )
+        val dataPair = DataSyncSelector.PairGlucoseValue(glucoseValue, 1000)
+        // create
+        `when`(nsAndroidClient.createSvg(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("entries", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastGlucoseValueIdIfGreater(1000)
+        verify(dataSyncSelector, Times(1)).processChangedGlucoseValues()
+        // update
+        `when`(nsAndroidClient.updateSvg(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("entries", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastGlucoseValueIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedGlucoseValues()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddFood() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val food = Food(
+            isValid = true,
+            name = "name",
+            category = "category",
+            subCategory = "subcategory",
+            portion = 2.0,
+            carbs = 20,
+            fat = 21,
+            protein = 22,
+            energy = 23,
+            unit = "g",
+            gi = 25,
+            interfaceIDs_backing = InterfaceIDs(
+                nightscoutId = "nightscoutId"
+            )
+        )
+        val dataPair = DataSyncSelector.PairFood(food, 1000)
+        // create
+        `when`(nsAndroidClient.createFood(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("food", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastFoodIdIfGreater(1000)
+        verify(dataSyncSelector, Times(1)).processChangedFoods()
+        // update
+        `when`(nsAndroidClient.updateFood(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("food", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastFoodIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedFoods()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddBolus() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val bolus = Bolus(
+            timestamp = 10000,
+            isValid = true,
+            amount = 1.0,
+            type = Bolus.Type.SMB,
+            notes = "aaaa",
+            isBasalInsulin = false,
+            interfaceIDs_backing = InterfaceIDs(
+                nightscoutId = "nightscoutId",
+                pumpId = 11000,
+                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpSerial = "bbbb"
+            )
+        )
+        val dataPair = DataSyncSelector.PairBolus(bolus, 1000)
+        // create
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastBolusIdIfGreater(1000)
+        verify(dataSyncSelector, Times(1)).processChangedBoluses()
+        // update
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastBolusIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedBoluses()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddCarbs() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val carbs = Carbs(
+            timestamp = 10000,
+            isValid = true,
+            amount = 1.0,
+            duration = 0,
+            notes = "aaaa",
+            interfaceIDs_backing = InterfaceIDs(
+                nightscoutId = "nightscoutId",
+                pumpId = 11000,
+                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpSerial = "bbbb"
+            )
+        )
+        val dataPair = DataSyncSelector.PairCarbs(carbs, 1000)
+        // create
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastCarbsIdIfGreater(1000)
+        verify(dataSyncSelector, Times(1)).processChangedCarbs()
+        // update
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastCarbsIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedCarbs()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddBolusCalculatorResult() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val bolus = BolusCalculatorResult(
+            timestamp = 10000,
+            isValid = true,
+            targetBGLow = 110.0,
+            targetBGHigh = 120.0,
+            isf = 30.0,
+            ic = 2.0,
+            bolusIOB = 1.1,
+            wasBolusIOBUsed = true,
+            basalIOB = 1.2,
+            wasBasalIOBUsed = true,
+            glucoseValue = 150.0,
+            wasGlucoseUsed = true,
+            glucoseDifference = 30.0,
+            glucoseInsulin = 1.3,
+            glucoseTrend = 15.0,
+            wasTrendUsed = true,
+            trendInsulin = 1.4,
+            cob = 24.0,
+            wasCOBUsed = true,
+            cobInsulin = 1.5,
+            carbs = 36.0,
+            wereCarbsUsed = true,
+            carbsInsulin = 1.6,
+            otherCorrection = 1.7,
+            wasSuperbolusUsed = true,
+            superbolusInsulin = 0.3,
+            wasTempTargetUsed = false,
+            totalInsulin = 9.1,
+            percentageCorrection = 70,
+            profileName = " sss",
+            note = "ddd",
+            interfaceIDs_backing = InterfaceIDs(
+                nightscoutId = "nightscoutId",
+                pumpId = 11000,
+                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpSerial = "bbbb"
+            )
+        )
+        val dataPair = DataSyncSelector.PairBolusCalculatorResult(bolus, 1000)
+        // create
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastBolusCalculatorResultsIdIfGreater(1000)
+        verify(dataSyncSelector, Times(1)).processChangedBolusCalculatorResults()
+        // update
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastBolusCalculatorResultsIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedBolusCalculatorResults()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddEffectiveProfileSwitch() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val profileSwitch = EffectiveProfileSwitch(
+            timestamp = 10000,
+            isValid = true,
+            basalBlocks = validProfile.basalBlocks,
+            isfBlocks = validProfile.isfBlocks,
+            icBlocks = validProfile.icBlocks,
+            targetBlocks = validProfile.targetBlocks,
+            glucoseUnit = EffectiveProfileSwitch.GlucoseUnit.fromConstant(validProfile.units),
+            originalProfileName = "SomeProfile",
+            originalCustomizedName = "SomeProfile (150%, 1h)",
+            originalTimeshift = 3600000,
+            originalPercentage = 150,
+            originalDuration = 3600000,
+            originalEnd = 0,
+            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration.also {
+                it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
+            },
+            interfaceIDs_backing = InterfaceIDs(
+                nightscoutId = "nightscoutId",
+                pumpId = 11000,
+                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpSerial = "bbbb"
+            )
+        )
+        val dataPair = DataSyncSelector.PairEffectiveProfileSwitch(profileSwitch, 1000)
+        // create
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastEffectiveProfileSwitchIdIfGreater(1000)
+        verify(dataSyncSelector, Times(1)).processChangedEffectiveProfileSwitches()
+        // update
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastEffectiveProfileSwitchIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedEffectiveProfileSwitches()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddProfileSwitch() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val profileSwitch = ProfileSwitch(
+            timestamp = 10000,
+            isValid = true,
+            basalBlocks = validProfile.basalBlocks,
+            isfBlocks = validProfile.isfBlocks,
+            icBlocks = validProfile.icBlocks,
+            targetBlocks = validProfile.targetBlocks,
+            glucoseUnit = ProfileSwitch.GlucoseUnit.fromConstant(validProfile.units),
+            profileName = "SomeProfile",
+            timeshift = 0,
+            percentage = 100,
+            duration = 0,
+            insulinConfiguration = activePlugin.activeInsulin.insulinConfiguration.also {
+                it.insulinEndTime = (validProfile.dia * 3600 * 1000).toLong()
+            },
+            interfaceIDs_backing = InterfaceIDs(
+                nightscoutId = "nightscoutId",
+                pumpId = 11000,
+                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpSerial = "bbbb"
+            )
+        )
+        val dataPair = DataSyncSelector.PairProfileSwitch(profileSwitch, 1000)
+        // create
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastProfileSwitchIdIfGreater(1000)
+        verify(dataSyncSelector, Times(1)).processChangedProfileSwitches()
+        // update
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastProfileSwitchIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedProfileSwitches()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddExtendedBolus() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val extendedBolus = ExtendedBolus(
+            timestamp = 10000,
+            isValid = true,
+            amount = 2.0,
+            isEmulatingTempBasal = false,
+            duration = 3600000,
+            interfaceIDs_backing = InterfaceIDs(
+                nightscoutId = "nightscoutId",
+                pumpId = 11000,
+                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpSerial = "bbbb"
+            )
+        )
+        val dataPair = DataSyncSelector.PairExtendedBolus(extendedBolus, 1000)
+        // create
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastExtendedBolusIdIfGreater(1000)
+        verify(dataSyncSelector, Times(1)).processChangedExtendedBoluses()
+        // update
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastExtendedBolusIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedExtendedBoluses()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddOffilineEvent() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val offlineEvent = OfflineEvent(
+            timestamp = 10000,
+            isValid = true,
+            reason = OfflineEvent.Reason.DISCONNECT_PUMP,
+            duration = 30000,
+            interfaceIDs_backing = InterfaceIDs(
+                nightscoutId = "nightscoutId",
+                pumpId = 11000,
+                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpSerial = "bbbb"
+            )
+        )
+        val dataPair = DataSyncSelector.PairOfflineEvent(offlineEvent, 1000)
+        // create
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastOfflineEventIdIfGreater(1000)
+        verify(dataSyncSelector, Times(1)).processChangedOfflineEvents()
+        // update
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastOfflineEventIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedOfflineEvents()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddTemporaryBasal() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val temporaryBasal = TemporaryBasal(
+            timestamp = 10000,
+            isValid = true,
+            type = TemporaryBasal.Type.NORMAL,
+            rate = 2.0,
+            isAbsolute = true,
+            duration = 3600000,
+            interfaceIDs_backing = InterfaceIDs(
+                nightscoutId = "nightscoutId",
+                pumpId = 11000,
+                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpSerial = "bbbb"
+            )
+        )
+        val dataPair = DataSyncSelector.PairTemporaryBasal(temporaryBasal, 1000)
+        // create
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastTemporaryBasalIdIfGreater(1000)
+        verify(dataSyncSelector, Times(1)).processChangedTemporaryBasals()
+        // update
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastTemporaryBasalIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedTemporaryBasals()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddTemporaryTarget() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val temporaryTarget = TemporaryTarget(
+            timestamp = 10000,
+            isValid = true,
+            reason = TemporaryTarget.Reason.ACTIVITY,
+            highTarget = 100.0,
+            lowTarget = 99.0,
+            duration = 3600000,
+            interfaceIDs_backing = InterfaceIDs(
+                nightscoutId = "nightscoutId",
+                pumpId = 11000,
+                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpSerial = "bbbb"
+            )
+        )
+        val dataPair = DataSyncSelector.PairTemporaryTarget(temporaryTarget, 1000)
+        // create
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastTempTargetsIdIfGreater(1000)
+        verify(dataSyncSelector, Times(1)).processChangedTempTargets()
+        // update
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastTempTargetsIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedTempTargets()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddTherapyEvent() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+        val therapyEvent = TherapyEvent(
+            timestamp = 10000,
+            isValid = true,
+            type = TherapyEvent.Type.ANNOUNCEMENT,
+            note = "ccccc",
+            enteredBy = "dddd",
+            glucose = 101.0,
+            glucoseType = TherapyEvent.MeterType.FINGER,
+            glucoseUnit = TherapyEvent.GlucoseUnit.MGDL,
+            duration = 3600000,
+            interfaceIDs_backing = InterfaceIDs(
+                nightscoutId = "nightscoutId",
+                pumpId = 11000,
+                pumpType = InterfaceIDs.PumpType.DANA_I,
+                pumpSerial = "bbbb"
+            )
+        )
+        val dataPair = DataSyncSelector.PairTherapyEvent(therapyEvent, 1000)
+        // create
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastTherapyEventIdIfGreater(1000)
+        verify(dataSyncSelector, Times(1)).processChangedTherapyEvents()
+        // update
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("treatments", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastTherapyEventIdIfGreater(1000)
+        verify(dataSyncSelector, Times(2)).processChangedTherapyEvents()
     }
 }

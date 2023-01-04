@@ -63,7 +63,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked TemporaryTarget " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedTempTargetsCompat()
+                dataSyncSelector.processChangedTempTargets()
             }
 
             is PairGlucoseValue           -> {
@@ -74,7 +74,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked GlucoseValue " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedGlucoseValuesCompat()
+                dataSyncSelector.processChangedGlucoseValues()
             }
 
             is PairFood                   -> {
@@ -85,7 +85,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked Food " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedFoodsCompat()
+                dataSyncSelector.processChangedFoods()
             }
 
             is PairTherapyEvent           -> {
@@ -96,7 +96,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked TherapyEvent " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedTherapyEventsCompat()
+                dataSyncSelector.processChangedTherapyEvents()
             }
 
             is PairBolus                  -> {
@@ -107,7 +107,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked Bolus " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedBolusesCompat()
+                dataSyncSelector.processChangedBoluses()
             }
 
             is PairCarbs                  -> {
@@ -118,7 +118,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked Carbs " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedCarbsCompat()
+                dataSyncSelector.processChangedCarbs()
             }
 
             is PairBolusCalculatorResult  -> {
@@ -129,7 +129,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked BolusCalculatorResult " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedBolusCalculatorResultsCompat()
+                dataSyncSelector.processChangedBolusCalculatorResults()
             }
 
             is PairTemporaryBasal         -> {
@@ -140,7 +140,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked TemporaryBasal " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedTemporaryBasalsCompat()
+                dataSyncSelector.processChangedTemporaryBasals()
             }
 
             is PairExtendedBolus          -> {
@@ -151,7 +151,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked ExtendedBolus " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedExtendedBolusesCompat()
+                dataSyncSelector.processChangedExtendedBoluses()
             }
 
             is PairProfileSwitch          -> {
@@ -162,7 +162,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked ProfileSwitch " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedProfileSwitchesCompat()
+                dataSyncSelector.processChangedProfileSwitches()
             }
 
             is PairEffectiveProfileSwitch -> {
@@ -173,7 +173,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked EffectiveProfileSwitch " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedEffectiveProfileSwitchesCompat()
+                dataSyncSelector.processChangedEffectiveProfileSwitches()
             }
 
             is DataSyncSelector.PairDeviceStatus -> {
@@ -184,7 +184,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked DeviceStatus " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedDeviceStatusesCompat()
+                dataSyncSelector.processChangedDeviceStatuses()
             }
 
             is PairProfileStore           -> {
@@ -200,7 +200,7 @@ class NSClientAddAckWorker(
                 storeDataForDb.scheduleNsIdUpdate()
                 rxBus.send(EventNSClientNewLog("DBADD", "Acked OfflineEvent " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedOfflineEventsCompat()
+                dataSyncSelector.processChangedOfflineEvents()
             }
 
         }

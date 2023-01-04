@@ -346,13 +346,13 @@ class NSClientV3Plugin @Inject constructor(
                             return@launch
                         }
                     }
-                    if (result.response == 201) { // created
-                        dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                        storeDataForDb.nsIdDeviceStatuses.add(dataPair.value)
-                        storeDataForDb.scheduleNsIdUpdate()
-                    }
+                    // if (result.response == 201) { // created
+                    //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                    //     storeDataForDb.nsIdDeviceStatuses.add(dataPair.value)
+                    //     storeDataForDb.scheduleNsIdUpdate()
+                    // }
                     dataSyncSelector.confirmLastDeviceStatusIdIfGreater(dataPair.id)
-                    dataSyncSelector.processChangedDeviceStatusesCompat()
+                    dataSyncSelector.processChangedDeviceStatuses()
                 }
             } catch (e: Exception) {
                 aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
@@ -397,13 +397,13 @@ class NSClientV3Plugin @Inject constructor(
                         }
                         when (dataPair) {
                             is DataSyncSelector.PairGlucoseValue -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdGlucoseValues.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
-                                }
+                                // if (result.response == 201) { // created
+                                //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                //     storeDataForDb.nsIdGlucoseValues.add(dataPair.value)
+                                //     storeDataForDb.scheduleNsIdUpdate()
+                                // }
                                 dataSyncSelector.confirmLastGlucoseValueIdIfGreater(dataPair.id)
-                                dataSyncSelector.processChangedGlucoseValuesCompat()
+                                dataSyncSelector.processChangedGlucoseValues()
                             }
                         }
                     }
@@ -451,13 +451,13 @@ class NSClientV3Plugin @Inject constructor(
                         }
                         when (dataPair) {
                             is DataSyncSelector.PairFood -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdFoods.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
-                                }
+                                // if (result.response == 201) { // created
+                                //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                //     storeDataForDb.nsIdFoods.add(dataPair.value)
+                                //     storeDataForDb.scheduleNsIdUpdate()
+                                // }
                                 dataSyncSelector.confirmLastFoodIdIfGreater(dataPair.id)
-                                dataSyncSelector.processChangedFoodsCompat()
+                                dataSyncSelector.processChangedFoods()
                             }
                         }
                     }
@@ -484,7 +484,7 @@ class NSClientV3Plugin @Inject constructor(
                 val profile = profileFunction.getProfile(dataPair.value.timestamp)
                 if (profile == null) {
                     dataSyncSelector.confirmLastTemporaryBasalIdIfGreater(dataPair.id)
-                    dataSyncSelector.processChangedTemporaryBasalsCompat()
+                    dataSyncSelector.processChangedTemporaryBasals()
                     return
                 }
                 dataPair.value.toNSTemporaryBasal(profile)
@@ -494,7 +494,7 @@ class NSClientV3Plugin @Inject constructor(
                 val profile = profileFunction.getProfile(dataPair.value.timestamp)
                 if (profile == null) {
                     dataSyncSelector.confirmLastExtendedBolusIdIfGreater(dataPair.id)
-                    dataSyncSelector.processChangedExtendedBolusesCompat()
+                    dataSyncSelector.processChangedExtendedBoluses()
                     return
                 }
                 dataPair.value.toNSExtendedBolus(profile)
@@ -533,103 +533,103 @@ class NSClientV3Plugin @Inject constructor(
                         }
                         when (dataPair) {
                             is DataSyncSelector.PairBolus                  -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdBoluses.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
-                                }
+                                // if (result.response == 201) { // created
+                                //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                //     storeDataForDb.nsIdBoluses.add(dataPair.value)
+                                //     storeDataForDb.scheduleNsIdUpdate()
+                                // }
                                 dataSyncSelector.confirmLastBolusIdIfGreater(dataPair.id)
-                                dataSyncSelector.processChangedBolusesCompat()
+                                dataSyncSelector.processChangedBoluses()
                             }
 
                             is DataSyncSelector.PairCarbs                  -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdCarbs.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
-                                }
+                                // if (result.response == 201) { // created
+                                //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                //     storeDataForDb.nsIdCarbs.add(dataPair.value)
+                                //     storeDataForDb.scheduleNsIdUpdate()
+                                // }
                                 dataSyncSelector.confirmLastCarbsIdIfGreater(dataPair.id)
-                                dataSyncSelector.processChangedCarbsCompat()
+                                dataSyncSelector.processChangedCarbs()
                             }
 
                             is DataSyncSelector.PairBolusCalculatorResult  -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdBolusCalculatorResults.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
-                                }
+                                // if (result.response == 201) { // created
+                                //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                //     storeDataForDb.nsIdBolusCalculatorResults.add(dataPair.value)
+                                //     storeDataForDb.scheduleNsIdUpdate()
+                                // }
                                 dataSyncSelector.confirmLastBolusCalculatorResultsIdIfGreater(dataPair.id)
-                                dataSyncSelector.processChangedBolusCalculatorResultsCompat()
+                                dataSyncSelector.processChangedBolusCalculatorResults()
                             }
 
                             is DataSyncSelector.PairTemporaryTarget        -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdTemporaryTargets.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
-                                }
+                                // if (result.response == 201) { // created
+                                //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                //     storeDataForDb.nsIdTemporaryTargets.add(dataPair.value)
+                                //     storeDataForDb.scheduleNsIdUpdate()
+                                // }
                                 dataSyncSelector.confirmLastTempTargetsIdIfGreater(dataPair.id)
-                                dataSyncSelector.processChangedTempTargetsCompat()
+                                dataSyncSelector.processChangedTempTargets()
                             }
 
                             is DataSyncSelector.PairTherapyEvent           -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdTherapyEvents.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
-                                }
+                                // if (result.response == 201) { // created
+                                //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                //     storeDataForDb.nsIdTherapyEvents.add(dataPair.value)
+                                //     storeDataForDb.scheduleNsIdUpdate()
+                                // }
                                 dataSyncSelector.confirmLastTherapyEventIdIfGreater(dataPair.id)
-                                dataSyncSelector.processChangedTherapyEventsCompat()
+                                dataSyncSelector.processChangedTherapyEvents()
                             }
 
                             is DataSyncSelector.PairTemporaryBasal         -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdTemporaryBasals.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
-                                }
+                                // if (result.response == 201) { // created
+                                //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                //     storeDataForDb.nsIdTemporaryBasals.add(dataPair.value)
+                                //     storeDataForDb.scheduleNsIdUpdate()
+                                // }
                                 dataSyncSelector.confirmLastTemporaryBasalIdIfGreater(dataPair.id)
-                                dataSyncSelector.processChangedTemporaryBasalsCompat()
+                                dataSyncSelector.processChangedTemporaryBasals()
                             }
 
                             is DataSyncSelector.PairExtendedBolus          -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdExtendedBoluses.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
-                                }
+                                // if (result.response == 201) { // created
+                                //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                //     storeDataForDb.nsIdExtendedBoluses.add(dataPair.value)
+                                //     storeDataForDb.scheduleNsIdUpdate()
+                                // }
                                 dataSyncSelector.confirmLastExtendedBolusIdIfGreater(dataPair.id)
-                                dataSyncSelector.processChangedExtendedBolusesCompat()
+                                dataSyncSelector.processChangedExtendedBoluses()
                             }
 
                             is DataSyncSelector.PairProfileSwitch          -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdProfileSwitches.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
-                                }
+                                // if (result.response == 201) { // created
+                                //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                //     storeDataForDb.nsIdProfileSwitches.add(dataPair.value)
+                                //     storeDataForDb.scheduleNsIdUpdate()
+                                // }
                                 dataSyncSelector.confirmLastProfileSwitchIdIfGreater(dataPair.id)
-                                dataSyncSelector.processChangedProfileSwitchesCompat()
+                                dataSyncSelector.processChangedProfileSwitches()
                             }
 
                             is DataSyncSelector.PairEffectiveProfileSwitch -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdEffectiveProfileSwitches.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
-                                }
+                                // if (result.response == 201) { // created
+                                //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                //     storeDataForDb.nsIdEffectiveProfileSwitches.add(dataPair.value)
+                                //     storeDataForDb.scheduleNsIdUpdate()
+                                // }
                                 dataSyncSelector.confirmLastEffectiveProfileSwitchIdIfGreater(dataPair.id)
-                                dataSyncSelector.processChangedEffectiveProfileSwitchesCompat()
+                                dataSyncSelector.processChangedEffectiveProfileSwitches()
                             }
 
                             is DataSyncSelector.PairOfflineEvent           -> {
-                                if (result.response == 201) { // created
-                                    dataPair.value.interfaceIDs.nightscoutId = result.identifier
-                                    storeDataForDb.nsIdOfflineEvents.add(dataPair.value)
-                                    storeDataForDb.scheduleNsIdUpdate()
-                                }
+                                // if (result.response == 201) { // created
+                                //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                                //     storeDataForDb.nsIdOfflineEvents.add(dataPair.value)
+                                //     storeDataForDb.scheduleNsIdUpdate()
+                                // }
                                 dataSyncSelector.confirmLastOfflineEventIdIfGreater(dataPair.id)
-                                dataSyncSelector.processChangedOfflineEventsCompat()
+                                dataSyncSelector.processChangedOfflineEvents()
                             }
                         }
                     }
