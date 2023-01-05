@@ -10,6 +10,7 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.NsClient
+import info.nightscout.rx.bus.RxBus
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,6 +27,7 @@ internal class DataSyncWorkerTest : TestBase() {
     @Mock lateinit var context: ContextWithInjector
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var nsClient: NsClient
+    @Mock lateinit var rxBus: RxBus
 
     private lateinit var sut: DataSyncWorker
 
@@ -36,6 +38,7 @@ internal class DataSyncWorkerTest : TestBase() {
                 it.fabricPrivacy = fabricPrivacy
                 it.dataSyncSelector = dataSyncSelector
                 it.activePlugin = activePlugin
+                it.rxBus = rxBus
             }
         }
     }

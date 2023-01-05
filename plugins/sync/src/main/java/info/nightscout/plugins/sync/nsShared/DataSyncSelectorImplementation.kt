@@ -20,7 +20,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     private val dateUtil: DateUtil,
     private val profileFunction: ProfileFunction,
     private val activePlugin: ActivePlugin,
-    private val appRepository: AppRepository,
+    private val appRepository: AppRepository
 ) : DataSyncSelector {
 
     class QueueCounter(
