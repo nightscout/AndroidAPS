@@ -196,18 +196,18 @@ class NSClientV3Plugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventNewBG::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ scheduleExecution() }, fabricPrivacy::logException)
+            .subscribe({ scheduleExecution("NEW_BG") }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventNewHistoryData::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ scheduleExecution() }, fabricPrivacy::logException)
+            .subscribe({ scheduleExecution("NEW_DATA") }, fabricPrivacy::logException)
 
         runLoop = Runnable {
             handler.postDelayed(runLoop, REFRESH_INTERVAL)
-            executeLoop()
+            executeLoop("MAIN_LOOP")
         }
         handler.postDelayed(runLoop, REFRESH_INTERVAL)
-        executeLoop()
+        executeLoop("START")
     }
 
     override fun onStop() {
@@ -273,7 +273,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     override fun resend(reason: String) {
-        executeLoop()
+        executeLoop("RESEND")
     }
 
     override fun pause(newState: Boolean) {
@@ -654,13 +654,17 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     fun scheduleNewExecution() {
-        var toTime = lastLoadedSrvModified.collections.entries + T.mins(6).plus(T.secs(0)).msecs()
-        if (toTime < dateUtil.now()) toTime = dateUtil.now() + T.mins(1).plus(T.secs(0)).msecs()
-        handler.postDelayed({ executeLoop() }, toTime - dateUtil.now())
+        var origin = "5_MIN_AFTER_BG"
+        var toTime = lastLoadedSrvModified.collections.entries + T.mins(5).plus(T.secs(10)).msecs()
+        if (toTime < dateUtil.now()) {
+            toTime = dateUtil.now() + T.mins(1).plus(T.secs(0)).msecs()
+            origin = "1_MIN_OLD_DATA"
+        }
+        handler.postDelayed({ executeLoop(origin) }, toTime - dateUtil.now())
         rxBus.send(EventNSClientNewLog("NEXT", dateUtil.dateAndTimeAndSecondsString(toTime)))
     }
 
-    private fun executeLoop() {
+    private fun executeLoop(origin: String) {
         if (sp.getBoolean(R.string.key_ns_client_paused, false)) {
             rxBus.send(EventNSClientNewLog("RUN", "paused"))
             return
@@ -670,9 +674,9 @@ class NSClientV3Plugin @Inject constructor(
             return
         }
         if (workIsRunning(arrayOf(JOB_NAME)))
-            rxBus.send(EventNSClientNewLog("RUN", "Already running"))
+            rxBus.send(EventNSClientNewLog("RUN", "Already running $origin"))
         else {
-            rxBus.send(EventNSClientNewLog("RUN", "Starting next round"))
+            rxBus.send(EventNSClientNewLog("RUN", "Starting next round $origin"))
             WorkManager.getInstance(context)
                 .beginUniqueWork(
                     "NSCv3Load",
@@ -700,12 +704,12 @@ class NSClientV3Plugin @Inject constructor(
 
     private val eventWorker = Executors.newSingleThreadScheduledExecutor()
     private var scheduledEventPost: ScheduledFuture<*>? = null
-    private fun scheduleExecution() {
+    private fun scheduleExecution(origin: String) {
         class PostRunnable : Runnable {
 
             override fun run() {
                 scheduledEventPost = null
-                executeLoop()
+                executeLoop(origin)
             }
         }
         // cancel waiting task to prevent sending multiple posts
