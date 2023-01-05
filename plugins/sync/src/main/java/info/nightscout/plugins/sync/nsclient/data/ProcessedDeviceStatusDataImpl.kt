@@ -63,11 +63,11 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
             // Removed here. Same value is in StatusLights
             // if (pumpData.reservoirDisplayOverride != "") string.append(pumpData.reservoirDisplayOverride).append("$insulinUnit ")
             // else if (fields.contains("reservoir")) string.append(pumpData.reservoir.toInt()).append("$insulinUnit ")
-            if (fields.contains("battery") && pumpData.isPercent) string.append(pumpData.percent).append("% ")
-            if (fields.contains("battery") && !pumpData.isPercent) string.append(Round.roundTo(pumpData.voltage, 0.001)).append(" ")
-            if (fields.contains("clock")) string.append(dateUtil.minAgo(rh, pumpData.clock)).append(" ")
-            if (fields.contains("status")) string.append(pumpData.status).append(" ")
-            if (fields.contains("device")) string.append(device).append(" ")
+            if (pumpData.isPercent) string.append(pumpData.percent).append("% ")
+            if (!pumpData.isPercent) string.append(Round.roundTo(pumpData.voltage, 0.001)).append(" ")
+            string.append(dateUtil.minAgo(rh, pumpData.clock)).append(" ")
+            string.append(pumpData.status).append(" ")
+            //string.append(device).append(" ")
             string.append("</span>") // color
             return HtmlHelper.fromHtml(string.toString())
         }
@@ -144,7 +144,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
             while (iterator.hasNext()) {
                 val pair = iterator.next() as Map.Entry<*, *>
                 val uploader = pair.value as ProcessedDeviceStatusData.Uploader
-                if (minBattery > uploader.battery) {
+                if (minBattery >= uploader.battery) {
                     minBattery = uploader.battery
                     found = true
                 }
