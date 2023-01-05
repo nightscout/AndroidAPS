@@ -1,4 +1,4 @@
-package info.nightscout.plugins.general.overview.activities
+package info.nightscout.ui.activities
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -23,17 +23,17 @@ import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.interfaces.dragHelpers.ItemTouchHelperAdapter
 import info.nightscout.interfaces.dragHelpers.OnStartDragListener
 import info.nightscout.interfaces.dragHelpers.SimpleItemTouchHelperCallback
-import info.nightscout.plugins.R
-import info.nightscout.plugins.databinding.OverviewQuickwizardlistActivityBinding
-import info.nightscout.plugins.databinding.OverviewQuickwizardlistItemBinding
-import info.nightscout.plugins.general.overview.dialogs.EditQuickWizardDialog
-import info.nightscout.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.ActivityQuickwizardListBinding
+import info.nightscout.ui.databinding.QuickwizardListItemBinding
+import info.nightscout.ui.dialogs.EditQuickWizardDialog
+import info.nightscout.ui.events.EventQuickWizardChange
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -51,7 +51,7 @@ class QuickWizardListActivity : DaggerAppCompatActivity(), OnStartDragListener {
     private var disposable: CompositeDisposable = CompositeDisposable()
     private lateinit var actionHelper: ActionModeHelper<QuickWizardEntry>
     private val itemTouchHelper = ItemTouchHelper(SimpleItemTouchHelperCallback())
-    private lateinit var binding: OverviewQuickwizardlistActivityBinding
+    private lateinit var binding: ActivityQuickwizardListBinding
 
     override fun onStartDrag(viewHolder: RecyclerView.ViewHolder) {
         itemTouchHelper.startDrag(viewHolder)
@@ -59,10 +59,10 @@ class QuickWizardListActivity : DaggerAppCompatActivity(), OnStartDragListener {
 
     private inner class RecyclerViewAdapter(var fragmentManager: FragmentManager) : RecyclerView.Adapter<RecyclerViewAdapter.QuickWizardEntryViewHolder>(), ItemTouchHelperAdapter {
 
-        private inner class QuickWizardEntryViewHolder(val binding: OverviewQuickwizardlistItemBinding) : RecyclerView.ViewHolder(binding.root)
+        private inner class QuickWizardEntryViewHolder(val binding: QuickwizardListItemBinding) : RecyclerView.ViewHolder(binding.root)
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): QuickWizardEntryViewHolder {
-            val binding = OverviewQuickwizardlistItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            val binding = QuickwizardListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
             return QuickWizardEntryViewHolder(binding)
         }
 
@@ -129,7 +129,7 @@ class QuickWizardListActivity : DaggerAppCompatActivity(), OnStartDragListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = OverviewQuickwizardlistActivityBinding.inflate(layoutInflater)
+        binding = ActivityQuickwizardListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         actionHelper = ActionModeHelper(rh, this, null)
@@ -137,7 +137,7 @@ class QuickWizardListActivity : DaggerAppCompatActivity(), OnStartDragListener {
         actionHelper.setOnRemoveHandler { removeSelected(it) }
         actionHelper.enableSort = true
 
-        title = rh.gs(R.string.quickwizard)
+        title = rh.gs(info.nightscout.core.ui.R.string.quickwizard)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 

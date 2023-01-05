@@ -22,16 +22,6 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity
-            android:name="info.nightscout.plugins.general.overview.activities.QuickWizardListActivity"
-            android:exported="false"
-            android:theme="@style/AppTheme">
-            <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
 
         <service android:name="info.nightscout.plugins.general.persistentNotification.DummyService" />
 

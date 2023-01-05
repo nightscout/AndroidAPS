@@ -1,4 +1,4 @@
-package info.nightscout.plugins.general.overview.events
+package info.nightscout.ui.events
 
 import info.nightscout.rx.events.Event
 

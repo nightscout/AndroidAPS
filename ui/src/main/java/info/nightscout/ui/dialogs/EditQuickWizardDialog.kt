@@ -1,4 +1,4 @@
-package info.nightscout.plugins.general.overview.dialogs
+package info.nightscout.ui.dialogs
 
 import android.os.Bundle
 import android.text.format.DateFormat
@@ -15,15 +15,15 @@ import info.nightscout.core.ui.extensions.setEnableForChildren
 import info.nightscout.core.ui.extensions.setSelection
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry
-import info.nightscout.plugins.R
-import info.nightscout.plugins.databinding.OverviewEditquickwizardDialogBinding
-import info.nightscout.plugins.general.overview.events.EventQuickWizardChange
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import info.nightscout.ui.R
+import info.nightscout.ui.databinding.DialogEditQuickwizardBinding
+import info.nightscout.ui.events.EventQuickWizardChange
 import org.json.JSONException
 import javax.inject.Inject
 
@@ -39,7 +39,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
     private var fromSeconds: Int = 0
     private var toSeconds: Int = 0
 
-    private var _binding: OverviewEditquickwizardDialogBinding? = null
+    private var _binding: DialogEditQuickwizardBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
@@ -52,7 +52,7 @@ class EditQuickWizardDialog : DaggerDialogFragment(), View.OnClickListener {
         dialog?.window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN)
         isCancelable = true
         dialog?.setCanceledOnTouchOutside(false)
-        _binding = OverviewEditquickwizardDialogBinding.inflate(inflater, container, false)
+        _binding = DialogEditQuickwizardBinding.inflate(inflater, container, false)
         return binding.root
     }
 

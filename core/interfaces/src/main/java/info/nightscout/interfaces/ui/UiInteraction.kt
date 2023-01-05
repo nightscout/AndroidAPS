@@ -21,6 +21,7 @@ interface UiInteraction {
     val singleFragmentActivity: Class<*>
     val preferencesActivity: Class<*>
     val myPreferenceFragment: Class<*>
+    val quickWizardListActivity: Class<*>
 
     val prefGeneral: Int
     /**

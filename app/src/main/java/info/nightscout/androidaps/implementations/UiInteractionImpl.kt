@@ -14,8 +14,6 @@ import info.nightscout.androidaps.activities.MyPreferenceFragment
 import info.nightscout.androidaps.activities.PreferencesActivity
 import info.nightscout.configuration.activities.SingleFragmentActivity
 import info.nightscout.core.events.EventNewNotification
-import info.nightscout.ui.services.AlarmSoundService
-import info.nightscout.ui.services.AlarmSoundServiceHelper
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSAlarm
@@ -24,6 +22,7 @@ import info.nightscout.plugins.general.overview.notifications.NotificationWithAc
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.ui.activities.BolusProgressHelperActivity
 import info.nightscout.ui.activities.ErrorHelperActivity
+import info.nightscout.ui.activities.QuickWizardListActivity
 import info.nightscout.ui.activities.TDDStatsActivity
 import info.nightscout.ui.dialogs.BolusProgressDialog
 import info.nightscout.ui.dialogs.CalibrationDialog
@@ -39,6 +38,8 @@ import info.nightscout.ui.dialogs.TempBasalDialog
 import info.nightscout.ui.dialogs.TempTargetDialog
 import info.nightscout.ui.dialogs.TreatmentDialog
 import info.nightscout.ui.dialogs.WizardDialog
+import info.nightscout.ui.services.AlarmSoundService
+import info.nightscout.ui.services.AlarmSoundServiceHelper
 import info.nightscout.ui.widget.Widget
 import javax.inject.Inject
 
@@ -57,6 +58,7 @@ class UiInteractionImpl @Inject constructor(
     override val singleFragmentActivity: Class<*> = SingleFragmentActivity::class.java
     override val preferencesActivity: Class<*> = PreferencesActivity::class.java
     override val myPreferenceFragment: Class<*> = MyPreferenceFragment::class.java
+    override val quickWizardListActivity: Class<*> = QuickWizardListActivity::class.java
     override val prefGeneral: Int = R.xml.pref_general
 
     override fun runAlarm(status: String, title: String, @RawRes soundId: Int) {
