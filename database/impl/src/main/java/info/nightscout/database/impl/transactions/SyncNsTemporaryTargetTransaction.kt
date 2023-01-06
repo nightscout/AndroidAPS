@@ -38,7 +38,7 @@ class SyncNsTemporaryTargetTransaction(private val temporaryTargets: List<Tempor
 
                 // not known nsId
                 val running = database.temporaryTargetDao.getTemporaryTargetActiveAt(temporaryTarget.timestamp).blockingGet()
-                if (running != null && abs(running.timestamp - temporaryTarget.timestamp) < 1000 && running.interfaceIDs.nightscoutId == null) { // allow missing milliseconds
+                if (running != null && abs(running.timestamp - temporaryTarget.timestamp) < 1000) { // allow missing milliseconds
                     // the same record, update nsId only
                     running.interfaceIDs.nightscoutId = temporaryTarget.interfaceIDs.nightscoutId
                     database.temporaryTargetDao.updateExistingEntry(running)
