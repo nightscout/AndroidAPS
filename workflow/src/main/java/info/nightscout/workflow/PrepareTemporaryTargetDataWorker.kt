@@ -49,13 +49,14 @@ class PrepareTemporaryTargetDataWorker(
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 0, null))
         val profile = profileFunction.getProfile() ?: return Result.success(workDataOf("Error" to "missing profile"))
         val units = profileFunction.getUnits()
-        var toTime = data.overviewData.endTime
+        var endTime = data.overviewData.endTime
+        val fromTime = data.overviewData.fromTime
         val targetsSeriesArray: MutableList<DataPoint> = ArrayList()
         var lastTarget = -1.0
-        loop.lastRun?.constraintsProcessed?.let { toTime = max(it.latestPredictionsTime, toTime) }
-        var time = data.overviewData.fromTime
-        while (time < toTime) {
-            val progress = (time - data.overviewData.fromTime).toDouble() / (data.overviewData.toTime - data.overviewData.fromTime) * 100.0
+        loop.lastRun?.constraintsProcessed?.let { endTime = max(it.latestPredictionsTime, endTime) }
+        var time = fromTime
+        while (time < endTime) {
+            val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, progress.toInt(), null))
             val tt = repository.getTemporaryTargetActiveAt(time).blockingGet()
             val value: Double = if (tt is ValueWrapper.Existing) {
@@ -71,7 +72,7 @@ class PrepareTemporaryTargetDataWorker(
             time += 5 * 60 * 1000L
         }
         // final point
-        targetsSeriesArray.add(DataPoint(toTime.toDouble(), lastTarget))
+        targetsSeriesArray.add(DataPoint(endTime.toDouble(), lastTarget))
         // create series
         data.overviewData.temporaryTargetSeries = LineGraphSeries(Array(targetsSeriesArray.size) { i -> targetsSeriesArray[i] }).also {
             it.isDrawBackground = false

@@ -117,13 +117,16 @@ class PrepareIobAutosensGraphDataWorker(
     override fun doWorkAndLog(): Result {
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareIobAutosensData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
+
+        val endTime = data.overviewData.endTime
+        val fromTime = data.overviewData.fromTime
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, 0, null))
         val iobArray: MutableList<ScaledDataPoint> = ArrayList()
         val absIobArray: MutableList<ScaledDataPoint> = ArrayList()
         data.overviewData.maxIobValueFound = Double.MIN_VALUE
         var lastIob = 0.0
         var absLastIob = 0.0
-        var time = data.overviewData.fromTime
+        var time = fromTime
 
         val minFailOverActiveList: MutableList<DataPointWithLabelInterface> = ArrayList()
         val cobArray: MutableList<ScaledDataPoint> = ArrayList()
@@ -153,8 +156,8 @@ class PrepareIobAutosensGraphDataWorker(
 
         val adsData = data.iobCobCalculator.ads.clone()
 
-        while (time <= data.overviewData.endTime) {
-            val progress = (time - data.overviewData.endTime).toDouble() / (data.overviewData.endTime - data.overviewData.fromTime) * 100.0
+        while (time <= endTime) {
+            val progress = (time - endTime).toDouble() / (endTime - fromTime) * 100.0
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, progress.toInt(), null))
             val profile = profileFunction.getProfile(time)
             if (profile == null) {

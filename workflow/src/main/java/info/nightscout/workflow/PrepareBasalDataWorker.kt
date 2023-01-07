@@ -51,9 +51,11 @@ class PrepareBasalDataWorker(
         var lastAbsoluteLineBasal = -1.0
         var lastBaseBasal = 0.0
         var lastTempBasal = 0.0
-        var time = data.overviewData.fromTime
-        while (time < data.overviewData.endTime) {
-            val progress = (time - data.overviewData.endTime).toDouble() / (data.overviewData.endTime - data.overviewData.fromTime) * 100.0
+        val endTime = data.overviewData.endTime
+        val fromTime = data.overviewData.fromTime
+        var time = fromTime
+        while (time < endTime) {
+            val progress = (time - endTime).toDouble() / (endTime - fromTime) * 100.0
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, progress.toInt(), null))
             val profile = profileFunction.getProfile(time)
             if (profile == null) {
@@ -103,10 +105,10 @@ class PrepareBasalDataWorker(
         }
 
         // final points
-        basalLineArray.add(ScaledDataPoint(data.overviewData.endTime, lastLineBasal, data.overviewData.basalScale))
-        baseBasalArray.add(ScaledDataPoint(data.overviewData.endTime, lastBaseBasal, data.overviewData.basalScale))
-        tempBasalArray.add(ScaledDataPoint(data.overviewData.endTime, lastTempBasal, data.overviewData.basalScale))
-        absoluteBasalLineArray.add(ScaledDataPoint(data.overviewData.endTime, lastAbsoluteLineBasal, data.overviewData.basalScale))
+        basalLineArray.add(ScaledDataPoint(endTime, lastLineBasal, data.overviewData.basalScale))
+        baseBasalArray.add(ScaledDataPoint(endTime, lastBaseBasal, data.overviewData.basalScale))
+        tempBasalArray.add(ScaledDataPoint(endTime, lastTempBasal, data.overviewData.basalScale))
+        absoluteBasalLineArray.add(ScaledDataPoint(endTime, lastAbsoluteLineBasal, data.overviewData.basalScale))
 
         // create series
         data.overviewData.baseBasalGraphSeries = LineGraphSeries(Array(baseBasalArray.size) { i -> baseBasalArray[i] }).also {

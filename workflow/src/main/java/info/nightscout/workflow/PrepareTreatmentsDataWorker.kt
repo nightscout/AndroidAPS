@@ -53,6 +53,8 @@ class PrepareTreatmentsDataWorker(
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareTreatmentsData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
+        val endTime = data.overviewData.endTime
+        val fromTime = data.overviewData.fromTime
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 0, null))
         data.overviewData.maxTreatmentsValue = 0.0
         data.overviewData.maxEpsValue = 0.0
@@ -60,14 +62,14 @@ class PrepareTreatmentsDataWorker(
         val filteredTherapyEvents: MutableList<DataPointWithLabelInterface> = ArrayList()
         val filteredEps: MutableList<DataPointWithLabelInterface> = ArrayList()
 
-        repository.getBolusesDataFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true).blockingGet()
+        repository.getBolusesDataFromTimeToTime(fromTime, endTime, true).blockingGet()
             .map { BolusDataPoint(it, rh, activePlugin, defaultValueHelper) }
             .filter { it.data.type == Bolus.Type.NORMAL || it.data.type == Bolus.Type.SMB }
             .forEach {
                 it.y = getNearestBg(data.overviewData, it.x.toLong())
                 filteredTreatments.add(it)
             }
-        repository.getCarbsDataFromTimeToTimeExpanded(data.overviewData.fromTime, data.overviewData.endTime, true).blockingGet()
+        repository.getCarbsDataFromTimeToTimeExpanded(fromTime, endTime, true).blockingGet()
             .map { CarbsDataPoint(it, rh) }
             .forEach {
                 it.y = getNearestBg(data.overviewData, it.x.toLong())
@@ -75,7 +77,7 @@ class PrepareTreatmentsDataWorker(
             }
 
         // ProfileSwitch
-        repository.getEffectiveProfileSwitchDataFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true).blockingGet()
+        repository.getEffectiveProfileSwitchDataFromTimeToTime(fromTime, endTime, true).blockingGet()
             .map { EffectiveProfileSwitchDataPoint(it, rh, data.overviewData.epsScale) }
             .forEach {
                 data.overviewData.maxEpsValue = maxOf(data.overviewData.maxEpsValue, it.data.originalPercentage.toDouble())
@@ -96,7 +98,7 @@ class PrepareTreatmentsDataWorker(
 
         // Extended bolus
         if (!activePlugin.activePump.isFakingTempsByExtendedBoluses) {
-            repository.getExtendedBolusDataFromTimeToTime(data.overviewData.fromTime, data.overviewData.endTime, true).blockingGet()
+            repository.getExtendedBolusDataFromTimeToTime(fromTime, endTime, true).blockingGet()
                 .map { ExtendedBolusDataPoint(it, rh) }
                 .filter { it.duration != 0L }
                 .forEach {
@@ -106,21 +108,19 @@ class PrepareTreatmentsDataWorker(
         }
 
         // Careportal
-        repository.compatGetTherapyEventDataFromToTime(data.overviewData.fromTime - T.hours(6).msecs(), data.overviewData.endTime).blockingGet()
+        repository.compatGetTherapyEventDataFromToTime(fromTime - T.hours(6).msecs(), endTime).blockingGet()
             .map { TherapyEventDataPoint(it, rh, profileFunction, translator) }
-            .filterTimeframe(data.overviewData.fromTime, data.overviewData.endTime)
+            .filterTimeframe(fromTime, endTime)
             .forEach {
                 if (it.y == 0.0) it.y = getNearestBg(data.overviewData, it.x.toLong())
                 filteredTherapyEvents.add(it)
             }
 
         // increase maxY if a treatment forces it's own height that's higher than a BG value
-        filteredTreatments.map { it.y }
-            .maxOrNull()
+        filteredTreatments.maxOfOrNull { it.y }
             ?.let(::addUpperChartMargin)
             ?.let { data.overviewData.maxTreatmentsValue = maxOf(data.overviewData.maxTreatmentsValue, it) }
-        filteredTherapyEvents.map { it.y }
-            .maxOrNull()
+        filteredTherapyEvents.maxOfOrNull { it.y }
             ?.let(::addUpperChartMargin)
             ?.let { data.overviewData.maxTherapyEventValue = maxOf(data.overviewData.maxTherapyEventValue, it) }
 
