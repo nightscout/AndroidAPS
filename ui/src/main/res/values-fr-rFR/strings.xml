@@ -127,4 +127,5 @@
     <string name="basal_rate">Débit de Basal</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">ARRÊT APPUYÉ</string>
+    <!--QuickWizard-->
 </resources>
