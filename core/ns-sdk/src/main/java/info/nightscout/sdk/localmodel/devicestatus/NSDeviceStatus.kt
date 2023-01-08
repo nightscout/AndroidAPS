@@ -1,16 +1,16 @@
-package info.nightscout.sdk.remotemodel
+package info.nightscout.sdk.localmodel.devicestatus
 
-import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
+import org.json.JSONObject
 
 /**
- * DeviceStatus coming from uploader or AAPS
+ * NS DeviceStatus coming from uploader or AAPS
  *
  **/
 @Serializable
-internal data class RemoteDeviceStatus(
+data class NSDeviceStatus(
     @SerializedName("app") var app: String? = null,
     @SerializedName("identifier")
     val identifier: String? = null, // string Main addressing, required field that identifies document in the collection. The client should not create the identifier, the server automatically assigns it when the document is inserted.
@@ -36,7 +36,7 @@ internal data class RemoteDeviceStatus(
         @SerializedName("reservoir_display_override") val reservoirDisplayOverride: String?,
         @SerializedName("battery") val battery: Battery?,
         @SerializedName("status") val status: Status?,
-        @Contextual @SerializedName("extended") val extended: JsonObject?   // Gson, content depending on pump driver
+        @Contextual @SerializedName("extended") val extended: JSONObject?   // Gson, content depending on pump driver
     ) {
 
         @Serializable data class Battery(
@@ -51,9 +51,9 @@ internal data class RemoteDeviceStatus(
     }
 
     @Serializable data class OpenAps(
-        @Contextual @SerializedName("suggested") val suggested: JsonObject?, // Gson
-        @Contextual @SerializedName("enacted") val enacted: JsonObject?,     // Gson
-        @Contextual @SerializedName("iob") val iob: JsonObject?              // Gson
+        @Contextual @SerializedName("suggested") val suggested: JSONObject?, // Gson
+        @Contextual @SerializedName("enacted") val enacted: JSONObject?,     // Gson
+        @Contextual @SerializedName("iob") val iob: JSONObject?              // Gson
     )
 
     @Serializable data class Uploader(
@@ -66,9 +66,9 @@ internal data class RemoteDeviceStatus(
         @SerializedName("insulin") val insulin: Int?,
         @SerializedName("sensitivity") val sensitivity: Int?,
         @SerializedName("smoothing") val smoothing: String?,
-        @Contextual @SerializedName("insulinConfiguration") val insulinConfiguration: JsonObject?,
-        @Contextual @SerializedName("sensitivityConfiguration") val sensitivityConfiguration: JsonObject?,
-        @Contextual @SerializedName("overviewConfiguration") val overviewConfiguration: JsonObject?,
-        @Contextual @SerializedName("safetyConfiguration") val safetyConfiguration: JsonObject?
+        @Contextual @SerializedName("insulinConfiguration") val insulinConfiguration: JSONObject?,
+        @Contextual @SerializedName("sensitivityConfiguration") val sensitivityConfiguration: JSONObject?,
+        @Contextual @SerializedName("overviewConfiguration") val overviewConfiguration: JSONObject?,
+        @Contextual @SerializedName("safetyConfiguration") val safetyConfiguration: JSONObject?
     )
 }

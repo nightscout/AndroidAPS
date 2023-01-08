@@ -52,7 +52,7 @@ import info.nightscout.rx.events.EventNSClientRestart
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
+import info.nightscout.sdk.localmodel.devicestatus.NSDeviceStatus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -510,7 +510,7 @@ class NSClientService : DaggerService() {
                                 }
                             }
 
-                            val devicestatuses = gson.fromJson(data.getString("devicestatus"), Array<RemoteDeviceStatus>::class.java)
+                            val devicestatuses = gson.fromJson(data.getString("devicestatus"), Array<NSDeviceStatus>::class.java)
                             if (devicestatuses.isNotEmpty()) {
                                 rxBus.send(EventNSClientNewLog("DATA", "received " + devicestatuses.size + " device statuses"))
                                 nsDeviceStatusHandler.handleNewData(devicestatuses)

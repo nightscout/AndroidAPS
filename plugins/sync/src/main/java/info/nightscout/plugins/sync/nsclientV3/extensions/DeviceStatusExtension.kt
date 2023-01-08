@@ -3,10 +3,10 @@ package info.nightscout.plugins.sync.nsclientV3.extensions
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonDeserializer
 import info.nightscout.database.entities.DeviceStatus
-import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
+import info.nightscout.sdk.localmodel.devicestatus.NSDeviceStatus
 import org.json.JSONObject
 
-fun DeviceStatus.toRemoteDeviceStatus(): RemoteDeviceStatus {
+fun DeviceStatus.toNSDeviceStatus(): NSDeviceStatus {
     val deserializer: JsonDeserializer<JSONObject?> =
         JsonDeserializer<JSONObject?> { json, _, _ ->
             JSONObject(json.asJsonObject.toString())
@@ -15,19 +15,19 @@ fun DeviceStatus.toRemoteDeviceStatus(): RemoteDeviceStatus {
         it.registerTypeAdapter(JSONObject::class.java, deserializer)
     }.create()
 
-    val pump = gson.fromJson(pump, RemoteDeviceStatus.Pump::class.java)
-    val openAps = RemoteDeviceStatus.OpenAps(
+    val pump = gson.fromJson(pump, NSDeviceStatus.Pump::class.java)
+    val openAps = NSDeviceStatus.OpenAps(
         suggested = suggested?.let { JSONObject(it) },
         enacted = enacted?.let { JSONObject(it) },
         iob = iob?.let { JSONObject(it) },
     )
-    return RemoteDeviceStatus(
+    return NSDeviceStatus(
         date = timestamp,
         device = device,
         pump = pump,
         openaps = openAps,
         uploaderBattery = if (uploaderBattery != 0) uploaderBattery else null,
-        configuration = gson.fromJson(configuration, RemoteDeviceStatus.Configuration::class.java),
+        configuration = gson.fromJson(configuration, NSDeviceStatus.Configuration::class.java),
         uploader = null
     )
 }

@@ -39,6 +39,7 @@ import info.nightscout.plugins.sync.nsclient.NsClientReceiverDelegate
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSBolus
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSBolusWizard
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSCarbs
+import info.nightscout.plugins.sync.nsclientV3.extensions.toNSDeviceStatus
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSEffectiveProfileSwitch
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSExtendedBolus
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSFood
@@ -48,7 +49,6 @@ import info.nightscout.plugins.sync.nsclientV3.extensions.toNSSvgV3
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSTemporaryBasal
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSTemporaryTarget
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSTherapyEvent
-import info.nightscout.plugins.sync.nsclientV3.extensions.toRemoteDeviceStatus
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadStatusWorker
@@ -371,7 +371,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     private fun dbOperationDeviceStatus(collection: String = "devicestatus", dataPair: DataSyncSelector.DataPair, progress: String) {
-        val data = (dataPair as DataSyncSelector.PairDeviceStatus).value.toRemoteDeviceStatus()
+        val data = (dataPair as DataSyncSelector.PairDeviceStatus).value.toNSDeviceStatus()
         scope.launch {
             try {
                 rxBus.send(EventNSClientNewLog("ADD $collection", "Sent ${dataPair.javaClass.simpleName} ${gson.toJson(data)} $progress"))

@@ -15,6 +15,7 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.plugins.aps.APSResultObject
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusDataImpl
+import info.nightscout.sdk.mapper.convertToRemoteAndBack
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -78,9 +79,23 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
             configuration = "{\"insulin\":5,\"insulinConfiguration\":{},\"sensitivity\":2,\"sensitivityConfiguration\":{\"openapsama_min_5m_carbimpact\":8,\"absorption_cutoff\":4,\"autosens_max\":1.2,\"autosens_min\":0.7},\"overviewConfiguration\":{\"units\":\"mmol\",\"QuickWizard\":\"[]\",\"eatingsoon_duration\":60,\"eatingsoon_target\":4,\"activity_duration\":180,\"activity_target\":7.5,\"hypo_duration\":90,\"hypo_target\":8,\"low_mark\":3.9,\"high_mark\":10,\"statuslights_cage_warning\":72,\"statuslights_cage_critical\":96,\"statuslights_iage_warning\":120,\"statuslights_iage_critical\":150,\"statuslights_sage_warning\":168,\"statuslights_sage_critical\":336,\"statuslights_sbat_warning\":25,\"statuslights_sbat_critical\":5,\"statuslights_bage_warning\":720,\"statuslights_bage_critical\":800,\"statuslights_res_warning\":30,\"statuslights_res_critical\":10,\"statuslights_bat_warning\":50,\"statuslights_bat_critical\":25,\"boluswizard_percentage\":70},\"safetyConfiguration\":{\"age\":\"resistantadult\",\"treatmentssafety_maxbolus\":10,\"treatmentssafety_maxcarbs\":70}}"
         )
 
-        val remoteDeviceStatus = deviceStatus.toRemoteDeviceStatus()
+        val nsDeviceStatus = deviceStatus.toNSDeviceStatus()
 
-        nsDeviceStatusHandler.handleNewData(arrayOf(remoteDeviceStatus))
+        nsDeviceStatusHandler.handleNewData(arrayOf(nsDeviceStatus))
         Assertions.assertEquals(75, processedDeviceStatusData.pumpData?.percent)
+
+        val nsDeviceStatus2 = nsDeviceStatus.convertToRemoteAndBack()
+        Assertions.assertTrue(nsDeviceStatus.device == nsDeviceStatus2.device)
+        Assertions.assertTrue(nsDeviceStatus.identifier == nsDeviceStatus2.identifier)
+        Assertions.assertTrue(nsDeviceStatus.srvCreated == nsDeviceStatus2.srvCreated)
+        Assertions.assertTrue(nsDeviceStatus.srvModified == nsDeviceStatus2.srvModified)
+        Assertions.assertTrue(nsDeviceStatus.createdAt == nsDeviceStatus2.createdAt)
+        Assertions.assertTrue(nsDeviceStatus.date == nsDeviceStatus2.date)
+        Assertions.assertTrue(nsDeviceStatus.uploaderBattery == nsDeviceStatus2.uploaderBattery)
+        Assertions.assertTrue(nsDeviceStatus.device == nsDeviceStatus2.device)
+        Assertions.assertTrue(nsDeviceStatus.uploader?.battery == nsDeviceStatus2.uploader?.battery)
+        Assertions.assertTrue(nsDeviceStatus.pump?.battery == nsDeviceStatus2.pump?.battery)
+        Assertions.assertTrue(nsDeviceStatus.openaps?.enacted?.toString() == nsDeviceStatus2.openaps?.enacted?.toString())
+        Assertions.assertTrue(nsDeviceStatus.configuration?.toString() == nsDeviceStatus2.configuration?.toString())
     }
 }

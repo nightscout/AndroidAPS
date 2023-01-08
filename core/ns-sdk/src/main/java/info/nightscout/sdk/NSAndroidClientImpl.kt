@@ -9,12 +9,15 @@ import info.nightscout.sdk.exceptions.UnknownResponseNightscoutException
 import info.nightscout.sdk.exceptions.UnsuccessfullNightscoutException
 import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.Status
+import info.nightscout.sdk.localmodel.devicestatus.NSDeviceStatus
 import info.nightscout.sdk.localmodel.entry.NSSgvV3
 import info.nightscout.sdk.localmodel.food.NSFood
 import info.nightscout.sdk.localmodel.treatment.CreateUpdateResponse
 import info.nightscout.sdk.localmodel.treatment.NSTreatment
 import info.nightscout.sdk.mapper.toLocal
+import info.nightscout.sdk.mapper.toNSDeviceStatus
 import info.nightscout.sdk.mapper.toNSFood
+import info.nightscout.sdk.mapper.toRemoteDeviceStatus
 import info.nightscout.sdk.mapper.toRemoteEntry
 import info.nightscout.sdk.mapper.toRemoteFood
 import info.nightscout.sdk.mapper.toRemoteTreatment
@@ -227,20 +230,20 @@ class NSAndroidClientImpl(
         }
     }
 
-    override suspend fun getDeviceStatusModifiedSince(from: Long): List<RemoteDeviceStatus> = callWrapper(dispatcher) {
+    override suspend fun getDeviceStatusModifiedSince(from: Long): List<NSDeviceStatus> = callWrapper(dispatcher) {
 
         val response = api.getDeviceStatusModifiedSince(from)
         if (response.isSuccessful) {
-            return@callWrapper response.body()?.result.toNotNull()
+            return@callWrapper response.body()?.result?.map(RemoteDeviceStatus::toNSDeviceStatus).toNotNull()
         } else {
             throw UnsuccessfullNightscoutException()
         }
     }
 
-    override suspend fun createDeviceStatus(remoteDeviceStatus: RemoteDeviceStatus): CreateUpdateResponse = callWrapper(dispatcher) {
+    override suspend fun createDeviceStatus(nsDeviceStatus: NSDeviceStatus): CreateUpdateResponse = callWrapper(dispatcher) {
 
-        remoteDeviceStatus.app = "AAPS"
-        val response = api.createDeviceStatus(remoteDeviceStatus)
+        nsDeviceStatus.app = "AAPS"
+        val response = api.createDeviceStatus(nsDeviceStatus.toRemoteDeviceStatus())
         if (response.isSuccessful) {
             if (response.code() == 200) {
                 return@callWrapper CreateUpdateResponse(

@@ -17,7 +17,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
+import info.nightscout.sdk.localmodel.devicestatus.NSDeviceStatus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONException
@@ -71,7 +71,7 @@ class RunningConfigurationImpl @Inject constructor(
     }
 
     // called in NSClient mode only
-    override fun apply(configuration: RemoteDeviceStatus.Configuration) {
+    override fun apply(configuration: NSDeviceStatus.Configuration) {
         assert(config.NSCLIENT)
 
         configuration.version?.let {
