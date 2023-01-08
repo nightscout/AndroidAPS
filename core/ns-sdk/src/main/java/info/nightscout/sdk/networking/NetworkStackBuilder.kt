@@ -3,9 +3,11 @@ package info.nightscout.sdk.networking
 import android.content.Context
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonDeserializer
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
+import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
@@ -85,7 +87,13 @@ internal object NetworkStackBuilder {
         return build()
     }
 
-    private fun provideGson(): Gson = GsonBuilder().create()
+    private val deserializer: JsonDeserializer<JSONObject?> =
+        JsonDeserializer<JSONObject?> { json, _, _ ->
+            JSONObject(json.asJsonObject.toString())
+        }
+    private fun provideGson(): Gson = GsonBuilder().also {
+        it.registerTypeAdapter(JSONObject::class.java, deserializer)
+    }.create()
 
     private const val OK_HTTP_CACHE_SIZE = 10L * 1024 * 1024
     private const val OK_HTTP_READ_TIMEOUT = 60L * 1000

@@ -22,9 +22,9 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.profile.PureProfile
@@ -413,6 +413,7 @@ class ProfilePlugin @Inject constructor(
             }
             if (numOfProfiles > 0) json.put("defaultProfile", currentProfile()?.name)
             val startDate = sp.getLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, dateUtil.now())
+            json.put("date", startDate)
             json.put("startDate", dateUtil.toISOAsUTC(startDate))
             json.put("store", store)
         } catch (e: JSONException) {

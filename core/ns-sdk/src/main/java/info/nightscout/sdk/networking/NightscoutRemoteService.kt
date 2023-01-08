@@ -1,5 +1,6 @@
 package info.nightscout.sdk.networking
 
+import com.google.gson.JsonObject
 import info.nightscout.sdk.remotemodel.LastModified
 import info.nightscout.sdk.remotemodel.NSResponse
 import info.nightscout.sdk.remotemodel.RemoteCreateUpdateResponse
@@ -8,6 +9,7 @@ import info.nightscout.sdk.remotemodel.RemoteEntry
 import info.nightscout.sdk.remotemodel.RemoteFood
 import info.nightscout.sdk.remotemodel.RemoteStatusResponse
 import info.nightscout.sdk.remotemodel.RemoteTreatment
+import org.json.JSONObject
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -70,14 +72,21 @@ internal interface NightscoutRemoteService {
 
     @GET("v3/food")
     suspend fun getFoods(@Query("limit") limit: Long): Response<NSResponse<List<RemoteFood>>>
-/*
-    @GET("v3/food/history/{from}")
-    suspend fun getFoodsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Long): Response<NSResponse<List<RemoteFood>>>
-*/
+
+    /*
+        @GET("v3/food/history/{from}")
+        suspend fun getFoodsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Long): Response<NSResponse<List<RemoteFood>>>
+    */
     @POST("v3/food")
     suspend fun createFood(@Body remoteFood: RemoteFood): Response<NSResponse<RemoteCreateUpdateResponse>>
 
     @PATCH("v3/food")
     suspend fun updateFood(@Body remoteFood: RemoteFood): Response<NSResponse<RemoteCreateUpdateResponse>>
+
+    @GET("v3/profile?sort\$desc=date&limit=1")
+    suspend fun getLastProfile(): Response<NSResponse<List<JSONObject>>>
+
+    @POST("v3/profile")
+    suspend fun createProfile(@Body profile: JsonObject): Response<NSResponse<RemoteCreateUpdateResponse>>
 
 }

@@ -25,9 +25,9 @@ import info.nightscout.interfaces.iob.IobTotal
 interface OverviewData {
 
     var rangeToDisplay: Int // for graph
-    var toTime: Long
-    var fromTime: Long
-    var endTime: Long
+    var toTime: Long  // current time rounded up to 1 hour
+    var fromTime: Long // toTime - range
+    var endTime: Long // toTime + predictions
 
     fun reset()
     fun initRange()

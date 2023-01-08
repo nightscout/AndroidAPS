@@ -69,7 +69,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         sut =
             NSClientV3Plugin(
                 injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-                sp, nsClientReceiverDelegate, config, dateUtil, uiInteraction, storeDataForDb, dataSyncSelector, mockedProfileFunction
+                sp, nsClientReceiverDelegate, config, dateUtil, uiInteraction, dataSyncSelector, mockedProfileFunction, repository
             )
         sut.nsAndroidClient = nsAndroidClient
         `when`(mockedProfileFunction.getProfile(anyLong())).thenReturn(validProfile)
@@ -518,5 +518,23 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         sut.nsUpdate("treatments", dataPair, "1/3")
         verify(dataSyncSelector, Times(2)).confirmLastTherapyEventIdIfGreater(1000)
         verify(dataSyncSelector, Times(2)).processChangedTherapyEvents()
+    }
+
+    @Test
+    @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
+    fun nsAddProfile() = runTest {
+        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
+
+        val dataPair = DataSyncSelector.PairProfileStore(getValidProfileStore().data, 1000)
+        // create
+        `when`(nsAndroidClient.createProfileStore(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        sut.nsAdd("profile", dataPair, "1/3")
+        verify(dataSyncSelector, Times(1)).confirmLastProfileStore(1000)
+        verify(dataSyncSelector, Times(1)).processChangedProfileStore()
+        // update
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        sut.nsUpdate("profile", dataPair, "1/3")
+        verify(dataSyncSelector, Times(2)).confirmLastProfileStore(1000)
+        verify(dataSyncSelector, Times(2)).processChangedProfileStore()
     }
 }

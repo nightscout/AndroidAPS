@@ -16,11 +16,12 @@ import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.validators.ValidatingEditTextPreference
+import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.interfaces.TraceableDBEntry
+import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.nsclient.NSAlarm
-import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -98,9 +99,9 @@ class NSClientV3Plugin @Inject constructor(
     private val config: Config,
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
-    private val storeDataForDb: StoreDataForDb,
     private val dataSyncSelector: DataSyncSelector,
-    private val profileFunction: ProfileFunction
+    private val profileFunction: ProfileFunction,
+    private val repository: AppRepository
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -116,7 +117,7 @@ class NSClientV3Plugin @Inject constructor(
     companion object {
 
         val JOB_NAME: String = this::class.java.simpleName
-        val REFRESH_INTERVAL = T.mins(5).msecs()
+        val REFRESH_INTERVAL = T.secs(30).msecs()
     }
 
     private val disposable = CompositeDisposable()
@@ -196,18 +197,26 @@ class NSClientV3Plugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventNewBG::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ scheduleExecution("NEW_BG") }, fabricPrivacy::logException)
+            .subscribe({ delayAndScheduleExecution("NEW_BG") }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventNewHistoryData::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ scheduleExecution("NEW_DATA") }, fabricPrivacy::logException)
+            .subscribe({ delayAndScheduleExecution("NEW_DATA") }, fabricPrivacy::logException)
 
         runLoop = Runnable {
             handler.postDelayed(runLoop, REFRESH_INTERVAL)
-            executeLoop("MAIN_LOOP")
+            repository.getLastGlucoseValueWrapped().blockingGet().let {
+                // if last value is older than 5 min or there is no bg
+                if (it is ValueWrapper.Existing) {
+                    if (it.value.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs())
+                        executeLoop("MAIN_LOOP", forceNew = false)
+                    else
+                        rxBus.send(EventNSClientNewLog("RECENT", "No need to load"))
+                } else executeLoop("MAIN_LOOP", forceNew = false)
+            }
         }
         handler.postDelayed(runLoop, REFRESH_INTERVAL)
-        executeLoop("START")
+        executeLoop("START", forceNew = false)
     }
 
     override fun onStop() {
@@ -273,7 +282,7 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     override fun resend(reason: String) {
-        executeLoop("RESEND")
+        executeLoop("RESEND", forceNew = false)
     }
 
     override fun pause(newState: Boolean) {
@@ -331,6 +340,36 @@ class NSClientV3Plugin @Inject constructor(
     enum class Operation { CREATE, UPDATE }
 
     private val gson: Gson = GsonBuilder().create()
+    private fun dbOperationProfileStore(collection: String = "profile", dataPair: DataSyncSelector.DataPair, progress: String) {
+        val data = (dataPair as DataSyncSelector.PairProfileStore).value
+        scope.launch {
+            try {
+                rxBus.send(EventNSClientNewLog("ADD $collection", "Sent ${dataPair.javaClass.simpleName} $data $progress"))
+                nsAndroidClient?.createProfileStore(data)?.let { result ->
+                    when (result.response) {
+                        200  -> rxBus.send(EventNSClientNewLog("UPDATED", "OK ProfileStore"))
+                        201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ProfileStore"))
+                        404  -> rxBus.send(EventNSClientNewLog("NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
+
+                        else -> {
+                            rxBus.send(EventNSClientNewLog("ERROR", "ProfileStore"))
+                            return@launch
+                        }
+                    }
+                    // if (result.response == 201) { // created
+                    //     dataPair.value.interfaceIDs.nightscoutId = result.identifier
+                    //     storeDataForDb.nsIdDeviceStatuses.add(dataPair.value)
+                    //     storeDataForDb.scheduleNsIdUpdate()
+                    // }
+                    dataSyncSelector.confirmLastProfileStore(dataPair.id)
+                    dataSyncSelector.processChangedProfileStore()
+                }
+            } catch (e: Exception) {
+                aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
+            }
+        }
+    }
+
     private fun dbOperationDeviceStatus(collection: String = "devicestatus", dataPair: DataSyncSelector.DataPair, progress: String) {
         val data = (dataPair as DataSyncSelector.PairDeviceStatus).value.toRemoteDeviceStatus()
         scope.launch {
@@ -340,6 +379,7 @@ class NSClientV3Plugin @Inject constructor(
                     when (result.response) {
                         200  -> rxBus.send(EventNSClientNewLog("UPDATED", "OK ${dataPair.value.javaClass.simpleName}"))
                         201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName} ${result.identifier}"))
+                        404  -> rxBus.send(EventNSClientNewLog("NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                         else -> {
                             rxBus.send(EventNSClientNewLog("ERROR", "${dataPair.value.javaClass.simpleName} "))
@@ -389,6 +429,7 @@ class NSClientV3Plugin @Inject constructor(
                             200  -> rxBus.send(EventNSClientNewLog("UPDATED", "OK ${dataPair.value.javaClass.simpleName}"))
                             201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName}"))
                             400  -> rxBus.send(EventNSClientNewLog("FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
+                            404  -> rxBus.send(EventNSClientNewLog("NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                             else -> {
                                 rxBus.send(EventNSClientNewLog("ERROR", "${dataPair.value.javaClass.simpleName} "))
@@ -443,6 +484,7 @@ class NSClientV3Plugin @Inject constructor(
                             200  -> rxBus.send(EventNSClientNewLog("UPDATED", "OK ${dataPair.value.javaClass.simpleName}"))
                             201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName}"))
                             400  -> rxBus.send(EventNSClientNewLog("FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
+                            404  -> rxBus.send(EventNSClientNewLog("NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                             else -> {
                                 rxBus.send(EventNSClientNewLog("ERROR", "${dataPair.value.javaClass.simpleName} "))
@@ -525,6 +567,7 @@ class NSClientV3Plugin @Inject constructor(
                             200  -> rxBus.send(EventNSClientNewLog("UPDATED", "OK ${dataPair.value.javaClass.simpleName}"))
                             201  -> rxBus.send(EventNSClientNewLog("ADDED", "OK ${dataPair.value.javaClass.simpleName}"))
                             400  -> rxBus.send(EventNSClientNewLog("FAIL", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
+                            404  -> rxBus.send(EventNSClientNewLog("NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                             else -> {
                                 rxBus.send(EventNSClientNewLog("ERROR", "${dataPair.value.javaClass.simpleName} "))
@@ -642,6 +685,7 @@ class NSClientV3Plugin @Inject constructor(
 
     private fun dbOperation(collection: String, dataPair: DataSyncSelector.DataPair, progress: String, operation: Operation) {
         when (collection) {
+            "profile"      -> dbOperationProfileStore(dataPair = dataPair, progress = progress)
             "devicestatus" -> dbOperationDeviceStatus(dataPair = dataPair, progress = progress)
             "entries"      -> dbOperationEntries(dataPair = dataPair, progress = progress, operation = operation)
             "food"         -> dbOperationFood(dataPair = dataPair, progress = progress, operation = operation)
@@ -653,18 +697,20 @@ class NSClientV3Plugin @Inject constructor(
         sp.putString(R.string.key_ns_client_v3_last_modified, Json.encodeToString(LastModified.serializer(), lastLoadedSrvModified))
     }
 
-    fun scheduleNewExecution() {
+    fun scheduleIrregularExecution() {
         var origin = "5_MIN_AFTER_BG"
+        var forceNew = true
         var toTime = lastLoadedSrvModified.collections.entries + T.mins(5).plus(T.secs(10)).msecs()
         if (toTime < dateUtil.now()) {
             toTime = dateUtil.now() + T.mins(1).plus(T.secs(0)).msecs()
             origin = "1_MIN_OLD_DATA"
+            forceNew = false
         }
-        handler.postDelayed({ executeLoop(origin) }, toTime - dateUtil.now())
+        handler.postDelayed({ executeLoop(origin, forceNew = forceNew) }, toTime - dateUtil.now())
         rxBus.send(EventNSClientNewLog("NEXT", dateUtil.dateAndTimeAndSecondsString(toTime)))
     }
 
-    private fun executeLoop(origin: String) {
+    private fun executeLoop(origin: String, forceNew: Boolean) {
         if (sp.getBoolean(R.string.key_ns_client_paused, false)) {
             rxBus.send(EventNSClientNewLog("RUN", "paused"))
             return
@@ -673,25 +719,28 @@ class NSClientV3Plugin @Inject constructor(
             rxBus.send(EventNSClientNewLog("RUN", blockingReason))
             return
         }
-        if (workIsRunning(arrayOf(JOB_NAME)))
+        if (workIsRunning(arrayOf(JOB_NAME))) {
             rxBus.send(EventNSClientNewLog("RUN", "Already running $origin"))
-        else {
-            rxBus.send(EventNSClientNewLog("RUN", "Starting next round $origin"))
-            WorkManager.getInstance(context)
-                .beginUniqueWork(
-                    "NSCv3Load",
-                    ExistingWorkPolicy.REPLACE,
-                    OneTimeWorkRequest.Builder(LoadStatusWorker::class.java).build()
-                )
-                .then(OneTimeWorkRequest.Builder(LoadLastModificationWorker::class.java).build())
-                .then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
-                // Other Workers are enqueued after BG finish
-                // LoadTreatmentsWorker
-                // LoadFoodsWorker
-                // LoadDeviceStatusWorker
-                // DataSyncWorker
-                .enqueue()
+            if (!forceNew) return
+            // Wait for end and start new cycle
+            while (workIsRunning(arrayOf(JOB_NAME))) Thread.sleep(5000)
         }
+        rxBus.send(EventNSClientNewLog("RUN", "Starting next round $origin"))
+        WorkManager.getInstance(context)
+            .beginUniqueWork(
+                JOB_NAME,
+                ExistingWorkPolicy.REPLACE,
+                OneTimeWorkRequest.Builder(LoadStatusWorker::class.java).build()
+            )
+            .then(OneTimeWorkRequest.Builder(LoadLastModificationWorker::class.java).build())
+            .then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
+            // Other Workers are enqueued after BG finish
+            // LoadTreatmentsWorker
+            // LoadFoodsWorker
+            // LoadProfileStoreWorker
+            // LoadDeviceStatusWorker
+            // DataSyncWorker
+            .enqueue()
     }
 
     private fun workIsRunning(workNames: Array<String>): Boolean {
@@ -704,12 +753,12 @@ class NSClientV3Plugin @Inject constructor(
 
     private val eventWorker = Executors.newSingleThreadScheduledExecutor()
     private var scheduledEventPost: ScheduledFuture<*>? = null
-    private fun scheduleExecution(origin: String) {
+    private fun delayAndScheduleExecution(origin: String) {
         class PostRunnable : Runnable {
 
             override fun run() {
                 scheduledEventPost = null
-                executeLoop(origin)
+                executeLoop(origin, forceNew = true)
             }
         }
         // cancel waiting task to prevent sending multiple posts

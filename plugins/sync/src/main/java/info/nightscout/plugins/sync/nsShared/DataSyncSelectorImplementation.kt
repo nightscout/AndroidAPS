@@ -5,6 +5,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.sync.DataSyncSelector
+import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -764,7 +765,11 @@ class DataSyncSelectorImplementation @Inject constructor(
         if (lastChange == 0L) return
         if (lastChange > lastSync) {
             if (activePlugin.activeProfileSource.profile?.allProfilesValid != true) return
-            val profileJson = activePlugin.activeProfileSource.profile?.data ?: return
+            val profileStore = activePlugin.activeProfileSource.profile
+            val profileJson = profileStore?.data ?: return
+            // add for v3
+            if (JsonHelper.safeGetLongAllowNull(profileJson, "date") == null)
+                profileJson.put("date", profileStore.getStartDate())
             activePlugin.activeNsClient?.nsAdd("profile", DataSyncSelector.PairProfileStore(profileJson, dateUtil.now()), "")
         }
     }

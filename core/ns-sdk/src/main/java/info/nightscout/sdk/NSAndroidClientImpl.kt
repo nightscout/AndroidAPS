@@ -1,6 +1,7 @@
 package info.nightscout.sdk
 
 import android.content.Context
+import com.google.gson.JsonParser
 import info.nightscout.sdk.exceptions.DateHeaderOutOfToleranceException
 import info.nightscout.sdk.exceptions.InvalidAccessTokenException
 import info.nightscout.sdk.exceptions.InvalidFormatNightscoutException
@@ -30,6 +31,7 @@ import info.nightscout.sdk.utils.toNotNull
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.json.JSONObject
 
 /**
  *
@@ -190,6 +192,14 @@ class NSAndroidClientImpl(
                 deduplicatedIdentifier = null,
                 lastModified = null
             )
+        } else if (response.code() == 404) { // not found
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                isDeduplication = false,
+                deduplicatedIdentifier = null,
+                lastModified = null
+            )
         } else {
             throw UnsuccessfullNightscoutException()
         }
@@ -307,6 +317,14 @@ class NSAndroidClientImpl(
                 deduplicatedIdentifier = null,
                 lastModified = null
             )
+        } else if (response.code() == 404) { // not found
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                isDeduplication = false,
+                deduplicatedIdentifier = null,
+                lastModified = null
+            )
         } else {
             throw UnsuccessfullNightscoutException()
         }
@@ -375,10 +393,57 @@ class NSAndroidClientImpl(
                 deduplicatedIdentifier = null,
                 lastModified = null
             )
+        } else if (response.code() == 404) { // not found
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                isDeduplication = false,
+                deduplicatedIdentifier = null,
+                lastModified = null
+            )
         } else {
             throw UnsuccessfullNightscoutException()
         }
     }
+
+    override suspend fun createProfileStore(remoteProfileStore: JSONObject): CreateUpdateResponse = callWrapper(dispatcher) {
+        remoteProfileStore.put("app", "AAPS")
+        val response = api.createProfile(JsonParser.parseString(remoteProfileStore.toString()).asJsonObject)
+        if (response.isSuccessful) {
+            if (response.code() == 200) {
+                return@callWrapper CreateUpdateResponse(
+                    response = response.code(),
+                    identifier = null,
+                    isDeduplication = true,
+                    deduplicatedIdentifier = null,
+                    lastModified = null
+                )
+            } else if (response.code() == 201) {
+                return@callWrapper CreateUpdateResponse(
+                    response = response.code(),
+                    identifier = response.body()?.result?.identifier,
+                    isDeduplication = response.body()?.result?.isDeduplication ?: false,
+                    deduplicatedIdentifier = response.body()?.result?.deduplicatedIdentifier,
+                    lastModified = response.body()?.result?.lastModified
+                )
+            } else throw UnsuccessfullNightscoutException()
+        } else {
+            throw UnsuccessfullNightscoutException()
+        }
+    }
+
+    override suspend fun getLastProfileStore(): NSAndroidClient.ReadResponse<List<JSONObject>> = callWrapper(dispatcher) {
+
+        val response = api.getLastProfile()
+        if (response.isSuccessful) {
+            val eTagString = response.headers()["ETag"]
+            val eTag = eTagString?.substring(3, eTagString.length - 1)?.toLong()
+            return@callWrapper NSAndroidClient.ReadResponse(eTag, response.body()?.result.toNotNull())
+        } else {
+            throw UnsuccessfullNightscoutException()
+        }
+    }
+
 
     private suspend fun <T> callWrapper(dispatcher: CoroutineDispatcher, block: suspend () -> T): T =
         withContext(dispatcher) {

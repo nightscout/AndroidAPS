@@ -22,6 +22,7 @@ import info.nightscout.plugins.sync.nsclientV3.workers.LoadBgWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadDeviceStatusWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadFoodsWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadLastModificationWorker
+import info.nightscout.plugins.sync.nsclientV3.workers.LoadProfileStoreWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadStatusWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.ProcessFoodWorker
@@ -49,6 +50,7 @@ abstract class SyncModule {
     @ContributesAndroidInjector abstract fun contributesLoadLastModificationWorker(): LoadLastModificationWorker
     @ContributesAndroidInjector abstract fun contributesLoadBgWorker(): LoadBgWorker
     @ContributesAndroidInjector abstract fun contributesLoadFoodsWorker(): LoadFoodsWorker
+    @ContributesAndroidInjector abstract fun contributesLoadProfileStoreWorker(): LoadProfileStoreWorker
     @ContributesAndroidInjector abstract fun contributesStoreBgWorker(): StoreDataForDbImpl.StoreBgWorker
     @ContributesAndroidInjector abstract fun contributesStoreFoodWorker(): StoreDataForDbImpl.StoreFoodWorker
     @ContributesAndroidInjector abstract fun contributesTreatmentWorker(): LoadTreatmentsWorker

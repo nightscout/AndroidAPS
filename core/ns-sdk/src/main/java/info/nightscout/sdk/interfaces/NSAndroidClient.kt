@@ -7,6 +7,7 @@ import info.nightscout.sdk.localmodel.treatment.CreateUpdateResponse
 import info.nightscout.sdk.localmodel.treatment.NSTreatment
 import info.nightscout.sdk.remotemodel.LastModified
 import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
+import org.json.JSONObject
 
 interface NSAndroidClient {
 
@@ -31,6 +32,9 @@ interface NSAndroidClient {
 
     suspend fun createDeviceStatus(remoteDeviceStatus: RemoteDeviceStatus): CreateUpdateResponse
     suspend fun getDeviceStatusModifiedSince(from: Long): List<RemoteDeviceStatus>
+
+    suspend fun createProfileStore(remoteProfileStore: JSONObject): CreateUpdateResponse
+    suspend fun getLastProfileStore(): ReadResponse<List<JSONObject>>
 
     suspend fun createTreatment(nsTreatment: NSTreatment): CreateUpdateResponse
     suspend fun updateTreatment(nsTreatment: NSTreatment): CreateUpdateResponse

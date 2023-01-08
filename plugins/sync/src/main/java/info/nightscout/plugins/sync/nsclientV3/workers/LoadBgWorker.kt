@@ -57,7 +57,7 @@ class LoadBgWorker(
                         sgvs = response.values
                         response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.entries = it }
                         nsClientV3Plugin.storeLastLoadedSrvModified()
-                        nsClientV3Plugin.scheduleNewExecution() // Idea is to run after 5 min after last BG
+                        nsClientV3Plugin.scheduleIrregularExecution() // Idea is to run after 5 min after last BG
                     }
                     aapsLogger.debug("SGVS: $sgvs")
                     if (sgvs.isNotEmpty()) {
@@ -77,8 +77,7 @@ class LoadBgWorker(
                             nsClientV3Plugin.lastLoadedSrvModified.collections.entries = lastLoaded
                             nsClientV3Plugin.storeLastLoadedSrvModified()
                         }
-                        rxBus.send(EventNSClientNewLog("RCV END", "No SGVs from ${dateUtil
-                            .dateAndTimeAndSecondsString(lastLoaded)}"))
+                        rxBus.send(EventNSClientNewLog("RCV END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                         WorkManager.getInstance(context)
                             .beginUniqueWork(
                                 NSClientV3Plugin.JOB_NAME,
