@@ -15,4 +15,5 @@
     <!-- Other dialogs -->
     <string name="basal_rate">基礎レート</string>
     <!--    BolusProgressDialog-->
+    <!--QuickWizard-->
 </resources>
