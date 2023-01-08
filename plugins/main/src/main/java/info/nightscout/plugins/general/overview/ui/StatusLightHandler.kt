@@ -1,4 +1,4 @@
-package info.nightscout.plugins.ui
+package info.nightscout.plugins.general.overview.ui
 
 import android.annotation.SuppressLint
 import android.os.Handler

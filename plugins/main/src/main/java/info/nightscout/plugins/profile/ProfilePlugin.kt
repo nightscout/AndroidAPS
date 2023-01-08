@@ -99,7 +99,7 @@ class ProfilePlugin @Inject constructor(
                 ToastUtils.errorToast(activity, rh.gs(info.nightscout.core.ui.R.string.value_out_of_hard_limits, rh.gs(info.nightscout.core.ui.R.string.profile_dia), dia))
                 return false
             }
-            if (name.isNullOrEmpty()) {
+            if (name.isEmpty()) {
                 ToastUtils.errorToast(activity, rh.gs(R.string.missing_profile_name))
                 return false
             }
@@ -177,7 +177,6 @@ class ProfilePlugin @Inject constructor(
     override fun storeSettings(activity: FragmentActivity?) {
         for (i in 0 until numOfProfiles) {
             profiles[i].run {
-                name?.let { name ->
                     val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
                     sp.putString(localProfileNumbered + "name", name)
                     sp.putBoolean(localProfileNumbered + "mgdl", mgdl)
@@ -187,7 +186,6 @@ class ProfilePlugin @Inject constructor(
                     sp.putString(localProfileNumbered + "basal", basal.toString())
                     sp.putString(localProfileNumbered + "targetlow", targetLow.toString())
                     sp.putString(localProfileNumbered + "targethigh", targetHigh.toString())
-                }
             }
         }
         sp.putInt(Constants.LOCAL_PROFILE + "_profiles", numOfProfiles)
@@ -198,10 +196,7 @@ class ProfilePlugin @Inject constructor(
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.data.toString())
         rxBus.send(EventProfileStoreChanged())
         var namesOK = true
-        profiles.forEach {
-            val name = it.name ?: "."
-            if (name.contains(".")) namesOK = false
-        }
+        profiles.forEach { if (it.name.contains(".")) namesOK = false }
         if (!namesOK) activity?.let {
             OKDialog.show(it, "", rh.gs(R.string.profile_name_contains_dot))
         }
@@ -214,20 +209,22 @@ class ProfilePlugin @Inject constructor(
 //        numOfProfiles = max(numOfProfiles, 1) // create at least one default profile if none exists
 
         for (i in 0 until numOfProfiles) {
-            val p = ProfileSource.SingleProfile()
             val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
-
-            p.name = sp.getString(localProfileNumbered + "name", Constants.LOCAL_PROFILE + i)
-            if (isExistingName(p.name)) continue
-            p.mgdl = sp.getBoolean(localProfileNumbered + "mgdl", false)
-            p.dia = sp.getDouble(localProfileNumbered + "dia", Constants.defaultDIA)
+            val name = sp.getString(localProfileNumbered + "name", Constants.LOCAL_PROFILE + i)
+            if (isExistingName(name)) continue
             try {
-                p.ic = JSONArray(sp.getString(localProfileNumbered + "ic", defaultArray))
-                p.isf = JSONArray(sp.getString(localProfileNumbered + "isf", defaultArray))
-                p.basal = JSONArray(sp.getString(localProfileNumbered + "basal", defaultArray))
-                p.targetLow = JSONArray(sp.getString(localProfileNumbered + "targetlow", defaultArray))
-                p.targetHigh = JSONArray(sp.getString(localProfileNumbered + "targethigh", defaultArray))
-                profiles.add(p)
+                profiles.add(
+                    ProfileSource.SingleProfile(
+                        name = name,
+                        mgdl = sp.getBoolean(localProfileNumbered + "mgdl", false),
+                        dia = sp.getDouble(localProfileNumbered + "dia", Constants.defaultDIA),
+                        ic = JSONArray(sp.getString(localProfileNumbered + "ic", defaultArray)),
+                        isf = JSONArray(sp.getString(localProfileNumbered + "isf", defaultArray)),
+                        basal = JSONArray(sp.getString(localProfileNumbered + "basal", defaultArray)),
+                        targetLow = JSONArray(sp.getString(localProfileNumbered + "targetlow", defaultArray)),
+                        targetHigh = JSONArray(sp.getString(localProfileNumbered + "targethigh", defaultArray))
+                    )
+                )
             } catch (e: JSONException) {
                 aapsLogger.error("Exception", e)
             }
@@ -279,16 +276,16 @@ class ProfilePlugin @Inject constructor(
         }
         val profile = ProfileSealed.Pure(pureProfile)
         val pureJson = pureProfile.jsonObject
-        val sp = ProfileSource.SingleProfile()
-        sp.name = verifiedName
-        sp.mgdl = profile.units == GlucoseUnit.MGDL
-        sp.dia = pureJson.getDouble("dia")
-        sp.ic = pureJson.getJSONArray("carbratio")
-        sp.isf = pureJson.getJSONArray("sens")
-        sp.basal = pureJson.getJSONArray("basal")
-        sp.targetLow = pureJson.getJSONArray("target_low")
-        sp.targetHigh = pureJson.getJSONArray("target_high")
-        return sp
+        return ProfileSource.SingleProfile(
+            name = verifiedName,
+            mgdl = profile.units == GlucoseUnit.MGDL,
+            dia = pureJson.getDouble("dia"),
+            ic = pureJson.getJSONArray("carbratio"),
+            isf = pureJson.getJSONArray("sens"),
+            basal = pureJson.getJSONArray("basal"),
+            targetLow = pureJson.getJSONArray("target_low"),
+            targetHigh = pureJson.getJSONArray("target_high")
+        )
     }
 
     private fun isExistingName(name: String?): Boolean {
@@ -348,16 +345,18 @@ class ProfilePlugin @Inject constructor(
                 break
             }
         }
-        val p = ProfileSource.SingleProfile()
-        p.name = Constants.LOCAL_PROFILE + free
-        p.mgdl = profileFunction.getUnits() == GlucoseUnit.MGDL
-        p.dia = Constants.defaultDIA
-        p.ic = JSONArray(defaultArray)
-        p.isf = JSONArray(defaultArray)
-        p.basal = JSONArray(defaultArray)
-        p.targetLow = JSONArray(defaultArray)
-        p.targetHigh = JSONArray(defaultArray)
-        profiles.add(p)
+        profiles.add(
+            ProfileSource.SingleProfile(
+                name = Constants.LOCAL_PROFILE + free,
+                mgdl = profileFunction.getUnits() == GlucoseUnit.MGDL,
+                dia = Constants.defaultDIA,
+                ic = JSONArray(defaultArray),
+                isf = JSONArray(defaultArray),
+                basal = JSONArray(defaultArray),
+                targetLow = JSONArray(defaultArray),
+                targetHigh = JSONArray(defaultArray)
+            )
+        )
         currentProfileIndex = profiles.size - 1
         createAndStoreConvertedProfile()
         storeSettings()
@@ -397,18 +396,16 @@ class ProfilePlugin @Inject constructor(
         try {
             for (i in 0 until numOfProfiles) {
                 profiles[i].run {
-                    name?.let { name ->
-                        val profile = JSONObject()
-                        profile.put("dia", dia)
-                        profile.put("carbratio", ic)
-                        profile.put("sens", isf)
-                        profile.put("basal", basal)
-                        profile.put("target_low", targetLow)
-                        profile.put("target_high", targetHigh)
-                        profile.put("units", if (mgdl) Constants.MGDL else Constants.MMOL)
-                        profile.put("timezone", TimeZone.getDefault().id)
-                        store.put(name, profile)
-                    }
+                    val profile = JSONObject()
+                    profile.put("dia", dia)
+                    profile.put("carbratio", ic)
+                    profile.put("sens", isf)
+                    profile.put("basal", basal)
+                    profile.put("target_low", targetLow)
+                    profile.put("target_high", targetHigh)
+                    profile.put("units", if (mgdl) Constants.MGDL else Constants.MMOL)
+                    profile.put("timezone", TimeZone.getDefault().id)
+                    store.put(name, profile)
                 }
             }
             if (numOfProfiles > 0) json.put("defaultProfile", currentProfile()?.name)
