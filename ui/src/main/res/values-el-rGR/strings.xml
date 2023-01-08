@@ -76,4 +76,5 @@
     <string name="basal_rate">Βασικός Ρυθμός</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">Πιέστε STOP</string>
+    <!--QuickWizard-->
 </resources>
