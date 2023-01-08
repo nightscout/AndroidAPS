@@ -148,4 +148,31 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOP PRESSED</string>
 
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">only on watch</string>
+    <string name="a11y_only_on_phone">only on phone</string>
+    <string name="quickwizard_settings">QuickWizard settings</string>
+    <string name="overview_edit_quickwizard_button_text">Button text:</string>
+    <string name="overview_edit_quickwizard_carbs">Carbs:</string>
+    <string name="overview_edit_quickwizard_valid">Valid:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Add</string>
+    <string name="overview_quickwizard_item_edit_button">Edit</string>
+    <string name="overview_edit_quickwizard_show_on_device">Show entry on device:</string>
+    <string name="overview_edit_quickwizard_use_bg">BG calculation</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB calculation</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB calculation</string>
+    <string name="overview_edit_quickwizard_use_trend">Trend calculation</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Superbolus calculation</string>
+    <string name="overview_edit_quickwizard_percentage">Percentage</string>
+    <string name="device_all">All</string>
+    <string name="device_phone">Phone</string>
+    <string name="device_watch">Watch</string>
+    <string name="positive_only">Positive only</string>
+    <string name="negative_only">Negative only</string>
+    <string name="overview_editquickwizard_usecob">COB calculation</string>
+    <string name="overview_editquickwizard_usetemptarget">Temporary target calculation</string>
+    <string name="overview_editquickwizard_usepercentage">Percentage calculation</string>
+    <string name="app_default">Application default</string>
+    <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
+
 </resources>
