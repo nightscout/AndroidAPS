@@ -473,6 +473,7 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s zu %2$s</string>
     <string name="wizard_pump_not_available">Keine Pumpe verfügbar!</string>
+    <string name="quickwizard">QuickWizard</string>
     <!--    Preferences-->
     <string name="child">Kind</string>
     <string name="teenage">Teenager</string>
