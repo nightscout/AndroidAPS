@@ -389,6 +389,10 @@ class IobCobCalculatorPlugin @Inject constructor(
             // cancel waiting task to prevent sending multiple posts
             scheduledHistoryPost?.cancel(false)
             // prepare task for execution in 1 sec
+            scheduledEvent?.let {
+                // set reload bg data if was not set
+                if (!event.reloadBgData) event.reloadBgData = it.reloadBgData
+            }
             scheduledEvent = event
             scheduledHistoryPost = historyWorker.schedule(
                 {
