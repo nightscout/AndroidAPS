@@ -327,4 +327,30 @@ Unerwartetes Verhalten.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>
     <string name="old_data">VERALTETE DATEN</string>
+    <string name="pump_fetching_data">versuche Daten von der Pumpe abzurufen.</string>
+    <string name="pump_old_data">TDD: verwendet alte Daten! Auslesen der Pumpe nicht möglich.</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">h</string>
+    <string name="no_active_profile">Kein aktiver Profilwechsel!</string>
+    <string name="profile_message">Profil:\n\nZeitverschiebung: %1$\nProzent: %2$d%\"</string>
+    <string name="tdd_line">%1$.2fE %1$.0f%</string>
+    <string name="no_profile">Kein Profil geladen</string>
+    <string name="aps_only">Nur im APS-Modus anwendbar!</string>
+    <string name="last_aps_result_na">Letztes Ergebnis ist nicht verfügbar!</string>
+    <string name="loop_status_closed">CLOSED LOOP</string>
+    <string name="loop_status_open">OPEN LOOP</string>
+    <string name="loop_status_disabled">LOOP DEAKTIVIERT</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Letzte Ausführung</string>
+    <string name="last_enact">Letzte Abgabe</string>
+    <string name="today">Heute</string>
+    <string name="weighted">gewichtet</string>
+    <string name="target_only_aps_mode">Ziele gelten nur im APS-Modus!</string>
+    <string name="no_history">Keine Verlaufsdaten!</string>
+    <string name="units_short">E</string>
+    <string name="temp_target">Temporäres Ziel</string>
+    <string name="until">bis</string>
+    <string name="default_range">STANDARD-BEREICH</string>
+    <string name="target">Ziel</string>
+    <string name="rate_duration">Rate: %1$.2fE/h (%2$.2f%) \nDauer %3$d% min</string>
 </resources>
