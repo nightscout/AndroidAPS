@@ -137,4 +137,6 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_dst_ended">Daylight savings time (DST) ended</string>
     <string name="combov2_cannot_connect_pump_error_observed">Cannot connect to pump because the pump reported an error. User must handle the error and then either wait 5 minutes or press the Refresh button in the driver tab.</string>
     <string name="combov2_refresh_pump_status_after_error">Refreshing pump status after the pump reported an error</string>
+    <string name="combov2_go_back">Go back</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Cannot perform pairing because the driver is not initialized. This typically happens because the necessary Bluetooth permissions have not been granted. Go back, grant the Bluetooth permissions, then try again to pair.</string>
 </resources>
