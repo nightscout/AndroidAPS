@@ -37,10 +37,6 @@
     <string name="overview_buttons_selection">Gombok</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Feltöltő</string>
-    <string name="overview_edit_quickwizard_button_text">Gombfelirat:</string>
-    <string name="overview_edit_quickwizard_valid">Érvényes:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Hozzáad</string>
-    <string name="overview_quickwizard_item_edit_button">Szerkeszt</string>
     <string name="keep_screen_on_title">Képernyő bekapcsolva tartása</string>
     <string name="cgm">CGM</string>
     <string name="button1">Gomb 1</string>
