@@ -4,6 +4,7 @@
     <string name="dia_label_exam">Duración de la acción de insulina (DAI)</string>
     <string name="dia_profile">Debes establecer el valor de DAI en tu perfil.</string>
     <string name="dia_minimumis5h">El valor mínimo permitido es de 5 horas.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="dia_meaningisequaltodiapump">Si estás satisfecho con el valor de DAI que utilizas en tu bomba antes de utilizar AAPS y te funcionó bien, no hay necesidad de cambiarlo cuando empieces a usar el bucle cerrado.</string>
     <string name="dia_valuemustbedetermined">Deberás determinar por ti mismo el valor apropiado para DAI.</string>
     <string name="hypott_label">Objetivo temporal ante Hipoglucemia</string>
@@ -187,6 +188,7 @@
     <string name="ic_noeffect">Si tiene 0 COB, cambiar la ratio IC conducirá a una cantidad distinta de insulina para corregir un valor de glucemia determinado.</string>
     <string name="ic_different">El IC será diferente si cuenta una unidad de carbohidratos como 10g o 12g.</string>
     <string name="ic_meaning">IC significa: Cuántas unidades de carbohidratos están cubiertas por 1U de insulina.</string>
+    <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Cambio de perfil</string>
     <string name="profileswitch_pctwillchange"> Al especificar un cambio de perfil del 90%, ¿qué respuestas son correctas?</string>
     <string name="profileswitch_basallower">Las basales serán 10% más bajas.</string>
