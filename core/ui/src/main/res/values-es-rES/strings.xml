@@ -473,6 +473,7 @@
     <string name="wizard_explain_tt">BasalT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">¡No hay bomba disponible!</string>
+    <string name="quickwizard">Asistente rápido</string>
     <!--    Preferences-->
     <string name="child">Menor de edad</string>
     <string name="teenage">Adolescente</string>
