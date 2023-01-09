@@ -473,6 +473,7 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s til %2$s</string>
     <string name="wizard_pump_not_available">Ingen pumpe tilgjengelig!</string>
+    <string name="quickwizard">Hurtigveiviser</string>
     <!--    Preferences-->
     <string name="child">Barn</string>
     <string name="teenage">Tenåring</string>
