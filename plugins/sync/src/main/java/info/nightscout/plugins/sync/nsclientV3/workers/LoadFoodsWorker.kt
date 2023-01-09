@@ -37,7 +37,7 @@ class LoadFoodsWorker(
         // Read full collection every 5th attempt
         runBlocking {
             if (nsClientV3Plugin.lastLoadedSrvModified.collections.foods++ % 5 == 0L) {
-                val foods: List<NSFood> = nsAndroidClient.getFoods(1000)
+                val foods: List<NSFood> = nsAndroidClient.getFoods(1000).values
                 aapsLogger.debug("FOODS: $foods")
                 rxBus.send(EventNSClientNewLog("RCV", "${foods.size} FOODs"))
                 // Schedule processing of fetched data

@@ -12,6 +12,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
+import info.nightscout.core.utils.worker.then
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.core.workflow.CalculationWorkflow.Companion.JOB
 import info.nightscout.core.workflow.CalculationWorkflow.Companion.MAIN_CALCULATION
@@ -220,9 +221,6 @@ class CalculationWorkflowImpl @Inject constructor(
             )
             .enqueue()
     }
-
-    fun WorkContinuation.then(shouldAdd: Boolean, work: OneTimeWorkRequest): WorkContinuation =
-        if (shouldAdd) then(work) else this
 
     private fun runOnEventTherapyEventChange() {
         WorkManager.getInstance(context)

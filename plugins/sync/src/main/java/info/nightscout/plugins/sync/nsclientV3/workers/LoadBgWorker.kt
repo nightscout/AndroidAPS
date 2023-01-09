@@ -8,6 +8,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
+import info.nightscout.core.utils.worker.then
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.workflow.WorkerClasses
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
@@ -51,14 +52,14 @@ class LoadBgWorker(
                 try {
                     val sgvs: List<NSSgvV3>
                     val response: NSAndroidClient.ReadResponse<List<NSSgvV3>>?
-                    if (isFirstLoad) sgvs = nsAndroidClient.getSgvsNewerThan(lastLoaded, 500)
+                    if (isFirstLoad) response = nsAndroidClient.getSgvsNewerThan(lastLoaded, 500)
                     else {
                         response = nsAndroidClient.getSgvsModifiedSince(lastLoaded, 500)
-                        sgvs = response.values
                         response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.entries = it }
                         nsClientV3Plugin.storeLastLoadedSrvModified()
                         nsClientV3Plugin.scheduleIrregularExecution() // Idea is to run after 5 min after last BG
                     }
+                    sgvs = response.values
                     aapsLogger.debug("SGVS: $sgvs")
                     if (sgvs.isNotEmpty()) {
                         val action = if (isFirstLoad) "RCV-FIRST" else "RCV"
@@ -70,7 +71,11 @@ class LoadBgWorker(
                             JOB_NAME,
                             ExistingWorkPolicy.APPEND_OR_REPLACE,
                             OneTimeWorkRequest.Builder(workerClasses.nsClientSourceWorker).setInputData(dataWorkerStorage.storeInputData(sgvs)).build()
-                        ).then(OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build()).enqueue()
+                        )
+                            // response 304 == Not modified (happens when date > srvModified => bad time on phone or server during upload
+                            .then(response.code != 304, OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
+                            .then(response.code == 304, OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
+                            .enqueue()
                     } else {
                         // End first load
                         if (isFirstLoad) {

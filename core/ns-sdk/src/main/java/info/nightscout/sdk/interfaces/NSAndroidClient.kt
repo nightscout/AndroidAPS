@@ -12,6 +12,7 @@ import org.json.JSONObject
 interface NSAndroidClient {
 
     class ReadResponse<T>(
+        val code: Int,
         val lastServerModified: Long?,
         val values: T
     )
@@ -21,13 +22,13 @@ interface NSAndroidClient {
     suspend fun getStatus(): Status
     suspend fun getLastModified(): LastModified
 
-    suspend fun getSgvs(): List<NSSgvV3>
+    suspend fun getSgvs(): ReadResponse<List<NSSgvV3>>
     suspend fun getSgvsModifiedSince(from: Long, limit: Long): ReadResponse<List<NSSgvV3>>
-    suspend fun getSgvsNewerThan(from: Long, limit: Long): List<NSSgvV3>
+    suspend fun getSgvsNewerThan(from: Long, limit: Long): ReadResponse<List<NSSgvV3>>
     suspend fun createSvg(nsSgvV3: NSSgvV3): CreateUpdateResponse
     suspend fun updateSvg(nsSgvV3: NSSgvV3): CreateUpdateResponse
 
-    suspend fun getTreatmentsNewerThan(createdAt: String, limit: Long): List<NSTreatment>
+    suspend fun getTreatmentsNewerThan(createdAt: String, limit: Long): ReadResponse<List<NSTreatment>>
     suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): ReadResponse<List<NSTreatment>>
 
     suspend fun createDeviceStatus(nsDeviceStatus: NSDeviceStatus): CreateUpdateResponse
@@ -38,7 +39,7 @@ interface NSAndroidClient {
 
     suspend fun createTreatment(nsTreatment: NSTreatment): CreateUpdateResponse
     suspend fun updateTreatment(nsTreatment: NSTreatment): CreateUpdateResponse
-    suspend fun getFoods(limit: Long): List<NSFood>
+    suspend fun getFoods(limit: Long): ReadResponse<List<NSFood>>
 
     //suspend fun getFoodsModifiedSince(from: Long, limit: Long): ReadResponse<List<NSFood>>
     suspend fun createFood(nsFood: NSFood): CreateUpdateResponse
