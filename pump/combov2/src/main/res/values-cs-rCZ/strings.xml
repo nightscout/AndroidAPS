@@ -122,4 +122,6 @@ Pokud po více než ~5 minutách není navázáno žádné spojení:\n\n
     <string name="combov2_dst_ended">Letní čas (DST) skončil</string>
     <string name="combov2_cannot_connect_pump_error_observed">Nelze se připojit k pumpě, protože pumpa nahlásila chybu. Uživatel musí zpracovat chybu a poté počkat 5 minut nebo stisknout tlačítko Obnovit na kartě ovladače.</string>
     <string name="combov2_refresh_pump_status_after_error">Obnovování stavu pumpy po nahlášení chyby</string>
+    <string name="combov2_go_back">Zpět</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Nelze provést párování, protože ovladač není inicializován. To se obvykle stává, protože nebyla udělena potřebná oprávnění Bluetooth. Jděte zpět, udělte oprávnění Bluetooth, pak zkuste znovu spárovat.</string>
 </resources>

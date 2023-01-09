@@ -37,6 +37,7 @@
     <string name="exitwizard">Hopp over oppsettsveiviser</string>
     <string name="setupwizard_loop_description">Trykk på knappen under for å tillate at AndroidAPS foreslår/gjør basal endringer</string>
     <string name="setupwizard_sensitivity_description">Sensitivitets plugin brukes til å oppdage insulinsensitivitet og COB beregninger. For mer info, se:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Velg en av de tilgjengelige algoritmene. De er sortert fra eldst til nyest. De nyeste algoritmene er vanligvis mer kraftfull og aggressiv. Hvis du er en ny looper kan det være fornuftig å starte med AMA og ikke den siste. Ikke glem å lese OpenAPS dokumentasjonen og konfigurer algoritmen før den brukes.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vennligst konfigurer din RileyLink under. Etter å ha valgt en RileyLink, vil det være mulig å fortsette konfigureringen når RileyLink statusen er \"Tilkoblet\". Dette kan ta et minutt.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Merk:</b> Du kan fortsette oppsettet når pumpen er satt opp.\n</string>
@@ -71,6 +72,8 @@
     <string name="configbuilder_insulin_description">Hvilken type insulin bruker du?</string>
     <string name="configbuilder_bgsource">BS-kilde</string>
     <string name="configbuilder_bgsource_description">Hvor skal AAPS få sine data fra?</string>
+    <string name="configbuilder_smoothing">Glatting</string>
+    <string name="configbuilder_smoothing_description">Velg glatting algoritme</string>
     <string name="configbuilder_sensitivity">Sensitivitetsdeteksjon</string>
     <string name="configbuilder_sensitivity_description">Hvilken sensitivitetsalgoritme skal benyttes?</string>
     <string name="config_builder_shortname">KONF</string>

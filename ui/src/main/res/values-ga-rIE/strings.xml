@@ -52,4 +52,5 @@
     <!-- Other dialogs -->
     <string name="basal_rate">Bunaidh ráta</string>
     <!--    BolusProgressDialog-->
+    <!--QuickWizard-->
 </resources>

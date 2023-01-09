@@ -8,7 +8,7 @@
     <string name="days_ago_round">vor %1$.0f Tagen</string>
     <string name="in_days">in %1$.0f Tagen</string>
     <string name="in_days_round">in %1$.0f Tagen</string>
-    <string name="shorthour">s</string>
+    <string name="shorthour">h</string>
     <string name="days">Tage</string>
     <string name="hours">Stunden</string>
     <string name="unit_second">Sekunde</string>

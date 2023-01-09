@@ -121,4 +121,8 @@ Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
     <string name="combov2_datetime_changed">Datum und/oder Uhrzeit geändert</string>
     <string name="combov2_dst_started">Sommerzeit (DST) begonnen</string>
     <string name="combov2_dst_ended">Sommerzeit (DST) endete</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Keine Verbindung zur Pumpe möglich, da die Pumpe einen Fehler gemeldet hat. Der Benutzer muss den Fehler korrigieren und dann entweder 5 Minuten warten oder die Aktualisieren-Schaltfläche im Pumpen-Detail-Tab drücken.</string>
+    <string name="combov2_refresh_pump_status_after_error">Aktualisiere Pumpenstatus nachdem die Pumpe einen Fehler gemeldet hat</string>
+    <string name="combov2_go_back">Zurück</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Paarung kann nicht durchgeführt werden, da der Treiber nicht initialisiert wurde. Dies geschieht in der Regel, weil die notwendigen Bluetooth-Berechtigungen nicht erteilt wurden. Gehe zurück, erteile die Bluetooth-Berechtigungen, dann versuche es erneut.</string>
 </resources>

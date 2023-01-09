@@ -101,4 +101,5 @@
     <string name="basal_rate">Basal양</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">정지 누름</string>
+    <!--QuickWizard-->
 </resources>

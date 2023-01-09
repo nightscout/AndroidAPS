@@ -16,6 +16,7 @@
     <string name="objectives_maxbasal_learned">Achten Sie auf Sicherheitsmerkmale und stellen Sie bei Bedarf Sicherheitsparameter ein.</string>
     <string name="objectives_maxiobzero_objective">Starte den Closed Loop Modus mit Abschaltung bei niedrigen Werten</string>
     <string name="objectives_maxiobzero_gate">Probiere den Closed Loop Modus mit max IOB = 0 für ein paar Tage aus, ohne zu viele Unterzuckerungen zu haben</string>
+    <string name="objectives_maxiobzero_learned">Das einstellen von MaxIOB auf 0 verhindert Unterzuckerungen und wird nicht mehr Insulin abgeben, als in der Basalrate vorgesehen (außer es kommt zu einem negativen IOB)</string>
     <string name="objectives_maxiob_objective">Passe den Closed Loop an, indem du max IOB auf über 0 erhöhst und den BZ-Zielwert langsam heruntersetzt</string>
     <string name="objectives_maxiob_gate">Bevor Du den Zielwert niedriger einstellst, musst Du einige Tage Erfahrung sammeln und mindestens eine Nacht ohne Hypoalarm schaffen</string>
     <string name="objectives_maxiob_learned">Passe MaxIOB an, wenn das Kind wächst. Erlauben Sie dem System nicht mehr Insulin abzugeben als Sie mit Lebensmitteln abdecken können = Ein wirklich hoher Wert ist eine schlechte Idee.</string>
@@ -27,6 +28,7 @@
 die Formel maxIOB = durchschnittlicher Essensbolus + 3 x höchste Basalrate</string>
     <string name="objectives_smb_learned">Die Verwendung von SMB ist Dein Ziel. Der Oref1-Algorithmus wurde entwickelt, um Dir auch mit Boli zu helfen. Du solltest nicht den vollen Bolus für Dein Essen geben, sondern nur einen Teil davon abgeben und es AAPS überlassen bei Bedarf den notwendigen Rest entsprechend dem Blutzuckerverlauf zugeben zu lassen. Auf diese Weise hast Du mehr Platz für falsch berechnete Kohlenhydrate. Wusstest Du, dass Du einen Prozentsatz bei Verwendung des Bolusrechners festlegen kannst, um die Größe des Bolus zu reduzieren?</string>
     <string name="objectives_auto_objective">Automatisierung aktivieren</string>
+    <string name="objectives_auto_gate">Lies in der Dokumentation nach, wie die Automation funktioniert. Richte Dir erst einfache Regeln ein. Zunächst sollte AAPS keine Änderungen vornehmen, sondern Dir nur eine Benachrichtigung anzeigen. Wenn Du Dir sicher bist, dass die Automation im richtigen Moment angetriggert wird, dann kannst Du die Benachrichtigung durch eine Aktion ersetzen (https://androidaps.readthedocs.io/de/latest/CROWDIN/de/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Automatisierung kann ein guter Diener sein, aber ein schlechter Meister. Überbeanspruchen Sie ihn nicht. Versuchen Sie nicht, den zugrundeliegenden Algorithmus zu ersetzen. Testen Sie die Regel erst vor der Verwendung. Es hängt von der Reihenfolge ab.</string>
     <string name="objectives_bgavailableinns">BZ in Nightscout verfügbar</string>
     <string name="objectives_pumpstatusavailableinns">Pumpen-Status in Nightscout verfügbar</string>
@@ -44,19 +46,27 @@ die Formel maxIOB = durchschnittlicher Essensbolus + 3 x höchste Basalrate</str
     <string name="objectives_usescale">Nutze die Skalierfunktion. Drücke dazu lange auf das BZ-Diagramm</string>
     <string name="objectives_exam_objective">Prüfe Dein Wissen</string>
     <string name="objectives_exam_gate">Beschäftige dich mit den Fragen. Dir werden für jede Frage vier Antwortmöglichkeiten vorgegeben. Es kann mehr als eine richtige Antwort geben. Bitte hake alle richtigen an und wähle BESTÄTIGEN.</string>
+    <string name="objectives_exam_learned_prerequisites">Du musst kein Entwickler sein, aber du brauchst NS um Ziele zu erreichen, eine kompatible Pumpe und einen Computer um AAPS zum ersten Mal und für jedes weitere Update zu bauen.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS kann offline ausgeführt werden.</string>
     <string name="objectives_exam_learned_basaltest">Das Profil sollte überprüft und aktualisiert werden. Besseres Profil = bessere Ergebnisse.</string>
+    <string name="objectives_exam_learned_dia">DIA hat beim Loopen eine andere Bedeutung (Zeit bis die Gesamtmenge an Insulin absorbiert ist) als in der klassischen Pumpentherapie (Zeit bis das meiste Insulin absorbiert ist).</string>
+    <string name="objectives_exam_learned_isf">Du hast die Bedeutung des ISF-Wertes kennengelernt und wie er die Menge an Insulin, die für die Blutzucker-Korrektur verwendet wird, beeinflusst.</string>
+    <string name="objectives_exam_learned_ic">Du hast die Bedeutung des IC-Wertes kennengelernt und wie er die Menge an Insulin, die für die Abdeckung der Kohlenhydrate verwendet wird, beeinflusst.</string>
     <string name="objectives_exam_learned_hypott">Hypo temporäres Ziel wird nur verwendet, um eine Überkorrektur nach Hypos zu verhindern, weil sich in dem Fall oft ein negatives IOB gesammelt hat. Zusätzliche Maßnahmen sollten evaluiert werden, um diese Situation in Zukunft zu verhindern.</string>
+    <string name="objectives_exam_learned_profileswitch">Die Verwendung eines Prozentsatzes betrifft nicht den Zielblutzucker, allerdings werden Basal, ISF und IC so angepasst, dass mehr Insulin (über 100%) oder weniger Insulin (unter 100%) gegeben wird.</string>
     <string name="objectives_exam_learned_profileswitchtime">Durch die Verwendung einer Zeitverschiebung beim Profilwechsel kannst du das zirkadiane Profil an Unregelmäßigkeiten – wie ein verspätetes Aufwachen, anpassen. Das Profil wird entsprechend zeitlich versetzt.</string>
     <string name="objectives_exam_learned_profileswitch4">Das Bearbeiten des Profils selbst reicht nicht aus, um eine Änderung vorzunehmen. Sie müssen noch einen Profilwechsel durchführen, um die Änderungen zu aktivieren.</string>
     <string name="objectives_exam_learned_exercise">Du solltest die Menge an Insulin im Körper mindestens 1 Stunde vor Beginn der Übung verringern, indem du ein Profil unter 100% wählst.</string>
     <string name="objectives_exam_learned_exercise2">Das Einstellen eines höheren Temporären Ziels mindestens 1 Stunde vor dem Training hilft ebenfalls bei der Verringerung der Menge an Insulin im Körper.</string>
+    <string name="objectives_exam_learned_noisycgm">Wenn Du der Korrektheit der CGM Werten nicht trauen kannst, solltest Du den Loop nicht unbeaufsichtigt verwenden.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS muss wissen, dass die Pumpe nicht verbunden ist, um IOB korrekt zu zählen.</string>
     <string name="objectives_exam_learned_insulin">Es ist nötig einzustellen, welches Insulin in der Pumpe ist, da es die IOB-Berechnung beeinflusst.</string>
     <string name="objectives_exam_learned_sensitivity">Die Sensitivitätserkennung ist Teil des Algorithmus, der eine Anpassung der Insulindosis an verschiedene Situationen ermöglicht.</string>
     <string name="objectives_exam_learned_objectives">Dein Fortschritt bei den Zielsetzungen wird zusammen mit anderen Einstellungen gespeichert und sollte zusätzlich gesichert werden.</string>
+    <string name="objectives_exam_learned_objectives2">Behalte immer eine Sicherungskopie deiner exportierten Einstellungen und deines erstellten APK an einem Ort außerhalb des Telefons auf. Das Telefon kann verloren gehen, beschädigt werden usw. Eine gute Stelle kann ein Cloudspeicher sein, der vom Telefon aus erreichbar ist. In diesem Fall kannst du AAPS auf einem anderen Gerät in ein paar Minuten wiederherstellen. Es ist auch eine gute Praxis das Master Passwort an einem sicheren Ort wie z.B. einem Passwortmanager aufzubewahren. Ohne dieses Passwort ist Deine Sicherungskopie nutzlos. Dasselbe gilt für den Signaturschlüssel (.jks Datei) mit den Passwörtern, mit denen AAPS gebaut wird. Der Rest ist nicht wichtig - er kann jederzeit wieder aus dem Internet heruntergeladen werden.</string>
     <string name="objectives_exam_learned_wrongcarbs">Wenn du falsche Eingaben in AAPS gemacht hast oder sie nicht der Realität entsprechen, passe diese so schnell wie möglich an. Dies könnte sonst zu einer Überdosierung mit Insulin führen. AAPS sollte immer gewissenhaft auf die bestmögliche Art und Weise über Kohlenhydrate und Insulinzuführung usw. informiert werden.</string>
     <string name="objectives_exam_learned_iob">Wenn Sie analysieren wollen, ob AAPS für Sie gut funktioniert, kann das Betrachten des IOB-Diagramms Ihnen sehr nützlichen Informationen liefern.</string>
+    <string name="objectives_exam_learned_cob">Die Berechnung des COB hängt von der Beziehung zwischen ISF und IC ab. Die Erhöhung der ISF oder das Verringern der ICs führt zu längeren Absorptionszeiten. Aber Profilwechsel mit prozentualen Änderungen verändern beide Werte zur gleichen Zeit und die Absorptionszeit bleibt davon unberührt.</string>
     <string name="objectives_exam_learned_breadgrams">Bei der Eingabe von KH sind nur Gramm erlaubt.</string>
     <string name="objectives_exam_learned_ecarbs">E-Carbs ist ein Ersatz für einen erweiterten Bolus in der Pumpenwelt.</string>
     <string name="objectives_exam_learned_nsclient">Fernüberwachung und -steuerung ist möglich, aber nicht alle Funktionen sind ggf. aus der Ferne verfügbar.</string>
@@ -65,7 +75,12 @@ die Formel maxIOB = durchschnittlicher Essensbolus + 3 x höchste Basalrate</str
     <string name="unfinshed_button">Nächste offene</string>
     <string name="requestcode">Code anfordern: %1$s</string>
     <string name="objectives_hint">(Kreuze alle richtigen Antworten an)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/de/latest/Getting-Started/FAQ.html#was-mache-ich-wenn-ich-duschen-oder-ein-bad-nehmen-mochte</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/de/latest/Getting-Started/Screenshots.html#die-startseite</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/de/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/de/latest/Getting-Started/Screenshots.html#die-startseite</string>
     <string name="notconnected">Keine Verbindung zum Internet</string>
     <string name="failedretrievetime">Abruf der Uhrzeit fehlgeschlagen</string>
     <string name="requirementnotmet">Anforderungen des Zieles nicht erfüllt</string>
+    <string name="what_i_ve_learned">Was ich gelernt habe:</string>
 </resources>

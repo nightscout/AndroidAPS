@@ -118,15 +118,8 @@
     <string name="insulin_label">Inzulin</string>
     <!-- Overview -->
     <string name="a11y_insulin_label">inzulin</string>
-    <string name="a11y_only_on_watch">samo na satu</string>
-    <string name="a11y_only_on_phone">samo na telefonu</string>
     <string name="overview">Pregled</string>
     <string name="description_overview">Prikaži trenutno stanje tvog loop-a i izbore za najuobičajenije postupke</string>
-    <string name="overview_edit_quickwizard_carbs">Ugljikohidrati (UH):</string>
-    <string name="device_all">Svi</string>
-    <string name="device_phone">Telefon</string>
-    <string name="device_watch">Sat</string>
-    <string name="a11y_drag_and_drop_handle">povuci i ostavi ruka</string>
     <string name="treatments">Tretmani</string>
     <string name="enable_bolus_advisor">Omogući savjetnika za bolus</string>
     <string name="enable_bolus_advisor_summary">Omogući savjetnika za bolus i koristite podsjetnik da počnete jesti kasnije umjesto rezultata čarobnjaka tijekom visoke glikemije (\"pre-bolus\")</string>

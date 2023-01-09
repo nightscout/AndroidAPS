@@ -121,4 +121,6 @@
     <string name="combov2_datetime_changed">Дата и/или время изменены</string>
     <string name="combov2_dst_started">Начато летнее/зимнее время (ДСТ)</string>
     <string name="combov2_dst_ended">Летнее/зимнее время окончено (ДСТ)</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Не удается подключиться к помпе, ошибка помпы. Следует устранить ошибку, а затем подождать 5 минут или нажать кнопку Обновить на вкладке драйвера.</string>
+    <string name="combov2_refresh_pump_status_after_error">Обновление статуса помпы после сообщения об ошибке</string>
 </resources>

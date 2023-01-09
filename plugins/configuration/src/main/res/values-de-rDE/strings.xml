@@ -37,6 +37,7 @@
     <string name="exitwizard">Einrichtungsassistenten überspringen</string>
     <string name="setupwizard_loop_description">Drücke die Schaltfläche unten, um AndroidAPS zu erlauben, Basal-Änderungen vorzuschlagen/vorzunehmen</string>
     <string name="setupwizard_sensitivity_description">Das Sensitivitäts-Plugin wird für die Sensitivitäts- und COB-Berechnung verwendet. Für weitere Informationen siehe:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/de/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Wähle einen der verfügbaren Algorithmen aus. Sie sind vom Ältesten zum Neuesten sortiert. Neuere Algorithmen sind meist stärker und aggressiver. Wenn du ein Anfänger bist, solltest du nicht mit dem Neuesten sondern mit AMA starten. Vergiss nicht, die OpenAPS-Dokumentation zu lesen und die entsprechenden Einstellungen vor der Benutzung vorzunehmen.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Bitte konfiguriere Deinen RileyLink unten. Nachdem Du einen RileyLink ausgewählt hast, kannst Du die Installation fortsetzen, sobald der RileyLink-Status \"Verbunden\" ist. Das kann eine Minute dauern.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Hinweis:</b> Du kannst das Setup fortsetzen, sobald die Pumpe initialisiert wurde.\n</string>
@@ -71,6 +72,8 @@
     <string name="configbuilder_insulin_description">Welchen Insulin-Typ verwendest Du?</string>
     <string name="configbuilder_bgsource">BZ-Quelle</string>
     <string name="configbuilder_bgsource_description">Woher soll AndroidAPS seine Blutzuckerwerte beziehen?</string>
+    <string name="configbuilder_smoothing">Glättung</string>
+    <string name="configbuilder_smoothing_description">Wähle Glättungsalgorithmus</string>
     <string name="configbuilder_sensitivity">Sensitivitätserkennung</string>
     <string name="configbuilder_sensitivity_description">Welcher Sensitivitäts-Algorithmus soll verwendet werden?</string>
     <string name="config_builder_shortname">KONF</string>

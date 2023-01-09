@@ -127,4 +127,30 @@
     <string name="basal_rate">Basalrate</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOPP er trykket</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">kun på klokke</string>
+    <string name="a11y_only_on_phone">kun på telefon</string>
+    <string name="quickwizard_settings">Innstillinger for hurtigveiviser</string>
+    <string name="overview_edit_quickwizard_button_text">Knappetekst:</string>
+    <string name="overview_edit_quickwizard_carbs">Karbo:</string>
+    <string name="overview_edit_quickwizard_valid">Gyldig:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Legg til</string>
+    <string name="overview_quickwizard_item_edit_button">Rediger</string>
+    <string name="overview_edit_quickwizard_show_on_device">Vis oppføring på enhet:</string>
+    <string name="overview_edit_quickwizard_use_bg">BS beregning</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB beregning</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB beregning</string>
+    <string name="overview_edit_quickwizard_use_trend">Trendberegning</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Superbolus beregning</string>
+    <string name="overview_edit_quickwizard_percentage">Prosent</string>
+    <string name="device_all">Alt</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Klokke</string>
+    <string name="positive_only">Bare positive</string>
+    <string name="negative_only">Bare negative</string>
+    <string name="overview_editquickwizard_usecob">COB beregning</string>
+    <string name="overview_editquickwizard_usetemptarget">Beregning av temp target</string>
+    <string name="overview_editquickwizard_usepercentage">Prosent beregning</string>
+    <string name="app_default">Standardverdi</string>
+    <string name="a11y_drag_and_drop_handle">dra og slipp håndtering</string>
 </resources>

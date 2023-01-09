@@ -45,16 +45,9 @@
     <!-- Overview -->
     <string name="a11y_insulin_label">inslin</string>
     <string name="overview_cgm">CGM</string>
-    <string name="quickwizard">QuickWizard</string>
     <string name="overview_shortname">BAILE</string>
     <string name="overview_buttons_selection">Cnaipi</string>
     <string name="openaps">OpenAPS</string>
-    <string name="overview_edit_quickwizard_carbs">Carbí:</string>
-    <string name="overview_edit_quickwizard_valid">Bailí:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Cuir</string>
-    <string name="overview_quickwizard_item_edit_button">In eagar</string>
-    <string name="overview_edit_quickwizard_percentage">Céatadán</string>
-    <string name="device_all">Ar fad</string>
     <string name="treatments">Cóireálacha</string>
     <string name="cgm">CGM</string>
     <string name="activity_duration">Gníomhaíocht fad</string>
