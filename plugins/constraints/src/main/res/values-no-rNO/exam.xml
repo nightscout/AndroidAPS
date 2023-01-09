@@ -4,6 +4,7 @@
     <string name="dia_label_exam">Insulinets virkningstid (DIA)</string>
     <string name="dia_profile">Du skal sette verdien for DIA i profilen din.</string>
     <string name="dia_minimumis5h">Minimum tillatt DIA verdi er 5 timer.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="dia_meaningisequaltodiapump">Hvis du føler at DIA verdien som du benyttet i pumpen fungerte godt før du tok i bruk AndroidAPS, da er det ikke nødvendig å endre dette når du starter å loope.</string>
     <string name="dia_valuemustbedetermined">Du må selv bestemme hvilken verdi som passer for DIA.</string>
     <string name="hypott_label">Hypo Temp-Target (TT)</string>
@@ -187,6 +188,7 @@
     <string name="ic_noeffect">Hvis du har 0 COB, vil endring av IK forholdet føre til endring av insulinmengden som trengs for å korrigere ditt BS nivå.</string>
     <string name="ic_different">IK vil være forskjellig hvis du regner en skive brød som 10g eller 12g.</string>
     <string name="ic_meaning">IK betyr: Hvor mange brødenheter som dekkes av 1E insulin.</string>
+    <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Profil bytte</string>
     <string name="profileswitch_pctwillchange"> Hvilke svar er korrekte når du spesifiserer et profilbytte på 90%?</string>
     <string name="profileswitch_basallower">Basaldoser vil være 10% lavere.</string>
