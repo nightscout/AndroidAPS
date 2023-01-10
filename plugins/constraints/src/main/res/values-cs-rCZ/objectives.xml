@@ -22,7 +22,7 @@
     <string name="objectives_maxiob_learned">Aktualizujte MaxIOB, jak roste dítě. Nedovolte, aby vám systém dával více inzulínu, než můžete pokrýt jídlem = opravdu vysoká hodnota je špatný nápad.</string>
     <string name="objectives_autosens_objective">Upravit bazály a poměry, bude-li to potřeba, a povolit automatickou detekci citlivosti na inzulín</string>
     <string name="objectives_autosens_gate">Jeden týden úspěšného používání s běžným příjmem sacharidů</string>
-    <string name="objectives_autosens_learned">Pokud váš výsledek autosens neosciluje kolem 100% nastevení Vašeho profilu pravděpodobně špatné.</string>
+    <string name="objectives_autosens_learned">Pokud váš výsledek autosens neosciluje kolem 100%, nastavení Vašeho profilu pravděpodobně špatné.</string>
     <string name="objectives_smb_objective">Povolit další funkce pro běžné používání jako SMB</string>
     <string name="objectives_smb_gate">Přečíst si dokumentaci a zvýšit maximální IOB, aby mohlo SMB fungovat. Pro začátek se dá použít velikost běžného bolusu + 3x maximální denní bazál</string>
     <string name="objectives_smb_learned">Použití SMB je vaším cílem. Oref1 algoritmus byl navržen tak, aby vám pomohl i s vašimi bolusy. Neměli byste dávat úplný bolus pro vaše jídlo, ale jen jeho část a nechtat AAPS v případě potřeby dát zbytek. Takto máte větší rezervu pro špatně vypočtené sacharidy. Věděli jste, že můžete nastavit procento bolusové kalkulačky pro snížení velikosti bolusu?</string>
@@ -76,7 +76,7 @@
     <string name="objectives_hint">(zatrhněte všechny správné odpovědi)</string>
     <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/cs/latest/Getting-Started/FAQ.html#co-delat-pri-sprchovani-a-koupani</string>
     <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/cs/latest/Getting-Started/Screenshots.html#hlavni-stranka</string>
-    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/cs/latest/Getting-Started/Screenshots.html#hlavni-stranka</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/cs/latest/Configuration/Config-Builder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/cs/latest/Getting-Started/Screenshots.html#hlavni-stranka</string>
     <string name="notconnected">Chybí připojení k internetu</string>
     <string name="failedretrievetime">Nepodařilo se načíst čas</string>

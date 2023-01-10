@@ -14,7 +14,7 @@ buildscript {
         activity_version = '1.6.1'
         fragmentktx_version = '1.5.5'
         ormLite_version = '4.46'
-        gson_version = '2.10'
+        gson_version = '2.10.1'
         nav_version = '2.5.3'
         appcompat_version = '1.5.1'
         material_version = '1.7.0'

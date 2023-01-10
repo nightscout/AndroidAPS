@@ -18,7 +18,7 @@
     <string name="invalidpairing">Información de emparejamiento inválida. Solicitando un nuevo emparejamiento</string>
     <string name="gettingpumpsettings">Recibiendo configuración de la bomba</string>
     <string name="gettingpumptime">Recibiendo hora de la bomba</string>
-    <string name="largetimediff">Gran diferencia de tiempo: \nLa bomba esta desincronizada más de 1,5 horas. \nPor favor, ajusta la hora manualmente en la bomba y asegúrate de que la lectura en el historial de la bomba no causa un comportamiento inesperado. \nSi es posible, borra el historial de la bomba antes de cambiar la hora o desactiva el lazo cerrado durante el periodo DIA (Duración Insulina Activa) después del último registro erróneo, con un mínimo de el valor de DIA a partir de ahora.</string>
+    <string name="largetimediff">Gran diferencia de tiempo: \nLa bomba esta desincronizada más de 1,5 horas. \nPor favor, ajusta la hora manualmente en la bomba y asegúrate de que la lectura en el historial de la bomba no causa un comportamiento inesperado. \nSi es posible, borra el historial de la bomba antes de cambiar la hora o desactiva el bucle cerrado durante el periodo DIA (Duración Insulina Activa) después del último registro erróneo, con un mínimo del valor de DIA a partir de ahora.</string>
     <string name="largetimedifftitle">Título de gran diferencia horaria</string>
     <string name="approachingdailylimit">Alcanzando el limite de insulina diario</string>
     <string name="startingbolus">Iniciando entrega del bolo</string>

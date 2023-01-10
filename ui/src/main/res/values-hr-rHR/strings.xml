@@ -72,4 +72,5 @@
     <string name="basal_rate">Bazalna stopa</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOP PRITISNUT</string>
+    <!--QuickWizard-->
 </resources>

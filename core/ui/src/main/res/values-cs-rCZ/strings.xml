@@ -473,6 +473,7 @@
     <string name="wizard_explain_tt">Doč. cíl: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s – %2$s</string>
     <string name="wizard_pump_not_available">Pumpa není k dispozici!</string>
+    <string name="quickwizard">Rychlý bolus</string>
     <!--    Preferences-->
     <string name="child">Dítě</string>
     <string name="teenage">Dospívající</string>

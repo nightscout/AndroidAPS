@@ -124,4 +124,5 @@
     <string name="basal_rate">מינון בזאלי</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">עצור נלחץ!</string>
+    <!--QuickWizard-->
 </resources>

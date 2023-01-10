@@ -66,17 +66,11 @@
     <!-- Overview -->
     <string name="a11y_insulin_label">insulin</string>
     <string name="set_basal_question">Prihvatite novi privremeni bazal:</string>
-    <string name="quickwizard">Brzi Čarobnjak</string>
     <string name="overview">Pregled</string>
     <string name="description_overview">Prikazuje trenutno stanje tvog loop-a i tipke za najčešće radnje</string>
     <string name="constraints_violation">Kršenje ograničenja</string>
     <string name="change_your_input">Promeni tvoj unos!</string>
     <string name="quickwizard_settings">Brzi Čarobnjak postavke</string>
-    <string name="overview_edit_quickwizard_button_text">Tekst tipke:</string>
-    <string name="overview_edit_quickwizard_carbs">Ugljeni hidrati:</string>
-    <string name="overview_edit_quickwizard_valid">Važi:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Dodaj</string>
-    <string name="overview_quickwizard_item_edit_button">Izmeni</string>
     <string name="treatments">Tretmani</string>
     <!--    OverviewMenu-->
     <string name="overview_show_treatments">Tretmani</string>

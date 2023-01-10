@@ -36,4 +36,5 @@
     <!-- Other dialogs -->
     <string name="basal_rate">Bázisütem</string>
     <!--    BolusProgressDialog-->
+    <!--QuickWizard-->
 </resources>

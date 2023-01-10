@@ -13,7 +13,7 @@
     <string name="hypott_preventoversmb">Aby se zabránilo přehnané korekci, způsobené rychlými sacharidy použitými k léčbě hypoglykémie.</string>
     <string name="hypott_exercise">Napravit hypo jako důsledek fyzické aktivity.</string>
     <string name="hypott_0basal">Aby se zabránilo snížení hladiny glukózy v krvi, pokud již běží 0% dočasný bazál.</string>
-    <string name="hypott_hint1">https://wiki.aaps.app/cs/latest/EN/Usage/temptarget.html</string>
+    <string name="hypott_hint1">https://wiki.aaps.app/cs/latest/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Který profil lze použít a konfigurovat offline?</string>
     <string name="offlineprofile_label">Téma: Offline profil</string>
     <string name="offlineprofile_nsprofile">NS profil může být použit, ale ne nastaven.</string>
@@ -178,7 +178,7 @@
     <string name="isf_noeffect">Zvýšení nebo snížení citlivosti nemá žádný vliv na výdej inzulinu, pokud jsou hladiny glykémie v krvi pod cílovou hodnotou.</string>
     <string name="isf_preferences">ISF by měl být zadán do předvoleb AAPS.</string>
     <string name="isf_profile">Změna hodnoty citlivosti ve vašem profilu postačuje k tomu, aby se tato změna použila.</string>
-    <string name="isf_hint1">https://wiki.aaps.app/cs/latest/Getting-Started/FAQ.html#korekcni-faktor-citlivost-na-inzulin-isf-mmol-l-u-nebo-mg-dl-u</string>
+    <string name="isf_hint1">https://wiki.aaps.app/cs/latest/Getting-Started/FAQ.html#inzulinovosacharidovy-pomer-ic-g-u</string>
     <string name="isf_hint2">https://wiki.aaps.app/cs/latest/Usage/Profiles.html</string>
     <string name="ic_multiple">Ve svém profilu můžete použít více než jednu hodnotu poměru I:C.</string>
     <string name="ic_isf">Změníte-li ISF ve svém profilu, měli byste vždy změnit také poměr I:C.</string>
@@ -195,7 +195,7 @@
     <string name="profileswitch_isfhigher">Hodnota citlivosti bude o 10 % vyšší.</string>
     <string name="profileswitch_iclower">Hodnota poměru I:C bude o 10% nižší.</string>
     <string name="profileswitch_unchanged">Hodnoty ISF a I:C nebudou změněny.</string>
-    <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/cs/latest/Usage/Profiles.html#prepinani-profilu</string>
+    <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/cs/latest/Usage/Profiles.html</string>
     <string name="profileswitch2_label">Přepnutí profilu</string>
     <string name="profileswitch2_pctwillchange">Když zadáte 120% profil, které odpovědi jsou pravdivé?</string>
     <string name="profileswitch2_bghigher">Cílová glykémie bude o 20 % vyšší.</string>
@@ -208,7 +208,7 @@
     <string name="profileswitchtime__2">Proveďte přepnutí profilu s posunem času -2</string>
     <string name="profileswitchtime_tt">Nastavte dočasný cíl Před jídlem.</string>
     <string name="profileswitchtime_100">Přepněte profil na více než 100%. </string>
-    <string name="profileswitchtime_hint1">https://wiki.aaps.app/en/latest/Usage/Profiles.html?highlight=profile+switch#time-shift</string>
+    <string name="profileswitchtime_hint1">https://wiki.aaps.app/cs/latest/Usage/Profiles.html</string>
     <string name="profileswitch4_label">Změna profilu</string>
     <string name="profileswitch4_rates">V profilech by měly být nastaveny bazální dávky, ISF, I:C poměry, atd.</string>
     <string name="profileswitch4_internet">Aktivace změn vašeho profilu Nightscout vyžaduje, aby váš telefon AAPS měl k dispozici připojení k Internetu.</string>

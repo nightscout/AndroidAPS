@@ -102,4 +102,5 @@
     <string name="basal_rate">Taxa da Basal</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOP PRESSIONADO</string>
+    <!--QuickWizard-->
 </resources>

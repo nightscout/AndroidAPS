@@ -43,7 +43,7 @@
     <string name="gettingpumpsettings">Recibiendo configuración de la bomba</string>
     <string name="gettingpumptime">Recibiendo hora bomba</string>
     <string name="largetimedifftitle">Diferencia de tiempo grande</string>
-    <string name="largetimediff">Gran diferencia de tiempo: \nLa bomba esta desincronizada más de 1,5 horas. \npor favor ajusta la hora manualmente en la bomba y asegúrate de que la lectura del histórico de la bomba no causa comportamiento inesperado. \nSi es posible, borra el historial de la bomba antes de cambiar la hora o desactiva el lazo cerrado durante el periodo DIA (duracion insulina activa) después del último registro erróneo pero mínimo durante el DIA a partir de ahora.</string>
+    <string name="largetimediff">Gran diferencia de tiempo: \nLa bomba esta desincronizada más de 1,5 horas. \npor favor ajusta la hora manualmente en la bomba y asegúrate de que la lectura del histórico de la bomba no pueda causar un comportamiento inesperado. \nSi es posible, borra el historial de la bomba antes de cambiar la hora o desactiva el bucle cerrado durante el periodo DIA (duracion insulina activa) después del último registro erróneo pero mínimo durante el DIA a partir de ahora.</string>
     <string name="pairfirst">Por favor, empareje su bomba con su teléfono!</string>
     <string name="approachingdailylimit">Alcanzando el limite de insulina diario</string>
     <string name="startingbolus">Iniciando bolo</string>

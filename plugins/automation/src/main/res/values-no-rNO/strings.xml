@@ -129,4 +129,5 @@
     <!--    Reminders-->
     <string name="time_to_eat">Nå må du spise!\nBruk bolus-veiviser og gjør beregning på nytt.</string>
     <string name="time_to_bolus">Tid for bolus!\nStart bolus-veiviser og gjør beregning på nytt.</string>
+    <string name="error_setting_reminder">Feil under innstilling av fremtidig alarm</string>
 </resources>
