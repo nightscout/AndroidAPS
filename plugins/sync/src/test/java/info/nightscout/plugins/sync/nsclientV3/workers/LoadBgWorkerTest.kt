@@ -90,6 +90,7 @@ internal class LoadBgWorkerTest : TestBase() {
 
     @Test
     fun doWork() = runTest {
+        initWorkManager()
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
         Mockito.`when`(nsAndroidClient.getSgvsNewerThan(anyLong(), anyLong())).thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))

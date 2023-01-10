@@ -35,8 +35,10 @@ open class TestBase {
     fun setupLocale() {
         Locale.setDefault(Locale.ENGLISH)
         System.setProperty("disableFirebase", "true")
+    }
 
-        // Initialize WorkManager for instrumentation tests.
+    // Initialize WorkManager for instrumentation tests.
+    fun initWorkManager() {
         WorkManagerTestInitHelper.initializeTestWorkManager(
             context,
             Configuration.Builder()
@@ -44,7 +46,6 @@ open class TestBase {
                 .setExecutor(SynchronousExecutor())
                 .build()
         )
-
     }
 
     // Workaround for Kotlin nullability.
