@@ -64,7 +64,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
             // if (pumpData.reservoirDisplayOverride != "") string.append(pumpData.reservoirDisplayOverride).append("$insulinUnit ")
             // else if (fields.contains("reservoir")) string.append(pumpData.reservoir.toInt()).append("$insulinUnit ")
             if (pumpData.isPercent) string.append(pumpData.percent).append("% ")
-            if (!pumpData.isPercent) string.append(Round.roundTo(pumpData.voltage, 0.001)).append(" ")
+            if (!pumpData.isPercent && pumpData.voltage > 0) string.append(Round.roundTo(pumpData.voltage, 0.001)).append(" ")
             string.append(dateUtil.minAgo(rh, pumpData.clock)).append(" ")
             string.append(pumpData.status).append(" ")
             //string.append(device).append(" ")
