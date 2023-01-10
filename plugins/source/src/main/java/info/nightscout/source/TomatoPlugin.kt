@@ -18,6 +18,7 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,7 +44,7 @@ class TomatoPlugin @Inject constructor(
     class TomatoWorker(
         context: Context,
         params: WorkerParameters
-    ) : LoggingWorker(context, params) {
+    ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var tomatoPlugin: TomatoPlugin
@@ -52,7 +53,7 @@ class TomatoPlugin @Inject constructor(
         @Inject lateinit var xDripBroadcast: XDripBroadcast
 
         @Suppress("SpellCheckingInspection")
-        override fun doWorkAndLog(): Result {
+        override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
 
             if (!tomatoPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))

@@ -20,6 +20,7 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.T
+import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
 import javax.inject.Inject
 import kotlin.math.ceil
@@ -29,7 +30,7 @@ import kotlin.math.min
 class PreparePredictionsWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var overviewData: OverviewData
@@ -48,7 +49,7 @@ class PreparePredictionsWorker(
         val overviewData: OverviewData
     )
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PreparePredictionsData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 

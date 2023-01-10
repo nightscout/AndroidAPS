@@ -39,12 +39,13 @@ import info.nightscout.sdk.localmodel.treatment.NSTherapyEvent
 import info.nightscout.sdk.localmodel.treatment.NSTreatment
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class ProcessTreatmentsWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var config: Config
@@ -57,7 +58,7 @@ class ProcessTreatmentsWorker(
     @Inject lateinit var xDripBroadcast: XDripBroadcast
     @Inject lateinit var storeDataForDb: StoreDataForDb
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
         @Suppress("UNCHECKED_CAST")
         val treatments = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as NSAndroidClient.ReadResponse<List<NSTreatment>>?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))

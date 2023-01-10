@@ -34,6 +34,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.max
@@ -42,7 +43,7 @@ import kotlin.math.min
 class PrepareIobAutosensGraphDataWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var dateUtil: DateUtil
@@ -114,7 +115,7 @@ class PrepareIobAutosensGraphDataWorker(
         }
     }
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareIobAutosensData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 

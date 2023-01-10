@@ -23,12 +23,13 @@ import info.nightscout.plugins.sync.nsclient.acks.NSUpdateAck
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class NSClientUpdateRemoveAckWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var repository: AppRepository
@@ -36,7 +37,7 @@ class NSClientUpdateRemoveAckWorker(
     @Inject lateinit var dataSyncSelector: DataSyncSelector
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
         var ret = Result.success()
 
         val ack = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as NSUpdateAck?

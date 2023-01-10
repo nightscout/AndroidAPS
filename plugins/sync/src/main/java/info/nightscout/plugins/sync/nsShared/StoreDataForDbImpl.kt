@@ -61,6 +61,7 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
@@ -123,11 +124,11 @@ class StoreDataForDbImpl @Inject constructor(
     class StoreBgWorker(
         context: Context,
         params: WorkerParameters
-    ) : LoggingWorker(context, params) {
+    ) : LoggingWorker(context, params, Dispatchers.Default) {
 
         @Inject lateinit var storeDataForDb: StoreDataForDb
 
-        override fun doWorkAndLog(): Result {
+        override suspend fun doWorkAndLog(): Result {
             storeDataForDb.storeGlucoseValuesToDb()
             return Result.success()
         }
@@ -136,11 +137,11 @@ class StoreDataForDbImpl @Inject constructor(
     class StoreFoodWorker(
         context: Context,
         params: WorkerParameters
-    ) : LoggingWorker(context, params) {
+    ) : LoggingWorker(context, params, Dispatchers.Default) {
 
         @Inject lateinit var storeDataForDb: StoreDataForDb
 
-        override fun doWorkAndLog(): Result {
+        override suspend fun doWorkAndLog(): Result {
             storeDataForDb.storeFoodsToDb()
             return Result.success()
         }

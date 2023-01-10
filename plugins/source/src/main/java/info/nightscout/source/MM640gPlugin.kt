@@ -20,6 +20,7 @@ import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
 import javax.inject.Inject
@@ -45,7 +46,7 @@ class MM640gPlugin @Inject constructor(
     class MM640gWorker(
         context: Context,
         params: WorkerParameters
-    ) : LoggingWorker(context, params) {
+    ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var mM640gPlugin: MM640gPlugin
         @Inject lateinit var injector: HasAndroidInjector
@@ -54,7 +55,7 @@ class MM640gPlugin @Inject constructor(
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var xDripBroadcast: XDripBroadcast
 
-        override fun doWorkAndLog(): Result {
+        override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
 
             if (!mM640gPlugin.isEnabled()) return Result.success()

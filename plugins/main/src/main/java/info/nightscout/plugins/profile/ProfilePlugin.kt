@@ -40,6 +40,7 @@ import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -432,7 +433,7 @@ class ProfilePlugin @Inject constructor(
     class NSProfileWorker(
         context: Context,
         params: WorkerParameters
-    ) : LoggingWorker(context, params) {
+    ) : LoggingWorker(context, params, Dispatchers.Default) {
 
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var rxBus: RxBus
@@ -444,7 +445,7 @@ class ProfilePlugin @Inject constructor(
         @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var instantiator: Instantiator
 
-        override fun doWorkAndLog(): Result {
+        override suspend fun doWorkAndLog(): Result {
             val profileJson = dataWorkerStorage.pickupJSONObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             xDripBroadcast.sendProfile(profileJson)

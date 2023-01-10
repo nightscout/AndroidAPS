@@ -8,17 +8,18 @@ import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventUpdateOverviewGraph
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class UpdateGraphWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.IO) {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var activePlugin: ActivePlugin
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
         if (inputData.getString(CalculationWorkflow.JOB) == CalculationWorkflow.MAIN_CALCULATION)
             activePlugin.activeOverview.overviewBus.send(EventUpdateOverviewGraph("UpdateGraphWorker"))
         else

@@ -13,12 +13,13 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.interfaces.ResourceHelper
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class PrepareBucketedDataWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileFunction: ProfileFunction
@@ -30,7 +31,7 @@ class PrepareBucketedDataWorker(
         val overviewData: OverviewData
     )
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
 
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareBucketedData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))

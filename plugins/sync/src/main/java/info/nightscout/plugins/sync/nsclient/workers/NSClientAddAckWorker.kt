@@ -28,12 +28,13 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.shared.sharedPreferences.SP
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class NSClientAddAckWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var repository: AppRepository
@@ -43,7 +44,7 @@ class NSClientAddAckWorker(
     @Inject lateinit var sp: SP
     @Inject lateinit var storeDataForDb: StoreDataForDb
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
         val ack = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as NSAddAck?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 

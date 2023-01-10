@@ -19,13 +19,13 @@ import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.entry.NSSgvV3
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlin.math.max
 
 class LoadBgWorker(
     context: Context, params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.IO) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var rxBus: RxBus
@@ -35,66 +35,55 @@ class LoadBgWorker(
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Inject lateinit var workerClasses: WorkerClasses
 
-    companion object {
-
-        val JOB_NAME: String = this::class.java.simpleName
-    }
-
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
-        var ret = Result.success()
         val isFirstLoad = nsClientV3Plugin.isFirstLoad(NsClient.Collection.ENTRIES)
         val lastLoaded =
             if (isFirstLoad) max(nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries, dateUtil.now() - nsClientV3Plugin.maxAge)
             else max(nsClientV3Plugin.lastLoadedSrvModified.collections.entries, dateUtil.now() - nsClientV3Plugin.maxAge)
-        runBlocking {
-            if ((nsClientV3Plugin.newestDataOnServer?.collections?.entries ?: Long.MAX_VALUE) > lastLoaded)
-                try {
-                    val sgvs: List<NSSgvV3>
-                    val response: NSAndroidClient.ReadResponse<List<NSSgvV3>>?
-                    if (isFirstLoad) response = nsAndroidClient.getSgvsNewerThan(lastLoaded, 500)
-                    else {
-                        response = nsAndroidClient.getSgvsModifiedSince(lastLoaded, 500)
-                        response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.entries = it }
-                        nsClientV3Plugin.storeLastLoadedSrvModified()
-                        nsClientV3Plugin.scheduleIrregularExecution() // Idea is to run after 5 min after last BG
-                    }
-                    sgvs = response.values
-                    aapsLogger.debug("SGVS: $sgvs")
-                    if (sgvs.isNotEmpty()) {
-                        val action = if (isFirstLoad) "RCV-FIRST" else "RCV"
-                        rxBus.send(EventNSClientNewLog(action, "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                        // Objective0
-                        sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
-                        // Schedule processing of fetched data and continue of loading
-                        WorkManager.getInstance(context).beginUniqueWork(
-                            JOB_NAME,
-                            ExistingWorkPolicy.APPEND_OR_REPLACE,
-                            OneTimeWorkRequest.Builder(workerClasses.nsClientSourceWorker).setInputData(dataWorkerStorage.storeInputData(sgvs)).build()
-                        )
-                            // response 304 == Not modified (happens when date > srvModified => bad time on phone or server during upload
-                            .then(response.code != 304, OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
-                            .then(response.code == 304, OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
-                            .enqueue()
-                    } else {
-                        // End first load
-                        if (isFirstLoad) {
-                            nsClientV3Plugin.lastLoadedSrvModified.collections.entries = lastLoaded
-                            nsClientV3Plugin.storeLastLoadedSrvModified()
-                        }
-                        rxBus.send(EventNSClientNewLog("RCV END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                        WorkManager.getInstance(context)
-                            .beginUniqueWork(
-                                NSClientV3Plugin.JOB_NAME,
-                                ExistingWorkPolicy.APPEND_OR_REPLACE,
-                                OneTimeWorkRequest.Builder(StoreDataForDbImpl.StoreBgWorker::class.java).build()
-                            )
-                            .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
-                            .enqueue()
-                    }
-                } catch (error: Exception) {
-                    aapsLogger.error("Error: ", error)
-                    ret = Result.failure(workDataOf("Error" to error.toString()))
+        if ((nsClientV3Plugin.newestDataOnServer?.collections?.entries ?: Long.MAX_VALUE) > lastLoaded) {
+            val sgvs: List<NSSgvV3>
+            val response: NSAndroidClient.ReadResponse<List<NSSgvV3>>?
+            if (isFirstLoad) response = nsAndroidClient.getSgvsNewerThan(lastLoaded, 500)
+            else {
+                response = nsAndroidClient.getSgvsModifiedSince(lastLoaded, 500)
+                response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.entries = it }
+                nsClientV3Plugin.storeLastLoadedSrvModified()
+                nsClientV3Plugin.scheduleIrregularExecution() // Idea is to run after 5 min after last BG
+            }
+            sgvs = response.values
+            aapsLogger.debug("SGVS: $sgvs")
+            if (sgvs.isNotEmpty()) {
+                val action = if (isFirstLoad) "RCV-FIRST" else "RCV"
+                rxBus.send(EventNSClientNewLog(action, "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                // Objective0
+                sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
+                // Schedule processing of fetched data and continue of loading
+                WorkManager.getInstance(context).beginUniqueWork(
+                    NSClientV3Plugin.JOB_NAME,
+                    ExistingWorkPolicy.APPEND_OR_REPLACE,
+                    OneTimeWorkRequest.Builder(workerClasses.nsClientSourceWorker).setInputData(dataWorkerStorage.storeInputData(sgvs)).build()
+                )
+                    // response 304 == Not modified (happens when date > srvModified => bad time on phone or server during upload
+                    .then(response.code != 304, OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
+                    .then(response.code == 304, OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
+                    .enqueue()
+            } else {
+                // End first load
+                if (isFirstLoad) {
+                    nsClientV3Plugin.lastLoadedSrvModified.collections.entries = lastLoaded
+                    nsClientV3Plugin.storeLastLoadedSrvModified()
+                }
+                rxBus.send(EventNSClientNewLog("RCV END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                WorkManager.getInstance(context)
+                    .beginUniqueWork(
+                        NSClientV3Plugin.JOB_NAME,
+                        ExistingWorkPolicy.APPEND_OR_REPLACE,
+                        OneTimeWorkRequest.Builder(StoreDataForDbImpl.StoreBgWorker::class.java).build()
+                    )
+                    .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
+                    .enqueue()
+            }
                 }
             else {
                 // End first load
@@ -112,7 +101,6 @@ class LoadBgWorker(
                     .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
                     .enqueue()
             }
-        }
-        return ret
+        return Result.success()
     }
 }

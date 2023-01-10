@@ -15,6 +15,7 @@ import info.nightscout.plugins.sync.nsclientV3.extensions.toFood
 import info.nightscout.rx.logging.LTag
 import info.nightscout.sdk.localmodel.food.NSFood
 import info.nightscout.shared.sharedPreferences.SP
+import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONObject
 import javax.inject.Inject
@@ -22,7 +23,7 @@ import javax.inject.Inject
 class ProcessFoodWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var repository: AppRepository
@@ -30,7 +31,7 @@ class ProcessFoodWorker(
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var storeDataForDb: StoreDataForDb
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
         aapsLogger.debug(LTag.DATABASE, "Received Food Data: $data")

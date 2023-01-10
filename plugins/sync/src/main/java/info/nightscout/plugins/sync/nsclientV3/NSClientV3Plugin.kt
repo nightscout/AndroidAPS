@@ -14,6 +14,7 @@ import androidx.work.WorkManager
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.database.ValueWrapper
@@ -85,6 +86,7 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@OpenForTesting
 @Singleton
 class NSClientV3Plugin @Inject constructor(
     injector: HasAndroidInjector,
@@ -128,13 +130,13 @@ class NSClientV3Plugin @Inject constructor(
     override val status
         get() =
             when {
-                sp.getBoolean(R.string.key_ns_client_paused, false)          -> rh.gs(info.nightscout.core.ui.R.string.paused)
-                isAllowed.not()                                              -> blockingReason
+                sp.getBoolean(R.string.key_ns_client_paused, false)           -> rh.gs(info.nightscout.core.ui.R.string.paused)
+                isAllowed.not()                                               -> blockingReason
                 nsAndroidClient?.lastStatus == null                           -> rh.gs(R.string.not_connected)
-                workIsRunning(arrayOf(JOB_NAME))                             -> rh.gs(R.string.working)
+                workIsRunning(arrayOf(JOB_NAME))                              -> rh.gs(R.string.working)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isFull() == true -> rh.gs(info.nightscout.shared.R.string.connected)
                 nsAndroidClient?.lastStatus?.apiPermissions?.isRead() == true -> rh.gs(R.string.read_only)
-                else                                                         -> rh.gs(info.nightscout.core.ui.R.string.unknown)
+                else                                                          -> rh.gs(info.nightscout.core.ui.R.string.unknown)
             }
 
     internal var nsAndroidClient: NSAndroidClient? = null

@@ -30,6 +30,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONObject
 import java.security.InvalidParameterException
@@ -85,8 +86,7 @@ class NSClientSourcePlugin @Inject constructor(
     class NSClientSourceWorker(
         context: Context,
         params: WorkerParameters
-    ) :
-        LoggingWorker(context, params) {
+    ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var nsClientSourcePlugin: NSClientSourcePlugin
         @Inject lateinit var injector: HasAndroidInjector
@@ -127,7 +127,7 @@ class NSClientSourcePlugin @Inject constructor(
         }
 
         @Suppress("SpellCheckingInspection")
-        override fun doWorkAndLog(): Result {
+        override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
             val sgvs = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))

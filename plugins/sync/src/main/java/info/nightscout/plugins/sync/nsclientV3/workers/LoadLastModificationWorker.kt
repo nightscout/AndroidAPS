@@ -5,16 +5,17 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class LoadLastModificationWorker(
     context: Context, params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.IO) {
 
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
         var ret = Result.success()
 

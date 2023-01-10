@@ -71,6 +71,7 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.Dispatchers
 import org.apache.commons.lang3.StringUtils
 import org.joda.time.DateTime
 import java.text.Normalizer
@@ -197,12 +198,12 @@ class SmsCommunicatorPlugin @Inject constructor(
     class SmsCommunicatorWorker(
         context: Context,
         params: WorkerParameters
-    ) : LoggingWorker(context, params) {
+    ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
 
-        override fun doWorkAndLog(): Result {
+        override suspend fun doWorkAndLog(): Result {
             val bundle = dataWorkerStorage.pickupBundle(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
             val format = bundle.getString("format")

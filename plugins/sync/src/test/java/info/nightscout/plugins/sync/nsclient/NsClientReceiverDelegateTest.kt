@@ -1,6 +1,5 @@
 package info.nightscout.plugins.sync.nsclient
 
-import android.content.Context
 import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.plugins.sync.R
@@ -17,7 +16,6 @@ import org.mockito.Mockito.`when`
 
 class NsClientReceiverDelegateTest : TestBase() {
 
-    @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
     @Mock lateinit var rh: ResourceHelper
     val rxBus = RxBus(aapsSchedulers, aapsLogger)

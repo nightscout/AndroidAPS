@@ -14,7 +14,6 @@ import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.core.profile.ProfileSealed
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
@@ -35,6 +34,7 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import info.nightscout.ui.widget.Widget
+import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
@@ -42,7 +42,7 @@ import kotlin.math.abs
 class KeepAliveWorker(
     private val context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var localAlertUtils: LocalAlertUtils
     @Inject lateinit var repository: AppRepository
@@ -74,7 +74,7 @@ class KeepAliveWorker(
         private const val KA_10 = "KeepAlive_10"
     }
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
         aapsLogger.debug(LTag.CORE, "KeepAlive received from: " + inputData.getString("schedule"))
 
         // 15 min interval is WorkManager minimum so schedule another instances to have 5 min interval
