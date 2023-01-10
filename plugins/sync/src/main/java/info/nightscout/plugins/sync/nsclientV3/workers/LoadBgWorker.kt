@@ -84,18 +84,17 @@ class LoadBgWorker(
                     .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
                     .enqueue()
             }
-                }
-            else {
-                // End first load
-                if (isFirstLoad) {
-                    nsClientV3Plugin.lastLoadedSrvModified.collections.entries = lastLoaded
-                    nsClientV3Plugin.storeLastLoadedSrvModified()
-                }
-                rxBus.send(EventNSClientNewLog("RCV END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                WorkManager.getInstance(context)
-                    .beginUniqueWork(
-                        NSClientV3Plugin.JOB_NAME,
-                        ExistingWorkPolicy.APPEND_OR_REPLACE,
+        } else {
+            // End first load
+            if (isFirstLoad) {
+                nsClientV3Plugin.lastLoadedSrvModified.collections.entries = lastLoaded
+                nsClientV3Plugin.storeLastLoadedSrvModified()
+            }
+            rxBus.send(EventNSClientNewLog("RCV END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+            WorkManager.getInstance(context)
+                .beginUniqueWork(
+                    NSClientV3Plugin.JOB_NAME,
+                    ExistingWorkPolicy.APPEND_OR_REPLACE,
                         OneTimeWorkRequest.Builder(StoreDataForDbImpl.StoreBgWorker::class.java).build()
                     )
                     .then(OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())

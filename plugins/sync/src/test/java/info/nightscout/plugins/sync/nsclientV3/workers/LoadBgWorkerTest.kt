@@ -52,6 +52,8 @@ internal class LoadBgWorkerTest : TestBase() {
     private lateinit var nsClientReceiverDelegate: NsClientReceiverDelegate
     private lateinit var sut: LoadBgWorker
 
+    private val now = 1000000000L
+
     private val injector = HasAndroidInjector {
         AndroidInjector {
             if (it is LoadBgWorker) {
@@ -72,6 +74,7 @@ internal class LoadBgWorkerTest : TestBase() {
     fun setUp() {
         Mockito.`when`(context.applicationContext).thenReturn(context)
         Mockito.`when`(context.androidInjector()).thenReturn(injector.androidInjector())
+        Mockito.`when`(dateUtil.now()).thenReturn(now)
         nsClientReceiverDelegate = NsClientReceiverDelegate(rxBus, rh, sp, receiverStatusStore)
         nsClientV3Plugin = NSClientV3Plugin(
             injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy, sp, nsClientReceiverDelegate, config, dateUtil, uiInteraction, dataSyncSelector,
@@ -89,12 +92,16 @@ internal class LoadBgWorkerTest : TestBase() {
     }
 
     @Test
-    fun doWork() = runTest {
+    fun testThereAreNewerDataFirstLoadEmptyReturn() = runTest {
         initWorkManager()
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
+        nsClientV3Plugin.lastLoadedSrvModified.collections.entries = 0L // first load
+        nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries = now - 1000
         sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
         Mockito.`when`(nsAndroidClient.getSgvsNewerThan(anyLong(), anyLong())).thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
-        var result = sut.doWorkAndLog()
+
+        val result = sut.doWorkAndLog()
+        Assertions.assertEquals(now - 1000, nsClientV3Plugin.lastLoadedSrvModified.collections.entries)
         Assertions.assertTrue(result is ListenableWorker.Result.Success)
     }
 }
