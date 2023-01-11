@@ -32,7 +32,7 @@ buildscript {
         swipe_version = '1.1.0'
 
         junit_version = '4.13.2'
-        junit_jupiter_version = '5.9.1'
+        junit_jupiter_version = '5.9.2'
         mockito_version = '4.6.1'
         dexmaker_version = '1.2'
         retrofit2_version = '2.9.0'
