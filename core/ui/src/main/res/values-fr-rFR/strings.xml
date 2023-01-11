@@ -473,6 +473,7 @@
     <string name="wizard_explain_tt">Cible Temp: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s vers %2$s</string>
     <string name="wizard_pump_not_available">Aucune pompe disponible!</string>
+    <string name="quickwizard">Assistant Rapide</string>
     <!--    Preferences-->
     <string name="child">Enfant</string>
     <string name="teenage">Adolescent</string>

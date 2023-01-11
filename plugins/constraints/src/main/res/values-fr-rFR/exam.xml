@@ -4,6 +4,7 @@
     <string name="dia_label_exam">Durée d\'Action de l\'Insuline (DAI)</string>
     <string name="dia_profile">Vous devez définir la valeur de DAI dans votre profil.</string>
     <string name="dia_minimumis5h">La valeur minimale autorisée est de 5 heures.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/fr/latest/Configuration/Config-Builder.html#insuline</string>
     <string name="dia_meaningisequaltodiapump">Si vous êtes convaincu que la valeur de DAI utilisée dans votre pompe avant AAPS marche bien, il n\'y a pas besoin de la changer lorsque vous commencez à utiliser la boucle.</string>
     <string name="dia_valuemustbedetermined">Vous devez déterminer par vous-même la valeur appropriée pour la DAI.</string>
     <string name="hypott_label">Cible temporaire Hypo</string>
@@ -187,6 +188,7 @@
     <string name="ic_noeffect">Si vous avez 0 GA, changer le ratio G/I conduira à différentes quantités d\'insuline pour corriger une valeur de glycémie donnée.</string>
     <string name="ic_different">Le G/I sera différent si vous comptez l\'unité (d\'échange) de pain à 10g ou à 12g.</string>
     <string name="ic_meaning">Le G/I (Ratio Glucides/Insuline) est : combien d\'unités (d\'échange) de pain sont couverte par 1U d\'insuline.</string>
+    <string name="ic_hint1">https://wiki.aaps.app/fr/latest/Getting-Started/FAQ.html#rapport-glucides-insuline-g-i-g-u</string>
     <string name="profileswitch_label">Changement de profil</string>
     <string name="profileswitch_pctwillchange">Quand vous spécifiez un changement de profil à 90%, quelles réponses sont vraies ?</string>
     <string name="profileswitch_basallower">Le débit de base sera diminuée de 10%.</string>

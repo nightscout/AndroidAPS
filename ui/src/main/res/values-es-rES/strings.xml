@@ -128,4 +128,5 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">DETENER PRESIONADO</string>
     <!--QuickWizard-->
+    <string name="app_default">Aplicación por defecto</string>
 </resources>
