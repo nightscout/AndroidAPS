@@ -123,4 +123,5 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_cannot_connect_pump_error_observed">No se puede conectar a la bomba porque la bomba reportó un error. El usuario debe tratar el error y, a continuación, esperar 5 minutos o pulsar el botón Actualizar en la pestaña del controlador.</string>
     <string name="combov2_refresh_pump_status_after_error">Actualizando el estado de la bomba después de que informara de un error</string>
     <string name="combov2_go_back">Retroceder</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">No se puede realizar el emparejamiento porque el controlador no está inicializado. Esto suele ocurrir porque no se han concedido los permisos Bluetooth necesarios. Vuelve atrás, concede los permisos Bluetooth e intenta de nuevo el emparejamiento</string>
 </resources>
