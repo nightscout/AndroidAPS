@@ -12,12 +12,13 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
-abstract class LoggingWorker(context: Context, workerParams: WorkerParameters, val dispatcher: CoroutineDispatcher) : CoroutineWorker(context, workerParams) {
+abstract class LoggingWorker(context: Context, workerParams: WorkerParameters, private val dispatcher: CoroutineDispatcher) : CoroutineWorker(context, workerParams) {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var fabricPrivacy: FabricPrivacy
 
     init {
+        @Suppress("LeakingThis")
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
     }
 
