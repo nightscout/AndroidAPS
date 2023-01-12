@@ -31,7 +31,7 @@ internal interface EffectiveProfileSwitchDao : TraceableDao<EffectiveProfileSwit
     @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE nightscoutId = :nsId AND referenceId IS NULL")
     fun findByNSId(nsId: String): EffectiveProfileSwitch?
 
-    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE isValid = 1 AND referenceId IS NULL ORDER BY id ASC LIMIT 1")
+    @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC LIMIT 1")
     fun getOldestEffectiveProfileSwitchRecord(): EffectiveProfileSwitch?
 
     @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE :timestamp >= timestamp AND referenceId IS NULL AND isValid = 1 ORDER BY timestamp DESC LIMIT 1")
