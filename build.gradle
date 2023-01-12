@@ -7,7 +7,7 @@ buildscript {
         rxjava_version = '3.1.5'
         rxandroid_version = '3.0.2'
         rxkotlin_version = '3.0.1'
-        room_version = '2.4.3'
+        room_version = '2.5.0'
         lifecycle_version = '2.5.1'
         dagger_version = '2.44.2'
         coroutines_version = '1.6.4'
