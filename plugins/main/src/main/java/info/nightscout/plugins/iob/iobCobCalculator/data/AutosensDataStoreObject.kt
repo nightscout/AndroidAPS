@@ -116,30 +116,34 @@ class AutosensDataStoreObject : AutosensDataStore {
         }
     }
 
+    // during recalculation autosensDataTable is cleared and not available
+    // for providing COB, which is an serious issue in BolusWizard
+    // So let save last value after every calculation and use it
+    // if autosensDataTable is not available
+    var storedLastAutosensResult: AutosensData? = null
+        get() = field?.let { if (it.time < System.currentTimeMillis() - 11 * 60 * 1000) it else null }
+
     override fun getLastAutosensData(reason: String, aapsLogger: AAPSLogger, dateUtil: DateUtil): AutosensData? {
         synchronized(dataLock) {
             if (autosensDataTable.size() < 1) {
                 aapsLogger.debug(LTag.AUTOSENS, "AUTOSENSDATA null: autosensDataTable empty ($reason)")
-                return null
+                return storedLastAutosensResult
             }
-            val data: AutosensData? = try {
+            val data: AutosensData = try {
                 autosensDataTable.valueAt(autosensDataTable.size() - 1)
             } catch (e: Exception) {
                 // data can be processed on the background
                 // in this rare case better return null and do not block UI
                 // APS plugin should use getLastAutosensDataSynchronized where the blocking is not an issue
                 aapsLogger.error("AUTOSENSDATA null: Exception caught ($reason)")
-                return null
+                return storedLastAutosensResult
             }
-            if (data == null) {
-                aapsLogger.error("AUTOSENSDATA null: data==null")
-                return null
-            }
-            return if (data.time < System.currentTimeMillis() - 11 * 60 * 1000) {
+            return if (data.time < dateUtil.now() - 11 * 60 * 1000) {
                 aapsLogger.debug(LTag.AUTOSENS) { "AUTOSENSDATA null: data is old ($reason) size()=${autosensDataTable.size()} lastData=${dateUtil.dateAndTimeAndSecondsString(data.time)}" }
-                null
+                storedLastAutosensResult
             } else {
                 aapsLogger.debug(LTag.AUTOSENS) { "AUTOSENSDATA ($reason) $data" }
+                storedLastAutosensResult = data
                 data
             }
         }
@@ -152,11 +156,8 @@ class AutosensDataStoreObject : AutosensDataStore {
         }
         var diff = abs(someTime - referenceTime)
         diff %= T.mins(5).msecs()
-        if (diff > T.mins(2).plus(T.secs(30)).msecs()){
-            return someTime + abs(diff - T.mins(5).msecs()) // Adjust to the future
-        } else {
-            return someTime - diff // adjust to the past
-        }
+        return if (diff > T.mins(2).plus(T.secs(30)).msecs()) someTime + abs(diff - T.mins(5).msecs()) // Adjust to the future
+        else someTime - diff // adjust to the past
     }
 
     fun isAbout5minData(aapsLogger: AAPSLogger): Boolean {

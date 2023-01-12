@@ -511,7 +511,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val quickWizardEntry = quickWizard.getActive()
         if (quickWizardEntry != null && actualBg != null && profile != null) {
             binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
-            val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true)
+            val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
             if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
                 val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
                 activity?.let {
@@ -539,7 +539,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             _binding ?: return@runOnUiThread
             if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && !pump.isSuspended() && !loop.isDisconnected) {
                 binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
-                val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false)
+                val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG)
                 binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(info.nightscout.core.graph.R.string.format_carbs, quickWizardEntry.carbs()) +
                     " " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
                 if (wizard.calculatedTotalInsulin <= 0) binding.buttonsLayout.quickWizardButton.visibility = View.GONE

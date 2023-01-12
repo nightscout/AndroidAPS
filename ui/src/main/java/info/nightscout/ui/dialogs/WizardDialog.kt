@@ -434,7 +434,7 @@ class WizardDialog : DaggerDialogFragment() {
         // COB
         var cob = 0.0
         if (binding.cobCheckbox.isChecked) {
-            val cobInfo = iobCobCalculator.getCobInfo(false, "Wizard COB")
+            val cobInfo = iobCobCalculator.getCobInfo("Wizard COB")
             cobInfo.displayCob?.let { cob = it }
         }
 

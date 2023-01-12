@@ -32,11 +32,10 @@ interface IobCobCalculator {
     /**
      *  Calculate CobInfo to now()
      *
-     *  @param waitForCalculationFinish access autosens data synchronized (wait for result if calculation is running)
      *  @param reason caller identification
      *  @return CobInfo
      */
-    fun getCobInfo(waitForCalculationFinish: Boolean, reason: String): CobInfo
+    fun getCobInfo(reason: String): CobInfo
 
     /**
      * Calculate IobTotal from boluses and extended boluses to now().

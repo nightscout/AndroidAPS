@@ -107,7 +107,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
 
     fun isActive(): Boolean = time.secondsFromMidnight() >= validFrom() && time.secondsFromMidnight() <= validTo() && forDevice(DEVICE_PHONE)
 
-    fun doCalc(profile: Profile, profileName: String, lastBG: InMemoryGlucoseValue, _synchronized: Boolean): BolusWizard {
+    fun doCalc(profile: Profile, profileName: String, lastBG: InMemoryGlucoseValue): BolusWizard {
         val dbRecord = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
         //BG
@@ -117,7 +117,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         }
         // COB
         val cob =
-            if (useCOB() == YES) iobCobCalculator.getCobInfo(_synchronized, "QuickWizard COB").displayCob ?: 0.0
+            if (useCOB() == YES) iobCobCalculator.getCobInfo("QuickWizard COB").displayCob ?: 0.0
             else 0.0
         // Bolus IOB
         var bolusIOB = false

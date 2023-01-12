@@ -151,7 +151,7 @@ class StatusLinePlugin @Inject constructor(
             status += " " + (if (bgi >= 0) "+" else "") + DecimalFormatter.to2Decimal(bgi)
         }
         // COB
-        status += " " + iobCobCalculator.getCobInfo(false, "StatusLinePlugin").generateCOBString()
+        status += " " + iobCobCalculator.getCobInfo("StatusLinePlugin").generateCOBString()
         return status
     }
 }

@@ -292,10 +292,8 @@ class IobCobCalculatorPlugin @Inject constructor(
         return ads.getLastAutosensData(reason, aapsLogger, dateUtil)
     }
 
-    override fun getCobInfo(waitForCalculationFinish: Boolean, reason: String): CobInfo {
-        val autosensData =
-            if (waitForCalculationFinish) getLastAutosensDataWithWaitForCalculationFinish(reason)
-            else ads.getLastAutosensData(reason, aapsLogger, dateUtil)
+    override fun getCobInfo(reason: String): CobInfo {
+        val autosensData = ads.getLastAutosensData(reason, aapsLogger, dateUtil)
         var displayCob: Double? = null
         var futureCarbs = 0.0
         val now = dateUtil.now()

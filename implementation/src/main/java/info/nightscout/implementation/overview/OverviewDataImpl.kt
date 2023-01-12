@@ -219,7 +219,7 @@ class OverviewDataImpl @Inject constructor(
 
     override fun bolusIob(iobCobCalculator: IobCobCalculator): IobTotal = iobCobCalculator.calculateIobFromBolus().round()
     override fun basalIob(iobCobCalculator: IobCobCalculator): IobTotal = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
-    override fun cobInfo(iobCobCalculator: IobCobCalculator): CobInfo = iobCobCalculator.getCobInfo(true, "Overview COB")
+    override fun cobInfo(iobCobCalculator: IobCobCalculator): CobInfo = iobCobCalculator.getCobInfo("Overview COB")
 
     override val lastCarbsTime: Long
         get() = repository.getLastCarbsRecordWrapped().blockingGet().let { lastCarbs ->

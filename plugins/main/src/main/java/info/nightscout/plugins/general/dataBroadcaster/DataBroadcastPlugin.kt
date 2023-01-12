@@ -133,7 +133,7 @@ class DataBroadcastPlugin @Inject constructor(
         bundle.putDouble("basalIob", basalIob.basaliob)
         bundle.putDouble("iob", bolusIob.iob + basalIob.basaliob) // total IOB
 
-        val cob = iobCobCalculator.getCobInfo(false, "broadcast")
+        val cob = iobCobCalculator.getCobInfo("broadcast")
         bundle.putDouble("cob", cob.displayCob ?: -1.0) // COB [g] or -1 if N/A
         bundle.putDouble("futureCarbs", cob.futureCarbs) // future scheduled carbs
     }

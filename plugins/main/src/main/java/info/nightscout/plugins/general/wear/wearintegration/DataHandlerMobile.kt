@@ -16,7 +16,13 @@ import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.*
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.entities.TotalDailyDose
+import info.nightscout.database.entities.UserEntry
+import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
@@ -60,7 +66,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.LinkedList
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 import javax.inject.Inject
@@ -369,7 +377,7 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_actual_bg))
             return
         }
-        val cobInfo = iobCobCalculator.getCobInfo(false, "Wizard wear")
+        val cobInfo = iobCobCalculator.getCobInfo("Wizard wear")
         if (cobInfo.displayCob == null) {
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_cob))
             return
@@ -436,7 +444,7 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_active_profile))
             return
         }
-        val cobInfo = iobCobCalculator.getCobInfo(false, "QuickWizard wear")
+        val cobInfo = iobCobCalculator.getCobInfo("QuickWizard wear")
         if (cobInfo.displayCob == null) {
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_cob))
             return
@@ -447,7 +455,7 @@ class DataHandlerMobile @Inject constructor(
             return
         }
 
-        val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true)
+        val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
         if (carbsAfterConstraints != quickWizardEntry.carbs()) {
@@ -877,7 +885,7 @@ class DataHandlerMobile @Inject constructor(
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)
             iobDetail = "(${DecimalFormatter.to2Decimal(bolusIob.iob)}|${DecimalFormatter.to2Decimal(basalIob.basaliob)})"
-            cobString = iobCobCalculator.getCobInfo(false, "WatcherUpdaterService").generateCOBString()
+            cobString = iobCobCalculator.getCobInfo("WatcherUpdaterService").generateCOBString()
             currentBasal =
                 iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort() ?: rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
 
