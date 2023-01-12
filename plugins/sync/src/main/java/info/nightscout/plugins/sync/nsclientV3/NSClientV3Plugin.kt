@@ -251,7 +251,7 @@ class NSClientV3Plugin @Inject constructor(
 
     private fun setClient() {
         nsAndroidClient = NSAndroidClientImpl(
-            baseUrl = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace("https://", ""),
+            baseUrl = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace("https://", "").replace(Regex("/$"), ""),
             accessToken = sp.getString(R.string.key_ns_client_token, ""),
             context = context,
             logging = true

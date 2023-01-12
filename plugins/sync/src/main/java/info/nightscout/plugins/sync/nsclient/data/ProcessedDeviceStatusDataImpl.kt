@@ -17,7 +17,6 @@ import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("SpellCheckingInspection")
 @Singleton
 class ProcessedDeviceStatusDataImpl @Inject constructor(
     private val rh: ResourceHelper,

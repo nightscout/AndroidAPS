@@ -9,12 +9,13 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@Suppress("KotlinConstantConditions")
 @Singleton
 class ConfigImpl @Inject constructor(
     fileListProvider: PrefFileListProvider
 ) : Config {
 
-    override val SUPPORTEDNSVERSION = 140206 // 14.2.6
+    override val SUPPORTED_NS_VERSION = 140206 // 14.2.6
     override val APS = BuildConfig.FLAVOR == "full"
     override val NSCLIENT = BuildConfig.FLAVOR == "aapsclient" || BuildConfig.FLAVOR == "aapsclient2"
     override val PUMPCONTROL = BuildConfig.FLAVOR == "pumpcontrol"

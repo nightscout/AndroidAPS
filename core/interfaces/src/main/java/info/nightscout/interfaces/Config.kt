@@ -2,7 +2,7 @@ package info.nightscout.interfaces
 
 @Suppress("PropertyName")
 interface Config {
-    val SUPPORTEDNSVERSION: Int
+    val SUPPORTED_NS_VERSION: Int
     val APS: Boolean
     val NSCLIENT: Boolean
     val PUMPCONTROL: Boolean
