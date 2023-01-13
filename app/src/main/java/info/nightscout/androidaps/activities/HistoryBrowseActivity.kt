@@ -367,7 +367,7 @@ class HistoryBrowseActivity : DaggerAppCompatActivity() {
     }
 
     private fun updateCalcProgress(percent: Int) {
-        binding.progressBar.progress = percent
         binding.progressBar.visibility = (percent != 100).toVisibilityKeepSpace()
+        binding.progressBar.progress = percent
     }
 }

@@ -1085,8 +1085,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun updateCalcProgress() {
         _binding ?: return
-        binding.progressBar.progress = overviewData.calcProgressPct
         binding.progressBar.visibility = (overviewData.calcProgressPct != 100).toVisibility()
+        binding.progressBar.progress = overviewData.calcProgressPct
     }
 
     private fun updateSensitivity() {
