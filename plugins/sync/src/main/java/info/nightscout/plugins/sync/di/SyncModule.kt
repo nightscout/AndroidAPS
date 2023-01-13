@@ -1,7 +1,11 @@
 package info.nightscout.plugins.sync.di
 
+import android.content.Context
+import androidx.work.WorkManager
 import dagger.Binds
 import dagger.Module
+import dagger.Provides
+import dagger.Reusable
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
@@ -31,7 +35,8 @@ import info.nightscout.plugins.sync.tidepool.TidepoolFragment
 
 @Module(
     includes = [
-        SyncModule.Binding::class
+        SyncModule.Binding::class,
+        SyncModule.Provide::class
     ]
 )
 
@@ -61,6 +66,13 @@ abstract class SyncModule {
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
 
+    @Module
+    open class Provide {
+
+        @Reusable
+        @Provides
+        fun providesWorkManager(context: Context) = WorkManager.getInstance(context)
+    }
     @Module
     interface Binding {
 

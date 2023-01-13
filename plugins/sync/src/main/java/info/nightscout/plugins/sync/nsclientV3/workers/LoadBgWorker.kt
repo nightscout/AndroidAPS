@@ -36,10 +36,11 @@ class LoadBgWorker(
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Inject lateinit var nsClientSource: NSClientSource
     @Inject lateinit var workerClasses: WorkerClasses
+    @Inject lateinit var workManager: WorkManager
 
     override suspend fun doWorkAndLog(): Result {
         if (!nsClientSource.isEnabled() && !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_cgm, false)) {
-            WorkManager.getInstance(context)
+            workManager
                 .enqueueUniqueWork(
                     NSClientV3Plugin.JOB_NAME,
                     ExistingWorkPolicy.APPEND_OR_REPLACE,
@@ -71,11 +72,12 @@ class LoadBgWorker(
                 // Objective0
                 sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
                 // Schedule processing of fetched data and continue of loading
-                WorkManager.getInstance(context).beginUniqueWork(
-                    NSClientV3Plugin.JOB_NAME,
-                    ExistingWorkPolicy.APPEND_OR_REPLACE,
-                    OneTimeWorkRequest.Builder(workerClasses.nsClientSourceWorker).setInputData(dataWorkerStorage.storeInputData(sgvs)).build()
-                )
+                workManager
+                    .beginUniqueWork(
+                        NSClientV3Plugin.JOB_NAME,
+                        ExistingWorkPolicy.APPEND_OR_REPLACE,
+                        OneTimeWorkRequest.Builder(workerClasses.nsClientSourceWorker).setInputData(dataWorkerStorage.storeInputData(sgvs)).build()
+                    )
                     // response 304 == Not modified (happens when date > srvModified => bad time on phone or server during upload
                     .then(response.code != 304, OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
                     .then(response.code == 304, OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
@@ -87,7 +89,7 @@ class LoadBgWorker(
                     nsClientV3Plugin.storeLastLoadedSrvModified()
                 }
                 rxBus.send(EventNSClientNewLog("RCV END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                WorkManager.getInstance(context)
+                workManager
                     .beginUniqueWork(
                         NSClientV3Plugin.JOB_NAME,
                         ExistingWorkPolicy.APPEND_OR_REPLACE,
@@ -103,7 +105,7 @@ class LoadBgWorker(
                 nsClientV3Plugin.storeLastLoadedSrvModified()
             }
             rxBus.send(EventNSClientNewLog("RCV END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-            WorkManager.getInstance(context)
+            workManager
                 .beginUniqueWork(
                     NSClientV3Plugin.JOB_NAME,
                     ExistingWorkPolicy.APPEND_OR_REPLACE,
