@@ -9,6 +9,7 @@ import androidx.work.workDataOf
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.core.utils.worker.then
+import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.workflow.WorkerClasses
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
@@ -33,9 +34,20 @@ class LoadBgWorker(
     @Inject lateinit var context: Context
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
+    @Inject lateinit var nsClientSource: NSClientSource
     @Inject lateinit var workerClasses: WorkerClasses
 
     override suspend fun doWorkAndLog(): Result {
+        if (!nsClientSource.isEnabled() && !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_cgm, false)) {
+            WorkManager.getInstance(context)
+                .enqueueUniqueWork(
+                    NSClientV3Plugin.JOB_NAME,
+                    ExistingWorkPolicy.APPEND_OR_REPLACE,
+                    OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build()
+                )
+            return Result.success(workDataOf("Result" to "Load not enabled"))
+        }
+
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
         val isFirstLoad = nsClientV3Plugin.isFirstLoad(NsClient.Collection.ENTRIES)
         val lastLoaded =
