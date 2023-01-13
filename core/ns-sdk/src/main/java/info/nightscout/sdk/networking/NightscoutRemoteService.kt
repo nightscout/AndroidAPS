@@ -12,6 +12,7 @@ import info.nightscout.sdk.remotemodel.RemoteTreatment
 import org.json.JSONObject
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -52,6 +53,9 @@ internal interface NightscoutRemoteService {
     @PATCH("v3/entries/{identifier}")
     suspend fun updateEntry(@Body remoteEntry: RemoteEntry, @Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
 
+    @DELETE("v3/entries/{identifier}")
+    suspend fun deleteEntry(@Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
+
     @GET("v3/treatments")
     suspend fun getTreatmentsNewerThan(@Query(value = "created_at\$gt", encoded = true) createdAt: String, @Query("limit") limit: Long): Response<NSResponse<List<RemoteTreatment>>>
 
@@ -63,6 +67,9 @@ internal interface NightscoutRemoteService {
 
     @PATCH("v3/treatments/{identifier}")
     suspend fun updateTreatment(@Body remoteTreatment: RemoteTreatment, @Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
+
+    @DELETE("v3/treatments/{identifier}")
+    suspend fun deleteTreatment(@Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
 
     @POST("v3/devicestatus")
     suspend fun createDeviceStatus(@Body remoteDeviceStatus: RemoteDeviceStatus): Response<NSResponse<RemoteCreateUpdateResponse>>
@@ -81,7 +88,10 @@ internal interface NightscoutRemoteService {
     suspend fun createFood(@Body remoteFood: RemoteFood): Response<NSResponse<RemoteCreateUpdateResponse>>
 
     @PATCH("v3/food")
-    suspend fun updateFood(@Body remoteFood: RemoteFood): Response<NSResponse<RemoteCreateUpdateResponse>>
+    suspend fun updateFood(@Body remoteFood: RemoteFood, @Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
+
+    @DELETE("v3/food")
+    suspend fun deleteFood(@Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
 
     @GET("v3/profile?sort\$desc=date&limit=1")
     suspend fun getLastProfile(): Response<NSResponse<List<JSONObject>>>

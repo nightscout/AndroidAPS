@@ -186,7 +186,9 @@ class NSAndroidClientImpl(
         nsSgvV3.date = null
         val remoteEntry = nsSgvV3.toRemoteEntry()
         val identifier = remoteEntry.identifier ?: throw InvalidFormatNightscoutException()
-        val response = api.updateEntry(remoteEntry, identifier)
+        val response =
+            if (nsSgvV3.isValid) api.updateEntry(remoteEntry, identifier)
+            else api.deleteEntry(identifier)
         if (response.isSuccessful) {
             return@callWrapper CreateUpdateResponse(
                 response = response.code(),
@@ -312,7 +314,9 @@ class NSAndroidClientImpl(
         nsTreatment.date = null
         val remoteTreatment = nsTreatment.toRemoteTreatment() ?: throw InvalidFormatNightscoutException()
         val identifier = remoteTreatment.identifier ?: throw InvalidFormatNightscoutException()
-        val response = api.updateTreatment(remoteTreatment, identifier)
+        val response =
+            if (nsTreatment.isValid) api.updateTreatment(remoteTreatment, identifier)
+            else api.deleteTreatment(identifier)
         if (response.isSuccessful) {
             return@callWrapper CreateUpdateResponse(
                 response = response.code(),
@@ -388,7 +392,10 @@ class NSAndroidClientImpl(
     override suspend fun updateFood(nsFood: NSFood): CreateUpdateResponse = callWrapper(dispatcher) {
 
         val remoteFood = nsFood.toRemoteFood()
-        val response = api.updateFood(remoteFood)
+        val identifier = nsFood.identifier ?: throw InvalidFormatNightscoutException()
+        val response =
+            if (nsFood.isValid) api.updateFood(remoteFood, identifier)
+            else api.deleteFood(identifier)
         if (response.isSuccessful) {
             return@callWrapper CreateUpdateResponse(
                 response = response.code(),
