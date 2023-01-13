@@ -11,6 +11,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
+import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.workflow.WorkerClasses
@@ -47,6 +48,7 @@ internal class LoadBgWorkerTest : TestBase() {
     @Mock lateinit var dataSyncSelector: DataSyncSelector
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
+    @Mock lateinit var nsClientSource: NSClientSource
 
     private lateinit var nsClientV3Plugin: NSClientV3Plugin
     private lateinit var nsClientReceiverDelegate: NsClientReceiverDelegate
@@ -66,6 +68,7 @@ internal class LoadBgWorkerTest : TestBase() {
                 it.dateUtil = dateUtil
                 it.nsClientV3Plugin = nsClientV3Plugin
                 it.workerClasses = workerClasses
+                it.nsClientSource = nsClientSource
             }
         }
     }
@@ -75,6 +78,7 @@ internal class LoadBgWorkerTest : TestBase() {
         Mockito.`when`(context.applicationContext).thenReturn(context)
         Mockito.`when`(context.androidInjector()).thenReturn(injector.androidInjector())
         Mockito.`when`(dateUtil.now()).thenReturn(now)
+        Mockito.`when`(nsClientSource.isEnabled()).thenReturn(true)
         nsClientReceiverDelegate = NsClientReceiverDelegate(rxBus, rh, sp, receiverStatusStore)
         nsClientV3Plugin = NSClientV3Plugin(
             injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy, sp, nsClientReceiverDelegate, config, dateUtil, uiInteraction, dataSyncSelector,
