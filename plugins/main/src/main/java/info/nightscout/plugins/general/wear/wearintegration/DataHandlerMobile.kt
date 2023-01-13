@@ -17,6 +17,7 @@ import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.TemporaryTarget
@@ -33,6 +34,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
@@ -102,7 +104,8 @@ class DataHandlerMobile @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
     private val fabricPrivacy: FabricPrivacy,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val persistenceLayer: PersistenceLayer
 ) {
 
     private val disposable = CompositeDisposable()
@@ -224,7 +227,7 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "ActionBolusConfirmed received $it from ${it.sourceNodeId}")
-                           doBolus(it.insulin, it.carbs, null, 0)
+                           doBolus(it.insulin, it.carbs, null, 0, null)
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventData.ActionECarbsPreCheck::class.java)
@@ -284,8 +287,10 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "ActionWizardConfirmed received $it from ${it.sourceNodeId}")
-                           if (lastBolusWizard?.timeStamp == it.timeStamp) { //use last calculation as confirmed string matches
-                               doBolus(lastBolusWizard!!.calculatedTotalInsulin, lastBolusWizard!!.carbs, null, 0)
+                           lastBolusWizard?.let { lastBolusWizard ->
+                               if (lastBolusWizard.timeStamp == it.timeStamp) { //use last calculation as confirmed string matches
+                                   doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs, null, 0, lastBolusWizard.createBolusCalculatorResult())
+                               }
                            }
                            lastBolusWizard = null
                        }, fabricPrivacy::logException)
@@ -1155,7 +1160,7 @@ class DataHandlerMobile @Inject constructor(
         }
     }
 
-    private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int) {
+    private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int, bolusCalculatorResult: BolusCalculatorResult?) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.carbs = carbs.toDouble()
@@ -1179,6 +1184,7 @@ class DataHandlerMobile @Inject constructor(
                         sendError(rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror) + "\n" + result.comment)
                 }
             })
+            bolusCalculatorResult?.let { persistenceLayer.insertOrUpdate(it) }
         }
     }
 
@@ -1203,7 +1209,7 @@ class DataHandlerMobile @Inject constructor(
                 ValueWithUnit.Timestamp(carbsTime),
                 ValueWithUnit.Gram(carbs),
                 ValueWithUnit.Hour(duration).takeIf { duration != 0 })
-        doBolus(0.0, carbs, carbsTime, duration)
+        doBolus(0.0, carbs, carbsTime, duration, null)
     }
 
     private fun doProfileSwitch(command: EventData.ActionProfileSwitchConfirmed) {
