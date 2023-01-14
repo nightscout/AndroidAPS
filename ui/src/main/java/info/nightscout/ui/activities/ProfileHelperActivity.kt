@@ -31,6 +31,7 @@ import info.nightscout.ui.R
 import info.nightscout.ui.databinding.ActivityProfilehelperBinding
 import info.nightscout.ui.defaultProfile.DefaultProfile
 import info.nightscout.ui.defaultProfile.DefaultProfileDPV
+import info.nightscout.ui.defaultProfile.DefaultProfileCircadian
 import info.nightscout.ui.dialogs.ProfileViewerDialog
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -44,6 +45,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var defaultProfile: DefaultProfile
     @Inject lateinit var defaultProfileDPV: DefaultProfileDPV
+    @Inject lateinit var defaultProfileCircadian: DefaultProfileCircadian
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
@@ -55,6 +57,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
     enum class ProfileType {
         MOTOL_DEFAULT,
         DPV_DEFAULT,
+        CIRCADIAN_DEFAULT,
         CURRENT,
         AVAILABLE_PROFILE,
         PROFILE_SWITCH
@@ -95,6 +98,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
         val profileTypeList = Lists.newArrayList(
             rh.gs(R.string.motol_default_profile),
             rh.gs(R.string.dpv_default_profile),
+            rh.gs(R.string.circadian_default_profile),
             rh.gs(R.string.current_profile),
             rh.gs(R.string.available_profile),
             rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch)
@@ -105,6 +109,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
             when (binding.profileType.text.toString()) {
                 rh.gs(R.string.motol_default_profile) -> switchTab(tabSelected, ProfileType.MOTOL_DEFAULT)
                 rh.gs(R.string.dpv_default_profile)   -> switchTab(tabSelected, ProfileType.DPV_DEFAULT)
+                rh.gs(R.string.circadian_default_profile) -> switchTab(tabSelected, ProfileType.CIRCADIAN_DEFAULT)
                 rh.gs(R.string.current_profile)       -> switchTab(tabSelected, ProfileType.CURRENT)
                 rh.gs(R.string.available_profile)                                  -> switchTab(tabSelected, ProfileType.AVAILABLE_PROFILE)
                 rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch) -> switchTab(tabSelected, ProfileType.PROFILE_SWITCH)
@@ -136,6 +141,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
             val tdd = tddUsed[tabSelected]
             val pct = pctUsed[tabSelected]
             val profile = if (typeSelected[tabSelected] == ProfileType.MOTOL_DEFAULT) defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
+            else if (typeSelected[tabSelected] == ProfileType.CIRCADIAN_DEFAULT) defaultProfileCircadian.profile(age, tdd, pct / 100.0, profileFunction.getUnits())
             else defaultProfileDPV.profile(age, tdd, pct / 100.0, profileFunction.getUnits())
             profile?.let {
                 OKDialog.showConfirmation(this, rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch), rh.gs(info.nightscout.core.ui.R.string.copytolocalprofile), Runnable {
@@ -151,7 +157,10 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
             }
         }
 
-        binding.age.setParams(0.0, 1.0, 18.0, 1.0, DecimalFormat("0"), false, null)
+        // original:
+        // binding.age.setParams(0.0, 1.0, 18.0, 1.0, DecimalFormat("0"), false, null)
+        // TODO: Add switch with different limits if possible, check also switching between profile types (retention of value's)
+        binding.age.setParams(0.0, 1.0, 99.0, 1.0, DecimalFormat("0"), false, null)
         binding.weight.setParams(0.0, 0.0, 150.0, 1.0, DecimalFormat("0"), false, null, object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -167,7 +176,10 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
             }
         })
 
-        binding.basalPctFromTdd.setParams(32.0, 32.0, 37.0, 1.0, DecimalFormat("0"), false, null)
+        // original:
+        // binding.basalPctFromTdd.setParams(32.0, 32.0, 37.0, 1.0, DecimalFormat("0"), false, null)
+        // TODO: Add switch with different limits if possible
+        binding.basalPctFromTdd.setParams(32.0, 32.0, 60.0, 1.0, DecimalFormat("0"), false, null)
 
         binding.tdds.addView(TextView(this).apply { text = rh.gs(info.nightscout.core.ui.R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress) })
         disposable += Single.fromCallable { tddCalculator.stats(this) }
@@ -205,10 +217,24 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
                         return@setOnClickListener
                     }
                     if (tddUsed[i] < 5 || tddUsed[i] > 150) {
-                        ToastUtils.warnToast(this, R.string.invalid_weight)
+                        ToastUtils.warnToast(this, R.string.invalid_tdd)
                         return@setOnClickListener
                     }
                     if ((pctUsed[i] < 32 || pctUsed[i] > 37)) {
+                        ToastUtils.warnToast(this, R.string.invalid_pct)
+                        return@setOnClickListener
+                    }
+                }
+                if (typeSelected[i] == ProfileType.CIRCADIAN_DEFAULT) {
+                    if (ageUsed[i] < 1 || ageUsed[i] > 99) {
+                        ToastUtils.warnToast(this, R.string.invalid_age)
+                        return@setOnClickListener
+                    }
+                    if (tddUsed[i] < 5 || tddUsed[i] > 150) {
+                        ToastUtils.warnToast(this, R.string.invalid_tdd)
+                        return@setOnClickListener
+                    }
+                    if ((pctUsed[i] < 10 || pctUsed[i] > 70)) {
                         ToastUtils.warnToast(this, R.string.invalid_pct)
                         return@setOnClickListener
                     }
@@ -253,6 +279,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
             when (typeSelected[tab]) {
                 ProfileType.MOTOL_DEFAULT     -> defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
                 ProfileType.DPV_DEFAULT       -> defaultProfileDPV.profile(age, tdd, basalPct, profileFunction.getUnits())
+                ProfileType.CIRCADIAN_DEFAULT -> defaultProfileCircadian.profile(age, tdd, basalPct, profileFunction.getUnits())
                 ProfileType.CURRENT           -> profileFunction.getProfile()?.convertToNonCustomizedProfile(dateUtil)
                 ProfileType.AVAILABLE_PROFILE -> activePlugin.activeProfileSource.profile?.getSpecificProfile(profileList[profileUsed[tab]].toString())
                 ProfileType.PROFILE_SWITCH    -> ProfileSealed.EPS(profileSwitch[profileSwitchUsed[tab]]).convertToNonCustomizedProfile(dateUtil)
@@ -265,6 +292,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
         when (typeSelected[tab]) {
             ProfileType.MOTOL_DEFAULT     -> if (tdd > 0) rh.gs(R.string.format_with_tdd, age, tdd) else rh.gs(R.string.format_with_weight, age, weight)
             ProfileType.DPV_DEFAULT       -> rh.gs(R.string.format_with_tdd_and_pct, age, tdd, (basalSumPct * 100).toInt())
+            ProfileType.CIRCADIAN_DEFAULT -> if (tdd > 0) rh.gs(R.string.format_with_tdd, age, tdd) else rh.gs(R.string.format_with_weight, age, weight) // TODO JB: proper stuff here
             ProfileType.CURRENT           -> profileFunction.getProfileName()
             ProfileType.AVAILABLE_PROFILE -> profileList[profileUsed[tab]].toString()
             ProfileType.PROFILE_SWITCH    -> profileSwitch[profileSwitchUsed[tab]].originalCustomizedName
@@ -289,24 +317,27 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
             when (typeSelected[tabSelected]) {
                 ProfileType.MOTOL_DEFAULT     -> rh.gs(R.string.motol_default_profile)
                 ProfileType.DPV_DEFAULT       -> rh.gs(R.string.dpv_default_profile)
+                ProfileType.CIRCADIAN_DEFAULT -> rh.gs(R.string.circadian_default_profile)
                 ProfileType.CURRENT           -> rh.gs(R.string.current_profile)
                 ProfileType.AVAILABLE_PROFILE -> rh.gs(R.string.available_profile)
                 ProfileType.PROFILE_SWITCH    -> rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch)
             },
             false
         )
-        binding.defaultProfile.visibility = (newContent == ProfileType.MOTOL_DEFAULT || newContent == ProfileType.DPV_DEFAULT).toVisibility()
+        binding.defaultProfile.visibility = (newContent == ProfileType.MOTOL_DEFAULT || newContent == ProfileType.DPV_DEFAULT || newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
         binding.currentProfile.visibility = (newContent == ProfileType.CURRENT).toVisibility()
         binding.availableProfile.visibility = (newContent == ProfileType.AVAILABLE_PROFILE).toVisibility()
         binding.profileSwitch.visibility = (newContent == ProfileType.PROFILE_SWITCH).toVisibility()
 
         // Restore selected values
+        // TODO: Find a way to handle different limits between profile types
         binding.age.value = ageUsed[tabSelected].toDouble()
         binding.weight.value = weightUsed[tabSelected]
         binding.tdd.value = tddUsed[tabSelected]
         binding.basalPctFromTdd.value = pctUsed[tabSelected]
 
-        binding.basalPctFromTddRow.visibility = (newContent == ProfileType.DPV_DEFAULT).toVisibility()
+        // binding.weightRow.visibility = (newContent == ProfileType.MOTOL_DEFAULT || newContent == ProfileType.DPV_DEFAULT).toVisibility()
+        binding.basalPctFromTddRow.visibility = (newContent == ProfileType.DPV_DEFAULT || newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
         if (profileList.isNotEmpty()) {
             binding.availableProfileList.setText(profileList[profileUsed[tabSelected]].toString(), false)
         }

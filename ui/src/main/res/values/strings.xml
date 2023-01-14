@@ -25,6 +25,7 @@
     <string name="calculation_in_progress">Calculation in progress</string>
     <string name="invalid_age">Invalid age entry</string>
     <string name="invalid_weight">Invalid weight entry</string>
+    <string name="invalid_tdd">Invalid tdd entry</string>
     <string name="id">ID:</string>
     <string name="submit">Submit</string>
     <string name="age">Age</string>
@@ -140,6 +141,7 @@
     <string name="format_with_tdd_and_pct">Age: %1$d TDD: %2$.0f U %3$d%%</string>
     <string name="format_with_weight">Age: %1$d Weight: %2$.0f kg</string>
     <string name="dpv_default_profile">DPV Default profile</string>
+    <string name="circadian_default_profile">Circadian Default profile</string>
     <string name="invalid_pct">Invalid % entry</string>
 
     <!-- Other dialogs -->
