@@ -473,6 +473,7 @@
     <string name="wizard_explain_tt">DC: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s do %2$s</string>
     <string name="wizard_pump_not_available">Pumpa nedostupná!</string>
+    <string name="quickwizard">Rýchly bolus</string>
     <!--    Preferences-->
     <string name="child">Dieťa</string>
     <string name="teenage">Dospievajúci</string>
