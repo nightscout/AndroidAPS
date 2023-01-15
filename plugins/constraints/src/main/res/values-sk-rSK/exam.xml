@@ -4,6 +4,7 @@
     <string name="dia_label_exam">Doba pôsobenia inzulínu (DIA)</string>
     <string name="dia_profile">Mali by ste nastaviť hodnotu DIA vo vašom profile.</string>
     <string name="dia_minimumis5h">Minimálna hodnota je 5 hodín.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/cs/latest/Configuration/Config-Builder.html#inzulin</string>
     <string name="dia_meaningisequaltodiapump">Pokiaľ ste spokojní s tým, že hodnota DIA použitá v pumpe pred AAPS dobre fungovala, nie je potrebné ju meniť, keď začínate s uzavretým okruhom.</string>
     <string name="dia_valuemustbedetermined">Mali by ste si pre seba určiť príslušnú hodnotu DIA.</string>
     <string name="hypott_label">Dočasný cieľ pri hypoglykémii</string>
@@ -187,6 +188,7 @@
     <string name="ic_noeffect">Pokiaľ máte 0 COB, zmena inzulíno-sacharidového pomeru povedie k inému množstvu inzulínu vydanému pre korekciu glykémie.</string>
     <string name="ic_different">Inzulíno-sacharidový pomer sa bude líšiť podľa toho, či počítate sacharidovú jednotku ako 10 g, alebo ako 12 g sacharidov.</string>
     <string name="ic_meaning">Inzulíno-sacharidový pomer vyjadruje: koľko sacharidových jednotiek pokryje 1 jednotka inzulínu.</string>
+    <string name="ic_hint1">https://wiki.aaps.app/cs/latest/Getting-Started/FAQ.html#inzulinovosacharidovy-pomer-ic-g-u</string>
     <string name="profileswitch_label">Prepnutie profilu</string>
     <string name="profileswitch_pctwillchange"> Keď zadáte 90% profil, ktoré odpovede sú pravdivé?</string>
     <string name="profileswitch_basallower">Bazály budú o 10 % nižšie.</string>
