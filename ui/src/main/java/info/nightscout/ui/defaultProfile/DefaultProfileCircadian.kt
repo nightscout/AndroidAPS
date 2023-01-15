@@ -25,11 +25,9 @@ class DefaultProfileCircadian @Inject constructor(val dateUtil: DateUtil) {
     private var twentyToSixty = arrayOf(1.01, 1.04, 1.12, 1.15, 1.20, 1.26, 1.21, 1.20, 1.15, 1.06, 0.98, 0.88, 0.86, 0.85, 0.85, 0.83, 0.83, 0.86, 0.89, 0.89, 0.94, 0.97, 0.98, 0.98)
     private var sixtyOneAndHigher = arrayOf(0.95, 1.02, 1.07, 1.14, 1.19, 1.38, 1.43, 1.36, 1.24, 1.24, 1.14, 1.00, 0.95, 0.93, 0.90, 0.79, 0.79, 0.79, 0.76, 0.74, 0.74, 0.79, 0.79, 0.88)
 
-
     fun profile(age: Int, tdd: Double, basalSumPct: Double, isf: Double, ic: Double, timeshift: Double, units: GlucoseUnit): PureProfile? {
         val avgBasal = (tdd * basalSumPct) / 24
         val profile = JSONObject()
-        // Initially calc ISF from TDD
 
         if (age in 1..10) {
             profile.put("basal", arrayToJson(oneToTen, avgBasal, timeshift))

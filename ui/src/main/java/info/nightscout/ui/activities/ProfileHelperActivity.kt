@@ -15,6 +15,7 @@ import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -73,8 +74,8 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
     private val weightUsed = arrayOf(0.0, 0.0)
     private val tddUsed = arrayOf(0.0, 0.0)
     private val pctUsed = arrayOf(32.0, 32.0)
-    private val isfUsed = arrayOf(0.0, 0.0)
-    private val icUsed = arrayOf(0.0, 0.0)
+    private val isfUsed = arrayOf(50.0, 50.0)
+    private val icUsed = arrayOf(50.0, 50.0)
     private val timeshiftUsed = arrayOf(0.0, 0.0)
 
     private lateinit var profileList: ArrayList<CharSequence>
@@ -150,7 +151,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
             val ic = isfUsed[tabSelected]
             val timeshift = timeshiftUsed[tabSelected]
             val profile = if (typeSelected[tabSelected] == ProfileType.MOTOL_DEFAULT) defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
-            else if (typeSelected[tabSelected] == ProfileType.CIRCADIAN_DEFAULT) defaultProfileCircadian.profile(age, tdd, pct / 100.0, isf, ic, timeshift, profileFunction.getUnits())
+            else if (typeSelected[tabSelected] == ProfileType.CIRCADIAN_DEFAULT) defaultProfileCircadian.profile(age, tdd, pct / 100.0, isf, ic, timeshift, profileFunction.getUnits()) // TODO: Proper name?
             else defaultProfileDPV.profile(age, tdd, pct / 100.0, profileFunction.getUnits())
             profile?.let {
                 OKDialog.showConfirmation(this, rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch), rh.gs(info.nightscout.core.ui.R.string.copytolocalprofile), Runnable {
@@ -166,15 +167,13 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
             }
         }
 
-        // original:
-        // binding.age.setParams(0.0, 1.0, 18.0, 1.0, DecimalFormat("0"), false, null)
-        // TODO: Add switch with different limits if possible, check also switching between profile types (retention of value's)
-        binding.age.setParams(0.0, 1.0, 99.0, 1.0, DecimalFormat("0"), false, null)
+        binding.age.setParams(0.0, 1.0, getMaxAge(typeSelected[tabSelected]), 1.0, DecimalFormat("0"), false, null)
         binding.weight.setParams(0.0, 0.0, 150.0, 1.0, DecimalFormat("0"), false, null, object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                 binding.tddRow.visibility = (binding.weight.value == 0.0).toVisibility()
+                // TODO: Fix visibility weight
             }
         })
         binding.tdd.setParams(0.0, 0.0, 200.0, 1.0, DecimalFormat("0"), false, null, object : TextWatcher {
@@ -185,14 +184,17 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
             }
         })
 
-        // original:
-        // binding.basalPctFromTdd.setParams(32.0, 32.0, 37.0, 1.0, DecimalFormat("0"), false, null)
-        // TODO: Add switch with different limits if possible
-        binding.basalPctFromTdd.setParams(32.0, 32.0, 60.0, 1.0, DecimalFormat("0"), false, null)
-        // TODO: Precision based on MGDL or MMOL, and nicen up
-        val units = profileFunction.getUnits()
-        binding.isf.setParams(Profile.fromMgdlToUnits(HardLimits.MAX_ISF, units), Profile.fromMgdlToUnits(HardLimits.MIN_ISF, units), Profile.fromMgdlToUnits(HardLimits.MAX_ISF, units), 0.1,
-                              DecimalFormat("0.0"), false, null)
+        binding.basalPctFromTdd.setParams(35.0, 30.0, 60.0, 1.0, DecimalFormat("0"), false, null)
+
+        binding.isf.setParams(
+            Profile.fromMgdlToUnits(HardLimits.MAX_ISF, profileFunction.getUnits()),
+            Profile.fromMgdlToUnits(HardLimits.MIN_ISF, profileFunction.getUnits()),
+            Profile.fromMgdlToUnits(HardLimits.MAX_ISF, profileFunction.getUnits()),
+            if (profileFunction.getUnits() == GlucoseUnit.MGDL) 1.0 else 0.1,
+            if (profileFunction.getUnits() == GlucoseUnit.MGDL) DecimalFormat("0") else DecimalFormat("0.0"),
+            false,
+            null
+        )
 
         binding.ic.setParams(hardLimits.maxIC(), hardLimits.minIC(), hardLimits.maxIC(), 0.1, DecimalFormat("0.0"), false, null)
         binding.timeshift.setParams(0.0, 0.0, 23.0, 1.0, DecimalFormat("0"), false, null)
@@ -236,7 +238,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
                         ToastUtils.warnToast(this, R.string.invalid_tdd)
                         return@setOnClickListener
                     }
-                    if ((pctUsed[i] < 32 || pctUsed[i] > 37)) {
+                    if ((pctUsed[i] < 30 || pctUsed[i] > 70)) {
                         ToastUtils.warnToast(this, R.string.invalid_pct)
                         return@setOnClickListener
                     }
@@ -250,7 +252,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
                         ToastUtils.warnToast(this, R.string.invalid_tdd)
                         return@setOnClickListener
                     }
-                    if ((pctUsed[i] < 10 || pctUsed[i] > 70)) {
+                    if ((pctUsed[i] < 30 || pctUsed[i] > 70)) {
                         ToastUtils.warnToast(this, R.string.invalid_pct)
                         return@setOnClickListener
                     }
@@ -311,7 +313,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
         when (typeSelected[tab]) {
             ProfileType.MOTOL_DEFAULT     -> if (tdd > 0) rh.gs(R.string.format_with_tdd, age, tdd) else rh.gs(R.string.format_with_weight, age, weight)
             ProfileType.DPV_DEFAULT       -> rh.gs(R.string.format_with_tdd_and_pct, age, tdd, (basalSumPct * 100).toInt())
-            ProfileType.CIRCADIAN_DEFAULT -> if (tdd > 0) rh.gs(R.string.format_with_tdd, age, tdd) else rh.gs(R.string.format_with_weight, age, weight) // TODO JB: proper stuff here
+            ProfileType.CIRCADIAN_DEFAULT -> rh.gs(R.string.format_with_tdd_and_pct, age, tdd, (basalSumPct * 100).toInt())
             ProfileType.CURRENT           -> profileFunction.getProfileName()
             ProfileType.AVAILABLE_PROFILE -> profileList[profileUsed[tab]].toString()
             ProfileType.PROFILE_SWITCH    -> profileSwitch[profileSwitchUsed[tab]].originalCustomizedName
@@ -351,13 +353,12 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
         binding.availableProfile.visibility = (newContent == ProfileType.AVAILABLE_PROFILE).toVisibility()
         binding.profileSwitch.visibility = (newContent == ProfileType.PROFILE_SWITCH).toVisibility()
 
-        binding.isf.visibility = (newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
-        binding.ic.visibility = (newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
-        binding.timeshift.visibility = (newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
-
         // Restore selected values
-        // TODO: Find a way to handle different limits between profile types
-        binding.age.value = ageUsed[tabSelected].toDouble()
+        if (ageUsed[tabSelected].toDouble() > getMaxAge(typeSelected[tabSelected])) {
+            binding.age.setParams(getMaxAge(typeSelected[tabSelected]), 1.0, getMaxAge(typeSelected[tabSelected]), 1.0, DecimalFormat("0"), false, null)
+        } else {
+            binding.age.setParams(ageUsed[tabSelected].toDouble(), 1.0, getMaxAge(typeSelected[tabSelected]), 1.0, DecimalFormat("0"), false, null)
+        }
         binding.weight.value = weightUsed[tabSelected]
         binding.tdd.value = tddUsed[tabSelected]
         binding.basalPctFromTdd.value = pctUsed[tabSelected]
@@ -365,8 +366,11 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
         binding.ic.value = icUsed[tabSelected]
         binding.timeshift.value = timeshiftUsed[tabSelected]
 
-        // binding.weightRow.visibility = (newContent == ProfileType.MOTOL_DEFAULT || newContent == ProfileType.DPV_DEFAULT).toVisibility()
         binding.basalPctFromTddRow.visibility = (newContent == ProfileType.DPV_DEFAULT || newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
+        binding.isfRow.visibility = (newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
+        binding.icRow.visibility = (newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
+        binding.timeshiftRow.visibility = (newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
+
         if (profileList.isNotEmpty()) {
             binding.availableProfileList.setText(profileList[profileUsed[tabSelected]].toString(), false)
         }
@@ -375,6 +379,11 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
         }
     }
 
+    private fun getMaxAge(profileType: ProfileType) : Double {
+        var ret = 18.0
+        if (profileType == ProfileType.CIRCADIAN_DEFAULT) ret = 100.0
+        return ret
+    }
     override fun onPause() {
         super.onPause()
         disposable.clear()
