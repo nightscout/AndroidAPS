@@ -233,6 +233,7 @@ class CalculationWorkflowImpl @Inject constructor(
             )
             .then(
                 OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
+                    .setInputData(Data.Builder().putInt(PASS, CalculationWorkflow.ProgressData.DRAW_FINAL.pass).build())
                     .build()
             )
             .enqueue()
@@ -254,6 +255,7 @@ class CalculationWorkflowImpl @Inject constructor(
             )
             .then(
                 OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
+                    .setInputData(Data.Builder().putInt(PASS, CalculationWorkflow.ProgressData.DRAW_FINAL.pass).build())
                     .build()
             )
             .enqueue()
