@@ -25,41 +25,28 @@ class DefaultProfileCircadian @Inject constructor(val dateUtil: DateUtil) {
     private var twentyToSixty = arrayOf(1.01, 1.04, 1.12, 1.15, 1.20, 1.26, 1.21, 1.20, 1.15, 1.06, 0.98, 0.88, 0.86, 0.85, 0.85, 0.83, 0.83, 0.86, 0.89, 0.89, 0.94, 0.97, 0.98, 0.98)
     private var sixtyOneAndHigher = arrayOf(0.95, 1.02, 1.07, 1.14, 1.19, 1.38, 1.43, 1.36, 1.24, 1.24, 1.14, 1.00, 0.95, 0.93, 0.90, 0.79, 0.79, 0.79, 0.76, 0.74, 0.74, 0.79, 0.79, 0.88)
 
-    @Suppress("unused") var eighteenToTwentyFour: TreeMap<Double, Array<Double>> = TreeMap()
-
-    // TODO:
-    // Basal calculation V
-    // ISF calculation
-    // IC calculation
-    // Inferface: V
-        // age V
-        // tdd V
-        // basalSumPct V
-        // avgISF V
-        // avgIC V 
-        // timeshift V
 
     fun profile(age: Int, tdd: Double, basalSumPct: Double, isf: Double, ic: Double, timeshift: Double, units: GlucoseUnit): PureProfile? {
-        val basalSum = tdd * basalSumPct
+        val avgBasal = (tdd * basalSumPct) / 24
         val profile = JSONObject()
         // Initially calc ISF from TDD
 
         if (age in 1..10) {
-            profile.put("basal", getBasalsJson(oneToTen, basalSum))
-            profile.put("carbratio", singleValueArray(0.0))
-            profile.put("sens", singleValueArrayFromMmolToUnits(0.0, units))
+            profile.put("basal", arrayToJson(oneToTen, avgBasal, timeshift))
+            profile.put("carbratio", arrayToJsonDiv(oneToTen, ic, timeshift + 1))
+            profile.put("sens", arrayToJsonDiv(oneToTen, isf, timeshift + 1))
         } else if (age in 11..20) {
-            profile.put("basal", getBasalsJson(elevenToTwenty, basalSum))
-            profile.put("carbratio", singleValueArray(0.0))
-            profile.put("sens", singleValueArrayFromMmolToUnits(0.0, units))
+            profile.put("basal", arrayToJson(elevenToTwenty, avgBasal, timeshift))
+            profile.put("carbratio", arrayToJsonDiv(elevenToTwenty, ic, timeshift + 1))
+            profile.put("sens", arrayToJsonDiv(elevenToTwenty, isf, timeshift + 1))
         } else if (age in 21..60) {
-            profile.put("basal", getBasalsJson(twentyToSixty, basalSum))
-            profile.put("carbratio", singleValueArray(0.0))
-            profile.put("sens", singleValueArrayFromMmolToUnits(0.0, units))
+            profile.put("basal", arrayToJson(twentyToSixty, avgBasal, timeshift))
+            profile.put("carbratio", arrayToJsonDiv(twentyToSixty, ic, timeshift + 1))
+            profile.put("sens", arrayToJsonDiv(twentyToSixty, isf, timeshift + 1))
         } else if (age > 60) {
-            profile.put("basal", getBasalsJson(sixtyOneAndHigher, basalSum))
-            profile.put("carbratio", singleValueArray(0.0))
-            profile.put("sens", singleValueArrayFromMmolToUnits(0.0, units))
+            profile.put("basal", arrayToJson(sixtyOneAndHigher, avgBasal, timeshift))
+            profile.put("carbratio", arrayToJsonDiv(sixtyOneAndHigher, ic, timeshift + 1))
+            profile.put("sens", arrayToJsonDiv(sixtyOneAndHigher, isf, timeshift + 1))
         }
         profile.put("dia", 5.0)
         profile.put("carbs_hr", 20) // not used
@@ -71,29 +58,25 @@ class DefaultProfileCircadian @Inject constructor(val dateUtil: DateUtil) {
         return pureProfileFromJson(profile, dateUtil)
     }
 
-    private fun getBasalsJson(factors: Array<Double>, basalSum: Double): JSONArray {
-        val basals = JSONArray()
+    private fun arrayToJson(factors: Array<Double>, average: Double, timeshift: Double): JSONArray {
+        val ret = JSONArray()
         for (i in 0..23) {
             val time = String.format(Locale.ENGLISH, "%02d:00", i)
-            val basal = (basalSum / 24) * factors[i]
-            // basal = baseBasal * factor * 1.0043
-            basals.put(JSONObject().put("time", time).put("value", basal.toString()).put("timeAsSeconds", i * 3600))
-            
+            val index = (i + abs(timeshift.toInt() - 24)) % 24
+            val value = average * factors[index]
+            ret.put(JSONObject().put("time", time).put("value", value.toString()).put("timeAsSeconds", i * 3600))
         }
-        return basals
+        return ret
     }
 
-    @Suppress("SameParameterValue")
-    private fun singleValueArray(value: Double): JSONArray {
-        val array = JSONArray()
-        array.put(JSONObject().put("time", "00:00").put("value", value).put("timeAsSeconds", 0 * 3600))
-        return array
-    }
-
-    @Suppress("SameParameterValue")
-    private fun singleValueArrayFromMmolToUnits(value: Double, units: GlucoseUnit): JSONArray {
-        val array = JSONArray()
-        array.put(JSONObject().put("time", "00:00").put("value", Profile.fromMmolToUnits(value, units)).put("timeAsSeconds", 0 * 3600))
-        return array
+    private fun arrayToJsonDiv(factors: Array<Double>, average: Double, timeshift: Double): JSONArray {
+        val ret = JSONArray()
+        for (i in 0..23) {
+            val time = String.format(Locale.ENGLISH, "%02d:00", i)
+            val index = (i + abs(timeshift.toInt() - 24)) % 24
+            val value = average / factors[index]
+            ret.put(JSONObject().put("time", time).put("value", value.toString()).put("timeAsSeconds", i * 3600))
+        }
+        return ret
     }
 }

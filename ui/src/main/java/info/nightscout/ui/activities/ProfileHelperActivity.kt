@@ -191,10 +191,10 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
         binding.basalPctFromTdd.setParams(32.0, 32.0, 60.0, 1.0, DecimalFormat("0"), false, null)
         // TODO: Precision based on MGDL or MMOL, and nicen up
         val units = profileFunction.getUnits()
-        binding.isf.setParams(Profile.fromMgdlToUnits(HardLimits.MAX_ISF, units), Profile.fromMgdlToUnits(HardLimits.MIN_ISF, units), Profile.fromMgdlToUnits(HardLimits.MAX_ISF, units), 0.5,
-                              DecimalFormat("0,0"), false, null)
+        binding.isf.setParams(Profile.fromMgdlToUnits(HardLimits.MAX_ISF, units), Profile.fromMgdlToUnits(HardLimits.MIN_ISF, units), Profile.fromMgdlToUnits(HardLimits.MAX_ISF, units), 0.1,
+                              DecimalFormat("0.0"), false, null)
 
-        binding.ic.setParams(Profile.fromMgdlToUnits(hardLimits.maxIC(), units), Profile.fromMgdlToUnits(hardLimits.minIC(), units), Profile.fromMgdlToUnits(hardLimits.maxIC(), units), 0.5, DecimalFormat("0,0"), false, null)
+        binding.ic.setParams(hardLimits.maxIC(), hardLimits.minIC(), hardLimits.maxIC(), 0.1, DecimalFormat("0.0"), false, null)
         binding.timeshift.setParams(0.0, 0.0, 23.0, 1.0, DecimalFormat("0"), false, null)
 
         binding.tdds.addView(TextView(this).apply { text = rh.gs(info.nightscout.core.ui.R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress) })
