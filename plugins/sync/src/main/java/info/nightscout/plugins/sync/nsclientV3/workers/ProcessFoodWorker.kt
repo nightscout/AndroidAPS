@@ -12,6 +12,8 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.nsclientV3.extensions.toFood
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.logging.LTag
 import info.nightscout.sdk.localmodel.food.NSFood
 import info.nightscout.shared.sharedPreferences.SP
@@ -30,24 +32,24 @@ class ProcessFoodWorker(
     @Inject lateinit var sp: SP
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var storeDataForDb: StoreDataForDb
+    @Inject lateinit var rxBus: RxBus
 
     override suspend fun doWorkAndLog(): Result {
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
         aapsLogger.debug(LTag.DATABASE, "Received Food Data: $data")
 
-        val ret = Result.success()
-        val foods = mutableListOf<Food>()
+        try {
+            val foods = mutableListOf<Food>()
+            if (data is JSONArray) {
+                for (index in 0 until data.length()) {
+                    val jsonFood: JSONObject = data.getJSONObject(index)
 
-        if (data is JSONArray) {
-            for (index in 0 until data.length()) {
-                val jsonFood: JSONObject = data.getJSONObject(index)
+                    if (JsonHelper.safeGetString(jsonFood, "type") != "food") continue
 
-                if (JsonHelper.safeGetString(jsonFood, "type") != "food") continue
-
-                when (JsonHelper.safeGetString(jsonFood, "action")) {
-                    "remove" -> {
-                        val delFood = Food(
+                    when (JsonHelper.safeGetString(jsonFood, "action")) {
+                        "remove" -> {
+                            val delFood = Food(
                             name = "",
                             portion = 0.0,
                             carbs = 0,
@@ -61,13 +63,19 @@ class ProcessFoodWorker(
                         if (food != null) foods += food
                         else aapsLogger.error(LTag.DATABASE, "Error parsing food", jsonFood.toString())
                     }
+                    }
                 }
+            } else if (data is List<*>) {
+                for (i in 0 until data.size)
+                    foods += (data[i] as NSFood).toFood()
             }
-        } else if (data is List<*>) {
-            for (i in 0 until data.size)
-                foods += (data[i] as NSFood).toFood()
+            storeDataForDb.foods.addAll(foods)
+        } catch (error: Exception) {
+            aapsLogger.error("Error: ", error)
+            rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
-        storeDataForDb.foods.addAll(foods)
-        return ret
+
+        return Result.success()
     }
 }

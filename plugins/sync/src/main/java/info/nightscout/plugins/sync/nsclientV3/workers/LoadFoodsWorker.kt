@@ -13,10 +13,10 @@ import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
+import info.nightscout.rx.logging.LTag
 import info.nightscout.sdk.localmodel.food.NSFood
 import info.nightscout.shared.utils.DateUtil
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 class LoadFoodsWorker(
@@ -36,10 +36,10 @@ class LoadFoodsWorker(
 
         // Food database doesn't provide last record modification
         // Read full collection every 5th attempt
-        runBlocking {
+        try {
             if (nsClientV3Plugin.lastLoadedSrvModified.collections.foods++ % 5 == 0L) {
                 val foods: List<NSFood> = nsAndroidClient.getFoods(1000).values
-                aapsLogger.debug("FOODS: $foods")
+                aapsLogger.debug(LTag.NSCLIENT, "FOODS: $foods")
                 rxBus.send(EventNSClientNewLog("RCV", "${foods.size} FOODs"))
                 // Schedule processing of fetched data
                 WorkManager.getInstance(context)
@@ -61,7 +61,12 @@ class LoadFoodsWorker(
                         OneTimeWorkRequest.Builder(LoadProfileStoreWorker::class.java).build()
                     )
             }
+        } catch (error: Exception) {
+            aapsLogger.error("Error: ", error)
+            rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
+
         return Result.success()
     }
 }

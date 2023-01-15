@@ -14,11 +14,11 @@ import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
+import info.nightscout.rx.logging.LTag
 import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.treatment.NSTreatment
 import info.nightscout.shared.utils.DateUtil
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import kotlin.math.max
 
@@ -36,64 +36,57 @@ class LoadTreatmentsWorker(
 
     override suspend fun doWorkAndLog(): Result {
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
-        var ret = Result.success()
 
-        val isFirstLoad = nsClientV3Plugin.isFirstLoad(NsClient.Collection.TREATMENTS)
-        val lastLoaded =
-            if (isFirstLoad) max(nsClientV3Plugin.firstLoadContinueTimestamp.collections.treatments, dateUtil.now() - nsClientV3Plugin.maxAge)
-            else max(nsClientV3Plugin.lastLoadedSrvModified.collections.treatments, dateUtil.now() - nsClientV3Plugin.maxAge)
-        runBlocking {
-            if ((nsClientV3Plugin.newestDataOnServer?.collections?.treatments ?: Long.MAX_VALUE) > lastLoaded)
-                try {
-                    val treatments: List<NSTreatment>
-                    val response: NSAndroidClient.ReadResponse<List<NSTreatment>>?
+        try {
+            val isFirstLoad = nsClientV3Plugin.isFirstLoad(NsClient.Collection.TREATMENTS)
+            val lastLoaded =
+                if (isFirstLoad) max(nsClientV3Plugin.firstLoadContinueTimestamp.collections.treatments, dateUtil.now() - nsClientV3Plugin.maxAge)
+                else max(nsClientV3Plugin.lastLoadedSrvModified.collections.treatments, dateUtil.now() - nsClientV3Plugin.maxAge)
+            if ((nsClientV3Plugin.newestDataOnServer?.collections?.treatments ?: Long.MAX_VALUE) > lastLoaded) {
+                val treatments: List<NSTreatment>
+                val response: NSAndroidClient.ReadResponse<List<NSTreatment>>?
+                if (isFirstLoad) {
+                    val lastLoadedIso = dateUtil.toISOString(lastLoaded)
+                    response = nsAndroidClient.getTreatmentsNewerThan(lastLoadedIso, 500)
+                } else {
+                    response = nsAndroidClient.getTreatmentsModifiedSince(lastLoaded, 500)
+                    response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = it }
+                    nsClientV3Plugin.storeLastLoadedSrvModified()
+                }
+                treatments = response.values
+                aapsLogger.debug(LTag.NSCLIENT, "TREATMENTS: $treatments")
+                if (treatments.isNotEmpty()) {
+                    val action = if (isFirstLoad) "RCV-FIRST" else "RCV"
+                    rxBus.send(EventNSClientNewLog(action, "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                    // Schedule processing of fetched data and continue of loading
+                    WorkManager.getInstance(context)
+                        .beginUniqueWork(
+                            NSClientV3Plugin.JOB_NAME,
+                            ExistingWorkPolicy.APPEND_OR_REPLACE,
+                            OneTimeWorkRequest.Builder(ProcessTreatmentsWorker::class.java)
+                                .setInputData(dataWorkerStorage.storeInputData(response))
+                                .build()
+                        )
+                        // response 304 == Not modified (happens when date > srvModified => bad time on phone or server during upload
+                        .then(response.code != 304, OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
+                        .then(response.code == 304, OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build())
+                        .enqueue()
+                } else {
+                    // End first load
                     if (isFirstLoad) {
-                        val lastLoadedIso = dateUtil.toISOString(lastLoaded)
-                        response = nsAndroidClient.getTreatmentsNewerThan(lastLoadedIso, 500)
-                    }
-                    else {
-                        response = nsAndroidClient.getTreatmentsModifiedSince(lastLoaded, 500)
-                        response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = it }
+                        nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = lastLoaded
                         nsClientV3Plugin.storeLastLoadedSrvModified()
                     }
-                    treatments = response.values
-                    aapsLogger.debug("TREATMENTS: $treatments")
-                    if (treatments.isNotEmpty()) {
-                        val action = if (isFirstLoad) "RCV-FIRST" else "RCV"
-                        rxBus.send(EventNSClientNewLog(action, "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                        // Schedule processing of fetched data and continue of loading
-                        WorkManager.getInstance(context)
-                            .beginUniqueWork(
-                                NSClientV3Plugin.JOB_NAME,
-                                ExistingWorkPolicy.APPEND_OR_REPLACE,
-                                OneTimeWorkRequest.Builder(ProcessTreatmentsWorker::class.java)
-                                    .setInputData(dataWorkerStorage.storeInputData(response))
-                                    .build()
-                            )
-                            // response 304 == Not modified (happens when date > srvModified => bad time on phone or server during upload
-                            .then(response.code != 304, OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
-                            .then(response.code == 304, OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build())
-                            .enqueue()
-                    } else {
-                        // End first load
-                        if (isFirstLoad) {
-                            nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = lastLoaded
-                            nsClientV3Plugin.storeLastLoadedSrvModified()
-                        }
-                        rxBus.send(EventNSClientNewLog("RCV END", "No TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                        storeDataForDb.storeTreatmentsToDb()
-                        WorkManager.getInstance(context)
-                            .enqueueUniqueWork(
-                                NSClientV3Plugin.JOB_NAME,
-                                ExistingWorkPolicy.APPEND_OR_REPLACE,
-                                OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build()
-                            )
-                    }
-                } catch (error: Exception) {
-                    aapsLogger.error("Error: ", error)
-                    ret = Result.failure(workDataOf("Error" to error.toString()))
+                    rxBus.send(EventNSClientNewLog("RCV END", "No TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                    storeDataForDb.storeTreatmentsToDb()
+                    WorkManager.getInstance(context)
+                        .enqueueUniqueWork(
+                            NSClientV3Plugin.JOB_NAME,
+                            ExistingWorkPolicy.APPEND_OR_REPLACE,
+                            OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build()
+                        )
                 }
-            else {
+            } else {
                 // End first load
                 if (isFirstLoad) {
                     nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = lastLoaded
@@ -108,7 +101,12 @@ class LoadTreatmentsWorker(
                         OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build()
                     )
             }
+        } catch (error: Exception) {
+            aapsLogger.error("Error: ", error)
+            rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
-        return ret
+
+        return Result.success()
     }
 }
