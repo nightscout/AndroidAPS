@@ -152,7 +152,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
             val ic = icUsed[tabSelected]
             val timeshift = timeshiftUsed[tabSelected]
             val profile = if (typeSelected[tabSelected] == ProfileType.MOTOL_DEFAULT) defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
-            else if (typeSelected[tabSelected] == ProfileType.CIRCADIAN_DEFAULT) defaultProfileCircadian.profile(age, tdd, pct / 100.0, isf, ic, timeshift, profileFunction.getUnits()) // TODO: Proper name?
+            else if (typeSelected[tabSelected] == ProfileType.CIRCADIAN_DEFAULT) defaultProfileCircadian.profile(age, tdd, pct / 100.0, isf, ic, timeshift, profileFunction.getUnits())
             else defaultProfileDPV.profile(age, tdd, pct / 100.0, profileFunction.getUnits())
             profile?.let {
                 OKDialog.showConfirmation(this, rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch), rh.gs(info.nightscout.core.ui.R.string.copytolocalprofile), Runnable {
@@ -191,7 +191,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
         binding.basalPctFromTdd.setParams(35.0, 30.0, 60.0, 1.0, DecimalFormat("0"), false, null)
 
         binding.isf.setParams(
-            Profile.fromMgdlToUnits(HardLimits.MAX_ISF, profileFunction.getUnits()),
+            0.0,
             Profile.fromMgdlToUnits(HardLimits.MIN_ISF, profileFunction.getUnits()),
             Profile.fromMgdlToUnits(HardLimits.MAX_ISF, profileFunction.getUnits()),
             if (profileFunction.getUnits() == GlucoseUnit.MGDL) 1.0 else 0.1,
@@ -248,7 +248,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
                     }
                 }
                 if (typeSelected[i] == ProfileType.CIRCADIAN_DEFAULT) {
-                    if (ageUsed[i] < 1 || ageUsed[i] > 99) {
+                    if (ageUsed[i] < 1 || ageUsed[i] > 100) {
                         ToastUtils.warnToast(this, R.string.invalid_age)
                         return@setOnClickListener
                     }
