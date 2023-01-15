@@ -16,6 +16,7 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -148,7 +149,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
             val tdd = tddUsed[tabSelected]
             val pct = pctUsed[tabSelected]
             val isf = isfUsed[tabSelected]
-            val ic = isfUsed[tabSelected]
+            val ic = icUsed[tabSelected]
             val timeshift = timeshiftUsed[tabSelected]
             val profile = if (typeSelected[tabSelected] == ProfileType.MOTOL_DEFAULT) defaultProfile.profile(age, tdd, weight, profileFunction.getUnits())
             else if (typeSelected[tabSelected] == ProfileType.CIRCADIAN_DEFAULT) defaultProfileCircadian.profile(age, tdd, pct / 100.0, isf, ic, timeshift, profileFunction.getUnits()) // TODO: Proper name?
@@ -172,15 +173,18 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                binding.tddRow.visibility = (binding.weight.value == 0.0).toVisibility()
-                // TODO: Fix visibility weight
+                if (typeSelected[tabSelected] == ProfileType.MOTOL_DEFAULT) {
+                    binding.tddRow.visibility = (binding.weight.value == 0.0).toVisibility()
+                }
             }
         })
         binding.tdd.setParams(0.0, 0.0, 200.0, 1.0, DecimalFormat("0"), false, null, object : TextWatcher {
             override fun afterTextChanged(s: Editable) {}
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                binding.weightRow.visibility = (binding.tdd.value == 0.0).toVisibility()
+                if (typeSelected[tabSelected] == ProfileType.MOTOL_DEFAULT) {
+                    binding.weightRow.visibility = (binding.tdd.value == 0.0).toVisibility()
+                }
             }
         })
 
@@ -197,7 +201,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
         )
 
         binding.ic.setParams(hardLimits.maxIC(), hardLimits.minIC(), hardLimits.maxIC(), 0.1, DecimalFormat("0.0"), false, null)
-        binding.timeshift.setParams(0.0, 0.0, 23.0, 1.0, DecimalFormat("0"), false, null)
+        binding.timeshift.setParams(0.0, Constants.CPP_MIN_TIMESHIFT.toDouble(), Constants.CPP_MAX_TIMESHIFT.toDouble(), 1.0, DecimalFormat("0"), false, null)
 
         binding.tdds.addView(TextView(this).apply { text = rh.gs(info.nightscout.core.ui.R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress) })
         disposable += Single.fromCallable { tddCalculator.stats(this) }
@@ -366,6 +370,7 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
         binding.ic.value = icUsed[tabSelected]
         binding.timeshift.value = timeshiftUsed[tabSelected]
 
+        binding.weightRow.visibility = (newContent == ProfileType.MOTOL_DEFAULT).toVisibility()
         binding.basalPctFromTddRow.visibility = (newContent == ProfileType.DPV_DEFAULT || newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
         binding.isfRow.visibility = (newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
         binding.icRow.visibility = (newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
