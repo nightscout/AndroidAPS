@@ -31,15 +31,15 @@ class DefaultProfileCircadian @Inject constructor(val dateUtil: DateUtil) {
     // Basal calculation V
     // ISF calculation
     // IC calculation
-    // Inferface:
+    // Inferface: V
         // age V
         // tdd V
         // basalSumPct V
-        // avgISF
-        // avgIC
-        // timeShift
+        // avgISF V
+        // avgIC V 
+        // timeshift V
 
-    fun profile(age: Int, tdd: Double, basalSumPct: Double, units: GlucoseUnit): PureProfile? {
+    fun profile(age: Int, tdd: Double, basalSumPct: Double, isf: Double, ic: Double, timeshift: Double, units: GlucoseUnit): PureProfile? {
         val basalSum = tdd * basalSumPct
         val profile = JSONObject()
         // Initially calc ISF from TDD
