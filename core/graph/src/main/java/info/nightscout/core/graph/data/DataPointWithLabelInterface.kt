@@ -2,6 +2,7 @@ package info.nightscout.core.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import androidx.annotation.ColorInt
 import com.jjoe64.graphview.series.DataPointInterface
 
 interface DataPointWithLabelInterface : DataPointInterface {
@@ -15,5 +16,5 @@ interface DataPointWithLabelInterface : DataPointInterface {
     val shape: PointsWithLabelGraphSeries.Shape
     val size: Float
     val paintStyle: Paint.Style
-    fun color(context: Context?): Int
+    @ColorInt fun color(context: Context?): Int
 }

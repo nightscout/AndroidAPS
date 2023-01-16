@@ -859,7 +859,7 @@ class DataHandlerMobile @Inject constructor(
         val finalLastRun = loop.lastRun
         if (sp.getBoolean(rh.gs(R.string.key_wear_predictions), true) && finalLastRun?.request?.hasPredictions == true && finalLastRun.constraintsProcessed != null) {
             val predArray = finalLastRun.constraintsProcessed!!.predictions
-                .stream().map { bg: GlucoseValue -> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh) }
+                .stream().map { bg: GlucoseValue -> GlucoseValueDataPoint(bg, profileFunction, rh) }
                 .collect(Collectors.toList())
             if (predArray.isNotEmpty())
                 for (bg in predArray) if (bg.data.value > 39)

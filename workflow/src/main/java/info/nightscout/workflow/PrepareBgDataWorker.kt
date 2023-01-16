@@ -49,7 +49,7 @@ class PrepareBgDataWorker(
         for (bg in data.overviewData.bgReadingsArray) {
             if (bg.timestamp < fromTime || bg.timestamp > toTime) continue
             if (bg.value > data.overviewData.maxBgValue) data.overviewData.maxBgValue = bg.value
-            bgListArray.add(GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh))
+            bgListArray.add(GlucoseValueDataPoint(bg, profileFunction, rh))
         }
         bgListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
         data.overviewData.bgReadingGraphSeries = PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] })

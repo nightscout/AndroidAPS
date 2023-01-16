@@ -80,7 +80,7 @@ class PreparePredictionsWorker(
 
         val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         val predictions: MutableList<GlucoseValueDataPoint>? = apsResult?.predictions
-            ?.map { bg -> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh) }
+            ?.map { bg -> GlucoseValueDataPoint(bg, profileFunction, rh) }
             ?.toMutableList()
         if (predictions != null) {
             predictions.sortWith { o1: GlucoseValueDataPoint, o2: GlucoseValueDataPoint -> o1.x.compareTo(o2.x) }
