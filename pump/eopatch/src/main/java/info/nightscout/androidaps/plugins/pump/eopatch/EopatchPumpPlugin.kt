@@ -107,15 +107,14 @@ class EopatchPumpPlugin @Inject constructor(
                                             alarmManager.init()
                                         }) { throwable: Throwable -> fabricPrivacy.logException(throwable) }
         )
-    }
+        // following was moved from specialEnableCondition()
+        // specialEnableCondition() is called too often to add there executive code
 
-    override fun specialEnableCondition(): Boolean {
         //BG -> FG, restart patch activation and trigger unhandled alarm
         if (preferenceManager.isInitDone()) {
             patchManager.checkActivationProcess()
             alarmManager.restartAll()
         }
-        return super.specialEnableCondition()
     }
 
     override fun onStop() {
