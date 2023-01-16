@@ -172,7 +172,7 @@
     <string name="age_label">Edad:</string>
     <string name="level_label">Nivel:</string>
     <string name="insulin_label">Insulina</string>
-    <string name="pb_label">Batería de la bomba</string>
+    <string name="pb_label">Batería de bomba</string>
     <string name="cannula">Cánula</string>
     <string name="ebstopsloop">El uso de la función de bolo extendido detendrá el modo de bucle cerrado durante el tiempo de ejecución del bolo extendido. ¿Realmente quieres esto?</string>
     <string name="statuslights_cannula_age">Edad de la cánula</string>
