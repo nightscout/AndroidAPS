@@ -100,4 +100,7 @@
     <string name="not_connected">Nicht verbunden</string>
     <string name="read_only">Nur lesen</string>
     <string name="working">Arbeitet</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
 </resources>
