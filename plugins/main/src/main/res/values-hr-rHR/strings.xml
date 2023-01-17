@@ -57,17 +57,11 @@
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Bazal:</string>
     <string name="a11y_otp_qr_code">QR kod za postavljanje jednokratne lozinke</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ Statusna linija (sat)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Prikažite informacije o svojem Loop-u na vašem xDrip+ brojčaniku.</string>
     <string name="xdrip_status_detailed_iob_title">Prikaži detaljan IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Podijelite IOB na bolus i bazalni IOB na brojčaniku</string>
     <string name="disabled_loop">Petlja onemogućena</string>
     <string name="xdrip_status_show_bgi_title">Prikaži BGI</string>
     <string name="xdrip_status_show_bgi_summary">Dodajte BGI u redak statusa</string>
-    <string name="xdrip_status_settings">xDrip+ status (sat)</string>
     <!-- Food-->
     <string name="food_short">Hrana</string>
     <string name="description_food">Prikaži postavke prehrane definirane u Nightscout</string>
@@ -130,7 +124,6 @@
     <string name="basal_shortname">BAZAL</string>
     <string name="graph_scale">Skala grafikona</string>
     <!-- Skins -->
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->
     <string name="description_wear">Pratite i kontrolirajte AAPS koristeći svoj WearOS sat.</string>
