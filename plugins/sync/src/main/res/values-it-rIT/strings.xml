@@ -93,4 +93,7 @@
     <string name="remove_all">Rimuovi tutto</string>
     <string name="reset_start">Avvio reset</string>
     <string name="upload_now">Carica adesso</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
 </resources>
