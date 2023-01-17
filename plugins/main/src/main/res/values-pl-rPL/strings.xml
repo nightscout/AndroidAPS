@@ -97,17 +97,11 @@
     <string name="sms_read_status_failed">Odczyt statusu nie powiódł się</string>
     <string name="sms_profile_switch_created">Zmiana profilu wykonana</string>
     <string name="sms_wrong_tbr_duration">Czas trwania TBR musi być wielokrotnością %1$d minut i większy niż 0.</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Linia Statusu xDrip+ (zegarek)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Pokaż informacje o swojej pętli na watchface xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Pokaż szczegóły IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Rozłóż IOB na bolus i IOB bazy na zegarku</string>
     <string name="disabled_loop">Pętla wyłączona</string>
     <string name="xdrip_status_show_bgi_title">Pokaż BGI</string>
     <string name="xdrip_status_show_bgi_summary">Dodaj BGI do Linii Statusu</string>
-    <string name="xdrip_status_settings">Status xDrip+ (zegarek)</string>
     <!-- Food-->
     <string name="food_short">Posiłek</string>
     <string name="description_food">Wyświetla dane posiłków zdefiniowanych w Nightscout</string>
@@ -261,7 +255,6 @@
     <string name="buttonson_description">Przyciski są zawsze wyświetlane na dole ekranu</string>
     <string name="largedisplay_description">Duży ekran</string>
     <string name="skin">Motyw</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">użytkowanie:</string>
     <!--    Iob-->
     <string name="send_logfiles">Wyślij dzisiejsze pliki logów razem z datą i czasem do programistów. Nieoczekiwana sytuacja.</string>
