@@ -12,11 +12,9 @@
             android:key="@string/key_xdrip_send_status"
             android:title="@string/xdrip_send_status_title" />
 
-        <PereferenceScreen
+        <androidx.preference.PreferenceScreen
             android:key="@string/key_xdrip_status_settings"
-            android:dependency="@string/key_xdrip_send_status"
-            android:title="@string/xdrip_status_settings"
-            app:initialExpandedChildrenCount="0">
+            android:title="@string/xdrip_status_settings">
 
             <SwitchPreference
                 android:defaultValue="true"
@@ -30,7 +28,7 @@
                 android:summary="@string/xdrip_status_show_bgi_summary"
                 android:title="@string/xdrip_status_show_bgi_title" />
 
-        </PereferenceScreen>
+        </androidx.preference.PreferenceScreen>
 
     </PreferenceCategory>
 
