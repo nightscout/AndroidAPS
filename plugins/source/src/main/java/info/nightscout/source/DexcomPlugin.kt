@@ -185,11 +185,11 @@ class DexcomPlugin @Inject constructor(
                                     }
                                 }
                             }
-                            xDripBroadcast.send(result.inserted[i])
+                            xDripBroadcast.sendIn640gMode(result.inserted[i])
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg ${result.inserted[i]}")
                         }
                         result.updated.forEach {
-                            xDripBroadcast.send(it)
+                            xDripBroadcast.sendIn640gMode(it)
                             aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         }
                         result.sensorInsertionsInserted.forEach {

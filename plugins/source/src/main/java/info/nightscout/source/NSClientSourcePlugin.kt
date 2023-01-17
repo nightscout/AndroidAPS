@@ -150,7 +150,6 @@ class NSClientSourcePlugin @Inject constructor(
                     }
 
                 } else if (sgvs is List<*>) { // V3 client
-//                xDripBroadcast.sendSgvs(sgvs)
 
                     for (i in 0 until sgvs.size) {
                         val sgv = toGv(sgvs[i] as NSSgvV3)

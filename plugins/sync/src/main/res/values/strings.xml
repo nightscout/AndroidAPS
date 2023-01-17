@@ -165,6 +165,10 @@
     <string name="disabled_loop">Loop Disabled</string>
     <string name="xdrip_send_status_title">Send Status line to xDrip+</string>
 
+    <string name="xdrip_not_installed">xDrip+ not installed</string>
+    <string name="calibration_sent">Calibration sent to xDrip+</string>
+
+
     <!--    DataBroadcast-->
     <string name="data_broadcaster" translatable="false">Data Broadcaster</string>
 

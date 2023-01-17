@@ -83,7 +83,7 @@ class PoctechPlugin @Inject constructor(
                     .blockingGet()
                     .also { savedValues ->
                         savedValues.inserted.forEach {
-                            xDripBroadcast.send(it)
+                            xDripBroadcast.sendIn640gMode(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
                     }

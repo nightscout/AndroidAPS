@@ -10,6 +10,10 @@ interface Intents {
         const val ACTION_NEW_PROFILE = "info.nightscout.client.NEW_PROFILE"
         const val ACTION_NEW_SGV = "info.nightscout.client.NEW_SGV"
 
+        const val EXTRA_STATUSLINE = "com.eveningoutpost.dexdrip.Extras.Statusline"
+        const val ACTION_NEW_EXTERNAL_STATUSLINE = "com.eveningoutpost.dexdrip.ExternalStatusline"
+        const val RECEIVER_PERMISSION = "com.eveningoutpost.dexdrip.permissions.RECEIVE_EXTERNAL_STATUSLINE"
+
         // AAPS -> xDrip 640G mode
         const val XDRIP_PLUS_NS_EMULATOR = "com.eveningoutpost.dexdrip.NS_EMULATOR"
 

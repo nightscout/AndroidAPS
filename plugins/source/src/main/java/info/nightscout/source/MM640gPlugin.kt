@@ -90,7 +90,7 @@ class MM640gPlugin @Inject constructor(
                             .blockingGet()
                             .also { savedValues ->
                                 savedValues.all().forEach {
-                                    xDripBroadcast.send(it)
+                                    xDripBroadcast.sendIn640gMode(it)
                                     aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                                 }
                             }

@@ -7,6 +7,7 @@ import dagger.Module
 import dagger.Provides
 import dagger.Reusable
 import dagger.android.ContributesAndroidInjector
+import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.nsclient.StoreDataForDb
@@ -32,6 +33,7 @@ import info.nightscout.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.ProcessFoodWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.ProcessTreatmentsWorker
 import info.nightscout.plugins.sync.tidepool.TidepoolFragment
+import info.nightscout.plugins.sync.xdrip.XdripPlugin
 
 @Module(
     includes = [
@@ -80,6 +82,7 @@ abstract class SyncModule {
         @Binds fun bindNSSettingsStatus(nsSettingsStatusImpl: NSSettingsStatusImpl): NSSettingsStatus
         @Binds fun bindDataSyncSelectorInterface(dataSyncSelectorImplementation: DataSyncSelectorImplementation): DataSyncSelector
         @Binds fun bindStoreDataForDb(storeDataForDbImpl: StoreDataForDbImpl): StoreDataForDb
+        @Binds fun bindXDripBroadcastInterface(xDripBroadcastImpl: XdripPlugin): XDripBroadcast
     }
 
 }
