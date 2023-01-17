@@ -47,10 +47,6 @@
     <string name="sms_loop_suspended_for">Opgeskort (%1$d m)</string>
     <string name="sms_read_status_failed">Lees status gefaal</string>
     <string name="sms_profile_switch_created">Profiel skakelaar geskep</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Wys informasie van jou loop op jou xDrip+ horlosie-gesig.</string>
     <string name="xdrip_status_detailed_iob_title">Wys gedetailleerde IAB</string>
     <string name="xdrip_status_detailed_iob_summary">Breek af IAB in bolus en basale IAB op die watchface</string>
     <string name="disabled_loop">Loop Afgeskakel</string>
@@ -151,7 +147,6 @@
     <string name="treatments_shortname">BEHANDEL</string>
     <string name="sensitivity_shortname">SENS</string>
     <!-- Skins -->
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Stuur vandag se loglêers aan ontwikkelaars saam met hierdie tyd. Onverwagte situasie.</string>
     <!--    Wear-->
