@@ -102,5 +102,12 @@
     <string name="working">Funcionando</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Enviar datos a xDrip+</string>
+    <string name="xdrip_status_show_bgi_summary">Agregar BGI a la línea de estado</string>
+    <string name="xdrip_status_settings">Estado de xDrip+ (reloj)</string>
+    <string name="disabled_loop">Lazo desactivado</string>
+    <string name="xdrip_send_status_title">Enviar línea de estado a xDrip+</string>
     <!--    DataBroadcast-->
 </resources>
