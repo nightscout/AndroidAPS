@@ -128,4 +128,29 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">НАЖАТ СТОП</string>
     <!--QuickWizard-->
+    <string name="a11y_only_on_watch">только на часах</string>
+    <string name="a11y_only_on_phone">только на телефоне</string>
+    <string name="quickwizard_settings">Мастер быстрой настройки</string>
+    <string name="overview_edit_quickwizard_button_text">Текст на кнопке:</string>
+    <string name="overview_edit_quickwizard_carbs">Углеводы:</string>
+    <string name="overview_edit_quickwizard_valid">Верно:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Добавить</string>
+    <string name="overview_quickwizard_item_edit_button">Редактировать</string>
+    <string name="overview_edit_quickwizard_show_on_device">Показать запись на устройстве:</string>
+    <string name="overview_edit_quickwizard_use_bg">Вычисление ГК</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Расчет активного инсулина IOB для болюса</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Расчет активного инсулина IOB для базала</string>
+    <string name="overview_edit_quickwizard_use_trend">Расчет тренда</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Расчет суперболюса</string>
+    <string name="overview_edit_quickwizard_percentage">Процент</string>
+    <string name="device_all">Все</string>
+    <string name="device_phone">Телефон</string>
+    <string name="device_watch">Смарт-часы</string>
+    <string name="positive_only">Только положительные</string>
+    <string name="negative_only">Только отрицательные</string>
+    <string name="overview_editquickwizard_usecob">Вычисление активных углеводов COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Расчет временного целевого значения</string>
+    <string name="overview_editquickwizard_usepercentage">Расчет процента</string>
+    <string name="app_default">Из настроек приложения</string>
+    <string name="a11y_drag_and_drop_handle">перетаскиватель</string>
 </resources>
