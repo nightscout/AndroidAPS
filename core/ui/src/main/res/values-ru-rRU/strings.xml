@@ -473,6 +473,7 @@
     <string name="wizard_explain_tt">ВремЦ: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s до %2$s</string>
     <string name="wizard_pump_not_available">Нет помпы!</string>
+    <string name="quickwizard">Мастер QuickWizard</string>
     <!--    Preferences-->
     <string name="child">Ребенок</string>
     <string name="teenage">Подросток</string>
