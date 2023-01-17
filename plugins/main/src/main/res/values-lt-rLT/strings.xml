@@ -97,17 +97,11 @@
     <string name="sms_read_status_failed">Būsenos nuskaityti nepavyko</string>
     <string name="sms_profile_switch_created">Profilio perjungimas sukurtas</string>
     <string name="sms_wrong_tbr_duration">Laikinos bazės trukmė turi būti kartotinė %1$d minučių ir didesnė nei 0.</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ būsenos juosta (laikrodyje)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Rodyti Ciklo informaciją laikrodyje, xDrip+ pradžios ekrane.</string>
     <string name="xdrip_status_detailed_iob_title">Rodyti AIO detaliai</string>
     <string name="xdrip_status_detailed_iob_summary">Rodyti laikrodyje bazės ir bolusų AIO</string>
     <string name="disabled_loop">Ciklas išjungtas</string>
     <string name="xdrip_status_show_bgi_title">Rodyti KG</string>
     <string name="xdrip_status_show_bgi_summary">Pridėti KG prie statuso linijos</string>
-    <string name="xdrip_status_settings">xDrip+ statusas (laikrodyje)</string>
     <!-- Food-->
     <string name="food_short">Maistas</string>
     <string name="description_food">Rodyti maisto ruošinius iš Nightscout</string>
@@ -267,7 +261,6 @@
     <string name="buttonson_description">Mygtukai visada rodomi ekrano apačioje</string>
     <string name="largedisplay_description">Didelis ekranas</string>
     <string name="skin">Išvaizda</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">naudojimas:</string>
     <!--    Iob-->
     <string name="send_logfiles">Siųsti šios dienos žurnalo įrašus kūrėjams dabar. Netikėta situacija.</string>
