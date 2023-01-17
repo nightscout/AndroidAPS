@@ -97,17 +97,11 @@
     <string name="sms_read_status_failed">Четенето на статуса се провали</string>
     <string name="sms_profile_switch_created">Създаден запис - Промяна на профил</string>
     <string name="sms_wrong_tbr_duration">Продължителността на временния база; трябва да бъде кратна на %1$d минути и по-голяма от 0.</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ линия със статута (часовник)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Покажи информация за вашия APS на xDrip + циферблат на часовник.</string>
     <string name="xdrip_status_detailed_iob_title">Покажи подробен IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="disabled_loop">Loop изключен</string>
     <string name="xdrip_status_show_bgi_title">Показвай BGI</string>
     <string name="xdrip_status_show_bgi_summary">Добави BGI към статуса</string>
-    <string name="xdrip_status_settings">xDrip+ статус (часовник)</string>
     <!-- Food-->
     <string name="food_short">Храна</string>
     <string name="description_food">Показва въведените в Nightscout храни</string>
@@ -260,7 +254,6 @@
     <string name="buttonson_description">Бутоните винаги се показват на дъното на екрана.</string>
     <string name="largedisplay_description">Голям екран</string>
     <string name="skin">Тема</string>
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Изпрати последните лог файлове на разработчиците. Непредвидена ситуация.</string>
     <!--    Wear-->
