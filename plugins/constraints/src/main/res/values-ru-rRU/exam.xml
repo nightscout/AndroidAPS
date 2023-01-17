@@ -4,6 +4,7 @@
     <string name="dia_label_exam">Время действия инсулина (DIA)</string>
     <string name="dia_profile">Следует задать значение DIA в вашем профиле.</string>
     <string name="dia_minimumis5h">Минимально допустимое значение-5 часов.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="dia_meaningisequaltodiapump">Если вы удовлетворены значением длительности действия инсулина DIA, заданным в помпе до AAPS, то при запуске цикла изменять это значение не требуется.</string>
     <string name="dia_valuemustbedetermined">Следует самостоятельно определить DIA подходящее для вас.</string>
     <string name="hypott_label">Временная цель Гипо </string>
@@ -187,6 +188,7 @@
     <string name="ic_noeffect">Если у вас 0 активных углеводов COB, изменение углеводного коэффициента IC приведет к иному количеству инсулина на коррекцию данной ГК.</string>
     <string name="ic_different">Углеводный коэффициент IC изменится если принимать ХЕ за 10 или 12г.</string>
     <string name="ic_meaning">Смысл углеводного коэффициента IC таков: сколько ГУ (хлебных единиц) покрываются одной ед. инсулина.</string>
+    <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Cмена профиля</string>
     <string name="profileswitch_pctwillchange"> При установке 90% при переключении профиля, какие утверждения верны?</string>
     <string name="profileswitch_basallower">Базальная скорость снизится на 10%.</string>
