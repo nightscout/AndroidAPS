@@ -22,7 +22,7 @@ import info.nightscout.source.GlimpPlugin
 import info.nightscout.source.MM640gPlugin
 import info.nightscout.source.PoctechPlugin
 import info.nightscout.source.TomatoPlugin
-import info.nightscout.source.XdripPlugin
+import info.nightscout.source.XdripSourcePlugin
 import javax.inject.Inject
 
 open class DataReceiver : DaggerBroadcastReceiver() {
@@ -37,7 +37,7 @@ open class DataReceiver : DaggerBroadcastReceiver() {
 
         when (intent.action) {
             Intents.ACTION_NEW_BG_ESTIMATE            ->
-                OneTimeWorkRequest.Builder(XdripPlugin.XdripWorker::class.java)
+                OneTimeWorkRequest.Builder(XdripSourcePlugin.XdripSourceWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
             Intents.POCTECH_BG                        ->
                 OneTimeWorkRequest.Builder(PoctechPlugin.PoctechWorker::class.java)

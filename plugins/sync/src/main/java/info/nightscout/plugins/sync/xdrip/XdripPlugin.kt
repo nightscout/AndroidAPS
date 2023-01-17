@@ -1,4 +1,4 @@
-package info.nightscout.plugins.general.xdripStatusline
+package info.nightscout.plugins.sync.xdrip
 
 import android.content.Context
 import android.content.Intent
@@ -16,7 +16,7 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.DecimalFormatter
-import info.nightscout.plugins.R
+import info.nightscout.plugins.sync.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppInitialized
@@ -36,7 +36,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class StatusLinePlugin @Inject constructor(
+class XdripPlugin @Inject constructor(
     injector: HasAndroidInjector,
     private val sp: SP,
     private val profileFunction: ProfileFunction,
@@ -50,13 +50,13 @@ class StatusLinePlugin @Inject constructor(
     aapsLogger: AAPSLogger
 ) : PluginBase(
     PluginDescription()
-        .mainType(PluginType.GENERAL)
+        .mainType(PluginType.SYNC)
         .pluginIcon((info.nightscout.core.main.R.drawable.ic_blooddrop_48))
-        .pluginName(R.string.xdrip_status)
-        .shortName(R.string.xdrip_status_shortname)
+        .pluginName(R.string.xdrip)
+        .shortName(R.string.xdrip_shortname)
         .neverVisible(true)
-        .preferencesId(R.xml.pref_xdripstatus)
-        .description(R.string.description_xdrip_status_line),
+        .preferencesId(R.xml.pref_xdrip)
+        .description(R.string.description_xdrip),
     aapsLogger, rh, injector
 ) {
 
@@ -111,47 +111,47 @@ class StatusLinePlugin @Inject constructor(
     }
 
     private fun sendStatus() {
-        var status = "" // sent once on disable
-        val profile = profileFunction.getProfile()
-        if (isEnabled() && profile != null) {
-            status = buildStatusString(profile)
+        if (sp.getBoolean(R.string.key_xdrip_send_status, false)) {
+            val status = profileFunction.getProfile()?.let { buildStatusLine(it) } ?: ""
+            context.sendBroadcast(
+                Intent(ACTION_NEW_EXTERNAL_STATUSLINE).also {
+                    it.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
+                    it.putExtras(Bundle().apply { putString(EXTRA_STATUSLINE, status) })
+                }
+            )
         }
-        //sendData
-        val bundle = Bundle()
-        bundle.putString(EXTRA_STATUSLINE, status)
-        val intent = Intent(ACTION_NEW_EXTERNAL_STATUSLINE)
-        intent.putExtras(bundle)
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
-        context.sendBroadcast(intent, null)
     }
 
-    private fun buildStatusString(profile: Profile): String {
-        var status = ""
-        if (!(loop as PluginBase).isEnabled()) {
-            status += rh.gs(R.string.disabled_loop) + "\n"
+    private fun buildStatusLine(profile: Profile): String {
+        val status = StringBuilder()
+        @Suppress("LiftReturnOrAssignment")
+        if (!loop.isEnabled()) {
+            status.append(rh.gs(R.string.disabled_loop)).append("\n")
             lastLoopStatus = false
         } else lastLoopStatus = true
 
         //Temp basal
-        val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
-        if (activeTemp != null) {
-            status += activeTemp.toStringShort() + " "
+        iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.let {
+            status.append(it.toStringShort()).append(" ")
         }
         //IOB
         val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
         val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
-        status += DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U"
-        if (sp.getBoolean(R.string.key_xdrip_status_detailed_iob, true)) {
-            status += ("("
-                + DecimalFormatter.to2Decimal(bolusIob.iob) + "|"
-                + DecimalFormatter.to2Decimal(basalIob.basaliob) + ")")
-        }
+        status.append(DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)).append(rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname))
+        if (sp.getBoolean(R.string.key_xdrip_status_detailed_iob, true))
+            status.append("(")
+                .append(DecimalFormatter.to2Decimal(bolusIob.iob))
+                .append("|")
+                .append(DecimalFormatter.to2Decimal(basalIob.basaliob))
+                .append(")")
         if (sp.getBoolean(R.string.key_xdrip_status_show_bgi, true)) {
             val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits())
-            status += " " + (if (bgi >= 0) "+" else "") + DecimalFormatter.to2Decimal(bgi)
+            status.append(" ")
+                .append(if (bgi >= 0) "+" else "")
+                .append(DecimalFormatter.to2Decimal(bgi))
         }
         // COB
-        status += " " + iobCobCalculator.getCobInfo("StatusLinePlugin").generateCOBString()
-        return status
+        status.append(" ").append(iobCobCalculator.getCobInfo("StatusLinePlugin").generateCOBString())
+        return status.toString()
     }
 }

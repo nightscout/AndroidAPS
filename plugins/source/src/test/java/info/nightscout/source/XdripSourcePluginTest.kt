@@ -8,18 +8,18 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
-class XdripPluginTest : TestBase() {
+class XdripSourcePluginTest : TestBase() {
 
-    private lateinit var xdripPlugin: XdripPlugin
+    private lateinit var xdripSourcePlugin: XdripSourcePlugin
 
     @Mock lateinit var rh: ResourceHelper
 
     @BeforeEach
     fun setup() {
-        xdripPlugin = XdripPlugin({ AndroidInjector { } }, rh, aapsLogger)
+        xdripSourcePlugin = XdripSourcePlugin({ AndroidInjector { } }, rh, aapsLogger)
     }
 
     @Test fun advancedFilteringSupported() {
-        Assertions.assertEquals(false, xdripPlugin.advancedFilteringSupported())
+        Assertions.assertEquals(false, xdripSourcePlugin.advancedFilteringSupported())
     }
 }

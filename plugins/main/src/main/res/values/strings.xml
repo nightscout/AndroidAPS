@@ -112,21 +112,11 @@
     <string name="sms_wrong_tbr_duration">TBR duration must be a multiple of %1$d minutes and greater than 0.</string>
     <string name="a11y_otp_qr_code">QR Code for setup one time password</string>
 
-    <!-- xDrip status line -->
-    <string name="key_xdrip_status_detailed_iob" translatable="false">xdripstatus_detailediob</string>
-    <string name="key_xdrip_status_show_bgi" translatable="false">xdripstatus_showbgi</string>
-    <string name="key_xdrip_status_settings" translatable="false">xdripstatus_settings</string>
-
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ Statusline (watch)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
     <string name="xdrip_status_detailed_iob_title">Show detailed IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Break down IOB into bolus and basal IOB on the watchface</string>
     <string name="disabled_loop">Loop Disabled</string>
     <string name="xdrip_status_show_bgi_title">Show BGI</string>
     <string name="xdrip_status_show_bgi_summary">Add BGI to status line</string>
-    <string name="xdrip_status_settings">xDrip+ Status (watch)</string>
 
     <!-- Food-->
     <string name="food_short">Food</string>
@@ -331,8 +321,6 @@
     <string name="largedisplay_description">Large display</string>
     <string name="skin">Skin</string>
 
-    <!--    DataBroadcast-->
-    <string name="data_broadcaster" translatable="false">Data Broadcaster</string>
     <string name="cannula_usage">usage:</string>
 
     <!--    Iob-->

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.testing.mocks;
+package info.nightscout.androidaps;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
@@ -17,8 +17,6 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.SparseArray;
 
-import com.google.android.gms.wearable.DataMap;
-
 import org.mockito.Mockito;
 import org.mockito.stubbing.Answer;
 
@@ -28,17 +26,9 @@ import java.util.HashMap;
 
 @SuppressWarnings({"unused", "rawtypes", "SuspiciousMethodCalls", "unchecked"})
 public final class BundleMock {
-/*
+
     public static Bundle mock() {
         return mock(new HashMap<>());
-    }
-
-    public static Bundle mock(DataMap dataMap) {
-        HashMap<String, Object> hm = new HashMap<>();
-        for (String key : dataMap.keySet()) {
-            hm.put(key, dataMap.get(key));
-        }
-        return mock(hm);
     }
 
     public static Bundle mock(final HashMap<String, Object> map) {
@@ -180,5 +170,4 @@ public final class BundleMock {
 
         return bundle;
     }
- */
 }

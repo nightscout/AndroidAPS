@@ -69,7 +69,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     private val rxBus: RxBus
 ) : PluginBase(
     PluginDescription()
-        .mainType(PluginType.GENERAL)
+        .mainType(PluginType.SYNC)
         .pluginIcon(R.drawable.open_humans_white)
         .pluginName(R.string.open_humans)
         .shortName(R.string.open_humans_short)

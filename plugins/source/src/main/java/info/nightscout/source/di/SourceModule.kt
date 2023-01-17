@@ -15,7 +15,7 @@ import info.nightscout.source.MM640gPlugin
 import info.nightscout.source.NSClientSourcePlugin
 import info.nightscout.source.PoctechPlugin
 import info.nightscout.source.TomatoPlugin
-import info.nightscout.source.XdripPlugin
+import info.nightscout.source.XdripSourcePlugin
 import info.nightscout.source.activities.RequestDexcomPermissionActivity
 
 @Module(
@@ -30,7 +30,7 @@ abstract class SourceModule {
     @ContributesAndroidInjector abstract fun contributesBGSourceFragment(): BGSourceFragment
 
     @ContributesAndroidInjector abstract fun contributesNSClientSourceWorker(): NSClientSourcePlugin.NSClientSourceWorker
-    @ContributesAndroidInjector abstract fun contributesXdripWorker(): XdripPlugin.XdripWorker
+    @ContributesAndroidInjector abstract fun contributesXdripWorker(): XdripSourcePlugin.XdripSourceWorker
     @ContributesAndroidInjector abstract fun contributesDexcomWorker(): DexcomPlugin.DexcomWorker
     @ContributesAndroidInjector abstract fun contributesMM640gWorker(): MM640gPlugin.MM640gWorker
     @ContributesAndroidInjector abstract fun contributesGlimpWorker(): GlimpPlugin.GlimpWorker
@@ -46,6 +46,6 @@ abstract class SourceModule {
 
         @Binds fun bindNSClientSource(nsClientSourcePlugin: NSClientSourcePlugin): NSClientSource
         @Binds fun bindDexcomBoyda(dexcomPlugin: DexcomPlugin): DexcomBoyda
-        @Binds fun bindXDrip(xdripPlugin: XdripPlugin): XDrip
+        @Binds fun bindXDrip(xdripSourcePlugin: XdripSourcePlugin): XDrip
     }
 }

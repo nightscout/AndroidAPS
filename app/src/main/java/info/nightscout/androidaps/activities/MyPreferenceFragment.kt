@@ -47,10 +47,10 @@ import info.nightscout.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.plugins.general.autotune.AutotunePlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.wear.WearPlugin
-import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
+import info.nightscout.plugins.sync.xdrip.XdripPlugin
 import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
@@ -116,7 +116,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var intelligoPlugin: IntelligoPlugin
     @Inject lateinit var aidexPlugin: AidexPlugin
     @Inject lateinit var smsCommunicatorPlugin: SmsCommunicatorPlugin
-    @Inject lateinit var statusLinePlugin: StatusLinePlugin
+    @Inject lateinit var statusLinePlugin: XdripPlugin
     @Inject lateinit var tidepoolPlugin: TidepoolPlugin
     @Inject lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Inject lateinit var wearPlugin: WearPlugin

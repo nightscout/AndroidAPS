@@ -8,14 +8,12 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.implementation.profile.ProfileFunctionImpl
 import info.nightscout.implementation.profile.ProfileStoreObject
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
@@ -46,7 +44,7 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     @Mock lateinit var insulin: Insulin
 
-    open lateinit var profileFunction: ProfileFunction
+    //open lateinit var profileFunction: ProfileFunction
     lateinit var dateUtil: DateUtil
     var insulinConfiguration: InsulinConfiguration = InsulinConfiguration("Insulin", 360 * 60 * 1000, 60 * 60 * 1000)
     val rxBus = RxBus(aapsSchedulers, aapsLogger)
@@ -68,7 +66,7 @@ open class TestBaseWithProfile : TestBase() {
         `when`(dateUtil.now()).thenReturn(1656358822000)
         `when`(insulin.insulinConfiguration).thenReturn(insulinConfiguration)
         `when`(activePlugin.activeInsulin).thenReturn(insulin)
-        profileFunction = ProfileFunctionImpl(aapsLogger, sp, rxBus, rh, activePlugin, repository, dateUtil, config, hardLimits, aapsSchedulers, fabricPrivacy, processedDeviceStatusData)
+        //profileFunction = ProfileFunctionImpl(aapsLogger, sp, rxBus, rh, activePlugin, repository, dateUtil, config, hardLimits, aapsSchedulers, fabricPrivacy, processedDeviceStatusData)
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!)
         effectiveProfileSwitch = EffectiveProfileSwitch(
             timestamp = dateUtil.now(),

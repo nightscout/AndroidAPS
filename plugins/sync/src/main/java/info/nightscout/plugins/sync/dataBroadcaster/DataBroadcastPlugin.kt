@@ -1,4 +1,4 @@
-package info.nightscout.plugins.general.dataBroadcaster
+package info.nightscout.plugins.sync.dataBroadcaster
 
 import android.content.Context
 import android.content.Intent
@@ -22,7 +22,7 @@ import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
-import info.nightscout.plugins.R
+import info.nightscout.plugins.sync.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.Event
@@ -60,7 +60,7 @@ class DataBroadcastPlugin @Inject constructor(
     private val glucoseStatusProvider: GlucoseStatusProvider
 ) : PluginBase(
     PluginDescription()
-        .mainType(PluginType.GENERAL)
+        .mainType(PluginType.SYNC)
         .pluginName(R.string.data_broadcaster)
         .alwaysEnabled(true)
         .neverVisible(true)
@@ -90,8 +90,7 @@ class DataBroadcastPlugin @Inject constructor(
         super.onStop()
     }
 
-    private fun sendData(event: Event) {
-        val bundle = Bundle()
+    internal fun prepareData(event: Event, bundle: Bundle) {
         bgStatus(bundle)
         iobCob(bundle)
         loopStatus(bundle)
@@ -102,6 +101,11 @@ class DataBroadcastPlugin @Inject constructor(
             bundle.putInt("progressPercent", event.percent)
             bundle.putString("progressStatus", event.status)
         }
+    }
+
+    private fun sendData(event: Event) {
+        val bundle = Bundle()
+        prepareData(event, bundle)
 
         //aapsLogger.debug("Prepared bundle:\n" + BundleLogger.log(bundle))
         sendBroadcast(
@@ -147,10 +151,7 @@ class DataBroadcastPlugin @Inject constructor(
             bundle.putLong("suggestedTimeStamp", loop.lastRun?.lastAPSRun ?: -1L)
             bundle.putString("suggested", loop.lastRun?.request?.json().toString())
             if (loop.lastRun?.tbrSetByPump != null && loop.lastRun?.tbrSetByPump?.enacted == true) {
-                bundle.putLong(
-                    "enactedTimeStamp", loop.lastRun?.lastTBREnact
-                        ?: -1L
-                )
+                bundle.putLong("enactedTimeStamp", loop.lastRun?.lastTBREnact ?: -1L)
                 bundle.putString("enacted", loop.lastRun?.request?.json().toString())
             }
         } else { //NSClient or remote

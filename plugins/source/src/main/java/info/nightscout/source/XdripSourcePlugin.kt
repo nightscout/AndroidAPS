@@ -25,7 +25,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class XdripPlugin @Inject constructor(
+class XdripSourcePlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger
@@ -58,19 +58,19 @@ class XdripPlugin @Inject constructor(
     }
 
     // cannot be inner class because of needed injection
-    class XdripWorker(
+    class XdripSourceWorker(
         context: Context,
         params: WorkerParameters
     ) : LoggingWorker(context, params, Dispatchers.IO) {
 
-        @Inject lateinit var xdripPlugin: XdripPlugin
+        @Inject lateinit var xdripSourcePlugin: XdripSourcePlugin
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
 
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
 
-            if (!xdripPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
+            if (!xdripSourcePlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
             val bundle = dataWorkerStorage.pickupBundle(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
@@ -93,11 +93,11 @@ class XdripPlugin @Inject constructor(
                 .blockingGet()
                 .also { savedValues ->
                     savedValues.all().forEach {
-                        xdripPlugin.detectSource(it)
+                        xdripSourcePlugin.detectSource(it)
                         aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                     }
                 }
-            xdripPlugin.sensorBatteryLevel = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)
+            xdripSourcePlugin.sensorBatteryLevel = bundle.getInt(Intents.EXTRA_SENSOR_BATTERY, -1)
             return ret
         }
     }
