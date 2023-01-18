@@ -101,10 +101,14 @@
     <string name="read_only">Sólo lectura</string>
     <string name="working">Funcionando</string>
     <!-- xDrip status line -->
+    <string name="key_xdrip_send_status">xdrip_send_status</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">Enviar datos a xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Mostrar detalles IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Desglosar la IOB en bolo y basal en la esfera del reloj</string>
+    <string name="xdrip_status_show_bgi_title">Mostrar BGI</string>
     <string name="xdrip_status_show_bgi_summary">Agregar BGI a la línea de estado</string>
     <string name="xdrip_status_settings">Estado de xDrip+ (reloj)</string>
     <string name="disabled_loop">Lazo desactivado</string>
