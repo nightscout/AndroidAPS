@@ -102,5 +102,15 @@
     <string name="working">Arbeitet</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Sende Daten an xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Zeige detailliertes IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
+    <string name="xdrip_status_show_bgi_title">Zeige BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Füge BGI zur Statuszeile hinzu</string>
+    <string name="xdrip_status_settings">xDrip+ Status (Uhr)</string>
+    <string name="disabled_loop">Loop deaktiviert</string>
+    <string name="xdrip_send_status_title">Statuszeile an xDrip+ senden</string>
     <!--    DataBroadcast-->
 </resources>
