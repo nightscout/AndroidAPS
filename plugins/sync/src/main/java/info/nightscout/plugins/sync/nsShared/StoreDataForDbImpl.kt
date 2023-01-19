@@ -48,7 +48,6 @@ import info.nightscout.database.impl.transactions.UpdateNsIdTherapyEventTransact
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.StoreDataForDb
@@ -78,7 +77,6 @@ class StoreDataForDbImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val config: Config,
     private val nsClientSource: NSClientSource,
-    private val xDripBroadcast: XDripBroadcast,
     private val virtualPump: VirtualPump,
     private val uiInteraction: UiInteraction
 ) : StoreDataForDb {
@@ -163,19 +161,16 @@ class StoreDataForDbImpl @Inject constructor(
                 .also { result ->
                     glucoseValues.clear()
                     result.updated.forEach {
-                        xDripBroadcast.sendIn640gMode(it)
                         nsClientSource.detectSource(it)
                         aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         updated.inc(GlucoseValue::class.java.simpleName)
                     }
                     result.inserted.forEach {
-                        xDripBroadcast.sendIn640gMode(it)
                         nsClientSource.detectSource(it)
                         aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         inserted.inc(GlucoseValue::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
-                        xDripBroadcast.sendIn640gMode(it)
                         nsClientSource.detectSource(it)
                         aapsLogger.debug(LTag.DATABASE, "Updated nsId bg $it")
                         nsIdUpdated.inc(GlucoseValue::class.java.simpleName)

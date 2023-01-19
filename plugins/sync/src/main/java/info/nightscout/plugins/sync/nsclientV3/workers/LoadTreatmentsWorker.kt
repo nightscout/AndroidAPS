@@ -61,7 +61,7 @@ class LoadTreatmentsWorker(
                     // Schedule processing of fetched data and continue of loading
                     WorkManager.getInstance(context)
                         .beginUniqueWork(
-                            NSClientV3Plugin.JOB_NAME,
+                            nsClientV3Plugin.JOB_NAME,
                             ExistingWorkPolicy.APPEND_OR_REPLACE,
                             OneTimeWorkRequest.Builder(ProcessTreatmentsWorker::class.java)
                                 .setInputData(dataWorkerStorage.storeInputData(response))
@@ -81,7 +81,7 @@ class LoadTreatmentsWorker(
                     storeDataForDb.storeTreatmentsToDb()
                     WorkManager.getInstance(context)
                         .enqueueUniqueWork(
-                            NSClientV3Plugin.JOB_NAME,
+                            nsClientV3Plugin.JOB_NAME,
                             ExistingWorkPolicy.APPEND_OR_REPLACE,
                             OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build()
                         )
@@ -96,7 +96,7 @@ class LoadTreatmentsWorker(
                 storeDataForDb.storeTreatmentsToDb()
                 WorkManager.getInstance(context)
                     .enqueueUniqueWork(
-                        NSClientV3Plugin.JOB_NAME,
+                        nsClientV3Plugin.JOB_NAME,
                         ExistingWorkPolicy.APPEND_OR_REPLACE,
                         OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build()
                     )

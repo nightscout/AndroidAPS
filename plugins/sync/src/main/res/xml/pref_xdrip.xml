@@ -9,6 +9,12 @@
 
         <SwitchPreference
             android:defaultValue="false"
+            android:key="@string/key_xdrip_local_broadcasts"
+            android:summary="@string/xdrip_local_broadcasts_summary"
+            android:title="@string/xdrip_local_broadcasts_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
             android:key="@string/key_xdrip_send_status"
             android:title="@string/xdrip_send_status_title" />
 

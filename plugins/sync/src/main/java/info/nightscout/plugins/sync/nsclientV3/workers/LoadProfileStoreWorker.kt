@@ -49,7 +49,7 @@ class LoadProfileStoreWorker(
                     rxBus.send(EventNSClientNewLog("RCV", "1 PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                     WorkManager.getInstance(context)
                         .beginUniqueWork(
-                            NSClientV3Plugin.JOB_NAME,
+                            nsClientV3Plugin.JOB_NAME,
                             ExistingWorkPolicy.APPEND_OR_REPLACE,
                             OneTimeWorkRequest.Builder((workerClasses.nsProfileWorker))
                                 .setInputData(dataWorkerStorage.storeInputData(profile))
@@ -60,7 +60,7 @@ class LoadProfileStoreWorker(
                     rxBus.send(EventNSClientNewLog("RCV END", "No new PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                     WorkManager.getInstance(context)
                         .enqueueUniqueWork(
-                            NSClientV3Plugin.JOB_NAME,
+                            nsClientV3Plugin.JOB_NAME,
                             ExistingWorkPolicy.APPEND_OR_REPLACE,
                             OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build()
                         )
@@ -69,7 +69,7 @@ class LoadProfileStoreWorker(
                 rxBus.send(EventNSClientNewLog("RCV END", "No PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                 WorkManager.getInstance(context)
                     .enqueueUniqueWork(
-                        NSClientV3Plugin.JOB_NAME,
+                        nsClientV3Plugin.JOB_NAME,
                         ExistingWorkPolicy.APPEND_OR_REPLACE,
                         OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build()
                     )

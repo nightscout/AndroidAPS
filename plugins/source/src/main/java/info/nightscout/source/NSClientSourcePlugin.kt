@@ -10,7 +10,6 @@ import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSSgv
 import info.nightscout.interfaces.nsclient.StoreDataForDb
@@ -95,7 +94,6 @@ class NSClientSourcePlugin @Inject constructor(
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var activePlugin: ActivePlugin
         @Inject lateinit var storeDataForDb: StoreDataForDb
 
@@ -116,7 +114,7 @@ class NSClientSourcePlugin @Inject constructor(
             return TransactionGlucoseValue(
                 timestamp = sgv.date ?: throw InvalidParameterException(),
                 value = sgv.sgv,
-                noise = sgv.noise?.toDouble(),
+                noise = sgv.noise,
                 raw = sgv.filtered,
                 trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction?.nsName),
                 nightscoutId = sgv.identifier,
@@ -141,8 +139,6 @@ class NSClientSourcePlugin @Inject constructor(
 
             try {
                 if (sgvs is JSONArray) { // V1 client
-                    xDripBroadcast.sendSgvs(sgvs)
-
                     for (i in 0 until sgvs.length()) {
                         val sgv = toGv(sgvs.getJSONObject(i)) ?: continue
                         if (sgv.timestamp < dateUtil.now() && sgv.timestamp > latestDateInReceivedData) latestDateInReceivedData = sgv.timestamp

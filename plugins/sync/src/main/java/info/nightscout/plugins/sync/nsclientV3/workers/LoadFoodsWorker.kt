@@ -44,7 +44,7 @@ class LoadFoodsWorker(
                 // Schedule processing of fetched data
                 WorkManager.getInstance(context)
                     .beginUniqueWork(
-                        NSClientV3Plugin.JOB_NAME,
+                        nsClientV3Plugin.JOB_NAME,
                         ExistingWorkPolicy.APPEND_OR_REPLACE,
                         OneTimeWorkRequest.Builder(ProcessFoodWorker::class.java)
                             .setInputData(dataWorkerStorage.storeInputData(foods))
@@ -56,7 +56,7 @@ class LoadFoodsWorker(
                 rxBus.send(EventNSClientNewLog("RCV", "FOOD skipped"))
                 WorkManager.getInstance(context)
                     .enqueueUniqueWork(
-                        NSClientV3Plugin.JOB_NAME,
+                        nsClientV3Plugin.JOB_NAME,
                         ExistingWorkPolicy.APPEND_OR_REPLACE,
                         OneTimeWorkRequest.Builder(LoadProfileStoreWorker::class.java).build()
                     )

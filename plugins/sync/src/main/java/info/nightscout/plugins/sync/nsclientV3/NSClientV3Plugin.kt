@@ -118,10 +118,10 @@ class NSClientV3Plugin @Inject constructor(
 
     companion object {
 
-        val JOB_NAME: String = this::class.java.simpleName
         val REFRESH_INTERVAL = T.secs(30).msecs()
     }
 
+    @Suppress("PropertyName") val JOB_NAME: String = this::class.java.simpleName
     private val disposable = CompositeDisposable()
     var scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private lateinit var runLoop: Runnable
@@ -222,7 +222,6 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     override fun onStop() {
-        // context.applicationContext.unbindService(mConnection)
         handler.removeCallbacksAndMessages(null)
         disposable.clear()
         super.onStop()
@@ -329,6 +328,7 @@ class NSClientV3Plugin @Inject constructor(
         firstLoadContinueTimestamp = LastModified(LastModified.Collections())
         lastLoadedSrvModified = LastModified(LastModified.Collections())
         storeLastLoadedSrvModified()
+        dataSyncSelector.resetToNextFullSync()
     }
 
     override fun nsAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {

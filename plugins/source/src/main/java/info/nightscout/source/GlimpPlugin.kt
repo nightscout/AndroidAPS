@@ -10,7 +10,6 @@ import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -50,7 +49,6 @@ class GlimpPlugin @Inject constructor(
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var glimpPlugin: GlimpPlugin
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var xDripBroadcast: XDripBroadcast
 
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
@@ -74,7 +72,6 @@ class GlimpPlugin @Inject constructor(
                 .blockingGet()
                 .also { savedValues ->
                     savedValues.inserted.forEach {
-                        xDripBroadcast.sendIn640gMode(it)
                         aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                     }
                 }

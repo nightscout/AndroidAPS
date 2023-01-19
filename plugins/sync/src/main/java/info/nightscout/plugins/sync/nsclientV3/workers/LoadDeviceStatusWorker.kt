@@ -45,7 +45,7 @@ class LoadDeviceStatusWorker(
             }
             WorkManager.getInstance(context)
                 .enqueueUniqueWork(
-                    NSClientV3Plugin.JOB_NAME,
+                    nsClientV3Plugin.JOB_NAME,
                     ExistingWorkPolicy.APPEND_OR_REPLACE,
                     OneTimeWorkRequest.Builder(DataSyncWorker::class.java).build()
                 )

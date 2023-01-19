@@ -34,7 +34,7 @@ class XdripSourcePlugin @Inject constructor(
     .mainType(PluginType.BGSOURCE)
     .fragmentClass(BGSourceFragment::class.java.name)
     .pluginIcon((info.nightscout.core.main.R.drawable.ic_blooddrop_48))
-    .pluginName(R.string.xdrip)
+    .pluginName(R.string.source_xdrip)
     .description(R.string.description_source_xdrip),
     aapsLogger, rh, injector
 ), BgSource, DoingOwnUploadSource, XDrip {

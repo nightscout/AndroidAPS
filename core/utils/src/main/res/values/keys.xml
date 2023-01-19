@@ -70,8 +70,7 @@
     <string name="key_autotune_additional_log" translatable="false">autotune_additional_log</string>
     <string name="key_autotune_plugin" translatable="false">key_autotune_plugin</string>
     <string name="key_autotune_last_run" translatable="false">key_autotune_last_run</string>
-    <string name="key_dexcomg5_xdripupload" translatable="false">dexcomg5_xdripupload</string>
-    <string name="key_nsclient_localbroadcasts" translatable="false">nsclient_localbroadcasts</string>
+    <string name="key_xdrip_local_broadcasts" translatable="false">xdrip_local_broadcasts</string>
     <string name="key_usebolusreminder" translatable="false">use_bolus_reminder</string>
     <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
     <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>

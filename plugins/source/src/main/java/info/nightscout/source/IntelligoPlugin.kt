@@ -16,7 +16,6 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -41,7 +40,6 @@ class IntelligoPlugin @Inject constructor(
     private val sp: SP,
     private val context: Context,
     private val repository: AppRepository,
-    private val xDripBroadcast: XDripBroadcast,
     private val dateUtil: DateUtil,
     private val uel: UserEntryLogger,
     private val fabricPrivacy: FabricPrivacy
@@ -159,7 +157,6 @@ class IntelligoPlugin @Inject constructor(
                     .blockingGet()
                     .also { savedValues ->
                         savedValues.inserted.forEach {
-                            xDripBroadcast.sendIn640gMode(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
                         savedValues.calibrationsInserted.forEach { calibration ->

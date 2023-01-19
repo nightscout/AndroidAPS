@@ -106,8 +106,6 @@
     <string name="ns_alarm_stale_data_value_label">Stale data threshold [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Urgent stale data threshold [min]</string>
     <string name="ns_log_app_started_event">Log app start to NS</string>
-    <string name="ns_local_broadcasts">Enable broadcasts to other apps (like xDrip+). Do not enable if you have more than one instance of AAPS or AAPSClient installed!</string>
-    <string name="ns_local_broadcasts_title">Enable local Broadcasts.</string>
     <string name="copy_existing_values">Copy NS settings (if exists)?</string>
 
     <!-- Tidepool -->
@@ -167,6 +165,24 @@
 
     <string name="xdrip_not_installed">xDrip+ not installed</string>
     <string name="calibration_sent">Calibration sent to xDrip+</string>
+
+    <string name="key_xdrip_temporary_target_last_synced_id" translatable="false">xdrip_temporary_target_last_sync</string>
+    <string name="key_xdrip_glucose_value_last_synced_id" translatable="false">xdrip_glucose_value_last_sync</string>
+    <string name="key_xdrip_food_last_synced_id" translatable="false">xdrip_food_last_sync</string>
+    <string name="key_xdrip_therapy_event_last_synced_id" translatable="false">xdrip_therapy_event_last_sync</string>
+    <string name="key_xdrip_bolus_calculator_result_last_synced_id" translatable="false">xdrip_bolus_calculator_result_last_synced_id</string>
+    <string name="key_xdrip_carbs_last_synced_id" translatable="false">xdrip_carbs_last_synced_id</string>
+    <string name="key_xdrip_bolus_last_synced_id" translatable="false">xdrip_bolus_last_synced_id</string>
+    <string name="key_xdrip_device_status_last_synced_id" translatable="false">xdrip_device_status_last_synced_id</string>
+    <string name="key_xdrip_temporary_basal_last_synced_id" translatable="false">xdrip_temporary_basal_last_synced_id</string>
+    <string name="key_xdrip_extended_bolus_last_synced_id" translatable="false">xdrip_extended_bolus_last_synced_id</string>
+    <string name="key_xdrip_profile_switch_last_synced_id" translatable="false">profile_switch_last_synced_id</string>
+    <string name="key_xdrip_effective_profile_switch_last_synced_id" translatable="false">xdrip_effective_profile_switch_last_synced_id</string>
+    <string name="key_xdrip_offline_event_last_synced_id" translatable="false">xdrip_offline_event_last_synced_id</string>
+    <string name="key_xdrip_profile_store_last_synced_timestamp" translatable="false">xdrip_profile_store_last_synced_timestamp</string>
+
+    <string name="xdrip_local_broadcasts_summary">Send glucose and treatments data to xDrip+. Data Source \"xDrip+ Sync Follower\" must be selected and accepting of data must be enabled in Settings - Inter-app settings - Accept Glucose/Treatments</string>
+    <string name="xdrip_local_broadcasts_title">Enable broadcasts to xDrip+.</string>
 
 
     <!--    DataBroadcast-->

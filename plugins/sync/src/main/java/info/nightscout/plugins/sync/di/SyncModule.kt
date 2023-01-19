@@ -33,7 +33,9 @@ import info.nightscout.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.ProcessFoodWorker
 import info.nightscout.plugins.sync.nsclientV3.workers.ProcessTreatmentsWorker
 import info.nightscout.plugins.sync.tidepool.TidepoolFragment
+import info.nightscout.plugins.sync.xdrip.XdripFragment
 import info.nightscout.plugins.sync.xdrip.XdripPlugin
+import info.nightscout.plugins.sync.xdrip.workers.XdripDataSyncWorker
 
 @Module(
     includes = [
@@ -67,6 +69,8 @@ abstract class SyncModule {
     @ContributesAndroidInjector abstract fun contributesFoodWorker(): ProcessFoodWorker
 
     @ContributesAndroidInjector abstract fun contributesTidepoolFragment(): TidepoolFragment
+    @ContributesAndroidInjector abstract fun contributesXdripFragment(): XdripFragment
+    @ContributesAndroidInjector abstract fun contributesXdripDataSyncWorker(): XdripDataSyncWorker
 
     @Module
     open class Provide {

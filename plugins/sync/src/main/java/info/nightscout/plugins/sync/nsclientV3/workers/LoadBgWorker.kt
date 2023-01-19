@@ -43,7 +43,7 @@ class LoadBgWorker(
         if (!nsClientSource.isEnabled() && !sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_cgm, false)) {
             workManager
                 .enqueueUniqueWork(
-                    NSClientV3Plugin.JOB_NAME,
+                    nsClientV3Plugin.JOB_NAME,
                     ExistingWorkPolicy.APPEND_OR_REPLACE,
                     OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build()
                 )
@@ -76,7 +76,7 @@ class LoadBgWorker(
                     // Schedule processing of fetched data and continue of loading
                     workManager
                         .beginUniqueWork(
-                            NSClientV3Plugin.JOB_NAME,
+                            nsClientV3Plugin.JOB_NAME,
                             ExistingWorkPolicy.APPEND_OR_REPLACE,
                             OneTimeWorkRequest.Builder(workerClasses.nsClientSourceWorker).setInputData(dataWorkerStorage.storeInputData(sgvs)).build()
                         )
@@ -93,7 +93,7 @@ class LoadBgWorker(
                     rxBus.send(EventNSClientNewLog("RCV END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                     workManager
                         .beginUniqueWork(
-                            NSClientV3Plugin.JOB_NAME,
+                            nsClientV3Plugin.JOB_NAME,
                             ExistingWorkPolicy.APPEND_OR_REPLACE,
                             OneTimeWorkRequest.Builder(StoreDataForDbImpl.StoreBgWorker::class.java).build()
                         )
@@ -109,7 +109,7 @@ class LoadBgWorker(
                 rxBus.send(EventNSClientNewLog("RCV END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                 workManager
                     .beginUniqueWork(
-                        NSClientV3Plugin.JOB_NAME,
+                        nsClientV3Plugin.JOB_NAME,
                         ExistingWorkPolicy.APPEND_OR_REPLACE,
                         OneTimeWorkRequest.Builder(StoreDataForDbImpl.StoreBgWorker::class.java).build()
                     )

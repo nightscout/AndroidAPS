@@ -4,13 +4,11 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -51,9 +49,7 @@ class MM640gPlugin @Inject constructor(
         @Inject lateinit var mM640gPlugin: MM640gPlugin
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var xDripBroadcast: XDripBroadcast
 
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
@@ -90,7 +86,6 @@ class MM640gPlugin @Inject constructor(
                             .blockingGet()
                             .also { savedValues ->
                                 savedValues.all().forEach {
-                                    xDripBroadcast.sendIn640gMode(it)
                                     aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                                 }
                             }
