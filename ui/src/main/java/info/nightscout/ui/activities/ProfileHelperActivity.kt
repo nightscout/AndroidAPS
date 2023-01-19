@@ -370,7 +370,19 @@ class ProfileHelperActivity : DaggerAppCompatActivity() {
         binding.ic.value = icUsed[tabSelected]
         binding.timeshift.value = timeshiftUsed[tabSelected]
 
-        binding.weightRow.visibility = (newContent == ProfileType.MOTOL_DEFAULT).toVisibility()
+        if (typeSelected[tabSelected] == ProfileType.MOTOL_DEFAULT) {
+            if (binding.weight.value != 0.0 && binding.tdd.value != 0.0){
+                // Both cannot have a value, reset one of them
+                weightUsed[tabSelected] = 0.0
+                binding.weight.value = weightUsed[tabSelected]
+            }
+            binding.tddRow.visibility = (binding.weight.value == 0.0).toVisibility()
+            binding.weightRow.visibility = (binding.tdd.value == 0.0).toVisibility()
+        } else {
+            binding.tddRow.visibility = (true).toVisibility()
+            binding.weightRow.visibility = (false).toVisibility()
+        }
+        
         binding.basalPctFromTddRow.visibility = (newContent == ProfileType.DPV_DEFAULT || newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
         binding.isfRow.visibility = (newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
         binding.icRow.visibility = (newContent == ProfileType.CIRCADIAN_DEFAULT).toVisibility()
