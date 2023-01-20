@@ -4,7 +4,7 @@ buildscript {
     ext {
         kotlin_version = '1.8.0'
         core_version = '1.9.0'
-        rxjava_version = '3.1.5'
+        rxjava_version = '3.1.6'
         rxandroid_version = '3.0.2'
         rxkotlin_version = '3.0.1'
         room_version = '2.5.0'
