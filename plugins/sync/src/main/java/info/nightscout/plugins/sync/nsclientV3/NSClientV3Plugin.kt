@@ -111,7 +111,7 @@ class NSClientV3Plugin @Inject constructor(
         .pluginIcon(info.nightscout.core.ui.R.drawable.ic_nightscout_syncs)
         .pluginName(R.string.ns_client_v3)
         .shortName(R.string.ns_client_v3_short_name)
-        .preferencesId(R.xml.pref_ns_client)
+        .preferencesId(R.xml.pref_ns_client_v3)
         .description(R.string.description_ns_client_v3),
     aapsLogger, rh, injector
 ) {
@@ -239,7 +239,6 @@ class NSClientV3Plugin @Inject constructor(
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
         }
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = config.isEngineeringMode()
-        preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_api_secret))?.isVisible = false
     }
 
     override val hasWritePermission: Boolean get() = nsAndroidClient?.lastStatus?.apiPermissions?.isFull() ?: false
