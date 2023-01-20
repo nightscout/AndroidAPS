@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="xdrip_not_installed">xDrip+ אינו מותקן</string>
-    <string name="calibration_sent">כיול נשלח ל-xDrip+</string>
     <string name="bg_label">BG</string>
     <string name="executing_right_now">הפקודה מבוצעת כעת</string>
     <string name="basal_value_below_minimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
