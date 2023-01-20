@@ -289,12 +289,12 @@ class NSClientV3Plugin @Inject constructor(
         executeLoop("RESEND", forceNew = false)
     }
 
-    override fun pause(newState: Boolean) {
-        sp.putBoolean(R.string.key_ns_client_paused, newState)
-        rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_client_paused)))
-    }
+     override fun pause(newState: Boolean) {
+         sp.putBoolean(R.string.key_ns_client_paused, newState)
+         rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_client_paused)))
+     }
 
-    override val version: NsClient.Version get() = NsClient.Version.V3
+    override fun detectedNsVersion(): String? = nsAndroidClient?.lastStatus?.version
 
     override val address: String get() = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "")
 

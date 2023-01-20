@@ -1,8 +1,6 @@
 package info.nightscout.plugins.sync.nsShared
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -22,7 +20,6 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginFragment
 import info.nightscout.interfaces.sync.DataSyncSelector
-import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.databinding.NsClientFragmentBinding
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
@@ -60,11 +57,9 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     override var plugin: PluginBase? = null
     private val nsClientPlugin
         get() = activePlugin.activeNsClient
-    private val version: NsClient.Version get() = nsClientPlugin?.version ?: NsClient.Version.NONE
 
     private val disposable = CompositeDisposable()
 
-    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private var _binding: NsClientFragmentBinding? = null
 
     // This property is only valid between onCreateView and

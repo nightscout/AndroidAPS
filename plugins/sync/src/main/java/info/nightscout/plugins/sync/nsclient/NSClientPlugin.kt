@@ -18,6 +18,7 @@ import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.nsclient.NSAlarm
+import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -71,7 +72,8 @@ class NSClientPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val activePlugin: ActivePlugin,
     private val dateUtil: DateUtil,
-    private val profileFunction: ProfileFunction
+    private val profileFunction: ProfileFunction,
+    private val nsSettingsStatus: NSSettingsStatus
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -180,6 +182,8 @@ class NSClientPlugin @Inject constructor(
         }
     }
 
+    override fun detectedNsVersion(): String? = nsSettingsStatus.getVersion()
+
     private fun addToLog(ev: EventNSClientNewLog) {
         synchronized(listLog) {
             listLog.add(ev)
@@ -212,9 +216,6 @@ class NSClientPlugin @Inject constructor(
         sp.putBoolean(R.string.key_ns_client_paused, newState)
         rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_client_paused)))
     }
-
-    override val version: NsClient.Version
-        get() = NsClient.Version.V1
 
     override val address: String get() = nsClientService?.nsURL ?: ""
 
