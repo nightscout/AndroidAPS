@@ -178,6 +178,8 @@ class NSClientV3Plugin @Inject constructor(
                            nsClientReceiverDelegate.onStatusEvent(ev)
                            if (ev.isChanged(rh.gs(R.string.key_ns_client_token)) || ev.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_url)))
                                setClient()
+                           if (ev.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_local_profile_last_change)))
+                               delayAndScheduleExecution("PROFILE_CHANGE")
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
