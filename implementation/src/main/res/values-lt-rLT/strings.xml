@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="xdrip_not_installed">xDrip+ neįdiegta</string>
-    <string name="calibration_sent">Kalibracija nusiųsta į xDrip+</string>
     <string name="bg_label">KG</string>
     <string name="executing_right_now">Komanda vykdoma</string>
     <string name="basal_value_below_minimum">Valandinės bazės vertė mažesnė už minimalią. Profilis nenustatytas!</string>
