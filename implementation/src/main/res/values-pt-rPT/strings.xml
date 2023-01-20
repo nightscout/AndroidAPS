@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="xdrip_not_installed">xDrip+ não está instalado</string>
-    <string name="calibration_sent">Calibração enviada para xDrip+</string>
     <string name="bg_label">GLIC</string>
     <string name="executing_right_now">Comando será executado agora</string>
     <string name="basal_value_below_minimum">Valor da basal abaixo do mínimo. Perfil não definido!</string>
