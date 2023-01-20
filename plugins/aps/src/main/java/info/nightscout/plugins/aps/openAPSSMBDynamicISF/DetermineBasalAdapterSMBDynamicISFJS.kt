@@ -285,7 +285,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
 
             tdd =
                 if (tdd1D != null && tdd7D != null) (tddWeightedFromLast8H * 0.33) + (tdd7D * 0.34) + (tdd1D * 0.33)
-                else tddWeightedFromLast8H
+                else (tddWeightedFromLast8H * 0.33) + (tddLast24H * 0.67)
 //        console.log("TDD = " + TDD + " using average of 7-day, 1-day and weighted 8hr average");
 
             val dynISFadjust = SafeParse.stringToDouble(sp.getString(R.string.key_DynISFAdjust, "100")) / 100.0
