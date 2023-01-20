@@ -49,6 +49,7 @@ import info.nightscout.rx.events.EventConfigBuilderChange
 import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.events.EventNSClientRestart
+import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -165,6 +166,10 @@ class NSClientService : DaggerService() {
             .toObservable(NSAuthAck::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ ack -> processAuthAck(ack) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventNewHistoryData::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ resend("NEW_DATA") }, fabricPrivacy::logException)
     }
 
     override fun onDestroy() {
@@ -231,10 +236,6 @@ class NSClientService : DaggerService() {
                 socket = IO.socket(nsURL, opt).also { socket ->
                     socket.on(Socket.EVENT_CONNECT, onConnect)
                     socket.on(Socket.EVENT_DISCONNECT, onDisconnect)
-                    socket.on(Socket.EVENT_ERROR, onError)
-                    socket.on(Socket.EVENT_CONNECT_ERROR, onError)
-                    socket.on(Socket.EVENT_CONNECT_TIMEOUT, onError)
-                    socket.on(Socket.EVENT_PING, onPing)
                     rxBus.send(EventNSClientNewLog("NSCLIENT", "do connect"))
                     socket.connect()
                     socket.on("dataUpdate", onDataUpdate)
@@ -300,7 +301,6 @@ class NSClientService : DaggerService() {
     @Synchronized fun destroy() {
         socket?.off(Socket.EVENT_CONNECT)
         socket?.off(Socket.EVENT_DISCONNECT)
-        socket?.off(Socket.EVENT_PING)
         socket?.off("dataUpdate")
         socket?.off("announcement")
         socket?.off("alarm")
@@ -336,18 +336,6 @@ class NSClientService : DaggerService() {
         nsDevice = sp.getString("careportal_enteredby", "")
     }
 
-    private val onError = Emitter.Listener { args ->
-        var msg = "Unknown Error"
-        if (args.isNotEmpty() && args[0] != null) {
-            msg = args[0].toString()
-        }
-        rxBus.send(EventNSClientNewLog("ERROR", msg))
-    }
-    private val onPing = Emitter.Listener {
-        rxBus.send(EventNSClientNewLog("PING", "received"))
-        // send data if there is something waiting
-        resend("Ping received")
-    }
     private val onAnnouncement = Emitter.Listener { args ->
 
         /*
