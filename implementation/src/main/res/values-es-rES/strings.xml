@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="xdrip_not_installed">xDrip+ no se encuentra instalado</string>
-    <string name="calibration_sent">Calibración enviada a xDrip+</string>
     <string name="bg_label">BG</string>
     <string name="executing_right_now">Orden se esta efectuando en este momento</string>
     <string name="basal_value_below_minimum">Valor basal por debajo del mínimo. Perfil no establecido.</string>
