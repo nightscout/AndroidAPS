@@ -456,6 +456,19 @@ class NSAndroidClientImpl(
     }
 
 
+    override suspend fun getProfileModifiedSince(from: Long): NSAndroidClient.ReadResponse<List<JSONObject>> = callWrapper(dispatcher) {
+
+        val response = api.getProfileModifiedSince(from)
+        if (response.isSuccessful) {
+            val eTagString = response.headers()["ETag"]
+            val eTag = eTagString?.substring(3, eTagString.length - 1)?.toLong()
+            return@callWrapper NSAndroidClient.ReadResponse(code = response.raw().networkResponse?.code ?: response.code(), lastServerModified = eTag, values = response.body()?.result.toNotNull())
+        } else {
+            throw UnsuccessfullNightscoutException()
+        }
+    }
+
+
     private suspend fun <T> callWrapper(dispatcher: CoroutineDispatcher, block: suspend () -> T): T =
         withContext(dispatcher) {
             retry(

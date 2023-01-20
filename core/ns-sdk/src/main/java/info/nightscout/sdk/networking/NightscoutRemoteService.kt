@@ -93,8 +93,13 @@ internal interface NightscoutRemoteService {
     @DELETE("v3/food")
     suspend fun deleteFood(@Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
 
+    @GET("v3/profile/history/{from}")
+    suspend fun getProfileModifiedSince(@Path("from") from: Long, @Query("limit") limit: Long = 10): Response<NSResponse<List<JSONObject>>>
+
+
     @GET("v3/profile?sort\$desc=date&limit=1")
     suspend fun getLastProfile(): Response<NSResponse<List<JSONObject>>>
+
 
     @POST("v3/profile")
     suspend fun createProfile(@Body profile: JsonObject): Response<NSResponse<RemoteCreateUpdateResponse>>
