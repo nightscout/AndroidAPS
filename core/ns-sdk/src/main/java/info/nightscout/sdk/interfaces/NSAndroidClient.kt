@@ -35,6 +35,7 @@ interface NSAndroidClient {
     suspend fun getDeviceStatusModifiedSince(from: Long): List<NSDeviceStatus>
 
     suspend fun createProfileStore(remoteProfileStore: JSONObject): CreateUpdateResponse
+    suspend fun getProfileModifiedSince(from: Long): ReadResponse<List<JSONObject>>
     suspend fun getLastProfileStore(): ReadResponse<List<JSONObject>>
 
     suspend fun createTreatment(nsTreatment: NSTreatment): CreateUpdateResponse

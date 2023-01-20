@@ -175,7 +175,7 @@ class ProfilePlugin @Inject constructor(
     }
 
     @Synchronized
-    override fun storeSettings(activity: FragmentActivity?) {
+    override fun storeSettings(activity: FragmentActivity?, emptyCreated: Boolean) {
         for (i in 0 until numOfProfiles) {
             profiles[i].run {
                     val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
@@ -191,7 +191,7 @@ class ProfilePlugin @Inject constructor(
         }
         sp.putInt(Constants.LOCAL_PROFILE + "_profiles", numOfProfiles)
 
-        sp.putLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, dateUtil.now())
+        sp.putLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, if (emptyCreated) 0 else dateUtil.now())
         createAndStoreConvertedProfile()
         isEdited = false
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.data.toString())
@@ -360,7 +360,7 @@ class ProfilePlugin @Inject constructor(
         )
         currentProfileIndex = profiles.size - 1
         createAndStoreConvertedProfile()
-        storeSettings()
+        storeSettings(emptyCreated = true)
     }
 
     fun cloneProfile() {
@@ -412,6 +412,7 @@ class ProfilePlugin @Inject constructor(
             if (numOfProfiles > 0) json.put("defaultProfile", currentProfile()?.name)
             val startDate = sp.getLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, dateUtil.now())
             json.put("date", startDate)
+            json.put("created_at", dateUtil.toISOAsUTC(startDate))
             json.put("startDate", dateUtil.toISOAsUTC(startDate))
             json.put("store", store)
         } catch (e: JSONException) {

@@ -8,6 +8,7 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
+import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.workflow.WorkerClasses
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
@@ -37,13 +38,23 @@ class LoadProfileStoreWorker(
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
 
         try {
-            val lastLoaded = max(nsClientV3Plugin.lastLoadedSrvModified.collections.profile, 0)
+            val isFirstLoad = nsClientV3Plugin.isFirstLoad(NsClient.Collection.PROFILE)
+            val lastLoaded = max(nsClientV3Plugin.lastLoadedSrvModified.collections.profile, dateUtil.now() - nsClientV3Plugin.maxAge)
             if ((nsClientV3Plugin.newestDataOnServer?.collections?.profile ?: Long.MAX_VALUE) > lastLoaded) {
-                val response: NSAndroidClient.ReadResponse<List<JSONObject>> = nsAndroidClient.getLastProfileStore()
+                val response: NSAndroidClient.ReadResponse<List<JSONObject>> =
+                    if (isFirstLoad) nsAndroidClient.getLastProfileStore()
+                    else nsAndroidClient.getProfileModifiedSince(lastLoaded)
                 val profiles = response.values
-                if (profiles.size == 1) {
-                    val profile = profiles[0]
-                    JsonHelper.safeGetLongAllowNull(profile, "srvModified")?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = it }
+                if (profiles.isNotEmpty()) {
+                    val profile = profiles[profiles.size - 1]
+                    // if srvModified found in response
+                    response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = it } ?:
+                    // if srvModified found in record
+                    JsonHelper.safeGetLongAllowNull(profile, "srvModified")?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = it } ?:
+                    // if created_at found in record
+                    JsonHelper.safeGetStringAllowNull(profile, "created_at", null)?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = dateUtil.fromISODateString(it) } ?:
+                    // if not found reset to now
+                    { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = dateUtil.now() }
                     nsClientV3Plugin.storeLastLoadedSrvModified()
                     aapsLogger.debug(LTag.NSCLIENT, "PROFILE: $profile")
                     rxBus.send(EventNSClientNewLog("RCV", "1 PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
