@@ -187,7 +187,10 @@ class PluginStore @Inject constructor(
         get() = activeAPSStore ?: checkNotNull(activeAPSStore) { "No APS selected" }
 
     override val activePump: Pump
-        get() = activePumpStore ?: checkNotNull(activePumpStore) { "No pump selected" }
+        get() = activePumpStore
+            // Following line can be used only during initialization
+            ?: getTheOneEnabledInArray(getSpecificPluginsList(PluginType.PUMP), PluginType.PUMP) as Pump?
+            ?: checkNotNull(activePumpStore) { "No pump selected" }
 
     override val activeSensitivity: Sensitivity
         get() = activeSensitivityStore
