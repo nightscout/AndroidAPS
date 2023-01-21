@@ -59,7 +59,6 @@ class ConfigBuilderPlugin @Inject constructor(
 ), ConfigBuilder {
 
     override fun initialize() {
-        activePlugin.loadDefaults()
         loadSettings()
         setAlwaysEnabledPluginsEnabled()
         rxBus.send(EventAppInitialized())
@@ -103,18 +102,14 @@ class ConfigBuilderPlugin @Inject constructor(
 
     private fun loadPref(p: PluginBase, type: PluginType) {
         val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
-        if (sp.contains(settingEnabled)) p.setPluginEnabled(
-            type,
-            sp.getBoolean(settingEnabled, false)
-        ) else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
+        if (sp.contains(settingEnabled)) p.setPluginEnabled(type, sp.getBoolean(settingEnabled, false))
+        else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
             p.setPluginEnabled(type, true)
         }
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingEnabled + ":" + p.isEnabled(type))
         val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
-        if (sp.contains(settingVisible)) p.setFragmentVisible(
-            type,
-            sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false)
-        ) else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
+        if (sp.contains(settingVisible)) p.setFragmentVisible(type, sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false))
+        else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
             p.setFragmentVisible(type, true)
         }
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingVisible + ":" + p.isFragmentVisible())
