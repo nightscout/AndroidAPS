@@ -7,7 +7,7 @@ import kotlin.math.abs
 /**
  * Sync the TemporaryTarget from NS
  */
-class SyncNsTemporaryTargetTransaction(private val temporaryTargets: List<TemporaryTarget>, private val nsClientMode: Boolean) :
+class SyncNsTemporaryTargetTransaction(private val temporaryTargets: List<TemporaryTarget>) :
     Transaction<SyncNsTemporaryTargetTransaction.TransactionResult>() {
 
     override fun run(): TransactionResult {
@@ -28,7 +28,7 @@ class SyncNsTemporaryTargetTransaction(private val temporaryTargets: List<Tempor
                         database.temporaryTargetDao.updateExistingEntry(current)
                         result.invalidated.add(current)
                     }
-                    if (current.duration != temporaryTarget.duration && nsClientMode) {
+                    if (current.duration != temporaryTarget.duration) {
                         current.duration = temporaryTarget.duration
                         database.temporaryTargetDao.updateExistingEntry(current)
                         result.updatedDuration.add(current)
