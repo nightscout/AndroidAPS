@@ -59,9 +59,9 @@ class LoadBgWorker(
             if ((nsClientV3Plugin.newestDataOnServer?.collections?.entries ?: Long.MAX_VALUE) > lastLoaded) {
                 val sgvs: List<NSSgvV3>
                 val response: NSAndroidClient.ReadResponse<List<NSSgvV3>>?
-                if (isFirstLoad) response = nsAndroidClient.getSgvsNewerThan(lastLoaded, 500)
+                if (isFirstLoad) response = nsAndroidClient.getSgvsNewerThan(lastLoaded, NSClientV3Plugin.RECORDS_TO_LOAD)
                 else {
-                    response = nsAndroidClient.getSgvsModifiedSince(lastLoaded, 500)
+                    response = nsAndroidClient.getSgvsModifiedSince(lastLoaded, NSClientV3Plugin.RECORDS_TO_LOAD)
                     response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.entries = it }
                     nsClientV3Plugin.storeLastLoadedSrvModified()
                     nsClientV3Plugin.scheduleIrregularExecution() // Idea is to run after 5 min after last BG

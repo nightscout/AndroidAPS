@@ -251,13 +251,13 @@ class ComboV2Plugin @Inject constructor (
 
     init {
         ComboCtlLogger.backend = AAPSComboCtlLogger(aapsLogger)
-        updateComboCtlLogLevel()
-
         _pumpDescription.fillFor(PumpType.ACCU_CHEK_COMBO)
     }
 
     override fun onStart() {
         super.onStart()
+
+        updateComboCtlLogLevel()
 
         // Check if there is a pump state in the internal SP. If not, try to
         // copy a pump state from the AAPS main SP. It is possible for example

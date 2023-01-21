@@ -325,7 +325,7 @@ class StoreDataForDbImpl @Inject constructor(
         SystemClock.sleep(pause)
 
         if (temporaryTargets.isNotEmpty())
-            repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTargets, config.NSCLIENT))
+            repository.runTransactionForResult(SyncNsTemporaryTargetTransaction(temporaryTargets))
                 .doOnError {
                     aapsLogger.error(LTag.DATABASE, "Error while saving temporary target", it)
                 }
