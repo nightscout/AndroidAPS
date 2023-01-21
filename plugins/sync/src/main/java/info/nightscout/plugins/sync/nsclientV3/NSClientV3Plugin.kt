@@ -16,7 +16,6 @@ import com.google.gson.GsonBuilder
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.interfaces.TraceableDBEntry
 import info.nightscout.database.impl.AppRepository
@@ -170,6 +169,7 @@ class NSClientV3Plugin @Inject constructor(
             .subscribe({ ev ->
                            nsClientReceiverDelegate.onStatusEvent(ev)
                            setClient()
+                           rxBus.send(EventNSClientUpdateGUI())
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
@@ -193,7 +193,10 @@ class NSClientV3Plugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventChargingState::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
+            .subscribe({ ev ->
+                           nsClientReceiverDelegate.onStatusEvent(ev)
+                           rxBus.send(EventNSClientUpdateGUI())
+                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventNSClientResend::class.java)
             .observeOn(aapsSchedulers.io)
@@ -214,8 +217,9 @@ class NSClientV3Plugin @Inject constructor(
                 if (it is ValueWrapper.Existing) {
                     if (it.value.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs())
                         executeLoop("MAIN_LOOP", forceNew = false)
-                    else
-                        rxBus.send(EventNSClientNewLog("RECENT", "No need to load"))
+                    else {
+                        if (isAllowed) rxBus.send(EventNSClientNewLog("RECENT", "No need to load"))
+                    }
                 } else executeLoop("MAIN_LOOP", forceNew = false)
             }
         }
