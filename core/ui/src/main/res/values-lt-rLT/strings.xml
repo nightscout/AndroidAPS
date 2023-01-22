@@ -53,6 +53,7 @@
     <string name="tdd_total">BPD viso</string>
     <string name="goingtodeliver">Bus suleista %1$.2f vv</string>
     <string name="waitingforpump">Laukiama ryšio su pompa</string>
+    <string name="androidaps_start">AAPS paleista</string>
     <string name="formatsignedinsulinunits">%1$+.2f vv</string>
     <string name="format_carbs">%1$dg</string>
     <string name="format_hours">%1$.2f val.</string>
@@ -61,6 +62,8 @@
     <string name="please_wait">Palaukite…</string>
     <string name="stop">Stop</string>
     <string name="carbs">Angliavandeniai</string>
+    <string name="invalid_profile">Netinkamas profilis!</string>
+    <string name="no_profile_set">Nenustatytas profilis</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Vienetai</string>
@@ -70,8 +73,10 @@
     <string name="basal_label">VB</string>
     <string name="target_label">Tikslas</string>
     <string name="dia_long_label">Insulino veikimo trukmė</string>
-    <string name="ic_long_label">Insulino į angliavandenius santykis</string>
+    <string name="ic_long_label">Insulino ir angliavandenių santykis</string>
+    <string name="isf_long_label">Jautrumo insulinui faktorius</string>
     <string name="basal_long_label">Valandinė bazė</string>
+    <string name="target_long_label">Tikslinė glikemija</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
@@ -97,10 +102,12 @@
     <string name="cob">AAO</string>
     <string name="name_short">Vardas:</string>
     <string name="time">Laikas</string>
-    <string name="ns_wifi_ssids">WiFi pavadinimas</string>
+    <string name="ns_wifi_ssids">WiFi SSID</string>
     <string name="loading">Kraunama …</string>
     <string name="notes_label">Pastabos</string>
     <string name="remove_button">Pašalinti</string>
+    <string name="add_new">Pridėti naują</string>
+    <string name="addnew_above">Pridėti naują aukščiau</string>
     <string name="wrong_pump_data">Duomenys gaunami iš kitos pompos. Pakeiskite pompos valdiklį.</string>
     <string name="bg_label">KG</string>
     <string name="calibration">Kalibravimas</string>
@@ -113,51 +120,69 @@
     <string name="notconfigured">Nesukonfigūruota</string>
     <string name="loopsuspended">Ciklas sustabdytas</string>
     <string name="trend_arrow">Tendencijos kryptis</string>
+    <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">reikal.</string>
+    <string name="a11y_arrow_double_down">greitai mažėja</string>
+    <string name="a11y_arrow_single_down">mažėja</string>
+    <string name="a11y_arrow_forty_five_down">lėtai mažėja</string>
+    <string name="a11y_arrow_flat">stabili</string>
+    <string name="a11y_arrow_forty_five_up">lėtai didėja</string>
+    <string name="a11y_arrow_single_up">didėja</string>
+    <string name="a11y_arrow_double_up">greitai didėja</string>
     <string name="a11y_arrow_none">nėra</string>
     <string name="a11y_arrow_unknown">nežinoma</string>
     <string name="a11y_high">aukštas</string>
+    <string name="a11y_inrange">ribose</string>
     <string name="a11y_low">žemas</string>
-    <string name="average">Vidutinis</string>
-    <string name="tir">TIR (Laikas normos ribose)</string>
+    <string name="average">Vidurkis</string>
+    <string name="tir">LNR</string>
     <string name="none"><![CDATA[<none>]]></string>
     <string name="remove_label">PAŠALINTI</string>
     <string name="activate_profile">Aktyvuoti profilį</string>
     <string name="reset">atstatyti</string>
     <string name="profileswitch_ismissing">Neatliktas profilio keitimas. Prašome atlikti profilio keitimą arba paspausti \"Aktyvuoti profilį\" Vietinio profilio (VP) skiltyje.</string>
     <string name="profile">Profilis</string>
+    <string name="select_for_removal">Pasirinkite pašalinimui</string>
+    <string name="confirm_remove_multiple_items">Ar tikrai norite pašalinti %1$d elementus</string>
     <string name="overview_treatment_label">Terapija</string>
     <string name="copytolocalprofile">Kurti naują profilį iš šito profilio?</string>
-    <string name="wear_wizard_settings">Išmaniojo laikrodžio nustatymai</string>
+    <string name="wear_wizard_settings">Vedlio nustatymai</string>
     <string name="bg_trend_label">15 min tendencija</string>
     <string name="treatments_wizard_cob_label">AAO</string>
     <string name="bolus_iob_label">Bolusų AIO</string>
     <string name="treatments_wizard_basaliob_label">Bazės AIO</string>
     <string name="invalid">KLAIDA</string>
     <string name="login">Prisijungti</string>
+    <string name="prime_fill">Užpildymas</string>
     <string name="overview_insulin_label">Insulinas</string>
-    <string name="stoptemptarget">Sustabdykite laikiną tikslą</string>
+    <string name="stoptemptarget">Sustabdyti laikiną tikslą</string>
     <string name="closedloop">Uždaras Ciklas</string>
     <string name="openloop">Atviras Ciklas</string>
     <string name="lowglucosesuspend">Sustabdymas esant žemai gliukozei</string>
     <string name="dia">IVT</string>
     <string name="ic_short">IA</string>
     <string name="isf_short">JIF</string>
-    <string name="virtualpump_uploadstatus_title">Perduoti būsenos duomenis į NS</string>
+    <string name="canceling_tbr_failed">Laikinos bazės atšaukti nepavyko</string>
+    <string name="canceling_eb_failed">Ištęsto boluso atšaukti nepavyko</string>
+    <string name="virtualpump_uploadstatus_title">Įkelti duomenis į NS</string>
     <string name="suspendloop_label">Ciklas išjungtas/sustabdytas</string>
     <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>
     <!--    Protection-->
     <string name="wrongpassword">Neteisingas slaptažodis</string>
+    <string name="wrongpin">Klaidingas PIN</string>
     <string name="passwords_dont_match">Slaptažodžiai nesutampa</string>
+    <string name="pin_dont_match">PIN kodai nesutampa</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Bazės reikšmės nesuderintos su valandomis: %1$s</string>
-    <string name="maximumbasalvaluereplaced">Valandinė bazė pakeista didžiausia palaikoma verte: %1$s</string>
-    <string name="profile_per_unit">/vv</string>
-    <string name="profile_ins_units_per_hour">Vv/val</string>
-    <string name="profile_carbs_per_unit">g/vv</string>
+    <string name="minimalbasalvaluereplaced">Nustatyta mažiausia galima valandinės bazės vertė: %1$s</string>
+    <string name="maximumbasalvaluereplaced">Nustatyta didžiausia galima valandinės bazės vertė: %1$s</string>
+    <string name="profile_per_unit">/v</string>
+    <string name="profile_ins_units_per_hour">v/val</string>
+    <string name="profile_carbs_per_unit">g/v</string>
     <!--    ProfileFunction-->
     <string name="startprofile">Pradėti profilį %1$d%% %2$d min</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Atšaukti laikiną bazę</string>
     <string name="let_temp_basal_run">Paleisti laikinąją bazę</string>
     <string name="rate">Vertė</string>
     <string name="duration">Trukmė</string>
@@ -179,6 +204,8 @@
     <string name="careportal_note_message">Pastaba: %1$s</string>
     <string name="careportal_question_message">Klausimas: %1$s</string>
     <string name="careportal_exercise_message">Aktyvumas: %1$s</string>
+    <string name="careportal_pump_site_change">Kateterio keitimas</string>
+    <string name="cgm_sensor_insert">NGJ įvedimas</string>
     <string name="careportal_cgmsensorstart">NGJ paleidimas</string>
     <string name="careportal_cgm_sensor_stop">NGJ stabdymas</string>
     <string name="careportal_dad_alert">D.A.D. įspėjimas</string>
@@ -191,6 +218,8 @@
     <string name="careportal_tempbasalend">Užbaigta laikina bazė</string>
     <string name="careportal_carbscorrection">AV korekcijai</string>
     <string name="careportal_openapsoffline">OpenAPS neprisijungus</string>
+    <string name="pump_battery_change">Baterijos keitimas</string>
+    <string name="temporary_target">Laikinas tikslas</string>
     <string name="careportal_temporarytargetvalue">Laikino tikslo reikšmė</string>
     <string name="careportal_temporarytargetcancel">Laikino tikslo atšaukimas</string>
     <string name="boluswizard">Boluso patarėjas</string>
@@ -217,7 +246,9 @@
     <string name="waitingforpumpresult">Laukiama rezultato</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">Būtina suvartoti %1$d g papildomų AV per %2$d min</string>
     <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">Kumuliacinė BPD</string>
     <string name="expweight">Eksponentiškai svertinė BPD</string>
     <string name="basalrate">Valandinė bazė</string>
     <string name="bolus">Bolusas</string>
@@ -226,6 +257,7 @@
     <string name="amount_days"># d.</string>
     <string name="weight">Svoris</string>
     <string name="warning_Message">Duomenys netikslūs, jei bolusai naudojami kateterių užpildymui!</string>
+    <string name="olddata_Message">Duomenys seni, spauskite \"ATNAUJINTI\"</string>
     <string name="tbb">Pagrindinė bazė (PB)</string>
     <string name="tbb2">PB * 2</string>
     <!--    Ntp-->
@@ -298,9 +330,11 @@
     <string name="uel_stat_reset">IŠVALYTI STATISTIKĄ</string>
     <string name="uel_delete_logs">IŠTRINTI ĮRAŠUS</string>
     <string name="uel_delete_future_treatments">IŠTRINTI ATEITIES TERAPIJĄ</string>
+    <string name="delete_future_treatments">Ištrinti ateities įrašus</string>
     <string name="uel_export_settings">EKSPORTUOTI NUSTATYMUS</string>
     <string name="uel_import_settings">IMPORTUOTI NUSTATYMUS</string>
     <string name="uel_reset_databases">IŠVALYTI DUOMENŲ BAZES</string>
+    <string name="uel_cleanup_databases">IŠVALYTI DUOMBAZĘ</string>
     <string name="uel_export_databases">EKSPORTUOTI DUOMENŲ BAZES</string>
     <string name="uel_import_databases">IMPORTUOTI DUOMENŲ BAZES</string>
     <string name="uel_otp_export">EKSPORTUOTI OTP</string>
@@ -358,6 +392,7 @@
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Valandinė bazė</string>
     <string name="basalpct">Valandinė bazė %</string>
+    <string name="a11y_file">failas</string>
     <string name="a11y_user">vartotojas</string>
     <!-- Autotune -->
     <string name="autotune_result">Rezultatas: %1$s</string>
