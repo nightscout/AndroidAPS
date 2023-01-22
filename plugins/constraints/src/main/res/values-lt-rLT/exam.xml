@@ -1,13 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dia_whatmeansdia">Koks atsakymas apie IVT yra teisingas?</string>
+    <string name="dia_whatmeansdia">Kurie teiginiai apie IVT yra teisingi?</string>
     <string name="dia_label_exam">Insulino veikimo trukmė (IVT)</string>
-    <string name="dia_profile">Jūs turite nustatyti IVT reikšmę profilyje.</string>
-    <string name="dia_minimumis5h">Mažiausia reikšmė - 5 valandos.</string>
-    <string name="dia_valuemustbedetermined">Jūs turite nustatyti sau tinkamą IVT reikšmę.</string>
+    <string name="dia_profile">IVT reikšmė nurodoma profilyje.</string>
+    <string name="dia_minimumis5h">Mažiausia IVT reikšmė - 5 valandos.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
+    <string name="dia_meaningisequaltodiapump">Jei IVT reikšmė, kurią naudojote pompoje prieš pradedant naudotis AndroidAPS, tiko - jos nereikia keisti.</string>
+    <string name="dia_valuemustbedetermined">Jūs turite nustatyti savo individualią IVT reikšmę.</string>
     <string name="hypott_label">Hipo laikinas tikslas</string>
-    <string name="hypott_whenhypott">Kokia yra pagrindinė priežastis nustatyti hipo laikiną tikslą?</string>
+    <string name="hypott_whenhypott">Kokia yra pagrindinė priežastis nustatyti Hipo laikiną tikslą?</string>
     <string name="hypott_wrongbasal">Hipoglikemijų dėl neteisingai nustatytos bazės korekcija.</string>
+    <string name="hypott_preventoversmb">Kad būtų išvengta per didelių AndroidAPS korekcijų, kai glikemija pradeda staigiai kilti suvalgius greitai veikiančių angliavandenių hipoglikemijos metu.</string>
     <string name="hypott_exercise">Hipoglikemijos dėl fizinio aktyvumo korekcija.</string>
     <string name="hypott_0basal">Kad būtų išvengta glikemijos kritimo kai jau nustatyta 0% laikina bazė.</string>
     <string name="offlineprofile_whatprofile">Kuris profilis gali būti naudojamas ir sukonfigūruotas neprisijungus?</string>
