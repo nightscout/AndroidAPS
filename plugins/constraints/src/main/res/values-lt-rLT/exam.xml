@@ -55,7 +55,7 @@
     <string name="prerequisites_determinedcorrectprofile">Turėti patikrintus profilio duomenis (valandines bazes, IA, JIF, IVT).</string>
     <string name="prerequisites_computer">Kompiuterio su įdiegta ir sukonfigūruota Android Studio programa.</string>
     <string name="prerequisites_phone">Tinkamo telefono.</string>
-    <string name="prerequisites_pump">Tinkamos insulino pompos, jei ketinate naudotis uždaru ciklu.</string>
+    <string name="prerequisites_pump">Tinkamos insulino pompos, jei ketinate naudoti uždarą ciklą.</string>
     <string name="prerequisites_nightscout">Nightscout, kad galima būtų išsaugoti ir peržiūrėti visų duomenų bei nustatymų istoriją.</string>
     <string name="prerequisites_tidepoolaccount">Tidepool paskyros.</string>
     <string name="prerequisites_googleaccount">Google paskyros.</string>
