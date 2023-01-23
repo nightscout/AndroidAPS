@@ -57,7 +57,7 @@ class LoadProfileStoreWorker(
                     { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = dateUtil.now() }
                     nsClientV3Plugin.storeLastLoadedSrvModified()
                     aapsLogger.debug(LTag.NSCLIENT, "PROFILE: $profile")
-                    rxBus.send(EventNSClientNewLog("RCV", "1 PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                    rxBus.send(EventNSClientNewLog("◄ RCV", "1 PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                     WorkManager.getInstance(context)
                         .beginUniqueWork(
                             NSClientV3Plugin.JOB_NAME,
@@ -68,7 +68,7 @@ class LoadProfileStoreWorker(
                         ).then(OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build())
                         .enqueue()
                 } else {
-                    rxBus.send(EventNSClientNewLog("RCV END", "No new PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                    rxBus.send(EventNSClientNewLog("◄ RCV PROFILE END", "No new data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                     WorkManager.getInstance(context)
                         .enqueueUniqueWork(
                             NSClientV3Plugin.JOB_NAME,
@@ -77,7 +77,7 @@ class LoadProfileStoreWorker(
                         )
                 }
             } else {
-                rxBus.send(EventNSClientNewLog("RCV END", "No PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                rxBus.send(EventNSClientNewLog("◄ RCV PROFILE END", "No data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                 WorkManager.getInstance(context)
                     .enqueueUniqueWork(
                         NSClientV3Plugin.JOB_NAME,
@@ -87,7 +87,7 @@ class LoadProfileStoreWorker(
             }
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
 

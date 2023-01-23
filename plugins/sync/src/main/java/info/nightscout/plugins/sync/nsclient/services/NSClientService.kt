@@ -33,6 +33,7 @@ import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
+import info.nightscout.plugins.sync.nsShared.events.EventNSConnectivityOptionChanged
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclient.acks.NSAddAck
 import info.nightscout.plugins.sync.nsclient.acks.NSAuthAck
@@ -140,12 +141,20 @@ class NSClientService : DaggerService() {
             .subscribe({ event: EventPreferenceChange ->
                            if (event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_url)) ||
                                event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_api_secret)) ||
-                               event.isChanged(rh.gs(R.string.key_ns_client_paused))
+                               event.isChanged(rh.gs(R.string.key_ns_paused))
                            ) {
                                latestDateInReceivedData = 0
                                destroy()
                                initialize()
                            }
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventNSConnectivityOptionChanged::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           latestDateInReceivedData = 0
+                           destroy()
+                           initialize()
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
@@ -218,10 +227,10 @@ class NSClientService : DaggerService() {
         @Suppress("DEPRECATION")
         if (nsAPISecret != "") nsApiHashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString()
         rxBus.send(EventNSClientStatus("Initializing"))
-        if (!nsClientPlugin.isAllowed) {
+        if (nsClientPlugin.isAllowed != true) {
             rxBus.send(EventNSClientNewLog("NSCLIENT", nsClientPlugin.blockingReason))
             rxBus.send(EventNSClientStatus(nsClientPlugin.blockingReason))
-        } else if (sp.getBoolean(R.string.key_ns_client_paused, false)) {
+        } else if (sp.getBoolean(R.string.key_ns_paused, false)) {
             rxBus.send(EventNSClientNewLog("NSCLIENT", "paused"))
             rxBus.send(EventNSClientStatus("Paused"))
         } else if (!nsEnabled) {
@@ -230,9 +239,7 @@ class NSClientService : DaggerService() {
         } else if (nsURL != "" && (nsURL.lowercase(Locale.getDefault()).startsWith("https://"))) {
             try {
                 rxBus.send(EventNSClientStatus("Connecting ..."))
-                val opt = IO.Options()
-                opt.forceNew = true
-                opt.reconnection = true
+                val opt = IO.Options().also { it.forceNew = true }
                 socket = IO.socket(nsURL, opt).also { socket ->
                     socket.on(Socket.EVENT_CONNECT, onConnect)
                     socket.on(Socket.EVENT_DISCONNECT, onDisconnect)

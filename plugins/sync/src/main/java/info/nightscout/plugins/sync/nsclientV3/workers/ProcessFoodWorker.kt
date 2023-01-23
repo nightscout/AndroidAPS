@@ -72,7 +72,7 @@ class ProcessFoodWorker(
             storeDataForDb.foods.addAll(foods)
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
 

@@ -40,7 +40,7 @@ class LoadFoodsWorker(
             if (nsClientV3Plugin.lastLoadedSrvModified.collections.foods++ % 5 == 0L) {
                 val foods: List<NSFood> = nsAndroidClient.getFoods(1000).values
                 aapsLogger.debug(LTag.NSCLIENT, "FOODS: $foods")
-                rxBus.send(EventNSClientNewLog("RCV", "${foods.size} FOODs"))
+                rxBus.send(EventNSClientNewLog("◄ RCV", "${foods.size} FOODs"))
                 // Schedule processing of fetched data
                 WorkManager.getInstance(context)
                     .beginUniqueWork(
@@ -53,7 +53,7 @@ class LoadFoodsWorker(
                     .then(OneTimeWorkRequest.Builder(LoadProfileStoreWorker::class.java).build())
                     .enqueue()
             } else {
-                rxBus.send(EventNSClientNewLog("RCV", "FOOD skipped"))
+                rxBus.send(EventNSClientNewLog("● RCV FOOD", "skipped"))
                 WorkManager.getInstance(context)
                     .enqueueUniqueWork(
                         NSClientV3Plugin.JOB_NAME,
@@ -63,7 +63,7 @@ class LoadFoodsWorker(
             }
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
             nsClientV3Plugin.lastOperationError = error.localizedMessage
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }

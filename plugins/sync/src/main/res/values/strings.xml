@@ -48,7 +48,7 @@
 
     <!-- NSClient -->
     <string name="key_ns_client_autoscroll" translatable="false">ns_client_autoscroll</string>
-    <string name="key_ns_client_paused" translatable="false">ns_client_paused</string>
+    <string name="key_ns_paused" translatable="false">ns_client_paused</string>
     <string name="key_ns_log_app_started_event" translatable="false">ns_log_app_started_event</string>
 
     <string name="no_write_permission">NSCLIENT has no write permission. Wrong API secret?</string>
@@ -171,5 +171,7 @@
 
     <!--    DataBroadcast-->
     <string name="data_broadcaster" translatable="false">Data Broadcaster</string>
+    <string name="ns_use_ws_title">Connect to websockets</string>
+    <string name="ns_use_ws_summary">Enabling means: faster updates, receiving alarms and announcements and higher battery consumption similar to v1. All other uploaderds to NS must use v3 protocol.</string>
 
 </resources>

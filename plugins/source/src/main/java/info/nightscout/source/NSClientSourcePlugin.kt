@@ -116,7 +116,7 @@ class NSClientSourcePlugin @Inject constructor(
             return TransactionGlucoseValue(
                 timestamp = sgv.date ?: throw InvalidParameterException(),
                 value = sgv.sgv,
-                noise = sgv.noise?.toDouble(),
+                noise = sgv.noise,
                 raw = sgv.filtered,
                 trendArrow = GlucoseValue.TrendArrow.fromString(sgv.direction?.nsName),
                 nightscoutId = sgv.identifier,

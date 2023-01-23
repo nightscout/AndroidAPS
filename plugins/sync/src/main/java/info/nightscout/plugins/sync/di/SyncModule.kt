@@ -60,6 +60,7 @@ abstract class SyncModule {
     @ContributesAndroidInjector abstract fun contributesLoadProfileStoreWorker(): LoadProfileStoreWorker
     @ContributesAndroidInjector abstract fun contributesStoreBgWorker(): StoreDataForDbImpl.StoreBgWorker
     @ContributesAndroidInjector abstract fun contributesStoreFoodWorker(): StoreDataForDbImpl.StoreFoodWorker
+    @ContributesAndroidInjector abstract fun contributesStoreTreatmentsWorker(): StoreDataForDbImpl.StoreTreatmentsWorker
     @ContributesAndroidInjector abstract fun contributesTreatmentWorker(): LoadTreatmentsWorker
     @ContributesAndroidInjector abstract fun contributesProcessTreatmentsWorker(): ProcessTreatmentsWorker
     @ContributesAndroidInjector abstract fun contributesLoadDeviceStatusWorker(): LoadDeviceStatusWorker

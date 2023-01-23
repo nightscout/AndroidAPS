@@ -14,7 +14,6 @@ import androidx.preference.SwitchPreference
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.toJson
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.nsclient.NSAlarm
@@ -41,9 +40,7 @@ import info.nightscout.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
-import info.nightscout.rx.events.EventChargingState
 import info.nightscout.rx.events.EventNSClientNewLog
-import info.nightscout.rx.events.EventNetworkChange
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventSWSyncStatus
 import info.nightscout.rx.logging.AAPSLogger
@@ -110,14 +107,6 @@ class NSClientPlugin @Inject constructor(
                                rxBus.send(EventSWSyncStatus(event.getStatus(context)))
                        }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventNetworkChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
-        disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ if (nsClientService != null) context.unbindService(mConnection) }, fabricPrivacy::logException)
@@ -128,10 +117,6 @@ class NSClientPlugin @Inject constructor(
                            addToLog(event)
                            aapsLogger.debug(LTag.NSCLIENT, event.action + " " + event.logText)
                        }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventChargingState::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventNSClientResend::class.java)
             .observeOn(aapsSchedulers.io)
@@ -181,7 +166,7 @@ class NSClientPlugin @Inject constructor(
         }
     }
 
-    override fun detectedNsVersion(): String? = nsSettingsStatus.getVersion()
+    override fun detectedNsVersion(): String = nsSettingsStatus.getVersion()
 
     private fun addToLog(ev: EventNSClientNewLog) {
         synchronized(listLog) {
@@ -212,8 +197,8 @@ class NSClientPlugin @Inject constructor(
     }
 
     override fun pause(newState: Boolean) {
-        sp.putBoolean(R.string.key_ns_client_paused, newState)
-        rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_client_paused)))
+        sp.putBoolean(R.string.key_ns_paused, newState)
+        rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_paused)))
     }
 
     override val address: String get() = nsClientService?.nsURL ?: ""

@@ -24,7 +24,6 @@ import info.nightscout.plugins.sync.nsclientV3.extensions.toTherapyEvent
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.logging.LTag
-import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.treatment.NSBolus
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
 import info.nightscout.sdk.localmodel.treatment.NSCarbs
@@ -57,12 +56,12 @@ class ProcessTreatmentsWorker(
 
     override suspend fun doWorkAndLog(): Result {
         @Suppress("UNCHECKED_CAST")
-        val treatments = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as NSAndroidClient.ReadResponse<List<NSTreatment>>?
+        val treatments = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as List<NSTreatment>?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
         try {
             var latestDateInReceivedData: Long = 0
-            for (treatment in treatments.values) {
+            for (treatment in treatments) {
                 aapsLogger.debug(LTag.DATABASE, "Received NS treatment: $treatment")
                 val date = treatment.date ?: continue
                 if (date > latestDateInReceivedData) latestDateInReceivedData = date
@@ -139,7 +138,7 @@ class ProcessTreatmentsWorker(
 //        xDripBroadcast.sendTreatments(treatments)
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
         return Result.success()
