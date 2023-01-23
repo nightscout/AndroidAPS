@@ -209,6 +209,7 @@
     <string name="careportal_cgmsensorstart">NGJ paleidimas</string>
     <string name="careportal_cgm_sensor_stop">NGJ stabdymas</string>
     <string name="careportal_dad_alert">D.A.D. įspėjimas</string>
+    <string name="careportal_insulin_cartridge_change">Rezervuaro keitimas</string>
     <string name="careportal_profileswitch">Profilio keitimas</string>
     <string name="careportal_snackbolus">Bolusas užkandžiui</string>
     <string name="careportal_mealbolus">Bolusas valgiui</string>
