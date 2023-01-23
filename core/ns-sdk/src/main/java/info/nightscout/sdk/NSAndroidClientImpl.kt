@@ -173,18 +173,22 @@ class NSAndroidClientImpl(
             // because utcOffset is mandatory and cannot be change, try 0
             nsSgvV3.utcOffset = 0
             return@callWrapper createSvg(nsSgvV3)
-        } else if (response.code() == 400 && errorResponse?.contains("Field utcOffset cannot be modified by the client") == true) {
-            // there is different utcOffset than in AAPS and zero
+        } else if (response.code() == 400 && errorResponse?.contains("cannot be modified by the client") == true) {
+            // there is different field to field in AAPS
             // not possible to upload
             return@callWrapper CreateUpdateResponse(
                 response = response.code(),
                 identifier = null,
                 errorResponse = errorResponse
             )
-        } else if (response.code() in 400..499)
-            throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
-        else
-            throw UnsuccessfullNightscoutException()
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = errorResponse ?: response.message()
+            )
+        } else
+            throw UnsuccessfullNightscoutException(errorResponse ?: response.message())
     }
 
     override suspend fun updateSvg(nsSgvV3: NSSgvV3): CreateUpdateResponse = callWrapper(dispatcher) {
@@ -213,10 +217,14 @@ class NSAndroidClientImpl(
                 deduplicatedIdentifier = null,
                 lastModified = null
             )
-        } else if (response.code() in 400..499)
-            throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
-        else
-            throw UnsuccessfullNightscoutException()
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = response.errorBody()?.string() ?: response.message()
+            )
+        } else
+            throw UnsuccessfullNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
     override suspend fun getTreatmentsNewerThan(createdAt: String, limit: Long): NSAndroidClient.ReadResponse<List<NSTreatment>> = callWrapper(dispatcher) {
@@ -280,10 +288,14 @@ class NSAndroidClientImpl(
                     lastModified = response.body()?.result?.lastModified
                 )
             } else throw UnknownResponseNightscoutException()
-        } else if (response.code() in 400..499)
-            throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
-        else
-            throw UnsuccessfullNightscoutException()
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = response.errorBody()?.string() ?: response.message()
+            )
+        } else
+            throw UnsuccessfullNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
     override suspend fun createTreatment(nsTreatment: NSTreatment): CreateUpdateResponse = callWrapper(dispatcher) {
@@ -311,18 +323,22 @@ class NSAndroidClientImpl(
             // because utcOffset is mandatory and cannot be change, try 0
             nsTreatment.utcOffset = 0
             return@callWrapper createTreatment(nsTreatment)
-        } else if (response.code() == 400 && errorResponse?.contains("Field utcOffset cannot be modified by the client") == true) {
-            // there is different utcOffset than in AAPS and zero
+        } else if (response.code() == 400 && errorResponse?.contains("cannot be modified by the client") == true) {
+            // there is different field to field in AAPS
             // not possible to upload
             return@callWrapper CreateUpdateResponse(
                 response = response.code(),
                 identifier = null,
                 errorResponse = errorResponse
             )
-        } else if (response.code() in 400..499)
-            throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
-        else
-            throw UnsuccessfullNightscoutException()
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = errorResponse ?: response.message()
+            )
+        } else
+            throw UnsuccessfullNightscoutException(errorResponse ?: response.message())
     }
 
     override suspend fun updateTreatment(nsTreatment: NSTreatment): CreateUpdateResponse = callWrapper(dispatcher) {
@@ -351,10 +367,14 @@ class NSAndroidClientImpl(
                 deduplicatedIdentifier = null,
                 lastModified = null
             )
-        } else if (response.code() in 400..499)
-            throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
-        else
-            throw UnsuccessfullNightscoutException()
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = response.errorBody()?.string() ?: response.message()
+            )
+        } else
+            throw UnsuccessfullNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
     override suspend fun getFoods(limit: Long): NSAndroidClient.ReadResponse<List<NSFood>> = callWrapper(dispatcher) {
@@ -404,9 +424,14 @@ class NSAndroidClientImpl(
                     lastModified = response.body()?.result?.lastModified
                 )
             } else throw UnsuccessfullNightscoutException()
-        } else {
-            throw UnsuccessfullNightscoutException()
-        }
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = response.errorBody()?.string() ?: response.message()
+            )
+        } else
+            throw UnsuccessfullNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
     override suspend fun updateFood(nsFood: NSFood): CreateUpdateResponse = callWrapper(dispatcher) {
@@ -432,10 +457,14 @@ class NSAndroidClientImpl(
                 deduplicatedIdentifier = null,
                 lastModified = null
             )
-        } else if (response.code() in 400..499)
-            throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
-        else
-            throw UnsuccessfullNightscoutException()
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = response.errorBody()?.string() ?: response.message()
+            )
+        } else
+            throw UnsuccessfullNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
     override suspend fun createProfileStore(remoteProfileStore: JSONObject): CreateUpdateResponse = callWrapper(dispatcher) {
@@ -459,10 +488,14 @@ class NSAndroidClientImpl(
                     lastModified = response.body()?.result?.lastModified
                 )
             } else throw UnsuccessfullNightscoutException()
-        } else if (response.code() in 400..499)
-            throw InvalidParameterNightscoutException(response.errorBody()?.string() ?: response.message())
-        else
-            throw UnsuccessfullNightscoutException()
+        } else if (response.code() in 400..499) {
+            return@callWrapper CreateUpdateResponse(
+                response = response.code(),
+                identifier = null,
+                errorResponse = response.errorBody()?.string() ?: response.message()
+            )
+        } else
+            throw UnsuccessfullNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
     override suspend fun getLastProfileStore(): NSAndroidClient.ReadResponse<List<JSONObject>> = callWrapper(dispatcher) {
