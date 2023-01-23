@@ -59,7 +59,6 @@ class ConfigBuilderPlugin @Inject constructor(
 ), ConfigBuilder {
 
     override fun initialize() {
-        activePlugin.loadDefaults()
         loadSettings()
         setAlwaysEnabledPluginsEnabled()
         rxBus.send(EventAppInitialized())
@@ -103,18 +102,14 @@ class ConfigBuilderPlugin @Inject constructor(
 
     private fun loadPref(p: PluginBase, type: PluginType) {
         val settingEnabled = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Enabled"
-        if (sp.contains(settingEnabled)) p.setPluginEnabled(
-            type,
-            sp.getBoolean(settingEnabled, false)
-        ) else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
+        if (sp.contains(settingEnabled)) p.setPluginEnabled(type, sp.getBoolean(settingEnabled, false))
+        else if (p.getType() == type && (p.pluginDescription.enableByDefault || p.pluginDescription.alwaysEnabled)) {
             p.setPluginEnabled(type, true)
         }
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingEnabled + ":" + p.isEnabled(type))
         val settingVisible = "ConfigBuilder_" + type.name + "_" + p.javaClass.simpleName + "_Visible"
-        if (sp.contains(settingVisible)) p.setFragmentVisible(
-            type,
-            sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false)
-        ) else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
+        if (sp.contains(settingVisible)) p.setFragmentVisible(type, sp.getBoolean(settingVisible, false) && sp.getBoolean(settingEnabled, false))
+        else if (p.getType() == type && p.pluginDescription.visibleByDefault) {
             p.setFragmentVisible(type, true)
         }
         aapsLogger.debug(LTag.CONFIGBUILDER, "Loaded: " + settingVisible + ":" + p.isFragmentVisible())
@@ -195,18 +190,18 @@ class ConfigBuilderPlugin @Inject constructor(
 
     override fun processOnEnabledCategoryChanged(changedPlugin: PluginBase, type: PluginType) {
         var pluginsInCategory: ArrayList<PluginBase>? = null
-        when (type) {
-            PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
-            PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)
-            PluginType.SMOOTHING   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Smoothing::class.java)
-            PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
-            PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
-            PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
-            PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
+        when {
+            type == PluginType.INSULIN     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Insulin::class.java)
+            type == PluginType.SENSITIVITY -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Sensitivity::class.java)
+            type == PluginType.SMOOTHING   -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Smoothing::class.java)
+            type == PluginType.APS         -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(APS::class.java)
+            type == PluginType.PROFILE     -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(ProfileSource::class.java)
+            type == PluginType.BGSOURCE    -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(BgSource::class.java)
+            type == PluginType.PUMP        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(Pump::class.java)
             // Process only NSClients
-            PluginType.SYNC        -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(NsClient::class.java)
+            changedPlugin is NsClient      -> pluginsInCategory = activePlugin.getSpecificPluginsListByInterface(NsClient::class.java)
 
-            else                   -> {
+            else                           -> {
             }
         }
         if (pluginsInCategory != null) {

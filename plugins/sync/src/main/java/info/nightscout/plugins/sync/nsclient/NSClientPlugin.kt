@@ -156,7 +156,6 @@ class NSClientPlugin @Inject constructor(
         if (activePlugin.activeBgSource is DoingOwnUploadSource) {
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_do_ns_upload))?.isVisible = false
         }
-        preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(R.string.key_ns_client_token))?.isVisible = false
     }
 
     override val hasWritePermission: Boolean get() = nsClientService?.hasWriteAuth ?: false
