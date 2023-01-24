@@ -124,7 +124,7 @@
     <string name="sensitivity_hint1">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/Usage/Open-APS-features.html#autosens</string>
     <string name="wrongcarbs_label">Angliavandenių įvedimo klaidos</string>
-    <string name="wrongcarbs_whattodo">Ką daryti, jei neteisingai įrašyti angliavandeniai?</string>
+    <string name="wrongcarbs_whattodo">Ką daryti neteisingai įrašius angliavandenius?</string>
     <string name="wrongcarbs_treatmentstab">Ištrinti neteisingą įrašą Terapijos skiltyje ir įvesti teisingą angliavandenių kiekį.</string>
     <string name="wrongcarbs_addinsulin">Suleisti bolusą, naudojant infuzijos rinkinio užpildymo funkciją.</string>
     <string name="wrongcarbs_donothing">Nedaryti nieko - AndroidAPS padarys atitinkamus pakeitimus.</string>
