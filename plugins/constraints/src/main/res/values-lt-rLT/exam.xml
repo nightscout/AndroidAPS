@@ -163,7 +163,7 @@
     <string name="extendedcarbs_future">Įvesti angliavandenius, kurie dar tik bus ateityje, pasiskirstę laike (panašiai kaip ištęstas bolusas paskirsto laike insuliną).</string>
     <string name="extendedcarbs_free">Norint įrašyti angliavandenius sportui, kuriuos norite nuslėpti nuo AndroidAPS.</string>
     <string name="extendedcarbs_fat">Laike paskirstyti i-AV gali padėti AndroidAPS susitvarkyti su maistu, turinčiu daug riebalų/baltymų.</string>
-    <string name="extendedcarbs_rescue">Norint įrašyti angliavandenius, kuriuos suvartojote esant žemai glikemijai. </string>
+    <string name="extendedcarbs_rescue">Norint įrašyti angliavandenius, suvartotus esant žemai glikemijai. </string>
     <string name="extendedcarbs_hint1">https://wiki.aaps.app/en/latest/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Nuotolinis stebėjimas</string>
     <string name="nsclient_howcanyou">Kaip galite stebėti AndroidAPS (pavyzdžiui, Jūsų vaiko) nuotoliniu būdu?</string>
