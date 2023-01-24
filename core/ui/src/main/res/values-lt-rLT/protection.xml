@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="biometric_title">Reikalinga autentifikacija</string>
-    <string name="biometric_description">Uždėkite pirštą ant pirštų atspaudų skaitytuvo jūsų tapatybės patvirtinimui</string>
+    <string name="biometric_description">Uždėkite pirštą ant pirštų atspaudų skaitytuvo tapatybės patvirtinimui</string>
     <string name="settings_protection">Nustatymų apsauga</string>
     <string name="application_protection">Programos apsauga</string>
     <string name="bolus_protection">Bolusų apsauga</string>
