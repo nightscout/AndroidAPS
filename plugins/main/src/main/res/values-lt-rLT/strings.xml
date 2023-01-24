@@ -15,7 +15,7 @@
     <string name="smscommunicator_otp_reset_prompt">Ar tikrai norite iš naujo nustatyti autentifikatoriaus raktą? Dėl to visi šiuo metu konfigūruojami autentifikatoriai negalios, ir jums reikės juos nustatyti dar kartą.</string>
     <string name="smscommunicator_otp_reset_successful">Sukurtas naujas autentifikavimo raktas! Autentifikatoriams pateikti naudokite atnaujintą QR kodą.</string>
     <string name="smscommunicator_otp_export_title">Eksportuojamas OTP kodas</string>
-    <string name="smscommunicator_otp_export_prompt">Ar tikrai norite nukopijuoti OTP slaptažodį į mainų sritį?\n\nTai gali būti reikalinga tik tuo atveju, jei jūsų programai kyla problemų identifikuojant nuskaitant QR kodą. Arba norite jį įvesti rankiniu būdu ar sukonfigūruoti įrangos OTP prieigos raktą naudodami specialią programą.</string>
+    <string name="smscommunicator_otp_export_prompt">Ar tikrai norite nukopijuoti OTP slaptažodį į mainų sritį?\n\nTai gali būti reikalinga tik tuo atveju, jei Jūsų programai kyla problemų identifikuojant nuskaitant QR kodą. Arba norite jį įvesti rankiniu būdu ar sukonfigūruoti įrangos OTP prieigos raktą naudodami specialią programą.</string>
     <string name="smscommunicator_otp_export_successful">OTP kodas (Base32 formatas) eksportuotas ir nukopijuotas į mainų sritį. Įklijuokite jį į autentifikatorių arba OTP programą!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Įdiegti Authenticator</string>
     <string name="smscommunicator_otp_step3_test_header">3. Patikrinti vienkartinį slaptažodį</string>
