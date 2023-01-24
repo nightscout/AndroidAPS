@@ -34,7 +34,7 @@
     <string name="objectives_afterinitialsetup">Reikia eksportuoti nustatymus užbaigus pirminę sąranką ir įvedus asmeninius parametrus.</string>
     <string name="objectives2_maintenance">Nustatymai eksportuojami lokaliai per Serviso meniu.</string>
     <string name="objectives2_internalstorage">Jūsų nustatymų failas saugomas telefono aplanke Internal Storage/AAPS/preferences.</string>
-    <string name="objectives2_cloud">Išsaugokite nustatymų failą saugioje vietoje ne telefone (pvz. saugykloje debesyje, perkeliant į kompiuterį kabeliu, el. pašte ir pan.)</string>
+    <string name="objectives2_cloud">Nustatymų failą reikia perkelti į saugią vietą ne telefone (pvz.: saugykloje debesyje, kompiuteryje, el. pašte ir pan.)</string>
     <string name="objectives2_easyrestore">Jei sugadinsite telefoną ar jį pamesite, yra paprastų būdų, kaip nuotoliniu būdu atkurti nustatymus be atsarginės kopijos.</string>
     <string name="objectives_hint1">https://wiki.aaps.app/en/latest/Usage/ExportImportSettings.html</string>
     <string name="objectives_hint2">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
