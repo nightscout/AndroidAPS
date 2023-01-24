@@ -176,7 +176,7 @@
     <string name="isf_increasingvalue">Padidinus JIF, bus leidžiama daugiau insulino konkrečiam angliavandenių kiekiui padengti.</string>
     <string name="isf_decreasingvalue">Sumažinus JIF, aukštos glikemijos korekcijai insulino bus leidžiama daugiau.</string>
     <string name="isf_noeffect">JIF padidinimas ar sumažinimas neturi įtakos insulino kiekio apskaičiavimui, jei glikemija žemesnė nei tikslinė.</string>
-    <string name="isf_preferences">JIF reikšmė įrašoma AAPS pagrindiniuose nustatymuose.</string>
+    <string name="isf_preferences">JIF reikšmė įrašoma AAPS programos bendruose nustatymuose.</string>
     <string name="isf_profile">Jei profilyje pakeisite JIF vertę, to pakaks, kad pakeitimas įsigaliotų.</string>
     <string name="isf_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="isf_hint2">https://wiki.aaps.app/en/latest/Usage/Profiles.html</string>
