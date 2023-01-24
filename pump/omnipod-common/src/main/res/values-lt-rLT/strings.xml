@@ -59,12 +59,12 @@
     <string name="omnipod_common_overview_temp_basal_rate">Laikina valandinė bazė</string>
     <string name="omnipod_common_overview_base_basal_rate">Pagrindinė valandinė bazė</string>
     <string name="omnipod_common_overview_reservoir">Rezervuaras</string>
-    <string name="omnipod_common_overview_pod_active_alerts">Aktyvaus Pod signalai</string>
+    <string name="omnipod_common_overview_pod_active_alerts">Aktyvūs Pod perspėjimai</string>
     <string name="omnipod_common_overview_firmware_version">Programinės įrangos versija</string>
-    <string name="omnipod_common_overview_time_on_pod">Laikas Pod</string>
-    <string name="omnipod_common_overview_temp_basal_value">%1$.2fvv/val @%2$s (%3$d/%4$d min)</string>
-    <string name="omnipod_common_overview_reservoir_value">liko %1$.2f vv</string>
-    <string name="omnipod_common_overview_reservoir_value_over50">Liko daugiau nei 50 vv</string>
+    <string name="omnipod_common_overview_time_on_pod">Pod laikas</string>
+    <string name="omnipod_common_overview_temp_basal_value">%1$.2fv/val @%2$s (%3$d/%4$d min)</string>
+    <string name="omnipod_common_overview_reservoir_value">liko %1$.2f v</string>
+    <string name="omnipod_common_overview_reservoir_value_over50">Liko daugiau nei 50 v</string>
     <string name="omnipod_common_overview_errors">Klaidos</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Atšaukti</string>
