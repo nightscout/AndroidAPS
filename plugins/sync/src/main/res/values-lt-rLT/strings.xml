@@ -77,7 +77,7 @@
     <string name="ns_local_broadcasts_title">Įgalinti lokalų duomenų perdavimą.</string>
     <string name="copy_existing_values">Kopijuoti NS nustatymus (jei yra)?</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Jūsų Tidepool vartotojo vardas, įprastai jūsų el. pašto adresas</string>
+    <string name="summary_tidepool_username">Jūsų Tidepool vartotojo vardas, įprastai tai Jūsų el. pašto adresas</string>
     <string name="title_tidepool_username">Vartotojo vardas</string>
     <string name="summary_tidepool_password">Jūsų Tidepool prisijungimo slaptažodis</string>
     <string name="title_tidepool_password">Prisijungimo slaptažodis</string>
