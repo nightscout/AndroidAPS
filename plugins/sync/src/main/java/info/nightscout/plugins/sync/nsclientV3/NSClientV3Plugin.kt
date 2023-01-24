@@ -35,7 +35,6 @@ import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HtmlHelper
-import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.workflow.WorkerClasses
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
@@ -192,9 +191,9 @@ class NSClientV3Plugin @Inject constructor(
             .toObservable(EventNSConnectivityOptionChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ ev ->
-                           rxBus.send(EventNSClientNewLog("● CONNECTIVITY CHANGE", ev.blockingReason))
-                           setClient("CONNECTIVITY_CHANGE")
-                           if (isAllowed) executeLoop("CONNECTIVITY_CHANGE", forceNew = false)
+                           rxBus.send(EventNSClientNewLog("● CONNECTIVITY", ev.blockingReason))
+                           setClient("CONNECTIVITY")
+                           if (isAllowed) executeLoop("CONNECTIVITY", forceNew = false)
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
@@ -269,7 +268,8 @@ class NSClientV3Plugin @Inject constructor(
     override fun onStop() {
         handler.removeCallbacksAndMessages(null)
         disposable.clear()
-        socket?.disconnect()
+        storageSocket?.disconnect()
+        alarmSocket?.disconnect()
         super.onStop()
     }
 
@@ -300,8 +300,10 @@ class NSClientV3Plugin @Inject constructor(
             context = context,
             logging = true
         )
-        if (wsConnected)
-            socket?.disconnect()
+        if (wsConnected) {
+            storageSocket?.disconnect()
+            alarmSocket?.disconnect()
+        }
         SystemClock.sleep(2000)
         initializeWebSockets(reason)
         rxBus.send(EventSWSyncStatus(status))
@@ -310,32 +312,36 @@ class NSClientV3Plugin @Inject constructor(
     /**********************
     WS code
      **********************/
-    private var connectCounter = 0
-    private var socket: Socket? = null
+    private var storageSocket: Socket? = null
+    private var alarmSocket: Socket? = null
     var wsConnected = false
     internal var initialLoadFinished = false
     private fun initializeWebSockets(reason: String) {
         if (!sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true)) return
-        val url = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace(Regex("/$"), "") + "/storage"
+        if (sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "").isEmpty()) return
+        val urlStorage = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace(Regex("/$"), "") + "/storage"
+        val urlAlarm = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "").lowercase().replace(Regex("/$"), "") + "/alarm"
         if (!isAllowed) {
             rxBus.send(EventNSClientNewLog("● WS", blockingReason))
         } else if (sp.getBoolean(R.string.key_ns_paused, false)) {
             rxBus.send(EventNSClientNewLog("● WS", "paused"))
-        } else if (url != "") {
+        } else {
             try {
-                //rxBus.send(EventNSClientStatus("Connecting ..."))
-                val opt = IO.Options().also {
-                    it.forceNew = true
-                    //it.webSocketFactory = nsAndroidClient.
-                }
-                socket = IO.socket(url, opt).also { socket ->
-                    socket.on(Socket.EVENT_CONNECT, onConnect)
-                    socket.on(Socket.EVENT_DISCONNECT, onDisconnect)
-                    rxBus.send(EventNSClientNewLog("► WS", "do connect $reason"))
+                // java io.client doesn't support multiplexing. create 2 sockets
+                storageSocket = IO.socket(urlStorage).also { socket ->
+                    socket.on(Socket.EVENT_CONNECT, onConnectStorage)
+                    socket.on(Socket.EVENT_DISCONNECT, onDisconnectStorage)
+                    rxBus.send(EventNSClientNewLog("► WS", "do connect storage $reason"))
                     socket.connect()
                     socket.on("create", onDataCreateUpdate)
                     socket.on("update", onDataCreateUpdate)
                     socket.on("delete", onDataDelete)
+                }
+                alarmSocket = IO.socket(urlAlarm).also { socket ->
+                    socket.on(Socket.EVENT_CONNECT, onConnectAlarms)
+                    socket.on(Socket.EVENT_DISCONNECT, onDisconnectAlarm)
+                    rxBus.send(EventNSClientNewLog("► WS", "do connect alarm $reason"))
+                    socket.connect()
                     socket.on("announcement", onAnnouncement)
                     socket.on("alarm", onAlarm)
                     socket.on("urgent_alarm", onUrgentAlarm)
@@ -346,22 +352,19 @@ class NSClientV3Plugin @Inject constructor(
             } catch (e: RuntimeException) {
                 rxBus.send(EventNSClientNewLog("● WS", "RuntimeException"))
             }
-        } else {
-            rxBus.send(EventNSClientNewLog("● WS", "No NS URL specified"))
         }
     }
 
-    private val onConnect = Emitter.Listener {
-        connectCounter++
-        val socketId = socket?.id() ?: "NULL"
-        rxBus.send(EventNSClientNewLog("◄ WS", "connect #$connectCounter event. ID: $socketId"))
-        if (socket != null) {
+    private val onConnectStorage = Emitter.Listener {
+        val socketId = storageSocket?.id() ?: "NULL"
+        rxBus.send(EventNSClientNewLog("◄ WS", "connected storage ID: $socketId"))
+        if (storageSocket != null) {
             val authMessage = JSONObject().also {
                 it.put("accessToken", sp.getString(R.string.key_ns_client_token, ""))
-                it.put("collections", JSONArray(arrayOf<String>("devicestatus", "entries", "profile", "treatments", "foods", "settings")))
+                it.put("collections", JSONArray(arrayOf("devicestatus", "entries", "profile", "treatments", "foods", "settings")))
             }
-            rxBus.send(EventNSClientNewLog("► WS", "requesting auth"))
-            socket?.emit("subscribe", authMessage, Ack { args ->
+            rxBus.send(EventNSClientNewLog("► WS", "requesting auth for storage"))
+            storageSocket?.emit("subscribe", authMessage, Ack { args ->
                 val response = args[0] as JSONObject
                 wsConnected = if (response.optBoolean("success")) {
                     rxBus.send(EventNSClientNewLog("◄ WS", "Subscribed for: ${response.optString("collections")}"))
@@ -374,12 +377,39 @@ class NSClientV3Plugin @Inject constructor(
         }
     }
 
-    private val onDisconnect = Emitter.Listener { args ->
-        aapsLogger.debug(LTag.NSCLIENT, "disconnect reason: ${args[0]}")
-        rxBus.send(EventNSClientNewLog("◄ WS", "disconnect event"))
+    private val onConnectAlarms = Emitter.Listener {
+        val socketId = alarmSocket?.id() ?: "NULL"
+        rxBus.send(EventNSClientNewLog("◄ WS", "connected alarms ID: $socketId"))
+        if (alarmSocket != null) {
+            val authMessage = JSONObject().also {
+                it.put("accessToken", sp.getString(R.string.key_ns_client_token, ""))
+            }
+            rxBus.send(EventNSClientNewLog("► WS", "requesting auth for alarms"))
+            alarmSocket?.emit("subscribe", authMessage, Ack { args ->
+                val response = args[0] as JSONObject
+                wsConnected = if (response.optBoolean("success")) {
+                    rxBus.send(EventNSClientNewLog("◄ WS", response.optString("message")))
+                    true
+                } else {
+                    rxBus.send(EventNSClientNewLog("◄ WS", "Auth failed"))
+                    false
+                }
+            })
+        }
+    }
+
+    private val onDisconnectStorage = Emitter.Listener { args ->
+        aapsLogger.debug(LTag.NSCLIENT, "disconnect storage reason: ${args[0]}")
+        rxBus.send(EventNSClientNewLog("◄ WS", "disconnect storage event"))
         wsConnected = false
         initialLoadFinished = false
-        socket = null
+        storageSocket = null
+    }
+
+    private val onDisconnectAlarm = Emitter.Listener { args ->
+        aapsLogger.debug(LTag.NSCLIENT, "disconnect alarm reason: ${args[0]}")
+        rxBus.send(EventNSClientNewLog("◄ WS", "disconnect alarm event"))
+        alarmSocket = null
     }
 
     private val onDataCreateUpdate = Emitter.Listener { args ->
@@ -454,13 +484,11 @@ class NSClientV3Plugin @Inject constructor(
         "key":"9ac46ad9a1dcda79dd87dae418fce0e7955c68da"
         }
          */
-        val data: JSONObject
-        try {
-            data = args[0] as JSONObject
-            handleAnnouncement(data)
-        } catch (e: Exception) {
-            aapsLogger.error("Unhandled exception", e)
-        }
+        val data = args[0] as JSONObject
+        rxBus.send(EventNSClientNewLog("◄ ANNOUNCEMENT", data.optString("message")))
+        aapsLogger.debug(LTag.NSCLIENT, data.toString())
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_announcements, config.NSCLIENT))
+            uiInteraction.addNotificationWithAction(injector, NSAlarm(data))
     }
     private val onAlarm = Emitter.Listener { args ->
 
@@ -477,23 +505,27 @@ class NSClientV3Plugin @Inject constructor(
         "key":"simplealarms_1"
         }
          */
-        val data: JSONObject
-        try {
-            data = args[0] as JSONObject
-            handleAlarm(data)
-        } catch (e: Exception) {
-            aapsLogger.error("Unhandled exception", e)
+        val data = args[0] as JSONObject
+        rxBus.send(EventNSClientNewLog("◄ ALARM", data.optString("message")))
+        aapsLogger.debug(LTag.NSCLIENT, data.toString())
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, config.NSCLIENT)) {
+            val snoozedTo = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
+            if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
+                uiInteraction.addNotificationWithAction(injector, NSAlarm(data))
         }
     }
+
     private val onUrgentAlarm = Emitter.Listener { args: Array<Any> ->
-        val data: JSONObject
-        try {
-            data = args[0] as JSONObject
-            handleUrgentAlarm(data)
-        } catch (e: Exception) {
-            aapsLogger.error("Unhandled exception", e)
+        val data = args[0] as JSONObject
+        rxBus.send(EventNSClientNewLog("◄ URGENT ALARM", data.optString("message")))
+        aapsLogger.debug(LTag.NSCLIENT, data.toString())
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, config.NSCLIENT)) {
+            val snoozedTo = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + data.optString("level"), 0L)
+            if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo)
+                uiInteraction.addNotificationWithAction(injector, NSAlarm(data))
         }
     }
+
     private val onClearAlarm = Emitter.Listener { args ->
 
         /*
@@ -504,52 +536,21 @@ class NSClientV3Plugin @Inject constructor(
         "group":"default"
         }
          */
-        val data: JSONObject
-        try {
-            data = args[0] as JSONObject
-            rxBus.send(EventNSClientNewLog("CLEARALARM", "received"))
-            rxBus.send(EventDismissNotification(Notification.NS_ALARM))
-            rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
-            aapsLogger.debug(LTag.NSCLIENT, data.toString())
-        } catch (e: Exception) {
-            aapsLogger.error("Unhandled exception", e)
-        }
+        val data = args[0] as JSONObject
+        rxBus.send(EventNSClientNewLog("◄ CLEARALARM", data.optString("title")))
+        aapsLogger.debug(LTag.NSCLIENT, data.toString())
+        rxBus.send(EventDismissNotification(Notification.NS_ALARM))
+        rxBus.send(EventDismissNotification(Notification.NS_URGENT_ALARM))
     }
 
-    private fun handleAnnouncement(announcement: JSONObject) {
-        val defaultVal = config.NSCLIENT
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_announcements, defaultVal)) {
-            val nsAlarm = NSAlarm(announcement)
-            uiInteraction.addNotificationWithAction(injector, nsAlarm)
-            rxBus.send(EventNSClientNewLog("ANNOUNCEMENT", JsonHelper.safeGetString(announcement, "message", "received")))
-            aapsLogger.debug(LTag.NSCLIENT, announcement.toString())
+    override fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
+        if (!isEnabled()) return
+        if (!sp.getBoolean(R.string.key_ns_upload, true)) {
+            aapsLogger.debug(LTag.NSCLIENT, "Upload disabled. Message dropped")
+            return
         }
-    }
-
-    private fun handleAlarm(alarm: JSONObject) {
-        val defaultVal = config.NSCLIENT
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, defaultVal)) {
-            val snoozedTo = sp.getLong(info.nightscout.core.utils.R.string.key_snoozed_to, 0L)
-            if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-                val nsAlarm = NSAlarm(alarm)
-                uiInteraction.addNotificationWithAction(injector, nsAlarm)
-            }
-            rxBus.send(EventNSClientNewLog("ALARM", JsonHelper.safeGetString(alarm, "message", "received")))
-            aapsLogger.debug(LTag.NSCLIENT, alarm.toString())
-        }
-    }
-
-    private fun handleUrgentAlarm(alarm: JSONObject) {
-        val defaultVal = config.NSCLIENT
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, defaultVal)) {
-            val snoozedTo = sp.getLong(info.nightscout.core.utils.R.string.key_snoozed_to, 0L)
-            if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
-                val nsAlarm = NSAlarm(alarm)
-                uiInteraction.addNotificationWithAction(injector, nsAlarm)
-            }
-            rxBus.send(EventNSClientNewLog("URGENTALARM", JsonHelper.safeGetString(alarm, "message", "received")))
-            aapsLogger.debug(LTag.NSCLIENT, alarm.toString())
-        }
+        alarmSocket?.emit("ack", originalAlarm.level(), originalAlarm.group(), silenceTimeInMilliseconds)
+        rxBus.send(EventNSClientNewLog("► ALARMACK ", "${originalAlarm.level()} ${originalAlarm.group()} $silenceTimeInMilliseconds"))
     }
 
     /**********************
@@ -595,20 +596,6 @@ class NSClientV3Plugin @Inject constructor(
     override fun detectedNsVersion(): String? = nsAndroidClient?.lastStatus?.version
 
     override val address: String get() = sp.getString(info.nightscout.core.utils.R.string.key_nsclientinternal_url, "")
-
-    override fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long) {
-        if (!isEnabled()) return
-        if (!sp.getBoolean(R.string.key_ns_upload, true)) {
-            aapsLogger.debug(LTag.NSCLIENT, "Upload disabled. Message dropped")
-            return
-        }
-        // nsClientService?.sendAlarmAck(
-        //     AlarmAck().also { ack ->
-        //         ack.level = originalAlarm.level()
-        //         ack.group = originalAlarm.group()
-        //         ack.silenceTime = silenceTimeInMilliseconds
-        //     })
-    }
 
     override fun isFirstLoad(collection: NsClient.Collection) =
         when (collection) {

@@ -646,7 +646,7 @@ class NSClientService : DaggerService() {
     private fun handleAlarm(alarm: JSONObject) {
         val defaultVal = config.NSCLIENT
         if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, defaultVal)) {
-            val snoozedTo = sp.getLong(info.nightscout.core.utils.R.string.key_snoozed_to, 0L)
+            val snoozedTo = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarm(alarm)
                 uiInteraction.addNotificationWithAction(injector, nsAlarm)
@@ -659,7 +659,7 @@ class NSClientService : DaggerService() {
     private fun handleUrgentAlarm(alarm: JSONObject) {
         val defaultVal = config.NSCLIENT
         if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, defaultVal)) {
-            val snoozedTo = sp.getLong(info.nightscout.core.utils.R.string.key_snoozed_to, 0L)
+            val snoozedTo = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarm(alarm)
                 uiInteraction.addNotificationWithAction(injector, nsAlarm)
