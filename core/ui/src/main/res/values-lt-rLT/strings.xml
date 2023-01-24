@@ -408,7 +408,7 @@
     <string name="autotune_tune_insulin_curve_summary">Įgalinkite tik jei naudojate pasirinktinį insulino piką. Ši opcija leis Autotune patikslinti piką ir IVT</string>
     <string name="autotune_default_tune_days_title">Dienų, kurių duomenys naudojami, skaičius</string>
     <string name="autotune_circadian_ic_isf_title">Įrašyti vidutinį cirkadinių IA/JIF rezultatą</string>
-    <string name="autotune_circadian_ic_isf_summary">Autotune netikslins cirkadinių pokyčių, ši opcija tik įrašys vidutinį IA ir JIF derinimo rezultatą į Jūsų cirkadinį profilį</string>
+    <string name="autotune_circadian_ic_isf_summary">Autotune netikslins cirkadinių pokyčių, ši funkcija tik įrašys vidutinį IA ir JIF derinimo rezultatą į Jūsų cirkadinį profilį</string>
     <string name="autotune_additional_log_title">Įtraukti daugiau įrašų kūrėjams</string>
     <string name="autotune_additional_log_summary">Aktyvuokite tik jei gavote kūrėjų užklausą įtraukti daugiau informacijos Autotune įskiepio derinimui</string>
     <string name="autotune_default_tune_days_summary">Numatytasis dienų, kurias Autotune turi apdoroti, skaičius (iki 30)</string>
@@ -532,7 +532,7 @@
     <string name="no">Ne</string>
     <string name="close">Uždaryti</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas atšifruojant importuotus nustatymus.</string>
+    <string name="password_preferences_decrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas dešifruojant importuotus nustatymus.</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">sumažinimas %1$s per %2$s</string>
     <string name="a11y_plus_button_description">padidinimas %1$s per %2$s</string>
