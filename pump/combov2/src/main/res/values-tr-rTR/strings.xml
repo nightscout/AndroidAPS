@@ -118,4 +118,5 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_datetime_changed">Tarih ve/veya saat değişti</string>
     <string name="combov2_dst_started">Yaz saati uygulaması (DST) başladı</string>
     <string name="combov2_dst_ended">Yaz saati uygulaması (DST) sona erdi</string>
+    <string name="combov2_go_back">Geri dön</string>
 </resources>
