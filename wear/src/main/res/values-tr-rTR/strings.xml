@@ -176,6 +176,9 @@
     <string name="no_iob_u">--Ü</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--Ü/sa</string>
+    <string name="uploader_na">Y: --%</string>
+    <string name="no_status">D: --</string>
+    <string name="time_stamp_na_min_ago">-- Dak. önce</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Döngü Durumu Yok</string>
     <string name="cob_000g">000g</string>
@@ -183,4 +186,11 @@
     <string name="iob_0_00u">0,00Ü</string>
     <string name="snooze_alert">AAPS Uyarı Erteleme</string>
     <string name="sending_snooze">AAPS\'ye Erteleme Gönderme</string>
+    <string name="short_hour">sa</string>
+    <string name="week_short">h</string>
+    <string name="day_short">g</string>
+    <string name="hour_short">sa</string>
+    <string name="old">eski</string>
+    <string name="old_warning">!eski!</string>
+    <string name="error">!hata!</string>
 </resources>
