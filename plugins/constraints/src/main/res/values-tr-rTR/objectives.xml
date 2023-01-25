@@ -7,10 +7,13 @@
     <string name="objectivenotfinished">Görev %1$d tamamlanmadı</string>
     <string name="objectives_0_objective">Nightscout üzerinden izlemeyi ve görselleştirmeyi yapılandırın, bazalları ve oranlarını analiz edin</string>
     <string name="objectives_0_gate">Nightscout\'ta KŞ\'nin bulunduğunu ve pompadaki insülin verilerinin yüklenmekte olduğunu doğrulayın</string>
+    <string name="objectives_0_learned">AAPS ekosisteminin temel kurulumunu yaptınız. AAPS\'nin çalışması için Nightscout gerekli değildir, ancak diğer hastaların raporlanması veya izlenmesi için çok yararlıdır. NS\'yi yalnızca kendiniz için kullanıyorsanız, her zaman NS\'ye bağlı olmanız gerekmez. Örneğin, yalnızca evdeki wifi üzerinden veri yüklemek için kurulum yapabilir ve böylelikle pil tasarrufu sağlarsınız.</string>
     <string name="objectives_openloop_objective">Açık Döngü modu başlatılıyor</string>
     <string name="objectives_openloop_gate">Birkaç gün boyunca Açık Döngü modunda çalıştırın ve birçok geçici bazalı el yordamı ile girin. Geçici ve varsayılan geçici hedefleri düzenleyin ve kullanın (örn. egzersiz ve hipo-tedaviyi desteklemek için)</string>
+    <string name="objectives_openloop_learned">Uyumlu pompanız yoksa veya kapalı döngüye hazır değilseniz, tavsiyeler için açık döngü kullanılabilir.</string>
     <string name="objectives_maxbasal_objective">Geçici bazal tavsiyeleri de dahil olmak üzere Açık Döngüyü anlamak</string>
     <string name="objectives_maxbasal_gate">Bu deneyime dayanarak, max bazalın ne olması gerektiğine karar vermeli ve bunu pompa ve tercihlere koymalısınız</string>
+    <string name="objectives_maxbasal_learned">Güvenlik özelliklerine dikkat edin ve gerektiğinde güvenlik parametrelerini ayarlayın.</string>
     <string name="objectives_maxiobzero_objective">Kapalı Döngü, (LGS) Düşük Glikoz Duraklatma modunda başlatılıyor</string>
     <string name="objectives_maxiobzero_gate">Kapalı Döngüyü, maks IOB = 0 olacak şekilde çok sayıda LGS (düşük KŞ) olmadan birkaç gün boyunca deneyin</string>
     <string name="objectives_maxiob_objective">Kapalı Döngü\'de ince ayarlar, maks (IOB) Aktif İnsülini 0\'ın üzerine yükseltme ve yavaş yavaş KŞ hedeflerini aşağıya çekme</string>
@@ -35,12 +38,19 @@
     <string name="objectives_usescale">KŞ tablosuna uzun basarak ölçeği değiştirebilirsiniz</string>
     <string name="objectives_exam_objective">Bilginizi sınayın</string>
     <string name="objectives_exam_gate">Sorulara çalışın. Her soru için size dört olası cevap verilir. Birden fazla doğru cevap olabilir. Lütfen doğru olanların hepsini kontrol edin ve DOĞRULA\'yı seçin.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS, AİNS\'i doğru saymak için pompanın bağlı olmadığını bilmelidir.</string>
+    <string name="objectives_exam_learned_insulin">AİNS hesaplamasını etkilediği için hangi insülinin pompada olduğunu bilmek gereklidir.</string>
     <string name="answerdisabledto">Yanıtlama devre dışı bırakıldı: %1$s</string>
     <string name="wronganswer">Yanlış Cevap!</string>
     <string name="unfinshed_button">Tamamlanmayan bir sonraki</string>
     <string name="requestcode">Kod: %1$s</string>
     <string name="objectives_hint">(tüm doğru cevapları kontrol edin)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/tr/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/tr/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/tr/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/tr/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">İnternete bağlı değil</string>
     <string name="failedretrievetime">Geri almada hata</string>
     <string name="requirementnotmet">Görev gereksinimleri karşılanmadı</string>
+    <string name="what_i_ve_learned">Ne öğrendim:</string>
 </resources>
