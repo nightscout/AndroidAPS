@@ -202,7 +202,9 @@ class NSClientV3Plugin @Inject constructor(
                            if (ev.isChanged(rh.gs(R.string.key_ns_client_token)) ||
                                ev.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_url)) ||
                                ev.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_ns_use_ws)) ||
-                               ev.isChanged(rh.gs(R.string.key_ns_paused))
+                               ev.isChanged(rh.gs(R.string.key_ns_paused)) ||
+                               ev.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_ns_alarms)) ||
+                               ev.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_ns_announcements))
                            )
                                setClient("SETTING CHANGE")
                            if (ev.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_local_profile_last_change)))
@@ -337,16 +339,19 @@ class NSClientV3Plugin @Inject constructor(
                     socket.on("update", onDataCreateUpdate)
                     socket.on("delete", onDataDelete)
                 }
-                alarmSocket = IO.socket(urlAlarm).also { socket ->
-                    socket.on(Socket.EVENT_CONNECT, onConnectAlarms)
-                    socket.on(Socket.EVENT_DISCONNECT, onDisconnectAlarm)
-                    rxBus.send(EventNSClientNewLog("► WS", "do connect alarm $reason"))
-                    socket.connect()
-                    socket.on("announcement", onAnnouncement)
-                    socket.on("alarm", onAlarm)
-                    socket.on("urgent_alarm", onUrgentAlarm)
-                    socket.on("clear_alarm", onClearAlarm)
-                }
+                if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_announcements, config.NSCLIENT) ||
+                    sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, config.NSCLIENT)
+                )
+                    alarmSocket = IO.socket(urlAlarm).also { socket ->
+                        socket.on(Socket.EVENT_CONNECT, onConnectAlarms)
+                        socket.on(Socket.EVENT_DISCONNECT, onDisconnectAlarm)
+                        rxBus.send(EventNSClientNewLog("► WS", "do connect alarm $reason"))
+                        socket.connect()
+                        socket.on("announcement", onAnnouncement)
+                        socket.on("alarm", onAlarm)
+                        socket.on("urgent_alarm", onUrgentAlarm)
+                        socket.on("clear_alarm", onClearAlarm)
+                    }
             } catch (e: URISyntaxException) {
                 rxBus.send(EventNSClientNewLog("● WS", "Wrong URL syntax"))
             } catch (e: RuntimeException) {

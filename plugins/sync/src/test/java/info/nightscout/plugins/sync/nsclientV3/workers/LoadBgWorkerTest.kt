@@ -23,6 +23,7 @@ import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.workflow.WorkerClasses
 import info.nightscout.plugins.sync.nsclient.NsClientReceiverDelegate
+import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSSvgV3
 import info.nightscout.rx.bus.RxBus
@@ -49,7 +50,6 @@ internal class LoadBgWorkerTest : TestBase() {
     @Mock lateinit var workerClasses: WorkerClasses
     @Mock lateinit var sp: SP
     @Mock lateinit var fabricPrivacy: FabricPrivacy
-    @Mock lateinit var rxBus: RxBus
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var nsAndroidClient: NSAndroidClient
     @Mock lateinit var rh: ResourceHelper
@@ -62,7 +62,9 @@ internal class LoadBgWorkerTest : TestBase() {
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var workManager: WorkManager
     @Mock lateinit var workContinuation: WorkContinuation
+    @Mock lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
 
+    private val rxBus: RxBus = RxBus(aapsSchedulers, aapsLogger)
     private lateinit var nsClientV3Plugin: NSClientV3Plugin
     private lateinit var nsClientReceiverDelegate: NsClientReceiverDelegate
     private lateinit var dataWorkerStorage: DataWorkerStorage
@@ -95,10 +97,11 @@ internal class LoadBgWorkerTest : TestBase() {
         Mockito.`when`(dateUtil.now()).thenReturn(now)
         Mockito.`when`(nsClientSource.isEnabled()).thenReturn(true)
         dataWorkerStorage = DataWorkerStorage(context)
-        nsClientReceiverDelegate = NsClientReceiverDelegate(rxBus, rh, sp, receiverStatusStore)
+        nsClientReceiverDelegate = NsClientReceiverDelegate(rxBus, rh, sp, receiverStatusStore, aapsSchedulers, fabricPrivacy)
         nsClientV3Plugin = NSClientV3Plugin(
-            injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy, sp, nsClientReceiverDelegate, config, dateUtil, uiInteraction, dataSyncSelector,
-            profileFunction, repository
+            injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
+            sp, nsClientReceiverDelegate, config, dateUtil, uiInteraction, dataSyncSelector, profileFunction, repository,
+            nsDeviceStatusHandler, workManager, workerClasses, dataWorkerStorage, nsClientSource
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }

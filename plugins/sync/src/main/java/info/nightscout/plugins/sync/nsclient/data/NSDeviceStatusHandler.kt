@@ -1,5 +1,6 @@
 package info.nightscout.plugins.sync.nsclient.data
 
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
@@ -65,6 +66,7 @@ import javax.inject.Singleton
  */
 @Suppress("SpellCheckingInspection")
 @Singleton
+@OpenForTesting
 class NSDeviceStatusHandler @Inject constructor(
     private val sp: SP,
     private val config: Config,
