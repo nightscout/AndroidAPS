@@ -98,6 +98,13 @@
     <string name="reset_start">Başlatmayı sıfırla</string>
     <string name="upload_now">Şimdi yükle</string>
     <!-- xDrip status line -->
+    <string name="key_xdrip_send_status">xDrip gönderi durumu</string>
     <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">xDrip+\'a verileri gönder</string>
+    <string name="xdrip_status_detailed_iob_title">Ayrıntılı AİNS göster</string>
+    <string name="xdrip_not_installed">xDrip+ yüklenmemiş</string>
+    <string name="calibration_sent">Kalibrasyon xDrip+ a gönderildi</string>
     <!--    DataBroadcast-->
 </resources>
