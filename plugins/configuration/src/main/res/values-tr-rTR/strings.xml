@@ -71,6 +71,8 @@
     <string name="configbuilder_insulin_description">Hangi tür insülin kullanıyorsunuz?</string>
     <string name="configbuilder_bgsource">KŞ kaynağı</string>
     <string name="configbuilder_bgsource_description">AAPS verilerini nereden alsın?</string>
+    <string name="configbuilder_smoothing">Yumuşatma</string>
+    <string name="configbuilder_smoothing_description">Yumuşatma algoritmasını seçin</string>
     <string name="configbuilder_sensitivity">Duyarlılık algılaması</string>
     <string name="configbuilder_sensitivity_description">Hangi duyarlılık algoritması kullanılmalıdır?</string>
     <string name="config_builder_shortname">KONF</string>
