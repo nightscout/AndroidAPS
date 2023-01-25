@@ -316,4 +316,22 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="old_data">ESKİ VERİ</string>
+    <string name="grams_short">gr</string>
+    <string name="hour_short">sa</string>
+    <string name="no_active_profile">Etkin profil ayarlanmadı!</string>
+    <string name="profile_message">Profil:\n\nZaman Kayması: %1$\nYüzde: %2$d%\"</string>
+    <string name="tdd_line">%1$.2fÜ%1$.0f%</string>
+    <string name="no_profile">Profil yüklenmedi</string>
+    <string name="aps_only">Sadece APS modunda uygulayın!</string>
+    <string name="last_aps_result_na">Son sonuç mevcut değil!</string>
+    <string name="loop_status_closed">KAPALI DÖNGÜ</string>
+    <string name="loop_status_open">AÇIK DÖNGÜ</string>
+    <string name="loop_status_disabled">DÖNGÜ DEVRE DIŞI</string>
+    <string name="aps">APS (YPS)</string>
+    <string name="last_run">Son Çalıştırma</string>
+    <string name="today">Bugün</string>
+    <string name="units_short">Ü</string>
+    <string name="temp_target">Geçici Hedef</string>
+    <string name="until">kadar</string>
+    <string name="target">hedef</string>
 </resources>
