@@ -97,6 +97,9 @@
     <string name="remove_all">Tümünü kaldır</string>
     <string name="reset_start">Başlatmayı sıfırla</string>
     <string name="upload_now">Şimdi yükle</string>
+    <string name="not_connected">Bağlantı yok</string>
+    <string name="read_only">Salt okunur</string>
+    <string name="working">İşleniyor</string>
     <!-- xDrip status line -->
     <string name="key_xdrip_send_status">xDrip gönderi durumu</string>
     <!-- Xdrip StatusLine -->
@@ -104,6 +107,7 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">xDrip+\'a verileri gönder</string>
     <string name="xdrip_status_detailed_iob_title">Ayrıntılı AİNS göster</string>
+    <string name="xdrip_status_show_bgi_title">KŞ Etkisi Göster</string>
     <string name="xdrip_not_installed">xDrip+ yüklenmemiş</string>
     <string name="calibration_sent">Kalibrasyon xDrip+ a gönderildi</string>
     <!--    DataBroadcast-->
