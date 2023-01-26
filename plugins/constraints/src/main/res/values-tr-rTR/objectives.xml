@@ -38,8 +38,13 @@
     <string name="objectives_usescale">KŞ tablosuna uzun basarak ölçeği değiştirebilirsiniz</string>
     <string name="objectives_exam_objective">Bilginizi sınayın</string>
     <string name="objectives_exam_gate">Sorulara çalışın. Her soru için size dört olası cevap verilir. Birden fazla doğru cevap olabilir. Lütfen doğru olanların hepsini kontrol edin ve DOĞRULA\'yı seçin.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS çevrimdışı çalıştırılabilir.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS, AİNS\'i doğru saymak için pompanın bağlı olmadığını bilmelidir.</string>
     <string name="objectives_exam_learned_insulin">AİNS hesaplamasını etkilediği için hangi insülinin pompada olduğunu bilmek gereklidir.</string>
+    <string name="objectives_exam_learned_iob">APPS\'in sizin için iyi çalışıp çalışmadığını analiz ederseniz, AİNS grafiğini izlemek size birçok yararlı bilgi verebilir.</string>
+    <string name="objectives_exam_learned_breadgrams">Karbonhidratların girişinde sadece grama izin verilir.</string>
+    <string name="objectives_exam_learned_ecarbs">E-karbonhidratlar, pompa dünyasında yayma bolusun yerine geçer.</string>
+    <string name="objectives_exam_learned_nsclient">Uzaktan izleme ve kontrol mümkündür, ancak tüm özelliklerin uzaktan kullanılabilir olması gerekmez.</string>
     <string name="answerdisabledto">Yanıtlama devre dışı bırakıldı: %1$s</string>
     <string name="wronganswer">Yanlış Cevap!</string>
     <string name="unfinshed_button">Tamamlanmayan bir sonraki</string>
