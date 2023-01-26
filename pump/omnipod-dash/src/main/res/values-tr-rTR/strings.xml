@@ -39,4 +39,7 @@
     <string name="omnipod_dash_not_enough_insulin">Rezervuarda yeterli insülin kalmamış</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Onaylanmamış komut</string>
     <string name="requested_by_user" comment="26 characters max for translation">Kullanıcı talebi</string>
+    <string name="profile_set_ok">Profil ayarı TAMAM</string>
+    <string name="insulin_delivery_suspended">İnsülin iletimi askıya alındı</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Pod\'un saat dilimi, telefondaki saat diliminden farklıdır. Bazal oran yanlış. Düzeltmek için profili değiştirin</string>
 </resources>
