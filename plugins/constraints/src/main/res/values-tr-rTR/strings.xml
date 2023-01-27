@@ -49,4 +49,5 @@
     <string name="objectives_next_button">Sonraki</string>
     <string name="objectives_previous_button">Önceki</string>
     <string name="objectives_button_unfinish">Temizleme tamamlandı</string>
+    <string name="objectives_button_unstart">Temizleme başladı</string>
 </resources>
