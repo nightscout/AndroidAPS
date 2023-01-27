@@ -129,4 +129,5 @@
     <!--    Reminders-->
     <string name="time_to_eat">Yemek zamanı!\nBolus sihirbazını çalıştırın ve hesaplamayı tekrar yapın.</string>
     <string name="time_to_bolus">Bolus zamanı!\nBolus sihirbazını çalıştırın ve yeniden hesaplama yapın.</string>
+    <string name="error_setting_reminder">Gelecek alarmı ayarlanırken hata oluştu</string>
 </resources>
