@@ -319,6 +319,8 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="old_data">ESKİ VERİ</string>
+    <string name="pump_fetching_data">pompadan veri almaya çalışıyor.</string>
+    <string name="pump_old_data">TGD: Hala eski veriler! Pompadan yüklenemiyor.</string>
     <string name="grams_short">gr</string>
     <string name="hour_short">sa</string>
     <string name="no_active_profile">Etkin profil ayarlanmadı!</string>
@@ -332,9 +334,15 @@
     <string name="loop_status_disabled">DÖNGÜ DEVRE DIŞI</string>
     <string name="aps">APS (YPS)</string>
     <string name="last_run">Son Çalıştırma</string>
+    <string name="last_enact">Son sahne</string>
     <string name="today">Bugün</string>
+    <string name="weighted">ağırlıklı</string>
+    <string name="target_only_aps_mode">Hedefler yalnızca APS modunda uygulanır!</string>
+    <string name="no_history">Geçmiş verisi yok!</string>
     <string name="units_short">Ü</string>
     <string name="temp_target">Geçici Hedef</string>
     <string name="until">kadar</string>
+    <string name="default_range">VARSAYILAN ARALIK</string>
     <string name="target">hedef</string>
+    <string name="rate_duration">Oran: %1$.2fÜ/sa (%2$.2f%) \nSüre %3$d% dk</string>
 </resources>
