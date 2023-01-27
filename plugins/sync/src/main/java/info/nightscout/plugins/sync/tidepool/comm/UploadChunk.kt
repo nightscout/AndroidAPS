@@ -176,7 +176,9 @@ class UploadChunk @Inject constructor(
         val pss = repository.getEffectiveProfileSwitchDataFromTimeToTime(start, end, true).blockingGet()
         val selection = LinkedList<ProfileElement>()
         for (ps in pss) {
-            newInstanceOrNull(ps)?.let { selection.add(it) }
+            newInstanceOrNull(ps)?.let {
+                selection.add(it)
+            }
         }
         if (selection.size > 0)
             rxBus.send(EventTidepoolStatus("${selection.size} ProfileSwitches selected for upload"))
