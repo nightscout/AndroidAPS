@@ -107,7 +107,12 @@
     <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">xDrip+\'a verileri gönder</string>
     <string name="xdrip_status_detailed_iob_title">Ayrıntılı AİNS göster</string>
+    <string name="xdrip_status_detailed_iob_summary">Saat arayüzü üzerinde AİNS\'i bolus ve bazal AİNS olarak ayırın</string>
     <string name="xdrip_status_show_bgi_title">KŞ Etkisi Göster</string>
+    <string name="xdrip_status_show_bgi_summary">KŞ Etkisini durum satırına ekle</string>
+    <string name="xdrip_status_settings">xDrip+ Durum Satırı Gelişmiş</string>
+    <string name="disabled_loop">Döngü devre dışı</string>
+    <string name="xdrip_send_status_title">Durum satırını xDrip+\'a gönder</string>
     <string name="xdrip_not_installed">xDrip+ yüklenmemiş</string>
     <string name="calibration_sent">Kalibrasyon xDrip+ a gönderildi</string>
     <!--    DataBroadcast-->
