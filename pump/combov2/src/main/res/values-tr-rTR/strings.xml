@@ -121,5 +121,8 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_datetime_changed">Tarih ve/veya saat değişti</string>
     <string name="combov2_dst_started">Yaz saati uygulaması (DST) başladı</string>
     <string name="combov2_dst_ended">Yaz saati uygulaması (DST) sona erdi</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Pompa bir hata bildirdiğinden pompaya bağlanılamıyor. Kullanıcı hatayı işlemeli ve ardından 5 dakika beklemeli veya sürücü sekmesindeki Yenile butonuna basmalıdır.</string>
+    <string name="combov2_refresh_pump_status_after_error">Pompa bir hata bildirdikten sonra pompa durumunu yenileme</string>
     <string name="combov2_go_back">Geri dön</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Sürücü başlatılmadığı için eşleştirme gerçekleştirilemiyor. Bunun nedeni genellikle gerekli Bluetooth izinlerinin verilmemiş olmasıdır. Geri dönün, Bluetooth izinlerini verin ve eşleştirmeyi tekrar deneyin.</string>
 </resources>
