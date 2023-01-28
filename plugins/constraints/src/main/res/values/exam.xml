@@ -21,7 +21,7 @@
     <string name="pumpdisconnect_label">Reasons for applying "Disconnect pump" in AAPS</string>
     <string name="pumpdisconnect_whattodo">What should be done when disconnecting the pump from your body?</string>
     <string name="pumpdisconnect_unnecessary">This is unnecessary as insulin will not be delivered if the pump is physically disconnected.</string>
-    <string name="pumpdisconnect_missinginsulin">It prevents AAPS from accounting for insulin that was not delivered whilst the pump is physically disconnected. </string>
+    <string name="pumpdisconnect_missinginsulin">It prevents AAPS from accounting for insulin that was not delivered whilst the pump is physically disconnected.</string>
     <string name="pumpdisconnect_notstop">It will not stop insulin delivery if the pump remains connected to your body.</string>
     <string name="pumpdisconnect_openloop">It will send AAPS into open loop mode.</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#other-settings</string>
@@ -130,7 +130,7 @@
     <string name="wrongcarbs_donothing">Do nothing – AAPS will make the appropriate adjustments.</string>
     <string name="wrongcarbs_bolus">Bolus with insulin using the Insulin (bolus) button in Overview.</string>
     <string name="wronginsulin_label">Insulin delivery/entry errors</string>
-    <string name="wronginsulin_whattodo">What should you do if you received less insulin than the pump history suggests e.g. due to an occlusion, a failed cannula or forgetting to reattach the pump after a shower? </string>
+    <string name="wronginsulin_whattodo">What should you do if you received less insulin than the pump history suggests e.g. due to an occlusion, a failed cannula or forgetting to reattach the pump after a shower?</string>
     <string name="wronginsulin_careportal">Delete insulin data from Nightscout Careportal to remove it from the pump history.</string>
     <string name="wronginsulin_compare">Compare values in AAPS and pump history (if pump supports this).</string>
     <string name="wronginsulin_prime">Bolus a proportion of your calculated ‘missed’ insulin by either syringe/pen or using a prime.</string>
@@ -138,7 +138,7 @@
     <string name="cob_label">Carbs on Board (COB)</string>
     <string name="cob_question">How changing ISF value affects COB calculation by AAPS?</string>
     <string name="cob_longer">Increasing ISF will make the calculated carb absorption time longer</string>
-    <string name="cob_shorter">Increasing ISF will make the calculated carb absorption time shorter </string>
+    <string name="cob_shorter">Increasing ISF will make the calculated carb absorption time shorter</string>
     <string name="cob_no_effect">Increasing ISF will not affect calculated carbs absorption</string>
     <string name="cob2_question">How changing IC value affects COB calculation?</string>
     <string name="cob2_longer">Increasing IC will make the calculated carb absorption time longer</string>
@@ -163,7 +163,7 @@
     <string name="extendedcarbs_future">To schedule carbs in the future, possibly distributed over an interval (similar to an extended bolus distributing insulin over an interval).</string>
     <string name="extendedcarbs_free">For logging \'free\' exercise carbs you want to hide from AAPS.</string>
     <string name="extendedcarbs_fat">e-carbs (distributed in the future) can assist AAPS in dealing with high fat/protein meals.</string>
-    <string name="extendedcarbs_rescue">For logging rescue carbs you use to treat low blood glucose. </string>
+    <string name="extendedcarbs_rescue">For logging rescue carbs you use to treat low blood glucose.</string>
     <string name="extendedcarbs_hint1">https://wiki.aaps.app/en/latest/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Remote Monitoring</string>
     <string name="nsclient_howcanyou">How can you monitor AAPS (for example for your child) remotely?</string>
@@ -190,14 +190,14 @@
     <string name="ic_meaning">IC meaning is: How many bread (exchange) units are covered by 1U of insulin?</string>
     <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Profile Switching</string>
-    <string name="profileswitch_pctwillchange"> When specifying a 90% profile switch, which answers are true?</string>
+    <string name="profileswitch_pctwillchange">When specifying a 90% profile switch, which answers are true?</string>
     <string name="profileswitch_basallower">Basal rates will be 10% lower.</string>
     <string name="profileswitch_isfhigher">ISF will be 10% higher.</string>
     <string name="profileswitch_iclower">The value of the I:C ratio will be a 10% lower number.</string>
     <string name="profileswitch_unchanged">ISF and I:C ratios will be unchanged.</string>
     <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/en/latest/Usage/Profiles.html#profile-switch</string>
     <string name="profileswitch2_label">Profile Switching</string>
-    <string name="profileswitch2_pctwillchange"> When specifying a 120% profile switch, which answers are true?</string>
+    <string name="profileswitch2_pctwillchange">When specifying a 120% profile switch, which answers are true?</string>
     <string name="profileswitch2_bghigher">Target blood glucose will be 20% higher.</string>
     <string name="profileswitch2_basalhigher">Basal rates will be 20% higher.</string>
     <string name="profileswitch2_bgunchanged">Target blood glucose will be unchanged.</string>
@@ -207,7 +207,7 @@
     <string name="profileswitchtime_2">Initiate a profile switch with a timeshift of 2</string>
     <string name="profileswitchtime__2">Initiate a profile switch with a timeshift of -2</string>
     <string name="profileswitchtime_tt">Set eating soon temporary target.</string>
-    <string name="profileswitchtime_100">Do a profile switch to more than 100%. </string>
+    <string name="profileswitchtime_100">Do a profile switch to more than 100%.</string>
     <string name="profileswitchtime_hint1">https://wiki.aaps.app/en/latest/Usage/Profiles.html#timeshift</string>
     <string name="profileswitch4_label">Changes to profiles</string>
     <string name="profileswitch4_rates">Basal rates, ISF, I:C ratios, etc., should be set in profiles.</string>
