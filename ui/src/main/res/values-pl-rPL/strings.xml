@@ -143,6 +143,14 @@
     <string name="overview_edit_quickwizard_use_trend">Obliczenia trendu</string>
     <string name="overview_edit_quickwizard_use_superbolus">Obliczenia Superbolusa</string>
     <string name="overview_edit_quickwizard_percentage">Procent</string>
+    <string name="device_all">Wszystkie</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Zegarek</string>
+    <string name="positive_only">Tylko pozytywne</string>
+    <string name="negative_only">Tylko negatywne</string>
     <string name="overview_editquickwizard_usecob">Obliczenia COB</string>
     <string name="overview_editquickwizard_usetemptarget">Obliczenie celu tymczasowego</string>
+    <string name="overview_editquickwizard_usepercentage">Obliczenia procentowe</string>
+    <string name="app_default">Domyślny aplikacji</string>
+    <string name="a11y_drag_and_drop_handle">tryb \"Przeciągnij i upuść\"</string>
 </resources>
