@@ -86,5 +86,8 @@
     <string name="upload_now">Prześlij teraz</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="xdrip_send_status_title">Wyślij linię statusu do xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ nie jest zainstalowany</string>
+    <string name="calibration_sent">Kalibracja przesłana do xDrip+</string>
     <!--    DataBroadcast-->
 </resources>
