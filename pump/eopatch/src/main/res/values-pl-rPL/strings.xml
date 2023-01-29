@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="eopatch">EOPatch2</string>
+    <string name="eopatch_shortname">EOP2</string>
+    <string name="eopatch_pump_description">Integracja z pompą EOPatch2 / GlucoMen Day</string>
     <string name="category_alerts">Alerty</string>
+    <string name="low_reservoir">Alarmy niskiego poziomu zbiornika</string>
+    <string name="patch_expiration_reminders">Przypomnienie o wygaśnięciu Patcha</string>
+    <string name="patch_buzzer_reminders">Alarmy akustyczne pompy</string>
+    <string name="time_format_a_h_mm">H:mm</string>
     <string name="eopatch_status">Status</string>
     <string name="eopatch_base_basal_rate">Podstawowa dawka bazowa</string>
     <string name="eopatch_temp_basal_rate">Tymczasowa dawka bazowa</string>
