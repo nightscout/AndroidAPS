@@ -69,16 +69,11 @@ class UploadChunk @Inject constructor(
 
         val records = LinkedList<BaseElement>()
 
-        if (sp.getBoolean(R.string.key_tidepool_upload_bolus, true))
-            records.addAll(getTreatments(start, end))
-        if (sp.getBoolean(R.string.key_tidepool_upload_bg, true))
-            records.addAll(getBloodTests(start, end))
-        if (sp.getBoolean(R.string.key_tidepool_upload_tbr, true))
-            records.addAll(getBasals(start, end))
-        if (sp.getBoolean(R.string.key_tidepool_upload_cgm, true))
-            records.addAll(getBgReadings(start, end))
-        if (sp.getBoolean(R.string.key_tidepool_upload_profile, true))
-            records.addAll(getProfiles(start, end))
+        records.addAll(getTreatments(start, end))
+        records.addAll(getBloodTests(start, end))
+        records.addAll(getBasals(start, end))
+        records.addAll(getBgReadings(start, end))
+        records.addAll(getProfiles(start, end))
 
         return GsonInstance.defaultGsonInstance().toJson(records)
     }

@@ -496,7 +496,7 @@
 
         <androidx.preference.PreferenceScreen
             android:key="overview_advanced"
-            android:title="@string/advancedsettings_title">
+            android:title="@string/advanced_settings_title">
 
             <SwitchPreference
                 android:defaultValue="false"

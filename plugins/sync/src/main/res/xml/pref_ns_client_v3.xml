@@ -184,14 +184,13 @@
 
         <androidx.preference.PreferenceScreen
             android:key="nsclient_advanced"
-            android:title="@string/advancedsettings_title">
+            android:title="@string/advanced_settings_title">
 
             <SwitchPreference
                 android:defaultValue="true"
                 android:key="@string/key_ns_log_app_started_event"
                 android:title="@string/ns_log_app_started_event"
-                android:summary="@string/ns_log_app_started_event"
-                />
+                android:summary="@string/ns_log_app_started_event" />
 
             <SwitchPreference
                 android:defaultValue="true"
