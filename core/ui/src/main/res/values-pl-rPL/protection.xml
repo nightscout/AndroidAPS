@@ -6,15 +6,26 @@
     <string name="application_protection">Ochrona aplikacji</string>
     <string name="bolus_protection">Ochrona Bolusa</string>
     <string name="settings_password">Hasło ustawień</string>
+    <string name="settings_pin">PIN ustawień</string>
     <string name="application_password">Hasło aplikacji</string>
+    <string name="application_pin">PIN aplikacji</string>
     <string name="bolus_password">Hasło bolusa</string>
+    <string name="bolus_pin">PIN bolusa</string>
+    <string name="protection_timeout_title">Podtrzymanie hasła i PINu [s]</string>
+    <string name="protection_timeout_summary">Po jakim czasie podanie hasła lub PINu jest ponownie wymagane</string>
     <string name="biometric">Biometryczne</string>
     <string name="custom_password">Hasło użytkownika</string>
+    <string name="custom_pin">Własny PIN</string>
     <string name="noprotection">Bez ochrony</string>
     <string name="unsecure_fallback_biometric">Niezabezpieczona funkcja fallback</string>
     <string name="unsecure_fallback_descriotion_biometric">Aby być skuteczna, biometryczna ochrona musi posiadać hasło typu master. \n\n Ustaw hasło typu master!</string>
     <string name="password_set">Hasło ustawione!</string>
+    <string name="pin_set">PIN został ustawiony!</string>
     <string name="password_not_set">Hasło nie ustawione</string>
+    <string name="pin_not_set">PIN nie został ustawiony</string>
     <string name="password_not_changed">Hasło nie zostało zmienione</string>
+    <string name="pin_not_changed">PIN nie został zmieniony</string>
+    <string name="pin_cleared">PIN został wyczyszczony!</string>
     <string name="password_hint">Wpisz hasło tutaj</string>
+    <string name="pin_hint">Podaj PIN tutaj</string>
 </resources>

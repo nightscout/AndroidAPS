@@ -46,9 +46,6 @@
     <string name="sms_iob">IOB:</string>
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Basal:</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="description_xdrip_status_line">Prikažite informacije o tvom loop-u na tvom xDrip+ satu.</string>
     <string name="disabled_loop">Loop Onesposobljen</string>
     <!-- Food-->
     <string name="description_food">Prikazuje unapred podešene postavke hrane definisane u Nightscout-u</string>
@@ -75,7 +72,6 @@
     <!--    OverviewMenu-->
     <string name="overview_show_treatments">Tretmani</string>
     <!-- Skins -->
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->
     <string name="description_wear">Pratite i kontrolirajte AAPS koristeći svoj WearOS sat.</string>

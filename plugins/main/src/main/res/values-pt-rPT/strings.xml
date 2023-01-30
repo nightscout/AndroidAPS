@@ -97,17 +97,11 @@
     <string name="sms_read_status_failed">Erro na leitura de estado</string>
     <string name="sms_profile_switch_created">Troca de perfil criada</string>
     <string name="sms_wrong_tbr_duration">A duração do DBT deve ser de um múltiplo de %1$d minutos e maior que 0.</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Linha Estado xDrip+ (relógio)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Mostrar informações sobre o loop no mostrador do xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Mostrar IA detalhada</string>
     <string name="xdrip_status_detailed_iob_summary">Dividir IA entre IA de bólus e de basal no ecrã do relógio</string>
     <string name="disabled_loop">Loop Desactivado</string>
     <string name="xdrip_status_show_bgi_title">Mostrar BGI</string>
     <string name="xdrip_status_show_bgi_summary">Adicionar BGI à linha de status</string>
-    <string name="xdrip_status_settings">Estado xDrip+ (relógio)</string>
     <!-- Food-->
     <string name="food_short">Alimentos</string>
     <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
@@ -262,7 +256,6 @@
     <string name="buttonson_description">Os botões são sempre exibidos na parte inferior do ecrã</string>
     <string name="largedisplay_description">Mostrador Grande</string>
     <string name="skin">Tema gráfico</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">utilização:</string>
     <!--    Iob-->
     <string name="send_logfiles">Enviar os ficheiros de registo do dia de hoje para os programadores. Situação inesperada.</string>

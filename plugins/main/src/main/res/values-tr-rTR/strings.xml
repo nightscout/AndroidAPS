@@ -88,6 +88,9 @@
     <string name="smscommunicator_message_body">Geçersiz mesaj</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Ulaşılamaz pompa olayı tetiklenirse SMS gönder</string>
     <string name="smscommunicator_pump_unreachable">Pompaya ulaşılamadığını bildir</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Döngü modunu LGS\'ye (Düşük kan şekerinde duraklatma modu) geçirmek için %1$s koduyla yanıt verin</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Döngü modunu Kapalı döngüye geçirmek için %1$s koduyla yanıt verin</string>
+    <string name="smscommunicator_current_loop_mode">Geçerli döngü modu: %1$s</string>
     <string name="wrong_format">Yanlış Format</string>
     <string name="sms_actual_bg">KŞ:</string>
     <string name="sms_last_bg">Son KŞ:</string>
@@ -101,17 +104,11 @@
     <string name="sms_profile_switch_created">Profil değiştirme yapıldı</string>
     <string name="sms_wrong_tbr_duration">GBO süresi %1$d dakikanın katı ve 0\'dan büyük olmalıdır.</string>
     <string name="a11y_otp_qr_code">Tek kullanımlık şifre kurulumu için QR Kodu</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ Durum Çizgisi (saat)</string>
-    <string name="xdrip_status_shortname">xd+</string>
-    <string name="description_xdrip_status_line">Döngü\'yle ilgili bilgileri xDrip+ saat arayüzünde gösterin.</string>
     <string name="xdrip_status_detailed_iob_title">Ayrıntılı AİNS göster</string>
     <string name="xdrip_status_detailed_iob_summary">Saat arayüzü üzerinde AİNS\'i bolus ve bazal AİNS olarak ayırın</string>
     <string name="disabled_loop">Döngü devre dışı</string>
     <string name="xdrip_status_show_bgi_title">BGI (Kan Şekeri İndeksleri) göster</string>
     <string name="xdrip_status_show_bgi_summary">BGI\'yı durum satırına ekle</string>
-    <string name="xdrip_status_settings">xDrip+ Durumu (saat)</string>
     <!-- Food-->
     <string name="food_short">Yiyecek</string>
     <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
@@ -283,7 +280,6 @@
     <string name="buttonson_description">Butonlar her zaman ekranın altında görüntülenir</string>
     <string name="largedisplay_description">Büyük ekran</string>
     <string name="skin">Görünüm</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">kullanım:</string>
     <!--    Iob-->
     <string name="send_logfiles">Bu günün kayıt dosyalarını geliştiricilere gönderin. Beklenmedik bir durum.</string>
@@ -323,4 +319,30 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="old_data">ESKİ VERİ</string>
+    <string name="pump_fetching_data">pompadan veri almaya çalışıyor.</string>
+    <string name="pump_old_data">TGD: Hala eski veriler! Pompadan yüklenemiyor.</string>
+    <string name="grams_short">gr</string>
+    <string name="hour_short">sa</string>
+    <string name="no_active_profile">Etkin profil ayarlanmadı!</string>
+    <string name="profile_message">Profil:\n\nZaman Kayması: %1$\nYüzde: %2$d%\"</string>
+    <string name="tdd_line">%1$.2fÜ%1$.0f%</string>
+    <string name="no_profile">Profil yüklenmedi</string>
+    <string name="aps_only">Sadece APS modunda uygulayın!</string>
+    <string name="last_aps_result_na">Son sonuç mevcut değil!</string>
+    <string name="loop_status_closed">KAPALI DÖNGÜ</string>
+    <string name="loop_status_open">AÇIK DÖNGÜ</string>
+    <string name="loop_status_disabled">DÖNGÜ DEVRE DIŞI</string>
+    <string name="aps">APS (YPS)</string>
+    <string name="last_run">Son Çalıştırma</string>
+    <string name="last_enact">Son sahne</string>
+    <string name="today">Bugün</string>
+    <string name="weighted">ağırlıklı</string>
+    <string name="target_only_aps_mode">Hedefler yalnızca APS modunda uygulanır!</string>
+    <string name="no_history">Geçmiş verisi yok!</string>
+    <string name="units_short">Ü</string>
+    <string name="temp_target">Geçici Hedef</string>
+    <string name="until">kadar</string>
+    <string name="default_range">VARSAYILAN ARALIK</string>
+    <string name="target">hedef</string>
+    <string name="rate_duration">Oran: %1$.2fÜ/sa (%2$.2f%) \nSüre %3$d% dk</string>
 </resources>

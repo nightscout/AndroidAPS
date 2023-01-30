@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="xdrip_not_installed">xDrip+ ikke installeret</string>
-    <string name="calibration_sent">Kalibrering sendt til xDrip+</string>
     <string name="bg_label">BG</string>
     <string name="executing_right_now">Kommando udføres lige nu</string>
     <string name="basal_value_below_minimum">Basal værdi under minimum. Profil ikke angivet!</string>

@@ -7,23 +7,35 @@
     <string name="objectivenotfinished">Zadanie %1$d nieukończone</string>
     <string name="objectives_0_objective">Konfiguracja wizualizacji i monitorowania, analiza dawek bazowych i współczynników</string>
     <string name="objectives_0_gate">Sprawdź czy BG (pomiary cukru) są dostępne w Nightscout, i czy przesyłane są dane pompy insulinowej</string>
+    <string name="objectives_0_learned">Utworzyłeś podstawową konfigurację ekosystemu AAPS. Nightscout nie jest niezbędny do działania AAPS, ale jest bardzo przydatny do tworzenia raportów lub monitorowania innych pacjentów. Ciągłe podłączenie do NS nie jest konieczne, jeśli używasz NS tylko dla siebie. W takim przypadku możesz skonfigurować przesyłanie tak, aby było uruchamiane tylko na domowym wifi, co pozwoli oszczędzać baterię i pakiet danych.</string>
     <string name="objectives_openloop_objective">Rozpoczęcie w trybie otwartej pętli (open loop)</string>
     <string name="objectives_openloop_gate">Uruchom w trybie otwartej pętli przez kilka dni i ręcznie potwierdzaj kilka zmian dawki tymczasowej. Ustaw i używaj celów tymczasowych i domyślnych celów tymczasowych (np. Ćwiczenia lub Hipo)</string>
+    <string name="objectives_openloop_learned">Otwarta pętla może być użyta do sugerowania rekomendacji, przy braku kompatybilnej pompy lub gotowości do zamknięcia pętli.</string>
     <string name="objectives_maxbasal_objective">Zrozumienie działania otwartej pętli, wraz z jej rekomendacjami dawek tymczasowych</string>
     <string name="objectives_maxbasal_gate">Na podstawie tych doświadczeń zdecyduj jaka powinna być ustawiona maksymalna baza, i wprowadź ją w pompie i w ustawieniach AAPS</string>
+    <string name="objectives_maxbasal_learned">Należy zwrócić uwagę na dostępne zabezpieczenia i w razie potrzeby dostosować parametry bezpieczeństwa.</string>
     <string name="objectives_maxiobzero_objective">Rozpoczęcie zamknięcia pętli z zawieszeniem podawania bazy przy niskim poziomie cukru</string>
     <string name="objectives_maxiobzero_gate">Używaj przez kilka dni zamkniętej pętli (Closed Loop) z max IOB = 0 bez zbyt wielu incydentów niedocukrzeń</string>
+    <string name="objectives_maxiobzero_learned">Ustawienie MaxIOB na zero zapobiega wystąpieniu hipoglikemii poprzez uniemożliwienie pętli podania insuliny powyżej dawki bazowej (z wyjątkiem sytuacji z ujemnym IOB)</string>
     <string name="objectives_maxiob_objective">Dostrajanie zamkniętej pętli, podniesienie wartości max IOB powyżej 0 i stopniowe obniżanie docelowego poziomu cukru (BG target)</string>
     <string name="objectives_maxiob_gate">Używaj pętli przez kilka dni i przynajmniej jedną noc bez żadnego alarmu niskiego poziomu, przed obniżeniem docelowego poziomu cukru</string>
+    <string name="objectives_maxiob_learned">Aktualizuj MaxIOB wraz ze wzrostem i rozwojem dziecka. Nie pozwalaj systemowi na podanie większej ilości insuliny niż można pokryć posiłkami = naprawdę wysoka wartość to zły pomysł.</string>
     <string name="objectives_autosens_objective">Dostosuj bazę i wartości parametrów jeśli jest to potrzebne, i wtedy uruchom funkcję autosens</string>
     <string name="objectives_autosens_gate">1 tydzień sukcesu w działaniu pętli w ciągu dnia z regularnym wprowadzaniem spożywanych węglowodanów</string>
+    <string name="objectives_autosens_learned">Jeśli wynik autosens nie oscyluje w okolicach 100%, prawdopodobnie Twój profil nie jest poprawny.</string>
     <string name="objectives_smb_objective">Włączanie dodatkowych funkcji do użytku, jak SMB (Super Mikro Bolusy)</string>
     <string name="objectives_smb_gate">Musisz przeczytać wiki i zwiększyć maxIOB, aby SMB działało dobrze! Dobrym początkiem jest maxIOB = średni bolus + 3 x maks. dzienna dawka bazowa</string>
+    <string name="objectives_smb_learned">Używanie SMB jest Twoim celem. Algorytm Oref1 został zaprojektowany, aby pomóc Ci również w bolusach. Nie należy podawać pełnego bolusa do jedzenia, ale tylko jego część, a w razie potrzeby pozostawić resztę AAPS. W ten sposób masz więcej miejsca na błędnie obliczone węglowodany. Czy wiesz, że można w kalkulatorze ustawić procent wyniku bolusa, aby zmniejszyć rozmiar bolusa?</string>
     <string name="objectives_auto_objective">Włączanie automatyzacji</string>
+    <string name="objectives_auto_gate">Przeczytaj dokumentację dotyczącą działania automatyzacji. Skonfiguruj swoje pierwsze proste zasady. Zamiast wykonania działania niech AAPS wyświetli tylko powiadomienie. Gdy masz pewność, że automatyzacja zostaje uruchomiona we właściwym czasie, zastąp powiadomienie rzeczywistą akcją. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">Automatyzacja może być dobrym sługą, ale złym panem. Nie nadużywaj jej. Nie próbuj zastąpić podwalin głównego algorytmu. Przed użyciem sprawdź regułę samym powiadomieniem. Zwróć uwagę na kolejność wykonania reguł.</string>
     <string name="objectives_bgavailableinns">BG dostępne w NS</string>
     <string name="objectives_pumpstatusavailableinns">Status pompy dostępny w NS</string>
     <string name="objectives_manualenacts">Ręczne zarządzanie</string>
     <string name="accomplished">Ukończone: %1$s</string>
+    <string name="objectives_usage_objective">Dowiedz się, jak kontrolować AAPS</string>
+    <string name="objectives_usage_gate">Wykonaj różne działania w AAPS</string>
+    <string name="objectives_usage_learned">Nauczyłeś się jak obsługiwać podstawy AAPS. Główne ustawienia znajdują się na ekranie głównym, dostępne po kliknięciu lub długim kliknięciu. Więcej ustawień znajduje się na ekranie Akcji. Powinieneś wiedzieć, jak umieścić ekran wtyczki w górnym przewijanym menu (karuzeli) lub pokazać go w lewym górnym rogu listy włączonych wtyczek (hamburger menu).</string>
     <string name="objectives_useprofileswitch">Ustaw profil 90% na 10 min (Długie przytrzymanie nazwy profilu w Przegląd)</string>
     <string name="objectives_usedisconnectpump">Symuluj prysznic. Odłącz pompę na 1 godzinę (długie naciśnięcie w otwartej pętli)</string>
     <string name="objectives_usereconnectpump">... i połącz się ponownie w ten sam sposób</string>
@@ -33,12 +45,41 @@
     <string name="objectives_usescale">Użyj funkcji skalowania przez dłuższe przytrzymanie wykresu glikemii</string>
     <string name="objectives_exam_objective">Potwierdź swoje umiejętności</string>
     <string name="objectives_exam_gate">Przestudiuj pytania.  Na każde pytanie masz cztery możliwe odpowiedzi. Może być więcej niż jedna poprawna odpowiedź. Zaznacz wszystkie poprawne i wybierz WERYFIKUJ.</string>
+    <string name="objectives_exam_learned_prerequisites">Nie musisz być programistą, ale potrzebujesz Nightscout (aby ukończyć Zadania), kompatybilną pompę i komputer (do zbudowania AAPS po raz pierwszy i przy każdej aktualizacji).</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS może być uruchomiony offline.</string>
+    <string name="objectives_exam_learned_basaltest">Profil powinien zostać zweryfikowany i zaktualizowany. Lepszy profil = lepsze wyniki.</string>
+    <string name="objectives_exam_learned_dia">DIA w pętli ma inne znaczenie (czas do wchłonięcia całej insuliny) niż w klasycznej terapii pompą (czas do wchłonięcia większości insuliny).</string>
+    <string name="objectives_exam_learned_isf">Nauczyłeś się znaczenia wartości ISF i jej wpływu na ilość insuliny użytej do korekty glikemii.</string>
+    <string name="objectives_exam_learned_ic">Nauczyłeś się znaczenia wartości IC i jej wpływu na ilość insuliny potrzebną do pokrycia węglowodanów.</string>
+    <string name="objectives_exam_learned_hypott">Cel tymczasowy Hipo jest używany tylko aby zapobiec nadmiernej korekcie po hipoglikemii, kiedy zazwyczaj występuje nagromadzony ujemny wskaźnik IOB. Należy rozważyć dodatkowe działania, aby zapobiec takiej sytuacji w przyszłości.</string>
+    <string name="objectives_exam_learned_profileswitch">Użycie mnożnika procentowego nie ma wpływu na poziomy docelowe, ale dawki bazowe, ISF i IC są dostosowane tak, aby podać więcej insuliny (powyżej 100%%) lub mniej insuliny (poniżej 100%%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">Używając zmiany czasu (systemu timeshift) w przełączniku profilu, możesz dostosować profil okołodobowy do nieprawidłowości takich jak spóźniona pobudka.</string>
+    <string name="objectives_exam_learned_profileswitch4">Edycja profilu nie jest wystarczająca aby dokonać zmiany. Nadal musisz przełączyć się na ten profil aby zastosować zmiany.</string>
+    <string name="objectives_exam_learned_exercise">Należy zmniejszyć ilość insuliny w organizmie na co najmniej 1 godzinę przed rozpoczęciem wysiłku fizycznego, wybierając profil i ustawiając mnożnik poniżej 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Ustawienie wyższego celu tymczasowego na co najmniej 1 godzinę przed wysiłkiem również pomaga zmniejszyć ilość insuliny w organizmie.</string>
+    <string name="objectives_exam_learned_noisycgm">Gdy nie możesz ufać wartościom CGM nie powinieneś używać pętli bez nadzoru.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS musi wiedzieć, że pompa nie jest podłączona, aby poprawnie wyliczać IOB.</string>
+    <string name="objectives_exam_learned_insulin">Konieczne jest ustawienie jaka insulina znajduje się w pompie, bo wpływa to na wyliczenie IOB.</string>
+    <string name="objectives_exam_learned_sensitivity">Wykrywanie wrażliwości jest częścią algorytmu, który umożliwia dostosowanie dawkowania insuliny do różnych sytuacji.</string>
+    <string name="objectives_exam_learned_objectives">Postęp w rozwiązywaniu Zadań jest przechowywany wraz z innymi ustawieniami - należy wykonywać regularne kopie zapasowe.</string>
+    <string name="objectives_exam_learned_objectives2">Zawsze zachowuj wyeksportowane ustawienia i wygenerowany plik APK, również poza telefonem. Telefon może zostać utracony, uszkodzony itp. Dobrym miejscem na kopię zapasową może być dowolna chmura plików dostępna z telefonu. W tym przypadku można przywrócić AAPS na innym urządzeniu w ciągu kilku minut. Dobrą praktyką jest również przechowywanie hasła głównego w bezpiecznym miejscu (np.: managerze haseł). Bez hasła głównego Twoja kopia zapasowa jest bezużyteczna. To samo dotyczy pliku z kluczami podpisu (plik .jks) i hasła do niego - użytych do budowania AAPS. Reszta nie jest ważna - może być w dowolnym momencie ponownie pobrana z Internetu.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Jeśli wprowadziłeś nieprawidłowe dane do AAPS lub dane nie odpowiadają rzeczywistości - skoryguj niezgodność tak szybko jak to tylko możliwe. Inaczej może dojść do przedawkowania. AAPS należy zawsze sumiennie i zgodnie ze sztuką informować o węglowodanach, insulinie itp.</string>
+    <string name="objectives_exam_learned_iob">Jeśli analizujesz czy AAPS działa dobrze w Twoim przypadku, przyjrzenie się wykresowi IOB może dostarczyć Ci wiele przydatnych informacji.</string>
+    <string name="objectives_exam_learned_cob">Wyliczenie COB zależy od związku między ISF a IC. Zwiększenie ISF lub zmniejszenie IC doprowadzi do wydłużenia czasu wchłaniania. Ale zmiana profilu z mnożnikiem procentowym zmieni oba te przeliczniki w tym samym czasie, przez co czas absorpcji nie ulegnie zmianie.</string>
+    <string name="objectives_exam_learned_breadgrams">Do wprowadzania węglowodanów dopuszcza się tylko gramy.</string>
+    <string name="objectives_exam_learned_ecarbs">e-Węgle (e-Carbs) są zamiennikiem występującego w niektórych pompach bolusa przedłużonego.</string>
+    <string name="objectives_exam_learned_nsclient">Zdalne monitorowanie i sterowanie jest możliwe, ale nie wszystkie funkcje muszą być w ten sposób (zdalnie) dostępne.</string>
     <string name="answerdisabledto">Odpowiadanie wyłączone do: %1$s</string>
     <string name="wronganswer">Odpowiedź nieprawidłowa!</string>
     <string name="unfinshed_button">Następny niedokończony</string>
     <string name="requestcode">Kod zapytania: %1$s</string>
     <string name="objectives_hint">(zaznacz wszystkie poprawne odpowiedzi)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Brak połączenia z Internetem</string>
     <string name="failedretrievetime">Nie udało się odzyskać</string>
     <string name="requirementnotmet">Wymagania celu nie zostały spełnione</string>
+    <string name="what_i_ve_learned">Czego się nauczyłem:</string>
 </resources>

@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="xdrip_not_installed">xDrip+ není nainstalován</string>
-    <string name="calibration_sent">Kalibrace odeslána do xDripu+</string>
     <string name="bg_label">Gly</string>
     <string name="executing_right_now">Příkaz je právě prováděn</string>
     <string name="basal_value_below_minimum">Hodnota bazálu pod povoleným minimem. Nenastaveno!</string>

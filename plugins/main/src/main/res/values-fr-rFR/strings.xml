@@ -104,17 +104,11 @@
     <string name="sms_profile_switch_created">Changement de profil effectué</string>
     <string name="sms_wrong_tbr_duration">La durée du DBT doit être un multiple de %1$d minutes et supérieure à 0.</string>
     <string name="a11y_otp_qr_code">QR Code pour configurer un mot de passe à usage unique</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Barre d\'état pour xDrip+ (Montre)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Afficher les informations de votre Boucle sur votre écran de montre xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Afficher l\'IA détaillée</string>
     <string name="xdrip_status_detailed_iob_summary">Sur la montre, décomposer l’IA en IA bolus et IA basal</string>
     <string name="disabled_loop">Boucle désactivée</string>
     <string name="xdrip_status_show_bgi_title">Afficher l’Impact Glycémie</string>
     <string name="xdrip_status_show_bgi_summary">Ajouter l’IGly sur la vue générale</string>
-    <string name="xdrip_status_settings">État Xdrip+ (montre)</string>
     <!-- Food-->
     <string name="food_short">Aliments</string>
     <string name="description_food">Affiche les aliments définis par défaut dans Nightscout</string>
@@ -285,7 +279,6 @@
     <string name="buttonson_description">Boutons toujours en bas</string>
     <string name="largedisplay_description">Grand écran</string>
     <string name="skin">Thème</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">utilisation:</string>
     <!--    Iob-->
     <string name="send_logfiles">Envoyer les fichiers journaux d\'aujourd\'hui aux développeurs avec l\'heure actuel. Situation inattendue.</string>

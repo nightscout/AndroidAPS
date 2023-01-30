@@ -128,4 +128,29 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">DURDUR\'A BASILDI</string>
     <!--QuickWizard-->
+    <string name="a11y_only_on_watch">sadece saatte</string>
+    <string name="a11y_only_on_phone">sadece telefonda</string>
+    <string name="quickwizard_settings">Hızlı asistan ayarları</string>
+    <string name="overview_edit_quickwizard_button_text">Buton Metni:</string>
+    <string name="overview_edit_quickwizard_carbs">Karb:</string>
+    <string name="overview_edit_quickwizard_valid">Geçerli:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Ekle</string>
+    <string name="overview_quickwizard_item_edit_button">Düzenle</string>
+    <string name="overview_edit_quickwizard_show_on_device">Girişi cihazda göster:</string>
+    <string name="overview_edit_quickwizard_use_bg">KŞ Hesaplaması</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus AİNS hesaplaması</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Bazal AİNS hesaplaması</string>
+    <string name="overview_edit_quickwizard_use_trend">Trend hesaplaması</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Süperbolus hesaplaması</string>
+    <string name="overview_edit_quickwizard_percentage">Yüzde</string>
+    <string name="device_all">Tümü</string>
+    <string name="device_phone">Telefon</string>
+    <string name="device_watch">Saat</string>
+    <string name="positive_only">Sadece pozitif</string>
+    <string name="negative_only">Sadece negatif</string>
+    <string name="overview_editquickwizard_usecob">AKRB hesaplaması</string>
+    <string name="overview_editquickwizard_usetemptarget">Geçici hedef hesaplaması</string>
+    <string name="overview_editquickwizard_usepercentage">Yüzde Hesaplaması</string>
+    <string name="app_default">Uygulama varsayılanı</string>
+    <string name="a11y_drag_and_drop_handle">sürükle ve bırak kolu</string>
 </resources>

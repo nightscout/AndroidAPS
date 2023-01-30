@@ -97,17 +97,11 @@
     <string name="sms_read_status_failed">Error en llegir estat</string>
     <string name="sms_profile_switch_created">Canvi de perfil creat</string>
     <string name="sms_wrong_tbr_duration">La durada d\'una TBR ha de ser múltiple de %1$d minuts i més gran que 0.</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Línia d\'estat d\'xDrip+ (rellotge)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Mostrar informació del llaç a la vostra esfera xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Mostrar detalls IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Mostrar IOB de bolus i de basal per separat al rellotge</string>
     <string name="disabled_loop">Llaç desactivat</string>
     <string name="xdrip_status_show_bgi_title">Mostrar glucèmia</string>
     <string name="xdrip_status_show_bgi_summary">Afegir glucèmia a línia d\'estat</string>
-    <string name="xdrip_status_settings">Estat d\'xDrip+ (rellotge)</string>
     <!-- Food-->
     <string name="food_short">Aliments</string>
     <string name="description_food">Mostra els valors preestablerts per alimentació definits a Nightscout</string>
@@ -259,7 +253,6 @@
     <string name="buttonson_description">Els botons sempre es mostren a la part inferior de la pantalla</string>
     <string name="largedisplay_description">Pantalla grossa</string>
     <string name="skin">Tema</string>
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Enviar logs del dia als desenvolupadors. Situació inesperada.</string>
     <!--    Wear-->

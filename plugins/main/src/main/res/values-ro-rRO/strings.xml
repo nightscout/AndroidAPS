@@ -97,17 +97,11 @@
     <string name="sms_read_status_failed">Citire eșuată a stării</string>
     <string name="sms_profile_switch_created">Schimbare de profil creată</string>
     <string name="sms_wrong_tbr_duration">Durata RBT trebuie să fie un multiplu de %1$d minute și mai mare de 0.</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Linie de stare xDrip+ (ceas)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Afișează informații privind starea buclei pe watchface-ul xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Arată IOB detaliat</string>
     <string name="xdrip_status_detailed_iob_summary">Separă IOB în bolus și IOB bazal pe ceas</string>
     <string name="disabled_loop">Buclă inactivă</string>
     <string name="xdrip_status_show_bgi_title">Arată BGI</string>
     <string name="xdrip_status_show_bgi_summary">Adaugă BGI în linia de status</string>
-    <string name="xdrip_status_settings">Stare xDrip+ (ceas)</string>
     <!-- Food-->
     <string name="food_short">Mâncare</string>
     <string name="description_food">Afişează mâncărurile predefinite în Nightscout</string>
@@ -264,7 +258,6 @@
     <string name="buttonson_description">Butoanele sunt afișate întotdeauna în partea de jos a ecranului</string>
     <string name="largedisplay_description">Display mare</string>
     <string name="skin">Tema</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">folosire:</string>
     <!--    Iob-->
     <string name="send_logfiles">Trimite înregistrările zilei de astăzi către dezvoltatori, împreună cu timpul curent. Situație neașteptată.</string>

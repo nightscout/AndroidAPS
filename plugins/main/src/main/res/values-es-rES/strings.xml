@@ -104,17 +104,11 @@
     <string name="sms_profile_switch_created">Cambio de perfil creado</string>
     <string name="sms_wrong_tbr_duration">La duración de TBR debe ser un múltiplo de %1$d minutos y mayor a 0.</string>
     <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Línea de estado de xDrip+ (reloj)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Mostrar información sobre tu bucle en tu reloj xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Mostrar detalles IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Separar la insulina activa en bolos y basales en el reloj</string>
     <string name="disabled_loop">Bucle desactivado</string>
     <string name="xdrip_status_show_bgi_title">Mostrar BGI (Índice de glucosa en sangre)</string>
     <string name="xdrip_status_show_bgi_summary">Agregar BGI a la línea de estado</string>
-    <string name="xdrip_status_settings">Estado de xDrip+ (reloj)</string>
     <!-- Food-->
     <string name="food_short">Comida</string>
     <string name="description_food">Muestra los ajustes preestablecidos de alimentos definidos en Nightscout</string>
@@ -172,7 +166,7 @@
     <string name="age_label">Edad:</string>
     <string name="level_label">Nivel:</string>
     <string name="insulin_label">Insulina</string>
-    <string name="pb_label">Batería de la bomba</string>
+    <string name="pb_label">Batería de bomba</string>
     <string name="cannula">Cánula</string>
     <string name="ebstopsloop">El uso de la función de bolo extendido detendrá el modo de bucle cerrado durante el tiempo de ejecución del bolo extendido. ¿Realmente quieres esto?</string>
     <string name="statuslights_cannula_age">Edad de la cánula</string>
@@ -286,7 +280,6 @@
     <string name="buttonson_description">Los botones siempre se muestran en la parte inferior de la pantalla</string>
     <string name="largedisplay_description">Pantalla grande</string>
     <string name="skin">Tema</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
     <string name="send_logfiles">Enviar los archivos de registro de hoy a los desarrolladores. Situación inesperada.</string>

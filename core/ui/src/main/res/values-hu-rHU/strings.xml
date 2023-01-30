@@ -133,6 +133,7 @@
     <!--    BlePreCheck-->
     <!--    Preferences -->
     <!-- SmsCommunicator -->
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d nap</item>
         <item quantity="other">%1$d nap</item>
