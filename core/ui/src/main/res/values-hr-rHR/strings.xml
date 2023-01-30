@@ -312,6 +312,7 @@
     <!--    Preferences -->
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Nedostaje dopuštenje za SMS</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d dan</item>
         <item quantity="few">%1$d dana</item>
