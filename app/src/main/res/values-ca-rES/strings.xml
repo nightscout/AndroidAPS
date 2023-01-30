@@ -43,8 +43,6 @@
     <string name="chartmenu">Menú gràfica</string>
     <string name="authorizationfailed">L\'autorització ha fallat</string>
     <string name="copytolocalprofile_invalid">No s\'ha pogut crear el perfil local. Perfil no vàlid.</string>
-    <string name="cta_dont_kill_my_app_info">No matar la meva app?</string>
-    <string name="fabric_upload_disabled">Enviament de logs d\'error desactivat!</string>
     <string name="clear_filter">Netejar filtres</string>
     <string name="cannula">Cànula</string>
     <string name="email_address">Correu electrònic</string>
