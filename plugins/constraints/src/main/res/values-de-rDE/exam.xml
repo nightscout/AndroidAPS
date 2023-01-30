@@ -187,7 +187,7 @@
     <string name="ic_decreasingvalue">Ein niedrigeres I:C-Verhältnis bedeutet, dass weniger Insulin für die vorgegebene Menge an KH abgegeben wird.</string>
     <string name="ic_noeffect">Das Ändern des IC-Verhältnisses bedeutet, dass bei 0 COB eine andere Menge an Insulin zur Korrektur eines vorgegebenen BZ-Wertes abgegeben wird.</string>
     <string name="ic_different">Der IC-Wert wird sich unterscheiden, je nachdem, ob Du eine Broteinheit (BE) mit 10g oder mit 12g berechnest.</string>
-    <string name="ic_meaning">IC bedeutet: Wie viele Kohlenhydrate werden durch eine Einheit Insulin abgedeckt?</string>
+    <string name="ic_meaning">IC bedeutet: Anzahl Broteinheiten (BE), die durch eine Einheit Insulin abgedeckt werden</string>
     <string name="ic_hint1">https://wiki.aaps.app/de/latest/Getting-Started/FAQ.html#insulin-kohlenhydrat-verhaltnis-insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Profilwechsel</string>
     <string name="profileswitch_pctwillchange">Welche Antworten sind bei der Einstellung eines Profilwechsels von 90% wahr?</string>
