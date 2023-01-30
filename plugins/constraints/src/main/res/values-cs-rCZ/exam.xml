@@ -5,12 +5,9 @@
     <string name="dia_profile">Měli byste nastavit hodnotu DIA ve vašem profilu.</string>
     <string name="dia_minimumis5h">Minimální hodnota je 5 hodin.</string>
     <string name="dia_hint1">https://wiki.aaps.app/cs/latest/Configuration/Config-Builder.html#inzulin</string>
-    <string name="dia_meaningisequaltodiapump">Pokud jste spokojeni s tím, že hodnota DIA použitá v pumpě před AAPS dobře fungovala, není třeba ji měnit, když začínáte se smyčkou.</string>
     <string name="dia_valuemustbedetermined">Měli byste si pro sebe určit příslušnou hodnotu DIA.</string>
     <string name="hypott_label">Dočasný cíl při hypoglykémii</string>
-    <string name="hypott_whenhypott">Co je primárním důvodem k nastavení dočasného cíle Hypoglykémie?</string>
     <string name="hypott_wrongbasal">Opravovat hypoglykémie způsobené nesprávným nastavením bazálu.</string>
-    <string name="hypott_preventoversmb">Aby se zabránilo přehnané korekci, způsobené rychlými sacharidy použitými k léčbě hypoglykémie.</string>
     <string name="hypott_exercise">Napravit hypo jako důsledek fyzické aktivity.</string>
     <string name="hypott_0basal">Aby se zabránilo snížení hladiny glukózy v krvi, pokud již běží 0% dočasný bazál.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/cs/latest/Usage/temptarget.html</string>
@@ -19,10 +16,7 @@
     <string name="offlineprofile_nsprofile">NS profil může být použit, ale ne nastaven.</string>
     <string name="offlineprofile_hint1">https://wiki.aaps.app/cs/latest/Configuration/Config-Builder.html#profil</string>
     <string name="pumpdisconnect_label">Důvody pro použití \"Odpojit pumpu\" v AAPS</string>
-    <string name="pumpdisconnect_whattodo">Co se má provést při odpojení pumpy?</string>
     <string name="pumpdisconnect_unnecessary">To je zbytečné, protože inzulín nebude dodáván v případě, že je pumpa fyzicky odpojena.</string>
-    <string name="pumpdisconnect_missinginsulin">Zabraňuje AAPS započítat inzulín, který nebyl dodán, když je pumpa fyzicky odpojena</string>
-    <string name="pumpdisconnect_notstop">Nezastaví vydávání inzulínu, pokud pumpa zůstane připojena.</string>
     <string name="pumpdisconnect_openloop">Pošle AAPS do režimu otevřené smyčky.</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/cs/latest/Getting-Started/FAQ.html#dalsi-nastaveni</string>
     <string name="objectives_label">Nastavení AAPS</string>
@@ -88,7 +82,6 @@
     <string name="prerequisites2_what">Co je nezbytné pro nastavení a používání AAPS?</string>
     <string name="prerequisites2_profile">Ověřené informace pro nastavení profilu (ISF, poměr I:C, bazální dávky, DIA atd.).</string>
     <string name="prerequisites2_device">Kompatibilní Android zařízení (např. mobilní telefon, Android hodinky nebo tablet).</string>
-    <string name="prerequisites2_internet">AAPS vyžaduje připojení k internetu pro spuštění uzavřené smyčky.</string>
     <string name="prerequisites2_supportedcgm">Podporované CGM a vhodná aplikace pro příjem glykémií v telefonu/zařízení.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/cs/latest/Module/module.html</string>
     <string name="update_label">Aktualizace AAPS</string>
@@ -118,9 +111,6 @@
     <string name="sensitivity_label">Pluginy Citlivost</string>
     <string name="sensitivity_which">Zatrhněte všechny správné odpovědi.</string>
     <string name="sensitivity_adjust">Pluginy citlivosti umožňují AAPS přizpůsobit se dočasným nebo krátkodobým změnám v citlivosti inzulinu (například hormonální změny nebo problémy s absorpcí na infúzním místě).</string>
-    <string name="sensitivity_edit">Pluginy citlivosti poskytují uživateli návrh změn bazálních hodnot, I:C poměrů a ISF, které mohou být použity k úpravě profilu.</string>
-    <string name="sensitivity_cannula">Výměna kanyly nebo změna profilu automaticky nastaví Autosense zpět na 100%.</string>
-    <string name="sensitivity_time">Některé pluginy mají konfigurovatelné časové rozmezí, které může nastavit uživatel.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/cs/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="sensitivity_hint2">https://wiki.aaps.app/cs/latest/Usage/Open-APS-features.html#autosens</string>
     <string name="wrongcarbs_label">Chyby při zadávání sacharidů</string>
@@ -130,23 +120,15 @@
     <string name="wrongcarbs_donothing">Nic nedělejte – AAPS provede příslušné úpravy.</string>
     <string name="wrongcarbs_bolus">Pošlete inzulín pomocí ikony Inzulín v přehledu.</string>
     <string name="wronginsulin_label">Chyby v podání inzulínu</string>
-    <string name="wronginsulin_whattodo">Co byste měli udělat, pokud jste dostali méně inzulínu, než ukazuje historie pumpy, např. v důsledku okluze, vadné kanyly nebo zapomenutí na opětovné připojení pumpy po sprše? </string>
     <string name="wronginsulin_careportal">Odstraňte data z Nightscoutu pro odstranění z historie pumpy.</string>
     <string name="wronginsulin_compare">Porovnat hodnoty v AAPS s hodnotami v historii pumpy (pokud to pumpa podporuje).</string>
     <string name="wronginsulin_prime">Pošlete bolus na vypočtený „chybějící“ inzulín buď injekční stříkačkou nebo perem nebo pomocí plnění na pumpě.</string>
     <string name="wronginsulin_donothing">Neudělejte nic a dovolte AAPS opravit jakoukoliv výslednou vysokou hladinu glukózy v krvi.</string>
     <string name="cob_label">Zbývající sacharidy (COB)</string>
-    <string name="cob_question">Jak změna hodnoty citlivosti ovlivňuje výpočet COB?</string>
-    <string name="cob_longer">Zvýšení hodnoty citlivosti prodlouží dobu absorpce sacharidů</string>
-    <string name="cob_shorter">Zvýšení hodnoty citlivosti zkrátí dobu absorpce sacharidů</string>
     <string name="cob_no_effect">Zvýšení citlivosti neovlivní vypočtenou absorpci sacharidů</string>
     <string name="cob2_question">Jak změna inzulíno-sacharidového poměru ovlivňuje výpočet COB?</string>
-    <string name="cob2_longer">Zvýšení hodnoty inzulíno-sacharidového poměru prodlouží dobu absorpce sacharidů</string>
-    <string name="cob2_shorter">Zvýšení hodnoty inzulíno-sacharidového poměru zkrátí dobu absorpce sacharidů</string>
     <string name="cob2_no_effect">Zvýšení inzulíno-sacharidového poměru neovlivní vypočtenou absorpci sacharidů</string>
     <string name="cob3_question">Jak procentuální změna profilu ovlivňuje výpočet COB?</string>
-    <string name="cob3_longer">Nastavením profilu na 150 % dojde k prodloužení doby absorpce sacharidů</string>
-    <string name="cob3_shorter">Nastavením profilu na 150 % dojde ke zkrácení doby absorpce sacharidů</string>
     <string name="cob3_no_effect">Nastavení profilu na 150% neovlivní vypočtenou absorpci sacharidů</string>
     <string name="iob_value">Hodnota IOB je ovlivněna vydanými dočasnými bazály.</string>
     <string name="iob_hightemp">Vysoký dočasný bazál nebude spuštěn, pokud je Vaše glykémie nižší než cíl.</string>
@@ -155,7 +137,6 @@
     <string name="breadgrams_label">Zadávání sacharidů a bolusy</string>
     <string name="breadgrams_grams">Pouze gramy by měly být použity pro odhad a záznam spotřebovaných sacharidů.</string>
     <string name="breadgrams_exchange">Spotřebované sacharidy lze nahrávat pomocí vhodného systému (např. \"výměnné jednotky\").</string>
-    <string name="breadgrams_decay">AAPS používá dynamický model k odhadu vstřebávání sacharidů a k výpočtu COB.</string>
     <string name="breadgrams_calc">Pokud jsou hladiny glykémie v krvi mimo přijatelné hodnoty (příliš nízké nebo příliš vysoké), může být použit bolusová kalkulačka k podávání návrhů na sacharidy nebo na korekční bolus.</string>
     <string name="breadgrams_hint1">https://wiki.aaps.app/cs/latest/Getting-Started/FAQ.html#inzulinovosacharidovy-pomer-ic-g-u</string>
     <string name="extendedcarbs_label">e-sacharidy</string>
@@ -163,7 +144,6 @@
     <string name="extendedcarbs_future">Pro plánování budoucích sacharidů, případně distribuovaných v intervalu (podobné prodlouženému bolusu).</string>
     <string name="extendedcarbs_free">Pro zaznamenání \'falešných\' sacharidů při cvičení, které chcete skrýt v AAPS.</string>
     <string name="extendedcarbs_fat">e-sacharidy (distribuované v budoucnu) mohou AAPS pomoci při nakládání s jídly s vysokým obsahem tuku/bílkovin.</string>
-    <string name="extendedcarbs_rescue">Pro zaznamenání rychlých sacharidů použitých k léčbě nízké hladiny glykémie v krvi</string>
     <string name="extendedcarbs_hint1">https://wiki.aaps.app/cs/latest/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Vzdálené sledování</string>
     <string name="nsclient_howcanyou">Jak můžete vzdáleně monitorovat AAPS (například své dítě)?</string>
@@ -174,8 +154,6 @@
     <string name="nsclient_hint1">https://wiki.aaps.app/cs/latest/Children/Children.html</string>
     <string name="isf_label_exam">Citlivost inzulínu (ISF)</string>
     <string name="isf_increasingvalue">Zvýšení hodnot citlivosti povede k větší dodávce inzulínu k pokrytí určitého množství sacharidů.</string>
-    <string name="isf_decreasingvalue">Snížení hodnot citlivosti vede k většímu množství inzulinu pro korekci vyšší glykémie.</string>
-    <string name="isf_noeffect">Zvýšení nebo snížení citlivosti nemá žádný vliv na výdej inzulinu, pokud jsou hladiny glykémie v krvi pod cílovou hodnotou.</string>
     <string name="isf_preferences">ISF by měl být zadán do předvoleb AAPS.</string>
     <string name="isf_profile">Změna hodnoty citlivosti ve vašem profilu postačuje k tomu, aby se tato změna použila.</string>
     <string name="isf_hint1">https://wiki.aaps.app/cs/latest/Getting-Started/FAQ.html#inzulinovosacharidovy-pomer-ic-g-u</string>
@@ -187,17 +165,14 @@
     <string name="ic_decreasingvalue">Nižší hodnoty I:C vedou k menší dávce inzulínu pro stejné množství sacharidů.</string>
     <string name="ic_noeffect">Pokud máte 0 COB změna inzulino-sacharidového poměru povede k jinému množství inzulínu vydanému pro korekci glykémie.</string>
     <string name="ic_different">Inzulino-sacharidový poměr se bude lišit podle toho, zda počítáte výměnnou jednotku jako 10 g nebo jako 12 g sacharidů.</string>
-    <string name="ic_meaning">Inzulino-sacharidový poměr vyjadřuje: kolik výměnných jednotek pokryje 1 jednotka inzulinu.</string>
     <string name="ic_hint1">https://wiki.aaps.app/cs/latest/Getting-Started/FAQ.html#inzulinovosacharidovy-pomer-ic-g-u</string>
     <string name="profileswitch_label">Přepnutí profilu</string>
-    <string name="profileswitch_pctwillchange">Když zadáte 90% profil, které odpovědi jsou pravdivé?</string>
     <string name="profileswitch_basallower">Bazály budou o 10 % nižší.</string>
     <string name="profileswitch_isfhigher">Hodnota citlivosti bude o 10 % vyšší.</string>
     <string name="profileswitch_iclower">Hodnota poměru I:C bude o 10% nižší.</string>
     <string name="profileswitch_unchanged">Hodnoty ISF a I:C nebudou změněny.</string>
     <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/cs/latest/Usage/Profiles.html</string>
     <string name="profileswitch2_label">Přepnutí profilu</string>
-    <string name="profileswitch2_pctwillchange">Když zadáte 120% profil, které odpovědi jsou pravdivé?</string>
     <string name="profileswitch2_bghigher">Cílová glykémie bude o 20 % vyšší.</string>
     <string name="profileswitch2_basalhigher">Bazály budou o 20 % vyšší.</string>
     <string name="profileswitch2_bgunchanged">Cílová glykémie se nezmění.</string>
@@ -206,21 +181,14 @@
     <string name="profileswitchtime_iwant">Pokud se probudíte o 2h dříve než obvykle, jak byste měli oznámit AAPS tuto změnu?</string>
     <string name="profileswitchtime_2">Proveďte přepnutí profilu s posunem času 2</string>
     <string name="profileswitchtime__2">Proveďte přepnutí profilu s posunem času -2</string>
-    <string name="profileswitchtime_tt">Nastavte dočasný cíl Před jídlem.</string>
-    <string name="profileswitchtime_100">Přepněte profil na více než 100%. </string>
     <string name="profileswitchtime_hint1">https://wiki.aaps.app/cs/latest/Usage/Profiles.html</string>
     <string name="profileswitch4_label">Změna profilu</string>
     <string name="profileswitch4_rates">V profilech by měly být nastaveny bazální dávky, ISF, I:C poměry, atd.</string>
     <string name="profileswitch4_internet">Aktivace změn vašeho profilu Nightscout vyžaduje, aby váš telefon AAPS měl k dispozici připojení k Internetu.</string>
     <string name="profileswitch4_sufficient">Úprava profilů za účelem změny hodnot je dostatečná k provedení všech provedených změn.</string>
-    <string name="profileswitch4_multi">Je možné nastavit a vybrat z více profilů za účelem přizpůsobení se měnícím se okolnostem (např. hormonální změny, pracovní dny směny, pracovní dny/víkend životního stylu).</string>
     <string name="basalhelp_hint1">https://wiki.aaps.app/cs/latest/Module/module.html#spravny-individualni-algoritmus-davkovani-pro-lecbu-vaseho-diabetu</string>
     <string name="basalhelp_label">Pomoc s bazály</string>
-    <string name="basalhelp_where">Kam jít pro pomoc s bazály apod.</string>
     <string name="basalhelp_diabetesteam">K Vašemu lékaři</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
-    <string name="other_medication_label">Ostatní léky. Přečtěte si prosím níže uvedené prohlášení a poté zaškrtněte políčko pro přijetí prohlášení.</string>
-    <string name="other_medication_text">AAPS snižuje bazály na zvýšení hladiny cukru v krvi. Léky ze skupiny inhibitorů SGLT2 (glifloziny) mohou zabránit očekávanému zvýšení hodnoty glykémie, a tak mohou produkovat nebezpečný nedostatek inzulínu (ketoacidózu).
-\nBěžné značky jsou: Invokana ®, Forxiga ®, Jardiance ®, Steglatro ®, Suglat ®, Apleway ®, Deberza ®, Synjardy ®, Vokanamet ®, Xigduo ®.\n\nTímto slibuji, že tyto léky neberu při používání AAPS nebo deaktivuji smyčku před užíváním těchto léků.</string>
 </resources>
