@@ -555,6 +555,7 @@
     <string name="nav_plugin_preferences">Настройки расширений</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Отсутствует смс разрешение</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d день</item>
         <item quantity="few">%1$d дня</item>
