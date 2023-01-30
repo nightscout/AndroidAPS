@@ -151,7 +151,7 @@
     <string name="key_xdrip_status_detailed_iob" translatable="false">xdripstatus_detailediob</string>
     <string name="key_xdrip_status_show_bgi" translatable="false">xdripstatus_showbgi</string>
     <string name="key_xdrip_status_settings" translatable="false">xdripstatus_settings</string>
-    <string name="key_xdrip_send_status">xdrip_send_status</string>
+    <string name="key_xdrip_send_status" translatable="false">xdrip_send_status</string>
 
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
