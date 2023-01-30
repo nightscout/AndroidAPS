@@ -935,6 +935,16 @@ class ComboV2Plugin @Inject constructor (
         val pumpEnactResult = PumpEnactResult(injector)
         pumpEnactResult.success = false
 
+        if (isSuspended()) {
+            aapsLogger.info(LTag.PUMP, "Cannot deliver bolus since the pump is suspended")
+            pumpEnactResult.apply {
+                success = false
+                enacted = false
+                comment = rh.gs(R.string.combov2_cannot_deliver_pump_suspended)
+            }
+            return pumpEnactResult
+        }
+
         // Set up initial bolus progress along with details that are invariant.
         // FIXME: EventOverviewBolusProgress is a singleton purely for
         // historical reasons and could be updated to be a regular
@@ -1148,6 +1158,16 @@ class ComboV2Plugin @Inject constructor (
         force100Percent: Boolean,
         pumpEnactResult: PumpEnactResult
     ) {
+        if (isSuspended()) {
+            aapsLogger.info(LTag.PUMP, "Cannot set TBR since the pump is suspended")
+            pumpEnactResult.apply {
+                success = false
+                enacted = false
+                comment = rh.gs(R.string.combov2_pump_is_suspended)
+            }
+            return
+        }
+
         runBlocking {
             try {
                 executeCommand {
