@@ -555,6 +555,7 @@
     <string name="nav_plugin_preferences">Nastavení pluginu</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Chybějící povolení SMS</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
