@@ -110,7 +110,7 @@
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
     <string name="insulin_plugins">Insulin Plugins</string>
     <string name="insulin_ultrarapid">Which insulin should you use with the Ultra-Rapid Oref plugin?</string>
-    <string name="insulin_fiasp">Fiasp®/Lyumijev®/</string>
+    <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
     <string name="insulin_humalog">Humalog®</string>
     <string name="insulin_actrapid">Actrapid®/Humalin R®/"regular" human insulin.</string>
