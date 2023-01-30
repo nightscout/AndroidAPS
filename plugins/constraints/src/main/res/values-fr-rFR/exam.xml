@@ -5,9 +5,12 @@
     <string name="dia_profile">Vous devez définir la valeur de DAI dans votre profil.</string>
     <string name="dia_minimumis5h">La valeur minimale autorisée est de 5 heures.</string>
     <string name="dia_hint1">https://wiki.aaps.app/fr/latest/Configuration/Config-Builder.html#insuline</string>
+    <string name="dia_meaningisequaltodiapump">Si vous êtes convaincu que la valeur de DAI utilisée dans votre pompe avant AAPS marche bien, il n\'y a pas besoin de la changer lorsque vous commencez à utiliser la boucle.</string>
     <string name="dia_valuemustbedetermined">Vous devez déterminer par vous-même la valeur appropriée pour la DAI.</string>
     <string name="hypott_label">Cible temporaire Hypo</string>
+    <string name="hypott_whenhypott">Quelle est la raison principale pour définir une cible temp hypo?</string>
     <string name="hypott_wrongbasal">Pour corriger les hypos causés par des paramètres de débit basal incorrects.</string>
+    <string name="hypott_preventoversmb">Pour empêcher AAPS de surcorriger une hausse de glycémie causée par les glucides à action rapide utilisés pour traiter une hypo.</string>
     <string name="hypott_exercise">Pour corriger une hypo due à un exercice.</string>
     <string name="hypott_0basal">Pour éviter que la glycémie ne baisse s\'il y a déjà un débit de basal temporaire de 0%.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/fr/latest/Usage/temptarget.html</string>
@@ -16,7 +19,10 @@
     <string name="offlineprofile_nsprofile">Le profil NS peut être utilisé, mais il n\'est pas configuré.</string>
     <string name="offlineprofile_hint1">https://wiki.aaps.app/fr/latest/Configuration/Config-Builder.html#profil</string>
     <string name="pumpdisconnect_label">Motifs pour l\'utilisation de la \"Déconnexion de pompe\" dans AAPS</string>
+    <string name="pumpdisconnect_whattodo">Que faire lorsque vous déconnectez la pompe de votre corps ?</string>
     <string name="pumpdisconnect_unnecessary">C\'est inutile car l\'insuline ne sera pas délivrée si la pompe est physiquement déconnectée.</string>
+    <string name="pumpdisconnect_missinginsulin">Cela empêche AAPS de comptabiliser l\'insuline qui n\'a pas été injectée quand la pompe est physiquement déconnectée.</string>
+    <string name="pumpdisconnect_notstop">Cela n\'arrêtera pas la distribution d\'insuline si la pompe reste connectée à votre corps.</string>
     <string name="pumpdisconnect_openloop">Cela passera AAPS en mode boucle ouverte.</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/fr/latest/Getting-Started/FAQ.html#autres-parametres</string>
     <string name="objectives_label">Paramètres AAPS</string>
@@ -82,6 +88,7 @@
     <string name="prerequisites2_what">Qu\'est-ce qui est essentiel pour mettre en place et utiliser AAPS ?</string>
     <string name="prerequisites2_profile">Informations validées pour configurer un profil (SI, ratio G/I, débits de basal, DAI, etc.).</string>
     <string name="prerequisites2_device">Un appareil Android compatible (par ex. téléphone mobile, montre Android version complète ou tablette).</string>
+    <string name="prerequisites2_internet">AAPS nécessite une connexion internet pour fonctionner en boucle fermée.</string>
     <string name="prerequisites2_supportedcgm">Une MGC prise en charge et une application appropriée pour recevoir des valeurs de glycémie sur le téléphone/appareil.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/fr/latest/Module/module.html</string>
     <string name="update_label">Mise à jour d\'AAPS</string>
@@ -111,6 +118,7 @@
     <string name="sensitivity_label">Plugins de Sensibilité</string>
     <string name="sensitivity_which">Sélectionnez toutes les bonnes réponses.</string>
     <string name="sensitivity_adjust">Les plugins de sensibilité permettent à AAPS de s\'adapter aux changements temporaires ou de courte durée de la sensibilité à l\'insuline (par ex. changements hormonaux ou problèmes d\'absorption sur le site d\'infusion).</string>
+    <string name="sensitivity_edit">Les plugins de sensibilité fournissent à l\'utilisateur des modifications suggérées pour les débits de basal, les ratios G/I et SI qui peuvent être utilisés pour éditer le profil.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/fr/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="sensitivity_hint2">https://wiki.aaps.app/fr/latest/Usage/Open-APS-features.html#autosens</string>
     <string name="wrongcarbs_label">Entrées de glucides erronées</string>
