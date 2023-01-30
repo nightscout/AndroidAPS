@@ -525,6 +525,7 @@
     <string name="nav_plugin_preferences">העדפות תוסף</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">הרשאות SMS חסרות</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>
