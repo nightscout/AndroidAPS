@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Скорость базала на помпе изменилась, но учесть ее не удалось</string>
     <string name="combo_activity_checking_for_history_changes">Проверка изменений в истории событий помпы</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Только что импортировано несколько болюсов с одинаковым количеством инсулина в течение одной минуты. В лог лечения может быть добавлена только одна запись. Пожалуйста проверьте помпу и вручную введите запись о болюсе через вкладку портала назначений. Убедитесь, что данному времени соответствует только одна запись о болюсе.</string>
-    <string name="about_link_urls">\n\ndocumentation:\nhttps://wiki.aaps.app\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Новый болюс старше 24 часов или запись относится к будущему. Пожалуйста убедитесь что дата на помпе установлена правильно.</string>
     <string name="combo_suspious_bolus_time">Время/дата поданного болюса неверны. Вероятно, кол-во активного инсулина IOB также неверно. Проверьте время/дату помпы.</string>
     <string name="combo_bolus_count">Отсчет болюса</string>
