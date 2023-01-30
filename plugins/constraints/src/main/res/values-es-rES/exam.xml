@@ -7,6 +7,7 @@
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="dia_valuemustbedetermined">Deberás determinar por ti mismo el valor apropiado para DAI.</string>
     <string name="hypott_label">Objetivo temporal ante Hipoglucemia</string>
+    <string name="hypott_whenhypott">¿Cuál es la razón principal para establecer un objetivo temporal por hipoglucemia?</string>
     <string name="hypott_wrongbasal">Para corregir hipoglucemias causadas por ajustes incorrectos de la tasa basal.</string>
     <string name="hypott_exercise">Para corregir una hipoglucemia que sucedió como resultando del ejercicio.</string>
     <string name="hypott_0basal">Para evitar que la glucosa sanguínea continue bajando si ya hay una tasa basal temporal igual a 0% actividad.</string>
