@@ -280,7 +280,7 @@
     <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
     <string name="largedisplay_description">Großer Bildschirm</string>
     <string name="skin">Erscheinungsbild</string>
-    <string name="cannula_usage">androidAPS nutzen:</string>
+    <string name="cannula_usage">Abgegeben:</string>
     <!--    Iob-->
     <string name="send_logfiles">Sende die heutigen Logdateien unter Angabe dieser Uhrzeit an die Entwickler.
 Unerwartetes Verhalten.</string>
