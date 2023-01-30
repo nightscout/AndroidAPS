@@ -555,6 +555,7 @@
     <string name="nav_plugin_preferences">Plugin-Einstellungen</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">SMS-Steuerung nicht erlaubt</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>
