@@ -101,7 +101,6 @@
     <string name="read_only">Salt okunur</string>
     <string name="working">İşleniyor</string>
     <!-- xDrip status line -->
-    <string name="key_xdrip_send_status">xDrip gönderi durumu</string>
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
     <string name="xdrip_shortname">XD</string>
