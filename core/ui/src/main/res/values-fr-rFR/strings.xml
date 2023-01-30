@@ -556,6 +556,9 @@
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
     <!-- About -->
+    <string name="cta_dont_kill_my_app_info">Garder l\'appli en arrière plan ?</string>
+    <string name="fabric_upload_disabled">Téléchargement des logs de plantage désactivé !</string>
+    <string name="about_link_urls">\n\nDocumentation :\nhttps://wiki.aaps.app/fr/latest/\n\nfacebook :\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>
