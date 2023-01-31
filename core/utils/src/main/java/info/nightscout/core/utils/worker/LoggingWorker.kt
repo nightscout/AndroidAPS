@@ -26,7 +26,7 @@ abstract class LoggingWorker(context: Context, workerParams: WorkerParameters, p
         try {
             withContext(dispatcher) {
                 doWorkAndLog().also {
-                    aapsLogger.debug(LTag.WORKER, "Worker result ${it::class.java.simpleName.uppercase()} for ${this::class.java}")
+                    aapsLogger.debug(LTag.WORKER, "Worker result ${it::class.java.simpleName.uppercase()} for ${this@LoggingWorker::class.java}")
                 }
             }
         } catch (e: Exception) {
