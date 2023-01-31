@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 
-class NsClientReceiverDelegateTest : TestBase() {
+class ReceiverDelegateTest : TestBase() {
 
     @Mock lateinit var sp: SP
     @Mock lateinit var rh: ResourceHelper
@@ -23,12 +23,12 @@ class NsClientReceiverDelegateTest : TestBase() {
     private val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
     @Mock private lateinit var receiverStatusStore: ReceiverStatusStore
-    private lateinit var sut: NsClientReceiverDelegate
+    private lateinit var sut: ReceiverDelegate
 
     @BeforeEach
     fun prepare() {
         //receiverStatusStore = ReceiverStatusStore(context, rxBus)
-        sut = NsClientReceiverDelegate(rxBus, rh, sp, receiverStatusStore, aapsSchedulers, fabricPrivacy)
+        sut = ReceiverDelegate(rxBus, rh, sp, receiverStatusStore, aapsSchedulers, fabricPrivacy)
     }
 
     @Test

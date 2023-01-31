@@ -4,7 +4,7 @@ import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.plugins.sync.R
-import info.nightscout.plugins.sync.nsShared.events.EventNSConnectivityOptionChanged
+import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventChargingState
@@ -19,7 +19,7 @@ import javax.inject.Singleton
 
 @OpenForTesting
 @Singleton
-class NsClientReceiverDelegate @Inject constructor(
+class ReceiverDelegate @Inject constructor(
     private val rxBus: RxBus,
     private val rh: ResourceHelper,
     private val sp: SP,
@@ -94,7 +94,7 @@ class NsClientReceiverDelegate @Inject constructor(
         if (newAllowedState != allowed) {
             allowed = newAllowedState
             if (allowed) blockingReason = ""
-            rxBus.send(EventNSConnectivityOptionChanged(blockingReason))
+            rxBus.send(EventConnectivityOptionChanged(blockingReason))
         }
     }
 

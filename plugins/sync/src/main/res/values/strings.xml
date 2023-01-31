@@ -115,14 +115,7 @@
     <string name="key_tidepool_password" translatable="false">tidepool_password</string>
     <string name="key_tidepool_dev_servers" translatable="false">tidepool_dev_servers</string>
     <string name="key_tidepool_test_login" translatable="false">tidepool_test_login</string>
-    <string name="key_tidepool_only_while_charging" translatable="false">tidepool_only_while_charging</string>
-    <string name="key_tidepool_only_while_unmetered" translatable="false">tidepool_only_while_unmetered</string>
     <string name="key_tidepool_last_end" translatable="false">tidepool_last_end</string>
-    <string name="key_tidepool_upload_profile" translatable="false">tidepool_upload_profile</string>
-    <string name="key_tidepool_upload_tbr" translatable="false">tidepool_upload_tbr</string>
-    <string name="key_tidepool_upload_cgm" translatable="false">tidepool_upload_cgm</string>
-    <string name="key_tidepool_upload_bolus" translatable="false">tidepool_upload_bolus</string>
-    <string name="key_tidepool_upload_bg" translatable="false">tidepool_upload_bg</string>
 
     <string name="summary_tidepool_username">Your Tidepool login user name, normally your email address</string>
     <string name="title_tidepool_username">Login User Name</string>

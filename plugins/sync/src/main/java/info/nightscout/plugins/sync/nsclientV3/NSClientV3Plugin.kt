@@ -39,10 +39,10 @@ import info.nightscout.interfaces.workflow.WorkerClasses
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
+import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
-import info.nightscout.plugins.sync.nsShared.events.EventNSConnectivityOptionChanged
-import info.nightscout.plugins.sync.nsclient.NsClientReceiverDelegate
+import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSBolus
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSBolusWizard
@@ -113,7 +113,7 @@ class NSClientV3Plugin @Inject constructor(
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val sp: SP,
-    private val nsClientReceiverDelegate: NsClientReceiverDelegate,
+    private val receiverDelegate: ReceiverDelegate,
     private val config: Config,
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
@@ -166,8 +166,8 @@ class NSClientV3Plugin @Inject constructor(
 
     internal var nsAndroidClient: NSAndroidClient? = null
 
-    private val isAllowed get() = nsClientReceiverDelegate.allowed
-    private val blockingReason get() = nsClientReceiverDelegate.blockingReason
+    private val isAllowed get() = receiverDelegate.allowed
+    private val blockingReason get() = receiverDelegate.blockingReason
 
     val maxAge = T.days(77).msecs()
     internal var newestDataOnServer: LastModified? = null // timestamp of last modification for every collection provided by server
@@ -186,9 +186,9 @@ class NSClientV3Plugin @Inject constructor(
 
         setClient("START")
 
-        nsClientReceiverDelegate.grabReceiversState()
+        receiverDelegate.grabReceiversState()
         disposable += rxBus
-            .toObservable(EventNSConnectivityOptionChanged::class.java)
+            .toObservable(EventConnectivityOptionChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ ev ->
                            rxBus.send(EventNSClientNewLog("● CONNECTIVITY", ev.blockingReason))

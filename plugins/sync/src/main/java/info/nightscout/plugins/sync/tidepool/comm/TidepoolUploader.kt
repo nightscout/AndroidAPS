@@ -5,8 +5,8 @@ import android.os.PowerManager
 import android.os.SystemClock
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.sync.R
+import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
 import info.nightscout.plugins.sync.tidepool.events.EventTidepoolStatus
 import info.nightscout.plugins.sync.tidepool.messages.AuthReplyMessage
 import info.nightscout.plugins.sync.tidepool.messages.AuthRequestMessage
@@ -37,11 +37,12 @@ class TidepoolUploader @Inject constructor(
     private val rh: ResourceHelper,
     private val sp: SP,
     private val uploadChunk: UploadChunk,
-    private val activePlugin: ActivePlugin,
     private val dateUtil: DateUtil,
+    private val receiverDelegate: ReceiverDelegate,
     private val config: Config
 ) {
 
+    private val isAllowed get() = receiverDelegate.allowed
     private var wl: PowerManager.WakeLock? = null
 
     companion object {
@@ -57,7 +58,7 @@ class TidepoolUploader @Inject constructor(
     private var session: Session? = null
 
     enum class ConnectionStatus {
-        DISCONNECTED, CONNECTING, CONNECTED, FAILED
+        BLOCKED, DISCONNECTED, CONNECTING, CONNECTED, FAILED
     }
 
     var connectionStatus: ConnectionStatus = ConnectionStatus.DISCONNECTED
@@ -87,7 +88,6 @@ class TidepoolUploader @Inject constructor(
         return Session(AuthRequestMessage.getAuthRequestHeader(sp), SESSION_TOKEN_HEADER, service)
     }
 
-    // TODO: call on preference change
     fun resetInstance() {
         retrofit = null
         aapsLogger.debug(LTag.TIDEPOOL, "Instance reset")
@@ -96,6 +96,11 @@ class TidepoolUploader @Inject constructor(
 
     @Synchronized
     fun doLogin(doUpload: Boolean = false) {
+        if (!isAllowed) {
+            connectionStatus = ConnectionStatus.BLOCKED
+            aapsLogger.debug(LTag.TIDEPOOL, "Blocked by connectivity settings")
+            return
+        }
         if (connectionStatus == ConnectionStatus.CONNECTED || connectionStatus == ConnectionStatus.CONNECTING) {
             aapsLogger.debug(LTag.TIDEPOOL, "Already connected")
             return
@@ -139,7 +144,6 @@ class TidepoolUploader @Inject constructor(
                                                                      "Failed to log into Tidepool.\nCheck that your user name and password are correct."
                                                                  )
                                                              }))
-
         }
             ?: OKDialog.show(rootContext, rh.gs(R.string.tidepool), "Cannot do login as user credentials have not been set correctly")
 
@@ -197,6 +201,11 @@ class TidepoolUploader @Inject constructor(
 
     @Synchronized
     fun doUpload() {
+        if (!isAllowed) {
+            connectionStatus = ConnectionStatus.BLOCKED
+            aapsLogger.debug(LTag.TIDEPOOL, "Blocked by connectivity settings")
+            return
+        }
         session.let { session ->
             if (session == null) {
                 aapsLogger.error("Session is null, cannot proceed")
@@ -231,7 +240,7 @@ class TidepoolUploader @Inject constructor(
                             releaseWakeLock()
                             uploadNext()
                         }, {
-                            connectionStatus = ConnectionStatus.FAILED
+                            connectionStatus = ConnectionStatus.DISCONNECTED
                             rxBus.send(EventTidepoolStatus(("Upload FAILED")))
                             releaseWakeLock()
                                                                           }))
@@ -242,6 +251,11 @@ class TidepoolUploader @Inject constructor(
     }
 
     private fun uploadNext() {
+        if (!isAllowed) {
+            connectionStatus = ConnectionStatus.BLOCKED
+            aapsLogger.debug(LTag.TIDEPOOL, "Blocked by connectivity settings")
+            return
+        }
         if (uploadChunk.getLastEnd() < dateUtil.now() - T.mins(1).msecs()) {
             SystemClock.sleep(3000)
             aapsLogger.debug(LTag.TIDEPOOL, "Restarting doUpload. Last: " + dateUtil.dateAndTimeString(uploadChunk.getLastEnd()))

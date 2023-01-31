@@ -31,9 +31,9 @@ import info.nightscout.interfaces.utils.JsonHelper.safeGetStringAllowNull
 import info.nightscout.interfaces.workflow.WorkerClasses
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
+import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
-import info.nightscout.plugins.sync.nsShared.events.EventNSConnectivityOptionChanged
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclient.acks.NSAddAck
 import info.nightscout.plugins.sync.nsclient.acks.NSAuthAck
@@ -149,7 +149,7 @@ class NSClientService : DaggerService() {
                            }
                        }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventNSConnectivityOptionChanged::class.java)
+            .toObservable(EventConnectivityOptionChanged::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            latestDateInReceivedData = 0
