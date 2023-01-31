@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Tasa Basal cambiada en bomba, pero falló al leer</string>
     <string name="combo_activity_checking_for_history_changes">Comprobando cambios en el historial</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Múltiples bolos con la misma cantidad en el mismo minuto fueron importados. Sólo se puede agregar un registro a los tratamientos. Verifique la bomba y agregue manualmente un registro de bolo usando la pestaña Careportal. Asegúrese de crear un bolo con un tiempo que no use otro bolo.</string>
-    <string name="about_link_urls">\n\nDocumentación::\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">El último bolo tiene más de 24 horas o está en el futuro. Comprueba que la fecha en la bomba está configurada correctamente.</string>
     <string name="combo_suspious_bolus_time">La hora / fecha del bolo administrado en la bomba parece incorrecta; es probable que la IOB sea incorrecta. Verifique la hora / fecha de la bomba.</string>
     <string name="combo_bolus_count">Contador Bolos</string>

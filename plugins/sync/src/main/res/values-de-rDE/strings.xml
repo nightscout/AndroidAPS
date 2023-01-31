@@ -100,4 +100,19 @@
     <string name="not_connected">Nicht verbunden</string>
     <string name="read_only">Nur lesen</string>
     <string name="working">Arbeitet</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Sende Daten an xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Zeige detailliertes IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
+    <string name="xdrip_status_show_bgi_title">Zeige BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Füge BGI zur Statuszeile hinzu</string>
+    <string name="xdrip_status_settings">Erweiterte xDrip+ Statuszeile</string>
+    <string name="disabled_loop">Loop deaktiviert</string>
+    <string name="xdrip_send_status_title">Statuszeile an xDrip+ senden</string>
+    <string name="xdrip_not_installed">xDrip+ nicht installiert</string>
+    <string name="calibration_sent">Kalibrierung an xDrip+ gesendet</string>
+    <!--    DataBroadcast-->
 </resources>

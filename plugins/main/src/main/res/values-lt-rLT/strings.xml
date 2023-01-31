@@ -15,7 +15,7 @@
     <string name="smscommunicator_otp_reset_prompt">Ar tikrai norite iš naujo nustatyti autentifikatoriaus raktą? Dėl to visi šiuo metu konfigūruojami autentifikatoriai negalios, ir jums reikės juos nustatyti dar kartą.</string>
     <string name="smscommunicator_otp_reset_successful">Sukurtas naujas autentifikavimo raktas! Autentifikatoriams pateikti naudokite atnaujintą QR kodą.</string>
     <string name="smscommunicator_otp_export_title">Eksportuojamas OTP kodas</string>
-    <string name="smscommunicator_otp_export_prompt">Ar tikrai norite nukopijuoti OTP slaptažodį į mainų sritį?\n\nTai gali būti reikalinga tik tuo atveju, jei jūsų programai kyla problemų identifikuojant nuskaitant QR kodą. Arba norite jį įvesti rankiniu būdu ar sukonfigūruoti įrangos OTP prieigos raktą naudodami specialią programą.</string>
+    <string name="smscommunicator_otp_export_prompt">Ar tikrai norite nukopijuoti OTP slaptažodį į mainų sritį?\n\nTai gali būti reikalinga tik tuo atveju, jei Jūsų programai kyla problemų identifikuojant nuskaitant QR kodą. Arba norite jį įvesti rankiniu būdu ar sukonfigūruoti įrangos OTP prieigos raktą naudodami specialią programą.</string>
     <string name="smscommunicator_otp_export_successful">OTP kodas (Base32 formatas) eksportuotas ir nukopijuotas į mainų sritį. Įklijuokite jį į autentifikatorių arba OTP programą!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Įdiegti Authenticator</string>
     <string name="smscommunicator_otp_step3_test_header">3. Patikrinti vienkartinį slaptažodį</string>
@@ -97,17 +97,11 @@
     <string name="sms_read_status_failed">Būsenos nuskaityti nepavyko</string>
     <string name="sms_profile_switch_created">Profilio perjungimas sukurtas</string>
     <string name="sms_wrong_tbr_duration">Laikinos bazės trukmė turi būti kartotinė %1$d minučių ir didesnė nei 0.</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ būsenos juosta (laikrodyje)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Rodyti Ciklo informaciją laikrodyje, xDrip+ pradžios ekrane.</string>
     <string name="xdrip_status_detailed_iob_title">Rodyti AIO detaliai</string>
     <string name="xdrip_status_detailed_iob_summary">Rodyti laikrodyje bazės ir bolusų AIO</string>
     <string name="disabled_loop">Ciklas išjungtas</string>
     <string name="xdrip_status_show_bgi_title">Rodyti KG</string>
     <string name="xdrip_status_show_bgi_summary">Pridėti KG prie statuso linijos</string>
-    <string name="xdrip_status_settings">xDrip+ statusas (laikrodyje)</string>
     <!-- Food-->
     <string name="food_short">Maistas</string>
     <string name="description_food">Rodyti maisto ruošinius iš Nightscout</string>
@@ -186,7 +180,7 @@
     <string name="a11y_blood_glucose">kraujo glikemija</string>
     <string name="set_basal_question">Patvirtinti naują laikiną bazę:</string>
     <string name="overview_cgm">NGJ</string>
-    <string name="overview">Apžvalga</string>
+    <string name="overview">Pradžios ekr.</string>
     <string name="overview_shortname">PRADŽIA</string>
     <string name="description_overview">Rodo dabartinę Ciklo būseną ir pagrindinių veiksmų mygtukus</string>
     <string name="overview_buttons_selection">Mygtukai</string>
@@ -226,7 +220,7 @@
     <string name="button2">Mygtukas 2</string>
     <string name="button3">Mygtukas 3</string>
     <string name="prefs_range_title">Vizualizacijos diapazonas</string>
-    <string name="prefs_range_summary">Aukštoji ir žemoji riba Apžvalgos grafikuose bei išmaniuosiuose laikrodžiuose</string>
+    <string name="prefs_range_summary">Aukštoji ir žemoji riba Pradžios lango grafikuose bei išmaniuosiuose laikrodžiuose</string>
     <string name="low_mark">Žemoji riba</string>
     <string name="high_mark">Aukštoji riba</string>
     <string name="short_tabtitles">Naudoti sutrumpintus skirtukų pavadinimus</string>
@@ -242,7 +236,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognozė</string>
     <string name="overview_show_treatments">Terapija</string>
-    <string name="overview_show_deviation_slope">Nukrypimo koeficientas</string>
+    <string name="overview_show_deviation_slope">Nuokrypiai</string>
     <string name="overview_show_activity">Aktyvumas</string>
     <string name="overview_show_bgi">KG įtaka</string>
     <string name="overview_show_sensitivity">Jautrumas insulinui</string>
@@ -267,7 +261,6 @@
     <string name="buttonson_description">Mygtukai visada rodomi ekrano apačioje</string>
     <string name="largedisplay_description">Didelis ekranas</string>
     <string name="skin">Išvaizda</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">naudojimas:</string>
     <!--    Iob-->
     <string name="send_logfiles">Siųsti šios dienos žurnalo įrašus kūrėjams dabar. Netikėta situacija.</string>

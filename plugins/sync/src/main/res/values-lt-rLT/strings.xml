@@ -77,7 +77,7 @@
     <string name="ns_local_broadcasts_title">Įgalinti lokalų duomenų perdavimą.</string>
     <string name="copy_existing_values">Kopijuoti NS nustatymus (jei yra)?</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Jūsų Tidepool vartotojo vardas, įprastai jūsų el. pašto adresas</string>
+    <string name="summary_tidepool_username">Jūsų Tidepool vartotojo vardas, įprastai tai Jūsų el. pašto adresas</string>
     <string name="title_tidepool_username">Vartotojo vardas</string>
     <string name="summary_tidepool_password">Jūsų Tidepool prisijungimo slaptažodis</string>
     <string name="title_tidepool_password">Prisijungimo slaptažodis</string>
@@ -95,4 +95,7 @@
     <string name="remove_all">Pašalinti visus</string>
     <string name="reset_start">Pradėti iš naujo</string>
     <string name="upload_now">Įkelti dabar</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
 </resources>

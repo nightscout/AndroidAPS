@@ -45,8 +45,6 @@
     <string name="chartmenu">Menu do Gráfico</string>
     <string name="authorizationfailed">Falha na autorização</string>
     <string name="copytolocalprofile_invalid">Não foi possível criar o perfil. Perfil inválido.</string>
-    <string name="cta_dont_kill_my_app_info">Não encerre meu aplicativo?</string>
-    <string name="fabric_upload_disabled">Envio de logs de erro desativado!</string>
     <string name="clear_filter">Limpar filtro</string>
     <string name="cannula">Cânula</string>
     <string name="email_address">Endereço de e-mail</string>

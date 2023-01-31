@@ -101,17 +101,11 @@
     <string name="sms_profile_switch_created">Cambio profilo creato</string>
     <string name="sms_wrong_tbr_duration">La durata del TBR deve essere un multiplo di %1$d minuti e maggiore di 0.</string>
     <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Statusline xDrip+ (smartwatch)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Mostra le informazioni del loop sulla watchface di xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Mostra IOB dettagliato</string>
     <string name="xdrip_status_detailed_iob_summary">Dividi IOB in bolo e basale sulla watchface</string>
     <string name="disabled_loop">Loop disabilitato</string>
     <string name="xdrip_status_show_bgi_title">Mostra BGI</string>
     <string name="xdrip_status_show_bgi_summary">Aggiungi BGI alla statusline</string>
-    <string name="xdrip_status_settings">Stato xDrip+ (smartwatch)</string>
     <!-- Food-->
     <string name="food_short">Cibo</string>
     <string name="description_food">Visualizza i preset dei cibi definiti in Nightscout</string>
@@ -282,7 +276,6 @@
     <string name="buttonson_description">I tasti vengono sempre visualizzati nella parte inferiore dello schermo</string>
     <string name="largedisplay_description">Visualizzazione ampia</string>
     <string name="skin">Tema</string>
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Invia agli sviluppatori i file log di oggi e di questo momento. Situazione inaspettata.</string>
     <!--    Wear-->

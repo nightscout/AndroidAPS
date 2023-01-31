@@ -3,17 +3,13 @@
     <string name="dia_whatmeansdia">Što je istina o DIA-i?</string>
     <string name="dia_label_exam">Trajanje djelovanja inzulina (DIA)</string>
     <string name="dia_profile">Trebali biste postaviti vrijednost za DIA u svom profilu.</string>
-    <string name="dia_meaningisequaltodiapump">Ako ste zadovoljni da je vrijednost za DIA koju ste koristili u svojoj pumpi prije AAPS-a, nema potrebe da je mijenjate kada počnete raditi u petlji.</string>
-    <string name="hypott_preventoversmb">Kako bi se spriječilo pretjerano korigiranje AAPS-a za porast glukoze u krvi uzrokovan brzodjelujućim ugljikohidratima koji se koriste za tretiranje hipoglikemije.</string>
     <string name="pumpdisconnect_label">Razlozi za primjenu \"Otkači pumpu\" u AAPS</string>
-    <string name="pumpdisconnect_missinginsulin">Sprječava APPS da obračuna inzulin koji nije isporučen dok je pumpa fizički odspojena. </string>
     <string name="pumpdisconnect_openloop">Poslat će AAPS u način rada otvorene petlje.</string>
     <string name="objectives_label">AAPS postavke</string>
     <string name="objectives2_label">AAPS postavke</string>
     <string name="noisycgm_nothing">Ne činiti ništa - AAPS će se pozabaviti time.</string>
     <string name="prerequisites_what">Što je bitno za postavljanje i korištenje AAPS-a?</string>
     <string name="prerequisites2_what">Što je bitno za postavljanje i korištenje AAPS-a?</string>
-    <string name="prerequisites2_internet">AAPS zahtijeva internetsku vezu kako bi radio u zatvorenoj petlji.</string>
     <string name="update_label">Ažuriranje AAPS-a</string>
     <string name="update_asap">Kada se objave ažurirane verzije AAPS-a, starije verzije mogu biti udaljeno ograničene nakon određenog vremena.</string>
     <string name="troubleshooting_wheretoask">Gdje možete potražiti pomoć za AAPS?</string>
@@ -24,7 +20,6 @@
     <string name="wrongcarbs_donothing">Ne poduzimati ništa – AAPS će izvršiti odgovarajuće prilagodbe.</string>
     <string name="wronginsulin_compare">Usporedite vrijednosti u AAPS i povijesti pumpe (ako pumpa to podržava).</string>
     <string name="wronginsulin_donothing">Ne poduzimajte ništa i dopustite APPS-u da ispravi sve rezultirajuće visoke razine glukoze u krvi.</string>
-    <string name="breadgrams_decay">AAPS koristi dinamički model za procjenu \"raspada\" ugljikohidrata i izračunavanje COB-a.</string>
     <string name="extendedcarbs_free">Za bilježenje \'besplatnih\' ugljikohidrata za vježbanje koje želite sakriti od AAPS-a.</string>
     <string name="extendedcarbs_fat">e-ugljikohidrati (distribuirani u budućnosti) mogu pomoći AAPS-u u rješavanju obroka s visokim udjelom masti/proteina.</string>
     <string name="nsclient_howcanyou">Kako možete nadzirati APPS (na primjer za svoje dijete) na daljinu?</string>
@@ -34,6 +29,4 @@
     <string name="isf_preferences">ISF trebate unijeti u svoje postavke AAPS-a.</string>
     <string name="profileswitchtime_iwant">Ako ustanete 2 sata ranije nego inače, kako biste trebali obavijestiti AAPS o promjeni svog rasporeda?</string>
     <string name="profileswitch4_internet">Aktiviranje promjena vašeg Nightscout profila zahtijeva da vaš AAPS telefon ima internetsku vezu.</string>
-    <string name="other_medication_text">AAPS smanjuje bazalne doze ili obustavlja isporuku inzulina radi povećanja šećera u krvi. Lijekovi iz klase inhibitora SGLT2 (gliflozini) mogu spriječiti povećanje glukoze u krvi i stoga mogu izazvati opasan nedostatak inzulina koji dovodi do DKA.
-\nUobičajeni brendovi su: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nOvime obećavam da neću uzimati takve lijekove kada koristeći AAPS ili će deaktivirati petlju prije upotrebe takvih lijekova.</string>
 </resources>

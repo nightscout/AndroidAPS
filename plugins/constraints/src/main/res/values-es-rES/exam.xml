@@ -5,12 +5,10 @@
     <string name="dia_profile">Debes establecer el valor de DAI en tu perfil.</string>
     <string name="dia_minimumis5h">El valor mínimo permitido es de 5 horas.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
-    <string name="dia_meaningisequaltodiapump">Si estás satisfecho con el valor de DAI que utilizas en tu bomba antes de utilizar AAPS y te funcionó bien, no hay necesidad de cambiarlo cuando empieces a usar el bucle cerrado.</string>
     <string name="dia_valuemustbedetermined">Deberás determinar por ti mismo el valor apropiado para DAI.</string>
     <string name="hypott_label">Objetivo temporal ante Hipoglucemia</string>
     <string name="hypott_whenhypott">¿Cuál es la razón principal para establecer un objetivo temporal por hipoglucemia?</string>
     <string name="hypott_wrongbasal">Para corregir hipoglucemias causadas por ajustes incorrectos de la tasa basal.</string>
-    <string name="hypott_preventoversmb">Para evitar que AAPS corrija de forma excesiva ante un rápido aumento de la glucosa por consumir carbohidratos simples para recuperarse de una hipoglucemia.</string>
     <string name="hypott_exercise">Para corregir una hipoglucemia que sucedió como resultando del ejercicio.</string>
     <string name="hypott_0basal">Para evitar que la glucosa sanguínea continue bajando si ya hay una tasa basal temporal igual a 0% actividad.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html</string>
@@ -19,10 +17,7 @@
     <string name="offlineprofile_nsprofile">El perfil que proviene de Nightscout (NS) puede ser utilizado, pero no configurado.</string>
     <string name="offlineprofile_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Razones para seleccionar \"Desconectar bomba\" en AAPS</string>
-    <string name="pumpdisconnect_whattodo">¿Qué se debe hacer al desconectar la bomba de insulina?</string>
     <string name="pumpdisconnect_unnecessary">Esto es innecesario, ya que no se entregará insulina si la bomba está físicamente desconectada.</string>
-    <string name="pumpdisconnect_missinginsulin">Evita que AAPS considere la insulina que no se suministró cuando la bomba estaba físicamente desconectada</string>
-    <string name="pumpdisconnect_notstop">Si la bomba permanece conectada, no se detendrá el suministro de insulina.</string>
     <string name="pumpdisconnect_openloop">Se activará el modo de bucle abierto en AAPS.</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_label">Ajustes de AAPS</string>
@@ -88,7 +83,6 @@
     <string name="prerequisites2_what">¿Qué es esencial para configurar y utilizar AAPS?</string>
     <string name="prerequisites2_profile">Parámetros validados para poder configurar un perfil (FSI, I:C, perfil basal, DAI etc.).</string>
     <string name="prerequisites2_device">Un dispositivo Android compatible (e.j. un móvil, un smartwatch Android compatible o una tablet).</string>
-    <string name="prerequisites2_internet">AAPS requiere una conexión a Internet para funcionar con el modo bucle cerrado.</string>
     <string name="prerequisites2_supportedcgm">Un medidor continuo de glucosa (MCG) y una aplicación capaz de recibir los valores proporcionados por el medidor en el móvil o tablet.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
     <string name="update_label">Actualizando AAPS</string>
@@ -118,9 +112,6 @@
     <string name="sensitivity_label">Plugins de sensibilidad</string>
     <string name="sensitivity_which">Seleccione todas las respuestas correctas.</string>
     <string name="sensitivity_adjust">Los plugins de sensibilidad permiten a AAPS ajustarse para cambios temporales o de corta duración en la sensibilidad a la insulina (por ejemplo, cambios hormonales o problemas con la absorción en el sitio de infusión).</string>
-    <string name="sensitivity_edit">Los plugins de sensibilidad sugieren al usuario cambios en la cantidad de insulina basal a suministrar, en el factor de sensibilidad a la insulina (ISF) y en el ratio I:C y pueden ser incorporados al perfil definido.</string>
-    <string name="sensitivity_cannula">Registrar el cámbio de cánula reinicia Autosens, volviendo de nuevo al 100%.</string>
-    <string name="sensitivity_time">Algunas de las opciones del plugin tienen rangos de tiempo configurables que pueden ser definidos por el usuario.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/Usage/Open-APS-features.html#autosens</string>
     <string name="wrongcarbs_label">Error de ingreso de Carbohidratos</string>
@@ -130,23 +121,15 @@
     <string name="wrongcarbs_donothing">No hacer nada - AAPS realizará los ajustes necesarios.</string>
     <string name="wrongcarbs_bolus">Darse un bolo usando el botón de Insulina (bolus) en página general.</string>
     <string name="wronginsulin_label">Errores de entrega/entrada de insulina</string>
-    <string name="wronginsulin_whattodo">¿Qué debes hacer si recibiste menos insulina de la que sugiere la historia de la bomba p.ej. debido a una oclusión, una cánula fallida o olvidarse de reponer la bomba después de una ducha?</string>
     <string name="wronginsulin_careportal">Elimina los valores de insulina del portal de Nightscout o Careportal para eliminarlos del historial de la bomba.</string>
     <string name="wronginsulin_compare">Comparar valores en AAPS con el historial de la bomba (si la bomba los registra).</string>
     <string name="wronginsulin_prime">Bolo una proporción de la insulina calculada “perdida” por jeringa/pluma o usando menú de Insulina.</string>
     <string name="wronginsulin_donothing">No hacer nada y permite que AAPS corrija cualquier resultado de nivel alto de glucosa.</string>
     <string name="cob_label">Carbohidratos activos (COB)</string>
-    <string name="cob_question">¿Cómo afecta el cambio del valor FSI al cálculo de COB?</string>
-    <string name="cob_longer">Incrementar el FSI hará que los carbohidratos se absorban más lentamente</string>
-    <string name="cob_shorter">Incrementar el FSI hará que los carbohidratos se absorban más rápidamente</string>
     <string name="cob_no_effect">Incrementar el FSI no afectará la absorción calculada de carbohidratos</string>
     <string name="cob2_question">¿Cómo afecta cambiar los valores de IC a los cálculos de COB?</string>
-    <string name="cob2_longer">Incrementar el IC hará que los carbohidratos se absorban más lentamente</string>
-    <string name="cob2_shorter">Incrementar el IC hará que los carbohidratos se absorban más rápidamente</string>
     <string name="cob2_no_effect">Incrementar el IC no afectará la absorción calculada de carbohidratos</string>
     <string name="cob3_question">¿Cómo afecta el cambio de porcentaje del perfil al cálculo de los COB?</string>
-    <string name="cob3_longer">Establecer el perfil a 150% hará que los carbohidratos se absorban más lentamente</string>
-    <string name="cob3_shorter">Establecer el perfil a 150% hará que los carbohidratos se absorban más rápidamente</string>
     <string name="cob3_no_effect">Establecer el perfil a 150% no afectará la absorción calculada de carbohidratos</string>
     <string name="iob_value">El valor del IOB se ve afectado por las bases temporales ejecutadas.</string>
     <string name="iob_hightemp">No se dará alta tasa basal temporal cuando su nivel de azúcar en sangre esté por debajo del objetivo.</string>
@@ -155,7 +138,6 @@
     <string name="breadgrams_label">Entrada y bolos de carbohidratos</string>
     <string name="breadgrams_grams">Sólo se deben utilizar gramos para estimar y registrar los carbohidratos consumidos.</string>
     <string name="breadgrams_exchange">Los carbohidratos consumidos se pueden registrar utilizando un sistema de intercambio apropiado (por ejemplo, los intercambios DAFNE \"CHO\" o \"Unidades de Pan\" europeas).</string>
-    <string name="breadgrams_decay">AAPS utiliza un modelo dinámico para estimar la \"reducción\" y calcular el COB.</string>
     <string name="breadgrams_calc">Si los niveles de glucosa en sangre están fuera de los valores aceptables (demasiado bajos o demasiado altos), la calculadora del bolo se puede utilizar para proporcionar sugerencias para las correcciones de carbohidratos o de insulina.</string>
     <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">e-carbs</string>
@@ -163,7 +145,6 @@
     <string name="extendedcarbs_future">Para programar los carbohidratos en el futuro, posiblemente distribuidos a través de un período (similar a un bolo extendido que distribuye insulina sobre un período).</string>
     <string name="extendedcarbs_free">Para regristrar carbohidratos \'libres\' de ejercicios que quieres ocultar a AAPS.</string>
     <string name="extendedcarbs_fat">Los eCarbs (distribuidos en el futuro) pueden ayudar a AAPS con el tratamiento de comidas con alto contenido de grasa/proteína (UGP).</string>
-    <string name="extendedcarbs_rescue">Para registrar carbohidratos de rescate que se utilizan para tratar glucosa baja.</string>
     <string name="extendedcarbs_hint1">https://wiki.aaps.app/en/latest/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Monitoreo remoto</string>
     <string name="nsclient_howcanyou">¿Cómo puedes monitorizar AAPS de forma remota (por ejemplo, para ver a tu hijo)?</string>
@@ -174,8 +155,6 @@
     <string name="nsclient_hint1">https://wiki.aaps.app/en/latest/Children/Children.html</string>
     <string name="isf_label_exam">Factor Sensibilidad a la Insulina (ISF)</string>
     <string name="isf_increasingvalue">El aumento de los valores de ISF conducirá a un mayor suministro de insulina para cubrir una cantidad específica de carbonos.</string>
-    <string name="isf_decreasingvalue">Reducir los valores de ISF conduce a una mayor cantidad de insulina para corregir una glucosa sanguínea a un objetivo superior.</string>
-    <string name="isf_noeffect">Aumentar o reducir el ISF no tiene ningún efecto en la administración de insulina cuando los niveles de glucosa en la sangre están por debajo del objetivo.</string>
     <string name="isf_preferences">El ISF debe añadirse en las preferencias de AAPS.</string>
     <string name="isf_profile">El cambio del valor de ISF en el perfil es suficiente para aplicar el cambio.</string>
     <string name="isf_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
@@ -187,17 +166,14 @@
     <string name="ic_decreasingvalue">Las relaciones I:C más bajas conducen a menos insulina entregada por una cantidad dada de carbohidratos.</string>
     <string name="ic_noeffect">Si tiene 0 COB, cambiar la ratio IC conducirá a una cantidad distinta de insulina para corregir un valor de glucemia determinado.</string>
     <string name="ic_different">El IC será diferente si cuenta una unidad de carbohidratos como 10g o 12g.</string>
-    <string name="ic_meaning">IC significa: Cuántas unidades de carbohidratos están cubiertas por 1U de insulina.</string>
     <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Cambio de perfil</string>
-    <string name="profileswitch_pctwillchange"> Al especificar un cambio de perfil del 90%, ¿qué respuestas son correctas?</string>
     <string name="profileswitch_basallower">Las basales serán 10% más bajas.</string>
     <string name="profileswitch_isfhigher">El ISF será un 10% más alto.</string>
     <string name="profileswitch_iclower">El valor del ratio I:C será un 10% más bajo.</string>
     <string name="profileswitch_unchanged">Las relaciones ISF e I:C no se modificarán.</string>
     <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/en/latest/Usage/Profiles.html#profile-switch</string>
     <string name="profileswitch2_label">Cambio de perfil</string>
-    <string name="profileswitch2_pctwillchange"> Al especificar un cambio de perfil del 120%, ¿qué respuestas son correctas?</string>
     <string name="profileswitch2_bghigher">El objetivo de la glucosa en sangre será 20% más alto.</string>
     <string name="profileswitch2_basalhigher">Las tasas basales serán un 20% más altas.</string>
     <string name="profileswitch2_bgunchanged">El objetivo de la glucosa sanguínea no cambiará.</string>
@@ -206,21 +182,14 @@
     <string name="profileswitchtime_iwant">Si te levantas 2 horas antes de lo habitual, ¿cómo debes notificar a AAPS sobre el cambio de horario?</string>
     <string name="profileswitchtime_2">Iniciar un cambio de perfil con un intervalo de tiempo de 2</string>
     <string name="profileswitchtime__2">Iniciar un cambio de perfil con un intervalo de tiempo de -2</string>
-    <string name="profileswitchtime_tt">Establece un objetivo temporal comida pronta.</string>
-    <string name="profileswitchtime_100">Haga un cambio de perfil a más de 100%. </string>
     <string name="profileswitchtime_hint1">https://wiki.aaps.app/en/latest/Usage/Profiles.html#timeshift</string>
     <string name="profileswitch4_label">Cambios en perfiles</string>
     <string name="profileswitch4_rates">Las tasas basales, ISF, I:C, etc., deben establecerse en los perfiles.</string>
     <string name="profileswitch4_internet">Activar cambios en el perfil de Nightscout requiere que el teléfono con AAPS disponga de conexión a Internet.</string>
     <string name="profileswitch4_sufficient">Editar perfiles para cambiar valores es suficiente para implementar cualquier cambio realizado.</string>
-    <string name="profileswitch4_multi">Se pueden configurar múltiples perfiles y seleccionarlos para adaptarse a las circunstancias cambiantes (por ejemplo, cambios hormonales, turnos de trabajo, días de semana/fin de semana).</string>
     <string name="basalhelp_hint1">https://wiki.aaps.app/en/latest/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_label">Ayuda con tasas basales</string>
-    <string name="basalhelp_where">A donde ir para obtener ayuda con tasa basal y demás.</string>
     <string name="basalhelp_diabetesteam">Tu equipo de diabetes</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
-    <string name="other_medication_label">Otros Medicamentos. Por favor, lea la siguiente declaración y luego marque la casilla para aceptar la declaración.</string>
-    <string name="other_medication_text">AAPS reduce las tasas basales o suspende la administración de insulina para aumentar la glucosa en sangre. Los inhibidores de la familia de las SGLT2 (gliflozinas) pueden prevenir el aumento esperado de la glucosa en sangre, por lo que pueden producir una deficiencia de insulina preligrosa (DKA)
-\nAlgunos nombres genéricos de marcas son: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nI Prometo que no tomaré este tipo de medicamentos cuando utilice AAPS o desactivaré el bucle cerrado antes de usarlos.</string>
 </resources>

@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Le pourcentage de basal a changé dans la pompe mais sa lecture a échoué</string>
     <string name="combo_activity_checking_for_history_changes">Vérification des modifications de l\'historique</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">De multiples bolus similaires viennent d\'être importés dans la même minute. Un seul enregistrement a pu être ajouté aux traitements. Veuillez vérifier la pompe et d\'ajouter manuellement un enregistrement de bolus en utilisant l\'onglet Careportal. Assurez vous de créer ce bolus avec un temps différent de tous les autres Bolus.</string>
-    <string name="about_link_urls">\n\ndocumentation :\nhttps://wiki.aaps.app/fr/latest/\n\nfacebook :\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Le dernier bolus enregistré date d\'il y a plus de 24h ou est dans le futur. Vérifiez que la date dans la pompe est correctement définie.</string>
     <string name="combo_suspious_bolus_time">L\'heure/date sur la pompe du dernier bolus administré semble erroné. L\'IA est probablement incorrecte. Vérifiez l\'heure/date de la pompe.</string>
     <string name="combo_bolus_count">Nombre de bolus</string>

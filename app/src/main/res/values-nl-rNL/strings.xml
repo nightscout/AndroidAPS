@@ -45,8 +45,6 @@
     <string name="chartmenu">Grafiek menu</string>
     <string name="authorizationfailed">Autorisatie mislukt</string>
     <string name="copytolocalprofile_invalid">Kan profiel niet aanmaken. Profiel is ongeldig.</string>
-    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
-    <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
     <string name="clear_filter">Verwijder filter</string>
     <string name="cannula">Canule</string>
     <string name="email_address">E-mailadres</string>

@@ -100,4 +100,19 @@
     <string name="not_connected">Nepripojené</string>
     <string name="read_only">Iba na čítanie</string>
     <string name="working">Pracujem</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Posielam dáta do xDripu</string>
+    <string name="xdrip_status_detailed_iob_title">Zobraziť detailný IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Rozpísať IOB na hodinkách do bolusového a bazálneho</string>
+    <string name="xdrip_status_show_bgi_title">Zobrazovať BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Pridať BGI do stavového riadku</string>
+    <string name="xdrip_status_settings">Rozšírený stavový riadok xDrip+</string>
+    <string name="disabled_loop">Uzavretý okruh deaktivovaný</string>
+    <string name="xdrip_send_status_title">Odoslať stavový riadok do xDripu</string>
+    <string name="xdrip_not_installed">xDrip+ nie je nainštalovaný</string>
+    <string name="calibration_sent">Kalibrácia odoslaná do xDrip+</string>
+    <!--    DataBroadcast-->
 </resources>

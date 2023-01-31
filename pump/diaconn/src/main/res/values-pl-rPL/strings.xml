@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">Błąd #34: Tryb LGS jest już wyłączony, polecenie OFF jest odrzucone.</string>
     <string name="diaconn_g8_errorcode_35">Błąd #35: Początek tymczasowej bazy jest odrzucony, gdy uruchomiona jest tymczasowa baza</string>
     <string name="diaconn_g8_errorcode_36">Błąd #36: Koniec tymczasowej bazy jest odrzucony, gdy tymczasowa baza nie jest uruchomiona</string>
+    <string name="diaconn_g8_cloudsend_summary">Wyślij dzienniki pompy do Diaconn Cloud.</string>
+    <string name="diaconn_g8_cloudsend_title">Synchronizacja z Diaconn Cloud</string>
 </resources>

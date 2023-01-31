@@ -104,17 +104,11 @@
     <string name="sms_profile_switch_created">Profilwechsel wurde erstellt</string>
     <string name="sms_wrong_tbr_duration">Die TBR-Dauer muss ein Vielfaches von %1$d Minuten und größer als 0 sein.</string>
     <string name="a11y_otp_qr_code">QR Code für einmaliges Passwort einrichten</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ Statuszeile (Uhr)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Zeige Loop-Informationen auf Deinem xDrip+-Watchface.</string>
     <string name="xdrip_status_detailed_iob_title">Zeige detailliertes IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="disabled_loop">Loop deaktiviert</string>
     <string name="xdrip_status_show_bgi_title">Zeige BGI</string>
     <string name="xdrip_status_show_bgi_summary">Füge BGI zur Statuszeile hinzu.</string>
-    <string name="xdrip_status_settings">xDrip+ Status (Uhr)</string>
     <!-- Food-->
     <string name="food_short">Essen</string>
     <string name="description_food">Zeigt die Essensvorlagen aus Nightscout an</string>
@@ -286,8 +280,7 @@
     <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
     <string name="largedisplay_description">Großer Bildschirm</string>
     <string name="skin">Erscheinungsbild</string>
-    <!--    DataBroadcast-->
-    <string name="cannula_usage">androidAPS nutzen:</string>
+    <string name="cannula_usage">Abgegeben:</string>
     <!--    Iob-->
     <string name="send_logfiles">Sende die heutigen Logdateien unter Angabe dieser Uhrzeit an die Entwickler.
 Unerwartetes Verhalten.</string>

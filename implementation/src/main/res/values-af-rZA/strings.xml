@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="xdrip_not_installed">xDrip + nie geïnstalleerd nie</string>
-    <string name="calibration_sent">Kalibrasie gestuur na xDrip+</string>
     <string name="bg_label">BG</string>
     <string name="executing_right_now">Opdrag word nou uitgevoer</string>
     <string name="basal_value_below_minimum">Basale waarde onder minimum. Profiel nie gestel nie!</string>

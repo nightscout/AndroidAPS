@@ -104,17 +104,11 @@
     <string name="sms_profile_switch_created">Profilbytte opprettet</string>
     <string name="sms_wrong_tbr_duration">Temp basal varighet må oppgis i antall %1$d minutter og større enn 0.</string>
     <string name="a11y_otp_qr_code">QR-kode for oppsett av engangspassord</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ statuslinje (klokke)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Vis informasjon om loop på din xDrip+ urskive.</string>
     <string name="xdrip_status_detailed_iob_title">Vis detaljert IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Splitt IOB til bolus- og basal-IOB på klokken</string>
     <string name="disabled_loop">Loop er deaktivert</string>
     <string name="xdrip_status_show_bgi_title">Vis BGI</string>
     <string name="xdrip_status_show_bgi_summary">Legg til BGI i statuslinje</string>
-    <string name="xdrip_status_settings">xDrip+ Status (klokke)</string>
     <!-- Food-->
     <string name="food_short">Mat</string>
     <string name="description_food">Viser forhåndsinnstillinger for mat fra Nightscout</string>
@@ -285,7 +279,6 @@
     <string name="buttonson_description">Knapper vises alltid på bunnen av skjermen</string>
     <string name="largedisplay_description">Stor skjerm</string>
     <string name="skin">Tema</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">bruk:</string>
     <!--    Iob-->
     <string name="send_logfiles">Send dagens loggfiler og tidspunkt til utviklere. Uventet situasjon oppstod.</string>
