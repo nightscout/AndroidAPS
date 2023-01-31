@@ -60,7 +60,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="configbuilder_pump">Pompe</string>
     <string name="configbuilder_pump_description">Quelle pompe souhaitez-vous utiliser avec AAPS ?</string>
     <string name="configbuilder_profile">Profil</string>
-    <string name="configbuilder_profile_description">Quel profil AAPS devrait-il utiliser ?</string>
+    <string name="configbuilder_profile_description">Quel profil doit être utilisé par AAPS ?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Quel algorithme APS doit faire les ajustements de thérapie?</string>
     <string name="configbuilder_general">Général</string>

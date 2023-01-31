@@ -12,4 +12,7 @@
     <!-- Tidepool -->
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
 </resources>

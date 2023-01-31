@@ -5,4 +5,7 @@
     <string name="unsupported_ns_version">Nepodržana verzija Nightscout-a</string>
     <!-- NSClient -->
     <!-- Tidepool -->
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
 </resources>

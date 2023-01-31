@@ -35,4 +35,5 @@
     <string name="bgsource_upload">KŞ yükleme ayarları</string>
     <string name="dexcom_log_ns_sensor_change_title">Sensör değişimlerini NS\'a kaydet</string>
     <string name="dexcom_log_ns_sensor_change_summary">Sensör başlangıcında otomatik olarak NS\'de \"Sensör Değişimi\" olayı oluştur</string>
+    <string name="direction">yön</string>
 </resources>

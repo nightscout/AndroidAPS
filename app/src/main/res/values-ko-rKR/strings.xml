@@ -42,8 +42,6 @@
     <string name="clearqueueconfirm">대기열을 삭제하시겠습니까? 대기열에 있는 모든 데이터가 삭제됩니다!</string>
     <string name="chartmenu">차트 메뉴</string>
     <string name="authorizationfailed">인증 실패</string>
-    <string name="cta_dont_kill_my_app_info">앱이 종료되지 않도록 합니다?</string>
-    <string name="fabric_upload_disabled">충돌 로그 업로드가 작동하지 않습니다.</string>
     <string name="clear_filter">필터 지우기</string>
     <string name="cannula">캐뉼라</string>
     <string name="email_address">이메일 주소</string>

@@ -473,6 +473,7 @@
     <string name="wizard_explain_tt">DC: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s do %2$s</string>
     <string name="wizard_pump_not_available">Pumpa nedostupná!</string>
+    <string name="quickwizard">Rýchly bolus</string>
     <!--    Preferences-->
     <string name="child">Dieťa</string>
     <string name="teenage">Dospievajúci</string>
@@ -554,6 +555,7 @@
     <string name="nav_plugin_preferences">Nastavenie modulu</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Chýbajúce povolenie SMS príkazov</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>

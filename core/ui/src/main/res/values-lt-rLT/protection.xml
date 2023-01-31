@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="biometric_title">Reikalingas tapatybės nustatymas</string>
-    <string name="biometric_description">Uždėkite pirštą ant pirštų atspaudų skaitytuvo jūsų tapatybės patvirtinimui</string>
+    <string name="biometric_title">Reikalinga autentifikacija</string>
+    <string name="biometric_description">Uždėkite pirštą ant pirštų atspaudų skaitytuvo tapatybės patvirtinimui</string>
     <string name="settings_protection">Nustatymų apsauga</string>
     <string name="application_protection">Programos apsauga</string>
     <string name="bolus_protection">Bolusų apsauga</string>
@@ -13,7 +13,7 @@
     <string name="bolus_pin">Boluso PIN</string>
     <string name="protection_timeout_title">Slaptažodžio ir PIN įvedimo laikas [s]</string>
     <string name="protection_timeout_summary">Laikas, per kurį turi būti įvestas slaptažodis ar PIN kodas</string>
-    <string name="biometric">Biometriniai</string>
+    <string name="biometric">Biometrika</string>
     <string name="custom_password">Pasirinktinis slaptažodis</string>
     <string name="custom_pin">Pasirinktinis PIN</string>
     <string name="noprotection">Apsaugos nėra</string>

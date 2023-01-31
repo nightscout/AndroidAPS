@@ -85,4 +85,7 @@
     <string name="tidepool_upload_bg">上传血糖值</string>
     <string name="remove_all">删除全部</string>
     <string name="upload_now">现在上传</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
 </resources>

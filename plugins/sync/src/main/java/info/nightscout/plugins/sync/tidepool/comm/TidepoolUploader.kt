@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.PowerManager
 import android.os.SystemClock
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.tidepool.events.EventTidepoolStatus
@@ -37,7 +38,8 @@ class TidepoolUploader @Inject constructor(
     private val sp: SP,
     private val uploadChunk: UploadChunk,
     private val activePlugin: ActivePlugin,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val config: Config
 ) {
 
     private var wl: PowerManager.WakeLock? = null
@@ -157,7 +159,7 @@ class TidepoolUploader @Inject constructor(
                     rxBus.send(EventTidepoolStatus(("Creating new dataset")))
                     val call = session.service.openDataSet(
                         session.token!!, session.authReply!!.userid!!,
-                        OpenDatasetRequestMessage(activePlugin.activePump.serialNumber(), dateUtil).getBody()
+                        OpenDatasetRequestMessage(config, dateUtil).getBody()
                     )
                     call.enqueue(TidepoolCallback<DatasetReplyMessage>(aapsLogger, rxBus, session, "Open New Dataset", {
                         connectionStatus = ConnectionStatus.CONNECTED
@@ -229,8 +231,9 @@ class TidepoolUploader @Inject constructor(
                             releaseWakeLock()
                             uploadNext()
                         }, {
-                                                                              rxBus.send(EventTidepoolStatus(("Upload FAILED")))
-                                                                              releaseWakeLock()
+                            connectionStatus = ConnectionStatus.FAILED
+                            rxBus.send(EventTidepoolStatus(("Upload FAILED")))
+                            releaseWakeLock()
                                                                           }))
                     }
                 }

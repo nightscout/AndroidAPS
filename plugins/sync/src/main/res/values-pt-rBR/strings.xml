@@ -91,4 +91,7 @@
     <string name="remove_all">Remover todos</string>
     <string name="reset_start">Iniciar reinicialização</string>
     <string name="upload_now">Enviar agora</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
 </resources>

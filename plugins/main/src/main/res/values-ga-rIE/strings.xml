@@ -16,9 +16,6 @@
     <string name="sms_basal">Bunaidh:</string>
     <string name="sms_min_ago">%1$dnóim ó shin</string>
     <string name="sms_loop_suspended_for">Ar fionraí (%1$d nóim)</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status_shortname">xds</string>
     <string name="disabled_loop">Lúb díchumasaithe</string>
     <!-- Food-->
     <string name="food_short">Bia</string>
@@ -62,7 +59,6 @@
     <string name="basal_shortname">BUN</string>
     <string name="activity_shortname">GNÍ</string>
     <!-- Skins -->
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>

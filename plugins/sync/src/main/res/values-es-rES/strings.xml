@@ -100,4 +100,19 @@
     <string name="not_connected">No conectado</string>
     <string name="read_only">Sólo lectura</string>
     <string name="working">Funcionando</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Enviar datos a xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Mostrar detalles IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Desglosar la IOB en bolo y basal en la esfera del reloj</string>
+    <string name="xdrip_status_show_bgi_title">Mostrar BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Agregar BGI a la línea de estado</string>
+    <string name="xdrip_status_settings">xDrip+ Línea de estado avanzada</string>
+    <string name="disabled_loop">Lazo desactivado</string>
+    <string name="xdrip_send_status_title">Enviar línea de estado a xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ no instalado</string>
+    <string name="calibration_sent">Calibración enviada a xDrip+</string>
+    <!--    DataBroadcast-->
 </resources>

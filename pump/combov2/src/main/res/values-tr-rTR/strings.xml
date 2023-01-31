@@ -95,6 +95,9 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_reservoir_low_warning">Pompa rezervuar seviyesi düşük</string>
     <string name="combov2_setting_tbr_succeeded">GBO ayarlandı</string>
     <string name="combov2_setting_tbr_failed">GBO ayarı başarısız oldu</string>
+    <string name="combov2_set_emulated_100_tbr">Emülasyonlu %100 GBO\'ına ayarla</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Devam eden emülasyonlu %100 GBO\'nın bitmesine izin ver</string>
+    <string name="combov2_ignoring_redundant_100_tbr">Gereksiz %100 GBO isteği yoksayılıyor</string>
     <string name="combov2_hit_unexpected_tbr_limit">GBO ayarlanırken beklenmeyen bir sınırla karşılaşıldı: hedef yüzde %1$d%% idi, fakat %1$d%%\'de bir sınıra ulaştı</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Temel bazal oran sıfırsa mutlak GBO ayarlanamaz</string>
     <string name="combov2_pair_with_pump_summary">AndroidAPS ile şu anda eşleştirilmemiş bir Accu-Chek Combo pompasını eşleştirin</string>
@@ -118,4 +121,8 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_datetime_changed">Tarih ve/veya saat değişti</string>
     <string name="combov2_dst_started">Yaz saati uygulaması (DST) başladı</string>
     <string name="combov2_dst_ended">Yaz saati uygulaması (DST) sona erdi</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Pompa bir hata bildirdiğinden pompaya bağlanılamıyor. Kullanıcı hatayı işlemeli ve ardından 5 dakika beklemeli veya sürücü sekmesindeki Yenile butonuna basmalıdır.</string>
+    <string name="combov2_refresh_pump_status_after_error">Pompa bir hata bildirdikten sonra pompa durumunu yenileme</string>
+    <string name="combov2_go_back">Geri dön</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Sürücü başlatılmadığı için eşleştirme gerçekleştirilemiyor. Bunun nedeni genellikle gerekli Bluetooth izinlerinin verilmemiş olmasıdır. Geri dönün, Bluetooth izinlerini verin ve eşleştirmeyi tekrar deneyin.</string>
 </resources>

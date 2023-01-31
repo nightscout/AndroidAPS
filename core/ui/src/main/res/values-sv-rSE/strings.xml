@@ -471,6 +471,7 @@
     <string name="nav_plugin_preferences">Inställningar för insticksprogram</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Saknar behörighet att skicka SMS</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagar</item>

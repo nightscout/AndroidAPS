@@ -519,6 +519,7 @@
     <string name="nav_plugin_preferences">插件选项</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">缺少 SMS 短信权限</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="other">%1$d　天</item>
     </plurals>

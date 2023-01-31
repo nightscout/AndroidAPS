@@ -80,4 +80,7 @@
     <string name="tidepool_upload_profile">Ladda upp profilbyten och temp mål</string>
     <string name="tidepool_upload_bg">Ladda upp BG-test</string>
     <string name="upload_now">Ladda upp nu</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
 </resources>

@@ -316,6 +316,7 @@
     <string name="nav_plugin_preferences">Настройки на модул</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">SMS команда забранена</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>

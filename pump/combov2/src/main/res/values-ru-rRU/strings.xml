@@ -123,4 +123,6 @@
     <string name="combov2_dst_ended">Летнее/зимнее время окончено (ДСТ)</string>
     <string name="combov2_cannot_connect_pump_error_observed">Не удается подключиться к помпе, ошибка помпы. Следует устранить ошибку, а затем подождать 5 минут или нажать кнопку Обновить на вкладке драйвера.</string>
     <string name="combov2_refresh_pump_status_after_error">Обновление статуса помпы после сообщения об ошибке</string>
+    <string name="combov2_go_back">Назад</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Невозможно выполнить сопряжение, т. к. драйвер не инициализирован. Обычно это происходит, потому что не были предоставлены необходимые разрешения Bluetooth. Вернитесь назад, предоставьте разрешения Bluetooth, а затем попробуйте еще раз.</string>
 </resources>

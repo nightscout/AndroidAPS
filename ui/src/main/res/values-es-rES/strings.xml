@@ -128,5 +128,29 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">DETENER PRESIONADO</string>
     <!--QuickWizard-->
+    <string name="a11y_only_on_watch">sólo en reloj</string>
+    <string name="a11y_only_on_phone">sólo en teléfono</string>
+    <string name="quickwizard_settings">Configuración del asistente de configuración</string>
+    <string name="overview_edit_quickwizard_button_text">Texto del botón:</string>
+    <string name="overview_edit_quickwizard_carbs">Carbohidratos:</string>
+    <string name="overview_edit_quickwizard_valid">Válido:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Añadir</string>
+    <string name="overview_quickwizard_item_edit_button">Editar</string>
+    <string name="overview_edit_quickwizard_show_on_device">Mostrar entrada en dispositivo:</string>
+    <string name="overview_edit_quickwizard_use_bg">Cálculo de glucosa</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Cálculo del bolo IOB</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Cálculo de basal IOB</string>
+    <string name="overview_edit_quickwizard_use_trend">Cálculo de tendencia</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Cálculo de superbolo</string>
+    <string name="overview_edit_quickwizard_percentage">Porcentaje</string>
+    <string name="device_all">Todo</string>
+    <string name="device_phone">Teléfono</string>
+    <string name="device_watch">Reloj</string>
+    <string name="positive_only">Sólo positivo</string>
+    <string name="negative_only">Sólo negativo</string>
+    <string name="overview_editquickwizard_usecob">Cálculo COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Cálculo de objetivo temporal</string>
+    <string name="overview_editquickwizard_usepercentage">Cálculo de porcentaje</string>
     <string name="app_default">Aplicación por defecto</string>
+    <string name="a11y_drag_and_drop_handle">arrastrar y soltar</string>
 </resources>

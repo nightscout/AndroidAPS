@@ -45,8 +45,6 @@
     <string name="chartmenu">Grafiko meniu</string>
     <string name="authorizationfailed">Autorizacija nepavyko</string>
     <string name="copytolocalprofile_invalid">Nepavyksta sukurti profilio. Profilis neteisingas.</string>
-    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
-    <string name="fabric_upload_disabled">Sutrikimų žurnalo įrašų įkėlimas išjungtas!</string>
     <string name="clear_filter">Valyti filtrą</string>
     <string name="cannula">Kaniulė</string>
     <string name="email_address">El. pašto adresas</string>

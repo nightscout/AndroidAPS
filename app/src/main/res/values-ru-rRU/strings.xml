@@ -45,8 +45,6 @@
     <string name="chartmenu">Меню графика</string>
     <string name="authorizationfailed">Ошибка авторизации</string>
     <string name="copytolocalprofile_invalid">Не удается создать локальный профиль. Настройки профиля неправильны.</string>
-    <string name="cta_dont_kill_my_app_info">Не закрывать приложение?</string>
-    <string name="fabric_upload_disabled">Загрузка журналов сбоя на сервер отключена!</string>
     <string name="clear_filter">Очистить фильтр</string>
     <string name="cannula">Катетер помпы</string>
     <string name="email_address">Адрес электронной почты</string>

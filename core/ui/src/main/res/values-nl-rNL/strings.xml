@@ -540,6 +540,7 @@
     <string name="nav_plugin_preferences">Plugin instellingen</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Geen SMS bevoegdheid</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>

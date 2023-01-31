@@ -16,8 +16,8 @@ buildscript {
         ormLite_version = '4.46'
         gson_version = '2.10.1'
         nav_version = '2.5.3'
-        appcompat_version = '1.5.1'
-        material_version = '1.7.0'
+        appcompat_version = '1.6.0'
+        material_version = '1.8.0'
         gridlayout_version = '1.0.0'
         constraintlayout_version = '2.1.4'
         preferencektx_version = '1.2.0'
@@ -76,8 +76,8 @@ buildscript {
 plugins {
     // Test Gradle build, keep disabled under normal circumstances
     // id "com.osacky.doctor" version "0.8.1"
-    id "org.jlleitschuh.gradle.ktlint" version "11.0.0"
-    id 'org.barfuin.gradle.jacocolog' version '2.0.0'
+    id "org.jlleitschuh.gradle.ktlint" version "11.1.0"
+    id 'org.barfuin.gradle.jacocolog' version '3.0.0'
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
 }
 

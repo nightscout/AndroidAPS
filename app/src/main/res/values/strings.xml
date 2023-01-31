@@ -78,8 +78,6 @@
     <string name="chartmenu">Chart menu</string>
     <string name="authorizationfailed">Authorization failed</string>
     <string name="copytolocalprofile_invalid">Unable to create profile. Profile is invalid.</string>
-    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
-    <string name="fabric_upload_disabled">Crash logs upload disabled!</string>
     <string name="clear_filter">Clear filter</string>
     <string name="cannula">Cannula</string>
     <string name="email_address">Email address</string>

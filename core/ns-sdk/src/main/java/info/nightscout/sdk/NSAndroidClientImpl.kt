@@ -35,6 +35,7 @@ import info.nightscout.sdk.utils.toNotNull
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
 
 /**
@@ -64,6 +65,7 @@ class NSAndroidClientImpl(
     accessToken: String,
     context: Context,
     logging: Boolean,
+    logger: HttpLoggingInterceptor.Logger,
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : NSAndroidClient {
 
@@ -71,7 +73,8 @@ class NSAndroidClientImpl(
         baseUrl = baseUrl,
         context = context,
         accessToken = accessToken,
-        logging = logging
+        logging = logging,
+        logger = logger
     )
     override var lastStatus: Status? = null
         private set

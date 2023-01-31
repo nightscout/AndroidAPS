@@ -104,17 +104,11 @@
     <string name="sms_profile_switch_created">Prepnutie profilu vytvorené</string>
     <string name="sms_wrong_tbr_duration">Trvanie dočasného bazálu musí byť násobkom %1$d minút a musí byť väčšie ako 0.</string>
     <string name="a11y_otp_qr_code">QR kód pre nastavenie jednorázového hesla</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Stavový riadok xDrip+ (hodinky)</string>
-    <string name="xdrip_status_shortname">XDS</string>
-    <string name="description_xdrip_status_line">Zobraz informácie o uzavretom okruhu na xDrip+ watchface.</string>
     <string name="xdrip_status_detailed_iob_title">Zobraziť detailný IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Rozpísať IOB na hodinkách do bolusového a bazálneho</string>
     <string name="disabled_loop">Uzavretý okruh deaktivovaný</string>
     <string name="xdrip_status_show_bgi_title">Zobrazovať BGI</string>
     <string name="xdrip_status_show_bgi_summary">Pridať BGI do stavového riadku</string>
-    <string name="xdrip_status_settings">Stav z xDrip+ (hodinky)</string>
     <!-- Food-->
     <string name="food_short">Jedlo</string>
     <string name="description_food">Zobrazenie prednastavených jedál, definovaných v Nightscoute</string>
@@ -286,7 +280,6 @@
     <string name="buttonson_description">Tlačidlá sú vždy zobrazené v spodnej časti obrazovky</string>
     <string name="largedisplay_description">Veľký displej</string>
     <string name="skin">Vzhľad</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">používanie:</string>
     <!--    Iob-->
     <string name="send_logfiles">Odošlite dnešné súbory protokolov vývojárom spolu s týmto časom. Neočakávaná situácia.</string>
