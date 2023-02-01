@@ -22,6 +22,7 @@ internal data class RemoteDeviceStatus(
     val createdAt: String? = null,  // string or string timestamp on previous version of api, in my examples, a lot of treatments don't have date, only created_at, some of them with string others with long...
     @SerializedName("date") val date: Long?,                     // date as milliseconds
     @SerializedName("uploaderBattery") val uploaderBattery: Int?,// integer($int64)
+    @SerializedName("isCharging") val isCharging: Boolean?,
     @SerializedName("device") val device: String?,               // "openaps://samsung SM-G970F"
 
     @SerializedName("uploader") val uploader: Uploader?,
@@ -57,7 +58,7 @@ internal data class RemoteDeviceStatus(
     )
 
     @Serializable data class Uploader(
-        @SerializedName("battery") val battery: Int?,
+        @SerializedName("battery") val battery: Int?
     )
 
     @Serializable data class Configuration(

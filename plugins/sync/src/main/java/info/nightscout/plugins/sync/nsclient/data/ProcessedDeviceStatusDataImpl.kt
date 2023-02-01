@@ -133,6 +133,7 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
 
     override val uploaderStatusSpanned: Spanned
         get() {
+            var isCharging = false
             val string = StringBuilder()
             string.append("<span style=\"color:${rh.gac(info.nightscout.core.ui.R.attr.nsTitleColor)}\">")
             string.append(rh.gs(R.string.uploader_short))
@@ -145,10 +146,12 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
                 val uploader = pair.value as ProcessedDeviceStatusData.Uploader
                 if (minBattery >= uploader.battery) {
                     minBattery = uploader.battery
+                    isCharging = uploader.isCharging ?: false
                     found = true
                 }
             }
             if (found) {
+                if (isCharging) string.append("ᴪ ")
                 string.append(minBattery)
                 string.append("%")
             }

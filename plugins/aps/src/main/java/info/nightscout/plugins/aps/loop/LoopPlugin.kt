@@ -780,6 +780,7 @@ class LoopPlugin @Inject constructor(
             device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL,
             pump = pump.getJSONStatus(profile, profileName, version).toString(),
             uploaderBattery = receiverStatusStore.batteryLevel,
+            isCharging = receiverStatusStore.isCharging,
             configuration = runningConfiguration.configuration().toString()
         )
     }
