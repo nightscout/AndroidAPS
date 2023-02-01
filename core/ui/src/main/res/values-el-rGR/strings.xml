@@ -266,6 +266,7 @@
     <string name="nav_plugin_preferences">Επιλογές προσθήκης</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Απουσία δικαιωμάτων SMS</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d ημέρες</item>
         <item quantity="other">%1$d ημέρες</item>

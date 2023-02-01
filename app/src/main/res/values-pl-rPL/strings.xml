@@ -33,6 +33,8 @@
     <string name="enable_carbs_req_alert">Alarm gdy wymagane jest podanie węglowodanów</string>
     <string name="open_navigation">Otwórz menu</string>
     <string name="close_navigation">Zamknij menu</string>
+    <string name="remove_items">Usuń elementy</string>
+    <string name="sort_items">Sortuj elementy</string>
     <string name="error_adding_treatment_title">Niekompletne dane leczenie</string>
     <string name="error_adding_treatment_message">Leczenie (insulina: %1$.2f, węglowodany: %2$d, czas:%3$s) nie mogą być dodane. Sprawdź i dodaj ręcznie rekord w razie potrzeby.</string>
     <string name="generated_ecarbs_note">eWęgle: %1$d g (%2$d h), Opóźnienie: %3$d m</string>
@@ -43,14 +45,16 @@
     <string name="chartmenu">Menu wykresu</string>
     <string name="authorizationfailed">Autoryzacja nie powiodła się</string>
     <string name="copytolocalprofile_invalid">Nie można utworzyć profilu. Profil jest nieprawidłowy.</string>
-    <string name="cta_dont_kill_my_app_info">Nie zabij mojej aplikacji?</string>
-    <string name="fabric_upload_disabled">Przesyłanie dzienników awarii jest wyłączone!</string>
     <string name="clear_filter">Wyczyść filtr</string>
     <string name="cannula">Kaniula</string>
     <string name="email_address">Adres e-mail</string>
+    <string name="remove_bg_readings">Usuń odczyty glikemii</string>
     <string name="identification_not_set">Identyfikator nie jest ustawiony w trybie dev</string>
+    <string name="a11y_dialog">dialog</string>
     <!-- WEAR OS-->
+    <string name="wear_unknown_action_string">Nieznana akcja:</string>
     <string name="remove_selected_items">Usuń wybrane pozycje</string>
     <string name="count_selected">Wybrany %1$d</string>
     <string name="sort_label">Sortuj</string>
+    <string name="search">Szukaj</string>
 </resources>

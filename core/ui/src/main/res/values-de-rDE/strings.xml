@@ -555,6 +555,10 @@
     <string name="nav_plugin_preferences">Plugin-Einstellungen</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">SMS-Steuerung nicht erlaubt</string>
+    <!-- About -->
+    <string name="cta_dont_kill_my_app_info">Meine App nicht beenden?</string>
+    <string name="fabric_upload_disabled">Absturzprotokolle hochladen deaktiviert!</string>
+    <string name="about_link_urls">\n\nDokumentation:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d Tag</item>
         <item quantity="other">%1$d Tage</item>

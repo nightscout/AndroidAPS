@@ -50,6 +50,7 @@ import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
 import info.nightscout.ui.databinding.DialogWizardBinding
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -171,8 +172,18 @@ class WizardDialog : DaggerDialogFragment() {
                 ?: 0.0, 0.0, maxCarbs.toDouble(), 1.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher
         )
 
+        // If there is no BG using % lower that 100% leads to high BGs
+        // because loop doesn't add missing insulin
+        var percentage = sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100).toDouble()
+        repository.getLastGlucoseValueWrapped().blockingGet().let {
+            // if last value is older than 6 min or there is no bg
+            if (it is ValueWrapper.Existing)
+                if (it.value.timestamp < dateUtil.now() - T.mins(6).msecs())
+                    percentage = 100.0
+        }
+
         if (usePercentage) {
-            calculatedPercentage = sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100).toDouble()
+            calculatedPercentage = percentage
             binding.correctionInput.setParams(calculatedPercentage, 10.0, 200.0, 5.0, DecimalFormat("0"), false, binding.okcancel.ok, textWatcher)
             binding.correctionInput.value = calculatedPercentage
             binding.correctionUnit.text = "%"

@@ -101,17 +101,11 @@
     <string name="sms_profile_switch_created">Profiel wissel aangemaakt</string>
     <string name="sms_wrong_tbr_duration">Tijdelijk basaal duur moet een veelvoud van %1$d minuten en groter dan 0 zijn.</string>
     <string name="a11y_otp_qr_code">QR Code voor het instellen van een eenmalig wachtwoord</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ Statuslijn (horloge)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Toon informatie over de Loop op jouw xDrip+ wijzerplaat.</string>
     <string name="xdrip_status_detailed_iob_title">Toon gedetailleerde IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Splits IOB in bolus en basaal op de watchface</string>
     <string name="disabled_loop">Loop is uitgeschakeld</string>
     <string name="xdrip_status_show_bgi_title">Toon BGI</string>
     <string name="xdrip_status_show_bgi_summary">Voeg BGI toe aan status lijn</string>
-    <string name="xdrip_status_settings">xDrip+ Status (horloge)</string>
     <!-- Food-->
     <string name="food_short">Voeding</string>
     <string name="description_food">Toon de instellingen voor Voeding in Nightscout</string>
@@ -282,7 +276,6 @@
     <string name="buttonson_description">Knoppen worden altijd weergegeven aan de onderkant van het scherm</string>
     <string name="largedisplay_description">Groot scherm</string>
     <string name="skin">Skin</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">gebruik:</string>
     <!--    Iob-->
     <string name="send_logfiles">Logboekbestanden van vandaag verzenden aan ontwikkelaars samen met de onverwachte situatie.</string>

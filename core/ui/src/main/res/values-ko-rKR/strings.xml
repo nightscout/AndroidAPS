@@ -408,6 +408,7 @@
     <string name="nav_plugin_preferences">플러그인 설정</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">SMS 권한 누락</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="other">%1$d 일</item>
     </plurals>

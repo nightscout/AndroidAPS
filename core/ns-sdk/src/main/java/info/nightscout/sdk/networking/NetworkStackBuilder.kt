@@ -19,19 +19,22 @@ internal object NetworkStackBuilder {
         baseUrl: String,
         context: Context,
         accessToken: String, // refresh token
-        logging: Boolean = false
+        logging: Boolean,
+        logger: HttpLoggingInterceptor.Logger
     ): NightscoutRemoteService = getRetrofit(
         baseUrl = baseUrl,
         context = context,
         refreshToken = accessToken,
-        logging = logging
+        logging = logging,
+        logger = logger
     ).create(NightscoutRemoteService::class.java)
 
     private fun getRetrofit(
         baseUrl: String,
         context: Context,
         refreshToken: String,
-        logging: Boolean
+        logging: Boolean,
+        logger: HttpLoggingInterceptor.Logger
     ): Retrofit =
         Retrofit.Builder()
             .baseUrl("https://$baseUrl/api/")
@@ -40,7 +43,8 @@ internal object NetworkStackBuilder {
                     context = context,
                     logging = logging,
                     refreshToken = refreshToken,
-                    authRefreshRetrofit = getAuthRefreshRetrofit(baseUrl, context, logging)
+                    authRefreshRetrofit = getAuthRefreshRetrofit(baseUrl, context, logging, logger),
+                    logger = logger
                 )
             )
             .addConverterFactory(GsonConverterFactory.create(provideGson()))
@@ -49,11 +53,12 @@ internal object NetworkStackBuilder {
     private fun getAuthRefreshRetrofit(
         baseUrl: String,
         context: Context,
-        logging: Boolean
+        logging: Boolean,
+        logger: HttpLoggingInterceptor.Logger
     ): Retrofit =
         Retrofit.Builder()
             .baseUrl("https://$baseUrl/api/")
-            .client(getAuthRefreshOkHttpClient(context = context, logging = logging))
+            .client(getAuthRefreshOkHttpClient(context = context, logging = logging, logger = logger))
             .addConverterFactory(GsonConverterFactory.create(provideGson()))
             .build()
 
@@ -61,24 +66,27 @@ internal object NetworkStackBuilder {
         context: Context,
         logging: Boolean,
         refreshToken: String,
-        authRefreshRetrofit: Retrofit
+        authRefreshRetrofit: Retrofit,
+        logger: HttpLoggingInterceptor.Logger
     ): OkHttpClient = OkHttpClient.Builder().run {
         addInterceptor(NSAuthInterceptor(refreshToken, authRefreshRetrofit))
-        commonOkHttpSetup(logging, context)
+        commonOkHttpSetup(logging, context, logger)
     }
 
     private fun getAuthRefreshOkHttpClient(
         context: Context,
         logging: Boolean,
-    ): OkHttpClient = OkHttpClient.Builder().run { commonOkHttpSetup(logging, context) }
+        logger: HttpLoggingInterceptor.Logger
+    ): OkHttpClient = OkHttpClient.Builder().run { commonOkHttpSetup(logging, context, logger) }
 
     private fun OkHttpClient.Builder.commonOkHttpSetup(
         logging: Boolean,
-        context: Context
+        context: Context,
+        logger: HttpLoggingInterceptor.Logger
     ): OkHttpClient {
         if (logging) {
             addNetworkInterceptor(
-                HttpLoggingInterceptor().also { it.level = HttpLoggingInterceptor.Level.BODY }
+                HttpLoggingInterceptor(logger).also { it.level = HttpLoggingInterceptor.Level.BODY }
             )
         }
         cache(Cache(context.cacheDir, OK_HTTP_CACHE_SIZE))

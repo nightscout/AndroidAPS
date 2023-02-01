@@ -128,4 +128,29 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STLAČENÝ STOP</string>
     <!--QuickWizard-->
+    <string name="a11y_only_on_watch">iba na hodinkách</string>
+    <string name="a11y_only_on_phone">iba na telefóne</string>
+    <string name="quickwizard_settings">Nastavenie rýchleho bolusu</string>
+    <string name="overview_edit_quickwizard_button_text">Text na tlačidle:</string>
+    <string name="overview_edit_quickwizard_carbs">Sacharidy:</string>
+    <string name="overview_edit_quickwizard_valid">Platnosť:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Pridať</string>
+    <string name="overview_quickwizard_item_edit_button">Upraviť</string>
+    <string name="overview_edit_quickwizard_show_on_device">Zobraziť záznam na zariadení:</string>
+    <string name="overview_edit_quickwizard_use_bg">Výpočet glykémie</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Výpočet bolusového IOB</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Výpočet bazálneho IOB</string>
+    <string name="overview_edit_quickwizard_use_trend">Výpočet trendu</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Výpočet superbolusu</string>
+    <string name="overview_edit_quickwizard_percentage">Percento</string>
+    <string name="device_all">Všetko</string>
+    <string name="device_phone">Telefón</string>
+    <string name="device_watch">Hodinky</string>
+    <string name="positive_only">Iba kladné</string>
+    <string name="negative_only">Iba záporné</string>
+    <string name="overview_editquickwizard_usecob">Výpočet COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Výpočet dočasného cieľa</string>
+    <string name="overview_editquickwizard_usepercentage">Percentuálny výpočet</string>
+    <string name="app_default">Predvolené aplikáciou</string>
+    <string name="a11y_drag_and_drop_handle">Režim \"Potiahni a pusť\"</string>
 </resources>

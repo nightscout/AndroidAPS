@@ -75,10 +75,6 @@
     <string name="sms_loop_suspended_for">Αναστολή (%1$d m)</string>
     <string name="sms_read_status_failed">Η ανάγνωση κατάστασης απέτυχε</string>
     <string name="sms_profile_switch_created">Δημιουργήθηκε αλλαγή προφίλ</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Δείτε πληροφορίες σχετικά με το κύκλωμά σας στην πρόσοψη xDrip +.</string>
     <string name="xdrip_status_detailed_iob_title">Δείξε αναλυτικά IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Χώρισε την IOB σε bolus και βασικό στο ρολόι</string>
     <string name="disabled_loop">Κύκλωμα απενεργοποιημένο</string>
@@ -190,7 +186,6 @@
     <string name="treatments_shortname">ΘΕΡΑΠ</string>
     <string name="sensitivity_shortname">SENS</string>
     <!-- Skins -->
-    <!--    DataBroadcast-->
     <string name="cannula_usage">χρήσιμες συμβουλές:</string>
     <!--    Iob-->
     <string name="send_logfiles">Στείλτε τα αρχεία καταγραφής της ημέρας στους προγραμματιστές μαζί με αυτή τη φορά. Απροσδόκητη κατάσταση.</string>

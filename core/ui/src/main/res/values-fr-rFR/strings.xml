@@ -555,6 +555,7 @@
     <string name="nav_plugin_preferences">Préférences du plugin</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Autorisation SMS manquante</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d jour</item>
         <item quantity="other">%1$d jours</item>

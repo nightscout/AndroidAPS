@@ -225,9 +225,9 @@ class SWDefinition @Inject constructor(
         .add(
             SWEventListener(injector, EventSWSyncStatus::class.java)
                 .label(R.string.status)
-                .initialStatus(activePlugin.firstActiveSync?.status ?: "")
+                .initialStatus(activePlugin.activeNsClient?.status ?: "")
         )
-        .validator { activePlugin.firstActiveSync?.connected == true && activePlugin.firstActiveSync?.hasWritePermission == true }
+        .validator { activePlugin.activeNsClient?.connected == true && activePlugin.activeNsClient?.hasWritePermission == true }
 
     private val screenPatientName get() = SWScreen(injector, R.string.patient_name)
         .skippable(true)

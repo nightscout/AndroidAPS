@@ -3,7 +3,6 @@ package info.nightscout.core.utils.worker
 import android.content.Context
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.rx.logging.AAPSLogger
@@ -23,16 +22,10 @@ abstract class LoggingWorker(context: Context, workerParams: WorkerParameters, p
     }
 
     override suspend fun doWork(): Result =
-        try {
-            withContext(dispatcher) {
-                doWorkAndLog().also {
-                    aapsLogger.debug(LTag.WORKER, "Worker result ${it::class.java.simpleName.uppercase()} for ${this::class.java}")
-                }
+        withContext(dispatcher) {
+            doWorkAndLog().also {
+                aapsLogger.debug(LTag.WORKER, "Worker result ${it::class.java.simpleName.uppercase()} for ${this@LoggingWorker::class.java}")
             }
-        } catch (e: Exception) {
-            fabricPrivacy.logException(e)
-            e.printStackTrace()
-            Result.failure(workDataOf("Error" to e.localizedMessage))
         }
 
     abstract suspend fun doWorkAndLog(): Result

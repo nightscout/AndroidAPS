@@ -377,7 +377,7 @@ sealed class ProfileSealed(
         val ret = Array(shifted.size) { ProfileValue(0, 0.0) }
         var elapsed = 0
         for (index in shifted.indices) {
-            ret[index] = ProfileValue(elapsed, (shifted[index].lowTarget + shifted[index].highTarget) / 2.0)
+            ret[index] = ProfileValue(elapsed, Profile.toMgdl((shifted[index].lowTarget + shifted[index].highTarget) / 2.0, units))
             elapsed += T.msecs(shifted[index].duration).secs().toInt()
         }
         return ret

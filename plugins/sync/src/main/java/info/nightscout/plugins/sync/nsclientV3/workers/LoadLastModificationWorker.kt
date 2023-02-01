@@ -28,8 +28,10 @@ class LoadLastModificationWorker(
         } catch (error: Exception) {
             aapsLogger.error(LTag.NSCLIENT, "Error: ", error)
             rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            nsClientV3Plugin.lastOperationError = error.localizedMessage
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
+        nsClientV3Plugin.lastOperationError = null
         return Result.success()
     }
 }

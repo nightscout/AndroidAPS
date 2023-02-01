@@ -12,11 +12,13 @@
     <string name="only_upload_if_charging">Prześlij tylko gdy telefon jest ładowany</string>
     <string name="open_humans_uploading">Przesyłanie do Open Humans…</string>
     <string name="open_humans_notifications">Powiadomienia Open Humans</string>
+    <string name="uploading_to_open_humans">AAPS wysyła dane do Open Humans. To może chwilę potrwać.</string>
     <string name="you_have_been_signed_out_of_open_humans">Zostałeś wylogowany z Open Humans</string>
     <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Kliknij tutaj, aby zalogować się ponownie, jeśli wylogowanie nie było celowe.</string>
     <string name="next">Dalej</string>
     <string name="welcome_to_open_humans">Witaj w Open Humans</string>
     <string name="setup_data_upload">Aby ustawić wysyłanie danych klinkij \'Next \'</string>
+    <string name="consent">Zgoda</string>
     <string name="terms_of_use">Warunki użytkowania</string>
     <string name="please_read__information">Proszę uważnie przeczytać poniższe informacje i zaakceptować warunki aby kontynuować.</string>
     <string name="info_openhumans">To jest narzędzie open source, które skopiuje Twoje dane do projektu Open Humans. Nie zachowujemy żadnych praw do dzielenia się Twoimi danymi z osobami trzecimi bez Twojej wyraźnej zgody. Dane, które otrzymują projekt i aplikacja są identyfikowane za pomocą losowego identyfikatora użytkownika i będą bezpiecznie przesyłane na konto Open Humans za Twoją zgodą dla tego procesu. Możesz zatrzymać przesyłanie i usunąć swoje już przesłane dane w dowolnym momencie za pośrednictwem strony www.openhumans.org.</string>
@@ -33,6 +35,8 @@
     <string name="settings">Ustawienia</string>
     <string name="application_version">Wersja aplikacji</string>
     <string name="device_model">Model urządzenia</string>
+    <string name="screen_dimensions">Wymiary ekranu</string>
+    <string name="algorithm_debug_data">Dane diagnostyczne algorytmu</string>
     <string name="data_not_uploaded">Dane NIE przesłane</string>
     <string name="passwords">Hasła</string>
     <string name="nightscout_url">Nightscout URL</string>

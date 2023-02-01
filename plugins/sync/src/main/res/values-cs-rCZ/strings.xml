@@ -100,4 +100,19 @@
     <string name="not_connected">Nepřipojeno</string>
     <string name="read_only">Jen pro čtení</string>
     <string name="working">Pracuji</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Odesílat data do xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Zobrazit podrobnosti IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Rozepsat na hodinkách IOB do bolusového a bazálního inzulínu</string>
+    <string name="xdrip_status_show_bgi_title">Zobrazovat BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Přidat BGI do stavové řádky</string>
+    <string name="xdrip_status_settings">Rozšířené Stavová řádka xDrip+</string>
+    <string name="disabled_loop">Smyčka zakázána</string>
+    <string name="xdrip_send_status_title">Odeslat stavový řádek do xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ není nainstalován</string>
+    <string name="calibration_sent">Kalibrace odeslána do xDrip+</string>
+    <!--    DataBroadcast-->
 </resources>

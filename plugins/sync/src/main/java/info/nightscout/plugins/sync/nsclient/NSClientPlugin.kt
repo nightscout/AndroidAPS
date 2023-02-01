@@ -18,6 +18,7 @@ import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.nsclient.NSAlarm
+import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -71,7 +72,8 @@ class NSClientPlugin @Inject constructor(
     private val uiInteraction: UiInteraction,
     private val activePlugin: ActivePlugin,
     private val dateUtil: DateUtil,
-    private val profileFunction: ProfileFunction
+    private val profileFunction: ProfileFunction,
+    private val nsSettingsStatus: NSSettingsStatus
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -154,7 +156,6 @@ class NSClientPlugin @Inject constructor(
         if (activePlugin.activeBgSource is DoingOwnUploadSource) {
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_do_ns_upload))?.isVisible = false
         }
-        preferenceFragment.findPreference<ValidatingEditTextPreference>(rh.gs(R.string.key_ns_client_token))?.isVisible = false
     }
 
     override val hasWritePermission: Boolean get() = nsClientService?.hasWriteAuth ?: false
@@ -179,6 +180,8 @@ class NSClientPlugin @Inject constructor(
             rxBus.send(EventNSClientUpdateGUI())
         }
     }
+
+    override fun detectedNsVersion(): String? = nsSettingsStatus.getVersion()
 
     private fun addToLog(ev: EventNSClientNewLog) {
         synchronized(listLog) {
@@ -212,9 +215,6 @@ class NSClientPlugin @Inject constructor(
         sp.putBoolean(R.string.key_ns_client_paused, newState)
         rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_client_paused)))
     }
-
-    override val version: NsClient.Version
-        get() = NsClient.Version.V1
 
     override val address: String get() = nsClientService?.nsURL ?: ""
 

@@ -18,12 +18,12 @@
             validate:testType="httpsUrl" />
 
         <info.nightscout.core.validators.ValidatingEditTextPreference
-            android:dialogMessage="@string/ns_client_secret_dialog_message"
-            android:dialogTitle="@string/ns_client_secret_dialog_title"
+            android:dialogMessage="@string/nsclient_token_dialog_message"
+            android:dialogTitle="@string/nsclient_token_dialog_title"
             android:inputType="textPassword"
-            android:key="@string/key_nsclientinternal_api_secret"
-            android:title="@string/ns_client_secret_title"
-            validate:minLength="12"
+            android:key="@string/key_ns_client_token"
+            android:title="@string/nsclient_token_title"
+            validate:minLength="17"
             validate:testType="minLength"/>
 
         <androidx.preference.PreferenceScreen

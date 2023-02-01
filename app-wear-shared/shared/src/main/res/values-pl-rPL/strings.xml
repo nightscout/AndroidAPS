@@ -2,6 +2,7 @@
 <resources>
     <!--    DateUtil-->
     <string name="minago">%1$d min temu</string>
+    <string name="minago_long">%1$d minut temu</string>
     <string name="hoursago">%1$.1f godz. temu</string>
     <string name="days_ago">%1$.1f dni temu</string>
     <string name="days_ago_round">%1$.0f dni temu</string>

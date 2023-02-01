@@ -101,17 +101,11 @@
     <string name="sms_profile_switch_created">Troca de perfil criada</string>
     <string name="sms_wrong_tbr_duration">A duração da basal temporária deve ser um múltiplo de %1$d minutos e maior que 0.</string>
     <string name="a11y_otp_qr_code">Código QR para configuração de senha de uso único</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Linha do estado do Xdrip+ (relógio)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Mostrar informações sobre o loop no watchface do xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Mostrar detalhes da IA</string>
     <string name="xdrip_status_detailed_iob_summary">Dividir IA entre IA de bolus e de basal na face do relógio</string>
     <string name="disabled_loop">Loop Desativado</string>
     <string name="xdrip_status_show_bgi_title">Mostrar IG (Impacto na Glicemia)</string>
     <string name="xdrip_status_show_bgi_summary">Adicionar BGI à linha de status</string>
-    <string name="xdrip_status_settings">Estado do xDrip+ (relógio)</string>
     <!-- Food-->
     <string name="food_short">Alimentos</string>
     <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
@@ -281,7 +275,6 @@
     <string name="buttonson_description">Botões são sempre exibidos na parte inferior da tela</string>
     <string name="largedisplay_description">Mostrador Grande</string>
     <string name="skin">Tema</string>
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Enviar os ficheiros de registo do dia de hoje para os programadores. Situação inesperada.</string>
     <!--    Wear-->

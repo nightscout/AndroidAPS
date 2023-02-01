@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="xdrip_not_installed">xDrip+ nije instaliran</string>
-    <string name="calibration_sent">Kalibracija poslana na xDrip+</string>
     <string name="bg_label">GUK</string>
     <string name="executing_right_now">Naredba se izvršava upravo sada</string>
     <string name="basal_value_below_minimum">Bazalna vrijednost ispod minimuma. Profil nije postavljen!</string>

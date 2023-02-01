@@ -57,6 +57,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     override var plugin: PluginBase? = null
     private val nsClientPlugin
         get() = activePlugin.activeNsClient
+
     private val disposable = CompositeDisposable()
 
     private var _binding: NsClientFragmentBinding? = null

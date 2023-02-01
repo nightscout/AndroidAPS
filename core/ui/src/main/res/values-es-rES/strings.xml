@@ -17,7 +17,7 @@
     <string name="bolus_delivered_successfully">Bolo %1$.2fU entregado correctamente</string>
     <string name="no_valid_basal_rate">Tasa basal no válida leída en la bomba</string>
     <string name="limiting_iob">Limitando IOB a %1$.1f U debido a %2$s</string>
-    <string name="loop_disabled">BUCLE DESACTIVADO POR RESTRICCIONES</string>
+    <string name="loop_disabled">LAZO DESACTIVADO POR RESTRICCIONES</string>
     <string name="event_type">Tipo de evento</string>
     <string name="reload">Recargar</string>
     <string name="mgdl">mg/dl</string>
@@ -86,12 +86,12 @@
     <string name="pump_time_updated">Hora actualizada en la bomba</string>
     <string name="exit">Salir</string>
     <string name="removerecord">Eliminar registro</string>
-    <string name="loopisdisabled">Bucle desactivado</string>
+    <string name="loopisdisabled">Lazo desactivado</string>
     <string name="alarm">Alarma</string>
-    <string name="disableloop">Desactivar bucle</string>
-    <string name="enableloop">Activar bucle</string>
-    <string name="resumeloop">Reanudar el bucle</string>
-    <string name="suspendloop">Suspender bucle</string>
+    <string name="disableloop">Desactivar lazo</string>
+    <string name="enableloop">Activar lazo</string>
+    <string name="resumeloop">Reanudar el lazo</string>
+    <string name="suspendloop">Suspender lazo</string>
     <string name="duration_min_label">Duración [min]</string>
     <string name="notification">Notificación</string>
     <string name="noprofile">Ningún perfil cargado desde Nightscout</string>
@@ -118,7 +118,7 @@
     <string name="shortgramm">g</string>
     <string name="pumpsuspended">Bomba parada</string>
     <string name="notconfigured">Sin configurar</string>
-    <string name="loopsuspended">Bucle suspendido</string>
+    <string name="loopsuspended">Lazo suspendido</string>
     <string name="trend_arrow">Flecha de tendencia</string>
     <string name="a11y_autosens_label">Auto sens</string>
     <string name="required">req</string>
@@ -156,8 +156,8 @@
     <string name="prime_fill">Cebar/Llenar</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Detener objetivo temporal</string>
-    <string name="closedloop">Bucle cerrado</string>
-    <string name="openloop">Bucle abierto</string>
+    <string name="closedloop">Lazo cerrado</string>
+    <string name="openloop">Lazo abierto</string>
     <string name="lowglucosesuspend">Suspensión por glucosa baja (LGS)</string>
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
@@ -165,7 +165,7 @@
     <string name="canceling_tbr_failed">Error cancelando la basal temporal</string>
     <string name="canceling_eb_failed">Error cancelando el bolo extendido</string>
     <string name="virtualpump_uploadstatus_title">Subir estado a Nightscout</string>
-    <string name="suspendloop_label">Desactiva/suspende el bucle</string>
+    <string name="suspendloop_label">Desactiva/suspende el lazo</string>
     <string name="iob_label">Insulina a bordo (IOB)</string>
     <!--    Protection-->
     <string name="wrongpassword">Contraseña incorrecta</string>
@@ -234,7 +234,7 @@
     <string name="wear">Reloj</string>
     <string name="automation">Automatización</string>
     <string name="custom">Personalizado</string>
-    <string name="loop">Bucle</string>
+    <string name="loop">Lazo</string>
     <string name="ns">NS</string>
     <string name="record">Registro</string>
     <!--    Command-->
@@ -278,11 +278,11 @@
     <string name="uel_store_profile">GUARDAR PERFIL</string>
     <string name="uel_profile_switch">CAMBIO DE PERFIL</string>
     <string name="uel_profile_switch_cloned">CAMBIO DE PERFIL CLONADO</string>
-    <string name="uel_closed_loop_mode">MODO BUCLE CERRADO</string>
-    <string name="uel_lgs_loop_mode">MODO BUCLE LGS</string>
-    <string name="uel_open_loop_mode">MODO BUCLEABIERTO</string>
-    <string name="uel_loop_disabled">BUCLE DESACTIVADO</string>
-    <string name="uel_loop_enabled">BUCLE ACTIVADO</string>
+    <string name="uel_closed_loop_mode">MODO LAZO CERRADO</string>
+    <string name="uel_lgs_loop_mode">MODO LAZO LGS</string>
+    <string name="uel_open_loop_mode">MODO LAZO ABIERTO</string>
+    <string name="uel_loop_disabled">LAZO DESACTIVADO</string>
+    <string name="uel_loop_enabled">LAZO ACTIVADO</string>
     <string name="uel_reconnect">RECONECTAR</string>
     <string name="uel_disconnect">DESCONECTAR</string>
     <string name="uel_resume">REANUDAR</string>
@@ -353,8 +353,8 @@
     <string name="ue_action">Acción</string>
     <string name="ue_timestamp">Fecha y hora</string>
     <string name="ue_none">Sin Unidad</string>
-    <string name="uel_loop_change">BUCLE CAMBIADO</string>
-    <string name="uel_loop_removed">BUCLE ELIMINADO</string>
+    <string name="uel_loop_change">LAZO CAMBIADO</string>
+    <string name="uel_loop_removed">LAZO ELIMINADO</string>
     <string name="uel_other">OTROS</string>
     <!-- HardLimits -->
     <string name="profile_low_target">Perfil de objetivo bajo</string>
@@ -555,6 +555,10 @@
     <string name="nav_plugin_preferences">Preferencias del complemento</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Faltan permisos de SMS</string>
+    <!-- About -->
+    <string name="cta_dont_kill_my_app_info">¿No matar mi aplicación?</string>
+    <string name="fabric_upload_disabled">¡Carga de registros de fallos desactivada!</string>
+    <string name="about_link_urls">\n\nDocumentación:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d día</item>
         <item quantity="other">%1$d días</item>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="automation_short">Auto</string>
-    <string name="automation">Automatiškai</string>
+    <string name="automation">Automatizacija</string>
     <string name="automation_description">Vartotojo nustatytos automatizavimo užduotys</string>
     <string name="automation_missing_task_name">Įveskite užduoties pavadinimą.</string>
     <string name="automation_missing_trigger">Nurodykite mažiausiai vieną sąlygą.</string>
     <string name="automation_missing_action">Nurodykite mažiausiai vieną veiksmą.</string>
     <string name="alarm_message">Aliarmas: %1$s</string>
     <string name="alarm_short">Aliarmas:</string>
-    <string name="message_short">Pranešimas:</string>
+    <string name="message_short">Žin:</string>
     <string name="alreadyenabled">Jau įjungta</string>
     <string name="alreadydisabled">Jau išjungta</string>
     <string name="alreadysuspended">Jau sustabdyta</string>
@@ -50,9 +50,9 @@
     <string name="use_passive_location">Naudoti pasyviąją vietovę</string>
     <string name="locationservice">Vietovės paslaugos</string>
     <string name="onconnect">Sujungimo metu</string>
-    <string name="ondisconnect">Išjungimo metu</string>
-    <string name="short_avgdelta">Trumpo laikotarpio vidutinis pokytis</string>
-    <string name="long_avgdelta">Ilgo laikotarpio vidutinis pokytis</string>
+    <string name="ondisconnect">Atjungimo metu</string>
+    <string name="short_avgdelta">Trumpo laik. delta</string>
+    <string name="long_avgdelta">Ilgo laik. delta</string>
     <string name="delta">Pokytis</string>
     <string name="locationis">%1$s %2$s</string>
     <string name="location_mode">Kada </string>
@@ -109,8 +109,15 @@
     <string name="automation_event">Automatizuotas įvykis</string>
     <string name="reorder_label">Pertvarkyti</string>
     <string name="user_action">Vartotojo veiksmas</string>
+    <string name="remove_automation">Pašalinti automatizaciją</string>
+    <string name="sort_automation">Rūšiuoti automatizacijas</string>
     <string name="remove_selected_items">Pašalinti pasirinktus elementus</string>
     <string name="count_selected">%1$d pasirinkta</string>
+    <string name="system_automation">Sistemos automatizacija</string>
+    <string name="run_automations">Paleisti automatizacijas</string>
+    <string name="add_automation">Pridėti taisyklę</string>
+    <string name="remove_sort">Pašalinti/rūšiuoti</string>
+    <string name="stop_processing">Stabdyti apdorojimą</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">P</string>
     <string name="tuesday_short">A</string>
@@ -120,5 +127,7 @@
     <string name="saturday_short">Š</string>
     <string name="sunday_short">S</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Laikas valgyti!\nĮjunkite Boluso patarėją ir atlikite skaičiavimą dar kartą.</string>
     <string name="time_to_bolus">Laikas bolusui!\nĮjunkite Skaičiuotuvą ir pakartokite skaičiavimus.</string>
+    <string name="error_setting_reminder">Klaida nustatant ateities perspėjimus</string>
 </resources>

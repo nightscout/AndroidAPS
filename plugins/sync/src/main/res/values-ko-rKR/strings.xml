@@ -76,4 +76,7 @@
     <string name="tidepool_upload_profile">프로파일변경, 임시목표 업로드</string>
     <string name="tidepool_upload_bg">혈당 테스트 업로드</string>
     <string name="upload_now">지금 업로드하기</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
 </resources>

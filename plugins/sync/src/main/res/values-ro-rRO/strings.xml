@@ -80,4 +80,7 @@
     <string name="tidepool_upload_profile">Înregistrează schimbările de profil, țintele temporare</string>
     <string name="tidepool_upload_bg">Înregistrează testările de glicemie</string>
     <string name="upload_now">Încarcă acum</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
 </resources>

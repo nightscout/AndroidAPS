@@ -555,6 +555,10 @@
     <string name="nav_plugin_preferences">Nastavení pluginu</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Chybějící povolení SMS</string>
+    <!-- About -->
+    <string name="cta_dont_kill_my_app_info">Nezabíjet mou aplikaci?</string>
+    <string name="fabric_upload_disabled">Nahrávání protokolů o pádech zakázáno!</string>
+    <string name="about_link_urls">\n\nDokumentace:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d den</item>
         <item quantity="few">%1$d dnů</item>
