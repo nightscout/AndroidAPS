@@ -41,21 +41,21 @@ class UploadChunk @Inject constructor(
     private val maxUploadSize = T.days(7).msecs() // don't change this
 
     fun getNext(session: Session?): String? {
-        if (session == null)
-            return null
+        session ?: return null
 
         session.start = getLastEnd()
-        session.end = min(session.start + maxUploadSize, dateUtil.now())
+        // do not upload last 3h, TBR can be still running
+        session.end = min(session.start + maxUploadSize, dateUtil.now() - T.hours(3).msecs())
 
         val result = get(session.start, session.end)
         if (result.length < 3) {
             aapsLogger.debug(LTag.TIDEPOOL, "No records in this time period, setting start to best end time")
-            setLastEnd(max(session.end, getOldestRecordTimeStamp()))
+            setLastEnd(session.end)
         }
         return result
     }
 
-    operator fun get(start: Long, end: Long): String {
+    fun get(start: Long, end: Long): String {
 
         aapsLogger.debug(LTag.TIDEPOOL, "Syncing data between: " + dateUtil.dateAndTimeString(start) + " -> " + dateUtil.dateAndTimeString(end))
         if (end <= start) {
@@ -92,21 +92,6 @@ class UploadChunk @Inject constructor(
         } else {
             aapsLogger.debug(LTag.TIDEPOOL, "Cannot set last end to: " + dateUtil.dateAndTimeString(time) + " vs " + dateUtil.dateAndTimeString(getLastEnd()))
         }
-    }
-
-    // numeric limits must match max time windows
-
-    private fun getOldestRecordTimeStamp(): Long {
-        // TODO we could make sure we include records older than the first bg record for completeness
-
-        val start: Long = 0
-        val end = dateUtil.now()
-
-        val bgReadingList = repository.compatGetBgReadingsDataFromTime(start, end, true)
-            .blockingGet()
-        return if (bgReadingList.isNotEmpty())
-            bgReadingList[0].timestamp
-        else -1
     }
 
     private fun getTreatments(start: Long, end: Long): List<BaseElement> {
