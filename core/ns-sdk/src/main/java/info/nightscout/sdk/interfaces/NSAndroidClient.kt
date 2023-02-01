@@ -23,13 +23,13 @@ interface NSAndroidClient {
     suspend fun getLastModified(): LastModified
 
     suspend fun getSgvs(): ReadResponse<List<NSSgvV3>>
-    suspend fun getSgvsModifiedSince(from: Long, limit: Long): ReadResponse<List<NSSgvV3>>
-    suspend fun getSgvsNewerThan(from: Long, limit: Long): ReadResponse<List<NSSgvV3>>
+    suspend fun getSgvsModifiedSince(from: Long, limit: Int): ReadResponse<List<NSSgvV3>>
+    suspend fun getSgvsNewerThan(from: Long, limit: Int): ReadResponse<List<NSSgvV3>>
     suspend fun createSvg(nsSgvV3: NSSgvV3): CreateUpdateResponse
     suspend fun updateSvg(nsSgvV3: NSSgvV3): CreateUpdateResponse
 
-    suspend fun getTreatmentsNewerThan(createdAt: String, limit: Long): ReadResponse<List<NSTreatment>>
-    suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): ReadResponse<List<NSTreatment>>
+    suspend fun getTreatmentsNewerThan(createdAt: String, limit: Int): ReadResponse<List<NSTreatment>>
+    suspend fun getTreatmentsModifiedSince(from: Long, limit: Int): ReadResponse<List<NSTreatment>>
 
     suspend fun createDeviceStatus(nsDeviceStatus: NSDeviceStatus): CreateUpdateResponse
     suspend fun getDeviceStatusModifiedSince(from: Long): List<NSDeviceStatus>
@@ -40,9 +40,9 @@ interface NSAndroidClient {
 
     suspend fun createTreatment(nsTreatment: NSTreatment): CreateUpdateResponse
     suspend fun updateTreatment(nsTreatment: NSTreatment): CreateUpdateResponse
-    suspend fun getFoods(limit: Long): ReadResponse<List<NSFood>>
+    suspend fun getFoods(limit: Int): ReadResponse<List<NSFood>>
 
-    //suspend fun getFoodsModifiedSince(from: Long, limit: Long): ReadResponse<List<NSFood>>
+    //suspend fun getFoodsModifiedSince(from: Long, limit: Int): ReadResponse<List<NSFood>>
     suspend fun createFood(nsFood: NSFood): CreateUpdateResponse
     suspend fun updateFood(nsFood: NSFood): CreateUpdateResponse
 }

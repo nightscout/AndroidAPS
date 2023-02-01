@@ -126,7 +126,7 @@ class NSAndroidClientImpl(
             throw UnsuccessfullNightscoutException()
     }
 
-    override suspend fun getSgvsModifiedSince(from: Long, limit: Long): NSAndroidClient.ReadResponse<List<NSSgvV3>> = callWrapper(dispatcher) {
+    override suspend fun getSgvsModifiedSince(from: Long, limit: Int): NSAndroidClient.ReadResponse<List<NSSgvV3>> = callWrapper(dispatcher) {
 
         val response = api.getSgvsModifiedSince(from, limit)
         if (response.isSuccessful) {
@@ -139,7 +139,7 @@ class NSAndroidClientImpl(
             throw UnsuccessfullNightscoutException()
     }
 
-    override suspend fun getSgvsNewerThan(from: Long, limit: Long): NSAndroidClient.ReadResponse<List<NSSgvV3>> = callWrapper(dispatcher) {
+    override suspend fun getSgvsNewerThan(from: Long, limit: Int): NSAndroidClient.ReadResponse<List<NSSgvV3>> = callWrapper(dispatcher) {
 
         val response = api.getSgvsNewerThan(from, limit)
         if (response.isSuccessful) {
@@ -230,7 +230,7 @@ class NSAndroidClientImpl(
             throw UnsuccessfullNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
-    override suspend fun getTreatmentsNewerThan(createdAt: String, limit: Long): NSAndroidClient.ReadResponse<List<NSTreatment>> = callWrapper(dispatcher) {
+    override suspend fun getTreatmentsNewerThan(createdAt: String, limit: Int): NSAndroidClient.ReadResponse<List<NSTreatment>> = callWrapper(dispatcher) {
 
         val response = api.getTreatmentsNewerThan(createdAt, limit)
         if (response.isSuccessful) {
@@ -241,7 +241,7 @@ class NSAndroidClientImpl(
             throw UnsuccessfullNightscoutException()
     }
 
-    override suspend fun getTreatmentsModifiedSince(from: Long, limit: Long): NSAndroidClient.ReadResponse<List<NSTreatment>> = callWrapper(dispatcher) {
+    override suspend fun getTreatmentsModifiedSince(from: Long, limit: Int): NSAndroidClient.ReadResponse<List<NSTreatment>> = callWrapper(dispatcher) {
 
         val response = api.getTreatmentsModifiedSince(from, limit)
         if (response.isSuccessful) {
@@ -380,7 +380,7 @@ class NSAndroidClientImpl(
             throw UnsuccessfullNightscoutException(response.errorBody()?.string() ?: response.message())
     }
 
-    override suspend fun getFoods(limit: Long): NSAndroidClient.ReadResponse<List<NSFood>> = callWrapper(dispatcher) {
+    override suspend fun getFoods(limit: Int): NSAndroidClient.ReadResponse<List<NSFood>> = callWrapper(dispatcher) {
 
         val response = api.getFoods(limit)
         if (response.isSuccessful) {
@@ -392,7 +392,7 @@ class NSAndroidClientImpl(
     }
 
     /*
-        override suspend fun getFoodsModifiedSince(from: Long, limit: Long): NSAndroidClient.ReadResponse<List<NSFood>> = callWrapper(dispatcher) {
+        override suspend fun getFoodsModifiedSince(from: Long, limit: Int): NSAndroidClient.ReadResponse<List<NSFood>> = callWrapper(dispatcher) {
 
             val response = api.getFoodsModifiedSince(from, limit)
             val eTagString = response.headers()["ETag"]

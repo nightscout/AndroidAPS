@@ -48,6 +48,7 @@ class LoadProfileStoreWorker(
                 if (profiles.isNotEmpty()) {
                     val profile = profiles[profiles.size - 1]
                     // if srvModified found in response
+                    aapsLogger.debug(LTag.NSCLIENT, "lastLoadedSrvModified: ${response.lastServerModified}")
                     response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = it } ?:
                     // if srvModified found in record
                     JsonHelper.safeGetLongAllowNull(profile, "srvModified")?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = it } ?:
@@ -60,7 +61,7 @@ class LoadProfileStoreWorker(
                     rxBus.send(EventNSClientNewLog("◄ RCV", "1 PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                     WorkManager.getInstance(context)
                         .beginUniqueWork(
-                            NSClientV3Plugin.JOB_NAME,
+                            nsClientV3Plugin.JOB_NAME,
                             ExistingWorkPolicy.APPEND_OR_REPLACE,
                             OneTimeWorkRequest.Builder((workerClasses.nsProfileWorker))
                                 .setInputData(dataWorkerStorage.storeInputData(profile))
@@ -71,7 +72,7 @@ class LoadProfileStoreWorker(
                     rxBus.send(EventNSClientNewLog("◄ RCV PROFILE END", "No new data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                     WorkManager.getInstance(context)
                         .enqueueUniqueWork(
-                            NSClientV3Plugin.JOB_NAME,
+                            nsClientV3Plugin.JOB_NAME,
                             ExistingWorkPolicy.APPEND_OR_REPLACE,
                             OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build()
                         )
@@ -80,7 +81,7 @@ class LoadProfileStoreWorker(
                 rxBus.send(EventNSClientNewLog("◄ RCV PROFILE END", "No data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                 WorkManager.getInstance(context)
                     .enqueueUniqueWork(
-                        NSClientV3Plugin.JOB_NAME,
+                        nsClientV3Plugin.JOB_NAME,
                         ExistingWorkPolicy.APPEND_OR_REPLACE,
                         OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build()
                     )

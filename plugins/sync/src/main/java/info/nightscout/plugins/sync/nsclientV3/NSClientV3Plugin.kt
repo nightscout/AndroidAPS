@@ -137,10 +137,12 @@ class NSClientV3Plugin @Inject constructor(
     aapsLogger, rh, injector
 ) {
 
+    @Suppress("PropertyName")
+    val JOB_NAME: String = this::class.java.simpleName
+
     companion object {
 
-        val JOB_NAME: String = this::class.java.simpleName
-        const val RECORDS_TO_LOAD = 500L
+        const val RECORDS_TO_LOAD = 500
     }
 
     private val disposable = CompositeDisposable()
