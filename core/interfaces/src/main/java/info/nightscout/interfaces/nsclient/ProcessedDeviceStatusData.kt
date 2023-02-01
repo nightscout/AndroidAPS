@@ -48,6 +48,7 @@ interface ProcessedDeviceStatusData {
 
         var clock = 0L
         var battery = 0
+        var isCharging: Boolean? = null
     }
 
     val uploaderMap: HashMap<String, Uploader>
