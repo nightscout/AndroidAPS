@@ -119,7 +119,7 @@ class NSClientV3Plugin @Inject constructor(
 
         val JOB_NAME: String = this::class.java.simpleName
         val REFRESH_INTERVAL = T.secs(30).msecs()
-        const val RECORDS_TO_LOAD = 500L
+        const val RECORDS_TO_LOAD = 500
     }
 
     private val disposable = CompositeDisposable()
