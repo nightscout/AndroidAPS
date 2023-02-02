@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.ArgumentMatchers.eq
@@ -135,7 +136,7 @@ internal class LoadBgWorkerTest : TestBase() {
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = 0L // first load
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries = now - 1000
         sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
-        Mockito.`when`(nsAndroidClient.getSgvsNewerThan(anyLong(), anyLong())).thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
+        Mockito.`when`(nsAndroidClient.getSgvsNewerThan(anyLong(), anyInt())).thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
         val result = sut.doWorkAndLog()
         Assertions.assertEquals(now - 1000, nsClientV3Plugin.lastLoadedSrvModified.collections.entries)
@@ -172,7 +173,7 @@ internal class LoadBgWorkerTest : TestBase() {
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = 0L // first load
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries = now - 1000
         sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
-        Mockito.`when`(nsAndroidClient.getSgvsNewerThan(anyLong(), anyLong())).thenReturn(NSAndroidClient.ReadResponse(200, 0, listOf(glucoseValue.toNSSvgV3())))
+        Mockito.`when`(nsAndroidClient.getSgvsNewerThan(anyLong(), anyInt())).thenReturn(NSAndroidClient.ReadResponse(200, 0, listOf(glucoseValue.toNSSvgV3())))
 
         val result = sut.doWorkAndLog()
         Assertions.assertTrue(result is ListenableWorker.Result.Success)
@@ -194,7 +195,7 @@ internal class LoadBgWorkerTest : TestBase() {
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries = now - 1000
         nsClientV3Plugin.newestDataOnServer?.collections?.entries = now - 2000
         sut = TestListenableWorkerBuilder<LoadBgWorker>(context).build()
-        Mockito.`when`(nsAndroidClient.getSgvsNewerThan(anyLong(), anyLong())).thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
+        Mockito.`when`(nsAndroidClient.getSgvsNewerThan(anyLong(), anyInt())).thenReturn(NSAndroidClient.ReadResponse(200, 0, emptyList()))
 
         val result = sut.doWorkAndLog()
         Assertions.assertEquals(now - 1000, nsClientV3Plugin.lastLoadedSrvModified.collections.entries)
