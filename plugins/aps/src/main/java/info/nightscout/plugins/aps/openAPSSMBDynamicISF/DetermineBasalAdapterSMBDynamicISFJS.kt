@@ -40,6 +40,8 @@ import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
 import javax.inject.Inject
 import kotlin.math.ln
+import kotlin.math.max
+import kotlin.math.min
 
 class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
 
@@ -229,8 +231,10 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.profile.put("carbsReqThreshold", sp.getInt(R.string.key_carbsReqThreshold, SMBDefaults.carbsReqThreshold))
         this.profile.put("current_basal", basalRate)
         this.profile.put("temptargetSet", tempTargetSet)
-        this.profile.put("autosens_max", SafeParse.stringToDouble(sp.getString(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, "1.2")))
-        this.profile.put("autosens_min", SafeParse.stringToDouble(sp.getString(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, "0.7")))
+        val autosens_max = SafeParse.stringToDouble(sp.getString(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, "1.2"))
+        this.profile.put("autosens_max", autosens_max)
+        val autosense_min = SafeParse.stringToDouble(sp.getString(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, "0.7"))
+        this.profile.put("autosens_min", autosense_min)
         //set the min SMB amount to be the amount set by the pump.
         if (profileFunction.getUnits() == GlucoseUnit.MMOL) {
             this.profile.put("out_units", "mmol/L")
@@ -302,9 +306,15 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         tdd?.let { this.profile.put("TDD", tdd) }
 
 
-        if (sp.getBoolean(R.string.key_adjust_sensitivity, false) && tdd7D != null && tddLast24H != null)
-            autosensData.put("ratio", tddLast24H / tdd7D)
-        else
+        if (sp.getBoolean(R.string.key_adjust_sensitivity, false) && tdd7D != null && tddLast24H != null) {
+            var calculatedRatio = tddLast24H / tdd7D
+            var adjustedRatio = calculatedRatio
+            adjustedRatio = max(adjustedRatio, autosense_min)
+            adjustedRatio = min(adjustedRatio, autosens_max)
+            aapsLogger.debug(LTag.APS, "Adjusting sensitivity with ratio ($tddLast24H / $tdd7D) = $calculatedRatio, limiting to: $adjustedRatio (min: $autosense_min, max: $autosens_max)")
+
+            autosensData.put("ratio", adjustedRatio)
+        } else
             autosensData.put("ratio", 1.0)
 
         this.microBolusAllowed = microBolusAllowed
