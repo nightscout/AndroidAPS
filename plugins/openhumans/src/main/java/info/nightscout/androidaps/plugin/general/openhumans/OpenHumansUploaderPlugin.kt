@@ -30,6 +30,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.sync.Sync
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
@@ -67,7 +68,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     counterDelegate: OHCounterDelegate,
     appIdDelegate: OHAppIDDelegate,
     private val rxBus: RxBus
-) : PluginBase(
+) : Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginIcon(R.drawable.open_humans_white)
@@ -84,6 +85,11 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
     private val appId by appIdDelegate
 
     private val preferenceChangeDisposable = CompositeDisposable()
+
+    // Not used Sync interface members
+    override val hasWritePermission: Boolean = true
+    override val connected: Boolean = true
+    override val status: String = ""
 
     override fun onStart() {
         super.onStart()
