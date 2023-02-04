@@ -8,7 +8,7 @@
     <string name="ns_client_bg">NSClient BG</string>
     <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Downloads BG data from Nightscout</string>
-    <string name="xdrip">xDrip+</string>
+    <string name="source_xdrip">xDrip+ BG</string>
     <string name="description_source_xdrip">Receive BG values from xDrip+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>

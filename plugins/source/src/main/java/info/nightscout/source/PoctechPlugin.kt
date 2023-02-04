@@ -10,7 +10,6 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -52,7 +51,6 @@ class PoctechPlugin @Inject constructor(
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var poctechPlugin: PoctechPlugin
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var xDripBroadcast: XDripBroadcast
 
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
@@ -83,7 +81,6 @@ class PoctechPlugin @Inject constructor(
                     .blockingGet()
                     .also { savedValues ->
                         savedValues.inserted.forEach {
-                            xDripBroadcast.sendIn640gMode(it)
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         }
                     }

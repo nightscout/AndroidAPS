@@ -16,7 +16,6 @@ import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
@@ -443,13 +442,11 @@ class ProfilePlugin @Inject constructor(
         @Inject lateinit var sp: SP
         @Inject lateinit var config: Config
         @Inject lateinit var profilePlugin: ProfilePlugin
-        @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var instantiator: Instantiator
 
         override suspend fun doWorkAndLog(): Result {
             val profileJson = dataWorkerStorage.pickupJSONObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
                 ?: return Result.failure(workDataOf("Error" to "missing input data"))
-            xDripBroadcast.sendProfile(profileJson)
             if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
                 val store = instantiator.provideProfileStore(profileJson)
                 val createdAt = store.getStartDate()

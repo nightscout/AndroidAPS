@@ -28,5 +28,6 @@ enum class LTag(val tag: String, val defaultValue : Boolean = true, val requires
     UI("UI", defaultValue = false),
     WEAR("WEAR"),
     WIDGET("WIDGET"),
-    WORKER("WORKER")
+    WORKER("WORKER"),
+    XDRIP("XDRIP")
 }

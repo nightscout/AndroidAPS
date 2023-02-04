@@ -12,12 +12,6 @@
             android:key="@string/key_do_ns_upload"
             android:title="@string/do_ns_upload_title" />
 
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="@string/key_dexcomg5_xdripupload"
-            android:summary="@string/do_xdrip_upload_summary"
-            android:title="@string/do_xdrip_upload_title" />
-
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>

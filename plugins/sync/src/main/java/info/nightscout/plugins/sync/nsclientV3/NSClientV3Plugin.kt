@@ -626,6 +626,7 @@ class NSClientV3Plugin @Inject constructor(
         lastLoadedSrvModified = LastModified(LastModified.Collections())
         initialLoadFinished = false
         storeLastLoadedSrvModified()
+        dataSyncSelector.resetToNextFullSync()
     }
 
     override fun nsAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
