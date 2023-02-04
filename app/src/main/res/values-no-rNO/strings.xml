@@ -45,8 +45,6 @@
     <string name="chartmenu">Diagram meny</string>
     <string name="authorizationfailed">Autentisering feilet</string>
     <string name="copytolocalprofile_invalid">Klarte ikke å opprette profil. Profilen er ikke gyldig.</string>
-    <string name="cta_dont_kill_my_app_info">Avslutte app?</string>
-    <string name="fabric_upload_disabled">Opplast av krasj logger er deaktivert!</string>
     <string name="clear_filter">Nullstill filtre</string>
     <string name="cannula">Kanyle</string>
     <string name="email_address">E-postadresse</string>

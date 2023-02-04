@@ -98,17 +98,11 @@
     <string name="sms_profile_switch_created">配置文件切换已创建</string>
     <string name="sms_wrong_tbr_duration">TBR(临时基础率) 的持续时间必须是 %1$d 分钟的倍数，且大于0。</string>
     <string name="a11y_otp_qr_code">用于安装一次性随机验证码的二维码</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+状态线 (手表)</string>
-    <string name="xdrip_status_shortname">xdrip</string>
-    <string name="description_xdrip_status_line">在 xDrip + 表盘上显示有关闭环的信息。</string>
     <string name="xdrip_status_detailed_iob_title">显示详细 IOB</string>
     <string name="xdrip_status_detailed_iob_summary">在手表的表盘上分别显示大剂量IOB和基础IOB</string>
     <string name="disabled_loop">闭环禁用</string>
     <string name="xdrip_status_show_bgi_title">显示血糖线</string>
     <string name="xdrip_status_show_bgi_summary">添加血糖线到状态线</string>
-    <string name="xdrip_status_settings">xDrip+状态 (手表)</string>
     <!-- Food-->
     <string name="food_short">食物</string>
     <string name="description_food">显示 Nightscout 中定义的食物预设</string>
@@ -278,7 +272,6 @@
     <string name="buttonson_description">按钮总是显示在屏幕底部</string>
     <string name="largedisplay_description">大显示屏</string>
     <string name="skin">皮肤</string>
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">发送包括当前时间的今日的日志文件给开发者。描述一下意外情况</string>
     <!--    Wear-->

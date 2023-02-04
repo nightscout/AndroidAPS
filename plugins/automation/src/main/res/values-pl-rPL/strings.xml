@@ -114,6 +114,10 @@
     <string name="remove_selected_items">Usuń wybrane pozycje</string>
     <string name="count_selected">Wybrany %1$d</string>
     <string name="system_automation">Automatyzacja systemowa</string>
+    <string name="run_automations">Uruchom automatyzację</string>
+    <string name="add_automation">Dodaj regułę</string>
+    <string name="remove_sort">Usuń / sortuj</string>
+    <string name="stop_processing">Zatrzymaj przetwarzanie</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">P</string>
     <string name="tuesday_short">W</string>
@@ -123,5 +127,7 @@
     <string name="saturday_short">S</string>
     <string name="sunday_short">N</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Czas na posiłek!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
     <string name="time_to_bolus">Czas na bolus!\nUruchom Kalkulator bolusa aby ponownie wykonać obliczenia.</string>
+    <string name="error_setting_reminder">Błąd podczas ustawiania przyszłego alarmu</string>
 </resources>

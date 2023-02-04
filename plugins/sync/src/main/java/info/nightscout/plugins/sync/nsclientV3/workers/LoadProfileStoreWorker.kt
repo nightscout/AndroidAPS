@@ -48,6 +48,7 @@ class LoadProfileStoreWorker(
                 if (profiles.isNotEmpty()) {
                     val profile = profiles[profiles.size - 1]
                     // if srvModified found in response
+                    aapsLogger.debug(LTag.NSCLIENT, "lastLoadedSrvModified: ${response.lastServerModified}")
                     response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = it } ?:
                     // if srvModified found in record
                     JsonHelper.safeGetLongAllowNull(profile, "srvModified")?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = it } ?:

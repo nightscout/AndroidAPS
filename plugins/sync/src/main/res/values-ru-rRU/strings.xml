@@ -100,4 +100,15 @@
     <string name="not_connected">Нет подключения</string>
     <string name="read_only">Только чтение</string>
     <string name="working">Обработка</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip +</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Отправить данные ГК на xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Показать IOB подробно</string>
+    <string name="xdrip_status_detailed_iob_summary">Показать разбивку IOB на болюсный и базальный IOB на циферблате</string>
+    <string name="xdrip_status_show_bgi_title">Показывать ГК</string>
+    <string name="xdrip_status_show_bgi_summary">Добавить ГК в строку состояния</string>
+    <string name="disabled_loop">Цикл не активирован</string>
+    <!--    DataBroadcast-->
 </resources>

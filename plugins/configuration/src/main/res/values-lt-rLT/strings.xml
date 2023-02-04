@@ -37,7 +37,7 @@
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Sukonfigūruokite RileyLink žemiau. Pasirinkę RileyLink, galėsite tęsti diegimą, kai tik RileyLink būsena bus „Prisijungta“. Tai gali užtrukti minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galite tęsti, kai tik inicijuojama pompa.\n</string>
-    <string name="startobjective">Pradėti jūsų pirmąjį tikslą</string>
+    <string name="startobjective">Pradėti Jūsų pirmąjį tikslą</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink statusas:</string>
     <string name="readstatus">Statuso nuskaitymas</string>
     <string name="data_choices">Duomenų pasirinkimas</string>
@@ -116,7 +116,7 @@
     <string name="exported_less_than_hour_ago">eksportuota mažiau nei prieš valandą</string>
     <string name="in_directory" comment="placeholder is for exported file path">kataloge: %1$s</string>
     <string name="preferences_import_list_title">Pasirinkite failą importavimui</string>
-    <string name="metadata_warning_different_flavour">Nustatymai sukurti naudojant skirtingą AAPS versiją (%1$s), jūsų turima: %2$s.\n\nKai kurių nustatymų gali trūkti arba jie gali būti neteisingi - po importavimo patikrinkite ir atnaujinkite nustatymus.</string>
+    <string name="metadata_warning_different_flavour">Nustatymai sukurti naudojant skirtingą AAPS versiją (%1$s), Jūsų turima: %2$s.\n\nKai kurių nustatymų gali trūkti arba jie gali būti neteisingi - po importavimo patikrinkite ir atnaujinkite nustatymus.</string>
     <string name="metadata_warning_different_device">Nustatymai buvo sukurti naudojant kitą prietaisą. Viskas gerai, jei importuojante iš senesnio/kito telefono, tačiau įsitikinkite, kad visi importuoti nustatymai yra teisingi!</string>
     <string name="metadata_warning_outdated_format">Jūs naudojate pasenusį formatą iš senos AAPS versijos, kuris nėra saugus! Naudokite tik kraštutiniu atveju, jei neturite nustatymų failo dabartiniu, JSON formatu.</string>
     <string name="metadata_warning_old_export">Importuoti nustatymai yra %1$s d. senumo! Patikrinkite, gal pasirinkote neteisingą failą ir turite naujesnius? Nepamirškite reguliariai eksportuoti nustatymų!</string>

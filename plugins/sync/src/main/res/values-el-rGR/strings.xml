@@ -52,4 +52,7 @@
     <string name="tidepool_upload_tbr">Αποστολή προσωρινών ρυθμών</string>
     <string name="tidepool_upload_profile">Αποστολή αλλαγών προφίλ, προσωρινών στόχων</string>
     <string name="tidepool_upload_bg">Αποστολή BG βαθμονομήσεων</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <!--    DataBroadcast-->
 </resources>

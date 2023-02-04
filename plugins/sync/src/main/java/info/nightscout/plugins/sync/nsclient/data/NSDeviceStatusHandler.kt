@@ -155,10 +155,11 @@ class NSDeviceStatusHandler @Inject constructor(
         }
     }
 
-    private fun updateUploaderData(NSDeviceStatus: NSDeviceStatus) {
-        val clock = NSDeviceStatus.createdAt?.let { dateUtil.fromISODateString(it) } ?: return
-        val device = NSDeviceStatus.device ?: return
-        val battery = NSDeviceStatus.uploaderBattery ?: NSDeviceStatus.uploader?.battery ?: return
+    private fun updateUploaderData(nsDeviceStatus: NSDeviceStatus) {
+        val clock = nsDeviceStatus.createdAt?.let { dateUtil.fromISODateString(it) } ?: return
+        val device = nsDeviceStatus.device ?: return
+        val battery = nsDeviceStatus.uploaderBattery ?: nsDeviceStatus.uploader?.battery ?: return
+        val isCharging = nsDeviceStatus.isCharging
 
         var uploader = processedDeviceStatusData.uploaderMap[device]
         // check if this is new data
@@ -166,6 +167,7 @@ class NSDeviceStatusHandler @Inject constructor(
             if (uploader == null) uploader = ProcessedDeviceStatusData.Uploader()
             uploader.battery = battery
             uploader.clock = clock
+            uploader.isCharging = isCharging
             processedDeviceStatusData.uploaderMap[device] = uploader
         }
     }

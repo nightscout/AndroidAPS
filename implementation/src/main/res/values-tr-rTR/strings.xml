@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="xdrip_not_installed">xDrip+ uygulaması yüklenmemiş</string>
-    <string name="calibration_sent">Kalibrasyon xDrip+ a gönderildi</string>
     <string name="bg_label">KŞ</string>
     <string name="executing_right_now">Komut şu anda çalıştırıldı</string>
     <string name="basal_value_below_minimum">Bazal değer minimumun altında. Profil ayarlanmadı!</string>

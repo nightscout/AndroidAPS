@@ -6,8 +6,6 @@
     <string name="sms_actual_bg">VC:</string>
     <string name="sms_bolus">Bólus:</string>
     <string name="sms_basal">Bázis:</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
     <!-- Food-->
     <string name="food_short">Étel</string>
     <string name="filter">Szűrő</string>
@@ -54,7 +52,6 @@
     <string name="classic_description">Eredeti megjelenés</string>
     <string name="lowres_description">Alacsony felbontás</string>
     <string name="skin">Megjelenés</string>
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->
     <string name="wear_settings">Wear beállítások</string>

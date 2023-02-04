@@ -4,12 +4,10 @@
     <string name="dia_label_exam">Время действия инсулина (DIA)</string>
     <string name="dia_profile">Следует задать значение DIA в вашем профиле.</string>
     <string name="dia_minimumis5h">Минимально допустимое значение-5 часов.</string>
-    <string name="dia_meaningisequaltodiapump">Если вы удовлетворены значением длительности действия инсулина DIA, заданным в помпе до AAPS, то при запуске цикла изменять это значение не требуется.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="dia_valuemustbedetermined">Следует самостоятельно определить DIA подходящее для вас.</string>
     <string name="hypott_label">Временная цель Гипо </string>
-    <string name="hypott_whenhypott">Какова основная причина для установки временной цели гипо?</string>
     <string name="hypott_wrongbasal">Для коррекции гипо, вызванных неверными настройками базальной скорости.</string>
-    <string name="hypott_preventoversmb">Чтобы не допустить чрезмерной коррекции подъема ГК, вызванного быстрыми углеводами, принятыми для устранения гипо.</string>
     <string name="hypott_exercise">Чтобы исправить гипо вызванное нагрузкой.</string>
     <string name="hypott_0basal">Чтобы предотвратить снижение уровня глюкозы в крови, если временная базальная скорость уже 0%.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html</string>
@@ -18,10 +16,7 @@
     <string name="offlineprofile_nsprofile">Профилем NS можно пользоваться, но не настраивать.</string>
     <string name="offlineprofile_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Причины применения опции «Отсоединить помпу» в AAPS</string>
-    <string name="pumpdisconnect_whattodo">Что следует делать при отсоединении помпы?</string>
     <string name="pumpdisconnect_unnecessary">This is unnecessary as insulin will not be delivered if the pump is physically disconnected.</string>
-    <string name="pumpdisconnect_missinginsulin">Это позволяет AAPS не учитывать инсулин, который не был подан во время физического отключения помпы</string>
-    <string name="pumpdisconnect_notstop">Это не прекратит подачу инсулина если помпа остается подключенной.</string>
     <string name="pumpdisconnect_openloop">Это переведет AAPS в режим открытого цикла.</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_label">Настройки AAPS</string>
@@ -87,7 +82,6 @@
     <string name="prerequisites2_what">Что необходимо для настройки и использования AAPS?</string>
     <string name="prerequisites2_profile">Проверенные настройки профиля (чувствительность ISF, I:C, скорость базала, продолжительность действия инсулина и т.д.).</string>
     <string name="prerequisites2_device">Совместимое устройство на Android (мобильный телефон, планшет или часы на полноценном Android).</string>
-    <string name="prerequisites2_internet">AAPS требует подключения к интернет чтоб работать в режиме замкнутого цикла.</string>
     <string name="prerequisites2_supportedcgm">Поддерживаемая система мониторинга и подходящее приложение для получения данных ГК на устройстве.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
     <string name="update_label">Обновление AAPS</string>
@@ -117,9 +111,6 @@
     <string name="sensitivity_label">Модули чувствительности</string>
     <string name="sensitivity_which">Отметьте все правильные ответы.</string>
     <string name="sensitivity_adjust">Модули чувствительности позволяют AAPS подстраиваться под временные или кратковременные изменения в чувствительности к инсулину (например, гормональные изменения или проблемы с поглощением в месте установки катетера).</string>
-    <string name="sensitivity_edit">Модули чувствительности предлагают пользователю изменения скорости базала, коэффициентов I:C и ISF, которые можно внести в профиль.</string>
-    <string name="sensitivity_cannula">Внесение записи о замене катетера вернет коэффициент Autosens к 100%.</string>
-    <string name="sensitivity_time">У некоторых опций модуля есть настраиваемые диапазоны времени, которые может задать пользователь.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/Usage/Open-APS-features.html#autosens</string>
     <string name="wrongcarbs_label">Ошибки записи углеводов</string>
@@ -129,23 +120,15 @@
     <string name="wrongcarbs_donothing">Ничего не делать – AAPS сам внесет необходимые изменения.</string>
     <string name="wrongcarbs_bolus">Ввести инсулин через кнопку Инсулин (болюс) на вкладке Начало.</string>
     <string name="wronginsulin_label">Ошибки подачи/поступления инсулина</string>
-    <string name="wronginsulin_whattodo">Что делать, если вы получили меньше инсулина, чем указано в истории помпы, например, из-за окклюзии, проблем с канюлей или из-за того, что вы забыли подключить помпу обратно после душа?</string>
     <string name="wronginsulin_careportal">Удалить данные об инсулине в Портале терапии Nightscout, чтобы удалить их из истории помпы.</string>
     <string name="wronginsulin_compare">Сравнить значения в истории AAPS и помпы (если помпа это поддерживает).</string>
     <string name="wronginsulin_prime">Рассчитать и ввести «пропущенный» вами инсулин шприцем/ручкой или через кнопку заполнения канюли.</string>
     <string name="wronginsulin_donothing">Ничего не делать и позволить AAPS исправить возможный высокий уровень ГК.</string>
     <string name="cob_label">Активные углеводы COB - углеводы в процессе компенсации</string>
-    <string name="cob_question">Как изменение значения ISF влияет на расчет COB?</string>
-    <string name="cob_longer">Увеличение фактора чувствительности ISF потребует больше времени на усвоение углеводов</string>
-    <string name="cob_shorter">Увеличение фактора чувствительности ISF потребует меньше времени на усвоение углеводов</string>
     <string name="cob_no_effect">Увеличение фактора чувствительности ISF не повлияет на расчетное время усвоения углеводов</string>
     <string name="cob2_question">Как изменение значения IC влияет на расчет COB?</string>
-    <string name="cob2_longer">Увеличение IC увеличит время усвоения углеводов</string>
-    <string name="cob2_shorter">Увеличение IC уменьшит время усвоения углеводов</string>
     <string name="cob2_no_effect">Увеличение IC не повлияет на расчетное время усвоения углеводов</string>
     <string name="cob3_question">Как изменение процента профиля влияет на расчет активных углеводов COB?</string>
-    <string name="cob3_longer">Установка профиля на 150% потребует больше времени на усвоение углеводов</string>
-    <string name="cob3_shorter">Установка профиля на 150% потребует меньше времени на усвоение углеводов</string>
     <string name="cob3_no_effect">Установка профиля на 150% не повлияет на расчетное время усвоения углеводов</string>
     <string name="iob_value">На величину IOB влияют устанавливаемые ВБС.</string>
     <string name="iob_hightemp">Высокая ВБС не будет применяться, если уровень сахара в крови ниже целевого.</string>
@@ -154,7 +137,6 @@
     <string name="breadgrams_label">Запись углеводов и болюсов</string>
     <string name="breadgrams_grams">Для оценки и записи потребляемых углеводов следует использовать только граммы.</string>
     <string name="breadgrams_exchange">Употребленные углеводы можно записывать с помощью соответствующей системы обмена (например, DAFNE «CHO» или европейские «хлебные единицы»).</string>
-    <string name="breadgrams_decay">AAPS использует динамическую модель для оценки \"распада\" и расчета COB.</string>
     <string name="breadgrams_calc">Если уровень глюкозы в крови находится вне допустимых значений (слишком низкое или слишком высокое), то калькулятор болюса может быть использован для внесения предложений по коррекции углеводного коэффициента IC.</string>
     <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">Растянутые углеводы</string>
@@ -162,7 +144,6 @@
     <string name="extendedcarbs_future">Запланировать углеводы в будущем, возможно, распределить в течение определенного времени (по аналогии с растянутым болюсом на определенный интервал времени).</string>
     <string name="extendedcarbs_free">Для внесения «свободных» углеводов при физнагрузке, чтобы скрыть их от AAPS.</string>
     <string name="extendedcarbs_fat">Растянутые углеводы e-carbs (распределяемые в будущем) могут помочь AAPS в работе с пищей с высоким содержанием жиров/белков.</string>
-    <string name="extendedcarbs_rescue">Для указания «лечебных» углеводов, при поднятии низкого уровня ГК.</string>
     <string name="extendedcarbs_hint1">https://wiki.aaps.app/en/latest/Usage/Extended-Carbs.html</string>
     <string name="nsclient_label">Удаленный мониторинг</string>
     <string name="nsclient_howcanyou">Как можно удаленно следить за работой AAPS (например, вашего ребенка)?</string>
@@ -173,8 +154,6 @@
     <string name="nsclient_hint1">https://wiki.aaps.app/en/latest/Children/Children.html</string>
     <string name="isf_label_exam">Фактор Чувствительности к Инсулину (ISF)</string>
     <string name="isf_increasingvalue">Увеличения фактора чувствительности к инсулину ISF приведет к увеличению дозы инсулина на покрытие определенного числа углеводов.</string>
-    <string name="isf_decreasingvalue">Уменьшение фактора чувствительности к инсулину ISF приведет к увеличению дозы инсулина для корректировки ГК выше целевого уровня.</string>
-    <string name="isf_noeffect">Увеличение или уменьшение фактора чувствительности к инсулину ISF не влияет на дозировку инсулина когда уровень ГК ниже целевого.</string>
     <string name="isf_preferences">Фактор чувствительности к инсулину ISF задается в параметрах AAPS.</string>
     <string name="isf_profile">Изменение значения ISF в профиле достаточно для применения изменений.</string>
     <string name="isf_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
@@ -186,16 +165,14 @@
     <string name="ic_decreasingvalue">Более низкий I:C приводит к уменьшению количества инсулина, вводимого на данное число углеводов.</string>
     <string name="ic_noeffect">Если у вас 0 активных углеводов COB, изменение углеводного коэффициента IC приведет к иному количеству инсулина на коррекцию данной ГК.</string>
     <string name="ic_different">Углеводный коэффициент IC изменится если принимать ХЕ за 10 или 12г.</string>
-    <string name="ic_meaning">Смысл углеводного коэффициента IC таков: сколько ГУ (хлебных единиц) покрываются одной ед. инсулина.</string>
+    <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Cмена профиля</string>
-    <string name="profileswitch_pctwillchange"> При установке 90% при переключении профиля, какие утверждения верны?</string>
     <string name="profileswitch_basallower">Базальная скорость снизится на 10%.</string>
     <string name="profileswitch_isfhigher">ISF повысится на 10%.</string>
     <string name="profileswitch_iclower">Значение I:C снизится на 10%.</string>
     <string name="profileswitch_unchanged">Коэффициенты ISF и I:C останутся без изменений.</string>
     <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/en/latest/Usage/Profiles.html#profile-switch</string>
     <string name="profileswitch2_label">Переключение профиля</string>
-    <string name="profileswitch2_pctwillchange"> При установке 120% при переключении профиля, какие утверждения верны?</string>
     <string name="profileswitch2_bghigher">Целевой уровень ГК будет на 20% выше.</string>
     <string name="profileswitch2_basalhigher">Базальная скорость будет на 20% выше.</string>
     <string name="profileswitch2_bgunchanged">Целевой уровень ГК не изменится.</string>
@@ -204,21 +181,14 @@
     <string name="profileswitchtime_iwant">Если вы проснулись на 2 часа раньше обычного, как следует уведомить AAPS об изменении режима?</string>
     <string name="profileswitchtime_2">Выполнить переключение профиля со сдвигом времени 2</string>
     <string name="profileswitchtime__2">Выполнить переключение профиля со сдвигом времени -2</string>
-    <string name="profileswitchtime_tt">Установить временную цель \"Eating Soon\" (Ожидаемый прием пищи).</string>
-    <string name="profileswitchtime_100">Задать профиль выше 100%</string>
     <string name="profileswitchtime_hint1">https://wiki.aaps.app/en/latest/Usage/Profiles.html#timeshift</string>
     <string name="profileswitch4_label">Изменения в профилях</string>
     <string name="profileswitch4_rates">Базальные скорости, ISF, соотношение I:C и т.д. должны быть установлены в профилях.</string>
     <string name="profileswitch4_internet">Для активации изменений в профиле Nightscout требуется, чтобы телефон с AAPS был подключен к Интернету.</string>
     <string name="profileswitch4_sufficient">Сохранения новых значений в профиле достаточно, чтобы все сделанные изменения вступили в силу.</string>
-    <string name="profileswitch4_multi">Можно настроить несколько профилей и выбирать их в связи с меняющимися обстоятельствами (например, гормональные изменения, посменная работа, образ жизни в будние/выходные дни).</string>
     <string name="basalhelp_hint1">https://wiki.aaps.app/en/latest/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_label">Помощь с базальной скоростью</string>
-    <string name="basalhelp_where">Куда обращаться за помощью по скорости базала и т. д.</string>
     <string name="basalhelp_diabetesteam">Ваши эндокринологи</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
-    <string name="other_medication_label">Прочие препараты. Прочтите высказывание ниже, а затем отметьте галочку, чтобы принять условия.</string>
-    <string name="other_medication_text">AAPS понижает базальную скорость или приостанавливает ввод инсулина для повышения уровня ГК. Препараты из класса ингибиторов SGLT2 (глифлозины) могут предотвращать повышение уровня ГК и, следовательно, вызывать опасную нехватку инсулина, приводящую к диабетическому кетоацидозу DKA.
-\nОбщими торговыми наименованиями являются: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nЯ подтверждаю, что не буду принимать такие препараты, при использовании AAPS или отключу цикл перед их применением.</string>
 </resources>

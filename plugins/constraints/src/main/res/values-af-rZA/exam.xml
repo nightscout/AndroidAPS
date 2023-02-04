@@ -4,7 +4,6 @@
     <string name="offlineprofile_whatprofile">Watter profiel kan gebruik en ingestel word van lyn af?</string>
     <string name="offlineprofile_label">Onderwerp: Aflyn Profiel</string>
     <string name="offlineprofile_nsprofile">NS-Profiel kan gebruik word, maar nie ingestel.</string>
-    <string name="pumpdisconnect_whattodo">Wat moet gedoen word wanneer pomp ontkoppel word?</string>
     <string name="noisycgm_whattodo">Wat moet gedoen word as CGM data raserig is?</string>
     <string name="prerequisites_googleaccount">\'n Google-rekening.</string>
     <string name="prerequisites_githubaccount">\'n Github rekening.</string>

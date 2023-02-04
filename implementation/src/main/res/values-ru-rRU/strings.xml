@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="xdrip_not_installed">xdrip+ не установлен</string>
-    <string name="calibration_sent">Калибровка отправлена на xDrip+</string>
     <string name="bg_label">ГК</string>
     <string name="executing_right_now">Команда выполняется</string>
     <string name="basal_value_below_minimum">значение базала ниже минимума. профиль не создан!</string>

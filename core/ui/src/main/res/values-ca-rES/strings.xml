@@ -421,6 +421,7 @@
     <string name="nav_plugin_preferences">Configuració plugin</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Falta permís SMS</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dies</item>

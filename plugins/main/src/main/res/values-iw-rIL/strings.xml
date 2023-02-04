@@ -98,17 +98,11 @@
     <string name="sms_profile_switch_created">נוצרה החלפת פרופיל</string>
     <string name="sms_wrong_tbr_duration">משך הבזאלי הזמני חייב להיות כפולה של %1$d דקות ויותר מ-0.</string>
     <string name="a11y_otp_qr_code">ברקוד QR ליצירת סיסמה חד פעמית</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">שורת מצב xDrip (שעון)</string>
-    <string name="xdrip_status_shortname">xDS</string>
-    <string name="description_xdrip_status_line">הצג מידע אודות הלולאה במסך xDrip בשעון החכם.</string>
     <string name="xdrip_status_detailed_iob_title">הצגת IOB מפורט</string>
     <string name="xdrip_status_detailed_iob_summary">לחלק את ה IOB לבולוס ובזאלי במסך השעון</string>
     <string name="disabled_loop">לולאה כבויה</string>
     <string name="xdrip_status_show_bgi_title">הצג השפעת רמת הסוכר</string>
     <string name="xdrip_status_show_bgi_summary">הוסף השפעת הסוכר לשורת הסטטוס</string>
-    <string name="xdrip_status_settings">מצב xDrip (שעון)</string>
     <!-- Food-->
     <string name="food_short">מזון</string>
     <string name="description_food">מציג את ההגדרות הקבועות מראש עבור מזון המוגדר ב-Nightscout</string>
@@ -278,7 +272,6 @@
     <string name="buttonson_description">לחצנים מוצגים תמיד בתחתית המסך</string>
     <string name="largedisplay_description">תצוגה גדולה</string>
     <string name="skin">סקין</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">שימוש:</string>
     <!--    Iob-->
     <string name="send_logfiles">שלח קובצי יומן של היום למפתחים יחד עם זמן זה. מצב לא צפוי.</string>

@@ -8,8 +8,6 @@
     <string name="smscommunicator_remote_bolus_not_allowed">リモートボーラスが利用できません。後でもう一度お試しください。</string>
     <string name="sms_delta">デルタ:</string>
     <string name="sms_basal">ベーサル:</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
     <!-- Food-->
     <!-- Theme switcher dark and light mode-->
     <!-- Profile -->
@@ -62,7 +60,6 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TREAT</string>
     <!-- Skins -->
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>

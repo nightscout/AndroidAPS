@@ -100,4 +100,19 @@
     <string name="not_connected">Non connecté</string>
     <string name="read_only">Lecture seule</string>
     <string name="working">Opération en cours</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Envoyer des données à xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Afficher l\'IA détaillée</string>
+    <string name="xdrip_status_detailed_iob_summary">Sur la montre, décomposer l’IA en IA bolus et IA basal</string>
+    <string name="xdrip_status_show_bgi_title">Afficher l’Impact Glycémie</string>
+    <string name="xdrip_status_show_bgi_summary">Ajouter l’IGly dans la barre d\'état</string>
+    <string name="xdrip_status_settings">xDrip+ barre d\'état avancée</string>
+    <string name="disabled_loop">Boucle désactivée</string>
+    <string name="xdrip_send_status_title">Envoyer la barre d\'état à xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ n\'est pas installé</string>
+    <string name="calibration_sent">Étalonnage envoyé à xDrip+</string>
+    <!--    DataBroadcast-->
 </resources>

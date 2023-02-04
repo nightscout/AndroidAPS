@@ -27,7 +27,8 @@ data class DeviceStatus(
     var enacted: String? = null,
     var suggested: String? = null,
     var iob: String? = null,
-    var uploaderBattery: Int = 0,
+    var uploaderBattery: Int,
+    var isCharging: Boolean?,
     var configuration: String? = null
 
 ) : DBEntryWithTime {

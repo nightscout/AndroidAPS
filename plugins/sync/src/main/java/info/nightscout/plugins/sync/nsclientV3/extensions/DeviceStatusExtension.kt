@@ -27,6 +27,7 @@ fun DeviceStatus.toNSDeviceStatus(): NSDeviceStatus {
         pump = pump,
         openaps = openAps,
         uploaderBattery = if (uploaderBattery != 0) uploaderBattery else null,
+        isCharging = isCharging,
         configuration = gson.fromJson(configuration, NSDeviceStatus.Configuration::class.java),
         uploader = null
     )

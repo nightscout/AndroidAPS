@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="xdrip_not_installed">xDrip+가 설치되지 않았습니다</string>
-    <string name="calibration_sent">보정이 xDrip으로 전송되었습니다+</string>
     <string name="bg_label">혈당</string>
     <string name="executing_right_now">명령을 지금 실행합니다.</string>
     <string name="basal_value_below_minimum">Basal값이 최소값 이하입니다. 프로파일이 설정되지 않습니다!</string>

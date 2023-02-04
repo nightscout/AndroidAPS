@@ -1,15 +1,16 @@
 package info.nightscout.plugins.sync.tidepool.messages
 
 import com.google.gson.annotations.Expose
+import info.nightscout.interfaces.Config
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import java.util.TimeZone
 
-class OpenDatasetRequestMessage(serialNumber: String, dateUtil: DateUtil) : BaseMessage() {
+class OpenDatasetRequestMessage(config: Config, dateUtil: DateUtil) : BaseMessage() {
 
     @Expose
-    var deviceId: String = TidepoolUploader.PUMP_TYPE + ":" + serialNumber
+    var deviceId: String? = null
 
     @Expose
     var time: String = dateUtil.toISOAsUTC(System.currentTimeMillis())
@@ -22,7 +23,7 @@ class OpenDatasetRequestMessage(serialNumber: String, dateUtil: DateUtil) : Base
 
     //public String byUser;
     @Expose
-    var client = ClientInfo()
+    var client = ClientInfo(config.APPLICATION_ID)
 
     @Expose
     var computerTime: String = dateUtil.toISONoZone(System.currentTimeMillis())
@@ -49,16 +50,12 @@ class OpenDatasetRequestMessage(serialNumber: String, dateUtil: DateUtil) : Base
     var timezone: String = TimeZone.getDefault().id
 
     @Expose
-    var version = "1.0"
+    var version = config.VERSION_NAME
 
-    inner class ClientInfo {
-
-        @Expose
-        val name = "AAPS"
-
-        @Expose
-        val version = TidepoolUploader.VERSION
-    }
+    inner class ClientInfo(
+        @Expose val name: String,
+        @Expose val version: String = TidepoolUploader.VERSION
+    )
 
     inner class Deduplicator {
 

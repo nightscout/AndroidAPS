@@ -62,6 +62,7 @@ class LoadBgWorker(
                 if (isFirstLoad) response = nsAndroidClient.getSgvsNewerThan(lastLoaded, NSClientV3Plugin.RECORDS_TO_LOAD)
                 else {
                     response = nsAndroidClient.getSgvsModifiedSince(lastLoaded, NSClientV3Plugin.RECORDS_TO_LOAD)
+                    aapsLogger.debug(LTag.NSCLIENT, "lastLoadedSrvModified: ${response.lastServerModified}")
                     response.lastServerModified?.let { nsClientV3Plugin.lastLoadedSrvModified.collections.entries = it }
                     nsClientV3Plugin.storeLastLoadedSrvModified()
                     nsClientV3Plugin.scheduleIrregularExecution() // Idea is to run after 5 min after last BG
@@ -74,6 +75,7 @@ class LoadBgWorker(
                     // Objective0
                     sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
                     // Schedule processing of fetched data and continue of loading
+                    val stopLoading = sgvs.size != NSClientV3Plugin.RECORDS_TO_LOAD || response.code == 304
                     workManager
                         .beginUniqueWork(
                             NSClientV3Plugin.JOB_NAME,
@@ -81,8 +83,8 @@ class LoadBgWorker(
                             OneTimeWorkRequest.Builder(workerClasses.nsClientSourceWorker).setInputData(dataWorkerStorage.storeInputData(sgvs)).build()
                         )
                         // response 304 == Not modified (happens when date > srvModified => bad time on phone or server during upload
-                        .then(response.code != 304, OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
-                        .then(response.code == 304, OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
+                        .then(!stopLoading, OneTimeWorkRequest.Builder(LoadBgWorker::class.java).build())
+                        .then(stopLoading, OneTimeWorkRequest.Builder(LoadTreatmentsWorker::class.java).build())
                         .enqueue()
                 } else {
                     // End first load

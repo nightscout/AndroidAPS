@@ -347,8 +347,8 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                 message += "${rh.gs(info.nightscout.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(info.nightscout.plugins.R.string.not_available_full)}"
                 if (config.isEngineeringMode()) message += "\n${rh.gs(info.nightscout.configuration.R.string.engineering_mode_enabled)}"
                 if (config.isUnfinishedMode()) message += "\nUnfinished mode enabled"
-                if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(R.string.fabric_upload_disabled)}"
-                message += rh.gs(info.nightscout.pump.combo.R.string.about_link_urls)
+                if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(info.nightscout.core.ui.R.string.fabric_upload_disabled)}"
+                message += rh.gs(info.nightscout.core.ui.R.string.about_link_urls)
                 val messageSpanned = SpannableString(message)
                 Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
                 MaterialAlertDialogBuilder(this, info.nightscout.core.ui.R.style.DialogTheme)
@@ -356,7 +356,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     .setIcon(iconsProvider.getIcon())
                     .setMessage(messageSpanned)
                     .setPositiveButton(rh.gs(info.nightscout.core.ui.R.string.ok), null)
-                    .setNeutralButton(rh.gs(R.string.cta_dont_kill_my_app_info)) { _, _ ->
+                    .setNeutralButton(rh.gs(info.nightscout.core.ui.R.string.cta_dont_kill_my_app_info)) { _, _ ->
                         startActivity(
                             Intent(
                                 Intent.ACTION_VIEW,
