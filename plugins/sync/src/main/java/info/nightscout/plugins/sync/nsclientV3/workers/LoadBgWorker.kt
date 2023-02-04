@@ -71,7 +71,7 @@ class LoadBgWorker(
                 aapsLogger.debug(LTag.NSCLIENT, "SGVS: $sgvs")
                 if (sgvs.isNotEmpty()) {
                     val action = if (isFirstLoad) "RCV-FIRST" else "RCV"
-                    rxBus.send(EventNSClientNewLog(action, "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                    rxBus.send(EventNSClientNewLog("◄ $action", "${sgvs.size} SVGs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                     // Objective0
                     sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
                     // Schedule processing of fetched data and continue of loading
@@ -92,7 +92,7 @@ class LoadBgWorker(
                         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = lastLoaded
                         nsClientV3Plugin.storeLastLoadedSrvModified()
                     }
-                    rxBus.send(EventNSClientNewLog("RCV END", "No SGVs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                    rxBus.send(EventNSClientNewLog("◄ RCV BG END", "No data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                     workManager
                         .beginUniqueWork(
                             nsClientV3Plugin.JOB_NAME,
@@ -108,7 +108,7 @@ class LoadBgWorker(
                     nsClientV3Plugin.lastLoadedSrvModified.collections.entries = lastLoaded
                     nsClientV3Plugin.storeLastLoadedSrvModified()
                 }
-                rxBus.send(EventNSClientNewLog("RCV END", "No new SGVs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                rxBus.send(EventNSClientNewLog("◄ RCV BG END", "No new data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                 workManager
                     .beginUniqueWork(
                         nsClientV3Plugin.JOB_NAME,
@@ -120,7 +120,7 @@ class LoadBgWorker(
             }
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
             nsClientV3Plugin.lastOperationError = error.localizedMessage
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }

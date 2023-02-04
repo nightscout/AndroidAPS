@@ -9,6 +9,7 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.NsClient
+import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -27,6 +28,7 @@ internal class DataSyncWorkerTest : TestBase() {
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var nsClient: NsClient
     @Mock lateinit var rxBus: RxBus
+    @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
 
     private lateinit var sut: DataSyncWorker
 
@@ -38,6 +40,7 @@ internal class DataSyncWorkerTest : TestBase() {
                 it.dataSyncSelector = dataSyncSelector
                 it.activePlugin = activePlugin
                 it.rxBus = rxBus
+                it.nsClientV3Plugin = nsClientV3Plugin
             }
         }
     }

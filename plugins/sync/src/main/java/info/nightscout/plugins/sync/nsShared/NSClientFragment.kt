@@ -81,7 +81,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
             updateGui()
         }
 
-        binding.paused.isChecked = sp.getBoolean(R.string.key_ns_client_paused, false)
+        binding.paused.isChecked = sp.getBoolean(R.string.key_ns_paused, false)
         binding.paused.setOnCheckedChangeListener { _, isChecked ->
             uel.log(if (isChecked) UserEntry.Action.NS_PAUSED else UserEntry.Action.NS_RESUME, UserEntry.Sources.NSClient)
             nsClientPlugin?.pause(isChecked)
@@ -143,7 +143,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
 
     private fun updateGui() {
         if (_binding == null) return
-        binding.paused.isChecked = sp.getBoolean(R.string.key_ns_client_paused, false)
+        binding.paused.isChecked = sp.getBoolean(R.string.key_ns_paused, false)
         binding.log.text = nsClientPlugin?.textLog()
         if (sp.getBoolean(R.string.key_ns_client_autoscroll, true)) binding.logScrollview.fullScroll(ScrollView.FOCUS_DOWN)
         binding.url.text = nsClientPlugin?.address

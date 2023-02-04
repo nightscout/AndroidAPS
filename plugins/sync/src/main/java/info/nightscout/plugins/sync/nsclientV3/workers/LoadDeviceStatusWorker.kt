@@ -33,15 +33,18 @@ class LoadDeviceStatusWorker(
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
 
         try {
+            // Notify plugin we loaded al missed data
+            nsClientV3Plugin.initialLoadFinished = true
+
             val from = dateUtil.now() - T.mins(7).msecs()
             val deviceStatuses = nsAndroidClient.getDeviceStatusModifiedSince(from)
             aapsLogger.debug("DEVICESTATUSES: $deviceStatuses")
             if (deviceStatuses.isNotEmpty()) {
-                rxBus.send(EventNSClientNewLog("RCV", "${deviceStatuses.size} DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
+                rxBus.send(EventNSClientNewLog("◄ RCV", "${deviceStatuses.size} DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
                 nsDeviceStatusHandler.handleNewData(deviceStatuses.toTypedArray())
-                rxBus.send(EventNSClientNewLog("DONE DS", ""))
+                rxBus.send(EventNSClientNewLog("● DONE PROCESSING DS", ""))
             } else {
-                rxBus.send(EventNSClientNewLog("RCV END", "No DSs from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
+                rxBus.send(EventNSClientNewLog("◄ RCV DS END", "No data from ${dateUtil.dateAndTimeAndSecondsString(from)}"))
             }
             WorkManager.getInstance(context)
                 .enqueueUniqueWork(
@@ -51,7 +54,7 @@ class LoadDeviceStatusWorker(
                 )
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
             nsClientV3Plugin.lastOperationError = error.localizedMessage
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }

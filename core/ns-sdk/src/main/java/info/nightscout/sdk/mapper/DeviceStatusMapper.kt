@@ -1,5 +1,6 @@
 package info.nightscout.sdk.mapper
 
+import com.google.gson.Gson
 import com.google.gson.JsonParser
 import info.nightscout.sdk.localmodel.devicestatus.NSDeviceStatus
 import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
@@ -7,6 +8,9 @@ import org.json.JSONObject
 
 fun NSDeviceStatus.convertToRemoteAndBack(): NSDeviceStatus =
     toRemoteDeviceStatus().toNSDeviceStatus()
+
+fun String.toNSDeviceStatus(): NSDeviceStatus =
+    Gson().fromJson(this, RemoteDeviceStatus::class.java).toNSDeviceStatus()
 
 internal fun RemoteDeviceStatus.toNSDeviceStatus(): NSDeviceStatus =
     NSDeviceStatus(

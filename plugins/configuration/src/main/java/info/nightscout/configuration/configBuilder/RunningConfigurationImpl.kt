@@ -75,7 +75,7 @@ class RunningConfigurationImpl @Inject constructor(
         assert(config.NSCLIENT)
 
         configuration.version?.let {
-            rxBus.send(EventNSClientNewLog("VERSION", "Received AAPS version  $it"))
+            rxBus.send(EventNSClientNewLog("◄ VERSION", "Received AAPS version  $it"))
             if (config.VERSION_NAME.startsWith(it).not())
                 uiInteraction.addNotification(Notification.NSCLIENT_VERSION_DOES_NOT_MATCH, rh.gs(R.string.nsclient_version_does_not_match), Notification.NORMAL)
         }

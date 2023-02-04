@@ -32,10 +32,7 @@ dependencies {
     testImplementation project(':plugins:aps')
 
     // NSClient, Tidepool
-    api("io.socket:socket.io-client:1.0.2") {
-        // excluding org.json which is provided by Android
-        exclude group: "org.json", module: "json"
-    }
+    api("io.socket:socket.io-client:2.1.0")
     api "com.squareup.okhttp3:okhttp:$okhttp3_version"
     api "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
     //api "com.squareup.retrofit2:retrofit:$retrofit2_version"

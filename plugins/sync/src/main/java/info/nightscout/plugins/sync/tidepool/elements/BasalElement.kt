@@ -7,7 +7,7 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.shared.utils.DateUtil
 import java.util.UUID
 
-class BasalElement(tbr: TemporaryBasal, private val profile: Profile, dateUtil: DateUtil)
+class BasalElement(tbr: TemporaryBasal, profile: Profile, dateUtil: DateUtil)
     : BaseElement(tbr.timestamp, UUID.nameUUIDFromBytes(("AAPS-basal" + tbr.timestamp).toByteArray()).toString(), dateUtil) {
 
     internal var timestamp: Long = 0 // not exposed

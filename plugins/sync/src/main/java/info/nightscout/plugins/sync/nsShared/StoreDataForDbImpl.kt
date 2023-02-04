@@ -145,13 +145,24 @@ class StoreDataForDbImpl @Inject constructor(
         }
     }
 
+    class StoreTreatmentsWorker(
+        context: Context,
+        params: WorkerParameters
+    ) : LoggingWorker(context, params, Dispatchers.Default) {
+
+        @Inject lateinit var storeDataForDb: StoreDataForDb
+
+        override suspend fun doWorkAndLog(): Result {
+            storeDataForDb.storeTreatmentsToDb()
+            return Result.success()
+        }
+    }
+
     fun <T> HashMap<T, Long>.inc(key: T) =
         if (containsKey(key)) merge(key, 1, Long::plus)
         else put(key, 1)
 
     override fun storeGlucoseValuesToDb() {
-        rxBus.send(EventNSClientNewLog("PROCESSING BG", ""))
-
         if (glucoseValues.isNotEmpty())
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
@@ -179,12 +190,10 @@ class StoreDataForDbImpl @Inject constructor(
 
         sendLog("GlucoseValue", GlucoseValue::class.java.simpleName)
         SystemClock.sleep(pause)
-        rxBus.send(EventNSClientNewLog("DONE BG", ""))
+        rxBus.send(EventNSClientNewLog("● DONE PROCESSING BG", ""))
     }
 
     override fun storeFoodsToDb() {
-        rxBus.send(EventNSClientNewLog("PROCESSING FOOD", ""))
-
         if (foods.isNotEmpty())
             repository.runTransactionForResult(SyncNsFoodTransaction(foods))
                 .doOnError {
@@ -209,12 +218,10 @@ class StoreDataForDbImpl @Inject constructor(
 
         sendLog("Food", Food::class.java.simpleName)
         SystemClock.sleep(pause)
-        rxBus.send(EventNSClientNewLog("DONE FOOD", ""))
+        rxBus.send(EventNSClientNewLog("● DONE PROCESSING FOOD", ""))
     }
 
     override fun storeTreatmentsToDb() {
-        rxBus.send(EventNSClientNewLog("PROCESSING TR", ""))
-
         if (boluses.isNotEmpty())
             repository.runTransactionForResult(SyncNsBolusTransaction(boluses))
                 .doOnError {
@@ -791,7 +798,7 @@ class StoreDataForDbImpl @Inject constructor(
         SystemClock.sleep(pause)
 
         uel.log(userEntries)
-        rxBus.send(EventNSClientNewLog("DONE TR", ""))
+        rxBus.send(EventNSClientNewLog("● DONE PROCESSING TR", ""))
     }
 
     private val eventWorker = Executors.newSingleThreadScheduledExecutor()
@@ -991,7 +998,7 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("TherapyEvent", TherapyEvent::class.java.simpleName)
         sendLog("OfflineEvent", OfflineEvent::class.java.simpleName)
         sendLog("ExtendedBolus", ExtendedBolus::class.java.simpleName)
-        rxBus.send(EventNSClientNewLog("DONE NSIDs", ""))
+        rxBus.send(EventNSClientNewLog("● DONE NSIDs", ""))
     }
 
     private fun sendLog(item: String, clazz: String) {

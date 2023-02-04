@@ -1,9 +1,11 @@
 package info.nightscout.plugins.sync.nsclientV3
 
+import androidx.work.WorkManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.core.extensions.fromConstant
+import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
@@ -26,8 +28,10 @@ import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.workflow.WorkerClasses
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
-import info.nightscout.plugins.sync.nsclient.NsClientReceiverDelegate
+import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
+import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclient.extensions.fromConstant
 import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.treatment.CreateUpdateResponse
@@ -45,7 +49,7 @@ import org.mockito.internal.verification.Times
 @Suppress("SpellCheckingInspection")
 internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var nsClientReceiverDelegate: NsClientReceiverDelegate
+    @Mock lateinit var receiverDelegate: ReceiverDelegate
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var dataSyncSelector: DataSyncSelector
     @Mock lateinit var nsAndroidClient: NSAndroidClient
@@ -54,6 +58,10 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Mock lateinit var xDripBroadcast: XDripBroadcast
     @Mock lateinit var virtualPump: VirtualPump
     @Mock lateinit var mockedProfileFunction: ProfileFunction
+    @Mock lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
+    @Mock lateinit var workManager: WorkManager
+    @Mock lateinit var workerClasses: WorkerClasses
+    @Mock lateinit var dataWorkerStorage: DataWorkerStorage
 
     private lateinit var storeDataForDb: StoreDataForDb
     private lateinit var sut: NSClientV3Plugin
@@ -65,11 +73,12 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     @BeforeEach
     fun prepare() {
-        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, repository, sp, uel, dateUtil, config, nsClientSource, xDripBroadcast, virtualPump, uiInteraction)
+        storeDataForDb = StoreDataForDbImpl(aapsLogger, rxBus, repository, sp, uel, dateUtil, config, nsClientSource, virtualPump, uiInteraction)
         sut =
             NSClientV3Plugin(
                 injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-                sp, nsClientReceiverDelegate, config, dateUtil, uiInteraction, dataSyncSelector, mockedProfileFunction, repository
+                sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelector, mockedProfileFunction, repository,
+                nsDeviceStatusHandler, workManager, workerClasses, dataWorkerStorage, nsClientSource
             )
         sut.nsAndroidClient = nsAndroidClient
         `when`(mockedProfileFunction.getProfile(anyLong())).thenReturn(validProfile)

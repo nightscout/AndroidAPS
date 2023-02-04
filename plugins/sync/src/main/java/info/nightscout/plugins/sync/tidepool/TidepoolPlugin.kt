@@ -10,11 +10,12 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.sync.Sync
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.sync.R
+import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
+import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
 import info.nightscout.plugins.sync.tidepool.comm.TidepoolUploader
 import info.nightscout.plugins.sync.tidepool.comm.UploadChunk
 import info.nightscout.plugins.sync.tidepool.events.EventTidepoolDoUpload
@@ -24,7 +25,7 @@ import info.nightscout.plugins.sync.tidepool.events.EventTidepoolUpdateGUI
 import info.nightscout.plugins.sync.tidepool.utils.RateLimit
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventNetworkChange
+import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.events.EventNewBG
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
@@ -50,7 +51,7 @@ class TidepoolPlugin @Inject constructor(
     private val uploadChunk: UploadChunk,
     private val sp: SP,
     private val rateLimit: RateLimit,
-    private val receiverStatusStore: ReceiverStatusStore,
+    private val receiverDelegate: ReceiverDelegate,
     private val uiInteraction: UiInteraction
 ) : Sync, PluginBase(
     PluginDescription()
@@ -67,10 +68,18 @@ class TidepoolPlugin @Inject constructor(
 
     private val listLog = ArrayList<EventTidepoolStatus>()
     var textLog: Spanned = HtmlHelper.fromHtml("")
+    private val isAllowed get() = receiverDelegate.allowed
 
-    @Suppress("UNNECESSARY_NOT_NULL_ASSERTION")
     override fun onStart() {
         super.onStart()
+        disposable += rxBus
+            .toObservable(EventConnectivityOptionChanged::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ ev ->
+                           rxBus.send(EventNSClientNewLog("● CONNECTIVITY", ev.blockingReason))
+                           tidepoolUploader.resetInstance()
+                           if (isAllowed) doUpload()
+                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventTidepoolDoUpload::class.java)
             .observeOn(aapsSchedulers.io)
@@ -94,17 +103,13 @@ class TidepoolPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventNewBG::class.java)
             .observeOn(aapsSchedulers.io)
-            .filter { it.glucoseValueTimestamp != null } // better would be optional in API level >24
-            .map { it.glucoseValueTimestamp!! }
-            .subscribe({ bgReadingTimestamp ->
-                           if (bgReadingTimestamp < uploadChunk.getLastEnd())
-                               uploadChunk.setLastEnd(bgReadingTimestamp)
-                           if (isEnabled()
-                               && (!sp.getBoolean(R.string.key_tidepool_only_while_charging, false) || receiverStatusStore.isCharging)
-                               && (!sp.getBoolean(R.string.key_tidepool_only_while_unmetered, false) || receiverStatusStore.isWifiConnected)
-                               && rateLimit.rateLimit("tidepool-new-data-upload", T.mins(4).secs().toInt())
-                           )
-                               doUpload()
+            .subscribe({
+                           it.glucoseValueTimestamp?.let { bgReadingTimestamp ->
+                               if (bgReadingTimestamp < uploadChunk.getLastEnd())
+                                   uploadChunk.setLastEnd(bgReadingTimestamp)
+                               if (isAllowed && rateLimit.rateLimit("tidepool-new-data-upload", T.mins(4).secs().toInt()))
+                                   doUpload()
+                           }
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventPreferenceChange::class.java)
@@ -116,11 +121,6 @@ class TidepoolPlugin @Inject constructor(
                            )
                                tidepoolUploader.resetInstance()
                        }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventNetworkChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({}, fabricPrivacy::logException) // TODO start upload on wifi connect
-
     }
 
     override fun onStop() {

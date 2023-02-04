@@ -31,6 +31,7 @@ import info.nightscout.interfaces.utils.JsonHelper.safeGetStringAllowNull
 import info.nightscout.interfaces.workflow.WorkerClasses
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
+import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
@@ -49,6 +50,7 @@ import info.nightscout.rx.events.EventConfigBuilderChange
 import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.events.EventNSClientRestart
+import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -139,12 +141,20 @@ class NSClientService : DaggerService() {
             .subscribe({ event: EventPreferenceChange ->
                            if (event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_url)) ||
                                event.isChanged(rh.gs(info.nightscout.core.utils.R.string.key_nsclientinternal_api_secret)) ||
-                               event.isChanged(rh.gs(R.string.key_ns_client_paused))
+                               event.isChanged(rh.gs(R.string.key_ns_paused))
                            ) {
                                latestDateInReceivedData = 0
                                destroy()
                                initialize()
                            }
+                       }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventConnectivityOptionChanged::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           latestDateInReceivedData = 0
+                           destroy()
+                           initialize()
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
@@ -165,6 +175,10 @@ class NSClientService : DaggerService() {
             .toObservable(NSAuthAck::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ ack -> processAuthAck(ack) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventNewHistoryData::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ resend("NEW_DATA") }, fabricPrivacy::logException)
     }
 
     override fun onDestroy() {
@@ -213,10 +227,10 @@ class NSClientService : DaggerService() {
         @Suppress("DEPRECATION")
         if (nsAPISecret != "") nsApiHashCode = Hashing.sha1().hashString(nsAPISecret, Charsets.UTF_8).toString()
         rxBus.send(EventNSClientStatus("Initializing"))
-        if (!nsClientPlugin.isAllowed) {
+        if (nsClientPlugin.isAllowed != true) {
             rxBus.send(EventNSClientNewLog("NSCLIENT", nsClientPlugin.blockingReason))
             rxBus.send(EventNSClientStatus(nsClientPlugin.blockingReason))
-        } else if (sp.getBoolean(R.string.key_ns_client_paused, false)) {
+        } else if (sp.getBoolean(R.string.key_ns_paused, false)) {
             rxBus.send(EventNSClientNewLog("NSCLIENT", "paused"))
             rxBus.send(EventNSClientStatus("Paused"))
         } else if (!nsEnabled) {
@@ -225,16 +239,10 @@ class NSClientService : DaggerService() {
         } else if (nsURL != "" && (nsURL.lowercase(Locale.getDefault()).startsWith("https://"))) {
             try {
                 rxBus.send(EventNSClientStatus("Connecting ..."))
-                val opt = IO.Options()
-                opt.forceNew = true
-                opt.reconnection = true
+                val opt = IO.Options().also { it.forceNew = true }
                 socket = IO.socket(nsURL, opt).also { socket ->
                     socket.on(Socket.EVENT_CONNECT, onConnect)
                     socket.on(Socket.EVENT_DISCONNECT, onDisconnect)
-                    socket.on(Socket.EVENT_ERROR, onError)
-                    socket.on(Socket.EVENT_CONNECT_ERROR, onError)
-                    socket.on(Socket.EVENT_CONNECT_TIMEOUT, onError)
-                    socket.on(Socket.EVENT_PING, onPing)
                     rxBus.send(EventNSClientNewLog("NSCLIENT", "do connect"))
                     socket.connect()
                     socket.on("dataUpdate", onDataUpdate)
@@ -300,7 +308,6 @@ class NSClientService : DaggerService() {
     @Synchronized fun destroy() {
         socket?.off(Socket.EVENT_CONNECT)
         socket?.off(Socket.EVENT_DISCONNECT)
-        socket?.off(Socket.EVENT_PING)
         socket?.off("dataUpdate")
         socket?.off("announcement")
         socket?.off("alarm")
@@ -336,18 +343,6 @@ class NSClientService : DaggerService() {
         nsDevice = sp.getString("careportal_enteredby", "")
     }
 
-    private val onError = Emitter.Listener { args ->
-        var msg = "Unknown Error"
-        if (args.isNotEmpty() && args[0] != null) {
-            msg = args[0].toString()
-        }
-        rxBus.send(EventNSClientNewLog("ERROR", msg))
-    }
-    private val onPing = Emitter.Listener {
-        rxBus.send(EventNSClientNewLog("PING", "received"))
-        // send data if there is something waiting
-        resend("Ping received")
-    }
     private val onAnnouncement = Emitter.Listener { args ->
 
         /*
@@ -651,7 +646,7 @@ class NSClientService : DaggerService() {
     private fun handleAlarm(alarm: JSONObject) {
         val defaultVal = config.NSCLIENT
         if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, defaultVal)) {
-            val snoozedTo = sp.getLong(info.nightscout.core.utils.R.string.key_snoozed_to, 0L)
+            val snoozedTo = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarm(alarm)
                 uiInteraction.addNotificationWithAction(injector, nsAlarm)
@@ -664,7 +659,7 @@ class NSClientService : DaggerService() {
     private fun handleUrgentAlarm(alarm: JSONObject) {
         val defaultVal = config.NSCLIENT
         if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_alarms, defaultVal)) {
-            val snoozedTo = sp.getLong(info.nightscout.core.utils.R.string.key_snoozed_to, 0L)
+            val snoozedTo = sp.getLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + alarm.optString("level"), 0L)
             if (snoozedTo == 0L || System.currentTimeMillis() > snoozedTo) {
                 val nsAlarm = NSAlarm(alarm)
                 uiInteraction.addNotificationWithAction(injector, nsAlarm)

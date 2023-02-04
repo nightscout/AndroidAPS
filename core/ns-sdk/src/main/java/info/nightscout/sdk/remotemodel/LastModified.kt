@@ -22,4 +22,15 @@ data class LastModified(
         @SerializedName("foods") var foods: Long = 0,               // foods collection
         @SerializedName("settings") var settings: Long = 0          // settings collection
     )
+
+    fun set(colName: String, value: Long) {
+        when (colName) {
+            "devicestatus" -> collections.devicestatus = value
+            "entries"      -> collections.entries = value
+            "profile"      -> collections.profile = value
+            "treatments"   -> collections.treatments = value
+            "foods"        -> collections.foods = value
+            "settings"     -> collections.settings = value
+        }
+    }
 }

@@ -57,7 +57,7 @@ class DataSyncSelectorImplementation @Inject constructor(
     }
 
     private val queueCounter = QueueCounter()
-    private val isPaused get() = sp.getBoolean(R.string.key_ns_client_paused, false)
+    private val isPaused get() = sp.getBoolean(R.string.key_ns_paused, false)
 
     override fun queueSize(): Long = queueCounter.size()
 

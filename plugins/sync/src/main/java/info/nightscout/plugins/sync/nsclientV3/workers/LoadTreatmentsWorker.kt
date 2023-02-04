@@ -11,6 +11,7 @@ import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.core.utils.worker.then
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.sync.NsClient
+import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
@@ -58,7 +59,7 @@ class LoadTreatmentsWorker(
                 aapsLogger.debug(LTag.NSCLIENT, "TREATMENTS: $treatments")
                 if (treatments.isNotEmpty()) {
                     val action = if (isFirstLoad) "RCV-FIRST" else "RCV"
-                    rxBus.send(EventNSClientNewLog(action, "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                    rxBus.send(EventNSClientNewLog("◄ $action", "${treatments.size} TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                     // Schedule processing of fetched data and continue of loading
                     val stopLoading = treatments.size != NSClientV3Plugin.RECORDS_TO_LOAD || response.code == 304
                     WorkManager.getInstance(context)
@@ -66,7 +67,7 @@ class LoadTreatmentsWorker(
                             nsClientV3Plugin.JOB_NAME,
                             ExistingWorkPolicy.APPEND_OR_REPLACE,
                             OneTimeWorkRequest.Builder(ProcessTreatmentsWorker::class.java)
-                                .setInputData(dataWorkerStorage.storeInputData(response))
+                                .setInputData(dataWorkerStorage.storeInputData(response.values))
                                 .build()
                         )
                         // response 304 == Not modified (happens when date > srvModified => bad time on phone or server during upload
@@ -79,14 +80,15 @@ class LoadTreatmentsWorker(
                         nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = lastLoaded
                         nsClientV3Plugin.storeLastLoadedSrvModified()
                     }
-                    rxBus.send(EventNSClientNewLog("RCV END", "No TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                    storeDataForDb.storeTreatmentsToDb()
+                    rxBus.send(EventNSClientNewLog("◄ RCV TR END", "No data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                     WorkManager.getInstance(context)
-                        .enqueueUniqueWork(
+                        .beginUniqueWork(
                             nsClientV3Plugin.JOB_NAME,
                             ExistingWorkPolicy.APPEND_OR_REPLACE,
-                            OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build()
+                            OneTimeWorkRequest.Builder(StoreDataForDbImpl.StoreTreatmentsWorker::class.java).build()
                         )
+                        .then(OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build())
+                        .enqueue()
                 }
             } else {
                 // End first load
@@ -94,18 +96,19 @@ class LoadTreatmentsWorker(
                     nsClientV3Plugin.lastLoadedSrvModified.collections.treatments = lastLoaded
                     nsClientV3Plugin.storeLastLoadedSrvModified()
                 }
-                rxBus.send(EventNSClientNewLog("RCV END", "No new TRs from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                storeDataForDb.storeTreatmentsToDb()
+                rxBus.send(EventNSClientNewLog("◄ RCV TR END", "No new data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                 WorkManager.getInstance(context)
-                    .enqueueUniqueWork(
+                    .beginUniqueWork(
                         nsClientV3Plugin.JOB_NAME,
                         ExistingWorkPolicy.APPEND_OR_REPLACE,
-                        OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build()
+                        OneTimeWorkRequest.Builder(StoreDataForDbImpl.StoreTreatmentsWorker::class.java).build()
                     )
+                    .then(OneTimeWorkRequest.Builder(LoadFoodsWorker::class.java).build())
+                    .enqueue()
             }
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
             nsClientV3Plugin.lastOperationError = error.localizedMessage
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
