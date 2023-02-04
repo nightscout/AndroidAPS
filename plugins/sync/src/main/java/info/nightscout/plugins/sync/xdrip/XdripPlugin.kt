@@ -29,6 +29,7 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.interfaces.sync.DataSyncSelector
+import info.nightscout.interfaces.sync.Sync
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HtmlHelper
@@ -76,7 +77,7 @@ class XdripPlugin @Inject constructor(
     private val dataSyncSelector: XdripDataSyncSelectorImplementation,
     private val dateUtil: DateUtil,
     aapsLogger: AAPSLogger
-) : XDripBroadcast, PluginBase(
+) : XDripBroadcast, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .fragmentClass(XdripFragment::class.java.name)
@@ -95,6 +96,11 @@ class XdripPlugin @Inject constructor(
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val listLog: MutableList<EventXdripNewLog> = ArrayList()
     private var lastLoopStatus = false
+
+    // Not used Sync interface members
+    override val hasWritePermission: Boolean = true
+    override val connected: Boolean = true
+    override val status: String = ""
 
     override fun onStart() {
         super.onStart()
