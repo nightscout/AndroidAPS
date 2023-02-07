@@ -70,9 +70,11 @@ open class DataReceiver : DaggerBroadcastReceiver() {
             Intents.EVERSENSE_BG                      ->
                 OneTimeWorkRequest.Builder(EversensePlugin.EversenseWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
-            Intents.DEXCOM_BG                         ->
+
+            Intents.DEXCOM_BG, Intents.DEXCOM_G7_BG   ->
                 OneTimeWorkRequest.Builder(DexcomPlugin.DexcomWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()
+
             Intents.AIDEX_NEW_BG_ESTIMATE             ->
                 OneTimeWorkRequest.Builder(AidexPlugin.AidexWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(bundle, intent.action)).build()

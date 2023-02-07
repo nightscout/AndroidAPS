@@ -109,6 +109,10 @@
     <string name="xdrip_status_detailed_iob_summary">Показать разбивку IOB на болюсный и базальный IOB на циферблате</string>
     <string name="xdrip_status_show_bgi_title">Показывать ГК</string>
     <string name="xdrip_status_show_bgi_summary">Добавить ГК в строку состояния</string>
+    <string name="xdrip_status_settings">Строка состояния xDrip+ подробно</string>
     <string name="disabled_loop">Цикл не активирован</string>
+    <string name="xdrip_send_status_title">Отправить строку состояния на xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ не установлен</string>
+    <string name="calibration_sent">Калибровка отправлена на xDrip+</string>
     <!--    DataBroadcast-->
 </resources>

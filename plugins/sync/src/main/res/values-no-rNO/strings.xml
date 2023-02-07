@@ -102,5 +102,17 @@
     <string name="working">Prosesserer</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Send data til xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Vis detaljert IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Splitt IOB i bolus- og basal-IOB på klokken</string>
+    <string name="xdrip_status_show_bgi_title">Vis BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Legg til BGI i statuslinje</string>
+    <string name="xdrip_status_settings">xDrip+ avansert statuslinje</string>
+    <string name="disabled_loop">Loop deaktivert</string>
+    <string name="xdrip_send_status_title">Send statuslinje til xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ ikke installert</string>
+    <string name="calibration_sent">Kalibrering sendt til xDrip+</string>
     <!--    DataBroadcast-->
 </resources>
