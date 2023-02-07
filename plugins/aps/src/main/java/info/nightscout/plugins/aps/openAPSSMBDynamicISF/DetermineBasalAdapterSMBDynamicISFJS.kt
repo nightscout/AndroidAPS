@@ -263,7 +263,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.mealData.put("lastCarbTime", mealData.lastCarbTime)
 
         val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(1, allowMissingDays = false))?.totalAmount
-        val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(7, allowMissingDays = false))?.totalAmount
+        val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(7, allowMissingDays = true))?.totalAmount
         val tddLast24H = tddCalculator.calculateDaily(-24, 0)?.totalAmount
         val tddLast4H = tddCalculator.calculateDaily(-4, 0)?.totalAmount
         val tddLast8to4H = tddCalculator.calculateDaily(-8, -4)?.totalAmount
@@ -277,15 +277,13 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
 
         var tdd: Double? = null
         var variableSensitivity: Double
-        if (tddLast24H != null && tddLast4H != null && tddLast8to4H != null) {
+        if (tddLast24H != null && tddLast4H != null && tddLast8to4H != null && tdd1D != null && tdd7D != null) {
             val tddWeightedFromLast8H = ((1.4 * tddLast4H) + (0.6 * tddLast8to4H)) * 3
 //        console.error("Rolling 8 hours weight average: " + tdd_last8_wt + "; ");
 //        console.error("1-day average TDD is: " + tdd1 + "; ");
 //        console.error("7-day average TDD is: " + tdd7 + "; ");
 
-            tdd =
-                if (tdd1D != null && tdd7D != null) (tddWeightedFromLast8H * 0.33) + (tdd7D * 0.34) + (tdd1D * 0.33)
-                else (tddWeightedFromLast8H * 0.33) + (tddLast24H * 0.67)
+            tdd = (tddWeightedFromLast8H * 0.33) + (tdd7D * 0.34) + (tdd1D * 0.33)
 //        console.log("TDD = " + TDD + " using average of 7-day, 1-day and weighted 8hr average");
 
             val dynISFadjust = SafeParse.stringToDouble(sp.getString(R.string.key_DynISFAdjust, "100")) / 100.0
