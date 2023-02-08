@@ -118,6 +118,9 @@
     <string name="sensitivity_label">Модули чувствительности</string>
     <string name="sensitivity_which">Отметьте все правильные ответы.</string>
     <string name="sensitivity_adjust">Модули чувствительности позволяют AAPS подстраиваться под временные или кратковременные изменения в чувствительности к инсулину (например, гормональные изменения или проблемы с поглощением в месте установки катетера).</string>
+    <string name="sensitivity_edit">Модули чувствительности предлагают пользователю изменения скорости базала, коэффициентов I:C и ISF, которые можно внести в профиль.</string>
+    <string name="sensitivity_cannula">Внесение записи о замене катетера вернет коэффициент Autosens к 100%.</string>
+    <string name="sensitivity_time">У некоторых опций модуля есть настраиваемые диапазоны времени, которые может задать пользователь.</string>
     <string name="sensitivity_hint1">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="sensitivity_hint2">https://wiki.aaps.app/en/latest/Usage/Open-APS-features.html#autosens</string>
     <string name="wrongcarbs_label">Ошибки записи углеводов</string>
@@ -127,6 +130,7 @@
     <string name="wrongcarbs_donothing">Ничего не делать – AAPS сам внесет необходимые изменения.</string>
     <string name="wrongcarbs_bolus">Ввести инсулин через кнопку Инсулин (болюс) на вкладке Начало.</string>
     <string name="wronginsulin_label">Ошибки подачи/поступления инсулина</string>
+    <string name="wronginsulin_whattodo">Что делать, если вы получили меньше инсулина, чем указано в истории помпы, например, из-за окклюзии, проблем с канюлей или из-за того, что вы забыли подключить помпу обратно после душа?</string>
     <string name="wronginsulin_careportal">Удалить данные об инсулине в Портале терапии Nightscout, чтобы удалить их из истории помпы.</string>
     <string name="wronginsulin_compare">Сравнить значения в истории AAPS и помпы (если помпа это поддерживает).</string>
     <string name="wronginsulin_prime">Рассчитать и ввести «пропущенный» вами инсулин шприцем/ручкой или через кнопку заполнения канюли.</string>
