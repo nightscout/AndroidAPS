@@ -119,7 +119,8 @@ class MaintenanceFragment : DaggerFragment() {
                             onError = { aapsLogger.error("Error cleaning up databases", it) },
                             onComplete = {
                                 if (result.isNotEmpty())
-                                    OKDialog.show(activity, rh.gs(info.nightscout.core.ui.R.string.result), HtmlHelper.fromHtml("<b>" + rh.gs(R.string.cleared_entries) + "</b>\n" + result).toSpanned())
+                                    OKDialog.show(activity, rh.gs(info.nightscout.core.ui.R.string.result), HtmlHelper.fromHtml("<b>" + rh.gs(R.string.cleared_entries) + "</b><br>" + result)
+                                        .toSpanned())
                                 aapsLogger.info(LTag.CORE, "Cleaned up databases with result: $result")
                             }
                         )

@@ -123,7 +123,7 @@ import kotlin.math.roundToInt
         val ret = StringBuilder()
         removed
             .filter { it.second > 0 }
-            .map { ret.append(it.first + " " + it.second + "\n") }
+            .map { ret.append(it.first + " " + it.second + "<br>") }
         return ret.toString()
     }
 
