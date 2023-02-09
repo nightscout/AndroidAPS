@@ -1533,11 +1533,26 @@ class Pump(
         pumpMode = null,
         isIdempotent = false,
         description = DeliveringBolusCommandDesc(
-            totalBolusAmount,
-            immediateBolusAmount,
-            durationInMinutes,
-            standardBolusReason,
-            bolusType
+            totalBolusAmount = totalBolusAmount,
+            // A standard bolus only has an immediate portion, no extended one. This
+            // implies that its total amount is also its immediate amount. As the
+            // function documentation states, the user only species the total amount
+            // when delivering a standard bolus - the immediateBolusAmount argument
+            // of deliverBolus() is ignored. It makes no sense for users to have
+            // to specify the same value twice.
+            //
+            // For UI elements it is however useful to have immediateBolusAmount be
+            // automatically set to the totalBolusAmount when delivering a standard
+            // bolus. One example for why this is useful is when during the immediate
+            // portion of a bolus, a modal dialog is shown with a progress bar, while
+            // the extended portion shows no such dialog.
+            //
+            // For this reason, assign the totalBolusAmount quantity to the
+            // immediateBolusAmount field of the command desc if this is a standard bolus.
+            immediateBolusAmount = if (bolusType == CMDDeliverBolusType.STANDARD_BOLUS) totalBolusAmount else immediateBolusAmount,
+            durationInMinutes = durationInMinutes,
+            standardBolusReason = standardBolusReason,
+            bolusType = bolusType
         )
     ) {
         require((totalBolusAmount > 0) && (totalBolusAmount <= 250)) {
