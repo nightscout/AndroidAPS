@@ -133,12 +133,13 @@ class DataSyncSelectorV3Impl @Inject constructor(
     }
 
     suspend fun processChangedBoluses() {
-        val lastDbId = appRepository.getLastBolusId() ?: 0L
         var cont = true
         while (cont) {
             if (isPaused) return
+            val lastDbId = appRepository.getLastBolusId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
             if (startId > lastDbId) {
+                aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
                 sp.putLong(R.string.key_ns_bolus_last_synced_id, 0)
                 startId = 0
             }
@@ -175,12 +176,13 @@ class DataSyncSelectorV3Impl @Inject constructor(
     }
 
     suspend fun processChangedCarbs() {
-        val lastDbId = appRepository.getLastCarbsId() ?: 0L
         var cont = true
         while (cont) {
             if (isPaused) return
+            val lastDbId = appRepository.getLastCarbsId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
             if (startId > lastDbId) {
+                aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
                 sp.putLong(R.string.key_ns_carbs_last_synced_id, 0)
                 startId = 0
             }
@@ -217,12 +219,13 @@ class DataSyncSelectorV3Impl @Inject constructor(
     }
 
     suspend fun processChangedBolusCalculatorResults() {
-        val lastDbId = appRepository.getLastBolusCalculatorResultId() ?: 0L
         var cont = true
         while (cont) {
             if (isPaused) return
+            val lastDbId = appRepository.getLastBolusCalculatorResultId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
             if (startId > lastDbId) {
+                aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
                 sp.putLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
                 startId = 0
             }
@@ -267,12 +270,13 @@ class DataSyncSelectorV3Impl @Inject constructor(
     }
 
     suspend fun processChangedTempTargets() {
-        val lastDbId = appRepository.getLastTempTargetId() ?: 0L
         var cont = true
         while (cont) {
             if (isPaused) return
+            val lastDbId = appRepository.getLastTempTargetId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)
             if (startId > lastDbId) {
+                aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
                 sp.putLong(R.string.key_ns_temporary_target_last_synced_id, 0)
                 startId = 0
             }
@@ -309,12 +313,13 @@ class DataSyncSelectorV3Impl @Inject constructor(
     }
 
     suspend fun processChangedFoods() {
-        val lastDbId = appRepository.getLastFoodId() ?: 0L
         var cont = true
         while (cont) {
             if (isPaused) return
+            val lastDbId = appRepository.getLastFoodId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_food_last_synced_id, 0)
             if (startId > lastDbId) {
+                aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
                 sp.putLong(R.string.key_ns_food_last_synced_id, 0)
                 startId = 0
             }
@@ -351,12 +356,13 @@ class DataSyncSelectorV3Impl @Inject constructor(
     }
 
     suspend fun processChangedGlucoseValues() {
-        val lastDbId = appRepository.getLastGlucoseValueId() ?: 0L
         var cont = true
         while (cont) {
             if (isPaused) return
+            val lastDbId = appRepository.getLastGlucoseValueId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)
             if (startId > lastDbId) {
+                aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
                 sp.putLong(R.string.key_ns_glucose_value_last_synced_id, 0)
                 startId = 0
             }
@@ -395,12 +401,13 @@ class DataSyncSelectorV3Impl @Inject constructor(
     }
 
     suspend fun processChangedTherapyEvents() {
-        val lastDbId = appRepository.getLastTherapyEventId() ?: 0L
         var cont = true
         while (cont) {
             if (isPaused) return
+            val lastDbId = appRepository.getLastTherapyEventId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)
             if (startId > lastDbId) {
+                aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
                 sp.putLong(R.string.key_ns_therapy_event_last_synced_id, 0)
                 startId = 0
             }
@@ -441,6 +448,7 @@ class DataSyncSelectorV3Impl @Inject constructor(
         val lastDbId = appRepository.getLastDeviceStatusId() ?: 0L
         var startId = sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)
         if (startId > lastDbId) {
+            aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
             sp.putLong(R.string.key_ns_device_status_last_synced_id, 0)
             startId = 0
         }
@@ -466,12 +474,13 @@ class DataSyncSelectorV3Impl @Inject constructor(
     }
 
     suspend fun processChangedTemporaryBasals() {
-        val lastDbId = appRepository.getLastTemporaryBasalId() ?: 0L
         var cont = true
         while (cont) {
             if (isPaused) return
+            val lastDbId = appRepository.getLastTemporaryBasalId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
             if (startId > lastDbId) {
+                aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
                 sp.putLong(R.string.key_ns_temporary_basal_last_synced_id, 0)
                 startId = 0
             }
@@ -508,12 +517,13 @@ class DataSyncSelectorV3Impl @Inject constructor(
     }
 
     suspend fun processChangedExtendedBoluses() {
-        val lastDbId = appRepository.getLastExtendedBolusId() ?: 0L
         var cont = true
         while (cont) {
             if (isPaused) return
+            val lastDbId = appRepository.getLastExtendedBolusId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
             if (startId > lastDbId) {
+                aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
                 sp.putLong(R.string.key_ns_extended_bolus_last_synced_id, 0)
                 startId = 0
             }
@@ -553,12 +563,13 @@ class DataSyncSelectorV3Impl @Inject constructor(
     }
 
     suspend fun processChangedProfileSwitches() {
-        val lastDbId = appRepository.getLastProfileSwitchId() ?: 0L
         var cont = true
         while (cont) {
             if (isPaused) return
+            val lastDbId = appRepository.getLastProfileSwitchId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)
             if (startId > lastDbId) {
+                aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
                 sp.putLong(R.string.key_ns_profile_switch_last_synced_id, 0)
                 startId = 0
             }
@@ -595,12 +606,13 @@ class DataSyncSelectorV3Impl @Inject constructor(
     }
 
     suspend fun processChangedEffectiveProfileSwitches() {
-        val lastDbId = appRepository.getLastEffectiveProfileSwitchId() ?: 0L
         var cont = true
         while (cont) {
             if (isPaused) return
+            val lastDbId = appRepository.getLastEffectiveProfileSwitchId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
             if (startId > lastDbId) {
+                aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
                 sp.putLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)
                 startId = 0
             }
@@ -637,12 +649,13 @@ class DataSyncSelectorV3Impl @Inject constructor(
     }
 
     suspend fun processChangedOfflineEvents() {
-        val lastDbId = appRepository.getLastOfflineEventId() ?: 0L
         var cont = true
         while (cont) {
             if (isPaused) return
+            val lastDbId = appRepository.getLastOfflineEventId() ?: 0L
             var startId = sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)
             if (startId > lastDbId) {
+                aapsLogger.info(LTag.NSCLIENT, "Resetting startId: $startId lastDbId: $lastDbId")
                 sp.putLong(R.string.key_ns_offline_event_last_synced_id, 0)
                 startId = 0
             }
