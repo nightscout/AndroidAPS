@@ -23,7 +23,7 @@ internal interface FoodDao : TraceableDao<Food> {
     override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_FOODS ORDER BY id DESC limit 1")
-    fun getLastId(): Maybe<Long>
+    fun getLastId(): Long?
 
     @Query("SELECT * FROM $TABLE_FOODS WHERE nightscoutId = :nsId AND referenceId IS NULL")
     fun findByNSId(nsId: String): Food?

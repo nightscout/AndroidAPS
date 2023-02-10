@@ -1,9 +1,6 @@
 package info.nightscout.plugins.sync.nsShared
 
-import android.content.Context
 import android.os.SystemClock
-import androidx.work.WorkerParameters
-import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
@@ -60,7 +57,6 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
@@ -118,45 +114,6 @@ class StoreDataForDbImpl @Inject constructor(
     private val ended = HashMap<String, Long>()
 
     private val pause = 1000L // to slow down db operations
-
-    class StoreBgWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : LoggingWorker(context, params, Dispatchers.Default) {
-
-        @Inject lateinit var storeDataForDb: StoreDataForDb
-
-        override suspend fun doWorkAndLog(): Result {
-            storeDataForDb.storeGlucoseValuesToDb()
-            return Result.success()
-        }
-    }
-
-    class StoreFoodWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : LoggingWorker(context, params, Dispatchers.Default) {
-
-        @Inject lateinit var storeDataForDb: StoreDataForDb
-
-        override suspend fun doWorkAndLog(): Result {
-            storeDataForDb.storeFoodsToDb()
-            return Result.success()
-        }
-    }
-
-    class StoreTreatmentsWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : LoggingWorker(context, params, Dispatchers.Default) {
-
-        @Inject lateinit var storeDataForDb: StoreDataForDb
-
-        override suspend fun doWorkAndLog(): Result {
-            storeDataForDb.storeTreatmentsToDb()
-            return Result.success()
-        }
-    }
 
     fun <T> HashMap<T, Long>.inc(key: T) =
         if (containsKey(key)) merge(key, 1, Long::plus)
@@ -803,6 +760,8 @@ class StoreDataForDbImpl @Inject constructor(
 
     private val eventWorker = Executors.newSingleThreadScheduledExecutor()
     private var scheduledEventPost: ScheduledFuture<*>? = null
+
+    @Synchronized
     override fun scheduleNsIdUpdate() {
         class PostRunnable : Runnable {
 
@@ -818,7 +777,8 @@ class StoreDataForDbImpl @Inject constructor(
         scheduledEventPost = eventWorker.schedule(task, 10, TimeUnit.SECONDS)
     }
 
-    private fun updateNsIds() {
+    @Synchronized
+    override fun updateNsIds() {
         repository.runTransactionForResult(UpdateNsIdTemporaryTargetTransaction(nsIdTemporaryTargets))
             .doOnError { error ->
                 aapsLogger.error(LTag.DATABASE, "Updated nsId of TemporaryTarget failed", error)
@@ -1003,27 +963,27 @@ class StoreDataForDbImpl @Inject constructor(
 
     private fun sendLog(item: String, clazz: String) {
         inserted[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("INSERT", "$item $it"))
+            rxBus.send(EventNSClientNewLog("◄ INSERT", "$item $it"))
         }
         inserted.remove(clazz)
         updated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("UPDATE", "$item $it"))
+            rxBus.send(EventNSClientNewLog("◄ UPDATE", "$item $it"))
         }
         updated.remove(clazz)
         invalidated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("INVALIDATE", "$item $it"))
+            rxBus.send(EventNSClientNewLog("◄ INVALIDATE", "$item $it"))
         }
         invalidated.remove(clazz)
         nsIdUpdated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("NS_ID", "$item $it"))
+            rxBus.send(EventNSClientNewLog("◄ NS_ID", "$item $it"))
         }
         nsIdUpdated.remove(clazz)
         durationUpdated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("DURATION", "$item $it"))
+            rxBus.send(EventNSClientNewLog("◄ DURATION", "$item $it"))
         }
         durationUpdated.remove(clazz)
         ended[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("CUT", "$item $it"))
+            rxBus.send(EventNSClientNewLog("◄ CUT", "$item $it"))
         }
         ended.remove(clazz)
     }

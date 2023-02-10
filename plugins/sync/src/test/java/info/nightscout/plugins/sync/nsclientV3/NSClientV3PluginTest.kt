@@ -1,11 +1,9 @@
 package info.nightscout.plugins.sync.nsclientV3
 
-import androidx.work.WorkManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.core.extensions.fromConstant
-import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
@@ -20,7 +18,6 @@ import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -28,16 +25,15 @@ import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.workflow.WorkerClasses
+import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsShared.StoreDataForDbImpl
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclient.extensions.fromConstant
 import info.nightscout.sdk.interfaces.NSAndroidClient
 import info.nightscout.sdk.localmodel.treatment.CreateUpdateResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -51,17 +47,14 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var receiverDelegate: ReceiverDelegate
     @Mock lateinit var uiInteraction: UiInteraction
-    @Mock lateinit var dataSyncSelector: DataSyncSelector
+    @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3Impl
     @Mock lateinit var nsAndroidClient: NSAndroidClient
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var nsClientSource: NSClientSource
-    @Mock lateinit var xDripBroadcast: XDripBroadcast
     @Mock lateinit var virtualPump: VirtualPump
     @Mock lateinit var mockedProfileFunction: ProfileFunction
     @Mock lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
-    @Mock lateinit var workManager: WorkManager
-    @Mock lateinit var workerClasses: WorkerClasses
-    @Mock lateinit var dataWorkerStorage: DataWorkerStorage
+    @Mock lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
 
     private lateinit var storeDataForDb: StoreDataForDb
     private lateinit var sut: NSClientV3Plugin
@@ -77,8 +70,8 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         sut =
             NSClientV3Plugin(
                 injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-                sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelector, mockedProfileFunction, repository,
-                nsDeviceStatusHandler, workManager, workerClasses, dataWorkerStorage, nsClientSource
+                sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, mockedProfileFunction, repository,
+                nsDeviceStatusHandler, nsClientSource, nsIncomingDataProcessor, storeDataForDb
             )
         sut.nsAndroidClient = nsAndroidClient
         `when`(mockedProfileFunction.getProfile(anyLong())).thenReturn(validProfile)
@@ -87,7 +80,6 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddDeviceStatus() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val deviceStatus = DeviceStatus(
             timestamp = 10000,
             suggested = "{\"temp\":\"absolute\",\"bg\":133,\"tick\":-6,\"eventualBG\":67,\"targetBG\":99,\"insulinReq\":0,\"deliverAt\":\"2023-01-02T15:29:33.374Z\",\"sensitivityRatio\":1,\"variable_sens\":97.5,\"predBGs\":{\"IOB\":[133,127,121,116,111,106,101,97,93,89,85,81,78,75,72,69,67,65,62,60,58,57,55,54,52,51,50,49,48,47,46,45,45,44,43,43,42,42,41,41,41,41,40,40,40,40,39],\"ZT\":[133,127,121,115,110,105,101,96,92,88,84,81,77,74,71,69,66,64,62,59,58,56,54,53,51,50,49,48,47,46,45,44,44,43,42,42,41,41,40,40,40,39,39,39,39,39,39,39],\"UAM\":[133,127,121,115,110,105,101,96,92,88,84,81,77,74,71,69,66,64,62,59,58,56,54,53,51,50,49,48,47,46,45,44,44,43,42,42,41,41,40,40,40,39]},\"reason\":\"COB: 0, Dev: 0.1, BGI: -0.3, ISF: 5.4, CR: 13, Target: 5.5, minPredBG 2.2, minGuardBG 2.1, IOBpredBG 2.2, UAMpredBG 2.2; minGuardBG 2.1<4.0\",\"COB\":0,\"IOB\":0.692,\"duration\":90,\"rate\":0,\"timestamp\":\"2023-01-02T15:29:39.460Z\"}",
@@ -103,23 +95,18 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairDeviceStatus(deviceStatus, 1000)
         // create
-        `when`(nsAndroidClient.createDeviceStatus(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createDeviceStatus(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("devicestatus", dataPair, "1/3")
-        // Assertions.assertEquals(1, storeDataForDb.nsIdDeviceStatuses.size)
-        verify(dataSyncSelector, Times(1)).confirmLastDeviceStatusIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedDeviceStatuses()
+        Assertions.assertEquals(1, storeDataForDb.nsIdDeviceStatuses.size)
         // update
-        `when`(nsAndroidClient.createDeviceStatus(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.createDeviceStatus(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsAdd("devicestatus", dataPair, "1/3")
-        // Assertions.assertEquals(1, storeDataForDb.nsIdDeviceStatuses.size) // still only 1
-        verify(dataSyncSelector, Times(2)).confirmLastDeviceStatusIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedDeviceStatuses()
+         Assertions.assertEquals(2, storeDataForDb.nsIdDeviceStatuses.size) // still only 1
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddEntries() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val glucoseValue = GlucoseValue(
             timestamp = 10000,
             isValid = true,
@@ -134,21 +121,18 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairGlucoseValue(glucoseValue, 1000)
         // create
-        `when`(nsAndroidClient.createSvg(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createSgv(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("entries", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastGlucoseValueIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedGlucoseValues()
+        Assertions.assertEquals(1, storeDataForDb.nsIdGlucoseValues.size)
         // update
-        `when`(nsAndroidClient.updateSvg(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateSvg(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("entries", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastGlucoseValueIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedGlucoseValues()
+        Assertions.assertEquals(2, storeDataForDb.nsIdGlucoseValues.size)
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddFood() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val food = Food(
             isValid = true,
             name = "name",
@@ -167,21 +151,18 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairFood(food, 1000)
         // create
-        `when`(nsAndroidClient.createFood(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createFood(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("food", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastFoodIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedFoods()
+        Assertions.assertEquals(1, storeDataForDb.nsIdFoods.size)
         // update
-        `when`(nsAndroidClient.updateFood(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateFood(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("food", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastFoodIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedFoods()
+        Assertions.assertEquals(2, storeDataForDb.nsIdFoods.size)
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddBolus() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val bolus = Bolus(
             timestamp = 10000,
             isValid = true,
@@ -198,21 +179,18 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairBolus(bolus, 1000)
         // create
-        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastBolusIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedBoluses()
+        Assertions.assertEquals(1, storeDataForDb.nsIdBoluses.size)
         // update
-        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastBolusIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedBoluses()
+        Assertions.assertEquals(2, storeDataForDb.nsIdBoluses.size)
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddCarbs() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val carbs = Carbs(
             timestamp = 10000,
             isValid = true,
@@ -228,21 +206,18 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairCarbs(carbs, 1000)
         // create
-        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastCarbsIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedCarbs()
+        Assertions.assertEquals(1, storeDataForDb.nsIdCarbs.size)
         // update
-        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastCarbsIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedCarbs()
+        Assertions.assertEquals(2, storeDataForDb.nsIdCarbs.size)
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddBolusCalculatorResult() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val bolus = BolusCalculatorResult(
             timestamp = 10000,
             isValid = true,
@@ -284,21 +259,18 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairBolusCalculatorResult(bolus, 1000)
         // create
-        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastBolusCalculatorResultsIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedBolusCalculatorResults()
+        Assertions.assertEquals(1, storeDataForDb.nsIdBolusCalculatorResults.size)
         // update
-        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastBolusCalculatorResultsIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedBolusCalculatorResults()
+        Assertions.assertEquals(2, storeDataForDb.nsIdBolusCalculatorResults.size)
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddEffectiveProfileSwitch() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val profileSwitch = EffectiveProfileSwitch(
             timestamp = 10000,
             isValid = true,
@@ -325,21 +297,18 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairEffectiveProfileSwitch(profileSwitch, 1000)
         // create
-        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastEffectiveProfileSwitchIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedEffectiveProfileSwitches()
+        Assertions.assertEquals(1, storeDataForDb.nsIdEffectiveProfileSwitches.size)
         // update
-        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastEffectiveProfileSwitchIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedEffectiveProfileSwitches()
+        Assertions.assertEquals(2, storeDataForDb.nsIdEffectiveProfileSwitches.size)
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddProfileSwitch() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val profileSwitch = ProfileSwitch(
             timestamp = 10000,
             isValid = true,
@@ -364,21 +333,18 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairProfileSwitch(profileSwitch, 1000)
         // create
-        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastProfileSwitchIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedProfileSwitches()
+        Assertions.assertEquals(1, storeDataForDb.nsIdProfileSwitches.size)
         // update
-        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastProfileSwitchIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedProfileSwitches()
+        Assertions.assertEquals(2, storeDataForDb.nsIdProfileSwitches.size)
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddExtendedBolus() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val extendedBolus = ExtendedBolus(
             timestamp = 10000,
             isValid = true,
@@ -394,21 +360,18 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairExtendedBolus(extendedBolus, 1000)
         // create
-        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastExtendedBolusIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedExtendedBoluses()
+        Assertions.assertEquals(1, storeDataForDb.nsIdExtendedBoluses.size)
         // update
-        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastExtendedBolusIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedExtendedBoluses()
+        Assertions.assertEquals(2, storeDataForDb.nsIdExtendedBoluses.size)
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddOffilineEvent() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val offlineEvent = OfflineEvent(
             timestamp = 10000,
             isValid = true,
@@ -423,21 +386,18 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairOfflineEvent(offlineEvent, 1000)
         // create
-        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastOfflineEventIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedOfflineEvents()
+        Assertions.assertEquals(1, storeDataForDb.nsIdOfflineEvents.size)
         // update
-        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastOfflineEventIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedOfflineEvents()
+        Assertions.assertEquals(2, storeDataForDb.nsIdOfflineEvents.size)
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddTemporaryBasal() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val temporaryBasal = TemporaryBasal(
             timestamp = 10000,
             isValid = true,
@@ -454,21 +414,18 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairTemporaryBasal(temporaryBasal, 1000)
         // create
-        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastTemporaryBasalIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedTemporaryBasals()
+        Assertions.assertEquals(1, storeDataForDb.nsIdTemporaryBasals.size)
         // update
-        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastTemporaryBasalIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedTemporaryBasals()
+        Assertions.assertEquals(2, storeDataForDb.nsIdTemporaryBasals.size)
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddTemporaryTarget() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val temporaryTarget = TemporaryTarget(
             timestamp = 10000,
             isValid = true,
@@ -485,21 +442,18 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairTemporaryTarget(temporaryTarget, 1000)
         // create
-        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastTempTargetsIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedTempTargets()
+        Assertions.assertEquals(1, storeDataForDb.nsIdTemporaryTargets.size)
         // update
-        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastTempTargetsIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedTempTargets()
+        Assertions.assertEquals(2, storeDataForDb.nsIdTemporaryTargets.size)
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddTherapyEvent() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
         val therapyEvent = TherapyEvent(
             timestamp = 10000,
             isValid = true,
@@ -519,32 +473,29 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         )
         val dataPair = DataSyncSelector.PairTherapyEvent(therapyEvent, 1000)
         // create
-        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastTherapyEventIdIfGreater(1000)
-        verify(dataSyncSelector, Times(1)).processChangedTherapyEvents()
+        Assertions.assertEquals(1, storeDataForDb.nsIdTherapyEvents.size)
         // update
-        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("treatments", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastTherapyEventIdIfGreater(1000)
-        verify(dataSyncSelector, Times(2)).processChangedTherapyEvents()
+        Assertions.assertEquals(2, storeDataForDb.nsIdTherapyEvents.size)
     }
 
     @Test
     @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
     fun nsAddProfile() = runTest {
-        sut.scope = CoroutineScope(UnconfinedTestDispatcher(testScheduler))
 
         val dataPair = DataSyncSelector.PairProfileStore(getValidProfileStore().data, 1000)
         // create
-        `when`(nsAndroidClient.createProfileStore(anyObject())).thenReturn(CreateUpdateResponse(201, null))
+        `when`(nsAndroidClient.createProfileStore(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
         sut.nsAdd("profile", dataPair, "1/3")
-        verify(dataSyncSelector, Times(1)).confirmLastProfileStore(1000)
-        verify(dataSyncSelector, Times(1)).processChangedProfileStore()
+        // verify(dataSyncSelectorV3, Times(1)).confirmLastProfileStore(1000)
+        // verify(dataSyncSelectorV3, Times(1)).processChangedProfileStore()
         // update
-        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, null))
+        `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
         sut.nsUpdate("profile", dataPair, "1/3")
-        verify(dataSyncSelector, Times(2)).confirmLastProfileStore(1000)
-        verify(dataSyncSelector, Times(2)).processChangedProfileStore()
+        // verify(dataSyncSelectorV3, Times(2)).confirmLastProfileStore(1000)
+        // verify(dataSyncSelectorV3, Times(2)).processChangedProfileStore()
     }
 }

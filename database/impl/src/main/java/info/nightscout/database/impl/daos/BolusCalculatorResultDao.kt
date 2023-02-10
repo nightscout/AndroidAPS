@@ -24,7 +24,7 @@ internal interface BolusCalculatorResultDao : TraceableDao<BolusCalculatorResult
     override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_BOLUS_CALCULATOR_RESULTS ORDER BY id DESC limit 1")
-    fun getLastId(): Maybe<Long>
+    fun getLastId(): Long?
 
     @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE timestamp = :timestamp AND referenceId IS NULL")
     fun findByTimestamp(timestamp: Long): BolusCalculatorResult?

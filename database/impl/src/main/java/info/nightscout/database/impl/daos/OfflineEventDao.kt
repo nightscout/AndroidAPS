@@ -23,7 +23,7 @@ internal interface OfflineEventDao : TraceableDao<OfflineEvent> {
     override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_OFFLINE_EVENTS ORDER BY id DESC limit 1")
-    fun getLastId(): Maybe<Long>
+    fun getLastId(): Long?
 
     @Query("SELECT * FROM $TABLE_OFFLINE_EVENTS WHERE nightscoutId = :nsId AND referenceId IS NULL")
     fun findByNSId(nsId: String): OfflineEvent?

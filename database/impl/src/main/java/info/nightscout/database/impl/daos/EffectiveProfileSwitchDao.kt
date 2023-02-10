@@ -23,7 +23,7 @@ internal interface EffectiveProfileSwitchDao : TraceableDao<EffectiveProfileSwit
     override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES ORDER BY id DESC limit 1")
-    fun getLastId(): Maybe<Long>
+    fun getLastId(): Long?
 
     @Query("SELECT * FROM $TABLE_EFFECTIVE_PROFILE_SWITCHES WHERE timestamp = :timestamp AND referenceId IS NULL")
     fun findByTimestamp(timestamp: Long): EffectiveProfileSwitch?

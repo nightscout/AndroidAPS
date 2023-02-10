@@ -1,12 +1,12 @@
 package info.nightscout.plugins.sync.xdrip
 
 import dagger.Lazy
-import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.sync.DataSyncSelector
+import info.nightscout.interfaces.sync.DataSyncSelectorXdrip
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.rx.logging.AAPSLogger
@@ -18,7 +18,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class XdripDataSyncSelectorImplementation @Inject constructor(
+class DataSyncSelectorXdripImpl @Inject constructor(
     private val sp: SP,
     private val aapsLogger: AAPSLogger,
     private val dateUtil: DateUtil,
@@ -26,7 +26,7 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val xdripBroadcast: Lazy<XDripBroadcast>,
     private val appRepository: AppRepository
-) : DataSyncSelector {
+) : DataSyncSelectorXdrip {
 
     class QueueCounter(
         var bolusesRemaining: Long = -1L,
@@ -72,7 +72,7 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
 
     override fun queueSize(): Long = queueCounter.size()
 
-    override fun doUpload() {
+    override suspend fun doUpload() {
         if (isEnabled) {
             processChangedGlucoseValues()
             processChangedBoluses()
@@ -113,22 +113,21 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         sp.remove(R.string.key_xdrip_offline_event_last_synced_id)
         sp.remove(R.string.key_xdrip_profile_store_last_synced_timestamp)
 
-        val lastDeviceStatusDbIdWrapped = appRepository.getLastDeviceStatusIdWrapped().blockingGet()
-        if (lastDeviceStatusDbIdWrapped is ValueWrapper.Existing) sp.putLong(R.string.key_xdrip_device_status_last_synced_id, lastDeviceStatusDbIdWrapped.value)
+        val lastDeviceStatusDbId = appRepository.getLastDeviceStatusId()
+        if (lastDeviceStatusDbId != null) sp.putLong(R.string.key_xdrip_device_status_last_synced_id, lastDeviceStatusDbId)
         else sp.remove(R.string.key_xdrip_device_status_last_synced_id)
     }
 
-    override fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long) {
+    fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_glucose_value_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting GlucoseValue data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_glucose_value_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedGlucoseValues() {
+    private fun processChangedGlucoseValues() {
         var progress: String
-        val lastDbIdWrapped = appRepository.getLastGlucoseValueIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        val lastDbId = appRepository.getLastGlucoseValueId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_glucose_value_last_synced_id, 0)
@@ -170,17 +169,16 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    override fun confirmLastBolusIdIfGreater(lastSynced: Long) {
+    fun confirmLastBolusIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_bolus_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting Bolus data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_bolus_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedBoluses() {
+    private fun processChangedBoluses() {
         var progress: String
-        val lastDbIdWrapped = appRepository.getLastBolusIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        val lastDbId = appRepository.getLastBolusId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_bolus_last_synced_id, 0)
@@ -201,17 +199,16 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         sendTreatments(force = true, progress)
     }
 
-    override fun confirmLastCarbsIdIfGreater(lastSynced: Long) {
+    fun confirmLastCarbsIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_carbs_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting Carbs data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_carbs_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedCarbs() {
+    private fun processChangedCarbs() {
         var progress: String
-        val lastDbIdWrapped = appRepository.getLastCarbsIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        val lastDbId = appRepository.getLastCarbsId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_carbs_last_synced_id, 0)
@@ -232,17 +229,16 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         sendTreatments(force = true, progress)
     }
 
-    override fun confirmLastBolusCalculatorResultsIdIfGreater(lastSynced: Long) {
+    fun confirmLastBolusCalculatorResultsIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_bolus_calculator_result_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting BolusCalculatorResult data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_bolus_calculator_result_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedBolusCalculatorResults() {
+    private fun processChangedBolusCalculatorResults() {
         var progress: String
-        val lastDbIdWrapped = appRepository.getLastBolusCalculatorResultIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        val lastDbId = appRepository.getLastBolusCalculatorResultId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_bolus_calculator_result_last_synced_id, 0)
@@ -263,17 +259,16 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         sendTreatments(force = true, progress)
     }
 
-    override fun confirmLastTempTargetsIdIfGreater(lastSynced: Long) {
+    fun confirmLastTempTargetsIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_temporary_target_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting TemporaryTarget data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_temporary_target_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedTempTargets() {
+    private fun processChangedTempTargets() {
         var progress: String
-        val lastDbIdWrapped = appRepository.getLastTempTargetIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        val lastDbId = appRepository.getLastTempTargetId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_temporary_target_last_synced_id, 0)
@@ -294,17 +289,16 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         sendTreatments(force = true, progress)
     }
 
-    override fun confirmLastFoodIdIfGreater(lastSynced: Long) {
+    fun confirmLastFoodIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_food_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting Food data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_food_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedFoods() {
+    private fun processChangedFoods() {
         var progress: String
-        val lastDbIdWrapped = appRepository.getLastFoodIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        val lastDbId = appRepository.getLastFoodId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_food_last_synced_id, 0)
@@ -324,17 +318,16 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         sendFoods(force = true, progress)
     }
 
-    override fun confirmLastTherapyEventIdIfGreater(lastSynced: Long) {
+    fun confirmLastTherapyEventIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_therapy_event_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting TherapyEvents data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_therapy_event_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedTherapyEvents() {
+    private fun processChangedTherapyEvents() {
         var progress: String
-        val lastDbIdWrapped = appRepository.getLastTherapyEventIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        val lastDbId = appRepository.getLastTherapyEventId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_therapy_event_last_synced_id, 0)
@@ -355,16 +348,15 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         sendTreatments(force = true, progress)
     }
 
-    override fun confirmLastDeviceStatusIdIfGreater(lastSynced: Long) {
+    fun confirmLastDeviceStatusIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_device_status_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting DeviceStatus data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_device_status_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedDeviceStatuses() {
-        val lastDbIdWrapped = appRepository.getLastDeviceStatusIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+    private fun processChangedDeviceStatuses() {
+        val lastDbId = appRepository.getLastDeviceStatusId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_device_status_last_synced_id, 0)
@@ -382,17 +374,16 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         }
     }
 
-    override fun confirmLastTemporaryBasalIdIfGreater(lastSynced: Long) {
+    fun confirmLastTemporaryBasalIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_temporary_basal_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting TemporaryBasal data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_temporary_basal_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedTemporaryBasals() {
+    private fun processChangedTemporaryBasals() {
         var progress: String
-        val lastDbIdWrapped = appRepository.getLastTemporaryBasalIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        val lastDbId = appRepository.getLastTemporaryBasalId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_temporary_basal_last_synced_id, 0)
@@ -413,17 +404,16 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         sendTreatments(force = true, progress)
     }
 
-    override fun confirmLastExtendedBolusIdIfGreater(lastSynced: Long) {
+    fun confirmLastExtendedBolusIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_extended_bolus_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting ExtendedBolus data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_extended_bolus_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedExtendedBoluses() {
+    private fun processChangedExtendedBoluses() {
         var progress: String
-        val lastDbIdWrapped = appRepository.getLastExtendedBolusIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        val lastDbId = appRepository.getLastExtendedBolusId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_extended_bolus_last_synced_id, 0)
@@ -447,17 +437,16 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         sendTreatments(force = true, progress)
     }
 
-    override fun confirmLastProfileSwitchIdIfGreater(lastSynced: Long) {
+    fun confirmLastProfileSwitchIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_profile_switch_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting ProfileSwitch data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_profile_switch_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedProfileSwitches() {
+    private fun processChangedProfileSwitches() {
         var progress: String
-        val lastDbIdWrapped = appRepository.getLastProfileSwitchIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        val lastDbId = appRepository.getLastProfileSwitchId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_profile_switch_last_synced_id, 0)
@@ -478,17 +467,16 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         sendTreatments(force = true, progress)
     }
 
-    override fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long) {
+    fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_effective_profile_switch_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting EffectiveProfileSwitch data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_effective_profile_switch_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedEffectiveProfileSwitches() {
+    private fun processChangedEffectiveProfileSwitches() {
         var progress: String
-        val lastDbIdWrapped = appRepository.getLastEffectiveProfileSwitchIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        val lastDbId = appRepository.getLastEffectiveProfileSwitchId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_effective_profile_switch_last_synced_id, 0)
@@ -509,17 +497,16 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         sendTreatments(force = true, progress)
     }
 
-    override fun confirmLastOfflineEventIdIfGreater(lastSynced: Long) {
+    fun confirmLastOfflineEventIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_xdrip_offline_event_last_synced_id, 0)) {
             //aapsLogger.debug(LTag.XDRIP, "Setting OfflineEvent data sync from $lastSynced")
             sp.putLong(R.string.key_xdrip_offline_event_last_synced_id, lastSynced)
         }
     }
 
-    override fun processChangedOfflineEvents() {
+    private fun processChangedOfflineEvents() {
         var progress: String
-        val lastDbIdWrapped = appRepository.getLastOfflineEventIdWrapped().blockingGet()
-        val lastDbId = if (lastDbIdWrapped is ValueWrapper.Existing) lastDbIdWrapped.value else 0L
+        val lastDbId = appRepository.getLastOfflineEventId() ?: 0L
         while (true) {
             if (!isEnabled) return
             var startId = sp.getLong(R.string.key_xdrip_offline_event_last_synced_id, 0)
@@ -540,11 +527,11 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
         sendTreatments(force = true, progress)
     }
 
-    override fun confirmLastProfileStore(lastSynced: Long) {
+    fun confirmLastProfileStore(lastSynced: Long) {
         sp.putLong(R.string.key_xdrip_profile_store_last_synced_timestamp, lastSynced)
     }
 
-    override fun processChangedProfileStore() {
+    private fun processChangedProfileStore() {
         if (!isEnabled) return
         val lastSync = sp.getLong(R.string.key_xdrip_profile_store_last_synced_timestamp, 0)
         val lastChange = sp.getLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, 0)
@@ -556,7 +543,10 @@ class XdripDataSyncSelectorImplementation @Inject constructor(
             // add for v3
             if (JsonHelper.safeGetLongAllowNull(profileJson, "date") == null)
                 profileJson.put("date", profileStore.getStartDate())
-            xdripPlugin.sendToXdrip("profile", DataSyncSelector.PairProfileStore(profileJson, dateUtil.now()), "")
+            val now = dateUtil.now()
+            xdripPlugin.sendToXdrip("profile", DataSyncSelector.PairProfileStore(profileJson, now), "")
+            confirmLastProfileStore(now)
+            processChangedProfileStore()
         }
     }
 }

@@ -29,6 +29,7 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.interfaces.sync.DataSyncSelector
+import info.nightscout.interfaces.sync.DataSyncSelectorXdrip
 import info.nightscout.interfaces.sync.Sync
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
@@ -54,6 +55,10 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import org.json.JSONArray
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
@@ -74,7 +79,7 @@ class XdripPlugin @Inject constructor(
     private val iobCobCalculator: IobCobCalculator,
     private val rxBus: RxBus,
     private val uiInteraction: UiInteraction,
-    private val dataSyncSelector: XdripDataSyncSelectorImplementation,
+    private val dataSyncSelector: DataSyncSelectorXdrip,
     private val dateUtil: DateUtil,
     aapsLogger: AAPSLogger
 ) : XDripBroadcast, Sync, PluginBase(
@@ -92,6 +97,7 @@ class XdripPlugin @Inject constructor(
     @Suppress("PrivatePropertyName")
     private val XDRIP_JOB_NAME: String = this::class.java.simpleName
 
+    private val scope = CoroutineScope(Dispatchers.IO + SupervisorJob())
     private val disposable = CompositeDisposable()
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val listLog: MutableList<EventXdripNewLog> = ArrayList()
@@ -316,23 +322,27 @@ class XdripPlugin @Inject constructor(
     */
 
     override fun sendToXdrip(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
-        when (collection) {
-            "profile"      -> sendProfileStore(dataPair = dataPair, progress = progress)
-            "devicestatus" -> sendDeviceStatus(dataPair = dataPair, progress = progress)
-            else           -> throw IllegalStateException()
+        scope.launch {
+            when (collection) {
+                "profile"      -> sendProfileStore(dataPair = dataPair, progress = progress)
+                "devicestatus" -> sendDeviceStatus(dataPair = dataPair, progress = progress)
+                else           -> throw IllegalStateException()
+            }
         }
     }
 
     override fun sendToXdrip(collection: String, dataPairs: List<DataSyncSelector.DataPair>, progress: String) {
-        when (collection) {
-            "entries"    -> sendEntries(dataPairs = dataPairs, progress = progress)
-            "food"       -> sendFood(dataPairs = dataPairs, progress = progress)
-            "treatments" -> sendTreatments(dataPairs = dataPairs, progress = progress)
-            else         -> throw IllegalStateException()
+        scope.launch {
+            when (collection) {
+                "entries"    -> sendEntries(dataPairs = dataPairs, progress = progress)
+                "food"       -> sendFood(dataPairs = dataPairs, progress = progress)
+                "treatments" -> sendTreatments(dataPairs = dataPairs, progress = progress)
+                else         -> throw IllegalStateException()
+            }
         }
     }
 
-    private fun sendProfileStore(dataPair: DataSyncSelector.DataPair, progress: String) {
+    private suspend fun sendProfileStore(dataPair: DataSyncSelector.DataPair, progress: String) {
         val data = (dataPair as DataSyncSelector.PairProfileStore).value
         rxBus.send(EventXdripNewLog("SENDING", "Sent 1 PROFILE ($progress)"))
         broadcast(
@@ -340,8 +350,6 @@ class XdripPlugin @Inject constructor(
                 .addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES)
                 .putExtras(Bundle().apply { putString("profile", data.toString()) })
         )
-        dataSyncSelector.confirmLastProfileStore(dataPair.id)
-        dataSyncSelector.processChangedProfileStore()
     }
 
     private fun sendDeviceStatus(dataPair: DataSyncSelector.DataPair, progress: String) {

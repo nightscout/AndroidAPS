@@ -1,7 +1,6 @@
 package info.nightscout.plugins.sync.tidepool.utils
 
 import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import javax.inject.Inject
@@ -21,7 +20,7 @@ class RateLimit @Inject constructor(
         // check if over limit
         rateLimits[name]?.let {
             if (dateUtil.now() - it < T.secs(seconds.toLong()).msecs()) {
-                aapsLogger.debug(LTag.TIDEPOOL, "$name rate limited: $seconds seconds")
+                //aapsLogger.debug(LTag.TIDEPOOL, "$name rate limited: $seconds seconds")
                 return false
             }
         }

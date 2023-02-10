@@ -22,6 +22,7 @@ import info.nightscout.interfaces.sync.DataSyncSelector.PairProfileSwitch
 import info.nightscout.interfaces.sync.DataSyncSelector.PairTemporaryBasal
 import info.nightscout.interfaces.sync.DataSyncSelector.PairTemporaryTarget
 import info.nightscout.interfaces.sync.DataSyncSelector.PairTherapyEvent
+import info.nightscout.interfaces.sync.DataSyncSelectorV1
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsclient.acks.NSAddAck
 import info.nightscout.rx.AapsSchedulers
@@ -39,7 +40,7 @@ class NSClientAddAckWorker(
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var dataSyncSelector: DataSyncSelector
+    @Inject lateinit var dataSyncSelectorV1: DataSyncSelectorV1
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
     @Inject lateinit var storeDataForDb: StoreDataForDb
@@ -60,148 +61,148 @@ class NSClientAddAckWorker(
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdTemporaryTargets.add(pair.value)
-                dataSyncSelector.confirmLastTempTargetsIdIfGreater(pair.id)
+                dataSyncSelectorV1.confirmLastTempTargetsIdIfGreater(pair.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked TemporaryTarget " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked TemporaryTarget " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedTempTargets()
+                dataSyncSelectorV1.processChangedTempTargets()
             }
 
             is PairGlucoseValue           -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdGlucoseValues.add(pair.value)
-                dataSyncSelector.confirmLastGlucoseValueIdIfGreater(pair.id)
+                dataSyncSelectorV1.confirmLastGlucoseValueIdIfGreater(pair.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked GlucoseValue " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked GlucoseValue " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedGlucoseValues()
+                dataSyncSelectorV1.processChangedGlucoseValues()
             }
 
             is PairFood                   -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdFoods.add(pair.value)
-                dataSyncSelector.confirmLastFoodIdIfGreater(pair.id)
+                dataSyncSelectorV1.confirmLastFoodIdIfGreater(pair.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked Food " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked Food " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedFoods()
+                dataSyncSelectorV1.processChangedFoods()
             }
 
             is PairTherapyEvent           -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdTherapyEvents.add(pair.value)
-                dataSyncSelector.confirmLastTherapyEventIdIfGreater(pair.id)
+                dataSyncSelectorV1.confirmLastTherapyEventIdIfGreater(pair.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked TherapyEvent " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked TherapyEvent " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedTherapyEvents()
+                dataSyncSelectorV1.processChangedTherapyEvents()
             }
 
             is PairBolus                  -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdBoluses.add(pair.value)
-                dataSyncSelector.confirmLastBolusIdIfGreater(pair.id)
+                dataSyncSelectorV1.confirmLastBolusIdIfGreater(pair.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked Bolus " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked Bolus " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedBoluses()
+                dataSyncSelectorV1.processChangedBoluses()
             }
 
             is PairCarbs                  -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdCarbs.add(pair.value)
-                dataSyncSelector.confirmLastCarbsIdIfGreater(pair.id)
+                dataSyncSelectorV1.confirmLastCarbsIdIfGreater(pair.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked Carbs " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked Carbs " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedCarbs()
+                dataSyncSelectorV1.processChangedCarbs()
             }
 
             is PairBolusCalculatorResult  -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdBolusCalculatorResults.add(pair.value)
-                dataSyncSelector.confirmLastBolusCalculatorResultsIdIfGreater(pair.id)
+                dataSyncSelectorV1.confirmLastBolusCalculatorResultsIdIfGreater(pair.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked BolusCalculatorResult " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked BolusCalculatorResult " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedBolusCalculatorResults()
+                dataSyncSelectorV1.processChangedBolusCalculatorResults()
             }
 
             is PairTemporaryBasal         -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdTemporaryBasals.add(pair.value)
-                dataSyncSelector.confirmLastTemporaryBasalIdIfGreater(pair.id)
+                dataSyncSelectorV1.confirmLastTemporaryBasalIdIfGreater(pair.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked TemporaryBasal " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked TemporaryBasal " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedTemporaryBasals()
+                dataSyncSelectorV1.processChangedTemporaryBasals()
             }
 
             is PairExtendedBolus          -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdExtendedBoluses.add(pair.value)
-                dataSyncSelector.confirmLastExtendedBolusIdIfGreater(pair.id)
+                dataSyncSelectorV1.confirmLastExtendedBolusIdIfGreater(pair.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked ExtendedBolus " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked ExtendedBolus " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedExtendedBoluses()
+                dataSyncSelectorV1.processChangedExtendedBoluses()
             }
 
             is PairProfileSwitch          -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdProfileSwitches.add(pair.value)
-                dataSyncSelector.confirmLastProfileSwitchIdIfGreater(pair.id)
+                dataSyncSelectorV1.confirmLastProfileSwitchIdIfGreater(pair.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked ProfileSwitch " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked ProfileSwitch " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedProfileSwitches()
+                dataSyncSelectorV1.processChangedProfileSwitches()
             }
 
             is PairEffectiveProfileSwitch -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdEffectiveProfileSwitches.add(pair.value)
-                dataSyncSelector.confirmLastEffectiveProfileSwitchIdIfGreater(pair.id)
+                dataSyncSelectorV1.confirmLastEffectiveProfileSwitchIdIfGreater(pair.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked EffectiveProfileSwitch " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked EffectiveProfileSwitch " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedEffectiveProfileSwitches()
+                dataSyncSelectorV1.processChangedEffectiveProfileSwitches()
             }
 
             is DataSyncSelector.PairDeviceStatus -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdDeviceStatuses.add(pair.value)
-                dataSyncSelector.confirmLastDeviceStatusIdIfGreater(pair.value.id)
+                dataSyncSelectorV1.confirmLastDeviceStatusIdIfGreater(pair.value.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked DeviceStatus " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked DeviceStatus " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedDeviceStatuses()
+                dataSyncSelectorV1.processChangedDeviceStatuses()
             }
 
             is PairProfileStore           -> {
-                dataSyncSelector.confirmLastProfileStore(ack.originalObject.id)
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked ProfileStore " + ack.id))
+                dataSyncSelectorV1.confirmLastProfileStore(ack.originalObject.id)
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked ProfileStore " + ack.id))
             }
 
             is PairOfflineEvent           -> {
                 val pair = ack.originalObject
                 pair.value.interfaceIDs.nightscoutId = ack.id
                 storeDataForDb.nsIdOfflineEvents.add(pair.value)
-                dataSyncSelector.confirmLastOfflineEventIdIfGreater(pair.id)
+                dataSyncSelectorV1.confirmLastOfflineEventIdIfGreater(pair.id)
                 storeDataForDb.scheduleNsIdUpdate()
-                rxBus.send(EventNSClientNewLog("DBADD", "Acked OfflineEvent " + pair.value.interfaceIDs.nightscoutId))
+                rxBus.send(EventNSClientNewLog("◄ DBADD", "Acked OfflineEvent " + pair.value.interfaceIDs.nightscoutId))
                 // Send new if waiting
-                dataSyncSelector.processChangedOfflineEvents()
+                dataSyncSelectorV1.processChangedOfflineEvents()
             }
 
         }

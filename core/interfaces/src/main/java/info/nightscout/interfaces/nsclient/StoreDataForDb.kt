@@ -47,4 +47,5 @@ interface StoreDataForDb {
     fun storeGlucoseValuesToDb()
     fun storeFoodsToDb()
     fun scheduleNsIdUpdate()
+    fun updateNsIds()
 }

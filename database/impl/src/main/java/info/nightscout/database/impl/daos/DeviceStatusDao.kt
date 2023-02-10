@@ -29,7 +29,7 @@ internal interface DeviceStatusDao {
     fun deleteOlderThan(than: Long): Int
 
     @Query("SELECT id FROM $TABLE_DEVICE_STATUS ORDER BY id DESC limit 1")
-    fun getLastId(): Maybe<Long>
+    fun getLastId(): Long?
 
     @Query("DELETE FROM $TABLE_DEVICE_STATUS WHERE id NOT IN (SELECT MAX(id) FROM $TABLE_DEVICE_STATUS)")
     fun deleteAllEntriesExceptLast()

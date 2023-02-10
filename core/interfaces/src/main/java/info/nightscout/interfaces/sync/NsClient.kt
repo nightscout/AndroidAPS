@@ -1,7 +1,7 @@
 package info.nightscout.interfaces.sync
 
-import android.text.Spanned
 import info.nightscout.interfaces.nsclient.NSAlarm
+import info.nightscout.rx.events.EventNSClientNewLog
 
 /**
  * Plugin providing communication with Nightscout server
@@ -24,14 +24,14 @@ interface NsClient : Sync {
     fun resend(reason: String)
 
     /**
-     * @return List last of messages for fragment in HTML format
+     * List of log messages for fragment
      */
-    fun textLog(): Spanned
+    val listLog: MutableList<EventNSClientNewLog>
 
     /**
-     * Clear list of stored messages displayed in fragment
+     * Used data sync selector
      */
-    fun clearLog()
+    val dataSyncSelector: DataSyncSelector
 
     /**
      * Version of NS server
@@ -89,8 +89,9 @@ interface NsClient : Sync {
      * @param collection target ns collection
      * @param dataPair data to upload (data.first) and id of changed record (data.second)
      * @param progress progress of sync in format "number/number". Only for display in fragment
+     * @return true for successful upload
      */
-    fun nsAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String)
+    suspend fun nsAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String): Boolean
 
     /**
      * Upload updated record to NS
@@ -98,6 +99,7 @@ interface NsClient : Sync {
      * @param collection target ns collection
      * @param dataPair data to upload (data.first) and id of changed record (data.second)
      * @param progress progress of sync in format "number/number". Only for display in fragment
+     * @return true for successful upload
      */
-    fun nsUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String)
+    suspend fun nsUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String): Boolean
 }

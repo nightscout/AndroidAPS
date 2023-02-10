@@ -35,7 +35,7 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsSchedulers: AapsSchedulers
-    @Inject lateinit var dataSyncSelector: XdripDataSyncSelectorImplementation
+    @Inject lateinit var dataSyncSelector: DataSyncSelectorXdripImpl
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var xdripPlugin: XdripPlugin
     @Inject lateinit var config: Config

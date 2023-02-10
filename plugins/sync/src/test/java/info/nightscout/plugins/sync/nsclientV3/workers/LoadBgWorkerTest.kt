@@ -1,6 +1,5 @@
 package info.nightscout.plugins.sync.nsclientV3.workers
 
-import androidx.work.ExistingWorkPolicy
 import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkContinuation
@@ -11,17 +10,17 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.source.NSClientSource
-import info.nightscout.interfaces.sync.DataSyncSelector
+import info.nightscout.interfaces.sync.DataSyncSelectorV3
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.workflow.WorkerClasses
+import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
@@ -41,14 +40,12 @@ import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
-import org.mockito.ArgumentMatchers.eq
 import org.mockito.Mock
 import org.mockito.Mockito
 
 @OptIn(ExperimentalCoroutinesApi::class)
 internal class LoadBgWorkerTest : TestBase() {
 
-    @Mock lateinit var workerClasses: WorkerClasses
     @Mock lateinit var sp: SP
     @Mock lateinit var fabricPrivacy: FabricPrivacy
     @Mock lateinit var dateUtil: DateUtil
@@ -57,13 +54,15 @@ internal class LoadBgWorkerTest : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var config: Config
     @Mock lateinit var uiInteraction: UiInteraction
-    @Mock lateinit var dataSyncSelector: DataSyncSelector
+    @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var nsClientSource: NSClientSource
     @Mock lateinit var workManager: WorkManager
     @Mock lateinit var workContinuation: WorkContinuation
     @Mock lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
+    @Mock lateinit var storeDataForDb: StoreDataForDb
+    @Mock lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
 
     private val rxBus: RxBus = RxBus(aapsSchedulers, aapsLogger)
     private lateinit var nsClientV3Plugin: NSClientV3Plugin
@@ -78,15 +77,13 @@ internal class LoadBgWorkerTest : TestBase() {
             if (it is LoadBgWorker) {
                 it.aapsLogger = aapsLogger
                 it.fabricPrivacy = fabricPrivacy
-                it.dataWorkerStorage = dataWorkerStorage
                 it.sp = sp
                 it.rxBus = rxBus
                 it.context = context
                 it.dateUtil = dateUtil
                 it.nsClientV3Plugin = nsClientV3Plugin
-                it.workerClasses = workerClasses
                 it.nsClientSource = nsClientSource
-                it.workManager = workManager
+                it.storeDataForDb = storeDataForDb
             }
         }
     }
@@ -101,8 +98,8 @@ internal class LoadBgWorkerTest : TestBase() {
         receiverDelegate = ReceiverDelegate(rxBus, rh, sp, receiverStatusStore, aapsSchedulers, fabricPrivacy)
         nsClientV3Plugin = NSClientV3Plugin(
             injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-            sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelector, profileFunction, repository,
-            nsDeviceStatusHandler, workManager, workerClasses, dataWorkerStorage, nsClientSource
+            sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, profileFunction, repository,
+            nsDeviceStatusHandler, nsClientSource, nsIncomingDataProcessor, storeDataForDb
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }
@@ -124,11 +121,6 @@ internal class LoadBgWorkerTest : TestBase() {
         val result = sut.doWorkAndLog()
         Assertions.assertTrue(result is ListenableWorker.Result.Success)
         Assertions.assertTrue(result.outputData.getString("Result") == "Load not enabled")
-        Mockito.verify(workManager, Mockito.times(1)).enqueueUniqueWork(
-            eq(nsClientV3Plugin.JOB_NAME),
-            eq(ExistingWorkPolicy.APPEND_OR_REPLACE),
-            any<OneTimeWorkRequest>()
-        )
     }
 
     @Test
@@ -144,13 +136,6 @@ internal class LoadBgWorkerTest : TestBase() {
         val result = sut.doWorkAndLog()
         Assertions.assertEquals(now - 1000, nsClientV3Plugin.lastLoadedSrvModified.collections.entries)
         Assertions.assertTrue(result is ListenableWorker.Result.Success)
-        Mockito.verify(workManager, Mockito.times(1)).beginUniqueWork(
-            eq(nsClientV3Plugin.JOB_NAME),
-            eq(ExistingWorkPolicy.APPEND_OR_REPLACE),
-            any<OneTimeWorkRequest>()
-        )
-        Mockito.verify(workContinuation, Mockito.times(1)).then(any<OneTimeWorkRequest>())
-        Mockito.verify(workContinuation, Mockito.times(1)).enqueue()
     }
 
     @Test
@@ -171,7 +156,6 @@ internal class LoadBgWorkerTest : TestBase() {
 
         Mockito.`when`(workManager.beginUniqueWork(anyString(), any(), any<OneTimeWorkRequest>())).thenReturn(workContinuation)
         Mockito.`when`(workContinuation.then(any<OneTimeWorkRequest>())).thenReturn(workContinuation)
-        Mockito.`when`(workerClasses.nsClientSourceWorker).thenReturn(LoggingWorker::class.java)
         nsClientV3Plugin.nsAndroidClient = nsAndroidClient
         nsClientV3Plugin.lastLoadedSrvModified.collections.entries = 0L // first load
         nsClientV3Plugin.firstLoadContinueTimestamp.collections.entries = now - 1000
@@ -180,13 +164,6 @@ internal class LoadBgWorkerTest : TestBase() {
 
         val result = sut.doWorkAndLog()
         Assertions.assertTrue(result is ListenableWorker.Result.Success)
-        Mockito.verify(workManager, Mockito.times(1)).beginUniqueWork(
-            eq(nsClientV3Plugin.JOB_NAME),
-            eq(ExistingWorkPolicy.APPEND_OR_REPLACE),
-            any<OneTimeWorkRequest>()
-        )
-        Mockito.verify(workContinuation, Mockito.times(1)).then(any<OneTimeWorkRequest>())
-        Mockito.verify(workContinuation, Mockito.times(1)).enqueue()
     }
 
 
@@ -203,12 +180,5 @@ internal class LoadBgWorkerTest : TestBase() {
         val result = sut.doWorkAndLog()
         Assertions.assertEquals(now - 1000, nsClientV3Plugin.lastLoadedSrvModified.collections.entries)
         Assertions.assertTrue(result is ListenableWorker.Result.Success)
-        Mockito.verify(workManager, Mockito.times(1)).beginUniqueWork(
-            eq(nsClientV3Plugin.JOB_NAME),
-            eq(ExistingWorkPolicy.APPEND_OR_REPLACE),
-            any<OneTimeWorkRequest>()
-        )
-        Mockito.verify(workContinuation, Mockito.times(1)).then(any<OneTimeWorkRequest>())
-        Mockito.verify(workContinuation, Mockito.times(1)).enqueue()
     }
 }

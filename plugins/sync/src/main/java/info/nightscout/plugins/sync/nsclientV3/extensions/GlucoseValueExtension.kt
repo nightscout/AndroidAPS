@@ -8,7 +8,6 @@ import info.nightscout.sdk.localmodel.entry.NsUnits
 import info.nightscout.shared.utils.T
 import java.security.InvalidParameterException
 
-// copy of NSClientSourcePlugin for testing
 fun NSSgvV3.toTransactionGlucoseValue(): TransactionGlucoseValue {
     return TransactionGlucoseValue(
         timestamp = date ?: throw InvalidParameterException(),
