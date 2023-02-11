@@ -18,7 +18,7 @@
     <string name="history_group_bolus">Bolusai</string>
     <string name="history_group_prime">Užpildyti sistemą</string>
     <string name="history_group_alarm">Aliarmai</string>
-    <string name="history_group_glucose">Gliukozė</string>
+    <string name="history_group_glucose">Glikemija</string>
     <string name="history_group_other">Kiti</string>
     <!-- Time -->
     <!-- BLE Config -->
