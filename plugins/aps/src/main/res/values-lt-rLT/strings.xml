@@ -39,10 +39,10 @@
     <string name="openapsma_autosensdata_label">Autosens duomenys</string>
     <string name="openapsma_script_debug_data_label">Scenarijų derinimas</string>
     <string name="openapsama_use_autosens">Naudoti Autosens funkciją</string>
-    <string name="openapsma_max_basal_title">Maks vv/val skaičius, kuris gali būti nustatytas kaip laikina bazė</string>
+    <string name="openapsma_max_basal_title">Maksimali laikina bazė, v/val</string>
     <string name="openapsma_max_basal_summary">Šis skaičius OpenAPS kontekste vadinamas maks. valandine baze</string>
     <string name="openapsma_max_iob_title">Didžiausias valandinės bazės insulino kiekis, kurį gali suleisti OpenAPS [U]</string>
-    <string name="openapsma_max_iob_summary">Ši vertė OpenAPS kontekste vadinama Maks AIO\nTai maksimalus insulino vienetų [U] skaičius, kurį DKS gali suleisti vienu metu.</string>
+    <string name="openapsma_max_iob_summary">Šis skaičius OpenAPS kontekste vadinamas maks. AIO\nTai maksimalus insulino vienetų [U] skaičius, kurį DKS gali suleisti vienu metu.</string>
     <string name="openapsama_autosens_adjust_targets_summary">Numatytoji reikšmė: true\nTai suteikia Autosens funkcijai leidimą keisti tikslinės glikemijos vertes, JIF ir valandinę bazę.</string>
     <string name="openapsama_autosens_adjust_targets">Autosens nustatomi tikslai, taip pat</string>
     <string name="openapsama_min_5m_carb_impact_summary">Numatytoji reikšmė: 3.0 (AMA) arba 8.0 (SMB). Tai parametras, nurodantis angliavandenių poveikį glikemijai kas 5 minutes nuo jų suvartojimo. Numatytoji reikšmė yra 3 mg/dl per 5min. Šis skaičius turi įtakos apskaičiavimams, kaip greitai mažės AAO, kokia bus glikemijos kitimo prognozė, ypač kai ji krenta daugiau nei tikėtasi, arba nedidėja tiek, kiek tikėtasi.</string>
@@ -54,8 +54,8 @@
     <string name="always_use_short_avg_summary">Naudinga, kai duomenys, gaunami iš nefiltruoto šaltinio, tokio kaip xDrip+, tampa nestabilūs.</string>
     <string name="openapsama_max_daily_safety_multiplier">Maksimalus dienos bazės saugos daugiklis</string>
     <string name="openapsama_current_basal_safety_multiplier">Dabartinės bazės saugos daugiklis</string>
-    <string name="openapssmb_max_iob_title">Maksimalus bendras AIO, kurio negali viršyti OpenAPS [U]</string>
-    <string name="openapssmb_max_iob_summary">Ši vertė yra vadinama Maks AIO OpenAPS kontekste\nOpenAPS nepridės daugiau insulino, jei dabartinis AIO yra didesnis už šią vertę</string>
+    <string name="openapssmb_max_iob_title">Maksimalus bendras AIO, kurio negali viršyti DKS [U]</string>
+    <string name="openapssmb_max_iob_summary">Šis skaičius OpenAPS kontekste vadinamas maks. AIO\nSistema neleis daugiau insulino, jei AIO bus didesnis už šį skaičių</string>
     <string name="enable_uam">Įjungti NDM</string>
     <string name="enable_smb">Įjungti SMB</string>
     <string name="enable_smb_summary">Naudoti Super Mikro Bolusus vietoj laikinos bazės greitesniam veikimui</string>
