@@ -556,6 +556,8 @@
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Trūksta leidimo SMS</string>
     <!-- About -->
+    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    <string name="fabric_upload_disabled">Sutrikimų žurnalo įrašų įkėlimas išjungtas!</string>
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>
