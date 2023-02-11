@@ -67,7 +67,6 @@ class LoadTreatmentsWorker(
                             nsClientV3Plugin.storeLastLoadedSrvModified()
                         }
                         rxBus.send(EventNSClientNewLog("◄ RCV TR END", "No data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                        storeDataForDb.storeTreatmentsToDb()
                         continueLoading = false
                     }
                 } else {
@@ -77,7 +76,6 @@ class LoadTreatmentsWorker(
                         nsClientV3Plugin.storeLastLoadedSrvModified()
                     }
                     rxBus.send(EventNSClientNewLog("◄ RCV TR END", "No new data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                    storeDataForDb.storeTreatmentsToDb()
                     continueLoading = false
                 }
             }
@@ -88,6 +86,7 @@ class LoadTreatmentsWorker(
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
 
+        storeDataForDb.storeTreatmentsToDb()
         nsClientV3Plugin.lastOperationError = null
         return Result.success()
     }

@@ -121,8 +121,8 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
             ID_MENU_CLEAR_LOG -> {
                 nsClientPlugin?.listLog?.let {
                     synchronized(it) {
-                        logAdapter.notifyItemRangeRemoved(0, it.size)
                         it.clear()
+                        _binding?.recyclerview?.swapAdapter(RecyclerViewAdapter(it), true)
                     }
                 }
                 true
