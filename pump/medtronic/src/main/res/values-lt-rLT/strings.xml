@@ -8,7 +8,7 @@
     <string name="medtronic_pump_frequency">Pompos dažnis</string>
     <string name="medtronic_pump_bolus_delay">Užlaikymas prieš Boluso suleidimą (s)</string>
     <string name="medtronic_pump_max_bolus">Max Bolusas pompoje (vv)</string>
-    <string name="medtronic_pump_max_basal">Maks val. bazė pompoje (vv/val)</string>
+    <string name="medtronic_pump_max_basal">Maks val. bazė pompoje (v/val)</string>
     <string name="medtronic_pump_encoding">Medronic kodavimas</string>
     <string name="medtronic_pump_frequency_us_ca">US &amp; Kanada (916 MHz)</string>
     <string name="medtronic_pump_frequency_worldwide">Pasaulinis (868 Mhz)</string>
