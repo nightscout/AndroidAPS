@@ -273,6 +273,8 @@ class NSClientV3Plugin @Inject constructor(
         disposable.clear()
         storageSocket?.disconnect()
         alarmSocket?.disconnect()
+        storageSocket = null
+        alarmSocket = null
         super.onStop()
     }
 
@@ -311,6 +313,8 @@ class NSClientV3Plugin @Inject constructor(
         if (wsConnected) {
             storageSocket?.disconnect()
             alarmSocket?.disconnect()
+            storageSocket = null
+            alarmSocket = null
         }
         SystemClock.sleep(2000)
         initializeWebSockets(reason)
@@ -389,14 +393,15 @@ class NSClientV3Plugin @Inject constructor(
     }
 
     private val onConnectAlarms = Emitter.Listener {
-        val socketId = alarmSocket?.id() ?: "NULL"
+        val socket = alarmSocket
+        val socketId = socket?.id() ?: "NULL"
         rxBus.send(EventNSClientNewLog("◄ WS", "connected alarms ID: $socketId"))
-        if (alarmSocket != null) {
+        if (socket != null) {
             val authMessage = JSONObject().also {
                 it.put("accessToken", sp.getString(R.string.key_ns_client_token, ""))
             }
             rxBus.send(EventNSClientNewLog("► WS", "requesting auth for alarms"))
-            alarmSocket?.emit("subscribe", authMessage, Ack { args ->
+            socket?.emit("subscribe", authMessage, Ack { args ->
                 val response = args[0] as JSONObject
                 wsConnected = if (response.optBoolean("success")) {
                     rxBus.send(EventNSClientNewLog("◄ WS", response.optString("message")))
@@ -414,13 +419,11 @@ class NSClientV3Plugin @Inject constructor(
         rxBus.send(EventNSClientNewLog("◄ WS", "disconnect storage event"))
         wsConnected = false
         initialLoadFinished = false
-        storageSocket = null
     }
 
     private val onDisconnectAlarm = Emitter.Listener { args ->
         aapsLogger.debug(LTag.NSCLIENT, "disconnect alarm reason: ${args[0]}")
         rxBus.send(EventNSClientNewLog("◄ WS", "disconnect alarm event"))
-        alarmSocket = null
     }
 
     private val onDataCreateUpdate = Emitter.Listener { args ->
