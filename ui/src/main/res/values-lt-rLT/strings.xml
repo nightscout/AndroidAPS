@@ -24,7 +24,7 @@
     <string name="age">Amžius</string>
     <string name="weight_label">Svoris</string>
     <string name="most_common_profile">Dažniausiai naudojamas profilis:</string>
-    <string name="glucose_type">Gliukozės tipas</string>
+    <string name="glucose_type">Glikemijos tipas</string>
     <string name="bg_other">Kiti</string>
     <string name="bg_meter">Matuoklis</string>
     <string name="bg_sensor">Iš sensoriaus</string>
