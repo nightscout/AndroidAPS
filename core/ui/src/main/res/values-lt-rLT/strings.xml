@@ -97,7 +97,7 @@
     <string name="noprofile">Dar negautas joks profilis iš NS</string>
     <string name="exists">egzistuoja</string>
     <string name="notexists">neegzistuoja</string>
-    <string name="glucose">Gliukozė</string>
+    <string name="glucose">Glikemija</string>
     <string name="iob">AIO</string>
     <string name="cob">AAO</string>
     <string name="name_short">Vardas:</string>
@@ -158,7 +158,7 @@
     <string name="stoptemptarget">Sustabdyti laikiną tikslą</string>
     <string name="closedloop">Uždaras Ciklas</string>
     <string name="openloop">Atviras Ciklas</string>
-    <string name="lowglucosesuspend">Sustabdymas esant žemai gliukozei</string>
+    <string name="lowglucosesuspend">Stabdymas esant žemai glikemijai</string>
     <string name="dia">IVT</string>
     <string name="ic_short">IA</string>
     <string name="isf_short">JIF</string>
