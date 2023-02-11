@@ -7,7 +7,6 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ScrollView
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import dagger.android.support.DaggerFragment
@@ -62,16 +61,6 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
             requireActivity().addMenuProvider(this, viewLifecycleOwner, Lifecycle.State.RESUMED)
         }.root
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.autoscroll.isChecked = sp.getBoolean(R.string.key_ns_client_autoscroll, true)
-        binding.autoscroll.setOnCheckedChangeListener { _, isChecked ->
-            sp.putBoolean(R.string.key_ns_client_autoscroll, isChecked)
-            updateGui()
-        }
-    }
-
     override fun onCreateMenu(menu: Menu, inflater: MenuInflater) {
         menu.add(Menu.FIRST, ID_MENU_CLEAR_LOG, 0, rh.gs(R.string.clear_log)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_FULL_SYNC, 0, rh.gs(R.string.full_sync)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
@@ -116,7 +105,6 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
     private fun updateGui() {
         if (_binding == null) return
         binding.log.text = xdripPlugin.textLog()
-        if (sp.getBoolean(R.string.key_ns_client_autoscroll, true)) binding.logScrollview.fullScroll(ScrollView.FOCUS_DOWN)
         val size = dataSyncSelector.queueSize()
         binding.queue.text = if (size >= 0) size.toString() else rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
     }

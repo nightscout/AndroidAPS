@@ -29,7 +29,7 @@ import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiInsert
+import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiData
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import info.nightscout.plugins.sync.nsclient.data.AlarmAck
 import info.nightscout.plugins.sync.nsclient.extensions.toJson
@@ -160,11 +160,11 @@ class NSClientPlugin @Inject constructor(
     private fun addToLog(ev: EventNSClientNewLog) {
         synchronized(listLog) {
             listLog.add(0, ev)
-            rxBus.send(EventNSClientUpdateGuiInsert(0))
             // remove the first line if log is too large
             if (listLog.size >= Constants.MAX_LOG_LINES) {
                 listLog.removeAt(listLog.size - 1)
             }
+            rxBus.send(EventNSClientUpdateGuiData())
         }
     }
 

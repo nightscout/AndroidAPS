@@ -47,7 +47,6 @@
     <string name="ns_malfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
 
     <!-- NSClient -->
-    <string name="key_ns_client_autoscroll" translatable="false">ns_client_autoscroll</string>
     <string name="key_ns_paused" translatable="false">ns_client_paused</string>
     <string name="key_ns_log_app_started_event" translatable="false">ns_log_app_started_event</string>
 
@@ -57,7 +56,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Autoscroll</string>
     <string name="restart">Restart</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>

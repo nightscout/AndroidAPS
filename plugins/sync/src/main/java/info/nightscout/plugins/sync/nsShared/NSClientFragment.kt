@@ -20,7 +20,6 @@ import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -30,7 +29,7 @@ import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.databinding.NsClientFragmentBinding
 import info.nightscout.plugins.sync.databinding.NsClientLogItemBinding
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiInsert
+import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiData
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiQueue
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import info.nightscout.rx.AapsSchedulers
@@ -97,11 +96,6 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.autoscroll.isChecked = sp.getBoolean(R.string.key_ns_client_autoscroll, true)
-        binding.autoscroll.setOnCheckedChangeListener { _, isChecked ->
-            sp.putBoolean(R.string.key_ns_client_autoscroll, isChecked)
-        }
 
         binding.paused.isChecked = sp.getBoolean(R.string.key_ns_paused, false)
         binding.paused.setOnCheckedChangeListener { _, isChecked ->
@@ -198,19 +192,11 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     override fun onResume() {
         super.onResume()
         disposable += rxBus
-            .toObservable(EventNSClientUpdateGuiInsert::class.java)
+            .toObservable(EventNSClientUpdateGuiData::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe(
                 {
-                    logAdapter.notifyItemInserted(it.position)
-                    if (sp.getBoolean(R.string.key_ns_client_autoscroll, true))
-                        _binding?.recyclerview?.scrollToPosition(it.position)
-                    nsClientPlugin?.listLog?.let { listLog ->
-                        synchronized(listLog) {
-                            if (listLog.size > Constants.MAX_LOG_LINES)
-                                logAdapter.notifyItemRemoved(listLog.size - 1)
-                        }
-                    }
+                    _binding?.recyclerview?.swapAdapter(RecyclerViewAdapter(nsClientPlugin?.listLog ?: arrayListOf()), true)
                 }, fabricPrivacy::logException
             )
         disposable += rxBus
@@ -240,7 +226,6 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
     private fun updateStatus() {
         if (_binding == null) return
         binding.paused.isChecked = sp.getBoolean(R.string.key_ns_paused, false)
-        //if (sp.getBoolean(R.string.key_ns_client_autoscroll, true)) binding.logScrollview.fullScroll(ScrollView.FOCUS_DOWN)
         binding.url.text = nsClientPlugin?.address
         binding.status.text = nsClientPlugin?.status
     }
