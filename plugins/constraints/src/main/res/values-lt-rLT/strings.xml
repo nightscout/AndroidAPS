@@ -2,10 +2,21 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Laiko persukimas įvyks po 24 val ar mažiau</string>
+    <string name="dst_loop_disabled_warning">Laiko persukimas įvyko prieš mažiau nei 3 val - Uždaras ciklas deaktyvuotas</string>
     <!-- Storage constraint -->
     <!-- Version Checker -->
+    <string name="old_version">sena versija</string>
+    <string name="very_old_version">labai sena versija</string>
+    <string name="application_expired">Programa nebenaudojama</string>
+    <string name="new_version_warning">Nauja versija pasiekiama mažiausiai %1$d d.! Po %2$d grįšite į Stabdymo esant žemai glikemijai režimą, po %3$d ciklas bus išjungtas</string>
+    <string name="running_invalid_version">Nustatyta, kad naudojate nebegaliojančią versiją. Ciklas išjungtas!</string>
+    <string name="versionavailable">Versiją %1$s jau galima naudoti</string>
+    <string name="version_expire">Versija %1$s baigs galioti %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Naudojami perskaičiuoti duomenys</string>
+    <string name="bg_too_close">KG dubliuojasi:\n%1$s\n%2$s</string>
     <!-- Safety -->
     <string name="limitingcarbs">Ribojami angliavandeniai iki %1$d g dėl %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompa negali nustatyti laikinos bazės</string>
