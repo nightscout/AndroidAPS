@@ -45,7 +45,6 @@
     <string name="mute5min">Demp i 5 minutter</string>
     <string name="mute">Lyd av</string>
     <string name="success">Suksess</string>
-    <string name="advancedsettings_title">Avanserte innstillinger</string>
     <string name="extendedbolusdeliveryerror">Forlenget bolus feilet</string>
     <string name="aps_mode_title">APS modus</string>
     <string name="extended_bolus">Forlenget bolus</string>
@@ -571,4 +570,5 @@
         <item quantity="one">%1$d minutt</item>
         <item quantity="other">%1$d minutter</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>
