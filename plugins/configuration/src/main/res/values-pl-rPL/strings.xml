@@ -114,8 +114,6 @@
     <string name="maintenance_shortname">MAINT</string>
     <string name="description_maintenance">Dostarcza kilka funkcji używanych do konserwacji (np. wysyłanie logów, kasowanie logów).</string>
     <string name="database_cleanup">Czyszczenie bazy danych</string>
-    <string name="cleanup_db_confirm">Czy chcesz wyczyścić bazę danych?\nTa operacja usunie odnotowane zmiany i dane historyczne starsze niż 3 miesiące.</string>
-    <string name="cleared_entries">Usunięte wpisy</string>
     <string name="reset_db_confirm">Na pewno chcesz zresetować bazy danych?</string>
     <string name="maintenance_settings">Ustawienia Konserwacji</string>
     <string name="maintenance_email">Odbiorca E-maila</string>
