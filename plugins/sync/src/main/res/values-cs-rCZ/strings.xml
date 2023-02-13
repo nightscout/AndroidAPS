@@ -111,5 +111,9 @@
     <string name="xdrip_send_status_title">Odeslat stavový řádek do xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ není nainstalován</string>
     <string name="calibration_sent">Kalibrace odeslána do xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Poslat data o glykémii a ošetření do xDrip+. Musí být vybrán zdroj dat \"xDrip+ Sync Follower\" a přijímání dat musí být povoleno v Nastavení - Nastavení komunikace mezi aplikacemi - Přijímat Glykémie/Ošetření</string>
+    <string name="xdrip_local_broadcasts_title">Povolit odesílání do xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="ns_use_ws_title">Připojit k websocketům</string>
+    <string name="ns_use_ws_summary">Povolení znamená: rychlejší aktualizace, příjem alarmů a oznámení a vyšší spotřebu baterie podobnou v1. Všechny ostatní aplikace nahrávající do NS musí používat protokol v3.</string>
 </resources>
