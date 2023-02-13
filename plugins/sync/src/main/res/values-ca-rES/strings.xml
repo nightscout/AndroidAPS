@@ -19,7 +19,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Autodesplaçament</string>
     <string name="restart">Reiniciar</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">URL de Nightscout</string>
@@ -61,7 +60,6 @@
     <string name="ns_alarm_stale_data_value_label">Umbral dades antigues [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Umbral urgent dades antigues [min]</string>
     <string name="ns_log_app_started_event">Enregistrar l\'inici de l\'app a NS</string>
-    <string name="ns_local_broadcasts_title">Permetre transmisions locals.</string>
     <string name="copy_existing_values">Copiar configuració NS (si existeix)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">El vostre nom d\'usuari de Tidepool, normalment és un email</string>
