@@ -111,7 +111,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "3.1.0.3-dev-g"
+        version "3.1.0.3-dev-h"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
