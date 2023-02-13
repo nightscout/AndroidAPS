@@ -28,7 +28,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Autoscroll</string>
     <string name="restart">Herstart</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -75,8 +74,6 @@
     <string name="ns_alarm_stale_data_value_label">Oude gegevens sinds [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Alarm oude gegevens sinds [min]</string>
     <string name="ns_log_app_started_event">Log app start naar NS</string>
-    <string name="ns_local_broadcasts">Schakel lokaal data delen met andere apps (zoals xDrip+) in. Schakel dit niet in als er meer dan één installatie van AAPS of NSClient zijn geinstalleerd!</string>
-    <string name="ns_local_broadcasts_title">Activeer locaal delen.</string>
     <string name="copy_existing_values">NS instellingen kopiëren (indien aanwezig)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Uw Tidepool login gebruikersnaam, normaliter uw e-mailadres</string>
