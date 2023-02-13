@@ -25,7 +25,6 @@
     <string name="ns_client">NSCliente</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Rolar automático</string>
     <string name="restart">Reiniciar</string>
     <string name="ns_client_internal_title">NSCliente</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -69,8 +68,6 @@
     <string name="ns_alarm_stale_data_value_label">Tempo limite para dados obsoletos [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Tempo limite para Urgência por dados obsoletos [min]</string>
     <string name="ns_log_app_started_event">Registrar início do app no NS</string>
-    <string name="ns_local_broadcasts">Habilitar transmissão para outros aplicativos (ex.: xDrip+). Não habilite se você tem mais de uma instância de AAPS ou NSClient instalado.</string>
-    <string name="ns_local_broadcasts_title">Ativar partilha local.</string>
     <string name="copy_existing_values">Copiar configurações do NS (se existirem)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Nome de utilizador no Tidepool, normalmente seu endereço de e-mail</string>
