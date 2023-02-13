@@ -2,6 +2,7 @@ package info.nightscout.core.graph.data
 
 import android.content.Context
 import android.graphics.Color
+import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.profile.DefaultValueHelper
@@ -35,7 +36,7 @@ internal class InMemoryGlucoseValueDataPointTest {
     }
     @Test
     fun alphaShouldBeAddedForFilledGaps() {
-        val gv = InMemoryGlucoseValue(1000, 100.0)
+        val gv = InMemoryGlucoseValue(1000, 100.0, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN)
         val sut = InMemoryGlucoseValueDataPoint(gv, defaultValueHelper, profileFunction, rh)
 
         var alpha = sut.color(context).ushr(24)

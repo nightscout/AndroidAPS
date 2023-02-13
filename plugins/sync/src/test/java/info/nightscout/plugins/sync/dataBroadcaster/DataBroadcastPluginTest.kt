@@ -5,6 +5,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.BundleMock
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.androidaps.TestPumpPlugin
+import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.AutosensDataStore
@@ -49,7 +50,7 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
             loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider
         )
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
-        Mockito.`when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0))
+        Mockito.`when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN))
         Mockito.`when`(profileFunction.getProfile()).thenReturn(validProfile)
         Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         Mockito.`when`(profileFunction.getProfileName()).thenReturn("TestProfile")
