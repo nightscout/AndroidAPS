@@ -4,7 +4,6 @@
     <string name="ns_client_bg">BG NSClient</string>
     <string name="ns_client_bg_short">BG NS</string>
     <string name="description_source_ns_client">Scarica dati glicemia da Nightscout</string>
-    <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">Ricevi valori glicemia da xDrip+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
