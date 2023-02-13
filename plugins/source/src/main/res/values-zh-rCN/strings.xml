@@ -2,7 +2,6 @@
 <resources>
     <!-- Source -->
     <string name="description_source_ns_client">从 Nightscout 下载 血糖数据</string>
-    <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">从 xDrip+ 接收血糖值。</string>
     <string name="dexcom_app_patched">BYODA德康补丁版(构建你自己的德康应用Build Your Own Dexcom App)</string>
     <string name="dexcom_short">BYODA</string>
