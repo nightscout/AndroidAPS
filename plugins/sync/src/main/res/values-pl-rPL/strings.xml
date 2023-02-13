@@ -28,7 +28,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Autoprzewijanie</string>
     <string name="restart">Restart</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -75,8 +74,6 @@
     <string name="ns_alarm_stale_data_value_label">Próg nieaktualne dane [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Próg uwaga nieaktualne dane [min]</string>
     <string name="ns_log_app_started_event">Wyślij start app do NS</string>
-    <string name="ns_local_broadcasts">Włącz rozgłaszanie do innych aplikacji (takich jak xDrip+). Nie należy włączać, jeśli zainstalowana jest więcej niż jedna instancja AAPS lub AAPSClient!</string>
-    <string name="ns_local_broadcasts_title">Włącz transmisję lokalnie.</string>
     <string name="copy_existing_values">Czy skopiować ustawienia NS (jeśli istnieją)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Twoja nazwa użytkownika Tidepool, zwykle Twój adres e-mail</string>
