@@ -45,7 +45,6 @@
     <string name="mute5min">Silenciar por 5 minutos</string>
     <string name="mute">Silenciar</string>
     <string name="success">Exito</string>
-    <string name="advancedsettings_title">Ajustes avanzados</string>
     <string name="extendedbolusdeliveryerror">Error al emitir bolo extendido</string>
     <string name="aps_mode_title">Modo APS</string>
     <string name="extended_bolus">Bolo extendido</string>
@@ -571,4 +570,5 @@
         <item quantity="one">%1$d minuto</item>
         <item quantity="other">%1$d minutos</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>
