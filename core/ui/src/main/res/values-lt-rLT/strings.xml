@@ -45,7 +45,6 @@
     <string name="mute5min">Nutildyti 5 minutėms</string>
     <string name="mute">Nutildyti</string>
     <string name="success">Atlikta</string>
-    <string name="advancedsettings_title">Papildomi nustatymai</string>
     <string name="extendedbolusdeliveryerror">Ištęstinio boluso suleidimo klaida</string>
     <string name="aps_mode_title">DKS režimas</string>
     <string name="extended_bolus">Ištęstas bolusas</string>
@@ -576,4 +575,5 @@
         <item quantity="many">%1$d min.</item>
         <item quantity="other">%1$d min.</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>
