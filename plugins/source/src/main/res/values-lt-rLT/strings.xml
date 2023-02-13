@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
-    <string name="description_source_ns_client">Gauti kraujo gliukozės vertes iš Nightscout</string>
+    <string name="description_source_ns_client">Gauti glikemijos duomenis iš Nightscout</string>
     <string name="xdrip">xDrip+</string>
-    <string name="description_source_xdrip">Gauti kraujo gliukozės reikšmes iš xDrip+.</string>
+    <string name="description_source_xdrip">Gauti glikemijos duomenis iš xDrip+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
-    <string name="description_source_dexcom">Gauti kraujo gliukozės reikšmes iš \'Build Your Own Dexcom App\'.</string>
+    <string name="description_source_dexcom">Gauti glikemijos duomenis iš \'Build Your Own Dexcom App\'.</string>
     <string name="eversense">Eversense programėlė (modifikuota)</string>
-    <string name="description_source_eversense">Gauti kraujo gliukozės vertes iš modifikuotos Eversense programėlės.</string>
-    <string name="description_source_glimp">Gauti kraujo gliukozės vertes iš Glimp.</string>
-    <string name="description_source_mm640g">Gauti kraujo gliukozės vertes iš 600SeriesAndroidUploader.</string>
+    <string name="description_source_eversense">Gauti glikemijos duomenis iš modifikuotos Eversense programėlės.</string>
+    <string name="description_source_glimp">Gauti glikemijos duomenis iš Glimp.</string>
+    <string name="description_source_mm640g">Gauti glikemijos duomenis iš 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Gauti KG vertes iš Poctech programėlės</string>
     <string name="glunovo">Glunovo</string>

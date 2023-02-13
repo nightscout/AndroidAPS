@@ -21,7 +21,7 @@
     <string name="ns_announcements">Sukurkite pranešimus iš NS perspėjimų</string>
     <string name="ns_alarm_stale_data_value_label">Seni duomenys, riba [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Kritiškai seni duomenys, riba [min]</string>
-    <string name="sensitivity_warning">Įjungę Autosens funkciją nepamirškite įvedinėti visus valgomus angliavandenius. To nedarant, angliavandenių sukeliami gliukozės svyravimai bus klaidingai identifikuojami kaip jautrumo pasikeitimai!</string>
+    <string name="sensitivity_warning">Įjungę Autosens funkciją nepamirškite įvedinėti visus valgomus angliavandenius. To nedarant, angliavandenių sukeliami glikemijos svyravimai bus klaidingai identifikuojami kaip jautrumo pasikeitimai!</string>
     <string name="notloadedplugins">Ne visi profiliai įkelti!</string>
     <string name="valuesnotstored">Reikšmės neišsaugotos!</string>
     <string name="invalid">KLAIDA</string>

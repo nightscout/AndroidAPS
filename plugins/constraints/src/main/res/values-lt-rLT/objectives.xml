@@ -6,12 +6,12 @@
     <string name="objectivenotstarted">%1$d tikslas nepradėtas</string>
     <string name="objectivenotfinished">%1$d tikslas nepasiektas</string>
     <string name="objectives_0_objective">Nustatymai vizualizacijai, monitoringui ir bazės verčių bei koeficientų analizei</string>
-    <string name="objectives_0_gate">Įsitikinkite, kad gliukozės duomenys rodomi Nightscout, o pompos insulino duomenys yra įkelti</string>
+    <string name="objectives_0_gate">Įsitikinkite, kad glikemijos duomenys rodomi Nightscout ir pompos insulino duomenys yra įkelti</string>
     <string name="objectives_openloop_objective">Aktyvuojamas atviras ciklas</string>
     <string name="objectives_openloop_gate">Keletą dienų praleiskite atvirojo ciklo (Open Loop) režime, rankiniu būdu tvirtindami kuo daugiau siūlomų bazės pakeitimų. Nustatykite ir naudokite laikinus bei numatytuosiuos tikslus (pvz.: fiziniam aktyvumui ir hipo korekcijai angliavandeniais)</string>
     <string name="objectives_maxbasal_objective">Perpraskite atvirojo ciklo veikimą bei laikinos bazės rekomendacijas</string>
     <string name="objectives_maxbasal_gate">Remdamiesi šia patirtimi, nuspręskite, koks turėtų būti maksimalus bazės dydis bei įveskite jį pompoje ir programos Nustatymuose</string>
-    <string name="objectives_maxiobzero_objective">Pradėkite uždaro ciklo (Closed Loop) režimą su pompos stabdymu esant žemai gliukozei</string>
+    <string name="objectives_maxiobzero_objective">Pradėkite uždaro ciklo režimą su pompos stabdymu esant žemai glikemijai</string>
     <string name="objectives_maxiobzero_gate">Keletą dienų praleiskite uždaro ciklo režime su kuo mažiau hipoglikemijų, kai AIO = 0</string>
     <string name="objectives_maxiob_objective">Koreguokite savo uždarąjį ciklą po truputį didindami maks AIO ir mažindami tikslinę glikemijos reikšmę</string>
     <string name="objectives_maxiob_gate">Praleiskite keletą dienų ir bent vieną naktį be hipoglikemijos aliarmų</string>

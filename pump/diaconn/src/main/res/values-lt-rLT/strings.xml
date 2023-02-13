@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">Sustabdymo prie žemos glikemijos režimas išjungtas, komanda IŠJUNGTI atmesta.</string>
     <string name="diaconn_g8_errorcode_35">Laikinos bazės paleidimas atmestas, nes jau veikia nustatyta laikina bazė</string>
     <string name="diaconn_g8_errorcode_36">Laikinos bazės stabdymas atmestas, nes nėra nustatyta laikina bazė</string>
+    <string name="diaconn_g8_cloudsend_summary">Siųsti pompos įrašus į Diaconn Cloud.</string>
+    <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Sync</string>
 </resources>

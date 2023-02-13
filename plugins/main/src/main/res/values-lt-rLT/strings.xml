@@ -3,6 +3,7 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS komunikatorius</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Nuotolinis AndroidAPS valdymas naudojant SMS komandas.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">iš Authenticator programėlės: %1$s, po to - PIN</string>
     <string name="smscommunicator_otp_pin">Papildomas privalomas PIN kodas žymeklio gale</string>
     <string name="smscommunicator_otp_pin_summary">Papildomi skaitmenys, kuriuos reikia atsiminti ir pridėti kiekvieno sugeneruoto slaptažodžio pabaigoje</string>
@@ -18,9 +19,11 @@
     <string name="smscommunicator_otp_export_prompt">Ar tikrai norite nukopijuoti OTP slaptažodį į mainų sritį?\n\nTai gali būti reikalinga tik tuo atveju, jei Jūsų programai kyla problemų identifikuojant nuskaitant QR kodą. Arba norite jį įvesti rankiniu būdu ar sukonfigūruoti įrangos OTP prieigos raktą naudodami specialią programą.</string>
     <string name="smscommunicator_otp_export_successful">OTP kodas (Base32 formatas) eksportuotas ir nukopijuotas į mainų sritį. Įklijuokite jį į autentifikatorių arba OTP programą!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Įdiegti Authenticator</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Skanuokite kodą AndroidAPS OTP kodų nustatymui</string>
     <string name="smscommunicator_otp_step3_test_header">3. Patikrinti vienkartinį slaptažodį</string>
     <string name="smscommunicator_otp_reset_header">Atstatyti tapatybės nustatymą</string>
     <string name="smscommunicator_otp_install_info">Kiekviename telefone, palaikančiame RFC 6238 TOTP prieigos raktus, įdiekite autentifikavimo programą. Populiariausios nemokamos programos yra:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Jei iš naujo nustatysite autentifikavimo priemonę, visi esami autentifikatoriai taps negaliojantys. Turėsite juos vėl nustatyti!</string>
     <string name="sms_wrong_code">Neteisingas kodas. Komanda atšaukta.</string>
     <string name="sms_timeout_while_waiting">Baigėsi laikas kol buvo laukiama, kada baigsis ankstesnis susijungimas su pompa</string>
     <string name="smscommunicator_allowednumbers">Leidžiami telefono numeriai</string>
@@ -85,6 +88,9 @@
     <string name="smscommunicator_message_body">Neteisingas pranešimas</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Siųsti SMS, jei aptinkamas įrašas apie nepasiekiamą pompą</string>
     <string name="smscommunicator_pump_unreachable">Pranešti apie nepasiekiamą pompą</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Norėdami pakeisti ciklo režimą į Stabdymą esant žemai glikemijai, atsakykite kodu %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Norėdami pakeisti ciklo režimą į Uždarą ciklą, atsakykite kodu %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Dabartinis ciklo režimas: %1$s</string>
     <string name="wrong_format">Neteisingas formatas</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">Paskutinė KG:</string>
@@ -97,6 +103,7 @@
     <string name="sms_read_status_failed">Būsenos nuskaityti nepavyko</string>
     <string name="sms_profile_switch_created">Profilio perjungimas sukurtas</string>
     <string name="sms_wrong_tbr_duration">Laikinos bazės trukmė turi būti kartotinė %1$d minučių ir didesnė nei 0.</string>
+    <string name="a11y_otp_qr_code">QR kodas vienkartinio slaptažodžio nustatymui</string>
     <string name="xdrip_status_detailed_iob_title">Rodyti AIO detaliai</string>
     <string name="xdrip_status_detailed_iob_summary">Rodyti laikrodyje bazės ir bolusų AIO</string>
     <string name="disabled_loop">Ciklas išjungtas</string>
@@ -115,6 +122,11 @@
     <string name="subcategory">Subkategorija</string>
     <string name="calculator_label">Skaičiuotuvas</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Rinkitės tamsią, šviesią arba sistemos temą</string>
+    <string name="app_color_scheme">Spalvų schema</string>
+    <string name="dark_theme">Tamsioji tema</string>
+    <string name="light_theme">Šviesioji tema</string>
+    <string name="follow_system_theme">Naudoti prietaiso temą</string>
     <!-- Profile -->
     <string name="localprofile">Profilis</string>
     <string name="localprofile_shortname">VP</string>
@@ -133,6 +145,7 @@
     <string name="invalid_profile_not_accepted">Neteisingas profilis %1$s nepriimtas iš NS</string>
     <string name="view">Rodymas</string>
     <string name="errors">Klaidos</string>
+    <string name="select_profile">Pasirinkite profilį keitimui</string>
     <string name="profile_name">Profilio pavadinimas:</string>
     <string name="a11y_add_new_profile">pridėti naują profilį</string>
     <string name="a11y_clone_profile">klonuoti esamą profilį</string>
@@ -157,6 +170,8 @@
     <string name="cannula">Kaniulė</string>
     <string name="ebstopsloop">Ištęsto boluso funkcija sustabdys uždaro ciklo režimą ištęsto boluso veikimo metu. Ar tikrai norite patvirtinti savo pasirinkimą?</string>
     <string name="statuslights_cannula_age">kateterio amžius</string>
+    <string name="statuslights_patch_pump_age">Patch pompos laikas</string>
+    <string name="patch_pump">Patch pompa</string>
     <!-- Overview -->
     <string name="show_statuslights">Pradžios ekrane rodyti spalvotus indikatorius</string>
     <string name="statuslights_cage_warning">Kaniulės ribinio laiko įspėjimas [h]</string>
@@ -177,7 +192,9 @@
     <string name="a11y_graph">grafikas</string>
     <string name="a11y_insulin_label">insulinas</string>
     <string name="chart_menu">Grafiko meniu</string>
+    <string name="a11y_bg_quality">glikemijos duomenų kokybė</string>
     <string name="a11y_blood_glucose">kraujo glikemija</string>
+    <string name="a11y_bg_outdated">nebegalioja</string>
     <string name="set_basal_question">Patvirtinti naują laikiną bazę:</string>
     <string name="overview_cgm">NGJ</string>
     <string name="overview">Pradžios ekr.</string>
@@ -254,6 +271,7 @@
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">ĮRAŠ</string>
     <string name="sensitivity_shortname">JAUTR</string>
+    <string name="graph_scale">Grafiko mastelis</string>
     <string name="graph_menu_divider_header">Grafikas</string>
     <!-- Skins -->
     <string name="classic_description">Originali išvaizda</string>
@@ -266,8 +284,12 @@
     <string name="send_logfiles">Siųsti šios dienos žurnalo įrašus kūrėjams dabar. Netikėta situacija.</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">Stebėti ir kontroliuoti AndroidAPS naudojant WearOS laikrodį.</string>
+    <string name="no_watch_connected">(nėra prijungto laikrodžio)</string>
+    <string name="pump_status">Pompos statusas</string>
     <string name="loop_status">Ciklo būklė</string>
     <string name="wizard_result">Wizard asistento skaičiuotuvas:\nInsulinas: %1$.2fU\nAngliavandeniai: %2$dg</string>
+    <string name="quick_wizard_not_available">Pasirinktas greitasis patarėjas nebepasiekiamas, atnaujinkite valdiklį</string>
     <string name="quick_wizard_message">QuickWizard asistentas: %1$s\nInsulinas: %2$.2fU\nAngliavandeniai: %3$dg</string>
     <string name="wear_action_tempt_cancel_message">Atšaukti laikinus tikslus?</string>
     <string name="wear_action_tempt_unit_error">Laikrodyje ir telefone naudojami skirtingi vienetai!</string>
@@ -283,7 +305,7 @@
     <string name="wear_wizard_settings_summary">Skaičiavimai, įtraukti į Patarėjo rezultatą:</string>
     <string name="wear_display_settings">Ekrano nustatymai</string>
     <string name="wear_general_settings">Bendrieji nustatymai</string>
-    <string name="wear_detailed_delta_title">Rodyti gliukozės pokyčio detales</string>
+    <string name="wear_detailed_delta_title">Rodyti glikemijos pokyčius detaliai</string>
     <string name="wear_detailed_delta_summary">Rodyti pokytį su reikšme po kablelio</string>
     <string name="wear_notifysmb_title">Pranešti apie SMB</string>
     <string name="wear_notifysmb_summary">Rodyti SMB laikrodyje kaip standartinį bolusą.</string>
@@ -294,4 +316,20 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="old_data">SENI DUOMENYS</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">val</string>
+    <string name="tdd_line">%1$.2fv %1$.0f%</string>
+    <string name="no_profile">Profilis neįkeltas</string>
+    <string name="loop_status_closed">UŽDARAS CIKLAS</string>
+    <string name="loop_status_open">ATVIRAS CIKLAS</string>
+    <string name="loop_status_disabled">CIKLAS IŠJUNGTAS</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Paskutinis veiksmas</string>
+    <string name="last_enact">Paskutinis veiksmas</string>
+    <string name="today">Šiandien</string>
+    <string name="no_history">Nėra istorijos!</string>
+    <string name="units_short">v</string>
+    <string name="temp_target">Laikinas tikslas</string>
+    <string name="until">iki</string>
+    <string name="target">tikslas</string>
 </resources>

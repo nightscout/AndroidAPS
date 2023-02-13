@@ -20,6 +20,7 @@
     <string name="need_location_permission">Programai reikia vietos nustatymo leidimo, kad būtų galima naudoti Bluetooth ir WiFi</string>
     <string name="need_storage_permission">Aplikacijai reikia leidimo prieigai prie saugyklos, kad galėtų išsaugoti žurnalo įrašus ir eksportavimo nustatymus</string>
     <string name="askforpermission">Prašyti leidimo</string>
+    <string name="need_whitelisting">%1$s įtraukite į baterijos neoptimizavimo sąrašą tinkamam veikimui užtikrinti</string>
     <string name="storedsettingsfound">Rasti išsaugoti nustatymai</string>
     <string name="master_password_summary">Pagrindinis slaptažodis naudojamas atsarginiam šifravimui ir programos saugumo ignoravimui. Atsiminkite jį arba laikykite užsirašę saugioje vietoje.</string>
     <string name="current_master_password">Dabartinis pagrindinis slaptažodis</string>
@@ -33,7 +34,9 @@
     <string name="profile">Profilis</string>
     <string name="doprofileswitch">Profilio keitimas</string>
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
+    <string name="setupwizard_loop_description">Paspauskite mygtuką žemiau, norėdami leisti AndroidAPS patarti/atlikti bazės pakeitimus</string>
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Sukonfigūruokite RileyLink žemiau. Pasirinkę RileyLink, galėsite tęsti diegimą, kai tik RileyLink būsena bus „Prisijungta“. Tai gali užtrukti minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galite tęsti, kai tik inicijuojama pompa.\n</string>
@@ -48,11 +51,14 @@
     <string name="request">Užklausa</string>
     <string name="apsmode_title">DKS režimas</string>
     <string name="setupwizard_preferred_aps_mode">Pageidaujamas DKS režimas</string>
+    <string name="error_asking_for_permissions">Leidimo užklausos klaida</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfigūracija</string>
     <string name="configbuilder_pump">Pompa</string>
+    <string name="configbuilder_pump_description">Kokią pompą naudosite su AAPS?</string>
     <string name="configbuilder_profile">Profilis</string>
+    <string name="configbuilder_profile_description">Kurį profilį naudos AAPS?</string>
     <string name="configbuilder_aps">DKS</string>
     <string name="configbuilder_aps_description">Kuris DKS algoritmas turėtų koreguoti terapiją?</string>
     <string name="configbuilder_general">Bendrieji</string>
@@ -62,6 +68,8 @@
     <string name="configbuilder_loop">Ciklas</string>
     <string name="configbuilder_insulin_description">Kokio tipo insuliną naudojate?</string>
     <string name="configbuilder_bgsource">Glikemijos šaltinis</string>
+    <string name="configbuilder_bgsource_description">Iš kur AAPS gaus duomenis?</string>
+    <string name="configbuilder_smoothing">Glodinimas</string>
     <string name="configbuilder_sensitivity">Jautrumo nustatymas</string>
     <string name="configbuilder_sensitivity_description">Kurį jautrumo nustatymo algoritmą naudoti?</string>
     <string name="config_builder_shortname">KONF</string>
