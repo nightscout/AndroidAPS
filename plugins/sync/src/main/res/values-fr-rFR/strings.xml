@@ -28,7 +28,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL :</string>
-    <string name="ns_client_autoscroll">Défilement automatique</string>
     <string name="restart">Redémarrer</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">URL Nightscout</string>
@@ -75,8 +74,6 @@
     <string name="ns_alarm_stale_data_value_label">Seuil sans nouvelle donnée Gly [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Seuil d\'urgence pour les données obsolètes [min]</string>
     <string name="ns_log_app_started_event">Démarrage AAPS entré dans NS</string>
-    <string name="ns_local_broadcasts">Active les diffusions vers d\'autres applications (comme xDrip+). Ne pas activer si plusieurs instances d\'AAPS ou de AAPSClient sont installées !</string>
-    <string name="ns_local_broadcasts_title">Activer les transmissions locales</string>
     <string name="copy_existing_values">Copier les paramètres NS (s\'ils existent)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Votre nom d\'utilisateur Tidepool, normalement votre adresse e-mail</string>
