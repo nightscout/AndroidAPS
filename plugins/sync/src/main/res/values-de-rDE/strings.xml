@@ -28,7 +28,6 @@
     <string name="ns_client">Nightscout-Client</string>
     <string name="ns_client_short_name">NSCl</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Auto-Scrollen</string>
     <string name="restart">Neustart</string>
     <string name="ns_client_internal_title">Nightscout-Client</string>
     <string name="ns_client_url_title">Nightscout-URL</string>
@@ -75,8 +74,6 @@
     <string name="ns_alarm_stale_data_value_label">Veraltete Daten seit [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Stark veraltete Daten seit [min]</string>
     <string name="ns_log_app_started_event">Logge App-Start in Nightscout</string>
-    <string name="ns_local_broadcasts">Aktiviere die Datenübertragung zu anderen Apps (z.B. xDrip+). Nicht aktivieren, falls Du mehr als eine Instanz von AAPS oder NSClient installiert hast!</string>
-    <string name="ns_local_broadcasts_title">Aktiviere lokale Broadcasts</string>
     <string name="copy_existing_values">NS-Einstellungen kopieren (falls vorhanden)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Dein Tidepool-Login-Benutzername, normalerweise deine E-Mail-Adresse</string>
