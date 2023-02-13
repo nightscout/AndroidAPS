@@ -28,7 +28,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Automatinis slinkimas</string>
     <string name="restart">Paleisti iš naujo</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -73,8 +72,6 @@
     <string name="ns_alarm_stale_data_value_label">Seni duomenys, riba [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Kritiškai seni duomenys, riba [min]</string>
     <string name="ns_log_app_started_event">Siųsti programos paleidimo žymę į NS</string>
-    <string name="ns_local_broadcasts">Įgalinti perdavimą į kitas programas (pvz., xDrip+). Neįgalinkite, jei įdiegta daugiau nei vienas AAPS arba NSClient egzempliorius!</string>
-    <string name="ns_local_broadcasts_title">Įgalinti lokalų duomenų perdavimą.</string>
     <string name="copy_existing_values">Kopijuoti NS nustatymus (jei yra)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Jūsų Tidepool vartotojo vardas, įprastai tai Jūsų el. pašto adresas</string>
