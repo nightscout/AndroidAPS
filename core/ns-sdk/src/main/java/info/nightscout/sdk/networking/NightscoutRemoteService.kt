@@ -48,7 +48,7 @@ internal interface NightscoutRemoteService {
     suspend fun getSgvsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Int): Response<NSResponse<List<RemoteEntry>>>
 
     @POST("v3/entries")
-    suspend fun createEntry(@Body remoteEntry: RemoteEntry): Response<NSResponse<RemoteCreateUpdateResponse>>
+    suspend fun createEntry(@Body remoteEntry: RemoteEntry): Response<RemoteCreateUpdateResponse>
 
     @PATCH("v3/entries/{identifier}")
     suspend fun updateEntry(@Body remoteEntry: RemoteEntry, @Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
@@ -63,16 +63,16 @@ internal interface NightscoutRemoteService {
     suspend fun getTreatmentsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Int): Response<NSResponse<List<RemoteTreatment>>>
 
     @POST("v3/treatments")
-    suspend fun createTreatment(@Body remoteTreatment: RemoteTreatment): Response<NSResponse<RemoteCreateUpdateResponse>>
+    suspend fun createTreatment(@Body remoteTreatment: RemoteTreatment): Response<RemoteCreateUpdateResponse>
 
     @PATCH("v3/treatments/{identifier}")
-    suspend fun updateTreatment(@Body remoteTreatment: RemoteTreatment, @Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
+    suspend fun updateTreatment(@Body remoteTreatment: RemoteTreatment, @Path("identifier") identifier: String): Response<RemoteCreateUpdateResponse>
 
     @DELETE("v3/treatments/{identifier}")
-    suspend fun deleteTreatment(@Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
+    suspend fun deleteTreatment(@Path("identifier") identifier: String): Response<RemoteCreateUpdateResponse>
 
     @POST("v3/devicestatus")
-    suspend fun createDeviceStatus(@Body remoteDeviceStatus: RemoteDeviceStatus): Response<NSResponse<RemoteCreateUpdateResponse>>
+    suspend fun createDeviceStatus(@Body remoteDeviceStatus: RemoteDeviceStatus): Response<RemoteCreateUpdateResponse>
 
     @GET("v3/devicestatus/history/{from}")
     suspend fun getDeviceStatusModifiedSince(@Path("from") from: Long): Response<NSResponse<List<RemoteDeviceStatus>>>
@@ -85,13 +85,13 @@ internal interface NightscoutRemoteService {
         suspend fun getFoodsModifiedSince(@Path("from") from: Long, @Query("limit") limit: Int): Response<NSResponse<List<RemoteFood>>>
     */
     @POST("v3/food")
-    suspend fun createFood(@Body remoteFood: RemoteFood): Response<NSResponse<RemoteCreateUpdateResponse>>
+    suspend fun createFood(@Body remoteFood: RemoteFood): Response<RemoteCreateUpdateResponse>
 
     @PATCH("v3/food")
-    suspend fun updateFood(@Body remoteFood: RemoteFood, @Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
+    suspend fun updateFood(@Body remoteFood: RemoteFood, @Path("identifier") identifier: String): Response<RemoteCreateUpdateResponse>
 
     @DELETE("v3/food")
-    suspend fun deleteFood(@Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
+    suspend fun deleteFood(@Path("identifier") identifier: String): Response<RemoteCreateUpdateResponse>
 
     @GET("v3/profile/history/{from}")
     suspend fun getProfileModifiedSince(@Path("from") from: Long, @Query("limit") limit: Int = 10): Response<NSResponse<List<JSONObject>>>
@@ -100,8 +100,7 @@ internal interface NightscoutRemoteService {
     @GET("v3/profile?sort\$desc=date&limit=1")
     suspend fun getLastProfile(): Response<NSResponse<List<JSONObject>>>
 
-
     @POST("v3/profile")
-    suspend fun createProfile(@Body profile: JsonObject): Response<NSResponse<RemoteCreateUpdateResponse>>
+    suspend fun createProfile(@Body profile: JsonObject): Response<RemoteCreateUpdateResponse>
 
 }

@@ -23,7 +23,7 @@ internal interface TherapyEventDao : TraceableDao<TherapyEvent> {
     override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_THERAPY_EVENTS ORDER BY id DESC limit 1")
-    fun getLastId(): Maybe<Long>
+    fun getLastId(): Long?
 
     @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE type = :type AND timestamp = :timestamp AND referenceId IS NULL")
     fun findByTimestamp(type: TherapyEvent.Type, timestamp: Long): TherapyEvent?

@@ -10,7 +10,6 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -38,7 +37,6 @@ class RandomBgPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val sp: SP,
     private val repository: AppRepository,
-    private val xDripBroadcast: XDripBroadcast,
     private val virtualPump: VirtualPump,
     private val config: Config
 ) : PluginBase(
@@ -119,7 +117,6 @@ class RandomBgPlugin @Inject constructor(
         disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
             .subscribe({ savedValues ->
                            savedValues.inserted.forEach {
-                               xDripBroadcast.sendIn640gMode(it)
                                aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                            }
                        }, { aapsLogger.error(LTag.DATABASE, "Error while saving values from Random plugin", it) }

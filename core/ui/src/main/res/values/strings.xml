@@ -45,7 +45,7 @@
     <string name="mute5min">Mute for 5 minutes</string>
     <string name="mute">Mute</string>
     <string name="success">Success</string>
-    <string name="advancedsettings_title">Advanced Settings</string>
+    <string name="advanced_settings_title">Advanced Settings</string>
     <string name="extendedbolusdeliveryerror">Extended bolus delivery error</string>
     <string name="aps_mode_title">APS Mode</string>
     <string name="extended_bolus">Extended bolus</string>
@@ -619,5 +619,10 @@
         <item quantity="one">%1$d minute</item>
         <item quantity="other">%1$d minutes</item>
     </plurals>
+
+    <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Do you want to cleanup the database?\nIt will remove tracked changes and historic data older than 3 months.</string>
+    <string name="cleanup_db_confirm_sync">Do you want to cleanup the database?\nIt will remove tracked changes and historic data older than 3 months.\nDoing it will speedup full synchronization dramatically.</string>
+    <string name="cleared_entries">Cleared entries</string>
 
 </resources>

@@ -9,7 +9,7 @@
         app:initialExpandedChildrenCount="0">
 
         <info.nightscout.core.validators.ValidatingEditTextPreference
-            android:defaultValue="https://{YOUR-SITE}.azurewebsites.net/"
+            android:defaultValue="https://{YOUR-SITE}.azurewebsites.net"
             android:dialogMessage="@string/ns_client_url_dialog_message"
             android:inputType="textUri"
             android:key="@string/key_nsclientinternal_url"
@@ -24,7 +24,13 @@
             android:key="@string/key_ns_client_token"
             android:title="@string/nsclient_token_title"
             validate:minLength="17"
-            validate:testType="minLength"/>
+            validate:testType="minLength" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_ns_use_ws"
+            android:summary="@string/ns_use_ws_summary"
+            android:title="@string/ns_use_ws_title" />
 
         <androidx.preference.PreferenceScreen
             android:key="@string/ns_sync_options"
@@ -178,14 +184,13 @@
 
         <androidx.preference.PreferenceScreen
             android:key="nsclient_advanced"
-            android:title="@string/advancedsettings_title">
+            android:title="@string/advanced_settings_title">
 
             <SwitchPreference
                 android:defaultValue="true"
                 android:key="@string/key_ns_log_app_started_event"
                 android:title="@string/ns_log_app_started_event"
-                android:summary="@string/ns_log_app_started_event"
-                />
+                android:summary="@string/ns_log_app_started_event" />
 
             <SwitchPreference
                 android:defaultValue="true"
@@ -198,12 +203,6 @@
                 android:key="@string/key_ns_create_announcements_from_carbs_req"
                 android:summary="@string/ns_create_announcements_from_carbs_req_summary"
                 android:title="@string/ns_create_announcements_from_carbs_req_title" />
-
-            <SwitchPreference
-                android:defaultValue="false"
-                android:key="@string/key_nsclient_localbroadcasts"
-                android:summary="@string/ns_local_broadcasts"
-                android:title="@string/ns_local_broadcasts_title" />
 
             <SwitchPreference
                 android:defaultValue="false"

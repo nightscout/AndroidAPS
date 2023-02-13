@@ -12,7 +12,6 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -61,7 +60,6 @@ class EversensePlugin @Inject constructor(
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var xDripBroadcast: XDripBroadcast
 
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
@@ -114,7 +112,6 @@ class EversensePlugin @Inject constructor(
                         .blockingGet()
                         .also { savedValues ->
                             savedValues.inserted.forEach {
-                                xDripBroadcast.sendIn640gMode(it)
                                 aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                             }
                         }

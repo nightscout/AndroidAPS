@@ -8,6 +8,8 @@ interface Intents {
         // AAPS -> Xdrip
         const val ACTION_NEW_TREATMENT = "info.nightscout.client.NEW_TREATMENT"
         const val ACTION_NEW_PROFILE = "info.nightscout.client.NEW_PROFILE"
+        const val ACTION_NEW_DEVICE_STATUS = "info.nightscout.client.NEW_DEVICESTATUS"
+        const val ACTION_NEW_FOOD = "info.nightscout.client.NEW_FOOD"
         const val ACTION_NEW_SGV = "info.nightscout.client.NEW_SGV"
 
         const val EXTRA_STATUSLINE = "com.eveningoutpost.dexdrip.Extras.Statusline"

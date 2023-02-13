@@ -1,9 +1,6 @@
 package info.nightscout.plugins.profile
 
-import android.content.Context
 import androidx.fragment.app.FragmentActivity
-import androidx.work.WorkerParameters
-import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.core.extensions.blockFromJsonArray
@@ -11,12 +8,9 @@ import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.receivers.DataWorkerStorage
-import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
@@ -40,7 +34,6 @@ import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
@@ -235,7 +228,7 @@ class ProfilePlugin @Inject constructor(
     }
 
     @Synchronized
-    fun loadFromStore(store: ProfileStore) {
+    override fun loadFromStore(store: ProfileStore) {
         try {
             val newProfiles: ArrayList<ProfileSource.SingleProfile> = ArrayList()
             for (p in store.getProfileList()) {
@@ -429,41 +422,4 @@ class ProfilePlugin @Inject constructor(
         get() = rawProfile?.getDefaultProfile()?.let {
             DecimalFormatter.to2Decimal(ProfileSealed.Pure(it).percentageBasalSum()) + "U "
         } ?: "INVALID"
-
-    // cannot be inner class because of needed injection
-    class NSProfileWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : LoggingWorker(context, params, Dispatchers.Default) {
-
-        @Inject lateinit var injector: HasAndroidInjector
-        @Inject lateinit var rxBus: RxBus
-        @Inject lateinit var dateUtil: DateUtil
-        @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-        @Inject lateinit var sp: SP
-        @Inject lateinit var config: Config
-        @Inject lateinit var profilePlugin: ProfilePlugin
-        @Inject lateinit var xDripBroadcast: XDripBroadcast
-        @Inject lateinit var instantiator: Instantiator
-
-        override suspend fun doWorkAndLog(): Result {
-            val profileJson = dataWorkerStorage.pickupJSONObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
-                ?: return Result.failure(workDataOf("Error" to "missing input data"))
-            xDripBroadcast.sendProfile(profileJson)
-            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_store, true) || config.NSCLIENT) {
-                val store = instantiator.provideProfileStore(profileJson)
-                val createdAt = store.getStartDate()
-                val lastLocalChange = sp.getLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, 0)
-                aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")
-                @Suppress("LiftReturnOrAssignment")
-                if (createdAt > lastLocalChange || createdAt % 1000 == 0L) {// whole second means edited in NS
-                    profilePlugin.loadFromStore(store)
-                    aapsLogger.debug(LTag.PROFILE, "Received profileStore: $profileJson")
-                    return Result.success(workDataOf("Data" to profileJson.toString().substring(0..Integer.min(5000, profileJson.length()))))
-                } else
-                    return Result.success(workDataOf("Result" to "Unchanged. Ignoring"))
-            }
-            return Result.success(workDataOf("Result" to "Sync not enabled"))
-        }
-    }
 }

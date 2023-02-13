@@ -7,8 +7,9 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.NsClient
+import info.nightscout.plugins.sync.nsclientV3.DataSyncSelectorV3Impl
+import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -23,10 +24,11 @@ import org.mockito.Mockito.`when`
 internal class DataSyncWorkerTest : TestBase() {
 
     @Mock lateinit var fabricPrivacy: FabricPrivacy
-    @Mock lateinit var dataSyncSelector: DataSyncSelector
+    @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3Impl
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var nsClient: NsClient
     @Mock lateinit var rxBus: RxBus
+    @Mock lateinit var nsClientV3Plugin: NSClientV3Plugin
 
     private lateinit var sut: DataSyncWorker
 
@@ -35,9 +37,10 @@ internal class DataSyncWorkerTest : TestBase() {
             if (it is DataSyncWorker) {
                 it.aapsLogger = aapsLogger
                 it.fabricPrivacy = fabricPrivacy
-                it.dataSyncSelector = dataSyncSelector
+                it.dataSyncSelectorV3 = dataSyncSelectorV3
                 it.activePlugin = activePlugin
                 it.rxBus = rxBus
+                it.nsClientV3Plugin = nsClientV3Plugin
             }
         }
     }
@@ -54,11 +57,11 @@ internal class DataSyncWorkerTest : TestBase() {
         sut = TestListenableWorkerBuilder<DataSyncWorker>(context).build()
         `when`(nsClient.hasWritePermission).thenReturn(false)
         sut.doWorkAndLog()
-        Mockito.verify(dataSyncSelector, Mockito.times(0)).doUpload()
+        Mockito.verify(dataSyncSelectorV3, Mockito.times(0)).doUpload()
 
         `when`(nsClient.hasWritePermission).thenReturn(true)
         val result = sut.doWorkAndLog()
-        Mockito.verify(dataSyncSelector, Mockito.times(1)).doUpload()
+        Mockito.verify(dataSyncSelectorV3, Mockito.times(1)).doUpload()
         Assertions.assertTrue(result is Success)
     }
 }

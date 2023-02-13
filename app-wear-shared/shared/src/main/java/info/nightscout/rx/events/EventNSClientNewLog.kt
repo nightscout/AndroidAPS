@@ -15,7 +15,6 @@ class EventNSClientNewLog(val action: String, val logText: String?) : Event() {
         stringBuilder.append(action)
         stringBuilder.append("</b> ")
         stringBuilder.append(logText)
-        stringBuilder.append("<br>")
         return stringBuilder
     }
 }

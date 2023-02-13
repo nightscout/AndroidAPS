@@ -4,7 +4,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSAlarm
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.plugins.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -21,7 +20,6 @@ class NotificationWithAction constructor(
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var activePlugin: ActivePlugin
 
     init {
@@ -66,7 +64,7 @@ class NotificationWithAction constructor(
             aapsLogger.debug(LTag.NOTIFICATION, "Notification text is: $text")
             val msToSnooze = sp.getInt(info.nightscout.core.utils.R.string.key_ns_alarm_stale_data_value, 15) * 60 * 1000L
             aapsLogger.debug(LTag.NOTIFICATION, "snooze nsalarm_staledatavalue in minutes is ${T.msecs(msToSnooze).mins()} currentTimeMillis is: ${System.currentTimeMillis()}")
-            sp.putLong(info.nightscout.core.utils.R.string.key_snoozed_to, System.currentTimeMillis() + msToSnooze)
+            sp.putLong(rh.gs(info.nightscout.core.utils.R.string.key_snoozed_to) + nsAlarm.level(), System.currentTimeMillis() + msToSnooze)
         }
     }
 

@@ -24,7 +24,7 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_TEMPORARY_BASALS ORDER BY id DESC limit 1")
-    fun getLastId(): Maybe<Long>
+    fun getLastId(): Long?
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE temporaryId = :temporaryId")
     fun findByTempId(temporaryId: Long): TemporaryBasal?

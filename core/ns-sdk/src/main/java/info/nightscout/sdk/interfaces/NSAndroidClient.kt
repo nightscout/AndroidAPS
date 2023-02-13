@@ -25,7 +25,7 @@ interface NSAndroidClient {
     suspend fun getSgvs(): ReadResponse<List<NSSgvV3>>
     suspend fun getSgvsModifiedSince(from: Long, limit: Int): ReadResponse<List<NSSgvV3>>
     suspend fun getSgvsNewerThan(from: Long, limit: Int): ReadResponse<List<NSSgvV3>>
-    suspend fun createSvg(nsSgvV3: NSSgvV3): CreateUpdateResponse
+    suspend fun createSgv(nsSgvV3: NSSgvV3): CreateUpdateResponse
     suspend fun updateSvg(nsSgvV3: NSSgvV3): CreateUpdateResponse
 
     suspend fun getTreatmentsNewerThan(createdAt: String, limit: Int): ReadResponse<List<NSTreatment>>

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import info.nightscout.core.utils.worker.LoggingWorker
+import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
@@ -26,11 +27,13 @@ class LoadStatusWorker(
             aapsLogger.debug(LTag.NSCLIENT, "STATUS: $status")
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
             nsClientV3Plugin.lastOperationError = error.localizedMessage
+            rxBus.send(EventNSClientUpdateGuiStatus())
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
         nsClientV3Plugin.lastOperationError = null
+        rxBus.send(EventNSClientUpdateGuiStatus())
         return Result.success()
     }
 }

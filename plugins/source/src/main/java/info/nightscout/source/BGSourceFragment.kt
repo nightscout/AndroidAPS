@@ -35,6 +35,7 @@ import info.nightscout.rx.events.EventNewBG
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibilityKeepSpace
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
@@ -135,7 +136,7 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
 
         override fun onBindViewHolder(holder: GlucoseValuesViewHolder, position: Int) {
             val glucoseValue = glucoseValues[position]
-            holder.binding.ns.visibility = (glucoseValue.interfaceIDs.nightscoutId != null).toVisibility()
+            holder.binding.ns.visibility = (glucoseValue.interfaceIDs.nightscoutId != null).toVisibilityKeepSpace()
             holder.binding.invalid.visibility = (!glucoseValue.isValid).toVisibility()
             val newDay = position == 0 || !dateUtil.isSameDay(glucoseValue.timestamp, glucoseValues[position - 1].timestamp)
             holder.binding.date.visibility = newDay.toVisibility()
@@ -201,7 +202,7 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
                         R.string.tomato             -> Sources.Tomato
                         R.string.glunovo            -> Sources.Glunovo
                         R.string.intelligo          -> Sources.Intelligo
-                        R.string.xdrip              -> Sources.Xdrip
+                        R.string.source_xdrip       -> Sources.Xdrip
                         R.string.aidex              -> Sources.Aidex
                         else                        -> Sources.Unknown
                     }

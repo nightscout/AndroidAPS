@@ -1,9 +1,6 @@
 package info.nightscout.plugins.sync.nsShared
 
-import android.content.Context
 import android.os.SystemClock
-import androidx.work.WorkerParameters
-import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
@@ -48,7 +45,6 @@ import info.nightscout.database.impl.transactions.UpdateNsIdTherapyEventTransact
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.StoreDataForDb
@@ -61,7 +57,6 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.Executors
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
@@ -78,7 +73,6 @@ class StoreDataForDbImpl @Inject constructor(
     private val dateUtil: DateUtil,
     private val config: Config,
     private val nsClientSource: NSClientSource,
-    private val xDripBroadcast: XDripBroadcast,
     private val virtualPump: VirtualPump,
     private val uiInteraction: UiInteraction
 ) : StoreDataForDb {
@@ -121,39 +115,11 @@ class StoreDataForDbImpl @Inject constructor(
 
     private val pause = 1000L // to slow down db operations
 
-    class StoreBgWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : LoggingWorker(context, params, Dispatchers.Default) {
-
-        @Inject lateinit var storeDataForDb: StoreDataForDb
-
-        override suspend fun doWorkAndLog(): Result {
-            storeDataForDb.storeGlucoseValuesToDb()
-            return Result.success()
-        }
-    }
-
-    class StoreFoodWorker(
-        context: Context,
-        params: WorkerParameters
-    ) : LoggingWorker(context, params, Dispatchers.Default) {
-
-        @Inject lateinit var storeDataForDb: StoreDataForDb
-
-        override suspend fun doWorkAndLog(): Result {
-            storeDataForDb.storeFoodsToDb()
-            return Result.success()
-        }
-    }
-
     fun <T> HashMap<T, Long>.inc(key: T) =
         if (containsKey(key)) merge(key, 1, Long::plus)
         else put(key, 1)
 
     override fun storeGlucoseValuesToDb() {
-        rxBus.send(EventNSClientNewLog("PROCESSING BG", ""))
-
         if (glucoseValues.isNotEmpty())
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
@@ -163,19 +129,16 @@ class StoreDataForDbImpl @Inject constructor(
                 .also { result ->
                     glucoseValues.clear()
                     result.updated.forEach {
-                        xDripBroadcast.sendIn640gMode(it)
                         nsClientSource.detectSource(it)
                         aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         updated.inc(GlucoseValue::class.java.simpleName)
                     }
                     result.inserted.forEach {
-                        xDripBroadcast.sendIn640gMode(it)
                         nsClientSource.detectSource(it)
                         aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                         inserted.inc(GlucoseValue::class.java.simpleName)
                     }
                     result.updatedNsId.forEach {
-                        xDripBroadcast.sendIn640gMode(it)
                         nsClientSource.detectSource(it)
                         aapsLogger.debug(LTag.DATABASE, "Updated nsId bg $it")
                         nsIdUpdated.inc(GlucoseValue::class.java.simpleName)
@@ -184,12 +147,10 @@ class StoreDataForDbImpl @Inject constructor(
 
         sendLog("GlucoseValue", GlucoseValue::class.java.simpleName)
         SystemClock.sleep(pause)
-        rxBus.send(EventNSClientNewLog("DONE BG", ""))
+        rxBus.send(EventNSClientNewLog("● DONE PROCESSING BG", ""))
     }
 
     override fun storeFoodsToDb() {
-        rxBus.send(EventNSClientNewLog("PROCESSING FOOD", ""))
-
         if (foods.isNotEmpty())
             repository.runTransactionForResult(SyncNsFoodTransaction(foods))
                 .doOnError {
@@ -214,12 +175,10 @@ class StoreDataForDbImpl @Inject constructor(
 
         sendLog("Food", Food::class.java.simpleName)
         SystemClock.sleep(pause)
-        rxBus.send(EventNSClientNewLog("DONE FOOD", ""))
+        rxBus.send(EventNSClientNewLog("● DONE PROCESSING FOOD", ""))
     }
 
     override fun storeTreatmentsToDb() {
-        rxBus.send(EventNSClientNewLog("PROCESSING TR", ""))
-
         if (boluses.isNotEmpty())
             repository.runTransactionForResult(SyncNsBolusTransaction(boluses))
                 .doOnError {
@@ -796,11 +755,13 @@ class StoreDataForDbImpl @Inject constructor(
         SystemClock.sleep(pause)
 
         uel.log(userEntries)
-        rxBus.send(EventNSClientNewLog("DONE TR", ""))
+        rxBus.send(EventNSClientNewLog("● DONE PROCESSING TR", ""))
     }
 
     private val eventWorker = Executors.newSingleThreadScheduledExecutor()
     private var scheduledEventPost: ScheduledFuture<*>? = null
+
+    @Synchronized
     override fun scheduleNsIdUpdate() {
         class PostRunnable : Runnable {
 
@@ -816,7 +777,8 @@ class StoreDataForDbImpl @Inject constructor(
         scheduledEventPost = eventWorker.schedule(task, 10, TimeUnit.SECONDS)
     }
 
-    private fun updateNsIds() {
+    @Synchronized
+    override fun updateNsIds() {
         repository.runTransactionForResult(UpdateNsIdTemporaryTargetTransaction(nsIdTemporaryTargets))
             .doOnError { error ->
                 aapsLogger.error(LTag.DATABASE, "Updated nsId of TemporaryTarget failed", error)
@@ -996,32 +958,32 @@ class StoreDataForDbImpl @Inject constructor(
         sendLog("TherapyEvent", TherapyEvent::class.java.simpleName)
         sendLog("OfflineEvent", OfflineEvent::class.java.simpleName)
         sendLog("ExtendedBolus", ExtendedBolus::class.java.simpleName)
-        rxBus.send(EventNSClientNewLog("DONE NSIDs", ""))
+        rxBus.send(EventNSClientNewLog("● DONE NSIDs", ""))
     }
 
     private fun sendLog(item: String, clazz: String) {
         inserted[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("INSERT", "$item $it"))
+            rxBus.send(EventNSClientNewLog("◄ INSERT", "$item $it"))
         }
         inserted.remove(clazz)
         updated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("UPDATE", "$item $it"))
+            rxBus.send(EventNSClientNewLog("◄ UPDATE", "$item $it"))
         }
         updated.remove(clazz)
         invalidated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("INVALIDATE", "$item $it"))
+            rxBus.send(EventNSClientNewLog("◄ INVALIDATE", "$item $it"))
         }
         invalidated.remove(clazz)
         nsIdUpdated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("NS_ID", "$item $it"))
+            rxBus.send(EventNSClientNewLog("◄ NS_ID", "$item $it"))
         }
         nsIdUpdated.remove(clazz)
         durationUpdated[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("DURATION", "$item $it"))
+            rxBus.send(EventNSClientNewLog("◄ DURATION", "$item $it"))
         }
         durationUpdated.remove(clazz)
         ended[clazz]?.let {
-            rxBus.send(EventNSClientNewLog("CUT", "$item $it"))
+            rxBus.send(EventNSClientNewLog("◄ CUT", "$item $it"))
         }
         ended.remove(clazz)
     }

@@ -1,5 +1,6 @@
 package info.nightscout.sdk.mapper
 
+import com.google.gson.Gson
 import info.nightscout.sdk.localmodel.entry.NsUnits
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSBolus
@@ -25,6 +26,9 @@ import java.util.concurrent.TimeUnit
  */
 fun NSTreatment.convertToRemoteAndBack(): NSTreatment? =
     toRemoteTreatment()?.toTreatment()
+
+fun String.toNSTreatment(): NSTreatment? =
+    Gson().fromJson(this, RemoteTreatment::class.java).toTreatment()
 
 internal fun RemoteTreatment.toTreatment(): NSTreatment? {
     val treatmentTimestamp = timestamp()

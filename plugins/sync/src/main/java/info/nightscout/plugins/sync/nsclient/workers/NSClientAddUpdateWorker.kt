@@ -44,7 +44,6 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var xDripBroadcast: XDripBroadcast
     @Inject lateinit var storeDataForDb: StoreDataForDb
 
     override suspend fun doWorkAndLog(): Result {
@@ -164,7 +163,6 @@ class NSClientAddUpdateWorker(
         }
         storeDataForDb.storeTreatmentsToDb()
         activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
-        xDripBroadcast.sendTreatments(treatments)
         return ret
     }
 }

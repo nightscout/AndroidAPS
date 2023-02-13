@@ -20,7 +20,6 @@ import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.impl.transactions.InvalidateGlucoseValueTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -91,7 +90,6 @@ class DexcomPlugin @Inject constructor(
         @Inject lateinit var sp: SP
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-        @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var uel: UserEntryLogger
 
@@ -185,11 +183,9 @@ class DexcomPlugin @Inject constructor(
                                     }
                                 }
                             }
-                            xDripBroadcast.sendIn640gMode(result.inserted[i])
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg ${result.inserted[i]}")
                         }
                         result.updated.forEach {
-                            xDripBroadcast.sendIn640gMode(it)
                             aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         }
                         result.sensorInsertionsInserted.forEach {

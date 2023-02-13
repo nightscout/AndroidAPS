@@ -1,16 +1,13 @@
 package info.nightscout.plugins.sync.nsclientV3.workers
 
 import android.content.Context
-import androidx.work.ExistingWorkPolicy
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.interfaces.workflow.WorkerClasses
+import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
@@ -32,7 +29,7 @@ class LoadProfileStoreWorker(
     @Inject lateinit var context: Context
     @Inject lateinit var nsClientV3Plugin: NSClientV3Plugin
     @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var workerClasses: WorkerClasses
+    @Inject lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
 
     override suspend fun doWorkAndLog(): Result {
         val nsAndroidClient = nsClientV3Plugin.nsAndroidClient ?: return Result.failure(workDataOf("Error" to "AndroidClient is null"))
@@ -58,40 +55,21 @@ class LoadProfileStoreWorker(
                     { nsClientV3Plugin.lastLoadedSrvModified.collections.profile = dateUtil.now() }
                     nsClientV3Plugin.storeLastLoadedSrvModified()
                     aapsLogger.debug(LTag.NSCLIENT, "PROFILE: $profile")
-                    rxBus.send(EventNSClientNewLog("RCV", "1 PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                    WorkManager.getInstance(context)
-                        .beginUniqueWork(
-                            NSClientV3Plugin.JOB_NAME,
-                            ExistingWorkPolicy.APPEND_OR_REPLACE,
-                            OneTimeWorkRequest.Builder((workerClasses.nsProfileWorker))
-                                .setInputData(dataWorkerStorage.storeInputData(profile))
-                                .build()
-                        ).then(OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build())
-                        .enqueue()
+                    rxBus.send(EventNSClientNewLog("◄ RCV", "1 PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
+                    nsIncomingDataProcessor.processProfile(profile)
                 } else {
-                    rxBus.send(EventNSClientNewLog("RCV END", "No new PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                    WorkManager.getInstance(context)
-                        .enqueueUniqueWork(
-                            NSClientV3Plugin.JOB_NAME,
-                            ExistingWorkPolicy.APPEND_OR_REPLACE,
-                            OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build()
-                        )
+                    rxBus.send(EventNSClientNewLog("◄ RCV PROFILE END", "No new data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
                 }
             } else {
-                rxBus.send(EventNSClientNewLog("RCV END", "No PROFILE from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                WorkManager.getInstance(context)
-                    .enqueueUniqueWork(
-                        NSClientV3Plugin.JOB_NAME,
-                        ExistingWorkPolicy.APPEND_OR_REPLACE,
-                        OneTimeWorkRequest.Builder(LoadDeviceStatusWorker::class.java).build()
-                    )
+                rxBus.send(EventNSClientNewLog("◄ RCV PROFILE END", "No data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
             }
         } catch (error: Exception) {
             aapsLogger.error("Error: ", error)
-            rxBus.send(EventNSClientNewLog("ERROR", error.localizedMessage))
+            rxBus.send(EventNSClientNewLog("◄ ERROR", error.localizedMessage))
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
 
         return Result.success()
     }
+
 }

@@ -9,7 +9,6 @@ import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -50,7 +49,6 @@ class TomatoPlugin @Inject constructor(
         @Inject lateinit var tomatoPlugin: TomatoPlugin
         @Inject lateinit var sp: SP
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var xDripBroadcast: XDripBroadcast
 
         @Suppress("SpellCheckingInspection")
         override suspend fun doWorkAndLog(): Result {
@@ -74,7 +72,6 @@ class TomatoPlugin @Inject constructor(
                 .blockingGet()
                 .also { savedValues ->
                     savedValues.inserted.forEach {
-                        xDripBroadcast.sendIn640gMode(it)
                         aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                     }
                 }

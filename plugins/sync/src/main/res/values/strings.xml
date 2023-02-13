@@ -11,7 +11,7 @@
     <string name="key_ns_device_status_last_synced_id" translatable="false">ns_device_status_last_synced_id</string>
     <string name="key_ns_temporary_basal_last_synced_id" translatable="false">ns_temporary_basal_last_synced_id</string>
     <string name="key_ns_extended_bolus_last_synced_id" translatable="false">ns_extended_bolus_last_synced_id</string>
-    <string name="key_ns_profile_switch_last_synced_id" translatable="false">profile_switch_last_synced_id</string>
+    <string name="key_ns_profile_switch_last_synced_id" translatable="false">ns_profile_switch_last_synced_id</string>
     <string name="key_ns_effective_profile_switch_last_synced_id" translatable="false">ns_effective_profile_switch_last_synced_id</string>
     <string name="key_ns_offline_event_last_synced_id" translatable="false">ns_offline_event_last_synced_id</string>
     <string name="key_ns_profile_store_last_synced_timestamp" translatable="false">ns_profile_store_last_synced_timestamp</string>
@@ -47,8 +47,7 @@
     <string name="ns_malfunction">NSClient malfunction. Consider NS and NSClient restart.</string>
 
     <!-- NSClient -->
-    <string name="key_ns_client_autoscroll" translatable="false">ns_client_autoscroll</string>
-    <string name="key_ns_client_paused" translatable="false">ns_client_paused</string>
+    <string name="key_ns_paused" translatable="false">ns_client_paused</string>
     <string name="key_ns_log_app_started_event" translatable="false">ns_log_app_started_event</string>
 
     <string name="no_write_permission">NSCLIENT has no write permission. Wrong API secret?</string>
@@ -57,7 +56,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Autoscroll</string>
     <string name="restart">Restart</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -106,8 +104,6 @@
     <string name="ns_alarm_stale_data_value_label">Stale data threshold [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Urgent stale data threshold [min]</string>
     <string name="ns_log_app_started_event">Log app start to NS</string>
-    <string name="ns_local_broadcasts">Enable broadcasts to other apps (like xDrip+). Do not enable if you have more than one instance of AAPS or AAPSClient installed!</string>
-    <string name="ns_local_broadcasts_title">Enable local Broadcasts.</string>
     <string name="copy_existing_values">Copy NS settings (if exists)?</string>
 
     <!-- Tidepool -->
@@ -115,14 +111,7 @@
     <string name="key_tidepool_password" translatable="false">tidepool_password</string>
     <string name="key_tidepool_dev_servers" translatable="false">tidepool_dev_servers</string>
     <string name="key_tidepool_test_login" translatable="false">tidepool_test_login</string>
-    <string name="key_tidepool_only_while_charging" translatable="false">tidepool_only_while_charging</string>
-    <string name="key_tidepool_only_while_unmetered" translatable="false">tidepool_only_while_unmetered</string>
     <string name="key_tidepool_last_end" translatable="false">tidepool_last_end</string>
-    <string name="key_tidepool_upload_profile" translatable="false">tidepool_upload_profile</string>
-    <string name="key_tidepool_upload_tbr" translatable="false">tidepool_upload_tbr</string>
-    <string name="key_tidepool_upload_cgm" translatable="false">tidepool_upload_cgm</string>
-    <string name="key_tidepool_upload_bolus" translatable="false">tidepool_upload_bolus</string>
-    <string name="key_tidepool_upload_bg" translatable="false">tidepool_upload_bg</string>
 
     <string name="summary_tidepool_username">Your Tidepool login user name, normally your email address</string>
     <string name="title_tidepool_username">Login User Name</string>
@@ -168,8 +157,28 @@
     <string name="xdrip_not_installed">xDrip+ not installed</string>
     <string name="calibration_sent">Calibration sent to xDrip+</string>
 
+    <string name="key_xdrip_temporary_target_last_synced_id" translatable="false">xdrip_temporary_target_last_sync</string>
+    <string name="key_xdrip_glucose_value_last_synced_id" translatable="false">xdrip_glucose_value_last_sync</string>
+    <string name="key_xdrip_food_last_synced_id" translatable="false">xdrip_food_last_sync</string>
+    <string name="key_xdrip_therapy_event_last_synced_id" translatable="false">xdrip_therapy_event_last_sync</string>
+    <string name="key_xdrip_bolus_calculator_result_last_synced_id" translatable="false">xdrip_bolus_calculator_result_last_synced_id</string>
+    <string name="key_xdrip_carbs_last_synced_id" translatable="false">xdrip_carbs_last_synced_id</string>
+    <string name="key_xdrip_bolus_last_synced_id" translatable="false">xdrip_bolus_last_synced_id</string>
+    <string name="key_xdrip_device_status_last_synced_id" translatable="false">xdrip_device_status_last_synced_id</string>
+    <string name="key_xdrip_temporary_basal_last_synced_id" translatable="false">xdrip_temporary_basal_last_synced_id</string>
+    <string name="key_xdrip_extended_bolus_last_synced_id" translatable="false">xdrip_extended_bolus_last_synced_id</string>
+    <string name="key_xdrip_profile_switch_last_synced_id" translatable="false">profile_switch_last_synced_id</string>
+    <string name="key_xdrip_effective_profile_switch_last_synced_id" translatable="false">xdrip_effective_profile_switch_last_synced_id</string>
+    <string name="key_xdrip_offline_event_last_synced_id" translatable="false">xdrip_offline_event_last_synced_id</string>
+    <string name="key_xdrip_profile_store_last_synced_timestamp" translatable="false">xdrip_profile_store_last_synced_timestamp</string>
+
+    <string name="xdrip_local_broadcasts_summary">Send glucose and treatments data to xDrip+. Data Source \"xDrip+ Sync Follower\" must be selected and accepting of data must be enabled in Settings - Inter-app settings - Accept Glucose/Treatments</string>
+    <string name="xdrip_local_broadcasts_title">Enable broadcasts to xDrip+.</string>
+
 
     <!--    DataBroadcast-->
     <string name="data_broadcaster" translatable="false">Data Broadcaster</string>
+    <string name="ns_use_ws_title">Connect to websockets</string>
+    <string name="ns_use_ws_summary">Enabling means: faster updates, receiving alarms and announcements and higher battery consumption similar to v1. All other uploaderds to NS must use v3 protocol.</string>
 
 </resources>
