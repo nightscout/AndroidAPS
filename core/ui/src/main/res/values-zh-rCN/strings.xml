@@ -43,7 +43,6 @@
     <string name="mute5min">静音 5 分钟</string>
     <string name="mute">静音</string>
     <string name="success">成功</string>
-    <string name="advancedsettings_title">高级设置</string>
     <string name="extendedbolusdeliveryerror">扩展大剂量(方波) 输注错误</string>
     <string name="extended_bolus">扩展大剂量(方波)</string>
     <string name="paused">已暂停</string>
@@ -529,4 +528,5 @@
     <plurals name="minutes">
         <item quantity="other">%1$d 分钟</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>
