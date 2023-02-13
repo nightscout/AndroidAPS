@@ -44,7 +44,6 @@
     <string name="mute5min">5분 동안 음소거</string>
     <string name="mute">음소거</string>
     <string name="success">성공</string>
-    <string name="advancedsettings_title">고급 설정</string>
     <string name="extendedbolusdeliveryerror">확장Bolus 주입 에러</string>
     <string name="extended_bolus">확장 Bolus</string>
     <string name="paused">일시중지</string>
@@ -418,4 +417,5 @@
     <plurals name="minutes">
         <item quantity="other">%1$d 분</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>
