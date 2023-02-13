@@ -13,7 +13,6 @@
     <string name="status">Állapot:</string>
     <string name="clear_log">Napló törlése</string>
     <string name="ns_receive_cgm">CGM adatok fogad/visszatölt</string>
-    <string name="ns_local_broadcasts_title">Helyi adatszórás bekapcsolása.</string>
     <!-- Tidepool -->
     <string name="tidepool">Tidepool</string>
     <string name="tidepool_shortname">TDP</string>
