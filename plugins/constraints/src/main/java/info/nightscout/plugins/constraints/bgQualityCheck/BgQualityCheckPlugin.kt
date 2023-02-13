@@ -11,7 +11,6 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.source.DexcomBoyda
 import info.nightscout.plugins.constraints.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -78,6 +77,7 @@ class BgQualityCheckPlugin @Inject constructor(
 
     fun processBgData() {
         val readings = iobCobCalculator.ads.getBgReadingsDataTableCopy()
+        val lastBg = iobCobCalculator.ads.lastBg()
         for (i in readings.indices)
         // Deltas are calculated from last ~50 min. Detect RED state only on this interval
             if (i < min(readings.size - 2, 10))
@@ -87,7 +87,7 @@ class BgQualityCheckPlugin @Inject constructor(
                     message = rh.gs(R.string.bg_too_close, dateUtil.dateAndTimeAndSecondsString(readings[i].timestamp), dateUtil.dateAndTimeAndSecondsString(readings[i + 1].timestamp))
                     return
                 }
-        if (activePlugin.activeBgSource !is DexcomBoyda && isBgFlatForInterval(staleBgCheckPeriodMinutes, staleBgMaxDeltaMgdl) == true) {
+        if (lastBg?.sourceSensor?.isLibre() == true && isBgFlatForInterval(staleBgCheckPeriodMinutes, staleBgMaxDeltaMgdl) == true) {
             state = BgQualityCheck.State.FLAT
             message = rh.gs(R.string.a11y_bg_quality_flat)
         } else if (iobCobCalculator.ads.lastUsed5minCalculation == true) {

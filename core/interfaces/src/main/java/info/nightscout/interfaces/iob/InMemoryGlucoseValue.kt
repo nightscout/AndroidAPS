@@ -23,10 +23,14 @@ class InMemoryGlucoseValue constructor(
      * if true value is not corresponding to received value,
      * but it was recalculated to fill gap between BGs
      */
-    var filledGap: Boolean = false
+    var filledGap: Boolean = false,
+    /**
+     * Taken from GlucoseValue
+     */
+    var sourceSensor: GlucoseValue.SourceSensor
 ) {
 
-    constructor(gv: GlucoseValue) : this(gv.timestamp, gv.value, gv.trendArrow)
+    constructor(gv: GlucoseValue) : this(timestamp = gv.timestamp, value = gv.value, trendArrow = gv.trendArrow, sourceSensor = gv.sourceSensor)
 
     /**
      * Provide smoothed value if available,

@@ -32,12 +32,12 @@ class GlimpPlugin @Inject constructor(
     private val sp: SP
 ) : PluginBase(
     PluginDescription()
-    .mainType(PluginType.BGSOURCE)
-    .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(info.nightscout.core.main.R.drawable.ic_glimp)
-    .pluginName(R.string.glimp)
-    .preferencesId(R.xml.pref_bgsource)
-    .description(R.string.description_source_glimp),
+        .mainType(PluginType.BGSOURCE)
+        .fragmentClass(BGSourceFragment::class.java.name)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_glimp)
+        .pluginName(R.string.glimp)
+        .preferencesId(R.xml.pref_bgsource)
+        .description(R.string.description_source_glimp),
     aapsLogger, rh, injector
 ), BgSource {
 
@@ -64,7 +64,7 @@ class GlimpPlugin @Inject constructor(
                 raw = inputData.getDouble("mySGV", 0.0),
                 noise = null,
                 trendArrow = GlucoseValue.TrendArrow.fromString(inputData.getString("myTrend")),
-                sourceSensor = GlucoseValue.SourceSensor.GLIMP
+                sourceSensor = GlucoseValue.SourceSensor.LIBRE_1_GLIMP
             )
             repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
                 .doOnError {
@@ -83,6 +83,6 @@ class GlimpPlugin @Inject constructor(
     }
 
     override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLIMP && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
+        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.LIBRE_1_GLIMP && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
 }
