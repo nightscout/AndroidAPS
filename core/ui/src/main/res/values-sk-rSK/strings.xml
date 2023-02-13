@@ -45,7 +45,6 @@
     <string name="mute5min">Stíšiť na 5 minút</string>
     <string name="mute">Stíšiť</string>
     <string name="success">Úspešne</string>
-    <string name="advancedsettings_title">Rozšírené nastavenia</string>
     <string name="extendedbolusdeliveryerror">Chyba pri podávaní predĺženého bolusu</string>
     <string name="aps_mode_title">APS mód</string>
     <string name="extended_bolus">Predĺžený bolus</string>
@@ -577,4 +576,5 @@
         <item quantity="many">%1$d minút</item>
         <item quantity="other">%1$d minút</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>
