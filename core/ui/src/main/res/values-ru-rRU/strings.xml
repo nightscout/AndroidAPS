@@ -45,7 +45,6 @@
     <string name="mute5min">Отключить уведомления на 5 минут</string>
     <string name="mute">Отключить звук</string>
     <string name="success">Успешно</string>
-    <string name="advancedsettings_title">Дополнительные настройки</string>
     <string name="extendedbolusdeliveryerror">Ошибка подачи пролонгированного болюса</string>
     <string name="aps_mode_title">Режим APS</string>
     <string name="extended_bolus">Пролонгированный болюс</string>
@@ -577,4 +576,5 @@
         <item quantity="many">%1$d минут</item>
         <item quantity="other">%1$d мин</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>
