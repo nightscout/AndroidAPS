@@ -28,7 +28,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCl</string>
     <string name="ns_client_url">Adresa URL:</string>
-    <string name="ns_client_autoscroll">Posouvat</string>
     <string name="restart">Restart</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Adresa Nightscoutu</string>
@@ -75,8 +74,6 @@
     <string name="ns_alarm_stale_data_value_label">Mezní hodnota pro zastaralá data [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Urgentní mezní hodnota pro zastaralá data [min]</string>
     <string name="ns_log_app_started_event">Zaznamenávat spuštění aplikace do NS</string>
-    <string name="ns_local_broadcasts">Povolit vysílání do jiných aplikací (například xDrip+). Nepovolujte, pokud máte instalovánu více než jednu instanci AAPS nebo AAPSClient!</string>
-    <string name="ns_local_broadcasts_title">Povolení odesílaní</string>
     <string name="copy_existing_values">Zkopírovat nastavení NS (existuje-li)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Vaše uživatelské jméno na Tidepoolu, obvykle vaše e-mailová adresa</string>
