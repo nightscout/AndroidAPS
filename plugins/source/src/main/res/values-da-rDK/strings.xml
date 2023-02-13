@@ -2,7 +2,6 @@
 <resources>
     <!-- Source -->
     <string name="description_source_ns_client">Downloader BG data fra Nightscout</string>
-    <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">Modtag BG-værdier fra xDrip+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
