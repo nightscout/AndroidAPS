@@ -115,8 +115,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="maintenance_shortname">MAINT</string>
     <string name="description_maintenance">Fournir différentes fonctions de maintenance (ex : envoyer, supprimer le journal).</string>
     <string name="database_cleanup">Nettoyer la base de données</string>
-    <string name="cleanup_db_confirm">Voulez-vous nettoyer la base de données ?\nCela supprimera les modifications suivies et les données historiques de plus de 3 mois.</string>
-    <string name="cleared_entries">Entrées effacées</string>
     <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
     <string name="maintenance_settings">Paramètres de maintenance</string>
     <string name="maintenance_email">Destinataire de l\'email</string>
