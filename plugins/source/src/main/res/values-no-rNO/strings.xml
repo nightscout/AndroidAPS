@@ -4,7 +4,6 @@
     <string name="ns_client_bg">NSClient BS</string>
     <string name="ns_client_bg_short">NS BS</string>
     <string name="description_source_ns_client">Last ned BS-verdier fra Nightscout</string>
-    <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">Motta BS-verdier fra xDrip+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>
