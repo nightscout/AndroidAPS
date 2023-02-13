@@ -225,6 +225,7 @@ class AutosensDataStoreObject : AutosensDataStore {
             bucketedData = null
             return
         }
+        val lastBg = bgReadings[0]
         val newBucketedData = ArrayList<InMemoryGlucoseValue>()
         var currentTime = bgReadings[0].timestamp
         val adjustedTime = adjustToReferenceTime(currentTime)
@@ -245,7 +246,7 @@ class AutosensDataStoreObject : AutosensDataStore {
                 val timeDiffToOlder = currentTime - older.timestamp
                 val filledGap = timeDiffToOlder > T.mins(5).msecs() || timeDiffToNew > T.mins(5).msecs()
                 val currentBg = newer.value - timeDiffToNew.toDouble() / (newer.timestamp - older.timestamp) * bgDelta
-                val newBgReading = InMemoryGlucoseValue(currentTime, currentBg.roundToLong().toDouble(), filledGap = filledGap)
+                val newBgReading = InMemoryGlucoseValue(currentTime, currentBg.roundToLong().toDouble(), filledGap = filledGap, sourceSensor = lastBg.sourceSensor)
                 newBucketedData.add(newBgReading)
                 //log.debug("BG: " + newBgReading.value + " (" + new Date(newBgReading.date).toLocaleString() + ") Prev: " + older.value + " (" + new Date(older.date).toLocaleString() + ") Newer: " + newer.value + " (" + new Date(newer.date).toLocaleString() + ")");
             }
@@ -259,6 +260,7 @@ class AutosensDataStoreObject : AutosensDataStore {
             bucketedData = null
             return
         }
+        val lastBg = bgReadings[0]
         val bData: MutableList<InMemoryGlucoseValue> = ArrayList()
         bData.add(InMemoryGlucoseValue(bgReadings[0]))
         aapsLogger.debug(LTag.AUTOSENS) { "Adding. bgTime: ${dateUtil.toISOString(bgReadings[0].timestamp)} lastBgTime: none-first-value ${bgReadings[0]}" }
@@ -271,33 +273,33 @@ class AutosensDataStoreObject : AutosensDataStore {
             when {
                 abs(elapsedMinutes) > 8 -> {
                     // interpolate missing data points
-                    var lastBg = bgReadings[i - 1].value
+                    var lastBgValue = bgReadings[i - 1].value
                     elapsedMinutes = abs(elapsedMinutes)
                     //console.error(elapsed_minutes);
                     var nextBgTime: Long
                     while (elapsedMinutes > 5) {
                         nextBgTime = lastBgTime - 5 * 60 * 1000
                         j++
-                        val gapDelta = bgReadings[i].value - lastBg
+                        val gapDelta = bgReadings[i].value - lastBgValue
                         //console.error(gapDelta, lastBg, elapsed_minutes);
-                        val nextBg = lastBg + 5.0 / elapsedMinutes * gapDelta
-                        val newBgReading = InMemoryGlucoseValue(nextBgTime, nextBg.roundToLong().toDouble(), filledGap = true)
+                        val nextBg = lastBgValue + 5.0 / elapsedMinutes * gapDelta
+                        val newBgReading = InMemoryGlucoseValue(nextBgTime, nextBg.roundToLong().toDouble(), filledGap = true, sourceSensor = lastBg.sourceSensor)
                         //console.error("Interpolated", bData[j]);
                         bData.add(newBgReading)
                         aapsLogger.debug(LTag.AUTOSENS) { "Adding. bgTime: ${dateUtil.toISOString(bgTime)} lastBgTime: ${dateUtil.toISOString(lastBgTime)} $newBgReading" }
                         elapsedMinutes -= 5
-                        lastBg = nextBg
+                        lastBgValue = nextBg
                         lastBgTime = nextBgTime
                     }
                     j++
-                    val newBgReading = InMemoryGlucoseValue(bgTime, bgReadings[i].value)
+                    val newBgReading = InMemoryGlucoseValue(bgTime, bgReadings[i].value, sourceSensor = lastBg.sourceSensor)
                     bData.add(newBgReading)
                     aapsLogger.debug(LTag.AUTOSENS) { "Adding. bgTime: ${dateUtil.toISOString(bgTime)} lastBgTime: ${dateUtil.toISOString(lastBgTime)} $newBgReading" }
                 }
 
                 abs(elapsedMinutes) > 2 -> {
                     j++
-                    val newBgReading = InMemoryGlucoseValue(bgTime, bgReadings[i].value)
+                    val newBgReading = InMemoryGlucoseValue(bgTime, bgReadings[i].value, sourceSensor = lastBg.sourceSensor)
                     bData.add(newBgReading)
                     aapsLogger.debug(LTag.AUTOSENS) { "Adding. bgTime: ${dateUtil.toISOString(bgTime)} lastBgTime: ${dateUtil.toISOString(lastBgTime)} $newBgReading" }
                 }
