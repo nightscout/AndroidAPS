@@ -45,7 +45,6 @@
     <string name="mute5min">Wycisz na 5 minut</string>
     <string name="mute">Wycisz</string>
     <string name="success">Sukces</string>
-    <string name="advancedsettings_title">Ustawienia zaawansowane</string>
     <string name="extendedbolusdeliveryerror">Błąd dostarczania bolusa przedłużonego</string>
     <string name="aps_mode_title">Tryb APS</string>
     <string name="extended_bolus">Bolus Przedłużony</string>
@@ -577,4 +576,5 @@
         <item quantity="many">%1$d minuty</item>
         <item quantity="other">%1$d minuty</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>
