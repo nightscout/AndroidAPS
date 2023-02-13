@@ -44,7 +44,6 @@
     <string name="mute5min">השתקה ל-5 דקות</string>
     <string name="mute">השתק</string>
     <string name="success">הצלחה</string>
-    <string name="advancedsettings_title">הגדרות מתקדמות</string>
     <string name="extendedbolusdeliveryerror">שגיאה במתן הבולוס הממושך</string>
     <string name="extended_bolus">בולוס ממושך</string>
     <string name="paused">מושהה</string>
@@ -544,4 +543,5 @@
         <item quantity="many">%1$d דקות</item>
         <item quantity="other">%1$d דקות</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>
