@@ -45,7 +45,6 @@
     <string name="mute5min">Stumm schalten für 5 Minuten</string>
     <string name="mute">Alarm stoppen</string>
     <string name="success">Erfolgreich</string>
-    <string name="advancedsettings_title">Erweiterte Einstellungen</string>
     <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verzögerten Bolus</string>
     <string name="aps_mode_title">APS-Modus</string>
     <string name="extended_bolus">Verzögerter Bolus</string>
@@ -571,4 +570,5 @@
         <item quantity="one">%1$d Minute</item>
         <item quantity="other">%1$d Minuten</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>
