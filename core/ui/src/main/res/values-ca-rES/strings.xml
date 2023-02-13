@@ -43,7 +43,6 @@
     <string name="mute5min">Silenciar 5 minuts</string>
     <string name="mute">Silenciar</string>
     <string name="success">Correcte</string>
-    <string name="advancedsettings_title">Configuració avançada</string>
     <string name="extendedbolusdeliveryerror">Error en lliurar bolus estès</string>
     <string name="extended_bolus">Bolus estès</string>
     <string name="paused">En pausa</string>
@@ -434,4 +433,5 @@
         <item quantity="one">%1$d minut</item>
         <item quantity="other">%1$d minuts</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>
