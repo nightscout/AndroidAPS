@@ -20,8 +20,6 @@
     <string name="objectives_smb_objective">在白天启用额外的功能，例如微型大剂量 SMB</string>
     <string name="objectives_smb_gate">你应该阅读wiki指南，以调整 maxIOB(活性胰岛素的最大值) 设置，让SMB(微型大剂量) 更好的工作。建议是 maxIOB值=餐时剂量的平均值+基础率的最大值的3倍。</string>
     <string name="objectives_auto_objective">启用自动操作功能插件</string>
-    <string name="objectives_bgavailableinns">血糖在NS中可用</string>
-    <string name="objectives_pumpstatusavailableinns">泵状态在 NS 中可用</string>
     <string name="objectives_manualenacts">手动执行</string>
     <string name="accomplished">已完成: %1$s</string>
     <string name="objectives_useprofileswitch">将个人配置文件设置为90%持续10分钟 (长按首页概览左上角的配置文件名称)</string>
