@@ -45,6 +45,7 @@
     <string name="mute5min">Отключить уведомления на 5 минут</string>
     <string name="mute">Отключить звук</string>
     <string name="success">Успешно</string>
+    <string name="advanced_settings_title">Дополнительные настройки</string>
     <string name="extendedbolusdeliveryerror">Ошибка подачи пролонгированного болюса</string>
     <string name="aps_mode_title">Режим APS</string>
     <string name="extended_bolus">Пролонгированный болюс</string>
@@ -577,4 +578,7 @@
         <item quantity="other">%1$d мин</item>
     </plurals>
     <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Вы хотите очистить базу данных?\nЭто удалит отслеживаемые изменения и данные старше 3 месяцев.</string>
+    <string name="cleanup_db_confirm_sync">Вы хотите очистить базу данных?\nЭто удалит отслеживаемые изменения и данные старше 3 месяцев.\nчто позволит значительно ускорить полную синхронизацию.</string>
+    <string name="cleared_entries">Удалённые записи</string>
 </resources>
