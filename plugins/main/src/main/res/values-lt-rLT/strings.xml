@@ -318,7 +318,6 @@
     <string name="old_data">SENI DUOMENYS</string>
     <string name="grams_short">g</string>
     <string name="hour_short">val</string>
-    <string name="tdd_line">%1$.2fv %1$.0f%</string>
     <string name="no_profile">Profilis neįkeltas</string>
     <string name="loop_status_closed">UŽDARAS CIKLAS</string>
     <string name="loop_status_open">ATVIRAS CIKLAS</string>
