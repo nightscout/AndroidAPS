@@ -105,6 +105,8 @@
     <string name="ns_alarm_urgent_stale_data_value_label">Urgent stale data threshold [min]</string>
     <string name="ns_log_app_started_event">Log app start to NS</string>
     <string name="copy_existing_values">Copy NS settings (if exists)?</string>
+    <string name="ns_use_ws_title">Connect to websockets</string>
+    <string name="ns_use_ws_summary">Enabling means: faster updates, receiving alarms and announcements and higher battery consumption similar to v1. All other uploaders to NS must use v3 protocol.</string>
 
     <!-- Tidepool -->
     <string name="key_tidepool_username" translatable="false">tidepool_username</string>
@@ -177,8 +179,7 @@
 
 
     <!--    DataBroadcast-->
-    <string name="data_broadcaster" translatable="false">Data Broadcaster</string>
-    <string name="ns_use_ws_title">Connect to websockets</string>
-    <string name="ns_use_ws_summary">Enabling means: faster updates, receiving alarms and announcements and higher battery consumption similar to v1. All other uploaderds to NS must use v3 protocol.</string>
+    <string name="data_broadcaster">Data Broadcaster</string>
+    <string name="data_broadcaster_description" translatable="false">Broadcast data to other apps like Garmin watch</string>
 
 </resources>
