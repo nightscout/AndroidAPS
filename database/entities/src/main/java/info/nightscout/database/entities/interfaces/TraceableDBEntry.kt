@@ -27,13 +27,13 @@ interface TraceableDBEntry: DBEntry {
         }
 
     fun interfaceIdsEqualsTo(other: TraceableDBEntry): Boolean =
-        interfaceIDs.nightscoutId == interfaceIDs.nightscoutId &&
-            interfaceIDs.nightscoutSystemId == interfaceIDs.nightscoutSystemId &&
-            interfaceIDs.pumpType == interfaceIDs.pumpType &&
-            interfaceIDs.pumpSerial == interfaceIDs.pumpSerial &&
-            interfaceIDs.temporaryId == interfaceIDs.temporaryId &&
-            interfaceIDs.pumpId == interfaceIDs.pumpId &&
-            interfaceIDs.startId == interfaceIDs.startId &&
-            interfaceIDs.endId == interfaceIDs.endId
+        interfaceIDs.nightscoutId == other.interfaceIDs.nightscoutId &&
+            interfaceIDs.nightscoutSystemId == other.interfaceIDs.nightscoutSystemId &&
+            interfaceIDs.pumpType == other.interfaceIDs.pumpType &&
+            interfaceIDs.pumpSerial == other.interfaceIDs.pumpSerial &&
+            interfaceIDs.temporaryId == other.interfaceIDs.temporaryId &&
+            interfaceIDs.pumpId == other.interfaceIDs.pumpId &&
+            interfaceIDs.startId == other.interfaceIDs.startId &&
+            interfaceIDs.endId == other.interfaceIDs.endId
 
 }
