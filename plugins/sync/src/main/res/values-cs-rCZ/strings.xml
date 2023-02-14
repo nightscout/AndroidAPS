@@ -75,6 +75,7 @@
     <string name="ns_alarm_urgent_stale_data_value_label">Urgentní mezní hodnota pro zastaralá data [min]</string>
     <string name="ns_log_app_started_event">Zaznamenávat spuštění aplikace do NS</string>
     <string name="copy_existing_values">Zkopírovat nastavení NS (existuje-li)?</string>
+    <string name="ns_use_ws_title">Připojit k websocketům</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Vaše uživatelské jméno na Tidepoolu, obvykle vaše e-mailová adresa</string>
     <string name="title_tidepool_username">Uživatelské jméno</string>
@@ -114,6 +115,4 @@
     <string name="xdrip_local_broadcasts_summary">Poslat data o glykémii a ošetření do xDrip+. Musí být vybrán zdroj dat \"xDrip+ Sync Follower\" a přijímání dat musí být povoleno v Nastavení - Nastavení komunikace mezi aplikacemi - Přijímat Glykémie/Ošetření</string>
     <string name="xdrip_local_broadcasts_title">Povolit odesílání do xDrip+.</string>
     <!--    DataBroadcast-->
-    <string name="ns_use_ws_title">Připojit k websocketům</string>
-    <string name="ns_use_ws_summary">Povolení znamená: rychlejší aktualizace, příjem alarmů a oznámení a vyšší spotřebu baterie podobnou v1. Všechny ostatní aplikace nahrávající do NS musí používat protokol v3.</string>
 </resources>
