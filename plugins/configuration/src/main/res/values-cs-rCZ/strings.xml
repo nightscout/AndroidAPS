@@ -25,7 +25,6 @@
     <string name="master_password_summary">Hlavní heslo se používá pro šifrování zálohy a pro \"přebití\" zabezpečení v aplikaci. Dobře si ho zapamatujte nebo uložte na bezpečném místě.</string>
     <string name="current_master_password">Aktuální hlavní heslo</string>
     <string name="common_values">Použijte hodnoty pro největší jídlo, jaké obvykle jíte\n</string>
-    <string name="syncinfotext">Synchronizujte data s cloudem. Tuto část nyní můžete přeskočit, ale nebudete schopni dokončit cíle, dokud synchronizace nebude nastavena.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Jméno pacienta</string>
     <string name="patient_name_summary">Zadejte jméno pacienta nebo přezdívku pro rozlišení mezi více nastaveními</string>
