@@ -62,9 +62,7 @@ class DataBroadcastPlugin @Inject constructor(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginName(R.string.data_broadcaster)
-        .alwaysEnabled(true)
-        .neverVisible(true)
-        .showInList(false),
+        .description(R.string.data_broadcaster_description),
     aapsLogger, rh, injector
 ) {
 

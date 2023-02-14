@@ -11,6 +11,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.sync.Sync
+import info.nightscout.interfaces.sync.Tidepool
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.plugins.sync.R
@@ -28,6 +29,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.events.EventNewBG
 import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.events.EventSWSyncStatus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -53,7 +55,7 @@ class TidepoolPlugin @Inject constructor(
     private val rateLimit: RateLimit,
     private val receiverDelegate: ReceiverDelegate,
     private val uiInteraction: UiInteraction
-) : Sync, PluginBase(
+) : Sync, Tidepool, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
         .pluginName(R.string.tidepool)
@@ -99,7 +101,11 @@ class TidepoolPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventTidepoolStatus::class.java)
             .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> addToLog(event) }, fabricPrivacy::logException)
+            .subscribe({ event ->
+                           addToLog(event)
+                           // Pass to setup wizard
+                           rxBus.send(EventSWSyncStatus(event.status))
+                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventNewBG::class.java)
             .observeOn(aapsSchedulers.io)

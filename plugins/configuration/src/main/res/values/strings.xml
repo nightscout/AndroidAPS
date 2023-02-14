@@ -28,7 +28,7 @@
     <string name="master_password_summary">Master password is used for backup encryption and to override security in application. Remember it or store on a safe place.</string>
     <string name="current_master_password">Current master password</string>
     <string name="common_values">Use values of your largest food you usually eat\n</string>
-    <string name="syncinfotext">Synchronize data to the cloud. You can skip this part now but you will not be able to pass objectives until you set it up.</string>
+    <string name="syncinfotext">Synchronize data to the cloud. You can skip this part now but you will not be able to pass objectives until you set up Nightscout or Tidepool client.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Patient name</string>
     <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
