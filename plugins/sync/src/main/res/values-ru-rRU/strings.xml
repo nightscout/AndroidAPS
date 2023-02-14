@@ -111,5 +111,8 @@
     <string name="xdrip_send_status_title">Отправить строку состояния на xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ не установлен</string>
     <string name="calibration_sent">Калибровка отправлена на xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Отправлять данные о глюкозе и терапии на xDrip+. Источником данных должен быть выбран \"xDrip+ Sync Follower\" а в настройках между приложениями надо включить - Принимать глюкозу/терапию</string>
+    <string name="xdrip_local_broadcasts_title">Включить трансляции для xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="ns_use_ws_title">Подключаться к веб-сокету</string>
 </resources>
