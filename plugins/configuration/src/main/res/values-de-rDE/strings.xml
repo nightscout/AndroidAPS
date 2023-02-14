@@ -25,7 +25,6 @@
     <string name="master_password_summary">Das Master-Passwort wird für die Backup-Verschlüsselung und zur Außerkraftsetzung der Sicherheit in der Anwendung verwendet. Merke es Dir oder bewahre es an einem sicheren Ort auf.</string>
     <string name="current_master_password">Aktuelles Master-Passwort</string>
     <string name="common_values">Verwende die Werte der größten Mahlzeit, die Du normalerweise zu Dir nimmst\n</string>
-    <string name="syncinfotext">Synchronisiere Daten mit der Cloud. Du kannst diesen Teil jetzt überspringen, aber Du wirst keine Ziele überschreiten können, bis Du die Synchronisierung eingerichtet hast.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Name des Patienten</string>
     <string name="patient_name_summary">Bitte gib den Namen des Patienten oder einen Spitznamen an, um mehrere Setups unterscheiden zu können.</string>
