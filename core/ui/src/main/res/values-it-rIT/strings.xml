@@ -155,7 +155,6 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="virtualpump_uploadstatus_title">Carica stato in NS</string>
     <string name="suspendloop_label">Loop disabilitato/sospeso</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
     <!--    Protection-->
