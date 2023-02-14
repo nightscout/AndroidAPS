@@ -20,8 +20,6 @@
     <string name="objectives_smb_objective">הפעלת פונקציות נוספות לשימוש במשך היום, כגון סופר מיקרו בולוסים (SMB)</string>
     <string name="objectives_smb_gate">חובה לקרוא את הויקי ולהעלות את ערך ה-maxIOB כדי להפעיל את ה- SMB כראוי. התחלה טובה תהיה maxIOB=בולוס ממוצע + 3 פעמים ערך הבזאלי היומי המקסימלי</string>
     <string name="objectives_auto_objective">הפעלת אוטומציה</string>
-    <string name="objectives_bgavailableinns">ערך הסוכר זמין ב-Nightscout</string>
-    <string name="objectives_pumpstatusavailableinns">סטטוס המשאבה זמין ב-Nightscout</string>
     <string name="objectives_manualenacts">קביעות ידניות</string>
     <string name="accomplished">הושלמו: %1$s</string>
     <string name="objectives_usage_objective">למדו כיצד לשלוט ב-AndoridAPS</string>
