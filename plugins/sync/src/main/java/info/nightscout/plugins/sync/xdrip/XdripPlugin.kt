@@ -29,7 +29,6 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.receivers.Intents
 import info.nightscout.interfaces.sync.DataSyncSelector
-import info.nightscout.interfaces.sync.DataSyncSelectorXdrip
 import info.nightscout.interfaces.sync.Sync
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
@@ -79,7 +78,6 @@ class XdripPlugin @Inject constructor(
     private val iobCobCalculator: IobCobCalculator,
     private val rxBus: RxBus,
     private val uiInteraction: UiInteraction,
-    private val dataSyncSelector: DataSyncSelectorXdrip,
     private val dateUtil: DateUtil,
     aapsLogger: AAPSLogger
 ) : XDripBroadcast, Sync, PluginBase(
@@ -364,7 +362,7 @@ class XdripPlugin @Inject constructor(
 
     private fun sendEntries(dataPairs: List<DataSyncSelector.DataPair>, progress: String) {
         val array = JSONArray()
-        for (dataPair in dataPairs) {
+        for (dataPair in dataPairs.toList()) {
             val data = (dataPair as DataSyncSelector.PairGlucoseValue).value.toXdripJson()
             array.put(data)
         }
@@ -378,7 +376,7 @@ class XdripPlugin @Inject constructor(
 
     private fun sendFood(dataPairs: List<DataSyncSelector.DataPair>, progress: String) {
         val array = JSONArray()
-        for (dataPair in dataPairs) {
+        for (dataPair in dataPairs.toList()) {
             val data = (dataPair as DataSyncSelector.PairFood).value.toJson(true)
             array.put(data)
         }
@@ -392,7 +390,7 @@ class XdripPlugin @Inject constructor(
 
     private fun sendTreatments(dataPairs: List<DataSyncSelector.DataPair>, progress: String) {
         val array = JSONArray()
-        for (dataPair in dataPairs) {
+        for (dataPair in dataPairs.toList()) {
             when (dataPair) {
                 is DataSyncSelector.PairBolus                  -> dataPair.value.toJson(true, dateUtil)
                 is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(true, dateUtil)
