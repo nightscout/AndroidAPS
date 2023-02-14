@@ -25,7 +25,6 @@
     <string name="master_password_summary">Ana parola, yedekleme şifrelemesi ve uygulamanın güvenliği için kullanılır. Bu parolayı unutmayın ve güvenli bir yerde saklayın.</string>
     <string name="current_master_password">Geçerli ana parola</string>
     <string name="common_values">Genellikle yediğiniz en büyük yiyeceğin değerlerini kullanın\n</string>
-    <string name="syncinfotext">Verileri bulutla senkronize edin. Şimdi bu kısmı atlayabilirsiniz, ancak ayarlamadan görevleri geçemezsiniz.</string>
     <string name="status">Durum:</string>
     <string name="patient_name">Hasta Adı</string>
     <string name="patient_name_summary">Lütfen çoklu kurulumlar arasında ayrım yapmak için hasta adı veya takma ad belirleyin</string>
