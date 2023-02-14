@@ -20,8 +20,6 @@
     <string name="objectives_smb_objective">Activando recursos adicionais para uso durante o dia, como SMB</string>
     <string name="objectives_smb_gate">Deverá ler a wiki e aumentar a IA máx para que os SMBs funcionem devidamente! Inicialmente poderá considerar maxIA=média dos bólus + 3 x a basal máxima</string>
     <string name="objectives_auto_objective">A ativar a automatização</string>
-    <string name="objectives_bgavailableinns">Glicose disponível no NS</string>
-    <string name="objectives_pumpstatusavailableinns">Estado da Bomba disponível no NS</string>
     <string name="objectives_manualenacts">Execução manual</string>
     <string name="accomplished">Concluído: %1$s</string>
     <string name="objectives_useprofileswitch">Definir perfil de 90% por 10 min (pressione longo no nome de perfil na Visão Geral)</string>
