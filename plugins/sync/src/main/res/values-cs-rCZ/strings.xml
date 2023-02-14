@@ -76,6 +76,7 @@
     <string name="ns_log_app_started_event">Zaznamenávat spuštění aplikace do NS</string>
     <string name="copy_existing_values">Zkopírovat nastavení NS (existuje-li)?</string>
     <string name="ns_use_ws_title">Připojit k websocketům</string>
+    <string name="ns_use_ws_summary">Povolení znamená: rychlejší aktualizace, příjem alarmů a oznámení a vyšší spotřebu baterie podobnou v1. Všechny ostatní aplikace nahrávající do NS musí používat také protokol v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Vaše uživatelské jméno na Tidepoolu, obvykle vaše e-mailová adresa</string>
     <string name="title_tidepool_username">Uživatelské jméno</string>
