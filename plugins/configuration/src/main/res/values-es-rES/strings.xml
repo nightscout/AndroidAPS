@@ -25,7 +25,6 @@
     <string name="master_password_summary">La contraseña maestra se utiliza para cifrar la copia de seguridad y para desbloquear la seguridad de la aplicación. Recuérdala o guárdala en un lugar seguro.</string>
     <string name="current_master_password">Contraseña maestra actual</string>
     <string name="common_values">Usa los valores de la comida más grande que sueles comer\n</string>
-    <string name="syncinfotext">Sincronizar datos a la nube. Puedes saltar este paso ahora, pero no podrás completar los objetivos hasta que lo configures.</string>
     <string name="status">Estado:</string>
     <string name="patient_name">Nombre del paciente</string>
     <string name="patient_name_summary">Proporcione el nombre de paciente o el apodo para diferenciar entre varias configuraciones</string>
