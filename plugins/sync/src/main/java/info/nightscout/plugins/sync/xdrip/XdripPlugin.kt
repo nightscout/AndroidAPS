@@ -340,7 +340,7 @@ class XdripPlugin @Inject constructor(
         }
     }
 
-    private suspend fun sendProfileStore(dataPair: DataSyncSelector.DataPair, progress: String) {
+    private fun sendProfileStore(dataPair: DataSyncSelector.DataPair, progress: String) {
         val data = (dataPair as DataSyncSelector.PairProfileStore).value
         rxBus.send(EventXdripNewLog("SENDING", "Sent 1 PROFILE ($progress)"))
         broadcast(
