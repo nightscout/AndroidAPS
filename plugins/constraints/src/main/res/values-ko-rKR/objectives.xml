@@ -20,8 +20,6 @@
     <string name="objectives_smb_objective">낮시간대에 SMB(Super Micro Bolus)같은 추가기능을 활성화해 사용해봅니다</string>
     <string name="objectives_smb_gate">SMB가 잘 작동하게 하기위해서 wiki를 반드시 읽은 다음 maxIOB 값을 올려보세요! maxIOB=평균 식사 Bolus + 3 x 최대하루 Basal이면 적당한 시작값입니다</string>
     <string name="objectives_auto_objective">자동화 사용</string>
-    <string name="objectives_bgavailableinns">NS에서 혈당이 확인 가능합니다</string>
-    <string name="objectives_pumpstatusavailableinns">NS에서 펌프상태가 확인 가능합니다</string>
     <string name="objectives_manualenacts">수동 주입</string>
     <string name="accomplished">완료: %1$s</string>
     <string name="objectives_useprofileswitch">10분동안 프로파일 90%를 설정해보세요(홈에서 프로파일명을 길게 눌러보세요)</string>
