@@ -19,8 +19,6 @@
     <string name="objectives_autosens_gate">1 επιτυχής εβδομάδα ημερήσιου κυκλώματος με κανονική εισαγωγή υδατανθράκων</string>
     <string name="objectives_smb_objective">Ενεργοποιώντας επιπρόσθετα χαρακτηριστικά για χρήση κατά την ημέρα, όπως το SMB</string>
     <string name="objectives_smb_gate">Πρέπει να διαβάσετε τον οδηγό wiki και να αυξήσετε το ανώτατο όριο του IOB για να μπορέσει να λειτουργήσει σωστά το SMB! Μια καλή αρχή είναι μέγιστο IOB= μέσο bolus γεύματος + 3 x το μέγιστο ημερήσιο βασικού ρυθμού</string>
-    <string name="objectives_bgavailableinns">BG διαθέσιμες στο NS</string>
-    <string name="objectives_pumpstatusavailableinns">Η κατάσταση της αντλίας διαθέσιμη στο NS</string>
     <string name="objectives_manualenacts">Ξεκινήστε χειροκίνητα</string>
     <string name="accomplished">Επιτεύχθηκε: %1$s</string>
     <string name="objectives_useprofileswitch">Θέστε το προφίλ στο 90% για 10 λεπτά (Παρατεταμένο πάτημα του προφίλ στην Επισκόπηση)</string>
