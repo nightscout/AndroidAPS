@@ -152,7 +152,6 @@
     <string name="dia">Duration</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="virtualpump_uploadstatus_title">Ladda upp status till Nightscout</string>
     <string name="suspendloop_label">Inaktiverad/pausad loop</string>
     <string name="iob_label">Aktivt Insulin (IOB)</string>
     <!--    Protection-->
