@@ -31,8 +31,8 @@
     <string name="objectives_auto_objective">Enabling automation</string>
     <string name="objectives_auto_gate">Read the docs on how automation works. Set up your first simple rules. Instead of action let AAPS display only notification. When you are sure automation is triggered at the right time replace notification by real action. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Automation can be a good servant but a bad master. Don\'t overuse it. Do not try to replace underlying algorithm. Test the rule with message only before use. It depends on order.</string>
-    <string name="objectives_bgavailableinns">BG available in NS</string>
-    <string name="objectives_pumpstatusavailableinns">Pump status available in NS</string>
+    <string name="objectives_bgavailableinns">BG available in NS or Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Pump status available in NS or Tidepool</string>
     <string name="objectives_manualenacts">Manual enacts</string>
     <string name="accomplished">Accomplished: %1$s</string>
     <string name="objectives_usage_objective">Learn how to control AAPS</string>
