@@ -444,6 +444,7 @@ class DanaPump @Inject constructor(
             0x06 -> PumpType.DANA_RS_KOREAN
             0x07 -> PumpType.DANA_I
             0x09 -> PumpType.DANA_I
+            0x0A -> PumpType.DANA_I // Korean version
             else -> PumpType.DANA_RS // having here default type non TBR capable is causing problem with disabling loop
         }
 
