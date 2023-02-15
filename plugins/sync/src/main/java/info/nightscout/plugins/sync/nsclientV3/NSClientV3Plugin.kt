@@ -401,7 +401,7 @@ class NSClientV3Plugin @Inject constructor(
                 it.put("accessToken", sp.getString(R.string.key_ns_client_token, ""))
             }
             rxBus.send(EventNSClientNewLog("► WS", "requesting auth for alarms"))
-            socket?.emit("subscribe", authMessage, Ack { args ->
+            socket.emit("subscribe", authMessage, Ack { args ->
                 val response = args[0] as JSONObject
                 wsConnected = if (response.optBoolean("success")) {
                     rxBus.send(EventNSClientNewLog("◄ WS", response.optString("message")))
