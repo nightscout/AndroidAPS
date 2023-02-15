@@ -75,6 +75,7 @@
     <string name="ns_alarm_urgent_stale_data_value_label">Acil durum verileri eşiği [min]</string>
     <string name="ns_log_app_started_event">NS\'a uygulama başlangıcını kaydet</string>
     <string name="copy_existing_values">NS ayarları kopyalansın mı (varsa)?</string>
+    <string name="ns_use_ws_title">Websockets\'e bağlanın</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Tidepool oturum açma kullanıcı adınız, normalde e-posta adresiniz</string>
     <string name="title_tidepool_username">Kullanıcı adınınız</string>
@@ -111,5 +112,7 @@
     <string name="xdrip_send_status_title">Durum satırını xDrip+\'a gönder</string>
     <string name="xdrip_not_installed">xDrip+ yüklenmemiş</string>
     <string name="calibration_sent">Kalibrasyon xDrip+ a gönderildi</string>
+    <string name="xdrip_local_broadcasts_summary">KŞ ve tedavi verilerini xDrip+\'a gönderin. Veri Kaynağı \"xDrip+ Sync Follower\" seçilmeli ve Ayarlar - Uygulamalar arası ayarlar - KŞ/Tedavileri Kabul Et bölümünde verilerin kabul edilmesi etkinleştirilmelidir.</string>
+    <string name="xdrip_local_broadcasts_title">xDrip+ \'a yayınları etkinleştirin.</string>
     <!--    DataBroadcast-->
 </resources>
