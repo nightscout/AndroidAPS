@@ -26,6 +26,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="master_password_summary">Le mot de passe principal est utilisé pour crypter les sauvegardes et superviser la sécurité de l\'application. Rappelez-vous en ou stockez le en lieu sûr.</string>
     <string name="current_master_password">Mot de passe principal actuel</string>
     <string name="common_values">Utilisez les valeurs qui correspondent à vos plus gros repas\n</string>
+    <string name="syncinfotext">Synchroniser les données sur le cloud. Vous pouvez sauter cette partie maintenant mais vous ne pourrez pas passer les objectifs tant que vous n\'aurez pas configuré le client Nightscout ou Tidepool.</string>
     <string name="status">État :</string>
     <string name="patient_name">Nom du patient</string>
     <string name="patient_name_summary">Veuillez indiquer un nom ou pseudo du patient pour différencier plusieurs configurations</string>
