@@ -8,7 +8,7 @@ import info.nightscout.androidaps.MainApp
 import info.nightscout.androidaps.danar.di.DanaRModule
 import info.nightscout.androidaps.insight.di.InsightDatabaseModule
 import info.nightscout.androidaps.insight.di.InsightModule
-import info.nightscout.androidaps.plugin.general.openhumans.di.OpenHumansModule
+import info.nightscout.plugins.sync.di.OpenHumansModule
 import info.nightscout.androidaps.plugins.pump.common.di.RileyLinkModule
 import info.nightscout.androidaps.plugins.pump.eopatch.dagger.EopatchModule
 import info.nightscout.androidaps.plugins.pump.medtronic.di.MedtronicModule
