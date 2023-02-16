@@ -76,6 +76,7 @@
     <string name="ns_log_app_started_event">NS\'a uygulama başlangıcını kaydet</string>
     <string name="copy_existing_values">NS ayarları kopyalansın mı (varsa)?</string>
     <string name="ns_use_ws_title">Websockets\'e bağlanın</string>
+    <string name="ns_use_ws_summary">Etkinleştirme şu anlama gelir: daha hızlı güncelleme, alarm ve duyuru alma ve v1 \'deki gibi daha yüksek pil tüketimi. NS\'ye diğer tüm yükleyiciler v3 protokolünü kullanmalıdır.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Tidepool oturum açma kullanıcı adınız, normalde e-posta adresiniz</string>
     <string name="title_tidepool_username">Kullanıcı adınınız</string>
