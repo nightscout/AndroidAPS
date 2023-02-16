@@ -2,7 +2,12 @@
 <resources>
     <!--    DateUtil-->
     <string name="minago">преди %1$d мин</string>
+    <string name="minago_long">Преди %1$d минути</string>
     <string name="hoursago">преди %1$.1fч</string>
+    <string name="days_ago">преди %1$.1f дни</string>
+    <string name="days_ago_round">преди %1$.0f дни</string>
+    <string name="in_days">за %1$.0f дни</string>
+    <string name="in_days_round">за %1$.0f дни</string>
     <string name="shorthour">ч</string>
     <string name="days">дни</string>
     <string name="hours">часа</string>
@@ -18,6 +23,10 @@
     <string name="unit_weeks">седмици</string>
     <string name="shortminute">м</string>
     <string name="shortday">д</string>
+    <string name="later_today">По-късно днес</string>
+    <string name="tomorrow">Утре</string>
+    <string name="today">Днес</string>
+    <string name="yesterday">Вчера</string>
     <!-- Rx -->
     <string name="connecting_for">Свързване %1$d сек</string>
     <string name="handshaking">Сдвояване</string>
