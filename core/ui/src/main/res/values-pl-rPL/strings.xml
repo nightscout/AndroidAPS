@@ -45,7 +45,7 @@
     <string name="mute5min">Wycisz na 5 minut</string>
     <string name="mute">Wycisz</string>
     <string name="success">Sukces</string>
-    <string name="advancedsettings_title">Ustawienia zaawansowane</string>
+    <string name="advanced_settings_title">Ustawienia zaawansowane</string>
     <string name="extendedbolusdeliveryerror">Błąd dostarczania bolusa przedłużonego</string>
     <string name="aps_mode_title">Tryb APS</string>
     <string name="extended_bolus">Bolus Przedłużony</string>
@@ -164,7 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Anulowanie bazy tymczasowej nie powiodło się</string>
     <string name="canceling_eb_failed">Anulowanie przedłużonego bolusa nie powiodło się</string>
-    <string name="virtualpump_uploadstatus_title">Przesyłaj status do NS</string>
+    <string name="virtualpump_uploadstatus_title">Prześlij status do NS lub Tidepool</string>
     <string name="suspendloop_label">Wyłączona/zawieszona pętla</string>
     <string name="iob_label">Aktywna insulina (IOB)</string>
     <!--    Protection-->
@@ -577,4 +577,8 @@
         <item quantity="many">%1$d minuty</item>
         <item quantity="other">%1$d minuty</item>
     </plurals>
+    <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Czy chcesz wyczyścić bazę danych?\nTa operacja usunie odnotowane zmiany i dane historyczne starsze niż 3 miesiące.</string>
+    <string name="cleanup_db_confirm_sync">Czy chcesz wyczyścić bazę danych?\nTa operacja usunie odnotowane zmiany i dane historyczne starsze niż 3 miesiące.\nWyczyszczenie bazy dramatycznie przyśpieszy pełną synchronizację.</string>
+    <string name="cleared_entries">Usunięte wpisy</string>
 </resources>

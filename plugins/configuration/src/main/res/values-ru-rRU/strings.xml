@@ -25,7 +25,6 @@
     <string name="master_password_summary">Главный пароль используется для шифрования резервных копий и для переопределения защиты в приложении. Запомните его или храните в безопасном месте.</string>
     <string name="current_master_password">Текущий главный пароль</string>
     <string name="common_values">Введите максимальные значения вашего приема пищи \n</string>
-    <string name="syncinfotext">Синхронизировать данные в облако. Сейчас можно пропустить эту часть, но без нее не получится пройти все цели.</string>
     <string name="status">состояние:</string>
     <string name="patient_name">Имя пациента</string>
     <string name="patient_name_summary">Укажите имя или псевдоним пациента, чтобы распознавать разные настройки</string>
@@ -114,8 +113,6 @@
     <string name="maintenance_shortname">ОБСЛУЖ</string>
     <string name="description_maintenance">Предоставляет возможности для обслуживания (например. отправку логов, удаление логов).</string>
     <string name="database_cleanup">Очистка базы данных</string>
-    <string name="cleanup_db_confirm">Вы хотите очистить базу данных?\nЭто удалит отслеживаемые изменения и данные старше 3 месяцев.</string>
-    <string name="cleared_entries">Удалённые записи</string>
     <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
     <string name="maintenance_settings">Параметры обслуживания</string>
     <string name="maintenance_email">Адрес электронной почты</string>

@@ -4,7 +4,7 @@
     <string name="ns_client_bg">NSClient KŞ</string>
     <string name="ns_client_bg_short">NS KŞ</string>
     <string name="description_source_ns_client">Nightscout\'tan KŞ verilerini yükler</string>
-    <string name="xdrip">xDrip+</string>
+    <string name="source_xdrip">xDrip+ KŞ</string>
     <string name="description_source_xdrip">XDrip+\'ten KŞ değerlerini alır.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>

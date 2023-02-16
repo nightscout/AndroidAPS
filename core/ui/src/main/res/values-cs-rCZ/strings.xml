@@ -45,7 +45,7 @@
     <string name="mute5min">Ztlumit na 5 minut</string>
     <string name="mute">Ztlumit</string>
     <string name="success">Úspěch</string>
-    <string name="advancedsettings_title">Rozšířené nastavení</string>
+    <string name="advanced_settings_title">Rozšířená nastavení</string>
     <string name="extendedbolusdeliveryerror">Chyba spuštění extended bolusu</string>
     <string name="aps_mode_title">Typ smyčky</string>
     <string name="extended_bolus">Prodloužený bolus</string>
@@ -164,7 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Rušení dočasného bazálu selhalo</string>
     <string name="canceling_eb_failed">Zastavení prodlouženého bolusu selhalo</string>
-    <string name="virtualpump_uploadstatus_title">Nahrávat status do NS</string>
+    <string name="virtualpump_uploadstatus_title">Nahrát stav do NS nebo Tidepoolu</string>
     <string name="suspendloop_label">Zakázaná/pozastavená smyčka</string>
     <string name="iob_label">Aktivní inzulín (IOB)</string>
     <!--    Protection-->
@@ -577,4 +577,8 @@
         <item quantity="many">%1$d minut</item>
         <item quantity="other">%1$d minut</item>
     </plurals>
+    <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Chcete vyčistit databázi?\nOdstraní sledované změny a historická data starší než 3 měsíce.</string>
+    <string name="cleanup_db_confirm_sync">Chcete vyčistit databázi?\nOdstraní sledované změny a historická data starší než 3 měsíce.\nVýrazně to urychlí plnou synchronizaci.</string>
+    <string name="cleared_entries">Vymazané záznamy</string>
 </resources>

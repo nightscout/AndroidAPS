@@ -44,7 +44,6 @@
     <string name="mute5min">Silenciar por 5 minutos</string>
     <string name="mute">Silêncio</string>
     <string name="success">Sucesso</string>
-    <string name="advancedsettings_title">Configurações Avançadas</string>
     <string name="extendedbolusdeliveryerror">Erro na administração Bólus Prolongado</string>
     <string name="extended_bolus">Bólus Prolongado</string>
     <string name="paused">Em pausa</string>
@@ -139,7 +138,6 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IHC</string>
     <string name="isf_short">FSI</string>
-    <string name="virtualpump_uploadstatus_title">Enviar estado para NS</string>
     <string name="suspendloop_label">Loop Desactivado/Suspenso</string>
     <string name="iob_label">Insulina ativa (IA )</string>
     <!--    Protection-->
@@ -439,4 +437,5 @@
         <item quantity="one">%1$d minuto</item>
         <item quantity="other">%1$d minutos</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

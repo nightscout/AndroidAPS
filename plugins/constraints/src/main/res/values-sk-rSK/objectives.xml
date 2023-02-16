@@ -29,8 +29,8 @@
     <string name="objectives_auto_objective">Povolenie automatiky</string>
     <string name="objectives_auto_gate">Prečítajte si dokumentáciu, ako automatika funguje. Najskôr nastavte iba jednoduché pravidlá. Namiesto vykonávania akcií nechajte AAPS zobrazovať iba oznámenia. Pokiaľ ste si istý, že automatika je spustená v správnom čase, môžete oznámenie nahradiť vykonaním akcie.(https://androidaps.readdocs.io/en/latest/CROWDIN/cs/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Automatizácia môže byť dobrý sluha, ale zlý pán. Nepreháňajte to s ním. Nesnažte sa nahradiť základný algoritmus. Odtestujte pravidlo iba so správou, predtým, ako ho použijete. Závisí na požiadavke.</string>
-    <string name="objectives_bgavailableinns">Glykémia dostupná v NS</string>
-    <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
+    <string name="objectives_bgavailableinns">Glykémia dostupná v NS, alebo Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS, alebo Tidepool</string>
     <string name="objectives_manualenacts">Spustené manuálne</string>
     <string name="accomplished">Splnené: %1$s</string>
     <string name="objectives_usage_objective">Naučte sa, ako ovládať AndroidAPS</string>

@@ -25,7 +25,6 @@
     <string name="master_password_summary">Hovedpassordet brukes for å beskytte backup og tilpasse enkelte sikkerhetsinnstillinger i appen. Husk passordet eller lagre det på et trygt sted.</string>
     <string name="current_master_password">Nåværende hovedpassord</string>
     <string name="common_values">Bruk verdiene for det største måltidet du normalt spiser\n</string>
-    <string name="syncinfotext">Synkronisere data til skyen. Du kan hoppe over dette nå, men du vil ikke bestå opplæringsmålene før det er satt opp.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Pasientnavn</string>
     <string name="patient_name_summary">Angi pasientnavn eller kallenavn for å kunne skille mellom flere oppsett</string>
@@ -114,8 +113,6 @@
     <string name="maintenance_shortname">VEDL</string>
     <string name="description_maintenance">Flere funksjoner for vedlikehold (f. eks. loggsending, loggsletting).</string>
     <string name="database_cleanup">Database opprydding</string>
-    <string name="cleanup_db_confirm">Vil du rydde opp i databasen?\nDet vil fjerne sporede endringer og historiske data eldre enn 3 måneder.</string>
-    <string name="cleared_entries">Ryddet opp i oppføringer</string>
     <string name="reset_db_confirm">Vil du virkelig nullstille databasene?</string>
     <string name="maintenance_settings">Vedlikeholds innstillinger</string>
     <string name="maintenance_email">E-post mottaker</string>

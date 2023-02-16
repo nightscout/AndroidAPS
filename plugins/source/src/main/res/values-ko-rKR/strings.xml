@@ -2,7 +2,6 @@
 <resources>
     <!-- Source -->
     <string name="description_source_ns_client">Nightscout에서 다운로드하여 혈당값 받기</string>
-    <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">xDrip+에서 혈당값 받기</string>
     <string name="eversense">Eversense 앱(패치버전)</string>
     <string name="description_source_eversense">패치된 Eversense 앱에서 혈당값 받기</string>

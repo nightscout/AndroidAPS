@@ -109,8 +109,6 @@
     <string name="maintenance_shortname">MANUT</string>
     <string name="description_maintenance">Fornisce numerose funzioni per la manutenzione (es. invio log, eliminazione log).</string>
     <string name="database_cleanup">Pulizia database</string>
-    <string name="cleanup_db_confirm">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.</string>
-    <string name="cleared_entries">Elementi cancellati</string>
     <string name="reset_db_confirm">Vuoi davvero resettare i database?</string>
     <string name="maintenance_settings">Impostazioni manutenzione</string>
     <string name="maintenance_email">Destinatario email</string>

@@ -45,7 +45,6 @@
     <string name="mute5min">Demp i 5 minutter</string>
     <string name="mute">Lyd av</string>
     <string name="success">Suksess</string>
-    <string name="advancedsettings_title">Avanserte innstillinger</string>
     <string name="extendedbolusdeliveryerror">Forlenget bolus feilet</string>
     <string name="aps_mode_title">APS modus</string>
     <string name="extended_bolus">Forlenget bolus</string>
@@ -164,7 +163,6 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Kansellering av Temp Basal feilet</string>
     <string name="canceling_eb_failed">Kansellering av forlenget bolus feilet</string>
-    <string name="virtualpump_uploadstatus_title">Last opp status til Nightscout</string>
     <string name="suspendloop_label">Deaktiver/pause loop</string>
     <string name="iob_label">Aktivt insulin (IOB)</string>
     <!--    Protection-->
@@ -571,4 +569,5 @@
         <item quantity="one">%1$d minutt</item>
         <item quantity="other">%1$d minutter</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

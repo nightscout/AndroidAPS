@@ -45,7 +45,7 @@
     <string name="mute5min">Muet pendant 5 minutes</string>
     <string name="mute">Muet</string>
     <string name="success">Succès</string>
-    <string name="advancedsettings_title">Paramètres Avancés</string>
+    <string name="advanced_settings_title">Paramètres Avancés</string>
     <string name="extendedbolusdeliveryerror">Erreur administration bolus étendu</string>
     <string name="aps_mode_title">Mode APS</string>
     <string name="extended_bolus">Bolus étendu</string>
@@ -164,7 +164,7 @@
     <string name="isf_short">SI</string>
     <string name="canceling_tbr_failed">Echec de l\'annulation du basal temporaire</string>
     <string name="canceling_eb_failed">Échec de l\'annulation du Bolus étendu</string>
-    <string name="virtualpump_uploadstatus_title">Remontée des informations vers NS</string>
+    <string name="virtualpump_uploadstatus_title">Transférer le statut vers NS ou Tidepool</string>
     <string name="suspendloop_label">Boucle désactivée/suspendue</string>
     <string name="iob_label">Insuline Active (IA)</string>
     <!--    Protection-->
@@ -571,4 +571,8 @@
         <item quantity="one">%1$d minute</item>
         <item quantity="other">%1$d minutes</item>
     </plurals>
+    <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Voulez-vous nettoyer la base de données ?\nCela supprimera les modifications suivies et les données historiques de plus de 3 mois.</string>
+    <string name="cleanup_db_confirm_sync">Voulez-vous nettoyer la base de données ?\nCela supprimera les modifications suivies et les données historiques de plus de 3 mois.\nCela accélérera la synchronisation complète de manière spectaculaire.</string>
+    <string name="cleared_entries">Entrées effacées</string>
 </resources>

@@ -28,7 +28,6 @@
     <string name="ns_client">Interný NSClient</string>
     <string name="ns_client_short_name">NSCl</string>
     <string name="ns_client_url">Adresa URL:</string>
-    <string name="ns_client_autoscroll">Automatický posuv</string>
     <string name="restart">Reštart</string>
     <string name="ns_client_internal_title">Interný NSClient</string>
     <string name="ns_client_url_title">Adresa Nightscoutu</string>
@@ -75,9 +74,9 @@
     <string name="ns_alarm_stale_data_value_label">Hraničná hodnota pre zastaralé dáta [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Vysoká hraničná hodnota pre zastaralé dáta [min]</string>
     <string name="ns_log_app_started_event">Zaznamenávať spustenie aplikácie do NS</string>
-    <string name="ns_local_broadcasts">Povoliť vysielanie do iných aplikácií (napr. xDrip+). Nepovoľujte, pokiaľ máte nainštalovanú viac ako jednu AAPS, alebo NSClient inštanciu!</string>
-    <string name="ns_local_broadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="copy_existing_values">Skopírovať nastavenia NS (ak existujú)?</string>
+    <string name="ns_use_ws_title">Pripojiť k websocketom</string>
+    <string name="ns_use_ws_summary">Povolenie znamená: rýchlejšie aktualizácie, príjem alarmov a oznámení a vyššiu spotrebu batérie podobnú v1. Všetky ostatné aplikácie nahrávajúce do NS musia používať takisto protokol v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Vaše meno používateľa na Tidepoole, obvykle Vaša E-mailová adresa</string>
     <string name="title_tidepool_username">Meno používateľa</string>
@@ -114,5 +113,7 @@
     <string name="xdrip_send_status_title">Odoslať stavový riadok do xDripu</string>
     <string name="xdrip_not_installed">xDrip+ nie je nainštalovaný</string>
     <string name="calibration_sent">Kalibrácia odoslaná do xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Poslať dáta o glykémii a ošetrení do xDrip+. Musí byť vybraný zdroj dát \"xDrip+ Sync Follower\" a prijímanie dát musí byť povolené v Nastavenia - Nastavenie komunikácie medzi aplikáciami - Prijímať Glykémie/Ošetrenia</string>
+    <string name="xdrip_local_broadcasts_title">Povoliť odosielanie do xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>

@@ -25,7 +25,7 @@
     <string name="master_password_summary">Das Master-Passwort wird für die Backup-Verschlüsselung und zur Außerkraftsetzung der Sicherheit in der Anwendung verwendet. Merke es Dir oder bewahre es an einem sicheren Ort auf.</string>
     <string name="current_master_password">Aktuelles Master-Passwort</string>
     <string name="common_values">Verwende die Werte der größten Mahlzeit, die Du normalerweise zu Dir nimmst\n</string>
-    <string name="syncinfotext">Synchronisiere Daten mit der Cloud. Du kannst diesen Teil jetzt überspringen, aber Du wirst keine Ziele überschreiten können, bis Du die Synchronisierung eingerichtet hast.</string>
+    <string name="syncinfotext">Synchronisiere Daten mit der Cloud. Du kannst diesen Teil jetzt überspringen, aber Du wirst keine Ziele überschreiten können, bis Du die Synchronisierung mit Nightscout oder Tidepool eingerichtet hast.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Name des Patienten</string>
     <string name="patient_name_summary">Bitte gib den Namen des Patienten oder einen Spitznamen an, um mehrere Setups unterscheiden zu können.</string>
@@ -114,8 +114,6 @@
     <string name="maintenance_shortname">WRTNG</string>
     <string name="description_maintenance">Stellt mehrere Wartungsfunktionen zur Verfügung (z.B. das Versenden von Logs oder Löschen dieser)</string>
     <string name="database_cleanup">Datenbankbereinigung</string>
-    <string name="cleanup_db_confirm">Möchten Sie die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.</string>
-    <string name="cleared_entries">Gelöschte Einträge</string>
     <string name="reset_db_confirm">Möchtest du die Datenbank wirklich zurücksetzen?</string>
     <string name="maintenance_settings">Wartungseinstellungen</string>
     <string name="maintenance_email">E-Mail</string>

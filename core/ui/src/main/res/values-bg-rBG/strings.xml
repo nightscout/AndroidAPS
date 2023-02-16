@@ -43,7 +43,6 @@
     <string name="mute5min">Изключи за 5 минути</string>
     <string name="mute">Заглушаване</string>
     <string name="success">Успешен</string>
-    <string name="advancedsettings_title">Допълнителни настройки</string>
     <string name="extendedbolusdeliveryerror">Грешка при доставяне на удължен болус</string>
     <string name="extended_bolus">Удължен болус</string>
     <string name="paused">Пауза</string>
@@ -138,7 +137,6 @@
     <string name="dia">DIA</string>
     <string name="ic_short">И / Въгл</string>
     <string name="isf_short">Чувств</string>
-    <string name="virtualpump_uploadstatus_title">Качва статуса в NS</string>
     <!--    Protection-->
     <string name="wrongpassword">Грешна парола</string>
     <string name="passwords_dont_match">Паролите не съвпадат</string>
@@ -329,4 +327,5 @@
         <item quantity="one">%1$d минутa</item>
         <item quantity="other">%1$d минути</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

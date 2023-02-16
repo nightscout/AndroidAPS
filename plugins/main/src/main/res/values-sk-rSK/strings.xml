@@ -324,8 +324,8 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
-    <string name="profile_message">Profil:\n\nPosunutie: %1$\npercento: %2$d%\"</string>
-    <string name="tdd_line">%1$.2fJI %1$.0f%</string>
+    <string name="profile_message">Profil:\n\nPosun času: %1$\nPercento: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fJI %1$.0f%%</string>
     <string name="no_profile">Nie je vybraný žiadny profil</string>
     <string name="aps_only">Použiť iba v APS móde!</string>
     <string name="last_aps_result_na">Posledný výsledok nie je k dispozícii!</string>
@@ -344,5 +344,5 @@
     <string name="until">až do</string>
     <string name="default_range">ŠTANDARDNÝ ROZSAH</string>
     <string name="target">cieľ</string>
-    <string name="rate_duration">Rýchlosť: %1$.2fJI/h (%2$.2f%) \nTrvanie %3$d% min</string>
+    <string name="rate_duration">Rýchlosť: %1$.2fJI/h (%2$.2f%%) \nTrvanie %3$d min</string>
 </resources>

@@ -44,7 +44,6 @@
     <string name="mute5min">5분 동안 음소거</string>
     <string name="mute">음소거</string>
     <string name="success">성공</string>
-    <string name="advancedsettings_title">고급 설정</string>
     <string name="extendedbolusdeliveryerror">확장Bolus 주입 에러</string>
     <string name="extended_bolus">확장 Bolus</string>
     <string name="paused">일시중지</string>
@@ -136,7 +135,6 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="virtualpump_uploadstatus_title">NS에 상태 업로드하기</string>
     <string name="suspendloop_label">중지 또는 일시중지된 loop</string>
     <string name="iob_label">활성 인슐린 (IOB)</string>
     <!--    Protection-->
@@ -418,4 +416,5 @@
     <plurals name="minutes">
         <item quantity="other">%1$d 분</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

@@ -44,7 +44,6 @@
     <string name="mute5min">Tysta i 5 minuter</string>
     <string name="mute">Tysta</string>
     <string name="success">Lyckad</string>
-    <string name="advancedsettings_title">Avancerade inställningar</string>
     <string name="extendedbolusdeliveryerror">Förlängd bolus misslyckad</string>
     <string name="extended_bolus">Förlängd bolus</string>
     <string name="paused">Pausad</string>
@@ -153,7 +152,6 @@
     <string name="dia">Duration</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="virtualpump_uploadstatus_title">Ladda upp status till Nightscout</string>
     <string name="suspendloop_label">Inaktiverad/pausad loop</string>
     <string name="iob_label">Aktivt Insulin (IOB)</string>
     <!--    Protection-->
@@ -484,4 +482,5 @@
         <item quantity="one">%1$d min</item>
         <item quantity="other">%1$d min</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

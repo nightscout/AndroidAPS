@@ -4,7 +4,7 @@
     <string name="ns_client_bg">NSClient BG</string>
     <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Pobieraj wartości BG z Nightscout</string>
-    <string name="xdrip">xDrip+</string>
+    <string name="source_xdrip">xDrip+ BG</string>
     <string name="description_source_xdrip">Pobieraj wartości BG z xDrip+.</string>
     <string name="dexcom_app_patched">Dexcom Patched</string>
     <string name="dexcom_short">DEX.PATCH.</string>

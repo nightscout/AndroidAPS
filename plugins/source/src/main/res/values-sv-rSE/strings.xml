@@ -2,7 +2,6 @@
 <resources>
     <!-- Source -->
     <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
-    <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">Ta emot BG-data från xDrip+.</string>
     <string name="dexcom_app_patched">Patchad Dexcom-app</string>
     <string name="dexcom_short">Dex</string>

@@ -45,7 +45,7 @@
     <string name="mute5min">Stumm schalten für 5 Minuten</string>
     <string name="mute">Alarm stoppen</string>
     <string name="success">Erfolgreich</string>
-    <string name="advancedsettings_title">Erweiterte Einstellungen</string>
+    <string name="advanced_settings_title">Erweiterte Einstellungen</string>
     <string name="extendedbolusdeliveryerror">Fehler bei der Abgabe eines verzögerten Bolus</string>
     <string name="aps_mode_title">APS-Modus</string>
     <string name="extended_bolus">Verzögerter Bolus</string>
@@ -164,7 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Abbruch der temporären Basalrate fehlgeschlagen</string>
     <string name="canceling_eb_failed">Der Abbruch des erweiterten Bolus ist fehlgeschlagen</string>
-    <string name="virtualpump_uploadstatus_title">Status zu Nightscout hochladen</string>
+    <string name="virtualpump_uploadstatus_title">Status zu NS oder Tidepool hochladen</string>
     <string name="suspendloop_label">Deaktiviere/Pausiere den Loop</string>
     <string name="iob_label">Aktives Insulin (IOB)</string>
     <!--    Protection-->
@@ -571,4 +571,8 @@
         <item quantity="one">%1$d Minute</item>
         <item quantity="other">%1$d Minuten</item>
     </plurals>
+    <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Möchten Sie die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.</string>
+    <string name="cleanup_db_confirm_sync">Möchten Sie die Datenbank bereinigen?\nEs werden gespeicherte Änderungen und historische Daten gelöscht, die älter als 3 Monate sind.\nDies beschleunigt die vollständige Synchronisierung dramatisch.</string>
+    <string name="cleared_entries">Gelöschte Einträge</string>
 </resources>

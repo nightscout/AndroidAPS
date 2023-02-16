@@ -44,7 +44,6 @@
     <string name="mute5min">5 minuten dempen</string>
     <string name="mute">Geluid dempen</string>
     <string name="success">Succes</string>
-    <string name="advancedsettings_title">Geavanceerde instellingen</string>
     <string name="extendedbolusdeliveryerror">Vertraagde bolus toedieningsfout</string>
     <string name="extended_bolus">Vertraagde bolus</string>
     <string name="paused">Gepauzeerd</string>
@@ -158,7 +157,6 @@
     <string name="dia">DIA</string>
     <string name="ic_short">KH-ratio</string>
     <string name="isf_short">ISF</string>
-    <string name="virtualpump_uploadstatus_title">Upload status naar NS</string>
     <string name="suspendloop_label">Uitgeschakelde/onderbroken loop</string>
     <string name="iob_label">Insuline aan boord (IOB)</string>
     <!--    Protection-->
@@ -553,4 +551,5 @@
         <item quantity="one">%1$d minuut</item>
         <item quantity="other">%1$d minuten</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

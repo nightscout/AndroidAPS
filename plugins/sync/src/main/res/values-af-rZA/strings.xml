@@ -17,7 +17,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Autoscroll</string>
     <string name="restart">Herbegin</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -35,7 +34,6 @@
     <string name="ns_alarm_stale_data_value_label">Ou data drumpel [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Nood ou data drumpel [min]</string>
     <string name="ns_log_app_started_event">Log app begin na NS</string>
-    <string name="ns_local_broadcasts_title">Aktiveer plaaslike Uitsaai.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">JouTidepool login gebruiker, normaallweg \'n email adres</string>
     <string name="title_tidepool_username">Login Gebruiker Naam</string>

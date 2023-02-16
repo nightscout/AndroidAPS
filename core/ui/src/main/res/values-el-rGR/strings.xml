@@ -38,7 +38,6 @@
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute">Σίγαση</string>
     <string name="success">Επιτυχία</string>
-    <string name="advancedsettings_title">Ρυθμίσεις για Προχωρημένους</string>
     <string name="extendedbolusdeliveryerror">Σφάλμα έγχυσης εκτεταμένου bolus</string>
     <string name="extended_bolus">Εκτεταμένο bolus</string>
     <string name="paused">Παύση</string>
@@ -116,7 +115,6 @@
     <string name="closedloop">Κλειστό Κύκλωμα</string>
     <string name="openloop">Ανοιχτό Κύκλωμα</string>
     <string name="lowglucosesuspend">Αναστολή Χαμηλής Γλυκόζης</string>
-    <string name="virtualpump_uploadstatus_title">Φόρτωση κατάστασης στο NS</string>
     <!--    Protection-->
     <string name="wrongpassword">Λάθος κωδικός</string>
     <!--    Profile-->
@@ -279,4 +277,5 @@
         <item quantity="one">%1$d minute</item>
         <item quantity="other">%1$d λεπτά</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

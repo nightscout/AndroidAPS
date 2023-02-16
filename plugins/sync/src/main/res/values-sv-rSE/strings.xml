@@ -19,7 +19,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCl</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Automatisk rullning</string>
     <string name="restart">Starta om</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout-URL</string>
@@ -61,7 +60,6 @@
     <string name="ns_alarm_stale_data_value_label">Första varning efter [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Akut varning efter [min]</string>
     <string name="ns_log_app_started_event">Rapportera appstart till Nightscout</string>
-    <string name="ns_local_broadcasts_title">Aktivera lokala broadcasts</string>
     <string name="copy_existing_values">Kopiera NS-inställningar (om det finns)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Ditt användarnamn på Tidepool. Normalt din e-postadress</string>

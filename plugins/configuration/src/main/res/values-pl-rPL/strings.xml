@@ -25,7 +25,7 @@
     <string name="master_password_summary">Hasło główne jest używane do szyfrowania kopii zapasowych i przełamania zabezpieczeń w aplikacji. Zapamiętaj je lub przechowuj w bezpiecznym miejscu.</string>
     <string name="current_master_password">Aktualne hasło główne</string>
     <string name="common_values">Użyj wartości największego jedzenia, które zazwyczaj zjadasz\n</string>
-    <string name="syncinfotext">Synchronizuj dane z chmurą. Możesz teraz pominąć ten krok, ale nie będziesz w stanie przejść zadań dopóki nie skonfigurujesz połączenia.</string>
+    <string name="syncinfotext">Synchronizuj dane z chmurą. Możesz teraz pominąć ten krok, ale nie będziesz w stanie przejść zadań dopóki nie skonfigurujesz połączenia z Nightscout lub Tidepool.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Nazwa pacjenta</string>
     <string name="patient_name_summary">Proszę podać nazwę pacjenta lub pseudonim w celu rozróżnienia pomiędzy różnymi konfiguracjami</string>
@@ -114,8 +114,6 @@
     <string name="maintenance_shortname">MAINT</string>
     <string name="description_maintenance">Dostarcza kilka funkcji używanych do konserwacji (np. wysyłanie logów, kasowanie logów).</string>
     <string name="database_cleanup">Czyszczenie bazy danych</string>
-    <string name="cleanup_db_confirm">Czy chcesz wyczyścić bazę danych?\nTa operacja usunie odnotowane zmiany i dane historyczne starsze niż 3 miesiące.</string>
-    <string name="cleared_entries">Usunięte wpisy</string>
     <string name="reset_db_confirm">Na pewno chcesz zresetować bazy danych?</string>
     <string name="maintenance_settings">Ustawienia Konserwacji</string>
     <string name="maintenance_email">Odbiorca E-maila</string>

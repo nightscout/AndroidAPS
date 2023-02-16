@@ -325,8 +325,8 @@ Unerwartetes Verhalten.</string>
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Kein aktiver Profilwechsel!</string>
-    <string name="profile_message">Profil:\n\nZeitverschiebung: %1$\nProzent: %2$d%\"</string>
-    <string name="tdd_line">%1$.2fE %1$.0f%</string>
+    <string name="profile_message">Profil:\n\nZeitverschiebung: %1$\nProzent: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="no_profile">Kein Profil geladen</string>
     <string name="aps_only">Nur im APS-Modus anwendbar!</string>
     <string name="last_aps_result_na">Letztes Ergebnis ist nicht verfügbar!</string>
@@ -345,5 +345,5 @@ Unerwartetes Verhalten.</string>
     <string name="until">bis</string>
     <string name="default_range">STANDARD-BEREICH</string>
     <string name="target">Ziel</string>
-    <string name="rate_duration">Rate: %1$.2fE/h (%2$.2f%) \nDauer %3$d% min</string>
+    <string name="rate_duration">Rate: %1$.2fIE/h (%2$.2f%) \nDauer %3$d% min</string>
 </resources>

@@ -45,7 +45,6 @@
     <string name="mute5min">Silenciar por 5 minutos</string>
     <string name="mute">Silêncio</string>
     <string name="success">Sucesso</string>
-    <string name="advancedsettings_title">Configurações Avançadas</string>
     <string name="extendedbolusdeliveryerror">Erro na entrega Bólus Estendido</string>
     <string name="aps_mode_title">Modo APS</string>
     <string name="extended_bolus">Bólus estendido</string>
@@ -164,7 +163,6 @@
     <string name="isf_short">FSI</string>
     <string name="canceling_tbr_failed">Cancelamento do basal temporário falhou</string>
     <string name="canceling_eb_failed">Falhou o cancelamento do bolus extendido</string>
-    <string name="virtualpump_uploadstatus_title">Enviar estado para NS</string>
     <string name="suspendloop_label">Loop Desativado/Suspenso</string>
     <string name="iob_label">Insulina ativa (IA)</string>
     <!--    Protection-->
@@ -567,4 +565,5 @@
         <item quantity="one">%1$d minuto</item>
         <item quantity="other">%1$d minutos</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

@@ -44,7 +44,6 @@
     <string name="mute5min">השתקה ל-5 דקות</string>
     <string name="mute">השתק</string>
     <string name="success">הצלחה</string>
-    <string name="advancedsettings_title">הגדרות מתקדמות</string>
     <string name="extendedbolusdeliveryerror">שגיאה במתן הבולוס הממושך</string>
     <string name="extended_bolus">בולוס ממושך</string>
     <string name="paused">מושהה</string>
@@ -156,7 +155,6 @@
     <string name="dia">משך פעילות אינסולין</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="virtualpump_uploadstatus_title">טוען מצב ל-Nightscout</string>
     <string name="suspendloop_label">השבתת \\ השהיית לולאה</string>
     <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
     <!--    Protection-->
@@ -544,4 +542,5 @@
         <item quantity="many">%1$d דקות</item>
         <item quantity="other">%1$d דקות</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

@@ -25,7 +25,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Autoscroll</string>
     <string name="restart">Genstart</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -69,8 +68,6 @@
     <string name="ns_alarm_stale_data_value_label">Forældet data grænse [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Akut forældet data grænse [min]</string>
     <string name="ns_log_app_started_event">Log app-start til NS</string>
-    <string name="ns_local_broadcasts">Aktivér dryp til andre apps (såsom xDrip+). Aktiver ikke, hvis du har mere end én instans af AAPS eller AAPSClient installeret!</string>
-    <string name="ns_local_broadcasts_title">Aktiver lokale udsendelser.</string>
     <string name="copy_existing_values">Kopier NS-indstillinger (hvis de findes)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Dit brugernavn til Tidepool, normalt din e-mailadresse</string>

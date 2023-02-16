@@ -29,8 +29,8 @@
     <string name="objectives_auto_objective">Povolení automatizace</string>
     <string name="objectives_auto_gate">Přečtěte si na wiki, jak automatizace funguje. Nejdříve nastavte pouze jednoduchá pravidla. Namísto provádění akcí nechte AAPS zobrazovat pouze oznámení. Pokud jste si jistí, že je automatizace spouštěna v pravý čas, můžete oznámení nahradit prováděním akce. (https://wiki.aaps.app/cs/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Automatizace může být dobrý sluha, ale špatný pán. Nepoužívejte ji nadměrně. Nesnažte se nahradit základní algoritmus. Otestujte pravidlo pouze se zprávou před použitím. Zpracování pravidel závisí na pořadí.</string>
-    <string name="objectives_bgavailableinns">Glykémie dostupná v NS</string>
-    <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS</string>
+    <string name="objectives_bgavailableinns">Glykémie dostupná v NS nebo Tidepoolu</string>
+    <string name="objectives_pumpstatusavailableinns">Stav pumpy dostupný v NS nebo Tidepoolu</string>
     <string name="objectives_manualenacts">Ručně spuštěno</string>
     <string name="accomplished">Splněno: %1$s</string>
     <string name="objectives_usage_objective">Naučte se, jak ovládat AAPS</string>

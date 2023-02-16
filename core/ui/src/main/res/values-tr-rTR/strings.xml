@@ -45,7 +45,7 @@
     <string name="mute5min">5 dakika sessize al</string>
     <string name="mute">Sessiz</string>
     <string name="success">Başarılı</string>
-    <string name="advancedsettings_title">Gelişmiş Ayarlar</string>
+    <string name="advanced_settings_title">Gelişmiş Ayarlar</string>
     <string name="extendedbolusdeliveryerror">Yayma bolus iletim hatası</string>
     <string name="aps_mode_title">APS modu</string>
     <string name="extended_bolus">Yayma Bolus</string>
@@ -164,7 +164,7 @@
     <string name="isf_short">IDF İnsülin Duyarlılık Faktörü</string>
     <string name="canceling_tbr_failed">Geçici bazal iptali başarısız oldu</string>
     <string name="canceling_eb_failed">Yayma bolusun iptal edilmesi başarısız oldu</string>
-    <string name="virtualpump_uploadstatus_title">Nightscout\'a durum aktar</string>
+    <string name="virtualpump_uploadstatus_title">Durumu NS\'a veya Tidepool\'a yükleyin</string>
     <string name="suspendloop_label">Döngüyü Devre Dışı bırakma/Askıya alma</string>
     <string name="iob_label">Aktif İnsülin (AİNS)</string>
     <!--    Protection-->
@@ -571,4 +571,8 @@
         <item quantity="one">%1$d dakika</item>
         <item quantity="other">%1$d dakika</item>
     </plurals>
+    <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Veritabanını temizlemek istiyor musunuz?\nİzlenen değişiklikleri ve 3 aydan eski geçmiş verileri kaldıracak.</string>
+    <string name="cleanup_db_confirm_sync">Veritabanını temizlemek istiyor musunuz?\nBu, izlenen değişiklikleri ve 3 aydan daha eski geçmiş verileri kaldıracaktır.\nBunu yapmak, tam senkronizasyonu önemli ölçüde hızlandıracaktır.</string>
+    <string name="cleared_entries">Temizlenen girdiler</string>
 </resources>

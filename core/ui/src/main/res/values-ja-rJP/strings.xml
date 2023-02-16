@@ -15,7 +15,6 @@
     <string name="save">保存</string>
     <string name="pump">ポンプ</string>
     <string name="mute">消音</string>
-    <string name="advancedsettings_title">詳細設定</string>
     <string name="goingtodeliver">%1$.2fUを注入します</string>
     <string name="waitingforpump">ポンプ反応待ち</string>
     <string name="androidaps_start">AAPSを開始しました</string>
@@ -112,4 +111,5 @@
     <!--    Preferences -->
     <!-- SmsCommunicator -->
     <!-- About -->
+    <!--    Maintenance-->
 </resources>

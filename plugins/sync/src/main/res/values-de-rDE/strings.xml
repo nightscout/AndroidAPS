@@ -28,7 +28,6 @@
     <string name="ns_client">Nightscout-Client</string>
     <string name="ns_client_short_name">NSCl</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Auto-Scrollen</string>
     <string name="restart">Neustart</string>
     <string name="ns_client_internal_title">Nightscout-Client</string>
     <string name="ns_client_url_title">Nightscout-URL</string>
@@ -75,9 +74,9 @@
     <string name="ns_alarm_stale_data_value_label">Veraltete Daten seit [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Stark veraltete Daten seit [min]</string>
     <string name="ns_log_app_started_event">Logge App-Start in Nightscout</string>
-    <string name="ns_local_broadcasts">Aktiviere die Datenübertragung zu anderen Apps (z.B. xDrip+). Nicht aktivieren, falls Du mehr als eine Instanz von AAPS oder NSClient installiert hast!</string>
-    <string name="ns_local_broadcasts_title">Aktiviere lokale Broadcasts</string>
     <string name="copy_existing_values">NS-Einstellungen kopieren (falls vorhanden)?</string>
+    <string name="ns_use_ws_title">Mit Websockets verbinden</string>
+    <string name="ns_use_ws_summary">Aktivieren bedeutet: schnellere Updates, Empfang von Alarmen und Ankündigungen und ein höherer Akkuverbrauch ähnlich v1. Alle anderen Uploader zu NS müssen v3-Protokoll verwenden.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Dein Tidepool-Login-Benutzername, normalerweise deine E-Mail-Adresse</string>
     <string name="title_tidepool_username">Login-Benutzername</string>
@@ -114,5 +113,7 @@
     <string name="xdrip_send_status_title">Statuszeile an xDrip+ senden</string>
     <string name="xdrip_not_installed">xDrip+ nicht installiert</string>
     <string name="calibration_sent">Kalibrierung an xDrip+ gesendet</string>
+    <string name="xdrip_local_broadcasts_summary">Senden Sie Glukose- und Behandlungsdaten an xDrip+. Datenquelle \"xDrip+ Sync-Follower\" muss ausgewählt werden und die Akzeptanz von Daten muss in den Einstellungen - Inter-App-Einstellungen - Glukose/Behandlung akzeptieren</string>
+    <string name="xdrip_local_broadcasts_title">Aktiviere Broadcasts zu xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>

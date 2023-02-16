@@ -37,7 +37,6 @@
     <string name="treatments_iob_label_string">IAB:</string>
     <string name="mute">Demp</string>
     <string name="success">Sukses</string>
-    <string name="advancedsettings_title">Gevorderde instellings</string>
     <string name="extendedbolusdeliveryerror">Verlengde bolus afleweringsfout</string>
     <string name="extended_bolus">Uitgebreide bolus</string>
     <string name="paused">Onderbreek</string>
@@ -113,7 +112,6 @@
     <string name="closedloop">Geslote lus</string>
     <string name="openloop">Oop lus</string>
     <string name="dia">DIA</string>
-    <string name="virtualpump_uploadstatus_title">Oplaaistatus aan NS</string>
     <!--    Protection-->
     <string name="wrongpassword">Verkeerde wagwoord</string>
     <!--    Profile-->
@@ -271,4 +269,5 @@
         <item quantity="one">%1$d minuut</item>
         <item quantity="other">%1$d minute</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

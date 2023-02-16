@@ -36,8 +36,6 @@
     <string name="master_password_missing">Glavna lozinka nije postavljena!\n\nMolimo postavite svoju glavnu lozinku u postavkama (%1$s &#8594; %2$s)</string>
     <!--    Maintenance-->
     <string name="database_cleanup">Čišćenje baze podataka</string>
-    <string name="cleanup_db_confirm">Želite li očistiti bazu podataka?\nUklonit će praćene promjene i povijesne podatke starije od 3 mjeseca.</string>
-    <string name="cleared_entries">Izbrisani unosi</string>
     <string name="reset_db_confirm">Stvarno želiš resetirati bazu?</string>
     <string name="nav_resetdb">Resetiraj bazu</string>
     <!-- Maintenance -->

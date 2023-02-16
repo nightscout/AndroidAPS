@@ -28,7 +28,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Autoprzewijanie</string>
     <string name="restart">Restart</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -75,9 +74,9 @@
     <string name="ns_alarm_stale_data_value_label">Próg nieaktualne dane [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Próg uwaga nieaktualne dane [min]</string>
     <string name="ns_log_app_started_event">Wyślij start app do NS</string>
-    <string name="ns_local_broadcasts">Włącz rozgłaszanie do innych aplikacji (takich jak xDrip+). Nie należy włączać, jeśli zainstalowana jest więcej niż jedna instancja AAPS lub AAPSClient!</string>
-    <string name="ns_local_broadcasts_title">Włącz transmisję lokalnie.</string>
     <string name="copy_existing_values">Czy skopiować ustawienia NS (jeśli istnieją)?</string>
+    <string name="ns_use_ws_title">Połącz używając websockets</string>
+    <string name="ns_use_ws_summary">Włączenie tej opcji oznacza: szybsze aktualizacje, otrzymywanie alarmów i powiadomień z NS oraz większe zużycie baterii, podobne do v1. Wszystkie inne źródła nadające do NS muszą używać protokołu v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Twoja nazwa użytkownika Tidepool, zwykle Twój adres e-mail</string>
     <string name="title_tidepool_username">Login nazwa użytkownika</string>
@@ -114,5 +113,7 @@
     <string name="xdrip_send_status_title">Wyślij linię statusu do xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ nie jest zainstalowany</string>
     <string name="calibration_sent">Kalibracja przesłana do xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Wyślij dane dotyczące glikemii i leczenia do xDrip+. W ustawieniach xDrip+ należy ustawić \"Sprzętowe źródło danych\" na \"xDrip+ Sync Follower\" oraz włączyć akceptowanie danych: \"Ustawienia innych aplikacji\" - \"Akceptuj Glukozę/Akceptuj zabiegi\"</string>
+    <string name="xdrip_local_broadcasts_title">Włącz nadawanie do xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>

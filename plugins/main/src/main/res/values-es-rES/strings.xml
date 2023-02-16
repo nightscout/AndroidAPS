@@ -324,8 +324,8 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Sin cambio de perfil activo</string>
-    <string name="profile_message">Perfil:\n\nCambio de hora: %1$\nPorcentaje: %2$d%\"</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%</string>
+    <string name="profile_message">Perfil:\n\nHorario: %1$\nPorcentaje: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">Ningún perfil cargado</string>
     <string name="aps_only">Sólo se aplica en modo APS</string>
     <string name="last_aps_result_na">¡Último resultado no disponible!</string>
@@ -344,5 +344,5 @@
     <string name="until">hasta</string>
     <string name="default_range">RANGO POR DEFECTO</string>
     <string name="target">objetivo</string>
-    <string name="rate_duration">Ratio: %1$.2fU/h (%2$.2f%) \nDuración %3$d% min</string>
+    <string name="rate_duration">Tasa: %1$.2fU/h (%2$.2f%%) \nDuración %3$d min</string>
 </resources>

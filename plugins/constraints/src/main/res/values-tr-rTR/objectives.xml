@@ -29,8 +29,8 @@
     <string name="objectives_auto_objective">Otomasyonu etkinleştirme</string>
     <string name="objectives_auto_gate">Otomasyonun nasıl çalıştığına dair dokümanları okuyun. İlk basit kurallarınızı belirleyin. Eylem yerine AAPS\'in yalnızca bildirim göndermesine izin verin. Otomasyonun doğru zamanda tetiklendiğinden emin olduğunuzda, bildirimi gerçek eylemle değiştirin. (https://wiki.aaps.app/tr/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Otomasyon iyi bir hizmetkar ama kötü bir efendi olabilir. Aşırı kullanmayın. Altta yatan algoritmayı değiştirmeye çalışmayın. Kuralı yalnızca kullanmadan önce mesajla test edin. Onayınıza bağlıdır.</string>
-    <string name="objectives_bgavailableinns">KŞ NS\'ta mevcut</string>
-    <string name="objectives_pumpstatusavailableinns">Pompa durumu NS\'ta mevcut</string>
+    <string name="objectives_bgavailableinns">KŞ NS veya Tidepool\'da mevcut</string>
+    <string name="objectives_pumpstatusavailableinns">Pompa durumu NS veya Tidepool\'da mevcut</string>
     <string name="objectives_manualenacts">Manuel eylemler</string>
     <string name="accomplished">Başarıldı: %1$s</string>
     <string name="objectives_usage_objective">AAPS\'yi nasıl kontrol edeceğinizi öğrenin</string>

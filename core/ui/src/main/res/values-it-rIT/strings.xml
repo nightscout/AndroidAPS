@@ -44,7 +44,6 @@
     <string name="mute5min">Muto per 5 minuti</string>
     <string name="mute">Muto</string>
     <string name="success">OK</string>
-    <string name="advancedsettings_title">Impostazioni avanzate</string>
     <string name="extendedbolusdeliveryerror">Errore erogazione bolo esteso</string>
     <string name="extended_bolus">Bolo esteso</string>
     <string name="paused">In pausa</string>
@@ -156,7 +155,6 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="virtualpump_uploadstatus_title">Carica stato in NS</string>
     <string name="suspendloop_label">Loop disabilitato/sospeso</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
     <!--    Protection-->
@@ -542,4 +540,5 @@
         <item quantity="one">%1$d minuto</item>
         <item quantity="other">%1$d minuti</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

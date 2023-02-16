@@ -25,7 +25,7 @@
     <string name="master_password_summary">La contraseña maestra se utiliza para cifrar la copia de seguridad y para desbloquear la seguridad de la aplicación. Recuérdala o guárdala en un lugar seguro.</string>
     <string name="current_master_password">Contraseña maestra actual</string>
     <string name="common_values">Usa los valores de la comida más grande que sueles comer\n</string>
-    <string name="syncinfotext">Sincronizar datos a la nube. Puedes saltar este paso ahora, pero no podrás completar los objetivos hasta que lo configures.</string>
+    <string name="syncinfotext">Sincronizar datos a la nube. Puedes saltarte esta parte ahora, pero no podrás pasar los objetivos hasta que configures el cliente Nightscout o Tidepool</string>
     <string name="status">Estado:</string>
     <string name="patient_name">Nombre del paciente</string>
     <string name="patient_name_summary">Proporcione el nombre de paciente o el apodo para diferenciar entre varias configuraciones</string>
@@ -114,8 +114,6 @@
     <string name="maintenance_shortname">MANT</string>
     <string name="description_maintenance">Accede a varias opciones de mantenimiento (p. ej. envío y borrado de registros)</string>
     <string name="database_cleanup">Limpiar base de dados</string>
-    <string name="cleanup_db_confirm">¿Desea limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos con más de 3 meses de antiguedad.</string>
-    <string name="cleared_entries">Entradas eliminadas</string>
     <string name="reset_db_confirm">¿Realmente quiere restablecer las bases de datos?</string>
     <string name="maintenance_settings">Ajustes de mantenimiento</string>
     <string name="maintenance_email">Correo electrónico</string>

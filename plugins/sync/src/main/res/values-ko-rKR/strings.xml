@@ -19,7 +19,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">자동스크롤</string>
     <string name="restart">재시작</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL</string>
@@ -57,7 +56,6 @@
     <string name="ns_alarm_stale_data_value_label">누락 데이터 기준값 [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">위험 누락 데이터 기준값 [min]</string>
     <string name="ns_log_app_started_event">앱시작을 NS에 기록하기</string>
-    <string name="ns_local_broadcasts_title">Local Broadcasts 활성화하기</string>
     <string name="copy_existing_values">NS 설정(이 존재하는 경우) 복사하기?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Tidepool 사용자명, 보통 이메일 주소입니다.</string>

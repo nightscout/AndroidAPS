@@ -43,7 +43,6 @@
     <string name="mute5min">静音 5 分钟</string>
     <string name="mute">静音</string>
     <string name="success">成功</string>
-    <string name="advancedsettings_title">高级设置</string>
     <string name="extendedbolusdeliveryerror">扩展大剂量(方波) 输注错误</string>
     <string name="extended_bolus">扩展大剂量(方波)</string>
     <string name="paused">已暂停</string>
@@ -154,7 +153,6 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="virtualpump_uploadstatus_title">将状态上传到 NS</string>
     <string name="suspendloop_label">禁用/暂停闭环</string>
     <string name="iob_label">活性胰岛素(IOB)</string>
     <!--    Protection-->
@@ -529,4 +527,5 @@
     <plurals name="minutes">
         <item quantity="other">%1$d 分钟</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

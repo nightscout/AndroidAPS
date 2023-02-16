@@ -28,7 +28,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL :</string>
-    <string name="ns_client_autoscroll">Défilement automatique</string>
     <string name="restart">Redémarrer</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">URL Nightscout</string>
@@ -75,9 +74,9 @@
     <string name="ns_alarm_stale_data_value_label">Seuil sans nouvelle donnée Gly [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Seuil d\'urgence pour les données obsolètes [min]</string>
     <string name="ns_log_app_started_event">Démarrage AAPS entré dans NS</string>
-    <string name="ns_local_broadcasts">Active les diffusions vers d\'autres applications (comme xDrip+). Ne pas activer si plusieurs instances d\'AAPS ou de AAPSClient sont installées !</string>
-    <string name="ns_local_broadcasts_title">Activer les transmissions locales</string>
     <string name="copy_existing_values">Copier les paramètres NS (s\'ils existent)?</string>
+    <string name="ns_use_ws_title">Se connecter aux websockets</string>
+    <string name="ns_use_ws_summary">L\'activation signifie : des mises à jour plus rapides, la réception d\'alarmes et d\'annonces et une consommation de batterie plus élevée similaire à la v1. Tous les autres téléchargeurs vers NS doivent utiliser le protocole v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Votre nom d\'utilisateur Tidepool, normalement votre adresse e-mail</string>
     <string name="title_tidepool_username">Nom d\'utilisateur</string>
@@ -114,5 +113,7 @@
     <string name="xdrip_send_status_title">Envoyer la barre d\'état à xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ n\'est pas installé</string>
     <string name="calibration_sent">Étalonnage envoyé à xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Envoyer les glycémies et les traitements à xDrip+. La source de données \"xDrip+ Sync Follower\" doit être sélectionnée et l\'acceptation des données doit être activée dans Paramètres - Paramètres Inter-app - Accepter Glycémies/Traitements</string>
+    <string name="xdrip_local_broadcasts_title">Activer les diffusions vers xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>

@@ -17,7 +17,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Αυτόματη κύλιση</string>
     <string name="restart">Επανεκκίνηση</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Διεύθυνση Nightscout</string>
@@ -35,7 +34,6 @@
     <string name="ns_alarm_stale_data_value_label">Οριακή τιμή για παλιά δεδομένα [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Επείγουσα οριακή τιμή για παλιά δεδομένα [min]</string>
     <string name="ns_log_app_started_event">Η εφαρμογή καταγραφής ξεκινά από το NS</string>
-    <string name="ns_local_broadcasts_title">Ενεργοποιήστε τις τοπικές αποστολές.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Το όνομα χρήστη του Tidepool, συνήθως το mail σας</string>
     <string name="title_tidepool_username">Όνομα Χρήστη</string>

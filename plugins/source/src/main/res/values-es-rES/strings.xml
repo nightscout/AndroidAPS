@@ -4,7 +4,7 @@
     <string name="ns_client_bg">NSClient Glucosa</string>
     <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Recibir los datos de glucosa de Nightscout</string>
-    <string name="xdrip">xDrip+</string>
+    <string name="source_xdrip">xDrip+ BG</string>
     <string name="description_source_xdrip">Recibir los valores de glucosa de xDrip+</string>
     <string name="dexcom_app_patched">Dexcom (BYODA)</string>
     <string name="dexcom_short">BYODA</string>

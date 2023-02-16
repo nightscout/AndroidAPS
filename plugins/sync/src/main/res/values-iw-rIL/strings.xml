@@ -25,7 +25,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">כתובת URL:</string>
-    <string name="ns_client_autoscroll">גלילה אוטומטית</string>
     <string name="restart">הפעל מחדש</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">כתובת נייטסקאוט</string>
@@ -69,8 +68,6 @@
     <string name="ns_alarm_stale_data_value_label">סף התיישנות נתונים [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">סף התיישנות נתונים דחוף [min]</string>
     <string name="ns_log_app_started_event">רשום הפעלת AAPS ב-Nightscout</string>
-    <string name="ns_local_broadcasts">אפשר הפצה לאפליקציות אחרות (כגון xDrip). אין להפעיל אם מותקן לכם יותר ממופע אחד של AAPS או NSClient!</string>
-    <string name="ns_local_broadcasts_title">אפשר שידורים מקומיים.</string>
     <string name="copy_existing_values">להעתיק הגדרות מ-Nightscout (אם קיימות)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">שם המשתמש שלכם להתחברות ל-Tidepool, בדרך כלל כתובת הדוא\"ל שלכם</string>

@@ -44,7 +44,6 @@
     <string name="mute5min">Dezactivează pentru 5 minute</string>
     <string name="mute">Liniște</string>
     <string name="success">Succes</string>
-    <string name="advancedsettings_title">Setări avansate</string>
     <string name="extendedbolusdeliveryerror">Eroare de livrare a bolusului extins</string>
     <string name="extended_bolus">Bolus extins</string>
     <string name="paused">Suspendat</string>
@@ -140,7 +139,6 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="virtualpump_uploadstatus_title">Trimitere status către NS</string>
     <string name="suspendloop_label">Buclă dezactivată/suspendată</string>
     <string name="iob_label">Insulină activă (IOB)</string>
     <!--    Protection-->
@@ -458,4 +456,5 @@
         <item quantity="few">%1$d minute</item>
         <item quantity="other">%1$d minute</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

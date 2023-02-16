@@ -28,7 +28,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCLI</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Desplazamiento automático</string>
     <string name="restart">Reiniciar</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">URL de Nightscout</string>
@@ -75,9 +74,9 @@
     <string name="ns_alarm_stale_data_value_label">Datos antiguos limite [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Datos antiguos urgentes limite [min]</string>
     <string name="ns_log_app_started_event">Registrar el inicio de la aplicación en Nightscout</string>
-    <string name="ns_local_broadcasts">Activar transmisiones a otras aplicaciones (como xDrip+). ¡No activar si tiene más de una instancia de AAPS o AAPSClient instalado!</string>
-    <string name="ns_local_broadcasts_title">Habilitar la emisión de mensajes localmente</string>
     <string name="copy_existing_values">¿Deseas copiar los ajustes desde Nightscout, si existen?</string>
+    <string name="ns_use_ws_title">Conectar a websockets</string>
+    <string name="ns_use_ws_summary">Activarlo significa: actualizaciones más rápidas, recepción de alarmas y avisos con un mayor consumo de batería, similar a v1. El resto de cargadores a NS deben utilizar el protocolo v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Tu nombre de usuario de Tidepool, normalmente tu dirección de correo electrónico</string>
     <string name="title_tidepool_username">Nombre de usuario</string>
@@ -114,5 +113,7 @@
     <string name="xdrip_send_status_title">Enviar línea de estado a xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ no instalado</string>
     <string name="calibration_sent">Calibración enviada a xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Enviar datos de glucosa y tratamientos a xDrip+. La fuente de datos \"xDrip+ Sync Follower\" debe estar seleccionada y la aceptación de datos debe estar activada en Ajustes - Ajustes entre aplicaciones - Aceptar glucosa/tratamientos</string>
+    <string name="xdrip_local_broadcasts_title">Activar las transmisiones a xDrip+</string>
     <!--    DataBroadcast-->
 </resources>

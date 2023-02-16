@@ -26,7 +26,7 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="master_password_summary">Le mot de passe principal est utilisé pour crypter les sauvegardes et superviser la sécurité de l\'application. Rappelez-vous en ou stockez le en lieu sûr.</string>
     <string name="current_master_password">Mot de passe principal actuel</string>
     <string name="common_values">Utilisez les valeurs qui correspondent à vos plus gros repas\n</string>
-    <string name="syncinfotext">Synchroniser les données sur le cloud. Vous pouvez sauter cette partie maintenant, mais vous ne pourrez pas passer les objectifs tant que vous ne l\'aurez pas configuré.</string>
+    <string name="syncinfotext">Synchroniser les données sur le cloud. Vous pouvez sauter cette partie maintenant mais vous ne pourrez pas passer les objectifs tant que vous n\'aurez pas configuré le client Nightscout ou Tidepool.</string>
     <string name="status">État :</string>
     <string name="patient_name">Nom du patient</string>
     <string name="patient_name_summary">Veuillez indiquer un nom ou pseudo du patient pour différencier plusieurs configurations</string>
@@ -115,8 +115,6 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="maintenance_shortname">MAINT</string>
     <string name="description_maintenance">Fournir différentes fonctions de maintenance (ex : envoyer, supprimer le journal).</string>
     <string name="database_cleanup">Nettoyer la base de données</string>
-    <string name="cleanup_db_confirm">Voulez-vous nettoyer la base de données ?\nCela supprimera les modifications suivies et les données historiques de plus de 3 mois.</string>
-    <string name="cleared_entries">Entrées effacées</string>
     <string name="reset_db_confirm">Voulez-vous vraiment réinitialiser les bases de données ?</string>
     <string name="maintenance_settings">Paramètres de maintenance</string>
     <string name="maintenance_email">Destinataire de l\'email</string>

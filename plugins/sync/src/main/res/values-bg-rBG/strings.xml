@@ -19,7 +19,6 @@
     <string name="ns_client">Вътрешен NSClient</string>
     <string name="ns_client_short_name">NSКЛ</string>
     <string name="ns_client_url">Nightscout aдрес:</string>
-    <string name="ns_client_autoscroll">Автопревъртане</string>
     <string name="restart">Рестарт</string>
     <string name="ns_client_internal_title">Вътрешен NSClient</string>
     <string name="ns_client_url_title">Nightscout адрес</string>
@@ -60,7 +59,6 @@
     <string name="ns_alarm_stale_data_value_label">Когато няма данни повече от [мин]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Много стари данни при повече от [мин]</string>
     <string name="ns_log_app_started_event">Записвай всяко стартиране на AndroidAPS в NS</string>
-    <string name="ns_local_broadcasts_title">Разреши локално предаване на данни</string>
     <string name="copy_existing_values">Копиране на профил от NS (ако има)?</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Потребителското Ви име за Tidepool, обикновено е Вашия имейл</string>

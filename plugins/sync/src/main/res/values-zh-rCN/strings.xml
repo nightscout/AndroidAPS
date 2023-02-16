@@ -21,7 +21,6 @@
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCIient</string>
     <string name="ns_client_url">URL网址：</string>
-    <string name="ns_client_autoscroll">自动滚动</string>
     <string name="restart">重新启动</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">Nightscout URL(网址)</string>
@@ -65,7 +64,6 @@
     <string name="ns_alarm_stale_data_value_label">陈旧数据阈值 [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">紧急陈旧数据阈值 [min]</string>
     <string name="ns_log_app_started_event">记录app启动事件到NS服务器</string>
-    <string name="ns_local_broadcasts_title">启用本地广播。</string>
     <string name="copy_existing_values">复制 NS 设置(如果存在的话)？</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">你的Tidepool登录用户名，通常是你的邮件地址</string>

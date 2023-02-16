@@ -324,8 +324,8 @@
     <string name="grams_short">gr</string>
     <string name="hour_short">sa</string>
     <string name="no_active_profile">Etkin profil ayarlanmadı!</string>
-    <string name="profile_message">Profil:\n\nZaman Kayması: %1$\nYüzde: %2$d%\"</string>
-    <string name="tdd_line">%1$.2fÜ%1$.0f%</string>
+    <string name="profile_message">Profil:\n\nZaman Kayması: %1$\nYüzde: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fÜ %1$.0f%%</string>
     <string name="no_profile">Profil yüklenmedi</string>
     <string name="aps_only">Sadece APS modunda uygulayın!</string>
     <string name="last_aps_result_na">Son sonuç mevcut değil!</string>
@@ -344,5 +344,5 @@
     <string name="until">kadar</string>
     <string name="default_range">VARSAYILAN ARALIK</string>
     <string name="target">hedef</string>
-    <string name="rate_duration">Oran: %1$.2fÜ/sa (%2$.2f%) \nSüre %3$d% dk</string>
+    <string name="rate_duration">Oran: %1$.2fÜ/sa (%2$.2f%%) \nSüre %3$d dk</string>
 </resources>

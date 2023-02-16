@@ -25,7 +25,7 @@
     <string name="master_password_summary">Ana parola, yedekleme şifrelemesi ve uygulamanın güvenliği için kullanılır. Bu parolayı unutmayın ve güvenli bir yerde saklayın.</string>
     <string name="current_master_password">Geçerli ana parola</string>
     <string name="common_values">Genellikle yediğiniz en büyük yiyeceğin değerlerini kullanın\n</string>
-    <string name="syncinfotext">Verileri bulutla senkronize edin. Şimdi bu kısmı atlayabilirsiniz, ancak ayarlamadan görevleri geçemezsiniz.</string>
+    <string name="syncinfotext">Verileri bulutla senkronize edin. Bu kısmı şimdi atlayabilirsiniz, ancak Nightscout veya Tidepool istemcisini kurmadan görevleri geçemezsiniz.</string>
     <string name="status">Durum:</string>
     <string name="patient_name">Hasta Adı</string>
     <string name="patient_name_summary">Lütfen çoklu kurulumlar arasında ayrım yapmak için hasta adı veya takma ad belirleyin</string>
@@ -114,8 +114,6 @@
     <string name="maintenance_shortname">BAKIM</string>
     <string name="description_maintenance">Bakım için çeşitli işlevler sağlar (örn. günlük gönder, günlük sil).</string>
     <string name="database_cleanup">Veritabanı temizleme</string>
-    <string name="cleanup_db_confirm">Veritabanını temizlemek istiyor musunuz?\nİzlenen değişiklikleri ve 3 aydan eski geçmiş verileri kaldıracak.</string>
-    <string name="cleared_entries">Temizlenen girişler</string>
     <string name="reset_db_confirm">Veritabanlarını gerçekten sıfırlamak istiyor musunuz?</string>
     <string name="maintenance_settings">Bakım ayarları</string>
     <string name="maintenance_email">E-Posta alıcısı</string>

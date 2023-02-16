@@ -323,8 +323,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">t</string>
     <string name="no_active_profile">Det er ikke angitt noen aktiv profil!</string>
-    <string name="profile_message">Profil:\n\nTidspunkt: %1$\nProsent: %2$d%\"</string>
-    <string name="tdd_line">%1$.2fE %1$.0f%</string>
     <string name="no_profile">Ingen profil valgt</string>
     <string name="aps_only">Bare bruk i APS-modus!</string>
     <string name="last_aps_result_na">Siste resultat ikke tilgjengelig!</string>
@@ -343,5 +341,4 @@
     <string name="until">inntil</string>
     <string name="default_range">STANDARD OMRÅDE</string>
     <string name="target">målverdi</string>
-    <string name="rate_duration">Tilførsel: %1$.2fE/t (%2$.2f%) \nVarighet %3$d% min</string>
 </resources>

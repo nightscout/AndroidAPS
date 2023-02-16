@@ -29,8 +29,8 @@
     <string name="objectives_auto_objective">Activation de l\'automatisation</string>
     <string name="objectives_auto_gate">Lisez la documentation sur le fonctionnement de l\'automatisation fonctionne. Configurez vos premières règles simples. Au lieu de mettre une action, configurez une notification. Quand vous êtes sûr que l\'automatisation est déclenchée au bon moment, remplacez la notification par une action réelle. (https://wiki.aaps.app/fr/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">L\'automatisation peut être un bon serviteur mais un mauvais maître. Ne l\'utilisez pas de manière excessive. N\'essayez pas de remplacer l\'algorithme sous-jacent. Testez la règle avec uniquement un message avant l\'utilisation. Le résultat dépend de l\'ordre.</string>
-    <string name="objectives_bgavailableinns">Glycémie disponible sur NS</string>
-    <string name="objectives_pumpstatusavailableinns">Statut de la pompe disponible sur NS</string>
+    <string name="objectives_bgavailableinns">Glycémie disponible dans NS ou Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">État de la pompe disponible en NS ou Tidepool</string>
     <string name="objectives_manualenacts">Activation manuelle</string>
     <string name="accomplished">Accompli : %1$s</string>
     <string name="objectives_usage_objective">Apprendre comment contrôler AAPS</string>

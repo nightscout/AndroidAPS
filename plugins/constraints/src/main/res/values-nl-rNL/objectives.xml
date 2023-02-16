@@ -20,8 +20,6 @@
     <string name="objectives_smb_objective">Activeren van extra functies overdag zoals SMB (super micro bolus)</string>
     <string name="objectives_smb_gate">Lees de wiki en verhoog maxIOB om SMB goed werkend te krijgen. Een goed begin is maxIOB=gemiddelde maaltijdbolus + 3 x max dagelijkse basaal</string>
     <string name="objectives_auto_objective">Automatisering inschakelen</string>
-    <string name="objectives_bgavailableinns">BG beschikbaar in NS</string>
-    <string name="objectives_pumpstatusavailableinns">Pomp status beschikbaar in NS</string>
     <string name="objectives_manualenacts">Handmatige aanpassingen</string>
     <string name="accomplished">Voltooid: %1$s</string>
     <string name="objectives_usage_objective">Leer hoe AndroidAPS te gebruiken</string>

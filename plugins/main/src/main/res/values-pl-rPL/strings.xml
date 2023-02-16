@@ -323,8 +323,8 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie ustawiono aktywnego profilu!</string>
-    <string name="profile_message">Profil:\n\nZmiana czasu: %1$\nProcent: %2$d%\"</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%</string>
+    <string name="profile_message">Profil:\n\nZmiana czasu: %1$\nProcent: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">Nie załadowano profilu</string>
     <string name="aps_only">Stosuje się tylko w trybie APS!</string>
     <string name="last_aps_result_na">Ostatni wynik niedostępny!</string>
@@ -343,5 +343,5 @@
     <string name="until">do</string>
     <string name="default_range">ZAKRES DOMYŚLNY</string>
     <string name="target">cel</string>
-    <string name="rate_duration">Dawka: %1$.2fU/h (%2$.2f%) \nCzas trwania %3$d% min</string>
+    <string name="rate_duration">Dawka: %1$.2fU/h (%2$.2f%%) \nCzas trwania %3$d min</string>
 </resources>

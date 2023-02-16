@@ -45,7 +45,7 @@
     <string name="mute5min">Silenciar por 5 minutos</string>
     <string name="mute">Silenciar</string>
     <string name="success">Exito</string>
-    <string name="advancedsettings_title">Ajustes avanzados</string>
+    <string name="advanced_settings_title">Ajustes avanzados</string>
     <string name="extendedbolusdeliveryerror">Error al emitir bolo extendido</string>
     <string name="aps_mode_title">Modo APS</string>
     <string name="extended_bolus">Bolo extendido</string>
@@ -164,7 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Error cancelando la basal temporal</string>
     <string name="canceling_eb_failed">Error cancelando el bolo extendido</string>
-    <string name="virtualpump_uploadstatus_title">Subir estado a Nightscout</string>
+    <string name="virtualpump_uploadstatus_title">Subir estado a NS o Tidepool</string>
     <string name="suspendloop_label">Desactiva/suspende el lazo</string>
     <string name="iob_label">Insulina a bordo (IOB)</string>
     <!--    Protection-->
@@ -571,4 +571,8 @@
         <item quantity="one">%1$d minuto</item>
         <item quantity="other">%1$d minutos</item>
     </plurals>
+    <!--    Maintenance-->
+    <string name="cleanup_db_confirm">¿Deseas limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos de más de 3 meses</string>
+    <string name="cleanup_db_confirm_sync">¿Deseas limpiar la base de datos?\nSe eliminarán los cambios registrados y los datos históricos de más de 3 meses.\nAl hacerlo, la sincronización completa se acelerará drásticamente</string>
+    <string name="cleared_entries">Entradas eliminadas</string>
 </resources>
