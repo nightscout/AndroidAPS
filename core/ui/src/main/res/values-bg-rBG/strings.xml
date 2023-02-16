@@ -249,6 +249,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d гр допълнителни въглехидрати ще са необходими до %2$d минути</string>
     <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">Комулативна TDD</string>
     <string name="expweight">Експоненциално претеглена TDD</string>
     <string name="basalrate">Базал</string>
     <string name="bolus">Болус</string>
@@ -257,13 +258,53 @@
     <string name="amount_days"># дни</string>
     <string name="weight">Тегло</string>
     <string name="warning_Message">Възможна неточност, ако сте използвали болус за презареждане!</string>
+    <string name="olddata_Message">Стари данни, натиснете \"ПРЕЗАРЕДИ\"</string>
     <string name="tbb">Общо базален инсулин</string>
     <string name="tbb2">ОБИ * 2</string>
     <!--    Ntp-->
     <string name="timedetection">Засичане на времето</string>
     <!-- User Entry -->
+    <string name="uel_bolus">БОЛУС</string>
+    <string name="uel_bolus_calculator">БОЛУС КАЛКУЛАТОР</string>
+    <string name="uel_bolus_advisor">БОЛУС СЪВЕТНИК</string>
+    <string name="uel_extended_bolus">УДЪЛЖЕН БОЛУС</string>
+    <string name="uel_superbolus_tbr">СУПЕРБОЛУС TBR (Временна базална доза)</string>
+    <string name="uel_carbs">ВЪГЛЕХИДРАТИ</string>
+    <string name="uel_extended_carbs">УДЪЛЖЕН БОЛУС</string>
+    <string name="uel_temp_basal">ВРЕМЕНЕН БАЗАЛ</string>
+    <string name="uel_tt">ВРЕМЕННА ЦЕЛ</string>
+    <string name="uel_new_profile">НОВ ПРОФИЛ</string>
+    <string name="uel_clone_profile">КЛОНИРАНЕ НА ПРОФИЛ</string>
+    <string name="uel_store_profile">ЗАПАЗИ ПРОФИЛ</string>
+    <string name="uel_profile_switch">ПРЕВКЛЮЧВАНЕ НА ПРОФИЛ</string>
+    <string name="uel_profile_switch_cloned">ПРЕВКЛЮЧВАНЕТО НА ПРОФИЛ КЛОНИРАНО</string>
+    <string name="uel_closed_loop_mode">РЕЖИМ НА ЗАТВОРЕН ЦИКЪЛ</string>
+    <string name="uel_lgs_loop_mode">РЕЖИМ LGS ЦИКЪЛ</string>
+    <string name="uel_open_loop_mode">РЕЖИМ ОТВОРЕН ЦИКЪЛ</string>
+    <string name="uel_loop_disabled">ЦИКЪЛ ИЗКЛЮЧЕН</string>
+    <string name="uel_loop_enabled">ЦИКЪЛ ВКЛЮЧЕН</string>
+    <string name="uel_reconnect">СВЪРЗВАНЕ ОТНОВО</string>
     <string name="uel_disconnect">Разкачане</string>
+    <string name="uel_resume">ПРОДЪЛЖИ</string>
+    <string name="uel_suspend">СПИРАНЕ</string>
+    <string name="uel_hw_pump_allowed">ХАРДУЕРНА ПОМПА РАЗРЕШЕНА</string>
+    <string name="uel_clear_pairing_keys">ИЗЧИСТВАНЕ НА КЛЮЧОВЕ ЗА СДВОЯВАНЕ</string>
+    <string name="uel_accepts_temp_basal">ПРИЕМА ВРЕМЕНЕН БАЗАЛ</string>
+    <string name="uel_cancel_temp_basal">ОТМЕНЯ ВРЕМЕНЕН БАЗАЛ</string>
     <string name="uel_cancel_bolus">СПРИ БОЛУС</string>
+    <string name="uel_cancel_extended_bolus">ОТМЕНИ УДЪЛЖЕН БОЛУС</string>
+    <string name="uel_cancel_tt">ОТМЕНИ ВРЕМЕННА ЦЕЛ</string>
+    <string name="uel_careportal">ПОРТАЛ ЗА ЛЕЧЕНИЯ</string>
+    <string name="uel_site_change">СМЯНА КАНЮЛА</string>
+    <string name="uel_reservoir_change">СМЯНА НА РЕЗЕРВОАР</string>
+    <string name="uel_calibration">КАЛИБРАЦИЯ</string>
+    <string name="uel_prime_bolus">БОЛУС ПЪЛНЕНЕНЕ</string>
+    <string name="uel_treatment">ЛЕЧЕНИЕ</string>
+    <string name="uel_careportal_ns_refresh">ОБНОВИ ПОРТАЛА ЗА ЛЕЧЕНИЯ NS</string>
+    <string name="uel_profile_switch_ns_refresh">ОБНОВИ СМЯНАТА НА ПРОФИЛ NS</string>
+    <string name="uel_treatments_ns_refresh">ОБНОВИ ЛЕЧЕНИЯ NS</string>
+    <string name="uel_tt_ns_refresh">ОБНОВИ ВРЕМЕННА ЦЕЛ NS</string>
+    <string name="uel_automation_removed">ПРЕМАХНАТА АВТОМАТИЗАЦИЯ</string>
     <string name="uel_bg_removed">КЗ ПРЕМАХНАТА</string>
     <string name="uel_careportal_removed">ПРЕМАХНАТ CAREPORTAL</string>
     <string name="uel_bolus_removed">ПРЕМАХНАТ БОЛУС</string>
@@ -443,12 +484,17 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Парола, която е била използвана за криптиране на експортираните настройки.</string>
     <!-- NumberPicker -->
+    <string name="a11y_min_button_description">понижение %1$s с %2$s</string>
+    <string name="a11y_plus_button_description">увеличение %1$s с %2$s</string>
+    <string name="you_are_on_allowed_limit">Достигнат лимит</string>
     <string name="format_hour_minute">%1$dч:%2$dм</string>
     <!-- datetime layout -->
     <string name="event_time_label">Време на събитие</string>
     <!-- BluetoothDevicePreference -->
     <string name="need_connect_permission">Апликацията изисква разрешение за bluetooth</string>
     <!--    Combo-->
+    <string name="user_request" comment="26 characters max for translation">Потребителско запитване</string>
+    <string name="pump_paired" comment="26 characters max for translation">Помпата е свързана</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy не се поддържа.</string>
     <string name="ble_not_supported_or_not_paired">Нискоенергиен Bluetooth не се потдържа или устройството не е сдвоено.</string>
@@ -460,6 +506,9 @@
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">SMS команда забранена</string>
     <!-- About -->
+    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    <string name="fabric_upload_disabled">Качването на логове е изключено!</string>
+    <string name="about_link_urls">\n\nДокументация:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>
@@ -473,4 +522,7 @@
         <item quantity="other">%1$d минути</item>
     </plurals>
     <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Искате ли да почистите базата данни\nТова ще премахне проследените промени и историята на данните, по-стари от 3 месеца.</string>
+    <string name="cleanup_db_confirm_sync">Искате ли да изтриете базата данни?\nТова ще премахне проследените промени и историята на данните, по-стари от 3 месеца.\nИзвършването му ще ускори драстично пълната синхронизация.</string>
+    <string name="cleared_entries">Изчистени записи</string>
 </resources>
