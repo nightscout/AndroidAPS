@@ -101,8 +101,8 @@ class NSDeviceStatusHandler @Inject constructor(
         }
     }
 
-    private fun updatePumpData(NSDeviceStatus: NSDeviceStatus) {
-        val pump = NSDeviceStatus.pump ?: return
+    private fun updatePumpData(nsDeviceStatus: NSDeviceStatus) {
+        val pump = nsDeviceStatus.pump ?: return
         val clock = pump.clock?.let { dateUtil.fromISODateString(it) } ?: return
         processedDeviceStatusData.pumpData?.let { if (clock < it.clock) return } // take only newer record
 
@@ -134,8 +134,8 @@ class NSDeviceStatusHandler @Inject constructor(
         }
     }
 
-    private fun updateOpenApsData(NSDeviceStatus: NSDeviceStatus) {
-        NSDeviceStatus.openaps?.suggested?.let {
+    private fun updateOpenApsData(nsDeviceStatus: NSDeviceStatus) {
+        nsDeviceStatus.openaps?.suggested?.let {
             JsonHelper.safeGetString(it, "timestamp")?.let { timestamp ->
                 val clock = dateUtil.fromISODateString(timestamp)
                 // check if this is new data
@@ -145,7 +145,7 @@ class NSDeviceStatusHandler @Inject constructor(
                 }
             }
         }
-        NSDeviceStatus.openaps?.enacted?.let {
+        nsDeviceStatus.openaps?.enacted?.let {
             JsonHelper.safeGetString(it, "timestamp")?.let { timestamp ->
                 val clock = dateUtil.fromISODateString(timestamp)
                 // check if this is new data

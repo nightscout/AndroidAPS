@@ -649,6 +649,7 @@ class NSClientV3Plugin @Inject constructor(
                 result.identifier?.let {
                     dataPair.value.interfaceIDs.nightscoutId = it
                     storeDataForDb.nsIdDeviceStatuses.add(dataPair.value)
+                    sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_pump_status_is_available_in_ns, true)
                 }
             }
         } catch (e: Exception) {
