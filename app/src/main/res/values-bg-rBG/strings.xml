@@ -48,5 +48,13 @@
     <string name="clear_filter">Премахни филтъра</string>
     <string name="cannula">Канюла</string>
     <string name="email_address">Електронна поща</string>
+    <string name="remove_bg_readings">Премахване показанията нa КЗ</string>
+    <string name="identification_not_set">Идентификацията не е зададена в режим на разработчик</string>
+    <string name="a11y_dialog">диалог</string>
     <!-- WEAR OS-->
+    <string name="wear_unknown_action_string">Неизвестна команда:</string>
+    <string name="remove_selected_items">Премахнете избраните елементи</string>
+    <string name="count_selected">%1$d избрано</string>
+    <string name="sort_label">Сортиране</string>
+    <string name="search">Търсене</string>
 </resources>

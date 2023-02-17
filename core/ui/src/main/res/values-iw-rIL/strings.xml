@@ -14,6 +14,7 @@
     <string name="pump_base_basal_rate">%1$.2f יח\' לשעה</string>
     <string name="pump_not_initialized_profile_not_set">משאבה לא אותחלה! לא נקבע פרופיל!</string>
     <string name="failed_update_basal_profile">עדכון הפרופיל הבזאלי נכשל</string>
+    <string name="bolus_delivered_successfully">בולוס %1$.2f יח\' ניתן בהצלחה</string>
     <string name="no_valid_basal_rate">לא התקבל מינון בזאלי תקף מהמשאבה</string>
     <string name="limiting_iob">הגבלת IOB ל-%1$.1f יח\' בגלל %2$s</string>
     <string name="loop_disabled">הלולאה הופסקה עקב המגבלות שבתוקף</string>
@@ -44,7 +45,9 @@
     <string name="mute5min">השתקה ל-5 דקות</string>
     <string name="mute">השתק</string>
     <string name="success">הצלחה</string>
+    <string name="advanced_settings_title">הגדרות מתקדמות</string>
     <string name="extendedbolusdeliveryerror">שגיאה במתן הבולוס הממושך</string>
+    <string name="aps_mode_title">מצב APS</string>
     <string name="extended_bolus">בולוס ממושך</string>
     <string name="paused">מושהה</string>
     <string name="tdd_total">מינון יומי מצטבר כולל</string>
@@ -59,6 +62,8 @@
     <string name="please_wait">נא להמתין…</string>
     <string name="stop">עצור</string>
     <string name="carbs">פחמימות</string>
+    <string name="invalid_profile">פרופיל לא חוקי!</string>
+    <string name="no_profile_set">לא הוגדר פרופיל</string>
     <string name="active"><![CDATA[<פועל>]]></string>
     <string name="date">תאריך</string>
     <string name="units_label">יחידות</string>
@@ -101,6 +106,7 @@
     <string name="loading">טוען…</string>
     <string name="notes_label">הערות</string>
     <string name="remove_button">הסרה</string>
+    <string name="add_new">הוספת חדש</string>
     <string name="addnew_above">הוסף חדש למעלה</string>
     <string name="wrong_pump_data">הנתונים מגיעים ממשאבה אחרת. בחרו מחדש את סוג המשאבה כדי לאפס את מצב המשאבה.</string>
     <string name="bg_label">BG</string>
@@ -147,6 +153,7 @@
     <string name="treatments_wizard_basaliob_label">בזאלי פעיל</string>
     <string name="invalid">לא חוקי</string>
     <string name="login">התחברות</string>
+    <string name="prime_fill">תיחול\\מילוי</string>
     <string name="overview_insulin_label">אינסולין</string>
     <string name="stoptemptarget">הפסקת ערך מטרה זמני</string>
     <string name="closedloop">לולאה סגורה</string>
@@ -155,6 +162,9 @@
     <string name="dia">משך פעילות אינסולין</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="canceling_tbr_failed">ביטול בזאלי זמני נכשל</string>
+    <string name="canceling_eb_failed">ביטול בולוס ממושך נכשל</string>
+    <string name="virtualpump_uploadstatus_title">סטטוס העלאה לנייטסקאוט או ל-Tidepool</string>
     <string name="suspendloop_label">השבתת \\ השהיית לולאה</string>
     <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
     <!--    Protection-->
@@ -172,6 +182,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">הפעלת פרופיל %1$d%% במשך %2$d דק\'</string>
     <!--    APSResult-->
+    <string name="cancel_temp">ביטול בזאלי זמני</string>
     <string name="let_temp_basal_run">אפשר לבזאלי זמני לרוץ</string>
     <string name="rate">מינון</string>
     <string name="duration">משך</string>
@@ -193,9 +204,12 @@
     <string name="careportal_note_message">הערה: %1$s</string>
     <string name="careportal_question_message">שאלה: %1$s</string>
     <string name="careportal_exercise_message">פעילות גופנית: %1$s</string>
+    <string name="careportal_pump_site_change">החלפת צינורית משאבה</string>
+    <string name="cgm_sensor_insert">התחלת סנסור חדש</string>
     <string name="careportal_cgmsensorstart">התחלת סנסור חדש</string>
     <string name="careportal_cgm_sensor_stop">עצירת סנסור</string>
     <string name="careportal_dad_alert">התראת D.A.D</string>
+    <string name="careportal_insulin_cartridge_change">החלפת מכל אינסולין</string>
     <string name="careportal_profileswitch">החלפת פרופיל</string>
     <string name="careportal_snackbolus">בולוס חטיף</string>
     <string name="careportal_mealbolus">בולוס ארוחה</string>
@@ -205,6 +219,8 @@
     <string name="careportal_tempbasalend">סיום בזאלי זמני</string>
     <string name="careportal_carbscorrection">תיקון פחמימות</string>
     <string name="careportal_openapsoffline">OpenAPS במצב לא מקוון</string>
+    <string name="pump_battery_change">החלפת סוללת משאבה</string>
+    <string name="temporary_target">ערך מטרה זמני</string>
     <string name="careportal_temporarytargetvalue">ערך המטרה הזמני</string>
     <string name="careportal_temporarytargetcancel">ביטול ערך מטרה זמני</string>
     <string name="boluswizard">אשף בולוס</string>
@@ -233,6 +249,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d גר\' פחמימות דרושות ב-%2$d הדקות הקרובות</string>
     <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">מינון יומי מצטבר (TDD)</string>
     <string name="expweight">TDD משוקלל אקספוננציאלי</string>
     <string name="basalrate">בזאלי</string>
     <string name="bolus">בולוס</string>
@@ -318,6 +335,7 @@
     <string name="uel_export_settings">ייצוא הגדרות</string>
     <string name="uel_import_settings">ייבוא הגדרות</string>
     <string name="uel_reset_databases">איפוס מסדי נתונים</string>
+    <string name="uel_cleanup_databases">ניקיון מסדי נתונים</string>
     <string name="uel_export_databases">ייצוא מסדי נתונים</string>
     <string name="uel_import_databases">ייבוא מסדי נתונים</string>
     <string name="uel_otp_export">ייצוא סיסמה חד פעמית (OTP)</string>
@@ -421,6 +439,8 @@
     <string name="autotune_update_local_profile_message">לעדכן את פרופיל %1$s עם הפרופיל המכוונן אוטומטית?</string>
     <string name="autotune_revert_local_profile_message">להחזיר את פרופיל %1$s אל פרופיל קלט?</string>
     <string name="autotune_profile_invalid">פרופיל לא חוקי</string>
+    <string name="autotune_run_without_autoswitch">כוונון אוטומטי הופעל ללא החלפת פרופיל</string>
+    <string name="autotune_run_with_autoswitch">כוונון אוטומטי הופעל והפרופיל הוחלף אוטומטית</string>
     <string name="autotune_run_with_error">שגיאה במהלך הכיוונון האוטומטי האחרון</string>
     <string name="autotune_run_cancelled">נמצאה הפעלה נוספת של הכוונון האוטומטי ברקע, ההפעלה מבוטלת</string>
     <!-- Alerts -->
@@ -428,9 +448,13 @@
     <string name="urgent_alarm">התראה דחופה</string>
     <string name="info">מידע</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">יועץ הבולוסים</string>
+    <string name="bolus_advisor_message">יש לכם היפרגליקמיה. במקום לאכול עכשיו מומלץ לחכות לרמת סוכר נמוכה יותר. האם תרצו לעשות בולוס תיקון עכשיו ולאחר מכן תופעל תזכורת לאכול? במקרה זה, לא יירשמו פחמימות ויהיה עליכם להשתמש באשף מחדש כאשר תגשו לאכול.</string>
     <string name="cobvsiob">פחמ\' פעילות לעומת אינ\' פעיל</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!!! זוהתה ספיגת פחמימות איטית: %2$d%% מהזמן הצפוי. הערכת כמות הפחמימות הפעילות עלולה להיות ביתר ולכן תיתכן הזרקת אינסולין עודפת !!!!!!</font>]]></string>
     <string name="partialboluswizard">ספק את חלק זה מתוצאת אשף הבולוס [%]</string>
+    <string name="bolus_constraint_applied_warn">מגבלת בולוס יושמה: %1$.2f עד %2$.2f יח\'</string>
+    <string name="bolus_recorded_only">בולוס רשום בלבד (לא מוזרק על ידי המשאבה)</string>
     <string name="advisoralarm">הפעל התראה כשצריכים לאכול</string>
     <string name="no_action_selected">לא נבחרה פעולה, דבר לא יתבצע.</string>
     <string name="wizard_no_actual_bg">אין נתוני סוכר לביסוס חישוב!</string>
@@ -449,10 +473,17 @@
     <string name="wizard_explain_tt">ע\' מטרה זמני: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s ל-%2$s</string>
     <string name="wizard_pump_not_available">המשאבה אינה זמינה!</string>
+    <string name="quickwizard">אשף מהיר</string>
     <!--    Preferences-->
+    <string name="child">ילד\\ה צעיר\\ה</string>
     <string name="teenage">מתבגר\\ת</string>
     <string name="adult">מבוגר\\ת</string>
+    <string name="resistant_adult">מבוגר\\ת עם תנגודת אינסולין גבוהה</string>
     <string name="pregnant">הריון</string>
+    <string name="patient_age_summary">נא לבחור את גיל המטופל\\ת להתאמת מגבלות בטיחות</string>
+    <string name="max_bolus_title">בולוס מקסימלי מותר [יח\']</string>
+    <string name="max_carbs_title">מקסימום פחמימות מותר [גר\']</string>
+    <string name="patient_type">סוג המטופל\\ת</string>
     <!--    Protection-->
     <string name="unlock_settings">שחרור נעילת הגדרות</string>
     <!--    Pumps -->
@@ -481,6 +512,7 @@
     <string name="pump_busy">המשאבה אינה פנויה</string>
     <string name="connection_error">שגיאה בחיבור המשאבה</string>
     <string name="reading_pump_history">קורא היסטוריית משאבה</string>
+    <string name="password_cleared">סיסמה נמחקה!</string>
     <string name="pairing">מצמד</string>
     <string name="initializing">מאתחל...</string>
     <!--    Constraints-->
@@ -524,6 +556,9 @@
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">הרשאות SMS חסרות</string>
     <!-- About -->
+    <string name="cta_dont_kill_my_app_info">איך לא להשבית את האפליקציה שלי?</string>
+    <string name="fabric_upload_disabled">העלאת רשומות קריסה מושבתת!</string>
+    <string name="about_link_urls">\n\nתיעוד:\nhttps://wiki.aaps.app\n\nפייסבוק:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d יום</item>
         <item quantity="two">%1$d ימים</item>
@@ -543,4 +578,7 @@
         <item quantity="other">%1$d דקות</item>
     </plurals>
     <!--    Maintenance-->
+    <string name="cleanup_db_confirm">אתם בטוחים שברצונכם לנקות את מסד הנתונים? \nפעולה זו תמחק את הנתונים הישנים מ-3 החודשים האחרונים.</string>
+    <string name="cleanup_db_confirm_sync">האם ברצונכם לנקות את מסד הנתונים?\nשינויים הנמצאים במעקב ונתונים היסטוריים הישנים מ-3 חודשים יימחקו.\nפעולה זו תזרז משמעותית את מהירות הסינכרון המלא.</string>
+    <string name="cleared_entries">רשומות שנמחקו</string>
 </resources>

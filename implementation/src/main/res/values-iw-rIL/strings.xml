@@ -4,6 +4,7 @@
     <string name="executing_right_now">הפקודה מבוצעת כעת</string>
     <string name="basal_value_below_minimum">ערך הבסיס מתחת למינימום. פרופיל אינו מוגדר!</string>
     <string name="permission">הרשאה</string>
+    <string name="need_whitelisting">%1$s צריך ביטול אופטימיזציית סוללה בשביל תפקוד תקין</string>
     <string name="need_location_permission">דרושה הרשאת מיקום עבור סריקת בלוטות\' וזיהוי WiFi</string>
     <string name="need_storage_permission">דרושה הרשאת אחסון כדי שתוכלו לאחסן קובצי יומן והגדרות יצוא.</string>
     <!--       Stats -->
@@ -19,4 +20,5 @@
     <string name="detailed_14_days">פירוט 14 יום</string>
     <string name="day_tir">זמן בטווח ביום</string>
     <string name="night_tir">זמן בטווח בלילה</string>
+    <string name="carbs_short" comment="max 6 characters">פחמימות</string>
 </resources>

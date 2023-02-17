@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="open_humans">Open Humans</string>
-    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">שירות Open Humans מאפשר העלאה ותרומת המידע הטיפולי שלכם למחקרים רפואיים.</string>
     <string name="logout">התנתקות</string>
     <string name="setup">תצורה</string>
