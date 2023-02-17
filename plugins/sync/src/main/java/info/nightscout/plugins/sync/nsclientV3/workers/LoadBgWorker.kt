@@ -73,7 +73,6 @@ class LoadBgWorker(
                             nsClientV3Plugin.storeLastLoadedSrvModified()
                         }
                         rxBus.send(EventNSClientNewLog("◄ RCV BG END", "No data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                        storeDataForDb.storeGlucoseValuesToDb()
                         continueLoading = false
                     }
                 } else {
@@ -83,7 +82,6 @@ class LoadBgWorker(
                         nsClientV3Plugin.storeLastLoadedSrvModified()
                     }
                     rxBus.send(EventNSClientNewLog("◄ RCV BG END", "No new data from ${dateUtil.dateAndTimeAndSecondsString(lastLoaded)}"))
-                    storeDataForDb.storeGlucoseValuesToDb()
                     continueLoading = false
                 }
             }
@@ -94,6 +92,7 @@ class LoadBgWorker(
             return Result.failure(workDataOf("Error" to error.localizedMessage))
         }
 
+        storeDataForDb.storeGlucoseValuesToDb()
         nsClientV3Plugin.lastOperationError = null
         return Result.success()
     }
