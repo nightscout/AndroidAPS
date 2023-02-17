@@ -152,6 +152,30 @@
     <string name="temp_target_manual">Друго</string>
     <string name="temp_target_cancel">Откажи</string>
     <string name="tile_none">Без</string>
+    <string name="tile_no_config">Не е конфигурирано</string>
+    <string name="wear_control_not_enabled">Управление от часовник изключено</string>
+    <string name="wear_control_no_data">Няма налични данни</string>
+    <string name="increment">Нарастване</string>
+    <string name="decrement">Намаляване</string>
+    <string name="first_char_high">В</string>
+    <string name="first_char_low">Н</string>
+    <string name="abbreviation_average">средно</string>
     <string name="no_iob_u">--Е</string>
+    <string name="no_cob_g">--гр</string>
     <string name="no_tmp_basal_u_h">-.--Е/ч</string>
+    <string name="time_stamp_na_min_ago">-- мин преди</string>
+    <string name="delta_na">--- мг/дл</string>
+    <string name="no_loop_status">Няма наличен статус</string>
+    <string name="cob_000g">000гр</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
+    <string name="iob_0_00u">0,00E</string>
+    <string name="snooze_alert">Приглушаване аларма</string>
+    <string name="sending_snooze">Изпращам заглушаване до AAPS</string>
+    <string name="short_hour">ч</string>
+    <string name="week_short">с</string>
+    <string name="day_short">д</string>
+    <string name="hour_short">ч</string>
+    <string name="old">стар</string>
+    <string name="old_warning">!старо!</string>
+    <string name="error">!err!</string>
 </resources>
