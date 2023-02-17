@@ -40,7 +40,17 @@
     <string name="data_not_uploaded">Данните не са качени</string>
     <string name="passwords">Пароли</string>
     <string name="nightscout_url">Nightscout адрес</string>
+    <string name="nightscout_api_secret">Парола на Найтскаут API</string>
+    <string name="free_text_fields">Поле със свободен текст</string>
     <string name="agree">Разбирам и съм съгласен.</string>
+    <string name="login_open_humans">Качване на данни към Open Humans</string>
+    <string name="final_touches">Последни настройки</string>
+    <string name="uploading_proceed">На една крачка от прикачването на данните си в Отворено Общество си. Продължаваш ли?</string>
     <string name="cancel">Откажи</string>
+    <string name="proceed">Продължи</string>
+    <string name="finishing">Приключва...</string>
+    <string name="this_may_take_a_few_seconds">Може да отнеме няколко секунди.</string>
+    <string name="we_re_done">Готови сме!</string>
+    <string name="silently_upload_date_note">От сега нататък, телефонът ви тихо ще качва данни от време на време на заден фон.</string>
     <string name="close">Затвори</string>
 </resources>
