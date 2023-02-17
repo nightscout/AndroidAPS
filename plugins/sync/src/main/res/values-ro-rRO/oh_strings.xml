@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="open_humans">Open Humans</string>
-    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Deschide Humans îți permite să încarci datele tale despre diabet și să le donezi proiectelor științifice.</string>
     <string name="logout">Deconectare</string>
     <string name="setup">Configurare</string>
