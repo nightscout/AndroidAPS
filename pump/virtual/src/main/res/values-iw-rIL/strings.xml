@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">סוג משאבה וירטואלית</string>
+    <string name="virtual_pump_definition">הגדרת משאבה</string>
+    <string name="virtual_pump_pump_def">בולוס: צעד=%1$s\nבולוס ממושך: [צעד=%2$s, משך=%3$s מינ\'-%4$sש\']\nבזאלי: צעד=%5$s\nבזאלי זמני: %6$s (עם %7$s), משך=%8$s מינ\'-%9$sש\'\n%10$s</string>
+    <string name="virtual_pump_shortname">מ\' וירטואלית</string>
     <string name="description_pump_virtual">שימוש במשאבות אשר עדיין אין להם מנהל התקן כלשהו (לולאה פתוחה)</string>
+    <string name="virtual_pump_label">משאבה וירטואלית</string>
     <string name="virtualpump_settings">הגדרות משאבה וירטואלית</string>
 </resources>
