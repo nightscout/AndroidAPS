@@ -76,6 +76,12 @@
         <item quantity="many">%1$d val.</item>
         <item quantity="other">%1$d val.</item>
     </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">Prieš %1$d val</item>
+        <item quantity="few">Prieš %1$d val</item>
+        <item quantity="many">Prieš %1$d val</item>
+        <item quantity="other">Prieš %1$d val</item>
+    </plurals>
     <plurals name="daysago">
         <item quantity="one">Prieš %1$d d.</item>
         <item quantity="few">Prieš %1$d d.</item>
