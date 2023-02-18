@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Nooit verbonden</string>
     <string name="pump_status_sleeping">Slapen</string>
     <string name="pump_status_waking_up">Actief worden</string>
     <string name="pump_status_active">Actief</string>
