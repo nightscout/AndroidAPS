@@ -176,6 +176,9 @@
     <string name="no_iob_u">-- יח\'</string>
     <string name="no_cob_g">-- גר\'</string>
     <string name="no_tmp_basal_u_h">-.--יח\' לשעה</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">לפני -- דקות</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">חסר סטטוס לולאה</string>
     <string name="cob_000g">000 גר\'</string>
@@ -183,4 +186,11 @@
     <string name="iob_0_00u">0,00 יח\'</string>
     <string name="snooze_alert">השתק התראה (נודניק)</string>
     <string name="sending_snooze">מבצע נודניק ב-AndroidAPS</string>
+    <string name="short_hour">ש\'</string>
+    <string name="week_short">ש\'</string>
+    <string name="day_short">י\'</string>
+    <string name="hour_short">ש\'</string>
+    <string name="old">ישן</string>
+    <string name="old_warning">!ישן!</string>
+    <string name="error">!שגיאה!</string>
 </resources>
