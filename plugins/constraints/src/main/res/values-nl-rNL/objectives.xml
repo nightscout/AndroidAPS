@@ -7,17 +7,22 @@
     <string name="objectivenotfinished">Doel %1$d niet gereed</string>
     <string name="objectives_0_objective">Opzetten van visualisatie en monitoring en analyseren van basalen en ratio\'s</string>
     <string name="objectives_0_gate">Verifieer dat BG beschikbaar is in Nightscout, en dat de insuline gegevens van de pomp worden geüpload</string>
+    <string name="objectives_0_learned">Je hebt de basisinstellingen van het AAPS ecosysteem aangemaakt. Nightscout is niet nodig om AAPS uit te voeren, maar het is wel erg nuttig voor rapportage\'s en monitoren. Het is niet nodig om constant met NS verbonden te zijn als je NS alleen voor jezelf gebruikt. Bijvoorbeeld met alleen uploaden via de thuis wifi kan je de batterij sparen.</string>
     <string name="objectives_openloop_objective">Starten met de Open Loop modus</string>
     <string name="objectives_openloop_gate">Draai enkele dagen In Open Loop modus en voer meermaals handmatig tijdelijke basalen uit. Stel standaard en aangepaste tijdelijke streefdoelen in (bv. bij sporten of koolhydraten inname bij hypo)</string>
+    <string name="objectives_openloop_learned">Open loop kan gebruikt worden voor aanbevelingen, als je een pomp hebt die niet geschikt is voor AAPS of als je de loop niet wilt sluiten.</string>
     <string name="objectives_maxbasal_objective">De Open Loop begrijpen, inclusief de voorgestelde tijdelijke basalen</string>
     <string name="objectives_maxbasal_gate">Gebaseerd op deze ervaringen, beslis wat het maximale basaal mag zijn en stel dit in op de pomp</string>
+    <string name="objectives_maxbasal_learned">Ga zorgvuldig om met de veiligheidsfuncties en pas de veiligheidsparameters aan indien nodig.</string>
     <string name="objectives_maxiobzero_objective">Starten met de Closed Loop met bescherming tegen lage Bg</string>
     <string name="objectives_maxiobzero_gate">In closed loop draaien met een max. IOB = 0 gedurende enkele dagen met een beperkt aantal lage BG</string>
     <string name="objectives_maxiobzero_learned">MaxIOB instellen op 0 is om te voorkomen dat u een hypo krijgt en zal niet meer insuline dan de basaal instelling toevoegen (behalve in een situatie met negatieve IOB)</string>
     <string name="objectives_maxiob_objective">Inregelen van de closed loop, verhoog de max IOB boven 0 en laat geleidelijk het streef BG dalen</string>
     <string name="objectives_maxiob_gate">Test enkele dagen als ook minstens 1 nacht zonder een laag BG alarm voordat je jouw streef BG verlaagt</string>
+    <string name="objectives_maxiob_learned">Pas MaxIOB aan naarmate een kind ouder wordt. Laat het systeem niet meer insuline geven dan wat door te eten gecompenseerd kan worden = een erg hoge waarde is niet verstandig.</string>
     <string name="objectives_autosens_objective">Pas het basaal en de ratios aan indien nodig, activeer hierna de auto-sens optie</string>
     <string name="objectives_autosens_gate">Gedurende 1 week succesvol overdag loopen met regelmatige invoer van koolhydraten</string>
+    <string name="objectives_autosens_learned">Als het resultaat van autosens zich niet rond de 100% beweegt dan is je profiel waarschijnlijk niet juist.</string>
     <string name="objectives_smb_objective">Activeren van extra functies overdag zoals SMB (super micro bolus)</string>
     <string name="objectives_smb_gate">Lees de wiki en verhoog maxIOB om SMB goed werkend te krijgen. Een goed begin is maxIOB=gemiddelde maaltijdbolus + 3 x max dagelijkse basaal</string>
     <string name="objectives_auto_objective">Automatisering inschakelen</string>
