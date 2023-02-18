@@ -51,11 +51,16 @@
     <string name="objectives_exam_learned_dia">IVT uždaro ciklo sistemoje traktuojama kitaip (laikas, per kurį nustoja veikti visas insulinas), nei įprastoje pompos terapijoje (laikas, per kurį nustoja veikti didžioji dalis insulino).</string>
     <string name="objectives_exam_learned_isf">Jūs sužinojote, kas yra JIF ir kaip jo dydis lemia insulino kiekio, naudojamo glikemijos korekcijoms, apskaičiavimus.</string>
     <string name="objectives_exam_learned_ic">Jūs sužinojote, kas yra IA ir kaip jo dydis lemia insulino kiekio, naudojamo angliavandeniams padengti, apskaičiavimus.</string>
+    <string name="objectives_exam_learned_noisycgm">Jei NGJ duomenys nepatikimi, leisti ciklui veikti be priežiūros pavojinga.</string>
+    <string name="objectives_exam_learned_breadgrams">Angliavandeniai įvedami tik gramais.</string>
+    <string name="objectives_exam_learned_ecarbs">Ištęsti AV pakeičia pompose įprastai naudojamus ištęstus bolusus.</string>
+    <string name="objectives_exam_learned_nsclient">Nuotolinis stebėjimas ir valdymas galimi, bet kai kurios funkcijos neveikia.</string>
     <string name="answerdisabledto">Atsakymas sustabdytas: %1$s</string>
     <string name="wronganswer">Neteisingas atsakymas!</string>
     <string name="unfinshed_button">Kitas neužbaigtas</string>
     <string name="requestcode">Paprašyti kodo: %1$s</string>
     <string name="objectives_hint">(pasirinkite visus teisingus atsakymus)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
     <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
