@@ -30,5 +30,10 @@
     <string name="random_bg">Atsitiktinė KG</string>
     <string name="description_source_random_bg">Generuoti atsitiktinę glikemiją (tik demo režime)</string>
     <string name="random_bg_short">KG</string>
+    <string name="do_xdrip_upload_title">Siųsti glikemijos duomenis į xDrip+</string>
+    <string name="do_xdrip_upload_summary">Xdrip+ pasirinkite 640g/Eversense kaip duomenų šaltinį</string>
     <string name="bgsource_upload">KG duomenų perdavimo nustatymai</string>
+    <string name="dexcom_log_ns_sensor_change_title">Registruoti sensoriaus keitimą NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Sukurti įvykį \"Sensoriaus keitimas\" NS automatiškai, startavus sensorių</string>
+    <string name="direction">kryptis</string>
 </resources>
