@@ -34,6 +34,7 @@
     <string name="patch_wake_up_step">1/6</string>
     <string name="patch_step_desc_1">1.</string>
     <string name="patch_step_desc_2">2.</string>
+    <string name="patch_start_pairing">Pradėti susiejimą</string>
     <string name="patch_connect_new_step">2/6</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
