@@ -157,6 +157,7 @@
     <string name="breadgrams_exchange">Koolhydraten kunnen worden geregistreerd met behulp van een geschikt uitwisselingssysteem (bv. DAFNE \"CHO\" of Europese \"Bread Units\").</string>
     <string name="breadgrams_decay">AndroidAPS gebruikt een dynamisch model om koolhydraat\"verval\" te schatten en COB te berekenen.</string>
     <string name="breadgrams_calc">Als de bloedglucosespiegels buiten aanvaardbare waarden liggen (te laag of te hoog), kan de boluscalculator worden gebruikt om suggesties te doen voor koolhydraat-of insuline-correcties.</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/nl/latest/Getting-Started/FAQ.html#koolhydraat-ratio-kh-g-e</string>
     <string name="extendedcarbs_label">e-carbs</string>
     <string name="extendedcarbs_handling">Waarvoor kun je e-carbs (uigestelde koolhydraten) gebruiken?</string>
     <string name="extendedcarbs_future">Om koolhydraten in de toekomst te plannen, mogelijk verdeeld over een interval (vergelijkbaar met een verlengde bolus die insuline over een interval verspreidt).</string>
@@ -205,12 +206,21 @@
     <string name="profileswitchtime_iwant">Als je 2 uur eerder opstaat dan normaal, hoe moet je AndroidAPS dan laten weten dat jouw dagschema is veranderd?</string>
     <string name="profileswitchtime_2">Voer een profiel wissel uit met een tijdverschuiving van 2</string>
     <string name="profileswitchtime__2">Voer een profiel wissel uit met een tijdverschuiving van -2</string>
+    <string name="profileswitchtime_tt">Stel een eet binnenkort tijdelijk streefdoel in.</string>
+    <string name="profileswitchtime_100">Pas het profiel percentage aan naar een waarde boven de 100%.</string>
+    <string name="profileswitchtime_hint1">https://wiki.aaps.app/nl/latest/Usage/Profiles.html#tijd-verschuiving</string>
     <string name="profileswitch4_label">Aanpassen van profielen</string>
     <string name="profileswitch4_rates">Basaalstanden, ISF, KH-ratio\'s, etc, moeten in profielen worden ingesteld.</string>
     <string name="profileswitch4_internet">Om veranderingen in je Nightscout Profiel te activeren, heeft je AAPS telefoon een actieve internetverbinding nodig.</string>
     <string name="profileswitch4_sufficient">Een profiel bewerken is voldoende om eventuele wijzigingen door te voeren.</string>
+    <string name="profileswitch4_multi">Er kunnen meerdere profielen worden ingesteld en geselecteerd om tegemoet te komen aan veranderende omstandigheden (bijvoorbeeld hormonale veranderingen, onregelmatig werk-, weekdagen/weekendlevensstijl).</string>
+    <string name="basalhelp_hint1">https://wiki.aaps.app/nl/latest/Module/module.html#correcte-insulineprofiel-instellingen-voor-jouw-diabetesbehandeling</string>
     <string name="basalhelp_label">Hulp met basaalstanden</string>
+    <string name="basalhelp_where">Waar je hulp kunt krijgen bij het instellen van jouw basaalstand en andere instellingen.</string>
     <string name="basalhelp_diabetesteam">Jouw behandelaars</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="other_medication_label">Andere medicijnen. Lees de verklaring hieronder en vink het vakje aan om de verklaring te accepteren.</string>
+    <string name="other_medication_text">AndroidAPS vermindert de basaalstanden of stopt de insulinetoediening om de bloedsuiker te verhogen. Medicijnen in de klasse SGLT2-remmers (gliflozines) kunnen een stijging van bloedglucose voorkomen en kunnen daardoor een gevaarlijk insulinetekort veroorzaken dat leidt tot diabetische ketoacidose.
+\nBekende merknamen zijn: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nIk verklaar dat ik dergelijke medicijnen niet zal gebruiken wanneer ik AndroidAPS gebruik, of dat ik de loop zal deactiveren voordat ik met deze medicijnen start.</string>
 </resources>
