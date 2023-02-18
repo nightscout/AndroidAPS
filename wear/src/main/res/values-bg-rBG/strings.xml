@@ -83,6 +83,7 @@
     <string name="menu_menu">Меню</string>
     <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Продължителност</string>
+    <string name="action_ecarb_confirmation">Трябват въглехидрати</string>
     <string name="action_target" comment="In temp target menu, single target value">Целeва КЗ:</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Ниска</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Висока</string>
@@ -146,13 +147,14 @@
     <string name="bolus_progress_channel_description">Прогрес на болуса и отказ</string>
     <string name="bolus_progress_silent_channel_description">Прогрес на болуса и отказ с по-малко вибрации</string>
     <string name="simple_ui_off">Изкл</string>
+    <string name="simple_ui_always_on_charging">Винаги включен по време на зареждане</string>
     <string name="temp_target_eating_soon">Хранене</string>
     <string name="temp_target_hypo">Хипоглекимия</string>
     <string name="temp_target_activity">Физ.активност</string>
     <string name="temp_target_manual">Друго</string>
     <string name="temp_target_cancel">Откажи</string>
     <string name="tile_none">Без</string>
-    <string name="tile_no_config">Не е конфигурирано</string>
+    <string name="tile_no_config">Няма настройки</string>
     <string name="wear_control_not_enabled">Управление от часовник изключено</string>
     <string name="wear_control_no_data">Няма налични данни</string>
     <string name="increment">Нарастване</string>
