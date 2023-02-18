@@ -82,6 +82,10 @@ class MedtronicConverter @Inject constructor(
         if (strokes == 40) {
             startIdx = 2
         }
+        if (rawData.size==2 && strokes == 40) {
+            aapsLogger.error(LTag.PUMPCOMM, "It seems configuration is not correct, detected model $pumpModel should have length bigger than 2, but it doesn't (data: $rawData)")
+            startIdx = 0
+        }
         val reqLength = startIdx + 1
         val value: Double
         value = if (reqLength >= rawData.size) {
