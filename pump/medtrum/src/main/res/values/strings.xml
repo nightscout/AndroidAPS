@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MedtrumPump -->
+   <string name="key_snInput" translatable="false">snInput</string> 
+   <string name="key_medtrumpump_settings" translatable="false">medtrumpump_settings</string> 
+
+
+    <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_shortname">MEDTRUM</string>
+    <string name="medtrum_pump_description">Medtrum Nano</string>
+    <string name="medtrum_pump_label">MEDTRUM</string>
+    <string name="medtrumpump_settings">Medtrum pump settings</string>
+
+    <string name="snInput_title">SN</string>
+    <string name="snInput_summary">Serial number pump base</string>
+
+</resources>
