@@ -171,12 +171,22 @@ class KeepAliveWorker(
         val requestedProfile = ProfileSealed.PS(ps)
         val runningProfile = profileFunction.getProfile()
         val lastConnection = pump.lastDataTime()
-        val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < dateUtil.now()
+        val now = dateUtil.now()
+        val isStatusOutdated = lastConnection + STATUS_UPDATE_FREQUENCY < now
         val isBasalOutdated = abs(requestedProfile.getBasal() - pump.baseBasalRate) > pump.pumpDescription.basalStep
         aapsLogger.debug(LTag.CORE, "Last connection: " + dateUtil.dateAndTimeString(lastConnection))
-        // sometimes keep alive broadcast stops
-        // as as workaround test if readStatus was requested before an alarm is generated
-        if (lastReadStatus != 0L && lastReadStatus > dateUtil.now() - T.mins(5).msecs()) {
+        // Sometimes it can happen that keepalive is not triggered every 5 minutes as it should.
+        // In some cases, it may not even have been started at all.
+        // If these cases aren't handled, false "pump unreachable" alarms can be produced.
+        // Avoid this by checking that (a) readStatus was requested at least once (lastReadStatus
+        // is != 0 in that case) and (b) the last read status request was not too long ago.
+        //
+        // Also, use 5:30 as the threshold for (b) above instead of 5 minutes sharp. The keepalive
+        // checks come in 5 minute intervals, but due to temporal jitter, the interval between the
+        // last read status attempt and the current time can be slightly over 5 minutes (for example,
+        // 300041 milliseconds instead of exactly 300000). Add 30 extra seconds to allow for
+        // plenty of tolerance.
+        if (lastReadStatus != 0L && (now - lastReadStatus).coerceIn(minimumValue = 0, maximumValue = null) <= T.secs(5 * 60 + 30).msecs()) {
             localAlertUtils.checkPumpUnreachableAlarm(lastConnection, isStatusOutdated, loop.isDisconnected)
         }
         if (loop.isDisconnected) {
@@ -184,10 +194,10 @@ class KeepAliveWorker(
         } else if (runningProfile == null || ((!pump.isThisProfileSet(requestedProfile) || !requestedProfile.isEqual(runningProfile)) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE))) {
             rxBus.send(EventProfileSwitchChanged())
         } else if (isStatusOutdated && !pump.isBusy()) {
-            lastReadStatus = dateUtil.now()
+            lastReadStatus = now
             commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.keepalive_status_outdated), null)
         } else if (isBasalOutdated && !pump.isBusy()) {
-            lastReadStatus = dateUtil.now()
+            lastReadStatus = now
             commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.keepalive_basal_outdated), null)
         }
     }
