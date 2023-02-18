@@ -1,12 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Ingebouwde integratie voor Accu-Chek Combo pomp</string>
+    <string name="combov2_could_not_connect">Kon niet verbinden met de pomp</string>
+    <string name="combov2_not_paired">Niet verbonden met een pomp</string>
+    <string name="combov2_pump_terminated_connection">Pomp heeft de verbinding verbroken</string>
+    <string name="combov2_warning">Combo waarschuwing</string>
+    <string name="combov2_error">Combo fout</string>
+    <string name="combov2_warning_4">Bel hotline voor update</string>
+    <string name="combov2_warning_10">Bluetooth fout opnieuw koppelen</string>
+    <string name="combov2_error_1">Reservoir leeg</string>
     <string name="combov2_error_2">Batterij leeg</string>
     <string name="combov2_error_4">Afsluiting</string>
+    <string name="combov2_error_5">Einde pomp backup operatie</string>
     <string name="combov2_error_6">Mechanische fout</string>
+    <string name="combov2_error_7">Electronische fout</string>
+    <string name="combov2_error_8">Stoom onderbroken</string>
+    <string name="combov2_error_10">Reservoir fout</string>
+    <string name="combov2_extended_bolus_not_supported">Verlengde bolus wordt niet ondersteund</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Koppelen met de pomp</string>
+    <string name="combov2_unpair_pump_title">Ontkoppel pomp</string>
+    <string name="combov2_driver_state_label">Besturingsprogramma status</string>
+    <string name="combov2_current_activity_label">Huidige activiteit</string>
     <string name="bluetooth_address">Bluetooth-adres</string>
     <string name="combov2_start_pairing">Begin met koppelen</string>
+    <string name="combov2_pairing_in_progress">Combo-koppeling wordt uitgevoerd</string>
+    <string name="combov2_pairing_start_steps">Stappen om de koppeling met uw Combo uit te voeren:\n\n
+1. Navigeer naar het scherm Bluetooth Instellingen op de pomp\n
+2. Controleer of er hier een apparaat wordt weergegeven als gekoppeld indien dit het geval is, ga dan naar het scherm \"Verwijder apparaat\" om het apparaat te verwijderen/ontkoppelen\n
+3. Ga vervolgens naar het scherm \"Voeg apparaat toe\" en begin met koppelen van de pomp\n
+4. Klik op de knop \"Begin met koppelen\" om de koppeling in AndroidAPS te starten\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Na een tijdje wordt de telefoonnaam op het pompscherm weergegeven; druk op CHECK om te bevestigen.\n\n
+Wanneer het koppelen succesvol is voltooid, bevestig het koppelen van je pomp en keer terug naar het hoofdpompscherm door twee keer op de CHECK-knop te drukken.\n\n
+Als na meer dan ~5 minuten geen verbinding is opgericht:\n\n
+1. Druk op Terug of op de knop \"Koppeling annuleren\"\n
+2. Annuleer de koppeling op de Combo (druk op zowel UP als MENU
+knoppen tegelijkertijd om koppelen te annuleren)\n
+Probeer opnieuw te koppelen</string>
+    <string name="combov2_enter_pin">PIN Invoeren</string>
     <string name="combov2_cancel_pairing">Koppeling annuleren</string>
+    <string name="combov2_pin_hint">10-cijferige PIN-code</string>
+    <string name="combov2_pairing_finished_successfully">Met succes gekoppeld aan Combo</string>
+    <string name="combov2_pairing_cancelled">Koppelen met Combo geannuleerd door de gebruiker</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Combo scan timeout bereikt</string>
+    <string name="combov2_pairing_failed_due_to_error">Koppelen mislukt door de fout: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Koppelen afgebroken om onbekende redenen</string>
+    <string name="combov2_scanning_for_pump">Zoeken naar pomp</string>
+    <string name="combov2_establishing_bt_connection">Bluetooth verbinding tot stand brengen (poging nr. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Handdruk met pomp uitvoeren</string>
+    <string name="combov2_pairing_pump_requests_pin">Pomp aanvraag 10-cijferige pincode</string>
     <string name="combov2_not_initialized">Niet geïnitialiseerd</string>
     <string name="combov2_ready">Gereed</string>
     <string name="combov2_suspended">Onderbroken</string>
