@@ -90,12 +90,28 @@
     <!--    Autotune   -->
     <string name="insulin_peak">Pico</string>
     <!--    Loop -->
+    <string name="run_now">Executar agora</string>
     <string name="smb_frequency_exceeded">Um bolus foi injectado nos últimos 3 minutos, saltando SMB</string>
+    <string name="pump_not_initialized">Bomba não inicializada!</string>
     <string name="loop_shortname">LOOP</string>
     <string name="description_loop">Ative ou desative a implementação ativando o loop.</string>
+    <string name="no_aps_selected">SEM APS SELECIONADO OU RESULTADO FORNECIDO</string>
     <string name="ignore5m">Ignorar 5m</string>
     <string name="ignore15m">Ignorar 15m</string>
     <string name="ignore30m">Ignorar 30m</string>
+    <string name="carbs_suggestion">Sugestão de Carbs</string>
+    <string name="open_loop_new_suggestion">Nova sugestão disponível</string>
     <string name="basal_set_correctly">Basal correctamente definida</string>
+    <string name="last_run_label">Última execução</string>
     <string name="loop_aps_label">APS</string>
+    <string name="request_label">Pedido</string>
+    <string name="loop_constraints_processed_label">Depois das restrições processadas</string>
+    <string name="loop_tbr_request_time_label">Hora de solicitação da basal temporária.</string>
+    <string name="loop_tbr_execution_time_label">Hora de execução da basal temporária.</string>
+    <string name="loop_tbr_set_by_pump_label">Basal temporária definida pela bomba</string>
+    <string name="loop_smb_request_time_label">Hora de solicitação SMB</string>
+    <string name="loop_smb_execution_time_label">Hora de execução do SMB</string>
+    <string name="loop_smb_set_by_pump_label">SMB definido pela bomba</string>
+    <string name="loop_open_mode_min_change">Pedido de mudança mínima [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">O Loop aberto irá apresentar uma nova solicitação de alteração apenas se a mudança for maior do que este valor em %. O valor padrão é 20%</string>
 </resources>
