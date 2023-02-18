@@ -45,6 +45,7 @@
     <string name="mute5min">Demp i 5 minutter</string>
     <string name="mute">Lyd av</string>
     <string name="success">Suksess</string>
+    <string name="advanced_settings_title">Avanserte innstillinger</string>
     <string name="extendedbolusdeliveryerror">Forlenget bolus feilet</string>
     <string name="aps_mode_title">APS modus</string>
     <string name="extended_bolus">Forlenget bolus</string>
@@ -163,6 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Kansellering av Temp Basal feilet</string>
     <string name="canceling_eb_failed">Kansellering av forlenget bolus feilet</string>
+    <string name="virtualpump_uploadstatus_title">Last opp status til NS eller Tidepool</string>
     <string name="suspendloop_label">Deaktiver/pause loop</string>
     <string name="iob_label">Aktivt insulin (IOB)</string>
     <!--    Protection-->
@@ -570,4 +572,7 @@
         <item quantity="other">%1$d minutter</item>
     </plurals>
     <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Vil du rydde opp i databasen?\nDet vil fjerne sporede endringer og historiske data eldre enn 3 måneder.</string>
+    <string name="cleanup_db_confirm_sync">Vil du rydde opp i databasen?\nDet vil fjerne sporede endringer og historiske data eldre enn 3 måneder.\nÅ gjøre dette vil øke hastigheten på synkronisering betydelig.</string>
+    <string name="cleared_entries">Fjernet oppføringer</string>
 </resources>

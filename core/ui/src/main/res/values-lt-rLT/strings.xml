@@ -45,6 +45,7 @@
     <string name="mute5min">Nutildyti 5 minutėms</string>
     <string name="mute">Nutildyti</string>
     <string name="success">Atlikta</string>
+    <string name="advanced_settings_title">Išplėstiniai nustatymai</string>
     <string name="extendedbolusdeliveryerror">Ištęstinio boluso suleidimo klaida</string>
     <string name="aps_mode_title">DKS režimas</string>
     <string name="extended_bolus">Ištęstas bolusas</string>
@@ -163,6 +164,7 @@
     <string name="isf_short">JIF</string>
     <string name="canceling_tbr_failed">Laikinos bazės atšaukti nepavyko</string>
     <string name="canceling_eb_failed">Ištęsto boluso atšaukti nepavyko</string>
+    <string name="virtualpump_uploadstatus_title">Įkelti statusą į NS arba Tidepool</string>
     <string name="suspendloop_label">Ciklas išjungtas/sustabdytas</string>
     <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>
     <!--    Protection-->
@@ -556,6 +558,7 @@
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="fabric_upload_disabled">Sutrikimų žurnalo įrašų įkėlimas išjungtas!</string>
+    <string name="about_link_urls">\n\nDocumentation:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d d.</item>
         <item quantity="few">%1$d d.</item>
@@ -575,4 +578,7 @@
         <item quantity="other">%1$d min.</item>
     </plurals>
     <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Ar tikrai norite išvalyti duombazę?\nIstoriniai duomenys ir pakeitimai, senesni nei 3 mėn., bus ištrinti.</string>
+    <string name="cleanup_db_confirm_sync">Ar norite išvalyti duombazę?\nIstoriniai duomenys ir pakeitimai, senesni nei 3 mėn., bus ištrinti.\nSinchronizacija reikšmingai pagreitės.</string>
+    <string name="cleared_entries">Ištrinti įrašai</string>
 </resources>

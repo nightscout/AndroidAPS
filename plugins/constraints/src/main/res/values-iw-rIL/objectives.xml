@@ -9,8 +9,10 @@
     <string name="objectives_0_gate">ודא כי רמת סוכר זמינה ב- Nightscout, ושנתוני האינסולין מהמשאבה נשלחים</string>
     <string name="objectives_openloop_objective">התחלה עם לולאה פתוחה</string>
     <string name="objectives_openloop_gate">השתמשו במצב לולאה פתוחה במשך מס\' ימים וקבעו באופן ידני מספר רב של מינונים בזאליים זמניים. הגדירו והשתמשו במטרות זמניות ובמטרות ברירת מחדל (לדוגמא פעילות גופנית, או מתן פחמימות בהיפו)</string>
+    <string name="objectives_openloop_learned">לולאה פתוחה יכולה להמליץ על הטיפול אם אין ברשתכם משאבה תואמת או אם אתם עוד לא מוכנים ללולאה סגורה.</string>
     <string name="objectives_maxbasal_objective">הבנה של הלולאה הפתוחה שלך, לרבות הבזאלים הזמניים וההמלצות</string>
     <string name="objectives_maxbasal_gate">בהתבסס על ניסיון זה, קבעו את הערך הבזאלי המקסימלי והגדירו אותו במשאבה</string>
+    <string name="objectives_maxbasal_learned">קחו בחשבון את אמצעי הבטיחות והתאימו את ערכי משתני הבטיחות במקרה הצורך.</string>
     <string name="objectives_maxiobzero_objective">מתחילים לסגור את הלולאה עם השהיה עקב רמת גלוקוז נמוכה</string>
     <string name="objectives_maxiobzero_gate">השתמשו בלולאה סגורה עם ערך IOB מקסימלי = 0 למשך מספר ימים, עם כמה שפחות ארועי השהיה עקב גלוקוז נמוך (LGS)</string>
     <string name="objectives_maxiob_objective">כוונון הלולאה הסגורה, תוך העלאה של ערך ה- IOB מעל 0 ובסופו של דבר הורדת ערכי המטרה של רמת הסוכר</string>
@@ -33,6 +35,7 @@
     <string name="objectives_usescale">השתמשו בפונקציית קנה המידה ע\"י לחיצה ארוכה על תרשים הסוכר</string>
     <string name="objectives_exam_objective">הוכיחו את הידע שלכם\\ן</string>
     <string name="objectives_exam_gate">למדו לקראת מענה על השאלות.  קיימות ארבע תשובות אפשריות לכל שאלה. ייתכן שיש יותר מתשובה נכונה אחת. בחרו את כל התשובות הנכונות ובחרו אישור.</string>
+    <string name="objectives_exam_learned_cob">חישוב פחמימות פעילות תלוי ביחס שבין יחס הפחמימות (IC) ויחס התיקון (ISF). העלאת ISF או הורדת IC יביאו להארכת משך ספיגת הפחמימות. החלפת הפרופיל באחוזים משנה את שני היחסים בו זמנית ולכן משך הספיגה אינו מושפע.</string>
     <string name="answerdisabledto">לא ניתן לענות עד: %1$s</string>
     <string name="wronganswer">תשובה שגויה!</string>
     <string name="unfinshed_button">הבא שלא נענה</string>

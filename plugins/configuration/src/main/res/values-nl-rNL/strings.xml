@@ -25,6 +25,7 @@
     <string name="master_password_summary">Het masterwachtwoord wordt gebruikt voor het versleutelen van backups en om de app-beveiligingen te kunnen overschrijven. Onthoud het goed of bewaar het op een veilige plaats.</string>
     <string name="current_master_password">Huidig masterwachtwoord</string>
     <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
+    <string name="syncinfotext">Gegevens naar de cloud synchroniseren. Je kan dit deel nu overslaan, maar je kan pas verder met de doelen wanneer je een Nightscout of Tidepool client hebt ingesteld.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Naam patiënt</string>
     <string name="patient_name_summary">Geef de naam of roepnaam van de patiënt op om onderscheid te maken tussen meerdere setups</string>

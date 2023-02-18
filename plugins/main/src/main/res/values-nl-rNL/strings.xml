@@ -314,4 +314,7 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="old_data">Oude gegevens</string>
+    <string name="pump_old_data">TDD: Nog steeds oude gegevens! Kan niet laden van de pomp.</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">u</string>
 </resources>

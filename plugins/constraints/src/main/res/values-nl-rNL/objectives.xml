@@ -13,6 +13,7 @@
     <string name="objectives_maxbasal_gate">Gebaseerd op deze ervaringen, beslis wat het maximale basaal mag zijn en stel dit in op de pomp</string>
     <string name="objectives_maxiobzero_objective">Starten met de Closed Loop met bescherming tegen lage Bg</string>
     <string name="objectives_maxiobzero_gate">In closed loop draaien met een max. IOB = 0 gedurende enkele dagen met een beperkt aantal lage BG</string>
+    <string name="objectives_maxiobzero_learned">MaxIOB instellen op 0 is om te voorkomen dat u een hypo krijgt en zal niet meer insuline dan de basaal instelling toevoegen (behalve in een situatie met negatieve IOB)</string>
     <string name="objectives_maxiob_objective">Inregelen van de closed loop, verhoog de max IOB boven 0 en laat geleidelijk het streef BG dalen</string>
     <string name="objectives_maxiob_gate">Test enkele dagen als ook minstens 1 nacht zonder een laag BG alarm voordat je jouw streef BG verlaagt</string>
     <string name="objectives_autosens_objective">Pas het basaal en de ratios aan indien nodig, activeer hierna de auto-sens optie</string>
@@ -33,6 +34,8 @@
     <string name="objectives_usescale">Gebruik de schaalfunctie: houd de BG grafiek lang ingedrukt</string>
     <string name="objectives_exam_objective">Bewijs je kennis</string>
     <string name="objectives_exam_gate">Beantwoord de vragen.  Bij elke vraag worden vier antwoordmogelijkheden gegeven. Het kan zijn dat er meer dan één antwoord moet worden aangevinkt. Vink alle antwoorden aan die jij denkt dat juist zijn en kies VERIFIEER.</string>
+    <string name="objectives_exam_learned_prerequisites">U hoeft geen ontwikkelaar te zijn, maar u heeft NS en een geschikte pomp nodig om doelen te behalen. U heeft een computer nodig om AAPS voor de eerste keer en voor iedere update te bouwen.</string>
+    <string name="objectives_exam_learned_dia">DIA in een loop heeft een andere betekenis (tijd totdat alle insuline is geabsorbeerd) dan in klassieke pomptherapie (tijd tot de meeste insuline is geabsorbeerd).</string>
     <string name="answerdisabledto">Beantwoorden uitgeschakeld tot: %1$s</string>
     <string name="wronganswer">Verkeerd antwoord!</string>
     <string name="unfinshed_button">Volgende onvoltooide</string>
