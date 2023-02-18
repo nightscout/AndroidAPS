@@ -35,6 +35,9 @@
     <string name="ns_client_secret_title">קוד API של Nightscout</string>
     <string name="ns_client_secret_dialog_title">קוד API של Nightscout</string>
     <string name="ns_client_secret_dialog_message">הזינו את קוד ה-API של Nightscout (מינימום 12 תווים)</string>
+    <string name="nsclient_token_title">אסימון גישה</string>
+    <string name="nsclient_token_dialog_title">אסימון גישה</string>
+    <string name="nsclient_token_dialog_message">אסימון גישה הופק בדף האדמיניסטרטור של NS (לפחות 17 תווים)</string>
     <string name="deliver_now">ספק עכשיו</string>
     <string name="clear_queue">נקה תור</string>
     <string name="show_queue">הצג תור</string>
@@ -72,6 +75,8 @@
     <string name="ns_alarm_urgent_stale_data_value_label">סף התיישנות נתונים דחוף [min]</string>
     <string name="ns_log_app_started_event">רשום הפעלת AAPS ב-Nightscout</string>
     <string name="copy_existing_values">להעתיק הגדרות מ-Nightscout (אם קיימות)?</string>
+    <string name="ns_use_ws_title">התחבר ל-websockets</string>
+    <string name="ns_use_ws_summary">משמעות ההפעלה: עדכונים, קבלת התראות והודעות במהירות גבוהה יותר תוך צריכת סוללה גבוהה יותר, בדומה ל-v1. כל שאר המעלים ל-NS חייבים להשתמש בפרוטוקול v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">שם המשתמש שלכם להתחברות ל-Tidepool, בדרך כלל כתובת הדוא\"ל שלכם</string>
     <string name="title_tidepool_username">שם משתמש להתחברות</string>
@@ -97,16 +102,18 @@
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
     <string name="description_xdrip">שליחת נתוני סוכר אל xDrip</string>
     <string name="xdrip_status_detailed_iob_title">הצגת IOB מפורט</string>
     <string name="xdrip_status_detailed_iob_summary">חלוקת ה-IOB לבולוס ובזאלי במסך השעון</string>
     <string name="xdrip_status_show_bgi_title">הצג השפעת רמת הסוכר</string>
     <string name="xdrip_status_show_bgi_summary">הוסף השפעת הסוכר לשורת הסטטוס</string>
+    <string name="xdrip_status_settings">שורת מצב xDrip מתקדמת</string>
     <string name="disabled_loop">לולאה מושבתת</string>
     <string name="xdrip_send_status_title">שליחת שורת הסטטוס ל-xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ אינו מותקן</string>
     <string name="calibration_sent">נשלח כיול ל-xDrip+</string>
-    <string name="xdrip_local_broadcasts_summary">שולח נתוני גלוקוז וטיפולים ל-xDrip+. יש לבחור את מקור הנתונים \"xDrip+ Sync Follower\" וקבלת נתונים חייבת להיות מופעלת בהגדרות > הגדרות לשיתוף פעולה בין אפליקציות > קבל גלוקוז\\טיפולים</string>
+    <string name="xdrip_local_broadcasts_summary">שולח נתוני גלוקוז וטיפולים ל-xDrip+. יש לבחור את מקור הנתונים \"xDrip+ Sync Follower\" וקבלת נתונים חייבת להיות מופעלת בהגדרות &gt; הגדרות לשיתוף פעולה בין אפליקציות &gt; קבל גלוקוז\\טיפולים</string>
     <string name="xdrip_local_broadcasts_title">אפשר שידור ל-xDrip+</string>
     <!--    DataBroadcast-->
 </resources>
