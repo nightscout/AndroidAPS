@@ -189,11 +189,14 @@
     <string name="ic_meaning">KH-ratio betekent: hoeveel brood-eenheden gebruik je voor 1E insuline?</string>
     <string name="ic_hint1">https://androidaps.readthedocs.io/nl/latest/Getting-Started/FAQ.html?#koolhydraat-ratio-kh-g-e</string>
     <string name="profileswitch_label">Profielwissels</string>
+    <string name="profileswitch_pctwillchange">Welke antwoorden zijn correct bij het opgeven van een 90% profielwissel?</string>
     <string name="profileswitch_basallower">De basaalstanden worden 10% lager.</string>
     <string name="profileswitch_isfhigher">ISF-waarde wordt 10% hoger.</string>
     <string name="profileswitch_iclower">De waarde van de KH-ratio wordt 10% lager.</string>
     <string name="profileswitch_unchanged">De ISF en KH-ratio blijven ongewijzigd.</string>
+    <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/nl/latest/Usage/Profiles.html#profiel-wissel</string>
     <string name="profileswitch2_label">Profielwissels</string>
+    <string name="profileswitch2_pctwillchange">Welke antwoorden zijn correct bij het opgeven van een 120% profielwissel?</string>
     <string name="profileswitch2_bghigher">De streefwaarde wordt 20% hoger.</string>
     <string name="profileswitch2_basalhigher">De basaalstanden worden 20% hoger.</string>
     <string name="profileswitch2_bgunchanged">Het BG streefdoel blijft ongewijzigd.</string>
