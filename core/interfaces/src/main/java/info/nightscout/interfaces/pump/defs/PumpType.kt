@@ -391,6 +391,26 @@ enum class PumpType {
         isPatchPump = true,
         maxReservoirReading = 50,
         source = Source.EOPatch2
+    ),
+
+    //Medtrum Nano Pump
+    MEDTRUM_NANO(
+        description = "Medtrum Nano",
+        manufacturer = ManufacturerType.Medtrum,
+        model = "Nano",
+        bolusSize = 0.05,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05, 30.0),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 25.0),
+        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        baseBasalMinValue = 0.05,
+        baseBasalMaxValue = 25.0,
+        baseBasalStep = 0.05,
+        baseBasalSpecialSteps = null,
+        pumpCapability = PumpCapability.MedtrumCapabilities,
+        isPatchPump = true,
+        source = Source.Medtrum
     );
 
     val description: String
@@ -458,6 +478,7 @@ enum class PumpType {
         OmnipodEros,
         OmnipodDash,
         EOPatch2,
+        Medtrum,
         MDI,
         VirtualPump,
         Unknown

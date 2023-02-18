@@ -64,6 +64,8 @@ class MedtrumPumpPlugin @Inject constructor(
         .description(R.string.medtrum_pump_description), injector, aapsLogger, rh, commandQueue
 ), Pump {
 
+    private var mPumpType: PumpType = PumpType.MEDTRUM_NANO
+    private val mPumpDescription = PumpDescription(mPumpType)
 
     override fun onStart() {
         super.onStart()
@@ -175,7 +177,7 @@ class MedtrumPumpPlugin @Inject constructor(
     }
 
     override fun model(): PumpType {
-        return PumpType.GENERIC_AAPS // TODO
+        return  mPumpType
     }
 
     override fun serialNumber(): String {
@@ -183,7 +185,7 @@ class MedtrumPumpPlugin @Inject constructor(
     }
 
     override val pumpDescription: PumpDescription
-        get() = PumpDescription(PumpType.GENERIC_AAPS) // TODO
+        get() = mPumpDescription
 
     override fun shortStatus(veryShort: Boolean): String {
         return ""// TODO

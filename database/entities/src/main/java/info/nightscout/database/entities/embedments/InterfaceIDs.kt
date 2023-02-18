@@ -43,6 +43,7 @@ data class InterfaceIDs(
         MDI,
         DIACONN_G8,
         EOPATCH2,
+        MEDTRUM,
         USER,
         CACHE;
 
