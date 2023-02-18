@@ -39,4 +39,16 @@
     <string name="omnipod_dash_not_enough_insulin">אין מספיק אינסולין במכל</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">פקודה לא מאושרת</string>
     <string name="requested_by_user" comment="26 characters max for translation">התבקש ע\"י המשתמש</string>
+    <string name="profile_set_ok">הפרופיל הוגדר בהצלחה</string>
+    <string name="suspend_delivery_is_unconfirmed">השעיית הזרקת האינסולין לא אושרה! נא לרענן ידנית את סטטוס הפוד מלשונית Omnipod ולהמשיך את ההזרקה במידה ונדרש.</string>
+    <string name="insulin_delivery_suspended">הזרקת האינסולין מופסקת</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">אזור הזמן בפוד שונה מאזור הזמן בטלפון. ערכי הבאזלי אינם נכונים. החליפו פרופיל כדי לתקן</string>
+    <string name="failed_to_set_the_new_basal_profile">הגדרת הבאזלי החדש נכשלה. ההזרקה הופסקה</string>
+    <string name="setting_basal_profile_might_have_failed">ייתכן שהגדרת הפרופיל הבזאלי נכשלה. הזרקת האינסולין עלולה להעצר! נא לרענן ידנית את סטטוס הפוד בלשונית Omnipod ולחדש את ההזרקה במידת הצורך.</string>
+    <string name="bolus_delivery_status_uncertain">מצב הזרקת בולוס אינו וודאי. רענן את סטטוס הפוד כדי לוודא זאת.</string>
+    <string name="checking_delivery_status">בודק סטטוס הזרקה</string>
+    <string name="setting_temp_basal_might_have_basal_failed">הגדרת בזאלי זמני כנראה נכשלה. אם בזאלי זמני הוחל קודם לכן, הוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">ביטול הבאזלי הזמני אינו וודאי</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">פקודת חידוש ההזרקה לא אושרה. יש לרענן את סטטוס הפוד</string>
+    <string name="cancelling_temp_basal_might_have_failed">ביטול הבזאלי הזמני נכשל. אם בזאלי זמני הוחל קודם לכן, ייתכן שהוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
 </resources>

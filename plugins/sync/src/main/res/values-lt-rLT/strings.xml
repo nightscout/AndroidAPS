@@ -57,6 +57,8 @@
     <string name="ns_receive_profile_switch_summary">Priimti profilio keitimus, įvestus per NS arba NSClient</string>
     <string name="ns_receive_offline_event">Gauti APS įvykius neprisijungus</string>
     <string name="ns_receive_offline_event_summary">Priimti APS įvykius neprisijungus, įvestus per NS arba NSClient</string>
+    <string name="ns_receive_tbr_eb">Gauti LB ir IB</string>
+    <string name="ns_receive_tbr_eb_summary">Priimti laikinas bazes ir ištęstus bolusus, įvestus kitur</string>
     <string name="ns_receive_insulin">Gauti insulino duomenis</string>
     <string name="ns_receive_insulin_summary">Priimti insulino duomenis, įvestus per NS arba NSClient (jis nėra suleidžiamas, tik įskaičiuojamas į AIO)</string>
     <string name="ns_receive_carbs">Gauti angliavandenių duomenis</string>
@@ -73,6 +75,8 @@
     <string name="ns_alarm_urgent_stale_data_value_label">Kritiškai seni duomenys, riba [min]</string>
     <string name="ns_log_app_started_event">Siųsti programos paleidimo žymę į NS</string>
     <string name="copy_existing_values">Kopijuoti NS nustatymus (jei yra)?</string>
+    <string name="ns_use_ws_title">Prisijungti per WebSocket</string>
+    <string name="ns_use_ws_summary">Įgalinimas reiškia: greitesni atnaujinimai, įspėjimų ir pranešimų gavimas ir didesnis baterijos eikvojimas, panašus į v1. Visi kiti įkėlėjai į NS turi naudoti v3 protokolą.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Jūsų Tidepool vartotojo vardas, įprastai tai Jūsų el. pašto adresas</string>
     <string name="title_tidepool_username">Vartotojo vardas</string>
@@ -92,7 +96,25 @@
     <string name="remove_all">Pašalinti visus</string>
     <string name="reset_start">Pradėti iš naujo</string>
     <string name="upload_now">Įkelti dabar</string>
+    <string name="not_connected">Neprisijungta</string>
+    <string name="read_only">Tik skaityti</string>
+    <string name="working">Dirbama</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Siųsti duomenis į xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Rodyti detalų AIO</string>
+    <string name="xdrip_status_detailed_iob_summary">Laikrodyje rodyti bolusų ir bazės AIO</string>
+    <string name="xdrip_status_show_bgi_title">Rodyti GĮ</string>
+    <string name="xdrip_status_show_bgi_summary">Prie statuso linijos pridėti glikemijos įtaką</string>
+    <string name="xdrip_status_settings">Išplėstinė xDrip+ statuso linija</string>
+    <string name="disabled_loop">Ciklas išjungtas</string>
+    <string name="xdrip_send_status_title">Siųsti statuso liniją į xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ neinstaliuota</string>
+    <string name="calibration_sent">Kalibracija nusiųsta į xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Siųsti glikemijos ir terapijos duomenis į xDrip+. Turi būti pasirinktas duomenų šaltinis „xDrip+ Sync Follower“, o duomenų priėmimas turi būti įjungtas skiltyje Nustatymai – Inter-app settings – Accept Glucose/Treatments</string>
+    <string name="xdrip_local_broadcasts_title">Įjungti duomenų perdavimą į xDrip+.</string>
     <!--    DataBroadcast-->
+    <string name="data_broadcaster">Data Broadcaster</string>
 </resources>

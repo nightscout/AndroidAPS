@@ -7,8 +7,8 @@
     <string name="omnipod_common_pod_management_heading_tools">Įrankiai</string>
     <string name="omnipod_common_pod_management_button_activate_pod">Aktyvuoti Pod</string>
     <string name="omnipod_common_pod_management_button_deactivate_pod">Išjungti Pod</string>
-    <string name="omnipod_common_pod_management_button_discard_pod">Išmesti Pod</string>
-    <string name="omnipod_common_pod_management_discard_pod_confirmation">Jei išmesite Pod, ryšio su juo nebebus galima atkurti. Darykite tai tik tada, kai pastoviai nepavyksta užmegzti ryšio. Jei ryšys visgi yra, naudokite <b>Deaktyvuoti Pod</b> funkciją. \n\nJei norite tęsti, pašalinkite Pod nuo savo kūno!</string>
+    <string name="omnipod_common_pod_management_button_discard_pod">Baigti naudoti Pod</string>
+    <string name="omnipod_common_pod_management_discard_pod_confirmation">Jei baigsite naudoti Pod, ryšio su juo nebebus galima atkurti. Darykite tai tik tada, kai pastoviai nepavyksta užmegzti ryšio. Jei ryšys visgi yra, naudokite <b>Deaktyvuoti Pod</b> funkciją. \n\nJei norite tęsti, pašalinkite Pod nuo savo kūno!</string>
     <string name="omnipod_common_pod_management_button_play_test_beep">Paleisti bandomąjį signalą</string>
     <string name="omnipod_common_pod_management_button_playing_test_beep">Bandomasis signalas paleistas…</string>
     <string name="omnipod_common_pod_management_button_pod_history">Pod istorija</string>
@@ -28,7 +28,7 @@
     <string name="omnipod_common_error_failed_to_initialize_pod">Nepavyko inicijuoti Pod</string>
     <string name="omnipod_common_error_failed_to_insert_cannula">Nepavyko įvesti kaniulės</string>
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Pod aktyvavimo laikas buvo viršytas. Šis Pod nebegali būti aktyvuotas.</string>
-    <string name="omnipod_common_error_failed_to_verify_activation_progress">Nepavyko patvirtinti aktyvinimo eigos. Pabandykite pakartoti.</string>
+    <string name="omnipod_common_error_failed_to_verify_activation_progress">Nepavyko patvirtinti aktyvinimo eigos. Pabandykite kartoti.</string>
     <string name="omnipod_common_error_pod_suspended">Pod sustabdyta</string>
     <string name="omnipod_common_error_failed_to_play_test_beep">Nepavyko paleisti bandomojo signalo</string>
     <string name="omnipod_common_error_time_out_of_sync">Neatitinka laikas su Pod. Atnaujinkite laiką skirtuke Omnipod.</string>
@@ -70,9 +70,9 @@
     <string name="omnipod_common_wizard_button_cancel">Atšaukti</string>
     <string name="omnipod_common_wizard_button_finish">Užbaigti</string>
     <string name="omnipod_common_wizard_button_next">Kitas</string>
-    <string name="omnipod_common_wizard_button_retry">Bandyti dar kartą</string>
+    <string name="omnipod_common_wizard_button_retry">Kartoti</string>
     <string name="omnipod_common_wizard_button_deactivate_pod">Išjungti Pod</string>
-    <string name="omnipod_common_wizard_button_discard_pod">Išmesti Pod</string>
+    <string name="omnipod_common_wizard_button_discard_pod">Baigti naudoti Pod</string>
     <string name="omnipod_common_wizard_exit_confirmation_text">Jūs dar nebaigėte visų veiksmų. Ar tikrai norite išeiti?</string>
     <string name="omnipod_common_wizard_exit_confirmation_title">Išeiti</string>
     <!-- Omnipod - Pod Activation Wizard -->
@@ -92,10 +92,10 @@
     <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Pod išjungiamas.\n\nKai išjungimas bus sėkmingai baigtas, galite spustelėti <b>Kitas</b>.</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod išjungtas</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">Pod išjungtas.\n\nNuimkite Pod nuo kūno ir jį išmeskite.</string>
-    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod išmestas</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Pod baigtas naudoti</string>
     <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Pod statusas atmestas. Insulino tiekimas nesustabdytas, nes Pod nebuvo teisingai deaktyvuotas. \n\nPašalinkite Pod nuo savo kūno ir jį utilizuokite.</string>
-    <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Jei atmesite Pod, ryšio su juo nebebus galima užmegzti. Darykite tai tik tada, kai visi bandymai užmegzti ryšį nepavyksta. Ar esate tikras, kad norite atmesti Pod?</string>
-    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Išmesti Pod</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Jei baigsite naudoti Pod, ryšio su juo nebebus galima užmegzti. Darykite tai tik tada, kai visi bandymai užmegzti ryšį nepavyksta. Ar esate tikri, kad norite atmesti Pod?</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Baigti naudoti Pod</string>
     <!-- Omnipod - Preferences -->
     <string name="omnipod_common_preferences_bolus_beeps_enabled">Boluso signalai įjungti</string>
     <string name="omnipod_common_preferences_basal_beeps_enabled">Bazės signalai įjungti</string>
@@ -127,7 +127,7 @@
     <string name="omnipod_common_pod_status_pod_fault_description">Pod klaida: %1$03d %2$s</string>
     <!-- Omnipod - Commands -->
     <string name="omnipod_common_cmd_deactivate_pod">Išjungti Pod</string>
-    <string name="omnipod_common_cmd_discard_pod">Išmesti Pod</string>
+    <string name="omnipod_common_cmd_discard_pod">Baigti naudoti Pod</string>
     <string name="omnipod_common_cmd_set_bolus">Nustatyti bolusą</string>
     <string name="omnipod_common_cmd_cancel_bolus">Atšaukti bolusą</string>
     <string name="omnipod_common_cmd_set_tbr">Nustatyti laikiną bazę</string>

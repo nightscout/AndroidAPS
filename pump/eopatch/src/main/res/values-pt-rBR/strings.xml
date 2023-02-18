@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="eopatch">EOPatch2</string>
+    <string name="eopatch_shortname">EOP2</string>
+    <string name="eopatch_pump_description">Integração para EOPatch2 / GlucoMen Day</string>
     <string name="category_alerts">Alertas</string>
+    <string name="low_reservoir">Alertas de Reservatório Baixo</string>
+    <string name="patch_expiration_reminders">Lembrete de Expiração do Patch</string>
     <string name="eopatch_status">Estado</string>
     <string name="eopatch_base_basal_rate">Taxa Basal de base</string>
     <string name="eopatch_temp_basal_rate">Taxa Basal Temporária</string>

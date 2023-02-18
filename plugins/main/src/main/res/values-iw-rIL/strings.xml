@@ -3,6 +3,7 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">תקשורת SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">שליטה מרחוק על AndroidAPS באמצעות SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">מיישום מאמת עבור: %1$s ואחריו PIN</string>
     <string name="smscommunicator_otp_pin">תוספת PIN חובה בסוף האסימון</string>
     <string name="smscommunicator_otp_pin_summary">ספרות נוספות שיש לשנן ולהדביק בסוף כל אחת מהסיסמאות החד פעמיות</string>
@@ -18,9 +19,11 @@
     <string name="smscommunicator_otp_export_prompt">אתם בטוחים שברצונכם להעתיק את סוד ה-OTP ללוח ההעתקה?\n\nייתכן שתצטרכו לעשות זאת רק אם יישום האימות נתקל בבעיות בסריקת קוד QR, או שברצונכם להכניס אותו ידנית או להגדיר אסימון OTP של חומרה באמצעות יישום ייעודי.</string>
     <string name="smscommunicator_otp_export_successful">סוד OTP (בפורמט Base32) יוצא והועתק אל לוח ההעתקה. הדביקו אותו לתוך תוכנת האימות או בחומרת צריבת OTP!</string>
     <string name="smscommunicator_otp_step1_install_header">1. התקנת מאמת</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. סרקו את הקוד על מנת להגדיר את קודי OTP של AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. ניסוי סיסמה חד-פעמית</string>
     <string name="smscommunicator_otp_reset_header">איפוס מאמתים</string>
     <string name="smscommunicator_otp_install_info">בכל אחד מהטלפונים העוקבים, התקינו יישום מאמת התומך באסימוני RFC 6238 TOTP. יישומים פופולריים בחינם הם:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">אתחול המאמת הופך את כל המאמתים הקיימים לבלתי חוקיים. יש להגדיר אותם מחדש!</string>
     <string name="sms_wrong_code">קוד שגוי. הפקודה בוטלה.</string>
     <string name="sms_timeout_while_waiting">בהמתנה עד לסיום תקשורת קודמת עם המשאבה</string>
     <string name="smscommunicator_allowednumbers">מספרי טלפון מורשים</string>
@@ -85,6 +88,7 @@
     <string name="smscommunicator_message_body">גוף ההודעה אינו חוקי</string>
     <string name="smscommunicator_report_pump_unreachable_summary">שולח SMS אם מופעל אירוע \"המשאבה אינה נגישה\"</string>
     <string name="smscommunicator_pump_unreachable">דווח שהמשאבה אינה נגישה</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">על מנת להחליף מצב לולאה ל-LGS (השעיית בסוכר נמוך) השיבו עם הקוד %1$s</string>
     <string name="wrong_format">פורמט שגוי</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">ערכי סוכר אחרונים:</string>
@@ -309,4 +313,5 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
+    <string name="last_enact">נקבעו לאחרונה</string>
 </resources>

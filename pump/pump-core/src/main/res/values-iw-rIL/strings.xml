@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">מעולם לא נוצר קשר</string>
     <string name="pump_status_sleeping">שינה</string>
     <string name="pump_status_waking_up">מתעורר</string>
     <string name="pump_status_active">פעיל</string>

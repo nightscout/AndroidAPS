@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans leidžia įkelti diabeto valdymo duomenis ir skirti juos moksliniams projektams.</string>
     <string name="logout">Atsijungti</string>
     <string name="setup">Sąranka</string>
@@ -37,6 +39,7 @@
     <string name="algorithm_debug_data">Algoritmo derinimo duomenys</string>
     <string name="data_not_uploaded">Duomenys neįkelti</string>
     <string name="passwords">Slaptažodžiai</string>
+    <string name="nightscout_url">Nightscout URL</string>
     <string name="nightscout_api_secret">Nighstcout API secret</string>
     <string name="free_text_fields">Laisvo teksto laukai</string>
     <string name="agree">Aš suprantu ir sutinku.</string>

@@ -127,5 +127,7 @@
     <string name="saturday_short">Sáb</string>
     <string name="sunday_short">Dom</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Hora de comer!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
     <string name="time_to_bolus">Hora do bolus!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
+    <string name="error_setting_reminder">Erro ao definir alarme futuro</string>
 </resources>
