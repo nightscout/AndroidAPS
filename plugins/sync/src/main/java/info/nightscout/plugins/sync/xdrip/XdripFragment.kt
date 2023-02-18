@@ -1,6 +1,8 @@
 package info.nightscout.plugins.sync.xdrip
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.HandlerThread
 import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuInflater
@@ -48,6 +50,7 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
     override var plugin: PluginBase? = null
 
     private val disposable = CompositeDisposable()
+    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
     private var _binding: XdripFragmentBinding? = null
 
@@ -78,7 +81,7 @@ class XdripFragment : DaggerFragment(), MenuProvider, PluginFragment {
                 context?.let { context ->
                     OKDialog.showConfirmation(
                         context, rh.gs(R.string.ns_client), rh.gs(R.string.full_sync_comment),
-                        Thread { dataSyncSelector.resetToNextFullSync() }
+                        Runnable { handler.post { dataSyncSelector.resetToNextFullSync() } }
                     )
                 }
                 true

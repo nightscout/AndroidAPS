@@ -150,21 +150,21 @@ class DataSyncSelectorXdripImpl @Inject constructor(
 
     private fun sendEntries(force: Boolean, progress: String) {
         if (preparedEntries.isNotEmpty() && (preparedEntries.size >= 100 || force)) {
-            xdripPlugin.sendToXdrip("entries", preparedEntries, progress)
+            xdripPlugin.sendToXdrip("entries", preparedEntries.toList(), progress)
             preparedEntries.clear()
         }
     }
 
     private fun sendTreatments(force: Boolean, progress: String) {
         if (preparedTreatments.isNotEmpty() && (preparedTreatments.size >= 100 || force)) {
-            xdripPlugin.sendToXdrip("treatments", preparedTreatments, progress)
+            xdripPlugin.sendToXdrip("treatments", preparedTreatments.toList(), progress)
             preparedTreatments.clear()
         }
     }
 
     private fun sendFoods(force: Boolean, progress: String) {
         if (preparedFoods.isNotEmpty() && (preparedFoods.size >= 100 || force)) {
-            xdripPlugin.sendToXdrip("food", preparedFoods, progress)
+            xdripPlugin.sendToXdrip("food", preparedFoods.toList(), progress)
             preparedFoods.clear()
         }
     }

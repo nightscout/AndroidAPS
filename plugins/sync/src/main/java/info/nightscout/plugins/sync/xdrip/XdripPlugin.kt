@@ -362,7 +362,7 @@ class XdripPlugin @Inject constructor(
 
     private fun sendEntries(dataPairs: List<DataSyncSelector.DataPair>, progress: String) {
         val array = JSONArray()
-        for (dataPair in dataPairs.toList()) {
+        for (dataPair in dataPairs) {
             val data = (dataPair as DataSyncSelector.PairGlucoseValue).value.toXdripJson()
             array.put(data)
         }
@@ -376,7 +376,7 @@ class XdripPlugin @Inject constructor(
 
     private fun sendFood(dataPairs: List<DataSyncSelector.DataPair>, progress: String) {
         val array = JSONArray()
-        for (dataPair in dataPairs.toList()) {
+        for (dataPair in dataPairs) {
             val data = (dataPair as DataSyncSelector.PairFood).value.toJson(true)
             array.put(data)
         }
@@ -390,7 +390,7 @@ class XdripPlugin @Inject constructor(
 
     private fun sendTreatments(dataPairs: List<DataSyncSelector.DataPair>, progress: String) {
         val array = JSONArray()
-        for (dataPair in dataPairs.toList()) {
+        for (dataPair in dataPairs) {
             when (dataPair) {
                 is DataSyncSelector.PairBolus                  -> dataPair.value.toJson(true, dateUtil)
                 is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(true, dateUtil)
