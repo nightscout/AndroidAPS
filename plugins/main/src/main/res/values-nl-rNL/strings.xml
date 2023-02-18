@@ -88,6 +88,9 @@
     <string name="smscommunicator_message_body">Ongeldige inhoud van het bericht</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Stuur SMS wanneer de pomp onbereikbaar is</string>
     <string name="smscommunicator_pump_unreachable">Melding pomp onbereikbaar</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Om van Loop mode te wisselen naar LGS (Low Glucose Suspend) antwoord met code %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Om van Loop mode te wisselen naar Closed Loop antwoord met code %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Huidige loop modus: %1$s</string>
     <string name="wrong_format">Verkeerde invoer</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">Laatste BG:</string>
@@ -283,6 +286,7 @@
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Monitor en bedien AAPS met uw WearOS horloge.</string>
     <string name="no_watch_connected">(Geen horloge verbonden)</string>
+    <string name="pump_status">Pomp status</string>
     <string name="loop_status">Loop status</string>
     <string name="wizard_result">Reken. Wizard:\nInsuline: %1$.2fE\nKoolhy.: %2$dg</string>
     <string name="quick_wizard_not_available">Geselecteerde QuickWizard is niet meer beschikbaar, vernieuw uw tegel</string>
@@ -314,7 +318,30 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="old_data">Oude gegevens</string>
+    <string name="pump_fetching_data">proberen gegevens van de pomp op te halen.</string>
     <string name="pump_old_data">TDD: Nog steeds oude gegevens! Kan niet laden van de pomp.</string>
     <string name="grams_short">g</string>
     <string name="hour_short">u</string>
+    <string name="no_active_profile">Geen actieve profielwissel!</string>
+    <string name="profile_message">Profiel: \n\nTijdverschuiving: %1$\nPercentage: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fE %1$.0f%%</string>
+    <string name="no_profile">Geen profiel geladen</string>
+    <string name="aps_only">Alleen gebruiken in de APS modus!</string>
+    <string name="last_aps_result_na">Laatste resultaat niet beschikbaar!</string>
+    <string name="loop_status_closed">GESLOTEN LOOP</string>
+    <string name="loop_status_open">OPEN LOOP</string>
+    <string name="loop_status_disabled">LOOP UITGESCHAKELD</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Laatst uitgevoerd</string>
+    <string name="last_enact">Laatste uitvoering</string>
+    <string name="today">Vandaag</string>
+    <string name="weighted">gewogen</string>
+    <string name="target_only_aps_mode">Streefdoelen zijn alleen van toepassing in de APS modus!</string>
+    <string name="no_history">Geen geschiedenisgegevens!</string>
+    <string name="units_short">E</string>
+    <string name="temp_target">Tijdelijk streefdoel</string>
+    <string name="until">tot</string>
+    <string name="default_range">Standaard streefbereik</string>
+    <string name="target">streefwaarde</string>
+    <string name="rate_duration">Basaal: %1$.2fE/uur (%2$.2f%) \nDuur %3$d% min</string>
 </resources>
