@@ -5,7 +5,6 @@ import android.os.SystemClock
 import androidx.work.Data
 import androidx.work.ExistingWorkPolicy
 import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkContinuation
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import dagger.android.HasAndroidInjector
@@ -44,6 +43,7 @@ import info.nightscout.workflow.PrepareTemporaryTargetDataWorker
 import info.nightscout.workflow.PrepareTreatmentsDataWorker
 import info.nightscout.workflow.UpdateGraphWorker
 import info.nightscout.workflow.UpdateIobCobSensWorker
+import info.nightscout.workflow.UpdateWidgetWorker
 import info.nightscout.workflow.iob.IobCobOref1Worker
 import info.nightscout.workflow.iob.IobCobOrefWorker
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -208,6 +208,10 @@ class CalculationWorkflowImpl @Inject constructor(
                 OneTimeWorkRequest.Builder(InvokeLoopWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(InvokeLoopWorker.InvokeLoopData(cause)))
                     .build()
+            )
+            .then(
+                job == MAIN_CALCULATION,
+                OneTimeWorkRequest.Builder(UpdateWidgetWorker::class.java).build()
             )
             .then(
                 job == MAIN_CALCULATION,

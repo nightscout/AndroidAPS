@@ -69,9 +69,10 @@ class Widget : AppWidgetProvider() {
         // many threads were created. Making handler static resolve this issue
         private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
-        fun updateWidget(context: Context) {
+        fun updateWidget(context: Context, from: String) {
             context.sendBroadcast(Intent().also {
                 it.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, AppWidgetManager.getInstance(context)?.getAppWidgetIds(ComponentName(context, Widget::class.java)))
+                it.putExtra("from", from)
                 it.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
             })
         }
@@ -80,6 +81,7 @@ class Widget : AppWidgetProvider() {
 
     override fun onReceive(context: Context, intent: Intent?) {
         (context.applicationContext as HasAndroidInjector).androidInjector().inject(this)
+        aapsLogger.debug(LTag.WIDGET, "onReceive ${intent?.extras?.getString("from")}")
         super.onReceive(context, intent)
     }
 
@@ -99,8 +101,6 @@ class Widget : AppWidgetProvider() {
     }
 
     private fun updateAppWidget(context: Context, appWidgetManager: AppWidgetManager, appWidgetId: Int) {
-        aapsLogger.debug(LTag.WIDGET, "updateAppWidget called")
-
         val views = RemoteViews(context.packageName, R.layout.widget_layout)
         val alpha = sp.getInt(WidgetConfigureActivity.PREF_PREFIX_KEY + appWidgetId, WidgetConfigureActivity.DEFAULT_OPACITY)
 

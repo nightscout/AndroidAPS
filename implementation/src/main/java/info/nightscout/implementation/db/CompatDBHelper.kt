@@ -45,7 +45,7 @@ class CompatDBHelper @Inject constructor(
         .changeObservable()
         .doOnSubscribe {
             rxBus.send(EventNewBG(null))
-            uiInteraction.updateWidget(context)
+            uiInteraction.updateWidget(context, "OnStart")
         }
         .subscribe {
             /**
@@ -58,7 +58,6 @@ class CompatDBHelper @Inject constructor(
             it.filterIsInstance<GlucoseValue>().maxByOrNull { gv -> gv.timestamp }?.let { gv ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventNewBg $gv")
                 rxBus.send(EventNewBG(gv.timestamp))
-                uiInteraction.updateWidget(context)
                 newestGlucoseValue = gv
             }
             it.filterIsInstance<GlucoseValue>().minOfOrNull { gv -> gv.timestamp }?.let { timestamp ->

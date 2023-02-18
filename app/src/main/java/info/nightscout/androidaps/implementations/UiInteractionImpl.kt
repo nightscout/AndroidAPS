@@ -70,8 +70,8 @@ class UiInteractionImpl @Inject constructor(
         context.startActivity(i)
     }
 
-    override fun updateWidget(context: Context) {
-        Widget.updateWidget(context)
+    override fun updateWidget(context: Context, from: String) {
+        Widget.updateWidget(context, from)
     }
 
     override fun runWizardDialog(fragmentManager: FragmentManager, carbs: Int?, name: String?) {

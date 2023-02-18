@@ -33,7 +33,7 @@ interface UiInteraction {
      */
     fun runAlarm(status: String, title: String, @RawRes soundId: Int = 0)
 
-    fun updateWidget(context: Context)
+    fun updateWidget(context: Context, from: String)
 
     fun runWizardDialog(fragmentManager: FragmentManager, carbs: Int? = null, name: String? = null)
     fun runLoopDialog(fragmentManager: FragmentManager, showOkCancel: Int)

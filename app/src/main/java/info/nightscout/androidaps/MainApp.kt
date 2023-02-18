@@ -151,7 +151,7 @@ class MainApp : DaggerApplication() {
         //  schedule widget update
         refreshWidget = Runnable {
             handler.postDelayed(refreshWidget, 60000)
-            Widget.updateWidget(this)
+            Widget.updateWidget(this, "ScheduleEveryMin")
         }
         handler.postDelayed(refreshWidget, 60000)
     }

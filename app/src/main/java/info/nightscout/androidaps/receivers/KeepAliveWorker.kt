@@ -33,7 +33,6 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.ui.widget.Widget
 import kotlinx.coroutines.Dispatchers
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
@@ -108,7 +107,6 @@ class KeepAliveWorker(
         }
         lastRun = dateUtil.now()
 
-        Widget.updateWidget(context)
         localAlertUtils.shortenSnoozeInterval()
         localAlertUtils.checkStaleBGAlert()
         checkPump()
