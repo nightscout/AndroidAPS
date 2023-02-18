@@ -97,6 +97,8 @@
     <string name="reset_start">Start reset</string>
     <string name="upload_now">Nu Uploaden</string>
     <string name="not_connected">Niet verbonden</string>
+    <string name="read_only">Alleen lezen</string>
+    <string name="working">Bezig</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
     <string name="xdrip">xDrip+</string>
