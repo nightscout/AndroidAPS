@@ -4,7 +4,9 @@
     <string name="combov2_error_4">Occlusione</string>
     <string name="combov2_error_6">Errore meccanico</string>
     <string name="bluetooth_address">Indirizzo bluetooth</string>
+    <string name="combov2_start_pairing">Avvia associazione</string>
     <string name="combov2_not_initialized">Non inizializzato</string>
+    <string name="combov2_checking_pump">Controllo micro</string>
     <string name="combov2_ready">Pronto</string>
     <string name="combov2_suspended">Sospeso</string>
     <string name="combov2_setting_basal_profile_cmddesc">Impostazione profilo basale</string>
