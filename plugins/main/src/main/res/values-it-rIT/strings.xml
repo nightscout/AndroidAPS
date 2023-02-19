@@ -245,8 +245,7 @@
     <string name="enablesuperbolus">Abilita superbolo nel calcolatore</string>
     <string name="enablesuperbolus_summary">Abilita la funzionalità superbolo nel calcolatore. Non abilitare fino a quando non impari ciò che realmente fa. PUÒ CAUSARE SOVRA-DOSAGGIO DI INSULINA SE USATO IMPROPRIAMENTE!</string>
     <string name="enablebolusreminder">Abilita promemoria bolo</string>
-    <string name="enablebolusreminder_summary">Usa promemoria bolo con calcolatore
-        (\"post-bolo\")</string>
+    <string name="enablebolusreminder_summary">Usa promemoria bolo con calcolatore (\"post-bolo\")</string>
     <string name="run_question">Eseguire %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predizioni</string>
