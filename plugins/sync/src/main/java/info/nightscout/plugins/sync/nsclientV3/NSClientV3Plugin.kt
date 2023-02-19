@@ -239,9 +239,9 @@ class NSClientV3Plugin @Inject constructor(
                 if (it is ValueWrapper.Existing) {
                     if (it.value.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
                         refreshInterval = T.mins(1).msecs()
-                        executeLoop("MAIN_LOOP", forceNew = false)
+                        executeLoop("MAIN_LOOP", forceNew = true)
                     }
-                } else executeLoop("MAIN_LOOP", forceNew = false)
+                } else executeLoop("MAIN_LOOP", forceNew = true)
             }
             handler.postDelayed(runLoop, refreshInterval)
             rxBus.send(EventNSClientNewLog("● TICK", ""))
