@@ -16,6 +16,9 @@
     <string name="in_range">In range</string>
     <string name="above" comment="above &quot;in range&quot;">Sopra</string>
     <string name="hba1c">HbA1c: </string>
+    <string name="std_deviation">SD: %1$s</string>
     <string name="detailed_14_days">Dettaglio 14 giorni</string>
     <string name="day_tir">TIR giorno</string>
+    <string name="night_tir">TIR notturno</string>
+    <string name="carbs_short" comment="max 6 characters">CHO</string>
 </resources>
