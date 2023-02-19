@@ -38,7 +38,6 @@ import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiData
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
@@ -224,27 +223,26 @@ class NSClientV3Plugin @Inject constructor(
                            aapsLogger.debug(LTag.NSCLIENT, event.action + " " + event.logText)
                        }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventNSClientResend::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> resend(event.reason) }, fabricPrivacy::logException)
-        disposable += rxBus
             .toObservable(EventNewHistoryData::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ executeUpload("NEW_DATA", forceNew = false) }, fabricPrivacy::logException)
 
         runLoop = Runnable {
             var refreshInterval = T.mins(5).msecs()
-            repository.getLastGlucoseValueWrapped().blockingGet().let {
-                // if last value is older than 5 min or there is no bg
-                if (it is ValueWrapper.Existing) {
-                    if (it.value.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
-                        refreshInterval = T.mins(1).msecs()
-                        executeLoop("MAIN_LOOP", forceNew = true)
+            if (nsClientSource.isEnabled())
+                repository.getLastGlucoseValueWrapped().blockingGet().let {
+                    // if last value is older than 5 min or there is no bg
+                    if (it is ValueWrapper.Existing) {
+                        if (it.value.timestamp < dateUtil.now() - T.mins(5).plus(T.secs(20)).msecs()) {
+                            refreshInterval = T.mins(1).msecs()
+                        }
                     }
-                } else executeLoop("MAIN_LOOP", forceNew = true)
-            }
+                }
+            if (!sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true))
+                executeLoop("MAIN_LOOP", forceNew = true)
+            else
+                rxBus.send(EventNSClientNewLog("● TICK", ""))
             handler.postDelayed(runLoop, refreshInterval)
-            rxBus.send(EventNSClientNewLog("● TICK", ""))
         }
         handler.postDelayed(runLoop, T.mins(2).msecs())
     }
@@ -554,9 +552,9 @@ class NSClientV3Plugin @Inject constructor(
 
     override fun resend(reason: String) {
         if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true))
-            executeUpload("RESEND", forceNew = false)
+            executeUpload("START $reason", forceNew = true)
         else
-            executeLoop("RESEND", forceNew = false)
+            executeLoop("START $reason", forceNew = true)
     }
 
     override fun pause(newState: Boolean) {

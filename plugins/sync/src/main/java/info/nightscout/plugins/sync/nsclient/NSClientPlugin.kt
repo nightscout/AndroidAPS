@@ -27,7 +27,6 @@ import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiData
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
@@ -113,10 +112,6 @@ class NSClientPlugin @Inject constructor(
                            addToLog(event)
                            aapsLogger.debug(LTag.NSCLIENT, event.action + " " + event.logText)
                        }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventNSClientResend::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> resend(event.reason) }, fabricPrivacy::logException)
     }
 
     override fun onStop() {
