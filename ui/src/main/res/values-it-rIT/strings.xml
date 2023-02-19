@@ -127,4 +127,8 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOP PREMUTO</string>
     <!--QuickWizard-->
+    <string name="a11y_only_on_phone">solo su telefono</string>
+    <string name="quickwizard_settings">Impostazioni Calcolatore rapido</string>
+    <string name="overview_edit_quickwizard_button_text">Testo:</string>
+    <string name="overview_edit_quickwizard_carbs">CHO:</string>
 </resources>
