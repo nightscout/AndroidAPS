@@ -44,7 +44,9 @@
     <string name="mute5min">Muto per 5 minuti</string>
     <string name="mute">Muto</string>
     <string name="success">OK</string>
+    <string name="advanced_settings_title">Impostazioni avanzate</string>
     <string name="extendedbolusdeliveryerror">Errore erogazione bolo esteso</string>
+    <string name="aps_mode_title">Modalità APS</string>
     <string name="extended_bolus">Bolo esteso</string>
     <string name="paused">In pausa</string>
     <string name="tdd_total">TDD totale</string>
@@ -59,6 +61,8 @@
     <string name="please_wait">Attendi…</string>
     <string name="stop">Stop</string>
     <string name="carbs">CHO</string>
+    <string name="invalid_profile">Profilo non valido!</string>
+    <string name="no_profile_set">NESSUN PROFILO IMPOSTATO</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Unità</string>
@@ -101,6 +105,7 @@
     <string name="loading">Caricamento…</string>
     <string name="notes_label">Note</string>
     <string name="remove_button">Rimuovi</string>
+    <string name="add_new">Aggiungi nuovo</string>
     <string name="addnew_above">Aggiungi nuovo sopra</string>
     <string name="wrong_pump_data">I dati arrivano da un micro differente. Cambia il driver del micro per resettarne lo stato.</string>
     <string name="bg_label">BG</string>
@@ -147,6 +152,7 @@
     <string name="treatments_wizard_basaliob_label">IOB da basale</string>
     <string name="invalid">NON VALIDO</string>
     <string name="login">Login</string>
+    <string name="prime_fill">Carica/Riempi</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Stoppa temp-target</string>
     <string name="closedloop">Loop chiuso</string>
@@ -172,6 +178,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Cancella basale temporanea</string>
     <string name="let_temp_basal_run">Lascia eseguire la basale temporanea</string>
     <string name="rate">Tasso</string>
     <string name="duration">Durata</string>
@@ -193,9 +200,12 @@
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Domanda : %1$s</string>
     <string name="careportal_exercise_message">Esercizio : %1$s</string>
+    <string name="careportal_pump_site_change">Cambio posizione cannula</string>
+    <string name="cgm_sensor_insert">Inserimento sensore</string>
     <string name="careportal_cgmsensorstart">Avvio sensore</string>
     <string name="careportal_cgm_sensor_stop">Arresto Sensore CGM</string>
     <string name="careportal_dad_alert">Avviso D.A.D.</string>
+    <string name="careportal_insulin_cartridge_change">Cambio cartuccia insulina</string>
     <string name="careportal_profileswitch">Cambio profilo</string>
     <string name="careportal_snackbolus">Bolo spuntino</string>
     <string name="careportal_mealbolus">Bolo pasto</string>
@@ -205,6 +215,8 @@
     <string name="careportal_tempbasalend">Fine basale temporanea</string>
     <string name="careportal_carbscorrection">Correzione con CHO</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="pump_battery_change">Cambio batteria micro</string>
+    <string name="temporary_target">Target temporaneo</string>
     <string name="careportal_temporarytargetvalue">Valore target temporaneo</string>
     <string name="careportal_temporarytargetcancel">Cancellazione temp-target</string>
     <string name="boluswizard">Calcolatore</string>
@@ -233,6 +245,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g di CHO aggiuntivi richiesti entro %2$d minuti</string>
     <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">TDD cumulativo</string>
     <string name="expweight">TDD esponenzialmente ponderato</string>
     <string name="basalrate">Basale</string>
     <string name="bolus">Bolo</string>
@@ -431,6 +444,7 @@
     <string name="urgent_alarm">Allarme urgente</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Consiglio bolo</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
     <string name="partialboluswizard">Eroga parte del risultato del calcolatore [%]</string>
