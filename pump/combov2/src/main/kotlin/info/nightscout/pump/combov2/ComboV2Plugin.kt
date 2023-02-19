@@ -419,7 +419,9 @@ class ComboV2Plugin @Inject constructor (
 
     override fun isBusy(): Boolean =
         when (driverStateFlow.value) {
-            DriverState.Connecting,
+            // DriverState.Connecting is _not_ listed here. Even though the pump
+            // is technically busy and unable to execute commands in that state,
+            // returning true then causes problems with AAPS' KeepAlive mechanism.
             DriverState.CheckingPump,
             is DriverState.ExecutingCommand -> true
             else                            -> false
