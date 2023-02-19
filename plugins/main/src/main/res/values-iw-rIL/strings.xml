@@ -89,6 +89,8 @@
     <string name="smscommunicator_report_pump_unreachable_summary">שולח SMS אם מופעל אירוע \"המשאבה אינה נגישה\"</string>
     <string name="smscommunicator_pump_unreachable">דווח שהמשאבה אינה נגישה</string>
     <string name="smscommunicator_set_lgs_reply_with_code">על מנת להחליף מצב לולאה ל-LGS (השעיית בסוכר נמוך) השיבו עם הקוד %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">על מנת להחליף מצב לולאה ל-לולאה סגורה השב עם הקוד %1$s</string>
+    <string name="smscommunicator_current_loop_mode">מצב לולאה נוכחי: %1$s</string>
     <string name="wrong_format">פורמט שגוי</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">ערכי סוכר אחרונים:</string>
@@ -172,6 +174,8 @@
     <string name="patch_pump">משאבה ללא צינורית</string>
     <!-- Overview -->
     <string name="show_statuslights">הצגת אורות חיווי במסך הבית</string>
+    <string name="statuslights_cage_warning">סף התראה לתוקף הצינורית [שעות]</string>
+    <string name="statuslights_cage_critical">סף התראה קריטית לתוקף הצינורית [שעות]</string>
     <string name="statuslights_iage_warning">סף התראה לתוקף האינסולין [h]</string>
     <string name="statuslights_iage_critical">סף התראה קריטית לתוקף האינסולין [h]</string>
     <string name="statuslights_sage_warning">סף התראה של תוקף החיישן [h]</string>
@@ -283,6 +287,7 @@
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
     <string name="no_watch_connected">(השעון לא מחובר)</string>
+    <string name="pump_status">סטטוס המשאבה</string>
     <string name="loop_status">סטטוס הלולאה</string>
     <string name="wizard_result">מחשבון: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
     <string name="quick_wizard_not_available">האשף המהיר שנבחר אינו זמין, נא לרענן את האריח</string>
@@ -290,6 +295,7 @@
     <string name="wear_action_tempt_preset_error">תצורה לא ידועה של מטרה זמנית: %1$s</string>
     <string name="wear_action_tempt_cancel_message">מבטל ערך מטרה זמני נוכחי</string>
     <string name="wear_action_tempt_unit_error">יחידות המידה שונות בין הטלפון והשעון!</string>
+    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - בוטל, הפעלת ערכי מטרה זמניים?</string>
     <string name="wear_action_tempt_min_bg_error">ערך הסוכר המינימלי מחוץ לטווח!</string>
     <string name="wear_action_tempt_max_bg_error">ערך הסוכר המקסימלי מחוץ לטווח!</string>
     <string name="wear_action_tempt_manual_range_message">ע\' מטרה זמני:\nמינ\': %1$s\nמקס\': %2$s\nמשך: %3$s</string>
@@ -313,5 +319,30 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
+    <string name="pump_fetching_data">מנסה לטעון נתונים מהמשאבה.</string>
+    <string name="pump_old_data">סטטיסטיקות (TDD): נתונים ישנים! לא ניתן לטעון מהמשאבה.</string>
+    <string name="grams_short">גר\'</string>
+    <string name="hour_short">ש\'</string>
+    <string name="no_active_profile">לא הופעלה החלפת פרופיל!</string>
+    <string name="profile_message">פרופיל:\n\nהיסט זמן: %1$\nאחוז: %2$d%\"</string>
+    <string name="tdd_line">%1$.2fיח\' %1$.0f%</string>
+    <string name="no_profile">לא נטען פרופיל</string>
+    <string name="aps_only">חל רק במצב APS!</string>
+    <string name="last_aps_result_na">התוצאה האחרונה לא זמינה!</string>
+    <string name="loop_status_closed">לולאה סגורה</string>
+    <string name="loop_status_open">לולאה פתוחה</string>
+    <string name="loop_status_disabled">לולאה מושבתת</string>
+    <string name="aps">APS</string>
+    <string name="last_run">ההפעלה האחרונה</string>
     <string name="last_enact">נקבעו לאחרונה</string>
+    <string name="today">היום</string>
+    <string name="weighted">משוקלל</string>
+    <string name="target_only_aps_mode">ערכי מטרה חלים רק במצב APS!</string>
+    <string name="no_history">אין נתוני עבר!</string>
+    <string name="units_short">יח\'</string>
+    <string name="temp_target">ערכי מטרה זמניים</string>
+    <string name="until">עד</string>
+    <string name="default_range">טווח ברירת מחדל</string>
+    <string name="target">מטרה</string>
+    <string name="rate_duration">מינון: %1$.2fיח\'\\ש\' (%2$.2f%) \nל-%3$d דק\'</string>
 </resources>

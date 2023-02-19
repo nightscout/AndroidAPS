@@ -245,8 +245,7 @@
     <string name="enablesuperbolus">Abilita superbolo nel calcolatore</string>
     <string name="enablesuperbolus_summary">Abilita la funzionalità superbolo nel calcolatore. Non abilitare fino a quando non impari ciò che realmente fa. PUÒ CAUSARE SOVRA-DOSAGGIO DI INSULINA SE USATO IMPROPRIAMENTE!</string>
     <string name="enablebolusreminder">Abilita promemoria bolo</string>
-    <string name="enablebolusreminder_summary">Usa promemoria bolo con calcolatore
-        (\"post-bolo\")</string>
+    <string name="enablebolusreminder_summary">Usa promemoria bolo con calcolatore (\"post-bolo\")</string>
     <string name="run_question">Eseguire %s?</string>
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predizioni</string>
@@ -270,18 +269,21 @@
     <string name="treatments_shortname">TRATT</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Scala del grafico</string>
+    <string name="graph_menu_divider_header">Grafico</string>
     <!-- Skins -->
     <string name="classic_description">Tema originale</string>
     <string name="lowres_description">Tema a bassa risoluzione</string>
     <string name="buttonson_description">I tasti vengono sempre visualizzati nella parte inferiore dello schermo</string>
     <string name="largedisplay_description">Visualizzazione ampia</string>
     <string name="skin">Tema</string>
+    <string name="cannula_usage">uso:</string>
     <!--    Iob-->
     <string name="send_logfiles">Invia agli sviluppatori i file log di oggi e di questo momento. Situazione inaspettata.</string>
     <!--    Wear-->
     <string name="wear_shortname">SMWA</string>
     <string name="description_wear">Monitora e controlla AAPS usando il tuo smartwatch WearOS.</string>
     <string name="no_watch_connected">(Nessuno smartwatch connesso)</string>
+    <string name="pump_status">Stato micro</string>
     <string name="loop_status">Stato loop</string>
     <string name="wizard_result">Calc. Wizard:\nInsulina: %1$.2fU\nCHO: %2$dg</string>
     <string name="quick_wizard_not_available">Il calcolo rapido selezionato non è più disponibile, aggiorna il riquadro</string>
@@ -313,4 +315,16 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
     <string name="old_data">DATI VECCHI</string>
+    <string name="pump_fetching_data">tentativo di recupero dati dal micro.</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">h</string>
+    <string name="loop_status_closed">LOOP CHIUSO</string>
+    <string name="loop_status_open">LOOP APERTO</string>
+    <string name="loop_status_disabled">LOOP DISABILITATO</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Ultima esecuzione</string>
+    <string name="last_enact">Ultima attivazione</string>
+    <string name="today">Oggi</string>
+    <string name="temp_target">Target Temporaneo</string>
+    <string name="target">target</string>
 </resources>

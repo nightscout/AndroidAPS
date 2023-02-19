@@ -14,6 +14,7 @@
     <string name="pump_base_basal_rate">%1$.2f E/u</string>
     <string name="pump_not_initialized_profile_not_set">Pomp niet geïnitialiseerd, profiel niet ingesteld!</string>
     <string name="failed_update_basal_profile">Update basaal profiel mislukt</string>
+    <string name="bolus_delivered_successfully">Bolus van %1$.2f E succesvol toegediend</string>
     <string name="no_valid_basal_rate">Geen correcte basale snelheid van pomp kunnen lezen</string>
     <string name="limiting_iob">IOB gelimiteerd tot %1$.1f E doordat %2$s</string>
     <string name="loop_disabled">LOOP UITGESCHAKELD DOOR BEPERKINGEN</string>
@@ -44,7 +45,9 @@
     <string name="mute5min">5 minuten dempen</string>
     <string name="mute">Geluid dempen</string>
     <string name="success">Succes</string>
+    <string name="advanced_settings_title">Geavanceerde instellingen</string>
     <string name="extendedbolusdeliveryerror">Vertraagde bolus toedieningsfout</string>
+    <string name="aps_mode_title">APS modus</string>
     <string name="extended_bolus">Vertraagde bolus</string>
     <string name="paused">Gepauzeerd</string>
     <string name="tdd_total">TDD Totaal</string>

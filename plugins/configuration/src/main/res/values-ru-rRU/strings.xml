@@ -25,6 +25,7 @@
     <string name="master_password_summary">Главный пароль используется для шифрования резервных копий и для переопределения защиты в приложении. Запомните его или храните в безопасном месте.</string>
     <string name="current_master_password">Текущий главный пароль</string>
     <string name="common_values">Введите максимальные значения вашего приема пищи \n</string>
+    <string name="syncinfotext">Синхронизировать данные в облако. Сейчас можно пропустить эту часть, но без клиента Nightscout или Tidepool не получится пройти все цели.</string>
     <string name="status">состояние:</string>
     <string name="patient_name">Имя пациента</string>
     <string name="patient_name_summary">Укажите имя или псевдоним пациента, чтобы распознавать разные настройки</string>

@@ -75,6 +75,8 @@
     <string name="ns_alarm_urgent_stale_data_value_label">Alarm oude gegevens sinds [min]</string>
     <string name="ns_log_app_started_event">Log app start naar NS</string>
     <string name="copy_existing_values">NS instellingen kopiëren (indien aanwezig)?</string>
+    <string name="ns_use_ws_title">Verbind met websockets</string>
+    <string name="ns_use_ws_summary">Inschakelen betekent: snellere updates, ontvangen van alarmen, aankondigingen en een hoger batterijverbruik, vergelijkbaar met v1. Alle andere uploaders naar NS moeten gebruik maken van het v3 protocol.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Uw Tidepool login gebruikersnaam, normaliter uw e-mailadres</string>
     <string name="title_tidepool_username">Inlog gebruikersnaam</string>
@@ -94,7 +96,24 @@
     <string name="remove_all">Alles verwijderen</string>
     <string name="reset_start">Start reset</string>
     <string name="upload_now">Nu Uploaden</string>
+    <string name="not_connected">Niet verbonden</string>
+    <string name="read_only">Alleen lezen</string>
+    <string name="working">Bezig</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Stuur data naar xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Toon gedetailleerde IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Splits IOB in bolus en basaal op de watchface</string>
+    <string name="xdrip_status_show_bgi_title">Toon BGI</string>
+    <string name="xdrip_status_show_bgi_summary">BGI aan statusregel toevoegen</string>
+    <string name="xdrip_status_settings">xDrip+ Geavanceerde Statusregel</string>
+    <string name="disabled_loop">Loop is uitgeschakeld</string>
+    <string name="xdrip_send_status_title">Stuur Statusregel naar xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ niet geïnstalleerd</string>
+    <string name="calibration_sent">Kalibratie naar xDrip+ verzonden</string>
+    <string name="xdrip_local_broadcasts_summary">Verzend glucose en behandelingsgegevens naar xDrip+. Gegevensbron \"xDrip+ Sync Follower\" moet worden geselecteerd en het accepteren van gegevens moet worden ingeschakeld in Instellingen - Inter-app instellingen - Accepteer Glucose/Behandelingen</string>
+    <string name="xdrip_local_broadcasts_title">Activeer uitzendingen naar xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>
