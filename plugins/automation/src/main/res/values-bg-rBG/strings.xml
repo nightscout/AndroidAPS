@@ -111,9 +111,12 @@
     <string name="user_action">Потребителско действие</string>
     <string name="remove_automation">Премахване на Автоматизация</string>
     <string name="remove_selected_items">Премахнете избраните елементи</string>
+    <string name="count_selected">%1$d избрани</string>
     <string name="system_automation">Системна автомация</string>
     <string name="run_automations">Стартирай автомаций</string>
+    <string name="add_automation">Добавяне на правило</string>
     <string name="remove_sort">Премахни/сортирай</string>
+    <string name="stop_processing">Спри изпълнението</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">П</string>
     <string name="tuesday_short">Вт</string>
