@@ -3,6 +3,7 @@ package info.nightscout.pump.diaconn.service
 import android.Manifest
 import android.annotation.SuppressLint
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothGatt
 import android.bluetooth.BluetoothGattCallback
 import android.bluetooth.BluetoothGattCharacteristic
@@ -117,6 +118,15 @@ class BLECommonService @Inject internal constructor(
             aapsLogger.error("Device not found.  Unable to connect from: $from")
             return false
         }
+
+        if (device.bondState == BluetoothDevice.BOND_NONE) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.S || ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
+                device.createBond()
+                SystemClock.sleep(10000)
+            }
+            return false
+        }
+
         aapsLogger.debug(LTag.PUMPBTCOMM, "Trying to create a new connection from: $from")
         connectDeviceName = device.name
         bluetoothGatt = device.connectGatt(context, false, mGattCallback)
