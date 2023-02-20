@@ -82,6 +82,31 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             if (treatmentTimestamp == 0L) return null
 
             this.duration ?: return null
+
+            if (duration == 0L)
+                return NSTemporaryTarget(
+                    date = treatmentTimestamp,
+                    device = this.device,
+                    identifier = this.identifier,
+                    units = NsUnits.fromString(this.units),
+                    srvModified = this.srvModified,
+                    srvCreated = this.srvCreated,
+                    utcOffset = this.utcOffset ?: 0,
+                    subject = this.subject,
+                    isReadOnly = this.isReadOnly ?: false,
+                    isValid = this.isValid ?: true,
+                    eventType = this.eventType,
+                    notes = this.notes,
+                    pumpId = this.pumpId,
+                    endId = this.endId,
+                    pumpType = this.pumpType,
+                    pumpSerial = this.pumpSerial,
+                    duration = 0,
+                    targetBottom = 0.0,
+                    targetTop = 0.0,
+                    reason = NSTemporaryTarget.Reason.CUSTOM
+                )
+
             this.targetBottom ?: return null
             this.targetTop ?: return null
 
