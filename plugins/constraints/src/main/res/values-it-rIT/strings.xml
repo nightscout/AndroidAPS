@@ -32,16 +32,20 @@
     <string name="hardlimit">limite fisso</string>
     <string name="treatmentssafety_title">Sicurezza trattamenti</string>
     <!-- Objectives -->
+    <string name="completed_well_done">Completato, ben fatto!</string>
     <string name="not_completed_yet">Non ancora completato</string>
     <string name="time_elapsed">Tempo trascorso</string>
     <string name="maxiobset">Max IOB impostata correttamente</string>
     <string name="hasbgdata">BG disponibile da sorgente selezionata</string>
+    <string name="synchaswritepermission">Il servizio di sincronizzazione ha i permessi di scrittura</string>
     <string name="loopenabled">Loop abilitato</string>
     <string name="apsselected">APS selezionato</string>
     <string name="closedmodeenabled">Modalità chiusa abilitata</string>
     <string name="objectives_shortname">OBT</string>
     <string name="description_objectives">Programma di apprendimento</string>
     <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
+    <string name="objectives_next_button">Avanti</string>
+    <string name="objectives_previous_button">Indietro</string>
     <string name="objectives_button_unfinish">Cancella completamento</string>
     <string name="objectives_button_unstart">Cancella avvio</string>
 </resources>
