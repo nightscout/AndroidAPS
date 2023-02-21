@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dynisf_adjust_sensitivity">Настройка на чувствителност и кръвна захар</string>
+    <string name="DynISFAdjust_title" formatted="false">Настройка на динамична инсулинова чувствителност %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Настройка на динамична инсулинова чувствителност. Настройте над 100% за по-агресивни корекционни дози и под 100% за по-не агресивни корекции.</string>
     <string name="high_temptarget_raises_sensitivity_title">Високите временни цели да вдигат ли чувствителността?</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Да вдигам ли чувствителността при цели над 5.6]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Ниските цели да свалят ли чувствителността ?</string>
@@ -72,6 +75,8 @@
     <string name="uam_smb_max_minutes_summary">Максимални минути за ограничаване на базала при SMB за UAM</string>
     <string name="carbs_req_threshold">Минимум въглехидрати, необходими за аларма</string>
     <string name="carbs_req_threshold_summary">Грама въглехидрати минимум, за да се покаже аларма. Нужни въглехидрати под това число няма да доведат до уведомяване.</string>
+    <string name="lgs_threshold_summary">Кръвна захар, под която инсулинът ще бъде спрян. Стойността по подразбиране използва стандартен целеви модел. Потребителят може да използва стойности между 60mg/dl (3.3 ммол/л) и 100mg/dl (5.5 ммол/л). Стойности под 65/3.6 водят до използване на модел по подразбиране</string>
+    <string name="lgs_threshold_title">Ниво на кръвна захар, под което се активира прекъсване заради ниска захар</string>
     <string name="increasing_max_basal">Повишавам максималната стойност на базал, защото тя е по-ниска от най-високата в базалния профил</string>
     <string name="max_basal_multiplier">множител на макс. базал</string>
     <string name="max_daily_basal_multiplier">множител на макс. дневен базал</string>
@@ -85,12 +90,28 @@
     <!--    Autotune   -->
     <string name="insulin_peak">Връх</string>
     <!--    Loop -->
+    <string name="run_now">Стартиране сега</string>
     <string name="smb_frequency_exceeded">Има болус през последните 3 мин, пропускам SMB</string>
+    <string name="pump_not_initialized">Помпата не е инициализирана!</string>
     <string name="loop_shortname">ЦИК</string>
     <string name="description_loop">Включва или изключва затворения кръг (loop).</string>
+    <string name="no_aps_selected">НЕ Е ИЗБРАН APS ИЛИ НАМА РЕЗУЛТАТ ОТ НЕГО</string>
     <string name="ignore5m">Игнориране за 5 мин</string>
     <string name="ignore15m">Игнориране за 15 мин</string>
     <string name="ignore30m">Игнориране за 30 мин</string>
+    <string name="carbs_suggestion">Предложение за въглехидрати</string>
+    <string name="open_loop_new_suggestion">Има ново предложение</string>
     <string name="basal_set_correctly">Базалът е зададен коректно</string>
+    <string name="last_run_label">Последно стартиран</string>
     <string name="loop_aps_label">Алгоритъм за APS</string>
+    <string name="request_label">Искане</string>
+    <string name="loop_constraints_processed_label">След обработените ограничения</string>
+    <string name="loop_tbr_request_time_label">Диапазон между временни базали</string>
+    <string name="loop_tbr_execution_time_label">Продължителност на временен базал</string>
+    <string name="loop_tbr_set_by_pump_label">Временен базал зададен от помпата</string>
+    <string name="loop_smb_request_time_label">Време за заявка на SMB</string>
+    <string name="loop_smb_execution_time_label">Време за изпълнение на SMB</string>
+    <string name="loop_smb_set_by_pump_label">SMB в помпата</string>
+    <string name="loop_open_mode_min_change">Минимална стойност за промяна [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Отворен цикъл ще покаже запитването за промяна на базала, само ако е по-голяма от тази стойност в %. Стойността по подразбиране е 20%</string>
 </resources>

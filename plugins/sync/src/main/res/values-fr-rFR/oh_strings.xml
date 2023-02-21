@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans vous permet de télécharger vos données sur le diabète et de les donner à des projets scientifiques.</string>
     <string name="logout">Déconnexion</string>
     <string name="setup">Configuration</string>

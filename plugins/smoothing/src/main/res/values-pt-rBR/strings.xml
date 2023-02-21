@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="avg_smoothing_name">Suavizar média</string>
+    <string name="description_avg_smoothing">"O algoritmo de suavização de média, o valor mais recente não é afetado"</string>
+    <string name="no_smoothing_name">Sem Suavização</string>
+    <string name="description_no_smoothing">"Nenhuma suavização é realizada nos dados de glicemia de entrada. Use isso quando já tiver dados filtrados, por exemplo, do BYODA G6."</string>
+</resources>

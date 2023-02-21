@@ -75,6 +75,8 @@
     <string name="ns_alarm_urgent_stale_data_value_label">Advarsel ved kritisk mangel på data [min]</string>
     <string name="ns_log_app_started_event">Logg app-start til NS</string>
     <string name="copy_existing_values">Kopiere NS innstillinger (hvis de eksisterer)?</string>
+    <string name="ns_use_ws_title">Koble til websockets</string>
+    <string name="ns_use_ws_summary">Aktivering av betingelse: hurtigere oppdateringer, mottak av alarmer og kunngjøringer og høyere batteriforbruk som ligner v1. Alle andre opplastere til NS må bruke v3 protokoll.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Ditt Tidepool brukernavn, normalt din e-postadresse</string>
     <string name="title_tidepool_username">Brukernavn for innlogging</string>
@@ -111,5 +113,7 @@
     <string name="xdrip_send_status_title">Send statuslinje til xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ ikke installert</string>
     <string name="calibration_sent">Kalibrering sendt til xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Send data om glukose og behandling til xDrip+. Velg datakilde \"xDrip+ Sync Følger\" og aktiver mottak av data under Innstillinger - Inter-app innstillinger - Aksepter glukose/behandlinger</string>
+    <string name="xdrip_local_broadcasts_title">Aktiver sending til xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>

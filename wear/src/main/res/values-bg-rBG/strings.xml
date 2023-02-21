@@ -83,11 +83,19 @@
     <string name="menu_menu">Меню</string>
     <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Продължителност</string>
+    <string name="action_tempt_confirmation">Заявен Временен базал</string>
+    <string name="action_quick_wizard_confirmation">Заявен Съветник</string>
+    <string name="action_treatment_confirmation">Заявена Терапия</string>
+    <string name="action_bolus_confirmation">Заявен Болус</string>
+    <string name="action_wizard_confirmation">Заявено Изчисление</string>
+    <string name="action_fill_confirmation">Заявка за пълнене</string>
     <string name="action_ecarb_confirmation">Трябват въглехидрати</string>
+    <string name="action_profile_switch_confirmation">Заявка за смяна на профил</string>
     <string name="action_target" comment="In temp target menu, single target value">Целeва КЗ:</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Ниска</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Висока</string>
     <string name="action_carbs">въглехидрати</string>
+    <string name="action_ecarbs">Удължени въглехидрати</string>
     <string name="action_percentage">% от профила</string>
     <string name="action_start_min">Старт [min]</string>
     <string name="action_duration_h">Прод [h]</string>
@@ -131,6 +139,7 @@
     <string name="color_name_white">бяло</string>
     <string name="color_name_black">черно</string>
     <string name="color_name_multicolor">многоцветно</string>
+    <string name="pref_simplify_ui">Опростен интерфейс</string>
     <string name="pref_simplify_ui_sum">Показвай само време и КЗ</string>
     <string name="pref_vibrate_hourly">Вибрира почасово</string>
     <string name="pref_show_weeknumber">Показване на номер седмица</string>
@@ -147,6 +156,8 @@
     <string name="bolus_progress_channel_description">Прогрес на болуса и отказ</string>
     <string name="bolus_progress_silent_channel_description">Прогрес на болуса и отказ с по-малко вибрации</string>
     <string name="simple_ui_off">Изкл</string>
+    <string name="simple_ui_charging">По време на зареждане</string>
+    <string name="simple_ui_always_on">Режим Постоянно включен</string>
     <string name="simple_ui_always_on_charging">Винаги включен по време на зареждане</string>
     <string name="temp_target_eating_soon">Хранене</string>
     <string name="temp_target_hypo">Хипоглекимия</string>
@@ -165,6 +176,8 @@
     <string name="no_iob_u">--Е</string>
     <string name="no_cob_g">--гр</string>
     <string name="no_tmp_basal_u_h">-.--Е/ч</string>
+    <string name="uploader_na">Е: --%</string>
+    <string name="no_status">С: --</string>
     <string name="time_stamp_na_min_ago">-- мин преди</string>
     <string name="delta_na">--- мг/дл</string>
     <string name="no_loop_status">Няма наличен статус</string>
