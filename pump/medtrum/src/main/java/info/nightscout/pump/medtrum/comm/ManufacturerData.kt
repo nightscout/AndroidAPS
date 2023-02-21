@@ -14,15 +14,15 @@ class ManufacturerData(private val manufacturerDataBytes: ByteArray) {
 
     fun setData(inputData: ByteArray) {
         var index = 0
-        val deviceIDBytes: ByteArray = manufacturerDataBytes.copyOfRange(index, index + 4)
+        val deviceIDBytes: ByteArray = inputData.copyOfRange(index, index + 4)
         deviceID = deviceIDBytes.toLong()
         index += 4
-        deviceType = (manufacturerDataBytes[index] and 0xff.toByte()).toInt()
+        deviceType = (inputData[index] and 0xff.toByte()).toInt()
         index += 1
-        version = (manufacturerDataBytes[index] and 0xff.toByte()).toInt()
+        version = (inputData[index] and 0xff.toByte()).toInt()
     }
 
-    fun getDeviceID(): Long{
+    fun getDeviceSN(): Long{
         return deviceID
     }
 

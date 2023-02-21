@@ -13,7 +13,7 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.pump.medtrum.databinding.MedtrumPumpFragmentBinding
 import info.nightscout.pump.medtrum.events.EventMedtrumPumpUpdateGui
-import info.nightscout.pump.medtrum.MedtrumPumpPlugin
+import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventExtendedBolusChange
@@ -31,7 +31,7 @@ class MedtrumPumpFragment : DaggerFragment() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var medtrumPumpPlugin: MedtrumPumpPlugin
+    @Inject lateinit var MedtrumPlugin: MedtrumPlugin
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -90,7 +90,7 @@ class MedtrumPumpFragment : DaggerFragment() {
     private fun updateGui() {
         if (_binding == null) return
         val profile = profileFunction.getProfile() ?: return
-        binding.baseBasalRate.text = rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, medtrumPumpPlugin.baseBasalRate)
+        binding.baseBasalRate.text = rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, MedtrumPlugin.baseBasalRate)
         binding.tempbasal.text = iobCobCalculator.getTempBasal(dateUtil.now())?.toStringFull(profile, dateUtil)
             ?: ""
         binding.extendedbolus.text = iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil)
@@ -98,6 +98,6 @@ class MedtrumPumpFragment : DaggerFragment() {
         binding.battery.text = rh.gs(info.nightscout.core.ui.R.string.format_percent, 0) // TODO
         binding.reservoir.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, 0.0) // TODO
 
-        binding.serialNumber.text = medtrumPumpPlugin.serialNumber()
+        binding.serialNumber.text = MedtrumPlugin.serialNumber()
     }
 }

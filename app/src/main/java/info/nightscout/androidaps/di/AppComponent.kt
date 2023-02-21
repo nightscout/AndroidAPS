@@ -31,9 +31,9 @@ import info.nightscout.pump.common.di.PumpCommonModule
 import info.nightscout.pump.dana.di.DanaHistoryModule
 import info.nightscout.pump.dana.di.DanaModule
 import info.nightscout.pump.danars.di.DanaRSModule
+import info.nightscout.pump.medtrum.di.MedtrumModule
 import info.nightscout.pump.diaconn.di.DiaconnG8Module
 import info.nightscout.pump.virtual.di.VirtualPumpModule
-import info.nightscout.pump.medtrum.di.MedtrumPumpModule
 import info.nightscout.rx.di.RxModule
 import info.nightscout.shared.di.SharedModule
 import info.nightscout.shared.impl.di.SharedImplModule
@@ -88,7 +88,7 @@ import javax.inject.Singleton
         OmnipodErosModule::class,
         PumpCommonModule::class,
         RileyLinkModule::class,
-        MedtrumPumpModule::class,
+        MedtrumModule::class,
         VirtualPumpModule::class
     ]
 )

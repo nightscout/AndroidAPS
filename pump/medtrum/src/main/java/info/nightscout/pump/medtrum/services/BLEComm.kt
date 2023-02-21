@@ -79,7 +79,7 @@ class BLEComm @Inject internal constructor(
     var isConnecting = false
     private var uartWrite: BluetoothGattCharacteristic? = null
 
-    private var deviceID: Long = 0
+    private var mDeviceSN: Long = 0
 
     /** Connect flow: 1. Start scanning for our device (SN entered in settings) */
     @SuppressLint("MissingPermission")
@@ -98,7 +98,6 @@ class BLEComm @Inject internal constructor(
             .build()
         val filters = mutableListOf<ScanFilter>()
 
-        if (deviceID == 0.toLong()) deviceID = rh.gs(info.nightscout.pump.medtrum.R.string.key_snInput).toLong(radix = 16)
 
         isConnected = false
         // TODO: Maybe replace this  by (or add) a isScanning parameter?
@@ -119,17 +118,43 @@ class BLEComm @Inject internal constructor(
         mBluetoothAdapter?.bluetoothLeScanner?.stopScan(mScanCallback)
     }
 
+    fun connect(from: String, deviceSN: Long): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ToastUtils.errorToast(context, context.getString(info.nightscout.core.ui.R.string.need_connect_permission))
+            aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
+            return false
+        }
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Initializing BLEComm.")
+        if (mBluetoothAdapter == null) {
+            aapsLogger.error("Unable to obtain a BluetoothAdapter.")
+            return false
+        }
+        mDeviceSN = deviceSN
+        isConnecting = true
+        startScan()
+        return true
+    }
+
     /** Connect flow: 2. When device is found this is called by onScanResult() */
     @SuppressLint("MissingPermission")
     @Synchronized
-    fun connect(device: BluetoothDevice) {
+    fun connectGatt(device: BluetoothDevice) {
         mBluetoothGatt =
             device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE)
     }
 
     @SuppressLint("MissingPermission")
     @Synchronized
-    fun disconnect() {
+    fun disconnect(from: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+            ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
+        ) {
+            aapsLogger.error(LTag.PUMPBTCOMM, "missing permission: $from")
+            return
+        }
+        aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
         mBluetoothGatt?.disconnect()
         mBluetoothGatt = null
     }
@@ -156,11 +181,12 @@ class BLEComm @Inject internal constructor(
                 result.scanRecord?.getManufacturerSpecificData(MANUFACTURER_ID)
                     ?.let { ManufacturerData(it) }
 
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Found DeviceID: " + manufacturerData?.getDeviceID())
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Found deviceSN: " + manufacturerData?.getDeviceSN())
 
-            if (manufacturerData?.getDeviceID() == deviceID) {
+            if (manufacturerData?.getDeviceSN() == mDeviceSN) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Found our device! deviceSN: " + manufacturerData.getDeviceSN())
                 stopScan()
-                connect(result.device)
+                connectGatt(result.device)
             }
         }
 
@@ -230,170 +256,166 @@ class BLEComm @Inject internal constructor(
                 checkDescriptor(descriptor)
             }
         }
+    }
 
-        @SuppressLint("MissingPermission")
-        @Synchronized
-        private fun readDescriptor(descriptor: BluetoothGattDescriptor?) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "readDescriptor")
-            if (mBluetoothAdapter == null || mBluetoothGatt == null || descriptor == null) {
-                aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-                isConnecting = false
-                isConnected = false
-                return
-            }
-            mBluetoothGatt?.readDescriptor(descriptor)
+    @SuppressLint("MissingPermission")
+    @Synchronized
+    private fun readDescriptor(descriptor: BluetoothGattDescriptor?) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "readDescriptor")
+        if (mBluetoothAdapter == null || mBluetoothGatt == null || descriptor == null) {
+            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
+            isConnecting = false
+            isConnected = false
+            return
         }
+        mBluetoothGatt?.readDescriptor(descriptor)
+    }
 
-        private fun checkDescriptor(descriptor: BluetoothGattDescriptor) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "checkDescriptor")
-            val service = getGattService()
-            if (mBluetoothAdapter == null || mBluetoothGatt == null || service == null) {
-                aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-                isConnecting = false
-                isConnected = false
-                return
-            }
-            if (descriptor.value.toInt() > 0) {
-                var notificationEnabled = true
-                val characteristics = service.characteristics
-                for (j in 0 until characteristics.size) {
-                    val configDescriptor =
-                        characteristics[j].getDescriptor(UUID.fromString(CHARACTERISTIC_CONFIG_UUID))
-                    if (configDescriptor.value == null || configDescriptor.value.toInt() <= 0) {
-                        notificationEnabled = false
-                    }
-                }
-                if (notificationEnabled) {
-                    aapsLogger.debug(LTag.PUMPBTCOMM, "Notifications enabled!")
-                    authorize()
+    @Suppress("DEPRECATION")
+    private fun checkDescriptor(descriptor: BluetoothGattDescriptor) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "checkDescriptor")
+        val service = getGattService()
+        if (mBluetoothAdapter == null || mBluetoothGatt == null || service == null) {
+            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
+            isConnecting = false
+            isConnected = false
+            return
+        }
+        if (descriptor.value.toInt() > 0) {
+            var notificationEnabled = true
+            val characteristics = service.characteristics
+            for (j in 0 until characteristics.size) {
+                val configDescriptor =
+                    characteristics[j].getDescriptor(UUID.fromString(CHARACTERISTIC_CONFIG_UUID))
+                if (configDescriptor.value == null || configDescriptor.value.toInt() <= 0) {
+                    notificationEnabled = false
                 }
             }
-        }
-
-        @Suppress("DEPRECATION")
-        @SuppressLint("MissingPermission")
-        @Synchronized
-        private fun setCharacteristicNotification(characteristic: BluetoothGattCharacteristic?, enabled: Boolean) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "setCharacteristicNotification")
-            if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-                aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-                isConnecting = false
-                isConnected = false
-                return
-            }
-            mBluetoothGatt?.setCharacteristicNotification(characteristic, enabled)
-            characteristic?.getDescriptor(UUID.fromString(CHARACTERISTIC_CONFIG_UUID))?.let {
-                if (characteristic.properties and 0x10 > 0) {
-                    it.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
-                    mBluetoothGatt?.writeDescriptor(it)
-                } else if (characteristic.properties and 0x20 > 0) {
-                    it.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
-                    mBluetoothGatt?.writeDescriptor(it)
-                } else {
-
-                }
+            if (notificationEnabled) {
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Notifications enabled!")
+                authorize()
             }
         }
+    }
 
-        /** Connect flow: 3. When we are connected discover services*/
-        @SuppressLint("MissingPermission")
-        @Synchronized
-        private fun onConnectionStateChangeSynchronized(gatt: BluetoothGatt, status: Int, newState: Int) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange newState: " + newState + " status: " + status)
-            if (newState == BluetoothProfile.STATE_CONNECTED) {
-                gatt.discoverServices()
-            } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-                close()
-                isConnected = false
-                isConnecting = false
-                rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnected
-                disconnect()
-                startScan()
+    @Suppress("DEPRECATION")
+    @SuppressLint("MissingPermission")
+    @Synchronized
+    private fun setCharacteristicNotification(characteristic: BluetoothGattCharacteristic?, enabled: Boolean) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "setCharacteristicNotification")
+        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
+            isConnecting = false
+            isConnected = false
+            return
+        }
+        mBluetoothGatt?.setCharacteristicNotification(characteristic, enabled)
+        characteristic?.getDescriptor(UUID.fromString(CHARACTERISTIC_CONFIG_UUID))?.let {
+            if (characteristic.properties and 0x10 > 0) {
+                it.value = BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE
+                mBluetoothGatt?.writeDescriptor(it)
+            } else if (characteristic.properties and 0x20 > 0) {
+                it.value = BluetoothGattDescriptor.ENABLE_INDICATION_VALUE
+                mBluetoothGatt?.writeDescriptor(it)
+            } else {
+
             }
         }
+    }
 
-        private fun readDataParsing(receivedData: ByteArray) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "<<<readDataParsing>>> " + Arrays.toString(receivedData))
-            // TODO
-            /** Connect flow: 6. Authorized */ // TODO place this at the correct place
+    /** Connect flow: 3. When we are connected discover services*/
+    @SuppressLint("MissingPermission")
+    @Synchronized
+    private fun onConnectionStateChangeSynchronized(gatt: BluetoothGatt, status: Int, newState: Int) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange newState: " + newState + " status: " + status)
+        if (newState == BluetoothProfile.STATE_CONNECTED) {
+            gatt.discoverServices()
+        } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+            close()
+            isConnected = false
+            isConnecting = false
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnected
         }
+    }
 
-        private fun authorize() {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Start auth!")
-            val role = 2 // Fixed to 2 for pump
-            val key = mCrypt.keyGen(deviceID)
-            val commandData = byteArrayOf(COMMAND_AUTH_REQ) + byteArrayOf(role.toByte()) + 0.toByteArray(4) + key.toByteArray(4)
-            sendMessage(commandData)
+    private fun readDataParsing(receivedData: ByteArray) {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "<<<readDataParsing>>> " + Arrays.toString(receivedData))
+        // TODO
+        /** Connect flow: 6. Authorized */ // TODO place this at the correct place
+    }
+
+    private fun authorize() {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "Start auth!")
+        val role = 2 // Fixed to 2 for pump
+        val key = mCrypt.keyGen(mDeviceSN)
+        val commandData = byteArrayOf(COMMAND_AUTH_REQ) + byteArrayOf(role.toByte()) + 0.toByteArray(4) + key.toByteArray(4)
+        sendMessage(commandData)
+    }
+
+    fun sendMessage(message: ByteArray) {
+        // TODO: Handle packages which consist of multiple, Create a queue of packages
+        aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage message = " + Arrays.toString(message))
+        val writePacket = WriteCommandPackets(message)
+        val value: ByteArray? = writePacket.getNextPacket()
+
+        // TODO: queue
+        writeCharacteristic(uartWriteBTGattChar, value)
+    }
+
+    private fun getGattService(): BluetoothGattService? {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "getGattService")
+        if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
+            isConnecting = false
+            isConnected = false
+            return null
         }
+        return mBluetoothGatt?.getService(UUID.fromString(SERVICE_UUID))
+    }
 
-        @Suppress("DEPRECATION")
-        @SuppressLint("MissingPermission")
-        @Synchronized
-        private fun sendMessage(message: ByteArray) {
-            // TODO: Handle packages which consist of multiple, Create a queue of packages
-            aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage message = " + Arrays.toString(message))
-            val writePacket = WriteCommandPackets(message)
-            val value: ByteArray? = writePacket.getNextPacket()
-
-            // TODO: queue
-            writeCharacteristic(uartWriteBTGattChar, value)
+    private fun getGattCharacteristic(uuid: UUID): BluetoothGattCharacteristic? {
+        aapsLogger.debug(LTag.PUMPBTCOMM, "getGattCharacteristic $uuid")
+        val service = getGattService()
+        if (mBluetoothAdapter == null || mBluetoothGatt == null || service == null) {
+            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
+            isConnecting = false
+            isConnected = false
+            return null
         }
+        return service.getCharacteristic(uuid)
+    }
 
-        private fun getGattService(): BluetoothGattService? {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "getGattService")
-            if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-                aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-                isConnecting = false
-                isConnected = false
-                return null
-            }
-            return mBluetoothGatt?.getService(UUID.fromString(SERVICE_UUID))
-        }
-
-        private fun getGattCharacteristic(uuid: UUID): BluetoothGattCharacteristic? {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "getGattCharacteristic $uuid")
-            val service = getGattService()
-            if (mBluetoothAdapter == null || mBluetoothGatt == null || service == null) {
-                aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-                isConnecting = false
-                isConnected = false
-                return null
-            }
-            return service.getCharacteristic(uuid)
-        }
-
-        @Suppress("DEPRECATION")
-        @SuppressLint("MissingPermission")
-        @Synchronized
-        private fun writeCharacteristic(characteristic: BluetoothGattCharacteristic, data: ByteArray?) {
-            Thread(Runnable {
-                SystemClock.sleep(WRITE_DELAY_MILLIS)
-                if (mBluetoothAdapter == null || mBluetoothGatt == null) {
-                    aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-                    isConnecting = false
-                    isConnected = false
-                    return@Runnable
-                }
-                characteristic.value = data
-                characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-                aapsLogger.debug("writeCharacteristic:" + Arrays.toString(data))
-                mBluetoothGatt?.writeCharacteristic(characteristic)
-            }).start()
+    @Suppress("DEPRECATION")
+    @SuppressLint("MissingPermission")
+    @Synchronized
+    private fun writeCharacteristic(characteristic: BluetoothGattCharacteristic, data: ByteArray?) {
+        Thread(Runnable {
             SystemClock.sleep(WRITE_DELAY_MILLIS)
-        }
-
-        private val uartWriteBTGattChar: BluetoothGattCharacteristic
-            get() = uartWrite
-                ?: BluetoothGattCharacteristic(UUID.fromString(WRITE_UUID), BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT, 0).also { uartWrite = it }
-
-        /** Connect flow: 4. When services are discovered find characteristics and set notifications*/
-        private fun findCharacteristic() {
-            val gattService = getGattService() ?: return
-            val gattCharacteristics = gattService.characteristics
-            for (gattCharacteristic in gattCharacteristics) {
-                setCharacteristicNotification(gattCharacteristic, true)
+            if (mBluetoothAdapter == null || mBluetoothGatt == null) {
+                aapsLogger.error("BluetoothAdapter not initialized_ERROR")
+                isConnecting = false
+                isConnected = false
+                return@Runnable
             }
+            characteristic.value = data
+            characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
+            aapsLogger.debug("writeCharacteristic:" + Arrays.toString(data))
+            mBluetoothGatt?.writeCharacteristic(characteristic)
+        }).start()
+        SystemClock.sleep(WRITE_DELAY_MILLIS)
+    }
+
+    private val uartWriteBTGattChar: BluetoothGattCharacteristic
+        get() = uartWrite
+            ?: BluetoothGattCharacteristic(UUID.fromString(WRITE_UUID), BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT, 0).also { uartWrite = it }
+
+    /** Connect flow: 4. When services are discovered find characteristics and set notifications*/
+    private fun findCharacteristic() {
+        val gattService = getGattService() ?: return
+        val gattCharacteristics = gattService.characteristics
+        for (gattCharacteristic in gattCharacteristics) {
+            setCharacteristicNotification(gattCharacteristic, true)
         }
     }
 }

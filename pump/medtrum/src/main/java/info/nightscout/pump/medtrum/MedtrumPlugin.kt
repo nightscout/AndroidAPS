@@ -1,6 +1,12 @@
 package info.nightscout.pump.medtrum
 
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
+import android.content.ServiceConnection
+import android.os.IBinder
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -21,33 +27,38 @@ import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.pump.medtrum.ui.MedtrumPumpFragment
+import info.nightscout.pump.medtrum.services.MedtrumService
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventAppInitialized
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.functions.Consumer
+import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
-
 @Singleton
-class MedtrumPumpPlugin @Inject constructor(
+class MedtrumPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
+    private val sp: SP,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
+    private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
@@ -55,7 +66,7 @@ class MedtrumPumpPlugin @Inject constructor(
     private val profileFunction: ProfileFunction
 ) : PumpPluginBase(
     PluginDescription()
-        .mainType(PluginType.PUMP) // TODO Prefs etc
+        .mainType(PluginType.PUMP)
         .fragmentClass(MedtrumPumpFragment::class.java.name)
         .pluginIcon(info.nightscout.core.ui.R.drawable.ic_eopatch2_128) // TODO
         .pluginName(R.string.medtrum)
@@ -64,16 +75,51 @@ class MedtrumPumpPlugin @Inject constructor(
         .description(R.string.medtrum_pump_description), injector, aapsLogger, rh, commandQueue
 ), Pump {
 
+    private val disposable = CompositeDisposable()
+    private var medtrumService: MedtrumService? = null
     private var mPumpType: PumpType = PumpType.MEDTRUM_NANO
     private val mPumpDescription = PumpDescription(mPumpType)
+    private var mDeviceSN: Long = 0
 
     override fun onStart() {
         super.onStart()
+        aapsLogger.debug(LTag.PUMP, "MedtrumPlugin onStart()")
+        val intent = Intent(context, MedtrumService::class.java)
+        context.bindService(intent, mConnection, Context.BIND_AUTO_CREATE)
+        disposable += rxBus
+            .toObservable(EventAppExit::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
+        changePump()
     }
 
     override fun onStop() {
+        aapsLogger.debug(LTag.PUMP, "MedtrumPlugin onStop()")
+        context.unbindService(mConnection)
+        disposable.clear()
         super.onStop()
-        aapsLogger.debug(LTag.PUMP, "MedtrumPumpPlugin onStop()")
+    }
+
+    private val mConnection: ServiceConnection = object : ServiceConnection {
+        override fun onServiceDisconnected(name: ComponentName) {
+            aapsLogger.debug(LTag.PUMP, "Service is disconnected")
+            medtrumService = null
+        }
+
+        override fun onServiceConnected(name: ComponentName, service: IBinder) {
+            aapsLogger.debug(LTag.PUMP, "Service is connected")
+            val mLocalBinder = service as MedtrumService.LocalBinder
+            medtrumService = mLocalBinder.serviceInstance
+        }
+    }
+
+    fun changePump() { // TODO: Call this on inputfield change?
+        try {
+            mDeviceSN = sp.getString(info.nightscout.pump.medtrum.R.string.key_snInput, " ").toLong(radix = 16)
+            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.device_changed), null)
+        } catch (e: NumberFormatException) {
+            aapsLogger.debug(LTag.PUMP, "changePump: invalid input!")
+        }
     }
 
     override fun isInitialized(): Boolean {
@@ -88,33 +134,35 @@ class MedtrumPumpPlugin @Inject constructor(
         return false
     }
 
-    override fun isConnected(): Boolean {
-        return false
-    }
-
-    override fun isConnecting(): Boolean {
-        return false
-    }
-
-    override fun isHandshakeInProgress(): Boolean {
-        return false
-    }
+    override fun isConnected(): Boolean = medtrumService?.isConnected ?: false
+    override fun isConnecting(): Boolean = medtrumService?.isConnecting ?: false
+    override fun isHandshakeInProgress(): Boolean = false
 
     override fun finishHandshaking() {
     }
 
     override fun connect(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Medtrum connect - reason:$reason")
+        aapsLogger.debug(LTag.PUMP, "Medtrum connect - service::$medtrumService")
+        aapsLogger.debug(LTag.PUMP, "Medtrum connect - mDeviceSN:$mDeviceSN")
+        if (medtrumService != null && mDeviceSN != 0.toLong()) {
+            aapsLogger.debug(LTag.PUMP, "Medtrum connect - Attempt connection!")
+            val success = medtrumService?.connect(reason, mDeviceSN) ?: false
+            if (!success) ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_supported_or_not_paired)            
+        }
     }
 
     override fun disconnect(reason: String) {
-        aapsLogger.debug(LTag.PUMP, "Medtrum disconnect - reason:$reason")
+        aapsLogger.debug(LTag.PUMP, "RS disconnect from: $reason")
+        medtrumService?.disconnect(reason)
     }
 
     override fun stopConnecting() {
+        medtrumService?.stopConnecting()
     }
 
     override fun getPumpStatus(reason: String) {
+        // TODO
     }
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
@@ -177,7 +225,7 @@ class MedtrumPumpPlugin @Inject constructor(
     }
 
     override fun model(): PumpType {
-        return  mPumpType
+        return mPumpType
     }
 
     override fun serialNumber(): String {
