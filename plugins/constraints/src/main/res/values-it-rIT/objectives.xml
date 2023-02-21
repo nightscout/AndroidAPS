@@ -20,6 +20,8 @@
     <string name="objectives_smb_objective">Abilitazione funzioni aggiuntive per l\'uso diurno, come SMB</string>
     <string name="objectives_smb_gate">È necessario leggere il wiki e aumentare maxIOB affinché le azioni di SMB funzionino adeguatamente! Un buon inizio è maxIOB = media bolo posto + 3 x max basale giornaliera</string>
     <string name="objectives_auto_objective">Abilitazione automazione</string>
+    <string name="objectives_auto_gate">Leggi la documentazione su come funziona l\'automazione. Configura le tue prime semplici regole. Consenti ad AAPS solo di visualizzare una notifica, non di eseguire un\'azione. Quando sei sicuro che l\'automazione viene attivata al momento giusto, sostituisci la notifica con un\'azione reale. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_bgavailableinns">BG disponibile in NS o Tidepool</string>
     <string name="objectives_manualenacts">Attivazioni manuali</string>
     <string name="accomplished">Completato: %1$s</string>
     <string name="objectives_usage_objective">Impara a controllare AAPS</string>
@@ -33,6 +35,7 @@
     <string name="objectives_usescale">Usa la funzione di ridimensionamento premendo a lungo sul grafico delle glicemie</string>
     <string name="objectives_exam_objective">Dai prova della tua conoscenza</string>
     <string name="objectives_exam_gate">Studia, leggi le domande e rifletti. Ti vengono fornite quattro possibili risposte per ogni domanda. Ci può essere più di una risposta corretta. Seleziona tutte quelle che sono corrette e poi vai su VERIFICA.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS può essere eseguito offline.</string>
     <string name="answerdisabledto">Risposta disabilitata fino a: %1$s</string>
     <string name="wronganswer">Risposta errata!</string>
     <string name="unfinshed_button">Prossimo N.C.</string>
@@ -40,8 +43,10 @@
     <string name="objectives_hint">(segna tutte le risposte corrette)</string>
     <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
     <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
     <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Non connesso a internet</string>
     <string name="failedretrievetime">Impossibile recuperare l\'ora</string>
     <string name="requirementnotmet">Requisiti obiettivo non soddisfatti</string>
+    <string name="what_i_ve_learned">Cosa ho imparato:</string>
 </resources>
