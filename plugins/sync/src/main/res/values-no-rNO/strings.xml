@@ -113,6 +113,7 @@
     <string name="xdrip_send_status_title">Send statuslinje til xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ ikke installert</string>
     <string name="calibration_sent">Kalibrering sendt til xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Send data om glukose og behandling til xDrip+. Velg datakilde \"xDrip+ Sync Følger\" og aktiver mottak av data under Innstillinger - Inter-app innstillinger - Aksepter glukose/behandlinger</string>
     <string name="xdrip_local_broadcasts_title">Aktiver sending til xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>
