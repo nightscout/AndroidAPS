@@ -82,8 +82,9 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             if (treatmentTimestamp == 0L) return null
 
             this.duration ?: return null
+            val durationInMilliseconds = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration)
 
-            if (duration == 0L)
+            if (durationInMilliseconds == 0L)
                 return NSTemporaryTarget(
                     date = treatmentTimestamp,
                     device = this.device,
@@ -127,7 +128,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
-                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration),
+                duration = durationInMilliseconds,
                 targetBottom = this.targetBottom,
                 targetTop = this.targetTop,
                 reason = NSTemporaryTarget.Reason.fromString(this.reason)
