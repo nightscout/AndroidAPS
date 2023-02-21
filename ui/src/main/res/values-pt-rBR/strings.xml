@@ -148,7 +148,7 @@
     <string name="device_watch">Relógio</string>
     <string name="positive_only">Apenas positivo</string>
     <string name="negative_only">Apenas negativo</string>
-    <string name="overview_editquickwizard_usecob">Cálculo COB</string>
+    <string name="overview_editquickwizard_usecob">Cálculo CA</string>
     <string name="overview_editquickwizard_usetemptarget">Cálculo alvo temporário</string>
     <string name="overview_editquickwizard_usepercentage">Cálculo de porcentagem</string>
     <string name="app_default">Padrão do aplicativo</string>
