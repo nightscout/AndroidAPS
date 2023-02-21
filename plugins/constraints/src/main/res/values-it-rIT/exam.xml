@@ -15,6 +15,7 @@
     <string name="pumpdisconnect_label">Motivi per azionare la funzione \"Disconnetti micro\" in AAPS</string>
     <string name="pumpdisconnect_unnecessary">Questo non è necessario poiché l\'insulina non verrà erogata se il micro è fisicamente disconnesso.</string>
     <string name="pumpdisconnect_openloop">Manderà AAPS in modalità loop aperto.</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#other-settings</string>
     <string name="objectives_label">Impostazioni AAPS</string>
     <string name="objectives2_label">Impostazioni AAPS</string>
     <string name="objectives_howtosave">Quali sono le migliori pratiche per il backup delle tue impostazioni?</string>
@@ -26,6 +27,7 @@
     <string name="objectives2_internalstorage">Il file delle tue impostazioni si trova nella cartella Internal Storage (memoria interna)/AAPS/preferences del tuo telefono.</string>
     <string name="objectives2_cloud">Copiare il file delle tue preferenze in un luogo sicuro al di fuori del tuo telefono (ad esempio usando un\'unità cloud, un computer, l\'email, ecc.)</string>
     <string name="objectives2_easyrestore">Se il tuo telefono è danneggiato o smarrito, ci sono modi semplici per recuperare da remoto le tue impostazioni senza avere un backup.</string>
+    <string name="objectives_hint2">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-emergency-equipment-is-recommended-to-take-with-me</string>
     <string name="noisycgm_label">Letture CGM \"rumorose\" (noisy)</string>
     <string name="noisycgm_whattodo">Cosa dovrebbe essere fatto se i dati CGM sono \"rumorosi\"?</string>
     <string name="noisycgm_nothing">Nulla - AAPS se ne occuperà.</string>
@@ -53,6 +55,7 @@
     <string name="basaltest_havingregularhighlow">Quando si verificano frequenti glicemie alte o basse.</string>
     <string name="basaltest_weekly">Almeno una volta a settimana.</string>
     <string name="basaltest_fixed">Una volta impostati e validati, questi valori non dovrebbero cambiare nel tempo.</string>
+    <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Prerequisiti</string>
     <string name="prerequisites_what">Cosa è essenziale per configurare e usare AAPS?</string>
     <string name="prerequisites_determinedcorrectprofile">Informazioni profilo validate (basale, IC, ISF, DIA).</string>
@@ -87,6 +90,7 @@
     <string name="troubleshooting_yourendo">Dovresti chiedere al tuo endocrinologo/centro diabetologico.</string>
     <string name="troubleshooting_hint2">https://www.facebook.com/groups/aapsitalia/</string>
     <string name="troubleshooting_hint3">https://discord.gg/4fQUWHZ4Mw</string>
+    <string name="insulin_plugins">Plugin insulina</string>
     <string name="insulin_ultrarapid">Quale insulina dovresti usare con il plugin Ultra-Rapid Oref?</string>
     <string name="insulin_fiasp">Fiasp®</string>
     <string name="insulin_novorapid">NovoRapid®/Novolog®</string>
@@ -102,6 +106,7 @@
     <string name="wrongcarbs_donothing">Non fare nulla - AAPS effettuerà gli opportuni aggiustamenti.</string>
     <string name="wrongcarbs_bolus">Erogare un bolo di insulina usando il tasto Insulina nella sezione Panoramica.</string>
     <string name="wronginsulin_label">Errori erogazione/inserimento insulina</string>
+    <string name="wronginsulin_whattodo">Cosa dovresti fare se hai ricevuto meno insulina di quanto lo storico del micro suggerisce? Ad esempio a causa di un\'occlusione, una cannula difettosa o l\'aver dimenticato di riattaccare il micro dopo una doccia?</string>
     <string name="wronginsulin_careportal">Eliminare dal portale Nightscout i dati relativi all\'insulina per rimuoverli dallo storico del micro.</string>
     <string name="wronginsulin_compare">Compara i valori in AAPS con lo storico micro (se supportato).</string>
     <string name="wronginsulin_prime">Erogare un bolo con parte della tua insulina calcolata \"mancante\" usando una siringa/penna o la funzione caricamento.</string>
@@ -120,6 +125,7 @@
     <string name="breadgrams_grams">Solo i grammi dovrebbero essere utilizzati per stimare e registrare i carboidrati consumati.</string>
     <string name="breadgrams_exchange">I carboidrati consumati possono essere registrati utilizzando un sistema di scambio appropriato (ad esempio: gli scambi CHO \"DAFNE\" o le unità di pane europee \"Bread Units\").</string>
     <string name="breadgrams_calc">Se la glicemia è di fuori dei valori accettabili (troppo bassa o troppo alta) il calcolatore di boli può essere utilizzato per fornire suggerimenti per le correzioni con carboidrati o insulina.</string>
+    <string name="breadgrams_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="extendedcarbs_label">e-carbs</string>
     <string name="extendedcarbs_handling">Per cosa potresti usare gli e-carbs (carboidrati estesi)?</string>
     <string name="extendedcarbs_future">Per indicare i carboidrati nel futuro e/o distribuiti su un intervallo di tempo (similmente a un bolo esteso che distribuisce insulina sullo stesso intervallo).</string>
@@ -135,6 +141,7 @@
     <string name="isf_increasingvalue">Aumentare i valori di ISF porterà a una maggiore erogazione di insulina per coprire una specifica quantità di carboidrati.</string>
     <string name="isf_preferences">ISF dovrebbe essere inserito nelle tue preferenze di AAPS.</string>
     <string name="isf_profile">Cambiare il valore ISF nel tuo profilo è sufficiente per applicare la modifica.</string>
+    <string name="isf_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
     <string name="ic_multiple">Puoi usare più di un valore per il rapporto I:C nel tuo profilo.</string>
     <string name="ic_isf">Se cambi il tuo ISF nel tuo profilo dovresti sempre cambiare anche il tuo rapporto I:C.</string>
     <string name="ic_label_exam">Rapporto insulina-carboidrati (rapporto I:C)</string>
@@ -142,6 +149,7 @@
     <string name="ic_decreasingvalue">Rapporti I:C più bassi portano a una minore insulina erogata per una data quantità di carboidrati.</string>
     <string name="ic_noeffect">Se hai 0 COB, cambiare il rapporto IC porterà a una differente quantità di insulina necessaria a correggere una determinata glicemia.</string>
     <string name="ic_different">IC sarà diverso se consideri l\'unità di pane (BE) come 10g o 12g.</string>
+    <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Cambio profilo</string>
     <string name="profileswitch_basallower">Le velocità basali saranno il 10% più basse.</string>
     <string name="profileswitch_isfhigher">ISF sarà il 10% più alto.</string>
@@ -164,4 +172,5 @@
     <string name="basalhelp_diabetesteam">Il tuo team diabetologico</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="other_medication_label">Altri Farmaci. Leggi la seguente dichiarazione e, per proseguire, accettala selezionando la casella.</string>
 </resources>
