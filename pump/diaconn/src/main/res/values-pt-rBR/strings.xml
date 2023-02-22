@@ -93,6 +93,9 @@
     <string name="diaconn_g8_logsyncinprogress">Log de sincronização em andamento</string>
     <string name="diaconn_g8_loginsulinshorage">Falta da insulina</string>
     <string name="diaconn_g8_logbatteryshorage">Pouca bateria</string>
+    <string name="diaconn_g8_logneedleprime">Preencher cateter :%1$.2fU</string>
+    <string name="diaconn_g8_loginjectorprime">Preencher cânula: %1$.2fU</string>
+    <string name="diaconn_g8_logtubeprime">Preenchimento de troca de tubo :%1$.2fU</string>
     <string name="diaconn_g8_resetfactoryreset">Reiniciar ao redefinir dados de fábrica</string>
     <string name="diaconn_g8_resetemergencyoff">Redefinir após desligar Emergência</string>
     <string name="diaconn_g8_resetbatteryreplacement">Redefinir após substituição de bateria</string>

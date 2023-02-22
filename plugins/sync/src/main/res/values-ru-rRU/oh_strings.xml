@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="open_humans">Проект Open Humans</string>
+    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans позволяет загружать данные о диабете и вносить их в научные проекты.</string>
     <string name="logout">Выход</string>
     <string name="setup">Настройки</string>
