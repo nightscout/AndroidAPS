@@ -118,7 +118,7 @@
     <string name="maintenance_settings">Настройки за поддръжка</string>
     <string name="maintenance_email">Имейл</string>
     <string name="maintenance_amount">Брой логове за изпращане</string>
-    <string name="send_all_logs">Изпратщане на логове чрез ел. поща</string>
+    <string name="send_all_logs">Изпращане на логове чрез ел. поща</string>
     <string name="delete_logs">Изтрий логове</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout версия:</string>
     <string name="engineering_mode_enabled">Режим за раработчици (Engineering mode) включен</string>
