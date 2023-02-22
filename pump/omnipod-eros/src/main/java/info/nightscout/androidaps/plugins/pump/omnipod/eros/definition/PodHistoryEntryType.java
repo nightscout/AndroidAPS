@@ -5,7 +5,7 @@ import androidx.annotation.StringRes;
 import java.util.HashMap;
 import java.util.Map;
 
-import info.nightscout.pump.common.defs.PumpHistoryEntryGroup;
+import info.nightscout.aaps.pump.common.defs.PumpHistoryEntryGroup;
 
 /**
  * Created by andy on 24.11.2019

@@ -1,4 +1,4 @@
-package info.nightscout.pump.common.di
+package info.nightscout.aaps.pump.common.di
 
 import dagger.Module
 import info.nightscout.aaps.pump.common.di.PumpCommonModuleAbstract

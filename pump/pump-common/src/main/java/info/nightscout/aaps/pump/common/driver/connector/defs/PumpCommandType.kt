@@ -1,7 +1,7 @@
 package info.nightscout.aaps.pump.common.driver.connector.defs
 
 import androidx.annotation.StringRes
-import info.nightscout.pump.common.R
+import info.nightscout.aaps.pump.common.R
 
 enum class PumpCommandType(@param:StringRes val resourceId: Int) {
     SetBolus(R.string.pump_cmd_desc_set_bolus),

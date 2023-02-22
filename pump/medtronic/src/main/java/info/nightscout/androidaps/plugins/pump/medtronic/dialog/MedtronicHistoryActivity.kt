@@ -15,7 +15,7 @@ import dagger.android.DaggerActivity
 import info.nightscout.androidaps.plugins.pump.medtronic.R
 import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpHistoryEntry
 import info.nightscout.androidaps.plugins.pump.medtronic.data.MedtronicHistoryData
-import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
+import info.nightscout.aaps.pump.common.defs.PumpHistoryEntryGroup
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 

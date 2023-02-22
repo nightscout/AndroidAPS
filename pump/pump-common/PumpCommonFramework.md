@@ -29,6 +29,16 @@ PumpPluginAbstract, but in future it will be. PumpConnectorInterface and
 PumpConnectionManager should be used as middle-layer for pump communication.
 
 
+LOT MORE OF DOCUMENTATION TO COME
 
+
+
+
+Version History
+===============
+
+
+1.1. (2022) - added few classes
+1.0. (2017) - Initial version (used with Medtronic and Omnipod)
 
 

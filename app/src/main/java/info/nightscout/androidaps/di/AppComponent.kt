@@ -27,7 +27,7 @@ import info.nightscout.plugins.di.PluginsModule
 import info.nightscout.plugins.sync.di.SyncModule
 import info.nightscout.pump.combo.di.ComboModule
 import info.nightscout.pump.combov2.di.ComboV2Module
-import info.nightscout.pump.common.di.PumpCommonModule
+import info.nightscout.aaps.pump.common.di.PumpCommonModule
 import info.nightscout.pump.dana.di.DanaHistoryModule
 import info.nightscout.pump.dana.di.DanaModule
 import info.nightscout.pump.danars.di.DanaRSModule

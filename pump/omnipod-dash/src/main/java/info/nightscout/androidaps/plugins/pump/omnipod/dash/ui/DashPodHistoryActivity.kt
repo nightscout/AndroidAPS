@@ -23,8 +23,8 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.Resolve
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
 import info.nightscout.core.utils.DateTimeUtil
 import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
-import info.nightscout.pump.common.utils.ProfileUtil
+import info.nightscout.aaps.pump.common.defs.PumpHistoryEntryGroup
+import info.nightscout.aaps.pump.common.utils.ProfileUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

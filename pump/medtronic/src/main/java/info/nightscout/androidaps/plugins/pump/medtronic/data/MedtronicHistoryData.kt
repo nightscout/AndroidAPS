@@ -27,11 +27,11 @@ import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.pump.common.sync.PumpDbEntry
-import info.nightscout.pump.common.sync.PumpDbEntryBolus
-import info.nightscout.pump.common.sync.PumpDbEntryCarbs
-import info.nightscout.pump.common.sync.PumpDbEntryTBR
-import info.nightscout.pump.common.sync.PumpSyncStorage
+import info.nightscout.aaps.pump.common.sync.PumpDbEntry
+import info.nightscout.aaps.pump.common.sync.PumpDbEntryBolus
+import info.nightscout.aaps.pump.common.sync.PumpDbEntryCarbs
+import info.nightscout.aaps.pump.common.sync.PumpDbEntryTBR
+import info.nightscout.aaps.pump.common.sync.PumpSyncStorage
 import info.nightscout.pump.core.utils.StringUtil
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger

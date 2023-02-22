@@ -1,8 +1,8 @@
 package info.nightscout.aaps.pump.common.driver.history
 
 import androidx.annotation.StringRes
-import info.nightscout.pump.common.R
-import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
+import info.nightscout.aaps.pump.common.R
+import info.nightscout.aaps.pump.common.defs.PumpHistoryEntryGroup
 
 interface PumpHistoryDataProvider {
 

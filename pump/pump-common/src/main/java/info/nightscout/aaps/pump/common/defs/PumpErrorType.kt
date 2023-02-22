@@ -1,7 +1,7 @@
 package info.nightscout.aaps.pump.common.defs
 
 import androidx.annotation.StringRes
-import info.nightscout.pump.common.R
+import info.nightscout.aaps.pump.common.R
 
 /**
  * Created by andy on 14/05/2018.

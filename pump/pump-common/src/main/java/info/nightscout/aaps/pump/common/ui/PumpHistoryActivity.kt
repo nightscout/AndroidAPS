@@ -13,9 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.pump.common.R
-import info.nightscout.pump.common.databinding.PumpHistoryActivityBinding
-import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
+import info.nightscout.aaps.pump.common.R
+import info.nightscout.aaps.pump.common.databinding.PumpHistoryActivityBinding
+import info.nightscout.aaps.pump.common.defs.PumpHistoryEntryGroup
 import info.nightscout.aaps.pump.common.driver.PumpDriverConfigurationCapable
 import info.nightscout.aaps.pump.common.driver.history.PumpHistoryDataProvider
 import info.nightscout.aaps.pump.common.driver.history.PumpHistoryEntry

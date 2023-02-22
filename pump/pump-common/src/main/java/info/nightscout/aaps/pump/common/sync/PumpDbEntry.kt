@@ -1,4 +1,4 @@
-package info.nightscout.pump.common.sync
+package info.nightscout.aaps.pump.common.sync
 
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpSync

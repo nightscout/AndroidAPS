@@ -10,8 +10,8 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
 import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.pump.common.data.PumpStatus
-import info.nightscout.pump.common.sync.PumpDbEntryTBR
+import info.nightscout.aaps.pump.common.data.PumpStatus
+import info.nightscout.aaps.pump.common.sync.PumpDbEntryTBR
 import info.nightscout.pump.core.defs.PumpDeviceState
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper

@@ -12,7 +12,7 @@ import info.nightscout.aaps.pump.common.driver.connector.commands.response.Resul
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.aaps.pump.common.data.PumpTimeDifferenceDto
-import info.nightscout.pump.common.defs.TempBasalPair
+import info.nightscout.aaps.pump.common.defs.TempBasalPair
 import info.nightscout.rx.logging.AAPSLogger
 
 

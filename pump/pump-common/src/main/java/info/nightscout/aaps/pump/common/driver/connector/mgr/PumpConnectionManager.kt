@@ -13,11 +13,11 @@ import info.nightscout.aaps.pump.common.driver.connector.commands.response.DataC
 import info.nightscout.aaps.pump.common.driver.connector.defs.PumpCommandType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.pump.common.data.PumpStatus
+import info.nightscout.aaps.pump.common.data.PumpStatus
 import info.nightscout.aaps.pump.common.data.PumpTimeDifferenceDto
-import info.nightscout.pump.common.defs.PumpDriverState
-import info.nightscout.pump.common.defs.TempBasalPair
-import info.nightscout.pump.common.utils.PumpUtil
+import info.nightscout.aaps.pump.common.defs.PumpDriverState
+import info.nightscout.aaps.pump.common.defs.TempBasalPair
+import info.nightscout.aaps.pump.common.utils.PumpUtil
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

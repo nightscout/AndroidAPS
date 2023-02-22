@@ -25,8 +25,8 @@ import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.BlePreCheck
-import info.nightscout.pump.common.R
-import info.nightscout.pump.common.databinding.PumpBleConfigActivityBinding
+import info.nightscout.aaps.pump.common.R
+import info.nightscout.aaps.pump.common.databinding.PumpBleConfigActivityBinding
 import info.nightscout.aaps.pump.common.driver.PumpDriverConfigurationCapable
 import info.nightscout.aaps.pump.common.driver.ble.PumpBLESelector
 import info.nightscout.aaps.pump.common.driver.ble.PumpBLESelectorText

@@ -9,7 +9,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.comm.history.pump.PumpH
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicUtil
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.pump.common.sync.PumpSyncStorage
+import info.nightscout.aaps.pump.common.sync.PumpSyncStorage
 import info.nightscout.pump.core.utils.ByteUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.TestAapsSchedulers

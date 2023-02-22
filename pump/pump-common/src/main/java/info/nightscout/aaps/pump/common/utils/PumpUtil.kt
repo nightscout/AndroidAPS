@@ -1,4 +1,4 @@
-package info.nightscout.pump.common.utils
+package info.nightscout.aaps.pump.common.utils
 
 import android.content.Context
 import com.google.gson.GsonBuilder
@@ -9,7 +9,7 @@ import info.nightscout.aaps.pump.common.driver.connector.defs.PumpCommandType
 import info.nightscout.aaps.pump.common.events.EventPumpDriverStateChanged
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.pump.common.defs.PumpDriverState
+import info.nightscout.aaps.pump.common.defs.PumpDriverState
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper

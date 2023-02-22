@@ -30,9 +30,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.Ero
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.util.AapsOmnipodUtil;
 import info.nightscout.interfaces.profile.Profile;
 import info.nightscout.interfaces.pump.defs.PumpType;
-import info.nightscout.pump.common.defs.PumpHistoryEntryGroup;
-import info.nightscout.pump.common.defs.TempBasalPair;
-import info.nightscout.pump.common.utils.ProfileUtil;
+import info.nightscout.aaps.pump.common.defs.PumpHistoryEntryGroup;
+import info.nightscout.aaps.pump.common.defs.TempBasalPair;
+import info.nightscout.aaps.pump.common.utils.ProfileUtil;
 import info.nightscout.rx.logging.AAPSLogger;
 import info.nightscout.rx.logging.LTag;
 import info.nightscout.shared.interfaces.ResourceHelper;

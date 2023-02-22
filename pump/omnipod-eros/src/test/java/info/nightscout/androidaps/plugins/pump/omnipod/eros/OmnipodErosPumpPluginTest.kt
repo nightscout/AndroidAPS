@@ -13,7 +13,7 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.pump.common.defs.TempBasalPair
+import info.nightscout.aaps.pump.common.defs.TempBasalPair
 import info.nightscout.rx.TestAapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper

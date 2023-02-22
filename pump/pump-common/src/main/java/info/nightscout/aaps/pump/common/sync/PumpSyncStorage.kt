@@ -1,4 +1,4 @@
-package info.nightscout.pump.common.sync
+package info.nightscout.aaps.pump.common.sync
 
 import com.thoughtworks.xstream.XStream
 import com.thoughtworks.xstream.security.AnyTypePermission

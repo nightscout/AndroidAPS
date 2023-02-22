@@ -1,4 +1,4 @@
-package info.nightscout.pump.common.utils
+package info.nightscout.aaps.pump.common.utils
 
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.Profile.ProfileValue

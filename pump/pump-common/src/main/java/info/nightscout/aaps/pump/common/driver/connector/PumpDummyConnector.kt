@@ -11,10 +11,10 @@ import info.nightscout.aaps.pump.common.driver.connector.commands.data.Additiona
 import info.nightscout.aaps.pump.common.driver.connector.commands.data.CustomCommandTypeInterface
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.pump.common.data.PumpStatus
+import info.nightscout.aaps.pump.common.data.PumpStatus
 import info.nightscout.aaps.pump.common.data.PumpTimeDifferenceDto
-import info.nightscout.pump.common.defs.TempBasalPair
-import info.nightscout.pump.common.utils.PumpUtil
+import info.nightscout.aaps.pump.common.defs.TempBasalPair
+import info.nightscout.aaps.pump.common.utils.PumpUtil
 import info.nightscout.rx.logging.AAPSLogger
 import org.joda.time.DateTime
 import javax.inject.Singleton
@@ -71,7 +71,8 @@ open class PumpDummyConnector(var pumpStatus: PumpStatus,
             pumpStatus.tempBasalEnd == null ||
             System.currentTimeMillis() > pumpStatus.tempBasalEnd!!) {
             DataCommandResponse(
-                PumpCommandType.GetTemporaryBasal, true, null, TempBasalPair(0.0, true, 0))
+                PumpCommandType.GetTemporaryBasal, true, null, TempBasalPair(0.0, true, 0)
+            )
         } else {
             val tempBasalPair = TempBasalPair()
             tempBasalPair.insulinRate = pumpStatus.tempBasalAmount!!

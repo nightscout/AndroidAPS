@@ -1,4 +1,4 @@
-package info.nightscout.pump.common
+package info.nightscout.aaps.pump.common
 
 import android.content.Context
 import android.content.Intent
@@ -24,11 +24,12 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.utils.DecimalFormatter.to0Decimal
 import info.nightscout.interfaces.utils.DecimalFormatter.to2Decimal
-import info.nightscout.pump.common.data.PumpStatus
-import info.nightscout.pump.common.defs.PumpDriverState
-import info.nightscout.pump.common.sync.PumpDbEntryCarbs
-import info.nightscout.pump.common.sync.PumpSyncEntriesCreator
-import info.nightscout.pump.common.sync.PumpSyncStorage
+import info.nightscout.aaps.pump.common.R
+import info.nightscout.aaps.pump.common.data.PumpStatus
+import info.nightscout.aaps.pump.common.defs.PumpDriverState
+import info.nightscout.aaps.pump.common.sync.PumpDbEntryCarbs
+import info.nightscout.aaps.pump.common.sync.PumpSyncEntriesCreator
+import info.nightscout.aaps.pump.common.sync.PumpSyncStorage
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
