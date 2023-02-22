@@ -137,4 +137,21 @@
     <string name="diaconn_g8_errorcode_7">Предприемане на други действия, ограничаване на настройките на приложението.</string>
     <string name="diaconn_g8_errorcode_8">Поставянето на инсулин е ограничено, по време на друго доставяне на Болус.</string>
     <string name="diaconn_g8_errorcode_9">Изискване за подновяване доставянето на базал</string>
+    <string name="diaconn_g8_errorcode_10">Отменено, поради липса на отговор от помпата.</string>
+    <string name="diaconn_g8_errorcode_11">Доставянето на инсулин е невъзможно, поради изтощена батерия.</string>
+    <string name="diaconn_g8_errorcode_12">Недостатъчен инсулин. Не може да се достави.</string>
+    <string name="diaconn_g8_errorcode_13">Не можете да го достави инсулина, защото превишава лимита.</string>
+    <string name="diaconn_g8_errorcode_14">Инсулинът не може да бъде доставен, защото надвишава дневното количество.</string>
+    <string name="diaconn_g8_errorcode_15">След завършване на базалната настройка, може да се извърши доставка на базал.</string>
+    <string name="diaconn_g8_errotpreceivedyet">Командата не беше предадена. Моля, опитайте отново.</string>
+    <string name="diaconn_g8_logtubechange_title">Запиши смяната на тръба за инфузионен сет</string>
+    <string name="diaconn_g8_logtubechange_summary">Добавете събитие „Смяна на тръба за инфузионен сет“ към Бележки, когато бъде открито в историята</string>
+    <string name="diaconn_g8_logtempstart">Старт на временен базал</string>
+    <string name="diaconn_g8_errorcode_32">По време на активирано \"Спиране при ниска захар\", доставката на инсулин е ограничена</string>
+    <string name="diaconn_g8_errorcode_33">При активирано \"Спиране при ниска захар\", командата ВКЛЮЧИ е отказана.</string>
+    <string name="diaconn_g8_errorcode_34">При деактивирано \"Спиране при ниска захар\", командата ИЗКЛЮЧИ е отказана.</string>
+    <string name="diaconn_g8_errorcode_35">Стартирането на временния базал се отхвърля, когато временният базал е активиран</string>
+    <string name="diaconn_g8_errorcode_36">Спирането на временния базал се отхвърля, когато временният базал не е активиран</string>
+    <string name="diaconn_g8_cloudsend_summary">Изпрати логовете на помпата до Diaconn Cloud.</string>
+    <string name="diaconn_g8_cloudsend_title">Diaconn Cloud Синхронизиране</string>
 </resources>
