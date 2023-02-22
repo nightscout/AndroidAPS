@@ -37,8 +37,8 @@ LOT MORE OF DOCUMENTATION TO COME
 Version History
 ===============
 
-
-1.1. (2022) - added few classes
-1.0. (2017) - Initial version (used with Medtronic and Omnipod)
+1.2 (20.2.2023) - added PumpDriverConfiguration and PumpConnectionManager main classes
+1.1 (2022) - added few classes (BleConfiguration), for use with experimenta Ypso driver
+1.0 (2017) - Initial version (used with Medtronic and Omnipod)
 
 
