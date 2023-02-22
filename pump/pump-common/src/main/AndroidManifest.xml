@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application>
@@ -12,7 +13,7 @@
             android:theme="@style/AppTheme"
             android:exported="false">
             <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.pump.common.ui.PumpBLEConfigActivity" />
+                <action android:name="info.nightscout.aaps.pump.common.ui.PumpBLEConfigActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
