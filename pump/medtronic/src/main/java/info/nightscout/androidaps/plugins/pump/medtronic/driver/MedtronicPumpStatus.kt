@@ -40,6 +40,8 @@ class MedtronicPumpStatus @Inject constructor(private val rh: ResourceHelper,
     var runningTBR: PumpDbEntryTBR? = null
     var runningTBRWithTemp: PumpDbEntryTBR? = null
 
+    //var tempBasalLength: Int? = 0   // TODO replace with tempBasalDuration
+
     // statuses
     var pumpDeviceState = PumpDeviceState.NeverContacted
         set(pumpDeviceState) {
@@ -127,12 +129,12 @@ class MedtronicPumpStatus @Inject constructor(private val rh: ResourceHelper,
             if (tempBasalStart == null) return null
             if (tempBasalEnd == null) {
                 val startTime = tempBasalStart!!
-                tempBasalEnd = startTime + tempBasalLength!! * 60 * 1000
+                tempBasalEnd = startTime + tempBasalDuration!! * 60 * 1000
             }
             if (System.currentTimeMillis() > tempBasalEnd!!) {
                 tempBasalStart = null
                 tempBasalEnd = null
-                tempBasalLength = null
+                tempBasalDuration = null
                 tempBasalAmount = null
                 return null
             }

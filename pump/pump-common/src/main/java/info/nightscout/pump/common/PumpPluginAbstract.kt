@@ -77,6 +77,7 @@ abstract class PumpPluginAbstract protected constructor(
     protected var displayConnectionMessages = false
 
     var pumpType: PumpType = PumpType.GENERIC_AAPS
+        get() = field
         set(value) {
             field = value
             pumpDescription.fillFor(value)
@@ -86,18 +87,24 @@ abstract class PumpPluginAbstract protected constructor(
 
     abstract fun initPumpStatusData()
 
+    open fun hasService(): Boolean {
+        return true
+    }
+
     override fun onStart() {
         super.onStart()
         initPumpStatusData()
-        serviceConnection?.let { serviceConnection ->
-            val intent = Intent(context, serviceClass)
-            context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-            disposable.add(
-                rxBus
-                    .toObservable(EventAppExit::class.java)
-                    .observeOn(aapsSchedulers.io)
-                    .subscribe({ context.unbindService(serviceConnection) }, fabricPrivacy::logException)
-            )
+        if (hasService()) {
+            serviceConnection?.let { serviceConnection ->
+                val intent = Intent(context, serviceClass)
+                context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
+                disposable.add(
+                        rxBus
+                            .toObservable(EventAppExit::class.java)
+                            .observeOn(aapsSchedulers.io)
+                            .subscribe({ context.unbindService(serviceConnection) }, fabricPrivacy::logException)
+                    )
+            }
         }
         serviceRunning = true
         onStartScheduledPumpActions()
@@ -105,8 +112,10 @@ abstract class PumpPluginAbstract protected constructor(
 
     override fun onStop() {
         aapsLogger.debug(LTag.PUMP, model().model + " onStop()")
-        serviceConnection?.let { serviceConnection ->
-            context.unbindService(serviceConnection)
+        if (hasService()) {
+            serviceConnection?.let { serviceConnection ->
+                context.unbindService(serviceConnection)
+            }
         }
         serviceRunning = false
         disposable.clear()

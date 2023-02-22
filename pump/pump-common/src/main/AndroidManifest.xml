@@ -1,8 +1,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application>
         <activity
-            android:name="info.nightscout.androidaps.plugins.pump.common.ui.PumpBLEConfigActivity"
+            android:name="info.nightscout.aaps.pump.common.ui.PumpBLEConfigActivity"
             android:theme="@style/AppTheme"
             android:exported="false">
             <intent-filter>
@@ -11,7 +17,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.PumpHistoryActivity" />
+        <activity android:name="info.nightscout.aaps.pump.common.ui.PumpHistoryActivity" />
 
     </application>
 

@@ -14,6 +14,8 @@ import androidx.core.content.ContextCompat
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.extensions.safeEnable
 import info.nightscout.interfaces.pump.BlePreCheck
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -21,7 +23,8 @@ import javax.inject.Singleton
 @Singleton
 class BlePreCheckImpl @Inject constructor(
     private val context: Context,
-    private val rh: ResourceHelper
+    private val rh: ResourceHelper,
+    val aapsLogger: AAPSLogger
 ) : BlePreCheck {
 
     companion object {
@@ -31,6 +34,10 @@ class BlePreCheckImpl @Inject constructor(
     }
 
     override fun prerequisitesCheck(activity: AppCompatActivity): Boolean {
+        return prerequisitesCheck(activity, null)
+    }
+
+    override fun prerequisitesCheck(activity: AppCompatActivity, additionalPermissions: List<String>?): Boolean {
         if (!activity.packageManager.hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
             OKDialog.show(activity, rh.gs(info.nightscout.core.ui.R.string.message), rh.gs(info.nightscout.core.ui.R.string.ble_not_supported))
             return false
@@ -51,6 +58,10 @@ class BlePreCheckImpl @Inject constructor(
                 }
             }
 
+            if (!checkAdditionalPermissions(additionalPermissions, activity)) {
+                return false;
+            }
+
             val bluetoothAdapter = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
             // Ensures Bluetooth is available on the device and it is enabled. If not,
             // displays a dialog requesting user permission to enable Bluetooth.
@@ -68,6 +79,35 @@ class BlePreCheckImpl @Inject constructor(
         }
         return true
     }
+
+
+    private fun checkAdditionalPermissions(additionalPermissions: List<String>?, activity: AppCompatActivity): Boolean {
+
+        if (additionalPermissions==null || additionalPermissions.size==0) {
+            aapsLogger.info(LTag.PUMP, "ADP: No additional permissions found !")
+            return true
+        }
+
+        aapsLogger.info(LTag.PUMP, "ADP: Additional permissions (${additionalPermissions.size}): ${additionalPermissions}")
+
+        val nonPermittedItems = mutableListOf<String>()
+
+        for (permission in additionalPermissions) {
+            if (ContextCompat.checkSelfPermission(context, permission) != PackageManager.PERMISSION_GRANTED) {
+                nonPermittedItems.add(permission)
+            }
+        }
+
+        aapsLogger.info(LTag.PUMP, "ADP: Non permited items: ${nonPermittedItems}")
+
+        if (nonPermittedItems.size > 0) {
+            ActivityCompat.requestPermissions(activity, nonPermittedItems.toTypedArray(), PERMISSION_REQUEST_BLUETOOTH)
+            return false
+        }
+
+        return true
+    }
+
 
     /**
      * Determine if GPS is currently enabled.

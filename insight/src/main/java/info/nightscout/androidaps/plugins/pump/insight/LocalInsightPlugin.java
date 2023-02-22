@@ -594,7 +594,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
                 EventOverviewBolusProgress.Treatment t = new EventOverviewBolusProgress.Treatment(0, 0, detailedBolusInfo.getBolusType() == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.getId());
                 final EventOverviewBolusProgress bolusingEvent = EventOverviewBolusProgress.INSTANCE;
                 bolusingEvent.setT(t);
-                bolusingEvent.setStatus(rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, 0d, insulin));
+                bolusingEvent.setStatus(rh.gs(info.nightscout.core.ui.R.string.bolus_delivered_so_far, 0d, insulin));
                 bolusingEvent.setPercent(0);
                 rxBus.send(bolusingEvent);
                 int trials = 0;
@@ -633,7 +633,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
                         trials = -1;
                         int percentBefore = bolusingEvent.getPercent();
                         bolusingEvent.setPercent((int) (100D / activeBolus.getInitialAmount() * (activeBolus.getInitialAmount() - activeBolus.getRemainingAmount())));
-                        bolusingEvent.setStatus(rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(),
+                        bolusingEvent.setStatus(rh.gs(info.nightscout.core.ui.R.string.bolus_delivered_so_far, activeBolus.getInitialAmount() - activeBolus.getRemainingAmount(),
                                 activeBolus.getInitialAmount()));
                         if (percentBefore != bolusingEvent.getPercent())
                             rxBus.send(bolusingEvent);
@@ -641,7 +641,7 @@ public class LocalInsightPlugin extends PumpPluginBase implements Pump, Insight,
                         synchronized ($bolusLock) {
                             if (bolusCancelled || trials == -1 || trials++ >= 5) {
                                 if (!bolusCancelled) {
-                                    bolusingEvent.setStatus(rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, insulin, insulin));
+                                    bolusingEvent.setStatus(rh.gs(info.nightscout.core.ui.R.string.bolus_delivered_so_far, insulin, insulin));
                                     bolusingEvent.setPercent(100);
                                     rxBus.send(bolusingEvent);
                                 }

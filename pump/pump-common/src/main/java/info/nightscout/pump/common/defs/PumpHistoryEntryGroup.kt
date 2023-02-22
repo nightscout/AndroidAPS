@@ -1,5 +1,6 @@
 package info.nightscout.pump.common.defs
 
+import info.nightscout.aaps.pump.common.defs.PumpTypeGroupConfig
 import info.nightscout.pump.common.R
 import info.nightscout.shared.interfaces.ResourceHelper
 import kotlin.streams.toList

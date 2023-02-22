@@ -15,6 +15,7 @@
     <string name="pump_not_initialized_profile_not_set">Pump not initialized, profile not set!</string>
     <string name="failed_update_basal_profile">Failed to update basal profile</string>
     <string name="bolus_delivered_successfully">Bolus %1$.2f U delivered successfully</string>
+    <string name="bolus_delivered_so_far">%1$.2f U / %2$.2f U delivered</string>
     <string name="no_valid_basal_rate">No valid basal rate read from pump</string>
     <string name="limiting_iob">Limiting IOB to %1$.1f U because of %2$s</string>
     <string name="loop_disabled">LOOP DISABLED BY CONSTRAINTS</string>

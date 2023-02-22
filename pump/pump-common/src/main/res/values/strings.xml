@@ -17,6 +17,7 @@
     <string name="pump_status_ready">Ready</string>
     <string name="pump_status_busy">Busy</string>
     <string name="pump_status_suspended">Suspended</string>
+    <string name="pump_status_error_communicating_with_pump">Error Communicating With Pump</string>
     <string name="pump_status_executing_command">Executing Command</string>
 
     <!-- PumpCommon - History Group -->
@@ -64,7 +65,8 @@
     <string name="ble_error_failed_to_conn_to_ble_device">Failed To Connect To BLE Device</string>
     <string name="ble_error_encryption_failed">Encryption Failed</string>
     <string name="ble_error_pump_found_unbonded">Found not Bonded Pump</string>
-
+    <string name="ble_error_not_correct_pump">Device is not correct pump (%s)</string>
+    <string name="ble_error_pump_pair_invalid_pair_code">Pump Pair: Invalid Pair Code</string>
 
     <!-- Pump Error -->
     <string name="pump_settings_error_basal_profiles_not_enabled">Basal profiles/patterns setting is not enabled on pump. Enable it on the pump.</string>
@@ -72,6 +74,34 @@
     <string name="pump_settings_error_wrong_tbr_type_set">Wrong TBR type set on pump (must be %s).</string>
     <string name="pump_settings_error_wrong_max_bolus_set">Wrong Max Bolus set on Pump (must be %1$.2f).</string>
     <string name="pump_settings_error_wrong_max_basal_set">Wrong Max Basal set on Pump (must be %1$.2f).</string>
+
+    <!-- Bolus -->
+    <string name="pump_bolus_normal">Normal Bolus, Amount: %.2f U</string>
+    <string name="pump_bolus_extended">Extended Bolus, Amount: %.2f U, Duration: %d min</string>
+    <string name="pump_bolus_combined">Combined Bolus, Immediate: %.2f U, Extended: %.2f U, Duration: %d min</string>
+    <string name="pump_bolus_smb">SMB Bolus, Amount: %.2f U</string>
+    <string name="pump_bolus_prime">Prime Bolus, Amount: %.2f U</string>
+
+    <!-- Commands -->
+    <string name="pump_cmd_desc_get_settings">Get Settings</string>
+    <string name="pump_cmd_desc_get_firmware">Get Pump Firmware</string>
+    <string name="pump_cmd_desc_get_basal_profile">Get Basal Profile</string>
+    <string name="pump_cmd_desc_set_basal_profile">Set Basal Profile</string>
+    <string name="pump_cmd_desc_get_tbr">Get Temporary Basal</string>
+    <string name="pump_cmd_desc_cancel_tbr">Cancel Temporary Basal</string>
+    <string name="pump_cmd_desc_set_tbr">Set Temporary Basal</string>
+    <string name="pump_cmd_desc_set_bolus">Set Bolus</string>
+    <string name="pump_cmd_desc_get_bolus">Get Bolus</string>
+    <string name="pump_cmd_desc_cancel_bolus">Cancel Bolus</string>
+
+    <string name="pump_cmd_desc_get_remaining_insulin">Get Remaining Insulin</string>
+    <string name="pump_cmd_desc_get_battery_status">Get Battery Status</string>
+    <string name="pump_cmd_desc_get_time">Get Time</string>
+    <string name="pump_cmd_desc_set_time">Set Time</string>
+    <string name="pump_cmd_desc_get_pump_status">Get Pump Status</string>
+    <string name="pump_cmd_desc_get_history">Get History</string>
+    <string name="pump_cmd_desc_get_history_params">Get History %s</string>
+    <string name="pump_cmd_desc_custom">Custom command</string>
 
     <!-- Pump History -->
     <string name="pump_history_type">Type:</string>

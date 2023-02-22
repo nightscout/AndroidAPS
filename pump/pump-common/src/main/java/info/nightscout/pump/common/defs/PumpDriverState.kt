@@ -15,8 +15,10 @@ enum class PumpDriverState(var resourceId: Int) {
     Ready(R.string.pump_status_ready),
     Busy(R.string.pump_status_busy), //
     Suspended(R.string.pump_status_suspended), //
+    Sleeping(info.nightscout.pump.core.R.string.pump_status_sleeping),
     ExecutingCommand(R.string.pump_status_executing_command),
     Disconnecting(info.nightscout.shared.R.string.disconnecting),
+    ErrorCommunicatingWithPump(R.string.pump_status_error_communicating_with_pump),
     Disconnected(info.nightscout.core.ui.R.string.disconnected);
 
     fun isConnected(): Boolean = this == Connected || this == Initialized || this == Busy || this == Suspended

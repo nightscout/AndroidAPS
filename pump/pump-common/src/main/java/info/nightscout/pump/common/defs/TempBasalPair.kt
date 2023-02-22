@@ -9,6 +9,7 @@ open class TempBasalPair {
     @Expose var isPercent = false
     private var start: Long? = null
     private var end: Long? = null
+    var isActive: Boolean = false
 
     constructor()
     constructor(insulinRate: Double, isPercent: Boolean, durationMinutes: Int) {
