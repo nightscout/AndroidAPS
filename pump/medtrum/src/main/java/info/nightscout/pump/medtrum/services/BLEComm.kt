@@ -32,9 +32,9 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
-import info.nightscout.pump.medtrum.encryption.Crypt
 import info.nightscout.pump.medtrum.comm.WriteCommandPackets
 import info.nightscout.pump.medtrum.comm.ManufacturerData
+import info.nightscout.pump.medtrum.comm.ReadDataPacket
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventPumpStatusChanged
@@ -47,6 +47,14 @@ import java.util.UUID
 import java.util.Arrays
 import javax.inject.Inject
 import javax.inject.Singleton
+
+interface BLECommCallback {
+
+    open fun onBLEConnected() {}
+    open fun onNotification(notification: ByteArray) {}
+    open fun onIndication(indication: ByteArray) {}
+    open fun onSendMessageError(reason: String)
+}
 
 @Singleton
 class BLEComm @Inject internal constructor(
@@ -74,23 +82,28 @@ class BLEComm @Inject internal constructor(
         private const val NEEDS_ENABLE = 0x30
 
         private const val MANUFACTURER_ID = 18305
-        private const val COMMAND_AUTH_REQ: Byte = 5
     }
 
     private val handler =
         Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
     private val mBluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var mBluetoothGatt: BluetoothGatt? = null
-    private val mCrypt = Crypt()
 
     var isConnected = false
     var isConnecting = false
     private var uartWrite: BluetoothGattCharacteristic? = null
     private var uartRead: BluetoothGattCharacteristic? = null
 
-    private var mDeviceSN: Long = 0
-
+    // Read and write buffers
     private var mWritePackets = WriteCommandPackets()
+    private var mReadPacket: ReadDataPacket? = null
+
+    private var mDeviceSN: Long = 0
+    private var mCallback: BLECommCallback? = null
+
+    fun setCallback(callback: BLECommCallback?) {
+        this.mCallback = callback
+    }
 
     /** Connect flow: 1. Start scanning for our device (SN entered in settings) */
     @SuppressLint("MissingPermission")
@@ -225,14 +238,26 @@ class BLEComm @Inject internal constructor(
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicChanged")
-            // TODO: Make split between Notif and Indication
-            // Notif contains pump status and alarms
-            readDataParsing(characteristic.value)
+
+            val value = characteristic.getValue()
+            if (characteristic.getUuid() == UUID.fromString(READ_UUID)) {
+                mCallback?.onNotification(value)
+            } else if (characteristic.getUuid() == UUID.fromString(WRITE_UUID)) {
+                if (mReadPacket == null) {
+                    mReadPacket = ReadDataPacket(value)
+                } else {
+                    mReadPacket?.addData(value)
+                }
+                if (mReadPacket?.allDataReceived() == true) {
+                    mReadPacket = null
+                    mReadPacket?.getData()?.let { mCallback?.onIndication(it) }
+                }
+            }
         }
 
         override fun onCharacteristicWrite(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicWrite status = " + status)
-           
+
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 // Check if we need to finish our command!
                 synchronized(mWritePackets) {
@@ -242,7 +267,7 @@ class BLEComm @Inject internal constructor(
                     }
                 }
             } else {
-                // TODO: What to do here?
+                mCallback?.onSendMessageError("onCharacteristicWrite failure")
             }
         }
 
@@ -303,7 +328,10 @@ class BLEComm @Inject internal constructor(
             }
             if (notificationEnabled) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Notifications enabled!")
-                authorize()
+                /** Connect flow: 6. Connected */
+                mCallback?.onBLEConnected()
+                isConnected = true
+                isConnecting = false
             }
         }
     }
@@ -351,23 +379,6 @@ class BLEComm @Inject internal constructor(
         }
     }
 
-    private fun readDataParsing(receivedData: ByteArray) {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< readDataParsing " + Arrays.toString(receivedData))
-        // TODO Implement
-        // TODO place this at the correct place
-        /** Connect flow: 6. Authorized */
-        isConnected = true
-        isConnecting = false
-    }
-
-    private fun authorize() {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "Start auth!")
-        val role = 2 // Fixed to 2 for pump
-        val key = mCrypt.keyGen(mDeviceSN)
-        val commandData = byteArrayOf(COMMAND_AUTH_REQ) + byteArrayOf(role.toByte()) + 0.toByteArray(4) + key.toByteArray(4)
-        sendMessage(commandData)
-    }
-
     fun sendMessage(message: ByteArray) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage message = " + Arrays.toString(message))
         if (!mWritePackets.allPacketsConsumed()) {
@@ -381,6 +392,7 @@ class BLEComm @Inject internal constructor(
                 writeCharacteristic(uartWriteBTGattChar, value)
             } else {
                 aapsLogger.error(LTag.PUMPBTCOMM, "sendMessage error in writePacket!")
+                mCallback?.onSendMessageError("error in writePacket!")
             }
         }
     }

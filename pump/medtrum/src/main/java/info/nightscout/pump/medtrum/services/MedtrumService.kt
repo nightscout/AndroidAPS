@@ -23,6 +23,8 @@ import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.medtrum.MedtrumPlugin
+import info.nightscout.pump.medtrum.encryption.Crypt
+import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
@@ -40,12 +42,13 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.joda.time.DateTime
 import org.joda.time.DateTimeZone
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.min
 
-class MedtrumService : DaggerService() {
+class MedtrumService : DaggerService(), BLECommCallback {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var aapsLogger: AAPSLogger
@@ -65,11 +68,19 @@ class MedtrumService : DaggerService() {
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var dateUtil: DateUtil
 
+    companion object {
+        private const val COMMAND_AUTH_REQ: Byte = 5
+    }
+
     private val disposable = CompositeDisposable()
     private val mBinder: IBinder = LocalBinder()
+    private val mCrypt = Crypt()
+
+    private var mDeviceSN: Long = 0
 
     override fun onCreate() {
         super.onCreate()
+        bleComm.setCallback(this)
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
@@ -89,20 +100,18 @@ class MedtrumService : DaggerService() {
 
     fun connect(from: String, deviceSN: Long): Boolean {
         // TODO Check we might want to replace this with start scan?
+        mDeviceSN = deviceSN
         return bleComm.connect(from, deviceSN)
     }
 
     fun stopConnecting() {
+        // TODO proper way for this might need send commands etc
         bleComm.stopConnecting()
     }
 
     fun disconnect(from: String) {
+        // TODO proper way for this might need send commands etc
         bleComm.disconnect(from)
-    }
-
-    fun sendMessage(message: ByteArray) { // TODO Check what we use here?
-        // TODO
-        bleComm.sendMessage(message)
     }
 
     fun readPumpStatus() {
@@ -177,6 +186,35 @@ class MedtrumService : DaggerService() {
         if (!isConnected) return false
         // TODO
         return false
+    }
+
+    private fun authorize() {
+        aapsLogger.debug(LTag.PUMPCOMM, "Start auth!")
+        val role = 2 // Fixed to 2 for pump
+        val key = mCrypt.keyGen(mDeviceSN)
+        val commandData = byteArrayOf(COMMAND_AUTH_REQ) + byteArrayOf(role.toByte()) + 0.toByteArray(4) + key.toByteArray(4)
+        bleComm.sendMessage(commandData)
+    }
+
+    /** BLECommCallbacks */
+    override fun onBLEConnected() {
+        // TODO Replace by FSM Entry?
+        authorize()
+    }
+
+    override fun onNotification(notification: ByteArray) {
+        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onNotification" + notification.contentToString())
+        // TODO 
+    }
+
+    override fun onIndication(indication: ByteArray) {
+        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onIndication" + indication.contentToString())
+        // TODO 
+    }
+
+    override fun onSendMessageError(reason: String) {
+        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< error during send message " + reason)
+        // TODO 
     }
 
     /** Service stuff */
