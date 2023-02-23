@@ -9,7 +9,8 @@ class WriteCommandPacketsTest {
     fun Given14LongCommandExpectOnePacket() {
         val input = byteArrayOf(5, 2, 0, 0, 0, 0, -21, 57, -122, -56)
         val expect = byteArrayOf(14, 5, 0, 0, 2, 0, 0, 0, 0, -21, 57, -122, -56, -93, 0)
-        val cmdPackets = WriteCommandPackets(input)
+        val cmdPackets = WriteCommandPackets()
+        cmdPackets.setData(input)
         val output = cmdPackets.getNextPacket()
 
         assertEquals(expect.contentToString(), output.contentToString())
@@ -22,7 +23,8 @@ class WriteCommandPacketsTest {
         val expect2 = byteArrayOf(41, 18, 0, 2, 0, -96, 2, -16, 96, 2, 104, 33, 2, -32, -31, 1, -64, 3, 2, -3)
         val expect3 = byteArrayOf(41, 18, 0, 3, -20, 36, 2, 100, -123, 2, -125, -89)
 
-        val cmdPackets = WriteCommandPackets(input)
+        val cmdPackets = WriteCommandPackets()
+        cmdPackets.setData(input)
         val output1 = cmdPackets.getNextPacket()
         val output2 = cmdPackets.getNextPacket()
         val output3 = cmdPackets.getNextPacket()
@@ -34,7 +36,6 @@ class WriteCommandPacketsTest {
         assertEquals(expect3.contentToString(), output3.contentToString())
         assertNull(output4)
         assertEquals(true, cmdPackets.allPacketsConsumed())
-
     }
 
     @Test
@@ -45,7 +46,8 @@ class WriteCommandPacketsTest {
         val expect1 = byteArrayOf(5, 66, 0, 0, -25, 0)
         val expect2 = byteArrayOf(5, 99, 1, 0, 64, 0)
 
-        val cmdPackets = WriteCommandPackets(input1)
+        val cmdPackets = WriteCommandPackets()
+        cmdPackets.setData(input1)
 
         val output1 = cmdPackets.getNextPacket()
 
@@ -58,7 +60,7 @@ class WriteCommandPacketsTest {
     }
 
     @Test
-    fun GivenWriteIndexOverflowExpectWriteIndex1() {
+    fun GivenSequenceNumberOverflowExpectSequenceNumber1() {
         val input1 = byteArrayOf(55)
         val input2 = byteArrayOf(66)
         val input3 = byteArrayOf(99)
@@ -67,12 +69,12 @@ class WriteCommandPacketsTest {
         val expect2 = byteArrayOf(5, 66, -1, 0, 86, 0)
         val expect3 = byteArrayOf(5, 99, 1, 0, 64, 0)
 
-        val cmdPackets = WriteCommandPackets(byteArrayOf(0.toByte()))
+        val cmdPackets = WriteCommandPackets()
 
         // All this stuff to set the private field ^^
-        val writeCommandIndex = WriteCommandPackets::class.java.getDeclaredField("writeCommandIndex")
-        writeCommandIndex.isAccessible = true
-        writeCommandIndex.setInt(cmdPackets, 254)
+        val sequenceNumber = WriteCommandPackets::class.java.getDeclaredField("sequenceNumber")
+        sequenceNumber.isAccessible = true
+        sequenceNumber.setInt(cmdPackets, 254)
 
         cmdPackets.setData(input1)
         val output1 = cmdPackets.getNextPacket()

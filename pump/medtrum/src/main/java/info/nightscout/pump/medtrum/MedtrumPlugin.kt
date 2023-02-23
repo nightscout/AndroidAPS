@@ -90,6 +90,15 @@ class MedtrumPlugin @Inject constructor(
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventPreferenceChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ event ->
+                           if (event.isChanged(rh.gs(info.nightscout.pump.medtrum.R.string.key_snInput))) {
+                               pumpSync.connectNewPump()
+                               changePump()
+                           }
+                       }, fabricPrivacy::logException)
         changePump()
     }
 
@@ -113,13 +122,15 @@ class MedtrumPlugin @Inject constructor(
         }
     }
 
-    fun changePump() { // TODO: Call this on inputfield change?
+    fun changePump() {
+        aapsLogger.debug(LTag.PUMP, "changePump: called!")
         try {
             mDeviceSN = sp.getString(info.nightscout.pump.medtrum.R.string.key_snInput, " ").toLong(radix = 16)
-            commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.device_changed), null)
         } catch (e: NumberFormatException) {
-            aapsLogger.debug(LTag.PUMP, "changePump: invalid input!")
+            aapsLogger.debug(LTag.PUMP, "changePump: Invalid input!")
         }
+        // TODO: add medtrumPump.reset()
+        commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.device_changed), null)
     }
 
     override fun isInitialized(): Boolean {
@@ -148,7 +159,7 @@ class MedtrumPlugin @Inject constructor(
         if (medtrumService != null && mDeviceSN != 0.toLong()) {
             aapsLogger.debug(LTag.PUMP, "Medtrum connect - Attempt connection!")
             val success = medtrumService?.connect(reason, mDeviceSN) ?: false
-            if (!success) ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_supported_or_not_paired)            
+            if (!success) ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_supported_or_not_paired)
         }
     }
 
@@ -162,7 +173,7 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override fun getPumpStatus(reason: String) {
-        // TODO
+        medtrumService?.readPumpStatus()
     }
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {

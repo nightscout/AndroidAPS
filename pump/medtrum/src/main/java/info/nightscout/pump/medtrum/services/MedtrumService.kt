@@ -179,13 +179,7 @@ class MedtrumService : DaggerService() {
         return false
     }
 
-    fun loadHistory(type: Byte): PumpEnactResult {
-        val result = PumpEnactResult(injector)
-        if (!isConnected) return result
-        // TODO
-        return result
-    }
-
+    /** Service stuff */
     inner class LocalBinder : Binder() {
         val serviceInstance: MedtrumService
             get() = this@MedtrumService
