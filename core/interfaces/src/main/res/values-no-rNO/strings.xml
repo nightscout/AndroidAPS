@@ -4,10 +4,10 @@
     <string name="metadata_label_format">Filformat</string>
     <string name="metadata_label_created_at">Opprettet den</string>
     <string name="metadata_label_aaps_version">AAPS versjon</string>
-    <string name="metadata_label_aaps_flavour">Bygge variant</string>
+    <string name="metadata_label_aaps_flavour">Byggvariant</string>
     <string name="metadata_label_device_name">Eksporterer enhetens pasientnavn</string>
     <string name="metadata_label_device_model">Eksportere enhetsmodell</string>
-    <string name="metadata_label_encryption">Fil kryptering</string>
+    <string name="metadata_label_encryption">Filkryptering</string>
     <string name="metadata_format_new">Nytt krypteringsformat</string>
     <string name="metadata_format_debug">Nytt feilsøkingsformat (ukryptert)</string>
     <string name="metadata_format_other">Ukjent eksportformat</string>
