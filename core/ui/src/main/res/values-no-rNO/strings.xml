@@ -357,11 +357,11 @@
     <string name="uel_loop_removed">LOOP FJERNET</string>
     <string name="uel_other">ANNET</string>
     <!-- HardLimits -->
-    <string name="profile_low_target">Profil lavt blodsukkermål</string>
-    <string name="profile_high_target">Profil høyt blodsukker</string>
-    <string name="temp_target_low_target">Midlertidig mål nedre grense</string>
-    <string name="temp_target_high_target">Midlertidig mål øvre grense</string>
-    <string name="temp_target_value">Temp target målverdi</string>
+    <string name="profile_low_target">Profil lavt mål</string>
+    <string name="profile_high_target">Profil høyt mål</string>
+    <string name="temp_target_low_target">Nedre grense for midl. mål</string>
+    <string name="temp_target_high_target">Øvre grense for midl. mål</string>
+    <string name="temp_target_value">Midl. målverdi</string>
     <string name="profile_dia">Profil DIA verdi</string>
     <string name="profile_sensitivity_value">Profil insulinfølsomhet</string>
     <string name="profile_max_daily_basal_value">Maksimal profil basalverdi</string>
@@ -373,7 +373,7 @@
     <string name="basal_value">Basalverdi</string>
     <!-- Command Queue + readStatus reasons -->
     <string name="bolus_u_min">BOLUS %1$.2f E</string>
-    <string name="carbs_g">CARBS %1$d g</string>
+    <string name="carbs_g">KARBO %1$d g</string>
     <string name="extended_bolus_u_min">UTVIDET BOLUS %1$.2f E %2$d min</string>
     <string name="load_events">LAST INN HENDELSER</string>
     <string name="load_history">LAST INN HENDELSESLOGG %1$d</string>
@@ -383,8 +383,8 @@
     <string name="smb_bolus_u">SMB BOLUS %1$.2f E</string>
     <string name="start_pump">START PUMPE</string>
     <string name="stop_pump">STOPP PUMPE</string>
-    <string name="temp_basal_absolute">TEMP BASAL %1$.2f E/t %2$d min</string>
-    <string name="temp_basal_percent">TEMP BASAL %1$d E/t %2$d min</string>
+    <string name="temp_basal_absolute">MIDL. BASAL %1$.2f E/t %2$d min</string>
+    <string name="temp_basal_percent">MIDL. BASAL %1$d E/t %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT SET TBR OVER NOTIFIKASJON</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">READSTATUS %1$s</string>
     <string name="keepalive_status_outdated" comment="26 characters max for translation">Oppretthold tilkobling. Status er ikke oppdatert.</string>
@@ -448,19 +448,19 @@
     <string name="urgent_alarm">Kritisk alarm</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
-    <string name="bolus_advisor">Bolus veiviser</string>
-    <string name="bolus_advisor_message">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korreksjons bolus nå og få en påminnelse om når det er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke måltids veiviseren igjen når vi gir deg en påminnelse.</string>
+    <string name="bolus_advisor">Bolusveiviser</string>
+    <string name="bolus_advisor_message">Du har høyt blodsukker. I stedet for å spise nå er det bedre å utsette det til du har et lavere blodsukker. Ønsker du å sette en korreksjons bolus nå og få en påminnelse om når det er på tide å spise? I dette tilfellet vil ingen karbohydrater registreres nå, og du må bruke måltidsveiviseren igjen når vi gir deg en påminnelse.</string>
     <string name="cobvsiob">COB vs IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Advarsel: Treg KH absorpsjon oppdaget: %2$d%% av tiden. Dobbeltsjekk din beregning. COB can være misvisende og du risikerer å få for mye insulin !!!!!</font>]]></string>
-    <string name="partialboluswizard">Doser denne delen av bolus wizard resultat [%]</string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!! Advarsel: Oppdaget treg absorpsjon av karbohydrater: %2$d%% av tiden. Dobbeltsjekk din beregning. COB kan være misvisende og du risikerer å få for mye insulin !!</font>]]></string>
+    <string name="partialboluswizard">Doser denne delen av resultatet fra bolusveiviseren [%]</string>
     <string name="bolus_constraint_applied_warn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
     <string name="no_action_selected">Ingen handling valgt. Ingenting endres</string>
-    <string name="wizard_no_actual_bg">Mangler nylige BS verdier til å bruke i beregninger!</string>
+    <string name="wizard_no_actual_bg">Mangler nylige BS-verdier til å gjøre beregninger!</string>
     <string name="wizard_no_active_profile">Det er ikke angitt noen aktiv profil!</string>
-    <string name="wizard_no_cob">Ukjent COB! BS verdier mangler eller nylig oppstart av appen?</string>
-    <string name="wizard_carbs_constraint">Brudd på karbo begrensninger!</string>
+    <string name="wizard_no_cob">Ukjent COB! BS-verdier mangler eller nylig oppstart av appen?</string>
+    <string name="wizard_carbs_constraint">Brudd på karbo-begrensninger!</string>
     <string name="wizard_explain_calc">Kalk (IK: %1$.1f, ISF: %2$.1f)</string>
     <string name="wizard_explain_carbs">Karbo: %1$.2fE</string>
     <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fE</string>
@@ -492,31 +492,31 @@
     <string name="last_connection_label">Siste tilkobling</string>
     <string name="last_bolus_label">Siste bolus</string>
     <string name="base_basal_rate_label">Profilens basaldose</string>
-    <string name="tempbasal_label">Temp basal</string>
+    <string name="tempbasal_label">Midl. basal</string>
     <string name="extended_bolus_label">Forlenget bolus</string>
     <string name="serial_number">Serienummer</string>
     <string name="disconnected">Frakoblet</string>
-    <string name="connecting">Tilkobler</string>
+    <string name="connecting">Kobler til</string>
     <string name="clicked_connect_to_pump" comment="26 characters max for translation">Trykket på koble til pumpen</string>
     <string name="reservoir_value">%1$.0f / %2$d E</string>
     <string name="daily_units">Daglige enheter</string>
-    <string name="pump_icon">Pumpe ikon</string>
+    <string name="pump_icon">Pumpeikon</string>
     <string name="view_profile">Vis profil</string>
-    <string name="pump_history">Pumpe historikk</string>
+    <string name="pump_history">Pumpehistorikk</string>
     <string name="stats">Statistikk</string>
     <string name="pump_driver_change" comment="26 characters max for translation">Endre pumpedriver.</string>
     <string name="device_changed" comment="26 characters max for translation">Enheten er endret</string>
     <string name="bolus_ok" comment="26 characters max for translation">Bolus OK</string>
-    <string name="temp_basal_delivery_error">Feil ved levering av Temp Basal</string>
+    <string name="temp_basal_delivery_error">Feil ved levering av midl. basal</string>
     <string name="not_set_short">Ikke angitt</string>
     <string name="pump_busy">Pumpen er opptatt</string>
     <string name="connection_error">Tilkoblingsfeil til pumpe</string>
     <string name="reading_pump_history">Leser pumpehistorikk</string>
     <string name="password_cleared">Passordet er fjernet!</string>
     <string name="pairing">Kobler sammen</string>
-    <string name="initializing">Initialiserer ...</string>
+    <string name="initializing">Initialiserer...</string>
     <!--    Constraints-->
-    <string name="limitingbasalratio">Begrenser maks basal dose til %1$.2f E/t på grunn av %2$s</string>
+    <string name="limitingbasalratio">Begrenser maks basaldose til %1$.2f E/t på grunn av %2$s</string>
     <string name="pumplimit">pumpebegrensning</string>
     <string name="limitingpercentrate">Begrenser maks prosentsats til %1$d%% på grunn av %2$s</string>
     <string name="itmustbepositivevalue">det på være positiv verdi</string>
@@ -541,7 +541,7 @@
     <!-- datetime layout -->
     <string name="event_time_label">Tidspunkt for hendelse</string>
     <!-- BluetoothDevicePreference -->
-    <string name="need_connect_permission">Appen trenger bluetooth tillatelse</string>
+    <string name="need_connect_permission">Appen trenger bluetooth-tillatelse</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Brukerforespørsel</string>
     <string name="pump_paired" comment="26 characters max for translation">Pumpe sammenkoblet</string>
@@ -556,8 +556,8 @@
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Mangler SMS-tillatelse</string>
     <!-- About -->
-    <string name="cta_dont_kill_my_app_info">Ikke terminer min app?</string>
-    <string name="fabric_upload_disabled">Opplast av krasj logger er deaktivert!</string>
+    <string name="cta_dont_kill_my_app_info">Hvordan hindre at appen stenges?</string>
+    <string name="fabric_upload_disabled">Opplast av krasjlogger er deaktivert!</string>
     <string name="about_link_urls">\n\nDokumentasjon:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
