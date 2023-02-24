@@ -170,18 +170,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
         return false
     }
 
-    fun extendedBolus(insulin: Double, durationInHalfHours: Int): Boolean {
-        if (!isConnected) return false
-        // TODO
-        return false
-    }
-
-    fun extendedBolusStop(): Boolean {
-        if (!isConnected) return false
-        // TODO
-        return false
-    }
-
     fun updateBasalsInPump(profile: Profile): Boolean {
         if (!isConnected) return false
         // TODO

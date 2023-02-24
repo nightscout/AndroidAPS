@@ -123,7 +123,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
     @Inject lateinit var wearPlugin: WearPlugin
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
     @Inject lateinit var eopatchPumpPlugin: EopatchPumpPlugin
-    @Inject lateinit var MedtrumPlugin: MedtrumPlugin
+    @Inject lateinit var medtrumPlugin: MedtrumPlugin
 
     @Inject lateinit var passwordCheck: PasswordCheck
     @Inject lateinit var nsSettingStatus: NSSettingsStatus
@@ -214,7 +214,7 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
             addPreferencesFromResourceIfEnabled(medtronicPumpPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(diaconnG8Plugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(eopatchPumpPlugin, rootKey, config.PUMPDRIVERS)
-            addPreferencesFromResourceIfEnabled(MedtrumPlugin, rootKey, config.PUMPDRIVERS)
+            addPreferencesFromResourceIfEnabled(medtrumPlugin, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResource(R.xml.pref_pump, rootKey, config.PUMPDRIVERS)
             addPreferencesFromResourceIfEnabled(virtualPumpPlugin, rootKey)
             addPreferencesFromResourceIfEnabled(insulinOrefFreePeakPlugin, rootKey)
