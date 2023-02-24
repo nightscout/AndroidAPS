@@ -44,6 +44,7 @@
     <string name="patch_connect_new_step">2/6</string>
     <string name="patch_remove_needle_cap">Preparazione per il fissaggio della patch</string>
     <string name="patch_remove_needle_cap_step">3/6</string>
+    <string name="patch_remove_needle_cap_desc_1">Rimuovi il nastro adesivo e poi tocca \'Avanti\'.</string>
     <string name="patch_remove_protection_tape">Fissaggio della patch</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
     <string name="patch_remove_protection_tape_desc_2">Controlla il sito di infusione e quindi tocca \'Avvia controllo di sicurezza\'.</string>
