@@ -9,6 +9,7 @@
     <string name="objectives_0_gate">Verifica che la glicemia sia disponibile su Nightscout e che i dati sull\'insulina del micro siano in fase di caricamento</string>
     <string name="objectives_openloop_objective">Avvio in un loop aperto</string>
     <string name="objectives_openloop_gate">Esegui l\'applicazione in modalità loop aperto per alcuni giorni. Attiva manualmente il maggior numero possibile di basali temporanee suggerite. Imposta e usa i target temporanei, anche quelli predefiniti (ad esempio per l\'attività fisica o il trattamento dell\'ipoglicemia con carboidrati)</string>
+    <string name="objectives_openloop_learned">Il loop aperto può essere usato per ricevere consigli se non hai un micro compatibile o non sei pronto a usare il loop chiuso.</string>
     <string name="objectives_maxbasal_objective">Comprensione del tuo loop aperto, incluse le relative raccomandazioni sulle basali temporanee</string>
     <string name="objectives_maxbasal_gate">Sulla base di tale esperienza, decidi quale dovrebbe essere il valore di \'max basale\' e impostalo sul microinfusore e nelle preferenze</string>
     <string name="objectives_maxiobzero_objective">Avvio della chiusura del loop con Low Glucose Suspend</string>
@@ -36,6 +37,12 @@
     <string name="objectives_exam_objective">Dai prova della tua conoscenza</string>
     <string name="objectives_exam_gate">Studia, leggi le domande e rifletti. Ti vengono fornite quattro possibili risposte per ogni domanda. Ci può essere più di una risposta corretta. Seleziona tutte quelle che sono corrette e poi vai su VERIFICA.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS può essere eseguito offline.</string>
+    <string name="objectives_exam_learned_noisycgm">Quando non puoi fidarti dei valori CGM non dovresti usare il loop senza supervisione.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS deve sapere che il micro non è connesso per calcolare IOB correttamente.</string>
+    <string name="objectives_exam_learned_objectives">I tuoi progressi negli Obiettivi sono memorizzati insieme alle altre impostazioni e dovrebbe essere eseguito il backup.</string>
+    <string name="objectives_exam_learned_breadgrams">Sono ammessi solo grammi per l\'inserimento di carboidrati.</string>
+    <string name="objectives_exam_learned_ecarbs">E-carbs è un sostituto del bolo esteso nel mondo dei microinfusori.</string>
+    <string name="objectives_exam_learned_nsclient">Monitoraggio e controllo remoto sono possibili, ma non tutte le funzionalità devono essere disponibili da remoto.</string>
     <string name="answerdisabledto">Risposta disabilitata fino a: %1$s</string>
     <string name="wronganswer">Risposta errata!</string>
     <string name="unfinshed_button">Prossimo N.C.</string>
