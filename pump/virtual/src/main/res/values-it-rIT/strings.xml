@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Tipo micro virtuale</string>
     <string name="virtual_pump_definition">Definizione micro</string>
     <string name="virtual_pump_pump_def">Bolo: Step=%1$s\nBolo Esteso: [Step=%2$s, Durata=%3$smin-%4$sh]\nBasale: Step=%5$s\nTBR: %6$s (di %7$s), Durata=%8$smin-%9$sh\n%10$s</string>
     <string name="virtual_pump_shortname">MICROV</string>
