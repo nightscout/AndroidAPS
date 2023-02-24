@@ -573,7 +573,7 @@ class BLEComm @Inject internal constructor(
                 disconnect("Non existing pairing key")
             }
 
-            if (danaPump.hwModel == 0x09) {
+            if (danaPump.hwModel == 0x09 || danaPump.hwModel == 0x0A) {
                 bleEncryption.setBle5Key(storedPairingKey.encodeToByteArray())
                 aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + "ENCRYPTION__PUMP_CHECK BLE5 (OK)" + " " + DanaRSPacket.toHexString(decryptedBuffer))
                 // Dana-i BLE5 Pump
