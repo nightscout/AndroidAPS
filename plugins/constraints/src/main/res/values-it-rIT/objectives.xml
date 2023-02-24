@@ -37,6 +37,9 @@
     <string name="objectives_exam_objective">Dai prova della tua conoscenza</string>
     <string name="objectives_exam_gate">Studia, leggi le domande e rifletti. Ti vengono fornite quattro possibili risposte per ogni domanda. Ci può essere più di una risposta corretta. Seleziona tutte quelle che sono corrette e poi vai su VERIFICA.</string>
     <string name="objectives_exam_learned_prerequisites2">AAPS può essere eseguito offline.</string>
+    <string name="objectives_exam_learned_isf">Hai imparato il significato del valore ISF e come influisce sulla quantità di insulina utilizzata per la correzione della glicemia.</string>
+    <string name="objectives_exam_learned_ic">Hai imparato il significato del valore IC e come influisce sulla quantità di insulina necessaria per \"coprire\" i CHO.</string>
+    <string name="objectives_exam_learned_profileswitchtime">Usando il timeshift nel cambio profilo puoi adattare il profilo circadiano a irregolarità come il risveglio tardivo.</string>
     <string name="objectives_exam_learned_noisycgm">Quando non puoi fidarti dei valori CGM non dovresti usare il loop senza supervisione.</string>
     <string name="objectives_exam_learned_pumpdisconnect">AAPS deve sapere che il micro non è connesso per calcolare IOB correttamente.</string>
     <string name="objectives_exam_learned_objectives">I tuoi progressi negli Obiettivi sono memorizzati insieme alle altre impostazioni e dovrebbe essere eseguito il backup.</string>
