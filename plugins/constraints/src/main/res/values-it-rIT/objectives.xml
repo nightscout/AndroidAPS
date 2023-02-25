@@ -53,6 +53,7 @@
     <string name="objectives_exam_learned_insulin">Far sapere quale insulina è nella micro è necessario perché influisce sul calcolo di IOB.</string>
     <string name="objectives_exam_learned_sensitivity">Il rilevamento della sensibilità fa parte dell\'algoritmo che consente di adattare il dosaggio di insulina a diverse situazioni.</string>
     <string name="objectives_exam_learned_objectives">I tuoi progressi negli Obiettivi sono memorizzati insieme alle altre impostazioni e dovrebbe essere eseguito il backup.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Se hai fatto inserimenti errati in AAPS o non corrispondenti alla realtà, risolvi al più presto. Gli errori potrebbero portare a sovradosaggio. AAPS deve essere sempre informato nel migliore modo possibile riguardo carboidrati, insulina ecc.</string>
     <string name="objectives_exam_learned_breadgrams">Sono ammessi solo grammi per l\'inserimento di carboidrati.</string>
     <string name="objectives_exam_learned_ecarbs">E-carbs è un sostituto del bolo esteso nel mondo dei microinfusori.</string>
     <string name="objectives_exam_learned_nsclient">Monitoraggio e controllo remoto sono possibili, ma non tutte le funzionalità devono essere disponibili da remoto.</string>
