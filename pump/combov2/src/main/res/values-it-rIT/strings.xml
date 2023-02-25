@@ -67,8 +67,10 @@
     <string name="combov2_cannot_access_pump_data">Impossibile accedere ai dati del micro; il micro deve essere associato di nuovo</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min rimanenti)</string>
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (meno di 1 minuto rimanente)</string>
+    <string name="combov2_load_tdds_cancelled">Caricamento TDD annullato</string>
     <string name="combov2_battery_low_warning">Livello batteria basso</string>
     <string name="combov2_setting_tbr_failed">Impostazione TBR fallita</string>
+    <string name="combov2_pair_with_pump_summary">Associa AndroidAPS e Android con un micro Accu-Chek Combo attualmente non associato</string>
     <string name="combov2_connection_error">Errore connessione: %1$s</string>
     <string name="combov2_short_status_last_connection">Ultima conn.: %1$d min fa</string>
     <string name="combov2_short_status_alert">Avviso: %s</string>
