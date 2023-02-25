@@ -21,6 +21,7 @@
     <string name="a11y_bg_quality_recalculated">ricalcolato</string>
     <string name="a11y_bg_quality_doubles">doppi caricamenti</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">Limitazione bolo esteso a %1$.1f U a causa di: %2$s</string>
     <string name="limitingcarbs">Limitazione carboidrati a %1$d g a causa di: %2$s</string>
     <string name="pumpisnottempbasalcapable">Micro non in grado di impostare la basale temporanea</string>
     <string name="closedmodedisabledinpreferences">Modalità loop chiuso disabilitata nelle preferenze</string>
