@@ -20,6 +20,7 @@
     <string name="bg_too_close">BG troppo vicino:\n%1$s\n%2$s</string>
     <string name="a11y_bg_quality_recalculated">ricalcolato</string>
     <string name="a11y_bg_quality_doubles">doppi caricamenti</string>
+    <string name="a11y_bg_quality_flat">Dati piatti. Considerati errati</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Limitazione bolo esteso a %1$.1f U a causa di: %2$s</string>
     <string name="limitingcarbs">Limitazione carboidrati a %1$d g a causa di: %2$s</string>
