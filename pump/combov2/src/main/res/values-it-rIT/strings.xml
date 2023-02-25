@@ -41,6 +41,8 @@
     <string name="combov2_pairing_finishing">Fine associazione</string>
     <string name="combov2_no_connection_for_n_mins">Nessuna connessione per %1$d minuti</string>
     <string name="combov2_less_than_one_minute_ago">Meno di un minuto fa</string>
+    <string name="combov2_setting_current_pump_time">Impostazione ora corrente del micro</string>
+    <string name="combov2_setting_current_pump_date">Impostazione data corrente del micro</string>
     <string name="combov2_not_initialized">Non inizializzato</string>
     <string name="combov2_checking_pump">Controllo micro</string>
     <string name="combov2_ready">Pronto</string>
@@ -51,7 +53,12 @@
     <string name="combov2_setting_basal_profile_cmddesc">Impostazione profilo basale</string>
     <string name="combov2_setting_tbr_cmddesc">Impostazione TBR %1$d%% per %2$d minuti</string>
     <string name="combov2_delivering_bolus_cmddesc">Erogazione bolo di %1$.1f U</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Recupero storico TDD</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Aggiornamento data e ora del micro</string>
+    <string name="combov2_updating_pump_status_cmddesc">Aggiornamento stato micro</string>
     <string name="combov2_pairing_pin_failure">Il PIN non ha funzionato. Controlla se c\'è stato un errore ti battitura. Se continua ad accadere, annulla e riprova l\'associazione.</string>
+    <string name="combov2_discovery_duration">Durata ricerca (in secondi)</string>
+    <string name="combov2_verbose_logging">Abilita log verboso del Combo</string>
     <string name="combov2_getting_basal_profile">Ricezione profilo basale; %1$d record letto(i)</string>
     <string name="combov2_insufficient_insulin_in_reservoir">Insulina insufficiente nel serbatoio</string>
     <string name="combov2_bolus_cancelled">Bolo cancellato</string>
@@ -62,14 +69,18 @@
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (meno di 1 minuto rimanente)</string>
     <string name="combov2_battery_low_warning">Livello batteria basso</string>
     <string name="combov2_setting_tbr_failed">Impostazione TBR fallita</string>
+    <string name="combov2_connection_error">Errore connessione: %1$s</string>
     <string name="combov2_short_status_last_connection">Ultima conn.: %1$d min fa</string>
     <string name="combov2_short_status_alert">Avviso: %s</string>
+    <string name="combov2_short_status_last_bolus">UltimoBolo: %1$sU @ %2$s</string>
     <string name="combov2_short_status_temp_basal">Temp: %s</string>
     <string name="combov2_short_status_reservoir">Serb: %dU</string>
     <string name="combov2_short_status_battery_state_empty">vuoto</string>
     <string name="combov2_short_status_battery_state_low">basso</string>
     <string name="combov2_short_status_battery_state_full">pieno</string>
     <string name="combov2_short_status_battery_state">Batt: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Rileva e inserisci automaticamente il cambio serbatoio di insulina</string>
+    <string name="combov2_automatic_battery_entry">Rileva e inserisci automaticamente il cambio batteria</string>
     <string name="combov2_note_reservoir_change">Cambio serbatoio insulina inserito automaticamente dal driver combov2</string>
     <string name="combov2_note_battery_change">Cambio batteria inserito automaticamente dal driver combov2</string>
     <string name="combov2_timezone_changed">Fuso orario cambiato</string>
@@ -77,4 +88,5 @@
     <string name="combov2_dst_started">Ora legale (DST) iniziata</string>
     <string name="combov2_dst_ended">Ora legale (DST) terminata</string>
     <string name="combov2_go_back">Torna indietro</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Impossibile eseguire l\'associazione perché il driver non è inizializzato. Questo accade tipicamente perché i permessi Bluetooth necessari non sono stati concessi. Torna indietro, concedi i permessi Bluetooth, quindi riprova ad associare.</string>
 </resources>
