@@ -74,6 +74,8 @@
     <string name="ns_alarm_urgent_stale_data_value_label">Soglia dati non aggiornati da molto tempo [min]</string>
     <string name="ns_log_app_started_event">Registra l\'avvio dell\'app in NS</string>
     <string name="copy_existing_values">Copiare impostazioni NS (se esiste)?</string>
+    <string name="ns_use_ws_title">Connetti a websocket</string>
+    <string name="ns_use_ws_summary">Abilitare significa: aggiornamenti più veloci, ricevere allarmi e annunci e un maggiore consumo di batteria simile a v1. Tutti gli altri caricatori di NS devono utilizzare il protocollo v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Il tuo nome utente per l\'accesso a Tidepool, generalmente il tuo indirizzo email</string>
     <string name="title_tidepool_username">Nome utente</string>
@@ -105,8 +107,11 @@
     <string name="xdrip_status_detailed_iob_summary">Dividi IOB in bolo e basale sulla watchface</string>
     <string name="xdrip_status_show_bgi_title">Mostra BGI</string>
     <string name="xdrip_status_show_bgi_summary">Aggiungi BGI alla statusline</string>
+    <string name="xdrip_status_settings">xDrip+ statusline (advanced)</string>
     <string name="disabled_loop">Loop disabilitato</string>
+    <string name="xdrip_send_status_title">Invia statusline a xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ non installato</string>
     <string name="calibration_sent">Calibrazione inviata a xDrip+</string>
+    <string name="xdrip_local_broadcasts_title">Abilita trasmissioni a xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>
