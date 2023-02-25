@@ -6,6 +6,7 @@
     <string name="category_alerts">Avvisi</string>
     <string name="low_reservoir">Avvisi livello serbatoio basso</string>
     <string name="patch_expiration_reminders">Promemoria scadenza patch</string>
+    <string name="patch_buzzer_reminders">Promemoria buzzer della patch</string>
     <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">Stato BLE</string>
     <string name="eopatch_serial_number">Numero seriale</string>
@@ -16,6 +17,8 @@
     <string name="eopatch_base_basal_rate">Velocità basale originale</string>
     <string name="eopatch_temp_basal_rate">Velocità basale temporanea</string>
     <string name="eopatch_total_delivered">Totale erogato</string>
+    <string name="invalid_basal_rate">La basale del profilo è inferiore a 0.05 U/h. EOPatch ha un’unità di iniezione minima di 0.05U. Riprova dopo aver impostato il profilo a più dell\'unità di iniezione minima.</string>
+    <string name="no_profile_selected">Nessun profilo selezionato. Seleziona un profilo e riprova.</string>
     <string name="symbol_day">giorno</string>
     <string name="symbol_plus">+</string>
     <string name="symbol_minus">-</string>
@@ -24,6 +27,7 @@
     <string name="time_1hr_30min">1 hr 30 min</string>
     <string name="time_2hr">2 hr</string>
     <string name="all_blank">\u0020</string>
+    <string name="patch_safe_deactivation_desc">Per passare a una nuova patch, la patch corrente deve essere scartata. Tutta l\'erogazione di insulina dalla patch verrà annullata.</string>
     <string name="patch_discard_complete_title">Lo scarto della patch è completato.</string>
     <string name="patch_discard_complete_desc">La patch è stata disattivata.\nScartala.\nRimuovi la patch attaccata al tuo corpo.</string>
     <string name="patch_change_confirm_bolus_is_active_desc">Un bolo è in erogazione proprio adesso. Vuoi davvero annullare l\'erogazione di insulina e scartare la patch?</string>
@@ -39,6 +43,8 @@
     <string name="patch_comm_error_during_discard_desc_1">Per la normale disattivazione, tocca \'Riprova\'.</string>
     <string name="patch_comm_error_during_discard_desc_2">Per la disattivazione unilaterale, tocca \'Scarta\'.</string>
     <string name="patch_manually_turning_off_alarm_title">Disattivazione manuale allarme patch</string>
+    <string name="patch_manually_turning_off_alarm_desc_1">Se disattivato unilateralmente durante un errore di comunicazione, il BIP di allarme dalla patch potrebbe non arrestarsi.</string>
+    <string name="patch_manually_turning_off_alarm_desc_2">In questo caso, puoi fermarlo completamente colpendo la porta di rilascio manuale dell\'allarme sulla patch come di seguito:</string>
     <string name="patch_manually_turning_off_alarm_step_1">1. Rimuovi la patch dal corpo e stacca il nastro adesivo.</string>
     <string name="patch_manually_turning_off_alarm_step_2">2. Usa una clip, colpisci con forza il foro accanto alla porta di riempimento dell\'insulina.</string>
     <string name="patch_wake_up">Riempimento insulina</string>
@@ -69,6 +75,7 @@
     <string name="patch_rotate_knob_desc_2">Controlla se c\'è 1 BIP e quindi tocca \'Avanti\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Controlla se c\'è 1 BIP e quindi tocca \'Riprova\'.</string>
     <string name="patch_basal_schedule">Attivazione patch completata!</string>
+    <string name="patch_basal_schedule_desc_1">Il programma \'%1$s\' è stato abilitato.</string>
     <string name="patch_basal_schedule_desc_2">Avvisa quando la patch è vicina alla scadenza.\nCambia il promemoria se necessario.</string>
     <string name="patch_expiration_reminder_setting_title">Promemoria scadenza patch</string>
     <string name="patch_activate_reminder_title">Promemoria attivazione patch</string>
