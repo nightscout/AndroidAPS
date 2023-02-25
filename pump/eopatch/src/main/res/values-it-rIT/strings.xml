@@ -64,6 +64,7 @@
     <string name="patch_remove_needle_cap_desc_3">[Caution2] Se la patch è bagnata o sporca, o il suo nastro adesivo è piegato, tocca \'Scarta\'.</string>
     <string name="patch_remove_protection_tape">Fissaggio della patch</string>
     <string name="patch_remove_protection_tape_step">4/6</string>
+    <string name="patch_remove_protection_tape_desc_1">Pulisci e asciuga il sito di applicazione, quindi attacca la patch alla pelle.</string>
     <string name="patch_remove_protection_tape_desc_2">Controlla il sito di infusione e quindi tocca \'Avvia controllo di sicurezza\'.</string>
     <string name="patch_start_safety_check">Avvia controllo di sicurezza</string>
     <string name="patch_safety_check">Controllo di sicurezza…</string>
@@ -72,6 +73,7 @@
     <string name="patch_safety_check_desc_2">[Caution] Per un uso sicuro, non rimuovere la leva di azionamento dell\'ago fino al completamento del controllo di sicurezza!</string>
     <string name="patch_rotate_knob">Inserimento dell’ago</string>
     <string name="patch_rotate_knob_step">6/6</string>
+    <string name="patch_rotate_knob_desc_1">Ruota la leva di azionamento dell\'ago a più di 100° per inserire l’ago e quindi ruota completamente per rimuoverlo</string>
     <string name="patch_rotate_knob_desc_2">Controlla se c\'è 1 BIP e quindi tocca \'Avanti\'.</string>
     <string name="patch_rotate_knob_desc_2_needle_insertion_error">Controlla se c\'è 1 BIP e quindi tocca \'Riprova\'.</string>
     <string name="patch_basal_schedule">Attivazione patch completata!</string>
@@ -122,4 +124,5 @@
     <string name="patch_connection_fail">Riprova dopo il controllo comunicazione patch.</string>
     <string name="string_pause_failed">Sospensione fallita.</string>
     <string name="string_resume_failed">Ripresa fallita.</string>
+    <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, d MMM, yyyy hh:mm a</string>
 </resources>
