@@ -92,6 +92,9 @@
     <string name="patch_cancel_pairing">Annulla associazione</string>
     <string name="symbol_days">giorni</string>
     <string name="all_dose_unit">&#160;U</string>
+    <string name="insulin_suspend_msg1">Al momento della sospensione, il bolo &amp; la basale temporanea attualmente in erogazione verranno cancellati. \n\nVelocità : %1$s U/hr\nTempo rimanente  : %2$s\n&amp; Insulin to go : %3$.2f U</string>
+    <string name="insulin_suspend_msg2">Al momento della sospensione, il bolo attualmente in erogazione verrà cancellato. \n\nInsulin to go : %1$.2f U</string>
+    <string name="insulin_suspend_msg3">Al momento della sospensione, la basale temporanea attualmente in erogazione verrà cancellata. \n\nVelocità : %1$s U/hr\nTempo rimanente  : %2$s</string>
     <string name="insulin_suspend_msg4">L\'erogazione di insulina sarà sospesa.</string>
     <string name="string_change_patch">Scarta/Cambia patch</string>
     <string name="string_activate_patch">Attiva patch</string>
