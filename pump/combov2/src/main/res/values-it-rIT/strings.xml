@@ -71,9 +71,11 @@
     <string name="combov2_bolus_delivery_failed">Erogazione bolo fallita. Sembra che nessun bolo sia stato erogato. Per sicurezza, controlla il micro per evitare un doppio bolo e se è tutto ok, erogalo di nuovo. Come protezione da eventuali \"bug\", i boli non vengono ripetuti automaticamente.</string>
     <string name="combov2_bolus_not_delivered">Bolo non erogato</string>
     <string name="combov2_cannot_access_pump_data">Impossibile accedere ai dati del micro; il micro deve essere associato di nuovo</string>
+    <string name="combov2_incorrect_active_basal_profile">Profilo basale attivo errato; il profilo 1 deve essere quello attivo, non il profilo %1$d</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min rimanenti)</string>
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (meno di 1 minuto rimanente)</string>
     <string name="combov2_load_tdds_cancelled">Caricamento TDD annullato</string>
+    <string name="combov2_retrieving_tdds_failed">Recupero TDD fallito</string>
     <string name="combov2_battery_low_warning">Livello batteria basso</string>
     <string name="combov2_reservoir_low_warning">Il livello del serbatoio del micro è basso</string>
     <string name="combov2_setting_tbr_succeeded">Impostazione TBR riuscita</string>
