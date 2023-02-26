@@ -28,6 +28,11 @@
     <string name="bluetooth_address">Indirizzo bluetooth</string>
     <string name="combov2_start_pairing">Avvia associazione</string>
     <string name="combov2_pairing_in_progress">Associazione Combo in corso</string>
+    <string name="combov2_pairing_start_steps">Passi per eseguire l\'associazione con il tuo Combo:\n\n
+1. Sul tuo microinfusore, vai alle Impostazioni Bluetooth\n
+2. Controlla se un dispositivo è già mostrato come associato; in tal caso, vai alla schermata del microinfusore \"Elimina dispositivo\" per eliminare/disassociare quel dispositivo\n
+3. Vai alla schermata del microinfusore \"Aggiungi dispositivo\" e avvia l\'associazione sul microinfusore\n
+4. Clicca sul tasto \"Avvia associazione\" qui sotto per avviare l\'associazione in AndroidAPS\n</string>
     <string name="combov2_enter_pin">Inserisci PIN</string>
     <string name="combov2_cancel_pairing">Annulla associazione</string>
     <string name="combov2_pin_hint">PIN a 10 cifre</string>
@@ -37,6 +42,7 @@
     <string name="combov2_pairing_failed_due_to_error">Associazione fallita a causa di un errore: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Associazione interrotta per motivi sconosciuti</string>
     <string name="combov2_scanning_for_pump">Scansione micro</string>
+    <string name="combov2_pairing_performing_handshake">Esecuzione dell\'associazione con il micro</string>
     <string name="combov2_pairing_pump_requests_pin">Il micro richiede un PIN a 10 cifre</string>
     <string name="combov2_pairing_finishing">Fine associazione</string>
     <string name="combov2_no_connection_for_n_mins">Nessuna connessione per %1$d minuti</string>
@@ -69,8 +75,12 @@
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (meno di 1 minuto rimanente)</string>
     <string name="combov2_load_tdds_cancelled">Caricamento TDD annullato</string>
     <string name="combov2_battery_low_warning">Livello batteria basso</string>
+    <string name="combov2_reservoir_low_warning">Il livello del serbatoio del micro è basso</string>
+    <string name="combov2_setting_tbr_succeeded">Impostazione TBR riuscita</string>
     <string name="combov2_setting_tbr_failed">Impostazione TBR fallita</string>
+    <string name="combov2_set_emulated_100_tbr">Imposta TBR 100% (emulato)</string>
     <string name="combov2_pair_with_pump_summary">Associa AndroidAPS e Android con un micro Accu-Chek Combo attualmente non associato</string>
+    <string name="combov2_unknown_tbr_detected">Un TBR sconosciuto è stato rilevato e fermato; percentuale: %1$d%%; durata rimanente: %2$s</string>
     <string name="combov2_connection_error">Errore connessione: %1$s</string>
     <string name="combov2_short_status_last_connection">Ultima conn.: %1$d min fa</string>
     <string name="combov2_short_status_alert">Avviso: %s</string>
@@ -89,6 +99,8 @@
     <string name="combov2_datetime_changed">Data e/o ora cambiata</string>
     <string name="combov2_dst_started">Ora legale (DST) iniziata</string>
     <string name="combov2_dst_ended">Ora legale (DST) terminata</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Impossibile connettersi al micro perché il micro ha segnalato un errore. L\'utente deve gestire l\'errore e quindi attendere 5 minuti o premere il tasto Aggiorna nella scheda del driver.</string>
+    <string name="combov2_refresh_pump_status_after_error">Aggiornamento dello stato del micro dopo che il micro ha segnalato un errore</string>
     <string name="combov2_go_back">Torna indietro</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Impossibile eseguire l\'associazione perché il driver non è inizializzato. Questo accade tipicamente perché i permessi Bluetooth necessari non sono stati concessi. Torna indietro, concedi i permessi Bluetooth, quindi riprova ad associare.</string>
 </resources>
