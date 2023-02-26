@@ -33,6 +33,12 @@
 2. Controlla se un dispositivo è già mostrato come associato; in tal caso, vai alla schermata del microinfusore \"Elimina dispositivo\" per eliminare/disassociare quel dispositivo\n
 3. Vai alla schermata del microinfusore \"Aggiungi dispositivo\" e avvia l\'associazione sul microinfusore\n
 4. Clicca sul tasto \"Avvia associazione\" qui sotto per avviare l\'associazione in AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Dopo un po \', il nome del telefono viene mostrato sullo schermo del micro; premi il tasto di CONFERMA per confermare.\n\n
+Quando l\'associazione è stata completata con successo, conferma la fine dell\'associazione sul microinfusore e torna alla schermata principale del microinfusore premendo il tasto di CONFERMA due volte.\n\n
+Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
+1. Premi Indietro o il tasto \"Annulla associazione\"\n
+2. Annulla l\'associazione sul Combo (premere i tasti SOPRA e MENU allo stesso tempo per annullare l\'associazione)\n
+3. Prova ad associare di nuovo</string>
     <string name="combov2_enter_pin">Inserisci PIN</string>
     <string name="combov2_cancel_pairing">Annulla associazione</string>
     <string name="combov2_pin_hint">PIN a 10 cifre</string>
@@ -42,6 +48,7 @@
     <string name="combov2_pairing_failed_due_to_error">Associazione fallita a causa di un errore: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Associazione interrotta per motivi sconosciuti</string>
     <string name="combov2_scanning_for_pump">Scansione micro</string>
+    <string name="combov2_establishing_bt_connection">Connessione Bluetooth (tentativo n. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Esecuzione dell\'associazione con il micro</string>
     <string name="combov2_pairing_pump_requests_pin">Il micro richiede un PIN a 10 cifre</string>
     <string name="combov2_pairing_finishing">Fine associazione</string>
@@ -58,6 +65,7 @@
     <string name="combov2_getting_basal_profile_cmddesc">Ricezione profilo basale</string>
     <string name="combov2_setting_basal_profile_cmddesc">Impostazione profilo basale</string>
     <string name="combov2_setting_tbr_cmddesc">Impostazione TBR %1$d%% per %2$d minuti</string>
+    <string name="combov2_cancelling_tbr">Cancellazione TBR in esecuzione</string>
     <string name="combov2_delivering_bolus_cmddesc">Erogazione bolo di %1$.1f U</string>
     <string name="combov2_fetching_tdd_history_cmddesc">Recupero storico TDD</string>
     <string name="combov2_updating_pump_datetime_cmddesc">Aggiornamento data e ora del micro</string>
@@ -66,6 +74,8 @@
     <string name="combov2_discovery_duration">Durata ricerca (in secondi)</string>
     <string name="combov2_verbose_logging">Abilita log verboso del Combo</string>
     <string name="combov2_getting_basal_profile">Ricezione profilo basale; %1$d record letto(i)</string>
+    <string name="combov2_setting_basal_profile">Impostazione profilo basale; %1$d record scritto(i)</string>
+    <string name="combov2_delivering_bolus">Erogazione bolo (%1$.1f di %2$.1f U erogate)</string>
     <string name="combov2_cannot_deliver_pump_suspended">Impossibile erogare il trattamento - il micro è sospeso</string>
     <string name="combov2_insufficient_insulin_in_reservoir">Insulina insufficiente nel serbatoio</string>
     <string name="combov2_bolus_cancelled">Bolo cancellato</string>
@@ -85,6 +95,7 @@
     <string name="combov2_setting_tbr_succeeded">Impostazione TBR riuscita</string>
     <string name="combov2_setting_tbr_failed">Impostazione TBR fallita</string>
     <string name="combov2_set_emulated_100_tbr">Imposta TBR 100% (emulato)</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Lasciando finire il TBR 100% (emulato) in esecuzione</string>
     <string name="combov2_ignoring_redundant_100_tbr">TBR 100%: ignorando la richiesta ridondante</string>
     <string name="combov2_hit_unexpected_tbr_limit">Limite inatteso riscontrato durante la regolazione di TBR: la percentuale target era %1$d%%, raggiunto un limite a %1$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Impossibile impostare un TBR assoluto se la velocità basale di base è zero</string>
