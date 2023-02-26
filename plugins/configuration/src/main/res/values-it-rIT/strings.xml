@@ -64,6 +64,7 @@
     <string name="configbuilder_general">Generale</string>
     <string name="configbuilder_general_description">Questi sono alcuni plugin generali che potresti trovare utili.</string>
     <string name="configbuilder_sync">Sincronizzazione</string>
+    <string name="configbuilder_sync_description">Plugin caricamento e sincronizzazione dati.</string>
     <string name="configbuilder_constraints_description">Quali vincoli sono applicati?</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Usalo per attivare l\'integrazione del loop di AAPS.</string>
