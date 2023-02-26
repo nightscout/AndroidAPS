@@ -49,11 +49,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface BLECommCallback {
-
-    open fun onBLEConnected() {}
-    open fun onNotification(notification: ByteArray) {}
-    open fun onIndication(indication: ByteArray) {}
-    open fun onSendMessageError(reason: String)
+    fun onBLEConnected()
+    fun onNotification(notification: ByteArray)
+    fun onIndication(indication: ByteArray)
+    fun onSendMessageError(reason: String)
 }
 
 @Singleton
@@ -237,7 +236,7 @@ class BLEComm @Inject internal constructor(
         }
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicChanged")
+            aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicChanged data: " + characteristic.value + "UUID: " + characteristic.getUuid().toString())
 
             val value = characteristic.getValue()
             if (characteristic.getUuid() == UUID.fromString(READ_UUID)) {
@@ -249,8 +248,8 @@ class BLEComm @Inject internal constructor(
                     mReadPacket?.addData(value)
                 }
                 if (mReadPacket?.allDataReceived() == true) {
-                    mReadPacket = null
                     mReadPacket?.getData()?.let { mCallback?.onIndication(it) }
+                    mReadPacket = null
                 }
             }
         }

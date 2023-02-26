@@ -23,8 +23,10 @@ import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.medtrum.MedtrumPlugin
-import info.nightscout.pump.medtrum.encryption.Crypt
-import info.nightscout.pump.medtrum.extension.toByteArray
+import info.nightscout.pump.medtrum.comm.WriteCommand
+import info.nightscout.pump.medtrum.extension.toInt
+import info.nightscout.pump.medtrum.extension.toLong
+import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
@@ -38,6 +40,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import io.reactivex.rxjava3.core.ObservableEmitter
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import org.joda.time.DateTime
@@ -67,16 +70,18 @@ class MedtrumService : DaggerService(), BLECommCallback {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var writeCommand: WriteCommand
 
-    companion object {
-        private const val COMMAND_AUTH_REQ: Byte = 5
-    }
+    val timeUtil = MedtrumTimeUtil()
 
     private val disposable = CompositeDisposable()
     private val mBinder: IBinder = LocalBinder()
-    private val mCrypt = Crypt()
 
     private var mDeviceSN: Long = 0
+    private var currentState: State = IdleState()
+
+    // TODO: Stuff like this in a settings class? 
+    private var mLastDeviceTime: Long = 0
 
     override fun onCreate() {
         super.onCreate()
@@ -106,12 +111,12 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     fun stopConnecting() {
         // TODO proper way for this might need send commands etc
-        bleComm.stopConnecting()
+        // bleComm.stopConnecting()
     }
 
     fun disconnect(from: String) {
         // TODO proper way for this might need send commands etc
-        bleComm.disconnect(from)
+        // bleComm.disconnect(from)
     }
 
     fun readPumpStatus() {
@@ -145,49 +150,15 @@ class MedtrumService : DaggerService(), BLECommCallback {
         // TODO
     }
 
-    fun tempBasal(percent: Int, durationInHours: Int): Boolean {
-        // TODO
-        return false
-    }
-
-    fun highTempBasal(percent: Int): Boolean {
-        // TODO
-        return false
-    }
-
-    fun tempBasalShortDuration(percent: Int, durationInMinutes: Int): Boolean {
-        if (durationInMinutes != 15 && durationInMinutes != 30) {
-            aapsLogger.error(LTag.PUMPCOMM, "Wrong duration param")
-            return false
-        }
-        // TODO
-        return false
-    }
-
-    fun tempBasalStop(): Boolean {
-        if (!isConnected) return false
-        // TODO
-        return false
-    }
-
     fun updateBasalsInPump(profile: Profile): Boolean {
         if (!isConnected) return false
         // TODO
         return false
     }
 
-    private fun authorize() {
-        aapsLogger.debug(LTag.PUMPCOMM, "Start auth!")
-        val role = 2 // Fixed to 2 for pump
-        val key = mCrypt.keyGen(mDeviceSN)
-        val commandData = byteArrayOf(COMMAND_AUTH_REQ) + byteArrayOf(role.toByte()) + 0.toByteArray(4) + key.toByteArray(4)
-        bleComm.sendMessage(commandData)
-    }
-
     /** BLECommCallbacks */
     override fun onBLEConnected() {
-        // TODO Replace by FSM Entry?
-        authorize()
+        currentState.onConnected()
     }
 
     override fun onNotification(notification: ByteArray) {
@@ -197,7 +168,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     override fun onIndication(indication: ByteArray) {
         aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onIndication" + indication.contentToString())
-        // TODO 
+        currentState.onIndication(indication)
     }
 
     override fun onSendMessageError(reason: String) {
@@ -207,6 +178,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     /** Service stuff */
     inner class LocalBinder : Binder() {
+
         val serviceInstance: MedtrumService
             get() = this@MedtrumService
     }
@@ -217,5 +189,209 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         return Service.START_STICKY
+    }
+
+    /**
+     * States are used to keep track of the communication and to guide the flow
+     */
+    private fun toState(nextState: State) {
+        currentState = nextState
+        currentState.onEnter()
+    }
+
+    // State class, Can we move this to different file?
+    private abstract inner class State {
+
+        open fun onEnter() {}
+        open fun onIndication(data: ByteArray) {
+            aapsLogger.debug(LTag.PUMPCOMM, "onIndicationr: " + this.toString() + "Should not be called here!")
+        }
+
+        open fun onConnected() {}
+    }
+
+    private inner class IdleState : State() {
+
+        override fun onConnected() {
+            toState(AuthState())
+        }
+    }
+
+    private inner class AuthState : State() {
+
+        override fun onEnter() {
+            aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached AuthState")
+            bleComm.sendMessage(writeCommand.authorize(mDeviceSN))
+        }
+
+        override fun onIndication(data: ByteArray) {
+            // TODO Create class for this? Maybe combine with authorize write command, something like danaRS packets? + Unit Tests
+            val commandCode: Byte = data.copyOfRange(1, 2).toInt().toByte()
+            val responseCode = data.copyOfRange(4, 6).toInt()
+            // TODO Get pump version info (do we care?)
+            if (responseCode == 0 && commandCode == writeCommand.COMMAND_AUTH_REQ) {
+                // Succes!
+                toState(GetDeviceTypeState())
+            } else {
+                // Failure
+                bleComm.disconnect("Failure")
+                toState(IdleState())
+            }
+        }
+    }
+
+    private inner class GetDeviceTypeState : State() {
+
+        override fun onEnter() {
+            aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached GetDeviceTypeState")
+            bleComm.sendMessage(writeCommand.getDeviceType())
+        }
+
+        override fun onIndication(data: ByteArray) {
+            // TODO Create class for this? Maybe combine with authorize write command, something like danaRS packets? + Unit Tests
+            val commandCode: Byte = data.copyOfRange(1, 2).toInt().toByte()
+            val responseCode = data.copyOfRange(4, 6).toInt()
+            // TODO Get device type (do we care?)
+            if (responseCode == 0 && commandCode == writeCommand.COMMAND_GET_DEVICE_TYPE) {
+                // Succes!
+                toState(GetTimeState())
+            } else {
+                // Failure
+                bleComm.disconnect("Failure")
+                toState(IdleState())
+            }
+        }
+    }
+
+    private inner class GetTimeState : State() {
+
+        override fun onEnter() {
+            aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached GetTimeState")
+            bleComm.sendMessage(writeCommand.getTime())
+        }
+
+        override fun onIndication(data: ByteArray) {
+            // TODO Create class for this? Maybe combine with authorize write command, something like danaRS packets? + Unit Tests
+            val commandCode: Byte = data.copyOfRange(1, 2).toInt().toByte()
+            val responseCode = data.copyOfRange(4, 6).toInt()
+            val time = data.copyOfRange(6, 10).toLong()
+            if (responseCode == 0 && commandCode == writeCommand.COMMAND_GET_TIME) {
+                // Succes!
+                mLastDeviceTime = time
+                val currTimeSec = dateUtil.nowWithoutMilliseconds() / 1000
+                if (abs(timeUtil.convertPumpTimeToSystemTimeSeconds(time) - currTimeSec) <= 5) { // Allow 5 sec deviation
+                    toState(SynchronizeState())
+                } else {
+                    aapsLogger.debug(
+                        LTag.PUMPCOMM,
+                        "GetTimeState.onIndication need to set time. systemTime: " + currTimeSec + " PumpTime: " + time + " Pump Time to system time: " + timeUtil.convertPumpTimeToSystemTimeSeconds(
+                            time
+                        )
+                    )
+                    toState(SetTimeState())
+                }
+            } else {
+                // Failure
+                bleComm.disconnect("Failure")
+                toState(IdleState())
+            }
+        }
+    }
+
+    private inner class SetTimeState : State() {
+
+        override fun onEnter() {
+            aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached SetTimeState")
+            bleComm.sendMessage(writeCommand.setTime())
+        }
+
+        override fun onIndication(data: ByteArray) {
+            // TODO Create class for this? Maybe combine with authorize write command, something like danaRS packets? + Unit Tests
+            val commandCode: Byte = data.copyOfRange(1, 2).toInt().toByte()
+            val responseCode = data.copyOfRange(4, 6).toInt()
+            if (responseCode == 0 && commandCode == writeCommand.COMMAND_SET_TIME) {
+                // Succes!
+                toState(SetTimeZoneState())
+            } else {
+                // Failure
+                bleComm.disconnect("Failure")
+                toState(IdleState())
+            }
+        }
+    }
+
+    private inner class SetTimeZoneState : State() {
+
+        override fun onEnter() {
+            aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached SetTimeZoneState")
+            bleComm.sendMessage(writeCommand.setTimeZone())
+        }
+
+        override fun onIndication(data: ByteArray) {
+            // TODO Create class for this? Maybe combine with authorize write command, something like danaRS packets? + Unit Tests
+            val commandCode: Byte = data.copyOfRange(1, 2).toInt().toByte()
+            val responseCode = data.copyOfRange(4, 6).toInt()
+            if (responseCode == 0 && commandCode == writeCommand.COMMAND_SET_TIME_ZONE) {
+                // Succes!
+                toState(SynchronizeState())
+            } else {
+                // Failure
+                bleComm.disconnect("Failure")
+                toState(IdleState())
+            }
+        }
+    }
+
+    private inner class SynchronizeState : State() {
+
+        override fun onEnter() {
+            aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached SynchronizeState")
+            bleComm.sendMessage(writeCommand.synchronize())
+        }
+
+        override fun onIndication(data: ByteArray) {
+            // TODO Create class for this? Maybe combine with authorize write command, something like danaRS packets? + Unit Tests
+            val commandCode: Byte = data.copyOfRange(1, 2).toInt().toByte()
+            val responseCode = data.copyOfRange(4, 6).toInt()
+            if (responseCode == 0 && commandCode == writeCommand.COMMAND_SYNCHRONIZE) {
+                // Succes!
+                // TODO: Handle pump state parameters
+                toState(SubscribeState())
+            } else {
+                // Failure
+                bleComm.disconnect("Failure")
+                toState(IdleState())
+            }
+        }
+    }
+
+    private inner class SubscribeState : State() {
+
+        override fun onEnter() {
+            aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached SubscribeState")
+            bleComm.sendMessage(writeCommand.subscribe())
+        }
+
+        override fun onIndication(data: ByteArray) {
+            // TODO Create class for this? Maybe combine with authorize write command, something like danaRS packets? + Unit Tests
+            val commandCode: Byte = data.copyOfRange(1, 2).toInt().toByte()
+            val responseCode = data.copyOfRange(4, 6).toInt()
+            if (responseCode == 0 && commandCode == writeCommand.COMMAND_SUBSCRIBE) {
+                // Succes!
+                toState(ReadyState())
+            } else {
+                // Failure
+                bleComm.disconnect("Failure")
+                toState(IdleState())
+            }
+        }
+    }
+
+    private inner class ReadyState : State() {
+
+        override fun onEnter() {
+            aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached ReadyState!")
+        }
+        // Just a placeholder, this state is reached when the patch is ready to receive commands (Bolus, temp basal and whatever)
     }
 }
