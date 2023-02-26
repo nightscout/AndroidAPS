@@ -2,6 +2,8 @@ package info.nightscout.core.graph.data
 
 import android.content.Context
 import android.graphics.Paint
+import androidx.annotation.ColorInt
+import androidx.core.graphics.ColorUtils
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
@@ -28,15 +30,17 @@ class InMemoryGlucoseValueDataPoint(
     override val size = 1f
     override val paintStyle: Paint.Style = Paint.Style.FILL
 
+    @ColorInt
     override fun color(context: Context?): Int {
         val units = profileFunction.getUnits()
         val lowLine = defaultValueHelper.determineLowLine()
         val highLine = defaultValueHelper.determineHighLine()
-        return when {
+        val color = when {
             valueToUnits(units) < lowLine  -> rh.gac(context, info.nightscout.core.ui.R.attr.bgLow)
             valueToUnits(units) > highLine -> rh.gac(context, info.nightscout.core.ui.R.attr.highColor)
             else                           -> rh.gac(context, info.nightscout.core.ui.R.attr.bgInRange)
         }
+        return if (data.filledGap) ColorUtils.setAlphaComponent(color, 128) else color
     }
 
 }

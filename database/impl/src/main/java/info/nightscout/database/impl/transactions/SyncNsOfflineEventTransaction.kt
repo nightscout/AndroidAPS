@@ -38,7 +38,7 @@ class SyncNsOfflineEventTransaction(private val offlineEvents: List<OfflineEvent
 
                 // not known nsId
                 val running = database.offlineEventDao.getOfflineEventActiveAt(offlineEvent.timestamp).blockingGet()
-                if (running != null && abs(running.timestamp - offlineEvent.timestamp) < 1000 && running.interfaceIDs.nightscoutId == null) { // allow missing milliseconds
+                if (running != null && abs(running.timestamp - offlineEvent.timestamp) < 1000) { // allow missing milliseconds
                     // the same record, update nsId only
                     running.interfaceIDs.nightscoutId = offlineEvent.interfaceIDs.nightscoutId
                     database.offlineEventDao.updateExistingEntry(running)

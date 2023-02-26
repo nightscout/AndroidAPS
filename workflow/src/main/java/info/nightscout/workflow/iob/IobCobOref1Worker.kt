@@ -7,7 +7,6 @@ import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.extensions.target
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.core.workflow.CalculationWorkflow
@@ -31,6 +30,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import kotlinx.coroutines.Dispatchers
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
@@ -42,7 +42,7 @@ import kotlin.math.roundToLong
 class IobCobOref1Worker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
@@ -66,7 +66,7 @@ class IobCobOref1Worker(
         val cause: Event?
     )
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
 
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as IobCobOref1WorkerData?
             ?: return Result.success(workDataOf("Error" to "missing input data"))
@@ -85,11 +85,11 @@ class IobCobOref1Worker(
             val bucketedData = ads.bucketedData
             val autosensDataTable = ads.autosensDataTable
             if (bucketedData == null || bucketedData.size < 3) {
-                aapsLogger.debug(LTag.AUTOSENS,  {"Aborting calculation thread (No bucketed data available): ${data.reason}"})
+                aapsLogger.debug(LTag.AUTOSENS) { "Aborting calculation thread (No bucketed data available): ${data.reason}" }
                 return Result.success(workDataOf("Error" to "Aborting calculation thread (No bucketed data available): ${data.reason}"))
             }
             val prevDataTime = ads.roundUpTime(bucketedData[bucketedData.size - 3].timestamp)
-            aapsLogger.debug(LTag.AUTOSENS, {"Prev data time: " + dateUtil.dateAndTimeString(prevDataTime)})
+            aapsLogger.debug(LTag.AUTOSENS) { "Prev data time: " + dateUtil.dateAndTimeString(prevDataTime) }
             var previous = autosensDataTable[prevDataTime]
             // start from oldest to be able sub cob
             for (i in bucketedData.size - 4 downTo 0) {
@@ -144,12 +144,12 @@ class IobCobOref1Worker(
                     val hourAgoData = ads.getAutosensDataAtTime(hourAgo)
                     if (hourAgoData != null) {
                         val initialIndex = autosensDataTable.indexOfKey(hourAgoData.time)
-                        aapsLogger.debug(LTag.AUTOSENS, { ">>>>> bucketed_data.size()=" + bucketedData.size + " i=" + i + " hourAgoData=" + hourAgoData.toString() })
+                        aapsLogger.debug(LTag.AUTOSENS) { ">>>>> bucketed_data.size()=" + bucketedData.size + " i=" + i + " hourAgoData=" + hourAgoData.toString() }
                         var past = 1
 //                        try {
                             while (past < 12) {
                                 val ad = autosensDataTable.valueAt(initialIndex + past)
-                                aapsLogger.debug(LTag.AUTOSENS, { ">>>>> past=" + past + " ad=" + ad?.toString() })
+                                aapsLogger.debug(LTag.AUTOSENS) { ">>>>> past=" + past + " ad=" + ad?.toString() }
                                 /*
                                                                 if (ad == null) {
                                                                     aapsLogger.debug(LTag.AUTOSENS, {autosensDataTable.toString()})
@@ -185,7 +185,7 @@ class IobCobOref1Worker(
                         //     break
                         // }
                     } else {
-                        aapsLogger.debug(LTag.AUTOSENS, ">>>>> bucketed_data.size()=" + bucketedData.size + " i=" + i + " hourAgoData=" + "null")
+                        aapsLogger.debug(LTag.AUTOSENS) { ">>>>> bucketed_data.size()=${bucketedData.size} i=$i hourAgoData=null" }
                     }
                 }
                 val recentCarbTreatments = repository.getCarbsDataFromTimeToTimeExpanded(bgTime - T.mins(5).msecs(), bgTime, true).blockingGet()
@@ -291,7 +291,7 @@ class IobCobOref1Worker(
 
                 // add an extra negative deviation if a high temp target is running and exercise mode is set
                 // TODO AS-FIX
-                @Suppress("SimplifyBooleanWithConstants")
+                @Suppress("SimplifyBooleanWithConstants", "KotlinConstantConditions")
                 if (false && sp.getBoolean(info.nightscout.core.utils.R.string.key_high_temptarget_raises_sensitivity, SMBDefaults.high_temptarget_raises_sensitivity)) {
                     val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
                     if (tempTarget is ValueWrapper.Existing && tempTarget.value.target() >= 100) {
@@ -307,14 +307,13 @@ class IobCobOref1Worker(
                 if (min in 0..4 && hours % 2 == 0) autosensData.extraDeviation.add(0.0)
                 previous = autosensData
                 if (bgTime < dateUtil.now()) autosensDataTable.put(bgTime, autosensData)
-                aapsLogger.debug(
-                    LTag.AUTOSENS,
-                    {"Running detectSensitivity from: " + dateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + dateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + ads.lastDataTime(dateUtil)}
-                )
+                aapsLogger.debug(LTag.AUTOSENS) {
+                    "Running detectSensitivity from: " + dateUtil.dateAndTimeString(oldestTimeWithData) + " to: " + dateUtil.dateAndTimeString(bgTime) + " lastDataTime:" + ads.lastDataTime(dateUtil)
+                }
                 val sensitivity = activePlugin.activeSensitivity.detectSensitivity(ads, oldestTimeWithData, bgTime)
                 aapsLogger.debug(LTag.AUTOSENS, "Sensitivity result: $sensitivity")
                 autosensData.autosensResult = sensitivity
-                aapsLogger.debug(LTag.AUTOSENS, {autosensData.toString()})
+                aapsLogger.debug(LTag.AUTOSENS) { autosensData.toString() }
             }
             data.iobCobCalculator.ads = ads
             Thread {
@@ -323,7 +322,7 @@ class IobCobOref1Worker(
             }.start()
         } finally {
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.IOB_COB_OREF, 100, data.cause))
-            aapsLogger.debug(LTag.AUTOSENS, {"AUTOSENSDATA thread ended: ${data.reason}"})
+            aapsLogger.debug(LTag.AUTOSENS) { "AUTOSENSDATA thread ended: ${data.reason}" }
             profiler.log(LTag.AUTOSENS, "IobCobOref1Thread", start)
         }
         return Result.success()

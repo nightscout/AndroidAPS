@@ -2,7 +2,6 @@
 <resources>
     <!-- Source -->
     <string name="description_source_ns_client">Descarrega dados Glicose do Nightscout</string>
-    <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">Receber valores Glicose do xDrip+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>

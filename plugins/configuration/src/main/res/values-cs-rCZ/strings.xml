@@ -25,7 +25,7 @@
     <string name="master_password_summary">Hlavní heslo se používá pro šifrování zálohy a pro \"přebití\" zabezpečení v aplikaci. Dobře si ho zapamatujte nebo uložte na bezpečném místě.</string>
     <string name="current_master_password">Aktuální hlavní heslo</string>
     <string name="common_values">Použijte hodnoty pro největší jídlo, jaké obvykle jíte\n</string>
-    <string name="syncinfotext">Synchronizujte data s cloudem. Tuto část nyní můžete přeskočit, ale nebudete schopni dokončit cíle, dokud synchronizace nebude nastavena.</string>
+    <string name="syncinfotext">Synchronizujte data s cloudem. Tuto část nyní můžete přeskočit, ale nebudete schopni dokončit cíle, dokud nebude nastavena synchronizace do NS nebo Tidepoolu.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Jméno pacienta</string>
     <string name="patient_name_summary">Zadejte jméno pacienta nebo přezdívku pro rozlišení mezi více nastaveními</string>
@@ -114,8 +114,6 @@
     <string name="maintenance_shortname">ÚDRŽBA</string>
     <string name="description_maintenance">Poskytuje funkce pro údržbu (např. odesílání logů, čištění).</string>
     <string name="database_cleanup">Vyčištění databáze</string>
-    <string name="cleanup_db_confirm">Chcete vyčistit databázi?\nOdstraní sledované změny a historická data starší než 3 měsíce.</string>
-    <string name="cleared_entries">Vymazané záznamy</string>
     <string name="reset_db_confirm">Opravdu resetovat všechny databáze?</string>
     <string name="maintenance_settings">Nastavení údržby</string>
     <string name="maintenance_email">Příjemce e-mailu</string>

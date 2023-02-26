@@ -28,7 +28,7 @@
     <string name="master_password_summary">Master password is used for backup encryption and to override security in application. Remember it or store on a safe place.</string>
     <string name="current_master_password">Current master password</string>
     <string name="common_values">Use values of your largest food you usually eat\n</string>
-    <string name="syncinfotext">Synchronize data to the cloud. You can skip this part now but you will not be able to pass objectives until you set it up.</string>
+    <string name="syncinfotext">Synchronize data to the cloud. You can skip this part now but you will not be able to pass objectives until you set up Nightscout or Tidepool client.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Patient name</string>
     <string name="patient_name_summary">Please provide patient name or nickname to differentiate among multiple setups</string>
@@ -122,8 +122,6 @@
     <string name="maintenance_shortname">MAINT</string>
     <string name="description_maintenance">Provides several functions for maintenance (eg. log sending, log deletion).</string>
     <string name="database_cleanup">Database cleanup</string>
-    <string name="cleanup_db_confirm">Do you want to cleanup the database?\nIt will remove tracked changes and historic data older than 3 months.</string>
-    <string name="cleared_entries">Cleared entries</string>
     <string name="reset_db_confirm">Do you really want to reset the databases?</string>
     <string name="maintenance_settings">Maintenance Settings</string>
     <string name="maintenance_email">Email recipient</string>

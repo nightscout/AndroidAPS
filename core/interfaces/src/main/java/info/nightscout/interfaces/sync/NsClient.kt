@@ -1,22 +1,46 @@
 package info.nightscout.interfaces.sync
 
-import android.text.Spanned
 import info.nightscout.interfaces.nsclient.NSAlarm
+import info.nightscout.rx.events.EventNSClientNewLog
 
+/**
+ * Plugin providing communication with Nightscout server
+ */
 interface NsClient : Sync {
-    enum class Version {
-        NONE, V1, V3
-    }
 
-    val version: Version
+    /**
+     * NS URL
+     */
     val address: String
 
+    /**
+     * Set plugin in paused state
+     */
     fun pause(newState: Boolean)
-    fun resend(reason: String)
-    fun textLog(): Spanned
-    fun clearLog()
 
-    enum class Collection { ENTRIES, TREATMENTS, FOODS }
+    /**
+     * Initiate new round of upload/download
+     */
+    fun resend(reason: String)
+
+    /**
+     * List of log messages for fragment
+     */
+    val listLog: MutableList<EventNSClientNewLog>
+
+    /**
+     * Used data sync selector
+     */
+    val dataSyncSelector: DataSyncSelector
+
+    /**
+     * Version of NS server
+     * @return Returns detected version of NS server
+     */
+    fun detectedNsVersion(): String?
+
+    enum class Collection { ENTRIES, TREATMENTS, FOODS, PROFILE }
+
     /**
      * NSC v3 does first load of all data
      * next loads are using srvModified property for sync
@@ -34,6 +58,7 @@ interface NsClient : Sync {
      *
      */
     fun updateLatestBgReceivedIfNewer(latestReceived: Long)
+
     /**
      * Update newest loaded timestamp for treatments collection (first load or NSCv1)
      * Update newest srvModified (sync loads)
@@ -42,10 +67,39 @@ interface NsClient : Sync {
      *
      */
     fun updateLatestTreatmentReceivedIfNewer(latestReceived: Long)
+
+    /**
+     * Send alarm confirmation to NS
+     *
+     * @param originalAlarm alarm to be cleared
+     * @param silenceTimeInMilliseconds silence alarm for specified duration
+     */
     fun handleClearAlarm(originalAlarm: NSAlarm, silenceTimeInMilliseconds: Long)
 
+    /**
+     * Clear synchronization status
+     *
+     * Next synchronization will start from scratch
+     */
     fun resetToFullSync()
 
-    fun dbAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String)
-    fun dbUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String)
+    /**
+     * Upload new record to NS
+     *
+     * @param collection target ns collection
+     * @param dataPair data to upload (data.first) and id of changed record (data.second)
+     * @param progress progress of sync in format "number/number". Only for display in fragment
+     * @return true for successful upload
+     */
+    suspend fun nsAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String): Boolean
+
+    /**
+     * Upload updated record to NS
+     *
+     * @param collection target ns collection
+     * @param dataPair data to upload (data.first) and id of changed record (data.second)
+     * @param progress progress of sync in format "number/number". Only for display in fragment
+     * @return true for successful upload
+     */
+    suspend fun nsUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String): Boolean
 }

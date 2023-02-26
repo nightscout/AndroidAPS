@@ -6,13 +6,14 @@ import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
+import info.nightscout.shared.utils.T
 import java.security.InvalidParameterException
 
 fun NSTemporaryBasal.toTemporaryBasal(): TemporaryBasal =
     TemporaryBasal(
         isValid = isValid,
         timestamp = date ?: throw InvalidParameterException(),
-        utcOffset = utcOffset ?: 0L,
+        utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         type = type.toType(),
         rate = rate,
         isAbsolute = isAbsolute,
@@ -28,7 +29,7 @@ fun TemporaryBasal.toNSTemporaryBasal(profile: Profile): NSTemporaryBasal =
         eventType = EventType.TEMPORARY_BASAL,
         isValid = isValid,
         date = timestamp,
-        utcOffset = utcOffset,
+        utcOffset = T.msecs(utcOffset).mins(),
         type = type.toType(),
         rate = convertedToAbsolute(timestamp, profile),
         isAbsolute = isAbsolute,

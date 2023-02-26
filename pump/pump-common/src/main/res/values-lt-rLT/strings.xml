@@ -5,9 +5,15 @@
     <string name="pump_operation_not_yet_supported_by_pump">Pompa dar nepalaiko operacijos.</string>
     <string name="common_resultok">Gerai</string>
     <string name="pump_serial_number">Pompos serijos Nr.</string>
+    <string name="bolus_delivered_so_far">%1$.2f v iš %2$.2f v suleista</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Nepavyko paleisti</string>
+    <string name="pump_status_initialized">Inicijuojama</string>
+    <string name="pump_status_encrypt">Ryšio šifravimas</string>
+    <string name="pump_status_ready">Pasirengusi</string>
+    <string name="pump_status_busy">Užimta</string>
     <string name="pump_status_suspended">Sustabdyta</string>
+    <string name="pump_status_executing_command">Komanda vykdoma</string>
     <!-- PumpCommon - History Group -->
     <string name="history_group_basal">Bazė</string>
     <string name="history_group_configuration">Nustatymai</string>
@@ -18,9 +24,21 @@
     <string name="history_group_bolus">Bolusai</string>
     <string name="history_group_prime">Užpildyti sistemą</string>
     <string name="history_group_alarm">Aliarmai</string>
-    <string name="history_group_glucose">Gliukozė</string>
+    <string name="history_group_glucose">Glikemija</string>
+    <string name="history_group_base">Pagrindiniai</string>
     <string name="history_group_other">Kiti</string>
+    <string name="history_group_events">Visi įvykiai</string>
+    <string name="history_group_events_no_stat">Įvykiai (be statistikos)</string>
     <!-- Time -->
+    <string name="time_today">Šiandien</string>
+    <string name="time_last_hour">Pask. val.</string>
+    <string name="time_last_3_hours">Pask. 3 val.</string>
+    <string name="time_last_6_hours">Pask. 6 val.</string>
+    <string name="time_last_12_hours">Pask. 12 val.</string>
+    <string name="time_last_2_days">Pask. 2 d.</string>
+    <string name="time_last_4_days">Pask. 4 d.</string>
+    <string name="time_last_week">Praėjusią savaitę</string>
+    <string name="time_last_month">Praėjusį mėnesį</string>
     <!-- BLE Config -->
     <string name="ble_config_button_scan_start">Skanuoti</string>
     <string name="ble_config_scan_stop">Stop</string>
@@ -33,9 +51,15 @@
     <!-- BLE Errors -->
     <string name="ble_error_bt_disabled">Bluetooth išjungtas</string>
     <string name="ble_error_no_bt_adapter">Nėra Bluetooth adapterio</string>
+    <string name="ble_error_configured_pump_not_found">Konfigūruota pompa nerasta</string>
     <string name="ble_error_pump_unreachable">Pompa nepasiekiama</string>
+    <string name="ble_error_failed_to_conn_to_ble_device">Nėra ryšio su BLE prietaisu</string>
+    <string name="ble_error_encryption_failed">Šifravimo klaida</string>
+    <string name="ble_error_pump_found_unbonded">Rasta nesusieta pompa</string>
     <!-- Pump Error -->
     <string name="pump_settings_error_basal_profiles_not_enabled">Bazės profilis / nustatymas pompoje nėra įgalintas. Įgalinkite jį pompoje.</string>
+    <string name="pump_settings_error_incorrect_basal_profile_selected">Pompoje nustatytas neteisingas bazės profilis (turi būti %s).</string>
+    <string name="pump_settings_error_wrong_tbr_type_set">Pompoje nustatyta neteisinga laikina bazė (turi būti %s).</string>
     <string name="pump_settings_error_wrong_max_bolus_set">Pompoje nustatytas neteisingas Max Bolusas (turi būti %1$.2f).</string>
     <string name="pump_settings_error_wrong_max_basal_set">Pompoje nustatyta neteisinga Maks val. bazė (turi būti %1$.2f).</string>
     <!-- Pump History -->
@@ -51,5 +75,17 @@
         <item quantity="few">%1$d val.</item>
         <item quantity="many">%1$d val.</item>
         <item quantity="other">%1$d val.</item>
+    </plurals>
+    <plurals name="hoursago">
+        <item quantity="one">Prieš %1$d val</item>
+        <item quantity="few">Prieš %1$d val</item>
+        <item quantity="many">Prieš %1$d val</item>
+        <item quantity="other">Prieš %1$d val</item>
+    </plurals>
+    <plurals name="daysago">
+        <item quantity="one">Prieš %1$d d.</item>
+        <item quantity="few">Prieš %1$d d.</item>
+        <item quantity="many">Prieš %1$d d.</item>
+        <item quantity="other">Prieš %1$d d.</item>
     </plurals>
 </resources>

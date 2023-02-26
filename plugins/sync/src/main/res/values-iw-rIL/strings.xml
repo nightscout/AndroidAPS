@@ -14,6 +14,7 @@
     <string name="ns_create_announcements_from_errors_summary">יצירת הכרזת Nightscout עבור הודעות על שגיאות והתראות מקומיות (ניתנות להצגה בפורטל הטיפולים תחת \"טיפולים\")</string>
     <string name="ns_create_announcements_from_carbs_req_summary">צור הכרזות נייטסקאוט עבור התראות מסוג פחמימות דרושות</string>
     <string name="description_ns_client">מסנכרן את נתוניכם עם Nightscout</string>
+    <string name="description_ns_client_v3">מסנכרן את הנתונים עם נייטסקאוט באמצעות v3 API</string>
     <string name="blocked_by_charging">חסום ע\"י הגדרות טעינה</string>
     <string name="blocked_by_connectivity">חסום ע\"י הגדרות חיבור</string>
     <string name="unsupported_ns_version">גרסה לא נתמכת של Nightscout</string>
@@ -22,10 +23,11 @@
     <string name="ns_malfunction">תקלה ב-NSClient. שקלו להפעיל את Nightscout ו-NSClient מחדש.</string>
     <!-- NSClient -->
     <string name="no_write_permission">ל-NSClient אין הרשאת כתיבה. סיסמת API שגויה?</string>
+    <string name="ns_client_v3">NSClientV3</string>
+    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">כתובת URL:</string>
-    <string name="ns_client_autoscroll">גלילה אוטומטית</string>
     <string name="restart">הפעל מחדש</string>
     <string name="ns_client_internal_title">NSClient</string>
     <string name="ns_client_url_title">כתובת נייטסקאוט</string>
@@ -33,6 +35,9 @@
     <string name="ns_client_secret_title">קוד API של Nightscout</string>
     <string name="ns_client_secret_dialog_title">קוד API של Nightscout</string>
     <string name="ns_client_secret_dialog_message">הזינו את קוד ה-API של Nightscout (מינימום 12 תווים)</string>
+    <string name="nsclient_token_title">אסימון גישה</string>
+    <string name="nsclient_token_dialog_title">אסימון גישה</string>
+    <string name="nsclient_token_dialog_message">אסימון גישה הופק בדף האדמיניסטרטור של NS (לפחות 17 תווים)</string>
     <string name="deliver_now">ספק עכשיו</string>
     <string name="clear_queue">נקה תור</string>
     <string name="show_queue">הצג תור</string>
@@ -69,9 +74,9 @@
     <string name="ns_alarm_stale_data_value_label">סף התיישנות נתונים [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">סף התיישנות נתונים דחוף [min]</string>
     <string name="ns_log_app_started_event">רשום הפעלת AAPS ב-Nightscout</string>
-    <string name="ns_local_broadcasts">אפשר הפצה לאפליקציות אחרות (כגון xDrip). אין להפעיל אם מותקן לכם יותר ממופע אחד של AAPS או NSClient!</string>
-    <string name="ns_local_broadcasts_title">אפשר שידורים מקומיים.</string>
     <string name="copy_existing_values">להעתיק הגדרות מ-Nightscout (אם קיימות)?</string>
+    <string name="ns_use_ws_title">התחבר ל-websockets</string>
+    <string name="ns_use_ws_summary">משמעות ההפעלה: עדכונים, קבלת התראות והודעות במהירות גבוהה יותר תוך צריכת סוללה גבוהה יותר, בדומה ל-v1. כל שאר המעלים ל-NS חייבים להשתמש בפרוטוקול v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">שם המשתמש שלכם להתחברות ל-Tidepool, בדרך כלל כתובת הדוא\"ל שלכם</string>
     <string name="title_tidepool_username">שם משתמש להתחברות</string>
@@ -91,4 +96,24 @@
     <string name="remove_all">הסר הכל</string>
     <string name="reset_start">אתחל התחלה</string>
     <string name="upload_now">העלה עכשיו</string>
+    <string name="not_connected">לא מחובר</string>
+    <string name="read_only">לקריאה בלבד</string>
+    <string name="working">עובד</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">שליחת נתוני סוכר אל xDrip</string>
+    <string name="xdrip_status_detailed_iob_title">הצגת IOB מפורט</string>
+    <string name="xdrip_status_detailed_iob_summary">חלוקת ה-IOB לבולוס ובזאלי במסך השעון</string>
+    <string name="xdrip_status_show_bgi_title">הצג השפעת רמת הסוכר</string>
+    <string name="xdrip_status_show_bgi_summary">הוסף השפעת הסוכר לשורת הסטטוס</string>
+    <string name="xdrip_status_settings">שורת מצב xDrip מתקדמת</string>
+    <string name="disabled_loop">לולאה מושבתת</string>
+    <string name="xdrip_send_status_title">שליחת שורת הסטטוס ל-xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ אינו מותקן</string>
+    <string name="calibration_sent">נשלח כיול ל-xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">שולח נתוני גלוקוז וטיפולים ל-xDrip+. יש לבחור את מקור הנתונים \"xDrip+ Sync Follower\" וקבלת נתונים חייבת להיות מופעלת בהגדרות &gt; הגדרות לשיתוף פעולה בין אפליקציות &gt; קבל גלוקוז\\טיפולים</string>
+    <string name="xdrip_local_broadcasts_title">אפשר שידור ל-xDrip+</string>
+    <!--    DataBroadcast-->
 </resources>

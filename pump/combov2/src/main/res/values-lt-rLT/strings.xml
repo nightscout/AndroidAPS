@@ -1,20 +1,127 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Originali pompos integracija Accu-Chek Combo pompoms</string>
+    <string name="combov2_could_not_connect">Nepavyko prisijungti prie pompos</string>
+    <string name="combov2_not_paired">Pompa nesusieta</string>
+    <string name="combov2_pump_terminated_connection">Pompa baigė prisijungimą</string>
+    <string name="combov2_warning">Combo įspėjimas</string>
+    <string name="combov2_error">Combo klaida</string>
+    <string name="combov2_warning_4">Skambinkite pagalbos linija dėl atnaujinimo</string>
+    <string name="combov2_warning_10">Bluetooth klaida; susiekite iš naujo</string>
+    <string name="combov2_error_1">Rezervuaras tuščias</string>
     <string name="combov2_error_2">Baterija tuščia</string>
     <string name="combov2_error_4">Užsikimšimas</string>
+    <string name="combov2_error_5">Pompos duomenų kopijavimo pabaiga</string>
     <string name="combov2_error_6">Mechaninė klaida</string>
+    <string name="combov2_error_7">Elektronikos klaida</string>
+    <string name="combov2_error_8">Maitinimo nutrūkimas</string>
+    <string name="combov2_error_9">Skolintos pompos veikimo pabaiga</string>
+    <string name="combov2_error_10">Rezervuaro klaida</string>
+    <string name="combov2_error_11">Infuzijos sistema neužpildyta</string>
+    <string name="combov2_extended_bolus_not_supported">Ištęstinis bolusas nepalaikomas</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Susieti pompą</string>
+    <string name="combov2_unpair_pump_title">Atsieti pompą</string>
+    <string name="combov2_driver_state_label">Valdiklio būsena</string>
+    <string name="combov2_current_activity_label">Dabartinė veikla</string>
     <string name="bluetooth_address">Bluetooth adresas</string>
+    <string name="combov2_start_pairing">Pradėti susiejimą</string>
+    <string name="combov2_pairing_in_progress">Vyksta Combo susiejimas</string>
+    <string name="combov2_pairing_start_steps">Žingsniai, reikalingi susieti Jūsų Combo:\n\n
+1. Pompoje nueikite į Bluetooth nustatymus\n
+2. Patikrinkite, ar įrenginys jau yra rodomas kaip suporuotas; jei taip, eikite į pompos ekraną \"Delete device\" ištrinti/atporuoti tą įrenginį\n
+3. Eikite į pompos ekraną \"Add device\" ir pradėkite poravimą pompoje\n
+4. Paspauskite \"Pradėti poravimą\" žemiau pradėti poravimą AndroidAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Po kurio laiko telefono pavadinimas parodomas pompos ekrane; paspauskite CHECK patvirtinimui.\n\n
+Kai poravimas sėkmingai baigtas, patvirtinkite baigtą poravimą pompoje ir grįžkite į pagrindinį pompos ekraną du kartus paspaudę CHECK mygtuką.\n\n
+Jei po daugiau nei ~5 minučių sujungimas nebaigtas:\n\n
+1. Paspauskite atgal arba \"Cancel Pairing\" mygtuką\n
+2. Atšaukite poravimą Combo (vienu metu paspauskite UP ir MENU mygtukus atšaukti poravimą)\n
+3. Bandykite suporuoti dar kartą</string>
+    <string name="combov2_enter_pin">Įveskite PIN</string>
+    <string name="combov2_cancel_pairing">Atšaukti susiejimą</string>
+    <string name="combov2_pin_hint">10 skaitmenų PIN</string>
+    <string name="combov2_pairing_finished_successfully">Combo sėkmingai prijungta</string>
+    <string name="combov2_pairing_cancelled">Combo prijungimą nutraukė vartotojas</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Pasiektas Combo skanavimo laiko limitas</string>
+    <string name="combov2_pairing_failed_due_to_error">Susiejimas nepavyko dėl klaidos: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Susiejimas nutrūko dėl nežinomos priežasties</string>
+    <string name="combov2_scanning_for_pump">Ieškoma ryšio su pompa</string>
+    <string name="combov2_establishing_bt_connection">Nustatomas Bluetooth ryšys (bandymo nr. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Užmezgamas ryšys su pompa</string>
+    <string name="combov2_pairing_pump_requests_pin">Pompa prašo 10 skaitmenų PIN</string>
+    <string name="combov2_pairing_finishing">Baigiamas susiejimas</string>
+    <string name="combov2_no_connection_for_n_mins">Nėra ryšio su pompa %1$d min</string>
+    <string name="combov2_less_than_one_minute_ago">Mažiau nei prieš minutę</string>
+    <string name="combov2_setting_current_pump_time">Nustatomas laikas pompoje</string>
+    <string name="combov2_setting_current_pump_date">Nustatoma data pompoje</string>
     <string name="combov2_not_initialized">Nepavyko paleisti</string>
+    <string name="combov2_checking_pump">Ieškoma pompos</string>
+    <string name="combov2_ready">Paruošta</string>
     <string name="combov2_suspended">Sustabdyta</string>
+    <string name="combov2_pump_is_suspended">Pompa sustabdyta</string>
+    <string name="combov2_executing_command">Komanda vykdoma</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Nuskaitomas bazės profilis</string>
     <string name="combov2_setting_basal_profile_cmddesc">Nustatyti bazės profilį</string>
+    <string name="combov2_setting_tbr_cmddesc">Nustatoma %1$d%% laikina bazė %2$d min.</string>
+    <string name="combov2_cancelling_tbr">Atšaukiama dabartinė laikina bazė</string>
+    <string name="combov2_delivering_bolus_cmddesc">Leidžiama %1$.1f v</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Įkeliama BPD istorija</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Atnaujinamas laikas ir data pompoje</string>
+    <string name="combov2_updating_pump_status_cmddesc">Gaunamas pompos statusas</string>
+    <string name="combov2_pairing_pin_failure">PIN neteisingas. Patikrinkite, ar visi skaičiai teisingi. Jei problema kartojasi, atšaukite ir pakartokite susiejimą.</string>
+    <string name="combov2_discovery_duration">Aptikimo trukmė (sekundėmis)</string>
+    <string name="combov2_verbose_logging">Įgalinti išsamius Combo įrašus</string>
+    <string name="combov2_getting_basal_profile">Nuskaitoma bazė; %1$d elementų nuskaityta</string>
+    <string name="combov2_setting_basal_profile">Įrašoma bazė; %1$d elementų įrašyta</string>
+    <string name="combov2_delivering_bolus">Leidžiamas bolusas (suleista %1$.1f iš %2$.1f v)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">Negalima atlikti veiksmo - pompa sustabdyta</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Nepakanka insulino rezervuare</string>
     <string name="combov2_bolus_cancelled">Bolusas atšauktas</string>
     <string name="combov2_bolus_delivery_failed">Boluso suleisti nepavyko. Panašu, kad nė kiek insulino nesuleista. Patikrinkite pompos įstoriją, kad įsitikintumėte tuo, ir bandykite vėl. Bolusai nekartojami automatiškai, siekiant apsisaugoti nuo programos klaidų.</string>
+    <string name="combov2_bolus_not_delivered">Bolusas nesuleistas</string>
+    <string name="combov2_cannot_access_pump_data">Neįmanoma pasiekti pompos duomenų; pompa turi būti susieta iš naujo</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Aptikti neįskaičiuoti insulino suleidimai. Bolusas atšaukiamas saugumui užtikrinti.</string>
+    <string name="combov2_incorrect_active_basal_profile">Neteisingas aktyvus bazės profilis; aktyvus turi būti profilis 1, ne profilis %1$d</string>
+    <string name="combov2_unrecognized_alert">Neatpažintas Combo įspėjimas</string>
+    <string name="combov2_combo_alert">Compo įspėjimas</string>
     <string name="combov2_current_tbr">%1$d%% (liko%2$d min)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (liko mažiau nei 1 min)</string>
+    <string name="combov2_load_tdds_cancelled">BPD įkėlimas atšauktas</string>
+    <string name="combov2_retrieving_tdds_failed">Nepavyko įkelti BPD</string>
     <string name="combov2_battery_low_warning">Pompos baterija baigia išsikrauti</string>
+    <string name="combov2_reservoir_low_warning">Pompos rezervuaras beveik tuščias</string>
+    <string name="combov2_setting_tbr_succeeded">Laikina bazė nustatyta</string>
+    <string name="combov2_setting_tbr_failed">Nepavyko nustatyti laikinos bazės</string>
+    <string name="combov2_set_emulated_100_tbr">Nustatyti imitacinę 100% bazę</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Leisti užbaigti imitacinę 100% bazę</string>
+    <string name="combov2_ignoring_redundant_100_tbr">Ignoruoti perteklines 100% bazės užklausas</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Nustatant laikiną bazę pasiektas nenumatytas limitas: LB tikslas %1$d%%, limitas %1$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Negalima nustatyti absoliučios laikinos bazės, jei pagrindinė bazė yra nulinė</string>
+    <string name="combov2_pair_with_pump_summary">Susieti AndroidAPS ir Android su dar nesusieta Accu-Chek Combo pompa</string>
+    <string name="combov2_unpair_pump_summary">Atsieti AndroidAPS ir Android su dabartine susieta Accu-Chek Combo pompa</string>
+    <string name="combov2_unknown_tbr_detected">Aptikta ir sustabdyta nežinoma laikina bazė: %1$d%%; likęs laikas: %2$s</string>
+    <string name="combov2_connection_error">Sujungimo klaida: %1$s</string>
     <string name="combov2_short_status_last_connection">Pask. prisijung.: prieš %1$d min</string>
+    <string name="combov2_short_status_alert">Įspėjimas: %s</string>
+    <string name="combov2_short_status_last_bolus">Pask.bolusas: %1$s @ %2$s</string>
     <string name="combov2_short_status_temp_basal">Laik.bazė: %s</string>
     <string name="combov2_short_status_reservoir">Rezerv: %dvv</string>
     <string name="combov2_short_status_battery_state_empty">tuščias</string>
     <string name="combov2_short_status_battery_state_low">žemas</string>
+    <string name="combov2_short_status_battery_state_full">pilna</string>
+    <string name="combov2_short_status_battery_state">Bat: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Automatiškai aptikti ir registruoti insulino rezervuaro keitimą</string>
+    <string name="combov2_automatic_battery_entry">Automatiškai aptikti ir registruoti baterijos keitimą</string>
+    <string name="combov2_note_reservoir_change">Rezervuaro keitimą automatiškai įrašė combov2 valdiklis</string>
+    <string name="combov2_note_battery_change">Baterijos keitimą automatiškai įrašė combov2 valdiklis</string>
+    <string name="combov2_timezone_changed">Laiko juosta pakeista</string>
+    <string name="combov2_datetime_changed">Data ir/ar laikas pasikeitė</string>
+    <string name="combov2_dst_started">Prasidėjo vasaros laikas</string>
+    <string name="combov2_dst_ended">Pasibaigė vasaros laikas</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Neįmanoma prisijungti prie pompos dėl pompos klaidos. Turite išspręsti klaidą ir palaukti 5 min, arba paspausti mygtuką Atnaujinti valdiklio skirtuke.</string>
+    <string name="combov2_refresh_pump_status_after_error">Atnaujinamas pompos statusas po klaidos pranešimo</string>
+    <string name="combov2_go_back">Grįžti atgal</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Neįmanoma prijungti pompos, nes nenustatytas valdiklis. Dažniausiai taip nutinka, kai nesuteiktas Bluetooth leidimas. Grįžkite atgal, leiskite Bluetooth ir bandykite vėl.</string>
 </resources>

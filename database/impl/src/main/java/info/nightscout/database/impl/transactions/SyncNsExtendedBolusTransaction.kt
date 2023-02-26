@@ -39,7 +39,7 @@ class SyncNsExtendedBolusTransaction(private val extendedBoluses: List<ExtendedB
 
                 // not known nsId
                 val running = database.extendedBolusDao.getExtendedBolusActiveAt(extendedBolus.timestamp).blockingGet()
-                if (running != null && abs(running.timestamp - extendedBolus.timestamp) < 1000 && running.interfaceIDs.nightscoutId == null) { // allow missing milliseconds
+                if (running != null && abs(running.timestamp - extendedBolus.timestamp) < 1000) { // allow missing milliseconds
                     // the same record, update nsId only
                     running.interfaceIDs.nightscoutId = extendedBolus.interfaceIDs.nightscoutId
                     database.extendedBolusDao.updateExistingEntry(running)

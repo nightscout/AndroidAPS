@@ -35,6 +35,27 @@ class ComboV2PairingActivity : DaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        val binding: Combov2PairingActivityBinding = DataBindingUtil.setContentView(
+            this, R.layout.combov2_pairing_activity)
+
+        // In the NotInitialized state, the PumpManager is unavailable because it cannot
+        // function without Bluetooth permissions. Several of ComboV2Plugin's functions
+        // such as getPairingProgressFlow() depend on PumpManager though. To prevent UI
+        // controls from becoming active without having a PumpManager, show instead a
+        // view on the activity that explains why pairing is currently not possible.
+        if (combov2Plugin.driverStateUIFlow.value == ComboV2Plugin.DriverState.NotInitialized) {
+            aapsLogger.info(LTag.PUMP, "Cannot pair right now; disabling pairing UI controls, showing message instead")
+
+            binding.combov2PairingSectionInitial.visibility = View.GONE
+            binding.combov2PairingSectionCannotPairDriverNotInitialized.visibility = View.VISIBLE
+
+            binding.combov2CannotPairGoBack.setOnClickListener {
+                finish()
+            }
+
+            return
+        }
+
         // Install an activity result caller for when the user presses
         // "deny" or "reject" in the dialog that pops up when Android
         // asks for permission to enable device discovery. In such a
@@ -53,9 +74,6 @@ class ComboV2PairingActivity : DaggerAppCompatActivity() {
         combov2Plugin.customDiscoveryActivityStartCallback = { intent ->
             startPairingActivityLauncher.launch(intent)
         }
-
-        val binding: Combov2PairingActivityBinding = DataBindingUtil.setContentView(
-            this, R.layout.combov2_pairing_activity)
 
         binding.combov2PairingFinishedOk.setOnClickListener {
             finish()
@@ -263,20 +281,26 @@ class ComboV2PairingActivity : DaggerAppCompatActivity() {
     }
 
     override fun onDestroy() {
-        // Reset the pairing progress reported to allow for future pairing attempts.
-        // Do this only after pairing was finished or aborted. onDestroy() can be
-        // called in the middle of a pairing process, and we do not want to reset
-        // the progress reporter mid-pairing.
-        when (combov2Plugin.getPairingProgressFlow().value.stage) {
-            BasicProgressStage.Finished,
-            is BasicProgressStage.Aborted -> {
-                aapsLogger.debug(
-                    LTag.PUMP,
-                    "Resetting pairing progress reporter after pairing was finished/aborted"
-                )
-                combov2Plugin.resetPairingProgress()
+        // In the NotInitialized state, getPairingProgressFlow() crashes because there
+        // is no PumpManager present. But in that state, the pairing progress flow needs
+        // no reset because no pairing can happen in that state anyway.
+        if (combov2Plugin.driverStateUIFlow.value != ComboV2Plugin.DriverState.NotInitialized) {
+            // Reset the pairing progress reported to allow for future pairing attempts.
+            // Do this only after pairing was finished or aborted. onDestroy() can be
+            // called in the middle of a pairing process, and we do not want to reset
+            // the progress reporter mid-pairing.
+            when (combov2Plugin.getPairingProgressFlow().value.stage) {
+                BasicProgressStage.Finished,
+                is BasicProgressStage.Aborted -> {
+                    aapsLogger.debug(
+                        LTag.PUMP,
+                        "Resetting pairing progress reporter after pairing was finished/aborted"
+                    )
+                    combov2Plugin.resetPairingProgress()
+                }
+
+                else                          -> Unit
             }
-            else -> Unit
         }
 
         super.onDestroy()

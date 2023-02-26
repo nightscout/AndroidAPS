@@ -129,7 +129,7 @@ public class BolusCommand extends BaseCommand {
                     if (cancellationThread != null) {
                         try {
                             cancellationThread.join(3500);
-                        } catch (InterruptedException e) {
+                        } catch (InterruptedException ignored) {
                             // ignore
                         }
                     }
@@ -175,7 +175,7 @@ public class BolusCommand extends BaseCommand {
         if (cancellationThread != null) {
             try {
                 cancellationThread.join();
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
                 // ignore
             }
         }

@@ -148,12 +148,10 @@ class PersistentNotificationPlugin @Inject constructor(
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             line2 =
                 rh.gs(info.nightscout.core.ui.R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + rh.gs(info.nightscout.core.ui.R.string.cob) + ": " + iobCobCalculator.getCobInfo(
-                    false,
                     "PersistentNotificationPlugin"
                 ).generateCOBString()
             val line2aa =
                 rh.gs(info.nightscout.core.ui.R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + rh.gs(info.nightscout.core.ui.R.string.cob) + ": " + iobCobCalculator.getCobInfo(
-                    false,
                     "PersistentNotificationPlugin"
                 ).generateCOBString() + "."
             line3 = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h"

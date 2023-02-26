@@ -104,17 +104,11 @@
     <string name="sms_profile_switch_created">Přepnutí profilu vytvořeno</string>
     <string name="sms_wrong_tbr_duration">Trvání dočasného bazálu musí být násobkem %1$d minut a musí být větší než 0.</string>
     <string name="a11y_otp_qr_code">QR kód pro nastavení jednorázového hesla</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Stavová řádka xDrip+ (hodinky)</string>
-    <string name="xdrip_status_shortname">XDS</string>
-    <string name="description_xdrip_status_line">Zobrazování informací o smyčce na xDrip+ watchface.</string>
     <string name="xdrip_status_detailed_iob_title">Zobrazit detailní IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Rozepsat IOB do bolusového a bazálního na hodinkách</string>
     <string name="disabled_loop">Smyčka zakázána</string>
     <string name="xdrip_status_show_bgi_title">Zobrazovat BGI</string>
     <string name="xdrip_status_show_bgi_summary">Přidat BGI do stavové řádky</string>
-    <string name="xdrip_status_settings">Status z xDripu+ (hodinky)</string>
     <!-- Food-->
     <string name="food_short">Jídlo</string>
     <string name="description_food">Zobrazení jídel definovaných v NS</string>
@@ -203,15 +197,9 @@
     <string name="a11y_bg_outdated">zastaralé</string>
     <string name="set_basal_question">Spustit nový dočasný bazál:</string>
     <string name="overview_cgm">CGM</string>
-    <string name="quickwizard">Rychlý bolus</string>
-    <string name="a11y_only_on_watch">pouze na hodinkách</string>
-    <string name="a11y_only_on_phone">pouze na telefonu</string>
     <string name="overview">Přehled</string>
     <string name="overview_shortname">PŘEH</string>
     <string name="description_overview">Zobrazení stavu a informací. Přístup k nejběžnějším ovládacím prvkům</string>
-    <string name="overview_editquickwizard_usecob">Kalkulace COB</string>
-    <string name="overview_editquickwizard_usetemptarget">Kalkulace s dočasným cílem</string>
-    <string name="overview_editquickwizard_usepercentage">Procentní výpočet</string>
     <string name="overview_buttons_selection">Tlačítka</string>
     <string name="show_calibration_button_summary">Odeslání kalibrace do xDrip+ nebo otevření kalibračního dialogu BYODA</string>
     <string name="show_cgm_button_summary">Otevře xDrip+ nebo BYODA, tlačítko zpět vrátí do AndroidAPS</string>
@@ -225,25 +213,6 @@
     <string name="uploader">Uploader</string>
     <string name="data_status">Stav glykémie</string>
     <string name="quickwizard_settings">Nastavení rychlých bolusů</string>
-    <string name="overview_edit_quickwizard_button_text">Text na tlačítku:</string>
-    <string name="overview_edit_quickwizard_carbs">Sacharidy:</string>
-    <string name="overview_edit_quickwizard_valid">Platné:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Přidat</string>
-    <string name="overview_quickwizard_item_edit_button">Upravit</string>
-    <string name="overview_edit_quickwizard_show_on_device">Zobrazit záznam na zařízení:</string>
-    <string name="overview_edit_quickwizard_use_bg">Kalkulace glykémie</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Kalkulace bolusového IOB</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Kalkulace bazálního IOB</string>
-    <string name="overview_edit_quickwizard_use_trend">Kalkulace trendu</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Kalkulace superbolusu</string>
-    <string name="overview_edit_quickwizard_percentage">% změna</string>
-    <string name="device_all">Vše</string>
-    <string name="device_phone">Telefon</string>
-    <string name="device_watch">Hodinky</string>
-    <string name="positive_only">Pouze kladné</string>
-    <string name="negative_only">Pouze záporné</string>
-    <string name="app_default">Výchozí nastavení aplikace</string>
-    <string name="a11y_drag_and_drop_handle">úchyt pro přetažení</string>
     <string name="keep_screen_on_title">Nechat obrazovku zapnutou</string>
     <string name="keep_screen_on_summary">Zabránit Androidu ve zhasínání obrazovky. Bez připojení do nabíječky vybije velice rychle baterii!</string>
     <string name="treatments">Ošetření</string>
@@ -310,7 +279,6 @@
     <string name="buttonson_description">Tlačítka jsou vždy zobrazena v dolní části obrazovky</string>
     <string name="largedisplay_description">Velký displej</string>
     <string name="skin">Vzhled</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">použití:</string>
     <!--    Iob-->
     <string name="send_logfiles">Odešlete dnešní soubory protokolů vývojářům spolu s tímto časem. Neočekávaná situace.</string>
@@ -355,8 +323,8 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Není nastaven žádný aktivní profil!</string>
-    <string name="profile_message">Profil:\n\nPosunutí: %1$\nprocento: %2$d%\"</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%</string>
+    <string name="profile_message">Profil:\n\nPosunutí: %1$\nProcento: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">Není vybrán žádný profil</string>
     <string name="aps_only">Použít pouze v APS módu!</string>
     <string name="last_aps_result_na">Poslední výsledek není k dispozici!</string>
@@ -375,5 +343,5 @@
     <string name="until">až do</string>
     <string name="default_range">VÝCHOZÍ ROZSAH</string>
     <string name="target">cíl</string>
-    <string name="rate_duration">Rychlost: %1$.2fU/h (%2$.2f%) \nTrvání %3$d% min</string>
+    <string name="rate_duration">Rychlost: %1$.2fU/h (%2$.2f%%) \nTrvání %3$d min</string>
 </resources>

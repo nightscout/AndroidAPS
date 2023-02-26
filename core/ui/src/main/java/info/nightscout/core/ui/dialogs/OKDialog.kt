@@ -40,6 +40,28 @@ object OKDialog {
     }
 
     @SuppressLint("InflateParams")
+    fun show(context: Context, title: String, message: Spanned, runnable: Runnable? = null) {
+        var okClicked = false
+        var notEmptyTitle = title
+        if (notEmptyTitle.isEmpty()) notEmptyTitle = context.getString(R.string.message)
+
+        MaterialAlertDialogBuilder(context, R.style.DialogTheme)
+            .setCustomTitle(AlertDialogHelper.buildCustomTitle(context, notEmptyTitle))
+            .setMessage(message)
+            .setPositiveButton(context.getString(R.string.ok)) { dialog: DialogInterface, _: Int ->
+                if (okClicked) return@setPositiveButton
+                else {
+                    okClicked = true
+                    dialog.dismiss()
+                    SystemClock.sleep(100)
+                    runOnUiThread(runnable)
+                }
+            }
+            .show()
+            .setCanceledOnTouchOutside(false)
+    }
+
+    @SuppressLint("InflateParams")
     fun show(activity: FragmentActivity, title: String, message: Spanned, runnable: Runnable? = null) {
         var okClicked = false
         var notEmptyTitle = title

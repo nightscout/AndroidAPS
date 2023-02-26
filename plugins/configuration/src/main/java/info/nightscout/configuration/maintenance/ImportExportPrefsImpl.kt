@@ -59,6 +59,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import kotlinx.coroutines.Dispatchers
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
@@ -381,7 +382,7 @@ class ImportExportPrefsImpl @Inject constructor(
     class CsvExportWorker(
         context: Context,
         params: WorkerParameters
-    ) : LoggingWorker(context, params) {
+    ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var rh: ResourceHelper
@@ -391,7 +392,7 @@ class ImportExportPrefsImpl @Inject constructor(
         @Inject lateinit var storage: Storage
         @Inject lateinit var persistenceLayer: PersistenceLayer
 
-        override fun doWorkAndLog(): Result {
+        override suspend fun doWorkAndLog(): Result {
             val entries = persistenceLayer.getUserEntryFilteredDataFromTime(MidnightTime.calc() - T.days(90).msecs()).blockingGet()
             prefFileList.ensureExportDirExists()
             val newFile = prefFileList.newExportCsvFile()

@@ -7,7 +7,7 @@ import dagger.multibindings.IntoMap
 import info.nightscout.androidaps.danaRKorean.DanaRKoreanPlugin
 import info.nightscout.androidaps.danaRv2.DanaRv2Plugin
 import info.nightscout.androidaps.danar.DanaRPlugin
-import info.nightscout.androidaps.plugin.general.openhumans.OpenHumansUploaderPlugin
+import info.nightscout.plugins.sync.openhumans.OpenHumansUploaderPlugin
 import info.nightscout.androidaps.plugins.pump.eopatch.EopatchPumpPlugin
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.androidaps.plugins.pump.medtronic.MedtronicPumpPlugin
@@ -31,19 +31,19 @@ import info.nightscout.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.plugins.general.actions.ActionsPlugin
 import info.nightscout.plugins.general.autotune.AutotunePlugin
-import info.nightscout.plugins.general.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.plugins.general.food.FoodPlugin
 import info.nightscout.plugins.general.overview.OverviewPlugin
 import info.nightscout.plugins.general.persistentNotification.PersistentNotificationPlugin
 import info.nightscout.plugins.general.smsCommunicator.SmsCommunicatorPlugin
 import info.nightscout.plugins.general.themes.ThemeSwitcherPlugin
 import info.nightscout.plugins.general.wear.WearPlugin
-import info.nightscout.plugins.general.xdripStatusline.StatusLinePlugin
 import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.plugins.profile.ProfilePlugin
+import info.nightscout.plugins.sync.dataBroadcaster.DataBroadcastPlugin
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
+import info.nightscout.plugins.sync.xdrip.XdripPlugin
 import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
@@ -51,8 +51,8 @@ import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.sensitivity.SensitivityAAPSPlugin
 import info.nightscout.sensitivity.SensitivityOref1Plugin
 import info.nightscout.sensitivity.SensitivityWeightedAveragePlugin
-import info.nightscout.smoothing.ExponentialSmoothingPlugin
 import info.nightscout.smoothing.AvgSmoothingPlugin
+import info.nightscout.smoothing.ExponentialSmoothingPlugin
 import info.nightscout.smoothing.NoSmoothingPlugin
 import info.nightscout.source.AidexPlugin
 import info.nightscout.source.DexcomPlugin
@@ -64,7 +64,7 @@ import info.nightscout.source.NSClientSourcePlugin
 import info.nightscout.source.PoctechPlugin
 import info.nightscout.source.RandomBgPlugin
 import info.nightscout.source.TomatoPlugin
-import info.nightscout.source.XdripPlugin
+import info.nightscout.source.XdripSourcePlugin
 import javax.inject.Qualifier
 
 @Suppress("unused")
@@ -308,26 +308,38 @@ abstract class PluginsListModule {
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(340)
-    abstract fun bindStatusLinePlugin(plugin: StatusLinePlugin): PluginBase
+    @IntKey(350)
+    abstract fun bindNSClientPlugin(plugin: NSClientPlugin): PluginBase
 
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(360)
-    abstract fun bindNSClientPlugin(plugin: NSClientPlugin): PluginBase
+    @IntKey(355)
+    abstract fun bindNSClientV3Plugin(plugin: NSClientV3Plugin): PluginBase
 
     @Binds
-    @Unfinished
+    @NotNSClient
     @IntoMap
-    @IntKey(368)
+    @IntKey(360)
     abstract fun bindTidepoolPlugin(plugin: TidepoolPlugin): PluginBase
 
     @Binds
-    @Unfinished
+    @AllConfigs
     @IntoMap
-    @IntKey(362)
-    abstract fun bindNSClientV3Plugin(plugin: NSClientV3Plugin): PluginBase
+    @IntKey(364)
+    abstract fun bindXdripPlugin(plugin: XdripPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
+    @IntKey(366)
+    abstract fun bindDataBroadcastPlugin(plugin: DataBroadcastPlugin): PluginBase
+
+    @Binds
+    @NotNSClient
+    @IntoMap
+    @IntKey(368)
+    abstract fun bindsOpenHumansPlugin(plugin: OpenHumansUploaderPlugin): PluginBase
 
     @Binds
     @AllConfigs
@@ -350,14 +362,8 @@ abstract class PluginsListModule {
     @Binds
     @AllConfigs
     @IntoMap
-    @IntKey(390)
-    abstract fun bindDataBroadcastPlugin(plugin: DataBroadcastPlugin): PluginBase
-
-    @Binds
-    @AllConfigs
-    @IntoMap
     @IntKey(400)
-    abstract fun bindXdripPlugin(plugin: XdripPlugin): PluginBase
+    abstract fun bindXdripSourcePlugin(plugin: XdripSourcePlugin): PluginBase
 
     @Binds
     @AllConfigs
@@ -418,12 +424,6 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(475)
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
-
-    @Binds
-    @NotNSClient
-    @IntoMap
-    @IntKey(480)
-    abstract fun bindsOpenHumansPlugin(plugin: OpenHumansUploaderPlugin): PluginBase
 
     @Binds
     @AllConfigs

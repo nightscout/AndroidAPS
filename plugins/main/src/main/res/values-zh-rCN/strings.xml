@@ -98,17 +98,11 @@
     <string name="sms_profile_switch_created">配置文件切换已创建</string>
     <string name="sms_wrong_tbr_duration">TBR(临时基础率) 的持续时间必须是 %1$d 分钟的倍数，且大于0。</string>
     <string name="a11y_otp_qr_code">用于安装一次性随机验证码的二维码</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+状态线 (手表)</string>
-    <string name="xdrip_status_shortname">xdrip</string>
-    <string name="description_xdrip_status_line">在 xDrip + 表盘上显示有关闭环的信息。</string>
     <string name="xdrip_status_detailed_iob_title">显示详细 IOB</string>
     <string name="xdrip_status_detailed_iob_summary">在手表的表盘上分别显示大剂量IOB和基础IOB</string>
     <string name="disabled_loop">闭环禁用</string>
     <string name="xdrip_status_show_bgi_title">显示血糖线</string>
     <string name="xdrip_status_show_bgi_summary">添加血糖线到状态线</string>
-    <string name="xdrip_status_settings">xDrip+状态 (手表)</string>
     <!-- Food-->
     <string name="food_short">食物</string>
     <string name="description_food">显示 Nightscout 中定义的食物预设</string>
@@ -195,15 +189,9 @@
     <string name="a11y_bg_outdated">已过期</string>
     <string name="set_basal_question">接受新的临时基础率</string>
     <string name="overview_cgm">CGM</string>
-    <string name="quickwizard">快速向导</string>
-    <string name="a11y_only_on_watch">仅在手表时</string>
-    <string name="a11y_only_on_phone">仅在手机上</string>
     <string name="overview">首页概览</string>
     <string name="overview_shortname">主页</string>
     <string name="description_overview">显示闭环的当前状态和大多数常用操作的按钮</string>
-    <string name="overview_editquickwizard_usecob">COB计算</string>
-    <string name="overview_editquickwizard_usetemptarget">临时目标血糖计算</string>
-    <string name="overview_editquickwizard_usepercentage">百分比计算</string>
     <string name="overview_buttons_selection">按钮</string>
     <string name="show_calibration_button_summary">将校准发送到xDrip+或打开BYODA校准对话框</string>
     <string name="show_cgm_button_summary">打开xDrip+或BYODA应用时，返回键将返回到AAPS应用</string>
@@ -217,25 +205,6 @@
     <string name="uploader">上传者</string>
     <string name="data_status">血糖数据状态</string>
     <string name="quickwizard_settings">快速向导设置</string>
-    <string name="overview_edit_quickwizard_button_text">按钮文本:</string>
-    <string name="overview_edit_quickwizard_carbs">碳水:</string>
-    <string name="overview_edit_quickwizard_valid">有效：</string>
-    <string name="overview_edit_quickwizard_list_activity_add">添加</string>
-    <string name="overview_quickwizard_item_edit_button">编辑</string>
-    <string name="overview_edit_quickwizard_show_on_device">在设备上显示条目：</string>
-    <string name="overview_edit_quickwizard_use_bg">血糖计算</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">大剂量IOB (活性胰岛素) 计算</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">基础率IOB (活性胰岛素) 计算</string>
-    <string name="overview_edit_quickwizard_use_trend">趋势计算</string>
-    <string name="overview_edit_quickwizard_use_superbolus">超级大剂量计算</string>
-    <string name="overview_edit_quickwizard_percentage">百分比</string>
-    <string name="device_all">全部</string>
-    <string name="device_phone">手机</string>
-    <string name="device_watch">手表</string>
-    <string name="positive_only">仅正数</string>
-    <string name="negative_only">仅负数</string>
-    <string name="app_default">应用程序预设</string>
-    <string name="a11y_drag_and_drop_handle">拖放操作</string>
     <string name="keep_screen_on_title">保持屏幕常亮</string>
     <string name="keep_screen_on_summary">阻止 Android 系统关闭手机屏幕。这将非常耗电</string>
     <string name="treatments">治疗</string>
@@ -303,7 +272,6 @@
     <string name="buttonson_description">按钮总是显示在屏幕底部</string>
     <string name="largedisplay_description">大显示屏</string>
     <string name="skin">皮肤</string>
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">发送包括当前时间的今日的日志文件给开发者。描述一下意外情况</string>
     <!--    Wear-->

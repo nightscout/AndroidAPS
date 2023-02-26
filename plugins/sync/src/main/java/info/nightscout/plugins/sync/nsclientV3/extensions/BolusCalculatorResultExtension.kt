@@ -6,6 +6,7 @@ import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.sdk.localmodel.entry.NsUnits
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSBolusWizard
+import info.nightscout.shared.utils.T
 
 fun NSBolusWizard.toBolusCalculatorResult(): BolusCalculatorResult? =
     try {
@@ -25,7 +26,7 @@ fun BolusCalculatorResult.toNSBolusWizard(): NSBolusWizard =
         eventType = EventType.BOLUS_WIZARD,
         isValid = isValid,
         date = timestamp,
-        utcOffset = utcOffset,
+        utcOffset = T.msecs(utcOffset).mins(),
         notes = note,
         bolusCalculatorResult = Gson().toJson(this).toString(),
         units = NsUnits.MG_DL,

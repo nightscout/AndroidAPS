@@ -11,5 +11,8 @@
     <string name="insulin_peak_time">Czas piku [min]</string>
     <string name="free_peak_oref">Swobodny-Pik Oref</string>
     <string name="rapid_acting_oref">Szybko-Działający Oref</string>
+    <string name="ultra_rapid_oref">Ultra-Szybki Oref</string>
     <string name="dia_too_short">DIA %1$f zbyt krótki - przyjmuję %2$f w zamian!</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
 </resources>

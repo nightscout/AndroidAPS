@@ -1,8 +1,8 @@
 package info.nightscout.comboctl.base
 
-import kotlin.reflect.KClassifier
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlin.reflect.KClassifier
 
 private val logger = Logger.get("Pump")
 

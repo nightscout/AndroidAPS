@@ -19,8 +19,6 @@
     <string name="objectives_autosens_gate">1 week suksesvolle dagtyd lus met gereelde karb toevoegings</string>
     <string name="objectives_smb_objective">Skakel bykomende nutsfunskies aan vir bedags gebruik, soos bv. SMB</string>
     <string name="objectives_smb_gate">Jy moet asb die wiki lees en verhoog maksIAB om SMBs te laat werk! \'n Goeie begin is maksIAB = gemiddelde ete bolus + 3 x maks daaglikse basale</string>
-    <string name="objectives_bgavailableinns">BG beskikbaar in NS</string>
-    <string name="objectives_pumpstatusavailableinns">Pompstatus beskikbaar in NS</string>
     <string name="objectives_manualenacts">Per hand aksies</string>
     <string name="accomplished">Bereik: %1$s</string>
     <string name="objectives_useprofileswitch">Stel profiel 90% vir 10 min (Lang-pers profiel naam op Oorsig)</string>

@@ -13,6 +13,7 @@ enum class LTag(val tag: String, val defaultValue : Boolean = true, val requires
     DATATREATMENTS("DATATREATMENTS"),
     EVENTS("EVENTS", defaultValue = false, requiresRestart = true),
     GLUCOSE("GLUCOSE", defaultValue = false),
+    HTTP("HTTP"),
     LOCATION("LOCATION"),
     NOTIFICATION("NOTIFICATION"),
     NSCLIENT("NSCLIENT"),
@@ -27,5 +28,6 @@ enum class LTag(val tag: String, val defaultValue : Boolean = true, val requires
     UI("UI", defaultValue = false),
     WEAR("WEAR"),
     WIDGET("WIDGET"),
-    WORKER("WORKER")
+    WORKER("WORKER"),
+    XDRIP("XDRIP")
 }

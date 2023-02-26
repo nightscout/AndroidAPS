@@ -20,8 +20,6 @@
     <string name="objectives_smb_objective">Activant funcions addicionals d\'ús diurn, com l\'SMB (super micro bolus)</string>
     <string name="objectives_smb_gate">Heu de llegir la wiki i augmentar la maxIOB per a què l\'SMB funcioni correctament! Una bona manera de començar és amb maxIOB = bolus d\'àpat mig + 3 x màxima basal diària</string>
     <string name="objectives_auto_objective">Activant l\'automatització</string>
-    <string name="objectives_bgavailableinns">Glucèmia disponible a NS</string>
-    <string name="objectives_pumpstatusavailableinns">Estat de la bomba disponible a NS</string>
     <string name="objectives_manualenacts">Activació manual</string>
     <string name="accomplished">Completat: %1$s</string>
     <string name="objectives_useprofileswitch">Establiu un perfil del 90% durant 10 minuts (pulsació llarga sobre el nom del perfil a \"Inici\")</string>

@@ -7,13 +7,14 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSExtendedBolus
 import info.nightscout.sdk.localmodel.treatment.NSTreatment
+import info.nightscout.shared.utils.T
 import java.security.InvalidParameterException
 
 fun NSExtendedBolus.toExtendedBolus(): ExtendedBolus =
     ExtendedBolus(
         isValid = isValid,
         timestamp = date ?: throw InvalidParameterException(),
-        utcOffset = utcOffset ?: 0L,
+        utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         amount = enteredinsulin,
         duration = duration,
         isEmulatingTempBasal = isEmulatingTempBasal ?: false,
@@ -30,7 +31,7 @@ fun ExtendedBolus.toNSExtendedBolus(profile: Profile, convertToTemporaryBasal: B
             eventType = EventType.COMBO_BOLUS,
             isValid = isValid,
             date = timestamp,
-            utcOffset = utcOffset,
+            utcOffset = T.msecs(utcOffset).mins(),
             enteredinsulin = amount,
             duration = duration,
             isEmulatingTempBasal = isEmulatingTempBasal,

@@ -102,4 +102,5 @@
     <string name="basal_rate">Rată bazală</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOP APĂSAT</string>
+    <!--QuickWizard-->
 </resources>

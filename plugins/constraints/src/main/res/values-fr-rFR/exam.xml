@@ -4,11 +4,11 @@
     <string name="dia_label_exam">Durée d\'Action de l\'Insuline (DAI)</string>
     <string name="dia_profile">Vous devez définir la valeur de DAI dans votre profil.</string>
     <string name="dia_minimumis5h">La valeur minimale autorisée est de 5 heures.</string>
-    <string name="dia_hint1">https://wiki.aaps.app/fr/latest/Configuration/Config-Builder.html?#insuline</string>
+    <string name="dia_hint1">https://wiki.aaps.app/fr/latest/Configuration/Config-Builder.html#insuline</string>
     <string name="dia_meaningisequaltodiapump">Si vous êtes convaincu que la valeur de DAI utilisée dans votre pompe avant AAPS marche bien, il n\'y a pas besoin de la changer lorsque vous commencez à utiliser la boucle.</string>
     <string name="dia_valuemustbedetermined">Vous devez déterminer par vous-même la valeur appropriée pour la DAI.</string>
     <string name="hypott_label">Cible temporaire Hypo</string>
-    <string name="hypott_whenhypott">Quelle est la raison principale pour définir une cible temporaire hypo?</string>
+    <string name="hypott_whenhypott">Quelle est la raison principale pour définir une cible temp hypo?</string>
     <string name="hypott_wrongbasal">Pour corriger les hypos causés par des paramètres de débit basal incorrects.</string>
     <string name="hypott_preventoversmb">Pour empêcher AAPS de surcorriger une hausse de glycémie causée par les glucides à action rapide utilisés pour traiter une hypo.</string>
     <string name="hypott_exercise">Pour corriger une hypo due à un exercice.</string>
@@ -19,10 +19,10 @@
     <string name="offlineprofile_nsprofile">Le profil NS peut être utilisé, mais il n\'est pas configuré.</string>
     <string name="offlineprofile_hint1">https://wiki.aaps.app/fr/latest/Configuration/Config-Builder.html#profil</string>
     <string name="pumpdisconnect_label">Motifs pour l\'utilisation de la \"Déconnexion de pompe\" dans AAPS</string>
-    <string name="pumpdisconnect_whattodo">Que faire lors de la déconnexion de la pompe?</string>
+    <string name="pumpdisconnect_whattodo">Que faire lorsque vous déconnectez la pompe de votre corps ?</string>
     <string name="pumpdisconnect_unnecessary">C\'est inutile car l\'insuline ne sera pas délivrée si la pompe est physiquement déconnectée.</string>
-    <string name="pumpdisconnect_missinginsulin">Cela empêche AAPS de comptabiliser l\'insuline qui n\'a pas été délivrée quand la pompe est physiquement déconnectée.</string>
-    <string name="pumpdisconnect_notstop">Cela n\'arrêtera pas la distribution d\'insuline si la pompe reste connectée.</string>
+    <string name="pumpdisconnect_missinginsulin">Cela empêche AAPS de comptabiliser l\'insuline qui n\'a pas été injectée quand la pompe est physiquement déconnectée.</string>
+    <string name="pumpdisconnect_notstop">Cela n\'arrêtera pas la distribution d\'insuline si la pompe reste connectée à votre corps.</string>
     <string name="pumpdisconnect_openloop">Cela passera AAPS en mode boucle ouverte.</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/fr/latest/Getting-Started/FAQ.html#autres-parametres</string>
     <string name="objectives_label">Paramètres AAPS</string>
@@ -136,17 +136,17 @@
     <string name="wronginsulin_prime">Faites un bolus du montant de votre insuline calculée « manquante » soit par seringue / stylo ou en utilisant un amorçage.</string>
     <string name="wronginsulin_donothing">Ne faites rien et laissez AAPS corriger le taux élevé de glycémie qui en résulte.</string>
     <string name="cob_label">Glucides Actifs (GA)</string>
-    <string name="cob_question">Comment le changement de la SI impacte le calcul des GA ?</string>
-    <string name="cob_longer">Augmenter la SI rendra l\'absorption des glucides plus longue</string>
-    <string name="cob_shorter">L\'augmentation de la SI réduira le temps d\'absorption des glucides</string>
+    <string name="cob_question">Comment le changement de la SI impacte le calcul des GA effectué par AAPS ?</string>
+    <string name="cob_longer">L\'augmentation de la SI allongera le temps d\'absorption des glucides calculé</string>
+    <string name="cob_shorter">L\'augmentation de la SI réduira le temps d\'absorption des glucides calculé</string>
     <string name="cob_no_effect">L\'augmentation de la SI n\'affectera pas les calculs de l\'absorption des glucides</string>
     <string name="cob2_question">Comment le changement de G/I impacte le calcul des GA ?</string>
-    <string name="cob2_longer">L\'augmentation de G/I rendra l\'absorption des glucides plus longue</string>
-    <string name="cob2_shorter">L\'augmentation de G/I réduira le temps d\'absorption des glucides</string>
+    <string name="cob2_longer">L\'augmentation du G/I allongera le temps d\'absorption des glucides calculé</string>
+    <string name="cob2_shorter">L\'augmentation du G/I réduira le temps d\'absorption des glucides calculé</string>
     <string name="cob2_no_effect">L\'augmentation de G/I n\'impactera pas l\'absorption des glucides calculés</string>
     <string name="cob3_question">Comment le changement du pourcentage de profil impacte le calcul des GA ?</string>
-    <string name="cob3_longer">Définir le profil à 150% rendra l\'absorption des glucides plus longue</string>
-    <string name="cob3_shorter">Définir le profil à 150% réduira le temps d\'absorption des glucides</string>
+    <string name="cob3_longer">Définir le profil à 150% allongera le temps d\'absorption des glucides calculé</string>
+    <string name="cob3_shorter">Définir le profil à 150% réduira le temps d\'absorption des glucides calculé</string>
     <string name="cob3_no_effect">Définir le profil à 150% n\'impactera pas le calcul de l\'absorption des glucides</string>
     <string name="iob_value">La valeur de l\'IA est impactée par les débits de basal temporaires émis.</string>
     <string name="iob_hightemp">Une basale temp haute ne sera pas donnée quand votre glycémie est en dessous de la cible.</string>
@@ -155,7 +155,7 @@
     <string name="breadgrams_label">Entrée de glucides et bolus</string>
     <string name="breadgrams_grams">Seuls les grammes doivent être utilisés pour estimer et enregistrer les glucides consommés.</string>
     <string name="breadgrams_exchange">Les glucides consommés peuvent être enregistrés à l\'aide d\'un système d\'échange approprié (par exemple, les échanges DAFNE \"CHO\" ou les \"Unités de Pain\" européennes).</string>
-    <string name="breadgrams_decay">AAPS utilise un modèle dynamique pour estimer la « décomposition » des glucides et calculer les GA (COB).</string>
+    <string name="breadgrams_decay">AAPS utilise un modèle dynamique pour estimer l\'absorption des glucides et calculer les GA.</string>
     <string name="breadgrams_calc">Si les glycémies sont en dehors des valeurs acceptables (trop faibles ou trop élevées), la calculatrice de bolus peut être utilisée pour fournir des suggestions de corrections de glucides ou d\'insuline.</string>
     <string name="breadgrams_hint1">https://wiki.aaps.app/fr/latest/Getting-Started/FAQ.html#rapport-glucides-insuline-g-i-g-u</string>
     <string name="extendedcarbs_label">e-Glucides</string>
@@ -175,7 +175,7 @@
     <string name="isf_label_exam">Sensibilité à l\'Insuline (SI)</string>
     <string name="isf_increasingvalue">Augmenter la SI entraînera une augmentation de la quantité d\'insuline pour couvrir une quantité spécifique de glucides.</string>
     <string name="isf_decreasingvalue">Réduire la SI entraînera une augmentation de la quantité d\'insuline pour corriger une glycémie supérieure à la cible.</string>
-    <string name="isf_noeffect">Augmenter ou diminuer la SI n\'a aucun effet sur la quantité d\'insuline injectée lorsque la glycémie est inférieur à la cible.</string>
+    <string name="isf_noeffect">L\'augmentation ou la diminution de la SI n\'affectent pas l\'injection d\'insuline lorsque la glycémie est inférieur à la cible.</string>
     <string name="isf_preferences">La SI doit être saisie dans vos préférences AAPS.</string>
     <string name="isf_profile">La modification de la SI dans le profil est suffisant pour appliquer le changement.</string>
     <string name="isf_hint1">https://wiki.aaps.app/fr/latest/Getting-Started/FAQ.html#sensibilite-a-l-insuline-si-mmol-l-u-ou-mg-dl-u</string>
@@ -187,7 +187,7 @@
     <string name="ic_decreasingvalue">Les ratios G/I plus faibles conduisent à moins d\'insuline injectée pour une quantité donnée de glucides.</string>
     <string name="ic_noeffect">Si vous avez 0 GA, changer le ratio G/I conduira à différentes quantités d\'insuline pour corriger une valeur de glycémie donnée.</string>
     <string name="ic_different">Le G/I sera différent si vous comptez l\'unité (d\'échange) de pain à 10g ou à 12g.</string>
-    <string name="ic_meaning">Le G/I (Ratio Glucides/Insuline) est : combien d\'unités (d\'échange) de pain sont couverte par 1U d\'insuline.</string>
+    <string name="ic_meaning">Le G/I (Ratio Glucides/Insuline) est : combien d\'unités (d\'échange) de pain sont couverte par 1U d\'insuline?</string>
     <string name="ic_hint1">https://wiki.aaps.app/fr/latest/Getting-Started/FAQ.html#rapport-glucides-insuline-g-i-g-u</string>
     <string name="profileswitch_label">Changement de profil</string>
     <string name="profileswitch_pctwillchange">Quand vous spécifiez un changement de profil à 90%, quelles réponses sont vraies ?</string>
@@ -195,7 +195,7 @@
     <string name="profileswitch_isfhigher">La valeur de SI sera augmentée de 10%.</string>
     <string name="profileswitch_iclower">La valeur du ratio G/I sera un nombre 10% inférieur.</string>
     <string name="profileswitch_unchanged">Les ratios SI et G/I seront inchangés.</string>
-    <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/fr/latest/Usage/Profiles.html#changement-de-profil</string>
+    <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/fr/latest/Usage/Profiles.html</string>
     <string name="profileswitch2_label">Changement de profil</string>
     <string name="profileswitch2_pctwillchange">Quand vous spécifiez un changement de profil à 120%, quelles réponses sont vraies ?</string>
     <string name="profileswitch2_bghigher">La glycémie cible sera 20% plus élevée.</string>
@@ -206,8 +206,8 @@
     <string name="profileswitchtime_iwant">Si vous vous réveillez 2 heures plus tôt que d\'habitude, comment informez-vous AAPS du changement de votre planning ?</string>
     <string name="profileswitchtime_2">Faites un changement de profil avec un décalage horaire de 2</string>
     <string name="profileswitchtime__2">Faites un changement de profil avec un décalage horaire de -2</string>
-    <string name="profileswitchtime_tt">Fixez une cible temporaire repas imminent.</string>
-    <string name="profileswitchtime_100">Faites un changement de profil à plus de 100 %.</string>
+    <string name="profileswitchtime_tt">Fixez la cible temp \"repas imminent\".</string>
+    <string name="profileswitchtime_100">Faites un changement de profil à plus de 100%.</string>
     <string name="profileswitchtime_hint1">https://wiki.aaps.app/fr/latest/Usage/Profiles.html#decalage-horaire</string>
     <string name="profileswitch4_label">Changements de profils</string>
     <string name="profileswitch4_rates">Les débits de basal, SI, ratios G/I, etc. doivent être définis dans les profils.</string>
@@ -216,7 +216,7 @@
     <string name="profileswitch4_multi">Plusieurs profils peuvent être définis et sélectionnés pour s\'adapter à des circonstances changeantes (par ex. changements hormonaux, changement de poste de travail, jours de semaine/week-end).</string>
     <string name="basalhelp_hint1">https://wiki.aaps.app/fr/latest/Module/module.html#un-bon-algorithme-de-dosage-individuel-pour-votre-diabete</string>
     <string name="basalhelp_label">Aide sur les débits de basal</string>
-    <string name="basalhelp_where">Où aller pour avoir de l\'aide avec le débit Basal etc.</string>
+    <string name="basalhelp_where">Où aller pour obtenir de l\'aide pour la configuration de votre débit de basal et d\'autres paramètres.</string>
     <string name="basalhelp_diabetesteam">Votre équipe médicale</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>

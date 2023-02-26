@@ -176,6 +176,9 @@
     <string name="no_iob_u">--v</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--v/val</string>
+    <string name="uploader_na">v: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">Prieš -- min.</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Ciklo būsena nežinoma</string>
     <string name="cob_000g">000g</string>
@@ -183,4 +186,11 @@
     <string name="iob_0_00u">0,00v</string>
     <string name="snooze_alert">AAPS atidėti aliarmą</string>
     <string name="sending_snooze">Atidėjimas siunčiamas AAPS</string>
+    <string name="short_hour">val</string>
+    <string name="week_short">sav</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">val</string>
+    <string name="old">senas</string>
+    <string name="old_warning">!senas!</string>
+    <string name="error">!klaida!</string>
 </resources>

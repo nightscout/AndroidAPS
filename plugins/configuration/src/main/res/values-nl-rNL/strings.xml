@@ -25,7 +25,7 @@
     <string name="master_password_summary">Het masterwachtwoord wordt gebruikt voor het versleutelen van backups en om de app-beveiligingen te kunnen overschrijven. Onthoud het goed of bewaar het op een veilige plaats.</string>
     <string name="current_master_password">Huidig masterwachtwoord</string>
     <string name="common_values">Gebruik de waarden van je grootste maaltijd die je gewoonlijk eet\n</string>
-    <string name="syncinfotext">Cloud data synchronisatie. Kan worden overgeslagen maar het wel nodig om de doelen te kunnen behalen.</string>
+    <string name="syncinfotext">Gegevens naar de cloud synchroniseren. Je kan dit deel nu overslaan, maar je kan pas verder met de doelen wanneer je een Nightscout of Tidepool client hebt ingesteld.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Naam patiënt</string>
     <string name="patient_name_summary">Geef de naam of roepnaam van de patiënt op om onderscheid te maken tussen meerdere setups</string>
@@ -37,6 +37,7 @@
     <string name="exitwizard">De installatiewizard overslaan</string>
     <string name="setupwizard_loop_description">Druk op de knop hieronder om AAPS basaalwijzigingen te laten voorstellen/uitvoeren</string>
     <string name="setupwizard_sensitivity_description">Gevoeligheid plugin wordt gebruikt voor de detectie van de gevoeligheid en COB berekening. Voor meer info bezoek:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/nl/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Selecteer een van beschikbare algoritmen. Ze zijn gesorteerd van oudste naar nieuwste. Nieuwer algoritme is meestal krachtiger en agressiever. Dus als je een nieuwe looper bent, kun je waarschijnlijk beginnen met AMA en niet met de nieuwste. Vergeet niet de OpenAPS-documentatie te lezen en deze vóór gebruik te configureren.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configureer uw RileyLink hieronder. Na het selecteren van een RileyLink, kun je doorgaan zodra de RileyLink status \"Verbonden\" is. Dit kan even duren.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Opmerking:</b> Je kunt doorgaan zodra de pomp is ingesteld.\n</string>
@@ -71,6 +72,8 @@
     <string name="configbuilder_insulin_description">Welk soort insuline gebruik je?</string>
     <string name="configbuilder_bgsource">BG bron</string>
     <string name="configbuilder_bgsource_description">Waar moet de AAPS zijn gegevens vandaan halen?</string>
+    <string name="configbuilder_smoothing">Vloeiend maken</string>
+    <string name="configbuilder_smoothing_description">Kies het algorithme om vloeiend te maken</string>
     <string name="configbuilder_sensitivity">Gevoeligheid detectie</string>
     <string name="configbuilder_sensitivity_description">Welk gevoeligheid algoritme moet worden gebruikt?</string>
     <string name="config_builder_shortname">CONF</string>
@@ -111,8 +114,6 @@
     <string name="maintenance_shortname">ONDH</string>
     <string name="description_maintenance">Biedt verschillende functies voor onderhoud (bv. log verzenden, verwijderen melden).</string>
     <string name="database_cleanup">Database opschonen</string>
-    <string name="cleanup_db_confirm">Wilt u de database opschonen?\nHet zal bijgehouden wijzigingen en historische gegevens ouder dan 3 maanden verwijderen.</string>
-    <string name="cleared_entries">Invoergegevens gewist</string>
     <string name="reset_db_confirm">Wil je echt de database wissen?</string>
     <string name="maintenance_settings">Onderhoudsinstellingen</string>
     <string name="maintenance_email">E-mail</string>

@@ -8,7 +8,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-internal class TidepoolCallback<T>(private val aapsLogger: AAPSLogger, private val rxBus: RxBus, private val session: Session, val name: String, val onSuccess: () -> Unit, val onFail: () -> Unit) :
+internal class TidepoolCallback<T>(
+    private val aapsLogger: AAPSLogger,
+    private val rxBus: RxBus,
+    private val session: Session,
+    private val name: String,
+    private val onSuccess: () -> Unit,
+    private val onFail: () -> Unit
+) :
     Callback<T> {
 
     override fun onResponse(call: Call<T>, response: Response<T>) {

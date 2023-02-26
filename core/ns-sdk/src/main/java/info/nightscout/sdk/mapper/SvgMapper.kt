@@ -1,5 +1,6 @@
 package info.nightscout.sdk.mapper
 
+import com.google.gson.Gson
 import info.nightscout.sdk.localmodel.entry.Direction
 import info.nightscout.sdk.localmodel.entry.NSSgvV3
 import info.nightscout.sdk.localmodel.entry.NsUnits
@@ -7,6 +8,9 @@ import info.nightscout.sdk.remotemodel.RemoteEntry
 
 fun NSSgvV3.convertToRemoteAndBack(): NSSgvV3? =
     toRemoteEntry().toSgv()
+
+fun String.toNSSgvV3(): NSSgvV3? =
+    Gson().fromJson(this, RemoteEntry::class.java).toSgv()
 
 internal fun RemoteEntry.toSgv(): NSSgvV3? {
 

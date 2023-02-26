@@ -251,13 +251,13 @@ class ComboV2Plugin @Inject constructor (
 
     init {
         ComboCtlLogger.backend = AAPSComboCtlLogger(aapsLogger)
-        updateComboCtlLogLevel()
-
         _pumpDescription.fillFor(PumpType.ACCU_CHEK_COMBO)
     }
 
     override fun onStart() {
         super.onStart()
+
+        updateComboCtlLogLevel()
 
         // Check if there is a pump state in the internal SP. If not, try to
         // copy a pump state from the AAPS main SP. It is possible for example
@@ -292,7 +292,7 @@ class ComboV2Plugin @Inject constructor (
 
         // Continue initialization in a separate coroutine. This allows us to call
         // runWithPermissionCheck(), which will keep trying to run the code block
-        // until either the necessary Bluetooth permissios are granted, or the
+        // until either the necessary Bluetooth permissions are granted, or the
         // coroutine is cancelled (see onStop() below).
         pumpCoroutineScope.launch {
             runWithPermissionCheck(
@@ -378,7 +378,7 @@ class ComboV2Plugin @Inject constructor (
         // Setup coroutine to enable/disable the pair and unpair
         // preferences depending on the pairing state.
         preferenceFragment.run {
-            // We use the fragment's lifecyle instead of the fragment view's, since the latter
+            // We use the fragment's lifecycle instead of the fragment view's, since the latter
             // is initialized in onCreateView(), and we reach this point here _before_ that
             // method is called. In other words, the fragment view does not exist at this point.
             // repeatOnLifecycle() is a utility function that runs its block when the lifecycle
@@ -419,7 +419,9 @@ class ComboV2Plugin @Inject constructor (
 
     override fun isBusy(): Boolean =
         when (driverStateFlow.value) {
-            DriverState.Connecting,
+            // DriverState.Connecting is _not_ listed here. Even though the pump
+            // is technically busy and unable to execute commands in that state,
+            // returning true then causes problems with AAPS' KeepAlive mechanism.
             DriverState.CheckingPump,
             is DriverState.ExecutingCommand -> true
             else                            -> false
@@ -935,6 +937,16 @@ class ComboV2Plugin @Inject constructor (
         val pumpEnactResult = PumpEnactResult(injector)
         pumpEnactResult.success = false
 
+        if (isSuspended()) {
+            aapsLogger.info(LTag.PUMP, "Cannot deliver bolus since the pump is suspended")
+            pumpEnactResult.apply {
+                success = false
+                enacted = false
+                comment = rh.gs(R.string.combov2_cannot_deliver_pump_suspended)
+            }
+            return pumpEnactResult
+        }
+
         // Set up initial bolus progress along with details that are invariant.
         // FIXME: EventOverviewBolusProgress is a singleton purely for
         // historical reasons and could be updated to be a regular
@@ -974,7 +986,7 @@ class ComboV2Plugin @Inject constructor (
             // Store a local reference to the Pump instance. "pump"
             // is set to null in case of an error, because then,
             // disconnectInternal() is called (which sets pump to null).
-            // However, we still need to access the last deliverd bolus
+            // However, we still need to access the last delivered bolus
             // from the pump's lastBolusFlow, even if an error happened.
             // Solve this by storing this reference and accessing the
             // lastBolusFlow through it.
@@ -1148,12 +1160,21 @@ class ComboV2Plugin @Inject constructor (
         force100Percent: Boolean,
         pumpEnactResult: PumpEnactResult
     ) {
+        if (isSuspended()) {
+            aapsLogger.info(LTag.PUMP, "Cannot set TBR since the pump is suspended")
+            pumpEnactResult.apply {
+                success = false
+                enacted = false
+                comment = rh.gs(R.string.combov2_pump_is_suspended)
+            }
+            return
+        }
+
         runBlocking {
             try {
                 executeCommand {
-                    val setTbrOutcome =  pump!!.setTbr(percentage, durationInMinutes, tbrType, force100Percent)
 
-                    val tbrComment = when (setTbrOutcome) {
+                    val tbrComment = when (pump!!.setTbr(percentage, durationInMinutes, tbrType, force100Percent)) {
                         ComboCtlPump.SetTbrOutcome.SET_NORMAL_TBR                  ->
                             rh.gs(R.string.combov2_setting_tbr_succeeded)
                         ComboCtlPump.SetTbrOutcome.SET_EMULATED_100_TBR            ->
@@ -1768,8 +1789,8 @@ class ComboV2Plugin @Inject constructor (
                                 is RTCommandProgressStage.DeliveringBolus ->
                                     rh.gs(
                                         R.string.combov2_delivering_bolus,
-                                        stage.deliveredAmount.cctlBolusToIU(),
-                                        stage.totalAmount.cctlBolusToIU()
+                                        stage.deliveredImmediateAmount .cctlBolusToIU(),
+                                        stage.totalImmediateAmount.cctlBolusToIU()
                                     )
                                 else -> ""
                             }
@@ -2261,7 +2282,7 @@ class ComboV2Plugin @Inject constructor (
             .comment(comment)
 
     private fun getBluetoothAddress(): ComboCtlBluetoothAddress? =
-        pumpManager!!.getPairedPumpAddresses().firstOrNull()
+        pumpManager?.getPairedPumpAddresses()?.firstOrNull()
 
     private fun isDisconnected() =
         when (driverStateFlow.value) {

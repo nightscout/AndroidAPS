@@ -193,7 +193,7 @@ class ObjectivesFragment : DaggerFragment() {
                 for (task in objective.tasks) {
                     if (task.shouldBeIgnored()) continue
                     for (learned in task.learned) {
-                        holder.binding.learned.addView(TextView(context).also { it.text = rh.gs(learned.learned) })
+                        holder.binding.learned.addView(TextView(context).also { it.text = rh.gs(learned.learned) + "\n" })
                     }
                 }
             } else if (objective.isStarted) {

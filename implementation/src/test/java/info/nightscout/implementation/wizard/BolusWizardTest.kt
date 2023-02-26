@@ -1,6 +1,5 @@
 package info.nightscout.implementation.wizard
 
-import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
@@ -35,7 +34,6 @@ class BolusWizardTest : TestBase() {
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var constraintChecker: Constraints
-    @Mock lateinit var context: Context
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loop: Loop

@@ -176,6 +176,9 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- Min. fa</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Nessun stato di loop</string>
     <string name="cob_000g">000g</string>
@@ -183,4 +186,11 @@
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">Avviso snooze AAPS</string>
     <string name="sending_snooze">Invio snooze ad AAPS</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">w</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="old">vecchio</string>
+    <string name="old_warning">!vecchio!</string>
+    <string name="error">!err!</string>
 </resources>

@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Bazál na pumpě byl změněn, ale čtení selhalo</string>
     <string name="combo_activity_checking_for_history_changes">Kontroluji změny v historii</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Byly načteny bolusy stejné velikosti během jedné minuty. Do ošetření je možné přidat jen jeden. Zkontrolujte pumpu a přidejte bolus do ošetření ručně tak, aby čas nekolidoval.</string>
-    <string name="about_link_urls">\n\ndokumentace:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <string name="combo_check_date">Poslední bolus je starší než 24h nebo v budoucnu. Zkontrolujte čas v pumpě.</string>
     <string name="combo_suspious_bolus_time">Datum/čas podaného bolusu se zdá špatně. IOB bude chybné. Zkontrolujte čas v pumpě.</string>
     <string name="combo_bolus_count">Počet bolusů</string>

@@ -11,5 +11,8 @@
     <string name="insulin_peak_time">Piko laikas [min]</string>
     <string name="free_peak_oref">Oref be piko</string>
     <string name="rapid_acting_oref">Greito veikimo Oref</string>
+    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
     <string name="dia_too_short">IVT %1$f per trumpa - bus naudojama %2$f!</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
 </resources>

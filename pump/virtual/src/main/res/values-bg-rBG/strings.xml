@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- VirtualPump -->
+    <string name="virtual_pump_type">Виртуална помпа от тип</string>
+    <string name="virtual_pump_definition">Дефиниция на помпата</string>
+    <string name="virtual_pump_pump_def">Болус: стъпка=%1$s\nудължен болус: [Стъпка=%2$s, Продължителноат=%3$sмин-%4$sh]\nБазал: Стъпка=%5$s\nTBR: %6$s (by %7$s), Продължителност=%8$smin-%9$sh\n%10$s</string>
+    <string name="virtual_pump_shortname">ВП</string>
     <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
+    <string name="virtual_pump_label">ВИРТУАЛНА ПОМПА</string>
     <string name="virtualpump_settings">Настойки Виртуална Помпа</string>
 </resources>

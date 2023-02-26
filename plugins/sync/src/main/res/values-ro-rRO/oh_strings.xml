@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="open_humans_description">Deschide Humans îți permite să încarci datele tale despre diabet și să le donezi proiectelor științifice.</string>
+    <string name="logout">Deconectare</string>
+    <string name="setup">Configurare</string>
+    <string name="setup_completed_info">Open Humans a fost configurat. În cazul în care doriți să încetați încărcarea, apăsați „Deconectare”.</string>
+    <string name="not_setup_info">Open Humans este deocamdată inactiv. Pentru a începe încărcarea datelor, apasă \"Configurare\".</string>
+    <string name="project_member_id">ID Membru proiect: %1$s</string>
+    <string name="only_upload_if_connected_to_wifi">Încarcă numai pe conexiune WiFi</string>
+    <string name="only_upload_if_charging">Încărca numai dacă telefonul este la încărcat</string>
+    <string name="open_humans_uploading">Se încarcă în Open Humans…</string>
+    <string name="open_humans_notifications">Notificări Open Humans</string>
+    <string name="you_have_been_signed_out_of_open_humans">Ai fost deconectat de la Open Humans</string>
+    <string name="click_here_to_sign_in_again_if_this_wasnt_on_purpose">Dați click aici pentru a vă conecta din nou, dacă a fost din greșeală.</string>
+    <string name="next">Următor</string>
+    <string name="terms_of_use">Condiții de utilizare</string>
+    <string name="info_openhumans">Aceasta este un instrument open source care va copia datele tale în Open Humans. Nu avem dreptul sa împărtășim datele tale cu terțe părți fără autorizație explicită. Datele pe care le primesc proiectul și aplicația sunt identificate printr-un ID de utilizator aleatoriu și vor fi transmise în siguranță într-un cont Open Humans numai cu autorizarea acestui proces. Poți înceta încărcarea și șterge datele oricând folosind www.openhumans.org.</string>
+    <string name="boluses">Bolusuri</string>
+    <string name="carbohydrates">Carbohidrați</string>
+    <string name="settings">Setări</string>
+    <string name="device_model">Model dispozitiv</string>
+    <string name="nightscout_url">Adresa Nightscout</string>
+    <string name="agree">Înţeleg şi sunt de acord.</string>
+    <string name="cancel">Renunță</string>
+    <string name="close">Închide</string>
+</resources>

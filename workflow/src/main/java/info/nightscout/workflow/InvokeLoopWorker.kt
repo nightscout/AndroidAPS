@@ -9,12 +9,13 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.events.EventNewBG
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class InvokeLoopWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var iobCobCalculator: IobCobCalculator
@@ -31,7 +32,7 @@ class InvokeLoopWorker(
      the event causing the calculation is not EventNewBg.
      <p>
     */
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
 
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as InvokeLoopData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))

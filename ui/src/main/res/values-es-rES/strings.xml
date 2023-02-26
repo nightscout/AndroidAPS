@@ -48,10 +48,10 @@
     <string name="timeshift_label">Cambio de hora</string>
     <string name="percentage_label">Porcentaje</string>
     <!-- LoopDialog -->
-    <string name="suspendloopfor1h">Suspender lazo durante 1 hora</string>
-    <string name="suspendloopfor2h">Suspender lazo durante 2 horas</string>
-    <string name="suspendloopfor3h">Suspender lazo durante 3 horas</string>
-    <string name="suspendloopfor10h">Suspender lazo durante 10 horas</string>
+    <string name="suspendloopfor1h">Suspender bucle durante 1 hora</string>
+    <string name="suspendloopfor2h">Suspender bucle durante 2 horas</string>
+    <string name="suspendloopfor3h">Suspender bucle durante 3 horas</string>
+    <string name="suspendloopfor10h">Suspender bucle durante 10 horas</string>
     <string name="disconnectpump">Desconectar bomba</string>
     <string name="disconnectpumpfor15m">Desconectar la bomba durante 15 minutos</string>
     <string name="disconnectpumpfor30m">Desconectar la bomba durante 30 minutos</string>
@@ -101,12 +101,12 @@
     <string name="show_invalidated">Mostrar invalidados</string>
     <string name="hide_invalidated">Ocultar invalidados</string>
     <string name="careportal_remove_started_events">Eliminar registros de inicio de AAPS</string>
-    <string name="hide_loop">Ocultar lazo</string>
-    <string name="show_loop">Mostrar lazo</string>
+    <string name="hide_loop">Ocultar bucle</string>
+    <string name="show_loop">Mostrar bucle</string>
     <string name="user_entry">Registro por parte del usuario</string>
     <string name="clone_label">Duplicar</string>
-    <string name="show_loop_records">Mostrar registros del lazo</string>
-    <string name="show_hide_records">Ocultar registros del lazo</string>
+    <string name="show_loop_records">Mostrar registros del bucle</string>
+    <string name="show_hide_records">Ocultar registros del bucle</string>
     <!-- ProfileHelperActivity -->
     <string name="profile1">Perfil 1</string>
     <string name="profile2">Perfil 2</string>
@@ -127,4 +127,30 @@
     <string name="basal_rate">Tasa basal</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">DETENER PRESIONADO</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">sólo en reloj</string>
+    <string name="a11y_only_on_phone">sólo en teléfono</string>
+    <string name="quickwizard_settings">Configuración del asistente de configuración</string>
+    <string name="overview_edit_quickwizard_button_text">Texto del botón:</string>
+    <string name="overview_edit_quickwizard_carbs">Carbohidratos:</string>
+    <string name="overview_edit_quickwizard_valid">Válido:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Añadir</string>
+    <string name="overview_quickwizard_item_edit_button">Editar</string>
+    <string name="overview_edit_quickwizard_show_on_device">Mostrar entrada en dispositivo:</string>
+    <string name="overview_edit_quickwizard_use_bg">Cálculo de glucosa</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Cálculo del bolo IOB</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Cálculo de basal IOB</string>
+    <string name="overview_edit_quickwizard_use_trend">Cálculo de tendencia</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Cálculo de superbolo</string>
+    <string name="overview_edit_quickwizard_percentage">Porcentaje</string>
+    <string name="device_all">Todo</string>
+    <string name="device_phone">Teléfono</string>
+    <string name="device_watch">Reloj</string>
+    <string name="positive_only">Sólo positivo</string>
+    <string name="negative_only">Sólo negativo</string>
+    <string name="overview_editquickwizard_usecob">Cálculo COB</string>
+    <string name="overview_editquickwizard_usetemptarget">Cálculo de objetivo temporal</string>
+    <string name="overview_editquickwizard_usepercentage">Cálculo de porcentaje</string>
+    <string name="app_default">Aplicación por defecto</string>
+    <string name="a11y_drag_and_drop_handle">arrastrar y soltar</string>
 </resources>

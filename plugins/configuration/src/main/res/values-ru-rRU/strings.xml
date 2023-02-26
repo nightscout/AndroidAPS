@@ -25,7 +25,7 @@
     <string name="master_password_summary">Главный пароль используется для шифрования резервных копий и для переопределения защиты в приложении. Запомните его или храните в безопасном месте.</string>
     <string name="current_master_password">Текущий главный пароль</string>
     <string name="common_values">Введите максимальные значения вашего приема пищи \n</string>
-    <string name="syncinfotext">Синхронизировать данные в облако. Сейчас можно пропустить эту часть, но без нее не получится пройти все цели.</string>
+    <string name="syncinfotext">Синхронизировать данные в облако. Сейчас можно пропустить эту часть, но без клиента Nightscout или Tidepool не получится пройти все цели.</string>
     <string name="status">состояние:</string>
     <string name="patient_name">Имя пациента</string>
     <string name="patient_name_summary">Укажите имя или псевдоним пациента, чтобы распознавать разные настройки</string>
@@ -37,6 +37,7 @@
     <string name="exitwizard">Пропустить Мастер установки</string>
     <string name="setupwizard_loop_description">Нажмите на кнопку ниже, чтобы AAPS мог предложить/внести изменения в базал</string>
     <string name="setupwizard_sensitivity_description">Плагин чувствительности Sensitivity применяется для определения чувствительности к инсулину и вычисления активных углеводов COB. Дополнительная информация:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Выберите один из доступных алгоритмов. Они расположены от самых старых к самым новым. Более новый алгоритм обычно мощнее и агрессивнее. Если вы новый пользователь возможно вам лучше начать с помощника болюса AMA а не с новейшего алгоритма. Читайте документацию OpenAPS и определите свою конфигурацию.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Сконфигурируйте RileyLink. После выбора RileyLink можно будет продолжить установку если состояние RileyLink \"Соединено\". Это может занять минуту.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Примечание:</b> После инициализации помпы можно продолжить настройку\n</string>
@@ -113,8 +114,6 @@
     <string name="maintenance_shortname">ОБСЛУЖ</string>
     <string name="description_maintenance">Предоставляет возможности для обслуживания (например. отправку логов, удаление логов).</string>
     <string name="database_cleanup">Очистка базы данных</string>
-    <string name="cleanup_db_confirm">Вы хотите очистить базу данных?\nЭто удалит отслеживаемые изменения и данные старше 3 месяцев.</string>
-    <string name="cleared_entries">Удалённые записи</string>
     <string name="reset_db_confirm">Вы действительно хотите обнулить базы данных?</string>
     <string name="maintenance_settings">Параметры обслуживания</string>
     <string name="maintenance_email">Адрес электронной почты</string>

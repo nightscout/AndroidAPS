@@ -8,6 +8,7 @@ import androidx.room.PrimaryKey
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.entities.interfaces.DBEntryWithTimeAndDuration
 import info.nightscout.database.entities.interfaces.TraceableDBEntry
+import info.nightscout.database.entities.interfaces.end
 import java.util.TimeZone
 
 @Entity(
@@ -52,9 +53,6 @@ data class OfflineEvent(
             contentEqualsTo(previous) &&
             previous.interfaceIDs.nightscoutId == null &&
             interfaceIDs.nightscoutId != null
-
-    fun isRecordDeleted(other: OfflineEvent): Boolean =
-        isValid && !other.isValid
 
     enum class Reason {
         DISCONNECT_PUMP,

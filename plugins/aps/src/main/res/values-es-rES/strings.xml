@@ -93,8 +93,8 @@
     <string name="run_now">Ejecutar ahora</string>
     <string name="smb_frequency_exceeded">Un bolo ha sido entregado en los últimos 3 minutos, omitiendo SMB</string>
     <string name="pump_not_initialized">¡Bomba no iniciada!</string>
-    <string name="loop_shortname">LAZO</string>
-    <string name="description_loop">Activar o desactivar la posibilidad para activar el lazo.</string>
+    <string name="loop_shortname">BUCLE</string>
+    <string name="description_loop">Activar o desactivar la posibilidad para activar el bucle.</string>
     <string name="no_aps_selected">NO APS Seleccionado o resultado entregado</string>
     <string name="ignore5m">Ignorar 5m</string>
     <string name="ignore15m">Ignorar 15m</string>
@@ -113,5 +113,5 @@
     <string name="loop_smb_execution_time_label">Tiempo de ejecución de SMB</string>
     <string name="loop_smb_set_by_pump_label">SMB administrado por la bomba</string>
     <string name="loop_open_mode_min_change">Valor mínimo de cambio [%]</string>
-    <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El lazo abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Valor predeterminado 20%. El bucle abierto realizará una petición de cambio, sólo cuando se supere este valor</string>
 </resources>

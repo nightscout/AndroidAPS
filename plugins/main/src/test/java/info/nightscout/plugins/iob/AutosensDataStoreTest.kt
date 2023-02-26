@@ -1,22 +1,48 @@
 package info.nightscout.plugins.iob
 
 import android.content.Context
+import androidx.collection.LongSparseArray
+import dagger.android.AndroidInjector
+import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.interfaces.aps.AutosensData
+import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.plugins.iob.iobCobCalculator.data.AutosensDataObject
+import info.nightscout.plugins.iob.iobCobCalculator.data.AutosensDataStoreObject
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
+import org.mockito.Mockito
 
 class AutosensDataStoreTest : TestBase() {
 
     @Mock lateinit var context: Context
+    @Mock lateinit var sp: SP
+    @Mock lateinit var rh: ResourceHelper
+    @Mock lateinit var profileFunction: ProfileFunction
+    @Mock lateinit var dateUtilMocked: DateUtil
 
     private lateinit var dateUtil: DateUtil
 
-    private val autosensDataStore = info.nightscout.plugins.iob.iobCobCalculator.data.AutosensDataStoreObject()
+    private val autosensDataStore = AutosensDataStoreObject()
+
+    private val injector = HasAndroidInjector {
+        AndroidInjector {
+            if (it is AutosensDataObject) {
+                it.aapsLogger = aapsLogger
+                it.sp = sp
+                it.rh = rh
+                it.profileFunction = profileFunction
+                it.dateUtil = dateUtilMocked
+            }
+        }
+    }
 
     @BeforeEach
     fun mock() {
@@ -1264,7 +1290,7 @@ class AutosensDataStoreTest : TestBase() {
         Assertions.assertEquals(67.0, autosensDataStore.bucketedData!![3].value, 1.0) // Recalculated data to 30min
         Assertions.assertEquals(45.0, autosensDataStore.bucketedData!![5].value, 1.0) // Recalculated data to 20min
 
-        // non 5min data without referenceTime set, should allign the data to the time of the last reading
+        // non 5min data without referenceTime set, should align the data to the time of the last reading
         autosensDataStore.referenceTime = -1
         bgReadingList.clear()
         bgReadingList.add(
@@ -1490,5 +1516,28 @@ class AutosensDataStoreTest : TestBase() {
         Assertions.assertEquals(T.mins(5).msecs(), autosensDataStore.findPreviousTimeFromBucketedData(T.mins(6).msecs()))
         Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.findPreviousTimeFromBucketedData(T.mins(20).msecs()))
         Assertions.assertEquals(T.mins(20).msecs(), autosensDataStore.findPreviousTimeFromBucketedData(T.mins(25).msecs()))
+    }
+
+    @Test
+    fun getLastAutosensDataTest() {
+        val now = 10000000L
+        Mockito.`when`(dateUtilMocked.now()).thenReturn(now)
+        val ads = AutosensDataStoreObject()
+        ads.storedLastAutosensResult = AutosensDataObject(injector).apply { time = now - 10 }
+        // empty array, return last stored
+        ads.autosensDataTable = LongSparseArray<AutosensData>()
+        Assertions.assertEquals(now - 10, ads.getLastAutosensData("test", aapsLogger, dateUtilMocked)?.time)
+
+        // data is there, return it
+        ads.autosensDataTable.append(now - 1, AutosensDataObject(injector).apply { time = now - 1 })
+        Assertions.assertEquals(now - 1, ads.getLastAutosensData("test", aapsLogger, dateUtilMocked)?.time)
+        // and latest value should be saved
+        Assertions.assertEquals(now - 1, ads.storedLastAutosensResult?.time)
+
+        // data is old, return last stored
+        ads.storedLastAutosensResult = AutosensDataObject(injector).apply { time = now - 1 }
+        ads.autosensDataTable = LongSparseArray<AutosensData>()
+        ads.autosensDataTable.append(now - T.mins(20).msecs(), AutosensDataObject(injector).apply { time = now - T.mins(20).msecs() })
+        Assertions.assertEquals(now - 1, ads.getLastAutosensData("test", aapsLogger, dateUtilMocked)?.time)
     }
 }

@@ -101,4 +101,5 @@
     <string name="basal_rate">Ràtio de basal</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOP polsat</string>
+    <!--QuickWizard-->
 </resources>

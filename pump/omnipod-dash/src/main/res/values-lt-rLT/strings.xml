@@ -39,4 +39,16 @@
     <string name="omnipod_dash_not_enough_insulin">Rezervuare nėra pakankamai insulino</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Nepatvirtinta komanda</string>
     <string name="requested_by_user" comment="26 characters max for translation">Užklausta vartotojo</string>
+    <string name="profile_set_ok">Profilis nustatytas OK</string>
+    <string name="suspend_delivery_is_unconfirmed">Insulino tiekimo sustabdymas nepatvirtintas! Rankiniu būdu atnaujinkite Pod būseną Omnipod skirtuke ir, jei reikia, atnaujinkite insulino leidimą.</string>
+    <string name="insulin_delivery_suspended">Insulino leidimas sustabdytas</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Pod laiko zona skiriasi nuo telefono. Bazė neteisinga. Atlikite profilio keitimą</string>
+    <string name="failed_to_set_the_new_basal_profile">Klaida nustatant naują bazės profilį. Insulinas netiekiamas</string>
+    <string name="setting_basal_profile_might_have_failed">Gali būti, kad bazės profilis nebuvo nustatytas. Insulino leidimas gali būti nutrauktas! Rankiniu būdu atnaujinkite Pod būseną Omnipod skirtuke ir, jei reikia, atnaujinkite insulino leidimą.</string>
+    <string name="bolus_delivery_status_uncertain">Boluso suleidimo statusas nežinomas. Atnaujinkite Pod statusą patvirtinimui ar atmetimui.</string>
+    <string name="checking_delivery_status">Tikrinama insulino tiekimo būsena</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Gali būti, kad nepavyko nustatyti laikinos valandinės bazės. Jei laikina bazė buvo nustatyta anksčiau, ji yra atšaukta. Rakiniu būdu atnaujinkite Pod būseną Omnipod skirtuke.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Laikinos bazės atšaukimo rezultatas nežinomas</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Komanda atnaujintiTiekimą nepatvirtinta. Atnaujinkite Pod statusą</string>
+    <string name="cancelling_temp_basal_might_have_failed">Gali būti, kad nepavyko atšaukti laikinos bazės. Jei laikina bazė buvo pradėta anksčiau, ji gali būti jau atšaukta. Rakiniu būdu atnaujinkite Pod būseną Omnipod skirtuke.</string>
 </resources>

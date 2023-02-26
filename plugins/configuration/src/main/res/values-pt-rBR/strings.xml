@@ -25,6 +25,7 @@
     <string name="master_password_summary">Password Mestre é usada para encriptação da cópia de segurança e substituir segurança na aplicação. Lembre-se dela ou guarde-a em um lugar seguro.</string>
     <string name="current_master_password">Senha mestra atual</string>
     <string name="common_values">Use valores da maior refeição que você costuma comer\n</string>
+    <string name="syncinfotext">Sincronize dados com a nuvem. Você pode pular esta parte agora, mas não será capaz de passar os objetivos até configurá-lo.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Nome do Paciente</string>
     <string name="patient_name_summary">Por favor, forneça nome do paciente ou apelido para diferenciar entre várias configurações</string>
@@ -36,6 +37,7 @@
     <string name="exitwizard">Saltar assistente de configuração</string>
     <string name="setupwizard_loop_description">Pressione o botão abaixo para permitir ao AndroidAPS sugerir/fazer alterações na basal.</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para detecção de sensibilidade e cálculos COB. Para mais info visite:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se você é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de usar.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor configurar o seu RileyLink abaixo. Após selecionar um RileyLink e assim que o estado do RileyLink for \"Conectado\", será possível continuar a instalação. Isso pode levar um minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Você pode continuar a configuração assim que a configuração da bomba estiver concluída.\n</string>
@@ -63,12 +65,15 @@
     <string name="configbuilder_general">Geral</string>
     <string name="configbuilder_general_description">Estes são alguns plugins gerais que pode achar úteis.</string>
     <string name="configbuilder_sync">Sincronização</string>
+    <string name="configbuilder_sync_description">Plugins para envio de dados e sincronização.</string>
     <string name="configbuilder_constraints_description">Que restrições são aplicadas?</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Use para ativar a integração o loop do AAPS.</string>
     <string name="configbuilder_insulin_description">Que tipo de insulina está usando?</string>
     <string name="configbuilder_bgsource">Fonte de BG</string>
     <string name="configbuilder_bgsource_description">De onde o AndroidAPS deve obter os dados?</string>
+    <string name="configbuilder_smoothing">Suavização</string>
+    <string name="configbuilder_smoothing_description">Escolha o algoritmo suavizador</string>
     <string name="configbuilder_sensitivity">Detecção sensibilidade</string>
     <string name="configbuilder_sensitivity_description">Que algoritmo de sensibilidade deve ser usado?</string>
     <string name="config_builder_shortname">CONF</string>
@@ -109,8 +114,6 @@
     <string name="maintenance_shortname">MANU</string>
     <string name="description_maintenance">Fornece várias funções para manutenção (ex. envio de relatórios, eliminação de relatórios).</string>
     <string name="database_cleanup">Limpeza de banco de dados</string>
-    <string name="cleanup_db_confirm">Você deseja limpar o banco de dados?\nIrá remover alterações registradas e histórico de dados com mais de 3 meses.</string>
-    <string name="cleared_entries">Entradas apagadas</string>
     <string name="reset_db_confirm">Você realmente quer redefinir os bancos de dados?</string>
     <string name="maintenance_settings">Configurações de manutenção</string>
     <string name="maintenance_email">Email destinatário</string>
@@ -121,6 +124,7 @@
     <string name="engineering_mode_enabled">Modo engenheiro activado</string>
     <string name="log_files">Arquivos de log</string>
     <string name="nav_logsettings">Definições de registo</string>
+    <string name="miscellaneous">Adicionais</string>
     <string name="nav_resetdb">Redefinir banco de dados</string>
     <string name="resettodefaults">Repor definições por defeito</string>
     <!-- Maintenance -->

@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="format_carbs">%1$dg</string>
+    <string name="format_carbs">%1$d g</string>
 </resources>

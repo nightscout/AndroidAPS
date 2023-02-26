@@ -26,14 +26,20 @@ dependencies {
     implementation project(':core:utils')
     implementation project(':core:validators')
 
+    testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
     testImplementation "androidx.work:work-testing:$work_version"
     testImplementation project(':implementation')
+    testImplementation project(':plugins:aps')
+
+    // OpenHuman
+    api "com.squareup.okhttp3:okhttp:$okhttp3_version"
+    api "com.squareup.retrofit2:retrofit:$retrofit2_version"
+    api "androidx.browser:browser:1.5.0"
+    api "androidx.work:work-runtime-ktx:$work_version"
+    api "com.google.android.material:material:$material_version"
 
     // NSClient, Tidepool
-    api("io.socket:socket.io-client:1.0.2") {
-        // excluding org.json which is provided by Android
-        exclude group: "org.json", module: "json"
-    }
+    api("io.socket:socket.io-client:2.1.0")
     api "com.squareup.okhttp3:okhttp:$okhttp3_version"
     api "com.squareup.okhttp3:logging-interceptor:$okhttp3_version"
     //api "com.squareup.retrofit2:retrofit:$retrofit2_version"

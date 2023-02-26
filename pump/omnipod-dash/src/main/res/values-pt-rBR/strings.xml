@@ -40,4 +40,16 @@
     <string name="omnipod_dash_not_enough_insulin">Não há insulina suficiente no reservatório</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Comando não confirmado</string>
     <string name="requested_by_user" comment="26 characters max for translation">Solicitado pelo usuário</string>
+    <string name="profile_set_ok">Configuração de perfil completo</string>
+    <string name="suspend_delivery_is_unconfirmed">A suspensão da entrega não foi confirmada! Por favor, atualize manualmente o status do Pod na guia Omnipod e retome a entrega, se necessário.</string>
+    <string name="insulin_delivery_suspended">Entrega de insulina suspensa</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Fuso horário no pod é diferente do fuso horário no telefone. A taxa de basal está incorreta. Alterne o perfil para corrigir</string>
+    <string name="failed_to_set_the_new_basal_profile">Falha ao definir o novo perfil basal. Entrega suspensa</string>
+    <string name="setting_basal_profile_might_have_failed">A configuração do perfil basal pode ter falhado. A entrega pode estar suspensa! Por favor, atualize manualmente o status do Pod na guia Omnipod e retome a entrega, se necessário.</string>
+    <string name="bolus_delivery_status_uncertain">O status de entrega do bolo de insulina está incerto. Atualize o status do pod para confirmar ou negar.</string>
+    <string name="checking_delivery_status">Verificando status da entrega</string>
+    <string name="setting_temp_basal_might_have_basal_failed">A configuração do basal temporário pode ter falhado. Se um basal temporário estava sendo executado anteriormente, ele foi cancelado. Por favor, atualize manualmente o status do Pod na guia Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">O cancelamento do basal temporário resultou em incerteza</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Comando de retomada de entrega não confirmado. Por favor, atualize o status do pod</string>
+    <string name="cancelling_temp_basal_might_have_failed">O cancelamento do basal temporário pode ter falhado. Se um basal temporário estava sendo executado anteriormente, ele pode ter sido cancelado. Por favor, atualize manualmente o status do Pod na guia Omnipod.</string>
 </resources>

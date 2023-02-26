@@ -38,7 +38,7 @@
 
         <androidx.preference.PreferenceScreen
             android:key="absorption_aaps_advanced"
-            android:title="@string/advancedsettings_title">
+            android:title="@string/advanced_settings_title">
 
             <info.nightscout.core.validators.ValidatingEditTextPreference
                 android:defaultValue="1.2"

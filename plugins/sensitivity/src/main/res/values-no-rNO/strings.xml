@@ -13,8 +13,8 @@
     <string name="absorption_max_time_summary">Tid i timer hvor det forventes at alle karbohydrater fra måltid vil være absorbert</string>
     <string name="openapsama_autosens_period">Intervall for autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Antall timer med historiske data for beregning av sensitivitet (absorpsjonstid for KH er ekskludert)</string>
-    <string name="openapsama_autosens_max_summary">Standardverdi: 1.2\nDetta er en multiplikatorbegrensning for autosens (og snart autotune) som begrenser at autosens ikke kan øke med mer enn 20%%, som dermed begrenser hvor mye autosens kan justere opp dine basaler, hvor mye ISK kan reduseres og hvor lavt BS målverdi kan settes.</string>
-    <string name="openapsama_autosens_min_summary">Standardverdi: 0.7\nDette er en multiplikatorbegrensning for autosens sikkerhet. Den begrenser autosens til å redusere basalverdier, og øke isulinssensitivitet (ISF) og BS mål med ikke mer enn enn 30%.</string>
+    <string name="openapsama_autosens_max_summary">Standardverdi: 1.2\nDette er en multiplikatorbegrensning for autosens (og snart autotune) som begrenser at autosens ikke kan øke med mer enn 20%%, som dermed begrenser hvor mye autosens kan justere opp dine basaler, hvor mye ISF kan reduseres og hvor lavt BS målverdi kan settes.</string>
+    <string name="openapsama_autosens_min_summary">Standardverdi: 0.7\nDette er en multiplikatorbegrensning for autosens-sikkerhet. Den begrenser autosens til å redusere basalverdier, og øke isulinssensitivitet (ISF) og BS mål med ikke mer enn enn 30%.</string>
     <string name="openapsama_autosens_max">Maks autosens ratio</string>
     <string name="openapsama_autosens_min">Minimum autosens ratio</string>
     <string name="openapsama_min_5m_carb_impact_summary">Standardverdi er: 3.0 (AMA) eller 8.0 (SMB). Dette er grunninnstillingen for KH-opptak per 5 minutt. Den påvirker hvor raskt COB skal reduseres, og benyttes i beregning av fremtidig BS-kurve når BS enten synker eller øker mer enn forventet. Standardverdi er 3mg/dl/5 min.</string>

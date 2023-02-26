@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="smoothing_shortname">SMOOTH</string>
+    <string name="exponential_smoothing_name">Smoothing esponenziale</string>
+    <string name="description_exponential_smoothing">"Algoritmo di smoothing esponenziale di secondo ordine"</string>
+    <string name="avg_smoothing_name">Smoothing medio</string>
+    <string name="description_avg_smoothing">"Algoritmo di smoothing medio, il valore più recente non ne è influenzato"</string>
+    <string name="no_smoothing_name">No smoothing</string>
+    <string name="description_no_smoothing">"Nessuno smoothing eseguito sui dati glicemici di input. Usalo quando hai già filtrato i dati, ad esempio da BYODA G6."</string>
+</resources>

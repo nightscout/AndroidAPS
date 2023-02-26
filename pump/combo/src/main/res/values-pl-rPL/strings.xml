@@ -49,6 +49,11 @@
     <string name="combo_tbr_count">Obliczenia TBR</string>
     <string name="bolusstopped">Bolus zatrzymany</string>
     <string name="bolusstopping">Zatrzymuję bolus</string>
+    <string name="pump_commerror_label">Liczba błędów komunikacji</string>
+    <string name="show_comm_error_count_title">Pokaż liczbę błędów komunikacji</string>
+    <string name="show_comm_error_count_summary">Pokazuje liczbę błędów podczas komunikowania się z Ruffy. W większości przypadków liczba większa niż 0 oznacza problemy z komunikacją z Ruffy (może być potrzebny restart).</string>
     <string name="combo_error_display_never">Nigdy</string>
+    <string name="combo_error_display_error">Gdy wystąpił błąd</string>
+    <string name="combo_error_display_always">Zawsze</string>
     <string name="unsafeusage">niebezpieczne użycie</string>
 </resources>

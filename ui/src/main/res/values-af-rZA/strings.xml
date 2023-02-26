@@ -66,4 +66,5 @@
     <string name="basal_rate">Basale waarde</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STAAK GEDRUK</string>
+    <!--QuickWizard-->
 </resources>

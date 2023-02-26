@@ -44,7 +44,7 @@ import info.nightscout.database.entities.TotalDailyDose
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.VersionChange
 
-const val DATABASE_VERSION = 22
+const val DATABASE_VERSION = 23
 
 @Database(version = DATABASE_VERSION,
           entities = [APSResult::class, Bolus::class, BolusCalculatorResult::class, Carbs::class,

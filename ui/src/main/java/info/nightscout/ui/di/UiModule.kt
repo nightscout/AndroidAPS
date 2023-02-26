@@ -5,6 +5,7 @@ import dagger.android.ContributesAndroidInjector
 import info.nightscout.ui.activities.BolusProgressHelperActivity
 import info.nightscout.ui.activities.ErrorHelperActivity
 import info.nightscout.ui.activities.ProfileHelperActivity
+import info.nightscout.ui.activities.QuickWizardListActivity
 import info.nightscout.ui.activities.StatsActivity
 import info.nightscout.ui.activities.SurveyActivity
 import info.nightscout.ui.activities.TDDStatsActivity
@@ -21,6 +22,7 @@ import info.nightscout.ui.dialogs.BolusProgressDialog
 import info.nightscout.ui.dialogs.CalibrationDialog
 import info.nightscout.ui.dialogs.CarbsDialog
 import info.nightscout.ui.dialogs.CareDialog
+import info.nightscout.ui.dialogs.EditQuickWizardDialog
 import info.nightscout.ui.dialogs.ExtendedBolusDialog
 import info.nightscout.ui.dialogs.FillDialog
 import info.nightscout.ui.dialogs.InsulinDialog
@@ -61,6 +63,8 @@ abstract class UiModule {
     @ContributesAndroidInjector abstract fun contributesLoopDialog(): LoopDialog
     @ContributesAndroidInjector abstract fun contributesBolusProgressDialog(): BolusProgressDialog
     @ContributesAndroidInjector abstract fun contributesErrorDialog(): ErrorDialog
+    @ContributesAndroidInjector abstract fun contributesQuickWizardListActivity(): QuickWizardListActivity
+    @ContributesAndroidInjector abstract fun contributesEditQuickWizardDialog(): EditQuickWizardDialog
 
     @ContributesAndroidInjector abstract fun contributesTDDStatsActivity(): TDDStatsActivity
     @ContributesAndroidInjector abstract fun contributeBolusProgressHelperActivity(): BolusProgressHelperActivity

@@ -97,17 +97,11 @@
     <string name="sms_read_status_failed">Statuskontroll misslyckad</string>
     <string name="sms_profile_switch_created">Skapade ett profilbyte</string>
     <string name="sms_wrong_tbr_duration">Durationen måste vara större än 0 och en multipel av %1$d minuter.</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ Statusrad (klocka)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Visa AAPS-information på din xDrip+ urtavla.</string>
     <string name="xdrip_status_detailed_iob_title">Visa detaljerad IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Visa IOB med bolus och basal på klocka</string>
     <string name="disabled_loop">Loop inaktiverad</string>
     <string name="xdrip_status_show_bgi_title">Visa BGI</string>
     <string name="xdrip_status_show_bgi_summary">Visa BGI i statusraden</string>
-    <string name="xdrip_status_settings">xDrip+ Status (klocka)</string>
     <!-- Food-->
     <string name="food_short">Matdatabas</string>
     <string name="description_food">Visar förutbestämda inställningar för mat i Nightscout</string>
@@ -188,13 +182,9 @@
     <string name="a11y_bg_outdated">föråldrad</string>
     <string name="set_basal_question">Acceptera ny temp basal:</string>
     <string name="overview_cgm">CGM</string>
-    <string name="quickwizard">Snabbsteg</string>
     <string name="overview">Översikt</string>
     <string name="overview_shortname">Hem</string>
     <string name="description_overview">Visar loopens nuvarande tillstånd och knappar för de vanligaste funktionerna</string>
-    <string name="overview_editquickwizard_usecob">Använd COB</string>
-    <string name="overview_editquickwizard_usetemptarget">Använd temp målvärde</string>
-    <string name="overview_editquickwizard_usepercentage">Procentuell beräkning</string>
     <string name="overview_buttons_selection">Knappar</string>
     <string name="show_calibration_button_summary">Sänder kalibrering till xDrip eller öppnar kalibreringsrutan i Dexcom-appen</string>
     <string name="show_cgm_button_summary">Öppnar xDrip+ eller Dexcom-appen. Bakåtknappen återgår till AAPS</string>
@@ -208,22 +198,6 @@
     <string name="uploader">Uppladdare</string>
     <string name="data_status">BG datastatus</string>
     <string name="quickwizard_settings">Inställningar för snabbsteg</string>
-    <string name="overview_edit_quickwizard_button_text">Knapptext:</string>
-    <string name="overview_edit_quickwizard_carbs">Kolhydrater:</string>
-    <string name="overview_edit_quickwizard_valid">Giltig:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Lägg till</string>
-    <string name="overview_quickwizard_item_edit_button">Ändra</string>
-    <string name="overview_edit_quickwizard_show_on_device">Visa post på enhet:</string>
-    <string name="overview_edit_quickwizard_use_bg">Använd BG</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Använd bolus-IOB</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Använd basal-IOB</string>
-    <string name="overview_edit_quickwizard_use_trend">Använd BG-trend</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Använd superbolus</string>
-    <string name="overview_edit_quickwizard_percentage">Procent</string>
-    <string name="device_all">Alla</string>
-    <string name="positive_only">Endast positiva</string>
-    <string name="negative_only">Endast negativa</string>
-    <string name="app_default">Appens standardinställning</string>
     <string name="keep_screen_on_title">Håll skärmen igång</string>
     <string name="keep_screen_on_summary">Förhindrar att skärmen stängs av. Förbrukar mer batteri.</string>
     <string name="treatments">Behandlingar</string>
@@ -290,7 +264,6 @@
     <string name="buttonson_description">Knappar visas alltid längst ned på skärmen</string>
     <string name="largedisplay_description">Stor skärm</string>
     <string name="skin">Tema</string>
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
     <!--    Wear-->

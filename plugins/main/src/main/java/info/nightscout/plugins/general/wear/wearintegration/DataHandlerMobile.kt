@@ -16,7 +16,14 @@ import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.core.wizard.QuickWizard
 import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.*
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.BolusCalculatorResult
+import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.database.entities.TemporaryTarget
+import info.nightscout.database.entities.TotalDailyDose
+import info.nightscout.database.entities.UserEntry
+import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
@@ -27,6 +34,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
@@ -60,7 +68,9 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.LinkedList
+import java.util.Locale
 import java.util.concurrent.TimeUnit
 import java.util.stream.Collectors
 import javax.inject.Inject
@@ -94,7 +104,8 @@ class DataHandlerMobile @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val commandQueue: CommandQueue,
     private val fabricPrivacy: FabricPrivacy,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val persistenceLayer: PersistenceLayer
 ) {
 
     private val disposable = CompositeDisposable()
@@ -216,7 +227,7 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "ActionBolusConfirmed received $it from ${it.sourceNodeId}")
-                           doBolus(it.insulin, it.carbs, null, 0)
+                           doBolus(it.insulin, it.carbs, null, 0, null)
                        }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventData.ActionECarbsPreCheck::class.java)
@@ -276,8 +287,10 @@ class DataHandlerMobile @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({
                            aapsLogger.debug(LTag.WEAR, "ActionWizardConfirmed received $it from ${it.sourceNodeId}")
-                           if (lastBolusWizard?.timeStamp == it.timeStamp) { //use last calculation as confirmed string matches
-                               doBolus(lastBolusWizard!!.calculatedTotalInsulin, lastBolusWizard!!.carbs, null, 0)
+                           lastBolusWizard?.let { lastBolusWizard ->
+                               if (lastBolusWizard.timeStamp == it.timeStamp) { //use last calculation as confirmed string matches
+                                   doBolus(lastBolusWizard.calculatedTotalInsulin, lastBolusWizard.carbs, null, 0, lastBolusWizard.createBolusCalculatorResult())
+                               }
                            }
                            lastBolusWizard = null
                        }, fabricPrivacy::logException)
@@ -369,7 +382,7 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_actual_bg))
             return
         }
-        val cobInfo = iobCobCalculator.getCobInfo(false, "Wizard wear")
+        val cobInfo = iobCobCalculator.getCobInfo("Wizard wear")
         if (cobInfo.displayCob == null) {
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_cob))
             return
@@ -436,7 +449,7 @@ class DataHandlerMobile @Inject constructor(
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_active_profile))
             return
         }
-        val cobInfo = iobCobCalculator.getCobInfo(false, "QuickWizard wear")
+        val cobInfo = iobCobCalculator.getCobInfo("QuickWizard wear")
         if (cobInfo.displayCob == null) {
             sendError(rh.gs(info.nightscout.core.ui.R.string.wizard_no_cob))
             return
@@ -447,7 +460,7 @@ class DataHandlerMobile @Inject constructor(
             return
         }
 
-        val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true)
+        val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
 
         val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
         if (carbsAfterConstraints != quickWizardEntry.carbs()) {
@@ -846,7 +859,7 @@ class DataHandlerMobile @Inject constructor(
         val finalLastRun = loop.lastRun
         if (sp.getBoolean(rh.gs(R.string.key_wear_predictions), true) && finalLastRun?.request?.hasPredictions == true && finalLastRun.constraintsProcessed != null) {
             val predArray = finalLastRun.constraintsProcessed!!.predictions
-                .stream().map { bg: GlucoseValue -> GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh) }
+                .stream().map { bg: GlucoseValue -> GlucoseValueDataPoint(bg, profileFunction, rh) }
                 .collect(Collectors.toList())
             if (predArray.isNotEmpty())
                 for (bg in predArray) if (bg.data.value > 39)
@@ -877,7 +890,7 @@ class DataHandlerMobile @Inject constructor(
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)
             iobDetail = "(${DecimalFormatter.to2Decimal(bolusIob.iob)}|${DecimalFormatter.to2Decimal(basalIob.basaliob)})"
-            cobString = iobCobCalculator.getCobInfo(false, "WatcherUpdaterService").generateCOBString()
+            cobString = iobCobCalculator.getCobInfo("WatcherUpdaterService").generateCOBString()
             currentBasal =
                 iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())?.toStringShort() ?: rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, profile.getBasal())
 
@@ -1147,7 +1160,7 @@ class DataHandlerMobile @Inject constructor(
         }
     }
 
-    private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int) {
+    private fun doBolus(amount: Double, carbs: Int, carbsTime: Long?, carbsDuration: Int, bolusCalculatorResult: BolusCalculatorResult?) {
         val detailedBolusInfo = DetailedBolusInfo()
         detailedBolusInfo.insulin = amount
         detailedBolusInfo.carbs = carbs.toDouble()
@@ -1171,6 +1184,7 @@ class DataHandlerMobile @Inject constructor(
                         sendError(rh.gs(info.nightscout.core.ui.R.string.treatmentdeliveryerror) + "\n" + result.comment)
                 }
             })
+            bolusCalculatorResult?.let { persistenceLayer.insertOrUpdate(it) }
         }
     }
 
@@ -1195,7 +1209,7 @@ class DataHandlerMobile @Inject constructor(
                 ValueWithUnit.Timestamp(carbsTime),
                 ValueWithUnit.Gram(carbs),
                 ValueWithUnit.Hour(duration).takeIf { duration != 0 })
-        doBolus(0.0, carbs, carbsTime, duration)
+        doBolus(0.0, carbs, carbsTime, duration, null)
     }
 
     private fun doProfileSwitch(command: EventData.ActionProfileSwitchConfirmed) {

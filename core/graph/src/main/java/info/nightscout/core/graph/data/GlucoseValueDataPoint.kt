@@ -5,14 +5,12 @@ import android.graphics.Paint
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.interfaces.ResourceHelper
 
 class GlucoseValueDataPoint(
     val data: GlucoseValue,
-    private val defaultValueHelper: DefaultValueHelper,
     private val profileFunction: ProfileFunction,
     private val rh: ResourceHelper
 ) : DataPointWithLabelInterface {

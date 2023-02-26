@@ -17,12 +17,13 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.shared.interfaces.ResourceHelper
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class PrepareBgDataWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileFunction: ProfileFunction
@@ -35,18 +36,20 @@ class PrepareBgDataWorker(
         val overviewData: OverviewData
     )
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
 
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareBgData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
+        val toTime = data.overviewData.toTime
+        val fromTime = data.overviewData.fromTime
         data.overviewData.maxBgValue = Double.MIN_VALUE
-        data.overviewData.bgReadingsArray = repository.compatGetBgReadingsDataFromTime(data.overviewData.fromTime, data.overviewData.toTime, false).blockingGet()
+        data.overviewData.bgReadingsArray = repository.compatGetBgReadingsDataFromTime(fromTime, toTime, false).blockingGet()
         val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         for (bg in data.overviewData.bgReadingsArray) {
-            if (bg.timestamp < data.overviewData.fromTime || bg.timestamp > data.overviewData.toTime) continue
+            if (bg.timestamp < fromTime || bg.timestamp > toTime) continue
             if (bg.value > data.overviewData.maxBgValue) data.overviewData.maxBgValue = bg.value
-            bgListArray.add(GlucoseValueDataPoint(bg, defaultValueHelper, profileFunction, rh))
+            bgListArray.add(GlucoseValueDataPoint(bg, profileFunction, rh))
         }
         bgListArray.sortWith { o1: DataPointWithLabelInterface, o2: DataPointWithLabelInterface -> o1.x.compareTo(o2.x) }
         data.overviewData.bgReadingGraphSeries = PointsWithLabelGraphSeries(Array(bgListArray.size) { i -> bgListArray[i] })

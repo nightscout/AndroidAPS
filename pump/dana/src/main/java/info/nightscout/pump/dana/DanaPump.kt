@@ -1,8 +1,8 @@
 package info.nightscout.pump.dana
 
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.Instantiator
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
@@ -43,8 +43,8 @@ class DanaPump @Inject constructor(
         SUSPENDED(0x01),
         DAILY_MAX(0x02),
         BOLUS_BLOCK(0x04),
-        ORDERDELIVERING(0x08),
-        NOPRIME(0x10);
+        ORDER_DELIVERING(0x08),
+        NO_PRIME(0x10);
 
         companion object {
 
@@ -128,11 +128,6 @@ class DanaPump @Inject constructor(
     var tempBasalDuration: Long = 0 // in milliseconds
     var tempBasalPercent = 0
 
-    var tempBasalTotalSec: Long
-        set(durationInSec) {
-            tempBasalDuration = T.secs(durationInSec).msecs()
-        }
-        get() = T.msecs(tempBasalDuration).mins()
     var isTempBasalInProgress: Boolean
         get() = tempBasalStart != 0L && dateUtil.now() in tempBasalStart..tempBasalStart + tempBasalDuration
         set(isRunning) {
@@ -416,19 +411,19 @@ class DanaPump @Inject constructor(
     fun modelFriendlyName(): String =
         when (hwModel) {
             0x01 -> "DanaR Korean"
-            0x03 ->
+            0x03       ->
                 when (protocol) {
                     0x00 -> "DanaR old"
                     0x02 -> "DanaR v2"
                     else -> "DanaR" // 0x01 and 0x03 known
                 }
-            0x05 ->
+            0x05       ->
                 if (protocol < 10) "DanaRS"
                 else "DanaRS v3"
-            0x06 -> "DanaRS Korean"
-            0x07 -> "Dana-i (BLE4.2)"
-            0x09 -> "Dana-i (BLE5)"
-            else -> "Unknown Dana pump"
+            0x06       -> "DanaRS Korean"
+            0x07       -> "Dana-i (BLE4.2)"
+            0x09, 0x0A -> "Dana-i (BLE5)"
+            else       -> "Unknown Dana pump"
         }
 
     fun pumpType(): PumpType =
@@ -444,6 +439,7 @@ class DanaPump @Inject constructor(
             0x06 -> PumpType.DANA_RS_KOREAN
             0x07 -> PumpType.DANA_I
             0x09 -> PumpType.DANA_I
+            0x0A -> PumpType.DANA_I // Korean version
             else -> PumpType.DANA_RS // having here default type non TBR capable is causing problem with disabling loop
         }
 

@@ -65,6 +65,8 @@
     <string name="medtronic_cmd_desc_get_history">Вземи история - стр %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Вземи история - стр %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Вземи времето на помпата</string>
+    <string name="medtronic_cmd_desc_set_time">Задай времето на помпата</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Получете състоянието на батерията</string>
     <string name="medtronic_cmd_desc_get_settings">Вземи настройките на помпата</string>
     <string name="medtronic_cmd_desc_get_model">Вземи модел на помпата</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Вземи базален профил от помпата</string>
@@ -73,6 +75,7 @@
     <string name="medtronic_cmd_desc_set_tbr">Приложи временен базал</string>
     <string name="medtronic_cmd_desc_cancel_tbr">Откажи временен базал</string>
     <string name="medtronic_cmd_desc_set_bolus">Стартирай болус</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Оставащ инсулин</string>
     <string name="medtronic_pump_status_pump_unreachable">Помпата е недостъпна</string>
     <string name="medtronic_warning">Внимание</string>
     <!-- medtronic_warning -->
@@ -86,6 +89,10 @@
     <string name="pump_time_updated">Актуализирано време на помпата</string>
     <string name="set_neutral_temps_title">Прилагане на неутрални временни базали</string>
     <string name="set_neutral_temps_summary">Ако е вкл, то ще анулира временен базал на всеки час. Това може да помогне за спиране на  звук/вибрация от някой помпи на всеки час.</string>
+    <string name="mdt_tbr_remaining">%1$.1f Е/ч (%2$d мин остават)</string>
+    <string name="invalid_history_data">Открити са невалидни данни за историята на помпата. Отворете \"нов проблем\" и предоставете логове.</string>
     <string name="riley_statistics">Статистика на RL</string>
     <string name="medtronic_history_type">Тип:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Отбелязано обновяване</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Планирано обновяване на състоянието</string>
 </resources>

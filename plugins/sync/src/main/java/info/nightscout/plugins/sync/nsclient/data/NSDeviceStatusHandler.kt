@@ -1,11 +1,12 @@
 package info.nightscout.plugins.sync.nsclient.data
 
+import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.JsonHelper
-import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
+import info.nightscout.sdk.localmodel.devicestatus.NSDeviceStatus
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
@@ -65,6 +66,7 @@ import javax.inject.Singleton
  */
 @Suppress("SpellCheckingInspection")
 @Singleton
+@OpenForTesting
 class NSDeviceStatusHandler @Inject constructor(
     private val sp: SP,
     private val config: Config,
@@ -73,7 +75,7 @@ class NSDeviceStatusHandler @Inject constructor(
     private val processedDeviceStatusData: ProcessedDeviceStatusData
 ) {
 
-    fun handleNewData(deviceStatuses: Array<RemoteDeviceStatus>) {
+    fun handleNewData(deviceStatuses: Array<NSDeviceStatus>) {
         var configurationDetected = false
         for (i in deviceStatuses.size - 1 downTo 0) {
             val nsDeviceStatus = deviceStatuses[i]
@@ -91,7 +93,7 @@ class NSDeviceStatusHandler @Inject constructor(
         }
     }
 
-    private fun updateDeviceData(deviceStatus: RemoteDeviceStatus) {
+    private fun updateDeviceData(deviceStatus: NSDeviceStatus) {
         val createdAt = deviceStatus.createdAt?.let { dateUtil.fromISODateString(it) } ?: return
         processedDeviceStatusData.device?.let { if (createdAt < it.createdAt) return } // take only newer record
         deviceStatus.device?.let {
@@ -99,8 +101,8 @@ class NSDeviceStatusHandler @Inject constructor(
         }
     }
 
-    private fun updatePumpData(remoteDeviceStatus: RemoteDeviceStatus) {
-        val pump = remoteDeviceStatus.pump ?: return
+    private fun updatePumpData(nsDeviceStatus: NSDeviceStatus) {
+        val pump = nsDeviceStatus.pump ?: return
         val clock = pump.clock?.let { dateUtil.fromISODateString(it) } ?: return
         processedDeviceStatusData.pumpData?.let { if (clock < it.clock) return } // take only newer record
 
@@ -132,8 +134,8 @@ class NSDeviceStatusHandler @Inject constructor(
         }
     }
 
-    private fun updateOpenApsData(remoteDeviceStatus: RemoteDeviceStatus) {
-        remoteDeviceStatus.openaps?.suggested?.let {
+    private fun updateOpenApsData(nsDeviceStatus: NSDeviceStatus) {
+        nsDeviceStatus.openaps?.suggested?.let {
             JsonHelper.safeGetString(it, "timestamp")?.let { timestamp ->
                 val clock = dateUtil.fromISODateString(timestamp)
                 // check if this is new data
@@ -143,7 +145,7 @@ class NSDeviceStatusHandler @Inject constructor(
                 }
             }
         }
-        remoteDeviceStatus.openaps?.enacted?.let {
+        nsDeviceStatus.openaps?.enacted?.let {
             JsonHelper.safeGetString(it, "timestamp")?.let { timestamp ->
                 val clock = dateUtil.fromISODateString(timestamp)
                 // check if this is new data
@@ -155,10 +157,11 @@ class NSDeviceStatusHandler @Inject constructor(
         }
     }
 
-    private fun updateUploaderData(remoteDeviceStatus: RemoteDeviceStatus) {
-        val clock = remoteDeviceStatus.createdAt?.let { dateUtil.fromISODateString(it) } ?: return
-        val device = remoteDeviceStatus.device ?: return
-        val battery = remoteDeviceStatus.uploaderBattery ?: remoteDeviceStatus.uploader?.battery ?: return
+    private fun updateUploaderData(nsDeviceStatus: NSDeviceStatus) {
+        val clock = nsDeviceStatus.createdAt?.let { dateUtil.fromISODateString(it) } ?: return
+        val device = nsDeviceStatus.device ?: return
+        val battery = nsDeviceStatus.uploaderBattery ?: nsDeviceStatus.uploader?.battery ?: return
+        val isCharging = nsDeviceStatus.isCharging
 
         var uploader = processedDeviceStatusData.uploaderMap[device]
         // check if this is new data
@@ -166,6 +169,7 @@ class NSDeviceStatusHandler @Inject constructor(
             if (uploader == null) uploader = ProcessedDeviceStatusData.Uploader()
             uploader.battery = battery
             uploader.clock = clock
+            uploader.isCharging = isCharging
             processedDeviceStatusData.uploaderMap[device] = uploader
         }
     }

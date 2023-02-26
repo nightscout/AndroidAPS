@@ -2,12 +2,27 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Omschakeling van zomer- of wintertijd in 24 uur of minder</string>
+    <string name="dst_loop_disabled_warning">Omschakeling zomer/wintertijd minder dan 3 uur geleden - Gesloten Lus modus gedeactiveerd</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Maak minstens %1$d MB vrij in interne opslag! Loop is uitgeschakeld!</string>
     <!-- Version Checker -->
+    <string name="old_version">oude versie</string>
+    <string name="very_old_version">zeer oude versie</string>
+    <string name="application_expired">Applicatie is verlopen</string>
+    <string name="new_version_warning">Nieuwe versie al zeker %1$d dagen beschikbaar! Terugval LGS na %2$d dagen, loop zal worden uitgeschakeld na %3$d dagen</string>
+    <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
+    <string name="versionavailable">Versie %1$s is beschikbaar</string>
+    <string name="version_expire">Versie %1$s verloopt op %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Herberekende data gebruikt</string>
+    <string name="bg_too_close">BG data interval to kort:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">opnieuw berekend</string>
+    <string name="a11y_bg_quality_doubles">dubbele invoer</string>
     <string name="a11y_bg_quality_flat">Vlakke data. Beschouwd als onjuist</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">Vertraagde bolus beperkt tot %1$.1f E vanwege %2$s</string>
     <string name="limitingcarbs">Koolhydraten worden beperkt tot %1$d gr doordat %2$s</string>
     <string name="pumpisnottempbasalcapable">Pomp kan geen tijdelijk basaal aanvaarden</string>
     <string name="closedmodedisabledinpreferences">Closed Loop modus gedeactiveerd in de instellingen</string>
@@ -31,6 +46,8 @@
     <string name="objectives_shortname">DOEL</string>
     <string name="description_objectives">Leerprogramma</string>
     <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
+    <string name="objectives_next_button">Volgende</string>
+    <string name="objectives_previous_button">Vorige</string>
     <string name="objectives_button_unfinish">Voltooiing wissen</string>
     <string name="objectives_button_unstart">Start wissen</string>
 </resources>

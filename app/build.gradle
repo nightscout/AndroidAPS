@@ -111,7 +111,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "3.1.0.3-dev-f"
+        version "3.1.0.3-dev-h"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -200,7 +200,6 @@ dependencies {
     implementation project(':plugins:constraints')
     implementation project(':plugins:insulin')
     implementation project(':plugins:main')
-    implementation project(':plugins:openhumans')
     implementation project(':plugins:sensitivity')
     implementation project(':plugins:smoothing')
     implementation project(':plugins:source')

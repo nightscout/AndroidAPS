@@ -23,7 +23,7 @@ fun NSProfileSwitch.toProfileSwitch(activePlugin: ActivePlugin, dateUtil: DateUt
     return ProfileSwitch(
         isValid = isValid,
         timestamp = date ?: throw InvalidParameterException(),
-        utcOffset = utcOffset ?: 0L,
+        utcOffset = T.mins(utcOffset ?: 0L).msecs(),
         basalBlocks = profileSealed.basalBlocks,
         isfBlocks = profileSealed.isfBlocks,
         icBlocks = profileSealed.icBlocks,
@@ -49,7 +49,7 @@ fun ProfileSwitch.toNSProfileSwitch(dateUtil: DateUtil): NSProfileSwitch {
         eventType = EventType.PROFILE_SWITCH,
         isValid = isValid,
         date = timestamp,
-        utcOffset = utcOffset,
+        utcOffset = T.msecs(utcOffset).mins(),
         timeShift = timeshift,
         percentage = percentage,
         duration = T.mins(duration).msecs(),

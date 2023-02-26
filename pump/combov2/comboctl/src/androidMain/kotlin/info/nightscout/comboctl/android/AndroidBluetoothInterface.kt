@@ -1,11 +1,6 @@
 package info.nightscout.comboctl.android
 
 import android.annotation.SuppressLint
-import android.bluetooth.BluetoothAdapter as SystemBluetoothAdapter
-import android.bluetooth.BluetoothDevice as SystemBluetoothDevice
-import android.bluetooth.BluetoothManager as SystemBluetoothManager
-import android.bluetooth.BluetoothServerSocket as SystemBluetoothServerSocket
-import android.bluetooth.BluetoothSocket as SystemBluetoothSocket
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
@@ -20,6 +15,11 @@ import info.nightscout.comboctl.base.toBluetoothAddress
 import java.io.IOException
 import java.util.concurrent.locks.ReentrantLock
 import kotlin.concurrent.thread
+import android.bluetooth.BluetoothAdapter as SystemBluetoothAdapter
+import android.bluetooth.BluetoothDevice as SystemBluetoothDevice
+import android.bluetooth.BluetoothManager as SystemBluetoothManager
+import android.bluetooth.BluetoothServerSocket as SystemBluetoothServerSocket
+import android.bluetooth.BluetoothSocket as SystemBluetoothSocket
 
 private val logger = Logger.get("AndroidBluetoothInterface")
 

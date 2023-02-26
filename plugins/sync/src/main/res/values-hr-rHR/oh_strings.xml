@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="uploading_to_open_humans">AAPS prenosi na Open Humans. Ovo može potrajati.</string>
+    <string name="next">Sljedeći</string>
+    <string name="welcome_to_open_humans">Dobrodošli u Open Humans</string>
+    <string name="setup_data_upload">Za postavljanje prijenosa podataka kliknite \'Dalje\'.</string>
+    <string name="consent">Pristanak</string>
+    <string name="terms_of_use">Uvjeti korištenja</string>
+    <string name="please_read__information">Molimo pažljivo pročitajte sljedeće informacije i prihvatite uvjete korištenja da biste nastavili.</string>
+    <string name="info_openhumans">Ovo je alat otvorenog koda koji će kopirati vaše podatke u Open Humans. Ne zadržavamo nikakva prava dijeljenja vaših podataka s trećim stranama bez vašeg izričitog dopuštenja. Podaci koje projekt i aplikacija primaju identificirani su putem slučajnog korisničkog ID-a i sigurno će se prenijeti na Open Humans račun samo uz vašu autorizaciju tog procesa. Možete zaustaviti prijenos i izbrisati svoje podatke za prijenos u bilo kojem trenutku putem www.openhumans.org.</string>
+    <string name="data_uploaded">Podaci preneseni</string>
+    <string name="glucose_values">Vrijednosti glukoze</string>
+    <string name="boluses">Bolusi</string>
+    <string name="extended_boluses">Produženi bolusi</string>
+    <string name="carbohydrates">Ugljikohidrati</string>
+    <string name="careportal_events">Careportal događaji (osim bilješki)</string>
+    <string name="profile_switches">Prekidači profila</string>
+    <string name="total_daily_doses">Ukupne dnevne doze</string>
+    <string name="temporary_basal_rates">Privremene bazalne stope</string>
+    <string name="temporary_targets">Privremeni ciljevi</string>
+    <string name="settings">Postavke</string>
+    <string name="application_version">Verzija aplikacije</string>
+    <string name="device_model">Model uređaja</string>
+    <string name="screen_dimensions">Dimenzije ekrana</string>
+    <string name="algorithm_debug_data">Podaci za otklanjanje pogrešaka algoritma</string>
+    <string name="data_not_uploaded">Podaci NISU preneseni</string>
+    <string name="passwords">Lozinke</string>
+    <string name="nightscout_api_secret">Tajni API Nightscouta</string>
+    <string name="free_text_fields">Slobodna tekstualna polja</string>
+    <string name="agree">Razumijem i slažem se.</string>
+    <string name="login_open_humans">Prijavite se na Open Humans</string>
+    <string name="final_touches">Završni detalji</string>
+    <string name="uploading_proceed">Samo ste jedan korak od prijenosa podataka na Open Humans. Želiš li nastaviti?</string>
+    <string name="cancel">Otkaži</string>
+    <string name="proceed">Nastavi</string>
+    <string name="finishing">Završavam...</string>
+    <string name="this_may_take_a_few_seconds">Ovo može potrajati nekoliko sekundi.</string>
+    <string name="we_re_done">Gotovi smo!</string>
+    <string name="silently_upload_date_note">Od sada će vaš telefon s vremena na vrijeme tiho prenositi podatke u pozadini.</string>
+    <string name="close">Zatvori</string>
+</resources>

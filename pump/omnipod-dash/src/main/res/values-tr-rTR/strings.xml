@@ -39,4 +39,16 @@
     <string name="omnipod_dash_not_enough_insulin">Rezervuarda yeterli insülin kalmamış</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Onaylanmamış komut</string>
     <string name="requested_by_user" comment="26 characters max for translation">Kullanıcı talebi</string>
+    <string name="profile_set_ok">Profil ayarı TAMAM</string>
+    <string name="suspend_delivery_is_unconfirmed">İletimin askıya alınması onaylanmadı! Lütfen Pod durumunu Omnipod sekmesinden manuel olarak yenileyin ve gerekirse iletime devam edin.</string>
+    <string name="insulin_delivery_suspended">İnsülin iletimi askıya alındı</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Pod\'un saat dilimi, telefondaki saat diliminden farklıdır. Bazal oran yanlış. Düzeltmek için profili değiştirin</string>
+    <string name="failed_to_set_the_new_basal_profile">Yeni bazal profil ayarlanamadı. İletim askıya alındı</string>
+    <string name="setting_basal_profile_might_have_failed">Bazal profili ayarlama başarısız olmuş olabilir. İletim askıya alınabilir! Lütfen Pod durumunu Omnipod sekmesinden manuel olarak yenileyin ve gerekirse iletime devam edin.</string>
+    <string name="bolus_delivery_status_uncertain">Bolus iletim durumu belirsiz. Onaylamak veya reddetmek için pod durumunu yenileyin.</string>
+    <string name="checking_delivery_status">İletim durumu kontrol ediliyor</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Geçici bazal ayarı hatalı olabilir. Geçici bir bazal daha önce çalışıyorsa, iptal edilmiştir. Lütfen Omnipod sekmesinden Pod durumunu manuel olarak yenileyin.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Geçici bazal iptal etme belirsizliği</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Onaylanmamış iletimi devam ettir komutu. Lütfen pod durumunu yenileyin</string>
+    <string name="cancelling_temp_basal_might_have_failed">Geçici bazal iptali başarısız olabilir. Daha önce bir geçici bazal çalışıyorsa, iptal edilmiş olabilir. Lütfen Pod durumunu Omnipod sekmesinden manuel olarak yenileyin.</string>
 </resources>

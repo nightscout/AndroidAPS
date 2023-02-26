@@ -7,23 +7,35 @@
     <string name="objectivenotfinished">Цел %1$d не е завършена</string>
     <string name="objectives_0_objective">Настройка на визуализацията и наблюдението, а също и анализиране на базалните нужди и коефициенти</string>
     <string name="objectives_0_gate">Потвърждаване, че КЗ се вижда в Найтскаут и данните за помпата се качват там</string>
+    <string name="objectives_0_learned">Направихте основна настройка на системата AAPS. Nightscout не е необходим, за да работи AAPS, но е много полезен за докладване или наблюдение на други пациенти. Не е необходимо да сте свързани с NS през цялото време, ако използвате NS само за себе си. Можете да настроите да качвате например само на домашен wifi и да пестите батерията.</string>
     <string name="objectives_openloop_objective">Стартиране в режим Отворен кръг (Open loop)</string>
     <string name="objectives_openloop_gate">Работа в режим \"Отворен кръг\" за няколко дни и ръчно въвеждане на много временни базали. Настройте и използвайте временни и стандартни временни цели (напр. за активни въглехидрати или такива при хипо)</string>
+    <string name="objectives_openloop_learned">Отворената система може да се използва за препоръки, ако нямате съвместима помпа или не сте готови да затворите системата.</string>
     <string name="objectives_maxbasal_objective">Опитайте се да разбирате по-добре вашият APS в режим \"Отворен кръг\", включително препоръчваните временни базали</string>
     <string name="objectives_maxbasal_gate">Определяне на макс. лимит на базалния инсулин и настройване в помпата и програмата</string>
+    <string name="objectives_maxbasal_learned">Внимавайте за функциите за безопасност и коригирайте безопасно параметрите, когато е необходимо.</string>
     <string name="objectives_maxiobzero_objective">Стартиране на \"Затворен кръг\" с изключване на базал при ниска КЗ</string>
     <string name="objectives_maxiobzero_gate">Стартиране на \"Затворен кръг\" с макс. IOB=0 без твърде много събития тип ниска КЗ</string>
+    <string name="objectives_maxiobzero_learned">Задаването на MaxIOB на нула ви предпазва от хипогликемия и няма да добави повече инсулин над базалната скорост (освен в ситуация с отрицателен IOB)</string>
     <string name="objectives_maxiob_objective">Настройване на \"Затворен кръг\" чрез повишаване на максималният IOB над 0 и понижаване на целевите нива на КЗ</string>
     <string name="objectives_maxiob_gate">Прекарайте няколко дни по този начин, като поне една нощ нямате аларма за ниска КЗ</string>
+    <string name="objectives_maxiob_learned">Актуализирайте MaxIOB внимателно. Не позволявайте на системата да ви дава повече инсулин, отколкото можете да покриете с храна = наистина високата стойност е лоша идея.</string>
     <string name="objectives_autosens_objective">Настройване на базалния инсулин и коефициенти ако е необходимо и активиране на auto-sens</string>
     <string name="objectives_autosens_gate">Една седмица успешно дневно използване с редовно въвеждане на въглехидрати</string>
+    <string name="objectives_autosens_learned">Ако вашият резултат от autosens не се колебае около 100%, вашият профил вероятно е грешен.</string>
     <string name="objectives_smb_objective">Добавяне на допълнителни функции за използване през деня, като SMB</string>
     <string name="objectives_smb_gate">Трябва да прочетете wiki и увеличите maxIOB за да може SMB да работи добре! Добро начало е maxIOB = средния болус за хранене + 3 пъти най-големия базал от профила</string>
+    <string name="objectives_smb_learned">Използването на SMB трябва да е вашата основна цел. Алгоритъмът Oref1 е създаден, за да ви помогне и с вашите болуси. Не трябва да давате пълен болус за вашата храна, а само част от него и оставете AAPS да ви даде останалото, ако е необходимо. По този начин имате по-голям диапазон за грешно изчислени въглехидрати. Знаете ли, че можете да зададете процент от резултата от болус калкулатора, за да намалите размера на болуса?</string>
     <string name="objectives_auto_objective">Разрешаване на автоматизация</string>
-    <string name="objectives_bgavailableinns">КЗ да се вижда в NS</string>
-    <string name="objectives_pumpstatusavailableinns">Статуса на помпата да е достъпен в NS</string>
+    <string name="objectives_auto_gate">Прочетете документацията за това как работи автоматизацията. Настройте първите си прости правила. Нека AAPS показва само известия. Когато сте сигурни, автоматизацията се задейства в точното време, за да заменете известяването с реални действия. (https: //androidaps.readthedocs.io/en/latest/EN/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">Автоматизацията може да бъде добър слуга, но и лош господар. Не прекалявайте с употребата му. Не се опитвайте да замените основния алгоритъм. Тествайте правилото със съобщение само преди употреба. Зависи от поръчката.</string>
+    <string name="objectives_bgavailableinns">КЗ е налична в NS или Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Състоянието на помпата е налично в NS или Tidepool</string>
     <string name="objectives_manualenacts">Ръчно приложени</string>
     <string name="accomplished">Изпълнено: %1$s</string>
+    <string name="objectives_usage_objective">Научете се как да управлявате AAPS</string>
+    <string name="objectives_usage_gate">Извършете различни действия в AAPS</string>
+    <string name="objectives_usage_learned">Научихте как да боравите с основите на AAPS. Основните контроли са на Екрана за общ преглед, достъпни при натискане или продължителен натиск, повече контроли има на Екрана за действие. Трябва да знаете как да поставите Екран за плъгини в горното скрол меню или да го оставите да се показва в горния ляв лист с активирани плъгини.</string>
     <string name="objectives_useprofileswitch">Настройте профила на 90% за 10 минути (задръжте върху името на профила в таб Общ)</string>
     <string name="objectives_usedisconnectpump">Симулирайте душ. Изключете помпата за 1 час (задръжте върху Отворен кръг)</string>
     <string name="objectives_usereconnectpump">... и отново я свържете по същия начин</string>
@@ -33,12 +45,41 @@
     <string name="objectives_usescale">Използвайте функцията за удължаване на периода на графиката, като задържите върху нея.</string>
     <string name="objectives_exam_objective">Докажете знанията си</string>
     <string name="objectives_exam_gate">Четете внимателно въпросите.  Имате четири възможни отговора за всеки въпрос. Може да има повече от един правилен отговор. Моля, изберете всички, които са правилни, и натиснете VERIFY.</string>
+    <string name="objectives_exam_learned_prerequisites">Не е нужно да сте програмист, но имате нужда от NS, за да преминете Цели, съвместима помпа и компютър, за да изградите AAPS за първи път и за всяка актуализация.</string>
+    <string name="objectives_exam_learned_prerequisites2">AAPS може да работи без интернет.</string>
+    <string name="objectives_exam_learned_basaltest">Профилът трябва да бъде прегледан и актуализиран. По-добър профил = по-добри резултати.</string>
+    <string name="objectives_exam_learned_dia">DIA в затворена система има различно значение (време, докато целият инсулин е абсорбиран), отколкото при класическата помпена терапия (време, докато повечето инсулин е абсорбиран).</string>
+    <string name="objectives_exam_learned_isf">Научихте значението на стойността на ISF и как тя влияе на количеството инсулин, използвано за корекция на КГ.</string>
+    <string name="objectives_exam_learned_ic">Научихте значението на IC стойността и как то влияе на количеството инсулин, необходимо за покриване на въглехидратите.</string>
+    <string name="objectives_exam_learned_hypott">Целта на Хипо временна цел е да се използва само за предотвратяване на свръхкорекция след хипо, когато обикновено е наличен отрицателен IOB. Трябва да бъдат предприети допълнителни действия, за да се предотврати тази ситуация отново в бъдеще.</string>
+    <string name="objectives_exam_learned_profileswitch">Използването на процент не засяга целевите нива на кръвната глюкоза, но базалът, ISF и IC се коригират така, че да дават повече инсулин (над 100%%) или по-малко инсулин (под 100%%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">Чрез използване на отместване в превключване на профили, можете да адаптирате циркадния профил към нередности, като късно събуждане.</string>
+    <string name="objectives_exam_learned_profileswitch4">Самото редактиране на профил не е достатъчно, за да направите промяна. Все още трябва да активирате профила, за да са в сила промените.</string>
+    <string name="objectives_exam_learned_exercise">Трябва да намалите количеството инсулин в тялото поне 1 час преди да започнете тренировка, като изберете профил под 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Задаването на по-висока временна цел, поне 1 час преди тренировка, помага и за намаляване на количеството инсулин в тялото.</string>
+    <string name="objectives_exam_learned_noisycgm">Когато не можете да се доверите на стойностите на CGM, не трябва да използвате затворен цикъл.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">AAPS трябва да знае, че помпата не е свързана, за да изчисли IOB правилно.</string>
+    <string name="objectives_exam_learned_insulin">Необходимо е да се отбележи вида инсулин в помпата, защото това влияе върху изчисляването на IOB.</string>
+    <string name="objectives_exam_learned_sensitivity">Откриването на чувствителността е част от алгоритъма, който позволява адаптиране на дозата инсулин към различни ситуации.</string>
+    <string name="objectives_exam_learned_objectives">Вашият напредък в Целите се съхранява заедно с други настройки и трябва да се архивира.</string>
+    <string name="objectives_exam_learned_objectives2">Винаги съхранявайте експортираните настройки и генерирания APK файл извън телефона. Телефонът може да бъде изгубен, повреден и т.н. Добро място може да бъде във всеки облак, достъпен от телефона. В този случай можете да възстановите AAPS на друго устройство за няколко минути. Добра практика също е да съхранявате използваната главна парола на сигурно място. Без нея, вашето резервно копие е безполезно. Същото важи за ключовете за подписване (.jks файл) и пароли, използвани за изграждане на AAPS. Останалото не е важно - може да бъде изтеглено по всяко време от интернет, отново.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Ако сте направили грешен вход в AAPS или не отговаря на реалността, разрешете го възможно най-скоро. Може да доведе до предозиране. AAPS трябва винаги да бъде информирано по възможно най-добрия начин за въглехидратите, инсулина и т. н.</string>
+    <string name="objectives_exam_learned_iob">Ако анализирате дали APPS работи добре за вас, гледането на IOB графиката може да ви даде много полезна информация.</string>
+    <string name="objectives_exam_learned_cob">Изчислението на COB зависи от връзката между ISF и IC. Увеличаването на ISF или намаляването на IC ще доведе до по-дълги времена на абсорбция. Но превключването на профила с процент, променя и двете стойности едновременно, а времето за усвояване не се засяга.</string>
+    <string name="objectives_exam_learned_breadgrams">Въвеждането на въглехидрати е разрешено само в грамове.</string>
+    <string name="objectives_exam_learned_ecarbs">E-carbs е заместител на удължения болус от помпата.</string>
+    <string name="objectives_exam_learned_nsclient">Отдалеченото наблюдение и управление е възможно, но не всички функции трябва да са достъпни от разстояние.</string>
     <string name="answerdisabledto">Изключено до: %1$s</string>
     <string name="wronganswer">Грешен отговор!</string>
     <string name="unfinshed_button">Следващия неотговорен</string>
     <string name="requestcode">Код (request code): %1$s</string>
     <string name="objectives_hint">(отбележете всички правилни отговори)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Няма връзка с Интернет!</string>
     <string name="failedretrievetime">Не може да се вземе времето</string>
     <string name="requirementnotmet">Задачите не са изпълнени</string>
+    <string name="what_i_ve_learned">Какво научих:</string>
 </resources>

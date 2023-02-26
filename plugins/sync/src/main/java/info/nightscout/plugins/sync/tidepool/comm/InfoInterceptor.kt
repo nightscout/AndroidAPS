@@ -8,7 +8,7 @@ import okhttp3.Response
 import okio.Buffer
 import java.io.IOException
 
-class InfoInterceptor(val tag: String = "interceptor", val aapsLogger: AAPSLogger) : Interceptor {
+class InfoInterceptor(val aapsLogger: AAPSLogger) : Interceptor {
 
     @Throws(IOException::class)
     override fun intercept(chain: Interceptor.Chain): Response {

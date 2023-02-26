@@ -124,4 +124,5 @@
     <string name="basal_rate">基础率</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">停止键按下了</string>
+    <!--QuickWizard-->
 </resources>

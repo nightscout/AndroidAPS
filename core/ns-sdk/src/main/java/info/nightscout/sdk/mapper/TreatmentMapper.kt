@@ -1,5 +1,6 @@
 package info.nightscout.sdk.mapper
 
+import com.google.gson.Gson
 import info.nightscout.sdk.localmodel.entry.NsUnits
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSBolus
@@ -25,6 +26,9 @@ import java.util.concurrent.TimeUnit
  */
 fun NSTreatment.convertToRemoteAndBack(): NSTreatment? =
     toRemoteTreatment()?.toTreatment()
+
+fun String.toNSTreatment(): NSTreatment? =
+    Gson().fromJson(this, RemoteTreatment::class.java).toTreatment()
 
 internal fun RemoteTreatment.toTreatment(): NSTreatment? {
     val treatmentTimestamp = timestamp()
@@ -78,6 +82,32 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
             if (treatmentTimestamp == 0L) return null
 
             this.duration ?: return null
+            val durationInMilliseconds = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration)
+
+            if (durationInMilliseconds == 0L)
+                return NSTemporaryTarget(
+                    date = treatmentTimestamp,
+                    device = this.device,
+                    identifier = this.identifier,
+                    units = NsUnits.fromString(this.units),
+                    srvModified = this.srvModified,
+                    srvCreated = this.srvCreated,
+                    utcOffset = this.utcOffset ?: 0,
+                    subject = this.subject,
+                    isReadOnly = this.isReadOnly ?: false,
+                    isValid = this.isValid ?: true,
+                    eventType = this.eventType,
+                    notes = this.notes,
+                    pumpId = this.pumpId,
+                    endId = this.endId,
+                    pumpType = this.pumpType,
+                    pumpSerial = this.pumpSerial,
+                    duration = 0,
+                    targetBottom = 0.0,
+                    targetTop = 0.0,
+                    reason = NSTemporaryTarget.Reason.CUSTOM
+                )
+
             this.targetBottom ?: return null
             this.targetTop ?: return null
 
@@ -98,7 +128,7 @@ internal fun RemoteTreatment.toTreatment(): NSTreatment? {
                 endId = this.endId,
                 pumpType = this.pumpType,
                 pumpSerial = this.pumpSerial,
-                duration = this.durationInMilliseconds ?: TimeUnit.MINUTES.toMillis(this.duration),
+                duration = durationInMilliseconds,
                 targetBottom = this.targetBottom,
                 targetTop = this.targetTop,
                 reason = NSTemporaryTarget.Reason.fromString(this.reason)

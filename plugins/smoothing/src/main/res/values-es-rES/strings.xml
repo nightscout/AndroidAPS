@@ -6,5 +6,5 @@
     <string name="avg_smoothing_name">Suavizado promedio</string>
     <string name="description_avg_smoothing">"Algoritmo de suavizado promedio, el valor más reciente no se ve afectado"</string>
     <string name="no_smoothing_name">Sin suavizado</string>
-    <string name="description_no_smoothing">"Sin suavizar los datos de glucosa de entrada. Utiliza esta opción cuando ya tenga datos filtrados, por ejemplo, con Dexcom G6 (BYODA) "</string>
+    <string name="description_no_smoothing">"Sin suavizar los datos de glucosa de entrada. Utiliza esta opción cuando ya tengas datos filtrados, por ejemplo, con Dexcom G6 (BYODA) "</string>
 </resources>

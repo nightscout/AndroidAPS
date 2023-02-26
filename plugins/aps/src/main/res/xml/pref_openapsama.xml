@@ -52,7 +52,7 @@
 
         <androidx.preference.PreferenceScreen
             android:key="absorption_ama_advanced"
-            android:title="@string/advancedsettings_title">
+            android:title="@string/advanced_settings_title">
 
             <Preference android:summary="@string/openapsama_link_to_preference_json_doc_txt">
                 <intent

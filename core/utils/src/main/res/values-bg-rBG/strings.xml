@@ -1,2 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="count_selected">%1$d избрано</string>
+    <string name="remove_items">Премахни артикули</string>
+    <string name="sort_items">Подреди артикули</string>
+    <string name="remove_selected_items">Премахнете избраните елементи</string>
+    <string name="sort_label">Сортирай</string>
+</resources>

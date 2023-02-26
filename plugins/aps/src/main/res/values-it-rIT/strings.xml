@@ -51,6 +51,7 @@
     <string name="openapsama_bolus_snooze_dia_divisor_summary">[Valore predefinito: 2]\nBolus snooze è attivato dopo un bolo pasto per fare in modo che il loop non imposti basali temporanee basse quando hai appena mangiato. AndroidAPS non imposterà velocità basali troppo basse nel periodo corrispondente a DIA diviso il parametro bolus snooze - divisore DIA. Con DIA di 3 ore \"bolus snooze\" durerà 1.5 ore (3/2).</string>
     <string name="openapsama_link_to_preference_json_doc_txt">Attenzione!\nNormalmente non dovresti modificare questi valori. FAI CLICK QUI e leggi il testo e assicurati di AVERLO CAPITO prima di cambiare uno di questi valori.</string>
     <string name="always_use_short_avg">Usa sempre il delta medio ridotto</string>
+    <string name="always_use_short_avg_summary">Utile quando i dati provenienti da sorgenti non filtrate come xDrip+ diventano \"rumorosi\" (instabili).</string>
     <string name="openapsama_max_daily_safety_multiplier">Moltiplicatore di sicurezza max basale giornaliera</string>
     <string name="openapsama_current_basal_safety_multiplier">Moltiplicatore di sicurezza basale corrente</string>
     <string name="openapssmb_max_iob_title">Max IOB totale a cui limitare OpenAPS [U]</string>
@@ -89,12 +90,28 @@
     <!--    Autotune   -->
     <string name="insulin_peak">Picco</string>
     <!--    Loop -->
+    <string name="run_now">Esegui ora</string>
     <string name="smb_frequency_exceeded">Un bolo è stato erogato negli ultimi 3 minuti, SMB ignorato</string>
+    <string name="pump_not_initialized">Micro non inizializzato!</string>
     <string name="loop_shortname">LOOP</string>
     <string name="description_loop">Attiva o disattiva l\'implementazione per la gestione del loop.</string>
+    <string name="no_aps_selected">NESSUN APS SELEZIONATO O RISULTATO FORNITO</string>
     <string name="ignore5m">Ignora | 5m</string>
     <string name="ignore15m">Ignora | 15m</string>
     <string name="ignore30m">Ignora | 30m</string>
+    <string name="carbs_suggestion">Suggerimento CHO</string>
+    <string name="open_loop_new_suggestion">Nuovo suggerimento disponibile</string>
     <string name="basal_set_correctly">Basale impostata correttamente</string>
+    <string name="last_run_label">Ultima esecuzione</string>
     <string name="loop_aps_label">APS</string>
+    <string name="request_label">Richiesta</string>
+    <string name="loop_constraints_processed_label">Dopo elaborazione vincoli</string>
+    <string name="loop_tbr_request_time_label">Richiesta basale temporanea (momento)</string>
+    <string name="loop_tbr_execution_time_label">Esecuzione basale temporanea (momento)</string>
+    <string name="loop_tbr_set_by_pump_label">Basale temporanea impostata dal micro</string>
+    <string name="loop_smb_request_time_label">Richiesta SMB (momento)</string>
+    <string name="loop_smb_execution_time_label">Esecuzione SMB (momento)</string>
+    <string name="loop_smb_set_by_pump_label">SMB impostato dal micro</string>
+    <string name="loop_open_mode_min_change">Richiesta minima di modifica [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Il loop aperto mostrerà una nuova richiesta di modifica solo se la modifica è maggiore di questo valore in %. Il valore predefinito è 20%</string>
 </resources>

@@ -1,6 +1,7 @@
 package info.nightscout.database.transactions
 
 import info.nightscout.database.entities.GlucoseValue
+import java.util.TimeZone
 
 data class TransactionGlucoseValue(
     val timestamp: Long,
@@ -10,5 +11,6 @@ data class TransactionGlucoseValue(
     val trendArrow: GlucoseValue.TrendArrow,
     val nightscoutId: String? = null,
     val sourceSensor: GlucoseValue.SourceSensor,
-    val isValid: Boolean = true
+    val isValid: Boolean = true,
+    val utcOffset: Long = TimeZone.getDefault().getOffset(timestamp).toLong()
 )

@@ -11,5 +11,8 @@
     <string name="insulin_peak_time">Tempo Pico [min]</string>
     <string name="free_peak_oref">Oref Pico-Livre</string>
     <string name="rapid_acting_oref">Oref Ação Rápida</string>
-    <string name="dia_too_short">Duração de Acção da Insulina (DIA) de %1$f demasiado curto - corrigido para %2$f!</string>
+    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
+    <string name="dia_too_short">Duração de atividade da Insulina (DAI) de %1$f é muito curto - corrigido para %2$f!</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
 </resources>

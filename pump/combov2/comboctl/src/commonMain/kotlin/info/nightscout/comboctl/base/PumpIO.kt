@@ -1012,11 +1012,29 @@ class PumpIO(
      *   of a packet's payload does not match the expected size.
      * @throws ComboIOException if IO with the pump fails.
      */
-    suspend fun deliverCMDStandardBolus(bolusAmount: Int): Boolean =
+    suspend fun deliverCMDStandardBolus(totalBolusAmount: Int): Boolean =
+        deliverCMDStandardBolus(
+            totalBolusAmount,
+            immediateBolusAmount = 0,
+            durationInMinutes = 0,
+            bolusType = ApplicationLayer.CMDDeliverBolusType.STANDARD_BOLUS
+        )
+
+    suspend fun deliverCMDStandardBolus(
+        totalBolusAmount: Int,
+        immediateBolusAmount: Int,
+        durationInMinutes: Int,
+        bolusType: ApplicationLayer.CMDDeliverBolusType
+    ): Boolean =
         runPumpIOCall("deliver standard bolus", Mode.COMMAND) {
 
         val packet = sendPacketWithResponse(
-            ApplicationLayer.createCMDDeliverBolusPacket(bolusAmount),
+            ApplicationLayer.createCMDDeliverBolusPacket(
+                totalBolusAmount,
+                immediateBolusAmount,
+                durationInMinutes,
+                bolusType
+            ),
             ApplicationLayer.Command.CMD_DELIVER_BOLUS_RESPONSE
         )
 
@@ -1038,7 +1056,7 @@ class PumpIO(
         // TODO: Test that this function does the expected thing
         // when no bolus is actually ongoing.
         val packet = sendPacketWithResponse(
-            ApplicationLayer.createCMDCancelBolusPacket(ApplicationLayer.CMDBolusType.STANDARD),
+            ApplicationLayer.createCMDCancelBolusPacket(ApplicationLayer.CMDImmediateBolusType.STANDARD),
             ApplicationLayer.Command.CMD_CANCEL_BOLUS_RESPONSE
         )
 

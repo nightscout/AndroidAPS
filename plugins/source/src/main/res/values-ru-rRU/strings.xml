@@ -4,7 +4,7 @@
     <string name="ns_client_bg">ГК с клиента Nightscout</string>
     <string name="ns_client_bg_short">ГК с NS</string>
     <string name="description_source_ns_client">Получать данные гликемии с сайта Nightscout</string>
-    <string name="xdrip">xDrip +</string>
+    <string name="source_xdrip">ГК с xDrip+ </string>
     <string name="description_source_xdrip">Получать данные гликемии от xDrip+.</string>
     <string name="dexcom_app_patched">Самост собран прилож Dexcom</string>
     <string name="dexcom_short">ССП DEXCOM</string>

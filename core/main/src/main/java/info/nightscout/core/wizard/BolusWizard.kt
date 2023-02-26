@@ -277,7 +277,7 @@ class BolusWizard @Inject constructor(
         return this
     }
 
-    private fun createBolusCalculatorResult(): BolusCalculatorResult {
+    fun createBolusCalculatorResult(): BolusCalculatorResult {
         val unit = profileFunction.getUnits()
         return BolusCalculatorResult(
             timestamp = dateUtil.now(),

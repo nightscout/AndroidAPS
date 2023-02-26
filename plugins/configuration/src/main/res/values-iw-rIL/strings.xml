@@ -20,10 +20,12 @@
     <string name="need_location_permission">דרושה הרשאת מיקום עבור סריקת בלוטות\' וזיהוי WiFi</string>
     <string name="need_storage_permission">דרושה הרשאת אחסון כדי שתוכלו לאחסן קובצי יומן והגדרות יצוא.</string>
     <string name="askforpermission">מבקש הרשאה</string>
+    <string name="need_whitelisting">%1$s צריך ביטול אופטימיזציית סוללה בשביל תפקוד תקין</string>
     <string name="storedsettingsfound">נמצאו הגדרות שמורות</string>
     <string name="master_password_summary">הסיסמה הראשית משמשת להצפנת גיבוי וכדי לעקוף את האבטחה ביישום. זכרו אותה או שמרו אותה במקום בטוח.</string>
     <string name="current_master_password">סיסמה ראשית נוכחית</string>
     <string name="common_values">השתמשו בערכים הגבוהים ביותר של מזונות שאתם אוכלים בדרך כלל\n</string>
+    <string name="syncinfotext">סנכרון נתונים לענן. ניתן לדלג על החלק הזה עכשיו אבל לא תוכלו לעבור משימות עד שתגדירו את קליינט הנייטסקאוט או Tidepool.</string>
     <string name="status">סטטוס: </string>
     <string name="patient_name">שם המטופל\\ת</string>
     <string name="patient_name_summary">נא לציין את שם המטופל\\ת או כינוי, להבחנה בין מספר הגדרות</string>
@@ -35,6 +37,7 @@
     <string name="exitwizard">דלג על אשף ההתקנה</string>
     <string name="setupwizard_loop_description">לחצו על הלחצן למטה כדי לאפשר ל-AndroidAPS להציע\\לבצע שינויים במינון הבזאלי</string>
     <string name="setupwizard_sensitivity_description">תוסף רגישות משמש לזיהוי רגישות וחישוב הפחמ\' הפעילות. לקבלת מידע נוסף, בקרו בכתובת:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/he/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">בחרו באחד מהאלגוריתמים הזמינים. הם ממוינים מהישן לחדש. אלגוריתם חדש יותר הוא בדרך כלל חזק ואגרסיבי יותר. לפיכך, אם אתם משתמשים חדשים רצוי שתתחילו עם AMA ולא עם האלגוריתם האחרון. נא לא לשכוח לקרוא את תיעוד OpenAPS ולהגדיר אותו כראוי לפני השימוש.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">הגדירו את תצורת הריילילינק מטה. לאחר שתבחרו באפשרות ריילילינק, ניתן יהיה להמשיך בהתקנה אחרי שסטטוס הריילילינק יהיה \"מחובר\". פעולה זו עשויה להימשך דקה.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>הערה:</b> ניתן יהיה להמשיך בהתקנה לאחר חיבור ההמשאבה.\n</string>
@@ -62,18 +65,22 @@
     <string name="configbuilder_general">כללי</string>
     <string name="configbuilder_general_description">מס\' תוספים כלליים שעשויים להיות יעילים.</string>
     <string name="configbuilder_sync">סינכרון</string>
+    <string name="configbuilder_sync_description">תוספי העלאת נתונים וסינכרון.</string>
     <string name="configbuilder_constraints_description">אילו מגבלות פעילות?</string>
     <string name="configbuilder_loop">לולאה</string>
     <string name="configbuilder_loop_description">השתמשו באפשרות זו כדי להפעיל את לולאת AndroidAPS.</string>
     <string name="configbuilder_insulin_description">באיזה סוג של אינסולין אתה משתמש?</string>
     <string name="configbuilder_bgsource">מקור ערכי הסוכר</string>
     <string name="configbuilder_bgsource_description">מהו מקור הנתונים של AndroidAPS?</string>
+    <string name="configbuilder_smoothing">החלקה</string>
+    <string name="configbuilder_smoothing_description">בחרו אלגוריתם החלקה</string>
     <string name="configbuilder_sensitivity">זיהוי רגישות</string>
     <string name="configbuilder_sensitivity_description">באיזה אלגוריתם זיהוי רגישות להשתמש?</string>
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">משמש לקביעת תצורה של תוספים פעילים</string>
     <string name="allow_hardware_pump_text">שימו לב: אם אתם מפעילים ומתחברים למשאבה פיזית, AndroidAPS יעתיק את הפרופיל הבזאלי אל המשאבה תוך דריסת הפרופיל שכבר שמור על המשאבה. יש שההגדרות הבזאליות שב-AndroidAPS נכונות. אם אינכם בטוחים או אינכם רוצים לשנות את הגדרות הבזאליות שעל המשאבה, לחצו על \'ביטול\' וחזרו על תהליך המעבר אל המשאבה במועד מאוחר יותר.</string>
     <string name="a11y_open_settings">פתח הגדרות</string>
+    <string name="nsclient_version_does_not_match">גרסת NSClient לא תואמת את גרסת AndroidAPS. נא לעדכן.</string>
     <!--ImportExport-->
     <string name="nav_preferences">העדפות</string>
     <string name="password_preferences_encrypt_prompt">אתם תתבקשו למלא סיסמה ראשית שתשמש להצפנת ההעדפות המיוצאות.</string>
@@ -101,10 +108,12 @@
     <string name="restartingapp">יוצא מ-AAPS כדי להחיל הגדרות.</string>
     <string name="ue_exported">רשומות המשתמש יוצאו</string>
     <string name="protection">Protection (הגנה בסיסמאות)</string>
+    <string name="master_password_missing">הסיסמה הראשית לא הוגדרה!\n\nנא להגדירה בהעדפות (%1$s&#8594;%2$s)</string>
     <!--    Maintenance-->
     <string name="maintenance">תחזוקה</string>
     <string name="maintenance_shortname">תחזוקה</string>
     <string name="description_maintenance">מספק מספר פונקציות של תחזוקה (כגון משלוח יומן, מחיקת יומן).</string>
+    <string name="database_cleanup">ניקיון מסד הנתונים</string>
     <string name="reset_db_confirm">אתם בטוחים שאתם רוצים לאפס את מסדי הנתונים?</string>
     <string name="maintenance_settings">הגדרות תחזוקה</string>
     <string name="maintenance_email">נמען דוא\"ל</string>
@@ -143,4 +152,5 @@
     <string name="prefdecrypt_issue_wrong_format">תצורת הצפנה חסרה, פורמט ההגדרות אינו חוקי!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">אלגוריתם ההצפנה לא צוין או שלא נתמך!</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">נא לאתחל את הסמרטפון שלכם או הפעילו מחדש את אפלקציית AndroidAPS בהגדרות המערכת \nאחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב ולוודא כי האלגוריתמים פועלים כראוי)!</string>
 </resources>

@@ -45,7 +45,7 @@
     <string name="mute5min">Stíšiť na 5 minút</string>
     <string name="mute">Stíšiť</string>
     <string name="success">Úspešne</string>
-    <string name="advancedsettings_title">Rozšírené nastavenia</string>
+    <string name="advanced_settings_title">Rozšírené nastavenia</string>
     <string name="extendedbolusdeliveryerror">Chyba pri podávaní predĺženého bolusu</string>
     <string name="aps_mode_title">APS mód</string>
     <string name="extended_bolus">Predĺžený bolus</string>
@@ -164,7 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Zrušenie dočasného bazálu zlyhalo</string>
     <string name="canceling_eb_failed">Zastavenie predĺženého bolusu zlyhalo</string>
-    <string name="virtualpump_uploadstatus_title">Nahrať stav do NS</string>
+    <string name="virtualpump_uploadstatus_title">Nahrať stav do NS, alebo Tidepool</string>
     <string name="suspendloop_label">Deaktivovaný/pozastavený uzavretý okruh</string>
     <string name="iob_label">Aktívny inzulín (IOB)</string>
     <!--    Protection-->
@@ -473,6 +473,7 @@
     <string name="wizard_explain_tt">DC: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s do %2$s</string>
     <string name="wizard_pump_not_available">Pumpa nedostupná!</string>
+    <string name="quickwizard">Rýchly bolus</string>
     <!--    Preferences-->
     <string name="child">Dieťa</string>
     <string name="teenage">Dospievajúci</string>
@@ -554,6 +555,10 @@
     <string name="nav_plugin_preferences">Nastavenie modulu</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Chýbajúce povolenie SMS príkazov</string>
+    <!-- About -->
+    <string name="cta_dont_kill_my_app_info">Nepotláčať moju aplikáciu?</string>
+    <string name="fabric_upload_disabled">Odosielanie protokolov o zlyhaní je zakázané!</string>
+    <string name="about_link_urls">\n\nDokumentace:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d deň</item>
         <item quantity="few">%1$d dní</item>
@@ -572,4 +577,8 @@
         <item quantity="many">%1$d minút</item>
         <item quantity="other">%1$d minút</item>
     </plurals>
+    <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Chcete vyčistiť databázu?\nOdstráni sledované zmeny a historické dáta staršie ako 3 mesiace.</string>
+    <string name="cleanup_db_confirm_sync">Chcete vyčistiť databázu?\nOdstráni sledované zmeny a historické dáta staršie ako 3 mesiace.\nVýrazne to urýchli úplnú synchronizáciu.</string>
+    <string name="cleared_entries">Vymazané záznamy</string>
 </resources>

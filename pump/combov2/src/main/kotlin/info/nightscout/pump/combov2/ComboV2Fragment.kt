@@ -81,7 +81,7 @@ class ComboV2Fragment : DaggerFragment() {
                                         else
                                             rh.gs(R.string.combov2_cancelling_tbr)
                                     is ComboCtlPump.DeliveringBolusCommandDesc ->
-                                        rh.gs(R.string.combov2_delivering_bolus_cmddesc, desc.bolusAmount.cctlBolusToIU())
+                                        rh.gs(R.string.combov2_delivering_bolus_cmddesc, desc.immediateBolusAmount.cctlBolusToIU())
                                     is ComboCtlPump.FetchingTDDHistoryCommandDesc ->
                                         rh.gs(R.string.combov2_fetching_tdd_history_cmddesc)
                                     is ComboCtlPump.UpdatingPumpDateTimeCommandDesc ->

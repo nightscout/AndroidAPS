@@ -20,8 +20,6 @@
     <string name="objectives_smb_objective">Se activează opțiuni pentru uzul în timpul zilei, cum ar fi SMB</string>
     <string name="objectives_smb_gate">Trebuie sa citiți wiki și să măriți maxIOB pentru a obține SMB corect! Un start bun este maxIOB=media bolusurilor + 3x maxima bazalei din zi</string>
     <string name="objectives_auto_objective">Activarea automatizării</string>
-    <string name="objectives_bgavailableinns">Glicemie disponibilă în NS</string>
-    <string name="objectives_pumpstatusavailableinns">Starea pompei disponibilă în NS</string>
     <string name="objectives_manualenacts">Acțiuni manuale</string>
     <string name="accomplished">Îndeplinit: %1$s</string>
     <string name="objectives_useprofileswitch">Stabiliți profilul 90% pentru 10 min (apăsare prelungă a numelui profilului în Vedere de ansamblu)</string>

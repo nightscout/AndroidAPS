@@ -71,12 +71,11 @@ import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.OverviewFragmentBinding
-import info.nightscout.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.plugins.general.overview.graphData.GraphData
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
+import info.nightscout.plugins.general.overview.ui.StatusLightHandler
 import info.nightscout.plugins.skins.SkinProvider
-import info.nightscout.plugins.ui.StatusLightHandler
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAcceptOpenLoopChange
@@ -478,7 +477,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     override fun onLongClick(v: View): Boolean {
         when (v.id) {
             R.id.quick_wizard_button -> {
-                startActivity(Intent(v.context, QuickWizardListActivity::class.java))
+                startActivity(Intent(v.context, uiInteraction.quickWizardListActivity))
                 return true
             }
 
@@ -512,7 +511,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val quickWizardEntry = quickWizard.getActive()
         if (quickWizardEntry != null && actualBg != null && profile != null) {
             binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
-            val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true)
+            val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
             if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
                 val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
                 activity?.let {
@@ -540,7 +539,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             _binding ?: return@runOnUiThread
             if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && !pump.isSuspended() && !loop.isDisconnected) {
                 binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
-                val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false)
+                val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG)
                 binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(info.nightscout.core.graph.R.string.format_carbs, quickWizardEntry.carbs()) +
                     " " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
                 if (wizard.calculatedTotalInsulin <= 0) binding.buttonsLayout.quickWizardButton.visibility = View.GONE
@@ -1086,8 +1085,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun updateCalcProgress() {
         _binding ?: return
-        binding.progressBar.progress = overviewData.calcProgressPct
         binding.progressBar.visibility = (overviewData.calcProgressPct != 100).toVisibility()
+        binding.progressBar.progress = overviewData.calcProgressPct
     }
 
     private fun updateSensitivity() {

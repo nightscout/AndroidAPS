@@ -176,6 +176,9 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- Min atrás</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Sem Status de Loop</string>
     <string name="cob_000g">000g</string>
@@ -183,4 +186,10 @@
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">Alerta de Soneca AAPS</string>
     <string name="sending_snooze">Enviando Alerta de Soneca para AAPS</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">s</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="old">antigo</string>
+    <string name="old_warning">!old!</string>
 </resources>

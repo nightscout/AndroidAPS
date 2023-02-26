@@ -104,7 +104,7 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Vis knapp for å Pause insulintilførsel i Omnipod-fanen</string>
     <string name="omnipod_common_preferences_time_change_enabled">DST/Tidssone-deteksjon aktivert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Utløpspåminnelse aktivert</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Timer før nedstenging</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Timer før utløp</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Varsel om lavt reservoar aktivert</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Antall enheter</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Demp Pod-varsler automatisk</string>
@@ -148,10 +148,10 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Angi vilkårlig midlertidig basal fordi Pod er pauset</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Avbryt vilkårlig midlertidig basal som er opprettet fordi Pod var pauset</string>
     <string name="omnipod_common_cmd_split_tbr">Del midlertidig basal fordi en uavklart feil ble oppdaget ved kanselleringen</string>
-    <string name="omnipod_common_cmd_beep_config">Oppsett lyd</string>
+    <string name="omnipod_common_cmd_beep_config">Lydinnstillinger</string>
     <string name="omnipod_common_cmd_play_test_beep">Spill av testlyd</string>
     <!-- Omnipod - Alerts -->
-    <string name="omnipod_common_alert_finish_pairing_reminder">Fullfør parringspåminnelse</string>
+    <string name="omnipod_common_alert_finish_pairing_reminder">Påminnelse om å fullføre paring</string>
     <string name="omnipod_common_alert_finish_setup_reminder_reminder">Påminnelse om å fullføre oppsett</string>
     <string name="omnipod_common_alert_expiration">Pod utløper snart</string>
     <string name="omnipod_common_alert_expiration_advisory">Pod utløper snart</string>

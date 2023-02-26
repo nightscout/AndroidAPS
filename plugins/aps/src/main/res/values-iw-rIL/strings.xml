@@ -90,12 +90,28 @@
     <!--    Autotune   -->
     <string name="insulin_peak">שיא</string>
     <!--    Loop -->
+    <string name="run_now">הפעל כעת</string>
     <string name="smb_frequency_exceeded">ניתן בולוס ב-3 הדקות האחרונות, מדלג על SMB</string>
+    <string name="pump_not_initialized">משאבה לא מאותחלת!</string>
     <string name="loop_shortname">לולאה</string>
     <string name="description_loop">הפעלת או השבתת הלולאה.</string>
+    <string name="no_aps_selected">לא נבחר סוג לופ או שלא סופקה תוצאה</string>
     <string name="ignore5m">התעלם ל-5 דק\'</string>
     <string name="ignore15m">התעלם ל-15 דק\'</string>
     <string name="ignore30m">התעלם ל-30 דק\'</string>
+    <string name="carbs_suggestion">המלצת פחמימות</string>
+    <string name="open_loop_new_suggestion">הצעה חדשה זמינה</string>
     <string name="basal_set_correctly">הבזאלי הוגדר כהלכה</string>
+    <string name="last_run_label">הפעלה אחרונה</string>
     <string name="loop_aps_label">אלגוריתם APS</string>
+    <string name="request_label">בקשה</string>
+    <string name="loop_constraints_processed_label">מגבלות לאחר עיבוד</string>
+    <string name="loop_tbr_request_time_label">זמן בקשת בזאלי זמני</string>
+    <string name="loop_tbr_execution_time_label">זמן הפעלת בזאלי זמני</string>
+    <string name="loop_tbr_set_by_pump_label">מינון בזאלי זמני שהוגדר במשאבה</string>
+    <string name="loop_smb_request_time_label">זמן בקשת SMB</string>
+    <string name="loop_smb_execution_time_label">זמן ביצוע SMB</string>
+    <string name="loop_smb_set_by_pump_label">SMB מוגדר באמצעות משאבה</string>
+    <string name="loop_open_mode_min_change">מינימום לבקשה לשינוי [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">\"לולאה פתוחה\" תציג בקשת שינוי חדשה רק אם השינוי גדול מערך זה ב-%. ערך ברירת המחדל הוא 20%</string>
 </resources>

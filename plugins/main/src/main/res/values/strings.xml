@@ -112,21 +112,11 @@
     <string name="sms_wrong_tbr_duration">TBR duration must be a multiple of %1$d minutes and greater than 0.</string>
     <string name="a11y_otp_qr_code">QR Code for setup one time password</string>
 
-    <!-- xDrip status line -->
-    <string name="key_xdrip_status_detailed_iob" translatable="false">xdripstatus_detailediob</string>
-    <string name="key_xdrip_status_show_bgi" translatable="false">xdripstatus_showbgi</string>
-    <string name="key_xdrip_status_settings" translatable="false">xdripstatus_settings</string>
-
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ Statusline (watch)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Show information about your loop on your xDrip+ watchface.</string>
     <string name="xdrip_status_detailed_iob_title">Show detailed IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Break down IOB into bolus and basal IOB on the watchface</string>
     <string name="disabled_loop">Loop Disabled</string>
     <string name="xdrip_status_show_bgi_title">Show BGI</string>
     <string name="xdrip_status_show_bgi_summary">Add BGI to status line</string>
-    <string name="xdrip_status_settings">xDrip+ Status (watch)</string>
 
     <!-- Food-->
     <string name="food_short">Food</string>
@@ -242,15 +232,9 @@
     <string name="a11y_bg_outdated">outdated</string>
     <string name="set_basal_question">Accept new temp basal:</string>
     <string name="overview_cgm">CGM</string>
-    <string name="quickwizard">QuickWizard</string>
-    <string name="a11y_only_on_watch">only on watch</string>
-    <string name="a11y_only_on_phone">only on phone</string>
     <string name="overview">Overview</string>
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Displays the current state of your loop and buttons for most common actions</string>
-    <string name="overview_editquickwizard_usecob">COB calculation</string>
-    <string name="overview_editquickwizard_usetemptarget">Temporary target calculation</string>
-    <string name="overview_editquickwizard_usepercentage">Percentage calculation</string>
     <string name="overview_buttons_selection">Buttons</string>
     <string name="show_calibration_button_summary">Sends a calibration to xDrip+ or open BYODA calibration dialog</string>
     <string name="show_cgm_button_summary">Opens xDrip+ or BYODA, back buttons returns to AAPS</string>
@@ -264,25 +248,6 @@
     <string name="uploader">Uploader</string>
     <string name="data_status">BG data status</string>
     <string name="quickwizard_settings">QuickWizard settings</string>
-    <string name="overview_edit_quickwizard_button_text">Button text:</string>
-    <string name="overview_edit_quickwizard_carbs">Carbs:</string>
-    <string name="overview_edit_quickwizard_valid">Valid:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Add</string>
-    <string name="overview_quickwizard_item_edit_button">Edit</string>
-    <string name="overview_edit_quickwizard_show_on_device">Show entry on device:</string>
-    <string name="overview_edit_quickwizard_use_bg">BG calculation</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB calculation</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB calculation</string>
-    <string name="overview_edit_quickwizard_use_trend">Trend calculation</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Superbolus calculation</string>
-    <string name="overview_edit_quickwizard_percentage">Percentage</string>
-    <string name="device_all">All</string>
-    <string name="device_phone">Phone</string>
-    <string name="device_watch">Watch</string>
-    <string name="positive_only">Positive only</string>
-    <string name="negative_only">Negative only</string>
-    <string name="app_default">Application default</string>
-    <string name="a11y_drag_and_drop_handle">drag and drop handle</string>
     <string name="keep_screen_on_title">Keep screen on</string>
     <string name="keep_screen_on_summary">Prevent Android to turn screen off. It will consume lot of energy when not plugged to power outlet.</string>
     <string name="treatments">Treatments</string>
@@ -356,8 +321,6 @@
     <string name="largedisplay_description">Large display</string>
     <string name="skin">Skin</string>
 
-    <!--    DataBroadcast-->
-    <string name="data_broadcaster" translatable="false">Data Broadcaster</string>
     <string name="cannula_usage">usage:</string>
 
     <!--    Iob-->
@@ -407,9 +370,9 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">No active profile switch!</string>
-    <string name="profile_message">Profile:\n\nTimeshift: %1$\nPercentage: %2$d%\"</string>
+    <string name="profile_message">Profile:\n\nTimeshift: %1$\nPercentage: %2$d%%\"</string>
     <string name="key_wear_predictions" translatable="false">wear_predictions</string>
-    <string name="tdd_line">%1$.2fU %1$.0f%</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">No profile loaded</string>
     <string name="aps_only">Only apply in APS mode!</string>
     <string name="last_aps_result_na">Last result not available!</string>
@@ -428,6 +391,6 @@
     <string name="until">until</string>
     <string name="default_range">DEFAULT RANGE</string>
     <string name="target">target</string>
-    <string name="rate_duration">Rate: %1$.2fU/h (%2$.2f%) \nDuration %3$d% min</string>    
+    <string name="rate_duration">Rate: %1$.2fU/h (%2$.2f%%) \nDuration %3$d min</string>
 
 </resources>

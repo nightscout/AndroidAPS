@@ -24,7 +24,7 @@ import info.nightscout.interfaces.plugin.OwnDatabasePlugin
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.protection.ProtectionCheck.Protection.PREFERENCES
 import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.sync.DataSyncSelector
+import info.nightscout.interfaces.sync.DataSyncSelectorXdrip
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
@@ -51,7 +51,7 @@ class MaintenanceFragment : DaggerFragment() {
     @Inject lateinit var persistenceLayer: PersistenceLayer
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var dataSyncSelector: DataSyncSelector
+    @Inject lateinit var dataSyncSelectorXdrip: DataSyncSelectorXdrip
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var overviewData: OverviewData
@@ -93,7 +93,8 @@ class MaintenanceFragment : DaggerFragment() {
                             for (plugin in activePlugin.getSpecificPluginsListByInterface(OwnDatabasePlugin::class.java)) {
                                 (plugin as OwnDatabasePlugin).clearAllTables()
                             }
-                            dataSyncSelector.resetToNextFullSync()
+                            activePlugin.activeNsClient?.dataSyncSelector?.resetToNextFullSync()
+                            dataSyncSelectorXdrip.resetToNextFullSync()
                             pumpSync.connectNewPump()
                             overviewData.reset()
                             iobCobCalculator.ads.reset()
@@ -111,7 +112,7 @@ class MaintenanceFragment : DaggerFragment() {
         binding.cleanupDb.setOnClickListener {
             activity?.let { activity ->
                 var result = ""
-                OKDialog.showConfirmation(activity, rh.gs(R.string.maintenance), rh.gs(R.string.cleanup_db_confirm), Runnable {
+                OKDialog.showConfirmation(activity, rh.gs(R.string.maintenance), rh.gs(info.nightscout.core.ui.R.string.cleanup_db_confirm), Runnable {
                     disposable += Completable.fromAction { result = persistenceLayer.cleanupDatabase(93, deleteTrackedChanges = true) }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)
@@ -119,7 +120,12 @@ class MaintenanceFragment : DaggerFragment() {
                             onError = { aapsLogger.error("Error cleaning up databases", it) },
                             onComplete = {
                                 if (result.isNotEmpty())
-                                    OKDialog.show(activity, rh.gs(info.nightscout.core.ui.R.string.result), HtmlHelper.fromHtml("<b>" + rh.gs(R.string.cleared_entries) + "</b>\n" + result).toSpanned())
+                                    OKDialog.show(
+                                        activity,
+                                        rh.gs(info.nightscout.core.ui.R.string.result),
+                                        HtmlHelper.fromHtml("<b>" + rh.gs(info.nightscout.core.ui.R.string.cleared_entries) + "</b><br>" + result)
+                                            .toSpanned()
+                                    )
                                 aapsLogger.info(LTag.CORE, "Cleaned up databases with result: $result")
                             }
                         )

@@ -1,5 +1,6 @@
 package info.nightscout.sdk.mapper
 
+import com.google.gson.Gson
 import info.nightscout.sdk.localmodel.food.NSFood
 import info.nightscout.sdk.remotemodel.RemoteFood
 
@@ -11,6 +12,9 @@ import info.nightscout.sdk.remotemodel.RemoteFood
  */
 fun NSFood.convertToRemoteAndBack(): NSFood? =
     toRemoteFood().toNSFood()
+
+fun String.toNSFood(): NSFood? =
+    Gson().fromJson(this, RemoteFood::class.java).toNSFood()
 
 internal fun RemoteFood.toNSFood(): NSFood? {
     when (type) {
