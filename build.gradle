@@ -25,7 +25,7 @@ buildscript {
         commonscodec_version = '1.15'
         jodatime_version = '2.10.14'
         work_version = '2.8.0'
-        tink_version = '1.7.0'
+        tink_version = '1.8.0'
         json_version = '20220320'
         serialization_version = '1.4.1'
         joda_version = '2.12.1.1'
