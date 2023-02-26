@@ -26,6 +26,7 @@
     <string name="objectives_smb_gate">È necessario leggere il wiki e aumentare maxIOB affinché le azioni di SMB funzionino adeguatamente! Un buon inizio è maxIOB = media bolo posto + 3 x max basale giornaliera</string>
     <string name="objectives_auto_objective">Abilitazione automazione</string>
     <string name="objectives_auto_gate">Leggi la documentazione su come funziona l\'automazione. Configura le tue prime semplici regole. Consenti ad AAPS solo di visualizzare una notifica, non di eseguire un\'azione. Quando sei sicuro che l\'automazione viene attivata al momento giusto, sostituisci la notifica con un\'azione reale. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">L\'automazione può essere un buon \"servitore\" ma anche un cattivo \"padrone\". Non abusarne. Non cercare di sostituire l\'algoritmo di base. Verifica lo stato dell\'automazione con un messaggio prima dell\'uso.</string>
     <string name="objectives_bgavailableinns">BG disponibile in NS o Tidepool</string>
     <string name="objectives_pumpstatusavailableinns">Stato micro disponibile in NS o Tidepool</string>
     <string name="objectives_manualenacts">Attivazioni manuali</string>
