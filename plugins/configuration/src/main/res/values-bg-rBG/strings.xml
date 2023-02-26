@@ -20,10 +20,12 @@
     <string name="need_location_permission">Приложение се нуждае от достъп до местоположението Ви за сканиране и WiFi идентификация</string>
     <string name="need_storage_permission">Приложението се нуждае от разрешение да съхранява данни за да може съхранява лог файлове и експортира настройки</string>
     <string name="askforpermission">Питане за разрешение</string>
+    <string name="need_whitelisting">%1$s се нуждае от одобрение на оптимизацията на батерията за правилна работа</string>
     <string name="storedsettingsfound">Открити са предишни настройки</string>
     <string name="master_password_summary">Главната парола се използва за архивиране на настройки и за подмяна на защитата в приложението. Запомни я или я пази на сигурно място.</string>
     <string name="current_master_password">Сегашна главна парола</string>
     <string name="common_values">Използвай стойностите от вашето най-голямо хранен, с което обикновено се храните</string>
+    <string name="syncinfotext">Синхронизирайте данни в облака. Можете да пропуснете тази част сега, но няма да можете да преминавате цели, докато не настроите Nightscout или Tidepool клиент.</string>
     <string name="status">Статус:</string>
     <string name="patient_name">Име на пациента</string>
     <string name="patient_name_summary">Моля, посочете име на пациента или измислено име, за да се различават</string>
@@ -33,7 +35,9 @@
     <string name="profile">Профил</string>
     <string name="doprofileswitch">Смени профил</string>
     <string name="exitwizard">Пропусни съветника за настройка</string>
+    <string name="setupwizard_loop_description">Натиснете бутона отдолу за да включите AAPS да прави предложения/промени на базлни промени</string>
     <string name="setupwizard_sensitivity_description">Модула за чувствителност се използва за определяне на чувствителността и COB изчисления. За повече информация посетете:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Изберете един от наличните алгоритми. Те са подредени от най-стария до най-новия. По-новите алгоритми са обикновено по-мощни и по-агресивни. Така ако сте новак в APS системите може да започнете с AMA. Не забравяйте да прочетете документацията на OpenAPS и да го конфигурирате преди употреба.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Конфигурация на RileyLink. След избиране на RileyLink, ще е възможно неговото конфигуриране, след като статуса му е \"Свързан\". Може да отнеме време \n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Заб:</b> Можете да продължите след като помпата се инициализира.\n</string>
@@ -43,27 +47,40 @@
     <string name="data_choices">Избор на данни</string>
     <string name="fabric_upload">Качване на статистики във Fabric</string>
     <string name="allow_automated_crash_reporting">Позволява автоматично изпращане на данни за грешки и статистически данни до разработчиците чрез услугата fabric.io .</string>
+    <string name="summary_email_for_crash_report">Тази идентификация ще бъде приложена към справките за грешки за да можем да се свържем с вас при спешни случаи. Пе желание е.</string>
+    <string name="identification">Идентификация (имейл, Фейсбук или Дискорд и др.)</string>
     <string name="request">Искане</string>
     <string name="apsmode_title">APS режим</string>
     <string name="setupwizard_preferred_aps_mode">Предпочитаният режим на APS</string>
+    <string name="error_asking_for_permissions">Грешка искане за разрешения</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Вашият телефон не поддържа оптимизация на батерията - може да се появят проблеми!</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Конфигурация</string>
     <string name="configbuilder_pump">Помпа</string>
+    <string name="configbuilder_pump_description">Коя помпа бихте искали да използвате с AAPS?</string>
     <string name="configbuilder_profile">Профил</string>
+    <string name="configbuilder_profile_description">Кой профил трябва да използва AAPS?</string>
     <string name="configbuilder_aps">Алгоритъм за APS</string>
     <string name="configbuilder_aps_description">Кои APS алгоритъм да се използва за корекции в лечението?</string>
     <string name="configbuilder_general">Общи</string>
     <string name="configbuilder_general_description">Това са някой общи функции, които може да са Ви от полза.</string>
     <string name="configbuilder_sync">Синхронизация</string>
+    <string name="configbuilder_sync_description">Плъгини за качване на данни и синхронизация.</string>
     <string name="configbuilder_constraints_description">Кои ограничения да се прилагат?</string>
     <string name="configbuilder_loop">Режим на APS - Loop</string>
+    <string name="configbuilder_loop_description">Използвайте това за да активирате цикъл в AAPS.</string>
     <string name="configbuilder_insulin_description">Кой тип на инсулин използвате?</string>
     <string name="configbuilder_bgsource">Източник на данни за КЗ</string>
+    <string name="configbuilder_bgsource_description">От къде трябва AAPS да взима данни?</string>
+    <string name="configbuilder_smoothing">Изглаждане</string>
+    <string name="configbuilder_smoothing_description">Изберете алгоритъм за изглаждане</string>
     <string name="configbuilder_sensitivity">Определяне на чувствителност</string>
     <string name="configbuilder_sensitivity_description">Кой алгоритъм за определяне на чувствителността да се използва?</string>
     <string name="config_builder_shortname">КОНФ</string>
     <string name="description_config_builder">За конфигурация на активните плъгини</string>
+    <string name="allow_hardware_pump_text">Внимание: Ако активирате и свържете с хардуерна помпа, AndroidAPS ще копира основните настройки от профила в помпата, като презапише базали, съхранявани в помпата. Уверете се, че имате правилните основни настройки в AndroidAPS. Ако не сте сигурни или не искате да презапишете основните настройки на помпата, натиснете Cancel и повторете превключването към помпата по-късно.</string>
+    <string name="a11y_open_settings">отваряне на настройки</string>
+    <string name="nsclient_version_does_not_match">Версията на AAPSClient не съвпада с версията на AAPS. Моля обновете.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Опции</string>
     <string name="password_preferences_encrypt_prompt">Главна парола, която ще бъде използвана за криптиране на експортирани настройки.</string>
@@ -96,15 +113,18 @@
     <string name="maintenance">Поддръжка</string>
     <string name="maintenance_shortname">ПОДДР</string>
     <string name="description_maintenance">Предоставя няколко функции за поддръжка (напр. изпращане и изтриване на логовете).</string>
+    <string name="database_cleanup">Почистване на база данни</string>
     <string name="reset_db_confirm">Сигурни ли сте че искате да изтриете всички данни?</string>
     <string name="maintenance_settings">Настройки за поддръжка</string>
     <string name="maintenance_email">Имейл</string>
     <string name="maintenance_amount">Брой логове за изпращане</string>
-    <string name="send_all_logs">Изпратщане на логове чрез ел. поща</string>
+    <string name="send_all_logs">Изпращане на логове чрез ел. поща</string>
     <string name="delete_logs">Изтрий логове</string>
     <string name="configbuilder_nightscoutversion_label">Nightscout версия:</string>
     <string name="engineering_mode_enabled">Режим за раработчици (Engineering mode) включен</string>
+    <string name="log_files">Log файлове</string>
     <string name="nav_logsettings">Настройки на логовете</string>
+    <string name="miscellaneous">Други</string>
     <string name="nav_resetdb">Нулирай базата данни</string>
     <string name="resettodefaults">Възстанови настройките по подразбиране</string>
     <!-- Maintenance -->
@@ -132,4 +152,5 @@
     <string name="prefdecrypt_issue_wrong_format">Липсва конфигурация на шифроване, форматът на настройките е невалиден!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Неподдържан или непотвърден алгоритъм за криптиране!</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Моля рестартирайте телефона си или AAPS от Системни настройки, иначе AAPS няма да има логове (това е важно за да се проследява и верифицира, че алгоритъма работи правилно)!</string>
 </resources>

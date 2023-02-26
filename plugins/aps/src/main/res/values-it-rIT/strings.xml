@@ -51,6 +51,7 @@
     <string name="openapsama_bolus_snooze_dia_divisor_summary">[Valore predefinito: 2]\nBolus snooze è attivato dopo un bolo pasto per fare in modo che il loop non imposti basali temporanee basse quando hai appena mangiato. AndroidAPS non imposterà velocità basali troppo basse nel periodo corrispondente a DIA diviso il parametro bolus snooze - divisore DIA. Con DIA di 3 ore \"bolus snooze\" durerà 1.5 ore (3/2).</string>
     <string name="openapsama_link_to_preference_json_doc_txt">Attenzione!\nNormalmente non dovresti modificare questi valori. FAI CLICK QUI e leggi il testo e assicurati di AVERLO CAPITO prima di cambiare uno di questi valori.</string>
     <string name="always_use_short_avg">Usa sempre il delta medio ridotto</string>
+    <string name="always_use_short_avg_summary">Utile quando i dati provenienti da sorgenti non filtrate come xDrip+ diventano \"rumorosi\" (instabili).</string>
     <string name="openapsama_max_daily_safety_multiplier">Moltiplicatore di sicurezza max basale giornaliera</string>
     <string name="openapsama_current_basal_safety_multiplier">Moltiplicatore di sicurezza basale corrente</string>
     <string name="openapssmb_max_iob_title">Max IOB totale a cui limitare OpenAPS [U]</string>

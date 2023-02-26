@@ -175,6 +175,7 @@
     <string name="isf_label_exam">Фактор Чувствительности к Инсулину (ISF)</string>
     <string name="isf_increasingvalue">Увеличения фактора чувствительности к инсулину ISF приведет к увеличению дозы инсулина на покрытие определенного числа углеводов.</string>
     <string name="isf_decreasingvalue">Уменьшение фактора чувствительности к инсулину ISF приведет к увеличению дозы инсулина для корректировки ГК выше целевого уровня.</string>
+    <string name="isf_noeffect">Увеличение или уменьшение фактора чувствительности к инсулину ISF не влияет на дозировку инсулина когда уровень ГК ниже целевого.</string>
     <string name="isf_preferences">Фактор чувствительности к инсулину ISF задается в параметрах AAPS.</string>
     <string name="isf_profile">Изменение значения ISF в профиле достаточно для применения изменений.</string>
     <string name="isf_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-sensitivity-factor-isf-mmol-l-u-or-mg-dl-u</string>
@@ -186,14 +187,17 @@
     <string name="ic_decreasingvalue">Более низкий I:C приводит к уменьшению количества инсулина, вводимого на данное число углеводов.</string>
     <string name="ic_noeffect">Если у вас 0 активных углеводов COB, изменение углеводного коэффициента IC приведет к иному количеству инсулина на коррекцию данной ГК.</string>
     <string name="ic_different">Углеводный коэффициент IC изменится если принимать ХЕ за 10 или 12г.</string>
+    <string name="ic_meaning">Смысл углеводного коэффициента IC таков: сколько ГУ (хлебных единиц) покрываются одной ед. инсулина?</string>
     <string name="ic_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#insulin-to-carb-ratio-ic-g-u</string>
     <string name="profileswitch_label">Cмена профиля</string>
+    <string name="profileswitch_pctwillchange">При установке 90% профиля, какие утверждения верны?</string>
     <string name="profileswitch_basallower">Базальная скорость снизится на 10%.</string>
     <string name="profileswitch_isfhigher">ISF повысится на 10%.</string>
     <string name="profileswitch_iclower">Значение I:C снизится на 10%.</string>
     <string name="profileswitch_unchanged">Коэффициенты ISF и I:C останутся без изменений.</string>
     <string name="profileswitch_hint1" formatted="false">https://wiki.aaps.app/en/latest/Usage/Profiles.html#profile-switch</string>
     <string name="profileswitch2_label">Переключение профиля</string>
+    <string name="profileswitch2_pctwillchange">При установке 120% профиля, какие утверждения верны?</string>
     <string name="profileswitch2_bghigher">Целевой уровень ГК будет на 20% выше.</string>
     <string name="profileswitch2_basalhigher">Базальная скорость будет на 20% выше.</string>
     <string name="profileswitch2_bgunchanged">Целевой уровень ГК не изменится.</string>
@@ -202,14 +206,21 @@
     <string name="profileswitchtime_iwant">Если вы проснулись на 2 часа раньше обычного, как следует уведомить AAPS об изменении режима?</string>
     <string name="profileswitchtime_2">Выполнить переключение профиля со сдвигом времени 2</string>
     <string name="profileswitchtime__2">Выполнить переключение профиля со сдвигом времени -2</string>
+    <string name="profileswitchtime_tt">Установить временную цель \"Eating Soon\" (Ожидаемый прием пищи).</string>
+    <string name="profileswitchtime_100">Переключить на профиль выше 100%.</string>
     <string name="profileswitchtime_hint1">https://wiki.aaps.app/en/latest/Usage/Profiles.html#timeshift</string>
     <string name="profileswitch4_label">Изменения в профилях</string>
     <string name="profileswitch4_rates">Базальные скорости, ISF, соотношение I:C и т.д. должны быть установлены в профилях.</string>
     <string name="profileswitch4_internet">Для активации изменений в профиле Nightscout требуется, чтобы телефон с AAPS был подключен к Интернету.</string>
     <string name="profileswitch4_sufficient">Сохранения новых значений в профиле достаточно, чтобы все сделанные изменения вступили в силу.</string>
+    <string name="profileswitch4_multi">Можно настроить несколько профилей и выбирать их в связи с меняющимися обстоятельствами (например, гормональные изменения, посменная работа, образ жизни в будние/выходные дни).</string>
     <string name="basalhelp_hint1">https://wiki.aaps.app/en/latest/Module/module.html#good-individual-dosage-algorithm-for-your-diabetes-therapy</string>
     <string name="basalhelp_label">Помощь с базальной скоростью</string>
+    <string name="basalhelp_where">Где можно найти помощь при настройке базальной скорости и других параметров.</string>
     <string name="basalhelp_diabetesteam">Ваши эндокринологи</string>
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
+    <string name="other_medication_label">Прочие препараты. Прочтите заявление ниже, а затем отметьте галочку, чтобы принять условия.</string>
+    <string name="other_medication_text">AAPS понижает базальную скорость или приостанавливает ввод инсулина для повышения уровня ГК. Препараты из класса ингибиторов SGLT2 (глифлозины) могут предотвращать повышение уровня ГК и, следовательно, вызывать опасную нехватку инсулина, приводящую к диабетическому кетоацидозу DKA.
+\nРаспространенными торговыми наименованиями являются: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®.\n\nЯ подтверждаю, что не буду принимать такие препараты, при использовании AAPS или отключу цикл перед их применением.</string>
 </resources>

@@ -7,7 +7,7 @@
     <string name="start_activity_tt">Start TT for trening</string>
     <string name="start_eating_soon_tt">Start TT for spise snart</string>
     <string name="start_hypo_tt">Start TT for hypoglykemi</string>
-    <string name="time_offset">Tidsforskyvning</string>
+    <string name="time_offset">Tids- forskyvning</string>
     <string name="unit_minute_short">min</string>
     <string name="remind_to_bolus_later">Påminnelse om å gi bolus senere</string>
     <string name="a11y_carb_reminder">angi påminnelse</string>
@@ -45,7 +45,7 @@
     <string name="do_not_bolus_record_only">Ikke gi bolus, bare loggfør hendelse</string>
     <!-- ProfileSwitchDialog -->
     <string name="reuse_profile_pct_hours">Gjenbruk %1$d%% %2$dt</string>
-    <string name="timeshift_label">Tidsforskyving</string>
+    <string name="timeshift_label">Tids- forskyving</string>
     <string name="percentage_label">Prosent</string>
     <!-- LoopDialog -->
     <string name="suspendloopfor1h">Pause loop i 1t</string>
@@ -74,7 +74,7 @@
     <string name="missing_carbs">Mangler %1$d g</string>
     <string name="a11y_current_bg">nåværende blodsukker</string>
     <string name="carb_time_label">Karbo-tid</string>
-    <string name="a11y_set_carb_timer">angi karbo nedtellings alarm</string>
+    <string name="a11y_set_carb_timer">angi nedtellingsalarm for karbo</string>
     <string name="show_calculation">Vis beregning</string>
     <!-- Treatments -->
     <string name="no_records_available">Ingen registreringer tilgjengelig</string>
@@ -92,8 +92,8 @@
     <string name="meal_bolus">Måltid</string>
     <string name="prime">Prime</string>
     <string name="profile_changes">Profilendringer</string>
-    <string name="tempt_targets">Temp Mål</string>
-    <string name="carbs_and_bolus">Karbohydrater og bolus</string>
+    <string name="tempt_targets">Midl. Mål</string>
+    <string name="carbs_and_bolus">Karbo og bolus</string>
     <string name="show_invalidated_records">Vis ugyldige / slettede registreringer</string>
     <string name="hide_invalidated_records">Skjul ugyldige / slettede registreringer</string>
     <string name="refresh_from_nightscout">Oppdater fra Nightscout</string>
@@ -149,8 +149,8 @@
     <string name="positive_only">Bare positive</string>
     <string name="negative_only">Bare negative</string>
     <string name="overview_editquickwizard_usecob">COB beregning</string>
-    <string name="overview_editquickwizard_usetemptarget">Beregning av temp target</string>
+    <string name="overview_editquickwizard_usetemptarget">Beregning av midl. mål</string>
     <string name="overview_editquickwizard_usepercentage">Prosent beregning</string>
     <string name="app_default">Standardverdi</string>
-    <string name="a11y_drag_and_drop_handle">dra og slipp håndtering</string>
+    <string name="a11y_drag_and_drop_handle">håndtering av dra-og-slipp</string>
 </resources>
