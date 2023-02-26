@@ -1,23 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Ingebouwde integratie voor Accu-Chek Combo pomp</string>
+    <string name="combov2_could_not_connect">Kon niet verbinden met de pomp</string>
+    <string name="combov2_not_paired">Niet verbonden met een pomp</string>
+    <string name="combov2_pump_terminated_connection">Pomp heeft de verbinding verbroken</string>
+    <string name="combov2_warning">Combo waarschuwing</string>
+    <string name="combov2_error">Combo fout</string>
+    <string name="combov2_warning_4">Bel hotline voor update</string>
+    <string name="combov2_warning_10">Bluetooth fout opnieuw koppelen</string>
+    <string name="combov2_error_1">Reservoir leeg</string>
     <string name="combov2_error_2">Batterij leeg</string>
     <string name="combov2_error_4">Afsluiting</string>
+    <string name="combov2_error_5">Einde pomp backup operatie</string>
     <string name="combov2_error_6">Mechanische fout</string>
+    <string name="combov2_error_7">Electronische fout</string>
+    <string name="combov2_error_8">Stoom onderbroken</string>
+    <string name="combov2_error_9">Leenpomp werking beëindigd</string>
+    <string name="combov2_error_10">Reservoir fout</string>
+    <string name="combov2_error_11">Infuusset niet voorgevuld</string>
+    <string name="combov2_extended_bolus_not_supported">Verlengde bolus wordt niet ondersteund</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Koppelen met de pomp</string>
+    <string name="combov2_unpair_pump_title">Ontkoppel pomp</string>
+    <string name="combov2_driver_state_label">Besturingsprogramma status</string>
+    <string name="combov2_current_activity_label">Huidige activiteit</string>
     <string name="bluetooth_address">Bluetooth-adres</string>
     <string name="combov2_start_pairing">Begin met koppelen</string>
+    <string name="combov2_pairing_in_progress">Combo-koppeling wordt uitgevoerd</string>
+    <string name="combov2_pairing_start_steps">Stappen om de koppeling met uw Combo uit te voeren:\n\n
+1. Navigeer naar het scherm Bluetooth Instellingen op de pomp\n
+2. Controleer of er hier een apparaat wordt weergegeven als gekoppeld indien dit het geval is, ga dan naar het scherm \"Verwijder apparaat\" om het apparaat te verwijderen/ontkoppelen\n
+3. Ga vervolgens naar het scherm \"Voeg apparaat toe\" en begin met koppelen van de pomp\n
+4. Klik op de knop \"Begin met koppelen\" om de koppeling in AndroidAPS te starten\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Na een tijdje wordt de telefoonnaam op het pompscherm weergegeven; druk op CHECK om te bevestigen.\n\n
+Wanneer het koppelen succesvol is voltooid, bevestig het koppelen van je pomp en keer terug naar het hoofdpompscherm door twee keer op de CHECK-knop te drukken.\n\n
+Als na meer dan ~5 minuten geen verbinding is opgericht:\n\n
+1. Druk op Terug of op de knop \"Koppeling annuleren\"\n
+2. Annuleer de koppeling op de Combo (druk op zowel UP als MENU
+knoppen tegelijkertijd om koppelen te annuleren)\n
+Probeer opnieuw te koppelen</string>
+    <string name="combov2_enter_pin">PIN Invoeren</string>
     <string name="combov2_cancel_pairing">Koppeling annuleren</string>
+    <string name="combov2_pin_hint">10-cijferige PIN-code</string>
+    <string name="combov2_pairing_finished_successfully">Met succes gekoppeld aan Combo</string>
+    <string name="combov2_pairing_cancelled">Koppelen met Combo geannuleerd door de gebruiker</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Combo scan timeout bereikt</string>
+    <string name="combov2_pairing_failed_due_to_error">Koppelen mislukt door de fout: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Koppelen afgebroken om onbekende redenen</string>
+    <string name="combov2_scanning_for_pump">Zoeken naar pomp</string>
+    <string name="combov2_establishing_bt_connection">Bluetooth verbinding tot stand brengen (poging nr. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Handdruk met pomp uitvoeren</string>
+    <string name="combov2_pairing_pump_requests_pin">Pomp aanvraag 10-cijferige pincode</string>
+    <string name="combov2_pairing_finishing">Koppeling afronden</string>
+    <string name="combov2_no_connection_for_n_mins">Geen verbinding gedurende %1$d minuten</string>
+    <string name="combov2_less_than_one_minute_ago">Minder dan 1 minuut geleden</string>
+    <string name="combov2_setting_current_pump_time">Huidige pomptijd instellen</string>
+    <string name="combov2_setting_current_pump_date">Datum instelling huidige pomp</string>
     <string name="combov2_not_initialized">Niet geïnitialiseerd</string>
+    <string name="combov2_checking_pump">Pomp controleren</string>
     <string name="combov2_ready">Gereed</string>
     <string name="combov2_suspended">Onderbroken</string>
+    <string name="combov2_pump_is_suspended">Pomp is onderbroken</string>
+    <string name="combov2_executing_command">Commando uitvoeren</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Ophalen Basaal Profiel</string>
     <string name="combov2_setting_basal_profile_cmddesc">Instellen van basaal profiel</string>
+    <string name="combov2_setting_tbr_cmddesc">Instellen %1$d%% TBR voor %2$d minuten</string>
+    <string name="combov2_cancelling_tbr">Annuleren actieve TBR</string>
+    <string name="combov2_delivering_bolus_cmddesc">%1$.1f E worden toegediend</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Ophalen TDD-geschiedenis</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Updaten pomp datum/tijd</string>
+    <string name="combov2_updating_pump_status_cmddesc">Pompstatus bijwerken</string>
+    <string name="combov2_pairing_pin_failure">PIN werkte niet. Controleer of er een typefout was. Als dit blijft gebeuren, annuleer en probeer opnieuw koppelen.</string>
+    <string name="combov2_discovery_duration">Tijd ontdekking (in seconden)</string>
+    <string name="combov2_verbose_logging">Schakel uitgebreide Combo logboekregistratie in</string>
+    <string name="combov2_getting_basal_profile">Ophalen van basaal profiel; %1$d factor(en) gelezen</string>
+    <string name="combov2_setting_basal_profile">Instellen van basaal profiel; %1$d factor(en) geschreven</string>
+    <string name="combov2_delivering_bolus">Bolus toedienen (%1$.1f van %2$.1f E toegediend)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">Kan behandeling niet afleveren - pomp is onderbroken</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">Onvoldoende insuline in reservoir</string>
     <string name="combov2_bolus_cancelled">Bolus geannuleerd</string>
     <string name="combov2_bolus_delivery_failed">Bolus toedienen mislukt. Waarschijnlijk is er geen bolus toegediend. Gelieve de pomp te controleren om een dubbele bolus te voorkomen. Indien nodig geef je een nieuwe bolus. Als bescherming tegen programmeerfouten worden bolussen niet automatisch opnieuw uitgevoerd.</string>
+    <string name="combov2_bolus_not_delivered">Bolus niet afgeleverd</string>
+    <string name="combov2_cannot_access_pump_data">Geen toegang tot pompgegevens; de pomp moet opnieuw gekoppeld worden</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">Niet meegerekende bolus toedieningen gedetecteerd. Bolus annuleren om veiligheidsredenen.</string>
+    <string name="combov2_incorrect_active_basal_profile">Onjuist actief basaal profiel; profiel 1 moet het actieve profiel zijn, niet profiel %1$d</string>
+    <string name="combov2_unrecognized_alert">Niet-herkend Combo alarm</string>
+    <string name="combov2_combo_alert">Combo alarm</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min resterend)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (minder dan 1 min. resterend)</string>
+    <string name="combov2_load_tdds_cancelled">TDD\'s laden geannuleerd</string>
+    <string name="combov2_retrieving_tdds_failed">Ophalen van TDD\'s is mislukt</string>
     <string name="combov2_battery_low_warning">Batterij pomp is bijna leeg</string>
+    <string name="combov2_reservoir_low_warning">Reservoir pomp is laag</string>
+    <string name="combov2_setting_tbr_succeeded">Instellen TBR geslaagd</string>
+    <string name="combov2_setting_tbr_failed">TBR instellen is mislukt</string>
+    <string name="combov2_set_emulated_100_tbr">Stel geëmuleerde 100% TBR in</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Wachten tot geëmuleerde 100% TBR is beëindigd</string>
+    <string name="combov2_ignoring_redundant_100_tbr">Overbodig 100% TBR verzoek wordt genegeerd</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Onverwachte limiet opgetreden tijdens het aanpassen van TBR: doel percentage was %1$d%%, raak een limiet op %1$d%%</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Kan absolute TBR niet instellen als basaalstand nul is</string>
+    <string name="combov2_pair_with_pump_summary">Koppel AndroidAPS en Android met een Accu-Chek Combo pomp die momenteel niet is gekoppeld</string>
+    <string name="combov2_unpair_pump_summary">Ontkoppel AndroidAPS en Android van de huidige Accu-Chek Combo pomp</string>
+    <string name="combov2_unknown_tbr_detected">Onbekende TBR werd gedetecteerd en gestopt; percentage: %1$d%%; resterende duur: %2$s</string>
+    <string name="combov2_connection_error">Verbindingsfout:</string>
     <string name="combov2_short_status_last_connection">Laatste verbinding: %1$d min geleden</string>
+    <string name="combov2_short_status_alert">Waarschuwing: %s</string>
+    <string name="combov2_short_status_last_bolus">Laatste bolus: %1$s @ %2$s</string>
     <string name="combov2_short_status_temp_basal">Tijdelijk: %s</string>
     <string name="combov2_short_status_reservoir">Reservoir: %dE</string>
     <string name="combov2_short_status_battery_state_empty">leeg</string>
     <string name="combov2_short_status_battery_state_low">laag</string>
+    <string name="combov2_short_status_battery_state_full">vol</string>
+    <string name="combov2_short_status_battery_state">Batt: %s</string>
+    <string name="combov2_automatic_reservoir_entry">Autodetect en voer automatisch de vervanging van het insulinereservoir in</string>
+    <string name="combov2_automatic_battery_entry">Automatisch batterijwijziging detecteren en automatisch invoeren</string>
+    <string name="combov2_note_reservoir_change">Insuline reservoir verandert automatisch ingevoegd door combov2 driver</string>
+    <string name="combov2_note_battery_change">Batterijwissel automatisch geplaatst door combov2 driver</string>
+    <string name="combov2_timezone_changed">Tijdzone is gewijzigd</string>
+    <string name="combov2_datetime_changed">Datum en/of tijd veranderd</string>
+    <string name="combov2_dst_started">Zomer/wintertijd (DST) gestart</string>
+    <string name="combov2_dst_ended">Zomer- en wintertijd (DST) beëindigd</string>
+    <string name="combov2_cannot_connect_pump_error_observed">Kan geen verbinding maken met de pomp, omdat de pomp een fout heeft gemeld. Gebruiker moet de fout verwerken en vervolgens 5 minuten wachten of op de knop Vernieuwen in het combo tabblad drukken.</string>
+    <string name="combov2_refresh_pump_status_after_error">Vernieuwen van pomp status nadat de pomp een fout rapporteerde</string>
+    <string name="combov2_go_back">Ga terug</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Kan geen koppeling uitvoeren omdat het stuurprogramma niet is geïnitialiseerd. Dit gebeurt meestal omdat de benodigde Bluetooth-machtigingen niet zijn verleend. Ga terug, verleen Bluetooth-machtigingen, en probeer opnieuw om te koppelen.</string>
 </resources>

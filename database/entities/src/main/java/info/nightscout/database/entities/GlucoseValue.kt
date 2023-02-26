@@ -1,14 +1,10 @@
 package info.nightscout.database.entities
 
-import androidx.room.Embedded
-import androidx.room.Entity
-import androidx.room.ForeignKey
-import androidx.room.Index
-import androidx.room.PrimaryKey
+import androidx.room.*
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.entities.interfaces.DBEntryWithTime
 import info.nightscout.database.entities.interfaces.TraceableDBEntry
-import java.util.TimeZone
+import java.util.*
 
 @Entity(
     tableName = TABLE_GLUCOSE_VALUES,
@@ -97,6 +93,7 @@ data class GlucoseValue(
         DEXCOM_G6_NATIVE_XDRIP("G6 Native"),
         DEXCOM_G5_NATIVE_XDRIP("G5 Native"),
         DEXCOM_G6_G5_NATIVE_XDRIP("G6 Native / G5 Native"),
+        LIBRE_1_OTHER("Other App"),
         LIBRE_1_NET("Network libre"),
         LIBRE_1_BLUE("BlueReader"),
         LIBRE_1_PL("Transmiter PL"),
@@ -104,7 +101,9 @@ data class GlucoseValue(
         LIBRE_1_TOMATO("Tomato"),
         LIBRE_1_RF("Rfduino"),
         LIBRE_1_LIMITTER("LimiTTer"),
-        GLIMP("Glimp"),
+        LIBRE_1_BUBBLE("Bubble"),
+        LIBRE_1_ATOM("Bubble"),
+        LIBRE_1_GLIMP("Glimp"),
         LIBRE_2_NATIVE("Libre2"),
         POCTECH_NATIVE("Poctech"),
         GLUNOVO_NATIVE("Glunovo"),
@@ -122,9 +121,26 @@ data class GlucoseValue(
         ZT_PREDICTION("ZTPrediction"),
         ;
 
+        fun isLibre(): Boolean = arrayListOf(
+            LIBRE_1_OTHER,
+            LIBRE_1_NET,
+            LIBRE_1_BLUE,
+            LIBRE_1_PL,
+            LIBRE_1_BLUCON,
+            LIBRE_1_TOMATO,
+            LIBRE_1_RF,
+            LIBRE_1_LIMITTER,
+            LIBRE_1_BUBBLE,
+            LIBRE_1_ATOM,
+            LIBRE_1_GLIMP,
+            LIBRE_2_NATIVE,
+            UNKNOWN // Better check for FLAT on unknown sources too
+        ).any { it.text == text }
+
         companion object {
 
             fun fromString(source: String?) = values().firstOrNull { it.text == source } ?: UNKNOWN
+
         }
     }
 }

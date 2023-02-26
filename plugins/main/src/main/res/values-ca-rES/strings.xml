@@ -97,17 +97,11 @@
     <string name="sms_read_status_failed">Error en llegir estat</string>
     <string name="sms_profile_switch_created">Canvi de perfil creat</string>
     <string name="sms_wrong_tbr_duration">La durada d\'una TBR ha de ser múltiple de %1$d minuts i més gran que 0.</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Línia d\'estat d\'xDrip+ (rellotge)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Mostrar informació del llaç a la vostra esfera xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Mostrar detalls IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Mostrar IOB de bolus i de basal per separat al rellotge</string>
     <string name="disabled_loop">Llaç desactivat</string>
     <string name="xdrip_status_show_bgi_title">Mostrar glucèmia</string>
     <string name="xdrip_status_show_bgi_summary">Afegir glucèmia a línia d\'estat</string>
-    <string name="xdrip_status_settings">Estat d\'xDrip+ (rellotge)</string>
     <!-- Food-->
     <string name="food_short">Aliments</string>
     <string name="description_food">Mostra els valors preestablerts per alimentació definits a Nightscout</string>
@@ -179,12 +173,9 @@
     <string name="chart_menu">Menú gràfica</string>
     <string name="set_basal_question">Acceptar nova basal temporal:</string>
     <string name="overview_cgm">CGM</string>
-    <string name="quickwizard">Assistent</string>
     <string name="overview">Inici</string>
     <string name="overview_shortname">INICI</string>
     <string name="description_overview">Mostra l\'estat actual del llaç i botons per les accions més habituals</string>
-    <string name="overview_editquickwizard_usecob">Càlcul COB</string>
-    <string name="overview_editquickwizard_usetemptarget">Càlcul objectiu temporal</string>
     <string name="overview_buttons_selection">Botons</string>
     <string name="show_calibration_button_summary">Enviar calibració a xDrip+ o obrir diàleg de calibració de BYODA</string>
     <string name="show_cgm_button_summary">Obre xDrip+ o Dexcom BYODA. Si prems el botó enrere, torna a AAPS</string>
@@ -198,20 +189,6 @@
     <string name="uploader">Carregador de dades</string>
     <string name="data_status">Estat de dades de glucèmia</string>
     <string name="quickwizard_settings">Configuració de l\'assistent</string>
-    <string name="overview_edit_quickwizard_button_text">Text del botó:</string>
-    <string name="overview_edit_quickwizard_carbs">Carbs:</string>
-    <string name="overview_edit_quickwizard_valid">Vàlid:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Afegir</string>
-    <string name="overview_quickwizard_item_edit_button">Editar</string>
-    <string name="overview_edit_quickwizard_use_bg">Càlcul glucèmia</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Càlcul IOB bolus</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Càlcul IOB basal</string>
-    <string name="overview_edit_quickwizard_use_trend">Càlcul tendència</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Càlcul superbolus</string>
-    <string name="overview_edit_quickwizard_percentage">Percentatge</string>
-    <string name="device_all">Tots</string>
-    <string name="positive_only">Només positiu</string>
-    <string name="negative_only">Només negatiu</string>
     <string name="keep_screen_on_title">Mantenir pantalla activa</string>
     <string name="keep_screen_on_summary">Evitar que Android apagui la pantalla. Consumeix molta energia en cas de no estar endollat a la corrent.</string>
     <string name="treatments">Tractaments</string>
@@ -276,7 +253,6 @@
     <string name="buttonson_description">Els botons sempre es mostren a la part inferior de la pantalla</string>
     <string name="largedisplay_description">Pantalla grossa</string>
     <string name="skin">Tema</string>
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Enviar logs del dia als desenvolupadors. Situació inesperada.</string>
     <!--    Wear-->

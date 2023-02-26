@@ -161,6 +161,7 @@
     <!--    BlePreCheck-->
     <!--    Preferences -->
     <!-- SmsCommunicator -->
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d lá</item>
         <item quantity="two">%1$d lá</item>
@@ -182,4 +183,5 @@
         <item quantity="many">%1$d nóiméad</item>
         <item quantity="other">%1$d nóiméad</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

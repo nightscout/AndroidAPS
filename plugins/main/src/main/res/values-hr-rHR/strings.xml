@@ -57,17 +57,11 @@
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Bazal:</string>
     <string name="a11y_otp_qr_code">QR kod za postavljanje jednokratne lozinke</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ Statusna linija (sat)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Prikažite informacije o svojem Loop-u na vašem xDrip+ brojčaniku.</string>
     <string name="xdrip_status_detailed_iob_title">Prikaži detaljan IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Podijelite IOB na bolus i bazalni IOB na brojčaniku</string>
     <string name="disabled_loop">Petlja onemogućena</string>
     <string name="xdrip_status_show_bgi_title">Prikaži BGI</string>
     <string name="xdrip_status_show_bgi_summary">Dodajte BGI u redak statusa</string>
-    <string name="xdrip_status_settings">xDrip+ status (sat)</string>
     <!-- Food-->
     <string name="food_short">Hrana</string>
     <string name="description_food">Prikaži postavke prehrane definirane u Nightscout</string>
@@ -118,15 +112,8 @@
     <string name="insulin_label">Inzulin</string>
     <!-- Overview -->
     <string name="a11y_insulin_label">inzulin</string>
-    <string name="a11y_only_on_watch">samo na satu</string>
-    <string name="a11y_only_on_phone">samo na telefonu</string>
     <string name="overview">Pregled</string>
     <string name="description_overview">Prikaži trenutno stanje tvog loop-a i izbore za najuobičajenije postupke</string>
-    <string name="overview_edit_quickwizard_carbs">Ugljikohidrati (UH):</string>
-    <string name="device_all">Svi</string>
-    <string name="device_phone">Telefon</string>
-    <string name="device_watch">Sat</string>
-    <string name="a11y_drag_and_drop_handle">povuci i ostavi ruka</string>
     <string name="treatments">Tretmani</string>
     <string name="enable_bolus_advisor">Omogući savjetnika za bolus</string>
     <string name="enable_bolus_advisor_summary">Omogući savjetnika za bolus i koristite podsjetnik da počnete jesti kasnije umjesto rezultata čarobnjaka tijekom visoke glikemije (\"pre-bolus\")</string>
@@ -137,7 +124,6 @@
     <string name="basal_shortname">BAZAL</string>
     <string name="graph_scale">Skala grafikona</string>
     <!-- Skins -->
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->
     <string name="description_wear">Pratite i kontrolirajte AAPS koristeći svoj WearOS sat.</string>

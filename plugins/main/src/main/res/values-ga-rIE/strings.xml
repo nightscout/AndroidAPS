@@ -16,9 +16,6 @@
     <string name="sms_basal">Bunaidh:</string>
     <string name="sms_min_ago">%1$dnóim ó shin</string>
     <string name="sms_loop_suspended_for">Ar fionraí (%1$d nóim)</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status_shortname">xds</string>
     <string name="disabled_loop">Lúb díchumasaithe</string>
     <!-- Food-->
     <string name="food_short">Bia</string>
@@ -45,16 +42,9 @@
     <!-- Overview -->
     <string name="a11y_insulin_label">inslin</string>
     <string name="overview_cgm">CGM</string>
-    <string name="quickwizard">QuickWizard</string>
     <string name="overview_shortname">BAILE</string>
     <string name="overview_buttons_selection">Cnaipi</string>
     <string name="openaps">OpenAPS</string>
-    <string name="overview_edit_quickwizard_carbs">Carbí:</string>
-    <string name="overview_edit_quickwizard_valid">Bailí:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Cuir</string>
-    <string name="overview_quickwizard_item_edit_button">In eagar</string>
-    <string name="overview_edit_quickwizard_percentage">Céatadán</string>
-    <string name="device_all">Ar fad</string>
     <string name="treatments">Cóireálacha</string>
     <string name="cgm">CGM</string>
     <string name="activity_duration">Gníomhaíocht fad</string>
@@ -69,7 +59,6 @@
     <string name="basal_shortname">BUN</string>
     <string name="activity_shortname">GNÍ</string>
     <!-- Skins -->
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>

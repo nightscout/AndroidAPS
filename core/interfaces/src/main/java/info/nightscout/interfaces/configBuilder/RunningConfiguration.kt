@@ -1,6 +1,6 @@
 package info.nightscout.interfaces.configBuilder
 
-import info.nightscout.sdk.remotemodel.RemoteDeviceStatus
+import info.nightscout.sdk.localmodel.devicestatus.NSDeviceStatus
 import org.json.JSONObject
 
 interface RunningConfiguration {
@@ -9,5 +9,5 @@ interface RunningConfiguration {
     fun configuration(): JSONObject
 
     // called in NSClient mode only
-    fun apply(configuration: RemoteDeviceStatus.Configuration)
+    fun apply(configuration: NSDeviceStatus.Configuration)
 }

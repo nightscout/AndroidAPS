@@ -4,7 +4,7 @@
     <string name="ns_client_bg">Glykémie z NS</string>
     <string name="ns_client_bg_short">NSGL</string>
     <string name="description_source_ns_client">Příjem glykémií z Nightscoutu</string>
-    <string name="xdrip">xDrip+</string>
+    <string name="source_xdrip">xDrip+ glykémie</string>
     <string name="description_source_xdrip">Příjem glykémií z xDripu+.</string>
     <string name="dexcom_app_patched">BYODA</string>
     <string name="dexcom_short">BYODA</string>

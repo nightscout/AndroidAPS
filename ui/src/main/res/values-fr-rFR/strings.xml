@@ -127,4 +127,30 @@
     <string name="basal_rate">Débit de Basal</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">ARRÊT APPUYÉ</string>
+    <!--QuickWizard-->
+    <string name="a11y_only_on_watch">uniquement sur la montre</string>
+    <string name="a11y_only_on_phone">uniquement sur le téléphone</string>
+    <string name="quickwizard_settings">Paramètres de l\'Assistant Rapide</string>
+    <string name="overview_edit_quickwizard_button_text">Texte du bouton :</string>
+    <string name="overview_edit_quickwizard_carbs">Glucides:</string>
+    <string name="overview_edit_quickwizard_valid">Valide:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Ajouter</string>
+    <string name="overview_quickwizard_item_edit_button">Éditer</string>
+    <string name="overview_edit_quickwizard_show_on_device">Afficher l\'entrée sur l\'appareil :</string>
+    <string name="overview_edit_quickwizard_use_bg">Calcul de Glycémie</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Calcul IA du Bolus</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Calcul IA du Basal</string>
+    <string name="overview_edit_quickwizard_use_trend">Calcul de tendance</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Calcul du Superbolus</string>
+    <string name="overview_edit_quickwizard_percentage">Pourcentage</string>
+    <string name="device_all">Tous</string>
+    <string name="device_phone">Téléphone</string>
+    <string name="device_watch">Montre</string>
+    <string name="positive_only">Positif uniquement</string>
+    <string name="negative_only">Négatif uniquement</string>
+    <string name="overview_editquickwizard_usecob">Calcul GA</string>
+    <string name="overview_editquickwizard_usetemptarget">Calcul de la cible temporaire</string>
+    <string name="overview_editquickwizard_usepercentage">Calcul du pourcentage</string>
+    <string name="app_default">Application par défaut</string>
+    <string name="a11y_drag_and_drop_handle">glissez déposez ici</string>
 </resources>

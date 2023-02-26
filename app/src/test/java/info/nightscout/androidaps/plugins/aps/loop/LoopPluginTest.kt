@@ -7,6 +7,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.constraints.Constraints
@@ -70,7 +71,7 @@ class LoopPluginTest : TestBase() {
     fun testPluginInterface() {
         `when`(rh.gs(info.nightscout.core.ui.R.string.loop)).thenReturn("Loop")
         `when`(rh.gs(info.nightscout.plugins.aps.R.string.loop_shortname)).thenReturn("LOOP")
-        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, "open")).thenReturn("closed")
+        `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         val pumpDescription = PumpDescription()
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         Assert.assertEquals(LoopFragment::class.java.name, loopPlugin.pluginDescription.fragmentClass)

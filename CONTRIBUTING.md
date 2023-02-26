@@ -7,9 +7,9 @@ General rules
 =============
 
 * There are plenty of ways you can help, some of them are listed on wiki: 
-  https://androidaps.readthedocs.io/en/latest/EN/Getting-Started/How-can-I-help.html
+  https://wiki.aaps.app/en/latest/Getting-Started/How-can-I-help.html
 * If you wish to help with documentation or translating: 
-  https://androidaps.readthedocs.io/en/latest/EN/translations.html
+  https://wiki.aaps.app/en/latest/translations.html
   
 Development guidelines
 ======================

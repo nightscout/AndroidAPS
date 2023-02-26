@@ -17,7 +17,6 @@ import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Suppress("SpellCheckingInspection")
 @Singleton
 class ProcessedDeviceStatusDataImpl @Inject constructor(
     private val rh: ResourceHelper,
@@ -36,37 +35,38 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
 
     // test warning level // color
     override fun pumpStatus(nsSettingsStatus: NSSettingsStatus): Spanned {
-            val pumpData = pumpData ?: return HtmlHelper.fromHtml("")
 
-            //String[] ALL_STATUS_FIELDS = {"reservoir", "battery", "clock", "status", "device"};
-            val string = StringBuilder()
-                .append("<span style=\"color:${rh.gac(info.nightscout.core.ui.R.attr.nsTitleColor)}\">")
-                .append(rh.gs(info.nightscout.core.ui.R.string.pump))
-                .append(": </span>")
+        //String[] ALL_STATUS_FIELDS = {"reservoir", "battery", "clock", "status", "device"};
+        val string = StringBuilder()
+            .append("<span style=\"color:${rh.gac(info.nightscout.core.ui.R.attr.nsTitleColor)}\">")
+            .append(rh.gs(info.nightscout.core.ui.R.string.pump))
+            .append(": </span>")
 
-            // test warning level
-            val level = when {
-                pumpData.clock + nsSettingsStatus.extendedPumpSettings("urgentClock") * 60 * 1000L < dateUtil.now()                    -> ProcessedDeviceStatusData.Levels.URGENT
-                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("urgentRes")                                                -> ProcessedDeviceStatusData.Levels.URGENT
-                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("urgentBattP")                          -> ProcessedDeviceStatusData.Levels.URGENT
-                !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("urgentBattV") -> ProcessedDeviceStatusData.Levels.URGENT
-                pumpData.clock + nsSettingsStatus.extendedPumpSettings("warnClock") * 60 * 1000L < dateUtil.now()                      -> ProcessedDeviceStatusData.Levels.WARN
-                pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("warnRes")                                                  -> ProcessedDeviceStatusData.Levels.WARN
-                pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("warnBattP")                            -> ProcessedDeviceStatusData.Levels.WARN
+        val pumpData = pumpData ?: return HtmlHelper.fromHtml(string.toString())
+
+        // test warning level
+        val level = when {
+            pumpData.clock + nsSettingsStatus.extendedPumpSettings("urgentClock") * 60 * 1000L < dateUtil.now()                        -> ProcessedDeviceStatusData.Levels.URGENT
+            pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("urgentRes")                                                    -> ProcessedDeviceStatusData.Levels.URGENT
+            pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("urgentBattP")                              -> ProcessedDeviceStatusData.Levels.URGENT
+            !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("urgentBattV")     -> ProcessedDeviceStatusData.Levels.URGENT
+            pumpData.clock + nsSettingsStatus.extendedPumpSettings("warnClock") * 60 * 1000L < dateUtil.now()                          -> ProcessedDeviceStatusData.Levels.WARN
+            pumpData.reservoir < nsSettingsStatus.extendedPumpSettings("warnRes")                                                      -> ProcessedDeviceStatusData.Levels.WARN
+            pumpData.isPercent && pumpData.percent < nsSettingsStatus.extendedPumpSettings("warnBattP")                                -> ProcessedDeviceStatusData.Levels.WARN
                 !pumpData.isPercent && pumpData.voltage > 0 && pumpData.voltage < nsSettingsStatus.extendedPumpSettings("warnBattV")   -> ProcessedDeviceStatusData.Levels.WARN
                 else                                                                                                                   -> ProcessedDeviceStatusData.Levels.INFO
             }
             string.append("<span style=\"color:${level.toColor()}\">")
-            val insulinUnit = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
-            val fields = nsSettingsStatus.pumpExtendedSettingsFields()
-            if (pumpData.reservoirDisplayOverride != "")
-                string.append(pumpData.reservoirDisplayOverride).append("$insulinUnit ")
-            else if (fields.contains("reservoir")) string.append(pumpData.reservoir.toInt()).append("$insulinUnit ")
-            if (fields.contains("battery") && pumpData.isPercent) string.append(pumpData.percent).append("% ")
-            if (fields.contains("battery") && !pumpData.isPercent) string.append(Round.roundTo(pumpData.voltage, 0.001)).append(" ")
-            if (fields.contains("clock")) string.append(dateUtil.minAgo(rh, pumpData.clock)).append(" ")
-            if (fields.contains("status")) string.append(pumpData.status).append(" ")
-            if (fields.contains("device")) string.append(device).append(" ")
+            // val insulinUnit = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
+        // val fields = nsSettingsStatus.pumpExtendedSettingsFields()
+        // Removed here. Same value is in StatusLights
+            // if (pumpData.reservoirDisplayOverride != "") string.append(pumpData.reservoirDisplayOverride).append("$insulinUnit ")
+            // else if (fields.contains("reservoir")) string.append(pumpData.reservoir.toInt()).append("$insulinUnit ")
+            if (pumpData.isPercent) string.append(pumpData.percent).append("% ")
+            if (!pumpData.isPercent && pumpData.voltage > 0) string.append(Round.roundTo(pumpData.voltage, 0.001)).append(" ")
+            string.append(dateUtil.minAgo(rh, pumpData.clock)).append(" ")
+            string.append(pumpData.status).append(" ")
+            //string.append(device).append(" ")
             string.append("</span>") // color
             return HtmlHelper.fromHtml(string.toString())
         }
@@ -133,19 +133,28 @@ class ProcessedDeviceStatusDataImpl @Inject constructor(
 
     override val uploaderStatusSpanned: Spanned
         get() {
+            var isCharging = false
             val string = StringBuilder()
             string.append("<span style=\"color:${rh.gac(info.nightscout.core.ui.R.attr.nsTitleColor)}\">")
             string.append(rh.gs(R.string.uploader_short))
             string.append(": </span>")
             val iterator: Iterator<*> = uploaderMap.entries.iterator()
             var minBattery = 100
+            var found = false
             while (iterator.hasNext()) {
                 val pair = iterator.next() as Map.Entry<*, *>
                 val uploader = pair.value as ProcessedDeviceStatusData.Uploader
-                if (minBattery > uploader.battery) minBattery = uploader.battery
+                if (minBattery >= uploader.battery) {
+                    minBattery = uploader.battery
+                    isCharging = uploader.isCharging ?: false
+                    found = true
+                }
             }
-            string.append(minBattery)
-            string.append("%")
+            if (found) {
+                if (isCharging) string.append("ᴪ ")
+                string.append(minBattery)
+                string.append("%")
+            }
             return HtmlHelper.fromHtml(string.toString())
         }
 

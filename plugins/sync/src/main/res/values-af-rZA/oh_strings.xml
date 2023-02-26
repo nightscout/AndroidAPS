@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="next">Volgende</string>
+    <string name="carbohydrates">Karbohidrate</string>
+    <string name="settings">Instellings</string>
+    <string name="device_model">Toestel Model</string>
+    <string name="cancel">Kanselleer</string>
+    <string name="close">Maak toe</string>
+</resources>

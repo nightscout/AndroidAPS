@@ -2,7 +2,6 @@
 <resources>
     <!-- Source -->
     <string name="description_source_ns_client">Sonraí a íoslódáil ó Nightscout</string>
-    <string name="xdrip">xDrip+</string>
     <string name="description_source_xdrip">Luachanna BG a fháil ó xDrip+.</string>
     <string name="description_source_mm640g">Luachanna BG a fháil ón 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>

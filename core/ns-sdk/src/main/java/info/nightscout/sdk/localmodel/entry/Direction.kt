@@ -10,8 +10,13 @@ enum class Direction(val nsName: String, val txtIcon: String) {
     SINGLE_UP("SingleUp", "\u2191"), // ↑
     DOUBLE_UP("DoubleUp", "\u21c8"), // ⇈
     TRIPLE_UP("TripleUp", "\u290A"), // ⤊
-    NONE("NONE", "⇼"), //
-    INVALID("", "-"), //
+    NONE("NONE", "⇼"),
+    INVALID("", "-");
+
+    companion object {
+
+        fun fromString(text: String?) = Direction.values().firstOrNull { it.nsName == text } ?: NONE
+    }
 }
 
 /*

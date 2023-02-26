@@ -14,6 +14,7 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.pump.Pump
+import info.nightscout.interfaces.smoothing.Smoothing
 import info.nightscout.interfaces.source.BgSource
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
@@ -36,6 +37,7 @@ class PluginStore @Inject constructor(
     private var activeAPSStore: APS? = null
     private var activeInsulinStore: Insulin? = null
     private var activeSensitivityStore: Sensitivity? = null
+    private var activeSmoothingStore: Smoothing? = null
 
     override fun loadDefaults() {
         verifySelectionInCategories()
@@ -106,6 +108,16 @@ class PluginStore @Inject constructor(
         }
         setFragmentVisibilities((activeSensitivityStore as PluginBase).name, pluginsInCategory, PluginType.SENSITIVITY)
 
+        // PluginType.SMOOTHING
+        pluginsInCategory = getSpecificPluginsList(PluginType.SMOOTHING)
+        activeSmoothingStore = getTheOneEnabledInArray(pluginsInCategory, PluginType.SMOOTHING) as Smoothing?
+        if (activeSmoothingStore == null) {
+            activeSmoothingStore = getDefaultPlugin(PluginType.SMOOTHING) as Smoothing
+            (activeSmoothingStore as PluginBase).setPluginEnabled(PluginType.SMOOTHING, true)
+            aapsLogger.debug(LTag.CONFIGBUILDER, "Defaulting SmoothingInterface")
+        }
+        setFragmentVisibilities((activeSmoothingStore as PluginBase).name, pluginsInCategory, PluginType.SMOOTHING)
+
         // PluginType.PROFILE
         pluginsInCategory = getSpecificPluginsList(PluginType.PROFILE)
         activeProfile = getTheOneEnabledInArray(pluginsInCategory, PluginType.PROFILE) as ProfileSource?
@@ -175,11 +187,18 @@ class PluginStore @Inject constructor(
         get() = activeAPSStore ?: checkNotNull(activeAPSStore) { "No APS selected" }
 
     override val activePump: Pump
-        get() = activePumpStore ?: checkNotNull(activePumpStore) { "No pump selected" }
+        get() = activePumpStore
+            // Following line can be used only during initialization
+            ?: getTheOneEnabledInArray(getSpecificPluginsList(PluginType.PUMP), PluginType.PUMP) as Pump?
+            ?: checkNotNull(activePumpStore) { "No pump selected" }
 
     override val activeSensitivity: Sensitivity
         get() = activeSensitivityStore
             ?: checkNotNull(activeSensitivityStore) { "No sensitivity selected" }
+
+    override val activeSmoothing: Smoothing
+        get() = activeSmoothingStore
+            ?: checkNotNull(activeSmoothingStore) { "No smoothing selected" }
 
     override val activeOverview: Overview
         get() = getSpecificPluginsListByInterface(Overview::class.java).first() as Overview
@@ -190,8 +209,7 @@ class PluginStore @Inject constructor(
     override val activeIobCobCalculator: IobCobCalculator
         get() = getSpecificPluginsListByInterface(IobCobCalculator::class.java).first() as IobCobCalculator
     override val activeObjectives: Objectives?
-        get() = getSpecificPluginsListByInterface(Objectives::class.java).firstOrNull() as Objectives
-
+        get() = getSpecificPluginsListByInterface(Objectives::class.java).firstOrNull() as Objectives?
     override val activeNsClient: NsClient?
         get() = getTheOneEnabledInArray(getSpecificPluginsListByInterface(NsClient::class.java), PluginType.SYNC) as NsClient?
 

@@ -86,9 +86,9 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
         }
         when (dataType) {
             ComplicationData.TYPE_ICON, ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_RANGED_VALUE -> if (since > 0) {
-                builder.setShortText(ComplicationText.plainText(displayFormat.shortTimeSince(since) + " old"))
+                builder.setShortText(ComplicationText.plainText(displayFormat.shortTimeSince(since) + " " + getString(R.string.old)))
             } else {
-                builder.setShortText(ComplicationText.plainText("!err!"))
+                builder.setShortText(ComplicationText.plainText(getString(R.string.error)))
             }
 
             ComplicationData.TYPE_LONG_TEXT                                                                  -> {
@@ -126,9 +126,9 @@ abstract class BaseComplicationProviderService : ComplicationProviderService() {
         }
         when (dataType) {
             ComplicationData.TYPE_ICON, ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_RANGED_VALUE -> if (since > 0) {
-                builder.setShortText(ComplicationText.plainText(displayFormat.shortTimeSince(since) + " old"))
+                builder.setShortText(ComplicationText.plainText(displayFormat.shortTimeSince(since) + " " + getString(R.string.old)))
             } else {
-                builder.setShortText(ComplicationText.plainText("!old!"))
+                builder.setShortText(ComplicationText.plainText(getString(R.string.old_warning)))
             }
 
             ComplicationData.TYPE_LONG_TEXT                                                                  -> {

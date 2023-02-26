@@ -72,7 +72,9 @@ class CarbsDialog : DialogFragmentWithDate() {
 
     private val textWatcher: TextWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
-            validateInputs()
+            _binding?.let {
+                validateInputs()
+            }
         }
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -190,7 +192,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         }
 
         iobCobCalculator.ads.actualBg()?.let { bgReading ->
-            if (bgReading.value < 72)
+            if (bgReading.recalculated < 72)
                 binding.hypoTt.isChecked = true
         }
         binding.hypoTt.setOnClickListener {

@@ -411,7 +411,7 @@ class AutotuneFragment : DaggerFragment() {
 
     private val textWatcher = object : TextWatcher {
         override fun afterTextChanged(s: Editable) {
-            updateGui()
+            _binding?.let { updateGui() }
         }
 
         override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}

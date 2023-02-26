@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
+import androidx.core.util.size
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.TotalDailyDose
@@ -37,7 +38,7 @@ class TddCalculatorImpl @Inject constructor(
     private val repository: AppRepository
 ) : TddCalculator {
 
-    override fun calculate(days: Long): LongSparseArray<TotalDailyDose> {
+    override fun calculate(days: Long, allowMissingDays: Boolean): LongSparseArray<TotalDailyDose>? {
         var startTime = MidnightTime.calc(dateUtil.now() - T.days(days).msecs())
         val endTime = MidnightTime.calc(dateUtil.now())
         //val stepSize = T.hours(24).msecs() // this is not true on DST change
@@ -55,8 +56,8 @@ class TddCalculatorImpl @Inject constructor(
         if (endTime > startTime) {
             var midnight = startTime
             while (midnight < endTime) {
-                val tdd = calculate(midnight, midnight + T.hours(24).msecs())
-                result.put(midnight, tdd)
+                val tdd = calculate(midnight, midnight + T.hours(24).msecs(), allowMissingData = false)
+                if (tdd != null) result.put(midnight, tdd)
                 midnight = MidnightTime.calc(midnight + T.hours(27).msecs()) // be sure we find correct midnight
             }
         }
@@ -68,25 +69,27 @@ class TddCalculatorImpl @Inject constructor(
                 repository.insertTotalDailyDose(tdd)
             }
         }
-        return result
+        if (result.size.toLong() == days || allowMissingDays) return result
+        return null
     }
 
-    override fun calculateToday(): TotalDailyDose {
+    override fun calculateToday(): TotalDailyDose? {
         val startTime = MidnightTime.calc(dateUtil.now())
         val endTime = dateUtil.now()
-        return calculate(startTime, endTime)
+        return calculate(startTime, endTime, allowMissingData = true)
     }
 
-    override fun calculateDaily(startHours: Long, endHours: Long): TotalDailyDose {
+    override fun calculateDaily(startHours: Long, endHours: Long): TotalDailyDose? {
         val startTime = dateUtil.now() + T.hours(hour = startHours).msecs()
         val endTime = dateUtil.now() + T.hours(hour = endHours).msecs()
-        return calculate(startTime, endTime)
+        return calculate(startTime, endTime, allowMissingData = false)
     }
 
-    override fun calculate(startTime: Long, endTime: Long): TotalDailyDose {
+    override fun calculate(startTime: Long, endTime: Long, allowMissingData: Boolean): TotalDailyDose? {
         val startTimeAligned = startTime - startTime % (5 * 60 * 1000)
         val endTimeAligned = endTime - endTime % (5 * 60 * 1000)
         val tdd = TotalDailyDose(timestamp = startTimeAligned)
+        var tbrFound = false
         repository.getBolusesDataFromTimeToTime(startTime, endTime, true).blockingGet()
             .filter { it.type != Bolus.Type.PRIMING }
             .forEach { t ->
@@ -98,8 +101,9 @@ class TddCalculatorImpl @Inject constructor(
         val calculationStep = T.mins(5).msecs()
         for (t in startTimeAligned until endTimeAligned step calculationStep) {
 
-            val profile = profileFunction.getProfile(t) ?: continue
+            val profile = profileFunction.getProfile(t) ?: if (allowMissingData) continue else return null
             val tbr = iobCobCalculator.getBasalData(profile, t)
+            if (tbr.isTempBasalRunning) tbrFound = true
             val absoluteRate = tbr.tempBasalAbsolute
             tdd.basalAmount += absoluteRate / 60.0 * 5.0
 
@@ -111,11 +115,13 @@ class TddCalculatorImpl @Inject constructor(
         }
         tdd.totalAmount = tdd.bolusAmount + tdd.basalAmount
         aapsLogger.debug(LTag.CORE, tdd.toString())
-        return tdd
+        if (tdd.bolusAmount > 0 || tdd.basalAmount > 0 || tbrFound) return tdd
+        return null
     }
 
-    override fun averageTDD(tdds: LongSparseArray<TotalDailyDose>): TotalDailyDose? {
+    override fun averageTDD(tdds: LongSparseArray<TotalDailyDose>?): TotalDailyDose? {
         val totalTdd = TotalDailyDose(timestamp = dateUtil.now())
+        tdds ?: return null
         if (tdds.size() == 0) return null
         for (i in 0 until tdds.size()) {
             val tdd = tdds.valueAt(i)
@@ -132,7 +138,7 @@ class TddCalculatorImpl @Inject constructor(
     }
 
     override fun stats(context: Context): TableLayout {
-        val tdds = calculate(7)
+        val tdds = calculate(7, allowMissingDays = true) ?: return TableLayout(context)
         val averageTdd = averageTDD(tdds)
         val todayTdd = calculateToday()
         val lp = TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT)
@@ -156,13 +162,15 @@ class TddCalculatorImpl @Inject constructor(
                 })
                 layout.addView(averageTdd.toTableRow(context, rh, tdds.size(), includeCarbs = true))
             }
-            layout.addView(TextView(context).apply {
-                text = rh.gs(info.nightscout.shared.R.string.today)
-                setTypeface(typeface, Typeface.BOLD)
-                gravity = Gravity.CENTER_HORIZONTAL
-                setTextAppearance(android.R.style.TextAppearance_Material_Medium)
-            })
-            layout.addView(todayTdd.toTableRow(context, rh, dateUtil, includeCarbs = true))
+            todayTdd?.let {
+                layout.addView(TextView(context).apply {
+                    text = rh.gs(info.nightscout.shared.R.string.today)
+                    setTypeface(typeface, Typeface.BOLD)
+                    gravity = Gravity.CENTER_HORIZONTAL
+                    setTextAppearance(android.R.style.TextAppearance_Material_Medium)
+                })
+                layout.addView(todayTdd.toTableRow(context, rh, dateUtil, includeCarbs = true))
+            }
         }
     }
 }

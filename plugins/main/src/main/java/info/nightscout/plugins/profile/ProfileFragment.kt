@@ -27,7 +27,7 @@ import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.ProfileFragmentBinding
-import info.nightscout.plugins.ui.TimeListEdit
+import info.nightscout.plugins.profile.ui.TimeListEdit
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventLocalProfileChanged
@@ -139,10 +139,10 @@ class ProfileFragment : DaggerFragment() {
         binding.dia.setParams(currentProfile.dia, hardLimits.minDia(), hardLimits.maxDia(), 0.1, DecimalFormat("0.0"), false, null, textWatch)
         binding.dia.tag = "LP_DIA"
         TimeListEdit(
-            context,
+            requireContext(),
             aapsLogger,
             dateUtil,
-            view,
+            requireView(),
             R.id.ic_holder,
             "IC",
             rh.gs(info.nightscout.core.ui.R.string.ic_long_label),
@@ -156,10 +156,10 @@ class ProfileFragment : DaggerFragment() {
         )
         basalView =
             TimeListEdit(
-                context,
+                requireContext(),
                 aapsLogger,
                 dateUtil,
-                view,
+                requireView(),
                 R.id.basal_holder,
                 "BASAL",
                 rh.gs(info.nightscout.core.ui.R.string.basal_long_label) + ": " + sumLabel(),
@@ -173,12 +173,27 @@ class ProfileFragment : DaggerFragment() {
             )
         if (units == Constants.MGDL) {
             val isfRange = doubleArrayOf(HardLimits.MIN_ISF, HardLimits.MAX_ISF)
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(info.nightscout.core.ui.R.string.isf_long_label), currentProfile.isf, null, isfRange, null, 1.0, DecimalFormat("0"), save)
             TimeListEdit(
-                context,
+                requireContext(),
                 aapsLogger,
                 dateUtil,
-                view,
+                requireView(),
+                R.id.isf_holder,
+                "ISF",
+                rh.gs(info.nightscout.core.ui.R.string.isf_long_label),
+                currentProfile.isf,
+                null,
+                isfRange,
+                null,
+                1.0,
+                DecimalFormat("0"),
+                save
+            )
+            TimeListEdit(
+                requireContext(),
+                aapsLogger,
+                dateUtil,
+                requireView(),
                 R.id.target_holder,
                 "TARGET",
                 rh.gs(info.nightscout.core.ui.R.string.target_long_label),
@@ -195,7 +210,9 @@ class ProfileFragment : DaggerFragment() {
                 roundUp(Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL)),
                 roundDown(Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL))
             )
-            TimeListEdit(context, aapsLogger, dateUtil, view, R.id.isf_holder, "ISF", rh.gs(info.nightscout.core.ui.R.string.isf_long_label), currentProfile.isf, null, isfRange, null, 0.1, DecimalFormat("0.0"), save)
+            TimeListEdit(requireContext(), aapsLogger, dateUtil, requireView(), R.id.isf_holder, "ISF", rh.gs(info.nightscout.core.ui.R.string.isf_long_label), currentProfile.isf, null, isfRange, null, 0.1,
+                         DecimalFormat
+                ("0.0"), save)
             val range1 = doubleArrayOf(
                 roundUp(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
                 roundDown(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[1], GlucoseUnit.MMOL))
@@ -206,10 +223,10 @@ class ProfileFragment : DaggerFragment() {
             )
             aapsLogger.info(LTag.CORE, "TimeListEdit", "build: range1" + range1[0] + " " + range1[1] + " range2" + range2[0] + " " + range2[1])
             TimeListEdit(
-                context,
+                requireContext(),
                 aapsLogger,
                 dateUtil,
-                view,
+                requireView(),
                 R.id.target_holder,
                 "TARGET",
                 rh.gs(info.nightscout.core.ui.R.string.target_long_label),

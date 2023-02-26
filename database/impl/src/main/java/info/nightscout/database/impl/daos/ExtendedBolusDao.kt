@@ -24,7 +24,7 @@ internal interface ExtendedBolusDao : TraceableDao<ExtendedBolus> {
     override fun deleteTrackedChanges(): Int
 
     @Query("SELECT id FROM $TABLE_EXTENDED_BOLUSES ORDER BY id DESC limit 1")
-    fun getLastId(): Maybe<Long>
+    fun getLastId(): Long?
 
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE timestamp = :timestamp AND referenceId IS NULL")
     fun findByTimestamp(timestamp: Long): ExtendedBolus?

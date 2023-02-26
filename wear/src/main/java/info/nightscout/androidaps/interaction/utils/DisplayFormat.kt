@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.interaction.utils
 
+import android.content.Context
+import info.nightscout.androidaps.R
 import info.nightscout.androidaps.interaction.utils.Pair.Companion.create
 import javax.inject.Singleton
 import javax.inject.Inject
@@ -20,6 +22,7 @@ class DisplayFormat @Inject internal constructor() {
 
     @Inject lateinit var sp: SP
     @Inject lateinit var wearUtil: WearUtil
+    @Inject lateinit var context: Context
 
     /**
      * Maximal and minimal lengths of fields/labels shown in complications, in characters
@@ -44,14 +47,14 @@ class DisplayFormat @Inject internal constructor() {
             "$minutes'"
         } else if (deltaTimeMs < Constants.DAY_IN_MS) {
             val hours = (deltaTimeMs / Constants.HOUR_IN_MS).toInt()
-            hours.toString() + "h"
+            hours.toString() + context.getString(R.string.hour_short)
         } else {
             val days = (deltaTimeMs / Constants.DAY_IN_MS).toInt()
             if (days < 7) {
-                days.toString() + "d"
+                days.toString() + context.getString(R.string.day_short)
             } else {
                 val weeks = days / 7
-                weeks.toString() + "w"
+                weeks.toString() + context.getString(R.string.week_short)
             }
         }
     }

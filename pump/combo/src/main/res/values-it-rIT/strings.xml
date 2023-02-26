@@ -43,7 +43,6 @@
     <string name="combo_error_failure_reading_changed_basal_rate">Velocità basale cambiata sul micro, ma la sua lettura è fallita</string>
     <string name="combo_activity_checking_for_history_changes">Controllo modifiche allo storico</string>
     <string name="combo_error_multiple_boluses_with_identical_timestamp">Sono appena stati importati più boli con la stessa quantità nello stesso minuto. Solo un record può essere aggiunto ai trattamenti. Controlla il micro e aggiungi manualmente un record di bolo usando la sezione Portale. Assicurati di creare un bolo con un\'ora non usata da nessun altro bolo.</string>
-    <string name="about_link_urls">\n\ndocumentazione:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers\nhttps://www.facebook.com/groups/aapsitalia</string>
     <string name="combo_check_date">L\'ultimo bolo è più vecchio di 24 ore o ha una data nel futuro. Controlla che la data sul micro sia impostata correttamente.</string>
     <string name="combo_suspious_bolus_time">L\'ora/la data del bolo erogato sul micro sembra errata, IOB probabilmente non è corretto. Controlla l\'ora e/o la data del micro.</string>
     <string name="combo_bolus_count">Conteggio bolo</string>

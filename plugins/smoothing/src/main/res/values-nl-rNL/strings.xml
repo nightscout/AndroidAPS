@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smoothing_shortname">VLOEIEND</string>
+    <string name="exponential_smoothing_name">Exponentiëel vloeiend maken</string>
+    <string name="description_exponential_smoothing">"Algoritme om exponentieel tot de tweede orde vloeiend te maken"</string>
+    <string name="avg_smoothing_name">Gemiddeld vloeiend maken</string>
+    <string name="description_avg_smoothing">"Gemiddeld vloeiend maken algoritme, nieuwste waarde wordt niet beïnvloed"</string>
+    <string name="no_smoothing_name">Niet vloeiend maken</string>
+    <string name="description_no_smoothing">"De invoer glucose waarden worden niet vloeiend gemaakt. Gebruik dit wanneer je al gefilterde data van bijv. BYODA G6 gebruikt."</string>
+</resources>

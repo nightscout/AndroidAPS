@@ -2,32 +2,52 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Laiko persukimas įvyks po 24 val ar mažiau</string>
+    <string name="dst_loop_disabled_warning">Laiko persukimas įvyko prieš mažiau nei 3 val - Uždaras ciklas deaktyvuotas</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Atlaisvinkite ne mažiau kaip %1$d MB vidinėje atmintyje! Ciklas išjungtas!</string>
     <!-- Version Checker -->
+    <string name="old_version">sena versija</string>
+    <string name="very_old_version">labai sena versija</string>
+    <string name="application_expired">Programa nebenaudojama</string>
+    <string name="new_version_warning">Nauja versija pasiekiama mažiausiai %1$d d.! Po %2$d grįšite į Stabdymo esant žemai glikemijai režimą, po %3$d ciklas bus išjungtas</string>
+    <string name="running_invalid_version">Nustatyta, kad naudojate nebegaliojančią versiją. Ciklas išjungtas!</string>
+    <string name="versionavailable">Versiją %1$s jau galima naudoti</string>
+    <string name="version_expire">Versija %1$s baigs galioti %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Naudojami perskaičiuoti duomenys</string>
+    <string name="bg_too_close">KG dubliuojasi:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">perskaičiuota</string>
+    <string name="a11y_bg_quality_doubles">reikšmės dubliuojasi</string>
+    <string name="a11y_bg_quality_flat">Duomenys nekinta. Jie galimai klaidingi</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">Ištęstas bolusas ribojamas iki %1$.1f v dėl %2$s</string>
     <string name="limitingcarbs">Ribojami angliavandeniai iki %1$d g dėl %2$s</string>
     <string name="pumpisnottempbasalcapable">Pompa negali nustatyti laikinos bazės</string>
     <string name="closedmodedisabledinpreferences">Uždaro ciklo būsena išjungta nustatymuose</string>
     <string name="closed_loop_disabled_on_dev_branch">Naudojama neužbaigta versija. Uždaras ciklas neaktyvus.</string>
     <string name="closed_loop_disabled_with_eb">Uždara ciklas išjungtas dėl ištęsto boluso veikimo</string>
-    <string name="smbalwaysdisabled">Funkcijos \"SMB visada\" ir \"SMB po angliavandenių\" išjungtos, nes kraujo gliukozės duomenų šaltinis neturi reikalingo filtravimo</string>
+    <string name="smbalwaysdisabled">Funkcijos \"SMB visada\" ir \"SMB po angliavandenių\" išjungtos, nes glikemijos duomenų šaltinis neturi reikalingo filtravimo</string>
     <string name="smbnotallowedinopenloopmode">SMB neleidžiami atviro ciklo režime</string>
     <string name="maxvalueinpreferences">Maksimali reikšmė nustatymuose</string>
     <string name="hardlimit">Nekeičiama riba</string>
     <string name="treatmentssafety_title">Terapijos saugumas</string>
     <!-- Objectives -->
+    <string name="completed_well_done">Užbaigta, puiku!</string>
     <string name="not_completed_yet">Dar nebaigta</string>
     <string name="time_elapsed">Praėjo laiko</string>
     <string name="maxiobset">Maksimalus AIO nustatytas tinkamai</string>
     <string name="hasbgdata">KG šaltinis pasirinktas teisingai</string>
+    <string name="synchaswritepermission">Sinchronizacijos servisas turi įrašymo leidimą</string>
     <string name="loopenabled">Ciklas aktyvuotas</string>
     <string name="apsselected">DKS pasirinkta</string>
     <string name="closedmodeenabled">Uždaras ciklas aktyvus</string>
     <string name="objectives_shortname">TIKSL</string>
     <string name="description_objectives">Mokymosi programa</string>
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
+    <string name="objectives_next_button">Kitas</string>
+    <string name="objectives_previous_button">Ankstesnis</string>
     <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
     <string name="objectives_button_unstart">Išvalyti pradėtus</string>
 </resources>

@@ -6,10 +6,10 @@ import info.nightscout.core.extensions.valueToUnits
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.database.ValueWrapper
-import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
+import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Profile
@@ -107,7 +107,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
 
     fun isActive(): Boolean = time.secondsFromMidnight() >= validFrom() && time.secondsFromMidnight() <= validTo() && forDevice(DEVICE_PHONE)
 
-    fun doCalc(profile: Profile, profileName: String, lastBG: GlucoseValue, _synchronized: Boolean): BolusWizard {
+    fun doCalc(profile: Profile, profileName: String, lastBG: InMemoryGlucoseValue): BolusWizard {
         val dbRecord = persistenceLayer.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         val tempTarget = if (dbRecord is ValueWrapper.Existing) dbRecord.value else null
         //BG
@@ -117,7 +117,7 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
         }
         // COB
         val cob =
-            if (useCOB() == YES) iobCobCalculator.getCobInfo(_synchronized, "QuickWizard COB").displayCob ?: 0.0
+            if (useCOB() == YES) iobCobCalculator.getCobInfo("QuickWizard COB").displayCob ?: 0.0
             else 0.0
         // Bolus IOB
         var bolusIOB = false

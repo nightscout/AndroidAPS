@@ -24,7 +24,7 @@ class ProfileElement(ps: EffectiveProfileSwitch, serialNumber: String, dateUtil:
     @Expose
     internal var insulinSensitivities: IsfProfile = IsfProfile()
     @Expose
-    internal var deviceId: String = TidepoolUploader.PUMP_TYPE + ":" + serialNumber
+    internal var deviceId: String? = TidepoolUploader.PUMP_TYPE + ":" + serialNumber
     @Expose
     internal var deviceSerialNumber: String = serialNumber
     @Expose
@@ -35,15 +35,21 @@ class ProfileElement(ps: EffectiveProfileSwitch, serialNumber: String, dateUtil:
     init {
         type = "pumpSettings"
         val profile: Profile = ProfileSealed.EPS(ps)
-        checkNotNull(profile)
-        for (br in profile.getBasalValues())
-            basalSchedules.Normal.add(BasalRate(br.timeAsSeconds * 1000, br.value))
-        for (target in profile.getSingleTargetsMgdl())
-            bgTargets.Normal.add(Target(target.timeAsSeconds * 1000, target.value))
-        for (ic in profile.getIcsValues())
-            carbRatios.Normal.add(Ratio(ic.timeAsSeconds * 1000, ic.value))
-        for (isf in profile.getIsfsMgdlValues())
-            insulinSensitivities.Normal.add(Ratio(isf.timeAsSeconds * 1000, isf.value))
+        // for (br in profile.getBasalValues())
+        //     basalSchedules.Normal.add(BasalRate(br.timeAsSeconds * 1000, br.value))
+        // for (target in profile.getSingleTargetsMgdl())
+        //     bgTargets.Normal.add(Target(target.timeAsSeconds * 1000, target.value.toInt()))
+        // for (ic in profile.getIcsValues())
+        //     carbRatios.Normal.add(Ratio(ic.timeAsSeconds * 1000, ic.value.toInt()))
+        // for (isf in profile.getIsfsMgdlValues())
+        //     insulinSensitivities.Normal.add(Ratio(isf.timeAsSeconds * 1000, isf.value.toInt()))
+        for (hour in 0..23) {
+            val seconds = hour * 3600
+            basalSchedules.Normal.add(BasalRate(seconds * 1000, profile.getBasalTimeFromMidnight(seconds)))
+            bgTargets.Normal.add(Target(seconds * 1000, Profile.toMgdl((((profile.getTargetLowMgdlTimeFromMidnight(seconds) + profile.getTargetLowMgdlTimeFromMidnight(seconds))) / 2)).toInt()))
+            carbRatios.Normal.add(Ratio(seconds * 1000, profile.getIcTimeFromMidnight(seconds).toInt()))
+            insulinSensitivities.Normal.add(Ratio(seconds * 1000, profile.getIsfMgdlTimeFromMidnight(seconds).toInt()))
+        }
     }
 
     inner class BasalProfile internal constructor(
@@ -74,7 +80,7 @@ class ProfileElement(ps: EffectiveProfileSwitch, serialNumber: String, dateUtil:
             @field:Expose
             internal var start: Int,
             @field:Expose
-            internal var target: Double
+            internal var target: Int
     )
 
     inner class IcProfile internal constructor(
@@ -91,6 +97,6 @@ class ProfileElement(ps: EffectiveProfileSwitch, serialNumber: String, dateUtil:
             @field:Expose
             internal var start: Int,
             @field:Expose
-            internal var amount: Double
+            internal var amount: Int
     )
 }

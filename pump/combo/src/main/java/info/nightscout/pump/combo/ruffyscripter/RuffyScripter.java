@@ -375,7 +375,7 @@ public class RuffyScripter implements RuffyCommands {
                     try {
                         // let command thread finish updating activeCmd var
                         cmdThread.join(1000);
-                    } catch (InterruptedException e) {
+                    } catch (InterruptedException ignored) {
                         // ignore
                     }
                 }
@@ -855,7 +855,7 @@ public class RuffyScripter implements RuffyCommands {
     public String getMacAddress() {
         try {
             return ruffyService.getMacAddress();
-        } catch (RemoteException e) {
+        } catch (RemoteException ignored) {
             // ignore; ruffy version is probably old and doesn't support reading MAC address yet
             return null;
         }

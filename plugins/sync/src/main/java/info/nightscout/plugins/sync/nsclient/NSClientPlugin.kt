@@ -4,10 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
-import android.os.Handler
-import android.os.HandlerThread
 import android.os.IBinder
-import android.text.Spanned
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.PreferenceScreen
 import androidx.preference.SwitchPreference
@@ -17,6 +14,7 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.nsclient.NSAlarm
+import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -24,24 +22,21 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.source.DoingOwnUploadSource
 import info.nightscout.interfaces.sync.DataSyncSelector
+import info.nightscout.interfaces.sync.DataSyncSelectorV1
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.utils.HtmlHelper.fromHtml
 import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.nsShared.NSClientFragment
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientResend
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
-import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGUI
+import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiData
+import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
 import info.nightscout.plugins.sync.nsclient.data.AlarmAck
 import info.nightscout.plugins.sync.nsclient.extensions.toJson
 import info.nightscout.plugins.sync.nsclient.services.NSClientService
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
-import info.nightscout.rx.events.EventChargingState
 import info.nightscout.rx.events.EventNSClientNewLog
-import info.nightscout.rx.events.EventNetworkChange
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventSWSyncStatus
 import info.nightscout.rx.logging.AAPSLogger
@@ -64,13 +59,13 @@ class NSClientPlugin @Inject constructor(
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val sp: SP,
-    private val nsClientReceiverDelegate: NsClientReceiverDelegate,
+    private val receiverDelegate: ReceiverDelegate,
     private val config: Config,
-    private val dataSyncSelector: DataSyncSelector,
-    private val uiInteraction: UiInteraction,
+    private val dataSyncSelectorV1: DataSyncSelectorV1,
     private val activePlugin: ActivePlugin,
     private val dateUtil: DateUtil,
-    private val profileFunction: ProfileFunction
+    private val profileFunction: ProfileFunction,
+    private val nsSettingsStatus: NSSettingsStatus
 ) : NsClient, Sync, PluginBase(
     PluginDescription()
         .mainType(PluginType.SYNC)
@@ -84,36 +79,28 @@ class NSClientPlugin @Inject constructor(
 ) {
 
     private val disposable = CompositeDisposable()
-    private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
-    private val listLog: MutableList<EventNSClientNewLog> = ArrayList()
+    override val listLog: MutableList<EventNSClientNewLog> = ArrayList()
+    override val dataSyncSelector: DataSyncSelector get() = dataSyncSelectorV1
     override var status = ""
     var nsClientService: NSClientService? = null
     val isAllowed: Boolean
-        get() = nsClientReceiverDelegate.allowed
+        get() = receiverDelegate.allowed
     val blockingReason: String
-        get() = nsClientReceiverDelegate.blockingReason
+        get() = receiverDelegate.blockingReason
 
     override fun onStart() {
         context.bindService(Intent(context, NSClientService::class.java), mConnection, Context.BIND_AUTO_CREATE)
         super.onStart()
-        nsClientReceiverDelegate.grabReceiversState()
+        receiverDelegate.grabReceiversState()
         disposable += rxBus
             .toObservable(EventNSClientStatus::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                               status = event.getStatus(context)
-                               rxBus.send(EventNSClientUpdateGUI())
-                               // Pass to setup wizard
-                               rxBus.send(EventSWSyncStatus(event.getStatus(context)))
+                           status = event.getStatus(context)
+                           rxBus.send(EventNSClientUpdateGuiStatus())
+                           // Pass to setup wizard
+                           rxBus.send(EventSWSyncStatus(event.getStatus(context)))
                        }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventNetworkChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
@@ -125,14 +112,6 @@ class NSClientPlugin @Inject constructor(
                            addToLog(event)
                            aapsLogger.debug(LTag.NSCLIENT, event.action + " " + event.logText)
                        }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventChargingState::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ ev -> nsClientReceiverDelegate.onStatusEvent(ev) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventNSClientResend::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event -> resend(event.reason) }, fabricPrivacy::logException)
     }
 
     override fun onStop() {
@@ -171,35 +150,17 @@ class NSClientPlugin @Inject constructor(
         }
     }
 
-    override fun clearLog() {
-        handler.post {
-            synchronized(listLog) { listLog.clear() }
-            rxBus.send(EventNSClientUpdateGUI())
-        }
-    }
+    override fun detectedNsVersion(): String = nsSettingsStatus.getVersion()
 
     private fun addToLog(ev: EventNSClientNewLog) {
         synchronized(listLog) {
-            listLog.add(ev)
+            listLog.add(0, ev)
             // remove the first line if log is too large
             if (listLog.size >= Constants.MAX_LOG_LINES) {
-                listLog.removeAt(0)
+                listLog.removeAt(listLog.size - 1)
             }
+            rxBus.send(EventNSClientUpdateGuiData())
         }
-        rxBus.send(EventNSClientUpdateGUI())
-    }
-
-    override fun textLog(): Spanned {
-        try {
-            val newTextLog = StringBuilder()
-            synchronized(listLog) {
-                for (log in listLog) newTextLog.append(log.toPreparedHtml())
-            }
-            return fromHtml(newTextLog.toString())
-        } catch (e: OutOfMemoryError) {
-            uiInteraction.showToastAndNotification(context, "Out of memory!\nStop using this phone !!!", info.nightscout.core.ui.R.raw.error)
-        }
-        return fromHtml("")
     }
 
     override fun resend(reason: String) {
@@ -207,12 +168,9 @@ class NSClientPlugin @Inject constructor(
     }
 
     override fun pause(newState: Boolean) {
-        sp.putBoolean(R.string.key_ns_client_paused, newState)
-        rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_client_paused)))
+        sp.putBoolean(R.string.key_ns_paused, newState)
+        rxBus.send(EventPreferenceChange(rh.gs(R.string.key_ns_paused)))
     }
-
-    override val version: NsClient.Version
-        get() = NsClient.Version.V1
 
     override val address: String get() = nsClientService?.nsURL ?: ""
 
@@ -242,7 +200,7 @@ class NSClientPlugin @Inject constructor(
         dataSyncSelector.resetToNextFullSync()
     }
 
-    override fun dbAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+    override suspend fun nsAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String): Boolean {
         when (dataPair) {
             is DataSyncSelector.PairBolus                  -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(true, dateUtil)
@@ -262,9 +220,10 @@ class NSClientPlugin @Inject constructor(
         }?.let { data ->
             nsClientService?.dbAdd(collection, data, dataPair, progress)
         }
+        return true
     }
 
-    override fun dbUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String) {
+    override suspend fun nsUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String): Boolean {
         val id = when (dataPair) {
             is DataSyncSelector.PairBolus                  -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairCarbs                  -> dataPair.value.interfaceIDs.nightscoutId
@@ -297,5 +256,6 @@ class NSClientPlugin @Inject constructor(
         }?.let { data ->
             nsClientService?.dbUpdate(collection, id, data, dataPair, progress)
         }
+        return true
     }
 }

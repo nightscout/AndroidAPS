@@ -11,5 +11,8 @@
     <string name="insulin_peak_time">Wirkungshoch [min]</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
     <string name="dia_too_short">DIA von %1$f ist zu kurz - AAPS nutzt stattdessen %2$f!</string>
+    <string name="fast_acting_insulin_comment">NovoRapid, NovoLog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
 </resources>

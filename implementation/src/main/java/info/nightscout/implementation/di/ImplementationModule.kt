@@ -10,7 +10,6 @@ import info.nightscout.implementation.LocalAlertUtilsImpl
 import info.nightscout.implementation.TranslatorImpl
 import info.nightscout.implementation.TrendCalculatorImpl
 import info.nightscout.implementation.UserEntryLoggerImpl
-import info.nightscout.implementation.XDripBroadcastImpl
 import info.nightscout.implementation.androidNotification.NotificationHolderImpl
 import info.nightscout.implementation.db.PersistenceLayerImpl
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
@@ -40,7 +39,6 @@ import info.nightscout.implementation.userEntry.UserEntryPresentationHelperImpl
 import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.interfaces.Translator
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.logging.LoggerUtils
@@ -105,7 +103,6 @@ abstract class ImplementationModule {
         @Binds fun bindTirCalculatorInterface(tirCalculator: TirCalculatorImpl): TirCalculator
         @Binds fun bindDexcomTirCalculatorInterface(dexcomTirCalculator: DexcomTirCalculatorImpl): DexcomTirCalculator
         @Binds fun bindPumpSyncInterface(pumpSyncImplementation: PumpSyncImplementation): PumpSync
-        @Binds fun bindXDripBroadcastInterface(xDripBroadcastImpl: XDripBroadcastImpl): XDripBroadcast
         @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils
         @Binds fun bindIconsProviderInterface(iconsProvider: IconsProviderImplementation): IconsProvider
         @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolderImpl): NotificationHolder

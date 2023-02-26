@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".sync.nsShared.NSClientFragment">
+    tools:context="info.nightscout.plugins.sync.nsShared.NSClientFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,15 +43,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/paused" />
-
-        <CheckBox
-            android:id="@+id/autoscroll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/ns_client_autoscroll"
-            tools:ignore="RtlHardcoded" />
 
     </LinearLayout>
 
@@ -96,18 +87,14 @@
 
     </LinearLayout>
 
-    <ScrollView
-        android:id="@+id/log_scrollview"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginStart="5dp"
-        android:layout_marginEnd="5dp">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fadeScrollbars="true"
+        android:scrollbarStyle="outsideOverlay"
+        android:scrollbars="vertical">
 
-        <TextView
-            android:id="@+id/log"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:text="" />
-    </ScrollView>
+    </androidx.recyclerview.widget.RecyclerView>
 
 </LinearLayout>

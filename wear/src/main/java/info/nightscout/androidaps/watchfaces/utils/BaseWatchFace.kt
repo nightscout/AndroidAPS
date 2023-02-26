@@ -1,20 +1,16 @@
 @file:Suppress("DEPRECATION")
+
 package info.nightscout.androidaps.watchfaces.utils
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.graphics.*
-import android.os.BatteryManager
 import android.os.Vibrator
 import android.support.wearable.watchface.WatchFaceStyle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.WindowInsets
 import android.view.WindowManager
-import androidx.core.content.ContextCompat
 import androidx.viewbinding.ViewBinding
 import com.ustwo.clockwise.common.WatchFaceTime
 import com.ustwo.clockwise.common.WatchMode
@@ -24,21 +20,20 @@ import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.RawDisplayData
 import info.nightscout.androidaps.events.EventWearPreferenceChange
-import info.nightscout.rx.events.EventWearToMobile
-import info.nightscout.shared.extensions.toVisibility
-import info.nightscout.shared.extensions.toVisibilityKeepSpace
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity
 import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.rx.AapsSchedulers
+import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.rx.weardata.EventData.ActionResendData
+import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibilityKeepSpace
+import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
@@ -60,6 +55,7 @@ abstract class BaseWatchFace : WatchFace() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
+    @Inject lateinit var simpleUi: SimpleUi
 
     private var disposable = CompositeDisposable()
     private val rawData = RawDisplayData()
@@ -69,8 +65,6 @@ abstract class BaseWatchFace : WatchFace() {
     private val treatmentData get() = rawData.treatmentData
     private val graphData get() = rawData.graphData
 
-    // Layout
-    // @LayoutRes abstract fun layoutResource(): Int
     abstract fun inflateLayout(inflater: LayoutInflater): ViewBinding
 
     private val displaySize = Point()
@@ -100,28 +94,17 @@ abstract class BaseWatchFace : WatchFace() {
     private var specW = 0
     private var specH = 0
     var forceSquareCanvas = false // Set to true by the Steampunk watch face.
-    private var batteryReceiver: BroadcastReceiver? = null
-    private var colorDarkHigh = 0
-    private var colorDarkMid = 0
-    private var colorDarkLow = 0
-    private var mBackgroundPaint = Paint()
 
-    private lateinit var mTimePaint: Paint
-    private lateinit var mSvgPaint: Paint
-    private lateinit var mDirectionPaint: Paint
     private lateinit var binding: WatchfaceViewAdapter
 
     private var mLastSvg = ""
     private var mLastDirection = ""
-    private var mYOffset = 0f
 
     override fun onCreate() {
         // Not derived from DaggerService, do injection here
         AndroidInjection.inject(this)
         super.onCreate()
-        colorDarkHigh = ContextCompat.getColor(this, R.color.dark_highColor)
-        colorDarkMid = ContextCompat.getColor(this, R.color.dark_midColor)
-        colorDarkLow = ContextCompat.getColor(this, R.color.dark_lowColor)
+        simpleUi.onCreate(::forceUpdate)
         @Suppress("DEPRECATION")
         (getSystemService(WINDOW_SERVICE) as WindowManager).defaultDisplay.getSize(displaySize)
         specW = View.MeasureSpec.makeMeasureSpec(displaySize.x, View.MeasureSpec.EXACTLY)
@@ -130,7 +113,7 @@ abstract class BaseWatchFace : WatchFace() {
             .toObservable(EventWearPreferenceChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe { event: EventWearPreferenceChange ->
-                setupBatteryReceiver()
+                simpleUi.updatePreferences()
                 if (event.changedKey != null && event.changedKey == "delta_granularity") rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace:onSharedPreferenceChanged")))
                 if (layoutSet) setDataFields()
                 invalidate()
@@ -141,7 +124,7 @@ abstract class BaseWatchFace : WatchFace() {
             .subscribe {
                 // this event is received as last batch of data
                 rawData.updateFromPersistence(persistence)
-                if (!isSimpleUi || !needUpdate()) {
+                if (!simpleUi.isEnabled(currentWatchMode) || !needUpdate()) {
                     setupCharts()
                     setDataFields()
                 }
@@ -149,8 +132,6 @@ abstract class BaseWatchFace : WatchFace() {
             }
         rawData.updateFromPersistence(persistence)
         persistence.turnOff()
-        setupBatteryReceiver()
-        setupSimpleUi()
 
         val inflater = (getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater)
         val bindLayout = inflateLayout(inflater)
@@ -158,6 +139,11 @@ abstract class BaseWatchFace : WatchFace() {
         layoutView = binding.root
         performViewSetup()
         rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace::onCreate")))
+    }
+
+    private fun forceUpdate() {
+        setDataFields()
+        invalidate()
     }
 
     override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
@@ -209,45 +195,6 @@ abstract class BaseWatchFace : WatchFace() {
         return WatchFaceStyle.Builder(this).setAcceptsTapEvents(true).build()
     }
 
-    private fun setupBatteryReceiver() {
-        val setting = sp.getString(R.string.key_simplify_ui, "off")
-        if ((setting == "charging" || setting == "ambient_charging") && batteryReceiver == null) {
-            val intentBatteryFilter = IntentFilter()
-            intentBatteryFilter.addAction(BatteryManager.ACTION_CHARGING)
-            intentBatteryFilter.addAction(BatteryManager.ACTION_DISCHARGING)
-            batteryReceiver = object : BroadcastReceiver() {
-                override fun onReceive(context: Context, intent: Intent) {
-                    setDataFields()
-                    invalidate()
-                }
-            }
-            registerReceiver(batteryReceiver, intentBatteryFilter)
-        }
-    }
-
-    private fun setupSimpleUi() {
-        val black = ContextCompat.getColor(this, R.color.black)
-        mBackgroundPaint.color = black
-        val white = ContextCompat.getColor(this, R.color.white)
-        val resources = this.resources
-        val textSizeSvg = resources.getDimension(R.dimen.simple_ui_svg_text_size)
-        val textSizeDirection = resources.getDimension(R.dimen.simple_ui_direction_text_size)
-        val textSizeTime = resources.getDimension(R.dimen.simple_ui_time_text_size)
-        mYOffset = resources.getDimension(R.dimen.simple_ui_y_offset)
-        mSvgPaint = createTextPaint(NORMAL_TYPEFACE, white, textSizeSvg)
-        mDirectionPaint = createTextPaint(BOLD_TYPEFACE, white, textSizeDirection)
-        mTimePaint = createTextPaint(NORMAL_TYPEFACE, white, textSizeTime)
-    }
-
-    private fun createTextPaint(typeface: Typeface, colour: Int, textSize: Float): Paint {
-        val paint = Paint()
-        paint.color = colour
-        paint.typeface = typeface
-        paint.isAntiAlias = true
-        paint.textSize = textSize
-        return paint
-    }
-
     override fun onLayout(shape: WatchShape, screenBounds: Rect, screenInsets: WindowInsets) {
         super.onLayout(shape, screenBounds, screenInsets)
         layoutView?.onApplyWindowInsets(screenInsets)
@@ -280,9 +227,7 @@ abstract class BaseWatchFace : WatchFace() {
 
     override fun onDestroy() {
         disposable.clear()
-        if (batteryReceiver != null) {
-            unregisterReceiver(batteryReceiver)
-        }
+        simpleUi.onDestroy()
         super.onDestroy()
     }
 
@@ -291,8 +236,8 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     override fun onDraw(canvas: Canvas) {
-        if (isSimpleUi) {
-            onDrawSimpleUi(canvas)
+        if (simpleUi.isEnabled(currentWatchMode)) {
+            simpleUi.onDraw(canvas, singleBg)
         } else {
             if (layoutSet) {
                 binding.mainLayout.measure(specW, specH)
@@ -303,50 +248,13 @@ abstract class BaseWatchFace : WatchFace() {
         }
     }
 
-    private fun onDrawSimpleUi(canvas: Canvas) {
-        canvas.drawRect(0f, 0f, displaySize.x.toFloat(), displaySize.y.toFloat(), mBackgroundPaint)
-        val xHalf = displaySize.x / 2f
-        val yThird = displaySize.y / 3f
-        val isOutdated = singleBg.timeStamp > 0 && ageLevel() <= 0
-        mSvgPaint.isStrikeThruText = isOutdated
-        mSvgPaint.color = getBgColour(singleBg.sgvLevel)
-        mDirectionPaint.color = getBgColour(singleBg.sgvLevel)
-        val sSvg = singleBg.sgvString
-        val svgWidth = mSvgPaint.measureText(sSvg)
-        val sDirection = " " + singleBg.slopeArrow + "\uFE0E"
-        val directionWidth = mDirectionPaint.measureText(sDirection)
-        val xSvg = xHalf - (svgWidth + directionWidth) / 2
-        canvas.drawText(sSvg, xSvg, yThird + mYOffset, mSvgPaint)
-        val xDirection = xSvg + svgWidth
-        canvas.drawText(sDirection, xDirection, yThird + mYOffset, mDirectionPaint)
-        val sTime = dateUtil.timeString()
-        val xTime = xHalf - mTimePaint.measureText(sTime) / 2f
-        canvas.drawText(sTime, xTime, yThird * 2f + mYOffset, mTimePaint)
-    }
-
-    private fun getBgColour(level: Long): Int {
-        if (level == 1L) {
-            return colorDarkHigh
-        }
-        return if (level == 0L) {
-            colorDarkMid
-        } else colorDarkLow
-    }
-
     override fun onTimeChanged(oldTime: WatchFaceTime, newTime: WatchFaceTime) {
         if (layoutSet && (newTime.hasHourChanged(oldTime) || newTime.hasMinuteChanged(oldTime))) {
             missedReadingAlert()
             checkVibrateHourly(oldTime, newTime)
-            if (!isSimpleUi) setDataFields()
+            if (!simpleUi.isEnabled(currentWatchMode)) setDataFields()
         }
     }
-
-    private val isCharging: Boolean
-        get() {
-            val mBatteryStatus = this.registerReceiver(null, iFilter)
-            val status = mBatteryStatus?.getIntExtra(BatteryManager.EXTRA_STATUS, -1)
-            return status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL
-        }
 
     @SuppressLint("MissingPermission")
     @Suppress("DEPRECATION")
@@ -384,7 +292,7 @@ abstract class BaseWatchFace : WatchFace() {
         binding.uploaderBattery?.visibility = sp.getBoolean(R.string.key_show_uploader_battery, true).toVisibility()
         binding.uploaderBattery?.text =
             when {
-                binding.AAPSv2 != null                                       -> status.battery + "%"
+                binding.AAPSv2 != null                                 -> status.battery + "%"
                 sp.getBoolean(R.string.key_show_external_status, true) -> "U: ${status.battery}%"
                 else                                                   -> "Uploader: ${status.battery}%"
             }
@@ -416,14 +324,14 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     override fun on24HourFormatChanged(is24HourFormat: Boolean) {
-        if (!isSimpleUi) {
+        if (!simpleUi.isEnabled(currentWatchMode)) {
             setDataFields()
         }
         invalidate()
     }
 
     private fun setDateAndTime() {
-        binding.time?.text = dateUtil.timeString()
+        binding.time?.text = if(binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString()
         binding.hour?.text = dateUtil.hourString()
         binding.minute?.text = dateUtil.minuteString()
         binding.dateTime?.visibility = sp.getBoolean(R.string.key_show_date, false).toVisibility()
@@ -453,29 +361,14 @@ abstract class BaseWatchFace : WatchFace() {
 
     override fun onWatchModeChanged(watchMode: WatchMode) {
         lowResMode = isLowRes(watchMode)
-        if (isSimpleUi) setSimpleUiAntiAlias()
+        if (simpleUi.isEnabled(currentWatchMode)) simpleUi.setAntiAlias(currentWatchMode)
         else setDataFields()
         invalidate()
-    }
-
-    private fun setSimpleUiAntiAlias() {
-        val antiAlias = currentWatchMode == WatchMode.AMBIENT
-        mSvgPaint.isAntiAlias = antiAlias
-        mDirectionPaint.isAntiAlias = antiAlias
-        mTimePaint.isAntiAlias = antiAlias
     }
 
     private fun isLowRes(watchMode: WatchMode): Boolean {
         return watchMode == WatchMode.LOW_BIT || watchMode == WatchMode.LOW_BIT_BURN_IN
     }
-
-    private val isSimpleUi: Boolean
-        get() {
-            val simplify = sp.getString(R.string.key_simplify_ui, "off")
-            return if (simplify == "off") false
-            else if ((simplify == "ambient" || simplify == "ambient_charging") && currentWatchMode == WatchMode.AMBIENT) true
-            else (simplify == "charging" || simplify == "ambient_charging") && isCharging
-        }
 
     protected abstract fun setColorDark()
     protected abstract fun setColorBright()
@@ -489,7 +382,7 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     fun setupCharts() {
-        if (isSimpleUi) {
+        if (simpleUi.isEnabled(currentWatchMode)) {
             return
         }
         if (binding.chart != null && graphData.entries.size > 0) {
@@ -521,9 +414,6 @@ abstract class BaseWatchFace : WatchFace() {
 
     companion object {
 
-        var iFilter = IntentFilter(Intent.ACTION_BATTERY_CHANGED)
-        val NORMAL_TYPEFACE: Typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL)
-        val BOLD_TYPEFACE: Typeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD)
         const val SCREEN_SIZE_SMALL = 280
     }
 }

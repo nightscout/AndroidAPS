@@ -71,19 +71,18 @@ import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.OverviewFragmentBinding
-import info.nightscout.plugins.general.overview.activities.QuickWizardListActivity
 import info.nightscout.plugins.general.overview.graphData.GraphData
 import info.nightscout.plugins.general.overview.notifications.NotificationStore
 import info.nightscout.plugins.general.overview.notifications.events.EventUpdateOverviewNotification
+import info.nightscout.plugins.general.overview.ui.StatusLightHandler
 import info.nightscout.plugins.skins.SkinProvider
-import info.nightscout.plugins.ui.StatusLightHandler
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAcceptOpenLoopChange
+import info.nightscout.rx.events.EventBucketedDataCreated
 import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.rx.events.EventExtendedBolusChange
 import info.nightscout.rx.events.EventMobileToWear
-import info.nightscout.rx.events.EventNewBG
 import info.nightscout.rx.events.EventNewOpenLoopNotification
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventPumpStatusChanged
@@ -99,6 +98,7 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.extensions.runOnUiThread
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibilityKeepSpace
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -275,7 +275,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                            sp.putBoolean(info.nightscout.core.utils.R.string.key_objectiveusescale, true)
                        }, fabricPrivacy::logException)
         disposable += rxBus
-            .toObservable(EventNewBG::class.java)
+            .toObservable(EventBucketedDataCreated::class.java)
             .debounce(1L, TimeUnit.SECONDS)
             .observeOn(aapsSchedulers.io)
             .subscribe({ updateBg() }, fabricPrivacy::logException)
@@ -477,7 +477,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     override fun onLongClick(v: View): Boolean {
         when (v.id) {
             R.id.quick_wizard_button -> {
-                startActivity(Intent(v.context, QuickWizardListActivity::class.java))
+                startActivity(Intent(v.context, uiInteraction.quickWizardListActivity))
                 return true
             }
 
@@ -511,7 +511,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val quickWizardEntry = quickWizard.getActive()
         if (quickWizardEntry != null && actualBg != null && profile != null) {
             binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
-            val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg, true)
+            val wizard = quickWizardEntry.doCalc(profile, profileName, actualBg)
             if (wizard.calculatedTotalInsulin > 0.0 && quickWizardEntry.carbs() > 0.0) {
                 val carbsAfterConstraints = constraintChecker.applyCarbsConstraints(Constraint(quickWizardEntry.carbs())).value()
                 activity?.let {
@@ -539,7 +539,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             _binding ?: return@runOnUiThread
             if (quickWizardEntry != null && lastBG != null && profile != null && pump.isInitialized() && !pump.isSuspended() && !loop.isDisconnected) {
                 binding.buttonsLayout.quickWizardButton.visibility = View.VISIBLE
-                val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG, false)
+                val wizard = quickWizardEntry.doCalc(profile, profileName, lastBG)
                 binding.buttonsLayout.quickWizardButton.text = quickWizardEntry.buttonText() + "\n" + rh.gs(info.nightscout.core.graph.R.string.format_carbs, quickWizardEntry.carbs()) +
                     " " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.calculatedTotalInsulin)
                 if (wizard.calculatedTotalInsulin <= 0) binding.buttonsLayout.quickWizardButton.visibility = View.GONE
@@ -777,19 +777,19 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @SuppressLint("SetTextI18n")
     fun updateBg() {
         val units = profileFunction.getUnits()
-        val lastBg = overviewData.lastBg
-        val lastBgColor = overviewData.lastBgColor(context)
-        val isActualBg = overviewData.isActualBg
+        val lastBg = overviewData.lastBg(iobCobCalculator.ads)
+        val lastBgColor = overviewData.lastBgColor(context, iobCobCalculator.ads)
+        val isActualBg = overviewData.isActualBg(iobCobCalculator.ads)
         val glucoseStatus = glucoseStatusProvider.glucoseStatusData
-        val trendDescription = trendCalculator.getTrendDescription(lastBg)
-        val trendArrow = trendCalculator.getTrendArrow(lastBg)
-        val lastBgDescription = overviewData.lastBgDescription
+        val trendDescription = trendCalculator.getTrendDescription(iobCobCalculator.ads)
+        val trendArrow = trendCalculator.getTrendArrow(iobCobCalculator.ads)
+        val lastBgDescription = overviewData.lastBgDescription(iobCobCalculator.ads)
         runOnUiThread {
             _binding ?: return@runOnUiThread
-            binding.infoLayout.bg.text = lastBg?.valueToUnitsString(units)
-                ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
+            binding.infoLayout.bg.text = lastBg?.valueToUnitsString(units) ?: ""
             binding.infoLayout.bg.setTextColor(lastBgColor)
-            binding.infoLayout.arrow.setImageResource(trendArrow.directionToIcon())
+            trendArrow?.let { binding.infoLayout.arrow.setImageResource(it.directionToIcon()) }
+            binding.infoLayout.arrow.visibility = (trendArrow != null).toVisibilityKeepSpace()
             binding.infoLayout.arrow.setColorFilter(lastBgColor)
             binding.infoLayout.arrow.contentDescription = lastBgDescription + " " + rh.gs(info.nightscout.core.ui.R.string.and) + " " + trendDescription
 
@@ -1008,7 +1008,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         if (menuChartSettings.isEmpty()) return
         graphData.addInRangeArea(overviewData.fromTime, overviewData.endTime, defaultValueHelper.determineLowLine(), defaultValueHelper.determineHighLine())
         graphData.addBgReadings(menuChartSettings[0][OverviewMenus.CharType.PRE.ordinal], context)
-        if (config.isDev()) graphData.addBucketedData()
+        graphData.addBucketedData()
         graphData.addTreatments(context)
         graphData.addEps(context, 0.95)
         if (menuChartSettings[0][OverviewMenus.CharType.TREAT.ordinal])
@@ -1085,21 +1085,22 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     private fun updateCalcProgress() {
         _binding ?: return
-        binding.progressBar.progress = overviewData.calcProgressPct
         binding.progressBar.visibility = (overviewData.calcProgressPct != 100).toVisibility()
+        binding.progressBar.progress = overviewData.calcProgressPct
     }
 
     private fun updateSensitivity() {
         _binding ?: return
-        if (constraintChecker.isAutosensModeEnabled().value() || !(config.NSCLIENT && overviewData.lastAutosensData(iobCobCalculator) == null)) {
+        val lastAutosensData = overviewData.lastAutosensData(iobCobCalculator)
+        if (constraintChecker.isAutosensModeEnabled().value() || !(config.NSCLIENT && lastAutosensData == null)) {
             binding.infoLayout.sensitivityIcon.setImageResource(info.nightscout.core.main.R.drawable.ic_swap_vert_black_48dp_green)
         } else {
             binding.infoLayout.sensitivityIcon.setImageResource(info.nightscout.core.main.R.drawable.ic_x_swap_vert)
         }
 
         binding.infoLayout.sensitivity.text =
-            overviewData.lastAutosensData(iobCobCalculator)?.let { autosensData ->
-                String.format(Locale.ENGLISH, "%.0f%%", autosensData.autosensResult.ratio * 100)
+           lastAutosensData?.let {
+                String.format(Locale.ENGLISH, "%.0f%%", it.autosensResult.ratio * 100)
             } ?: ""
         // Show variable sensitivity
         val profile = profileFunction.getProfile()

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smoothing_shortname">YUMUŞAT</string>
+    <string name="exponential_smoothing_name">Üstel yumuşatma</string>
+    <string name="description_exponential_smoothing">"İkinci dereceden üstel yumuşatma algoritması"</string>
+    <string name="avg_smoothing_name">Ortalama yumuşatma</string>
+    <string name="description_avg_smoothing">"Ortalama yumuşatma algoritması, en yeni değer etkilenmez"</string>
+    <string name="no_smoothing_name">Yumuşatma yok</string>
+    <string name="description_no_smoothing">"Girilen glikoz verilerinde yumuşatma yapılmadı. BYODA G6'dan filtrelenmiş verileriniz olduğunda bunu kullanın."</string>
+</resources>

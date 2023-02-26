@@ -343,7 +343,7 @@ class MedtronicPumpPlugin @Inject constructor(
         var resetTime = false
         if (isPumpNotReachable) {
             aapsLogger.error("Pump unreachable.")
-            medtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable, rh, rxBus)
+            medtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable, rh)
             return
         }
         medtronicUtil.dismissNotification(MedtronicNotificationType.PumpUnreachable, rxBus)
@@ -413,7 +413,7 @@ class MedtronicPumpPlugin @Inject constructor(
         if (isRefresh) {
             if (isPumpNotReachable) {
                 aapsLogger.error(logPrefix + "initializePump::Pump unreachable.")
-                medtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable, rh, rxBus)
+                medtronicUtil.sendNotification(MedtronicNotificationType.PumpUnreachable, rh)
                 setRefreshButtonEnabled(true)
                 return true
             }
@@ -426,7 +426,7 @@ class MedtronicPumpPlugin @Inject constructor(
         } else {
             if (medtronicPumpStatus.medtronicDeviceType !== medtronicUtil.medtronicPumpModel) {
                 aapsLogger.warn(LTag.PUMP, logPrefix + "Configured pump is not the same as one detected.")
-                medtronicUtil.sendNotification(MedtronicNotificationType.PumpTypeNotSame, rh, rxBus)
+                medtronicUtil.sendNotification(MedtronicNotificationType.PumpTypeNotSame, rh)
             }
         }
         pumpState = PumpDriverState.Connected
@@ -578,7 +578,7 @@ class MedtronicPumpPlugin @Inject constructor(
             } else {
                 if (clock.localDeviceTime.year > 2015) {
                     aapsLogger.error(String.format(Locale.ENGLISH, "MedtronicPumpPlugin::checkTimeAndOptionallySetTime - Time difference over 24h requested [diff=%d s]. Doing nothing.", timeDiff))
-                    medtronicUtil.sendNotification(MedtronicNotificationType.TimeChangeOver24h, rh, rxBus)
+                    medtronicUtil.sendNotification(MedtronicNotificationType.TimeChangeOver24h, rh)
                 }
             }
         } else {

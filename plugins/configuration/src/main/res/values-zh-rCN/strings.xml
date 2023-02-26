@@ -34,7 +34,6 @@
     <string name="doprofileswitch">配置文件切换</string>
     <string name="exitwizard">跳过设置向导</string>
     <string name="setupwizard_sensitivity_description">灵敏度插件用于灵敏度检测和碳水化合物计算。有关详细信息, 请访问:</string>
-    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">从可用算法中选择一个。 他们从最旧到最新排序。 较新的算法通常更强大，更冒险。 因此，如果你是新的闭环使用者，你可能会从AMA算法开始，而不是最新的。 不要忘记在使用之前阅读OpenAPS文档并对其进行配置。</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">在下面配置你的RileyLink 。选择RileLink后，一旦RileLink状态为“已连接”，就可以继续安装。这可能需要一分钟。\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>注意：</b>胰岛素泵设置完成后，您可以继续安装。\n</string>

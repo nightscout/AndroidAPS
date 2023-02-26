@@ -155,7 +155,7 @@ class IobCobCalculatorPlugin @Inject constructor(
             overviewData = overviewData,
             reason = reason,
             end = System.currentTimeMillis(),
-            bgDataReload = false,
+            bgDataReload = true,
             cause = event
         )
     }
@@ -292,10 +292,8 @@ class IobCobCalculatorPlugin @Inject constructor(
         return ads.getLastAutosensData(reason, aapsLogger, dateUtil)
     }
 
-    override fun getCobInfo(waitForCalculationFinish: Boolean, reason: String): CobInfo {
-        val autosensData =
-            if (waitForCalculationFinish) getLastAutosensDataWithWaitForCalculationFinish(reason)
-            else ads.getLastAutosensData(reason, aapsLogger, dateUtil)
+    override fun getCobInfo(reason: String): CobInfo {
+        val autosensData = ads.getLastAutosensData(reason, aapsLogger, dateUtil)
         var displayCob: Double? = null
         var futureCarbs = 0.0
         val now = dateUtil.now()
@@ -389,6 +387,10 @@ class IobCobCalculatorPlugin @Inject constructor(
             // cancel waiting task to prevent sending multiple posts
             scheduledHistoryPost?.cancel(false)
             // prepare task for execution in 1 sec
+            scheduledEvent?.let {
+                // set reload bg data if was not set
+                if (!event.reloadBgData) event.reloadBgData = it.reloadBgData
+            }
             scheduledEvent = event
             scheduledHistoryPost = historyWorker.schedule(
                 {

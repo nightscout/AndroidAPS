@@ -3,19 +3,18 @@ package info.nightscout.plugins.sync.nsclient.workers
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
-import info.nightscout.core.extensions.bolusCalculatorResultFromJson
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.XDripBroadcast
-import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
+import info.nightscout.plugins.sync.nsclient.extensions.bolusCalculatorResultFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.bolusFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.carbsFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.effectiveProfileSwitchFromJson
@@ -30,12 +29,13 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class NSClientAddUpdateWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var config: Config
@@ -44,11 +44,9 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var uel: UserEntryLogger
-    @Inject lateinit var xDripBroadcast: XDripBroadcast
     @Inject lateinit var storeDataForDb: StoreDataForDb
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
         val treatments = dataWorkerStorage.pickupJSONArray(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
 
@@ -165,7 +163,6 @@ class NSClientAddUpdateWorker(
         }
         storeDataForDb.storeTreatmentsToDb()
         activePlugin.activeNsClient?.updateLatestTreatmentReceivedIfNewer(latestDateInReceivedData)
-        xDripBroadcast.sendTreatments(treatments)
         return ret
     }
 }

@@ -18,13 +18,14 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import kotlin.math.max
 
 class PrepareTemporaryTargetDataWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.Default) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileFunction: ProfileFunction
@@ -33,15 +34,16 @@ class PrepareTemporaryTargetDataWorker(
     @Inject lateinit var loop: Loop
     @Inject lateinit var rxBus: RxBus
     private var ctx: Context
+
     init {
-        ctx =  rh.getThemedCtx(context)
+        ctx = rh.getThemedCtx(context)
     }
 
     class PrepareTemporaryTargetData(
         val overviewData: OverviewData
     )
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
 
         val data = dataWorkerStorage.pickupObject(inputData.getLong(DataWorkerStorage.STORE_KEY, -1)) as PrepareTemporaryTargetData?
             ?: return Result.failure(workDataOf("Error" to "missing input data"))
@@ -49,13 +51,14 @@ class PrepareTemporaryTargetDataWorker(
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 0, null))
         val profile = profileFunction.getProfile() ?: return Result.success(workDataOf("Error" to "missing profile"))
         val units = profileFunction.getUnits()
-        var toTime = data.overviewData.endTime
+        var endTime = data.overviewData.endTime
+        val fromTime = data.overviewData.fromTime
         val targetsSeriesArray: MutableList<DataPoint> = ArrayList()
         var lastTarget = -1.0
-        loop.lastRun?.constraintsProcessed?.let { toTime = max(it.latestPredictionsTime, toTime) }
-        var time = data.overviewData.fromTime
-        while (time < toTime) {
-            val progress = (time - data.overviewData.fromTime).toDouble() / (data.overviewData.toTime - data.overviewData.fromTime) * 100.0
+        loop.lastRun?.constraintsProcessed?.let { endTime = max(it.latestPredictionsTime, endTime) }
+        var time = fromTime
+        while (time < endTime) {
+            val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, progress.toInt(), null))
             val tt = repository.getTemporaryTargetActiveAt(time).blockingGet()
             val value: Double = if (tt is ValueWrapper.Existing) {
@@ -71,7 +74,7 @@ class PrepareTemporaryTargetDataWorker(
             time += 5 * 60 * 1000L
         }
         // final point
-        targetsSeriesArray.add(DataPoint(toTime.toDouble(), lastTarget))
+        targetsSeriesArray.add(DataPoint(endTime.toDouble(), lastTarget))
         // create series
         data.overviewData.temporaryTargetSeries = LineGraphSeries(Array(targetsSeriesArray.size) { i -> targetsSeriesArray[i] }).also {
             it.isDrawBackground = false

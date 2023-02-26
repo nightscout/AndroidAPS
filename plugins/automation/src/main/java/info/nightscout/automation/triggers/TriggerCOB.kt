@@ -38,7 +38,7 @@ class TriggerCOB(injector: HasAndroidInjector) : Trigger(injector) {
     }
 
     override fun shouldRun(): Boolean {
-        val cobInfo = iobCobCalculator.getCobInfo(false, "AutomationTriggerCOB")
+        val cobInfo = iobCobCalculator.getCobInfo("AutomationTriggerCOB")
         if (cobInfo.displayCob == null) {
             return if (comparator.value === Comparator.Compare.IS_NOT_AVAILABLE) {
                 aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())

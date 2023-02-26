@@ -127,5 +127,7 @@
     <string name="saturday_short">S</string>
     <string name="sunday_short">S</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Tijd om te eten!\nStart de Bolus wizard en doe de berekening opnieuw.</string>
     <string name="time_to_bolus">Tijd om te bolussen!\nVoer de boluswizard uit en maak de berekening opnieuw.</string>
+    <string name="error_setting_reminder">Fout bij het instellen van een toekomstig alarm</string>
 </resources>

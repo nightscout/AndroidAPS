@@ -31,7 +31,7 @@ class PersistenceLayerImpl @Inject constructor(
 
     private val disposable = CompositeDisposable()
     override fun clearDatabases() = repository.clearDatabases()
-    override fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String = cleanupDatabase(keepDays, deleteTrackedChanges)
+    override fun cleanupDatabase(keepDays: Long, deleteTrackedChanges: Boolean): String = repository.cleanupDatabase(keepDays, deleteTrackedChanges)
 
     override fun insertOrUpdate(bolusCalculatorResult: BolusCalculatorResult) {
         disposable += repository.runTransactionForResult(InsertOrUpdateBolusCalculatorResultTransaction(bolusCalculatorResult))

@@ -15,6 +15,7 @@ import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.gson.Gson
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.extensions.iobCalc
 import info.nightscout.core.ui.dialogs.OKDialog
@@ -292,7 +293,9 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                     val mealLinkLoaded = it.tag as MealLink? ?: return@setOnClickListener
                     mealLinkLoaded.bolusCalculatorResult?.let { bolusCalculatorResult ->
                         WizardInfoDialog().also { wizardDialog ->
-                            wizardDialog.setData(bolusCalculatorResult)
+                            wizardDialog.arguments = Bundle().also { bundle ->
+                                bundle.putString("data", Gson().toJson(bolusCalculatorResult).toString())
+                            }
                             wizardDialog.show(childFragmentManager, "WizardInfoDialog")
                         }
                     }

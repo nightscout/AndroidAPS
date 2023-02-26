@@ -10,7 +10,6 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -23,6 +22,7 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import java.lang.Math.random
 import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
@@ -37,7 +37,6 @@ class RandomBgPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     private val sp: SP,
     private val repository: AppRepository,
-    private val xDripBroadcast: XDripBroadcast,
     private val virtualPump: VirtualPump,
     private val config: Config
 ) : PluginBase(
@@ -93,7 +92,7 @@ class RandomBgPlugin @Inject constructor(
     }
 
     override fun specialEnableCondition(): Boolean {
-        return isRunningTest() || config.isUnfinishedMode() || virtualPump.isEnabled() && config.isEngineeringMode()
+        return isRunningTest() || virtualPump.isEnabled() && config.isEngineeringMode()
     }
 
     private fun handleNewData() {
@@ -101,7 +100,7 @@ class RandomBgPlugin @Inject constructor(
 
         val cal = GregorianCalendar()
         val currentMinute = cal[Calendar.MINUTE] + (cal[Calendar.HOUR_OF_DAY] % 2) * 60
-        val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / period * 2 * PI)) / 2
+        val bgMgdl = min + ((max - min) + (max - min) * sin(currentMinute / period * 2 * PI)) / 2 + (random() - 0.5) * (max - min) * 0.4
 
         cal[Calendar.MILLISECOND] = 0
         cal[Calendar.SECOND] = 0
@@ -118,7 +117,6 @@ class RandomBgPlugin @Inject constructor(
         disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
             .subscribe({ savedValues ->
                            savedValues.inserted.forEach {
-                               xDripBroadcast.send(it)
                                aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                            }
                        }, { aapsLogger.error(LTag.DATABASE, "Error while saving values from Random plugin", it) }

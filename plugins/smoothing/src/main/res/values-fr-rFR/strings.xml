@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smoothing_shortname">LISSAGE</string>
+    <string name="exponential_smoothing_name">Lissage Exponentiel</string>
+    <string name="description_exponential_smoothing">"Algorithme de lissage exponentiel d'ordre deux"</string>
+    <string name="avg_smoothing_name">Lissage moyen</string>
+    <string name="description_avg_smoothing">"Algorithme de lissage moyen, la dernière valeur n'est pas affectée"</string>
+    <string name="no_smoothing_name">Pas de lissage</string>
+    <string name="description_no_smoothing">"Aucun lissage effectué sur les glycémies d'entrée. Utilisez ceci lorsque vous avez des données déjà filtrés, par exemple avec G6 et BYODA."</string>
+</resources>

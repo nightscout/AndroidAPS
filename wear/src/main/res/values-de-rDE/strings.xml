@@ -176,9 +176,9 @@
     <string name="no_iob_u">--IE</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--IE/h</string>
-    <string name="uploader_na">Uploader: ---%</string>
-    <string name="no_status">S: kein Status</string>
-    <string name="time_stamp_na_min_ago">-- Minuten vorher</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- Min. her</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Kein Loop Status</string>
     <string name="cob_000g">000g</string>
@@ -186,4 +186,11 @@
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">AAPS Schlummeralarm</string>
     <string name="sending_snooze">Sende Schlummern an AAPS</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">w</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="old">alt</string>
+    <string name="old_warning">!alt!</string>
+    <string name="error">!err!</string>
 </resources>

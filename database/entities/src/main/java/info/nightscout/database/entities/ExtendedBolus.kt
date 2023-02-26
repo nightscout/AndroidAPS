@@ -48,7 +48,7 @@ data class ExtendedBolus(
         require(duration > 0)
     }
 
-    private fun contentEqualsTo(other: ExtendedBolus): Boolean =
+    fun contentEqualsTo(other: ExtendedBolus): Boolean =
         isValid == other.isValid &&
             timestamp == other.timestamp &&
             utcOffset == other.utcOffset &&

@@ -129,4 +129,5 @@
     <!--    Reminders-->
     <string name="time_to_eat">Čas k jídlu!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
     <string name="time_to_bolus">Čas na bolus!\nSpusťte Bolusovou kalkulačku a proveďte výpočet znovu.</string>
+    <string name="error_setting_reminder">Chyba při nastavení budoucího budíku</string>
 </resources>

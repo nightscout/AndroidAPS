@@ -14,6 +14,7 @@
     <string name="ns_create_announcements_from_errors_summary">Erstelle Nightscout-Ankündigungen für Fehler-Dialoge und lokale Alarme (auch einsehbar im Careportal unter \"Behandlungen\").</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Nightscout-Benachrichtigungen aus KH-Vorschlags-Alarmen erzeugen</string>
     <string name="description_ns_client">Synchronisiert deine Daten mit Nightscout</string>
+    <string name="description_ns_client_v3">Synchronisiert deine Daten mit Nightscout</string>
     <string name="blocked_by_charging">Blockiert durch Ladeoptionen</string>
     <string name="blocked_by_connectivity">Blockiert durch Verbindungsoptionen</string>
     <string name="unsupported_ns_version">Nicht unterstützte Nightscout-Version</string>
@@ -22,10 +23,11 @@
     <string name="ns_malfunction">NSClient Störung. Ziehe einen Neustart von NS und NSClient in Betracht.</string>
     <!-- NSClient -->
     <string name="no_write_permission">Nightscout-Client hat keine Schreibrechte. Falscher API-Key?</string>
+    <string name="ns_client_v3">NSClientV3</string>
+    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">Nightscout-Client</string>
     <string name="ns_client_short_name">NSCl</string>
     <string name="ns_client_url">URL:</string>
-    <string name="ns_client_autoscroll">Auto-Scrollen</string>
     <string name="restart">Neustart</string>
     <string name="ns_client_internal_title">Nightscout-Client</string>
     <string name="ns_client_url_title">Nightscout-URL</string>
@@ -33,6 +35,9 @@
     <string name="ns_client_secret_title">Nightscout API-Key</string>
     <string name="ns_client_secret_dialog_title">Nightscout API-Key</string>
     <string name="ns_client_secret_dialog_message">Nightscout API-Key eingeben (min. 12 Zeichen)</string>
+    <string name="nsclient_token_title">NS-Zugangstoken</string>
+    <string name="nsclient_token_dialog_title">NS-Zugangstoken</string>
+    <string name="nsclient_token_dialog_message">Zugriffstoken der auf der NS Admin-Seite generiert wurde (min 17 Zeichen)</string>
     <string name="deliver_now">Jetzt abgeben</string>
     <string name="clear_queue">Warteschlange leeren</string>
     <string name="show_queue">Zeige Warteschlange</string>
@@ -69,8 +74,9 @@
     <string name="ns_alarm_stale_data_value_label">Veraltete Daten seit [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Stark veraltete Daten seit [min]</string>
     <string name="ns_log_app_started_event">Logge App-Start in Nightscout</string>
-    <string name="ns_local_broadcasts_title">Aktiviere lokale Broadcasts</string>
     <string name="copy_existing_values">NS-Einstellungen kopieren (falls vorhanden)?</string>
+    <string name="ns_use_ws_title">Mit Websockets verbinden</string>
+    <string name="ns_use_ws_summary">Aktivieren bedeutet: schnellere Updates, Empfang von Alarmen und Ankündigungen und ein höherer Akkuverbrauch ähnlich v1. Alle anderen Uploader zu NS müssen v3-Protokoll verwenden.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Dein Tidepool-Login-Benutzername, normalerweise deine E-Mail-Adresse</string>
     <string name="title_tidepool_username">Login-Benutzername</string>
@@ -90,4 +96,24 @@
     <string name="remove_all">Alle entfernen</string>
     <string name="reset_start">Start zurücksetzen</string>
     <string name="upload_now">Jetzt hochladen</string>
+    <string name="not_connected">Nicht verbunden</string>
+    <string name="read_only">Nur lesen</string>
+    <string name="working">Arbeitet</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Sende Daten an xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Zeige detailliertes IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
+    <string name="xdrip_status_show_bgi_title">Zeige BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Füge BGI zur Statuszeile hinzu</string>
+    <string name="xdrip_status_settings">Erweiterte xDrip+ Statuszeile</string>
+    <string name="disabled_loop">Loop deaktiviert</string>
+    <string name="xdrip_send_status_title">Statuszeile an xDrip+ senden</string>
+    <string name="xdrip_not_installed">xDrip+ nicht installiert</string>
+    <string name="calibration_sent">Kalibrierung an xDrip+ gesendet</string>
+    <string name="xdrip_local_broadcasts_summary">Senden Sie Glukose- und Behandlungsdaten an xDrip+. Datenquelle \"xDrip+ Sync-Follower\" muss ausgewählt werden und die Akzeptanz von Daten muss in den Einstellungen - Inter-App-Einstellungen - Glukose/Behandlung akzeptieren</string>
+    <string name="xdrip_local_broadcasts_title">Aktiviere Broadcasts zu xDrip+.</string>
+    <!--    DataBroadcast-->
 </resources>

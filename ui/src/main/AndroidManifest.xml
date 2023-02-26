@@ -52,9 +52,15 @@
             android:exported="false"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="info.nightscout.configuration.activities.SingleFragmentActivity"
+            android:name="info.nightscout.ui.activities.QuickWizardListActivity"
             android:exported="false"
-            android:theme="@style/AppTheme" />
+            android:theme="@style/AppTheme">
+            <intent-filter>
+                <action android:name="info.nightscout.androidaps.plugins.general.overview.activities.QuickWizardListActivity" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
 
     </application>
 

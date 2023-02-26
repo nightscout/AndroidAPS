@@ -17,70 +17,30 @@ import org.json.JSONObject
 
 interface DataSyncSelector {
 
-    interface DataPair { 
+    interface DataPair {
+
         val value: Any
         val id: Long
     }
-    data class PairTemporaryTarget(override val value: TemporaryTarget, override val id: Long): DataPair
-    data class PairGlucoseValue(override val value: GlucoseValue, override val id: Long): DataPair
-    data class PairTherapyEvent(override val value: TherapyEvent, override val id: Long): DataPair
-    data class PairFood(override val value: Food, override val id: Long): DataPair
-    data class PairBolus(override val value: Bolus, override val id: Long): DataPair
-    data class PairCarbs(override val value: Carbs, override val id: Long): DataPair
-    data class PairBolusCalculatorResult(override val value: BolusCalculatorResult, override val id: Long): DataPair
-    data class PairTemporaryBasal(override val value: TemporaryBasal, override val id: Long): DataPair
-    data class PairExtendedBolus(override val value: ExtendedBolus, override val id: Long): DataPair
-    data class PairProfileSwitch(override val value: ProfileSwitch, override val id: Long): DataPair
-    data class PairEffectiveProfileSwitch(override val value: EffectiveProfileSwitch, override val id: Long): DataPair
-    data class PairOfflineEvent(override val value: OfflineEvent, override val id: Long): DataPair
-    data class PairProfileStore(override val value: JSONObject, override val id: Long): DataPair
-    data class PairDeviceStatus(override val value: DeviceStatus, override val id: Long): DataPair
+
+    data class PairTemporaryTarget(override val value: TemporaryTarget, override val id: Long) : DataPair
+    data class PairGlucoseValue(override val value: GlucoseValue, override val id: Long) : DataPair
+    data class PairTherapyEvent(override val value: TherapyEvent, override val id: Long) : DataPair
+    data class PairFood(override val value: Food, override val id: Long) : DataPair
+    data class PairBolus(override val value: Bolus, override val id: Long) : DataPair
+    data class PairCarbs(override val value: Carbs, override val id: Long) : DataPair
+    data class PairBolusCalculatorResult(override val value: BolusCalculatorResult, override val id: Long) : DataPair
+    data class PairTemporaryBasal(override val value: TemporaryBasal, override val id: Long) : DataPair
+    data class PairExtendedBolus(override val value: ExtendedBolus, override val id: Long) : DataPair
+    data class PairProfileSwitch(override val value: ProfileSwitch, override val id: Long) : DataPair
+    data class PairEffectiveProfileSwitch(override val value: EffectiveProfileSwitch, override val id: Long) : DataPair
+    data class PairOfflineEvent(override val value: OfflineEvent, override val id: Long) : DataPair
+    data class PairProfileStore(override val value: JSONObject, override val id: Long) : DataPair
+    data class PairDeviceStatus(override val value: DeviceStatus, override val id: Long) : DataPair
 
     fun queueSize(): Long
 
-    fun doUpload()
-
     fun resetToNextFullSync()
 
-    fun confirmLastBolusIdIfGreater(lastSynced: Long)
-    fun processChangedBolusesCompat()
-
-    fun confirmLastCarbsIdIfGreater(lastSynced: Long)
-    fun processChangedCarbsCompat()
-
-    fun confirmLastBolusCalculatorResultsIdIfGreater(lastSynced: Long)
-    fun processChangedBolusCalculatorResultsCompat()
-
-    fun confirmLastTempTargetsIdIfGreater(lastSynced: Long)
-    fun processChangedTempTargetsCompat()
-
-    fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long)
-    fun processChangedGlucoseValuesCompat()
-
-    fun confirmLastTherapyEventIdIfGreater(lastSynced: Long)
-    fun processChangedTherapyEventsCompat()
-
-    fun confirmLastFoodIdIfGreater(lastSynced: Long)
-    fun processChangedFoodsCompat()
-
-    fun confirmLastDeviceStatusIdIfGreater(lastSynced: Long)
-    fun processChangedDeviceStatusesCompat()
-
-    fun confirmLastTemporaryBasalIdIfGreater(lastSynced: Long)
-    fun processChangedTemporaryBasalsCompat()
-
-    fun confirmLastExtendedBolusIdIfGreater(lastSynced: Long)
-    fun processChangedExtendedBolusesCompat()
-
-    fun confirmLastProfileSwitchIdIfGreater(lastSynced: Long)
-    fun processChangedProfileSwitchesCompat()
-
-    fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long)
-    fun processChangedEffectiveProfileSwitchesCompat()
-
-    fun confirmLastOfflineEventIdIfGreater(lastSynced: Long)
-    fun processChangedOfflineEventsCompat()
-
-    fun confirmLastProfileStore(lastSynced: Long)
-    fun processChangedProfileStore()
+    suspend fun doUpload()
 }

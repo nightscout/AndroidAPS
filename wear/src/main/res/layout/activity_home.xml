@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".watchfaces.AapsWatchface">
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/secondary_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/sgv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:gravity="bottom"
+            android:textSize="41sp"
+            tools:text="---" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/direction"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                tools:text="--" />
+
+            <TextView
+                android:id="@+id/delta"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                tools:text="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/secondary_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="?android:colorForeground"
+        android:gravity="center_horizontal"
+        android:paddingVertical="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/time">
+
+        <TextView
+            android:id="@+id/timestamp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textColor="?android:textColorPrimaryInverse"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:text="@string/time_stamp_na_min_ago" />
+
+        <TextView
+            android:id="@+id/uploader_battery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10sp"
+            android:paddingEnd="0sp"
+            android:textAlignment="center"
+            android:textColor="?android:textColorPrimaryInverse"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:text="@string/uploader_na" />
+
+        <TextView
+            android:id="@+id/raw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10sp"
+            android:paddingEnd="0sp"
+            android:textAlignment="center"
+            android:textColor="?android:textColorPrimaryInverse"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:text="" />
+
+        <TextView
+            android:id="@+id/status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="10sp"
+            android:paddingEnd="0sp"
+            android:textAlignment="center"
+            android:textColor="?android:textColorPrimaryInverse"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:text="@string/no_status" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|top"
+        android:textAlignment="center"
+
+        android:textSize="35sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="12:00" />
+
+    <lecho.lib.hellocharts.view.LineChartView
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="-5dp"
+        android:paddingBottom="7dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/time" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

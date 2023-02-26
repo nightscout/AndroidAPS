@@ -14,6 +14,7 @@
     <string name="pump_base_basal_rate">%1$.2f E/u</string>
     <string name="pump_not_initialized_profile_not_set">Pomp niet geïnitialiseerd, profiel niet ingesteld!</string>
     <string name="failed_update_basal_profile">Update basaal profiel mislukt</string>
+    <string name="bolus_delivered_successfully">Bolus van %1$.2f E succesvol toegediend</string>
     <string name="no_valid_basal_rate">Geen correcte basale snelheid van pomp kunnen lezen</string>
     <string name="limiting_iob">IOB gelimiteerd tot %1$.1f E doordat %2$s</string>
     <string name="loop_disabled">LOOP UITGESCHAKELD DOOR BEPERKINGEN</string>
@@ -44,8 +45,9 @@
     <string name="mute5min">5 minuten dempen</string>
     <string name="mute">Geluid dempen</string>
     <string name="success">Succes</string>
-    <string name="advancedsettings_title">Geavanceerde instellingen</string>
+    <string name="advanced_settings_title">Geavanceerde instellingen</string>
     <string name="extendedbolusdeliveryerror">Vertraagde bolus toedieningsfout</string>
+    <string name="aps_mode_title">APS modus</string>
     <string name="extended_bolus">Vertraagde bolus</string>
     <string name="paused">Gepauzeerd</string>
     <string name="tdd_total">TDD Totaal</string>
@@ -104,6 +106,7 @@
     <string name="loading">Bezig met laden …</string>
     <string name="notes_label">Notities</string>
     <string name="remove_button">Verwijder</string>
+    <string name="add_new">Nieuwe toevoegen</string>
     <string name="addnew_above">Voeg nieuw hierboven toe</string>
     <string name="wrong_pump_data">Data komt van een andere pomp. Wijzig de pomp driver om de pomp status te resetten.</string>
     <string name="bg_label">BG</string>
@@ -150,6 +153,7 @@
     <string name="treatments_wizard_basaliob_label">Basaal IOB</string>
     <string name="invalid">Ongeldig</string>
     <string name="login">Aanmelden</string>
+    <string name="prime_fill">Prime/Vul</string>
     <string name="overview_insulin_label">Insuline</string>
     <string name="stoptemptarget">Stop tijdelijk doel</string>
     <string name="closedloop">Closed loop</string>
@@ -158,7 +162,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">KH-ratio</string>
     <string name="isf_short">ISF</string>
-    <string name="virtualpump_uploadstatus_title">Upload status naar NS</string>
+    <string name="canceling_tbr_failed">Annuleren van tijdelijke basaal mislukt</string>
+    <string name="canceling_eb_failed">Annuleren van vertraagde bolus is mislukt</string>
+    <string name="virtualpump_uploadstatus_title">Upload status naar NS of Tidepool</string>
     <string name="suspendloop_label">Uitgeschakelde/onderbroken loop</string>
     <string name="iob_label">Insuline aan boord (IOB)</string>
     <!--    Protection-->
@@ -198,6 +204,7 @@
     <string name="careportal_note_message">Notitie : %1$s</string>
     <string name="careportal_question_message">Vraag : %1$s</string>
     <string name="careportal_exercise_message">Bewegen : %1$s</string>
+    <string name="careportal_pump_site_change">Infuus wissel</string>
     <string name="cgm_sensor_insert">CGM Sens. ingebracht</string>
     <string name="careportal_cgmsensorstart">CGM Sens. Start</string>
     <string name="careportal_cgm_sensor_stop">CGM Sensor stoppen</string>
@@ -242,6 +249,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g extra koolhydraten nodig binnen %2$d minuten</string>
     <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">Cumulatieve TDD</string>
     <string name="expweight">Exponentieel gewogen TDD</string>
     <string name="basalrate">Basaal</string>
     <string name="bolus">Bolus</string>
@@ -465,10 +473,17 @@
     <string name="wizard_explain_tt">Tijdelijk Doel: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s tot %2$s</string>
     <string name="wizard_pump_not_available">Geen pomp beschikbaar!</string>
+    <string name="quickwizard">QuickWizard</string>
     <!--    Preferences-->
+    <string name="child">Kind</string>
     <string name="teenage">Tiener</string>
     <string name="adult">Volwassene</string>
+    <string name="resistant_adult">Insuline resistente volwassene</string>
     <string name="pregnant">Zwangerschap</string>
+    <string name="patient_age_summary">Selecteer het type patiënt om de veiligheidslimieten in te stellen</string>
+    <string name="max_bolus_title">Max toegestane bolus [E]</string>
+    <string name="max_carbs_title">Max toegestane koolhydraten [g]</string>
+    <string name="patient_type">Type patiënt</string>
     <!--    Protection-->
     <string name="unlock_settings">Instellingen ontgrendelen</string>
     <!--    Pumps -->
@@ -540,6 +555,10 @@
     <string name="nav_plugin_preferences">Plugin instellingen</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Geen SMS bevoegdheid</string>
+    <!-- About -->
+    <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
+    <string name="fabric_upload_disabled">Upload van crashrapporten is uitgeschakeld!</string>
+    <string name="about_link_urls">\n\nDocumentatie:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dagen</item>
@@ -552,4 +571,8 @@
         <item quantity="one">%1$d minuut</item>
         <item quantity="other">%1$d minuten</item>
     </plurals>
+    <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Wil je de database opschonen?\nHet zal bijgehouden wijzigingen en historische gegevens ouder dan 3 maanden verwijderen.</string>
+    <string name="cleanup_db_confirm_sync">Wil je de database opschonen?\nHet zal bijgehouden wijzigingen en historische gegevens ouder dan 3 maanden verwijderen.\nDit zal de volledige synchronisatie drastisch versnellen.</string>
+    <string name="cleared_entries">Invoer gewist</string>
 </resources>

@@ -4,7 +4,6 @@ import info.nightscout.comboctl.base.BluetoothAddress
 import info.nightscout.comboctl.base.BluetoothDevice
 import info.nightscout.comboctl.base.ComboFrameParser
 import info.nightscout.comboctl.base.ComboIO
-import info.nightscout.comboctl.base.ProgressReporter
 import info.nightscout.comboctl.base.byteArrayListOfInts
 import info.nightscout.comboctl.base.toComboFrame
 import kotlinx.coroutines.CoroutineScope

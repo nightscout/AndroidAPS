@@ -24,7 +24,8 @@ class CgmSourceTransaction constructor(
                 noise = it.noise,
                 trendArrow = it.trendArrow,
                 sourceSensor = it.sourceSensor,
-                isValid = it.isValid
+                isValid = it.isValid,
+                utcOffset = it.utcOffset
             ).also { gv ->
                 gv.interfaceIDs.nightscoutId = it.nightscoutId
             }

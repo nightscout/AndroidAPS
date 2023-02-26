@@ -176,9 +176,9 @@
     <string name="no_iob_u">--ед</string>
     <string name="no_cob_g">--г</string>
     <string name="no_tmp_basal_u_h">-.--ед/ч</string>
-    <string name="uploader_na">Загрузчик: --%</string>
-    <string name="no_status">S: статус отсутствует</string>
-    <string name="time_stamp_na_min_ago">-- Минут назад</string>
+    <string name="uploader_na">Ед: --%</string>
+    <string name="no_status">Сост: --</string>
+    <string name="time_stamp_na_min_ago">-- Мин. назад</string>
     <string name="delta_na">--- мг/дл</string>
     <string name="no_loop_status">Нет статуса</string>
     <string name="cob_000g">000г</string>
@@ -186,4 +186,11 @@
     <string name="iob_0_00u">0,00 ед</string>
     <string name="snooze_alert">Отложить оповещения AAPS</string>
     <string name="sending_snooze">Отправка команды отложить оповещения AAPS</string>
+    <string name="short_hour">ч</string>
+    <string name="week_short">н</string>
+    <string name="day_short">д</string>
+    <string name="hour_short">ч</string>
+    <string name="old">старые</string>
+    <string name="old_warning">!старое!</string>
+    <string name="error">!ошибка!</string>
 </resources>

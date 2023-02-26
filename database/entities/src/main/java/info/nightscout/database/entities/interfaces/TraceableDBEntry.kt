@@ -25,4 +25,15 @@ interface TraceableDBEntry: DBEntry {
         set(value) {
             interfaceIDs_backing = value
         }
+
+    fun interfaceIdsEqualsTo(other: TraceableDBEntry): Boolean =
+        interfaceIDs.nightscoutId == other.interfaceIDs.nightscoutId &&
+            interfaceIDs.nightscoutSystemId == other.interfaceIDs.nightscoutSystemId &&
+            interfaceIDs.pumpType == other.interfaceIDs.pumpType &&
+            interfaceIDs.pumpSerial == other.interfaceIDs.pumpSerial &&
+            interfaceIDs.temporaryId == other.interfaceIDs.temporaryId &&
+            interfaceIDs.pumpId == other.interfaceIDs.pumpId &&
+            interfaceIDs.startId == other.interfaceIDs.startId &&
+            interfaceIDs.endId == other.interfaceIDs.endId
+
 }

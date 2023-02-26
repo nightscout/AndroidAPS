@@ -47,7 +47,7 @@ data class TemporaryBasal(
         require(duration > 0)
     }
 
-    private fun contentEqualsTo(other: TemporaryBasal): Boolean =
+    fun contentEqualsTo(other: TemporaryBasal): Boolean =
         isValid == other.isValid &&
             timestamp == other.timestamp &&
             utcOffset == other.utcOffset &&

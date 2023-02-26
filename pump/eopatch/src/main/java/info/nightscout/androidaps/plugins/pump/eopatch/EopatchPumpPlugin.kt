@@ -14,6 +14,7 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
@@ -27,6 +28,7 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.Round
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -41,9 +43,11 @@ import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.subjects.BehaviorSubject
+import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 import kotlin.math.min
 import kotlin.math.roundToInt
 
@@ -61,7 +65,8 @@ class EopatchPumpPlugin @Inject constructor(
     private val patchManager: IPatchManager,
     private val alarmManager: IAlarmManager,
     private val preferenceManager: IPreferenceManager,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val profileFunction: ProfileFunction
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -102,15 +107,14 @@ class EopatchPumpPlugin @Inject constructor(
                                             alarmManager.init()
                                         }) { throwable: Throwable -> fabricPrivacy.logException(throwable) }
         )
-    }
+        // following was moved from specialEnableCondition()
+        // specialEnableCondition() is called too often to add there executive code
 
-    override fun specialEnableCondition(): Boolean {
         //BG -> FG, restart patch activation and trigger unhandled alarm
         if (preferenceManager.isInitDone()) {
             patchManager.checkActivationProcess()
             alarmManager.restartAll()
         }
-        return super.specialEnableCondition()
     }
 
     override fun onStop() {
@@ -201,20 +205,20 @@ class EopatchPumpPlugin @Inject constructor(
                                    }, {
                                        result.onNext(false)
                                    })
-                )
+            )
 
-                do {
-                    SystemClock.sleep(100)
-                } while (isSuccess == null)
+            do {
+                SystemClock.sleep(100)
+            } while (isSuccess == null)
 
-                disposable.dispose()
-                aapsLogger.info(LTag.PUMP, "Basal Profile was set: ${isSuccess ?: false}")
-                if (isSuccess == true) {
-                    uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
-                    return PumpEnactResult(injector).success(true).enacted(true)
-                } else {
-                    return PumpEnactResult(injector)
-                }
+            disposable.dispose()
+            aapsLogger.info(LTag.PUMP, "Basal Profile was set: ${isSuccess ?: false}")
+            return if (isSuccess == true) {
+                uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
+                PumpEnactResult(injector).success(true).enacted(true)
+            } else {
+                PumpEnactResult(injector)
+            }
         } else {
             preferenceManager.getNormalBasalManager().setNormalBasal(profile)
             preferenceManager.flushNormalBasalManager()
@@ -311,10 +315,10 @@ class EopatchPumpPlugin @Inject constructor(
 
             disposable.dispose()
 
-            return if (isSuccess && askedInsulin == detailedBolusInfo.insulin)
-                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(detailedBolusInfo.insulin)
+            return if (isSuccess && abs(askedInsulin - detailedBolusInfo.insulin) < pumpDescription.bolusStep)
+                PumpEnactResult(injector).success(true).enacted(true).bolusDelivered(askedInsulin)
             else
-                PumpEnactResult(injector).success(false)/*.enacted(false)*/.bolusDelivered(detailedBolusInfo.insulin)
+                PumpEnactResult(injector).success(false)/*.enacted(false)*/.bolusDelivered(Round.roundTo(detailedBolusInfo.insulin, 0.01))
 
         } else {
             // no bolus required
@@ -496,7 +500,43 @@ class EopatchPumpPlugin @Inject constructor(
     }
 
     override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
-        return JSONObject()
+        val now = System.currentTimeMillis()
+        val pumpJson = JSONObject()
+        val battery = JSONObject()
+        val status = JSONObject()
+        val extended = JSONObject()
+        try {
+            battery.put("percent", 100)
+            status.put("status", if (patchManager.patchState.isNormalBasalPaused) "suspended" else "normal")
+            status.put("timestamp", dateUtil.toISOString(lastDataTime()))
+            extended.put("Version", version)
+            val tb = pumpSync.expectedPumpState().temporaryBasal
+            if (tb != null) {
+                extended.put("TempBasalAbsoluteRate", tb.convertedToAbsolute(now, profile))
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.timestamp))
+                extended.put("TempBasalRemaining", tb.plannedRemainingMinutes)
+            }
+            val eb = pumpSync.expectedPumpState().extendedBolus
+            if (eb != null) {
+                extended.put("ExtendedBolusAbsoluteRate", eb.rate)
+                extended.put("ExtendedBolusStart", dateUtil.dateAndTimeString(eb.timestamp))
+                extended.put("ExtendedBolusRemaining", eb.plannedRemainingMinutes)
+            }
+            extended.put("BaseBasalRate", baseBasalRate)
+            try {
+                extended.put("ActiveProfile", profileFunction.getProfileName())
+            } catch (e: Exception) {
+                aapsLogger.error("Unhandled exception", e)
+            }
+            pumpJson.put("battery", battery)
+            pumpJson.put("status", status)
+            pumpJson.put("extended", extended)
+            pumpJson.put("reservoir", patchManager.patchState.remainedInsulin.toInt())
+            pumpJson.put("clock", dateUtil.toISOString(now))
+        } catch (e: JSONException) {
+            aapsLogger.error("Unhandled exception", e)
+        }
+        return pumpJson
     }
 
     override fun manufacturer(): ManufacturerType {

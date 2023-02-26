@@ -20,7 +20,6 @@ import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.impl.transactions.InvalidateGlucoseValueTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -36,6 +35,7 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import info.nightscout.source.activities.RequestDexcomPermissionActivity
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
@@ -83,18 +83,17 @@ class DexcomPlugin @Inject constructor(
     class DexcomWorker(
         context: Context,
         params: WorkerParameters
-    ) : LoggingWorker(context, params) {
+    ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var dexcomPlugin: DexcomPlugin
         @Inject lateinit var sp: SP
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-        @Inject lateinit var xDripBroadcast: XDripBroadcast
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var uel: UserEntryLogger
 
-        override fun doWorkAndLog(): Result {
+        override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
 
             if (!dexcomPlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
@@ -184,11 +183,9 @@ class DexcomPlugin @Inject constructor(
                                     }
                                 }
                             }
-                            xDripBroadcast.send(result.inserted[i])
                             aapsLogger.debug(LTag.DATABASE, "Inserted bg ${result.inserted[i]}")
                         }
                         result.updated.forEach {
-                            xDripBroadcast.send(it)
                             aapsLogger.debug(LTag.DATABASE, "Updated bg $it")
                         }
                         result.sensorInsertionsInserted.forEach {
@@ -243,7 +240,8 @@ class DexcomPlugin @Inject constructor(
             "com.dexcom.cgm.region1.mgdl", "com.dexcom.cgm.region1.mmol",
             "com.dexcom.cgm.region2.mgdl", "com.dexcom.cgm.region2.mmol",
             "com.dexcom.g6.region1.mmol", "com.dexcom.g6.region2.mgdl",
-            "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol", "com.dexcom.g6"
+            "com.dexcom.g6.region3.mgdl", "com.dexcom.g6.region3.mmol",
+            "com.dexcom.g6", "com.dexcom.g7"
         )
         const val PERMISSION = "com.dexcom.cgm.EXTERNAL_PERMISSION"
     }

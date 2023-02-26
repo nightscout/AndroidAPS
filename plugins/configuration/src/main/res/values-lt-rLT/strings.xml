@@ -20,10 +20,12 @@
     <string name="need_location_permission">Programai reikia vietos nustatymo leidimo, kad būtų galima naudoti Bluetooth ir WiFi</string>
     <string name="need_storage_permission">Aplikacijai reikia leidimo prieigai prie saugyklos, kad galėtų išsaugoti žurnalo įrašus ir eksportavimo nustatymus</string>
     <string name="askforpermission">Prašyti leidimo</string>
+    <string name="need_whitelisting">%1$s įtraukite į baterijos neoptimizavimo sąrašą tinkamam veikimui užtikrinti</string>
     <string name="storedsettingsfound">Rasti išsaugoti nustatymai</string>
     <string name="master_password_summary">Pagrindinis slaptažodis naudojamas atsarginiam šifravimui ir programos saugumo ignoravimui. Atsiminkite jį arba laikykite užsirašę saugioje vietoje.</string>
     <string name="current_master_password">Dabartinis pagrindinis slaptažodis</string>
     <string name="common_values">Naudokite gausiausio patiekalo, kurį paprastai valgote, reikšmes\n</string>
+    <string name="syncinfotext">Sinchronizuokite duomenis debesyje. Jūs galite kol kas praleisti šį veiksmą, bet negalėsite baigti mokymosi programos, kol nenustatysite duomenų perdavimo į Nightscout arba Tidepool.</string>
     <string name="status">Statusas:</string>
     <string name="patient_name">Paciento vardas</string>
     <string name="patient_name_summary">Pateikite paciento vardą arba slapyvardį, kad galima būtų atskirti tarp skirtingų konfigūracijų.</string>
@@ -33,12 +35,13 @@
     <string name="profile">Profilis</string>
     <string name="doprofileswitch">Profilio keitimas</string>
     <string name="exitwizard">Praleisti sąrankos vedlį</string>
+    <string name="setupwizard_loop_description">Paspauskite mygtuką žemiau, norėdami leisti AndroidAPS patarti/atlikti bazės pakeitimus</string>
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
-    <string name="setupwizard_sensitivity_url">https://androidaps.readthedocs.io/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Sukonfigūruokite RileyLink žemiau. Pasirinkę RileyLink, galėsite tęsti diegimą, kai tik RileyLink būsena bus „Prisijungta“. Tai gali užtrukti minutę.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galite tęsti, kai tik inicijuojama pompa.\n</string>
-    <string name="startobjective">Pradėti jūsų pirmąjį tikslą</string>
+    <string name="startobjective">Pradėti Jūsų pirmąjį tikslą</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink statusas:</string>
     <string name="readstatus">Statuso nuskaitymas</string>
     <string name="data_choices">Duomenų pasirinkimas</string>
@@ -49,24 +52,35 @@
     <string name="request">Užklausa</string>
     <string name="apsmode_title">DKS režimas</string>
     <string name="setupwizard_preferred_aps_mode">Pageidaujamas DKS režimas</string>
+    <string name="error_asking_for_permissions">Leidimo užklausos klaida</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Šis įrenginys nepalaiko baterijos optimizavimo išimčių - galite patirti veikimo nesklandumų.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfigūracija</string>
     <string name="configbuilder_pump">Pompa</string>
+    <string name="configbuilder_pump_description">Kokią pompą naudosite su AAPS?</string>
     <string name="configbuilder_profile">Profilis</string>
+    <string name="configbuilder_profile_description">Kurį profilį naudos AAPS?</string>
     <string name="configbuilder_aps">DKS</string>
     <string name="configbuilder_aps_description">Kuris DKS algoritmas turėtų koreguoti terapiją?</string>
     <string name="configbuilder_general">Bendrieji</string>
     <string name="configbuilder_general_description">Bendrieji įskiepiai, kurie gali praversti.</string>
     <string name="configbuilder_sync">Sinchronizacija</string>
+    <string name="configbuilder_sync_description">Duomenų įkėlimo ir sinchronizavimo įskiepiai.</string>
     <string name="configbuilder_constraints_description">Kokie apribojimai taikomi?</string>
     <string name="configbuilder_loop">Ciklas</string>
+    <string name="configbuilder_loop_description">Naudokite, norėdami aktyvuoti AAPS ciklą.</string>
     <string name="configbuilder_insulin_description">Kokio tipo insuliną naudojate?</string>
     <string name="configbuilder_bgsource">Glikemijos šaltinis</string>
+    <string name="configbuilder_bgsource_description">Iš kur AAPS gaus duomenis?</string>
+    <string name="configbuilder_smoothing">Glodinimas</string>
+    <string name="configbuilder_smoothing_description">Pasirinkite glodinimo algoritmą</string>
     <string name="configbuilder_sensitivity">Jautrumo nustatymas</string>
     <string name="configbuilder_sensitivity_description">Kurį jautrumo nustatymo algoritmą naudoti?</string>
     <string name="config_builder_shortname">KONF</string>
     <string name="description_config_builder">Naudojama aktyvių įskiepių konfigūravimui</string>
+    <string name="allow_hardware_pump_text">Dėmesio: jei aktyvuosite ir prijungsite realią pompą, AAPS nukopijuos bazės nustatymus iš profilio į pompą, todėl nustatymai pompoje gali pasikeisti. Įsitikinkite, kad bazės nustatymai AAPS yra teisingi. Jei nesate tikri arba nenorite keisti bazės nustatymų jūsų pompoje, paspauskite Atšaukti ir atlikite prijungimą prie pompos vėliau.</string>
+    <string name="a11y_open_settings">atidaryti nustatymus</string>
+    <string name="nsclient_version_does_not_match">AAPSClient ir AAPS versijos nesutampa. Atnaujinkite.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Nustatymai</string>
     <string name="password_preferences_encrypt_prompt">Jūsų paprašys nustatyti slaptažodį, kuris bus naudojamas užšifruojant eksportuojamus nustatymus.</string>
@@ -99,6 +113,7 @@
     <string name="maintenance">Servisas</string>
     <string name="maintenance_shortname">Serv</string>
     <string name="description_maintenance">Pateikia keletą serviso funkcijų (pvz., žurnalo įrašų siuntimas ar ištrynimas).</string>
+    <string name="database_cleanup">Duomenų bazės valymas</string>
     <string name="reset_db_confirm">Ar tikrai norite iš naujo nustatyti duomenų bazę?</string>
     <string name="maintenance_settings">Serviso nustatymai</string>
     <string name="maintenance_email">Gavėjo el. paštas</string>
@@ -109,6 +124,7 @@
     <string name="engineering_mode_enabled">Inžinerinis režimas įjungtas</string>
     <string name="log_files">Žurnalo failai</string>
     <string name="nav_logsettings">Įrašų nustatymai</string>
+    <string name="miscellaneous">Kita</string>
     <string name="nav_resetdb">Iš naujo nustatyti duomenų bazę</string>
     <string name="resettodefaults">Atkurti numatytuosius</string>
     <!-- Maintenance -->
@@ -117,7 +133,7 @@
     <string name="exported_less_than_hour_ago">eksportuota mažiau nei prieš valandą</string>
     <string name="in_directory" comment="placeholder is for exported file path">kataloge: %1$s</string>
     <string name="preferences_import_list_title">Pasirinkite failą importavimui</string>
-    <string name="metadata_warning_different_flavour">Nustatymai sukurti naudojant skirtingą AAPS versiją (%1$s), jūsų turima: %2$s.\n\nKai kurių nustatymų gali trūkti arba jie gali būti neteisingi - po importavimo patikrinkite ir atnaujinkite nustatymus.</string>
+    <string name="metadata_warning_different_flavour">Nustatymai sukurti naudojant skirtingą AAPS versiją (%1$s), Jūsų turima: %2$s.\n\nKai kurių nustatymų gali trūkti arba jie gali būti neteisingi - po importavimo patikrinkite ir atnaujinkite nustatymus.</string>
     <string name="metadata_warning_different_device">Nustatymai buvo sukurti naudojant kitą prietaisą. Viskas gerai, jei importuojante iš senesnio/kito telefono, tačiau įsitikinkite, kad visi importuoti nustatymai yra teisingi!</string>
     <string name="metadata_warning_outdated_format">Jūs naudojate pasenusį formatą iš senos AAPS versijos, kuris nėra saugus! Naudokite tik kraštutiniu atveju, jei neturite nustatymų failo dabartiniu, JSON formatu.</string>
     <string name="metadata_warning_old_export">Importuoti nustatymai yra %1$s d. senumo! Patikrinkite, gal pasirinkote neteisingą failą ir turite naujesnius? Nepamirškite reguliariai eksportuoti nustatymų!</string>
@@ -136,4 +152,5 @@
     <string name="prefdecrypt_issue_wrong_format">Trūksta šifravimo sąrankos parametrų, nustatymų formatas yra neteisingas!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepalaikomas arba nepatikslintas šifravimo algoritmas!</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Prašome perkrauti telefoną arba sistemos nustatymuose iš naujo paleisti AAPS \nkitaip AndroidAPS negalės registruoti prisijungimų (svarbu stebėti ir tikrinti, ar algoritmai veikia tinkamai)!</string>
 </resources>

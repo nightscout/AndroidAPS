@@ -1,20 +1,19 @@
 package info.nightscout.sdk.localmodel.entry
 
 data class NSSgvV3(
-    override val date: Long,
-    override val device: String?,
-    override val identifier: String,
-    override val srvModified: Long,
-    override val srvCreated: Long,
-    override val utcOffset: Long?,
-    override val subject: String?,
-    override var isReadOnly: Boolean,
-    override val isValid: Boolean,
-    val sgv: Double, // TODO: might be Double?
+    var date: Long?,
+    val device: String? = null, // sourceSensor
+    val identifier: String?,
+    val srvModified: Long? = null,
+    val srvCreated: Long? = null,
+    var utcOffset: Long?,
+    val subject: String? = null,
+    var isReadOnly: Boolean = false,
+    val isValid: Boolean,
+    val sgv: Double,
     val units: NsUnits,
-    val direction: Direction,
-    val noise: Int?, // TODO: enum?
+    val direction: Direction?,
+    val noise: Double?,
     val filtered: Double?, // number in doc (I found decimal values in API v1
-    val unfiltered: Double?, // number in doc (I found decimal values in API v1
-    // TODO: add SVG fields
-) : Entry
+    val unfiltered: Double? // number in doc (I found decimal values in API v1
+)

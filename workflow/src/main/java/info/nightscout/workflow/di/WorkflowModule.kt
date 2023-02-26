@@ -14,6 +14,7 @@ import info.nightscout.workflow.PrepareTemporaryTargetDataWorker
 import info.nightscout.workflow.PrepareTreatmentsDataWorker
 import info.nightscout.workflow.UpdateGraphWorker
 import info.nightscout.workflow.UpdateIobCobSensWorker
+import info.nightscout.workflow.UpdateWidgetWorker
 import info.nightscout.workflow.iob.IobCobOref1Worker
 import info.nightscout.workflow.iob.IobCobOrefWorker
 
@@ -34,5 +35,6 @@ abstract class WorkflowModule {
     @ContributesAndroidInjector abstract fun prepareBucketedDataWorkerInjector(): PrepareBucketedDataWorker
     @ContributesAndroidInjector abstract fun loadBgDataWorkerInjector(): LoadBgDataWorker
     @ContributesAndroidInjector abstract fun invokeLoopWorkerInjector(): InvokeLoopWorker
+    @ContributesAndroidInjector abstract fun updateWidgetWorkerInjector(): UpdateWidgetWorker
     @ContributesAndroidInjector abstract fun dummyWorkerInjector(): DummyWorker
 }

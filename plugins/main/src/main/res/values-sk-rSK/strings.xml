@@ -88,6 +88,9 @@
     <string name="smscommunicator_message_body">Neplatný obsah správy</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Odoslať SMS, pokiaľ pumpa nie je dostupná</string>
     <string name="smscommunicator_pump_unreachable">Nahlásiť nedostupnú pumpu</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Ak chcete prepnúť režim okruhu na LGS (Low Glucose Suspend) odpovedzte kódom %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Ak chcete prepnúť režim okruhu na uzavretý okruh, odpovedzte kódom %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Aktuálny režim okruhu: %1$s</string>
     <string name="wrong_format">Chybný formát</string>
     <string name="sms_actual_bg">Glykémia:</string>
     <string name="sms_last_bg">Posledná glykémia:</string>
@@ -101,17 +104,11 @@
     <string name="sms_profile_switch_created">Prepnutie profilu vytvorené</string>
     <string name="sms_wrong_tbr_duration">Trvanie dočasného bazálu musí byť násobkom %1$d minút a musí byť väčšie ako 0.</string>
     <string name="a11y_otp_qr_code">QR kód pre nastavenie jednorázového hesla</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Stavový riadok xDrip+ (hodinky)</string>
-    <string name="xdrip_status_shortname">XDS</string>
-    <string name="description_xdrip_status_line">Zobraz informácie o uzavretom okruhu na xDrip+ watchface.</string>
     <string name="xdrip_status_detailed_iob_title">Zobraziť detailný IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Rozpísať IOB na hodinkách do bolusového a bazálneho</string>
     <string name="disabled_loop">Uzavretý okruh deaktivovaný</string>
     <string name="xdrip_status_show_bgi_title">Zobrazovať BGI</string>
     <string name="xdrip_status_show_bgi_summary">Pridať BGI do stavového riadku</string>
-    <string name="xdrip_status_settings">Stav z xDrip+ (hodinky)</string>
     <!-- Food-->
     <string name="food_short">Jedlo</string>
     <string name="description_food">Zobrazenie prednastavených jedál, definovaných v Nightscoute</string>
@@ -200,15 +197,9 @@
     <string name="a11y_bg_outdated">zastaralé</string>
     <string name="set_basal_question">Povoliť nový dočasný bazál:</string>
     <string name="overview_cgm">CGM</string>
-    <string name="quickwizard">Rýchly bolus</string>
-    <string name="a11y_only_on_watch">iba na hodinkách</string>
-    <string name="a11y_only_on_phone">iba na telefóne</string>
     <string name="overview">Prehľad</string>
     <string name="overview_shortname">PREH</string>
     <string name="description_overview">Zobrazenie aktuálneho stavu vašeho uzavretého okruhu a tlačidlá k najpoužívanejším ovládacím prvkom</string>
-    <string name="overview_editquickwizard_usecob">Výpočet COB</string>
-    <string name="overview_editquickwizard_usetemptarget">Výpočet dočasného cieľa</string>
-    <string name="overview_editquickwizard_usepercentage">Percentuálny výpočet</string>
     <string name="overview_buttons_selection">Tlačidlá</string>
     <string name="show_calibration_button_summary">Odošle kalibráciu do xDripu+, alebo otvorenie kalibračného dialógu BYODA</string>
     <string name="show_cgm_button_summary">Otvorí xDrip+, alebo BYODA, tlačidlom späť sa vrátiš do AndroidAPS</string>
@@ -222,25 +213,6 @@
     <string name="uploader">Uploader</string>
     <string name="data_status">Stav dát glykémie</string>
     <string name="quickwizard_settings">Nastavenie rýchleho bolusu</string>
-    <string name="overview_edit_quickwizard_button_text">Text na tlačidle:</string>
-    <string name="overview_edit_quickwizard_carbs">Sacharidy:</string>
-    <string name="overview_edit_quickwizard_valid">Platnosť:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Pridať</string>
-    <string name="overview_quickwizard_item_edit_button">Upraviť</string>
-    <string name="overview_edit_quickwizard_show_on_device">Zobraziť záznam na zariadení:</string>
-    <string name="overview_edit_quickwizard_use_bg">Výpočet glykémie</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Výpočet bolusového IOB</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Výpočet bazálneho IOB</string>
-    <string name="overview_edit_quickwizard_use_trend">Výpočet trendu</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Výpočet superbolusu</string>
-    <string name="overview_edit_quickwizard_percentage">% zmena</string>
-    <string name="device_all">Všetko</string>
-    <string name="device_phone">Telefón</string>
-    <string name="device_watch">Hodinky</string>
-    <string name="positive_only">Iba kladné</string>
-    <string name="negative_only">Iba záporné</string>
-    <string name="app_default">Predvolené aplikáciou</string>
-    <string name="a11y_drag_and_drop_handle">úchop potiahni a pusť</string>
     <string name="keep_screen_on_title">Nechať obrazovku zapnutú</string>
     <string name="keep_screen_on_summary">Zabrániť Androidu, aby zhasínal obrazovku. Bez pripojenia nabíjačky vybije veľmi rýchlo batériu!</string>
     <string name="treatments">Ošetrenia</string>
@@ -308,7 +280,6 @@
     <string name="buttonson_description">Tlačidlá sú vždy zobrazené v spodnej časti obrazovky</string>
     <string name="largedisplay_description">Veľký displej</string>
     <string name="skin">Vzhľad</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">používanie:</string>
     <!--    Iob-->
     <string name="send_logfiles">Odošlite dnešné súbory protokolov vývojárom spolu s týmto časom. Neočakávaná situácia.</string>
@@ -348,4 +319,30 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>
+    <string name="pump_fetching_data">pokus o načítanie dát z pumpy.</string>
+    <string name="pump_old_data">CDD: Stále staré dáta! Nie je možné načítať z pumpy.</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">h</string>
+    <string name="no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
+    <string name="profile_message">Profil:\n\nPosun času: %1$\nPercento: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fJI %1$.0f%%</string>
+    <string name="no_profile">Nie je vybraný žiadny profil</string>
+    <string name="aps_only">Použiť iba v APS móde!</string>
+    <string name="last_aps_result_na">Posledný výsledok nie je k dispozícii!</string>
+    <string name="loop_status_closed">UZAVRETÝ OKRUH</string>
+    <string name="loop_status_open">OTVORENÝ OKRUH</string>
+    <string name="loop_status_disabled">UZAVRETÝ OKRUH DEAKTIVOVANÝ</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Posledné spustenie</string>
+    <string name="last_enact">Naposledy vykonané</string>
+    <string name="today">Dnes</string>
+    <string name="weighted">vážený</string>
+    <string name="target_only_aps_mode">Ciele sa použijú iba v režime APS!</string>
+    <string name="no_history">Žiadne údaje o histórii!</string>
+    <string name="units_short">J</string>
+    <string name="temp_target">Dočasný cieľ</string>
+    <string name="until">až do</string>
+    <string name="default_range">ŠTANDARDNÝ ROZSAH</string>
+    <string name="target">cieľ</string>
+    <string name="rate_duration">Rýchlosť: %1$.2fJI/h (%2$.2f%%) \nTrvanie %3$d min</string>
 </resources>

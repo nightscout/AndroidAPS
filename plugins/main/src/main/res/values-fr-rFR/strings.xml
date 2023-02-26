@@ -88,6 +88,9 @@
     <string name="smscommunicator_message_body">Message invalide</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Envoyer un SMS si l\'événement Pompe hors de portée est déclenché</string>
     <string name="smscommunicator_pump_unreachable">Signaler Pompe hors de portée</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Afin de basculer du mode Boucle vers AGB (Arrêt pour Glycémie Basse) répondre avec le code %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Afin de basculer en mode Boucle Fermée répondre avec le code %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Mode de boucle actuelle: %1$s</string>
     <string name="wrong_format">Format incorrect</string>
     <string name="sms_actual_bg">Gly:</string>
     <string name="sms_last_bg">Dernière Gly:</string>
@@ -101,17 +104,11 @@
     <string name="sms_profile_switch_created">Changement de profil effectué</string>
     <string name="sms_wrong_tbr_duration">La durée du DBT doit être un multiple de %1$d minutes et supérieure à 0.</string>
     <string name="a11y_otp_qr_code">QR Code pour configurer un mot de passe à usage unique</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">Barre d\'état pour xDrip+ (Montre)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Afficher les informations de votre Boucle sur votre écran de montre xDrip+.</string>
     <string name="xdrip_status_detailed_iob_title">Afficher l\'IA détaillée</string>
     <string name="xdrip_status_detailed_iob_summary">Sur la montre, décomposer l’IA en IA bolus et IA basal</string>
     <string name="disabled_loop">Boucle désactivée</string>
     <string name="xdrip_status_show_bgi_title">Afficher l’Impact Glycémie</string>
     <string name="xdrip_status_show_bgi_summary">Ajouter l’IGly sur la vue générale</string>
-    <string name="xdrip_status_settings">État Xdrip+ (montre)</string>
     <!-- Food-->
     <string name="food_short">Aliments</string>
     <string name="description_food">Affiche les aliments définis par défaut dans Nightscout</string>
@@ -200,15 +197,9 @@
     <string name="a11y_bg_outdated">obsolète</string>
     <string name="set_basal_question">Accepter nouveau basal temp. :</string>
     <string name="overview_cgm">MGC</string>
-    <string name="quickwizard">Assistant Rapide</string>
-    <string name="a11y_only_on_watch">uniquement sur la montre</string>
-    <string name="a11y_only_on_phone">uniquement sur le téléphone</string>
     <string name="overview">Aperçu</string>
     <string name="overview_shortname">ACCUEIL</string>
     <string name="description_overview">Affiche l’état actuel de votre boucle et des boutons d’actions les plus courantes</string>
-    <string name="overview_editquickwizard_usecob">Calcul GA</string>
-    <string name="overview_editquickwizard_usetemptarget">Calcul de la cible temporaire</string>
-    <string name="overview_editquickwizard_usepercentage">Calcul du pourcentage</string>
     <string name="overview_buttons_selection">Boutons</string>
     <string name="show_calibration_button_summary">Envoie un étalonnage à xDrip+ ou ouvre la boîte de dialogue de calibration de BYODA</string>
     <string name="show_cgm_button_summary">Ouvre xDrip+ ou BYODA, le bouton de retour renverra vers AAPS</string>
@@ -222,25 +213,6 @@
     <string name="uploader">Logiciel pour télécharger vers Internet</string>
     <string name="data_status">État des données Gly</string>
     <string name="quickwizard_settings">Paramètres de l\'Assistant Rapide</string>
-    <string name="overview_edit_quickwizard_button_text">Texte du bouton :</string>
-    <string name="overview_edit_quickwizard_carbs">Glucides :</string>
-    <string name="overview_edit_quickwizard_valid">Valide:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Ajouter</string>
-    <string name="overview_quickwizard_item_edit_button">Éditer</string>
-    <string name="overview_edit_quickwizard_show_on_device">Afficher l\'entrée sur l\'appareil :</string>
-    <string name="overview_edit_quickwizard_use_bg">Calcul de Glycémie</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Calcul IA du Bolus</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Calcul IA du Basal</string>
-    <string name="overview_edit_quickwizard_use_trend">Calcul de tendance</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Calcul SuperBolus</string>
-    <string name="overview_edit_quickwizard_percentage">Pourcentage</string>
-    <string name="device_all">Tous</string>
-    <string name="device_phone">Téléphone</string>
-    <string name="device_watch">Montre</string>
-    <string name="positive_only">Positif uniquement</string>
-    <string name="negative_only">Négatif uniquement</string>
-    <string name="app_default">Application par défaut</string>
-    <string name="a11y_drag_and_drop_handle">glissez déposez ici</string>
     <string name="keep_screen_on_title">Garder l\'écran allumé</string>
     <string name="keep_screen_on_summary">Empêcher Android d\'éteindre l\'écran. Ceci consommera beaucoup de batterie lorsque vous n’êtes pas connecté à une prise de courant.</string>
     <string name="treatments">Traitements</string>
@@ -307,7 +279,6 @@
     <string name="buttonson_description">Boutons toujours en bas</string>
     <string name="largedisplay_description">Grand écran</string>
     <string name="skin">Thème</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">utilisation:</string>
     <!--    Iob-->
     <string name="send_logfiles">Envoyer les fichiers journaux d\'aujourd\'hui aux développeurs avec l\'heure actuel. Situation inattendue.</string>
@@ -347,4 +318,30 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
+    <string name="pump_fetching_data">tentative de récupération des données de la pompe.</string>
+    <string name="pump_old_data">DTQ: Données encore anciennes ! Impossible de charger depuis la pompe.</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">h</string>
+    <string name="no_active_profile">Aucun profil actif!</string>
+    <string name="profile_message">Profil :\n\nDécalage: %1$\nPourcentage: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="no_profile">Aucun profil séléctionné</string>
+    <string name="aps_only">S\'applique uniquement en mode APS!</string>
+    <string name="last_aps_result_na">Dernier résultat non disponible!</string>
+    <string name="loop_status_closed">BOUCLE FERMÉE</string>
+    <string name="loop_status_open">BOUCLE OUVERTE</string>
+    <string name="loop_status_disabled">BOUCLE DÉSACTIVÉE</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Dernière exécution</string>
+    <string name="last_enact">Dernière injection</string>
+    <string name="today">Aujourd’hui</string>
+    <string name="weighted">pondération</string>
+    <string name="target_only_aps_mode">Les cibles ne s\'appliquent qu\'en mode APS!</string>
+    <string name="no_history">Aucune donnée d\'historique!</string>
+    <string name="units_short">U</string>
+    <string name="temp_target">Cibles Temp</string>
+    <string name="until">jusqu\'à</string>
+    <string name="default_range">PLAGE PAR DEFAUT</string>
+    <string name="target">cible</string>
+    <string name="rate_duration">Taux: %1$.2fU/h (%2$.2f%%) \nDurée: %3$d% min</string>
 </resources>

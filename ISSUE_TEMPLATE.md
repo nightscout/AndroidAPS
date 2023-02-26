@@ -6,5 +6,5 @@ Reporting bugs
   upper-right corner).
 - Obtain the app's log files, which can be found on the phone in
   _/storage/emulated/0/Android/data/info.nightscout.androidaps/_
-  See https://androidaps.readthedocs.io/en/latest/EN/Usage/Accessing-logfiles.html
+  See https://wiki.aaps.app/en/latest/Usage/Accessing-logfiles.html
 - Open an issue at https://github.com/nightscout/AndroidAPS/issues/new

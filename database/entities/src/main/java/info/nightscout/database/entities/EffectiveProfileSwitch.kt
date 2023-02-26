@@ -49,12 +49,12 @@ data class EffectiveProfileSwitch(
     var originalTimeshift: Long,  // [milliseconds]
     var originalPercentage: Int, // 1 ~ XXX [%]
     var originalDuration: Long, // [milliseconds]
-    var originalEnd: Long,
+    var originalEnd: Long, // not used (calculated from duration)
     @Embedded
     var insulinConfiguration: InsulinConfiguration
 ) : TraceableDBEntry, DBEntryWithTime {
 
-    private fun contentEqualsTo(other: EffectiveProfileSwitch): Boolean =
+    fun contentEqualsTo(other: EffectiveProfileSwitch): Boolean =
         isValid == other.isValid &&
             timestamp == other.timestamp &&
             utcOffset == other.utcOffset &&

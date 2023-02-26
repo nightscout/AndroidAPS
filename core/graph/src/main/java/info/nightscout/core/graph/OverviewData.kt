@@ -16,16 +16,18 @@ import info.nightscout.core.graph.data.ScaledDataPoint
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.interfaces.aps.AutosensData
+import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.iob.CobInfo
+import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.iob.IobTotal
 
 interface OverviewData {
 
     var rangeToDisplay: Int // for graph
-    var toTime: Long
-    var fromTime: Long
-    var endTime: Long
+    var toTime: Long  // current time rounded up to 1 hour
+    var fromTime: Long // toTime - range
+    var endTime: Long // toTime + predictions
 
     fun reset()
     fun initRange()
@@ -45,12 +47,12 @@ interface OverviewData {
      * BG
      */
 
-    val lastBg: GlucoseValue?
-    val isLow: Boolean
-    val isHigh: Boolean
-    @ColorInt fun lastBgColor(context: Context?): Int
-    val lastBgDescription: String
-    val isActualBg: Boolean
+    fun lastBg(autosensDataStore: AutosensDataStore): InMemoryGlucoseValue?
+    fun isLow(autosensDataStore: AutosensDataStore): Boolean
+    fun isHigh(autosensDataStore: AutosensDataStore): Boolean
+    @ColorInt fun lastBgColor(context: Context?, autosensDataStore: AutosensDataStore): Int
+    fun lastBgDescription(autosensDataStore: AutosensDataStore): String
+    fun isActualBg(autosensDataStore: AutosensDataStore): Boolean
     /*
      * TEMPORARY BASAL
      */

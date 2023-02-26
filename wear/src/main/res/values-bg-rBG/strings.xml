@@ -7,9 +7,13 @@
     <string name="label_watchface_big_chart">AAPS(Графика)</string>
     <string name="label_watchface_no_chart">AAPS(без рафика)</string>
     <string name="label_watchface_circle">AAPS(Кръгъл)</string>
+    <string name="label_watchface_v2">AAPS(v2)</string>
     <string name="label_watchface_cockpit">AAPS(Самолет)</string>
     <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
+    <string name="label_actions_tile">AAPS(Действия)</string>
+    <string name="label_temp_target_tile">AAPS(Временна цел)</string>
+    <string name="label_quick_wizard_tile">AAPS(Съветник)</string>
     <string name="label_warning_sync">Няма данни!</string>
     <string name="label_warning_old">Стари данни!</string>
     <string name="label_warning_since">От %1$s</string>
@@ -53,8 +57,10 @@
     <string name="pref_ring_history">История</string>
     <string name="pref_light_ring_history">Олекотена история</string>
     <string name="pref_animations">Анимации</string>
+    <string name="pref_wizard_in_menu">Калкулатор в Менюто</string>
     <string name="pref_prime_in_menu">Пълнене в менюто</string>
     <string name="pref_single_target">Единична цел</string>
+    <string name="pref_wizard_percentage">Калкулатор Процент</string>
     <string name="pref_complication_tap_action">Допълнителни действия при почукване</string>
     <string name="pref_unicode_in_complications">Unicode кодиране</string>
     <string name="pref_version">Версия:</string>
@@ -64,8 +70,10 @@
     <string name="menu_wizard">Калкулатор</string>
     <string name="menu_wizard_short">Калк</string>
     <string name="menu_treatment">Болус</string>
+    <string name="menu_treatment_short">Лечение</string>
     <string name="menu_bolus">Болус</string>
     <string name="menu_carb">въглехидрати</string>
+    <string name="menu_ecarb">уд. въгл.</string>
     <string name="menu_settings">Настройки</string>
     <string name="menu_status">Статус</string>
     <string name="menu_resync">Ре-синхр.</string>
@@ -73,11 +81,21 @@
     <string name="menu_none">Без</string>
     <string name="menu_default">Стандартен</string>
     <string name="menu_menu">Меню</string>
+    <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Продължителност</string>
+    <string name="action_tempt_confirmation">Заявен Временен базал</string>
+    <string name="action_quick_wizard_confirmation">Заявен Съветник</string>
+    <string name="action_treatment_confirmation">Заявена Терапия</string>
+    <string name="action_bolus_confirmation">Заявен Болус</string>
+    <string name="action_wizard_confirmation">Заявено Изчисление</string>
+    <string name="action_fill_confirmation">Заявка за пълнене</string>
+    <string name="action_ecarb_confirmation">Трябват въглехидрати</string>
+    <string name="action_profile_switch_confirmation">Заявка за смяна на профил</string>
     <string name="action_target" comment="In temp target menu, single target value">Целeва КЗ:</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Ниска</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Висока</string>
     <string name="action_carbs">въглехидрати</string>
+    <string name="action_ecarbs">Удължени въглехидрати</string>
     <string name="action_percentage">% от профила</string>
     <string name="action_start_min">Старт [min]</string>
     <string name="action_duration_h">Прод [h]</string>
@@ -121,6 +139,8 @@
     <string name="color_name_white">бяло</string>
     <string name="color_name_black">черно</string>
     <string name="color_name_multicolor">многоцветно</string>
+    <string name="pref_simplify_ui">Опростен интерфейс</string>
+    <string name="pref_simplify_ui_sum">Показвай само време и КЗ</string>
     <string name="pref_vibrate_hourly">Вибрира почасово</string>
     <string name="pref_show_weeknumber">Показване на номер седмица</string>
     <string name="digitalstyle_pref_your_style">Вашият стил:</string>
@@ -136,10 +156,41 @@
     <string name="bolus_progress_channel_description">Прогрес на болуса и отказ</string>
     <string name="bolus_progress_silent_channel_description">Прогрес на болуса и отказ с по-малко вибрации</string>
     <string name="simple_ui_off">Изкл</string>
+    <string name="simple_ui_charging">По време на зареждане</string>
+    <string name="simple_ui_always_on">Режим Постоянно включен</string>
+    <string name="simple_ui_always_on_charging">Винаги включен по време на зареждане</string>
+    <string name="temp_target_eating_soon">Хранене</string>
     <string name="temp_target_hypo">Хипоглекимия</string>
     <string name="temp_target_activity">Физ.активност</string>
     <string name="temp_target_manual">Друго</string>
     <string name="temp_target_cancel">Откажи</string>
     <string name="tile_none">Без</string>
+    <string name="tile_no_config">Няма настройки</string>
+    <string name="wear_control_not_enabled">Управление от часовник изключено</string>
+    <string name="wear_control_no_data">Няма налични данни</string>
+    <string name="increment">Нарастване</string>
+    <string name="decrement">Намаляване</string>
+    <string name="first_char_high">В</string>
+    <string name="first_char_low">Н</string>
+    <string name="abbreviation_average">средно</string>
     <string name="no_iob_u">--Е</string>
+    <string name="no_cob_g">--гр</string>
+    <string name="no_tmp_basal_u_h">-.--Е/ч</string>
+    <string name="uploader_na">Е: --%</string>
+    <string name="no_status">С: --</string>
+    <string name="time_stamp_na_min_ago">-- мин преди</string>
+    <string name="delta_na">--- мг/дл</string>
+    <string name="no_loop_status">Няма наличен статус</string>
+    <string name="cob_000g">000гр</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
+    <string name="iob_0_00u">0,00E</string>
+    <string name="snooze_alert">Приглушаване аларма</string>
+    <string name="sending_snooze">Изпращам заглушаване до AAPS</string>
+    <string name="short_hour">ч</string>
+    <string name="week_short">с</string>
+    <string name="day_short">д</string>
+    <string name="hour_short">ч</string>
+    <string name="old">стар</string>
+    <string name="old_warning">!старо!</string>
+    <string name="error">!err!</string>
 </resources>

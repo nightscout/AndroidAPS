@@ -3,6 +3,7 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">תקשורת SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">שליטה מרחוק על AndroidAPS באמצעות SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">מיישום מאמת עבור: %1$s ואחריו PIN</string>
     <string name="smscommunicator_otp_pin">תוספת PIN חובה בסוף האסימון</string>
     <string name="smscommunicator_otp_pin_summary">ספרות נוספות שיש לשנן ולהדביק בסוף כל אחת מהסיסמאות החד פעמיות</string>
@@ -18,9 +19,11 @@
     <string name="smscommunicator_otp_export_prompt">אתם בטוחים שברצונכם להעתיק את סוד ה-OTP ללוח ההעתקה?\n\nייתכן שתצטרכו לעשות זאת רק אם יישום האימות נתקל בבעיות בסריקת קוד QR, או שברצונכם להכניס אותו ידנית או להגדיר אסימון OTP של חומרה באמצעות יישום ייעודי.</string>
     <string name="smscommunicator_otp_export_successful">סוד OTP (בפורמט Base32) יוצא והועתק אל לוח ההעתקה. הדביקו אותו לתוך תוכנת האימות או בחומרת צריבת OTP!</string>
     <string name="smscommunicator_otp_step1_install_header">1. התקנת מאמת</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. סרקו את הקוד על מנת להגדיר את קודי OTP של AndroidAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. ניסוי סיסמה חד-פעמית</string>
     <string name="smscommunicator_otp_reset_header">איפוס מאמתים</string>
     <string name="smscommunicator_otp_install_info">בכל אחד מהטלפונים העוקבים, התקינו יישום מאמת התומך באסימוני RFC 6238 TOTP. יישומים פופולריים בחינם הם:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">אתחול המאמת הופך את כל המאמתים הקיימים לבלתי חוקיים. יש להגדיר אותם מחדש!</string>
     <string name="sms_wrong_code">קוד שגוי. הפקודה בוטלה.</string>
     <string name="sms_timeout_while_waiting">בהמתנה עד לסיום תקשורת קודמת עם המשאבה</string>
     <string name="smscommunicator_allowednumbers">מספרי טלפון מורשים</string>
@@ -85,6 +88,9 @@
     <string name="smscommunicator_message_body">גוף ההודעה אינו חוקי</string>
     <string name="smscommunicator_report_pump_unreachable_summary">שולח SMS אם מופעל אירוע \"המשאבה אינה נגישה\"</string>
     <string name="smscommunicator_pump_unreachable">דווח שהמשאבה אינה נגישה</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">על מנת להחליף מצב לולאה ל-LGS (השעיית בסוכר נמוך) השיבו עם הקוד %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">על מנת להחליף מצב לולאה ל-לולאה סגורה השב עם הקוד %1$s</string>
+    <string name="smscommunicator_current_loop_mode">מצב לולאה נוכחי: %1$s</string>
     <string name="wrong_format">פורמט שגוי</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">ערכי סוכר אחרונים:</string>
@@ -98,17 +104,11 @@
     <string name="sms_profile_switch_created">נוצרה החלפת פרופיל</string>
     <string name="sms_wrong_tbr_duration">משך הבזאלי הזמני חייב להיות כפולה של %1$d דקות ויותר מ-0.</string>
     <string name="a11y_otp_qr_code">ברקוד QR ליצירת סיסמה חד פעמית</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">שורת מצב xDrip (שעון)</string>
-    <string name="xdrip_status_shortname">xDS</string>
-    <string name="description_xdrip_status_line">הצג מידע אודות הלולאה במסך xDrip בשעון החכם.</string>
     <string name="xdrip_status_detailed_iob_title">הצגת IOB מפורט</string>
     <string name="xdrip_status_detailed_iob_summary">לחלק את ה IOB לבולוס ובזאלי במסך השעון</string>
     <string name="disabled_loop">לולאה כבויה</string>
     <string name="xdrip_status_show_bgi_title">הצג השפעת רמת הסוכר</string>
     <string name="xdrip_status_show_bgi_summary">הוסף השפעת הסוכר לשורת הסטטוס</string>
-    <string name="xdrip_status_settings">מצב xDrip (שעון)</string>
     <!-- Food-->
     <string name="food_short">מזון</string>
     <string name="description_food">מציג את ההגדרות הקבועות מראש עבור מזון המוגדר ב-Nightscout</string>
@@ -174,6 +174,8 @@
     <string name="patch_pump">משאבה ללא צינורית</string>
     <!-- Overview -->
     <string name="show_statuslights">הצגת אורות חיווי במסך הבית</string>
+    <string name="statuslights_cage_warning">סף התראה לתוקף הצינורית [שעות]</string>
+    <string name="statuslights_cage_critical">סף התראה קריטית לתוקף הצינורית [שעות]</string>
     <string name="statuslights_iage_warning">סף התראה לתוקף האינסולין [h]</string>
     <string name="statuslights_iage_critical">סף התראה קריטית לתוקף האינסולין [h]</string>
     <string name="statuslights_sage_warning">סף התראה של תוקף החיישן [h]</string>
@@ -195,15 +197,9 @@
     <string name="a11y_bg_outdated">לא עדכני</string>
     <string name="set_basal_question">אשר בזאלי זמני חדש:</string>
     <string name="overview_cgm">סנסור</string>
-    <string name="quickwizard">אשף מהיר</string>
-    <string name="a11y_only_on_watch">על השעון בלבד</string>
-    <string name="a11y_only_on_phone">על הטלפון בלבד</string>
     <string name="overview">סקירה כללית</string>
     <string name="overview_shortname">בית</string>
     <string name="description_overview">מציג את המצב הנוכחי של הלולאה ולחצני פעולות שימושיות</string>
-    <string name="overview_editquickwizard_usecob">חישוב פחמ\' פעילות</string>
-    <string name="overview_editquickwizard_usetemptarget">חישוב ערך מטרה זמני</string>
-    <string name="overview_editquickwizard_usepercentage">חישוב אחוזים</string>
     <string name="overview_buttons_selection">מקשים</string>
     <string name="show_calibration_button_summary">שולח כיול ל- xDrip או פותח את חלון הכיול של אפליקציית Dexcom</string>
     <string name="show_cgm_button_summary">פותח את xDrip או את דקסקום, לחיצה על אחורה מחזירה ל-AAPS</string>
@@ -217,25 +213,6 @@
     <string name="uploader">מעלה</string>
     <string name="data_status">מצב נתוני הסוכר</string>
     <string name="quickwizard_settings">הגדרות אשף מהיר</string>
-    <string name="overview_edit_quickwizard_button_text">טקסט הלחצן:</string>
-    <string name="overview_edit_quickwizard_carbs">פחמימות:</string>
-    <string name="overview_edit_quickwizard_valid">תקף:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">הוספה</string>
-    <string name="overview_quickwizard_item_edit_button">עריכה</string>
-    <string name="overview_edit_quickwizard_show_on_device">הצג רשומה על המכשיר:</string>
-    <string name="overview_edit_quickwizard_use_bg">חישוב רמת הסוכר</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">חישוב IOB של בולוס</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">חישוב IOB של בזאלי</string>
-    <string name="overview_edit_quickwizard_use_trend">חישוב מגמה</string>
-    <string name="overview_edit_quickwizard_use_superbolus">חישוב סופר בולוס</string>
-    <string name="overview_edit_quickwizard_percentage">אחוזים</string>
-    <string name="device_all">הכול</string>
-    <string name="device_phone">טלפון</string>
-    <string name="device_watch">שעון</string>
-    <string name="positive_only">חיובי בלבד</string>
-    <string name="negative_only">שלילי בלבד</string>
-    <string name="app_default">ברירת המחדל של היישום</string>
-    <string name="a11y_drag_and_drop_handle">ידית גרירה</string>
     <string name="keep_screen_on_title">השאר את המסך דולק</string>
     <string name="keep_screen_on_summary">מניעת כיבוי המסך. הדבר צורך הרבה כח סוללה.</string>
     <string name="treatments">טיפולים</string>
@@ -303,7 +280,6 @@
     <string name="buttonson_description">לחצנים מוצגים תמיד בתחתית המסך</string>
     <string name="largedisplay_description">תצוגה גדולה</string>
     <string name="skin">סקין</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">שימוש:</string>
     <!--    Iob-->
     <string name="send_logfiles">שלח קובצי יומן של היום למפתחים יחד עם זמן זה. מצב לא צפוי.</string>
@@ -311,6 +287,7 @@
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">ניטור ושליטה ב-AndroidAPS באמצעות שעון WearOS.</string>
     <string name="no_watch_connected">(השעון לא מחובר)</string>
+    <string name="pump_status">סטטוס המשאבה</string>
     <string name="loop_status">סטטוס הלולאה</string>
     <string name="wizard_result">מחשבון: %1$s\n אינס\': %2$.2f יח\'\nפחמ\': %3$d גר\'</string>
     <string name="quick_wizard_not_available">האשף המהיר שנבחר אינו זמין, נא לרענן את האריח</string>
@@ -318,6 +295,7 @@
     <string name="wear_action_tempt_preset_error">תצורה לא ידועה של מטרה זמנית: %1$s</string>
     <string name="wear_action_tempt_cancel_message">מבטל ערך מטרה זמני נוכחי</string>
     <string name="wear_action_tempt_unit_error">יחידות המידה שונות בין הטלפון והשעון!</string>
+    <string name="wear_action_tempt_zero_message">Zero-Temp-Target - בוטל, הפעלת ערכי מטרה זמניים?</string>
     <string name="wear_action_tempt_min_bg_error">ערך הסוכר המינימלי מחוץ לטווח!</string>
     <string name="wear_action_tempt_max_bg_error">ערך הסוכר המקסימלי מחוץ לטווח!</string>
     <string name="wear_action_tempt_manual_range_message">ע\' מטרה זמני:\nמינ\': %1$s\nמקס\': %2$s\nמשך: %3$s</string>
@@ -341,4 +319,30 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
+    <string name="pump_fetching_data">מנסה לטעון נתונים מהמשאבה.</string>
+    <string name="pump_old_data">סטטיסטיקות (TDD): נתונים ישנים! לא ניתן לטעון מהמשאבה.</string>
+    <string name="grams_short">גר\'</string>
+    <string name="hour_short">ש\'</string>
+    <string name="no_active_profile">לא הופעלה החלפת פרופיל!</string>
+    <string name="profile_message">פרופיל:\n\nהיסט זמן: %1$\nאחוז: %2$d%\"</string>
+    <string name="tdd_line">%1$.2fיח\' %1$.0f%</string>
+    <string name="no_profile">לא נטען פרופיל</string>
+    <string name="aps_only">חל רק במצב APS!</string>
+    <string name="last_aps_result_na">התוצאה האחרונה לא זמינה!</string>
+    <string name="loop_status_closed">לולאה סגורה</string>
+    <string name="loop_status_open">לולאה פתוחה</string>
+    <string name="loop_status_disabled">לולאה מושבתת</string>
+    <string name="aps">APS</string>
+    <string name="last_run">ההפעלה האחרונה</string>
+    <string name="last_enact">נקבעו לאחרונה</string>
+    <string name="today">היום</string>
+    <string name="weighted">משוקלל</string>
+    <string name="target_only_aps_mode">ערכי מטרה חלים רק במצב APS!</string>
+    <string name="no_history">אין נתוני עבר!</string>
+    <string name="units_short">יח\'</string>
+    <string name="temp_target">ערכי מטרה זמניים</string>
+    <string name="until">עד</string>
+    <string name="default_range">טווח ברירת מחדל</string>
+    <string name="target">מטרה</string>
+    <string name="rate_duration">מינון: %1$.2fיח\'\\ש\' (%2$.2f%) \nל-%3$d דק\'</string>
 </resources>

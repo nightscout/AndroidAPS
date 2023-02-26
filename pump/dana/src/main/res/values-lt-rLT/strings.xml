@@ -61,7 +61,7 @@
     <string name="danar_history_carbohydrates">AV</string>
     <string name="danar_history_dailyinsulin">Paros insulinas</string>
     <string name="danar_history_errors">Klaidos</string>
-    <string name="danar_history_glucose">Gliukozė</string>
+    <string name="danar_history_glucose">Glikemija</string>
     <string name="danar_history_refill">Užpildymas</string>
     <string name="danar_history_syspend">Sustabdyta</string>
     <string name="danar_history_prime">Užpildyti sistemą</string>

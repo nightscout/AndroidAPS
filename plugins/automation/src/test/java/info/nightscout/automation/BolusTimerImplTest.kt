@@ -13,7 +13,7 @@ import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.utils.TimerUtil
+import info.nightscout.automation.ui.TimerUtil
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP

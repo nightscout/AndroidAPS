@@ -97,17 +97,11 @@
     <string name="sms_read_status_failed">상태를 읽지 못했습니다.</string>
     <string name="sms_profile_switch_created">프로파일 변경 생성됨</string>
     <string name="sms_wrong_tbr_duration">TBR 기간은 %1$d분의 배수가 되어야 하고 0보다 커야 함.</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ 상태표시라인 (워치)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">xDrip+ 워치페이스에서 Loop정보 보여주기</string>
     <string name="xdrip_status_detailed_iob_title">IOB 자세하게 보여주기</string>
     <string name="xdrip_status_detailed_iob_summary">워치페이스에 IOB를 Bolus IOB와 Basal IOB로 나누어서 보여줍니다.</string>
     <string name="disabled_loop">Loop 중지됨</string>
     <string name="xdrip_status_show_bgi_title">BGI 보기</string>
     <string name="xdrip_status_show_bgi_summary">BGI를 상태라인에 추가하기</string>
-    <string name="xdrip_status_settings">xDrip+ 상태 (워치)</string>
     <!-- Food-->
     <string name="food_short">음식</string>
     <string name="description_food">Nightscout에서 정의된 음식 설정을 표시합니다.</string>
@@ -172,12 +166,9 @@
     <string name="chart_menu">차트 메뉴</string>
     <string name="set_basal_question">새 임시Basal 적용:</string>
     <string name="overview_cgm">CGM</string>
-    <string name="quickwizard">빠른마법사</string>
     <string name="overview">홈</string>
     <string name="overview_shortname">홈</string>
     <string name="description_overview">현재 Loop 상태와 기본 기능 버튼을 표시합니다.</string>
-    <string name="overview_editquickwizard_usecob">COB 계산</string>
-    <string name="overview_editquickwizard_usetemptarget">임시목표 계산</string>
     <string name="overview_buttons_selection">버튼</string>
     <string name="dexcom_app_not_installed">Dexcom 앱이 설치되지 않았습니다.</string>
     <string name="dexcom_app_not_detected">Dexcom앱을 지원가능한 버전으로 업데이트하세요.</string>
@@ -188,22 +179,6 @@
     <string name="openaps">OpenAPS</string>
     <string name="uploader">업로더</string>
     <string name="quickwizard_settings">빠른마법사 설정</string>
-    <string name="overview_edit_quickwizard_button_text">버튼명:</string>
-    <string name="overview_edit_quickwizard_carbs">탄수화물:</string>
-    <string name="overview_edit_quickwizard_valid">유효기간:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">추가</string>
-    <string name="overview_quickwizard_item_edit_button">수정</string>
-    <string name="overview_edit_quickwizard_use_bg">혈당 계산</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB 계산</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB 계산</string>
-    <string name="overview_edit_quickwizard_use_trend">추세계산</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Superbolus 계산</string>
-    <string name="overview_edit_quickwizard_percentage">퍼센트</string>
-    <string name="device_all">모든</string>
-    <string name="device_phone">핸드폰</string>
-    <string name="device_watch">시계</string>
-    <string name="positive_only">양수만</string>
-    <string name="negative_only">음수만</string>
     <string name="keep_screen_on_title">화면을 켜진 상태로 유지</string>
     <string name="keep_screen_on_summary">안드로이드의 화면이 꺼지는 것을 방지합니다. 전원이 공급되어 있지 않으면 전력소모가 큽니다.</string>
     <string name="treatments">관리</string>
@@ -266,7 +241,6 @@
     <string name="buttonson_description">버튼을 화면 아래 고정하여 보여주기</string>
     <string name="largedisplay_description">큰 화면</string>
     <string name="skin">스킨</string>
-    <!--    DataBroadcast-->
     <string name="cannula_usage">사용:</string>
     <!--    Iob-->
     <string name="send_logfiles">예상치 못한 상황 보고를 위해 오늘의 로그 파일을 개발자에게 전송합니다.</string>

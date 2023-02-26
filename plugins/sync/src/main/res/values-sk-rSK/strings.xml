@@ -28,7 +28,6 @@
     <string name="ns_client">Interný NSClient</string>
     <string name="ns_client_short_name">NSCl</string>
     <string name="ns_client_url">Adresa URL:</string>
-    <string name="ns_client_autoscroll">Automatický posuv</string>
     <string name="restart">Reštart</string>
     <string name="ns_client_internal_title">Interný NSClient</string>
     <string name="ns_client_url_title">Adresa Nightscoutu</string>
@@ -75,9 +74,9 @@
     <string name="ns_alarm_stale_data_value_label">Hraničná hodnota pre zastaralé dáta [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Vysoká hraničná hodnota pre zastaralé dáta [min]</string>
     <string name="ns_log_app_started_event">Zaznamenávať spustenie aplikácie do NS</string>
-    <string name="ns_local_broadcasts">Povoliť vysielanie do iných aplikácií (napr. xDrip+). Nepovoľujte, pokiaľ máte nainštalovanú viac ako jednu AAPS, alebo NSClient inštanciu!</string>
-    <string name="ns_local_broadcasts_title">Povoliť lokálne vysielanie.</string>
     <string name="copy_existing_values">Skopírovať nastavenia NS (ak existujú)?</string>
+    <string name="ns_use_ws_title">Pripojiť k websocketom</string>
+    <string name="ns_use_ws_summary">Povolenie znamená: rýchlejšie aktualizácie, príjem alarmov a oznámení a vyššiu spotrebu batérie podobnú v1. Všetky ostatné aplikácie nahrávajúce do NS musia používať takisto protokol v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Vaše meno používateľa na Tidepoole, obvykle Vaša E-mailová adresa</string>
     <string name="title_tidepool_username">Meno používateľa</string>
@@ -97,4 +96,24 @@
     <string name="remove_all">Odstrániť všetko</string>
     <string name="reset_start">Resetovať štart</string>
     <string name="upload_now">Nahrať teraz</string>
+    <string name="not_connected">Nepripojené</string>
+    <string name="read_only">Iba na čítanie</string>
+    <string name="working">Pracujem</string>
+    <!-- xDrip status line -->
+    <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Posielam dáta do xDripu</string>
+    <string name="xdrip_status_detailed_iob_title">Zobraziť detailný IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Rozpísať IOB na hodinkách do bolusového a bazálneho</string>
+    <string name="xdrip_status_show_bgi_title">Zobrazovať BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Pridať BGI do stavového riadku</string>
+    <string name="xdrip_status_settings">Rozšírený stavový riadok xDrip+</string>
+    <string name="disabled_loop">Uzavretý okruh deaktivovaný</string>
+    <string name="xdrip_send_status_title">Odoslať stavový riadok do xDripu</string>
+    <string name="xdrip_not_installed">xDrip+ nie je nainštalovaný</string>
+    <string name="calibration_sent">Kalibrácia odoslaná do xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Poslať dáta o glykémii a ošetrení do xDrip+. Musí byť vybraný zdroj dát \"xDrip+ Sync Follower\" a prijímanie dát musí byť povolené v Nastavenia - Nastavenie komunikácie medzi aplikáciami - Prijímať Glykémie/Ošetrenia</string>
+    <string name="xdrip_local_broadcasts_title">Povoliť odosielanie do xDrip+.</string>
+    <!--    DataBroadcast-->
 </resources>

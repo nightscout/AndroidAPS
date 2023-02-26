@@ -176,9 +176,9 @@
     <string name="no_iob_u">--JI</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--JI/h</string>
-    <string name="uploader_na">Uploader: ---%</string>
-    <string name="no_status">S: žiadny stav</string>
-    <string name="time_stamp_na_min_ago">Pred -- minútami</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- Pred min.</string>
     <string name="delta_na">--- mg/dl</string>
     <string name="no_loop_status">Žiadny stav uzavretého okruhu</string>
     <string name="cob_000g">000g</string>
@@ -186,4 +186,11 @@
     <string name="iob_0_00u">0,00JI</string>
     <string name="snooze_alert">AAPS Potvrdenie výstrahy</string>
     <string name="sending_snooze">Odosielanie potvrdení do AAPS</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">t</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="old">starý</string>
+    <string name="old_warning">!starý!</string>
+    <string name="error">!chyba!</string>
 </resources>

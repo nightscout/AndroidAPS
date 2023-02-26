@@ -1,6 +1,7 @@
 package info.nightscout.core.graph.data
 
 import android.content.Context
+import android.graphics.Paint
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -18,6 +19,7 @@ class ExtendedBolusDataPoint(
     override val duration get() = data.duration
     override val size = 10f
     override val shape = PointsWithLabelGraphSeries.Shape.EXTENDEDBOLUS
+    override val paintStyle: Paint.Style = Paint.Style.FILL // not used
     override fun color(context: Context?): Int {
         return rh.gac(context, info.nightscout.core.ui.R.attr.extBolusColor)
     }

@@ -30,7 +30,7 @@
     <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
     <string name="pref_show_rig_battery">Mostrar batería de la plataforma</string>
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
-    <string name="pref_show_loop_status">Mostrar estado del lazo</string>
+    <string name="pref_show_loop_status">Mostrar estado de bucle</string>
     <string name="pref_show_bg">Mostrar glucosa</string>
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
     <string name="pref_show_ago">Mostrar histórico</string>
@@ -105,13 +105,13 @@
     <string name="action_preset_3">Botón 3</string>
     <string name="action_free_amount" comment="In prime/fill menu, allows one to enter any amount to be used for priming/filling">Cantidad libre</string>
     <string name="action_confirm">CONFIRMAR</string>
-    <string name="action_timeshift">Intervalo de tiempo</string>
+    <string name="action_timeshift">Cambio de hora</string>
     <string name="action_bolus">Bolo</string>
     <string name="bolus_progress">Progreso del bolo</string>
     <string name="press_to_cancel">Presiona para cancelar</string>
     <string name="cancel_bolus">CANCELAR BOLO</string>
     <string name="status_pump">Infusora</string>
-    <string name="status_loop">Lazo</string>
+    <string name="status_loop">Bucle</string>
     <string name="status_profile_switch">Cambio de perfil</string>
     <string name="status_tdd">TDD</string>
     <string name="activity_carb">Carbohidratos</string>
@@ -176,14 +176,21 @@
     <string name="no_iob_u">--U</string>
     <string name="no_cob_g">--g</string>
     <string name="no_tmp_basal_u_h">-.--U/h</string>
-    <string name="uploader_na">Subido: ---%</string>
-    <string name="no_status">S: sin estado</string>
-    <string name="time_stamp_na_min_ago">-- minutos atrás</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- Hace min.</string>
     <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Sin estado del lazo</string>
+    <string name="no_loop_status">Sin estado del bucle</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00U</string>
     <string name="snooze_alert">Posponer Alertas de AAPS</string>
     <string name="sending_snooze">Enviando aplazamientos a AAPS</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">s</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="old">antiguo</string>
+    <string name="old_warning">¡antiguo!</string>
+    <string name="error">!err!</string>
 </resources>

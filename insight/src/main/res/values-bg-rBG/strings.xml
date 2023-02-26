@@ -66,4 +66,5 @@
     <string name="min_recovery_duration">Мин време за възстановяване [сек]</string>
     <string name="pump_alert">Аларма на помпата</string>
     <string name="pairing_information">Информация за сдвояването</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Insight Бутон Обновяване</string>
 </resources>

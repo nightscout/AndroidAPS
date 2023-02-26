@@ -3,24 +3,27 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS-Kommunikator</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">AndroidAPS mit SMS-Befehlen fernsteuern.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">von der Authenticator App für: %1$s gefolgt von der PIN</string>
     <string name="smscommunicator_otp_pin">Zusätzliche obligatorische PIN am Token-Ende</string>
     <string name="smscommunicator_otp_pin_summary">Zusätzliche Ziffern, die auswendig gelernt und am Ende jedes generierten Einmal-Passworts angehängt werden sollten.</string>
-    <string name="smscommunicator_tab_otp_label">Konfiguration des Authentifikators</string>
+    <string name="smscommunicator_tab_otp_label">Konfiguration der Authenticator App</string>
     <string name="smscommunicator_code_verify_label">Zu prüfender Code:</string>
     <string name="smscommunicator_code_verify_hint">OTP + PIN</string>
     <string name="smscommunicator_code_verify_info">Der Verifizierungscode besteht aus 6 Ziffern, die von Authenticator App (auch OTP genannt) angezeigt werden, gefolgt von 3 oder mehr Ziffern der obligatorischen PIN.</string>
-    <string name="smscommunicator_otp_reset_btn">Authentifikators zurücksetzen</string>
-    <string name="smscommunicator_otp_reset_title">Authentifikatorschlüssel zurücksetzen</string>
-    <string name="smscommunicator_otp_reset_prompt">Willst Du wirklich den Authentifikatorschlüssel zurücksetzen? Dies wird alle momentan genutzten Authentifikatoren ungültig machen und Du musst sie neu einrichten.</string>
+    <string name="smscommunicator_otp_reset_btn">Authentifikatoren zurücksetzen</string>
+    <string name="smscommunicator_otp_reset_title">Authentifikationsschlüssel zurücksetzen</string>
+    <string name="smscommunicator_otp_reset_prompt">Willst du wirklich den Authentifikationsschlüssel zurücksetzen? Dies wird alle momentan genutzten Authentifikatoren ungültig machen und Du musst sie neu einrichten.</string>
     <string name="smscommunicator_otp_reset_successful">Neuer Authentifizierungsschlüssel generiert! Bitte verwende den aktualisierten QR-Code für die Bereitstellung von Authentifikatoren.</string>
     <string name="smscommunicator_otp_export_title">OTP-Secret exportieren</string>
     <string name="smscommunicator_otp_export_prompt">Willst Du wirklich das OTP Secret in die Zwischenablage kopieren?\n\nDas ist nur erforderlich, wenn Deine Authentifizierungs-App Probleme mit dem Scannen des QR-Codes hat. Du kannst es auch manuell eingeben oder einen Hardware-OTP-Token mit einer bestimmten App verwenden.</string>
     <string name="smscommunicator_otp_export_successful">OTP Secret (im Base32 Format) exportiert und in die Zwischenablage kopiert. Setze es von dort in Deine Authentifizierungs-App ein.</string>
     <string name="smscommunicator_otp_step1_install_header">1. Authentifikator installieren</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scanne den Code zum Einrichten von AndroidAPS OTP-Codes</string>
     <string name="smscommunicator_otp_step3_test_header">3. Teste das Einmal-Passwort</string>
     <string name="smscommunicator_otp_reset_header">Authentifikators zurücksetzen</string>
     <string name="smscommunicator_otp_install_info">Installiere auf jedem Follower-Phone eine Authenticator-App, die RFC 6238 TOTP-Token unterstützt. Beliebte kostenlose Apps sind:\n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Wenn Du den Authentifikator zurücksetzt, werden alle bestehenden Authentifikatoren ungültig. Du musst sie dann neu einrichten!</string>
     <string name="sms_wrong_code">Falscher Code. Befehl wurde abgebrochen.</string>
     <string name="sms_timeout_while_waiting">Zeitüberschreitung beim Warten auf das Ende der vorherigen Kommunikation mit der Pumpe</string>
     <string name="smscommunicator_allowednumbers">Erlaubte Telefonnummern</string>
@@ -85,6 +88,9 @@
     <string name="smscommunicator_message_body">Ungültiger Inhalt</string>
     <string name="smscommunicator_report_pump_unreachable_summary">SMS senden, wenn Pumpe nicht erreichbar</string>
     <string name="smscommunicator_pump_unreachable">Hinweis Pumpe nicht erreichbar</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Um den Loop Modus auf LGS (Low Glucose Suspend) zu wechseln, antworte mit dem Code %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Um den Loop-Modus auf Closed Loop zu setzen, antworte mit Code %1$s.</string>
+    <string name="smscommunicator_current_loop_mode">Aktueller Loop Modus: %1$s</string>
     <string name="wrong_format">Falsches Format</string>
     <string name="sms_actual_bg">BZ:</string>
     <string name="sms_last_bg">Letzter BZ:</string>
@@ -98,17 +104,11 @@
     <string name="sms_profile_switch_created">Profilwechsel wurde erstellt</string>
     <string name="sms_wrong_tbr_duration">Die TBR-Dauer muss ein Vielfaches von %1$d Minuten und größer als 0 sein.</string>
     <string name="a11y_otp_qr_code">QR Code für einmaliges Passwort einrichten</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip+ Statuszeile (Uhr)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Zeige Loop-Informationen auf Deinem xDrip+-Watchface.</string>
     <string name="xdrip_status_detailed_iob_title">Zeige detailliertes IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="disabled_loop">Loop deaktiviert</string>
     <string name="xdrip_status_show_bgi_title">Zeige BGI</string>
     <string name="xdrip_status_show_bgi_summary">Füge BGI zur Statuszeile hinzu.</string>
-    <string name="xdrip_status_settings">xDrip+ Status (Uhr)</string>
     <!-- Food-->
     <string name="food_short">Essen</string>
     <string name="description_food">Zeigt die Essensvorlagen aus Nightscout an</string>
@@ -174,6 +174,8 @@
     <string name="patch_pump">Patch-Pumpe</string>
     <!-- Overview -->
     <string name="show_statuslights">Statusanzeige auf Homescreen</string>
+    <string name="statuslights_cage_warning">Warnschwelle Kanülenalter [h]</string>
+    <string name="statuslights_cage_critical">Warnschwelle kritisches Kanülenalter [h]</string>
     <string name="statuslights_iage_warning">Warnschwelle Insulinalter [h]</string>
     <string name="statuslights_iage_critical">Warnschwelle kritisches Insulinalter [h]</string>
     <string name="statuslights_sage_warning">Warnschwelle Sensoralter [h]</string>
@@ -195,15 +197,9 @@
     <string name="a11y_bg_outdated">veraltet</string>
     <string name="set_basal_question">Akzeptiere neue TBR:</string>
     <string name="overview_cgm">CGM</string>
-    <string name="quickwizard">QuickWizard</string>
-    <string name="a11y_only_on_watch">nur auf Uhr</string>
-    <string name="a11y_only_on_phone">nur auf Telefon</string>
     <string name="overview">Übersicht</string>
     <string name="overview_shortname">HOME</string>
     <string name="description_overview">Zeigt den aktuellen Status deines Loops und Schaltflächen für die geläufigsten Aktionen an</string>
-    <string name="overview_editquickwizard_usecob">COB Berechnung</string>
-    <string name="overview_editquickwizard_usetemptarget">Temporäres Ziel Berechnung</string>
-    <string name="overview_editquickwizard_usepercentage">Prozentuale Berechnung</string>
     <string name="overview_buttons_selection">Schaltflächen</string>
     <string name="show_calibration_button_summary">Sendet eine Kalibierung an xDrip+ oder öffnet den BYODA Kalibrierungs-Dialog.</string>
     <string name="show_cgm_button_summary">Öffnet xDrip+ oder BOYDA, mit der Zurück-Schaltfläche gelangst Du zurück zu AndroidAPS.</string>
@@ -217,25 +213,6 @@
     <string name="uploader">Uploader</string>
     <string name="data_status">Status BZ-Daten</string>
     <string name="quickwizard_settings">QuickWizard-Einstellungen</string>
-    <string name="overview_edit_quickwizard_button_text">Schaltflächen-Text:</string>
-    <string name="overview_edit_quickwizard_carbs">Kohlenhydrate:</string>
-    <string name="overview_edit_quickwizard_valid">Gültigkeit:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Hinzufügen</string>
-    <string name="overview_quickwizard_item_edit_button">Bearbeiten</string>
-    <string name="overview_edit_quickwizard_show_on_device">Zeige Eintrag auf dem Gerät:</string>
-    <string name="overview_edit_quickwizard_use_bg">BZ Berechnung</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus-IOB Berechnung</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Basal-IOB Berechnung</string>
-    <string name="overview_edit_quickwizard_use_trend">Trend Berechnung</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Superbolus Berechnung</string>
-    <string name="overview_edit_quickwizard_percentage">Prozentsatz</string>
-    <string name="device_all">Alle</string>
-    <string name="device_phone">Smartphone</string>
-    <string name="device_watch">Smartwatch</string>
-    <string name="positive_only">Nur positive</string>
-    <string name="negative_only">Nur negative</string>
-    <string name="app_default">Standardwert der Anwendung</string>
-    <string name="a11y_drag_and_drop_handle">Drag and Drop Handle</string>
     <string name="keep_screen_on_title">Bildschirm aktiv lassen</string>
     <string name="keep_screen_on_summary">Hindere Android daran, den Bildschirm abzuschalten. Dies erhöht den Energieverbrauch, wenn das Gerät nicht an einem Ladegerät angeschlossen ist.</string>
     <string name="treatments">Behandlungen</string>
@@ -303,8 +280,7 @@
     <string name="buttonson_description">Schaltflächen werden immer am unteren Rand des Bildschirms angezeigt</string>
     <string name="largedisplay_description">Großer Bildschirm</string>
     <string name="skin">Erscheinungsbild</string>
-    <!--    DataBroadcast-->
-    <string name="cannula_usage">androidAPS nutzen:</string>
+    <string name="cannula_usage">Abgegeben:</string>
     <!--    Iob-->
     <string name="send_logfiles">Sende die heutigen Logdateien unter Angabe dieser Uhrzeit an die Entwickler.
 Unerwartetes Verhalten.</string>
@@ -312,6 +288,7 @@ Unerwartetes Verhalten.</string>
     <string name="wear_shortname">UHR</string>
     <string name="description_wear">Überwache und steuere AndroidAPS mit Deiner WearOS-Smartwatch.</string>
     <string name="no_watch_connected">(keine Uhr verbunden)</string>
+    <string name="pump_status">Status der Pumpe</string>
     <string name="loop_status">Loop Status</string>
     <string name="wizard_result">Calc. Wizard:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">Ausgewählter Quickwizard nicht mehr verfügbar, bitte aktualisiere die Kachel</string>
@@ -343,4 +320,30 @@ Unerwartetes Verhalten.</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>
     <string name="old_data">VERALTETE DATEN</string>
+    <string name="pump_fetching_data">versuche Daten von der Pumpe abzurufen.</string>
+    <string name="pump_old_data">TDD: verwendet alte Daten! Auslesen der Pumpe nicht möglich.</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">h</string>
+    <string name="no_active_profile">Kein aktiver Profilwechsel!</string>
+    <string name="profile_message">Profil:\n\nZeitverschiebung: %1$\nProzent: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fE %1$.0f%%</string>
+    <string name="no_profile">Kein Profil geladen</string>
+    <string name="aps_only">Nur im APS-Modus anwendbar!</string>
+    <string name="last_aps_result_na">Letztes Ergebnis ist nicht verfügbar!</string>
+    <string name="loop_status_closed">CLOSED LOOP</string>
+    <string name="loop_status_open">OPEN LOOP</string>
+    <string name="loop_status_disabled">LOOP DEAKTIVIERT</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Letzte Ausführung</string>
+    <string name="last_enact">Letzte Abgabe</string>
+    <string name="today">Heute</string>
+    <string name="weighted">gewichtet</string>
+    <string name="target_only_aps_mode">Ziele gelten nur im APS-Modus!</string>
+    <string name="no_history">Keine Verlaufsdaten!</string>
+    <string name="units_short">E</string>
+    <string name="temp_target">Temporäres Ziel</string>
+    <string name="until">bis</string>
+    <string name="default_range">STANDARD-BEREICH</string>
+    <string name="target">Ziel</string>
+    <string name="rate_duration">Rate: %1$.2fIE/h (%2$.2f%) \nDauer %3$d% min</string>
 </resources>

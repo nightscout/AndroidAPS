@@ -13,7 +13,7 @@
     <string name="alreadydisabled">Ya está deshabilitado</string>
     <string name="alreadysuspended">Ya está suspendido</string>
     <string name="notsuspended">No suspendido</string>
-    <string name="suspendloopforXmin">Suspender lazo durante %1$d min</string>
+    <string name="suspendloopforXmin">Suspender bucle durante %1$d min</string>
     <string name="notification_message">Notificación: %1$s</string>
     <string name="profilename">Cambiar perfil a</string>
     <string name="changengetoprofilename">Cambiar perfil a %1$s</string>
@@ -129,4 +129,5 @@
     <!--    Reminders-->
     <string name="time_to_eat">¡Hora de comer!\nEjecuta el asistente de bolo y calcula de nuevo.</string>
     <string name="time_to_bolus">¡Hora de comer!\nEjecutar el asistente de bolo y calcular de nuevo.</string>
+    <string name="error_setting_reminder">Error al configurar la alarma en el futuro</string>
 </resources>

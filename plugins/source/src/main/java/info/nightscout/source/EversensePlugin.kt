@@ -12,7 +12,6 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CgmSourceTransaction
 import info.nightscout.database.impl.transactions.InsertIfNewByTimestampTherapyEventTransaction
 import info.nightscout.database.transactions.TransactionGlucoseValue
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
@@ -22,6 +21,7 @@ import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import kotlinx.coroutines.Dispatchers
 import java.util.Arrays
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -53,16 +53,15 @@ class EversensePlugin @Inject constructor(
     class EversenseWorker(
         context: Context,
         params: WorkerParameters
-    ) : LoggingWorker(context, params) {
+    ) : LoggingWorker(context, params, Dispatchers.IO) {
 
         @Inject lateinit var injector: HasAndroidInjector
         @Inject lateinit var eversensePlugin: EversensePlugin
         @Inject lateinit var dateUtil: DateUtil
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
         @Inject lateinit var repository: AppRepository
-        @Inject lateinit var xDripBroadcast: XDripBroadcast
 
-        override fun doWorkAndLog(): Result {
+        override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
 
             if (!eversensePlugin.isEnabled()) return Result.success(workDataOf("Result" to "Plugin not enabled"))
@@ -113,7 +112,6 @@ class EversensePlugin @Inject constructor(
                         .blockingGet()
                         .also { savedValues ->
                             savedValues.inserted.forEach {
-                                xDripBroadcast.send(it)
                                 aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
                             }
                         }

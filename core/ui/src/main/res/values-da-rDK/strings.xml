@@ -43,7 +43,6 @@
     <string name="mute5min">Lydløs i 5 minutter</string>
     <string name="mute">Lydløs</string>
     <string name="success">Succes</string>
-    <string name="advancedsettings_title">Avancerede indstillinger</string>
     <string name="extendedbolusdeliveryerror">Forlænget bolus leveringsfejl</string>
     <string name="extended_bolus">Forlænget bolus</string>
     <string name="paused">Pauset</string>
@@ -155,7 +154,6 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="virtualpump_uploadstatus_title">Upload status til NS</string>
     <string name="suspendloop_label">Deaktiveret/Suspendéret Loop</string>
     <string name="iob_label">Insulin om bord (IOB)</string>
     <!--    Protection-->
@@ -523,6 +521,7 @@
     <string name="nav_plugin_preferences">Plugin indstillinger</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Manglende sms tilladelse</string>
+    <!-- About -->
     <plurals name="days">
         <item quantity="one">%1$d dag</item>
         <item quantity="other">%1$d dage</item>
@@ -535,4 +534,5 @@
         <item quantity="one">%1$d minut</item>
         <item quantity="other">%1$d minutter</item>
     </plurals>
+    <!--    Maintenance-->
 </resources>

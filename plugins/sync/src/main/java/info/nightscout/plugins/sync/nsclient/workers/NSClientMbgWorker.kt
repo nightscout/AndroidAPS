@@ -10,19 +10,20 @@ import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.plugins.sync.nsclient.data.NSMbg
 import info.nightscout.plugins.sync.nsclient.extensions.therapyEventFromNsMbg
 import info.nightscout.shared.sharedPreferences.SP
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 class NSClientMbgWorker(
     context: Context,
     params: WorkerParameters
-) : LoggingWorker(context, params) {
+) : LoggingWorker(context, params, Dispatchers.IO) {
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var sp: SP
     @Inject lateinit var config: Config
     @Inject lateinit var storeDataForDb: StoreDataForDb
 
-    override fun doWorkAndLog(): Result {
+    override suspend fun doWorkAndLog(): Result {
         val ret = Result.success()
 
         val acceptNSData = sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smoothing_shortname">VYHLAD</string>
+    <string name="exponential_smoothing_name">Exponenciálne vyhladzovanie</string>
+    <string name="description_exponential_smoothing">"Vyhladzovací algoritmus druhého rádu"</string>
+    <string name="avg_smoothing_name">Priemerovacie vyhladzovanie</string>
+    <string name="description_avg_smoothing">"Priemerovací vyhladzovací algoritmus, najnovšia hodnota nie je ovplyvnená"</string>
+    <string name="no_smoothing_name">Žiadne vyhladzovanie</string>
+    <string name="description_no_smoothing">"Na vstupných dátach glykémie sa nevykonáva žiadne vyhladzovanie. Použite to, pokiaľ už máte filtrované dáta, napr. z BYODA G6."</string>
+</resources>

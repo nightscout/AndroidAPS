@@ -14,6 +14,7 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Micro non inizializzato, profilo non impostato!</string>
     <string name="failed_update_basal_profile">Impossibile aggiornare il profilo basale</string>
+    <string name="bolus_delivered_successfully">Bolo di %1$.2f U erogato con successo</string>
     <string name="no_valid_basal_rate">Nessuna velocità basale valida letta dal micro</string>
     <string name="limiting_iob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
     <string name="loop_disabled">LOOP DISABILITATO DAI VINCOLI</string>
@@ -44,8 +45,9 @@
     <string name="mute5min">Muto per 5 minuti</string>
     <string name="mute">Muto</string>
     <string name="success">OK</string>
-    <string name="advancedsettings_title">Impostazioni avanzate</string>
+    <string name="advanced_settings_title">Impostazioni avanzate</string>
     <string name="extendedbolusdeliveryerror">Errore erogazione bolo esteso</string>
+    <string name="aps_mode_title">Modalità APS</string>
     <string name="extended_bolus">Bolo esteso</string>
     <string name="paused">In pausa</string>
     <string name="tdd_total">TDD totale</string>
@@ -60,6 +62,8 @@
     <string name="please_wait">Attendi…</string>
     <string name="stop">Stop</string>
     <string name="carbs">CHO</string>
+    <string name="invalid_profile">Profilo non valido!</string>
+    <string name="no_profile_set">NESSUN PROFILO IMPOSTATO</string>
     <string name="active"><![CDATA[<Active>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Unità</string>
@@ -102,6 +106,7 @@
     <string name="loading">Caricamento…</string>
     <string name="notes_label">Note</string>
     <string name="remove_button">Rimuovi</string>
+    <string name="add_new">Aggiungi nuovo</string>
     <string name="addnew_above">Aggiungi nuovo sopra</string>
     <string name="wrong_pump_data">I dati arrivano da un micro differente. Cambia il driver del micro per resettarne lo stato.</string>
     <string name="bg_label">BG</string>
@@ -148,6 +153,7 @@
     <string name="treatments_wizard_basaliob_label">IOB da basale</string>
     <string name="invalid">NON VALIDO</string>
     <string name="login">Login</string>
+    <string name="prime_fill">Carica/Riempi</string>
     <string name="overview_insulin_label">Insulina</string>
     <string name="stoptemptarget">Stoppa temp-target</string>
     <string name="closedloop">Loop chiuso</string>
@@ -156,7 +162,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
-    <string name="virtualpump_uploadstatus_title">Carica stato in NS</string>
+    <string name="canceling_tbr_failed">Basale temporanea: cancellazione fallita</string>
+    <string name="canceling_eb_failed">Bolo esteso: cancellazione fallita</string>
+    <string name="virtualpump_uploadstatus_title">Carica stato su NS o Tidepool</string>
     <string name="suspendloop_label">Loop disabilitato/sospeso</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
     <!--    Protection-->
@@ -174,6 +182,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Avvia profilo %1$d%% per %2$d min</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Cancella basale temporanea</string>
     <string name="let_temp_basal_run">Lascia eseguire la basale temporanea</string>
     <string name="rate">Tasso</string>
     <string name="duration">Durata</string>
@@ -195,9 +204,12 @@
     <string name="careportal_note_message">Nota : %1$s</string>
     <string name="careportal_question_message">Domanda : %1$s</string>
     <string name="careportal_exercise_message">Esercizio : %1$s</string>
+    <string name="careportal_pump_site_change">Cambio posizione cannula</string>
+    <string name="cgm_sensor_insert">Inserimento sensore</string>
     <string name="careportal_cgmsensorstart">Avvio sensore</string>
     <string name="careportal_cgm_sensor_stop">Arresto Sensore CGM</string>
     <string name="careportal_dad_alert">Avviso D.A.D.</string>
+    <string name="careportal_insulin_cartridge_change">Cambio cartuccia insulina</string>
     <string name="careportal_profileswitch">Cambio profilo</string>
     <string name="careportal_snackbolus">Bolo spuntino</string>
     <string name="careportal_mealbolus">Bolo pasto</string>
@@ -207,6 +219,8 @@
     <string name="careportal_tempbasalend">Fine basale temporanea</string>
     <string name="careportal_carbscorrection">Correzione con CHO</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="pump_battery_change">Cambio batteria micro</string>
+    <string name="temporary_target">Target temporaneo</string>
     <string name="careportal_temporarytargetvalue">Valore target temporaneo</string>
     <string name="careportal_temporarytargetcancel">Cancellazione temp-target</string>
     <string name="boluswizard">Calcolatore</string>
@@ -235,6 +249,7 @@
     <!--    CarbsReq-->
     <string name="carbsreq">%1$d g di CHO aggiuntivi richiesti entro %2$d minuti</string>
     <!--    TDDStatsActivity-->
+    <string name="cumulative_tdd">TDD cumulativo</string>
     <string name="expweight">TDD esponenzialmente ponderato</string>
     <string name="basalrate">Basale</string>
     <string name="bolus">Bolo</string>
@@ -433,9 +448,12 @@
     <string name="urgent_alarm">Allarme urgente</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Consiglio bolo</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
     <string name="partialboluswizard">Eroga parte del risultato del calcolatore [%]</string>
+    <string name="bolus_constraint_applied_warn">Vincolo bolo applicato: %1$.2f U a %2$.2f U</string>
+    <string name="bolus_recorded_only">Il bolo sarà solo registrato (non erogato dal micro)</string>
     <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>
     <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
     <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
@@ -454,10 +472,17 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">Nessun micro disponibile!</string>
+    <string name="quickwizard">Calcolatore rapido</string>
     <!--    Preferences-->
+    <string name="child">Bambino</string>
     <string name="teenage">Adolescente</string>
     <string name="adult">Adulto</string>
+    <string name="resistant_adult">Adulto insulino-resistente</string>
     <string name="pregnant">Gravidanza</string>
+    <string name="patient_age_summary">Seleziona il tipo di paziente per configurare i limiti di sicurezza</string>
+    <string name="max_bolus_title">Max bolo consentito [U]</string>
+    <string name="max_carbs_title">Max CHO consentiti [g]</string>
+    <string name="patient_type">Tipo paziente</string>
     <!--    Protection-->
     <string name="unlock_settings">Impostazioni sblocco</string>
     <!--    Pumps -->
@@ -529,6 +554,10 @@
     <string name="nav_plugin_preferences">Preferenze plugin</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Autorizzazione SMS mancante</string>
+    <!-- About -->
+    <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
+    <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
+    <string name="about_link_urls">\n\nDocumentazione:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers\nhttps://www.facebook.com/groups/aapsitalia</string>
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
@@ -541,4 +570,8 @@
         <item quantity="one">%1$d minuto</item>
         <item quantity="other">%1$d minuti</item>
     </plurals>
+    <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.</string>
+    <string name="cleanup_db_confirm_sync">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.\nFarlo velocizzerà considerevolmente la sincronizzazione completa.</string>
+    <string name="cleared_entries">Elementi cancellati</string>
 </resources>

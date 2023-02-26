@@ -50,7 +50,7 @@ class WidgetConfigureActivity : DaggerActivity() {
             override fun onProgressChanged(seekBar: SeekBar, progress: Int, fromUser: Boolean) {
                 value = progress
                 saveTitlePref(appWidgetId, value)
-                Widget.updateWidget(this@WidgetConfigureActivity)
+                Widget.updateWidget(this@WidgetConfigureActivity, "WidgetConfigure")
             }
         })
 

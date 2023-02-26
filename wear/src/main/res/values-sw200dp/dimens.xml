@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <!-- Watch face sizes for bigger larger screen sizes   -->
+    <dimen name="watch_face_svg_text_size">50sp</dimen>
+    <dimen name="watch_face_delta_text_size">25sp</dimen>
+    <dimen name="watch_face_time_text_size">45sp</dimen>
+    <dimen name="watch_face_timestamp_text_size">23sp</dimen>
+    <dimen name="watch_face_time_period_text_size">12sp</dimen>
+    <dimen name="watch_face_status_text_size">17sp</dimen>
+
+    <!--    Watch face specific-->
+    <dimen name="watch_face_no_chart_status_size">24sp</dimen>
+    <dimen name="watch_face_big_chart_svg_text_size">35sp</dimen>
+    <dimen name="watch_face_big_chart_delta_text_size">29sp</dimen>
+    <dimen name="watch_face_digital_svg_text_size">23sp</dimen>
+    <dimen name="watch_face_digital_direction_text_size">17sp</dimen>
+    <dimen name="watch_face_digital_timestamp_text_size">11sp</dimen>
+    <dimen name="watch_face_digital_sub_text_size">15sp</dimen>
+
+    <dimen name="watch_face_large_svg_text_size">55sp</dimen>
+    <dimen name="watch_face_large_direction_text_size">29sp</dimen>
+    <dimen name="watch_face_large_delta_text_size">13sp</dimen>
+    <dimen name="watch_face_large_time_text_size">55sp</dimen>
+    <dimen name="watch_face_large_time_period_text_size">13sp</dimen>
+
+</resources>

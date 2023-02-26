@@ -33,8 +33,8 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.ActionsFragmentBinding
+import info.nightscout.plugins.general.overview.ui.StatusLightHandler
 import info.nightscout.plugins.skins.SkinProvider
-import info.nightscout.plugins.ui.StatusLightHandler
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventCustomActionsChanged

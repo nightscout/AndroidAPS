@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".watchfaces.AapsV2Watchface">
+
+    <LinearLayout
+        android:id="@+id/primary_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/secondary_layout"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/loop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/loop_grey_25"
+            android:gravity="center"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:text="--'" />
+
+        <TextView
+            android:id="@+id/sgv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity=""
+            android:layout_marginBottom="-2dp"
+            android:paddingHorizontal="5dp"
+            android:textSize="38sp"
+            tools:text="---" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/direction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                tools:text="--" />
+
+            <TextView
+                android:id="@+id/timestamp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="--'" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/secondary_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:colorForeground"
+        android:paddingVertical="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/tertiary_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="5dp">
+
+            <TextView
+                android:id="@+id/delta"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="+/-" />
+
+            <TextView
+                android:id="@+id/avg_delta"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="@string/abbreviation_average" />
+
+            <TextView
+                android:id="@+id/uploader_battery"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="--%" />
+
+            <TextView
+                android:id="@+id/rig_battery"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                tools:text="--%" />
+
+            <TextView
+                android:id="@+id/basalRate"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.7"
+                android:gravity="center"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                tools:text="@string/no_tmp_basal_u_h" />
+
+            <TextView
+                android:id="@+id/bgi"
+                android:layout_width="0px"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:textColor="?android:textColorPrimaryInverse"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                tools:text="bgi" />
+
+            <View
+                android:id="@+id/AAPSv2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/tertiary_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:weightSum="7"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/cob1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/activity_carb"
+                android:textSize="11sp" />
+
+            <TextView
+                android:id="@+id/cob2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_cob_g"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            tools:ignore="NestedWeights" />
+
+        <TextView
+            android:id="@+id/time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            tools:text="12:00" />
+
+        <LinearLayout
+            android:id="@+id/date_time"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/day"
+                android:layout_width="23dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="12sp"
+                tools:text="day" />
+
+            <TextView
+                android:id="@+id/month"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="12sp"
+                tools:text="mth" />
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="0px"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:textAlignment="center">
+
+            <TextView
+                android:id="@+id/iob1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:textSize="11sp"
+                tools:text="@string/activity_IOB" />
+
+            <TextView
+                android:id="@+id/iob2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="@string/no_iob_u" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <lecho.lib.hellocharts.view.LineChartView
+        android:id="@+id/chart"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="-5dp"
+        android:layout_marginBottom="7dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tertiary_layout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

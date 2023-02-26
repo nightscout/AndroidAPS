@@ -100,17 +100,11 @@
     <string name="sms_profile_switch_created">Profil switch oprettet</string>
     <string name="sms_wrong_tbr_duration">TBR-varigheden skal være et multiplum af %1$d minutter og større end 0.</string>
     <string name="a11y_otp_qr_code">QR-kode til opsætning af engangs kodeord</string>
-    <!-- xDrip status line -->
-    <!-- StatusLine -->
-    <string name="xdrip_status">xDrip Statuslinje (ur)</string>
-    <string name="xdrip_status_shortname">xds</string>
-    <string name="description_xdrip_status_line">Vis oplysninger om dit Loop på din xDrip+ urskive.</string>
     <string name="xdrip_status_detailed_iob_title">Vis detaljeret IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Bryd IOB ned i bolus og basal IOB på urskiven</string>
     <string name="disabled_loop">Loop deaktiveret</string>
     <string name="xdrip_status_show_bgi_title">Vis BGI</string>
     <string name="xdrip_status_show_bgi_summary">Tilføj BGI til statuslinje</string>
-    <string name="xdrip_status_settings">xDrip-status (ur)</string>
     <!-- Food-->
     <string name="food_short">Mad</string>
     <string name="description_food">Viser forudindstillede madvarer defineret i Nightscout</string>
@@ -197,15 +191,9 @@
     <string name="a11y_bg_outdated">forældet</string>
     <string name="set_basal_question">Acceptér ny midlertidig basal:</string>
     <string name="overview_cgm">CGM</string>
-    <string name="quickwizard">Lynguide</string>
-    <string name="a11y_only_on_watch">kun på ur</string>
-    <string name="a11y_only_on_phone">kun på telefon</string>
     <string name="overview">Overblik</string>
     <string name="overview_shortname">HJEM</string>
     <string name="description_overview">Viser den aktuelle tilstand af dit loop og knapper til de mest almindelige handlinger</string>
-    <string name="overview_editquickwizard_usecob">COB beregning</string>
-    <string name="overview_editquickwizard_usetemptarget">Midlertidig mål beregning</string>
-    <string name="overview_editquickwizard_usepercentage">Beregning i %</string>
     <string name="overview_buttons_selection">Knapper</string>
     <string name="show_calibration_button_summary">Sender en kalibrering til xDrip+ eller åbner BYODA kalibreringsmenu</string>
     <string name="show_cgm_button_summary">Åbner xDrip + eller BYODA, tilbage-knappen returnerer til AAPS</string>
@@ -219,25 +207,6 @@
     <string name="uploader">Uploader</string>
     <string name="data_status">BG data status</string>
     <string name="quickwizard_settings">Indstillinger for lynguide</string>
-    <string name="overview_edit_quickwizard_button_text">Knap tekst:</string>
-    <string name="overview_edit_quickwizard_carbs">Kulhydrater:</string>
-    <string name="overview_edit_quickwizard_valid">Gyldig:</string>
-    <string name="overview_edit_quickwizard_list_activity_add">Tilføj</string>
-    <string name="overview_quickwizard_item_edit_button">Rediger</string>
-    <string name="overview_edit_quickwizard_show_on_device">Vis post på enhed:</string>
-    <string name="overview_edit_quickwizard_use_bg">BS beregning</string>
-    <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB beregning</string>
-    <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB beregning</string>
-    <string name="overview_edit_quickwizard_use_trend">Tendens beregning</string>
-    <string name="overview_edit_quickwizard_use_superbolus">Superbolus beregning</string>
-    <string name="overview_edit_quickwizard_percentage">Procentdel</string>
-    <string name="device_all">Alle</string>
-    <string name="device_phone">Telefon</string>
-    <string name="device_watch">Ur</string>
-    <string name="positive_only">Kun positive</string>
-    <string name="negative_only">Kun negative</string>
-    <string name="app_default">Program standard</string>
-    <string name="a11y_drag_and_drop_handle">træk og slip håndtering</string>
     <string name="keep_screen_on_title">Hold skærmen tændt</string>
     <string name="keep_screen_on_summary">Forhindrer Android i at slukke for skærmen. Det vil forbruge meget energi, når den ikke er tilsluttet stikkontakt.</string>
     <string name="treatments">Behandlinger</string>
@@ -305,7 +274,6 @@
     <string name="buttonson_description">Knapper vises altid nederst på skærmen</string>
     <string name="largedisplay_description">Stort display</string>
     <string name="skin">Udseende</string>
-    <!--    DataBroadcast-->
     <!--    Iob-->
     <string name="send_logfiles">Send dagens logfiler til udviklere sammen med denne tid. Uventet situation.</string>
     <!--    Wear-->

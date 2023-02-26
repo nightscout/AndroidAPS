@@ -394,21 +394,25 @@ object ApplicationLayer {
         ) : CMDHistoryEventDetail(isBolusDetail = true)
         data class ExtendedBolusStarted(
             val totalBolusAmount: Int,
-            val totalDurationMinutes: Int
+            val totalDurationMinutes: Int,
+            val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
         data class ExtendedBolusEnded(
             val totalBolusAmount: Int,
-            val totalDurationMinutes: Int
+            val totalDurationMinutes: Int,
+            val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
         data class MultiwaveBolusStarted(
             val totalBolusAmount: Int,
             val immediateBolusAmount: Int,
-            val totalDurationMinutes: Int
+            val totalDurationMinutes: Int,
+            val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
         data class MultiwaveBolusEnded(
             val totalBolusAmount: Int,
             val immediateBolusAmount: Int,
-            val totalDurationMinutes: Int
+            val totalDurationMinutes: Int,
+            val manual: Boolean
         ) : CMDHistoryEventDetail(isBolusDetail = true)
         data class NewDateTimeSet(val dateTime: LocalDateTime) : CMDHistoryEventDetail(isBolusDetail = false)
     }
@@ -524,14 +528,18 @@ object ApplicationLayer {
     )
 
     /**
-     * Possible bolus types used in COMMAND mode commands.
+     * Possible immediate bolus types used in COMMAND mode commands.
+     *
+     * "Immediate" means that the bolus gets delivered immediately once the command is sent.
+     * A standard bolus only has an immediate delivery, an extended bolus has none, and
+     * a multiwave bolus is partially made up of an immediate and an extended delivery.
      */
-    enum class CMDBolusType(val id: Int) {
+    enum class CMDImmediateBolusType(val id: Int) {
         STANDARD(0x47),
         MULTI_WAVE(0xB7);
 
         companion object {
-            private val values = CMDBolusType.values()
+            private val values = CMDImmediateBolusType.values()
             fun fromInt(value: Int) = values.firstOrNull { it.id == value }
         }
     }
@@ -565,7 +573,7 @@ object ApplicationLayer {
      *            "57" means 5.7 IU.
      */
     data class CMDBolusDeliveryStatus(
-        val bolusType: CMDBolusType,
+        val bolusType: CMDImmediateBolusType,
         val deliveryState: CMDBolusDeliveryState,
         val remainingAmount: Int
     )
@@ -996,8 +1004,18 @@ object ApplicationLayer {
         command = Command.CMD_GET_BOLUS_STATUS
     )
 
+    enum class CMDDeliverBolusType {
+        STANDARD_BOLUS,
+        EXTENDED_BOLUS,
+        MULTIWAVE_BOLUS
+    }
+
     /**
-     * Creates a CMD_DELIVER_BOLUS packet.
+     * Creates a CMD_DELIVER_BOLUS packet for a standard bolus.
+     *
+     * This is equivalent to calling the full [createCMDDeliverBolusPacket] function
+     * with bolusType set to [CMDDeliverBolusType.STANDARD_BOLUS]. The [bolusAmount]
+     * argument here is passed as the full function's totalBolusAmount argument.
      *
      * The command mode must have been activated before this can be sent to the Combo.
      *
@@ -1008,45 +1026,124 @@ object ApplicationLayer {
      *        "57" means 5.7 IU.
      * @return The produced packet.
      */
-    fun createCMDDeliverBolusPacket(bolusAmount: Int): Packet {
+    fun createCMDDeliverBolusPacket(bolusAmount: Int) =
+        createCMDDeliverBolusPacket(
+            totalBolusAmount = bolusAmount,
+            immediateBolusAmount = 0,
+            durationInMinutes = 0,
+            bolusType = CMDDeliverBolusType.STANDARD_BOLUS
+        )
+
+    /**
+     * Creates a CMD_DELIVER_BOLUS packet.
+     *
+     * The command mode must have been activated before this can be sent to the Combo.
+     *
+     * See the combo-comm-spec.adoc file for details about this packet.
+     *
+     * @param totalBolusAmount Total amount of insulin to use for the bolus.
+     *   Note that this is given in 0.1 IU units, so for example, "57" means 5.7 IU.
+     * @param immediateBolusAmount The amount of insulin units to use for the
+     *   immediate portion of a multiwave bolus. This value is only used if
+     *   [bolusType] is [CMDDeliverBolusType.MULTIWAVE_BOLUS]. This
+     *   value must be <= [totalBolusAmount].
+     * @param durationInMinutes The duration of the extended bolus or the
+     *   extended portion of the multiwave bolus. If [bolusType] is set to
+     *   [CMDDeliverBolusType.STANDARD_BOLUS], this value is ignored.
+     *   Otherwise, it must be at least 15.
+     * @param bolusType Type of the bolus.
+     * @return The produced packet.
+     * @throws IllegalArgumentException if [immediateBolusAmount] exceeds
+     *   [totalBolusAmount], or if [durationInMinutes] is <15 when [bolusType]
+     *   is set to anything other than [CMDDeliverBolusType.STANDARD_BOLUS].
+     */
+    fun createCMDDeliverBolusPacket(
+        totalBolusAmount: Int,
+        immediateBolusAmount: Int,
+        durationInMinutes: Int,
+        bolusType: CMDDeliverBolusType
+    ): Packet {
+        // Values that aren't used for the particular bolus type are set to 0
+        // since we don't know what happens if we transmit a nonzero value to
+        // the Combo with these bolus types.
+        val (effectiveImmediateBolusAmount, effectiveDurationInMinutes) = when (bolusType) {
+            CMDDeliverBolusType.STANDARD_BOLUS -> Pair(0, 0)
+            CMDDeliverBolusType.EXTENDED_BOLUS -> Pair(0, durationInMinutes)
+            CMDDeliverBolusType.MULTIWAVE_BOLUS -> Pair(immediateBolusAmount, durationInMinutes)
+        }
+
+        // Apply argument requirement checks, depending on the bolus type.
+        when (bolusType) {
+            CMDDeliverBolusType.STANDARD_BOLUS -> Unit
+
+            CMDDeliverBolusType.EXTENDED_BOLUS ->
+                require(effectiveDurationInMinutes >= 15) {
+                    "extended bolus duration must be at least 15; actual duration: $effectiveDurationInMinutes"
+                }
+
+            CMDDeliverBolusType.MULTIWAVE_BOLUS -> {
+                require(effectiveDurationInMinutes >= 15) {
+                    "multiwave bolus duration must be at least 15; actual duration: $effectiveDurationInMinutes"
+                }
+                require(immediateBolusAmount <= totalBolusAmount) {
+                    "immediate bolus duration must be <= total bolus amount; actual immediate/total amount: " +
+                    "$effectiveImmediateBolusAmount / $totalBolusAmount"
+                }
+            }
+        }
+
         // Need to convert the bolus amount to a 32-bit floating point, and
         // then convert that into a form that can be stored below as 4 bytes
         // in little-endian order.
-        val bolusAmountAsFloatBits = bolusAmount.toFloat().toBits().toPosLong()
+        val totalBolusAmountAsFloatBits = totalBolusAmount.toFloat().toBits().toPosLong()
+        val effectiveImmediateBolusAmountAsFloatBits = effectiveImmediateBolusAmount.toFloat().toBits().toPosLong()
+        val effectiveDurationInMinutesAsFloatBits = effectiveDurationInMinutes.toFloat().toBits().toPosLong()
 
-        // TODO: It is currently unknown why the 0x55 and 0x59 bytes encode
-        // a standard bolus, why the same bolus parameters have to be added
-        // twice (once as 16-bit integers and once as 32-bit floats), or
-        // how to program in multi-wave and extended bolus types.
+        // TODO: It is currently unknown why the same bolus parameters have to
+        // be added twice (once as 16-bit integers and once as 32-bit floats).
+
+        // NOTE: The 0x55, 0x59, 0x65 etc. values have been found empirically.
+        val bolusTypeIDBytes = when (bolusType) {
+            CMDDeliverBolusType.STANDARD_BOLUS -> intArrayOf(0x55, 0x59)
+            CMDDeliverBolusType.EXTENDED_BOLUS -> intArrayOf(0x65, 0x69)
+            CMDDeliverBolusType.MULTIWAVE_BOLUS -> intArrayOf(0xA5, 0xA9)
+        }
 
         val payload = byteArrayListOfInts(
-            // This specifies a standard bolus.
-            0x55, 0x59,
+            bolusTypeIDBytes[0], bolusTypeIDBytes[1],
 
             // Total bolus amount, encoded as a 16-bit little endian integer.
-            (bolusAmount and 0x00FF) ushr 0,
-            (bolusAmount and 0xFF00) ushr 8,
+            (totalBolusAmount and 0x00FF) ushr 0,
+            (totalBolusAmount and 0xFF00) ushr 8,
             // Duration in minutes, encoded as a 16-bit little endian integer.
             // (Only relevant for multi-wave and extended bolus.)
-            0x00, 0x00,
+            (effectiveDurationInMinutes and 0x00FF) ushr 0,
+            (effectiveDurationInMinutes and 0xFF00) ushr 8,
             // Immediate bolus amount encoded as a 16-bit little endian integer.
             // (Only relevant for multi-wave bolus.)
-            0x00, 0x00,
+            (effectiveImmediateBolusAmount and 0x00FF) ushr 0,
+            (effectiveImmediateBolusAmount and 0xFF00) ushr 8,
 
             // Total bolus amount, encoded as a 32-bit little endian float point.
-            ((bolusAmountAsFloatBits and 0x000000FFL) ushr 0).toInt(),
-            ((bolusAmountAsFloatBits and 0x0000FF00L) ushr 8).toInt(),
-            ((bolusAmountAsFloatBits and 0x00FF0000L) ushr 16).toInt(),
-            ((bolusAmountAsFloatBits and 0xFF000000L) ushr 24).toInt(),
+            ((totalBolusAmountAsFloatBits and 0x000000FFL) ushr 0).toInt(),
+            ((totalBolusAmountAsFloatBits and 0x0000FF00L) ushr 8).toInt(),
+            ((totalBolusAmountAsFloatBits and 0x00FF0000L) ushr 16).toInt(),
+            ((totalBolusAmountAsFloatBits and 0xFF000000L) ushr 24).toInt(),
             // Duration in minutes, encoded as a 32-bit little endian float point.
             // (Only relevant for multi-wave and extended bolus.)
-            0x00, 0x00, 0x00, 0x00,
+            ((effectiveDurationInMinutesAsFloatBits and 0x000000FFL) ushr 0).toInt(),
+            ((effectiveDurationInMinutesAsFloatBits and 0x0000FF00L) ushr 8).toInt(),
+            ((effectiveDurationInMinutesAsFloatBits and 0x00FF0000L) ushr 16).toInt(),
+            ((effectiveDurationInMinutesAsFloatBits and 0xFF000000L) ushr 24).toInt(),
             // Immediate bolus amount encoded as a 32-bit little endian float point.
             // (Only relevant for multi-wave bolus.)
-            0x00, 0x00, 0x00, 0x00
+            ((effectiveImmediateBolusAmountAsFloatBits and 0x000000FFL) ushr 0).toInt(),
+            ((effectiveImmediateBolusAmountAsFloatBits and 0x0000FF00L) ushr 8).toInt(),
+            ((effectiveImmediateBolusAmountAsFloatBits and 0x00FF0000L) ushr 16).toInt(),
+            ((effectiveImmediateBolusAmountAsFloatBits and 0xFF000000L) ushr 24).toInt(),
         )
 
-        // Add a CRC16 checksum for all of the parameters
+        // Add a CRC16 checksum for all the parameters
         // stored in the payload above.
         val crcChecksum = calculateCRC16MCRF4XX(payload)
         payload.add(((crcChecksum and 0x00FF) ushr 0).toByte())
@@ -1068,7 +1165,7 @@ object ApplicationLayer {
      * @param bolusType The type of the bolus to cancel.
      * @return The produced packet.
      */
-    fun createCMDCancelBolusPacket(bolusType: CMDBolusType) = Packet(
+    fun createCMDCancelBolusPacket(bolusType: CMDImmediateBolusType) = Packet(
         command = Command.CMD_CANCEL_BOLUS,
         payload = byteArrayListOfInts(bolusType.id)
     )
@@ -1289,6 +1386,11 @@ object ApplicationLayer {
             // All bolus amounts are recorded as an integer that got multiplied by 10.
             // For example, an amount of 3.7 IU is recorded as the 16-bit integer 37.
 
+            // NOTE: "Manual" means that the user manually administered the bolus
+            // on the pump itself, with the pump's buttons. So, manual == false
+            // specifies that the bolus was given off programmatically (that is,
+            // through the CMD_DELIVER_BOLUS command).
+
             val eventDetail = when (eventTypeId) {
                 // Quick bolus.
                 4, 5 -> {
@@ -1313,34 +1415,38 @@ object ApplicationLayer {
                 }
 
                 // Extended bolus.
-                8, 9 -> {
+                8, 9, 16, 17 -> {
                     // Total bolus amount is recorded in the first 2 detail bytes as a 16-bit little endian integer.
                     val totalBolusAmount = (detailBytes[1].toPosInt() shl 8) or detailBytes[0].toPosInt()
                     // Total duration in minutes is recorded in the next 2 detail bytes as a 16-bit little endian integer.
                     val totalDurationMinutes = (detailBytes[3].toPosInt() shl 8) or detailBytes[2].toPosInt()
-                    // Event type ID 8 = bolus started. ID 9 = bolus ended.
-                    val started = (eventTypeId == 8)
+                    // Event type IDs 8 or 16 = bolus started. IDs 9 or 17 = bolus ended.
+                    val started = (eventTypeId == 8) || (eventTypeId == 16)
+                    val manual = (eventTypeId == 8) || (eventTypeId == 9)
 
                     logger(LogLevel.DEBUG) {
-                        "Detail info: got history event \"extended bolus ${if (started) "started" else "ended"}\" " +
-                                "with total amount of ${totalBolusAmount.toFloat() / 10} IU and " +
-                                "total duration of $totalDurationMinutes minutes"
+                        "Detail info: got history event \"${if (manual) "manual" else "automatic"} " +
+                        "extended bolus ${if (started) "started" else "ended"}\" " +
+                        "with total amount of ${totalBolusAmount.toFloat() / 10} IU and " +
+                        "total duration of $totalDurationMinutes minutes"
                     }
 
                     if (started)
                         CMDHistoryEventDetail.ExtendedBolusStarted(
                             totalBolusAmount = totalBolusAmount,
-                            totalDurationMinutes = totalDurationMinutes
+                            totalDurationMinutes = totalDurationMinutes,
+                            manual = manual
                         )
                     else
                         CMDHistoryEventDetail.ExtendedBolusEnded(
                             totalBolusAmount = totalBolusAmount,
-                            totalDurationMinutes = totalDurationMinutes
+                            totalDurationMinutes = totalDurationMinutes,
+                            manual = manual
                         )
                 }
 
                 // Multiwave bolus.
-                10, 11 -> {
+                10, 11, 18, 19 -> {
                     // All 8 bits of first byte + 2 LSB of second byte: bolus amount.
                     // 6 MSB of second byte + 4 LSB of third byte: immediate bolus amount.
                     // 4 MSB of third byte + all 8 bits of fourth byte: duration in minutes.
@@ -1349,27 +1455,31 @@ object ApplicationLayer {
                             ((detailBytes[1].toPosInt() and 0b11111100) ushr 2)
                     val totalDurationMinutes = (detailBytes[3].toPosInt() shl 4) or
                             ((detailBytes[2].toPosInt() and 0b11110000) ushr 4)
-                    // Event type ID 10 = bolus started. ID 11 = bolus ended.
-                    val started = (eventTypeId == 10)
+                    // Event type IDs 10 or 18 = bolus started. IDs 11 or 19 = bolus ended.
+                    val started = (eventTypeId == 10) || (eventTypeId == 18)
+                    val manual = (eventTypeId == 10) || (eventTypeId == 11)
 
                     logger(LogLevel.DEBUG) {
-                        "Detail info: got history event \"multiwave bolus ${if (started) "started" else "ended"}\" " +
-                                "with total amount of ${totalBolusAmount.toFloat() / 10} IU, " +
-                                "immediate amount of ${immediateBolusAmount.toFloat() / 10} IU, " +
-                                "and total duration of $totalDurationMinutes minutes"
+                        "Detail info: got history event \"${if (manual) "manual" else "automatic"} " +
+                        "multiwave bolus ${if (started) "started" else "ended"}\" " +
+                        "with total amount of ${totalBolusAmount.toFloat() / 10} IU, " +
+                        "immediate amount of ${immediateBolusAmount.toFloat() / 10} IU, " +
+                        "and total duration of $totalDurationMinutes minutes"
                     }
 
                     if (started)
                         CMDHistoryEventDetail.MultiwaveBolusStarted(
                             totalBolusAmount = totalBolusAmount,
                             immediateBolusAmount = immediateBolusAmount,
-                            totalDurationMinutes = totalDurationMinutes
+                            totalDurationMinutes = totalDurationMinutes,
+                            manual = manual
                         )
                     else
                         CMDHistoryEventDetail.MultiwaveBolusEnded(
                             totalBolusAmount = totalBolusAmount,
                             immediateBolusAmount = immediateBolusAmount,
-                            totalDurationMinutes = totalDurationMinutes
+                            totalDurationMinutes = totalDurationMinutes,
+                            manual = manual
                         )
                 }
 
@@ -1378,10 +1488,6 @@ object ApplicationLayer {
                     // Bolus amount is recorded in the first 2 detail bytes as a 16-bit little endian integer.
                     val bolusAmount = (detailBytes[1].toPosInt() shl 8) or detailBytes[0].toPosInt()
                     // Events with type IDs 6 and 7 indicate manual infusion.
-                    // NOTE: "Manual" means that the user manually administered the bolus
-                    // on the pump itself, with the pump's buttons. So, manual == false
-                    // specifies that the bolus was given off programmatically (that is,
-                    // through the CMD_DELIVER_BOLUS command).
                     val manual = (eventTypeId == 6) || (eventTypeId == 7)
                     // Events with type IDs 6 and 14 indicate that a bolus was requested, while
                     // events with type IDs 7 and 15 indicate that a bolus was infused (= finished).
@@ -1477,7 +1583,7 @@ object ApplicationLayer {
         val payload = packet.payload
 
         val bolusTypeInt = payload[2].toPosInt()
-        val bolusType = CMDBolusType.fromInt(bolusTypeInt)
+        val bolusType = CMDImmediateBolusType.fromInt(bolusTypeInt)
             ?: throw PayloadDataCorruptionException(
                 packet,
                 "Invalid bolus type ${bolusTypeInt.toHexString(2, true)}"

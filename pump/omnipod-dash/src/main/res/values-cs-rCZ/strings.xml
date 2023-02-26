@@ -39,4 +39,16 @@
     <string name="omnipod_dash_not_enough_insulin">V zásobníku nezbývá dostatek inzulínu</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Nepotvrzený příkaz</string>
     <string name="requested_by_user" comment="26 characters max for translation">Vyžádáno uživatelem</string>
+    <string name="profile_set_ok">Profil nastaven OK</string>
+    <string name="suspend_delivery_is_unconfirmed">Pozastavení je nepotvrzené! Aktualizujte prosím ručně stav podu na záložce Omnipod a obnovte podávání inzulínu, pokud je to nutné.</string>
+    <string name="insulin_delivery_suspended">Výdej inzulínu pozastaven</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Časové pásmo podu se liší od časového pásma v telefonu. Bazál je nesprávný. Přepněte profil pro opravu</string>
+    <string name="failed_to_set_the_new_basal_profile">Nepodařilo se nastavit nový bazální profil. Podávání inzulínu pozastaveno</string>
+    <string name="setting_basal_profile_might_have_failed">Nastavení bazálního profilu se možná nezdařilo. Podávání inzulínu může být pozastaveno! Prosím ručně obnovte stav podu na záložce Omnipod a obnovte podávání pokud je to potřeba.</string>
+    <string name="bolus_delivery_status_uncertain">Stavu bolusu je nejistý. Aktualizujte stav podu pro potvrzení nebo zamítnutí.</string>
+    <string name="checking_delivery_status">Kontrola stavu podávání</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Nastavení dočasného bazálu mohlo být neúspěšné. Pokud již dočasný bazál dříve běžel, byl zrušen. Aktualizujte prosím ručně stav podu na záložce Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Zrušení dočasného bazálu je nejisté</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Nepotvrzený příkaz pro obnovení podávání inzulínu. Obnovte stav podu</string>
+    <string name="cancelling_temp_basal_might_have_failed">Zrušení dočasného bazátu selhalo. Pokud byl dočasný bazální již dříve spuštěn, mohl být zrušen. Aktualizujte prosím stav podu z karty Omnipod.</string>
 </resources>
