@@ -317,8 +317,11 @@
     <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
     <string name="old_data">DATI VECCHI</string>
     <string name="pump_fetching_data">tentativo di recupero dati dal micro.</string>
+    <string name="pump_old_data">TDD: Dati ancora vecchi! Non è possibile caricare dal micro.</string>
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
+    <string name="no_active_profile">Nessun cambio profilo attivo!</string>
+    <string name="profile_message">Profilo:\n\nTimeshift: %1$\nPercentuale: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">Nessun profilo caricato</string>
     <string name="aps_only">Si applica solo in modalità APS!</string>
@@ -337,4 +340,5 @@
     <string name="until">fino a</string>
     <string name="default_range">RANGE PREDEFINITO</string>
     <string name="target">target</string>
+    <string name="rate_duration">Velocità: %1$.2fU/h (%2$.2f%%) \nDurata %3$d min</string>
 </resources>
