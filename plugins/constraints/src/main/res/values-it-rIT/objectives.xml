@@ -19,11 +19,13 @@
     <string name="objectives_maxiobzero_learned">Impostare MaxIOB a zero previene l\'ipoglicemia e non aggiungerà più insulina al di sopra della velocità basale (eccetto in caso di IOB negativo)</string>
     <string name="objectives_maxiob_objective">Regolazione del loop chiuso, aumentando max IOB al di sopra di 0 e abbassando gradualmente i target glicemici</string>
     <string name="objectives_maxiob_gate">Esegui l\'applicazione per alcuni giorni e almeno una notte senza allarmi di glicemia bassa, prima di abbassare il target glicemico</string>
+    <string name="objectives_maxiob_learned">Aggiorna MaxIOB in base alla crescita del bambino. Non permettere al sistema di dare più insulina di quanto si può coprire con il cibo è una cattiva idea quanto impostare un valore davvero alto.</string>
     <string name="objectives_autosens_objective">Adatta basali e rapporti se necessario, quindi attiva auto-sens</string>
     <string name="objectives_autosens_gate">1 settimana di looping diurno con inserimento regolare dei carboidrati, eseguito con successo</string>
     <string name="objectives_autosens_learned">Se il risultato di autosens non è oscillante intorno al 100% il tuo profilo probabilmente è errato.</string>
     <string name="objectives_smb_objective">Abilitazione funzioni aggiuntive per l\'uso diurno, come SMB</string>
     <string name="objectives_smb_gate">È necessario leggere il wiki e aumentare maxIOB affinché le azioni di SMB funzionino adeguatamente! Un buon inizio è maxIOB = media bolo posto + 3 x max basale giornaliera</string>
+    <string name="objectives_smb_learned">Usare SMB è il tuo obiettivo. L\'algoritmo Oref1 è stato progettato per aiutarti anche con i tuoi boli. Non dovresti erogare un bolo completo per il tuo cibo, ma solo una parte di esso e lasciare che AAPS ti dia il resto se necessario. In questo modo hai più spazio di azione per i carboidrati mal calcolati. Lo sapevi che puoi impostare una percentuale del risultato del calcolatore per ridurre la dimensione del bolo?</string>
     <string name="objectives_auto_objective">Abilitazione automazione</string>
     <string name="objectives_auto_gate">Leggi la documentazione su come funziona l\'automazione. Configura le tue prime semplici regole. Consenti ad AAPS solo di visualizzare una notifica, non di eseguire un\'azione. Quando sei sicuro che l\'automazione viene attivata al momento giusto, sostituisci la notifica con un\'azione reale. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">L\'automazione può essere un buon \"servitore\" ma anche un cattivo \"padrone\". Non abusarne. Non cercare di sostituire l\'algoritmo di base. Verifica lo stato dell\'automazione con un messaggio prima dell\'uso.</string>
@@ -33,6 +35,7 @@
     <string name="accomplished">Completato: %1$s</string>
     <string name="objectives_usage_objective">Impara a controllare AAPS</string>
     <string name="objectives_usage_gate">Esegui varie azioni in AAPS</string>
+    <string name="objectives_usage_learned">Hai imparato come gestire le basi di AAPS. I controlli principali sono nella schermata Panoramica accessibile con un click o un click lungo. Ci sono controlli aggiuntivi nella schermata Azioni. Dovresti sapere come mettere la schermata di un plugin nel menu scorrevole in alto o lasciare che il plugin sia visualizzato nell\'elenco dei plugin attivati in alto a sinistra.</string>
     <string name="objectives_useprofileswitch">Imposta il profilo \"90%\" per 10 min (premi a lungo sul nome profilo nella sezione Panoramica)</string>
     <string name="objectives_usedisconnectpump">Simula la doccia. Disconnetti il micro per 1h (premi a lungo su Loop aperto)</string>
     <string name="objectives_usereconnectpump">... e riconnetti allo stesso modo</string>
