@@ -32,7 +32,7 @@ dependencies {
     //
     // Source: https://github.com/mockk/mockk/issues/685#issuecomment-907076353:
     // TODO: Revisit this when upgrading kotlinx-datetime
-    runtimeOnly("org.jetbrains.kotlinx:kotlinx-serialization-core:$kotlinx_serialization_core_version")
+    runtimeOnly("org.jetbrains.kotlinx:kotlinx-serialization-core:$kotlinx_serialization_version")
 }
 
 android {
