@@ -838,7 +838,7 @@ class BLEComm @Inject internal constructor(
         if (!message.isReceived) {
             aapsLogger.warn(LTag.PUMPBTCOMM, "Reply not received " + message.friendlyName)
             message.handleMessageNotReceived()
-            danaRSPlugin.disconnect("Reply not received")
+            disconnect("Reply not received")
         }
         // verify encryption for v3 & BLE
         if (message is DanaRSPacketEtcKeepConnection)
