@@ -449,6 +449,7 @@
     <string name="info">INFO</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">Consiglio bolo</string>
+    <string name="bolus_advisor_message">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed essere ricordato quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
     <string name="partialboluswizard">Eroga parte del risultato del calcolatore [%]</string>
