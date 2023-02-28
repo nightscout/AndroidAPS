@@ -13,5 +13,7 @@
 
     <string name="snInput_title">SN</string>
     <string name="snInput_summary">Serial number pump base</string>
+    <string name="string_new_patch">Start new patch</string>
+    <string name="string_stop_patch">Stop patch</string>
 
 </resources>

@@ -26,7 +26,7 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.TimeChangeType
-import info.nightscout.pump.medtrum.ui.MedtrumPumpFragment
+import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
 import info.nightscout.pump.medtrum.services.MedtrumService
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -67,7 +67,7 @@ class MedtrumPlugin @Inject constructor(
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
-        .fragmentClass(MedtrumPumpFragment::class.java.name)
+        .fragmentClass(MedtrumOverviewFragment::class.java.name)
         .pluginIcon(info.nightscout.core.ui.R.drawable.ic_eopatch2_128) // TODO
         .pluginName(R.string.medtrum)
         .shortName(R.string.medtrum_pump_shortname)
