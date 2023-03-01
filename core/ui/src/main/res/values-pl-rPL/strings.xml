@@ -164,7 +164,6 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Anulowanie bazy tymczasowej nie powiodło się</string>
     <string name="canceling_eb_failed">Anulowanie przedłużonego bolusa nie powiodło się</string>
-    <string name="virtualpump_uploadstatus_title">Prześlij status do NS lub Tidepool</string>
     <string name="suspendloop_label">Wyłączona/zawieszona pętla</string>
     <string name="iob_label">Aktywna insulina (IOB)</string>
     <!--    Protection-->
