@@ -164,7 +164,6 @@
     <string name="isf_short">Чувств</string>
     <string name="canceling_tbr_failed">Отмяната на временния базал е неуспешно</string>
     <string name="canceling_eb_failed">Неуспешно спиране на удължен болус</string>
-    <string name="virtualpump_uploadstatus_title">Качване на статус в NS или Tidepool</string>
     <string name="suspendloop_label">Изключен/забранен цикъл</string>
     <string name="iob_label">Активен Инсулин (IOB)</string>
     <!--    Protection-->
