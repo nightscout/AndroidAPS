@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="category_alerts">התראות</string>
+    <string name="eopatch_ble_status">סטטוס BLE</string>
     <string name="eopatch_status">סטטוס</string>
     <string name="eopatch_base_basal_rate">ערך בזאלי בסיסי</string>
     <string name="eopatch_temp_basal_rate">מינון בזאלי זמני</string>
@@ -10,10 +11,20 @@
     <string name="symbol_minus">-</string>
     <string name="time_30min">30 דקות</string>
     <string name="time_1hr">שעה</string>
+    <string name="time_1hr_30min">שעה וחצי</string>
+    <string name="time_2hr">שעתיים</string>
     <string name="all_blank">\u0020</string>
+    <string name="patch_safe_deactivation_desc">כדי להחליף ל Patch חדש, נדרש לנתק את ה-Patch הנוכחי. כל אספקת האינסולין מ-Patch תבוטל.</string>
+    <string name="patch_change_confirm_desc">האם אתם בטוחים שברצונכם לנתק את ה-Patch?</string>
+    <string name="patch_remaining_insulin">אינסולין נותר</string>
+    <string name="patch_remaining_usage_period">זמן נותר</string>
     <string name="patch_finish">סיום</string>
+    <string name="patch_wake_up">מילוי אינסולין</string>
+    <string name="patch_wake_up_step">1/6</string>
     <string name="patch_step_desc_1">1.</string>
+    <string name="patch_wake_up_desc_1">נא למלא את ה-Patch באינסולין בטמפרטורת החדר. שימו לב לזווית המזרק.</string>
     <string name="patch_step_desc_2">2.</string>
+    <string name="patch_wake_up_desc_2">וודאו ששמעתם צפצוף אחד.</string>
     <string name="symbol_days">ימים</string>
     <string name="string_resume">חידוש</string>
     <string name="string_suspend">השהיה</string>
