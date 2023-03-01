@@ -351,7 +351,7 @@
     <string name="pumpsuspended">Pump suspended</string>
     <string name="executing">Executing</string>
     <string name="virtualpump_settings">Virtual pump settings</string>
-    <string name="virtualpump_uploadstatus_title">Upload status to NS</string>
+    <string name="virtualpump_uploadstatus_title">Upload pump status to NS</string>
     <string name="nsclientinternal">NSClient</string>
     <string name="nsclientinternal_shortname">NSCI</string>
     <string name="nsclientinternal_url">URL:</string>
