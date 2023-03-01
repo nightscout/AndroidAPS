@@ -22,7 +22,7 @@
     <string name="terms_of_use">Условия за ползване</string>
     <string name="please_read__information">Моля прочетете внимателно следващата информация и се съгласете с условията за да продължите.</string>
     <string name="info_openhumans">Това е отворен код, който ще копира данните ви в Open Humans. Ние не запазваме никакви права да споделяме вашите данни с трети страни без изричното ви разрешение. Данните, които проектът и приложението получават, се идентифицират чрез случаен идентификатор на потребител и ще бъдат надеждно предадени на Open Humans акаунт с вашето разрешение за този процес. Можете да спрете качването и да изтриете данните за качване по всяко време чрез www.openhumans.org.</string>
-    <string name="data_uploaded">Данните не са качени</string>
+    <string name="data_uploaded">Данните са качени</string>
     <string name="glucose_values">Стойности на КЗ</string>
     <string name="boluses">Болуси</string>
     <string name="extended_boluses">Удължен болус</string>
@@ -45,7 +45,7 @@
     <string name="agree">Разбирам и съм съгласен.</string>
     <string name="login_open_humans">Качване на данни към Open Humans</string>
     <string name="final_touches">Последни настройки</string>
-    <string name="uploading_proceed">На една крачка от прикачването на данните си в Отворено Общество си. Продължаваш ли?</string>
+    <string name="uploading_proceed">Ти си на една крачка от качването на данните ти в Open Humans. Продължаваш ли?</string>
     <string name="cancel">Откажи</string>
     <string name="proceed">Продължи</string>
     <string name="finishing">Приключва...</string>
