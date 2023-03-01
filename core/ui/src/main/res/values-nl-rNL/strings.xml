@@ -164,7 +164,6 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Annuleren van tijdelijke basaal mislukt</string>
     <string name="canceling_eb_failed">Annuleren van vertraagde bolus is mislukt</string>
-    <string name="virtualpump_uploadstatus_title">Upload status naar NS of Tidepool</string>
     <string name="suspendloop_label">Uitgeschakelde/onderbroken loop</string>
     <string name="iob_label">Insuline aan boord (IOB)</string>
     <!--    Protection-->
