@@ -119,7 +119,6 @@
     <string name="system_automation">System automation</string>
     <string name="run_automations">Run automations</string>
     <string name="add_automation">Add rule</string>
-    <string name="remove_sort">Remove/sort</string>
     <string name="stop_processing">Stop processing</string>
 
     <!-- WeekdayPicker -->
