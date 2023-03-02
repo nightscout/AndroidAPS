@@ -2,6 +2,7 @@ package info.nightscout.plugins.sync.nsclientV3
 
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.database.impl.AppRepository
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
@@ -29,7 +30,8 @@ class DataSyncSelectorV3Impl @Inject constructor(
     private val activePlugin: ActivePlugin,
     private val appRepository: AppRepository,
     private val rxBus: RxBus,
-    private val storeDataForDb: StoreDataForDb
+    private val storeDataForDb: StoreDataForDb,
+    private val config: Config
 ) : DataSyncSelectorV3 {
 
     class QueueCounter(
@@ -71,7 +73,7 @@ class DataSyncSelectorV3Impl @Inject constructor(
 
     override suspend fun doUpload() {
         rxBus.send(EventNSClientUpdateGuiStatus())
-        if (sp.getBoolean(R.string.key_ns_upload, true) && !isPaused) {
+        if ((config.NSCLIENT || sp.getBoolean(R.string.key_ns_upload, true)) && !isPaused) {
             queueCounter.bolusesRemaining = (appRepository.getLastBolusId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)
             queueCounter.carbsRemaining = (appRepository.getLastCarbsId() ?: 0L) - sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)
             queueCounter.bcrRemaining = (appRepository.getLastBolusCalculatorResultId() ?: 0L) - sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)
