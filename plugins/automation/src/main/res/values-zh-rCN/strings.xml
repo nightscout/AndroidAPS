@@ -116,7 +116,6 @@
     <string name="system_automation">系统自动化</string>
     <string name="run_automations">运行自动化</string>
     <string name="add_automation">添加规则</string>
-    <string name="remove_sort">移除/排序</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">周一</string>
     <string name="tuesday_short">周二</string>
