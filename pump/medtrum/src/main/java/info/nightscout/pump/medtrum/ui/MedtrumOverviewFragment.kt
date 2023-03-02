@@ -1,101 +1,67 @@
 package info.nightscout.pump.medtrum.ui
 
+import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.HandlerThread
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import dagger.android.support.DaggerFragment
-import info.nightscout.core.extensions.toStringFull
-import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.interfaces.profile.ProfileFunction
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.lifecycle.ViewModelProvider
 import info.nightscout.pump.medtrum.databinding.MedtrumOverviewFragmentBinding
-import info.nightscout.pump.medtrum.events.EventMedtrumPumpUpdateGui
-import info.nightscout.pump.medtrum.MedtrumPlugin
+import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel
+import info.nightscout.pump.medtrum.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventExtendedBolusChange
-import info.nightscout.rx.events.EventTempBasalChange
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
+import info.nightscout.rx.logging.AAPSLogger
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class MedtrumOverviewFragment : DaggerFragment() {
+class MedtrumOverviewFragment : MedtrumBaseFragment<MedtrumOverviewFragmentBinding>() {
 
     @Inject lateinit var rxBus: RxBus
-    @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var dateUtil: DateUtil
-    @Inject lateinit var fabricPrivacy: FabricPrivacy
-    @Inject lateinit var MedtrumPlugin: MedtrumPlugin
-    @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var aapsLogger: AAPSLogger
+    private lateinit var resultLauncherForResume: ActivityResultLauncher<Intent>
+    private lateinit var resultLauncherForPause: ActivityResultLauncher<Intent>
 
-    private val disposable = CompositeDisposable()
+    private var disposable: CompositeDisposable = CompositeDisposable()
 
-    private lateinit var refreshLoop: Runnable
-    private var handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
+    override fun getLayoutId(): Int = R.layout.medtrum_overview_fragment
 
-    private var _binding: MedtrumOverviewFragmentBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
-    private val binding get() = _binding!!
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        MedtrumOverviewFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
-
-    @Synchronized
-    override fun onResume() {
-        super.onResume()
-        disposable += rxBus
-            .toObservable(EventMedtrumPumpUpdateGui::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGui() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventTempBasalChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGui() }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventExtendedBolusChange::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({ updateGui() }, fabricPrivacy::logException)
-        refreshLoop = Runnable {
-            activity?.runOnUiThread { updateGui() }
-            handler.postDelayed(refreshLoop, T.mins(1).msecs())
-        }
-        handler.postDelayed(refreshLoop, T.mins(1).msecs())
-        updateGui()
+    override fun onDestroy() {
+        super.onDestroy()
+        disposable.clear()
     }
 
-    @Synchronized
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.apply {
+            viewmodel = ViewModelProvider(this@MedtrumOverviewFragment, viewModelFactory).get(MedtrumOverviewViewModel::class.java)
+            viewmodel?.apply {
+                // TODO Handle events here, see eopatch eventhandler
+            }
+
+            resultLauncherForResume = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                when (it.resultCode) {
+                    // TODO Handle events here, see eopatch eventhandler
+                }
+            }
+
+            resultLauncherForPause = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                when (it.resultCode) {
+                    // TODO Handle events here, see eopatch eventhandler
+                }
+            }
+        }
+    }
+
     override fun onPause() {
         super.onPause()
-        disposable.clear()
-        handler.removeCallbacksAndMessages(null)
+        // TODO
     }
 
-    @Synchronized
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
-
-    @Synchronized
-    private fun updateGui() {
-        if (_binding == null) return
-        val profile = profileFunction.getProfile() ?: return
-        binding.baseBasalRate.text = rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, MedtrumPlugin.baseBasalRate)
-        binding.tempbasal.text = iobCobCalculator.getTempBasal(dateUtil.now())?.toStringFull(profile, dateUtil)
-            ?: ""
-        binding.battery.text = rh.gs(info.nightscout.core.ui.R.string.format_percent, 0) // TODO
-        binding.reservoir.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, 0.0) // TODO
-
-        binding.serialNumber.text = MedtrumPlugin.serialNumber()
+    override fun onResume() {
+        super.onResume()
+        // TODO
     }
 }

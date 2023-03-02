@@ -7,11 +7,9 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-// import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.OverviewViewModel
 import info.nightscout.pump.medtrum.services.MedtrumService
 import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
-import info.nightscout.pump.medtrum.ui.viewmodel.OverviewViewModel
-// import info.nightscout.pump.medtrum.ui.viewmodel.ViewModel
+import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel
 import info.nightscout.pump.medtrum.ui.viewmodel.ViewModelFactory
 import info.nightscout.pump.medtrum.ui.viewmodel.ViewModelKey
 import javax.inject.Provider
@@ -33,8 +31,8 @@ abstract class MedtrumModule {
     @Binds
     @IntoMap
     @MedtrumPluginQualifier
-    @ViewModelKey(OverviewViewModel::class)
-    internal abstract fun bindsOverviewViewmodel(viewModel: OverviewViewModel): ViewModel
+    @ViewModelKey(MedtrumOverviewViewModel::class)
+    internal abstract fun bindsMedtrumOverviewViewmodel(viewModel: MedtrumOverviewViewModel): ViewModel
 
     // FRAGMENTS
     @ContributesAndroidInjector

@@ -1,19 +1,21 @@
 package info.nightscout.pump.medtrum.ui.viewmodel
 
-import info.nightscout.pump.medtrum.ui.BaseNavigator
+import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
 import info.nightscout.pump.medtrum.ui.viewmodel.BaseViewModel
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
-class OverviewViewModel @Inject constructor(
+class MedtrumOverviewViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger
-) : BaseViewModel<BaseNavigator>() {
+) : BaseViewModel<MedtrumBaseNavigator>() {
 
     val isPatchActivated : Boolean
         get() = false // TODO
     val isPatchConnected: Boolean
         get() = false // TODO
+    val bleStatus : String
+        get() ="" //TODO
 
     init {
         // TODO

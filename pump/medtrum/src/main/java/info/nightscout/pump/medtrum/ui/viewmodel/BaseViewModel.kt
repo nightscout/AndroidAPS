@@ -1,12 +1,12 @@
 package info.nightscout.pump.medtrum.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import info.nightscout.pump.medtrum.ui.BaseNavigator
+import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import java.lang.ref.WeakReference
 
-abstract class BaseViewModel<N : BaseNavigator> : ViewModel() {
+abstract class BaseViewModel<N : MedtrumBaseNavigator> : ViewModel() {
 
     private var _navigator: WeakReference<N?>? = null
     var navigator: N?

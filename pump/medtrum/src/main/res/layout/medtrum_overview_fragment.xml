@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewmodel"
-            type="info.nightscout.pump.medtrum.ui.viewmodel.OverviewViewModel"/>
+            type="info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel"/>
     </data>
 
     <RelativeLayout
@@ -16,88 +16,55 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/medtrum_overview_buttons"
-            android:fillViewport="true"
-            tools:context=".MedtrumOverviewFragment">
-            
+            android:fillViewport="true">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/medtrum_pump_label"
-                    android:textAppearance="?android:attr/textAppearanceLarge" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:focusable="true"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="5dp"
+                    android:visibility="gone">
 
                     <TextView
+                        android:id="@+id/text1"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="5dp"
-                        android:text="@string/base_basal_rate_label"
-                        android:textAlignment="viewEnd"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingStart="2dp"
-                        android:paddingEnd="2dp"
-                        android:text=":"
-                        android:textSize="14sp"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/base_basal_rate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="0dp"
-                        android:textAlignment="viewStart"
-                        android:textSize="14sp"
-                        tools:text="0.38 U/h" />
-
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:gravity="center_vertical|center_horizontal"
+                        android:text="@string/initializing"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
                 </LinearLayout>
 
                 <View
                     android:layout_width="fill_parent"
                     android:layout_height="2dip"
-                    android:layout_marginStart="20dp"
+                    android:layout_marginLeft="20dp"
                     android:layout_marginTop="5dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginRight="20dp"
                     android:layout_marginBottom="5dp"
-                    android:background="?android:attr/dividerHorizontal" />
+                    android:background="@color/list_delimiter" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:focusable="true"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingStart="0dp"
+                        android:layout_weight="1.5"
+                        android:gravity="end"
+                        android:paddingStart="5dp"
                         android:paddingEnd="5dp"
-                        android:text="@string/tempbasal_label"
-                        android:textAlignment="viewEnd"
-                        android:textSize="14sp" />
+                        android:text="@string/medtrum_ble_status"
+                        android:textSize="16sp" />
 
                     <TextView
                         android:layout_width="5dp"
@@ -106,166 +73,20 @@
                         android:gravity="center_horizontal"
                         android:paddingStart="2dp"
                         android:paddingEnd="2dp"
-                        android:text=":"
-                        android:textSize="14sp"
-                        tools:ignore="HardcodedText" />
+                        android:text="@string/colon"
+                        android:textSize="16sp" />
 
-                    <TextView
-                        android:id="@+id/tempbasal"
+                    <com.joanzapata.iconify.widget.IconTextView
+                        android:id="@+id/medtrum_ble_status"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:gravity="start"
                         android:paddingStart="5dp"
-                        android:paddingEnd="0dp"
-                        android:textAlignment="viewStart"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dip"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="?android:attr/dividerHorizontal" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="true"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingStart="0dp"
                         android:paddingEnd="5dp"
-                        android:text="@string/battery_label"
-                        android:textAlignment="viewEnd"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingStart="2dp"
-                        android:paddingEnd="2dp"
-                        android:text=":"
-                        android:textSize="14sp"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/battery"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="0dp"
-                        android:textAlignment="viewStart"
-                        android:textSize="14sp"
-                        tools:text="50%" />
-
-                </LinearLayout>
-
-                <!-- Reservoir -->
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dip"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="?android:attr/dividerHorizontal" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="true"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="5dp"
-                        android:text="@string/reservoir_label"
-                        android:textAlignment="viewEnd"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingStart="2dp"
-                        android:paddingEnd="2dp"
-                        android:text=":"
-                        android:textSize="14sp"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/reservoir"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="0dp"
-                        android:textAlignment="viewStart"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <!-- Pump Serial -->
-                <View
-                    android:layout_width="fill_parent"
-                    android:layout_height="2dip"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginEnd="20dp"
-                    android:layout_marginBottom="5dp"
-                    android:background="?android:attr/dividerHorizontal" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:focusable="true"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingStart="0dp"
-                        android:paddingEnd="5dp"
-                        android:text="@string/serial_number"
-                        android:textAlignment="viewEnd"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:layout_width="5dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:gravity="center_horizontal"
-                        android:paddingStart="2dp"
-                        android:paddingEnd="2dp"
-                        android:text=":"
-                        android:textSize="14sp"
-                        tools:ignore="HardcodedText" />
-
-                    <TextView
-                        android:id="@+id/serial_number"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="0dp"
-                        android:textAlignment="viewStart"
-                        android:textSize="14sp" />
+                        android:text="@{viewmodel.bleStatus}"
+                        android:textColor="@android:color/white"
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -286,8 +107,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/string_new_patch"
-                android:enabled="@{!viewmodel.isPatchActivated}"/>
-<!-- TODO NEEDS BINDING               app:onSafeClick="@{() -> viewmodel.onClickActivation()}"/>-->
+                android:enabled="@{!viewmodel.isPatchActivated}"
+                app:onSafeClick="@{() -> viewmodel.onClickActivation()}"/>
 
             <Button
                 android:id="@+id/button2"
@@ -296,8 +117,8 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="@string/string_stop_patch"
-                android:enabled="@{viewmodel.isPatchActivated}"/>
-<!-- TODO NEEDS BINDING                app:onSafeClick="@{() -> viewmodel.onClickDeactivation()}"/>-->
+                android:enabled="@{viewmodel.isPatchActivated}"
+                app:onSafeClick="@{() -> viewmodel.onClickDeactivation()}"/>
 
         </LinearLayout>
     </RelativeLayout>
