@@ -616,7 +616,7 @@ class NSClientV3Plugin @Inject constructor(
                     404  -> rxBus.send(EventNSClientNewLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                     else -> {
-                        rxBus.send(EventNSClientNewLog("◄ ERROR", "ProfileStore"))
+                        rxBus.send(EventNSClientNewLog("◄ ERROR", "${result.errorResponse}"))
                         return true
                     }
                 }
@@ -640,7 +640,7 @@ class NSClientV3Plugin @Inject constructor(
                     404  -> rxBus.send(EventNSClientNewLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                     else -> {
-                        rxBus.send(EventNSClientNewLog("◄ ERROR", "${dataPair.value.javaClass.simpleName} "))
+                        rxBus.send(EventNSClientNewLog("◄ ERROR", "${result.errorResponse} "))
                         return true
                     }
                 }
@@ -684,7 +684,7 @@ class NSClientV3Plugin @Inject constructor(
                     404  -> rxBus.send(EventNSClientNewLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                     else -> {
-                        rxBus.send(EventNSClientNewLog("◄ ERROR", "${dataPair.value.javaClass.simpleName} "))
+                        rxBus.send(EventNSClientNewLog("◄ ERROR", "${result.errorResponse} "))
                         return true
                     }
                 }
@@ -729,7 +729,7 @@ class NSClientV3Plugin @Inject constructor(
                     404  -> rxBus.send(EventNSClientNewLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                     else -> {
-                        rxBus.send(EventNSClientNewLog("◄ ERROR", "${dataPair.value.javaClass.simpleName} "))
+                        rxBus.send(EventNSClientNewLog("◄ ERROR", "${result.errorResponse} "))
                         return true
                     }
                 }
@@ -795,7 +795,7 @@ class NSClientV3Plugin @Inject constructor(
                         404  -> rxBus.send(EventNSClientNewLog("◄ NOT_FOUND", "${dataPair.value.javaClass.simpleName} ${result.errorResponse}"))
 
                         else -> {
-                            rxBus.send(EventNSClientNewLog("◄ ERROR", "${dataPair.value.javaClass.simpleName} "))
+                            rxBus.send(EventNSClientNewLog("◄ ERROR", "${result.errorResponse} "))
                             return true
                         }
                     }
@@ -859,6 +859,7 @@ class NSClientV3Plugin @Inject constructor(
                     slowDown()
                 }
             } catch (e: Exception) {
+                rxBus.send(EventNSClientNewLog("◄ ERROR", e.localizedMessage))
                 aapsLogger.error(LTag.NSCLIENT, "Upload exception", e)
                 return false
             }
