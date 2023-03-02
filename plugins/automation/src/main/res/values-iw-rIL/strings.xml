@@ -116,7 +116,6 @@
     <string name="system_automation">אוטומציית מערכת</string>
     <string name="run_automations">הפעל אוטומציות</string>
     <string name="add_automation">הוספת כלל</string>
-    <string name="remove_sort">הסרה\\סידור</string>
     <string name="stop_processing">עצור עיבוד</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">ב\'</string>
