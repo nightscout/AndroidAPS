@@ -164,7 +164,7 @@
     <string name="isf_short">SI</string>
     <string name="canceling_tbr_failed">Echec de l\'annulation du basal temporaire</string>
     <string name="canceling_eb_failed">Échec de l\'annulation du Bolus étendu</string>
-    <string name="virtualpump_uploadstatus_title">Transférer le statut vers NS ou Tidepool</string>
+    <string name="virtualpump_uploadstatus_title">Télécharger l\'état de la pompe sur NS ou Tidepool</string>
     <string name="suspendloop_label">Boucle désactivée/suspendue</string>
     <string name="iob_label">Insuline Active (IA)</string>
     <!--    Protection-->

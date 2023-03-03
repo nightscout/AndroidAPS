@@ -164,7 +164,6 @@
     <string name="isf_short">Чувств</string>
     <string name="canceling_tbr_failed">Отмяната на временния базал е неуспешно</string>
     <string name="canceling_eb_failed">Неуспешно спиране на удължен болус</string>
-    <string name="virtualpump_uploadstatus_title">Качване на статус в NS или Tidepool</string>
     <string name="suspendloop_label">Изключен/забранен цикъл</string>
     <string name="iob_label">Активен Инсулин (IOB)</string>
     <!--    Protection-->
@@ -298,7 +297,6 @@
     <string name="uel_site_change">СМЯНА КАНЮЛА</string>
     <string name="uel_reservoir_change">СМЯНА НА РЕЗЕРВОАР</string>
     <string name="uel_calibration">КАЛИБРАЦИЯ</string>
-    <string name="uel_prime_bolus">БОЛУС ПЪЛНЕНЕНЕ</string>
     <string name="uel_treatment">ЛЕЧЕНИЕ</string>
     <string name="uel_careportal_ns_refresh">ОБНОВИ ПОРТАЛА ЗА ЛЕЧЕНИЯ NS</string>
     <string name="uel_profile_switch_ns_refresh">ОБНОВИ СМЯНАТА НА ПРОФИЛ NS</string>

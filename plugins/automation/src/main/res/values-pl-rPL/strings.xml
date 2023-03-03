@@ -116,7 +116,6 @@
     <string name="system_automation">Automatyzacja systemowa</string>
     <string name="run_automations">Uruchom automatyzację</string>
     <string name="add_automation">Dodaj regułę</string>
-    <string name="remove_sort">Usuń / sortuj</string>
     <string name="stop_processing">Zatrzymaj przetwarzanie</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">P</string>

@@ -164,7 +164,6 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Abbruch der temporären Basalrate fehlgeschlagen</string>
     <string name="canceling_eb_failed">Der Abbruch des erweiterten Bolus ist fehlgeschlagen</string>
-    <string name="virtualpump_uploadstatus_title">Status zu NS oder Tidepool hochladen</string>
     <string name="suspendloop_label">Deaktiviere/Pausiere den Loop</string>
     <string name="iob_label">Aktives Insulin (IOB)</string>
     <!--    Protection-->
