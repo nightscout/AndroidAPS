@@ -164,6 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Error cancelando la basal temporal</string>
     <string name="canceling_eb_failed">Error cancelando el bolo extendido</string>
+    <string name="virtualpump_uploadstatus_title">Subir estado de la bomba a NS o Tidepool</string>
     <string name="suspendloop_label">Desactiva/suspende el bucle</string>
     <string name="iob_label">Insulina a bordo (IOB)</string>
     <!--    Protection-->
