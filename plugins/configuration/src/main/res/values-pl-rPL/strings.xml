@@ -83,7 +83,7 @@
     <string name="nsclient_version_does_not_match">Wersja AAPSClient nie jest zgodna z wersją AAPS. Proszę zaktualizować.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Ustawienia</string>
-    <string name="password_preferences_encrypt_prompt">Zostaniesz poproszony o hasło główne, które będzie użyte do szyfrowania wyeksportowanych preferencji.</string>
+    <string name="password_preferences_encrypt_prompt">Zostaniesz poproszony o hasło główne, które będzie użyte do szyfrowania wyeksportowanych ustawień.</string>
     <string name="preferences_export_canceled">Eksportowanie anulowane! Ustawienia NIE zostały wyeksportowane!</string>
     <string name="preferences_import_canceled">Import anulowany! Ustawienia NIE zostały zaimportowane!</string>
     <string name="preferences_import_impossible">Nie można zaimportować ustawień!</string>
