@@ -461,7 +461,17 @@ class NSClientV3Plugin @Inject constructor(
     private val onDataDelete = Emitter.Listener { args ->
         val response = args[0] as JSONObject
         aapsLogger.debug(LTag.NSCLIENT, "onDataDelete: $response")
-        rxBus.send(EventNSClientNewLog("◄ WS DELETE", "${response.optString("collection")} ${response.optString("doc")}"))
+        val collection = response.optString("colName") ?: return@Listener
+        val identifier = response.optString("identifier") ?: return@Listener
+        rxBus.send(EventNSClientNewLog("◄ WS DELETE", "$collection $identifier"))
+        if (collection == "treatments") {
+            storeDataForDb.deleteTreatment.add(identifier)
+            storeDataForDb.updateDeletedTreatmentsInDb()
+        }
+        if (collection == "entries") {
+            storeDataForDb.deleteGlucoseValue.add(identifier)
+            storeDataForDb.updateDeletedGlucoseValuesInDb()
+        }
     }
 
     private val onAnnouncement = Emitter.Listener { args ->

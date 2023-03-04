@@ -8,9 +8,11 @@ class InvalidateTemporaryBasalWithTempIdTransaction(val tempId: Long) : Transact
         val result = TransactionResult()
         val temporaryBasal = database.temporaryBasalDao.findByTempId(tempId)
             ?: throw IllegalArgumentException("There is no such Temporary Basal with the specified temp ID.")
-        temporaryBasal.isValid = false
-        database.temporaryBasalDao.updateExistingEntry(temporaryBasal)
-        result.invalidated.add(temporaryBasal)
+        if (temporaryBasal.isValid) {
+            temporaryBasal.isValid = false
+            database.temporaryBasalDao.updateExistingEntry(temporaryBasal)
+            result.invalidated.add(temporaryBasal)
+        }
         return result
     }
 

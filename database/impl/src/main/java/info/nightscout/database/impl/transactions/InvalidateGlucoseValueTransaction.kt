@@ -11,9 +11,11 @@ class InvalidateGlucoseValueTransaction(val id: Long) : Transaction<InvalidateGl
         val result = TransactionResult()
         val glucoseValue = database.glucoseValueDao.findById(id)
             ?: throw IllegalArgumentException("There is no such GlucoseValue with the specified ID.")
-        glucoseValue.isValid = false
-        database.glucoseValueDao.updateExistingEntry(glucoseValue)
-        result.invalidated.add(glucoseValue)
+        if (glucoseValue.isValid) {
+            glucoseValue.isValid = false
+            database.glucoseValueDao.updateExistingEntry(glucoseValue)
+            result.invalidated.add(glucoseValue)
+        }
         return result
     }
 
