@@ -39,6 +39,9 @@
     <string name="patch_finish">סיום</string>
     <string name="patch_forced_discard">ניתוק</string>
     <string name="patch_comm_error_during_discard_status">ניתוק Patch - שגיאת תקשורת במהלך ניתוק </string>
+    <string name="patch_manually_turning_off_alarm_title">כיבוי ידני של התראות ה-Patch</string>
+    <string name="patch_manually_turning_off_alarm_desc_1">אם מבוצעת השבתה באופן חד צדדי במהלך שגיאת תקשורת, ייתכן שצפצוף האזעקה מה- Patch לא ייפסק.</string>
+    <string name="patch_manually_turning_off_alarm_desc_2">במקרה זה, ניתן לעצור את זה לחלוטין על ידי לחיצה על לחצן הפסקת ההתראה הידני ב-Patch כמו שמתואר להלן:</string>
     <string name="patch_wake_up">מילוי אינסולין</string>
     <string name="patch_wake_up_step">1/6</string>
     <string name="patch_step_desc_1">1.</string>
