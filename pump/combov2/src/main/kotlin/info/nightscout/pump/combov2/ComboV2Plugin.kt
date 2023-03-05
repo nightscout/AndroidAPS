@@ -872,7 +872,6 @@ class ComboV2Plugin @Inject constructor (
                     pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = System.currentTimeMillis(),
                         type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
-                        note = rh.gs(R.string.combov2_note_reservoir_change),
                         pumpId = null,
                         pumpType = PumpType.ACCU_CHEK_COMBO,
                         pumpSerial = serialNumber()
@@ -897,7 +896,6 @@ class ComboV2Plugin @Inject constructor (
                     pumpSync.insertTherapyEventIfNewWithTimestamp(
                         timestamp = System.currentTimeMillis(),
                         type = DetailedBolusInfo.EventType.PUMP_BATTERY_CHANGE,
-                        note = rh.gs(R.string.combov2_note_battery_change),
                         pumpId = null,
                         pumpType = PumpType.ACCU_CHEK_COMBO,
                         pumpSerial = serialNumber()
