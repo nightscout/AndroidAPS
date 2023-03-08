@@ -81,8 +81,14 @@ sealed class MainScreenContent {
  * Possible contents of alert (= warning/error) screens.
  */
 sealed class AlertScreenContent {
-    data class Warning(val code: Int) : AlertScreenContent()
-    data class Error(val code: Int) : AlertScreenContent()
+    enum class AlertScreenState {
+        TO_SNOOZE,
+        TO_CONFIRM,
+        HISTORY_ENTRY
+    }
+
+    data class Warning(val code: Int, val state: AlertScreenState) : AlertScreenContent()
+    data class Error(val code: Int, val state: AlertScreenState) : AlertScreenContent()
 
     /**
      * "Content" while the alert symbol & code currently are "blinked out".
@@ -1139,8 +1145,9 @@ class AlertScreenParser : Parser() {
                 OptionalParser(SingleGlyphTypeParser(Glyph.LargeSymbol::class)), // warning/error symbol
                 OptionalParser(SingleGlyphTypeParser(Glyph.LargeCharacter::class)), // "W" or "E"
                 OptionalParser(IntegerParser()), // warning/error number
-                OptionalParser(SingleGlyphTypeParser(Glyph.LargeSymbol::class)), // stop symbol (only with errors)
-                SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.CHECK))
+                OptionalParser(SingleGlyphTypeParser(Glyph.LargeSymbol::class)), // stop symbol (shown in suspended state)
+                SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.CHECK)),
+                StringParser() // snooze / confirm text
             )
         ).parse(parseContext)
 
@@ -1149,16 +1156,23 @@ class AlertScreenParser : Parser() {
 
         parseResult as ParseResult.Sequence
 
+        val stateString = parseResult.valueAt<String>(4)
+        val alertState = when (knownScreenTitles[stateString]) {
+            TitleID.ALERT_TO_SNOOZE -> AlertScreenContent.AlertScreenState.TO_SNOOZE
+            TitleID.ALERT_TO_CONFIRM -> AlertScreenContent.AlertScreenState.TO_CONFIRM
+            else -> return ParseResult.Failed
+        }
+
         return when (parseResult.valueAtOrNull<Glyph>(0)) {
             Glyph.LargeSymbol(LargeSymbol.WARNING) -> {
                 ParseResult.Value(ParsedScreen.AlertScreen(
-                    AlertScreenContent.Warning(parseResult.valueAt(2))
+                    AlertScreenContent.Warning(parseResult.valueAt(2), alertState)
                 ))
             }
 
             Glyph.LargeSymbol(LargeSymbol.ERROR) -> {
                 ParseResult.Value(ParsedScreen.AlertScreen(
-                    AlertScreenContent.Error(parseResult.valueAt(2))
+                    AlertScreenContent.Error(parseResult.valueAt(2), alertState)
                 ))
             }
 
@@ -1654,7 +1668,10 @@ class MyDataErrorDataScreenParser : Parser() {
                 index = index,
                 totalNumEntries = totalNumEntries,
                 timestamp = timestamp,
-                alert = if (alertType == SmallSymbol.WARNING) AlertScreenContent.Warning(alertNumber) else AlertScreenContent.Error(alertNumber)
+                alert = if (alertType == SmallSymbol.WARNING)
+                    AlertScreenContent.Warning(alertNumber, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
+                else
+                    AlertScreenContent.Error(alertNumber, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
             )
         )
     }

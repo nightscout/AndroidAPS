@@ -300,7 +300,7 @@ class ParsedDisplayFrameStreamTest {
         // We expect normal parsing behavior.
         stream.feedDisplayFrame(testFrameW6CancelTbrWarningScreen)
         val parsedWarningFrame = stream.getParsedDisplayFrame(processAlertScreens = false)
-        assertEquals(ParsedScreen.AlertScreen(AlertScreenContent.Warning(6)), parsedWarningFrame!!.parsedScreen)
+        assertEquals(ParsedScreen.AlertScreen(AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.TO_SNOOZE)), parsedWarningFrame!!.parsedScreen)
 
         // Feed a W6 screen, but with alert screen detection enabled.
         // We expect the alert screen to be detected and an exception
