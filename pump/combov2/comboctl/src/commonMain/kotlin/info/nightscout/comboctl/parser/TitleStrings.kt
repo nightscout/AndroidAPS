@@ -372,6 +372,22 @@ val knownScreenTitles = mapOf(
     "UTIŠANJE" to TitleID.ALERT_TO_SNOOZE,
     "POTRDITEV" to TitleID.ALERT_TO_CONFIRM,
 
+    // Lithuanian
+    "QUICK INFO" to TitleID.QUICK_INFO,
+    "TBR REIKŠMĖS" to TitleID.TBR_PERCENTAGE,
+    "TBR TRUKMĖ" to TitleID.TBR_DURATION,
+    "VALANDA" to TitleID.HOUR,
+    "MINUTĖ" to TitleID.MINUTE,
+    "METAI" to TitleID.YEAR,
+    "MĖNUO" to TitleID.MONTH,
+    "DIENA" to TitleID.DAY,
+    "BOLIUSO DUOMENYS" to TitleID.BOLUS_DATA,
+    "KLAIDOS DUOMENYS" to TitleID.ERROR_DATA,
+    "BENDR. DIENOS K." to TitleID.DAILY_TOTALS,
+    "TBR DUOMENYS" to TitleID.TBR_DATA,
+    "NUTILDYTI" to TitleID.ALERT_TO_SNOOZE,
+    "PATVIRTINTI" to TitleID.ALERT_TO_CONFIRM,
+
     // Some pumps came preconfigured with a different quick info name
     "ACCU CHECK SPIRIT" to TitleID.QUICK_INFO
 )

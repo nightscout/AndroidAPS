@@ -743,6 +743,7 @@ class ParserTest {
             Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageDanishScreen, 110),
             Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageGermanScreen, 110),
             Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageSlovenianScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageLithuanianScreen, 110),
         )
 
         for (testScreen in testScreens) {
@@ -790,7 +791,8 @@ class ParserTest {
             Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationSwedishScreen, 30),
             Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationDanishScreen, 30),
             Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationGermanScreen, 30),
-            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationSlovenianScreen, 15)
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationSlovenianScreen, 15),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationLithuanianScreen, 15),
         )
 
         for (testScreen in testScreens) {
@@ -934,6 +936,12 @@ class ParserTest {
             Pair(testTimeAndDateSettingsYearSlovenianScreen, ParsedScreen.TimeAndDateSettingsYearScreen(2023)),
             Pair(testTimeAndDateSettingsMonthSlovenianScreen, ParsedScreen.TimeAndDateSettingsMonthScreen(3)),
             Pair(testTimeAndDateSettingsDaySlovenianScreen, ParsedScreen.TimeAndDateSettingsDayScreen(8)),
+
+            Pair(testTimeAndDateSettingsHourLithuanianScreen, ParsedScreen.TimeAndDateSettingsHourScreen(20)),
+            Pair(testTimeAndDateSettingsMinuteLithuanianScreen, ParsedScreen.TimeAndDateSettingsMinuteScreen(16)),
+            Pair(testTimeAndDateSettingsYearLithuanianScreen, ParsedScreen.TimeAndDateSettingsYearScreen(2023)),
+            Pair(testTimeAndDateSettingsMonthLithuanianScreen, ParsedScreen.TimeAndDateSettingsMonthScreen(3)),
+            Pair(testTimeAndDateSettingsDayLithuanianScreen, ParsedScreen.TimeAndDateSettingsDayScreen(8)),
 
             // Extra test to verify that a *minute* 24 is not incorrectly interpreted
             // as an *hour* 24 and thus translated to 0 (this is done because the Combo
@@ -1609,6 +1617,37 @@ class ParserTest {
                     percentage = 110, durationInMinutes = 1
                 )
             ),
+            Pair(
+                testMyDataBolusDataLithuanianScreen,
+                ParsedScreen.MyDataBolusDataScreen(
+                    index = 1, totalNumEntries = 30,
+                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 23, minute = 21, second = 0),
+                    bolusAmount = 3200, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 43
+                )
+            ),
+            Pair(
+                testMyDataErrorDataLithuanianScreen,
+                ParsedScreen.MyDataErrorDataScreen(
+                    index = 1, totalNumEntries = 30,
+                    timestamp = LocalDateTime(year = 0, monthNumber = 3, dayOfMonth = 8, hour = 20, minute = 6, second = 0),
+                    alert = AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
+                )
+            ),
+            Pair(
+                testMyDataDailyTotalsLithuanianScreen,
+                ParsedScreen.MyDataDailyTotalsScreen(
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 8, monthNumber = 3),
+                    totalDailyAmount = 33600
+                )
+            ),
+            Pair(
+                testMyDataTbrDataLithuanianScreen,
+                ParsedScreen.MyDataTbrDataScreen(
+                    index = 1, totalNumEntries = 30,
+                    timestamp = LocalDateTime(year = 0, monthNumber = 3, dayOfMonth = 8, hour = 20, minute = 6, second = 0),
+                    percentage = 110, durationInMinutes = 1
+                )
+            ),
         )
 
         for (testScreen in testScreens) {
@@ -1803,6 +1842,14 @@ class ParserTest {
             ),
             Pair(
                 AlertSnoozeAndConfirmScreens.testAlertScreenConfirmTextSlovenianScreen,
+                AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.TO_CONFIRM)
+            ),
+            Pair(
+                AlertSnoozeAndConfirmScreens.testAlertScreenSnoozeTextLithuanianScreen,
+                AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.TO_SNOOZE)
+            ),
+            Pair(
+                AlertSnoozeAndConfirmScreens.testAlertScreenConfirmTextLithuanianScreen,
                 AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.TO_CONFIRM)
             ),
         )
