@@ -1240,6 +1240,7 @@ class TemporaryBasalRatePercentageScreenParser : Parser() {
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
+                OptionalParser(SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.PERCENT))),
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.BASAL)),
                 OptionalParser(IntegerParser()), // TBR percentage
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.PERCENT)),
