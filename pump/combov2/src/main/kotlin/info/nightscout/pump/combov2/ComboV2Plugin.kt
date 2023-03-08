@@ -134,8 +134,8 @@ class ComboV2Plugin @Inject constructor (
 
     // Coroutine scope and the associated job. All coroutines
     // that are started in this plugin are part of this scope.
-    private val pumpCoroutineMainJob = SupervisorJob()
-    private val pumpCoroutineScope = CoroutineScope(Dispatchers.Default + pumpCoroutineMainJob)
+    private var pumpCoroutineScopeJob = SupervisorJob()
+    private var pumpCoroutineScope = CoroutineScope(Dispatchers.Default + pumpCoroutineScopeJob)
 
     private val _pumpDescription = PumpDescription()
 
@@ -255,6 +255,8 @@ class ComboV2Plugin @Inject constructor (
     }
 
     override fun onStart() {
+        aapsLogger.info(LTag.PUMP, "Starting combov2 driver")
+
         super.onStart()
 
         updateComboCtlLogLevel()
@@ -290,49 +292,63 @@ class ComboV2Plugin @Inject constructor (
         aapsLogger.debug(LTag.PUMP, "Creating bluetooth interface")
         bluetoothInterface = AndroidBluetoothInterface(context)
 
+        aapsLogger.info(LTag.PUMP, "Continuing combov2 driver start in coroutine")
+
         // Continue initialization in a separate coroutine. This allows us to call
         // runWithPermissionCheck(), which will keep trying to run the code block
         // until either the necessary Bluetooth permissions are granted, or the
         // coroutine is cancelled (see onStop() below).
         pumpCoroutineScope.launch {
-            runWithPermissionCheck(
-                context, config, aapsLogger, androidPermission,
-                permissionsToCheckFor = listOf("android.permission.BLUETOOTH_CONNECT")
-            ) {
-                aapsLogger.debug(LTag.PUMP, "Setting up bluetooth interface")
-                bluetoothInterface!!.setup()
+            try {
+                runWithPermissionCheck(
+                    context, config, aapsLogger, androidPermission,
+                    permissionsToCheckFor = listOf("android.permission.BLUETOOTH_CONNECT")
+                ) {
+                    aapsLogger.debug(LTag.PUMP, "Setting up bluetooth interface")
+                    bluetoothInterface!!.setup()
 
-                aapsLogger.debug(LTag.PUMP, "Setting up pump manager")
-                pumpManager = ComboCtlPumpManager(bluetoothInterface!!, pumpStateStore)
-                pumpManager!!.setup {
-                    _pairedStateUIFlow.value = false
-                    unpairing = false
+                    aapsLogger.debug(LTag.PUMP, "Setting up pump manager")
+                    pumpManager = ComboCtlPumpManager(bluetoothInterface!!, pumpStateStore)
+                    pumpManager!!.setup {
+                        _pairedStateUIFlow.value = false
+                        unpairing = false
+                    }
+
+                    // UI flows that must have defined values right
+                    // at start are initialized here.
+
+                    // The paired state UI flow is special in that it is also
+                    // used as the backing store for the isPaired() function,
+                    // so setting up that UI state flow equals updating that
+                    // paired state.
+                    val paired = pumpManager!!.getPairedPumpAddresses().isNotEmpty()
+                    _pairedStateUIFlow.value = paired
+
+                    setDriverState(DriverState.Disconnected)
+
+                    aapsLogger.info(LTag.PUMP, "combov2 driver start complete")
+
+                    // NOTE: EventInitializationChanged is sent in getPumpStatus() .
                 }
-
-                // UI flows that must have defined values right
-                // at start are initialized here.
-
-                // The paired state UI flow is special in that it is also
-                // used as the backing store for the isPaired() function,
-                // so setting up that UI state flow equals updating that
-                // paired state.
-                val paired = pumpManager!!.getPairedPumpAddresses().isNotEmpty()
-                _pairedStateUIFlow.value = paired
-
-                setDriverState(DriverState.Disconnected)
-
-                // NOTE: EventInitializationChanged is sent in getPumpStatus() .
+            } catch (e: CancellationException) {
+                aapsLogger.info(LTag.PUMP, "combov2 driver start cancelled")
+                throw e
             }
         }
     }
 
     override fun onStop() {
-        // Cancel any ongoing background coroutines. This includes an ongoing
-        // unfinished initialization that still waits for the user to grant
-        // Bluetooth permissions.
-        pumpCoroutineScope.cancel()
+        aapsLogger.info(LTag.PUMP, "Stopping combov2 driver")
 
         runBlocking {
+            // Cancel any ongoing background coroutines. This includes an ongoing
+            // unfinished initialization that still waits for the user to grant
+            // Bluetooth permissions. Also join to wait for the coroutines to
+            // finish. Otherwise, race conditions can occur, for example, when
+            // a coroutine tries to access bluetoothInterface right after it
+            // was torn down below.
+            pumpCoroutineScopeJob.cancelAndJoin()
+
             // Normally this should not happen, but to be safe,
             // make sure any running pump instance is disconnected.
             pump?.disconnect()
@@ -353,7 +369,13 @@ class ComboV2Plugin @Inject constructor (
         rxBus.send(EventInitializationChanged())
         initializationChangedEventSent = false
 
+        // The old job and scope were completed. We need new ones.
+        pumpCoroutineScopeJob = SupervisorJob()
+        pumpCoroutineScope = CoroutineScope(Dispatchers.Default + pumpCoroutineScopeJob)
+
         super.onStop()
+
+        aapsLogger.info(LTag.PUMP, "combov2 driver stopped")
     }
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
