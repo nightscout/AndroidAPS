@@ -13,7 +13,7 @@ import info.nightscout.comboctl.parser.ParsedScreen
 import info.nightscout.comboctl.parser.testFrameMainScreenWithTimeSeparator
 import info.nightscout.comboctl.parser.testFrameMainScreenWithoutTimeSeparator
 import info.nightscout.comboctl.parser.testFrameStandardBolusMenuScreen
-import info.nightscout.comboctl.parser.testFrameTbrDurationEnglishScreen
+import info.nightscout.comboctl.parser.TbrPercentageAndDurationScreens
 import info.nightscout.comboctl.parser.testFrameTemporaryBasalRateNoPercentageScreen
 import info.nightscout.comboctl.parser.testFrameTemporaryBasalRatePercentage110Screen
 import info.nightscout.comboctl.parser.testFrameW6CancelTbrWarningScreen
@@ -328,7 +328,7 @@ class ParsedDisplayFrameStreamTest {
         val displayFrameList = listOf(
             testFrameTemporaryBasalRatePercentage110Screen,
             testFrameTemporaryBasalRateNoPercentageScreen,
-            testFrameTbrDurationEnglishScreen
+            TbrPercentageAndDurationScreens.testFrameTbrDurationEnglishScreen
         )
 
         val parsedFrameList = mutableListOf<ParsedDisplayFrame>()

@@ -356,6 +356,22 @@ val knownScreenTitles = mapOf(
     "NEU ERINNERN" to TitleID.ALERT_TO_SNOOZE,
     "BESTÄTIGEN" to TitleID.ALERT_TO_CONFIRM,
 
+    // Slovenian
+    "QUICK INFO" to TitleID.QUICK_INFO,
+    "ODSTOTEK ZBO" to TitleID.TBR_PERCENTAGE,
+    "TRAJANJE ZBO" to TitleID.TBR_DURATION,
+    "URA" to TitleID.HOUR,
+    "MINUTE" to TitleID.MINUTE,
+    "LETO" to TitleID.YEAR,
+    "MESEC" to TitleID.MONTH,
+    "DAN" to TitleID.DAY,
+    "PODATKI O BOLUSU" to TitleID.BOLUS_DATA,
+    "PODATKI O NAPAKI" to TitleID.ERROR_DATA,
+    "DNEVNA PORABA" to TitleID.DAILY_TOTALS,
+    "PODATKI O ZBO" to TitleID.TBR_DATA,
+    "UTIŠANJE" to TitleID.ALERT_TO_SNOOZE,
+    "POTRDITEV" to TitleID.ALERT_TO_CONFIRM,
+
     // Some pumps came preconfigured with a different quick info name
     "ACCU CHECK SPIRIT" to TitleID.QUICK_INFO
 )

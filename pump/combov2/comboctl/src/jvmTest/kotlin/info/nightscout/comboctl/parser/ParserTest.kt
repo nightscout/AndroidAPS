@@ -722,26 +722,27 @@ class ParserTest {
             Pair(testFrameTemporaryBasalRatePercentage100Screen, 100),
             Pair(testFrameTemporaryBasalRatePercentage110Screen, 110),
             Pair(testFrameTemporaryBasalRateNoPercentageScreen, null),
-            Pair(testFrameTbrPercentageEnglishScreen, 110),
-            Pair(testFrameTbrPercentageSpanishScreen, 110),
-            Pair(testFrameTbrPercentageFrenchScreen, 110),
-            Pair(testFrameTbrPercentageItalianScreen, 110),
-            Pair(testFrameTbrPercentageRussianScreen, 110),
-            Pair(testFrameTbrPercentageTurkishScreen, 110),
-            Pair(testFrameTbrPercentagePolishScreen, 100),
-            Pair(testFrameTbrPercentageCzechScreen, 110),
-            Pair(testFrameTbrPercentageHungarianScreen, 110),
-            Pair(testFrameTbrPercentageSlovakScreen, 110),
-            Pair(testFrameTbrPercentageRomanianScreen, 110),
-            Pair(testFrameTbrPercentageCroatianScreen, 110),
-            Pair(testFrameTbrPercentageDutchScreen, 110),
-            Pair(testFrameTbrPercentageGreekScreen, 110),
-            Pair(testFrameTbrPercentageFinnishScreen, 110),
-            Pair(testFrameTbrPercentageNorwegianScreen, 110),
-            Pair(testFrameTbrPercentagePortugueseScreen, 110),
-            Pair(testFrameTbrPercentageSwedishScreen, 110),
-            Pair(testFrameTbrPercentageDanishScreen, 110),
-            Pair(testFrameTbrPercentageGermanScreen, 110)
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageEnglishScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageSpanishScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageFrenchScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageItalianScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageRussianScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageTurkishScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentagePolishScreen, 100),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageCzechScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageHungarianScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageSlovakScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageRomanianScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageCroatianScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageDutchScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageGreekScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageFinnishScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageNorwegianScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentagePortugueseScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageSwedishScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageDanishScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageGermanScreen, 110),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrPercentageSlovenianScreen, 110),
         )
 
         for (testScreen in testScreens) {
@@ -769,26 +770,27 @@ class ParserTest {
     fun checkTemporaryBasalRateDurationScreenParsing() {
         val testScreens = listOf(
             Pair(testFrameTbrDurationNoDurationScreen, null),
-            Pair(testFrameTbrDurationEnglishScreen, 30),
-            Pair(testFrameTbrDurationSpanishScreen, 30),
-            Pair(testFrameTbrDurationFrenchScreen, 30),
-            Pair(testFrameTbrDurationItalianScreen, 30),
-            Pair(testFrameTbrDurationRussianScreen, 30),
-            Pair(testFrameTbrDurationTurkishScreen, 30),
-            Pair(testFrameTbrDurationPolishScreen, 30),
-            Pair(testFrameTbrDurationCzechScreen, 30),
-            Pair(testFrameTbrDurationHungarianScreen, 30),
-            Pair(testFrameTbrDurationSlovakScreen, 30),
-            Pair(testFrameTbrDurationRomanianScreen, 30),
-            Pair(testFrameTbrDurationCroatianScreen, 30),
-            Pair(testFrameTbrDurationDutchScreen, 30),
-            Pair(testFrameTbrDurationGreekScreen, 30),
-            Pair(testFrameTbrDurationFinnishScreen, 30),
-            Pair(testFrameTbrDurationNorwegianScreen, 30),
-            Pair(testFrameTbrDurationPortugueseScreen, 30),
-            Pair(testFrameTbrDurationSwedishScreen, 30),
-            Pair(testFrameTbrDurationDanishScreen, 30),
-            Pair(testFrameTbrDurationGermanScreen, 30)
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationEnglishScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationSpanishScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationFrenchScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationItalianScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationRussianScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationTurkishScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationPolishScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationCzechScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationHungarianScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationSlovakScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationRomanianScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationCroatianScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationDutchScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationGreekScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationFinnishScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationNorwegianScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationPortugueseScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationSwedishScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationDanishScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationGermanScreen, 30),
+            Pair(TbrPercentageAndDurationScreens.testFrameTbrDurationSlovenianScreen, 15)
         )
 
         for (testScreen in testScreens) {
@@ -926,6 +928,12 @@ class ParserTest {
             Pair(testTimeAndDateSettingsYearGermanScreen, ParsedScreen.TimeAndDateSettingsYearScreen(2015)),
             Pair(testTimeAndDateSettingsMonthGermanScreen, ParsedScreen.TimeAndDateSettingsMonthScreen(4)),
             Pair(testTimeAndDateSettingsDayGermanScreen, ParsedScreen.TimeAndDateSettingsDayScreen(21)),
+
+            Pair(testTimeAndDateSettingsHourSlovenianScreen, ParsedScreen.TimeAndDateSettingsHourScreen(19)),
+            Pair(testTimeAndDateSettingsMinuteSlovenianScreen, ParsedScreen.TimeAndDateSettingsMinuteScreen(50)),
+            Pair(testTimeAndDateSettingsYearSlovenianScreen, ParsedScreen.TimeAndDateSettingsYearScreen(2023)),
+            Pair(testTimeAndDateSettingsMonthSlovenianScreen, ParsedScreen.TimeAndDateSettingsMonthScreen(3)),
+            Pair(testTimeAndDateSettingsDaySlovenianScreen, ParsedScreen.TimeAndDateSettingsDayScreen(8)),
 
             // Extra test to verify that a *minute* 24 is not incorrectly interpreted
             // as an *hour* 24 and thus translated to 0 (this is done because the Combo
@@ -1569,7 +1577,38 @@ class ParserTest {
                     timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 28, hour = 11, minute = 0, second = 0),
                     percentage = 110, durationInMinutes = 0
                 )
-            )
+            ),
+            Pair(
+                testMyDataBolusDataSlovenianScreen,
+                ParsedScreen.MyDataBolusDataScreen(
+                    index = 1, totalNumEntries = 30,
+                    timestamp = LocalDateTime(year = 0, monthNumber = 1, dayOfMonth = 1, hour = 23, minute = 21, second = 0),
+                    bolusAmount = 3200, bolusType = MyDataBolusType.MULTI_WAVE, durationInMinutes = 43
+                )
+            ),
+            Pair(
+                testMyDataErrorDataSlovenianScreen,
+                ParsedScreen.MyDataErrorDataScreen(
+                    index = 1, totalNumEntries = 30,
+                    timestamp = LocalDateTime(year = 0, monthNumber = 3, dayOfMonth = 8, hour = 17, minute = 31, second = 0),
+                    alert = AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
+                )
+            ),
+            Pair(
+                testMyDataDailyTotalsSlovenianScreen,
+                ParsedScreen.MyDataDailyTotalsScreen(
+                    index = 1, totalNumEntries = 30, date = LocalDate(year = 0, dayOfMonth = 8, monthNumber = 3),
+                    totalDailyAmount = 32100
+                )
+            ),
+            Pair(
+                testMyDataTbrDataSlovenianScreen,
+                ParsedScreen.MyDataTbrDataScreen(
+                    index = 1, totalNumEntries = 30,
+                    timestamp = LocalDateTime(year = 0, monthNumber = 3, dayOfMonth = 8, hour = 17, minute = 31, second = 0),
+                    percentage = 110, durationInMinutes = 1
+                )
+            ),
         )
 
         for (testScreen in testScreens) {
@@ -1756,6 +1795,14 @@ class ParserTest {
             ),
             Pair(
                 AlertSnoozeAndConfirmScreens.testAlertScreenConfirmTextGermanScreen,
+                AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.TO_CONFIRM)
+            ),
+            Pair(
+                AlertSnoozeAndConfirmScreens.testAlertScreenSnoozeTextSlovenianScreen,
+                AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.TO_SNOOZE)
+            ),
+            Pair(
+                AlertSnoozeAndConfirmScreens.testAlertScreenConfirmTextSlovenianScreen,
                 AlertScreenContent.Warning(6, AlertScreenContent.AlertScreenState.TO_CONFIRM)
             ),
         )
