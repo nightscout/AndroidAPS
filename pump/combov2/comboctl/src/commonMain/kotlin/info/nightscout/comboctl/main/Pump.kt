@@ -249,6 +249,7 @@ class Pump(
     // Used for keeping track of wether an RT alert screen was already dismissed
     // (necessary since the screen may change its contents but still be the same screen).
     private var rtScreenAlreadyDismissed = false
+    private var seenAlertAfterDismissingCounter = 0
     // Used in handleAlertScreenContent() to check if the current alert
     // screen contains the same alert as the previous one.
     private var lastObservedAlertScreenContent: AlertScreenContent? = null
@@ -2401,10 +2402,32 @@ class Pump(
                 // the two button presses, so there is no need to wait
                 // for the second screen - just press twice right away.
                 if (!rtScreenAlreadyDismissed) {
-                    logger(LogLevel.DEBUG) { "Dismissing W$warningCode by short-pressing CHECK twice" }
-                    rtNavigationContext.shortPressButton(RTNavigationButton.CHECK)
-                    rtNavigationContext.shortPressButton(RTNavigationButton.CHECK)
+                    val numRequiredButtonPresses = when (alertScreenContent.state) {
+                        AlertScreenContent.AlertScreenState.TO_SNOOZE -> 2
+                        AlertScreenContent.AlertScreenState.TO_CONFIRM -> 1
+                        else -> throw AlertScreenException(alertScreenContent)
+                    }
+                    logger(LogLevel.DEBUG) { "Dismissing W$warningCode by short-pressing CHECK $numRequiredButtonPresses time(s)" }
+                    for (i in 1..numRequiredButtonPresses)
+                        rtNavigationContext.shortPressButton(RTNavigationButton.CHECK)
                     rtScreenAlreadyDismissed = true
+                } else {
+                    // In rare cases, an alert screen may still show after an alert
+                    // was dismissed. Unfortunately, it is not immediately clear if
+                    // this is the case, because the RT screen updates can come in
+                    // with some temporal jitter. So, to be safe, we only begin to
+                    // again handle alert screens after >10 alert screens were
+                    // observed in sequence.
+                    logger(LogLevel.DEBUG) { "W$warningCode already dismissed" }
+                    seenAlertAfterDismissingCounter++
+                    if (seenAlertAfterDismissingCounter > 10) {
+                        logger(LogLevel.WARN) {
+                            "Saw an alert screen $seenAlertAfterDismissingCounter time(s) " +
+                                "after having dismissed an alert twice; now again handling alerts"
+                        }
+                        rtScreenAlreadyDismissed = false
+                        seenAlertAfterDismissingCounter = 0
+                    }
                 }
             }
         }
