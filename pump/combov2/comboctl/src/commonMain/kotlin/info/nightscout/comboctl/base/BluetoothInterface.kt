@@ -140,6 +140,10 @@ interface BluetoothInterface {
      *         a Bluetooth subsystem that has been shut down.
      * @throws BluetoothPermissionException if discovery fails because
      *         scanning and connection permissions are missing.
+     * @throws BluetoothNotEnabledException if the system's
+     *         Bluetooth adapter is currently not enabled.
+     * @throws BluetoothNotAvailableException if the system's
+     *         Bluetooth adapter is currently not available.
      * @throws BluetoothException if discovery fails due to an underlying
      *         Bluetooth issue.
      */
@@ -172,6 +176,10 @@ interface BluetoothInterface {
      *
      * @return BluetoothDevice instance for the device with the
      *         given address
+     * @throws BluetoothNotEnabledException if the system's
+     *         Bluetooth adapter is currently not enabled.
+     * @throws BluetoothNotAvailableException if the system's
+     *         Bluetooth adapter is currently not available.
      * @throws IllegalStateException if the interface is in a state
      *         in which accessing devices is not possible, such as
      *         a Bluetooth subsystem that has been shut down.
@@ -183,6 +191,8 @@ interface BluetoothInterface {
      *
      * @throws BluetoothPermissionException if getting the adapter name
      *         fails because connection permissions are missing.
+     * @throws BluetoothNotAvailableException if the system's
+     *         Bluetooth adapter is currently not available.
      * @throws BluetoothException if getting the adapter name fails
      *         due to an underlying Bluetooth issue.
      */
@@ -205,6 +215,11 @@ interface BluetoothInterface {
      * round, it is possible that between the [getPairedDeviceAddresses]
      * call and the [onDeviceUnpaired] assignment, a device is
      * unpaired, and thus does not get noticed.
+     *
+     * @throws BluetoothNotEnabledException if the system's
+     *         Bluetooth adapter is currently not enabled.
+     * @throws BluetoothNotAvailableException if the system's
+     *         Bluetooth adapter is currently not available.
      */
     fun getPairedDeviceAddresses(): Set<BluetoothAddress>
 }
