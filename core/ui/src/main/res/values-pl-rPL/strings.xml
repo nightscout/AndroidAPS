@@ -164,6 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Anulowanie bazy tymczasowej nie powiodło się</string>
     <string name="canceling_eb_failed">Anulowanie przedłużonego bolusa nie powiodło się</string>
+    <string name="virtualpump_uploadstatus_title">Prześlij status pompy do NS lub Tidepool</string>
     <string name="suspendloop_label">Wyłączona/zawieszona pętla</string>
     <string name="iob_label">Aktywna insulina (IOB)</string>
     <!--    Protection-->
@@ -531,7 +532,7 @@
     <string name="no">Nie</string>
     <string name="close">Zamknij</string>
     <!-- TwoMessagesDialog -->
-    <string name="password_preferences_decrypt_prompt">Zostaniesz poproszony o hasło główne, które jest potrzebne do odszyfrowania zaimportowanych preferencji.</string>
+    <string name="password_preferences_decrypt_prompt">Zostaniesz poproszony o hasło główne, które jest potrzebne do odszyfrowania zaimportowanych ustawień.</string>
     <!-- NumberPicker -->
     <string name="a11y_min_button_description">zmniejszenie %1$s o %2$s</string>
     <string name="a11y_plus_button_description">zwiększenie %1$s o %2$s</string>

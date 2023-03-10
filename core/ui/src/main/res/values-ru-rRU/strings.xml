@@ -164,6 +164,7 @@
     <string name="isf_short">ISF (чувствительность к инсулину)</string>
     <string name="canceling_tbr_failed">Отмена врем базала не состоялась</string>
     <string name="canceling_eb_failed">Сбой отмены пролонгированного болюса</string>
+    <string name="virtualpump_uploadstatus_title">Передавать статус помпы в NS или Tidepool</string>
     <string name="suspendloop_label">Отключенный/приостановленный цикл</string>
     <string name="iob_label">Активный инсулин (IOB)</string>
     <!--    Protection-->

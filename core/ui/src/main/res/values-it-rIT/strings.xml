@@ -164,6 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Basale temporanea: cancellazione fallita</string>
     <string name="canceling_eb_failed">Bolo esteso: cancellazione fallita</string>
+    <string name="virtualpump_uploadstatus_title">Carica stato micro su NS o Tidepool</string>
     <string name="suspendloop_label">Loop disabilitato/sospeso</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
     <!--    Protection-->
