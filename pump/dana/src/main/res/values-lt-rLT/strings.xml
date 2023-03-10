@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="danars_pairing">Sujungiama</string>
+    <string name="danars_pairing">Susiejimas</string>
     <string name="danars_no_device_available">Nerasta jokio prietaiso</string>
-    <string name="danars_pairingok">Sujungta</string>
-    <string name="danars_pairingtimedout">Sujungimui skirtas laikas baigėsi</string>
+    <string name="danars_pairingok">Susieta OK</string>
+    <string name="danars_pairingtimedout">Susiejimui skirtas laikas baigėsi</string>
     <string name="danars_waitingforpairing">Laukiama ryšio su pompa</string>
     <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
@@ -15,7 +15,7 @@
     <string name="boluserrorcode">Įvesta: %1$.2fvv Suleista: %2$.2fvv Klaidos kodas: %3$s</string>
     <string name="danar_valuenotsetproperly">Vertė nėra tinkamai nustatyta</string>
     <string name="danar_setbasalstep001">Nustatyti bazės žingsnį 0.01 vv/val</string>
-    <string name="resetpairing">Panaikinti sąsajos informaciją?</string>
+    <string name="resetpairing">Panaikinti susiejimo informaciją?</string>
     <string name="dana_model">%1$s\nModelis: %2$02X\nProtokolas: %3$02X\nKodas: %4$02X</string>
     <string name="processinghistory">Apdorojama</string>
     <string name="danar_enableextendedbolus">Aktyvuoti ištęstinius bolusus pompoje</string>
@@ -44,7 +44,7 @@
     <string name="gettingpumptime">Gaunamas pompos laikas</string>
     <string name="largetimedifftitle">Didelis laiko neatitikimas</string>
     <string name="largetimediff">Didelis laiko skirtumas:\nLaikas pompoje skiriasi daugiau nei 1,5 val.\nNustatykite laiką pompoje rankiniu būdu ir įsitikinkite, kad įrašai iš pompos istorijos nesukelia netikėtų sistemos veiksmų.\nJei įmanoma, ištrinkite istoriją pompoje prieš keisdami laiką arba atjunkite uždarąjį ciklą vienai IVT po paskutinio neteisingo istorijos įrašo ar mažiausiai vienai IVT nuo dabar.</string>
-    <string name="pairfirst">Atnaujinkite pompos ir telefono ryšį!</string>
+    <string name="pairfirst">Susiekite pompą su telefonu!</string>
     <string name="approachingdailylimit">Artėja paros insulino limitas</string>
     <string name="startingbolus">Pradedamas bolusas</string>
     <string name="waitingforestimatedbolusend">Laukiama boluso pabaigos. Liko %1$d s.</string>
