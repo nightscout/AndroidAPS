@@ -234,7 +234,7 @@ dependencies {
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
 
     // MainApp
-    api "com.uber.rxdogtag2:rxdogtag:2.0.1"
+    api "com.uber.rxdogtag2:rxdogtag:2.0.2"
 
 }
 
