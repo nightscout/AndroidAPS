@@ -288,7 +288,7 @@
     <string name="uel_resume">ATNAUJINTI</string>
     <string name="uel_suspend">SUSTABDYTI</string>
     <string name="uel_hw_pump_allowed">HW POMPA LEIDŽIAMA</string>
-    <string name="uel_clear_pairing_keys">IŠVALYTI PORAVIMO KODUS</string>
+    <string name="uel_clear_pairing_keys">IŠVALYTI SUSIEJIMO KODUS</string>
     <string name="uel_accepts_temp_basal">PRIIMTI LAIKINĄ BAZĘ</string>
     <string name="uel_cancel_temp_basal">ATŠAUKTI LAIKINĄ BAZĘ</string>
     <string name="uel_cancel_bolus">ATŠAUKTI BOLUSĄ</string>
@@ -387,7 +387,7 @@
     <string name="temp_basal_percent">LAIKINA BAZĖ %1$d%% %2$d min</string>
     <string name="insight_set_tbr_over_notification">INSIGHT NUSTATYTI LAIKINĄ BAZĘ PRANEŠIMU</string>
     <string name="read_status" comment="10 characters max for READSTATUS translation">STATUSAS %1$s</string>
-    <string name="keepalive_status_outdated" comment="26 characters max for translation">Tęsti. Būklė per sena.</string>
+    <string name="keepalive_status_outdated" comment="26 characters max for translation">Tęsti. Statusas senas.</string>
     <string name="keepalive_basal_outdated" comment="26 characters max for translation">Tęsti. Bazė per sena.</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="formatPercent">%1$.0f%%</string>
@@ -513,7 +513,7 @@
     <string name="connection_error">Pompos prisijungimo klaida</string>
     <string name="reading_pump_history">Skaitoma pompos istorija</string>
     <string name="password_cleared">Slaptažodis išvalytas!</string>
-    <string name="pairing">Sujungiama</string>
+    <string name="pairing">Susiejimas</string>
     <string name="initializing">Inicijuojama ...</string>
     <!--    Constraints-->
     <string name="limitingbasalratio">Ribojamas maksimalus bazės dydis%1$.2f vv/val dėl %2$s</string>
@@ -544,13 +544,13 @@
     <string name="need_connect_permission">Programai reikalinga Bluetooth prieigos teisė</string>
     <!--    Combo-->
     <string name="user_request" comment="26 characters max for translation">Vartotojo užklausa</string>
-    <string name="pump_paired" comment="26 characters max for translation">Pompa suporuota</string>
+    <string name="pump_paired" comment="26 characters max for translation">Pompa susieta</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nepalaikoma.</string>
-    <string name="ble_not_supported_or_not_paired">Nepalaikomas Bluetooth Low Energy arba įrenginys nesuporuotas.</string>
+    <string name="ble_not_supported_or_not_paired">Nepalaikomas BLE arba įrenginys nesusietas.</string>
     <string name="ble_not_enabled">Bluetooth neįjungta.</string>
     <string name="location_not_found_title">Vietovės nustatymas neįjungtas</string>
-    <string name="location_not_found_message">Vietos nustatymo paslauga turi būti įjungta, kad Bluetooth aptikimas veiktų naujesniuose įrenginiuose. AAPS neseka Jūsų lokacijos, o vietos nustatymo paslauga gali būti išjungta po sėkmingo įrenginių suporavimo.</string>
+    <string name="location_not_found_message">Vietos nustatymo paslauga turi būti įjungta, kad Bluetooth aptikimas veiktų naujesniuose įrenginiuose. AAPS neseka Jūsų lokacijos, o vietos nustatymo paslauga gali būti išjungta po sėkmingo įrenginių susiejimo.</string>
     <!--    Preferences -->
     <string name="nav_plugin_preferences">Įskiepių nustatymai</string>
     <!-- SmsCommunicator -->
