@@ -12,8 +12,8 @@
     <string name="diaconn_g8_history_prime">Užpildyti sistemą</string>
     <string name="diaconn_g8_history_refill">Užpildymas</string>
     <string name="diaconn_g8_history_suspend">Sustabdyta</string>
-    <string name="diaconn_g8_pairingok">Sujungta</string>
-    <string name="diaconn_g8_waitingforpairing">Laukiama sujungimo</string>
+    <string name="diaconn_g8_pairingok">Susieta OK</string>
+    <string name="diaconn_g8_waitingforpairing">Laukiama susiejimo</string>
     <string name="diaconn_firmware_version">Versija</string>
     <string name="invalidpairing">Netinkama susiejimo informacija. Bandoma susieti iš naujo</string>
     <string name="gettingpumpsettings">Gaunami pompos nustatymai</string>
@@ -50,7 +50,7 @@
     <string name="basal_step">Bazės žingsnis</string>
     <string name="pump_firmware_label">Programinė įranga</string>
     <string name="diaconn_g8_user_options">VARTOTOJO PARINKTYS</string>
-    <string name="pairfirst">Atnaujinkite pompos ir telefono ryšį!</string>
+    <string name="pairfirst">Susiekite pompą su telefonu!</string>
     <string name="processinghistory">"Apdorojama "</string>
     <string name="apslastLogNum">aps_last_log_num</string>
     <string name="apsWrappingCount">aps_wrapping_count</string>
