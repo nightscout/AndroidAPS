@@ -7,8 +7,8 @@
     <string name="pump_serial_number">Pompos serijos Nr.</string>
     <string name="bolus_delivered_so_far">%1$.2f v iš %2$.2f v suleista</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_not_initialized">Nepavyko paleisti</string>
-    <string name="pump_status_initialized">Inicijuojama</string>
+    <string name="pump_status_not_initialized">Neinicializuota</string>
+    <string name="pump_status_initialized">Inicializuota</string>
     <string name="pump_status_encrypt">Ryšio šifravimas</string>
     <string name="pump_status_ready">Pasirengusi</string>
     <string name="pump_status_busy">Užimta</string>
