@@ -16,7 +16,7 @@
     <string name="riley_link_ble_config_remove_riley_link_confirmation_title">Pašalinti RileyLink</string>
     <string name="riley_link_ble_config_no_riley_link_selected">Nepasirinktas RileyLink</string>
     <!-- RL Status Page -->
-    <string name="rileylink_settings_tab1">Parametrai</string>
+    <string name="rileylink_settings_tab1">Nustatymai</string>
     <string name="rileylink_settings_tab2">Istorija</string>
     <string name="rileylink_status">RileyLink statusas</string>
     <string name="medtronic_pump_status">Pompos statusas</string>
@@ -26,7 +26,7 @@
     <string name="rileylink_name">Vardas:</string>
     <string name="rileylink_battery_level">Baterijos lygis:</string>
     <string name="rileylink_battery_level_value">%1$d%%</string>
-    <string name="rileylink_connection_status">Ryšio būsena:</string>
+    <string name="rileylink_connection_status">Ryšio statusas:</string>
     <string name="rileylink_connection_error">Prisijungimo klaida:</string>
     <string name="rileylink_device">Įrenginys</string>
     <string name="rileylink_device_type">Įrenginio tipas:</string>
