@@ -56,7 +56,7 @@ Jei po daugiau nei ~5 minučių sujungimas nebaigtas:\n\n
     <string name="combov2_less_than_one_minute_ago">Mažiau nei prieš minutę</string>
     <string name="combov2_setting_current_pump_time">Nustatomas laikas pompoje</string>
     <string name="combov2_setting_current_pump_date">Nustatoma data pompoje</string>
-    <string name="combov2_not_initialized">Nepavyko paleisti</string>
+    <string name="combov2_not_initialized">Neinicializuota</string>
     <string name="combov2_checking_pump">Ieškoma pompos</string>
     <string name="combov2_ready">Paruošta</string>
     <string name="combov2_suspended">Sustabdyta</string>
@@ -123,5 +123,5 @@ Jei po daugiau nei ~5 minučių sujungimas nebaigtas:\n\n
     <string name="combov2_cannot_connect_pump_error_observed">Neįmanoma prisijungti prie pompos dėl pompos klaidos. Turite išspręsti klaidą ir palaukti 5 min, arba paspausti mygtuką Atnaujinti valdiklio skirtuke.</string>
     <string name="combov2_refresh_pump_status_after_error">Atnaujinamas pompos statusas po klaidos pranešimo</string>
     <string name="combov2_go_back">Grįžti atgal</string>
-    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Neįmanoma prijungti pompos, nes nenustatytas valdiklis. Dažniausiai taip nutinka, kai nesuteiktas Bluetooth leidimas. Grįžkite atgal, leiskite Bluetooth ir bandykite vėl.</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">Neįmanoma prijungti pompos, nes nenustatytas valdiklis. Dažniausiai taip nutinka, kai nesuteiktas Bluetooth leidimas. Grįžkite atgal, įgalinkite Bluetooth ir bandykite vėl.</string>
 </resources>
