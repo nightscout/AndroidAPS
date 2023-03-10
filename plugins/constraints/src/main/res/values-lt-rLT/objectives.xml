@@ -30,7 +30,7 @@
     <string name="objectives_auto_gate">Perskaitykite dokumentaciją apie automatizacijos veikimą. Nustatykite kelias paprastas taisykles. Nustatykite, kad AAPS tik parodytų pranešimą, o ne atliktų realų veiksmą. Kai įsitikinsite, kad automatizacija suveikia reikalingu metu, vietoj pranešimo įjunkite veiksmą. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Automatizacija gali būti lazda su dviem galais. Nepiktnaudžiaukite. Nebandykite keisti ją aprašančių algoritmų. Prieš įgalindami veiksmą, išbandykite rezultatą su pranešimu. Rezultatas labai priklauso nuo sąlygų eiliškumo.</string>
     <string name="objectives_bgavailableinns">Glikemija matoma NS arba Tidepool</string>
-    <string name="objectives_pumpstatusavailableinns">Pompos būsena matoma NS arba Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Pompos statusas matomas NS arba Tidepool</string>
     <string name="objectives_manualenacts">Įvesti rankiniu būdu</string>
     <string name="accomplished">Įvykdyta: %1$s</string>
     <string name="objectives_usage_objective">Išmokite valdyti AAPS</string>
