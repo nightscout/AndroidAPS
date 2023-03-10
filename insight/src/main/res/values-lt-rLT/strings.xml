@@ -4,7 +4,7 @@
     <string name="disable_tbr_over_notification">Išjungti pranešimus apie LBD pabaigą\n(pompos nustatymai)</string>
     <string name="not_paired">Nesusieta</string>
     <string name="recovering">Atstatoma</string>
-    <string name="insight_status">Būsena</string>
+    <string name="insight_status">Statusas</string>
     <string name="recovery_duration">Atkūrimo trukmė</string>
     <string name="last_connected">Paskutinis prisijungimas</string>
     <string name="start_pump">Paleisti pompą</string>
@@ -36,7 +36,7 @@
     <string name="timeout_during_handshake">Ryšio užmezgimui skirtas laikas baigėsi - iš naujo nustatykite bluetooth</string>
     <string name="pump_stopped">Pompa sustabdyta</string>
     <string name="pump_started">Pompa paleista</string>
-    <string name="short_status_last_connected">Paskutinis prisijungimas: prieš %1$d min</string>
+    <string name="short_status_last_connected">Pask. prijung: prieš %1$d min</string>
     <string name="short_status_tbr">LBD: %1$d%% - %2$d / %3$d min</string>
     <string name="short_status_extended">Ištęstas: %1$.2f / %2$.2f V %3$d min</string>
     <string name="short_status_multiwave">Daugiabangis: %1$.2f / %2$.2f vv %3$d min</string>
