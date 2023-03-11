@@ -133,6 +133,7 @@ open class Notification {
         const val EOELOW_PATCH_ALERTS = 79
         const val COMBO_PUMP_SUSPENDED = 80
         const val COMBO_UNKNOWN_TBR = 81
+        const val BLUETOOTH_NOT_ENABLED = 82
 
         const val USER_MESSAGE = 1000
 

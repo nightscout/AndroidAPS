@@ -66,7 +66,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.async
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.channels.BufferOverflow
 import kotlinx.coroutines.channels.Channel
@@ -310,6 +309,8 @@ class ComboV2Plugin @Inject constructor (
                     try {
                         bluetoothInterface!!.setup()
 
+                        rxBus.send(EventDismissNotification(Notification.BLUETOOTH_NOT_ENABLED))
+
                         aapsLogger.debug(LTag.PUMP, "Setting up pump manager")
                         pumpManager = ComboCtlPumpManager(bluetoothInterface!!, pumpStateStore)
                         pumpManager!!.setup {
@@ -327,6 +328,12 @@ class ComboV2Plugin @Inject constructor (
                         val paired = pumpManager!!.getPairedPumpAddresses().isNotEmpty()
                         _pairedStateUIFlow.value = paired
                     } catch (_: BluetoothNotEnabledException) {
+                        uiInteraction.addNotification(
+                            Notification.BLUETOOTH_NOT_ENABLED,
+                            text = rh.gs(info.nightscout.core.ui.R.string.ble_not_enabled),
+                            level = Notification.INFO
+                        )
+
                         // If the user currently has Bluetooth disabled, retry until
                         // the user turns it on. AAPS will automatically show a dialog
                         // box which requests the user to enable Bluetooth. Upon
@@ -555,6 +562,8 @@ class ComboV2Plugin @Inject constructor (
             _bluetoothAddressUIFlow.value = bluetoothAddress.toString()
             _serialNumberUIFlow.value = pumpManager!!.getPumpID(bluetoothAddress)
 
+            rxBus.send(EventDismissNotification(Notification.BLUETOOTH_NOT_ENABLED))
+
             // Erase any display frame that may be left over from a previous connection.
             @OptIn(kotlinx.coroutines.ExperimentalCoroutinesApi::class)
             _displayFrameUIFlow.resetReplayCache()
@@ -729,6 +738,12 @@ class ComboV2Plugin @Inject constructor (
                     executePendingDisconnect()
                 }
             }
+        } catch (_: BluetoothNotEnabledException) {
+            uiInteraction.addNotification(
+                Notification.BLUETOOTH_NOT_ENABLED,
+                text = rh.gs(info.nightscout.core.ui.R.string.ble_not_enabled),
+                level = Notification.INFO
+            )
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMP, "Connection failure: $e")
             ToastUtils.showToastInUiThread(context, rh.gs(R.string.combov2_could_not_connect))
@@ -1575,15 +1590,24 @@ class ComboV2Plugin @Inject constructor (
                     context, config, aapsLogger, androidPermission,
                     permissionsToCheckFor = listOf("android.permission.BLUETOOTH_CONNECT")
                 ) {
-                    pumpManager?.pairWithNewPump(discoveryDuration) { newPumpAddress, previousAttemptFailed ->
-                        aapsLogger.info(
-                            LTag.PUMP,
-                            "New pairing PIN request from Combo pump with Bluetooth " +
-                                "address $newPumpAddress (previous attempt failed: $previousAttemptFailed)"
-                        )
-                        _previousPairingAttemptFailedFlow.value = previousAttemptFailed
-                        newPINChannel.receive()
-                    } ?: throw IllegalStateException("Attempting to access uninitialized pump manager")
+                    try {
+                        pumpManager?.pairWithNewPump(discoveryDuration) { newPumpAddress, previousAttemptFailed ->
+                            aapsLogger.info(
+                                LTag.PUMP,
+                                "New pairing PIN request from Combo pump with Bluetooth " +
+                                    "address $newPumpAddress (previous attempt failed: $previousAttemptFailed)"
+                            )
+                            _previousPairingAttemptFailedFlow.value = previousAttemptFailed
+                            newPINChannel.receive()
+                        } ?: throw IllegalStateException("Attempting to access uninitialized pump manager")
+                    } catch (e: BluetoothNotEnabledException) {
+                        // If Bluetooth is turned off during pairing, show a toaster message.
+                        // Notifications on the AAPS overview fragment are not useful here
+                        // because the pairing activity obscures that fragment. So, instead,
+                        // alert the user by showing the notification via the toaster.
+                        ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_enabled)
+                        ComboCtlPumpManager.PairingResult.ExceptionDuringPairing(e)
+                    }
                 }
 
                 if (pairingResult !is ComboCtlPumpManager.PairingResult.Success)
