@@ -12,6 +12,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothException
+import info.nightscout.comboctl.base.BluetoothNotEnabledException
 import info.nightscout.comboctl.base.ComboException
 import info.nightscout.comboctl.base.DisplayFrame
 import info.nightscout.comboctl.base.NullDisplayFrame
@@ -305,24 +306,34 @@ class ComboV2Plugin @Inject constructor (
                     permissionsToCheckFor = listOf("android.permission.BLUETOOTH_CONNECT")
                 ) {
                     aapsLogger.debug(LTag.PUMP, "Setting up bluetooth interface")
-                    bluetoothInterface!!.setup()
 
-                    aapsLogger.debug(LTag.PUMP, "Setting up pump manager")
-                    pumpManager = ComboCtlPumpManager(bluetoothInterface!!, pumpStateStore)
-                    pumpManager!!.setup {
-                        _pairedStateUIFlow.value = false
-                        unpairing = false
+                    try {
+                        bluetoothInterface!!.setup()
+
+                        aapsLogger.debug(LTag.PUMP, "Setting up pump manager")
+                        pumpManager = ComboCtlPumpManager(bluetoothInterface!!, pumpStateStore)
+                        pumpManager!!.setup {
+                            _pairedStateUIFlow.value = false
+                            unpairing = false
+                        }
+
+                        // UI flows that must have defined values right
+                        // at start are initialized here.
+
+                        // The paired state UI flow is special in that it is also
+                        // used as the backing store for the isPaired() function,
+                        // so setting up that UI state flow equals updating that
+                        // paired state.
+                        val paired = pumpManager!!.getPairedPumpAddresses().isNotEmpty()
+                        _pairedStateUIFlow.value = paired
+                    } catch (_: BluetoothNotEnabledException) {
+                        // If the user currently has Bluetooth disabled, retry until
+                        // the user turns it on. AAPS will automatically show a dialog
+                        // box which requests the user to enable Bluetooth. Upon
+                        // catching this exception, runWithPermissionCheck() will wait
+                        // a bit before retrying, so no delay() call is needed here.
+                        throw RetryPermissionCheckException()
                     }
-
-                    // UI flows that must have defined values right
-                    // at start are initialized here.
-
-                    // The paired state UI flow is special in that it is also
-                    // used as the backing store for the isPaired() function,
-                    // so setting up that UI state flow equals updating that
-                    // paired state.
-                    val paired = pumpManager!!.getPairedPumpAddresses().isNotEmpty()
-                    _pairedStateUIFlow.value = paired
 
                     setDriverState(DriverState.Disconnected)
 
