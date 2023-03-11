@@ -79,7 +79,6 @@ class MedtrumPlugin @Inject constructor(
     private var medtrumService: MedtrumService? = null
     private var mPumpType: PumpType = PumpType.MEDTRUM_NANO
     private val mPumpDescription = PumpDescription(mPumpType)
-    private var mDeviceSN: Long = 0
 
     override fun onStart() {
         super.onStart()
@@ -90,16 +89,6 @@ class MedtrumPlugin @Inject constructor(
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ context.unbindService(mConnection) }, fabricPrivacy::logException)
-        disposable += rxBus
-            .toObservable(EventPreferenceChange::class.java)
-            .observeOn(aapsSchedulers.io)
-            .subscribe({ event ->
-                           if (event.isChanged(rh.gs(info.nightscout.pump.medtrum.R.string.key_snInput))) {
-                               pumpSync.connectNewPump()
-                               changePump()
-                           }
-                       }, fabricPrivacy::logException)
-        changePump()
     }
 
     override fun onStop() {
@@ -122,15 +111,8 @@ class MedtrumPlugin @Inject constructor(
         }
     }
 
-    fun changePump() {
-        aapsLogger.debug(LTag.PUMP, "changePump: called!")
-        try {
-            mDeviceSN = sp.getString(info.nightscout.pump.medtrum.R.string.key_snInput, " ").toLong(radix = 16)
-        } catch (e: NumberFormatException) {
-            aapsLogger.debug(LTag.PUMP, "changePump: Invalid input!")
-        }
-        // TODO: add medtrumPump.reset()
-        commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.device_changed), null)
+    fun getService(): MedtrumService? {
+        return medtrumService
     }
 
     override fun isInitialized(): Boolean {
@@ -138,14 +120,17 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override fun isSuspended(): Boolean {
-        return false
+        return true
     }
 
     override fun isBusy(): Boolean {
-        return false
+        return true
     }
 
-    override fun isConnected(): Boolean = medtrumService?.isConnected ?: false
+    override fun isConnected(): Boolean {
+        return if (!isInitialized()) true else medtrumService?.isConnected ?: true // This is a workaround to prevent AAPS to trigger connects when we are initializing
+    }
+
     override fun isConnecting(): Boolean = medtrumService?.isConnecting ?: false
     override fun isHandshakeInProgress(): Boolean = false
 
@@ -153,19 +138,23 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override fun connect(reason: String) {
-        aapsLogger.debug(LTag.PUMP, "Medtrum connect - reason:$reason")
-        aapsLogger.debug(LTag.PUMP, "Medtrum connect - service::$medtrumService")
-        aapsLogger.debug(LTag.PUMP, "Medtrum connect - mDeviceSN:$mDeviceSN")
-        if (medtrumService != null && mDeviceSN != 0.toLong()) {
-            aapsLogger.debug(LTag.PUMP, "Medtrum connect - Attempt connection!")
-            val success = medtrumService?.connect(reason, mDeviceSN) ?: false
-            if (!success) ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_supported_or_not_paired)
+        if (isInitialized()) {
+            aapsLogger.debug(LTag.PUMP, "Medtrum connect - reason:$reason")
+            aapsLogger.debug(LTag.PUMP, "Medtrum connect - service::$medtrumService")
+            // aapsLogger.debug(LTag.PUMP, "Medtrum connect - mDeviceSN:$mDeviceSN")
+            if (medtrumService != null) {
+                aapsLogger.debug(LTag.PUMP, "Medtrum connect - Attempt connection!")
+                val success = medtrumService?.connect(reason) ?: false
+                if (!success) ToastUtils.errorToast(context, info.nightscout.core.ui.R.string.ble_not_supported_or_not_paired)
+            }
         }
     }
 
     override fun disconnect(reason: String) {
-        aapsLogger.debug(LTag.PUMP, "RS disconnect from: $reason")
-        medtrumService?.disconnect(reason)
+        if (isInitialized()) {
+            aapsLogger.debug(LTag.PUMP, "Medtrum disconnect from: $reason")
+            medtrumService?.disconnect(reason)
+        }
     }
 
     override fun stopConnecting() {
@@ -173,11 +162,13 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override fun getPumpStatus(reason: String) {
-        medtrumService?.readPumpStatus()
+        if (isInitialized()) {
+            medtrumService?.readPumpStatus()
+        }
     }
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
-        return PumpEnactResult(injector) // TODO
+        return PumpEnactResult(injector).success(true).enacted(true) // TODO
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean {

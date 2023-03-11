@@ -11,10 +11,16 @@
     
     <!-- overview fragment -->
     <string name="medtrum_ble_status">BLE Status</string>
-
-    <string name="snInput_title">SN</string>
-    <string name="snInput_summary">Serial number pump base</string>
     <string name="string_new_patch">Start new patch</string>
     <string name="string_stop_patch">Stop patch</string>
+
+    <!-- wizard-->
+    <string name="string_change_patch">Discard/Change Patch</string> <!-- TODO check-->
+    <string name="string_start_prime">Start priming</string>
+
+    <!-- settings-->
+    <string name="snInput_title">SN</string>
+    <string name="snInput_summary">Serial number pump base</string>
+
 
 </resources>

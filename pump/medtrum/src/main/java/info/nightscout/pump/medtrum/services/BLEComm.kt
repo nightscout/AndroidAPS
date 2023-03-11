@@ -49,7 +49,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 interface BLECommCallback {
+
     fun onBLEConnected()
+    fun onBLEDisconnected()
     fun onNotification(notification: ByteArray)
     fun onIndication(indication: ByteArray)
     fun onSendMessageError(reason: String)
@@ -88,8 +90,8 @@ class BLEComm @Inject internal constructor(
     private val mBluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var mBluetoothGatt: BluetoothGatt? = null
 
-    var isConnected = false
-    var isConnecting = false
+    var isConnected = false // TODO: These may be removed have no function
+    var isConnecting = false// TODO: These may be removed have no function
     private var uartWrite: BluetoothGattCharacteristic? = null
     private var uartRead: BluetoothGattCharacteristic? = null
 
@@ -179,7 +181,6 @@ class BLEComm @Inject internal constructor(
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
         mBluetoothGatt?.disconnect()
-        mBluetoothGatt = null
     }
 
     @Synchronized
@@ -373,7 +374,7 @@ class BLEComm @Inject internal constructor(
             close()
             isConnected = false
             isConnecting = false
-            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
+            mCallback?.onBLEDisconnected()
             aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnected
         }
     }

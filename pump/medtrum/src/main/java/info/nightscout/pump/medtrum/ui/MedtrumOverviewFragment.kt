@@ -6,18 +6,18 @@ import android.view.View
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.ViewModelProvider
-import info.nightscout.pump.medtrum.databinding.MedtrumOverviewFragmentBinding
+import info.nightscout.pump.medtrum.databinding.FragmentMedtrumOverviewBinding
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel
 import info.nightscout.pump.medtrum.R
+import info.nightscout.pump.medtrum.code.EventType
+import info.nightscout.pump.medtrum.code.PatchStep
 import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class MedtrumOverviewFragment : MedtrumBaseFragment<MedtrumOverviewFragmentBinding>() {
+class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBinding>() {
 
-    @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var aapsLogger: AAPSLogger
     private lateinit var resultLauncherForResume: ActivityResultLauncher<Intent>
@@ -25,7 +25,7 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<MedtrumOverviewFragmentBindi
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
-    override fun getLayoutId(): Int = R.layout.medtrum_overview_fragment
+    override fun getLayoutId(): Int = R.layout.fragment_medtrum_overview
 
     override fun onDestroy() {
         super.onDestroy()
@@ -38,18 +38,23 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<MedtrumOverviewFragmentBindi
         binding.apply {
             viewmodel = ViewModelProvider(this@MedtrumOverviewFragment, viewModelFactory).get(MedtrumOverviewViewModel::class.java)
             viewmodel?.apply {
-                // TODO Handle events here, see eopatch eventhandler
-            }
-
-            resultLauncherForResume = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                when (it.resultCode) {
-                    // TODO Handle events here, see eopatch eventhandler
+                eventHandler.observe(viewLifecycleOwner) { evt ->
+                    when (evt.peekContent()) {
+                        EventType.ACTIVATION_CLICKED -> requireContext().apply { startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.PREPARE_PATCH)) }
+                        else                         -> Unit
+                    }
                 }
-            }
 
-            resultLauncherForPause = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-                when (it.resultCode) {
-                    // TODO Handle events here, see eopatch eventhandler
+                resultLauncherForResume = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                    when (it.resultCode) {
+                        // TODO Handle events here, see eopatch eventhandler
+                    }
+                }
+
+                resultLauncherForPause = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                    when (it.resultCode) {
+                        // TODO Handle events here, see eopatch eventhandler
+                    }
                 }
             }
         }

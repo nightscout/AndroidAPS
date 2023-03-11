@@ -3,9 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewmodel"
-            type="info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel"/>
+            type="info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel" />
     </data>
 
     <RelativeLayout
@@ -100,15 +101,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
+
             <Button
                 android:id="@+id/button1"
                 style="@style/ButtonMediumFontStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/string_new_patch"
                 android:enabled="@{!viewmodel.isPatchActivated}"
-                app:onSafeClick="@{() -> viewmodel.onClickActivation()}"/>
+                android:text="@string/string_new_patch"
+                app:onSafeClick="@{() -> viewmodel.onClickActivation()}" />
 
             <Button
                 android:id="@+id/button2"
@@ -116,9 +118,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/string_stop_patch"
                 android:enabled="@{viewmodel.isPatchActivated}"
-                app:onSafeClick="@{() -> viewmodel.onClickDeactivation()}"/>
+                android:text="@string/string_stop_patch"
+                app:onSafeClick="@{() -> viewmodel.onClickDeactivation()}" />
 
         </LinearLayout>
     </RelativeLayout>

@@ -32,6 +32,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventInitializationChanged
 import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.AAPSLogger
@@ -79,6 +80,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     private var mDeviceSN: Long = 0
     private var currentState: State = IdleState()
+    var isConnected = false
+    var isConnecting = false
 
     // TODO: Stuff like this in a settings class? 
     private var mLastDeviceTime: Long = 0
@@ -90,6 +93,16 @@ class MedtrumService : DaggerService(), BLECommCallback {
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ stopSelf() }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventPreferenceChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ event ->
+                           if (event.isChanged(rh.gs(info.nightscout.pump.medtrum.R.string.key_snInput))) {
+                               pumpSync.connectNewPump()
+                               changePump()
+                           }
+                       }, fabricPrivacy::logException)
+        changePump()
     }
 
     override fun onDestroy() {
@@ -97,26 +110,27 @@ class MedtrumService : DaggerService(), BLECommCallback {
         super.onDestroy()
     }
 
-    val isConnected: Boolean
-        get() = bleComm.isConnected
-
-    val isConnecting: Boolean
-        get() = bleComm.isConnecting
-
-    fun connect(from: String, deviceSN: Long): Boolean {
-        // TODO Check we might want to replace this with start scan?
-        mDeviceSN = deviceSN
-        return bleComm.connect(from, deviceSN)
+    fun connect(from: String): Boolean {
+        aapsLogger.debug(LTag.PUMP, "connect: called!")
+        if (currentState is IdleState) {
+            isConnecting = true
+            isConnected = false
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
+            return bleComm.connect(from, mDeviceSN)
+        } else {
+            aapsLogger.error(LTag.PUMPCOMM, "Connect attempt when in non Idle state from: " + from)
+            return false
+        }
     }
 
     fun stopConnecting() {
         // TODO proper way for this might need send commands etc
-        // bleComm.stopConnecting()
+        bleComm.stopConnecting()
     }
 
     fun disconnect(from: String) {
         // TODO proper way for this might need send commands etc
-        // bleComm.disconnect(from)
+        bleComm.disconnect(from)
     }
 
     fun readPumpStatus() {
@@ -156,9 +170,28 @@ class MedtrumService : DaggerService(), BLECommCallback {
         return false
     }
 
+    fun changePump() {
+        aapsLogger.debug(LTag.PUMP, "changePump: called!")
+        try {
+            mDeviceSN = sp.getString(info.nightscout.pump.medtrum.R.string.key_snInput, " ").toLong(radix = 16)
+        } catch (e: NumberFormatException) {
+            aapsLogger.debug(LTag.PUMP, "changePump: Invalid input!")
+        }
+        // TODO: What do we do with active patch here?
+        when (currentState) {
+            // is IdleState  -> connect("changePump")
+            // is ReadyState -> disconnect("changePump")
+            else -> null // TODO: What to do here? Abort stuff?
+        }
+    }
+
     /** BLECommCallbacks */
     override fun onBLEConnected() {
         currentState.onConnected()
+    }
+
+    override fun onBLEDisconnected() {
+        currentState.onDisconnected()
     }
 
     override fun onNotification(notification: ByteArray) {
@@ -207,13 +240,33 @@ class MedtrumService : DaggerService(), BLECommCallback {
             aapsLogger.debug(LTag.PUMPCOMM, "onIndicationr: " + this.toString() + "Should not be called here!")
         }
 
-        open fun onConnected() {}
+        open fun onConnected() {
+            aapsLogger.debug(LTag.PUMPCOMM, "onConnected")
+        }
+
+        open fun onDisconnected() {
+            aapsLogger.debug(LTag.PUMPCOMM, "onDisconnected")
+            isConnecting = false
+            isConnected = false
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
+
+            // TODO: Check flow for this
+            toState(IdleState())
+        }
     }
 
     private inner class IdleState : State() {
 
+        override fun onEnter() {}
+
         override fun onConnected() {
+            super.onConnected()
             toState(AuthState())
+        }
+
+        override fun onDisconnected() {
+            super.onDisconnected()
+            // TODO replace this by proper connecting state where we can retry
         }
     }
 
@@ -391,6 +444,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached ReadyState!")
+            // Now we are fully connected and authenticated and we can start sending commands. Let AAPS know
+            isConnecting = false
+            isConnected = true
+            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
         }
         // Just a placeholder, this state is reached when the patch is ready to receive commands (Bolus, temp basal and whatever)
     }
