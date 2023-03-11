@@ -84,6 +84,9 @@ sealed class AlertScreenContent {
     enum class AlertScreenState {
         TO_SNOOZE,
         TO_CONFIRM,
+        // Used when the alert is an error. The text in error screens is not
+        // interpreted, since it is anyway fully up to the user to interpret it.
+        ERROR_TEXT,
         HISTORY_ENTRY
     }
 
@@ -1156,15 +1159,14 @@ class AlertScreenParser : Parser() {
 
         parseResult as ParseResult.Sequence
 
-        val stateString = parseResult.valueAt<String>(4)
-        val alertState = when (knownScreenTitles[stateString]) {
-            TitleID.ALERT_TO_SNOOZE -> AlertScreenContent.AlertScreenState.TO_SNOOZE
-            TitleID.ALERT_TO_CONFIRM -> AlertScreenContent.AlertScreenState.TO_CONFIRM
-            else -> return ParseResult.Failed
-        }
-
         return when (parseResult.valueAtOrNull<Glyph>(0)) {
             Glyph.LargeSymbol(LargeSymbol.WARNING) -> {
+                val stateString = parseResult.valueAt<String>(4)
+                val alertState = when (knownScreenTitles[stateString]) {
+                    TitleID.ALERT_TO_SNOOZE -> AlertScreenContent.AlertScreenState.TO_SNOOZE
+                    TitleID.ALERT_TO_CONFIRM -> AlertScreenContent.AlertScreenState.TO_CONFIRM
+                    else -> return ParseResult.Failed
+                }
                 ParseResult.Value(ParsedScreen.AlertScreen(
                     AlertScreenContent.Warning(parseResult.valueAt(2), alertState)
                 ))
@@ -1172,7 +1174,14 @@ class AlertScreenParser : Parser() {
 
             Glyph.LargeSymbol(LargeSymbol.ERROR) -> {
                 ParseResult.Value(ParsedScreen.AlertScreen(
-                    AlertScreenContent.Error(parseResult.valueAt(2), alertState)
+                    AlertScreenContent.Error(
+                        parseResult.valueAt(2),
+                        // We don't really care about the state string if an error is shown.
+                        // It's not like any logic here will interpret it; that text is
+                        // purely for the user. So, don't bother interpreting it here, and
+                        // just assign a generic ERROR_TEXT state value instead.
+                        AlertScreenContent.AlertScreenState.ERROR_TEXT
+                    )
                 ))
             }
 

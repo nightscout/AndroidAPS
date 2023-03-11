@@ -717,6 +717,24 @@ class ParserTest {
     }
 
     @Test
+    fun checkE4OcclusionErrorScreenParsing() {
+        val testScreens = listOf(
+            Pair(testFrameE4OcclusionErrorScreen0, AlertScreenContent.Error(4, AlertScreenContent.AlertScreenState.ERROR_TEXT)),
+            Pair(testFrameE4OcclusionErrorScreen1, AlertScreenContent.None),
+            Pair(testFrameE4OcclusionErrorScreen2, AlertScreenContent.Error(4, AlertScreenContent.AlertScreenState.ERROR_TEXT)),
+            Pair(testFrameE4OcclusionErrorScreen3, AlertScreenContent.None),
+        )
+
+        for (testScreen in testScreens) {
+            val testContext = TestContext(testScreen.first, 0, skipTitleString = true)
+            val result = AlertScreenParser().parse(testContext.parseContext)
+            assertEquals(ParseResult.Value::class, result::class)
+            val screen = (result as ParseResult.Value<*>).value as ParsedScreen.AlertScreen
+            assertEquals(testScreen.second, screen.content)
+        }
+    }
+
+    @Test
     fun checkTemporaryBasalRatePercentageScreenParsing() {
         val testScreens = listOf(
             Pair(testFrameTemporaryBasalRatePercentage100Screen, 100),
