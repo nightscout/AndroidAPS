@@ -290,7 +290,8 @@ class ComboV2Plugin @Inject constructor (
         }
 
         aapsLogger.debug(LTag.PUMP, "Creating bluetooth interface")
-        bluetoothInterface = AndroidBluetoothInterface(context)
+        val newBluetoothInterface = AndroidBluetoothInterface(context)
+        bluetoothInterface = newBluetoothInterface
 
         aapsLogger.info(LTag.PUMP, "Continuing combov2 driver start in coroutine")
 
@@ -307,13 +308,13 @@ class ComboV2Plugin @Inject constructor (
                     aapsLogger.debug(LTag.PUMP, "Setting up bluetooth interface")
 
                     try {
-                        bluetoothInterface!!.setup()
+                        newBluetoothInterface.setup()
 
                         rxBus.send(EventDismissNotification(Notification.BLUETOOTH_NOT_ENABLED))
 
                         aapsLogger.debug(LTag.PUMP, "Setting up pump manager")
-                        pumpManager = ComboCtlPumpManager(bluetoothInterface!!, pumpStateStore)
-                        pumpManager!!.setup {
+                        val newPumpManager = ComboCtlPumpManager(newBluetoothInterface, pumpStateStore)
+                        newPumpManager.setup {
                             _pairedStateUIFlow.value = false
                             unpairing = false
                         }
@@ -325,8 +326,10 @@ class ComboV2Plugin @Inject constructor (
                         // used as the backing store for the isPaired() function,
                         // so setting up that UI state flow equals updating that
                         // paired state.
-                        val paired = pumpManager!!.getPairedPumpAddresses().isNotEmpty()
+                        val paired = newPumpManager.getPairedPumpAddresses().isNotEmpty()
                         _pairedStateUIFlow.value = paired
+
+                        pumpManager = newPumpManager
                     } catch (_: BluetoothNotEnabledException) {
                         uiInteraction.addNotification(
                             Notification.BLUETOOTH_NOT_ENABLED,
@@ -549,18 +552,16 @@ class ComboV2Plugin @Inject constructor (
         }
 
         try {
-            runBlocking {
-                pump = pumpManager?.acquirePump(bluetoothAddress, activeBasalProfile) { event -> handlePumpEvent(event) }
+            val curPumpManager = pumpManager ?: throw Error("Could not get pump manager; this should not happen. Please report this as a bug.")
+
+            val acquiredPump = runBlocking {
+                curPumpManager.acquirePump(bluetoothAddress, activeBasalProfile) { event -> handlePumpEvent(event) }
             }
 
-            if (pump == null) {
-                aapsLogger.error(LTag.PUMP, "Could not get pump instance - pump state store may be corrupted")
-                unpairDueToPumpDataError()
-                return
-            }
+            pump = acquiredPump
 
             _bluetoothAddressUIFlow.value = bluetoothAddress.toString()
-            _serialNumberUIFlow.value = pumpManager!!.getPumpID(bluetoothAddress)
+            _serialNumberUIFlow.value = curPumpManager.getPumpID(bluetoothAddress)
 
             rxBus.send(EventDismissNotification(Notification.BLUETOOTH_NOT_ENABLED))
 
@@ -570,7 +571,7 @@ class ComboV2Plugin @Inject constructor (
 
             stateAndStatusFlowsDeferred = pumpCoroutineScope.async {
                 coroutineScope {
-                    pump!!.stateFlow
+                    acquiredPump.stateFlow
                         .onEach { pumpState ->
                             val driverState = when (pumpState) {
                                 // The Disconnected pump state is ignored, since the Disconnected
@@ -591,7 +592,7 @@ class ComboV2Plugin @Inject constructor (
                             setDriverState(driverState)
                         }
                         .launchIn(this)
-                    pump!!.statusFlow
+                    acquiredPump.statusFlow
                         .onEach { newPumpStatus ->
                             if (newPumpStatus == null)
                                 return@onEach
@@ -613,7 +614,7 @@ class ComboV2Plugin @Inject constructor (
                             rxBus.send(EventRefreshOverview("ComboV2 pump status updated"))
                         }
                         .launchIn(this)
-                    pump!!.lastBolusFlow
+                    acquiredPump.lastBolusFlow
                         .onEach { lastBolus ->
                             if (lastBolus == null)
                                 return@onEach
@@ -621,7 +622,7 @@ class ComboV2Plugin @Inject constructor (
                             _lastBolusUIFlow.value = lastBolus
                         }
                         .launchIn(this)
-                    pump!!.currentTbrFlow
+                    acquiredPump.currentTbrFlow
                         .onEach { currentTbr ->
                             _currentTbrUIFlow.value = currentTbr
                         }
@@ -629,7 +630,7 @@ class ComboV2Plugin @Inject constructor (
                 }
             }
 
-            setupUiFlows()
+            setupUiFlows(acquiredPump)
 
             ////
             // The actual connect procedure begins here.
@@ -814,6 +815,8 @@ class ComboV2Plugin @Inject constructor (
             }
         }
 
+        val acquiredPump = getAcquiredPump()
+
         rxBus.send(EventDismissNotification(Notification.PROFILE_NOT_SET_NOT_INITIALIZED))
         rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
 
@@ -825,7 +828,7 @@ class ComboV2Plugin @Inject constructor (
         runBlocking {
             try {
                 executeCommand {
-                    if (pump!!.setBasalProfile(requestedBasalProfile)) {
+                    if (acquiredPump.setBasalProfile(requestedBasalProfile)) {
                         aapsLogger.debug(LTag.PUMP, "Basal profiles are different; new profile set")
                         activeBasalProfile = requestedBasalProfile
                         updateBaseBasalRateUI()
@@ -973,6 +976,8 @@ class ComboV2Plugin @Inject constructor (
         // (Also, a zero insulin value makes no sense when bolusing.)
         require((detailedBolusInfo.insulin > 0) && (detailedBolusInfo.carbs <= 0.0)) { detailedBolusInfo.toString() }
 
+        val acquiredPump = getAcquiredPump()
+
         val requestedBolusAmount = detailedBolusInfo.insulin.iuToCctlBolus()
         val bolusReason = when (detailedBolusInfo.bolusType) {
             DetailedBolusInfo.BolusType.NORMAL -> ComboCtlPump.StandardBolusReason.NORMAL
@@ -1006,7 +1011,7 @@ class ComboV2Plugin @Inject constructor (
         )
 
         val bolusProgressJob = pumpCoroutineScope.launch {
-            pump!!.bolusDeliveryProgressFlow
+            acquiredPump.bolusDeliveryProgressFlow
                 .collect { progressReport ->
                     when (progressReport.stage) {
                         is RTCommandProgressStage.DeliveringBolus -> {
@@ -1029,14 +1034,16 @@ class ComboV2Plugin @Inject constructor (
         // Run the delivery in a sub-coroutine to be able
         // to cancel it via stopBolusDelivering().
         val newBolusJob = pumpCoroutineScope.async {
-            // Store a local reference to the Pump instance. "pump"
-            // is set to null in case of an error, because then,
-            // disconnectInternal() is called (which sets pump to null).
-            // However, we still need to access the last delivered bolus
-            // from the pump's lastBolusFlow, even if an error happened.
-            // Solve this by storing this reference and accessing the
-            // lastBolusFlow through it.
-            val acquiredPump = pump!!
+            // NOTE: Above, we take a local reference to the acquired Pump instance,
+            // with a check that throws an exception in case the "pump" member is
+            // null. This local reference is particularly important inside this
+            // coroutine, because the "pump" member is set to null in case of an
+            // error or other disconnect reason (see disconnectInternal()). However,
+            // we still need to access the last delivered bolus inside this coroutine
+            // from the pump's lastBolusFlow, even if an error happened. Accessing
+            // it through the "pump" member would then result in an NPE. This is
+            // solved by instead accessing the lastBolusFlow through the local
+            // "acquiredPump" reference.
 
             try {
                 executeCommand {
@@ -1216,11 +1223,13 @@ class ComboV2Plugin @Inject constructor (
             return
         }
 
+        val acquiredPump = getAcquiredPump()
+
         runBlocking {
             try {
                 executeCommand {
 
-                    val tbrComment = when (pump!!.setTbr(percentage, durationInMinutes, tbrType, force100Percent)) {
+                    val tbrComment = when (acquiredPump.setTbr(percentage, durationInMinutes, tbrType, force100Percent)) {
                         ComboCtlPump.SetTbrOutcome.SET_NORMAL_TBR                  ->
                             rh.gs(R.string.combov2_setting_tbr_succeeded)
                         ComboCtlPump.SetTbrOutcome.SET_EMULATED_100_TBR            ->
@@ -1373,8 +1382,9 @@ class ComboV2Plugin @Inject constructor (
 
     override fun serialNumber(): String {
         val bluetoothAddress = getBluetoothAddress()
-        return if ((bluetoothAddress != null) && (pumpManager != null))
-            pumpManager!!.getPumpID(bluetoothAddress)
+        val curPumpManager = pumpManager
+        return if ((bluetoothAddress != null) && (curPumpManager != null))
+            curPumpManager.getPumpID(bluetoothAddress)
         else
             rh.gs(R.string.combov2_not_paired)
     }
@@ -1442,6 +1452,7 @@ class ComboV2Plugin @Inject constructor (
 
     override fun loadTDDs(): PumpEnactResult {
         val pumpEnactResult = PumpEnactResult(injector)
+        val acquiredPump = getAcquiredPump()
 
         runBlocking {
             try {
@@ -1449,7 +1460,7 @@ class ComboV2Plugin @Inject constructor (
                 val tddMap = mutableMapOf<Long, Int>()
 
                 executeCommand {
-                    val tddHistory = pump!!.fetchTDDHistory()
+                    val tddHistory = acquiredPump.fetchTDDHistory()
 
                     tddHistory
                         .filter { it.totalDailyAmount >= 1 }
@@ -1771,11 +1782,11 @@ class ComboV2Plugin @Inject constructor (
 
     /*** Misc private functions ***/
 
-    private fun setupUiFlows() {
+    private fun setupUiFlows(acquiredPump: ComboCtlPump) {
         pumpUIFlowsDeferred = pumpCoroutineScope.async {
             try {
                 coroutineScope {
-                    pump!!.connectProgressFlow
+                    acquiredPump.connectProgressFlow
                         .onEach { progressReport ->
                             val description = when (val progStage = progressReport.stage) {
                                 is BasicProgressStage.EstablishingBtConnection   ->
@@ -1793,7 +1804,7 @@ class ComboV2Plugin @Inject constructor (
                         }
                         .launchIn(this)
 
-                    pump!!.setDateTimeProgressFlow
+                    acquiredPump.setDateTimeProgressFlow
                         .onEach { progressReport ->
                             val description = when (progressReport.stage) {
                                 RTCommandProgressStage.SettingDateTimeHour,
@@ -1810,7 +1821,7 @@ class ComboV2Plugin @Inject constructor (
                         }
                         .launchIn(this)
 
-                    pump!!.getBasalProfileFlow
+                    acquiredPump.getBasalProfileFlow
                         .onEach { progressReport ->
                             val description = when (val stage = progressReport.stage) {
                                 is RTCommandProgressStage.GettingBasalProfile ->
@@ -1824,7 +1835,7 @@ class ComboV2Plugin @Inject constructor (
                         }
                         .launchIn(this)
 
-                    pump!!.setBasalProfileFlow
+                    acquiredPump.setBasalProfileFlow
                         .onEach { progressReport ->
                             val description = when (val stage = progressReport.stage) {
                                 is RTCommandProgressStage.SettingBasalProfile ->
@@ -1838,7 +1849,7 @@ class ComboV2Plugin @Inject constructor (
                         }
                         .launchIn(this)
 
-                    pump!!.bolusDeliveryProgressFlow
+                    acquiredPump.bolusDeliveryProgressFlow
                         .onEach { progressReport ->
                             val description = when (val stage = progressReport.stage) {
                                 is RTCommandProgressStage.DeliveringBolus ->
@@ -1856,7 +1867,7 @@ class ComboV2Plugin @Inject constructor (
                         }
                         .launchIn(this)
 
-                    pump!!.parsedDisplayFrameFlow
+                    acquiredPump.parsedDisplayFrameFlow
                         .onEach { parsedDisplayFrame ->
                             _displayFrameUIFlow.emit(
                                 parsedDisplayFrame?.displayFrame ?: NullDisplayFrame
@@ -2058,7 +2069,11 @@ class ComboV2Plugin @Inject constructor (
 
         // It makes no sense to reach this location with pump
         // being null due to the checks above.
-        assert(pump != null)
+        val pumpToDisconnect = pump
+        if (pumpToDisconnect == null) {
+            aapsLogger.error(LTag.PUMP, "Current pump is already null")
+            return
+        }
 
         // Run these operations in a coroutine to be able to wait
         // until the disconnect really completes and the UI flows
@@ -2096,17 +2111,17 @@ class ComboV2Plugin @Inject constructor (
             // the Pump.disconnect() call shuts down the RFCOMM socket,
             // making all send/receive calls fail.
 
-            if (pump!!.stateFlow.value == ComboCtlPump.State.Connecting) {
+            if (pumpToDisconnect.stateFlow.value == ComboCtlPump.State.Connecting) {
                 // Case #1 from above
                 aapsLogger.debug(LTag.PUMP, "Cancelling ongoing connect attempt")
                 connectionSetupJob?.cancel()
-                pump?.disconnect()
+                pumpToDisconnect.disconnect()
                 connectionSetupJob?.join()
             } else {
                 // Case #2 from above
                 aapsLogger.debug(LTag.PUMP, "Disconnecting Combo (if not disconnected already by a cancelling request)")
                 connectionSetupJob?.cancelAndJoin()
-                pump?.disconnect()
+                pumpToDisconnect.disconnect()
             }
 
             aapsLogger.debug(LTag.PUMP, "Combo disconnected; cancelling UI flows coroutine")
@@ -2338,6 +2353,8 @@ class ComboV2Plugin @Inject constructor (
 
     private fun getBluetoothAddress(): ComboCtlBluetoothAddress? =
         pumpManager?.getPairedPumpAddresses()?.firstOrNull()
+
+    private fun getAcquiredPump() = pump ?: throw Error("There is no currently acquired pump; this should not happen. Please report this as a bug.")
 
     private fun isDisconnected() =
         when (driverStateFlow.value) {
