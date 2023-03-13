@@ -704,7 +704,7 @@ class ParserTest {
     fun checkE2BatteryEmptyErrorScreenParsing() {
         val testScreens = listOf(
             Pair(testFrameE2BatteryEmptyErrorScreen0, AlertScreenContent.None),
-            Pair(testFrameE2BatteryEmptyErrorScreen1, AlertScreenContent.Error(2, AlertScreenContent.AlertScreenState.TO_CONFIRM))
+            Pair(testFrameE2BatteryEmptyErrorScreen1, AlertScreenContent.Error(2, AlertScreenContent.AlertScreenState.ERROR_TEXT))
         )
 
         for (testScreen in testScreens) {
