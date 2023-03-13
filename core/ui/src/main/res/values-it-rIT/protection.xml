@@ -6,15 +6,26 @@
     <string name="application_protection">Protezione applicazione</string>
     <string name="bolus_protection">Protezione bolo</string>
     <string name="settings_password">Password impostazioni</string>
+    <string name="settings_pin">PIN impostazioni</string>
     <string name="application_password">Password applicazione</string>
+    <string name="application_pin">PIN applicazione</string>
     <string name="bolus_password">Password bolo</string>
+    <string name="bolus_pin">PIN bolo</string>
+    <string name="protection_timeout_title">Conservazione password e PIN [s]</string>
+    <string name="protection_timeout_summary">Tempo per l\'inserimento di password o PIN</string>
     <string name="biometric">Biometrico</string>
     <string name="custom_password">Password personalizzata</string>
+    <string name="custom_pin">PIN personalizzato</string>
     <string name="noprotection">Nessuna protezione</string>
     <string name="unsecure_fallback_biometric">Fallback non sicuro</string>
     <string name="unsecure_fallback_descriotion_biometric">Per essere efficace, la protezione biometrica richiede una password master per impostare un\'alternativa in caso di necessità (fallback).\n\nImposta una password master!</string>
     <string name="password_set">Password impostata!</string>
+    <string name="pin_set">PIN impostato!</string>
     <string name="password_not_set">Password non impostata</string>
+    <string name="pin_not_set">PIN non impostato</string>
     <string name="password_not_changed">Password non modificata</string>
+    <string name="pin_not_changed">PIN non modificato</string>
+    <string name="pin_cleared">PIN eliminato!</string>
     <string name="password_hint">Inserisci qui la password</string>
+    <string name="pin_hint">Inserisci PIN</string>
 </resources>

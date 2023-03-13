@@ -164,7 +164,7 @@
     <string name="isf_short">JIF</string>
     <string name="canceling_tbr_failed">Laikinos bazės atšaukti nepavyko</string>
     <string name="canceling_eb_failed">Ištęsto boluso atšaukti nepavyko</string>
-    <string name="virtualpump_uploadstatus_title">Įkelti statusą į NS arba Tidepool</string>
+    <string name="virtualpump_uploadstatus_title">Įkelti pompos statusą į NS arba Tidepool</string>
     <string name="suspendloop_label">Ciklas išjungtas/sustabdytas</string>
     <string name="iob_label">Aktyvus insulinas organizme (AIO)</string>
     <!--    Protection-->

@@ -45,5 +45,10 @@
     <string name="timezone_on_pod_is_different_from_the_timezone">Il fuso orario sul pod è diverso dal fuso orario sul telefono. La velocità basale non è corretta. Cambia il profilo per correggere</string>
     <string name="failed_to_set_the_new_basal_profile">Impossibile impostare il nuovo profilo basale. Erogazione sospesa</string>
     <string name="setting_basal_profile_might_have_failed">L\'Impostazione del profilo basale potrebbe essere fallita. L\'erogazione potrebbe essere sospesa! Aggiorna manualmente lo stato del pod dalla scheda Omnipod e riprendi l\'erogazione se necessario.</string>
+    <string name="bolus_delivery_status_uncertain">Stato erogazione bolo incerto. Ricarica lo stato del pod per confermare o negare.</string>
     <string name="checking_delivery_status">Controllo stato erogazione</string>
+    <string name="setting_temp_basal_might_have_basal_failed">L\'impostazione della basale temporanea potrebbe essere fallita. Se una basale temporanea era precedentemente in esecuzione, è stata cancellata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Cancellazione basale temporanea: risultato incerto</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Comando resumeDelivery non confermato. Aggiorna lo stato del pod</string>
+    <string name="cancelling_temp_basal_might_have_failed">La cancellazione della basale temporanea potrebbe essere fallita. Se una basale temporanea era precedentemente in esecuzione, potrebbe essere stata cancellata. Aggiorna manualmente lo stato del pod dalla scheda Omnipod.</string>
 </resources>

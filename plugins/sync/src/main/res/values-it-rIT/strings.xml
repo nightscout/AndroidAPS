@@ -14,6 +14,7 @@
     <string name="ns_create_announcements_from_errors_summary">Crea avviso su Nightscout per finestre di errore e allarmi locali (visualizzabile anche nella sezione Portale sotto la voce Trattamenti)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Crea avvisi su Nightscout dagli avvisi per CHO richiesti</string>
     <string name="description_ns_client">Sincronizza i tuoi dati con Nightscout</string>
+    <string name="description_ns_client_v3">Sincronizza i tuoi dati con Nightscout usando API v3</string>
     <string name="blocked_by_charging">Bloccato dalle opzioni di ricarica</string>
     <string name="blocked_by_connectivity">Bloccato dalle opzioni di connettività</string>
     <string name="unsupported_ns_version">Versione non supportata di Nightscout</string>
@@ -34,6 +35,9 @@
     <string name="ns_client_secret_title">API secret di NS</string>
     <string name="ns_client_secret_dialog_title">API secret di NS</string>
     <string name="ns_client_secret_dialog_message">Inserisci l\'API secret di NS (minimo 12 caratteri)</string>
+    <string name="nsclient_token_title">Token di accesso NS</string>
+    <string name="nsclient_token_dialog_title">Token di accesso NS</string>
+    <string name="nsclient_token_dialog_message">Token di accesso generato sulla pagina admin di NS (min 17 caratteri)</string>
     <string name="deliver_now">Invia ora</string>
     <string name="clear_queue">Cancella coda</string>
     <string name="show_queue">Mostra coda</string>
@@ -71,6 +75,8 @@
     <string name="ns_alarm_urgent_stale_data_value_label">Soglia dati non aggiornati da molto tempo [min]</string>
     <string name="ns_log_app_started_event">Registra l\'avvio dell\'app in NS</string>
     <string name="copy_existing_values">Copiare impostazioni NS (se esiste)?</string>
+    <string name="ns_use_ws_title">Connetti a websocket</string>
+    <string name="ns_use_ws_summary">Abilitare significa: aggiornamenti più veloci, ricevere allarmi e annunci e un maggiore consumo di batteria simile a v1. Tutti gli altri caricatori di NS devono utilizzare il protocollo v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Il tuo nome utente per l\'accesso a Tidepool, generalmente il tuo indirizzo email</string>
     <string name="title_tidepool_username">Nome utente</string>
@@ -90,7 +96,24 @@
     <string name="remove_all">Rimuovi tutto</string>
     <string name="reset_start">Avvio reset</string>
     <string name="upload_now">Carica adesso</string>
+    <string name="not_connected">Non connesso</string>
+    <string name="read_only">Sola lettura</string>
+    <string name="working">Lavorazione</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Invia dati a xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Mostra IOB dettagliato</string>
+    <string name="xdrip_status_detailed_iob_summary">Dividi IOB in bolo e basale sulla watchface</string>
+    <string name="xdrip_status_show_bgi_title">Mostra BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Aggiungi BGI alla statusline</string>
+    <string name="xdrip_status_settings">xDrip+ statusline (advanced)</string>
+    <string name="disabled_loop">Loop disabilitato</string>
+    <string name="xdrip_send_status_title">Invia statusline a xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ non installato</string>
+    <string name="calibration_sent">Calibrazione inviata a xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Invia dati glicemia e trattamenti a xDrip+. La sorgente dati \"xDrip+ Sync Follower\" deve essere selezionata e l\'accettazione dei dati deve essere abilitata in: Settings - Inter-app settings - Accept Glucose/Treatments</string>
+    <string name="xdrip_local_broadcasts_title">Abilita trasmissioni a xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>

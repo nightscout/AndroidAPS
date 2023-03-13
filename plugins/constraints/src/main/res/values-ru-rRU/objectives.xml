@@ -29,6 +29,8 @@
     <string name="objectives_auto_objective">Включение автоматизации</string>
     <string name="objectives_auto_gate">Прочтите документацию по автоматизации. Настройте свои первые простые правила. Вместо действия позвольте AAPS только выводить уведомления. Если вы уверены, что автоматизация инициируется в нужное время, замените уведомление реальными действиями. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
     <string name="objectives_auto_learned">Автоматизация может быть хорошим слугой, но плохим хозяином. Не полагайтесь на нее сверх меры. Не пытайтесь заменить лежащий в основе алгоритм. Проверяйте перед использованием.</string>
+    <string name="objectives_bgavailableinns">ГК доступна в NS или Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Статус помпы доступен в NS или Tidepool</string>
     <string name="objectives_manualenacts">Ввод вручную</string>
     <string name="accomplished">Выполнено: %1$s</string>
     <string name="objectives_usage_objective">Научитесь контролировать AAPS</string>

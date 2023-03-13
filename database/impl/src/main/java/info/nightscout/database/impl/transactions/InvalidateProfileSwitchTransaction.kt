@@ -8,9 +8,11 @@ class InvalidateProfileSwitchTransaction(val id: Long) : Transaction<InvalidateP
         val result = TransactionResult()
         val profileSwitch = database.profileSwitchDao.findById(id)
             ?: throw IllegalArgumentException("There is no such ProfileSwitch with the specified ID.")
-        profileSwitch.isValid = false
-        database.profileSwitchDao.updateExistingEntry(profileSwitch)
-        result.invalidated.add(profileSwitch)
+        if (profileSwitch.isValid) {
+            profileSwitch.isValid = false
+            database.profileSwitchDao.updateExistingEntry(profileSwitch)
+            result.invalidated.add(profileSwitch)
+        }
         return result
     }
 

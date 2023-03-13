@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="open_humans">Open Humans</string>
+    <string name="open_humans_short">OH</string>
     <string name="open_humans_description">Open Humans permite que você envie os dados do seu tratamento para doação a projetos científicos.</string>
     <string name="logout">Sair da sua conta</string>
     <string name="setup">Configuração</string>
@@ -37,6 +39,7 @@
     <string name="algorithm_debug_data">Dados de depuração do algoritmo</string>
     <string name="data_not_uploaded">Dados NÃO enviados</string>
     <string name="passwords">Senhas</string>
+    <string name="nightscout_url">URL do Nightscout</string>
     <string name="nightscout_api_secret">Senha API do Nightscout</string>
     <string name="free_text_fields">Campos de Texto Livre</string>
     <string name="agree">Eu compreendo e concordo.</string>

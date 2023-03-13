@@ -165,7 +165,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Canceling of temporary basal failed</string>
     <string name="canceling_eb_failed">Canceling of extended bolus failed</string>
-    <string name="virtualpump_uploadstatus_title">Upload status to NS or Tidepool</string>
+    <string name="virtualpump_uploadstatus_title">Upload pump status to NS or Tidepool</string>
     <string name="suspendloop_label">Disabled/Suspended loop</string>
     <string name="iob_label">Insulin on Board (IOB)</string>
 

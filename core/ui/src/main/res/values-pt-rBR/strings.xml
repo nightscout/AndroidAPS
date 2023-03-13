@@ -164,7 +164,6 @@
     <string name="isf_short">FSI</string>
     <string name="canceling_tbr_failed">Cancelamento do basal temporário falhou</string>
     <string name="canceling_eb_failed">Falhou o cancelamento do bolus extendido</string>
-    <string name="virtualpump_uploadstatus_title">Carregar status para NS ou Tidepool</string>
     <string name="suspendloop_label">Loop Desativado/Suspenso</string>
     <string name="iob_label">Insulina ativa (IA)</string>
     <!--    Protection-->

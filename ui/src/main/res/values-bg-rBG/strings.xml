@@ -3,16 +3,21 @@
     <string name="bolus_constraint_applied">Приложено ограничение на болус</string>
     <string name="carbs_constraint_applied">Приложено ограничение на въглехидрати</string>
     <string name="temp_target_short">Вр.цел</string>
+    <string name="dialog_canceled">Диалогът е анулиран</string>
     <string name="start_activity_tt">Старт на вр.цел за физ. активност</string>
     <string name="start_eating_soon_tt">Старт на вр. цел за Eating soon</string>
     <string name="start_hypo_tt">Старт на вр. цел при хипо</string>
     <string name="time_offset">времево отместване</string>
     <string name="unit_minute_short">мин</string>
     <string name="remind_to_bolus_later">Напомни за болус по-късно</string>
+    <string name="a11y_carb_reminder">задайте напомняне</string>
     <!--    Widget-->
+    <string name="configure">Конфигуриране прозрачност</string>
+    <string name="widget_description">AAPS уиджет</string>
     <!--     Activities-->
     <string name="activity_monitor">Мониторинг на активност</string>
     <string name="do_you_want_reset_stats">Искате да нулирате статистиката?</string>
+    <string name="do_you_want_reset_tdd_stats">Искате да нулирате TDD статистиката?</string>
     <string name="statistics">Статистика</string>
     <string name="calculation_in_progress">Калкулация в прогресс</string>
     <string name="invalid_age">Невалидна възраст</string>
@@ -22,6 +27,7 @@
     <string name="age">Възраст</string>
     <string name="weight_label">Тегло</string>
     <string name="most_common_profile">Най-често използван профил:</string>
+    <string name="survey_comment">Забележка: Само данни, видими на този екран, ще бъдат анонимно качени. Дава се идентичност на тази инсталация на AndroidAPS. Отново можете да изпратите данните, ако вашият основен профил се промени, но нека да работи поне една седмица, за да се види резултата във времеви диапазон. Вашата помощ е оценена.</string>
     <string name="glucose_type">Тип КЗ</string>
     <string name="bg_other">Друго</string>
     <string name="bg_meter">Глюкомер</string>
@@ -61,12 +67,16 @@
     <string name="duration3h">3 часа</string>
     <string name="duration10h">10 часа</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_units">коригирайте резултат с единици</string>
     <string name="two_hours">2ч</string>
     <string name="result_insulin_carbs">Резултат: %1$s %2$s</string>
     <string name="missing_carbs">Нужни %1$d гр</string>
+    <string name="a11y_current_bg">настояща КЗ</string>
     <string name="carb_time_label">ВХ след</string>
+    <string name="a11y_set_carb_timer">задайте таймер за въглехидратна аларма</string>
     <string name="show_calculation">Покажи изчисленията</string>
     <!-- Treatments -->
+    <string name="no_records_available">Няма налични записи</string>
     <string name="calculation_short">Калк</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_insulin_label_string">Инсулин:</string>
@@ -80,12 +90,25 @@
     <string name="treatments_wizard_correction_label">Корекция</string>
     <string name="meal_bolus">Хранене</string>
     <string name="prime">Пълнене</string>
+    <string name="profile_changes">Промени на профила</string>
+    <string name="tempt_targets">Временни цели</string>
+    <string name="carbs_and_bolus">Въглехидрати и болус</string>
+    <string name="show_invalidated_records">Показване на невалидните/премахнатите записи</string>
+    <string name="hide_invalidated_records">Скриване на невалидните/премахнатите записи</string>
+    <string name="refresh_from_nightscout">Обнови от Найтскаут</string>
     <string name="refresheventsfromnightscout">Презареди от NS</string>
     <string name="show_invalidated">Покажи невалидните</string>
     <string name="hide_invalidated">Скрий невалидните</string>
+    <string name="careportal_remove_started_events">Премахни започнатите от AAPS записи</string>
+    <string name="hide_loop">Скрий цикъл</string>
+    <string name="show_loop">Покажи цикъл</string>
     <string name="user_entry">Потербителска настройка</string>
     <string name="clone_label">Клонирай</string>
+    <string name="show_loop_records">Покажи записите от цикъла</string>
+    <string name="show_hide_records">Скрий записите от цикъла</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Профил 1</string>
+    <string name="profile2">Профил 2</string>
     <string name="profile_type">Профил тип</string>
     <string name="basal_pct_from_tdd_label">% от базата</string>
     <string name="selected_profile">Избрано:</string>
@@ -104,4 +127,29 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">Натиснат е СТОП!</string>
     <!--QuickWizard-->
+    <string name="a11y_only_on_watch">само на часовник</string>
+    <string name="a11y_only_on_phone">само на смартфон</string>
+    <string name="quickwizard_settings">Настройки Бърз достъп</string>
+    <string name="overview_edit_quickwizard_button_text">Текст на бутона:</string>
+    <string name="overview_edit_quickwizard_carbs">Вълехидрати:</string>
+    <string name="overview_edit_quickwizard_valid">Валиден:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Добави</string>
+    <string name="overview_quickwizard_item_edit_button">Редактирай</string>
+    <string name="overview_edit_quickwizard_show_on_device">Покажи на устройството:</string>
+    <string name="overview_edit_quickwizard_use_bg">Изчисляване на КЗ</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Изчисляване на болус спрямо остатъчен инсулин</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Изчисляване на базал спрямо остатъчен инсулин</string>
+    <string name="overview_edit_quickwizard_use_trend">Изчисляване на тенденцията</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Изчисляване на суперболус</string>
+    <string name="overview_edit_quickwizard_percentage">Проценти</string>
+    <string name="device_all">Всички</string>
+    <string name="device_phone">Смартфон</string>
+    <string name="device_watch">Часовник</string>
+    <string name="positive_only">Само положителни</string>
+    <string name="negative_only">Само отрицателни</string>
+    <string name="overview_editquickwizard_usecob">Изчисляване на остатъчни въглехидрати</string>
+    <string name="overview_editquickwizard_usetemptarget">Изчисляване на временни целеви стойности</string>
+    <string name="overview_editquickwizard_usepercentage">Изчисляване на проценти</string>
+    <string name="app_default">По подразбиране на приложението</string>
+    <string name="a11y_drag_and_drop_handle">опция \"плъзни и пусни\"</string>
 </resources>

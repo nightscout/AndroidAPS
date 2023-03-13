@@ -116,7 +116,6 @@
     <string name="system_automation">Sistemos automatizacija</string>
     <string name="run_automations">Paleisti automatizacijas</string>
     <string name="add_automation">Pridėti taisyklę</string>
-    <string name="remove_sort">Pašalinti/rūšiuoti</string>
     <string name="stop_processing">Stabdyti apdorojimą</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">P</string>

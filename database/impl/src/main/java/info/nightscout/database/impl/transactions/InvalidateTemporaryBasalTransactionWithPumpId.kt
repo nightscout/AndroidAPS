@@ -10,9 +10,11 @@ class InvalidateTemporaryBasalTransactionWithPumpId(val pumpId: Long, val pumpTy
         val result = TransactionResult()
         val temporaryBasal = database.temporaryBasalDao.findByPumpIds(pumpId, pumpType, pumpSerial)
             ?: throw IllegalArgumentException("There is no such Temporary Basal with the specified temp ID.")
-        temporaryBasal.isValid = false
-        database.temporaryBasalDao.updateExistingEntry(temporaryBasal)
-        result.invalidated.add(temporaryBasal)
+        if (temporaryBasal.isValid) {
+            temporaryBasal.isValid = false
+            database.temporaryBasalDao.updateExistingEntry(temporaryBasal)
+            result.invalidated.add(temporaryBasal)
+        }
         return result
     }
 

@@ -116,7 +116,6 @@
     <string name="system_automation">Automazione sistema</string>
     <string name="run_automations">Esegui automazioni</string>
     <string name="add_automation">Aggiungi regola</string>
-    <string name="remove_sort">Rimuovi/ordina</string>
     <string name="stop_processing">Interrompere l\'elaborazione</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">L</string>
@@ -127,5 +126,7 @@
     <string name="saturday_short">S</string>
     <string name="sunday_short">D</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Tempo di mangiare!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
     <string name="time_to_bolus">Tempo di fare un bolo!\nEsegui il calcolatore e fai di nuovi i calcoli.</string>
+    <string name="error_setting_reminder">Errore nell\'impostare l\'allarme futuro</string>
 </resources>

@@ -411,19 +411,19 @@ class DanaPump @Inject constructor(
     fun modelFriendlyName(): String =
         when (hwModel) {
             0x01 -> "DanaR Korean"
-            0x03 ->
+            0x03       ->
                 when (protocol) {
                     0x00 -> "DanaR old"
                     0x02 -> "DanaR v2"
                     else -> "DanaR" // 0x01 and 0x03 known
                 }
-            0x05 ->
+            0x05       ->
                 if (protocol < 10) "DanaRS"
                 else "DanaRS v3"
-            0x06 -> "DanaRS Korean"
-            0x07 -> "Dana-i (BLE4.2)"
-            0x09 -> "Dana-i (BLE5)"
-            else -> "Unknown Dana pump"
+            0x06       -> "DanaRS Korean"
+            0x07       -> "Dana-i (BLE4.2)"
+            0x09, 0x0A -> "Dana-i (BLE5)"
+            else       -> "Unknown Dana pump"
         }
 
     fun pumpType(): PumpType =

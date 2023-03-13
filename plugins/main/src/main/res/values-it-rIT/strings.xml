@@ -88,6 +88,9 @@
     <string name="smscommunicator_message_body">Corpo del messaggio non valido</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Invia SMS se si verifica l\'evento \"micro irraggiungibile\"</string>
     <string name="smscommunicator_pump_unreachable">Segnala micro irraggiungibile</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Per cambiare la modalità loop a LGS (Sospensione a glicemia bassa) rispondi con il codice %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Per cambiare la modalità loop a Loop Chiuso rispondi con il codice %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Modalità loop corrente %1$s</string>
     <string name="wrong_format">Formato errato</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">Ultimo BG:</string>
@@ -316,8 +319,15 @@
     <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
     <string name="old_data">DATI VECCHI</string>
     <string name="pump_fetching_data">tentativo di recupero dati dal micro.</string>
+    <string name="pump_old_data">TDD: Dati ancora vecchi! Non è possibile caricare dal micro.</string>
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
+    <string name="no_active_profile">Nessun cambio profilo attivo!</string>
+    <string name="profile_message">Profilo:\n\nTimeshift: %1$\nPercentuale: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="no_profile">Nessun profilo caricato</string>
+    <string name="aps_only">Si applica solo in modalità APS!</string>
+    <string name="last_aps_result_na">Ultimo risultato non disponibile!</string>
     <string name="loop_status_closed">LOOP CHIUSO</string>
     <string name="loop_status_open">LOOP APERTO</string>
     <string name="loop_status_disabled">LOOP DISABILITATO</string>
@@ -325,6 +335,13 @@
     <string name="last_run">Ultima esecuzione</string>
     <string name="last_enact">Ultima attivazione</string>
     <string name="today">Oggi</string>
+    <string name="weighted">ponderato</string>
+    <string name="target_only_aps_mode">I target si applicano solo in modalità APS!</string>
+    <string name="no_history">Nessun dato storico!</string>
+    <string name="units_short">U</string>
     <string name="temp_target">Target Temporaneo</string>
+    <string name="until">fino a</string>
+    <string name="default_range">RANGE PREDEFINITO</string>
     <string name="target">target</string>
+    <string name="rate_duration">Velocità: %1$.2fU/h (%2$.2f%%) \nDurata %3$d min</string>
 </resources>

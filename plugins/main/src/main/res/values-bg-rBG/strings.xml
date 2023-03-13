@@ -3,6 +3,7 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS комуникатор</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Дистанционно управление AndroidAPS чрез използване на SMS команди.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">от приложението AUTHENTICATOR за: %1$s , последвано от PIN</string>
     <string name="smscommunicator_otp_pin">Допълнителен PIN в края на токен</string>
     <string name="smscommunicator_otp_pin_summary">Допълнителни цифри, които следва да бъдат залепени в края на всяка генерирана еднократна парола</string>
@@ -18,9 +19,11 @@
     <string name="smscommunicator_otp_export_prompt">Сигурни ли сте, че искате да копирате OTP паролата в клипборда?\n\nВие може да се нуждаете само от това, ако вашето приложение за автентичност има проблеми със сканирането на QRCode, искате да го въведете ръчно или искате да конфигурирате хардуерен OTP токен чрез специално приложение.</string>
     <string name="smscommunicator_otp_export_successful">OTP парола (във Base32 формат) е експортирана и копирана в клипборда. Поставете го в автентикатор или хардуерен OTP!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Инсталиране на удостоверител</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Сканирай кода за настройка на AndroidAPS OTP</string>
     <string name="smscommunicator_otp_step3_test_header">3. Тест на еднократна парола</string>
     <string name="smscommunicator_otp_reset_header">Нулиране на удостоверители</string>
     <string name="smscommunicator_otp_install_info">На всеки следящ телефона инсталирайте приложение Аутентификатор, който поддържа RFC 6238 ТОТР токени. Популярни безплатни приложения:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">При нулиране на на удостоверителя, правите невалидни всички вече използвани удостоверения. Ще трябва да ги настроите отново!</string>
     <string name="sms_wrong_code">Грешен код. Командата не е изпълнена.</string>
     <string name="sms_timeout_while_waiting">Изтичане на времето на предишна комуникация с помпата</string>
     <string name="smscommunicator_allowednumbers">Разрешени телефонни номера</string>
@@ -85,6 +88,9 @@
     <string name="smscommunicator_message_body">Невалиден текст на съобщение</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Изпращане на SMS, ако помпата е недостъпна</string>
     <string name="smscommunicator_pump_unreachable">Докладвай недостъпна помпа</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">За да превключите AndroidAPS  в режим на LGS (Low Glucose Suspend), отговорете с код %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">За да превключите в режим на Затворен цикъл, отговорете с код %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Текущ режим: %1$s</string>
     <string name="wrong_format">Грешен формат</string>
     <string name="sms_actual_bg">КЗ:</string>
     <string name="sms_last_bg">Последна КЗ:</string>
@@ -97,6 +103,7 @@
     <string name="sms_read_status_failed">Четенето на статуса се провали</string>
     <string name="sms_profile_switch_created">Създаден запис - Промяна на профил</string>
     <string name="sms_wrong_tbr_duration">Продължителността на временния база; трябва да бъде кратна на %1$d минути и по-голяма от 0.</string>
+    <string name="a11y_otp_qr_code">QR Code за еднократна парола</string>
     <string name="xdrip_status_detailed_iob_title">Покажи подробен IOB</string>
     <string name="xdrip_status_detailed_iob_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="disabled_loop">Loop изключен</string>
@@ -115,10 +122,16 @@
     <string name="subcategory">Подкатегория</string>
     <string name="calculator_label">Калкулатор</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Изберете тъмна, светла или да се ползва темата на телефона</string>
+    <string name="app_color_scheme">Цветови теми</string>
+    <string name="dark_theme">Тъмна тема</string>
+    <string name="light_theme">Светла тема</string>
+    <string name="follow_system_theme">Използвай темета на устройството</string>
     <!-- Profile -->
     <string name="localprofile">Профил</string>
     <string name="localprofile_shortname">ЛПр</string>
     <string name="description_profile_local">Този тип профил е достъпен в офлайн режим.</string>
+    <string name="a11y_add_new_to_list">Добавяне към списък</string>
     <string name="do_you_want_switch_profile">Искате да смените профила и премахнете на промените, направени в текущия профил?</string>
     <string name="save_or_reset_changes_first">Първо запазете или се откажете от промените</string>
     <string name="delete_current_profile">Изтриване на текущия профил?</string>
@@ -132,7 +145,10 @@
     <string name="invalid_profile_not_accepted">Невалиден профил %1$s не приет от NS</string>
     <string name="view">Изглед</string>
     <string name="errors">Грешки</string>
+    <string name="select_profile">Изберете профил за редактиране</string>
     <string name="profile_name">Име на профила:</string>
+    <string name="a11y_add_new_profile">добавяне на нов профил</string>
+    <string name="a11y_clone_profile">клониране на текущия профил</string>
     <string name="a11y_delete_current_profile">изтриване на текущия профил</string>
     <string name="dia_short">DIA</string>
     <string name="target_short">Цел</string>
@@ -153,8 +169,13 @@
     <string name="pb_label">Батерия на помпата</string>
     <string name="cannula">Канюла</string>
     <string name="ebstopsloop">Използване на удължен болус ще спре режим затворен цикъл за времето на болуса. Сигурни ли сте?</string>
+    <string name="statuslights_cannula_age">възраст на канюла</string>
+    <string name="statuslights_patch_pump_age">възраст на помпата</string>
+    <string name="patch_pump">Пач помпа</string>
     <!-- Overview -->
     <string name="show_statuslights">Покажи статус светлини на началния екран</string>
+    <string name="statuslights_cage_warning">Праг за възраст на канюла [h]</string>
+    <string name="statuslights_cage_critical">Праг за критична възраст на канюла [h]</string>
     <string name="statuslights_iage_warning">Праг за инсулинова възраст [часа]</string>
     <string name="statuslights_iage_critical">Праг за критична инсулинова възраст [часа]</string>
     <string name="statuslights_sage_warning">Праг за възраст на сензор [часа]</string>
@@ -171,6 +192,9 @@
     <string name="a11y_graph">графика</string>
     <string name="a11y_insulin_label">инсулин</string>
     <string name="chart_menu">Меню на графиката</string>
+    <string name="a11y_bg_quality">качество на КЗ</string>
+    <string name="a11y_blood_glucose">кръвна захар</string>
+    <string name="a11y_bg_outdated">остаряло</string>
     <string name="set_basal_question">Приложи нов временен базал:</string>
     <string name="overview_cgm">CGM</string>
     <string name="overview">Общ</string>
@@ -247,6 +271,7 @@
     <string name="devslope_shortname">ОТК.НАКЛ</string>
     <string name="treatments_shortname">Леч</string>
     <string name="sensitivity_shortname">ЧУВСТВ</string>
+    <string name="graph_scale">Мащаб на графиката</string>
     <string name="graph_menu_divider_header">Графика</string>
     <!-- Skins -->
     <string name="classic_description">Оригинален изглед</string>
@@ -254,10 +279,27 @@
     <string name="buttonson_description">Бутоните винаги се показват на дъното на екрана.</string>
     <string name="largedisplay_description">Голям екран</string>
     <string name="skin">Тема</string>
+    <string name="cannula_usage">употреба:</string>
     <!--    Iob-->
     <string name="send_logfiles">Изпрати последните лог файлове на разработчиците. Непредвидена ситуация.</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">Наблюдавайте и контролирайте AndroidAPS, от вашия WearOS часовник.</string>
+    <string name="no_watch_connected">(Няма активна връзка)</string>
+    <string name="pump_status">Статус на помпата</string>
+    <string name="loop_status">Статус на цикъл</string>
+    <string name="wizard_result">Съветник:\nИнсулин: %1$.2fЕ\nВъгл: %2$dг</string>
+    <string name="quick_wizard_not_available">Избраният съветник вече не е наличен, моля, опреснете</string>
+    <string name="quick_wizard_message">Съветник:%1$s\nИнсулин: %1$.2fЕ\nВъгл: %2$dг</string>
+    <string name="wear_action_tempt_preset_error">Временна цел непознат шаблон %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Изключи текуща Временна цел?</string>
+    <string name="wear_action_tempt_unit_error">Различни мерни единици се ползват на телефона и часовника!</string>
+    <string name="wear_action_tempt_zero_message">Нулева цел - изключвам временна цел?</string>
+    <string name="wear_action_tempt_min_bg_error">Мин КЗ е извън обхват!</string>
+    <string name="wear_action_tempt_max_bg_error">Макс КЗ е извън обхват!</string>
+    <string name="wear_action_tempt_manual_range_message">Временна цел \nМин: %1$s\nМакс: %2$s\nПрод: %3$s</string>
+    <string name="wear_action_tempt_manual_message">Временна цел \nцел: %1$s\nПрод: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Временна цел \nЦел: %1$s\nЦел: %2$s\nПрод: %3$s</string>
     <string name="no_success">неуспешно - моля проверете телефона</string>
     <string name="wear_settings">Настройки на часовник</string>
     <string name="wearcontrol_title">Контролиране от часовник</string>
@@ -276,4 +318,30 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия APS</string>
     <string name="old_data">СТАРИ ДАННИ</string>
+    <string name="pump_fetching_data">опитвам се да изтегля данни от помпата.</string>
+    <string name="pump_old_data">ОДД: Все още стари данни! Не може да се заредят от помпата.</string>
+    <string name="grams_short">гр.</string>
+    <string name="hour_short">ч</string>
+    <string name="no_active_profile">Не е настроен активен профил!</string>
+    <string name="profile_message">Профил:\n\nСмяна на времето: %1$\nПроценти: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fЕ %1$.0f%%</string>
+    <string name="no_profile">Не е зареден профил</string>
+    <string name="aps_only">Прилагане само в режим АПС!</string>
+    <string name="last_aps_result_na">Последният резултат не е наличен!</string>
+    <string name="loop_status_closed">ЗАТВОРЕН ЦИКЪЛ</string>
+    <string name="loop_status_open">ОТВОРЕН ЦИКЪЛ</string>
+    <string name="loop_status_disabled">ЦИКЪЛ ИЗКЛЮЧЕН</string>
+    <string name="aps">АПС</string>
+    <string name="last_run">Последно изпълнение</string>
+    <string name="last_enact">Последно зададено</string>
+    <string name="today">Днес</string>
+    <string name="weighted">тегло</string>
+    <string name="target_only_aps_mode">Целите се прилагат само в режим АПС!</string>
+    <string name="no_history">Няма хронология!</string>
+    <string name="units_short">Е</string>
+    <string name="temp_target">Временна цел</string>
+    <string name="until">до</string>
+    <string name="default_range">НАЧАЛНИ СТОЙНОСТИ</string>
+    <string name="target">цел</string>
+    <string name="rate_duration">Скорост: %1$.2fЕ/ч (%2$.2f%%) \nПродължителност %3$d мин</string>
 </resources>

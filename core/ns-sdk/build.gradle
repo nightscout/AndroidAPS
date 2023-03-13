@@ -34,5 +34,5 @@ dependencies {
     api "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     api "org.jetbrains.kotlinx:kotlinx-coroutines-rx3:$coroutines_version"
 
-    api "org.jetbrains.kotlinx:kotlinx-serialization-json:$serialization_version"
+    api "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version"
 }

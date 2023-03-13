@@ -371,6 +371,7 @@ class DanaRSService : DaggerService() {
         if (!isConnected) return false
         val status = DanaRSPacketGeneralInitialScreenInformation(injector)
         sendMessage(status)
+        if (status.failed) return false
         if (status.isTempBasalInProgress) {
             rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.stoppingtempbasal)))
             sendMessage(DanaRSPacketBasalSetCancelTemporaryBasal(injector))
@@ -391,6 +392,7 @@ class DanaRSService : DaggerService() {
     fun highTempBasal(percent: Int): Boolean {
         val status = DanaRSPacketGeneralInitialScreenInformation(injector)
         sendMessage(status)
+        if (status.failed) return false
         if (status.isTempBasalInProgress) {
             rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.stoppingtempbasal)))
             sendMessage(DanaRSPacketBasalSetCancelTemporaryBasal(injector))
@@ -414,6 +416,7 @@ class DanaRSService : DaggerService() {
         }
         val status = DanaRSPacketGeneralInitialScreenInformation(injector)
         sendMessage(status)
+        if (status.failed) return false
         if (status.isTempBasalInProgress) {
             rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.stoppingtempbasal)))
             sendMessage(DanaRSPacketBasalSetCancelTemporaryBasal(injector))

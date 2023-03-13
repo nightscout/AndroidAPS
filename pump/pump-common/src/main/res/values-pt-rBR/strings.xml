@@ -5,6 +5,7 @@
     <string name="pump_operation_not_yet_supported_by_pump">Operação não suportada ainda pela Bomba.</string>
     <string name="common_resultok">OK</string>
     <string name="pump_serial_number">Número de série da Bomba</string>
+    <string name="bolus_delivered_so_far">%1$.2f U / %2$.2f U entregues</string>
     <!-- PumpCommon - Pump Status -->
     <string name="pump_status_not_initialized">Bomba não inicializada</string>
     <string name="pump_status_initialized">Inicializado</string>

@@ -14,6 +14,7 @@
     <string name="ns_create_announcements_from_errors_summary">Criar um anúncio no Nightscout para caixas de diálogo de erro e alertas locais (também podem ser visualizados em Careportal sob tratamentos)</string>
     <string name="ns_create_announcements_from_carbs_req_summary">Criar anúncios no Nightscout para alertas de carboidratos requeridos</string>
     <string name="description_ns_client">Sincroniza seus dados com o Nightscout</string>
+    <string name="description_ns_client_v3">Sincroniza seus dados com o Nightscout usando a API v3</string>
     <string name="blocked_by_charging">Bloqueado pelas opções de carregamento</string>
     <string name="blocked_by_connectivity">Bloqueado pelas opções de conectividade</string>
     <string name="unsupported_ns_version">Versão não suportada do Nightscout</string>
@@ -22,6 +23,8 @@
     <string name="ns_malfunction">Erro de funcionamento do NSCliente. Pondere reiniciar o NS e NSCliente.</string>
     <!-- NSClient -->
     <string name="no_write_permission">NSCLIENT não tem permissão de escrita. Senha da API errada?</string>
+    <string name="ns_client_v3">NSClienteV3</string>
+    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">NSCliente</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
@@ -32,6 +35,9 @@
     <string name="ns_client_secret_title">NS API secret</string>
     <string name="ns_client_secret_dialog_title">NS API secret</string>
     <string name="ns_client_secret_dialog_message">Insira NS API secret (min 12 caract.)</string>
+    <string name="nsclient_token_title">Token de acesso NS</string>
+    <string name="nsclient_token_dialog_title">Token de acesso NS</string>
+    <string name="nsclient_token_dialog_message">Token de acesso gerado na página de administração do NS (mínimo de 17 caracteres)</string>
     <string name="deliver_now">Entregar agora</string>
     <string name="clear_queue">Limpar fila</string>
     <string name="show_queue">Mostrar fila</string>
@@ -69,6 +75,8 @@
     <string name="ns_alarm_urgent_stale_data_value_label">Tempo limite para Urgência por dados obsoletos [min]</string>
     <string name="ns_log_app_started_event">Registrar início do app no NS</string>
     <string name="copy_existing_values">Copiar configurações do NS (se existirem)?</string>
+    <string name="ns_use_ws_title">Conectar a websockets</string>
+    <string name="ns_use_ws_summary">Habilitar significa: atualizações mais rápidas, recebimento de alarmes e anúncios e maior consumo de bateria, semelhante à versão 1. Todos os outros carregadores para o NS devem usar o protocolo v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Nome de utilizador no Tidepool, normalmente seu endereço de e-mail</string>
     <string name="title_tidepool_username">Nome de Utilizador</string>
@@ -88,7 +96,24 @@
     <string name="remove_all">Remover todos</string>
     <string name="reset_start">Iniciar reinicialização</string>
     <string name="upload_now">Enviar agora</string>
+    <string name="not_connected">Não conectado</string>
+    <string name="read_only">Somente leitura</string>
+    <string name="working">Trabalhando</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Enviar dados de glicemia para xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Mostrar detalhes da IA</string>
+    <string name="xdrip_status_detailed_iob_summary">Dividir IA entre IA de bolus e de basal na face do relógio</string>
+    <string name="xdrip_status_show_bgi_title">Mostrar IG (Impacto na Glicemia)</string>
+    <string name="xdrip_status_show_bgi_summary">Adicionar Impacto glicêmico à linha de status</string>
+    <string name="xdrip_status_settings">linha do estado do Xdrip+ (relógio)</string>
+    <string name="disabled_loop">Loop Desativado</string>
+    <string name="xdrip_send_status_title">Enviar linha de status para xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ não está instalado</string>
+    <string name="calibration_sent">Calibração enviada para o xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Enviar dados de glicose e tratamentos para xDrip+. A fonte de dados \"xDrip+ Sync Seguidor\" deve ser selecionada e a aceitação de dados deve estar ativada nas configurações - Configurações entre apps - Aceitar Glucose/Tratamentos</string>
+    <string name="xdrip_local_broadcasts_title">Ativar transmissões para xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>

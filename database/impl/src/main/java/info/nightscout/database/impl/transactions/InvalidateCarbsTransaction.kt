@@ -8,9 +8,11 @@ class InvalidateCarbsTransaction(val id: Long) : Transaction<InvalidateCarbsTran
         val result = TransactionResult()
         val carbs = database.carbsDao.findById(id)
             ?: throw IllegalArgumentException("There is no such Carbs with the specified ID.")
-        carbs.isValid = false
-        database.carbsDao.updateExistingEntry(carbs)
-        result.invalidated.add(carbs)
+        if (carbs.isValid) {
+            carbs.isValid = false
+            database.carbsDao.updateExistingEntry(carbs)
+            result.invalidated.add(carbs)
+        }
         return result
     }
 

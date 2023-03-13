@@ -22,7 +22,7 @@
     <string name="askforpermission">Zapytaj o uprawnienia</string>
     <string name="need_whitelisting">%1$s potrzebuje wyłączenia z optymalizacji baterii, w celu zapewnienia poprawnego działania</string>
     <string name="storedsettingsfound">Znaleziono zapisane ustawienia</string>
-    <string name="master_password_summary">Hasło główne jest używane do szyfrowania kopii zapasowych i przełamania zabezpieczeń w aplikacji. Zapamiętaj je lub przechowuj w bezpiecznym miejscu.</string>
+    <string name="master_password_summary">Hasło główne jest używane do szyfrowania kopii zapasowych i przełamania zabezpieczeń w aplikacji. Zapamiętaj je i przechowuj w bezpiecznym miejscu (np.: managerze haseł).</string>
     <string name="current_master_password">Aktualne hasło główne</string>
     <string name="common_values">Użyj wartości największego jedzenia, które zazwyczaj zjadasz\n</string>
     <string name="syncinfotext">Synchronizuj dane z chmurą. Możesz teraz pominąć ten krok, ale nie będziesz w stanie przejść zadań dopóki nie skonfigurujesz połączenia z Nightscout lub Tidepool.</string>
@@ -83,7 +83,7 @@
     <string name="nsclient_version_does_not_match">Wersja AAPSClient nie jest zgodna z wersją AAPS. Proszę zaktualizować.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Ustawienia</string>
-    <string name="password_preferences_encrypt_prompt">Zostaniesz poproszony o hasło główne, które będzie użyte do szyfrowania wyeksportowanych preferencji.</string>
+    <string name="password_preferences_encrypt_prompt">Zostaniesz poproszony o hasło główne, które będzie użyte do szyfrowania wyeksportowanych ustawień.</string>
     <string name="preferences_export_canceled">Eksportowanie anulowane! Ustawienia NIE zostały wyeksportowane!</string>
     <string name="preferences_import_canceled">Import anulowany! Ustawienia NIE zostały zaimportowane!</string>
     <string name="preferences_import_impossible">Nie można zaimportować ustawień!</string>
@@ -147,7 +147,7 @@
     <string name="prefdecrypt_wrong_password">Błąd odszyfrowania, podane hasło nie może odszyfrować pliku</string>
     <string name="prefdecrypt_issue_missing_file_hash">Brak sumy kontrolnej pliku (hash), nie można zweryfikować autentyczności ustawień!</string>
     <string name="prefdecrypt_issue_modified">Plik został zmodyfikowany po eksporcie!</string>
-    <string name="prefdecrypt_issue_parsing">Błąd odszyfrowania, nie udało się przetworzyć ustawień!</string>
+    <string name="prefdecrypt_issue_parsing">Błąd odszyfrowania, nie udało się odczytać ustawień!</string>
     <string name="prefdecrypt_issue_wrong_pass">Błąd deszyfrowania, podane hasło jest niepoprawne lub plik ustawień został zmodyfikowany! Może się zdarzyć, że zaimportowany plik został wyeksportowany z innym hasłem głównym.</string>
     <string name="prefdecrypt_issue_wrong_format">Brak konfiguracji szyfrowania, format ustawień jest nieprawidłowy!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nieobsługiwany lub nieokreślony algorytm szyfrowania!</string>

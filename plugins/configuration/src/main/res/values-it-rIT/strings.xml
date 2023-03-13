@@ -25,6 +25,7 @@
     <string name="master_password_summary">La password master viene usata per la crittografia del backup e per gestire la sicurezza nell\'applicazione. Ricordala o conservala in un luogo sicuro.</string>
     <string name="current_master_password">Password Master corrente</string>
     <string name="common_values">Usa i valori del cibo più abbondante che mangi di solito\n</string>
+    <string name="syncinfotext">Sincronizza i dati nel cloud. Puoi saltare questa parte ora, ma non sarai in grado di superare gli obiettivi fino a quando non avrai impostato il client Nightscout o Tidepool.</string>
     <string name="status">Stato:</string>
     <string name="patient_name">Nome paziente</string>
     <string name="patient_name_summary">Fornisci il nome del paziente o il nickname per distinguere questa configurazione tra altre</string>
@@ -36,6 +37,7 @@
     <string name="exitwizard">Salta configurazione guidata</string>
     <string name="setupwizard_loop_description">Premi il tasto in basso per permettere ad AAPS di proporre/fare modifiche alla basale</string>
     <string name="setupwizard_sensitivity_description">Il plugin di sensibilità è usato per il rilevamento della sensibilità all\'insulina e il calcolo di COB. Per ulteriori informazioni visita:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Seleziona uno degli algoritmi disponibili. Sono ordinati dal più vecchio al più recente. L\'algoritmo più recente è solitamente più potente e più aggressivo. Pertanto, se sei un nuovo utente, probabilmente dovresti iniziare con AMA e non con l\'ultimo. Non dimenticare di leggere la documentazione di OpenAPS e di configurarlo prima dell\'uso.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Configura il RileyLink di seguito. Dopo aver selezionato un RileyLink, sarà possibile continuare la configurazione una volta che lo stato del RileyLink sarà \"Connesso\". Questo potrebbe richiedere un minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Puoi continuare la configurazione una volta che il micro è stato configurato.\n</string>
@@ -63,12 +65,15 @@
     <string name="configbuilder_general">Generale</string>
     <string name="configbuilder_general_description">Questi sono alcuni plugin generali che potresti trovare utili.</string>
     <string name="configbuilder_sync">Sincronizzazione</string>
+    <string name="configbuilder_sync_description">Plugin caricamento e sincronizzazione dati.</string>
     <string name="configbuilder_constraints_description">Quali vincoli sono applicati?</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Usalo per attivare l\'integrazione del loop di AAPS.</string>
     <string name="configbuilder_insulin_description">Quale tipo di insulina stai usando?</string>
     <string name="configbuilder_bgsource">Origine BG</string>
     <string name="configbuilder_bgsource_description">Da dove AAPS dovrebbe ottenere i suoi dati?</string>
+    <string name="configbuilder_smoothing">Smoothing</string>
+    <string name="configbuilder_smoothing_description">Scegli algoritmo di smoothing</string>
     <string name="configbuilder_sensitivity">Rilevamento sensibilità</string>
     <string name="configbuilder_sensitivity_description">Quale algoritmo di sensibilità dovrebbe essere usato?</string>
     <string name="config_builder_shortname">CONF</string>

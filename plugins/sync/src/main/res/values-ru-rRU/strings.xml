@@ -76,6 +76,7 @@
     <string name="ns_log_app_started_event">Передать в NS запись о начале работы приложения</string>
     <string name="copy_existing_values">Копировать настройки NS (если есть)?</string>
     <string name="ns_use_ws_title">Подключаться к веб-сокету</string>
+    <string name="ns_use_ws_summary">Активация означает: более быстрое обновление, получение оповещений и объявлений, более высокое потребление заряда батареи по аналогии с v1. Все остальные загрузчики NS будут использовать протокол v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Имя пользователя Tidepool, обычно ваш адрес электронной почты</string>
     <string name="title_tidepool_username">Имя пользователя</string>

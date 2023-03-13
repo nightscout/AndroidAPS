@@ -44,11 +44,11 @@
     <string name="insulin_delivery_suspended">Insulintilførsel er pauset</string>
     <string name="timezone_on_pod_is_different_from_the_timezone">Tidssone på pod er forskjellig fra tidssonen på telefon. Basalrater er feil. Bytt profil for å korrigere</string>
     <string name="failed_to_set_the_new_basal_profile">Kunne ikke sette ny basalprofil. Insulintilførsel er pauset</string>
-    <string name="setting_basal_profile_might_have_failed">Endring av basalprofil kan ha feilet. Insulinlevering kan bli stoppet! Vennligst velg Oppdater Pod fra Omnipod fanen og velg gjenoppta levering hvis nødvendig.</string>
-    <string name="bolus_delivery_status_uncertain">Status for levering av bolus doser er usikker. Oppdater pod-statusen for å verifisere.</string>
+    <string name="setting_basal_profile_might_have_failed">Endring av basalprofil kan ha feilet. Insulinlevering kan bli stoppet! Vennligst velg Oppdater Pod fra Omnipod-fanen og velg gjenoppta levering hvis nødvendig.</string>
+    <string name="bolus_delivery_status_uncertain">Status for levering av bolusdoser er usikker. Oppdater pod-statusen for å verifisere.</string>
     <string name="checking_delivery_status">Kontrollerer leveringsstatus</string>
-    <string name="setting_temp_basal_might_have_basal_failed">Innstillingen av temp basal kan ha feilet. Hvis en temp basal allerede var aktivert, så har den blitt kansellert. Vennligst oppdater Pod statusen manuelt fra Omnipod fanen.</string>
-    <string name="cancel_temp_basal_result_is_uncertain">Kansellering av temp basal er ikke bekreftet</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Innstillingen av midl. basal kan ha feilet. Hvis en midl. basal allerede var aktivert, så har den blitt kansellert. Vennligst oppdater Pod-statusen manuelt fra Omnipod-fanen.</string>
+    <string name="cancel_temp_basal_result_is_uncertain">Kansellering av midl. basal er ikke bekreftet</string>
     <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Ubekreftet kommando \"gjenopptakelse\". Vennligst oppdater pod-status</string>
-    <string name="cancelling_temp_basal_might_have_failed">Endring av tempg basal kan ha feilet. Hvis en temp basal allerede var aktiv så har den blitt kansellert. Oppdater Pod statusen manuelt fra Omnipod fanen.</string>
+    <string name="cancelling_temp_basal_might_have_failed">Endring av midl. basal kan ha feilet. Hvis en midl. basal allerede var aktiv så har den blitt kansellert. Oppdater Pod-statusen manuelt fra Omnipod-fanen.</string>
 </resources>

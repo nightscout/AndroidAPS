@@ -109,6 +109,14 @@
     <string name="automation_event">Събитие</string>
     <string name="reorder_label">Подреди</string>
     <string name="user_action">Потребителско действие</string>
+    <string name="remove_automation">Премахване на Автоматизация</string>
+    <string name="sort_automation">Сортиране на автоматизацията</string>
+    <string name="remove_selected_items">Премахнете избраните елементи</string>
+    <string name="count_selected">%1$d избрани</string>
+    <string name="system_automation">Системна автомация</string>
+    <string name="run_automations">Стартирай автомаций</string>
+    <string name="add_automation">Добавяне на правило</string>
+    <string name="stop_processing">Спри изпълнението</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">П</string>
     <string name="tuesday_short">Вт</string>
@@ -118,5 +126,7 @@
     <string name="saturday_short">С</string>
     <string name="sunday_short">Н</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Време за ядене!\Стартирайте болус съветника и направете изчисления отново.</string>
     <string name="time_to_bolus">Време е за болус!\nВключи болус съветника и направи изчисление отново.</string>
+    <string name="error_setting_reminder">Грешка при настройка на аларма!</string>
 </resources>

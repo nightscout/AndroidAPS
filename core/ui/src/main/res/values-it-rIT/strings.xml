@@ -14,6 +14,7 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Micro non inizializzato, profilo non impostato!</string>
     <string name="failed_update_basal_profile">Impossibile aggiornare il profilo basale</string>
+    <string name="bolus_delivered_successfully">Bolo di %1$.2f U erogato con successo</string>
     <string name="no_valid_basal_rate">Nessuna velocità basale valida letta dal micro</string>
     <string name="limiting_iob">Limitazione IOB a %1$.1f U a causa di: %2$s</string>
     <string name="loop_disabled">LOOP DISABILITATO DAI VINCOLI</string>
@@ -161,6 +162,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IC</string>
     <string name="isf_short">ISF</string>
+    <string name="canceling_tbr_failed">Basale temporanea: cancellazione fallita</string>
+    <string name="canceling_eb_failed">Bolo esteso: cancellazione fallita</string>
+    <string name="virtualpump_uploadstatus_title">Carica stato micro su NS o Tidepool</string>
     <string name="suspendloop_label">Loop disabilitato/sospeso</string>
     <string name="iob_label">Insulina attiva (IOB)</string>
     <!--    Protection-->
@@ -445,9 +449,12 @@
     <string name="info">INFO</string>
     <!-- BolusWizard -->
     <string name="bolus_advisor">Consiglio bolo</string>
+    <string name="bolus_advisor_message">Hai una glicemia alta. Invece di mangiare ora, si consiglia di attendere una glicemia migliore. Vuoi fare adesso un bolo di correzione ed essere ricordato quando è il momento di mangiare? In questo caso non verranno registrati carboidrati e dovrai usare di nuovo il calcolatore quando ti verrà mostrato il promemoria.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
     <string name="partialboluswizard">Eroga parte del risultato del calcolatore [%]</string>
+    <string name="bolus_constraint_applied_warn">Vincolo bolo applicato: %1$.2f U a %2$.2f U</string>
+    <string name="bolus_recorded_only">Il bolo sarà solo registrato (non erogato dal micro)</string>
     <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>
     <string name="no_action_selected">Nessuna azione selezionata, non succederà nulla</string>
     <string name="wizard_no_actual_bg">Nessun recente valore BG su cui basare il calcolo!</string>
@@ -466,10 +473,17 @@
     <string name="wizard_explain_tt">TempT: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s a %2$s</string>
     <string name="wizard_pump_not_available">Nessun micro disponibile!</string>
+    <string name="quickwizard">Calcolatore rapido</string>
     <!--    Preferences-->
+    <string name="child">Bambino</string>
     <string name="teenage">Adolescente</string>
     <string name="adult">Adulto</string>
+    <string name="resistant_adult">Adulto insulino-resistente</string>
     <string name="pregnant">Gravidanza</string>
+    <string name="patient_age_summary">Seleziona il tipo di paziente per configurare i limiti di sicurezza</string>
+    <string name="max_bolus_title">Max bolo consentito [U]</string>
+    <string name="max_carbs_title">Max CHO consentiti [g]</string>
+    <string name="patient_type">Tipo paziente</string>
     <!--    Protection-->
     <string name="unlock_settings">Impostazioni sblocco</string>
     <!--    Pumps -->
@@ -542,6 +556,9 @@
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Autorizzazione SMS mancante</string>
     <!-- About -->
+    <string name="cta_dont_kill_my_app_info">Non terminare l\'app?</string>
+    <string name="fabric_upload_disabled">Caricamento log dei crash disabilitato!</string>
+    <string name="about_link_urls">\n\nDocumentazione:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers\nhttps://www.facebook.com/groups/aapsitalia</string>
     <plurals name="days">
         <item quantity="one">%1$d giorno</item>
         <item quantity="other">%1$d giorni</item>
@@ -555,4 +572,7 @@
         <item quantity="other">%1$d minuti</item>
     </plurals>
     <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.</string>
+    <string name="cleanup_db_confirm_sync">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.\nFarlo velocizzerà considerevolmente la sincronizzazione completa.</string>
+    <string name="cleared_entries">Elementi cancellati</string>
 </resources>

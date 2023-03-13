@@ -5,7 +5,7 @@
     <string name="error_this_field_cannot_contain_special_character">Dette feltet kan ikke inneholde noen spesialtegn</string>
     <string name="error_only_standard_letters_are_allowed">Bare vanlige bokstaver er tillatt</string>
     <string name="error_field_must_not_be_empty">Dette feltet kan ikke være tomt</string>
-    <string name="error_email_address_not_valid">E-post adressen er ikke gyldig</string>
+    <string name="error_email_address_not_valid">E-postadressen er ikke gyldig</string>
     <string name="error_creditcard_number_not_valid">Kredittkortnummer er ikke gyldig</string>
     <string name="error_phone_not_valid">Telefonnummeret er ikke gyldig</string>
     <string name="error_domain_not_valid">Domenenavnet er ikke gyldig</string>
@@ -14,8 +14,8 @@
     <string name="error_notvalid_personname">Ikke et gyldig fornavn eller etternavn.</string>
     <string name="error_notvalid_personfullname">Ikke et gyldig fullt navn.</string>
     <string name="error_date_not_valid">Ugyldig format</string>
-    <string name="error_mustbe4digitnumber">Må være 4 sifret tall</string>
-    <string name="error_mustbe6digitnumber">Må være 6 sifret tall</string>
+    <string name="error_mustbe4digitnumber">Må være et firesifret tall</string>
+    <string name="error_mustbe6digitnumber">Må være et sekssifret tall</string>
     <string name="error_mustbe12hexadidits">Må være 12 tegn av ABCDEF0123456789</string>
     <string name="error_mustbe8hexadidits">Må være 8 tegn av ABCDEF0123456789</string>
     <string name="error_mustbe4hexadidits">Må være 4 tegn av ABCDEF0123456789</string>

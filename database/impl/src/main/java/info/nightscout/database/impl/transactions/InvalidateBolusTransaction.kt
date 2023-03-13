@@ -8,9 +8,11 @@ class InvalidateBolusTransaction(val id: Long) : Transaction<InvalidateBolusTran
         val result = TransactionResult()
         val bolus = database.bolusDao.findById(id)
             ?: throw IllegalArgumentException("There is no such Bolus with the specified ID.")
-        bolus.isValid = false
-        database.bolusDao.updateExistingEntry(bolus)
-        result.invalidated.add(bolus)
+        if (bolus.isValid) {
+            bolus.isValid = false
+            database.bolusDao.updateExistingEntry(bolus)
+            result.invalidated.add(bolus)
+        }
         return result
     }
 

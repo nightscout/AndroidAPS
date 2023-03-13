@@ -12,7 +12,7 @@
     <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(Digitalstil)</string>
     <string name="label_actions_tile">AAPS(Actions)</string>
-    <string name="label_temp_target_tile">AAPS(Temp Target)</string>
+    <string name="label_temp_target_tile">AAPS(Midl. Mål)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
     <string name="label_warning_sync">Ingen data!</string>
     <string name="label_warning_old">Gamle data!</string>
@@ -48,14 +48,14 @@
     <string name="pref_quick_righty">Raskt høyre</string>
     <string name="pref_quick_lefty">Raskt venstre</string>
     <string name="pref_modern_sparse">Modern Sparse</string>
-    <string name="pref_delta_granularity">Delta granularitet (Steampunk)</string>
+    <string name="pref_delta_granularity">Deltagranularitet (Steampunk)</string>
     <string name="pref_low">Lav</string>
     <string name="pref_medium">Middels</string>
     <string name="pref_high">Høy</string>
     <string name="pref_auto">Auto</string>
     <string name="pref_big_numbers">Store sifre</string>
-    <string name="pref_ring_history">Ringe historikk</string>
-    <string name="pref_light_ring_history">Lys ringe historikk</string>
+    <string name="pref_ring_history">Ring-historikk</string>
+    <string name="pref_light_ring_history">Lys ring-historikk</string>
     <string name="pref_animations">Animasjoner</string>
     <string name="pref_wizard_in_menu">Kalkulator i Meny</string>
     <string name="pref_prime_in_menu">Prime i menyen</string>
@@ -66,7 +66,7 @@
     <string name="pref_version">Versjon:</string>
     <string name="pref_moreWatchfaceSettings">Flere innstillinger for urskive</string>
     <string name="pref_lookInYourWatchfaceConfiguration">Vennligst sjekk urskiveinnstillinger.</string>
-    <string name="menu_tempt">TempT</string>
+    <string name="menu_tempt">MidlMål</string>
     <string name="menu_wizard">Kalkulator</string>
     <string name="menu_wizard_short">Kalk</string>
     <string name="menu_treatment">Behandling</string>
@@ -83,7 +83,7 @@
     <string name="menu_menu">Meny</string>
     <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Varighet</string>
-    <string name="action_tempt_confirmation">Temp target forespurt</string>
+    <string name="action_tempt_confirmation">Midl. mål forespurt</string>
     <string name="action_quick_wizard_confirmation">Quick Wizard forespurt</string>
     <string name="action_treatment_confirmation">Behandling forespurt</string>
     <string name="action_bolus_confirmation">Bolus forespurt</string>
