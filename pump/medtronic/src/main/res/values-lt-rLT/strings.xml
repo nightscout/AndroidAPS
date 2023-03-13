@@ -66,7 +66,7 @@
     <string name="medtronic_cmd_desc_get_history_request">Gauti istoriją - Lapas %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Gauti pompos laiką</string>
     <string name="medtronic_cmd_desc_set_time">Nustatyti pompos laiką</string>
-    <string name="medtronic_cmd_desc_get_battery_status">Parodyti baterijos būseną</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Parodyti baterijos statusą</string>
     <string name="medtronic_cmd_desc_get_settings">Gauti parametrus</string>
     <string name="medtronic_cmd_desc_get_model">Gauti pompos modelį</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Gauti bazės profilį</string>
@@ -94,5 +94,5 @@
     <string name="riley_statistics">RL statistika</string>
     <string name="medtronic_history_type">Tipas:</string>
     <string name="clicked_refresh" comment="26 characters max for translation">Paspausta atnaujinti</string>
-    <string name="scheduled_status_refresh" comment="26 characters max for translation">Planuotas būklės naujinimas</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Statuso naujinimas</string>
 </resources>

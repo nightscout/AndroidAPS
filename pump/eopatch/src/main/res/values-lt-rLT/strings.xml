@@ -8,12 +8,12 @@
     <string name="patch_expiration_reminders">Priminimas apie Patch galiojimą</string>
     <string name="patch_buzzer_reminders">Garsinio signalo priminimai</string>
     <string name="time_format_a_h_mm">val:min</string>
-    <string name="eopatch_ble_status">BLE būsena</string>
+    <string name="eopatch_ble_status">BLE statusas</string>
     <string name="eopatch_serial_number">Serijos nr.</string>
     <string name="eopatch_lot_number">Partijos nr.</string>
     <string name="eopatch_wakeup_time">Paleidimo data &amp; laikas</string>
     <string name="eopatch_expiration_time">Galiojimo laikas</string>
-    <string name="eopatch_status">Būsena</string>
+    <string name="eopatch_status">Statusas</string>
     <string name="eopatch_base_basal_rate">Pagrindinė valandinė bazė</string>
     <string name="eopatch_temp_basal_rate">Laikina valandinė bazė</string>
     <string name="eopatch_total_delivered">Iš viso suleista</string>
@@ -95,7 +95,7 @@
     <string name="insulin_suspend_msg1">Sustabdžius dabartinis bolusas &amp; laikina bazė bus atšaukti. \n\nDydis : %1$s v/val\nLiko laiko  : %2$s\n&amp; Liko insulino : %3$.2f v</string>
     <string name="insulin_suspend_msg2">Sustabdžius dabartinis bolusas bus atšauktas. \n\nLiko insulino : %1$.2f v</string>
     <string name="insulin_suspend_msg3">Sustabdžius dabartinė laikina bazė bus atšaukta. \n\nDydis : %1$s v/val\nLiko laiko  : %2$s</string>
-    <string name="insulin_suspend_msg4">Insulino leidimas bus sustabdytas.</string>
+    <string name="insulin_suspend_msg4">Insulino tiekimas bus sustabdytas.</string>
     <string name="string_change_patch">Baigti naudoti/Keisti Patch</string>
     <string name="string_activate_patch">Aktyvuoti Patch</string>
     <string name="string_discard_patch">Baigti naudoti Patch</string>
@@ -121,8 +121,8 @@
     <string name="string_suspend_time_insulin_delivery_title">Bazės sustabdymo laikas</string>
     <string name="string_resume_insulin_delivery_title">Atnaujinti insulino tiekimą</string>
     <string name="string_resume_insulin_delivery_message">Pompos sustabdymo pabaiga.\nNorėdami atnaujinti insulino tiekimą, spauskite \'Patvirtinti\'.\n\n[Caution]\nInsulino tiekimas nebus atnaujintas, kol nepaspausite \'Patvirtinti\'.\nNepaspaudus \'Patvirtinti\', gali kilti hiperglikemija.</string>
-    <string name="string_suspended_insulin_delivery_message">Insulino leidimas sustabdytas.</string>
-    <string name="string_resumed_insulin_delivery_message">Insulino leidimas atnaujintas.</string>
+    <string name="string_suspended_insulin_delivery_message">Insulino tiekimas sustabdytas.</string>
+    <string name="string_resumed_insulin_delivery_message">Insulino tiekimas atnaujintas.</string>
     <string name="finish">Užbaigti</string>
     <string name="string_temp_basal_remained_hhmm">liko laiko: %1$s:%2$s</string>
     <string name="next">Kitas</string>
