@@ -9,6 +9,8 @@ import info.nightscout.interfaces.userEntry.ValueWithUnitMapper
 
 interface UserEntryLogger {
 
+    fun log(action: Action, source: Sources, note: String?, timestamp: Long, vararg listValues: ValueWithUnit?)
+    fun log(action: Action, source: Sources, note: String?, timestamp: Long, listValues: List<ValueWithUnit?>)
     fun log(action: Action, source: Sources, note: String? = "", vararg listValues: ValueWithUnit?)
     fun log(action: Action, source: Sources, vararg listValues: ValueWithUnit?)
     fun log(action: Action, source: Sources, note: String? = "", listValues: List<ValueWithUnit?> = listOf())

@@ -723,7 +723,7 @@ class RTNavigationTest {
             )),
             ParsedScreen.BasalRate1ProgrammingMenuScreen,
             ParsedScreen.BasalRate2ProgrammingMenuScreen,
-            ParsedScreen.AlertScreen(AlertScreenContent.Warning(code = 6)),
+            ParsedScreen.AlertScreen(AlertScreenContent.Warning(code = 6, AlertScreenContent.AlertScreenState.TO_SNOOZE)),
             ParsedScreen.BasalRate3ProgrammingMenuScreen,
             ParsedScreen.BasalRate4ProgrammingMenuScreen,
             ParsedScreen.BasalRate5ProgrammingMenuScreen
@@ -864,7 +864,7 @@ class RTNavigationTest {
             ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
             ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
             ParsedScreen.TemporaryBasalRatePercentageScreen(170, remainingDurationInMinutes = 30),
-            ParsedScreen.AlertScreen(AlertScreenContent.Warning(code = 6)),
+            ParsedScreen.AlertScreen(AlertScreenContent.Warning(code = 6, AlertScreenContent.AlertScreenState.TO_SNOOZE)),
             ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30),
             ParsedScreen.TemporaryBasalRatePercentageScreen(160, remainingDurationInMinutes = 30)
         ))
