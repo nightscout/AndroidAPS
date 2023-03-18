@@ -11,6 +11,7 @@ import org.mockito.junit.jupiter.MockitoSettings
 import org.mockito.quality.Strictness
 import java.util.Locale
 
+@Suppress("SpellCheckingInspection")
 @ExtendWith(MockitoExtension::class)
 @MockitoSettings(strictness = Strictness.LENIENT)
 open class TestBase {

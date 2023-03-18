@@ -180,6 +180,9 @@ class BLEComm @Inject internal constructor(
             return
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
+        if (isConnecting) {
+            stopScan()
+        }
         mBluetoothGatt?.disconnect()
     }
 

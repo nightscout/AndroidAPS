@@ -18,7 +18,7 @@ import info.nightscout.pump.medtrum.ui.viewmodel.ViewModelFactory
 import info.nightscout.pump.medtrum.ui.viewmodel.ViewModelKey
 import javax.inject.Provider
 
-@Module
+@Module(includes = [MedtrumCommModule::class])
 @Suppress("unused")
 abstract class MedtrumModule {
 
