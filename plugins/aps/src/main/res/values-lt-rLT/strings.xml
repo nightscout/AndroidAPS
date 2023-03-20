@@ -25,7 +25,7 @@
     <string name="description_ama">2017 m. algoritmas</string>
     <string name="description_smb">Naujausias algoritmas patyrusiems vartotojams</string>
     <string name="description_smb_dynamic_isf">Naujausias algoritmas patyrusiems naudotojams su dinaminiu/automatiniu JIF</string>
-    <string name="openapsama_bolus_snooze_dia_divisor">Boluso snaudimo daliklis</string>
+    <string name="openapsama_bolus_snooze_dia_divisor">Atidėjimo po boluso IVT daliklis</string>
     <string name="openapsma_run">Paleisti dabar</string>
     <string name="openapsma_last_run_label">Paskutinis veiksmas</string>
     <string name="openapsma_input_parameters_label">Įvesties parametrai</string>
@@ -48,7 +48,7 @@
     <string name="openapsama_min_5m_carb_impact_summary">Numatytoji reikšmė: 3.0 (AMA) arba 8.0 (SMB). Tai parametras, nurodantis angliavandenių poveikį glikemijai kas 5 minutes nuo jų suvartojimo. Numatytoji reikšmė yra 3 mg/dl per 5min. Šis skaičius turi įtakos apskaičiavimams, kaip greitai mažės AAO, kokia bus glikemijos kitimo prognozė, ypač kai ji krenta daugiau nei tikėtasi, arba nedidėja tiek, kiek tikėtasi.</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Numatytoji reikšmė: 3 tai pagrindinis OpenAPS saugiklis. Jis apriboja Jūsų valandinę bazę iki trigubos maksimalios valandinės bazės (standartiniu atveju). Jums greičiausiai neprireiks šios reikšmės keisti, tačiau turėtumėte žinoti, kad ji naudojama kaip saugiklis apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\".</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Numatytoji reikšmė: 4 tai antras pagrindinis OpenAPS saugiklis, apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\". Jis reiškia, kad jūsų valandinė bazė, nepriklausomai nuo to, kokia maksimali valandinė bazė suprogramuota pompoje, negali būti didesnė, nei keturguba dabartinė valandinė bazė. Tai apsaugo Jus nuo pavojingų situacijų, kai nustatoma pernelyg didelė valandinė bazė, pilnai nesuprantant, kaip veikia algoritmas. Numatytoji reikšmė yra 4x; daugumai vartotojų niekada neprireikia šio skaičiaus keisti, o pajutus, kad \"atsitrenkiama\" į saugiklį, rekomenduojama peržiūrėti kitus nustatymus.</string>
-    <string name="openapsama_bolus_snooze_dia_divisor_summary">Numatytoji reikšmė: 2\nBoluso snaudimas aktyvuojamas iškart po to, kai susileidžiate bolusą maistui. Ši funkcija neleidžia sistemai nustatyti mažų LBD iškart po valgio. Pvz.: jei IVT yra 3 val, tai boluso snaudimas pamažu deaktyvuojamas per 1,5 val (3 val. / 2).</string>
+    <string name="openapsama_bolus_snooze_dia_divisor_summary">Numatytoji reikšmė: 2\nAtidėjimas po boluso aktyvuojamas iškart po to, kai susileidžiate bolusą maistui. Ši funkcija neleidžia sistemai nustatyti mažų laikinų bazių iškart po valgio. Pvz.: jei IVT yra 3 val, tai atidėjimas po boluso pamažu deaktyvuojamas per 1,5 val (3 val. / 2).</string>
     <string name="openapsama_link_to_preference_json_doc_txt">Dėmesio!\nPaprastai neturėtumėte keisti šių, žemiau esančių, reikšmių. Prašome PASPAUSTI ČIA ir PERSKAITYKITE tekstą ir įsitikinkite, kad SUPRANTATE prieš keisdami bet kurią iš šių verčių.</string>
     <string name="always_use_short_avg">Visada naudoti trumpo laikotarpio vidutinį pokyti vietoj paprasto pokyčio</string>
     <string name="always_use_short_avg_summary">Naudinga, kai duomenys, gaunami iš nefiltruoto šaltinio, tokio kaip xDrip+, tampa nestabilūs.</string>
