@@ -1877,6 +1877,7 @@ class Pump(
     suspend fun fetchTDDHistory() = executeCommand<List<TDDHistoryEntry>>(
         pumpMode = PumpIO.Mode.REMOTE_TERMINAL,
         isIdempotent = true,
+        allowExecutionWhileSuspended = true,
         description = FetchingTDDHistoryCommandDesc()
     ) {
         tddHistoryProgressReporter.reset(Unit)
