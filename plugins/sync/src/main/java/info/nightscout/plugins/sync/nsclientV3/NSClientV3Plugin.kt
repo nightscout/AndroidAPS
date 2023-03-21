@@ -381,6 +381,9 @@ class NSClientV3Plugin @Inject constructor(
                 val response = args[0] as JSONObject
                 wsConnected = if (response.optBoolean("success")) {
                     rxBus.send(EventNSClientNewLog("◄ WS", "Subscribed for: ${response.optString("collections")}"))
+                    // during disconnection updated data is not received
+                    // thus run non WS load to get missing data
+                    executeLoop("WS_CONNECT", forceNew = false)
                     true
                 } else {
                     rxBus.send(EventNSClientNewLog("◄ WS", "Auth failed"))
