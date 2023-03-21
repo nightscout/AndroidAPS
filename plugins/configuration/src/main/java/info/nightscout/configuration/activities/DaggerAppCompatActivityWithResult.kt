@@ -33,7 +33,6 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(info.nightscout.core.ui.R.style.AppTheme_NoActionBar)
-        rh.updateContext(this)
 
         compositeDisposable.add(rxBus.toObservable(EventThemeSwitch::class.java).subscribe {
             recreate()
