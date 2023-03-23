@@ -184,8 +184,8 @@
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00v</string>
-    <string name="snooze_alert">AAPS atidėti aliarmą</string>
-    <string name="sending_snooze">Atidėjimas siunčiamas AAPS</string>
+    <string name="snooze_alert">Nutildyti aliarmą AAPS</string>
+    <string name="sending_snooze">Nutildymas siunčiamas AAPS</string>
     <string name="short_hour">val</string>
     <string name="week_short">sav</string>
     <string name="day_short">d</string>

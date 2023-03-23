@@ -81,8 +81,8 @@
     <string name="combov2_incorrect_active_basal_profile">פרופיל בזאלי פעיל שגוי; על פרופיל מספר 1 להיות הפרופיל הפעיל, לא פרופיל מספר %1$d</string>
     <string name="combov2_unrecognized_alert">התראת משאבה בלתי מזוהה</string>
     <string name="combov2_combo_alert">התראת Combo</string>
-    <string name="combov2_current_tbr">%1$d%% (נותרו %2$d דקות)</string>
-    <string name="combov2_current_tbr_less_than_1min">%1$d% (נותרה פחות מדקה אחת)</string>
+    <string name="combov2_current_tbr">%1$d%% (נותרו d%2$ דקות)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (נותרה פחות מדקה אחת)</string>
     <string name="combov2_load_tdds_cancelled">טעינת המינונים היומיים בוטלה</string>
     <string name="combov2_retrieving_tdds_failed">טעינת המינונים היומיים נכשלה</string>
     <string name="combov2_battery_low_warning">סוללת המשאבה חלשה</string>
