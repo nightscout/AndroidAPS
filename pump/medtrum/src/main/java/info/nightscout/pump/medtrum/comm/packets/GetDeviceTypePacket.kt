@@ -1,7 +1,7 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.medtrum.comm.packets.CommandType.GET_DEVICE_TYPE
+import info.nightscout.pump.medtrum.comm.enums.CommandType.GET_DEVICE_TYPE
 import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.pump.medtrum.extension.toLong
 

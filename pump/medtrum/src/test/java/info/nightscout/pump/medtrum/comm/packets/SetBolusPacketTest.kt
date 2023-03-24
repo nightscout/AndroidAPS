@@ -20,15 +20,14 @@ class SetBolusPacketTest : MedtrumTestBase() {
 
     @Test fun getRequestGivenPacketWhenCalledThenReturnOpCode() {
         // Inputs
-        val opCode = 19
+        val insulin = 2.35
 
         // Call
-        val packet = SetBolusPacket(packetInjector)
+        val packet = SetBolusPacket(packetInjector, insulin)
         val result = packet.getRequest()
 
         // Expected values
-        // TODO correct value's
-        assertEquals(1, result.size)
-        assertEquals(opCode.toByte(), result[0])
+        val expected = byteArrayOf(19, 1, 47, 0, 0)
+        assertEquals(expected.contentToString(), result.contentToString())
     }
 }

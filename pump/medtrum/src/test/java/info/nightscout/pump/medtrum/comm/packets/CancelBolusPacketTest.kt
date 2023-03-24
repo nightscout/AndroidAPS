@@ -27,7 +27,8 @@ class CancelBolusPacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        assertEquals(1, result.size)
-        assertEquals(opCode.toByte(), result[0])
+        val expectedByteArray = byteArrayOf(opCode.toByte()) + 1.toByte()
+        assertEquals(2, result.size)
+        assertEquals(expectedByteArray.contentToString(), result.contentToString())
     }
 }

@@ -1,7 +1,7 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.medtrum.comm.packets.CommandType.SET_TIME
+import info.nightscout.pump.medtrum.comm.enums.CommandType.SET_TIME
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
 

@@ -3,6 +3,7 @@ package info.nightscout.pump.medtrum.comm.packets
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
+import info.nightscout.pump.medtrum.comm.enums.AlarmSetting
 import org.junit.jupiter.api.Test
 import org.junit.Assert.*
 
@@ -12,22 +13,74 @@ class ActivatePacketTest : MedtrumTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is MedtrumPacket) {
+            if (it is ActivatePacket) {
                 it.aapsLogger = aapsLogger
+                it.medtrumPump = medtrumPump
+                it.tddCalculator = tddCalculator
             }
         }
     }
 
-    @Test fun getRequestGivenPacketWhenCalledThenReturnOpCode() {
+    @Test fun getRequestGivenPacketWhenValuesSetThenReturnCorrectByteArray() {
         // Inputs
-        val opCode = 18
+        medtrumPump.desiredPatchExpiration = true
+        medtrumPump.desiredAlarmSetting = AlarmSetting.BEEP_ONLY.code
+        medtrumPump.desiredDailyMaxInsulin = 40
+        medtrumPump.desiredDailyMaxInsulin = 180
+
+        val basalProfile = byteArrayOf(3, 16, 14, 0, 0, 1, 2, 12, 12, 12)
 
         // Call
-        val packet = ActivatePacket(packetInjector)
+        val packet = ActivatePacket(packetInjector, basalProfile)
         val result = packet.getRequest()
 
         // Expected values
-        assertEquals(1, result.size)
-        assertEquals(opCode.toByte(), result[0])
+        val expectedByteArray = byteArrayOf(18, 0, 0, 1, 6, 0, 0, 0, 32, 3, 16, 14, 0, 0, 1, 3, 16, 14, 0, 0, 1, 2, 12, 12, 12)
+        assertEquals(expectedByteArray.contentToString(), result.contentToString())
+    }
+
+    @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
+        // Inputs
+        medtrumPump.desiredPatchExpiration = true
+        medtrumPump.desiredAlarmSetting = AlarmSetting.BEEP_ONLY.code
+        medtrumPump.desiredDailyMaxInsulin = 40
+        medtrumPump.desiredDailyMaxInsulin = 180
+
+        val basalProfile = byteArrayOf(3, 16, 14, 0, 0, 1, 2, 12, 12, 12)
+        val response = byteArrayOf(26, 18, 19, 1, 0, 0, 41, 0, 0, 0, -104, 91, 28, 17, 1, 30, 0, 1, 0, 41, 0, -104, 91, 28, 17)
+
+        // Call
+        val packet = ActivatePacket(packetInjector, basalProfile)
+        val result = packet.handleResponse(response)
+
+        // Expected values
+        val expectedPatchId = 41L
+        val expectedTime = 1675605528L
+        val exptectedBasalType = 1
+        val expectedBasalRate = 1.5
+        val expectedBasalSequence = 1
+        val expectedBasalPatchId = 41
+        val expectedBasalStart = 1675605528L
+
+        assertEquals(true, result)
+        assertEquals(expectedPatchId, medtrumPump.patchId)
+        assertEquals(expectedTime, medtrumPump.lastTimeReceivedFromPump)
+        assertEquals(exptectedBasalType, medtrumPump.lastBasalType)
+        assertEquals(expectedBasalRate, medtrumPump.lastBasalRate, 0.01)
+        assertEquals(expectedBasalSequence, medtrumPump.lastBasalSequence)
+        assertEquals(expectedBasalPatchId, medtrumPump.lastBasalPatchId)
+        assertEquals(expectedBasalStart, medtrumPump.lastBasalStartTime)
+    }
+
+    @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
+        // Inputs
+        val response = byteArrayOf(26, 18, 19, 1, 0, 0, 41, 0, 0, 0, -104, 91, 28, 17, 1, 30, 0, 1, 0, 41, 0, -104, 91, 28)
+
+        // Call
+        val packet = ActivatePacket(packetInjector, byteArrayOf())
+        val result = packet.handleResponse(response)
+
+        // Expected values
+        assertFalse(result)
     }
 }

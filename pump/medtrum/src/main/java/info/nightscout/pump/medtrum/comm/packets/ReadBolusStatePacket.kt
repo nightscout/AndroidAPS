@@ -1,8 +1,7 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.medtrum.comm.packets.CommandType.READ_BOLUS_STATE
-import info.nightscout.pump.medtrum.extension.toInt
+import info.nightscout.pump.medtrum.comm.enums.CommandType.READ_BOLUS_STATE
 
 class ReadBolusStatePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
 
@@ -10,7 +9,7 @@ class ReadBolusStatePacket(injector: HasAndroidInjector) : MedtrumPacket(injecto
 
     companion object {
 
-        private const val RESP_BOLUS_DATA_START = 6 // TODO: check this
+        private const val RESP_BOLUS_DATA_START = 6
     }
 
     init {

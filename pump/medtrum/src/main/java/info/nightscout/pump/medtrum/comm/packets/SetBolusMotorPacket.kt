@@ -1,9 +1,7 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.medtrum.comm.packets.CommandType.SET_BOLUS_MOTOR
-import info.nightscout.pump.medtrum.extension.toByteArray
-import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
+import info.nightscout.pump.medtrum.comm.enums.CommandType.SET_BOLUS_MOTOR
 
 class SetBolusMotorPacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
 

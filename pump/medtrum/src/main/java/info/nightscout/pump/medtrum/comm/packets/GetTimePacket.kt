@@ -1,7 +1,7 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.medtrum.comm.packets.CommandType.GET_TIME
+import info.nightscout.pump.medtrum.comm.enums.CommandType.GET_TIME
 import info.nightscout.pump.medtrum.extension.toLong
 
 class GetTimePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {

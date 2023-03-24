@@ -3,32 +3,36 @@ package info.nightscout.pump.medtrum.comm.packets
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
+import info.nightscout.pump.medtrum.comm.enums.AlarmSetting
 import org.junit.jupiter.api.Test
 import org.junit.Assert.*
 
-class SetPatchPacket : MedtrumTestBase() {
+class SetPatchPacketTest : MedtrumTestBase() {
 
     /** Test packet specific behavoir */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is MedtrumPacket) {
+            if (it is SetPatchPacket) {
                 it.aapsLogger = aapsLogger
+                it.medtrumPump = medtrumPump
             }
         }
     }
 
-    @Test fun getRequestGivenPacketWhenCalledThenReturnOpCode() {
+    @Test fun getRequestGivenValuesWhenCalledThenReturnValidArray() {
         // Inputs
-        val opCode = 35
+        medtrumPump.desiredPatchExpiration = false
+        medtrumPump.desiredAlarmSetting = AlarmSetting.LIGHT_AND_VIBRATE.code
+        medtrumPump.desiredDailyMaxInsulin = 40
+        medtrumPump.desiredDailyMaxInsulin = 180
 
         // Call
-        val packet = SetBolusPacket(packetInjector)
+        val packet = SetPatchPacket(packetInjector)
         val result = packet.getRequest()
 
         // Expected values
-        // TODO correct value's
-        assertEquals(1, result.size)
-        assertEquals(opCode.toByte(), result[0])
+        val expected = byteArrayOf(35, 1, 32, 3, 16, 14, 0, 0, 0, 0, 0, 0)
+        assertEquals(expected.contentToString(), result.contentToString())
     }
 }

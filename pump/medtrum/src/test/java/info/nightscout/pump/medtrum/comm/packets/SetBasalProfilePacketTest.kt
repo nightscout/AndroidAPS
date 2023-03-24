@@ -12,8 +12,9 @@ class SetBasalProfilePacketTest : MedtrumTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is MedtrumPacket) {
+            if (it is SetBasalProfilePacket) {
                 it.aapsLogger = aapsLogger
+                it.medtrumPump = medtrumPump
             }
         }
     }
@@ -21,13 +22,14 @@ class SetBasalProfilePacketTest : MedtrumTestBase() {
     @Test fun getRequestGivenPacketWhenCalledThenReturnOpCode() {
         // Inputs
         val opCode = 21
+        val basalProfile = byteArrayOf(8, 2, 3, 4, -1, 0, 0, 0, 0)
 
         // Call
-        val packet = SetBasalProfilePacket(packetInjector)
+        val packet = SetBasalProfilePacket(packetInjector, basalProfile)
         val result = packet.getRequest()
 
         // Expected values
-        assertEquals(1, result.size)
-        assertEquals(opCode.toByte(), result[0])
+        val expected = byteArrayOf(opCode.toByte()) + 1.toByte() + basalProfile
+        assertEquals(expected.contentToString(), result.contentToString())
     }
 }

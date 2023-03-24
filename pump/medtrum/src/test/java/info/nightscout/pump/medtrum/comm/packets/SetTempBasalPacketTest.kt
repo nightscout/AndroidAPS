@@ -3,7 +3,6 @@ package info.nightscout.pump.medtrum.comm.packets
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
-import info.nightscout.pump.medtrum.extension.toByteArray
 import org.junit.jupiter.api.Test
 import org.junit.Assert.*
 
@@ -13,50 +12,65 @@ class SetTempBasalPacketTest : MedtrumTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is MedtrumPacket) {
+            if (it is SetTempBasalPacket) {
                 it.aapsLogger = aapsLogger
+                it.medtrumPump = medtrumPump
             }
         }
     }
 
     @Test fun getRequestGivenPacketWhenCalledThenReturnOpCode() {
         // Inputs
-        val opCode = 24
+        val absoluteRate = 1.25
+        val duration = 60
 
         // Call
-        val packet = SetTempBasalPacket(packetInjector)
+        val packet = SetTempBasalPacket(packetInjector, absoluteRate, duration)
         val result = packet.getRequest()
 
         // Expected values
-        assertEquals(1, result.size)
-        assertEquals(opCode.toByte(), result[0])
+        val expected = byteArrayOf(24, 6, 25, 0, 60, 0)
+        assertEquals(expected.contentToString(), result.contentToString())
     }
 
-    @Test fun getRequestGivenPacketWhenCalledThenReturnOpCodeAndDuration() {
-        // TODO
-    }
+    @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
+        // Inputs
+        val absoluteRate = 1.25
+        val duration = 60
 
-    @Test fun getRequestGivenPacketWhenCalledThenReturnOpCodeAndDurationAndRate() {
-        // TODO
-    }
+        val response = byteArrayOf(18, 24, 12, 0, 0, 0, 6, 25, 0, 2, 0, -110, 0, -56, -19, 88, 17, -89, 0)
 
-    @Test fun handleResponseGivenResponseWhenMessageIsCorrectLengthThenResultTrue() {
-        // TODO
+        // Call
+        val packet = SetTempBasalPacket(packetInjector, absoluteRate, duration)
+        val result = packet.handleResponse(response)
+
+        // Expected values
+        val expectedBasalType = 6
+        val expectedBasalRate = 1.25
+        val expectedBasalSequence = 2
+        val expectedStartTime = 1679575112L
+        val expectedPatchId = 146
+
+        assertTrue(result)
+        assertEquals(expectedBasalType, medtrumPump.lastBasalType)
+        assertEquals(expectedBasalRate, medtrumPump.lastBasalRate, 0.01)
+        assertEquals(expectedBasalSequence, medtrumPump.lastBasalSequence)
+        assertEquals(expectedStartTime, medtrumPump.lastBasalStartTime)
+        assertEquals(expectedPatchId, medtrumPump.lastBasalPatchId)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
         // Inputs
-        val opCode = 24
-        val responseCode = 0
-        val response = byteArrayOf(0) + opCode.toByte() + 0.toByteArray(2) + responseCode.toByteArray(2)
+        val absoluteRate = 1.25
+        val duration = 60
 
-        // Call        
-        val packet = ReadBolusStatePacket(packetInjector)
+        val response = byteArrayOf(18, 24, 12, 0, 0, 0, 6, 25, 0, 2, 0, -110, 0, -56, -19, 88)
+
+        // Call
+        val packet = SetTempBasalPacket(packetInjector, absoluteRate, duration)
         val result = packet.handleResponse(response)
 
         // Expected values
-        assertEquals(false, result)
-        assertEquals(true, packet.failed)
-        // assertEquals(byteArrayOf().contentToString(), packet.bolusData.contentToString()) TODO
+        assertFalse(result)
     }
 }

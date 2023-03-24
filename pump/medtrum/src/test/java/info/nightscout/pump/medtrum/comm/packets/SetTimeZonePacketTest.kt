@@ -26,8 +26,8 @@ class SetTimeZonePacketTest : MedtrumTestBase() {
     @Test fun getRequestGivenPacketWhenCalledThenReturnOpCode() {
         // Inputs
         val opCode = 12
-        val time = MedtrumTimeUtil().getCurrentTimePumpSeconds() // TODO: Mock time proper?
-        val offsetMins = dateUtil.getTimeZoneOffsetMinutes(dateUtil.now()) // TODO: Mock time proper?
+        val time = MedtrumTimeUtil().getCurrentTimePumpSeconds()
+        val offsetMins = dateUtil.getTimeZoneOffsetMinutes(dateUtil.now())
 
         // Call
         val packet = SetTimeZonePacket(packetInjector)

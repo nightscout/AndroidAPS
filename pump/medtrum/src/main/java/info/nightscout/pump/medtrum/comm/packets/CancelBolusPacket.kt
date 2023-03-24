@@ -1,7 +1,7 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.medtrum.comm.packets.CommandType.CANCEL_BOLUS
+import info.nightscout.pump.medtrum.comm.enums.CommandType.CANCEL_BOLUS
 
 class CancelBolusPacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
 
@@ -10,7 +10,11 @@ class CancelBolusPacket(injector: HasAndroidInjector) : MedtrumPacket(injector) 
     }
 
     override fun getRequest(): ByteArray {
-        // TODO: Get bolus type
-        return byteArrayOf(opCode)
+        // Bolus types:
+        // 1 = normal
+        // 2 = Extended
+        // 3 = Combi
+        val bolusType: Byte = 1 // Only support for normal bolus for now
+        return byteArrayOf(opCode) + bolusType
     }
 }

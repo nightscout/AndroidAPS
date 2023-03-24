@@ -1,7 +1,7 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.medtrum.comm.packets.CommandType.AUTH_REQ
+import info.nightscout.pump.medtrum.comm.enums.CommandType.AUTH_REQ
 import info.nightscout.pump.medtrum.encryption.Crypt
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt

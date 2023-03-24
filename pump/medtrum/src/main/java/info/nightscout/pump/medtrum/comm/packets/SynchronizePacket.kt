@@ -1,7 +1,7 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.medtrum.comm.packets.CommandType.SYNCHRONIZE
+import info.nightscout.pump.medtrum.comm.enums.CommandType.SYNCHRONIZE
 import info.nightscout.pump.medtrum.extension.toInt
 
 class SynchronizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {

@@ -1,4 +1,4 @@
-package info.nightscout.pump.medtrum.comm.packets
+package info.nightscout.pump.medtrum.comm.enums
 
 enum class CommandType(val code: Byte) {
     SYNCHRONIZE(3),

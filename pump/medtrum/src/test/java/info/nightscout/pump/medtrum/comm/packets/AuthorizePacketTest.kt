@@ -52,8 +52,8 @@ class AuthorizePacketTest : MedtrumTestBase() {
 
         // Expected values
         val swString = "$swVerX.$swVerY.$swVerZ"
-        assertEquals(true, result)
-        assertEquals(false, packet.failed)
+        assertTrue(result)
+        assertFalse(packet.failed)
         assertEquals(deviceType, packet.deviceType)
         assertEquals(swString, packet.swVersion)
     }
@@ -70,7 +70,7 @@ class AuthorizePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        assertEquals(false, result)
-        assertEquals(true, packet.failed)
+        assertFalse(result)
+        assertTrue(packet.failed)
     }
 }

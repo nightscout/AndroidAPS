@@ -19,7 +19,7 @@ class ReadBolusStatePacketTest : MedtrumTestBase() {
         }
     }
 
-    @Test fun handleResponseGivenResponseWhenMessageIsCorrectLengthThenResultTrue() {
+    @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
         // Inputs
         val opCode = 34
         val responseCode = 0
@@ -31,8 +31,8 @@ class ReadBolusStatePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        assertEquals(true, result)
-        assertEquals(false, packet.failed)
+        assertTrue(result)
+        assertFalse(packet.failed)
         assertEquals(bolusData.contentToString(), packet.bolusData.contentToString())
     }
 

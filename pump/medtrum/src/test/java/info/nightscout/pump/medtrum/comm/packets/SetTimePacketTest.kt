@@ -23,7 +23,7 @@ class SetTimePacketTest : MedtrumTestBase() {
     @Test fun getRequestGivenPacketWhenCalledThenReturnOpCode() {
         // Inputs
         val opCode = 10
-        val time = MedtrumTimeUtil().getCurrentTimePumpSeconds() // TODO: Mock time proper?
+        val time = MedtrumTimeUtil().getCurrentTimePumpSeconds()
 
         // Call
         val packet = SetTimePacket(packetInjector)

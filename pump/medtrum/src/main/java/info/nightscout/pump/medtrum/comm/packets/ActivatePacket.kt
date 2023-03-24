@@ -1,23 +1,88 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.pump.medtrum.comm.packets.CommandType.ACTIVATE
+import info.nightscout.pump.medtrum.MedtrumPump
+import info.nightscout.pump.medtrum.comm.enums.CommandType.ACTIVATE
+import info.nightscout.pump.medtrum.extension.toByteArray
+import info.nightscout.pump.medtrum.extension.toByte
+import info.nightscout.interfaces.stats.TddCalculator
+import info.nightscout.pump.medtrum.extension.toInt
+import info.nightscout.pump.medtrum.extension.toLong
+import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
+import javax.inject.Inject
+import kotlin.math.round
 
-class ActivatePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
+class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: ByteArray) : MedtrumPacket(injector) {
+
+    @Inject lateinit var medtrumPump: MedtrumPump
+    @Inject lateinit var tddCalculator: TddCalculator
+
+    companion object {
+
+        private const val RESP_PATCH_ID_START = 6
+        private const val RESP_PATCH_ID_END = RESP_PATCH_ID_START + 4
+        private const val RESP_TIME_START = 10
+        private const val RESP_TIME_END = RESP_TIME_START + 4
+        private const val RESP_BASAL_TYPE_START = 14
+        private const val RESP_BASAL_TYPE_END = RESP_BASAL_TYPE_START + 1
+        private const val RESP_BASAL_VALUE_START = 15
+        private const val RESP_BASAL_VALUE_END = RESP_BASAL_VALUE_START + 2
+        private const val RESP_BASAL_SEQUENCE_START = 17
+        private const val RESP_BASAL_SEQUENCE_END = RESP_BASAL_SEQUENCE_START + 2
+        private const val RESP_BASAL_PATCH_ID_START = 19
+        private const val RESP_BASAL_PATCH_ID_END = RESP_BASAL_PATCH_ID_START + 2
+        private const val RESP_BASAL_START_TIME_START = 21
+        private const val RESP_BASAL_START_TIME_END = RESP_BASAL_START_TIME_START + 4
+    }
 
     init {
         opCode = ACTIVATE.code
+        expectedMinRespLength = RESP_BASAL_START_TIME_END
     }
 
     override fun getRequest(): ByteArray {
-        // TODO get activation commands
-        return byteArrayOf(opCode)
+        /**
+         * byte 0: opCode
+         * byte 1: autoSuspendEnable         // Value for auto mode, not used for AAPS
+         * byte 2: autoSuspendTime           // Value for auto mode, not used for AAPS
+         * byte 3: expirationTimer           // Expiration timer, 0 = no expiration 1 = 12 hour reminder and expiration after 3 days
+         * byte 4: alarmSetting              // See AlarmSetting
+         * byte 5: lowSuspend                // Value for auto mode, not used for AAPS
+         * byte 6: predictiveLowSuspend      // Value for auto mode, not used for AAPS
+         * byte 7: predictiveLowSuspendRange // Value for auto mode, not used for AAPS
+         * byte 8-9: hourlyMaxInsulin        // Max hourly dose of insulin not used for now, divided by 0.05
+         * byte 10-11: daylyMaxSet           // Max daily dose of insulin not used for now, divided by 0.05
+         * byte 12-13: tddToday              // Current TDD (of present day) not used for now, divided by 0.05
+         * byte 14: 1                        // Always 1
+         * bytes 15 - end                    // Basal profile > see MedtrumPump
+         */
+
+        val patchExpiration: Byte = medtrumPump.desiredPatchExpiration.toByte()
+        val alarmSetting: Byte = medtrumPump.desiredAlarmSetting
+        val hourlyMaxInsulin: Int = round(medtrumPump.desiredHourlyMaxInsulin / 0.05).toInt()
+        val dailyMaxInsulin: Int = round(medtrumPump.desiredDailyMaxInsulin / 0.05).toInt()
+        val currentTDD: Double = tddCalculator.calculateToday()?.totalAmount?.div(0.05) ?: 0.0
+
+        return byteArrayOf(opCode) + 0.toByteArray(2) + patchExpiration + alarmSetting + 0.toByteArray(3) + hourlyMaxInsulin.toByteArray(2) + dailyMaxInsulin.toByteArray(2) + currentTDD.toInt()
+            .toByteArray(2) + 1.toByte() + basalProfile
     }
 
     override fun handleResponse(data: ByteArray): Boolean {
         val success = super.handleResponse(data)
         if (success) {
-            // TODO
+            val medtrumTimeUtil = MedtrumTimeUtil()
+
+            val patchId = data.copyOfRange(RESP_PATCH_ID_START, RESP_PATCH_ID_END).toLong()
+            val time = medtrumTimeUtil.convertPumpTimeToSystemTimeSeconds(data.copyOfRange(RESP_TIME_START, RESP_TIME_END).toLong())
+            val basalType = data.copyOfRange(RESP_BASAL_TYPE_START, RESP_BASAL_TYPE_END).toInt()
+            val basalValue = data.copyOfRange(RESP_BASAL_VALUE_START, RESP_BASAL_VALUE_END).toInt() * 0.05
+            val basalSequence = data.copyOfRange(RESP_BASAL_SEQUENCE_START, RESP_BASAL_SEQUENCE_END).toInt()
+            val basalPatchId = data.copyOfRange(RESP_BASAL_PATCH_ID_START, RESP_BASAL_PATCH_ID_END).toInt()
+            val basalStartTime = medtrumTimeUtil.convertPumpTimeToSystemTimeSeconds(data.copyOfRange(RESP_BASAL_START_TIME_START, RESP_BASAL_START_TIME_END).toLong())
+
+            medtrumPump.patchId = patchId
+            medtrumPump.lastTimeReceivedFromPump = time
+            medtrumPump.handleBasalStatusUpdate(basalType, basalValue, basalSequence, basalPatchId, basalStartTime, time)
         }
 
         return success
