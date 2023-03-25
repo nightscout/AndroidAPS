@@ -189,6 +189,8 @@
                     android:id="@+id/combov2_pin_entry_ui"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
                     android:layout_marginBottom="20dp"
                     android:gravity="center_horizontal"
                     android:orientation="vertical"
@@ -210,7 +212,8 @@
 
                         <EditText
                             android:id="@+id/combov2_pin_entry_edit"
-                            android:layout_width="200dp"
+                            android:layout_weight="1"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:autofillHints="@string/combov2_pin_entry_hint"
                             android:digits="0123456789 "
