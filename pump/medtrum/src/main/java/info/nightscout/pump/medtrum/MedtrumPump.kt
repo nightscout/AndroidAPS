@@ -55,6 +55,7 @@ class MedtrumPump @Inject constructor(
 
     var patchId = 0L
     var lastTimeReceivedFromPump = 0L // Time in seconds!
+    var lastKnownSequenceNumber = 0
 
     // Pump history
 
@@ -97,13 +98,17 @@ class MedtrumPump @Inject constructor(
         lastBasalType = basalType
         lastBasalRate = basalRate
         lastBasalSequence = basalSequence
+        lastKnownSequenceNumber = basalSequence
         lastBasalPatchId = basalPatchId
         lastBasalStartTime = basalStartTime
+        // TODO Handle history
     }
 
     fun handleStopStatusUpdate(stopSequence: Int, stopPatchId: Int) {
         aapsLogger.debug(LTag.PUMP, "handleStopStatusUpdate: stopSequence: $stopSequence stopPatchId: $stopPatchId")
         lastStopSequence = stopSequence
+        lastKnownSequenceNumber = stopSequence
         lastStopPatchId = stopPatchId
+        // TODO Handle history
     }
 }

@@ -19,5 +19,6 @@ enum class CommandType(val code: Byte) {
     STOP_PATCH(31),
     READ_BOLUS_STATE(34),
     SET_PATCH(35),
-    SET_BOLUS_MOTOR(36)
+    SET_BOLUS_MOTOR(36),
+    GET_RECORD(99)
 }
