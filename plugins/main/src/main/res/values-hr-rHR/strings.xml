@@ -94,7 +94,6 @@
     <string name="error_in_basal_values">Pogreška u bazalnim vrijednostima</string>
     <string name="error_in_target_values">Pogreška u ciljanim vrijednostima</string>
     <string name="error_in_isf_values">Pogreška u ISF vrijednostima</string>
-    <string name="profile_name_contains_dot">Naziv profila sadrži točke.\nNS to ne podržava.\nProfil nije učitan u NS.</string>
     <string name="invalid_profile_not_accepted">Nevažeći profil %1$s nije prihvaćen od NS-a</string>
     <string name="view">Pogled</string>
     <string name="errors">Greške</string>
