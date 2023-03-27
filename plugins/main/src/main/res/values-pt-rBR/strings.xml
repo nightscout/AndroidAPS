@@ -138,7 +138,6 @@
     <string name="error_in_basal_values">Erro nos valores da basal</string>
     <string name="error_in_target_values">Erro nos valores de alvo</string>
     <string name="error_in_isf_values">Erro nos valores de FSI</string>
-    <string name="profile_name_contains_dot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não foi enviado para o NS.</string>
     <string name="invalid_profile_not_accepted">Perfil inválido %1$s não aceito do NS</string>
     <string name="view">Visualização</string>
     <string name="errors">Erros</string>
