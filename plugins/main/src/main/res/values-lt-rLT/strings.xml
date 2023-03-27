@@ -141,7 +141,6 @@
     <string name="error_in_basal_values">Bazės reikšmių klaida</string>
     <string name="error_in_target_values">Tikslinės glikemijos reikšmės klaida</string>
     <string name="error_in_isf_values">JIF reikšmės klaida</string>
-    <string name="profile_name_contains_dot">Profilio pavadinime yra taškų.\nŠios funkcijos NS nepalaiko.\nProfilis neįkeltas į NS.</string>
     <string name="invalid_profile_not_accepted">Neteisingas profilis %1$s nepriimtas iš NS</string>
     <string name="view">Rodymas</string>
     <string name="errors">Klaidos</string>
