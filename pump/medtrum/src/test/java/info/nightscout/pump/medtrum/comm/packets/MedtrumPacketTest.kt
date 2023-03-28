@@ -9,7 +9,7 @@ import org.junit.Assert.*
 
 class MedtrumPacketTest : MedtrumTestBase() {
 
-    /** Test base behavoir of the medtrum packet, thse  */
+    /** Test base behavoir of the medtrum packet  */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {

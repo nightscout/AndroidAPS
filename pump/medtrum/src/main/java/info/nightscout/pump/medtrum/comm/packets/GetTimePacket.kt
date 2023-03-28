@@ -1,12 +1,15 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.CommandType.GET_TIME
 import info.nightscout.pump.medtrum.extension.toLong
+import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
+import javax.inject.Inject
 
 class GetTimePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
 
-    var time: Long = 0
+    @Inject lateinit var medtrumPump: MedtrumPump
 
     companion object {
 
@@ -22,7 +25,8 @@ class GetTimePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
     override fun handleResponse(data: ByteArray): Boolean {
         val success = super.handleResponse(data)
         if (success) {
-            time = data.copyOfRange(RESP_TIME_START, RESP_TIME_END).toLong()
+            val time = MedtrumTimeUtil().convertPumpTimeToSystemTimeSeconds(data.copyOfRange(RESP_TIME_START, RESP_TIME_END).toLong())
+            medtrumPump.lastTimeReceivedFromPump = time
         }
 
         return success

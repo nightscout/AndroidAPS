@@ -50,9 +50,9 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
          * byte 5: lowSuspend                // Value for auto mode, not used for AAPS
          * byte 6: predictiveLowSuspend      // Value for auto mode, not used for AAPS
          * byte 7: predictiveLowSuspendRange // Value for auto mode, not used for AAPS
-         * byte 8-9: hourlyMaxInsulin        // Max hourly dose of insulin not used for now, divided by 0.05
-         * byte 10-11: daylyMaxSet           // Max daily dose of insulin not used for now, divided by 0.05
-         * byte 12-13: tddToday              // Current TDD (of present day) not used for now, divided by 0.05
+         * byte 8-9: hourlyMaxInsulin        // Max hourly dose of insulin, divided by 0.05
+         * byte 10-11: daylyMaxSet           // Max daily dose of insulin, divided by 0.05
+         * byte 12-13: tddToday              // Current TDD (of present day), divided by 0.05
          * byte 14: 1                        // Always 1
          * bytes 15 - end                    // Basal profile > see MedtrumPump
          */
@@ -82,6 +82,7 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
 
             medtrumPump.patchId = patchId
             medtrumPump.lastTimeReceivedFromPump = time
+            // TODO: Handle basal here, and report to AAPS directly
             medtrumPump.handleBasalStatusUpdate(basalType, basalValue, basalSequence, basalPatchId, basalStartTime, time)
         }
 

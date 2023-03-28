@@ -92,6 +92,7 @@ class BLEComm @Inject internal constructor(
 
     var isConnected = false // TODO: These may be removed have no function
     var isConnecting = false// TODO: These may be removed have no function
+    private var retryCounter = 0
     private var uartWrite: BluetoothGattCharacteristic? = null
     private var uartRead: BluetoothGattCharacteristic? = null
 
@@ -158,6 +159,7 @@ class BLEComm @Inject internal constructor(
         }
         mDeviceSN = deviceSN
         isConnecting = true
+        retryCounter = 0
         startScan()
         return true
     }
@@ -374,11 +376,20 @@ class BLEComm @Inject internal constructor(
                                     mBluetoothGatt?.discoverServices()
                                 }, WRITE_DELAY_MILLIS)
         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-            close()
-            isConnected = false
-            isConnecting = false
-            mCallback?.onBLEDisconnected()
-            aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnected
+            if (status == 133 && isConnecting && retryCounter < 3) {
+                // Special case for status 133 when we are connecting
+                // We need to close gatt and try to reconnect
+                aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange status 133")
+                close()
+                startScan()
+                retryCounter++
+            } else {
+                close()
+                isConnected = false
+                isConnecting = false
+                mCallback?.onBLEDisconnected()
+                aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnectedS
+            }
         }
     }
 

@@ -7,8 +7,10 @@ import info.nightscout.pump.medtrum.comm.packets.AuthorizePacket
 import info.nightscout.pump.medtrum.comm.packets.CancelBolusPacket
 import info.nightscout.pump.medtrum.comm.packets.CancelTempBasalPacket
 import info.nightscout.pump.medtrum.comm.packets.GetDeviceTypePacket
+import info.nightscout.pump.medtrum.comm.packets.GetRecordPacket
 import info.nightscout.pump.medtrum.comm.packets.GetTimePacket
 import info.nightscout.pump.medtrum.comm.packets.MedtrumPacket
+import info.nightscout.pump.medtrum.comm.packets.NotificationPacket
 import info.nightscout.pump.medtrum.comm.packets.PollPatchPacket
 import info.nightscout.pump.medtrum.comm.packets.PrimePacket
 import info.nightscout.pump.medtrum.comm.packets.ReadBolusStatePacket
@@ -31,8 +33,10 @@ abstract class MedtrumCommModule {
     @ContributesAndroidInjector abstract fun contributesCancelBolusPacket(): CancelBolusPacket
     @ContributesAndroidInjector abstract fun contributesCancelTempBasalPacket(): CancelTempBasalPacket
     @ContributesAndroidInjector abstract fun contributesGetDeviceTypePacket(): GetDeviceTypePacket
+    @ContributesAndroidInjector abstract fun contributesGetRecordPacket(): GetRecordPacket
     @ContributesAndroidInjector abstract fun contributesGetTimePacket(): GetTimePacket
     @ContributesAndroidInjector abstract fun contributesMedtrumPacket(): MedtrumPacket
+    @ContributesAndroidInjector abstract fun contributesNotificationPacket(): NotificationPacket
     @ContributesAndroidInjector abstract fun contributesPollPatchPacket(): PollPatchPacket
     @ContributesAndroidInjector abstract fun contributesPrimePacket(): PrimePacket
     @ContributesAndroidInjector abstract fun contributesReadBolusStatePacket(): ReadBolusStatePacket

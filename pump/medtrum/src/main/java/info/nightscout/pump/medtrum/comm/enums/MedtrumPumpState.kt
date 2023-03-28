@@ -3,7 +3,7 @@ package info.nightscout.pump.medtrum.comm.enums
 enum class MedtrumPumpState(val state: Byte) {
     NONE(0),
     IDLE(1),
-    DELIVERING(2),
+    FILL(2),
     PRIMING(3),
     PRIMED(4),
     EJECTING(5),
@@ -25,5 +25,10 @@ enum class MedtrumPumpState(val state: Byte) {
     BASE_FAULT(101),
     BATTERY_OUT(102),
     NO_CALIBRATION(103),
-    STOPPED(128.toByte())
+    STOPPED(128.toByte());
+
+    companion object {
+        fun fromByte(state: Byte) = values().find { it.state == state }
+            ?: throw IllegalAccessException("")
+    }
 }

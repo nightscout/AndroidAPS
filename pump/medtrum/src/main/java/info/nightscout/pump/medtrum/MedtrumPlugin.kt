@@ -26,6 +26,7 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.TimeChangeType
+import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
 import info.nightscout.pump.medtrum.services.MedtrumService
 import info.nightscout.rx.AapsSchedulers
@@ -62,6 +63,7 @@ class MedtrumPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
+    private val medtrumPump: MedtrumPump,
     private val uiInteraction: UiInteraction,
     private val profileFunction: ProfileFunction
 ) : PumpPluginBase(
@@ -116,15 +118,15 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override fun isInitialized(): Boolean {
-        return false
+        return medtrumPump.pumpState > MedtrumPumpState.EJECTED
     }
 
     override fun isSuspended(): Boolean {
-        return true
+        return medtrumPump.pumpState < MedtrumPumpState.ACTIVE || medtrumPump.pumpState > MedtrumPumpState.ACTIVE_ALT
     }
 
     override fun isBusy(): Boolean {
-        return true
+        return false
     }
 
     override fun isConnected(): Boolean {

@@ -17,6 +17,8 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.medtrum.MedtrumPlugin
+import info.nightscout.pump.medtrum.MedtrumPump
+import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.comm.packets.*
 import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.pump.medtrum.extension.toLong
@@ -50,6 +52,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var context: Context
     @Inject lateinit var medtrumPlugin: MedtrumPlugin
+    @Inject lateinit var medtrumPump: MedtrumPump
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var uiInteraction: UiInteraction
@@ -71,6 +74,29 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     // TODO: Stuff like this in a settings class? 
     private var mLastDeviceTime: Long = 0
+
+    companion object {
+
+        private val MASK_SUSPEND = 0x01
+        private val MASK_NORMAL_BOLUS = 0x02
+        private val MASK_EXTENDED_BOLUS = 0x04
+        private val MASK_BASAL = 0x08
+
+        private val MASK_SETUP = 0x10
+        private val MASK_RESERVOIR = 0x20
+        private val MASK_LIFE_TIME = 0x40
+        private val MASK_BATTERY = 0x80
+
+        private val MASK_STORAGE = 0x100
+        private val MASK_ALARM = 0x200
+        private val MASK_START_TIME = 0x400
+        private val MASK_UNKNOWN_1 = 0x800
+
+        private val MASK_UNUSED_CGM = 0x1000
+        private val MASK_UNUSED_COMMAND_CONFIRM = 0x2000
+        private val MASK_UNUSED_AUTO_STATUS = 0x4000
+        private val MASK_UNUSED_LEGACY = 0x8000
+    }
 
     override fun onCreate() {
         super.onCreate()
@@ -182,7 +208,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     override fun onNotification(notification: ByteArray) {
         aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onNotification" + notification.contentToString())
-        // TODO 
+        NotificationPacket(injector).handleNotification(notification)
     }
 
     override fun onIndication(indication: ByteArray) {
@@ -315,15 +341,14 @@ class MedtrumService : DaggerService(), BLECommCallback {
         override fun onIndication(data: ByteArray) {
             if (mPacket?.handleResponse(data) == true) {
                 // Succes!
-                mLastDeviceTime = (mPacket as GetTimePacket).time
                 val currTimeSec = dateUtil.nowWithoutMilliseconds() / 1000
-                if (abs(timeUtil.convertPumpTimeToSystemTimeSeconds(mLastDeviceTime) - currTimeSec) <= 5) { // Allow 5 sec deviation
+                if (abs(timeUtil.convertPumpTimeToSystemTimeSeconds(medtrumPump.lastTimeReceivedFromPump) - currTimeSec) <= 5) { // Allow 5 sec deviation
                     toState(SynchronizeState())
                 } else {
                     aapsLogger.debug(
                         LTag.PUMPCOMM,
-                        "GetTimeState.onIndication need to set time. systemTime: $currTimeSec PumpTime: $mLastDeviceTime Pump Time to system time: " + timeUtil.convertPumpTimeToSystemTimeSeconds(
-                            mLastDeviceTime
+                        "GetTimeState.onIndication need to set time. systemTime: $currTimeSec PumpTime: ${medtrumPump.lastTimeReceivedFromPump} Pump Time to system time: " + timeUtil.convertPumpTimeToSystemTimeSeconds(
+                            medtrumPump.lastTimeReceivedFromPump
                         )
                     )
                     toState(SetTimeState())

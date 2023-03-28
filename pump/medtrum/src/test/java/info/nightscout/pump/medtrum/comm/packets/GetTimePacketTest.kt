@@ -4,6 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.extension.toByteArray
+import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
 import org.junit.jupiter.api.Test
 import org.junit.Assert.*
 
@@ -13,8 +14,9 @@ class GetTimePacketTest : MedtrumTestBase() {
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
-            if (it is MedtrumPacket) {
+            if (it is GetTimePacket) {
                 it.aapsLogger = aapsLogger
+                it.medtrumPump = medtrumPump
             }
         }
     }
@@ -46,7 +48,7 @@ class GetTimePacketTest : MedtrumTestBase() {
         // Expected values
         assertEquals(true, result)
         assertEquals(false, packet.failed)
-        assertEquals(time, packet.time)
+        assertEquals(MedtrumTimeUtil().convertPumpTimeToSystemTimeSeconds(time), medtrumPump.lastTimeReceivedFromPump)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
@@ -63,6 +65,6 @@ class GetTimePacketTest : MedtrumTestBase() {
         // Expected values
         assertEquals(false, result)
         assertEquals(true, packet.failed)
-        assertEquals(0, packet.time)
+        assertEquals(0, medtrumPump.lastTimeReceivedFromPump)
     }
 }

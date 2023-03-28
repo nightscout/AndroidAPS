@@ -40,24 +40,21 @@ class MedtrumPump @Inject constructor(
     var pumpState = MedtrumPumpState.NONE // TODO save in SP
     var patchActivationState = PatchActivationState.NONE // TODO save in SP
 
-    // TODO set these setting on init
-    // User settings (desired values, to be set on pump)
-    var desiredPatchExpiration = false
-    var desiredAlarmSetting = AlarmSetting.LIGHT_VIBRATE_AND_BEEP.code
-    var desiredHourlyMaxInsulin: Int = 40
-    var desiredDailyMaxInsulin: Int = 180
-
-    // User settings (actual value's as reported by pump)
-
-    // Alarm settings
-
-    // Pump status
-
     var patchId = 0L
-    var lastTimeReceivedFromPump = 0L // Time in seconds!
     var lastKnownSequenceNumber = 0
+    var lastTimeReceivedFromPump = 0L // Time in seconds!
+    var suspendTime = 0L // Time in seconds!
+    var patchStartTime = 0L // Time in seconds!
+    var patchAge = 0L // Time in seconds!
+    
+    var reservoir = 0.0
+    var primeProgress = 0
 
-    // Pump history
+    var batteryVoltage_A = 0.0
+    var batteryVoltage_B = 0.0
+
+    var alarmFlags = 0
+    var alarmParameter = 0
 
     // Last basal status update
     var lastBasalType = 0
@@ -69,6 +66,15 @@ class MedtrumPump @Inject constructor(
     // Last stop status update
     var lastStopSequence = 0
     var lastStopPatchId = 0
+
+
+    // TODO set these setting on init
+    // User settings (desired values, to be set on pump)
+    var desiredPatchExpiration = false
+    var desiredAlarmSetting = AlarmSetting.LIGHT_VIBRATE_AND_BEEP.code
+    var desiredHourlyMaxInsulin: Int = 40
+    var desiredDailyMaxInsulin: Int = 180
+
 
     fun buildMedtrumProfileArray(nsProfile: Profile): ByteArray? {
         val list = nsProfile.getBasalValues()

@@ -20,6 +20,7 @@ class ReadBolusStatePacket(injector: HasAndroidInjector) : MedtrumPacket(injecto
     override fun handleResponse(data: ByteArray): Boolean {
         val success = super.handleResponse(data)
         if (success) {
+            // TODO: Handle bolus data here
             bolusData = data.copyOfRange(RESP_BOLUS_DATA_START, data.size)
         }
 
