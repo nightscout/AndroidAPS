@@ -22,16 +22,16 @@ class TriggerWifiSsidTest : TriggerTestBase() {
     @Test fun shouldRunTest() {
         val e = EventNetworkChange()
         `when`(receiverStatusStore.lastNetworkEvent).thenReturn(e)
-        var t: TriggerWifiSsid = TriggerWifiSsid(injector).setValue("aSSID").comparator(Comparator.Compare.IS_EQUAL)
+        var t: TriggerWifiSsid = TriggerWifiSsid(injector).setValue("aSSID 1").comparator(Comparator.Compare.IS_EQUAL)
         e.wifiConnected = false
         Assert.assertFalse(t.shouldRun())
         e.wifiConnected = true
         e.ssid = "otherSSID"
         Assert.assertFalse(t.shouldRun())
         e.wifiConnected = true
-        e.ssid = "aSSID"
+        e.ssid = "aSSID 1"
         Assert.assertTrue(t.shouldRun())
-        t = TriggerWifiSsid(injector).setValue("aSSID").comparator(Comparator.Compare.IS_NOT_AVAILABLE)
+        t = TriggerWifiSsid(injector).setValue("aSSID 1").comparator(Comparator.Compare.IS_NOT_AVAILABLE)
         e.wifiConnected = false
         Assert.assertTrue(t.shouldRun())
 
