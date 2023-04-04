@@ -189,6 +189,18 @@ class ComboV2Plugin @Inject constructor (
     // allow other components to react to state changes.
     private val _driverStateFlow = MutableStateFlow<DriverState>(DriverState.NotInitialized)
 
+    // If true, the pump was found to be suspended during the connect()
+    // call. This is separate from driverStateFlow and driverStateUIFlow.
+    // It is set immediately after connect() (while the other two may be
+    // set in a separate coroutine), which is important for check
+    // inside connect() and checks before commands like deliverTreatment()
+    // are run. This is what drives the isSuspended() call, and is _not_
+    // to be used for UI update purposes (use driverStateUIFlow for that).
+    // Like driverStateUIFlow, this state persists even after disconnecting
+    // from the pump. This is necessary, because AAPS may call isSuspended()
+    // even when the pump is not connected.
+    private var pumpIsSuspended = false
+
     // The basal profile that is set to be the pump's current profile.
     // If the pump's actual basal profile deviates from this, it is
     // overwritten. This check is performed in checkBasalProfile().
@@ -225,15 +237,19 @@ class ComboV2Plugin @Inject constructor (
         // Driver is connected, but pump is suspended and
         // cannot currently execute commands. This state is
         // special in that it technically persists even after
-        // disconnecting. However, it is still important to
-        // model it as a driver state to prevent commands
-        // that deliver insulin from being executed (and,
-        // it is needed for the isSuspended() implementation).
-        // NOTE: Instead of comparing the driverStateFlow
-        // value with this state directly, consider using
-        // isSuspended() instead, since it is based on the
-        // driverStateUIFlow, and thus retains the Suspended
-        // and Error states even after disconnecting.
+        // disconnecting (because the pump remains suspended
+        // until the user resumes it, not until the connection
+        // is terminated), but it does not persists the same
+        // way here (it is replaced by Disconnected after
+        // the connection is terminated). This state is used
+        // for UI updates (see driverStateUIFlow) and for
+        // checks during driver state updates and connection
+        // attempts.
+        // NOTE: Do not compare against this state to check
+        // prior to commands like deliverTreatment() if
+        // the pump is currently suspended or not. Use
+        // isSuspended() instead. See the pumpIsSuspended
+        // documentation for details.
         object Suspended : DriverState("suspended")
         // Driver is currently executing a command.
         // isBusy() will return true in this state.
@@ -453,12 +469,7 @@ class ComboV2Plugin @Inject constructor (
     override fun isInitialized(): Boolean =
         isPaired() && (driverStateFlow.value != DriverState.NotInitialized) && !pumpErrorObserved
 
-    override fun isSuspended(): Boolean =
-        when (driverStateUIFlow.value) {
-            DriverState.Suspended,
-            DriverState.Error -> true
-            else -> false
-        }
+    override fun isSuspended(): Boolean = pumpIsSuspended
 
     override fun isBusy(): Boolean =
         when (driverStateFlow.value) {
@@ -656,6 +667,14 @@ class ComboV2Plugin @Inject constructor (
                     // No need to set the driver state here, since the pump's stateFlow will announce that.
 
                     pump?.let {
+                        pumpIsSuspended = when (it.stateFlow.value) {
+                            ComboCtlPump.State.Suspended,
+                            is ComboCtlPump.State.Error -> true
+                            else -> false
+                        }
+
+                        aapsLogger.debug(LTag.PUMP, "Pump is suspended: $pumpIsSuspended")
+
                         // We can't read the active profile number in the suspended state, since
                         // the Combo's screen does not show any profile number then.
                         if (!isSuspended()) {
@@ -1729,6 +1748,12 @@ class ComboV2Plugin @Inject constructor (
     // This is a variant of driverStateFlow that retains the Error
     // and Suspended state even after disconnecting to make sure these
     // states kept being showed to the user post-disconnect.
+    // NOTE: Do not rely on this to check prior to a command if the
+    // pump is suspended or not, since the driver state UI flow is
+    // updated in a separate coroutine, and is _only_ meant for UI
+    // updates. Using this for other purposes can cause race conditions
+    // to appear, such as when immediately after the Pump.connect() call
+    // finishes, the state is checked. Use isSuspended() instead.
     private val _driverStateUIFlow = MutableStateFlow<DriverState>(DriverState.NotInitialized)
     val driverStateUIFlow = _driverStateUIFlow.asStateFlow()
 
