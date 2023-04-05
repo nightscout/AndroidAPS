@@ -206,7 +206,7 @@
     <string name="dexcom_app_not_installed">Dexcom app neįdiegta.</string>
     <string name="dexcom_app_not_detected">Atnaujinkite savo Dexcom programėlės versiją</string>
     <string name="error_starting_cgm">Nepavyko paleisti NGJ programos.  Įsitikinkite, kad ji įdiegta.</string>
-    <string name="not_available_full">Negalimas</string>
+    <string name="not_available_full">Nėra duomenų</string>
     <string name="constraints_violation">Apribojimų pažeidimas</string>
     <string name="change_your_input">Pakeiskite įvestus duomenis!</string>
     <string name="openaps">AtviraDKS</string>
