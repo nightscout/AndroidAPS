@@ -130,7 +130,7 @@
     <!-- Profile -->
     <string name="localprofile">Profilis</string>
     <string name="localprofile_shortname">VP</string>
-    <string name="description_profile_local">Nustatykite vietinį profilį.</string>
+    <string name="description_profile_local">Nustatyti vietinį profilį.</string>
     <string name="a11y_add_new_to_list">pridėti naują į sąrašą</string>
     <string name="do_you_want_switch_profile">Ar norite pakeisti profilį ir atsisakyti pakeitimų, atliktų dabartiniame profilyje?</string>
     <string name="save_or_reset_changes_first">Pirmiausia išsaugoti arba anuliuoti dabartinius pokyčius</string>
