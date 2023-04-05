@@ -27,7 +27,7 @@
     <string name="sendsmsactionlabel">Siųsti SMS: %1$s</string>
     <string name="sendsmsactiondescription">Siųsti SMS į visus numerius</string>
     <string name="sendsmsactiontext">Išsiųsti SMS žinutę su tekstu</string>
-    <string name="starttemptarget">Nustatykite laikiną tikslą</string>
+    <string name="starttemptarget">Pradėti laikiną tikslą</string>
     <string name="islesser">mažiau nei</string>
     <string name="isequalorlesser">lygu arba mažiau nei</string>
     <string name="isequal">lygu</string>
