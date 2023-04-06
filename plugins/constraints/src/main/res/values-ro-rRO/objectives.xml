@@ -18,7 +18,6 @@
     <string name="objectives_autosens_objective">Ajustarea bazalelor și a factorilor dacă este necesar și apoi activarea auto-sens</string>
     <string name="objectives_autosens_gate">O săptămână de buclă închisă încheiată cu succes în condițiile introducerii regulate a carbohidraților</string>
     <string name="objectives_smb_objective">Se activează opțiuni pentru uzul în timpul zilei, cum ar fi SMB</string>
-    <string name="objectives_smb_gate">Trebuie sa citiți wiki și să măriți maxIOB pentru a obține SMB corect! Un start bun este maxIOB=media bolusurilor + 3x maxima bazalei din zi</string>
     <string name="objectives_auto_objective">Activarea automatizării</string>
     <string name="objectives_manualenacts">Acțiuni manuale</string>
     <string name="accomplished">Îndeplinit: %1$s</string>
