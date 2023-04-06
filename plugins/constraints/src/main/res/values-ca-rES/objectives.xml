@@ -18,7 +18,6 @@
     <string name="objectives_autosens_objective">Ajustar basals i ràtios si cal, i després activar auto-sens</string>
     <string name="objectives_autosens_gate">1 setmana d\'èxit en mode llaç tancat durant el dia, amb introducció regular de carbohidrats</string>
     <string name="objectives_smb_objective">Activant funcions addicionals d\'ús diurn, com l\'SMB (super micro bolus)</string>
-    <string name="objectives_smb_gate">Heu de llegir la wiki i augmentar la maxIOB per a què l\'SMB funcioni correctament! Una bona manera de començar és amb maxIOB = bolus d\'àpat mig + 3 x màxima basal diària</string>
     <string name="objectives_auto_objective">Activant l\'automatització</string>
     <string name="objectives_manualenacts">Activació manual</string>
     <string name="accomplished">Completat: %1$s</string>
