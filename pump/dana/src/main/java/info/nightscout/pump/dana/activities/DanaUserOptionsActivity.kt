@@ -42,7 +42,7 @@ class DanaUserOptionsActivity : DaggerAppCompatActivity() {
     private val disposable = CompositeDisposable()
 
     // This is for Dana pumps only
-    private fun isRS() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS
+    private fun isRS() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RS || activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_I
     private fun isDanaR() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_R
     private fun isDanaRv2() = activePlugin.activePump.pumpDescription.pumpType == PumpType.DANA_RV2
 
