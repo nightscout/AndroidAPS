@@ -16,7 +16,16 @@
 
     <!-- wizard-->
     <string name="string_change_patch">Discard/Change Patch</string> <!-- TODO check-->
+    <string name="string_next">Next</string>
     <string name="string_start_prime">Start priming</string>
+    <string name="string_start_activate">Start activation</string>
+    <string name="string_start_complete">Complete</string>
+
+    <string name ="step_prepare_patch">Prepare patch</string>
+    <string name ="step_prime">Priming</string>
+    <string name ="step_attach">Attach patch</string>
+    <string name ="step_activate">Activation</string>
+    <string name ="step_complete">Complete</string>
 
     <!-- settings-->
     <string name="snInput_title">SN</string>

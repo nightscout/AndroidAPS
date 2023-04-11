@@ -9,6 +9,8 @@ import info.nightscout.pump.medtrum.ui.event.SingleLiveEvent
 import info.nightscout.pump.medtrum.ui.event.UIEvent
 import info.nightscout.pump.medtrum.ui.viewmodel.BaseViewModel
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.pump.medtrum.MedtrumPump
+import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPumpStatusChanged
@@ -16,6 +18,9 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MedtrumOverviewViewModel @Inject constructor(
@@ -24,9 +29,11 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
     private val profileFunction: ProfileFunction,
+    private val medtrumPump: MedtrumPump
 ) : BaseViewModel<MedtrumBaseNavigator>() {
 
     private var disposable: CompositeDisposable = CompositeDisposable()
+    private val scope = CoroutineScope(Dispatchers.Default)
 
     private val _eventHandler = SingleLiveEvent<UIEvent<EventType>>()
     val eventHandler: LiveData<UIEvent<EventType>>
@@ -36,11 +43,12 @@ class MedtrumOverviewViewModel @Inject constructor(
     val bleStatus: LiveData<String>
         get() = _bleStatus
 
-    // TODO make these livedata
-    val isPatchActivated: Boolean
-        get() = false // TODO
+    private val _isPatchActivated = SingleLiveEvent<Boolean>()
+    val isPatchActivated: LiveData<Boolean>
+        get() = _isPatchActivated
 
     init {
+        // TODO proper connection state from medtrumPump
         disposable += rxBus
             .toObservable(EventPumpStatusChanged::class.java)
             .observeOn(aapsSchedulers.main)
@@ -59,6 +67,16 @@ class MedtrumOverviewViewModel @Inject constructor(
                                    ""
                            }
                        }, fabricPrivacy::logException)
+        scope.launch {
+            medtrumPump.pumpStateFlow.collect { state ->
+                aapsLogger.debug(LTag.PUMP, "MedtrumViewModel pumpStateFlow: $state")
+                if (state > MedtrumPumpState.EJECTED) {
+                    _isPatchActivated.postValue(true)
+                } else {
+                    _isPatchActivated.postValue(false)
+                }
+            }
+        }
     }
 
     fun onClickActivation() {

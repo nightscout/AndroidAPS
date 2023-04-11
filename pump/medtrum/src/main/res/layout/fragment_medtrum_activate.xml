@@ -49,13 +49,13 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:contentDescription="@string/string_next"
-                    android:text="@string/string_next"
+                    android:contentDescription="@string/string_start_complete"
+                    android:text="@string/string_start_complete"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/btn_negative"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.ATTACH_PATCH)}"
+                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.COMPLETE)}"
                     tools:visibility="visible" />
             </androidx.constraintlayout.widget.ConstraintLayout>
             

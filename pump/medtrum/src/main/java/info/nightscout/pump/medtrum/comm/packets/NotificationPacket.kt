@@ -14,19 +14,19 @@ import kotlin.experimental.and
 
 class NotificationPacket(val injector: HasAndroidInjector) {
 
-    /** 
+    /**
      * This is a bit of a special packet, as it is not a command packet
      * but a notification packet. It is sent by the pump to the phone
      * when the pump has a notification to send.
-     * 
+     *
      * Notifications are sent regualary, regardless of the pump state.
-     * 
+     *
      * There can be multiple messages in one packet, this is noted by the fieldMask.
-     * 
+     *
      * Byte 1: State (Handle a state change directly? before analyzing further?)
      * Byte 2-3: FieldMask (BitMask which tells the fields present in the message)
      * Byte 4-end : status data
-     * 
+     *
      * When multiple fields are in the message, the data is concatenated.
      * This kind of message can also come as a response of SynchronizePacket,
      * and can be handled here by handleMaskedMessage() as well.
@@ -36,9 +36,10 @@ class NotificationPacket(val injector: HasAndroidInjector) {
     @Inject lateinit var medtrumPump: MedtrumPump
 
     companion object {
+
         private const val NOTIF_STATE_START = 0
         private const val NOTIF_STATE_END = NOTIF_STATE_START + 1
-        
+
         private const val MASK_SUSPEND = 0x01
         private const val MASK_NORMAL_BOLUS = 0x02
         private const val MASK_EXTENDED_BOLUS = 0x04
@@ -79,7 +80,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
     /**
      * Handle a message with a field mask, can be used by other packets as well
      */
-    fun handleMaskedMessage(data: ByteArray) {        
+    fun handleMaskedMessage(data: ByteArray) {
         val fieldMask = data.copyOfRange(0, 2).toInt()
         var offset = 2
 
@@ -96,13 +97,13 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             aapsLogger.debug(LTag.PUMPCOMM, "Normal bolus notification received")
             var bolusData = data.copyOfRange(offset, offset + 1).toInt()
             var bolusType = bolusData and 0x7F
-            var bolusCompleted = (bolusData shr 7) and 0x01
+            var bolusCompleted = (bolusData shr 7) and 0x01 // TODO: Check for other flags here :)
             var bolusDelivered = data.copyOfRange(offset + 1, offset + 3).toInt() / 0.05
             // TODO Sync bolus flow:
             // If bolus is known add status
             // If bolus is not known start read bolus
             // When bolus is completed, remove bolus from medtrumPump
-            aapsLogger.debug(LTag.PUMPCOMM, "Bolus type: $bolusType, bolus completed: $bolusCompleted, bolus delivered: $bolusDelivered")
+            aapsLogger.debug(LTag.PUMPCOMM, "Bolus type: $bolusType, bolusData: $bolusData bolus completed: $bolusCompleted, bolus delivered: $bolusDelivered")
             offset += 3
         }
 
@@ -172,7 +173,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             medtrumPump.alarmFlags = data.copyOfRange(offset, offset + 2).toInt()
             medtrumPump.alarmParameter = data.copyOfRange(offset + 2, offset + 4).toInt()
             aapsLogger.debug(LTag.PUMPCOMM, "Alarm flags: ${medtrumPump.alarmFlags}, alarm parameter: ${medtrumPump.alarmParameter}")
-            offset += 4            
+            offset += 4
         }
 
         if (fieldMask and MASK_START_TIME != 0) {
@@ -202,5 +203,5 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         if (fieldMask and MASK_UNUSED_LEGACY != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Unused legacy notification received, not handled!")
         }
-    }    
+    }
 }

@@ -70,6 +70,7 @@ class ActivatePacketTest : MedtrumTestBase() {
         assertEquals(expectedBasalSequence, medtrumPump.lastBasalSequence)
         assertEquals(expectedBasalPatchId, medtrumPump.lastBasalPatchId)
         assertEquals(expectedBasalStart, medtrumPump.lastBasalStartTime)
+        assertEquals(basalProfile, medtrumPump.actualBasalProfile)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {

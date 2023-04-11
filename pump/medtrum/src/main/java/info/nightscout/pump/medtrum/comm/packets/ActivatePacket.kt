@@ -57,14 +57,23 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
          * bytes 15 - end                    // Basal profile > see MedtrumPump
          */
 
+        val autoSuspendEnable: Byte = 0
+        val autoSuspendTime: Byte = 12 // Not sure why, but pump needs this in order to activate
+
         val patchExpiration: Byte = medtrumPump.desiredPatchExpiration.toByte()
         val alarmSetting: Byte = medtrumPump.desiredAlarmSetting
+
+        val lowSuspend: Byte = 0
+        val predictiveLowSuspend: Byte = 0
+        val predictiveLowSuspendRange: Byte = 30 // Not sure why, but pump needs this in order to activate
+
         val hourlyMaxInsulin: Int = round(medtrumPump.desiredHourlyMaxInsulin / 0.05).toInt()
         val dailyMaxInsulin: Int = round(medtrumPump.desiredDailyMaxInsulin / 0.05).toInt()
         val currentTDD: Double = tddCalculator.calculateToday()?.totalAmount?.div(0.05) ?: 0.0
 
-        return byteArrayOf(opCode) + 0.toByteArray(2) + patchExpiration + alarmSetting + 0.toByteArray(3) + hourlyMaxInsulin.toByteArray(2) + dailyMaxInsulin.toByteArray(2) + currentTDD.toInt()
-            .toByteArray(2) + 1.toByte() + basalProfile
+        return byteArrayOf(opCode) + autoSuspendEnable + autoSuspendTime + patchExpiration + alarmSetting + lowSuspend + predictiveLowSuspend + predictiveLowSuspendRange + hourlyMaxInsulin.toByteArray(
+            2
+        ) + dailyMaxInsulin.toByteArray(2) + currentTDD.toInt().toByteArray(2) + 1.toByte() + basalProfile
     }
 
     override fun handleResponse(data: ByteArray): Boolean {
@@ -82,7 +91,9 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
 
             medtrumPump.patchId = patchId
             medtrumPump.lastTimeReceivedFromPump = time
-            // TODO: Handle basal here, and report to AAPS directly
+            // Update the actual basal profile
+            medtrumPump.actualBasalProfile = basalProfile
+            // TODO: Handle history entry
             medtrumPump.handleBasalStatusUpdate(basalType, basalValue, basalSequence, basalPatchId, basalStartTime, time)
         }
 

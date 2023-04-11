@@ -30,13 +30,13 @@ open class MedtrumPacket(protected var injector: HasAndroidInjector) {
     }
 
     open fun getRequest(): ByteArray {
-        aapsLogger.debug(LTag.PUMPCOMM, "Get REQUEST TEST")
         return byteArrayOf(opCode)
     }
 
     /**  handles a response from the Medtrum pump, returns true if command was successfull, returns false if command failed or waiting for response */
     open fun handleResponse(data: ByteArray): Boolean {
-        if (expectedMinRespLength > data.size) {
+        // Check for broken packets
+        if (RESP_RESULT_END > data.size) {
             failed = true
             aapsLogger.debug(LTag.PUMPCOMM, "handleResponse: Unexpected response length, expected: $expectedMinRespLength got: ${data.size}")
             return false
@@ -48,11 +48,17 @@ open class MedtrumPacket(protected var injector: HasAndroidInjector) {
         return when {
             incomingOpCode != opCode     -> {
                 failed = true
-                aapsLogger.debug(LTag.PUMPCOMM, "handleResponse: Unexpected command, expected: $opCode got: $incomingOpCode")
+                aapsLogger.error(LTag.PUMPCOMM, "handleResponse: Unexpected command, expected: $opCode got: $incomingOpCode")
                 false
             }
 
             responseCode == 0            -> {
+                // Check if length is what is expected from this type of packet
+                if (expectedMinRespLength > data.size) {
+                    failed = true
+                    aapsLogger.debug(LTag.PUMPCOMM, "handleResponse: Unexpected response length, expected: $expectedMinRespLength got: ${data.size}")
+                    return false
+                }
                 aapsLogger.debug(LTag.PUMPCOMM, "handleResponse: Happy command: $opCode response: $responseCode")
                 true
             }
@@ -65,7 +71,7 @@ open class MedtrumPacket(protected var injector: HasAndroidInjector) {
 
             else                         -> {
                 failed = true
-                aapsLogger.debug(LTag.PUMPCOMM, "handleResponse: Error in command: $opCode response: $responseCode")
+                aapsLogger.warn(LTag.PUMPCOMM, "handleResponse: Error in command: $opCode response: $responseCode")
                 false
             }
         }

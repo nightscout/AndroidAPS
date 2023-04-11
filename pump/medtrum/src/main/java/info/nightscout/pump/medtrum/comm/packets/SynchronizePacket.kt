@@ -37,7 +37,7 @@ class SynchronizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) 
             var state = MedtrumPumpState.fromByte(data[RESP_STATE_START])
 
             medtrumPump.pumpState = state
-            
+
             var fieldMask = data.copyOfRange(RESP_FIELDS_START, RESP_FIELDS_END).toInt()
             var syncData = data.copyOfRange(RESP_SYNC_DATA_START, data.size)
             var offset = 0
@@ -46,8 +46,7 @@ class SynchronizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) 
                 aapsLogger.debug(LTag.PUMPCOMM, "SynchronizePacket: fieldMask: $fieldMask")
             }
 
-            // Remove bolus fields from fieldMask if fields are present
-            // TODO: Test if this workaround is needed (hence the warning log)
+            // Remove bolus fields from fieldMask if fields are present (we sync bolus trough other commands)
             if (fieldMask and MASK_SUSPEND != 0) {
                 offset += 4 // If field is present, skip 4 bytes
             }

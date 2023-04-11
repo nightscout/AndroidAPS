@@ -49,16 +49,16 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:contentDescription="@string/string_next"
-                    android:text="@string/string_next"
-                    android:visibility="gone"
+                    android:contentDescription="@string/string_start_activate"
+                    android:text="@string/string_start_activate"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/btn_negative"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.ATTACH_PATCH)}"
+                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.ACTIVATE)}"
                     tools:visibility="visible" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-            
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>

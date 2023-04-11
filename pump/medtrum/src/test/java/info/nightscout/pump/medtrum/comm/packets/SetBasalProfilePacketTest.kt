@@ -32,4 +32,43 @@ class SetBasalProfilePacketTest : MedtrumTestBase() {
         val expected = byteArrayOf(opCode.toByte()) + 1.toByte() + basalProfile
         assertEquals(expected.contentToString(), result.contentToString())
     }
+
+    @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
+        // Inputs
+        val repsonse = byteArrayOf(18, 21, 16, 0, 0, 0, 1, 22, 0, 3, 0, -110, 0, -32, -18, 88, 17)
+        val basalProfile = byteArrayOf(8, 2, 3, 4, -1, 0, 0, 0, 0)
+
+        // Call
+        val packet = SetBasalProfilePacket(packetInjector, basalProfile)
+        val result = packet.handleResponse(repsonse)
+
+        // Expected values
+        val expectedBasalType = 1
+        val expectedBasalRate = 1.1
+        val expectedBasalSequence = 3
+        val expectedStartTime = 1679575392L
+        val expectedPatchId = 146
+
+        assertTrue(result)
+        assertEquals(expectedBasalType, medtrumPump.lastBasalType)
+        assertEquals(expectedBasalRate, medtrumPump.lastBasalRate, 0.01)
+        assertEquals(expectedBasalSequence, medtrumPump.lastBasalSequence)
+        assertEquals(expectedStartTime, medtrumPump.lastBasalStartTime)
+        assertEquals(expectedPatchId, medtrumPump.lastBasalPatchId)
+        assertEquals(basalProfile, medtrumPump.actualBasalProfile)
+    }
+
+    @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
+        // Inputs
+        val response = byteArrayOf(18, 21, 16, 0, 0, 0, 1, 22, 0, 3, 0, -110, 0, -32, -18, 88)
+        val basalProfile = byteArrayOf(8, 2, 3, 4, -1, 0, 0, 0, 0)
+
+        // Call
+        val packet = SetBasalProfilePacket(packetInjector, basalProfile)
+        val result = packet.handleResponse(response)
+
+        // Expected values
+        assertFalse(result)
+        assertTrue(packet.failed)
+    }
 }

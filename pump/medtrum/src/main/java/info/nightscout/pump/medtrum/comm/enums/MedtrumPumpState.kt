@@ -3,7 +3,7 @@ package info.nightscout.pump.medtrum.comm.enums
 enum class MedtrumPumpState(val state: Byte) {
     NONE(0),
     IDLE(1),
-    FILL(2),
+    FILLED(2),
     PRIMING(3),
     PRIMED(4),
     EJECTING(5),

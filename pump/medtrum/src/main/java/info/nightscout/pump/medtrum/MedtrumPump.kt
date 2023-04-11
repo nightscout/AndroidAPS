@@ -1,5 +1,7 @@
 package info.nightscout.pump.medtrum
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.Profile
@@ -14,6 +16,8 @@ import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.round
@@ -26,29 +30,37 @@ class MedtrumPump @Inject constructor(
     private val instantiator: Instantiator
 ) {
 
-    enum class PatchActivationState(val state: Int) {
-        NONE(0),
-        IDLE(1),
-        ACTIVATING(2),
-        ACTIVATED(3),
-        DEACTIVATING(4),
-        DEACTIVATED(5),
-        ERROR(6)
-    }
+    // Pump state flow
+    // TODO We might want to save this in SP, or at least get activated state from SP
+    private val _pumpState = MutableStateFlow(MedtrumPumpState.NONE)
+    val pumpStateFlow: StateFlow<MedtrumPumpState> = _pumpState
 
-    // Pump state and parameters
-    var pumpState = MedtrumPumpState.NONE // TODO save in SP
-    var patchActivationState = PatchActivationState.NONE // TODO save in SP
+    var pumpState: MedtrumPumpState
+        get() = _pumpState.value
+        set(value) {
+            _pumpState.value = value
+        }
 
+    // Prime progress as state flow
+    private val _primeProgress = MutableStateFlow(0)
+    val primeProgressFlow: StateFlow<Int> = _primeProgress
+
+    var primeProgress: Int
+        get() = _primeProgress.value
+        set(value) {
+            _primeProgress.value = value
+        }
+
+    // TODO: Save this in SP? This might be a bit tricky as we only know what we have set, not what the pump has set but the pump should not change it, addtionally we should track the active basal profile in pump e.g. Basal patern A, B etc
+    var actualBasalProfile = byteArrayOf(0)
     var patchId = 0L
     var lastKnownSequenceNumber = 0
     var lastTimeReceivedFromPump = 0L // Time in seconds!
     var suspendTime = 0L // Time in seconds!
     var patchStartTime = 0L // Time in seconds!
     var patchAge = 0L // Time in seconds!
-    
+
     var reservoir = 0.0
-    var primeProgress = 0
 
     var batteryVoltage_A = 0.0
     var batteryVoltage_B = 0.0
@@ -67,14 +79,12 @@ class MedtrumPump @Inject constructor(
     var lastStopSequence = 0
     var lastStopPatchId = 0
 
-
     // TODO set these setting on init
     // User settings (desired values, to be set on pump)
     var desiredPatchExpiration = false
     var desiredAlarmSetting = AlarmSetting.LIGHT_VIBRATE_AND_BEEP.code
     var desiredHourlyMaxInsulin: Int = 40
     var desiredDailyMaxInsulin: Int = 180
-
 
     fun buildMedtrumProfileArray(nsProfile: Profile): ByteArray? {
         val list = nsProfile.getBasalValues()
@@ -87,7 +97,7 @@ class MedtrumPump @Inject constructor(
                 return null
             }
             basals += ((rate shl 12) + time).toByteArray(3)
-            aapsLogger.debug(LTag.PUMP, "buildMedtrumProfileArray: value: ${item.value} time: ${item.timeAsSeconds}")
+            aapsLogger.debug(LTag.PUMP, "buildMedtrumProfileArray: value: ${item.value} time: ${item.timeAsSeconds}, converted: $rate, $time")
         }
         return (list.size).toByteArray(1) + basals
     }

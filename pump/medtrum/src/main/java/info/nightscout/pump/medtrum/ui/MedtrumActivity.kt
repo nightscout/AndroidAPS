@@ -9,6 +9,8 @@ import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumActivateFragment
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumAttachPatchFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumPreparePatchFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumPrimeFragment
 import info.nightscout.core.utils.extensions.safeGetSerializableExtra
@@ -42,6 +44,9 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
                     when (it) {
                         PatchStep.PREPARE_PATCH -> setupViewFragment(MedtrumPreparePatchFragment.newInstance())
                         PatchStep.PRIME         -> setupViewFragment(MedtrumPrimeFragment.newInstance())
+                        PatchStep.ATTACH_PATCH  -> setupViewFragment(MedtrumAttachPatchFragment.newInstance())
+                        PatchStep.ACTIVATE      -> setupViewFragment(MedtrumActivateFragment.newInstance())
+                        PatchStep.COMPLETE      -> this@MedtrumActivity.finish() // TODO proper finish
                         PatchStep.CANCEL        -> this@MedtrumActivity.finish()
                         else                    -> Unit
                     }

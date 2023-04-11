@@ -6,38 +6,35 @@ import androidx.lifecycle.ViewModelProvider
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.PatchStep
-import info.nightscout.pump.medtrum.databinding.FragmentMedtrumPreparePatchBinding
+import info.nightscout.pump.medtrum.databinding.FragmentMedtrumActivateBinding
 import info.nightscout.pump.medtrum.ui.MedtrumBaseFragment
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
-class MedtrumPreparePatchFragment : MedtrumBaseFragment<FragmentMedtrumPreparePatchBinding>() {
+class MedtrumActivateFragment : MedtrumBaseFragment<FragmentMedtrumActivateBinding>() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
 
     companion object {
 
-        fun newInstance(): MedtrumPreparePatchFragment = MedtrumPreparePatchFragment()
+        fun newInstance(): MedtrumActivateFragment = MedtrumActivateFragment()
     }
 
-    override fun getLayoutId(): Int = R.layout.fragment_medtrum_prepare_patch
+    override fun getLayoutId(): Int = R.layout.fragment_medtrum_activate
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        aapsLogger.debug(LTag.PUMP, "MedtrumPreparePatchFragment onViewCreated")
         binding.apply {
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MedtrumViewModel::class.java)
             viewModel?.apply {
                 setupStep.observe(viewLifecycleOwner) {
                     when (it) {
-                        MedtrumViewModel.SetupStep.INITIAL -> btnPositive.visibility = View.GONE
-                        // TODO: Confirmation dialog
-                        MedtrumViewModel.SetupStep.FILLED  -> btnPositive.visibility = View.VISIBLE
-
+                        MedtrumViewModel.SetupStep.PRIMED -> Unit // Nothing to do here, previous state
+                        MedtrumViewModel.SetupStep.ACTIVATED -> btnPositive.visibility = View.VISIBLE
                         MedtrumViewModel.SetupStep.ERROR   -> {
-                            ToastUtils.errorToast(requireContext(), "Error preparing patch") // TODO: String resource and show error message
+                            ToastUtils.errorToast(requireContext(), "Error Activating") // TODO: String resource and show error message
                             moveStep(PatchStep.CANCEL)
                         }
 
@@ -47,7 +44,7 @@ class MedtrumPreparePatchFragment : MedtrumBaseFragment<FragmentMedtrumPreparePa
                         }
                     }
                 }
-                preparePatch()
+                startActivate()
             }
         }
     }

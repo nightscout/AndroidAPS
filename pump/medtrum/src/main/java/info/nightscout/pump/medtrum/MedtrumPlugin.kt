@@ -8,6 +8,7 @@ import android.os.IBinder
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
@@ -33,6 +34,7 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventAppInitialized
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
@@ -170,11 +172,33 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult {
-        return PumpEnactResult(injector).success(true).enacted(true) // TODO
+        // New profile will be set when patch is activated
+        if (!isInitialized()) return PumpEnactResult(injector).success(true).enacted(true)
+
+        return if (medtrumService?.updateBasalsInPump(profile) == true) {
+            rxBus.send(EventDismissNotification(Notification.FAILED_UPDATE_PROFILE))
+            uiInteraction.addNotificationValidFor(Notification.PROFILE_SET_OK, rh.gs(info.nightscout.core.ui.R.string.profile_set_ok), Notification.INFO, 60)
+            PumpEnactResult(injector).success(true).enacted(true)
+        } else {
+            uiInteraction.addNotification(Notification.FAILED_UPDATE_PROFILE, rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), Notification.URGENT)
+            PumpEnactResult(injector)
+        }
     }
 
     override fun isThisProfileSet(profile: Profile): Boolean {
-        return false // TODO
+        if (!isInitialized()) return true
+        var result = false
+        val profileBytes = medtrumPump.buildMedtrumProfileArray(profile)
+        if (profileBytes?.size == medtrumPump.actualBasalProfile.size) {
+            result = true
+            for (i in profileBytes.indices) {
+                if (profileBytes[i] != medtrumPump.actualBasalProfile[i]) {
+                    result = false
+                    break
+                }
+            }
+        }
+        return result
     }
 
     override fun lastDataTime(): Long {
@@ -204,12 +228,14 @@ class MedtrumPlugin @Inject constructor(
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setTempBasalPercent - percent: $percent, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
-        return PumpEnactResult(injector) // TODO
+        return PumpEnactResult(injector).success(false).enacted(false)
+            .comment("Medtrum driver does not support percentage temp basals")
     }
 
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setExtendedBolus - insulin: $insulin, durationInMinutes: $durationInMinutes")
-        return PumpEnactResult(injector) // TODO
+        return PumpEnactResult(injector).success(false).enacted(false)
+            .comment("Medtrum driver does not support extended boluses")
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {

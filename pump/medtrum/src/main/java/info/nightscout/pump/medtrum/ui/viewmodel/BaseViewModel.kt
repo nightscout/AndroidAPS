@@ -1,6 +1,8 @@
 package info.nightscout.pump.medtrum.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
+import info.nightscout.pump.medtrum.code.PatchStep
+import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
@@ -28,4 +30,12 @@ abstract class BaseViewModel<N : MedtrumBaseNavigator> : ViewModel() {
 
     fun Disposable.addTo() = apply { compositeDisposable.add(this) }
 
+    fun convertToPatchStep(pumpState: MedtrumPumpState) = when (pumpState) {
+        MedtrumPumpState.NONE, MedtrumPumpState.IDLE         -> PatchStep.PREPARE_PATCH
+        MedtrumPumpState.FILLED                              -> PatchStep.PREPARE_PATCH
+        MedtrumPumpState.PRIMING                             -> PatchStep.PRIME
+        MedtrumPumpState.PRIMED, MedtrumPumpState.EJECTED    -> PatchStep.ATTACH_PATCH
+        MedtrumPumpState.ACTIVE, MedtrumPumpState.ACTIVE_ALT -> PatchStep.COMPLETE
+        else                                                 -> PatchStep.CANCEL
+    }
 }
