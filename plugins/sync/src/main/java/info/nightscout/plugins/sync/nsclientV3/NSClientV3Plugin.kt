@@ -389,6 +389,7 @@ class NSClientV3Plugin @Inject constructor(
                     rxBus.send(EventNSClientNewLog("◄ WS", "Auth failed"))
                     false
                 }
+                rxBus.send(EventNSClientUpdateGuiStatus())
             })
         }
     }
@@ -420,6 +421,7 @@ class NSClientV3Plugin @Inject constructor(
         rxBus.send(EventNSClientNewLog("◄ WS", "disconnect storage event"))
         wsConnected = false
         initialLoadFinished = false
+        rxBus.send(EventNSClientUpdateGuiStatus())
     }
 
     private val onDisconnectAlarm = Emitter.Listener { args ->
