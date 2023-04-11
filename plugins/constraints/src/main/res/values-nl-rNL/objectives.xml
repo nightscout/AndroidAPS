@@ -24,7 +24,6 @@
     <string name="objectives_autosens_gate">Gedurende 1 week succesvol overdag loopen met regelmatige invoer van koolhydraten</string>
     <string name="objectives_autosens_learned">Als het resultaat van autosens zich niet rond de 100% beweegt dan is je profiel waarschijnlijk niet juist.</string>
     <string name="objectives_smb_objective">Activeren van extra functies overdag zoals SMB (super micro bolus)</string>
-    <string name="objectives_smb_gate">Lees de wiki en verhoog maxIOB om SMB goed werkend te krijgen. Een goed begin is maxIOB=gemiddelde maaltijdbolus + 3 x max dagelijkse basaal</string>
     <string name="objectives_smb_learned">Het gebruik van SMB is het uiteindelijke doel. Het Oref1 algoritme is ontworpen om je ook te helpen met je bolussen. Je hoeft geen volledige bolus te geven voor jouw voeding, maar slechts een deel ervan en AAPS zal de rest geven als dat nodig is. Op deze manier heb je meer ruimte voor verkeerd berekende koolhydraten. Wist je dat je een percentage in de bolus calculator kan instellen om de hoeveelheid bolus te verminderen?</string>
     <string name="objectives_auto_objective">Automatisering inschakelen</string>
     <string name="objectives_auto_gate">Lees eerst de documentatie over hoe automatisering werkt. Maak daarna je eerste simpele regels, waarbij je in plaats van acties eerst gebruikt maakt van de notificaties. Wanneer je er dan zeker van bent, dat je automatisering op de goede momenten wordt geactiveerd, kan je de noticifcatie omzetten naar een echte actie. 

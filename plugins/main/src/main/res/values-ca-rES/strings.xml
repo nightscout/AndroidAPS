@@ -128,7 +128,6 @@
     <string name="error_in_basal_values">Error en els valors de basal</string>
     <string name="error_in_target_values">Error en els valors de l\'objectiu </string>
     <string name="error_in_isf_values">Error en els valors de ISF</string>
-    <string name="profile_name_contains_dot">El nom del perfil conté punts.\nAixò NS no ho permet.\nPerfil no enviat a NS.</string>
     <string name="invalid_profile_not_accepted">Perfil invàlid %1$s no acceptat de NS</string>
     <string name="view">Vista</string>
     <string name="errors">Errors</string>

@@ -141,7 +141,7 @@
     <string name="error_in_basal_values">Error en valores basales</string>
     <string name="error_in_target_values">Error en los valores de objetivo</string>
     <string name="error_in_isf_values">Error en valores ISF</string>
-    <string name="profile_name_contains_dot">El nombre de perfil contiene puntos.\nEsto no está permitido por NS.\nEl perfil no se cargará en NS.</string>
+    <string name="profile_name_contains_dot">Algunos nombres de perfiles contienen puntos.\nEsto no está soportado por NS.\nLos perfiles no serán subidos a NS.</string>
     <string name="invalid_profile_not_accepted">Perfil no válido %1$s no aceptado desde Nightscout</string>
     <string name="view">Vista</string>
     <string name="errors">Errores</string>

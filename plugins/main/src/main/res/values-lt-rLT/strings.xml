@@ -130,7 +130,7 @@
     <!-- Profile -->
     <string name="localprofile">Profilis</string>
     <string name="localprofile_shortname">VP</string>
-    <string name="description_profile_local">Nustatykite vietinį profilį.</string>
+    <string name="description_profile_local">Nustatyti vietinį profilį.</string>
     <string name="a11y_add_new_to_list">pridėti naują į sąrašą</string>
     <string name="do_you_want_switch_profile">Ar norite pakeisti profilį ir atsisakyti pakeitimų, atliktų dabartiniame profilyje?</string>
     <string name="save_or_reset_changes_first">Pirmiausia išsaugoti arba anuliuoti dabartinius pokyčius</string>
@@ -141,7 +141,7 @@
     <string name="error_in_basal_values">Bazės reikšmių klaida</string>
     <string name="error_in_target_values">Tikslinės glikemijos reikšmės klaida</string>
     <string name="error_in_isf_values">JIF reikšmės klaida</string>
-    <string name="profile_name_contains_dot">Profilio pavadinime yra taškų.\nŠios funkcijos NS nepalaiko.\nProfilis neįkeltas į NS.</string>
+    <string name="profile_name_contains_dot">Profilio pavadinime yra taškų.\nŠios funkcijos NS nepalaiko.\nProfilis nebus įkeltas į NS.</string>
     <string name="invalid_profile_not_accepted">Neteisingas profilis %1$s nepriimtas iš NS</string>
     <string name="view">Rodymas</string>
     <string name="errors">Klaidos</string>
@@ -206,7 +206,7 @@
     <string name="dexcom_app_not_installed">Dexcom app neįdiegta.</string>
     <string name="dexcom_app_not_detected">Atnaujinkite savo Dexcom programėlės versiją</string>
     <string name="error_starting_cgm">Nepavyko paleisti NGJ programos.  Įsitikinkite, kad ji įdiegta.</string>
-    <string name="not_available_full">Negalimas</string>
+    <string name="not_available_full">Nėra duomenų</string>
     <string name="constraints_violation">Apribojimų pažeidimas</string>
     <string name="change_your_input">Pakeiskite įvestus duomenis!</string>
     <string name="openaps">AtviraDKS</string>

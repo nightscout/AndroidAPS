@@ -6,12 +6,12 @@
     <string name="category_alerts">Alertas</string>
     <string name="low_reservoir">Alertas de reservorio bajo</string>
     <string name="patch_expiration_reminders">Recordatorio de expiración del parche</string>
-    <string name="patch_buzzer_reminders">Recordatorios de zumbidos del parche</string>
+    <string name="patch_buzzer_reminders">Recordatorios de pitidos del parche</string>
     <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">Estado del Bluetooth</string>
     <string name="eopatch_serial_number">Número de serie</string>
     <string name="eopatch_lot_number">Número de lote</string>
-    <string name="eopatch_wakeup_time">Fecha y hora para despertar &amp;</string>
+    <string name="eopatch_wakeup_time">Fecha y hora de activación</string>
     <string name="eopatch_expiration_time">Fecha de expiración</string>
     <string name="eopatch_status">Estado</string>
     <string name="eopatch_base_basal_rate">Tasa basal base</string>
