@@ -1,11 +1,9 @@
 package info.nightscout.pump.medtrum.code
 
 enum class PatchStep {
-    SAFE_DEACTIVATION,
-    MANUALLY_TURNING_OFF_ALARM,
-    DISCARDED,
-    DISCARDED_FOR_CHANGE,
-    DISCARDED_FROM_ALARM,
+    START_DEACTIVATION,
+    DEACTIVATE,
+    DEACTIVATION_COMPLETE,
     PREPARE_PATCH,
     PRIME,
     ATTACH_PATCH,

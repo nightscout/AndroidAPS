@@ -9,8 +9,10 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumActivateFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumAttachPatchFragment
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumDeactivatePatchFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumPreparePatchFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumPrimeFragment
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumStartDeactivationFragment
 import info.nightscout.pump.medtrum.services.MedtrumService
 import info.nightscout.pump.medtrum.ui.MedtrumActivity
 import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
@@ -49,6 +51,14 @@ abstract class MedtrumModule {
     // FRAGMENTS
     @ContributesAndroidInjector
     abstract fun contributesMedtrumOverviewFragment(): MedtrumOverviewFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    internal abstract fun contributesStartDeactivationFragment(): MedtrumStartDeactivationFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    internal abstract fun contributesDeactivatePatchFragment(): MedtrumDeactivatePatchFragment
 
     @FragmentScope
     @ContributesAndroidInjector

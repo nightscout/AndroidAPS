@@ -1,13 +1,9 @@
 package info.nightscout.pump.medtrum
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileStore
-import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.pump.medtrum.code.ConnectionState
 import info.nightscout.pump.medtrum.comm.enums.AlarmSetting
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.extension.toByteArray
@@ -15,7 +11,6 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
@@ -26,30 +21,43 @@ import kotlin.math.round
 class MedtrumPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
-    private val dateUtil: DateUtil,
-    private val instantiator: Instantiator
+    private val dateUtil: DateUtil
 ) {
 
+    // Connection state flow
+    private val _connectionState = MutableStateFlow(ConnectionState.DISCONNECTED)
+    val connectionStateFlow: StateFlow<ConnectionState> = _connectionState
+    var connectionState: ConnectionState
+        get() = _connectionState.value
+        set(value) {
+            _connectionState.value = value
+        }
+
     // Pump state flow
-    // TODO We might want to save this in SP, or at least get activated state from SP
     private val _pumpState = MutableStateFlow(MedtrumPumpState.NONE)
     val pumpStateFlow: StateFlow<MedtrumPumpState> = _pumpState
-
     var pumpState: MedtrumPumpState
         get() = _pumpState.value
         set(value) {
             _pumpState.value = value
         }
 
+    var _patchActivated = false
+    val patchActivated: Boolean
+        get() = _patchActivated
+
     // Prime progress as state flow
     private val _primeProgress = MutableStateFlow(0)
     val primeProgressFlow: StateFlow<Int> = _primeProgress
-
     var primeProgress: Int
         get() = _primeProgress.value
         set(value) {
             _primeProgress.value = value
         }
+
+    var pumpSN = 0L
+    val pumpType: PumpType = PumpType.MEDTRUM_NANO // TODO, type based on pumpSN or pump activation/connection
+    var patchSessionToken = 0L
 
     // TODO: Save this in SP? This might be a bit tricky as we only know what we have set, not what the pump has set but the pump should not change it, addtionally we should track the active basal profile in pump e.g. Basal patern A, B etc
     var actualBasalProfile = byteArrayOf(0)
@@ -85,6 +93,19 @@ class MedtrumPump @Inject constructor(
     var desiredAlarmSetting = AlarmSetting.LIGHT_VIBRATE_AND_BEEP.code
     var desiredHourlyMaxInsulin: Int = 40
     var desiredDailyMaxInsulin: Int = 180
+
+    fun setPatchActivatedState(activated: Boolean) {
+        aapsLogger.debug(LTag.PUMP, "setPatchActivatedState: $activated")
+        _patchActivated = activated
+        sp.putBoolean(R.string.key_patch_activated, activated)
+    }
+
+    /** When the activation/deactivation screen, and the connection flow needs to be controlled,
+     *  this can be used to set the ActivatedState without saving to SP, So when app is force closed the state is still maintained */
+    fun setPatchActivatedStateTemp(activated: Boolean) {
+        aapsLogger.debug(LTag.PUMP, "setPatchActivatedStateTemp: $activated")
+        _patchActivated = activated
+    }
 
     fun buildMedtrumProfileArray(nsProfile: Profile): ByteArray? {
         val list = nsProfile.getBasalValues()

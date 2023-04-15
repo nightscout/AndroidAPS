@@ -10,6 +10,7 @@ import info.nightscout.pump.medtrum.ui.event.UIEvent
 import info.nightscout.pump.medtrum.ui.viewmodel.BaseViewModel
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.pump.medtrum.MedtrumPump
+import info.nightscout.pump.medtrum.code.ConnectionState
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -20,6 +21,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -32,7 +34,6 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val medtrumPump: MedtrumPump
 ) : BaseViewModel<MedtrumBaseNavigator>() {
 
-    private var disposable: CompositeDisposable = CompositeDisposable()
     private val scope = CoroutineScope(Dispatchers.Default)
 
     private val _eventHandler = SingleLiveEvent<UIEvent<EventType>>()
@@ -48,35 +49,39 @@ class MedtrumOverviewViewModel @Inject constructor(
         get() = _isPatchActivated
 
     init {
-        // TODO proper connection state from medtrumPump
-        disposable += rxBus
-            .toObservable(EventPumpStatusChanged::class.java)
-            .observeOn(aapsSchedulers.main)
-            .subscribe({
-                           _bleStatus.value = when (it.status) {
-                               EventPumpStatusChanged.Status.CONNECTING   ->
-                                   "{fa-bluetooth-b spin} ${it.secondsElapsed}s"
+        scope.launch {
+            medtrumPump.connectionStateFlow.collect { state ->
+                aapsLogger.debug(LTag.PUMP, "MedtrumViewModel connectionStateFlow: $state")
+                when (state) {
+                    ConnectionState.CONNECTING   -> {
+                        _bleStatus.postValue("{fa-bluetooth-b spin}")
+                    }
 
-                               EventPumpStatusChanged.Status.CONNECTED    ->
-                                   "{fa-bluetooth}"
+                    ConnectionState.CONNECTED    -> {
+                        _bleStatus.postValue("{fa-bluetooth}")
+                    }
 
-                               EventPumpStatusChanged.Status.DISCONNECTED ->
-                                   "{fa-bluetooth-b}"
-
-                               else                                       ->
-                                   ""
-                           }
-                       }, fabricPrivacy::logException)
+                    ConnectionState.DISCONNECTED -> {
+                        _bleStatus.postValue("{fa-bluetooth-b}")
+                    }
+                }
+            }
+        }
         scope.launch {
             medtrumPump.pumpStateFlow.collect { state ->
                 aapsLogger.debug(LTag.PUMP, "MedtrumViewModel pumpStateFlow: $state")
-                if (state > MedtrumPumpState.EJECTED) {
+                if (state > MedtrumPumpState.EJECTED && state < MedtrumPumpState.STOPPED) {
                     _isPatchActivated.postValue(true)
                 } else {
                     _isPatchActivated.postValue(false)
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        scope.cancel()
     }
 
     fun onClickActivation() {
@@ -91,6 +96,6 @@ class MedtrumOverviewViewModel @Inject constructor(
 
     fun onClickDeactivation() {
         aapsLogger.debug(LTag.PUMP, "Stop Patch clicked!")
-        // TODO
+        _eventHandler.postValue(UIEvent(EventType.DEACTIVATION_CLICKED))
     }
 }

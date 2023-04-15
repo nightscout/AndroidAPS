@@ -17,6 +17,7 @@ class ActivatePacketTest : MedtrumTestBase() {
                 it.aapsLogger = aapsLogger
                 it.medtrumPump = medtrumPump
                 it.tddCalculator = tddCalculator
+                it.pumpSync = pumpSync
             }
         }
     }
@@ -35,7 +36,7 @@ class ActivatePacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        val expectedByteArray = byteArrayOf(18, 0, 0, 1, 6, 0, 0, 0, 32, 3, 16, 14, 0, 0, 1, 3, 16, 14, 0, 0, 1, 2, 12, 12, 12)
+        val expectedByteArray = byteArrayOf(18, 0, 12, 1, 6, 0, 0, 30, 32, 3, 16, 14, 0, 0, 1, 3, 16, 14, 0, 0, 1, 2, 12, 12, 12)
         assertEquals(expectedByteArray.contentToString(), result.contentToString())
     }
 

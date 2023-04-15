@@ -52,8 +52,7 @@ import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class MedtrumPlugin @Inject constructor(
+@Singleton class MedtrumPlugin @Inject constructor(
     injector: HasAndroidInjector,
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
@@ -81,8 +80,6 @@ class MedtrumPlugin @Inject constructor(
 
     private val disposable = CompositeDisposable()
     private var medtrumService: MedtrumService? = null
-    private var mPumpType: PumpType = PumpType.MEDTRUM_NANO
-    private val mPumpDescription = PumpDescription(mPumpType)
 
     override fun onStart() {
         super.onStart()
@@ -120,7 +117,7 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override fun isInitialized(): Boolean {
-        return medtrumPump.pumpState > MedtrumPumpState.EJECTED
+        return medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED
     }
 
     override fun isSuspended(): Boolean {
@@ -132,7 +129,8 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override fun isConnected(): Boolean {
-        return if (!isInitialized()) true else medtrumService?.isConnected ?: true // This is a workaround to prevent AAPS to trigger connects when we are initializing
+        // This is a workaround to prevent AAPS to trigger connects when we have no patch activated
+        return if (!medtrumPump.patchActivated) true else medtrumService?.isConnected ?: false
     }
 
     override fun isConnecting(): Boolean = medtrumService?.isConnecting ?: false
@@ -142,7 +140,7 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override fun connect(reason: String) {
-        if (isInitialized()) {
+        if (medtrumPump.patchActivated) {
             aapsLogger.debug(LTag.PUMP, "Medtrum connect - reason:$reason")
             aapsLogger.debug(LTag.PUMP, "Medtrum connect - service::$medtrumService")
             // aapsLogger.debug(LTag.PUMP, "Medtrum connect - mDeviceSN:$mDeviceSN")
@@ -166,6 +164,7 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override fun getPumpStatus(reason: String) {
+        aapsLogger.debug(LTag.PUMP, "Medtrum getPumpStatus - reason:$reason")
         if (isInitialized()) {
             medtrumService?.readPumpStatus()
         }
@@ -202,14 +201,14 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override fun lastDataTime(): Long {
-        return 0 // TODO
+        return medtrumPump.lastTimeReceivedFromPump * 1000L
     }
 
     override val baseBasalRate: Double
         get() = 0.0 // TODO
 
     override val reservoirLevel: Double
-        get() = 0.0 // TODO
+        get() = medtrumPump.reservoir
 
     override val batteryLevel: Int
         get() = 0 // TODO
@@ -228,14 +227,12 @@ class MedtrumPlugin @Inject constructor(
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setTempBasalPercent - percent: $percent, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
-        return PumpEnactResult(injector).success(false).enacted(false)
-            .comment("Medtrum driver does not support percentage temp basals")
+        return PumpEnactResult(injector).success(false).enacted(false).comment("Medtrum driver does not support percentage temp basals")
     }
 
     override fun setExtendedBolus(insulin: Double, durationInMinutes: Int): PumpEnactResult {
         aapsLogger.info(LTag.PUMP, "setExtendedBolus - insulin: $insulin, durationInMinutes: $durationInMinutes")
-        return PumpEnactResult(injector).success(false).enacted(false)
-            .comment("Medtrum driver does not support extended boluses")
+        return PumpEnactResult(injector).success(false).enacted(false).comment("Medtrum driver does not support extended boluses")
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
@@ -255,15 +252,15 @@ class MedtrumPlugin @Inject constructor(
     }
 
     override fun model(): PumpType {
-        return mPumpType
+        return medtrumPump.pumpType
     }
 
     override fun serialNumber(): String {
-        return "0" // TODO
+        return medtrumPump.pumpSN.toString(radix = 16)
     }
 
     override val pumpDescription: PumpDescription
-        get() = mPumpDescription
+        get() = PumpDescription(medtrumPump.pumpType)
 
     override fun shortStatus(veryShort: Boolean): String {
         return ""// TODO

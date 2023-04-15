@@ -18,6 +18,8 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.medtrum.MedtrumPump
+import info.nightscout.pump.medtrum.R
+import info.nightscout.pump.medtrum.code.ConnectionState
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.comm.packets.*
 import info.nightscout.pump.medtrum.extension.toInt
@@ -67,14 +69,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
     private val disposable = CompositeDisposable()
     private val mBinder: IBinder = LocalBinder()
 
-    private var mDeviceSN: Long = 0
     private var currentState: State = IdleState()
     private var mPacket: MedtrumPacket? = null
-    var isConnected = false
-    var isConnecting = false
-
-    // TODO: Stuff like this in a settings class? 
-    private var mLastDeviceTime: Long = 0
+    
+    val isConnected: Boolean
+        get() = medtrumPump.connectionState == ConnectionState.CONNECTED
+    val isConnecting: Boolean
+        get() = medtrumPump.connectionState == ConnectionState.CONNECTING
 
     override fun onCreate() {
         super.onCreate()
@@ -88,11 +89,11 @@ class MedtrumService : DaggerService(), BLECommCallback {
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
                            if (event.isChanged(rh.gs(info.nightscout.pump.medtrum.R.string.key_snInput))) {
-                               pumpSync.connectNewPump()
                                changePump()
                            }
                        }, fabricPrivacy::logException)
         changePump()
+        // TODO: We should probably listen to the pump state as well and handle some state changes? Or do we handle that in the packets or medtrumPump?
     }
 
     override fun onDestroy() {
@@ -101,12 +102,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun connect(from: String): Boolean {
-        aapsLogger.debug(LTag.PUMP, "connect: called!")
+        aapsLogger.debug(LTag.PUMP, "connect: called from: $from")
         if (currentState is IdleState) {
-            isConnecting = true
-            isConnected = false
-            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
-            return bleComm.connect(from, mDeviceSN)
+            medtrumPump.connectionState = ConnectionState.CONNECTING
+            if (medtrumPump.patchActivated) {
+                rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
+            }
+            return bleComm.connect(from, medtrumPump.pumpSN)
         } else {
             aapsLogger.error(LTag.PUMPCOMM, "Connect attempt when in non Idle state from: $from")
             return false
@@ -119,10 +121,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun startActivate(): Boolean {
-        // TODO not sure this is the correct way lol, We might need to tell AAPS which profile is active
         val profile = profileFunction.getProfile()?.let { medtrumPump.buildMedtrumProfileArray(it) }
         val packet = profile?.let { ActivatePacket(injector, it) }
         return packet?.let { sendPacketAndGetResponse(it) } == true
+    }
+
+    fun deactivatePatch(): Boolean {
+        return sendPacketAndGetResponse(StopPatchPacket(injector))
     }
 
     fun stopConnecting() {
@@ -136,7 +141,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun readPumpStatus() {
-        // TODO
+        // TODO read pump history
     }
 
     fun loadEvents(): PumpEnactResult {
@@ -145,12 +150,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
             result.comment = "pump not initialized"
             return result
         }
-        // TODO need this? Check
-        val result = PumpEnactResult(injector)
-        return result
-    }
-
-    fun setUserSettings(): PumpEnactResult {
         // TODO need this? Check
         val result = PumpEnactResult(injector)
         return result
@@ -174,15 +173,15 @@ class MedtrumService : DaggerService(), BLECommCallback {
     fun changePump() {
         aapsLogger.debug(LTag.PUMP, "changePump: called!")
         try {
-            mDeviceSN = sp.getString(info.nightscout.pump.medtrum.R.string.key_snInput, " ").toLong(radix = 16)
+            medtrumPump.pumpSN = sp.getString(info.nightscout.pump.medtrum.R.string.key_snInput, " ").toLong(radix = 16)
         } catch (e: NumberFormatException) {
             aapsLogger.debug(LTag.PUMP, "changePump: Invalid input!")
         }
-        // TODO: What do we do with active patch here? Getting status should be enough?
-        when (currentState) {
-            is IdleState -> connect("changePump")
-            // is ReadyState -> disconnect("changePump")
-            else         -> null // TODO: What to do here? Abort stuff?
+        medtrumPump.setPatchActivatedState(sp.getBoolean(R.string.key_patch_activated, false))
+        medtrumPump.patchSessionToken = sp.getLong(R.string.key_session_token, 0)
+        if (medtrumPump.patchActivated) {
+            aapsLogger.debug(LTag.PUMP, "changePump: Patch is already activated, setting as ACTIVE")            
+            medtrumPump.pumpState = MedtrumPumpState.ACTIVE // Set inital status as active will be updated on first connection
         }
     }
 
@@ -260,10 +259,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         open fun onDisconnected() {
             aapsLogger.debug(LTag.PUMPCOMM, "onDisconnected")
-            isConnecting = false
-            isConnected = false
-            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
-
+            medtrumPump.connectionState = ConnectionState.DISCONNECTED
+            if (medtrumPump.patchActivated) {
+                rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
+            }
             // TODO: Check flow for this
             toState(IdleState())
         }
@@ -277,7 +276,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached IdleState")
-            connect("IdleState onEnter")
         }
 
         override fun onConnected() {
@@ -287,7 +285,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         override fun onDisconnected() {
             super.onDisconnected()
-            connect("IdleState onDisconnected")
         }
     }
 
@@ -296,7 +293,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached AuthState")
-            mPacket = AuthorizePacket(injector, mDeviceSN)
+            mPacket = AuthorizePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
         }
 
@@ -427,7 +424,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
         override fun onIndication(data: ByteArray) {
             if (mPacket?.handleResponse(data) == true) {
                 // Succes!
-                // TODO: Handle pump state parameters
                 toState(SubscribeState())
             } else if (mPacket?.failed == true) {
                 // Failure
@@ -464,9 +460,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached ReadyState!")
             // Now we are fully connected and authenticated and we can start sending commands. Let AAPS know
-            isConnecting = false
-            isConnected = true
-            rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
+            medtrumPump.connectionState = ConnectionState.CONNECTED
+            if (medtrumPump.patchActivated) {
+                rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
+            }
         }
     }
 

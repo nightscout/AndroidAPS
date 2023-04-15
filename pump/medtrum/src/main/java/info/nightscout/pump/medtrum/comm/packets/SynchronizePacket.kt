@@ -6,6 +6,7 @@ import info.nightscout.pump.medtrum.comm.enums.CommandType.SYNCHRONIZE
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
+import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
@@ -37,6 +38,7 @@ class SynchronizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) 
             var state = MedtrumPumpState.fromByte(data[RESP_STATE_START])
 
             medtrumPump.pumpState = state
+            aapsLogger.debug(LTag.PUMPCOMM, "SynchronizePacket: state: $state")
 
             var fieldMask = data.copyOfRange(RESP_FIELDS_START, RESP_FIELDS_END).toInt()
             var syncData = data.copyOfRange(RESP_SYNC_DATA_START, data.size)

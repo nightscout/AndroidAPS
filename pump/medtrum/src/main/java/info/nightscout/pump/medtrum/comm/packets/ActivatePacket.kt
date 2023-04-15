@@ -1,6 +1,8 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.CommandType.ACTIVATE
 import info.nightscout.pump.medtrum.extension.toByteArray
@@ -16,6 +18,7 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
 
     @Inject lateinit var medtrumPump: MedtrumPump
     @Inject lateinit var tddCalculator: TddCalculator
+    @Inject lateinit var pumpSync: PumpSync
 
     companion object {
 
@@ -95,6 +98,22 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
             medtrumPump.actualBasalProfile = basalProfile
             // TODO: Handle history entry
             medtrumPump.handleBasalStatusUpdate(basalType, basalValue, basalSequence, basalPatchId, basalStartTime, time)
+
+            // Update the pump in the database, technically this is not a new pump only new patch, but still TBR's etc need to be cannceled
+            pumpSync.connectNewPump()
+            // Sync canula change
+            pumpSync.insertTherapyEventIfNewWithTimestamp(
+                timestamp = System.currentTimeMillis(),
+                type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+                pumpType = medtrumPump.pumpType,
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+            pumpSync.insertTherapyEventIfNewWithTimestamp(
+                timestamp = System.currentTimeMillis(),
+                type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+                pumpType = medtrumPump.pumpType,
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
         }
 
         return success

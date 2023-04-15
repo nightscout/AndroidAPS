@@ -43,13 +43,19 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
             viewmodel?.apply {
                 eventHandler.observe(viewLifecycleOwner) { evt ->
                     when (evt.peekContent()) {
-                        EventType.ACTIVATION_CLICKED -> requireContext().apply { 
+                        EventType.ACTIVATION_CLICKED   -> requireContext().apply {
                             val step = convertToPatchStep(medtrumPump.pumpState)
+                            // TODO is stil needed?
                             if (step != PatchStep.PREPARE_PATCH) {
                                 aapsLogger.warn(LTag.PUMP, "MedtrumOverviewFragment: Patch already in activation process, going to $step")
                             }
-                            startActivity(MedtrumActivity.createIntentFromMenu(this, step)) }
-                        else                         -> Unit
+                            startActivity(MedtrumActivity.createIntentFromMenu(this, step))
+                        }
+
+                        EventType.DEACTIVATION_CLICKED -> requireContext().apply {
+                            startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.START_DEACTIVATION))
+                        }
+                        else                           -> Unit
                     }
                 }
 

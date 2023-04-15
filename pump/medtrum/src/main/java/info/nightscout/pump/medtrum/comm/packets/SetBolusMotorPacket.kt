@@ -10,6 +10,7 @@ class SetBolusMotorPacket(injector: HasAndroidInjector) : MedtrumPacket(injector
     }
 
     override fun getRequest(): ByteArray {
+        // TODO CHECK! Seems to be a feature? to set the bolus to vibrate? TEST!
         return byteArrayOf(opCode) + 0.toByte()
     }
 }

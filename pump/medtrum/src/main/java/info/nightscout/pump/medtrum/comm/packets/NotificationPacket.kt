@@ -115,15 +115,19 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         if (fieldMask and MASK_BASAL != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Basal notification received")
-            var basalType = data.copyOfRange(offset, offset + 1)
-            var basalSequence = data.copyOfRange(offset + 1, offset + 3)
-            var basalInterval = data.copyOfRange(offset + 3, offset + 7)
-            var basalRateAndDelivery = data.copyOfRange(offset + 7, offset + 10).toInt()
-            var basalRate = basalRateAndDelivery and 0xFFF
-            var basalDelivery = (basalRateAndDelivery shr 12)
-            aapsLogger.debug(LTag.PUMPCOMM, "Basal type: $basalType, basal sequence: $basalSequence, basal interval: $basalInterval, basal rate: $basalRate, basal delivery: $basalDelivery")
+            var basalType = data.copyOfRange(offset, offset + 1).toInt()
+            var basalSequence = data.copyOfRange(offset + 1, offset + 3).toInt()
+            var basalPatchId = data.copyOfRange(offset + 3, offset + 5).toInt()
+            var basalInterval = data.copyOfRange(offset + 5, offset + 9).toInt()
+            var basalRateAndDelivery = data.copyOfRange(offset + 9, offset + 12).toInt()
+            var basalRate = (basalRateAndDelivery and 0xFFF) * 0.05
+            var basalDelivery = (basalRateAndDelivery shr 12) * 0.05
+            aapsLogger.debug(
+                LTag.PUMPCOMM,
+                "Basal type: $basalType, basal sequence: $basalSequence, basal patch id: $basalPatchId, basal interval: $basalInterval, basal rate: $basalRate, basal delivery: $basalDelivery"
+            )
             // TODO Sync basal flow
-            offset += 10
+            offset += 12
         }
 
         if (fieldMask and MASK_SETUP != 0) {

@@ -410,6 +410,7 @@ enum class PumpType {
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.MedtrumCapabilities,
         isPatchPump = true,
+        maxReservoirReading = 400,
         source = Source.Medtrum
     );
 

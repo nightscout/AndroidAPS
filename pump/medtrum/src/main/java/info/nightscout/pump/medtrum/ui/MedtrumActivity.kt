@@ -11,8 +11,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumActivateFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumAttachPatchFragment
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumDeactivatePatchFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumPreparePatchFragment
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumPrimeFragment
+import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumStartDeactivationFragment
 import info.nightscout.core.utils.extensions.safeGetSerializableExtra
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.PatchStep
@@ -42,13 +44,16 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
 
                 patchStep.observe(this@MedtrumActivity) {
                     when (it) {
-                        PatchStep.PREPARE_PATCH -> setupViewFragment(MedtrumPreparePatchFragment.newInstance())
-                        PatchStep.PRIME         -> setupViewFragment(MedtrumPrimeFragment.newInstance())
-                        PatchStep.ATTACH_PATCH  -> setupViewFragment(MedtrumAttachPatchFragment.newInstance())
-                        PatchStep.ACTIVATE      -> setupViewFragment(MedtrumActivateFragment.newInstance())
-                        PatchStep.COMPLETE      -> this@MedtrumActivity.finish() // TODO proper finish
-                        PatchStep.CANCEL        -> this@MedtrumActivity.finish()
-                        else                    -> Unit
+                        PatchStep.PREPARE_PATCH         -> setupViewFragment(MedtrumPreparePatchFragment.newInstance())
+                        PatchStep.PRIME                 -> setupViewFragment(MedtrumPrimeFragment.newInstance())
+                        PatchStep.ATTACH_PATCH          -> setupViewFragment(MedtrumAttachPatchFragment.newInstance())
+                        PatchStep.ACTIVATE              -> setupViewFragment(MedtrumActivateFragment.newInstance())
+                        PatchStep.COMPLETE              -> this@MedtrumActivity.finish() // TODO proper finish
+                        PatchStep.CANCEL                -> this@MedtrumActivity.finish()
+                        PatchStep.START_DEACTIVATION    -> setupViewFragment(MedtrumStartDeactivationFragment.newInstance())
+                        PatchStep.DEACTIVATE            -> setupViewFragment(MedtrumDeactivatePatchFragment.newInstance())
+                        PatchStep.DEACTIVATION_COMPLETE -> this@MedtrumActivity.finish() // TODO proper finish
+                        else                            -> Unit
                     }
                 }
             }
@@ -85,8 +90,7 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
         const val EXTRA_START_PATCH_STEP = "EXTRA_START_PATCH_FRAGMENT_UI"
         const val EXTRA_START_FROM_MENU = "EXTRA_START_FROM_MENU"
 
-        @JvmStatic
-        fun createIntentFromMenu(context: Context, patchStep: PatchStep): Intent {
+        @JvmStatic fun createIntentFromMenu(context: Context, patchStep: PatchStep): Intent {
             return Intent(context, MedtrumActivity::class.java).apply {
                 putExtra(EXTRA_START_PATCH_STEP, patchStep)
                 putExtra(EXTRA_START_FROM_MENU, true)

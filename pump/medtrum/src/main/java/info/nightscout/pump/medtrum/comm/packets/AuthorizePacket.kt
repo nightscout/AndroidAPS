@@ -1,12 +1,16 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.CommandType.AUTH_REQ
 import info.nightscout.pump.medtrum.encryption.Crypt
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
+import javax.inject.Inject
 
-class AuthorizePacket(injector: HasAndroidInjector, private val deviceSerial: Long) : MedtrumPacket(injector) {
+class AuthorizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
+
+    @Inject lateinit var medtrumPump: MedtrumPump
 
     var deviceType: Int = 0
     var swVersion: String = ""
@@ -30,8 +34,8 @@ class AuthorizePacket(injector: HasAndroidInjector, private val deviceSerial: Lo
 
     override fun getRequest(): ByteArray {
         val role = 2 // Fixed to 2 for pump
-        val key = Crypt().keyGen(deviceSerial)
-        return byteArrayOf(opCode) + byteArrayOf(role.toByte()) + 0.toByteArray(4) + key.toByteArray(4)
+        val key = Crypt().keyGen(medtrumPump.pumpSN)
+        return byteArrayOf(opCode) + byteArrayOf(role.toByte()) + medtrumPump.patchSessionToken.toByteArray(4) + key.toByteArray(4)
     }
 
     override fun handleResponse(data: ByteArray): Boolean {
