@@ -11,7 +11,7 @@
     <string name="eopatch_ble_status">Estado del Bluetooth</string>
     <string name="eopatch_serial_number">Número de serie</string>
     <string name="eopatch_lot_number">Número de lote</string>
-    <string name="eopatch_wakeup_time">Fecha y hora de activación</string>
+    <string name="eopatch_wakeup_time">Fecha de activación</string>
     <string name="eopatch_expiration_time">Fecha de expiración</string>
     <string name="eopatch_status">Estado</string>
     <string name="eopatch_base_basal_rate">Tasa basal base</string>
