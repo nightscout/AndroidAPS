@@ -101,6 +101,7 @@ import kotlin.math.roundToInt
         //database.foodDao.deleteOlderThan(than)
         removed.add(Pair("DeviceStatus", database.deviceStatusDao.deleteOlderThan(than)))
         removed.add(Pair("OfflineEvent", database.offlineEventDao.deleteOlderThan(than)))
+        removed.add(Pair("HeartRate", database.heartRateDao.deleteOlderThan(than)))
 
         if (deleteTrackedChanges) {
             removed.add(Pair("GlucoseValue", database.glucoseValueDao.deleteTrackedChanges()))
@@ -119,6 +120,7 @@ import kotlin.math.roundToInt
             removed.add(Pair("ApsResult", database.apsResultDao.deleteTrackedChanges()))
             //database.foodDao.deleteHistory()
             removed.add(Pair("OfflineEvent", database.offlineEventDao.deleteTrackedChanges()))
+            removed.add(Pair("HeartRate", database.heartRateDao.deleteTrackedChanges()))
         }
         val ret = StringBuilder()
         removed
@@ -930,6 +932,8 @@ import kotlin.math.roundToInt
     fun getLastOfflineEventId(): Long? =
         database.offlineEventDao.getLastId()
 
+    fun getHeartRatesFromTime(timeMillis: Long) = database.heartRateDao.getFromTime(timeMillis)
+
     suspend fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int) = NewEntries(
         apsResults = database.apsResultDao.getNewEntriesSince(since, until, limit, offset),
         apsResultLinks = database.apsResultLinkDao.getNewEntriesSince(since, until, limit, offset),
@@ -948,6 +952,7 @@ import kotlin.math.roundToInt
         therapyEvents = database.therapyEventDao.getNewEntriesSince(since, until, limit, offset),
         totalDailyDoses = database.totalDailyDoseDao.getNewEntriesSince(since, until, limit, offset),
         versionChanges = database.versionChangeDao.getNewEntriesSince(since, until, limit, offset),
+        heartRates = database.heartRateDao.getNewEntriesSince(since, until, limit, offset),
     )
 }
 
@@ -956,4 +961,3 @@ inline fun <reified T : Any> Maybe<T>.toWrappedSingle(): Single<ValueWrapper<T>>
     this.map { ValueWrapper.Existing(it) as ValueWrapper<T> }
         .switchIfEmpty(Maybe.just(ValueWrapper.Absent()))
         .toSingle()
-
