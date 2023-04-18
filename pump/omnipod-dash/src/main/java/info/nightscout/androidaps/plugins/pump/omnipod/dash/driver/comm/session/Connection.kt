@@ -200,7 +200,8 @@ class Connection(
     // This will be called from a different thread !!!
     override fun onConnectionLost(status: Int) {
         aapsLogger.info(LTag.PUMPBTCOMM, "Lost connection with status: $status")
-        disconnect(false)
+        // This is called from onConnectionStateChange(), meaning BLE is already disconnected, so need to close gatt
+        disconnect(true)
     }
 
     companion object {
