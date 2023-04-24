@@ -35,7 +35,7 @@ buildscript {
         mockito_version = '4.6.1'
         dexmaker_version = '1.2'
         retrofit2_version = '2.9.0'
-        okhttp3_version = '4.10.0'
+        okhttp3_version = '4.11.0'
         byteBuddy_version = '1.12.8'
 
         androidx_junit_version = '1.1.4'
