@@ -4,7 +4,7 @@
 
 Build APK using Colab 
 
-[![Build APK using Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/robsonvn/AndroidAPS/blob/master/build.ipynb)
+[![Build APK using Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/nightscout/AndroidAPS/blob/master/build.ipynb)
 
 [![Support Server](https://img.shields.io/discord/629952586895851530.svg?label=Discord&logo=Discord&colorB=7289da&style=for-the-badge)](https://discord.gg/4fQUWHZ4Mw)
 
