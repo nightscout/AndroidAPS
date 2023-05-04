@@ -5,8 +5,8 @@
     <string name="nth_objective">Цель %1$d</string>
     <string name="objectivenotstarted">Цель %1$d не начата</string>
     <string name="objectivenotfinished">Цель %1$d не завершена</string>
-    <string name="objectives_0_objective">Настройка визуализации и мониторинга, анализ базала и коэффициентов</string>
-    <string name="objectives_0_gate">Убедитесь, что величина ГК и данные по инсулину помпы передаются в Nightscout</string>
+    <string name="objectives_0_objective">Настройка интеграции с Nightscout, анализ базала и коэффициентов</string>
+    <string name="objectives_0_gate">Убедитесь, что данные о гликемии и подаваемом AAPSом инсулине отображаются в Nightscout и актуальны</string>
     <string name="objectives_0_learned">Вы сделали базовую настройку экосистемы AAPS. Nightscout не нужен для работы AAPS, но может быть полезен для отчетов и мониторинга других пациентов. Необходимости в постоянном подключении к NS нет, если вы используете NS только для себя. Вы можете установить загрузку, например, только на домашний wifi, чтобы сэкономить заряд батареи.</string>
     <string name="objectives_openloop_objective">Старт незамкнутого цикла</string>
     <string name="objectives_openloop_gate">Начинайте работу в режиме незамкнутого цикла и ручной подстройки величины временного базала. Установите и применяйте временные цели и временные цели по умолчанию (напр. углеводы при нагрузке или купировании гипо)</string>
