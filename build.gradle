@@ -17,7 +17,7 @@ buildscript {
         gson_version = '2.10.1'
         nav_version = '2.5.3'
         appcompat_version = '1.6.1'
-        material_version = '1.8.0'
+        material_version = '1.9.0'
         gridlayout_version = '1.0.0'
         constraintlayout_version = '2.1.4'
         preferencektx_version = '1.2.0'
