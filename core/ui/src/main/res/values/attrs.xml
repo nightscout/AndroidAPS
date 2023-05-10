@@ -181,6 +181,7 @@
     <attr name="bolusDataPointColor" format="reference|color" />
     <attr name="profileSwitchColor" format="reference|color" />
     <attr name="originalBgValueColor" format="reference|color" />
+    <attr name="heartRateColor" format="reference|color" />
     <attr name="therapyEvent_NS_MBG" format="reference|color" />
     <attr name="therapyEvent_FINGER_STICK_BG_VALUE" format="reference|color" />
     <attr name="therapyEvent_EXERCISE" format="reference|color" />

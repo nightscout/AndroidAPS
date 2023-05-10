@@ -291,6 +291,7 @@
 
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_treatments">Treatments</string>
+    <string name="overview_show_heartRate">Heart Rate</string>
     <string name="overview_show_deviation_slope">Deviation slope</string>
     <string name="overview_show_activity">Activity</string>
     <string name="overview_show_bgi">Blood Glucose Impact</string>
@@ -308,6 +309,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TREAT</string>
+    <string name="heartRate_shortname">HR</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graph scale</string>
     <string name="graph_menu_divider_header">Graph</string>
