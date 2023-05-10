@@ -7,6 +7,7 @@ plugins {
 }
 
 apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
+apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 
 android {
 

@@ -1,12 +1,14 @@
 package info.nightscout.database.impl
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import androidx.room.Room
 import androidx.room.RoomDatabase.Callback
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import dagger.Module
 import dagger.Provides
+import info.nightscout.database.entities.TABLE_HEART_RATE
 import javax.inject.Qualifier
 import javax.inject.Singleton
 
@@ -22,13 +24,7 @@ open class DatabaseModule {
     internal fun provideAppDatabase(context: Context, @DbFileName fileName: String) =
         Room
             .databaseBuilder(context, AppDatabase::class.java, fileName)
- //           .addMigrations(migration5to6)
- //           .addMigrations(migration6to7)
- //           .addMigrations(migration7to8)
- //           .addMigrations(migration11to12)
-            .addMigrations(migration20to21)
-            .addMigrations(migration21to22)
-            .addMigrations(migration22to23)
+            .addMigrations(*migrations)
             .addCallback(object : Callback() {
                 override fun onOpen(db: SupportSQLiteDatabase) {
                     super.onOpen(db)
@@ -89,4 +85,36 @@ open class DatabaseModule {
         }
     }
 
+    private val migration23to24 = object : Migration(23, 24) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL(
+                """CREATE TABLE IF NOT EXISTS `$TABLE_HEART_RATE` (
+                    `id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                    `duration` INTEGER NOT NULL,
+                    `timestamp` INTEGER NOT NULL,
+                    `beatsPerMinute` REAL NOT NULL,
+                    `device` TEXT NOT NULL,
+                    `utcOffset` INTEGER NOT NULL,
+                    `version` INTEGER NOT NULL,
+                    `dateCreated` INTEGER NOT NULL,
+                    `isValid` INTEGER NOT NULL,
+                    `referenceId` INTEGER,
+                    `nightscoutSystemId` TEXT,
+                    `nightscoutId` TEXT,
+                    `pumpType` TEXT,
+                    `pumpSerial` TEXT,
+                    `temporaryId` INTEGER,
+                    `pumpId` INTEGER, `startId` INTEGER,
+                    `endId` INTEGER)""".trimIndent()
+            )
+            database.execSQL("""CREATE INDEX IF NOT EXISTS `index_heartRate_id` ON `$TABLE_HEART_RATE` (`id`)""")
+            database.execSQL("""CREATE INDEX IF NOT EXISTS `index_heartRate_timestamp` ON `$TABLE_HEART_RATE` (`timestamp`)""")
+            // Custom indexes must be dropped on migration to pass room schema checking after upgrade
+            dropCustomIndexes(database)
+        }
+    }
+
+    /** List of all migrations for easy reply in tests. */
+    @VisibleForTesting
+    internal val migrations = arrayOf(migration20to21, migration21to22, migration22to23, migration23to24)
 }
