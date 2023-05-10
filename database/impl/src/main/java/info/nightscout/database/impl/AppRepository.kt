@@ -934,6 +934,9 @@ import kotlin.math.roundToInt
 
     fun getHeartRatesFromTime(timeMillis: Long) = database.heartRateDao.getFromTime(timeMillis)
 
+    fun getHeartRatesFromTimeToTime(startMillis: Long, endMillis: Long) =
+        database.heartRateDao.getFromTimeToTime(startMillis, endMillis)
+
     suspend fun collectNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int) = NewEntries(
         apsResults = database.apsResultDao.getNewEntriesSince(since, until, limit, offset),
         apsResultLinks = database.apsResultLinkDao.getNewEntriesSince(since, until, limit, offset),
