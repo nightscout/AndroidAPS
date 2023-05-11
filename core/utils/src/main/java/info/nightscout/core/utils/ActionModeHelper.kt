@@ -5,6 +5,7 @@ import android.view.ActionMode
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.core.view.MenuCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -68,7 +69,7 @@ class ActionModeHelper<T>(val rh: ResourceHelper, val activity: FragmentActivity
         } else if (fragment?.isResumed == true) {
             menu.add(Menu.FIRST, R.id.nav_remove_items, 0, rh.gs(R.string.remove_items)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
             menu.add(Menu.FIRST, R.id.nav_sort_items, 0, rh.gs(R.string.sort_items)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-            menu.setGroupDividerEnabled(true)
+            MenuCompat.setGroupDividerEnabled(menu, true)
         }
     }
 
