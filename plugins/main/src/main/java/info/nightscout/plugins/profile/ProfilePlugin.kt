@@ -255,6 +255,7 @@ class ProfilePlugin @Inject constructor(
                 isEdited = false
                 createAndStoreConvertedProfile()
                 aapsLogger.debug(LTag.PROFILE, "Accepted ${profiles.size} profiles")
+                storeSettings()
                 rxBus.send(EventLocalProfileChanged())
             } else
                 aapsLogger.debug(LTag.PROFILE, "ProfileStore not accepted")

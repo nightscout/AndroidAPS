@@ -841,11 +841,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
                         info.nightscout.core.ui.R.attr.ribbonWarningColor
                     else info.nightscout.core.ui.R.attr.ribbonDefaultColor
-                } else if (it is ProfileSealed.PS) {
-                    info.nightscout.core.ui.R.attr.ribbonDefaultColor
-                } else {
-                    info.nightscout.core.ui.R.attr.ribbonDefaultColor
-                }
+                 } else info.nightscout.core.ui.R.attr.ribbonDefaultColor
             } ?: info.nightscout.core.ui.R.attr.ribbonCriticalColor
 
             val profileTextColor = profile?.let {
@@ -853,11 +849,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
                         info.nightscout.core.ui.R.attr.ribbonTextWarningColor
                     else info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
-                } else if (it is ProfileSealed.PS) {
-                    info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
-                } else {
-                    info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
-                }
+                } else info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
             } ?: info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
             setRibbon(binding.activeProfile, profileTextColor, profileBackgroundColor, profileFunction.getProfileNameWithRemainingTime())
         }
