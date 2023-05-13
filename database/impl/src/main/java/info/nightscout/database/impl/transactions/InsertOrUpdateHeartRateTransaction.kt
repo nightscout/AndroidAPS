@@ -8,7 +8,7 @@ class InsertOrUpdateHeartRateTransaction(private val heartRate: HeartRate):
     override fun run(): TransactionResult {
         val existing = if (heartRate.id == 0L) null else database.heartRateDao.findById(heartRate.id)
          return if (existing == null) {
-            database.heartRateDao.insertNewEntry(heartRate).let { id ->
+            database.heartRateDao.insertNewEntry(heartRate).let {
                 TransactionResult(listOf(heartRate), emptyList()) }
         } else {
             database.heartRateDao.updateExistingEntry(heartRate)
