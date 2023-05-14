@@ -1,32 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/status_lights_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="3dp"
-    android:layout_marginBottom="3dp"
-    android:orientation="horizontal"
+    android:layout_marginTop="-3dp"
+    android:layout_marginBottom="-3dp"
     android:paddingTop="4dp"
     android:paddingBottom="4dp"
-    android:baselineAligned="false">
+    app:alignContent="stretch"
+    app:alignItems="stretch"
+    app:flexDirection="row"
+    app:flexWrap="wrap"
+    app:justifyContent="space_around">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:focusable="true"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
             android:id="@+id/cannula_or_patch"
-            android:layout_width="38dp"
-            android:layout_height="fill_parent"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:contentDescription="@string/statuslights_cannula_age"
-            android:scaleX="2"
-            android:scaleY="2"
             app:srcCompat="@drawable/ic_cp_age_cannula" />
 
         <TextView
@@ -40,23 +40,20 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:focusable="true"
-        android:gravity="center_horizontal">
+        android:gravity="center">
 
         <ImageView
-            android:layout_width="26dp"
-            android:layout_height="fill_parent"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:contentDescription="@string/a11y_insulin_label"
-            android:scaleX="1.7"
-            android:scaleY="1.7"
             app:srcCompat="@drawable/ic_cp_age_insulin" />
 
         <TextView
             android:id="@+id/insulin_age"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:lines="1"
             tools:text="12h" />
 
@@ -73,18 +70,15 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:focusable="true"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         tools:ignore="UseCompoundDrawables">
 
         <ImageView
             android:layout_width="28dp"
-            android:layout_height="fill_parent"
+            android:layout_height="28dp"
             android:contentDescription="@string/sensor_label"
-            android:scaleX="1.6"
-            android:scaleY="1.6"
             app:srcCompat="@drawable/ic_cp_age_sensor" />
 
         <TextView
@@ -99,31 +93,28 @@
     <LinearLayout
         android:id="@+id/battery_layout"
         android:layout_width="wrap_content"
-        android:layout_height="fill_parent"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:focusable="true"
-        android:gravity="center_horizontal">
+        android:gravity="center">
 
         <ImageView
-            android:layout_width="32dp"
-            android:layout_height="wrap_content"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:contentDescription="@string/battery_label"
-            android:scaleX="1.8"
-            android:scaleY="1.8"
             app:srcCompat="@drawable/ic_cp_age_battery" />
 
         <TextView
             android:id="@+id/pb_age"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:lines="1"
             android:text="-"
             tools:ignore="HardcodedText" />
 
         <TextView
-            android:id="@+id/battery_level"
+            android:id="@+id/pb_level"
             android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:lines="1"
             android:paddingStart="2dp"
             android:paddingEnd="0dp"
@@ -131,4 +122,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</com.google.android.flexbox.FlexboxLayout>

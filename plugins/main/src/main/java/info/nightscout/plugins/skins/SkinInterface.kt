@@ -59,7 +59,7 @@ interface SkinInterface {
                     for (v in texts) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.3f)
                 }
                 binding.statusLightsLayout.apply {
-                    val texts = listOf(cannulaAge, insulinAge, reservoirLevel, sensorAge, pbAge, batteryLevel)
+                    val texts = listOf(cannulaAge, insulinAge, reservoirLevel, sensorAge, pbAge, pbLevel)
                     for (v in texts) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.3f)
                 }
                 timeLayout.orientation = LinearLayout.HORIZONTAL

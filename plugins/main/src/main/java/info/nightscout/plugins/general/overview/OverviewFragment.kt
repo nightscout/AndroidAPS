@@ -891,14 +891,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.statusLightsLayout.apply {
             cannulaOrPatch.setImageResource(if (isPatchPump) info.nightscout.core.main.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula)
             cannulaOrPatch.contentDescription = rh.gs(if (isPatchPump) R.string.statuslights_patch_pump_age else R.string.statuslights_cannula_age)
-            cannulaOrPatch.scaleX = if (isPatchPump) 1.4f else 2f
-            cannulaOrPatch.scaleY = cannulaOrPatch.scaleX
             insulinAge.visibility = isPatchPump.not().toVisibility()
             batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
             pbAge.visibility = (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()).toVisibility()
             val useBatteryLevel = (pump.model() == PumpType.OMNIPOD_EROS)
                 || (pump.model() != PumpType.ACCU_CHEK_COMBO && pump.model() != PumpType.OMNIPOD_DASH)
-            batteryLevel.visibility = useBatteryLevel.toVisibility()
+            pbLevel.visibility = useBatteryLevel.toVisibility()
             statusLightsLayout.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
         }
         statusLightHandler.updateStatusLights(
@@ -909,7 +907,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.statusLightsLayout.sensorAge,
             null,
             binding.statusLightsLayout.pbAge,
-            binding.statusLightsLayout.batteryLevel
+            binding.statusLightsLayout.pbLevel
         )
     }
 
