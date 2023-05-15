@@ -422,7 +422,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     // returns true if command is queued
-    fun setProfile(profile: ProfileSealed.PS, hasNsId: Boolean, callback: Callback?): Boolean {
+    fun setProfile(profile: ProfileSealed, hasNsId: Boolean, callback: Callback?): Boolean {
         if (isRunning(CommandType.BASAL_PROFILE)) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Command is already executed")
             callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()
