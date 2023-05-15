@@ -1,6 +1,5 @@
 package info.nightscout.plugins.skins
 
-import android.util.DisplayMetrics
 import android.view.View.GONE
 import android.view.ViewGroup
 import info.nightscout.interfaces.Config
@@ -17,27 +16,26 @@ class SkinLowRes @Inject constructor(private val config: Config) : SkinInterface
     override val mainGraphHeight: Int get() = 200
     override val secondaryGraphHeight: Int get() = 100
 
-    override fun preProcessLandscapeActionsLayout(dm: DisplayMetrics, binding: ActionsFragmentBinding) {
-        val screenWidth = dm.widthPixels
-        val screenHeight = dm.heightPixels
-        val isLandscape = screenHeight < screenWidth
-
+    override fun preProcessLandscapeActionsLayout(isLandscape: Boolean, binding: ActionsFragmentBinding) {
         if (!isLandscape) {
             binding.status.apply {
-                sensorAgeLabel.visibility = GONE
+                sensorLabel.text = ""
                 sensorAgeLabel.visibility = GONE
                 sensorLevelLabel.visibility = GONE
                 insulinAgeLabel.visibility = GONE
+                insulinLabel.text = ""
                 insulinLevelLabel.visibility = GONE
+                cannulaOrPatch.text = ""
                 cannulaAgeLabel.visibility = GONE
                 cannulaUsageLabel.visibility = GONE
+                pbLabel.text = ""
                 pbAgeLabel.visibility = GONE
                 pbLevelLabel.visibility = GONE
             }
         }
     }
 
-    override fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, binding: OverviewFragmentBinding, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
+    override fun preProcessLandscapeOverviewLayout(binding: OverviewFragmentBinding, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
         if (!config.NSCLIENT && isLandscape) moveButtonsLayout(binding.root)
 
         binding.apply {
