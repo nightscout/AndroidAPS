@@ -324,7 +324,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             omnipodManager
                 .getStatus(ResponseType.StatusResponseType.DEFAULT_STATUS_RESPONSE)
                 .ignoreElements(),
-            history.updateFromState(podStateManager),
+            updateFromState(),
             podStateManager.updateActiveCommand()
                 .map { handleCommandConfirmation(it) }
                 .ignoreElement(),
@@ -632,14 +632,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     )
                 } else {
                     if (podStateManager.activeCommand != null) {
-                        val sound =
-                            if (sp.getBoolean(
-                                    info.nightscout.androidaps.plugins.pump.omnipod.common.R.string
-                                        .key_omnipod_common_notification_uncertain_bolus_sound_enabled, true
-                                )
-                            ) info.nightscout.core.ui.R.raw.boluserror
-                            else 0
-
+                        val sound = if (hasBolusErrorBeepEnabled()) info.nightscout.core.ui.R.raw.boluserror else 0
                         showErrorDialog(rh.gs(R.string.bolus_delivery_status_uncertain), sound)
                     }
                 }
@@ -714,7 +707,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             }
             val percent = (waited.toFloat() / estimatedDeliveryTimeSeconds) * 100
             updateBolusProgressDialog(
-                rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, Round.roundTo(percent*requestedBolusAmount/100, PodConstants.POD_PULSE_BOLUS_UNITS), requestedBolusAmount),
+                rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, Round.roundTo(percent * requestedBolusAmount / 100, PodConstants.POD_PULSE_BOLUS_UNITS), requestedBolusAmount),
                 percent.toInt()
             )
         }
@@ -944,6 +937,13 @@ class OmnipodDashPumpPlugin @Inject constructor(
 
     private fun hasBasalBeepEnabled(): Boolean {
         return sp.getBoolean(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_basal_beeps_enabled, false)
+    }
+
+    private fun hasBolusErrorBeepEnabled(): Boolean {
+        return sp.getBoolean(
+            info.nightscout.androidaps.plugins.pump.omnipod.common.R.string
+                .key_omnipod_common_notification_uncertain_bolus_sound_enabled, true
+        )
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
@@ -1319,7 +1319,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                     podStateManager.activeCommand?.sendError = it
                     aapsLogger.error(LTag.PUMP, "Error executing command", it)
                 }.onErrorComplete(),
-                history.updateFromState(podStateManager),
+                updateFromState(),
                 podStateManager.updateActiveCommand()
                     .map { handleCommandConfirmation(it) }
                     .ignoreElement(),
@@ -1486,6 +1486,41 @@ class OmnipodDashPumpPlugin @Inject constructor(
                         "success: ${confirmation.success}"
                 )
         }
+    }
+
+    private fun updateFromState(): Completable = Completable.defer {
+        val tbr = pumpSync.expectedPumpState().temporaryBasal
+        if (tbr != null && podStateManager.deliveryStatus?.tempBasalActive() == false && pumpSync.expectedPumpState().temporaryBasal?.pumpSerial != Constants
+                .PUMP_SERIAL_FOR_FAKE_TBR
+        ) {
+            // AAPS thinks there is a TBR running but pump has no TBR running
+            aapsLogger.error(LTag.PUMP, "AAPS expected a TBR running but pump has no TBR running! AAPS: ${pumpSync.expectedPumpState().temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
+            // Alert user
+            val sound = if (hasBolusErrorBeepEnabled()) info.nightscout.core.ui.R.raw.boluserror else 0
+            showErrorDialog(rh.gs(R.string.temp_basal_out_of_sync), sound)
+            // Sync stopped basal with AAPS
+            val ret = pumpSync.syncStopTemporaryBasalWithPumpId(
+                System.currentTimeMillis(), // Note: It would be nice if TBR end could be estimated, but this will add a lot of complexity
+                tbr.id,
+                PumpType.OMNIPOD_DASH,
+                serialNumber()
+            )
+            aapsLogger.info(LTag.PUMP, "syncStopTemporaryBasalWithPumpId ret=$ret pumpId=${tbr.id}")
+            podStateManager.tempBasal = null
+        }
+        if (tbr == null && podStateManager.deliveryStatus?.tempBasalActive() == true) {
+            // AAPS thinks there is no TBR running but pump has a TBR running
+            aapsLogger.error(LTag.PUMP, "AAPS expected no TBR running but pump has a TBR running! AAPS: ${pumpSync.expectedPumpState().temporaryBasal} Pump: ${podStateManager.deliveryStatus}")
+            // Alert user
+            val sound = if (hasBolusErrorBeepEnabled()) info.nightscout.core.ui.R.raw.boluserror else 0
+            showErrorDialog(rh.gs(R.string.temp_basal_out_of_sync), sound)
+            // If this is reached is reached there is probably a something wrong with the time (maybe it has changed?).
+            // No way to calculate the TBR end time and update pumpSync properly.
+            // Cancel TBR running on Pump, pod history will be updated by observeNoActiveTempBasal()
+            return@defer observeNoActiveTempBasal()
+        }
+        // Update pod history:
+        history.updateFromState(podStateManager)
     }
 
     private fun showErrorDialog(message: String, sound: Int) {
