@@ -16,9 +16,9 @@ import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.PairingPIN
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.combov2.R
@@ -72,7 +72,7 @@ private class BluetoothPermissionChecks(
     }
 }
 
-class ComboV2PairingActivity : DaggerAppCompatActivity() {
+class ComboV2PairingActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rh: ResourceHelper

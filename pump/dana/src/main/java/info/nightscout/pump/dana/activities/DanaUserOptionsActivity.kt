@@ -2,7 +2,7 @@ package info.nightscout.pump.dana.activities
 
 import android.content.Context
 import android.os.Bundle
-import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -26,7 +26,7 @@ import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
-class DanaUserOptionsActivity : DaggerAppCompatActivity() {
+class DanaUserOptionsActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger

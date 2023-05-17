@@ -11,9 +11,9 @@ import android.widget.TextView
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
-import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.databinding.ActivityHistorybrowseBinding
 import info.nightscout.core.events.EventIobCalculationProgress
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.interfaces.Config
@@ -42,7 +42,7 @@ import java.util.GregorianCalendar
 import javax.inject.Inject
 import kotlin.math.min
 
-class HistoryBrowseActivity : DaggerAppCompatActivity() {
+class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var historyBrowserData: HistoryBrowserData
     @Inject lateinit var injector: HasAndroidInjector
