@@ -299,7 +299,7 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
         }
 
         private fun setAmount(historyEntry: HistoryRecord, amountView: TextView) {
-            amountView.text = historyEntry.totalAmountDelivered?.let { rh.gs(R.string.omnipod_common_history_total_delivered, it) ?: "" }
+            amountView.text = historyEntry.totalAmountDelivered?.let { rh.gs(R.string.omnipod_common_history_total_delivered, it) }
             // Set some color
             setTextViewColor(check_result = false, amountView, historyEntry)
         }
