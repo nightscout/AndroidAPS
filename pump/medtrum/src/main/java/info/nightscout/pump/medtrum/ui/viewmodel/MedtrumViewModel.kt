@@ -173,8 +173,7 @@ class MedtrumViewModel @Inject constructor(
         }
         // New session, generate new session token
         aapsLogger.info(LTag.PUMP, "preparePatch: new session")
-        medtrumPump.patchSessionToken = Crypt().generateRandomToken()
-        sp.putLong(R.string.key_session_token, medtrumPump.patchSessionToken)
+        medtrumPump.patchSessionToken = Crypt().generateRandomToken()        
         // Connect to pump
         medtrumService?.connect("PreparePatch")
     }

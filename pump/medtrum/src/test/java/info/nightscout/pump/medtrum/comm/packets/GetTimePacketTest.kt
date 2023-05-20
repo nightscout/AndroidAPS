@@ -48,7 +48,7 @@ class GetTimePacketTest : MedtrumTestBase() {
         // Expected values
         assertEquals(true, result)
         assertEquals(false, packet.failed)
-        assertEquals(MedtrumTimeUtil().convertPumpTimeToSystemTimeSeconds(time), medtrumPump.lastTimeReceivedFromPump)
+        assertEquals(MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(time), medtrumPump.lastTimeReceivedFromPump)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {

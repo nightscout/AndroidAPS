@@ -25,7 +25,7 @@ class GetTimePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
     override fun handleResponse(data: ByteArray): Boolean {
         val success = super.handleResponse(data)
         if (success) {
-            val time = MedtrumTimeUtil().convertPumpTimeToSystemTimeSeconds(data.copyOfRange(RESP_TIME_START, RESP_TIME_END).toLong())
+            val time = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_TIME_START, RESP_TIME_END).toLong())
             medtrumPump.lastTimeReceivedFromPump = time
         }
 

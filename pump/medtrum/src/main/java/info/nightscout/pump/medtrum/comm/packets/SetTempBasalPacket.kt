@@ -3,10 +3,12 @@ package info.nightscout.pump.medtrum.comm.packets
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.CommandType.SET_TEMP_BASAL
+import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.pump.medtrum.extension.toLong
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
+import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 import kotlin.math.round
 
@@ -49,11 +51,19 @@ class SetTempBasalPacket(injector: HasAndroidInjector, private val absoluteRate:
     override fun handleResponse(data: ByteArray): Boolean {
         val success = super.handleResponse(data)
         if (success) {
-            val basalType = data.copyOfRange(RESP_BASAL_TYPE_START, RESP_BASAL_TYPE_END).toInt()
+            val basalType = enumValues<BasalType>()[data.copyOfRange(RESP_BASAL_TYPE_START, RESP_BASAL_TYPE_END).toInt()]
             val basalRate = data.copyOfRange(RESP_BASAL_RATE_START, RESP_BASAL_RATE_END).toInt() * 0.05
             val basalSequence = data.copyOfRange(RESP_BASAL_SEQUENCE_START, RESP_BASAL_SEQUENCE_END).toInt()
-            val basalPatchId = data.copyOfRange(RESP_BASAL_PATCH_ID_START, RESP_BASAL_PATCH_ID_END).toInt()
-            val basalStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeSeconds(data.copyOfRange(RESP_BASAL_START_TIME_START, RESP_BASAL_START_TIME_END).toLong())
+            val basalPatchId = data.copyOfRange(RESP_BASAL_PATCH_ID_START, RESP_BASAL_PATCH_ID_END).toLong()
+
+            val rawTime = data.copyOfRange(RESP_BASAL_START_TIME_START, RESP_BASAL_START_TIME_END).toLong()
+            val basalStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_BASAL_START_TIME_START, RESP_BASAL_START_TIME_END).toLong())
+            aapsLogger.debug(LTag.PUMPCOMM, "Basal status update: type=$basalType, rate=$basalRate, sequence=$basalSequence, patchId=$basalPatchId, startTime=$basalStartTime, rawTime=$rawTime")
+
+            // TODO: For debugging remove later
+            val pumpTime = MedtrumTimeUtil().getCurrentTimePumpSeconds()
+            val systemTime = System.currentTimeMillis()
+            aapsLogger.debug(LTag.PUMPCOMM, "Pump time: $pumpTime, System time: $systemTime")
 
             medtrumPump.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalStartTime)
         }

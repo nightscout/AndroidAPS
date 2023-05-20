@@ -5,6 +5,7 @@ import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.CommandType.ACTIVATE
+import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toByte
 import info.nightscout.interfaces.stats.TddCalculator
@@ -85,15 +86,17 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
             val medtrumTimeUtil = MedtrumTimeUtil()
 
             val patchId = data.copyOfRange(RESP_PATCH_ID_START, RESP_PATCH_ID_END).toLong()
-            val time = medtrumTimeUtil.convertPumpTimeToSystemTimeSeconds(data.copyOfRange(RESP_TIME_START, RESP_TIME_END).toLong())
-            val basalType = data.copyOfRange(RESP_BASAL_TYPE_START, RESP_BASAL_TYPE_END).toInt()
+            val time = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_TIME_START, RESP_TIME_END).toLong())
+            val basalType = enumValues<BasalType>()[data.copyOfRange(RESP_BASAL_TYPE_START, RESP_BASAL_TYPE_END).toInt()]
             val basalValue = data.copyOfRange(RESP_BASAL_VALUE_START, RESP_BASAL_VALUE_END).toInt() * 0.05
             val basalSequence = data.copyOfRange(RESP_BASAL_SEQUENCE_START, RESP_BASAL_SEQUENCE_END).toInt()
-            val basalPatchId = data.copyOfRange(RESP_BASAL_PATCH_ID_START, RESP_BASAL_PATCH_ID_END).toInt()
-            val basalStartTime = medtrumTimeUtil.convertPumpTimeToSystemTimeSeconds(data.copyOfRange(RESP_BASAL_START_TIME_START, RESP_BASAL_START_TIME_END).toLong())
+            val basalPatchId = data.copyOfRange(RESP_BASAL_PATCH_ID_START, RESP_BASAL_PATCH_ID_END).toLong()
+            val basalStartTime = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_BASAL_START_TIME_START, RESP_BASAL_START_TIME_END).toLong())
 
             medtrumPump.patchId = patchId
             medtrumPump.lastTimeReceivedFromPump = time
+            medtrumPump.currentSequenceNumber = basalSequence // We are activated, set the new seq nr
+            medtrumPump.syncedSequenceNumber = basalSequence // We are activated, reset the synced seq nr ()
             // Update the actual basal profile
             medtrumPump.actualBasalProfile = basalProfile
             // TODO: Handle history entry

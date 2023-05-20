@@ -2,6 +2,7 @@ package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumPump
+import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
@@ -98,7 +99,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             var bolusData = data.copyOfRange(offset, offset + 1).toInt()
             var bolusType = bolusData and 0x7F
             var bolusCompleted = (bolusData shr 7) and 0x01 // TODO: Check for other flags here :)
-            var bolusDelivered = data.copyOfRange(offset + 1, offset + 3).toInt() / 0.05
+            var bolusDelivered = data.copyOfRange(offset + 1, offset + 3).toInt() * 0.05
             // TODO Sync bolus flow:
             // If bolus is known add status
             // If bolus is not known start read bolus
@@ -115,18 +116,20 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         if (fieldMask and MASK_BASAL != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Basal notification received")
-            var basalType = data.copyOfRange(offset, offset + 1).toInt()
+            val basalType = enumValues<BasalType>()[data.copyOfRange(offset, offset + 1).toInt()]
             var basalSequence = data.copyOfRange(offset + 1, offset + 3).toInt()
-            var basalPatchId = data.copyOfRange(offset + 3, offset + 5).toInt()
-            var basalInterval = data.copyOfRange(offset + 5, offset + 9).toInt()
+            var basalPatchId = data.copyOfRange(offset + 3, offset + 5).toLong()
+            var basalTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset + 5, offset + 9).toLong())
             var basalRateAndDelivery = data.copyOfRange(offset + 9, offset + 12).toInt()
             var basalRate = (basalRateAndDelivery and 0xFFF) * 0.05
             var basalDelivery = (basalRateAndDelivery shr 12) * 0.05
             aapsLogger.debug(
                 LTag.PUMPCOMM,
-                "Basal type: $basalType, basal sequence: $basalSequence, basal patch id: $basalPatchId, basal interval: $basalInterval, basal rate: $basalRate, basal delivery: $basalDelivery"
+                "Basal type: $basalType, basal sequence: $basalSequence, basal patch id: $basalPatchId, basal time: $basalTime, basal rate: $basalRate, basal delivery: $basalDelivery"
             )
-            // TODO Sync basal flow
+            // TODO: Check if basal is known, if not add it
+            // medtrumPump.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalTime)
+            // TODO: Handle basal delivery
             offset += 12
         }
 
@@ -165,9 +168,16 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         if (fieldMask and MASK_STORAGE != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Storage notification received")
             // TODO, trigger check for new sequence?
-            medtrumPump.lastKnownSequenceNumber = data.copyOfRange(offset, offset + 2).toInt()
-            medtrumPump.patchId = data.copyOfRange(offset + 2, offset + 4).toLong()
-            aapsLogger.debug(LTag.PUMPCOMM, "Last known sequence number: ${medtrumPump.lastKnownSequenceNumber}, patch id: ${medtrumPump.patchId}")
+            val sequence = data.copyOfRange(offset, offset + 2).toInt()
+            if (sequence > medtrumPump.currentSequenceNumber) {
+                medtrumPump.currentSequenceNumber = sequence
+            }
+            val patchId = data.copyOfRange(offset + 2, offset + 4).toLong()
+            if (patchId != medtrumPump.patchId) {
+                aapsLogger.error(LTag.PUMPCOMM, "handleMaskedMessage: WTF? We got wrong patch id!")
+                // TODO: We should terminate session or stop patch here? or at least throw error? THis can be thrown during activation process though
+            }
+            aapsLogger.debug(LTag.PUMPCOMM, "Last known sequence number: ${medtrumPump.currentSequenceNumber}, patch id: ${patchId}")
             offset += 4
         }
 
@@ -182,7 +192,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         if (fieldMask and MASK_START_TIME != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Start time notification received")
-            medtrumPump.patchStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeSeconds(data.copyOfRange(offset, offset + 4).toLong())
+            medtrumPump.patchStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
             aapsLogger.debug(LTag.PUMPCOMM, "Patch start time: ${medtrumPump.patchStartTime}")
             offset += 4
         }

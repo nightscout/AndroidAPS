@@ -18,6 +18,7 @@ import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpPluginBase
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.pump.actions.CustomAction
 import info.nightscout.interfaces.pump.actions.CustomActionType
 import info.nightscout.interfaces.pump.defs.ManufacturerType
@@ -51,6 +52,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.round
 
 @Singleton class MedtrumPlugin @Inject constructor(
     injector: HasAndroidInjector,
@@ -63,10 +65,11 @@ import javax.inject.Singleton
     private val context: Context,
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
-    private val pumpSync: PumpSync,
     private val medtrumPump: MedtrumPump,
     private val uiInteraction: UiInteraction,
-    private val profileFunction: ProfileFunction
+    private val profileFunction: ProfileFunction,
+    private val pumpSync: PumpSync,
+    private val temporaryBasalStorage: TemporaryBasalStorage
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -205,7 +208,7 @@ import javax.inject.Singleton
     }
 
     override val baseBasalRate: Double
-        get() = 0.0 // TODO
+        get() = medtrumPump.baseBasalRate
 
     override val reservoirLevel: Double
         get() = medtrumPump.reservoir
@@ -222,7 +225,24 @@ import javax.inject.Singleton
     }
 
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
-        return PumpEnactResult(injector) // TODO
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
+
+        aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - absoluteRate: $absoluteRate, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
+        // round rate to 0.05
+        val pumpRate = round(absoluteRate * 20) / 20 // TODO: Maybe replace by constraints thing
+        temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), pumpRate, true, tbrType, 0L, 0L))
+        val connectionOk = medtrumService?.setTempBasal(pumpRate, durationInMinutes) ?: false
+        if (connectionOk
+            && medtrumPump.tempBasalInProgress 
+            && Math.abs(medtrumPump.tempBasalAbsoluteRate - pumpRate) <= 0.05
+            /*&& Math.abs(medtrumPump.tempBasalRemainingMinutes - durationInMinutes) <= 5*/) {
+        
+            return PumpEnactResult(injector).success(true).enacted(true).duration(/*medtrumPump.tempBasalRemainingMinutes*/durationInMinutes).absolute(medtrumPump.tempBasalAbsoluteRate).isPercent(false)
+                .isTempCancel(false)
+        } else {
+            aapsLogger.error(LTag.PUMP, "setTempBasalAbsolute failed, connectionOk: $connectionOk, tempBasalInProgress: ${medtrumPump.tempBasalInProgress}, tempBasalAbsoluteRate: ${medtrumPump.tempBasalAbsoluteRate}") //, tempBasalRemainingMinutes: ${medtrumPump.tempBasalRemainingMinutes}")
+            return PumpEnactResult(injector).success(false).enacted(false).comment("Medtrum setTempBasalAbsolute failed")
+        }
     }
 
     override fun setTempBasalPercent(percent: Int, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
@@ -236,7 +256,16 @@ import javax.inject.Singleton
     }
 
     override fun cancelTempBasal(enforceNew: Boolean): PumpEnactResult {
-        return PumpEnactResult(injector) // TODO
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
+
+        aapsLogger.info(LTag.PUMP, "cancelTempBasal - enforceNew: $enforceNew")
+        val connectionOk = medtrumService?.cancelTempBasal() ?: false
+        if (connectionOk && !medtrumPump.tempBasalInProgress) {
+            return PumpEnactResult(injector).success(true).enacted(true).isTempCancel(true)
+        } else {
+            aapsLogger.error(LTag.PUMP, "cancelTempBasal failed, connectionOk: $connectionOk, tempBasalInProgress: ${medtrumPump.tempBasalInProgress}")
+            return PumpEnactResult(injector).success(false).enacted(false).comment("Medtrum cancelTempBasal failed")
+        }
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
@@ -288,9 +317,5 @@ import javax.inject.Singleton
     }
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
-    }
-
-    private fun readTBR(): PumpSync.PumpState.TemporaryBasal? {
-        return pumpSync.expectedPumpState().temporaryBasal // TODO
     }
 }

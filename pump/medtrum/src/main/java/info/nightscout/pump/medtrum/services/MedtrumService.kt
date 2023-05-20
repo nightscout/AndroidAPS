@@ -116,8 +116,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun startPrime(): Boolean {
-        val packet = PrimePacket(injector)
-        return sendPacketAndGetResponse(packet)
+        return sendPacketAndGetResponse(PrimePacket(injector))
     }
 
     fun startActivate(): Boolean {
@@ -141,18 +140,19 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun readPumpStatus() {
-        // TODO read pump history
-    }
+        // TODO decide what we need to do here
+        var result = false
 
-    fun loadEvents(): PumpEnactResult {
-        if (!medtrumPlugin.isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
+        // Most of these things are already done when a connection is setup, but wo dont know how long the pump was connected for?
+        // So just do a syncronize to make sure we have the latest data
+        result = sendPacketAndGetResponse(SynchronizePacket(injector))
+
+        // Sync records (based on the info we have from the sync)
+        if (result) result = syncRecords()
+        if (!result) {
+            aapsLogger.error(LTag.PUMPCOMM, "Failed to sync records")
+            return
         }
-        // TODO need this? Check
-        val result = PumpEnactResult(injector)
-        return result
     }
 
     fun bolus(insulin: Double, carbs: Int, carbTime: Long, t: EventOverviewBolusProgress.Treatment): Boolean {
@@ -165,24 +165,59 @@ class MedtrumService : DaggerService(), BLECommCallback {
         // TODO
     }
 
+    fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {
+        var result = true
+        if (medtrumPump.tempBasalInProgress) {
+            result = sendPacketAndGetResponse(CancelTempBasalPacket(injector))
+        }
+        if (result) result = sendPacketAndGetResponse(SetTempBasalPacket(injector, absoluteRate, durationInMinutes))
+
+        // Get history records, this will update the pump state
+        if (result) result = syncRecords()
+
+        return result
+    }
+
+    fun cancelTempBasal(): Boolean {
+        var result = false
+
+        result = sendPacketAndGetResponse(CancelTempBasalPacket(injector))
+
+        // Get history records, this will update the pump state
+        if (result) result = syncRecords()
+
+        return result
+    }
+
     fun updateBasalsInPump(profile: Profile): Boolean {
+        var result = false
         val packet = medtrumPump.buildMedtrumProfileArray(profile)?.let { SetBasalProfilePacket(injector, it) }
-        return packet?.let { sendPacketAndGetResponse(it) } == true
+        result = packet?.let { sendPacketAndGetResponse(it) } == true
+
+        // TODO: We might want to get rid of this and cancel the TBR before we set the basal profile
+        // Update basal affects the TBR records (the pump will cancel the TBR, set our basal profile, and resume the TBR in a new record)
+        // Get history records, this will update the pump state and add changes in TBR to AAPS history
+        if (result) result = syncRecords()
+
+        return result
     }
 
     fun changePump() {
         aapsLogger.debug(LTag.PUMP, "changePump: called!")
-        try {
-            medtrumPump.pumpSN = sp.getString(info.nightscout.pump.medtrum.R.string.key_snInput, " ").toLong(radix = 16)
-        } catch (e: NumberFormatException) {
-            aapsLogger.debug(LTag.PUMP, "changePump: Invalid input!")
+        medtrumPump.loadUserSettingsFromSP()
+    }
+
+    /** This gets the history records from the pump */
+    private fun syncRecords(): Boolean {
+        aapsLogger.debug(LTag.PUMP, "syncRecords: called!, syncedSequenceNumber: ${medtrumPump.syncedSequenceNumber}, currentSequenceNumber: ${medtrumPump.currentSequenceNumber}")
+        var result = false
+        // TODO: Check if we need to sync older records as well
+        // Note: medtrum app fetches all records when they sync?
+        for (sequence in medtrumPump.syncedSequenceNumber..medtrumPump.currentSequenceNumber) {
+            result = sendPacketAndGetResponse(GetRecordPacket(injector, sequence))
+            if (!result) break
         }
-        medtrumPump.setPatchActivatedState(sp.getBoolean(R.string.key_patch_activated, false))
-        medtrumPump.patchSessionToken = sp.getLong(R.string.key_session_token, 0)
-        if (medtrumPump.patchActivated) {
-            aapsLogger.debug(LTag.PUMP, "changePump: Patch is already activated, setting as ACTIVE")            
-            medtrumPump.pumpState = MedtrumPumpState.ACTIVE // Set inital status as active will be updated on first connection
-        }
+        return result
     }
 
     /** BLECommCallbacks */
@@ -206,7 +241,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     override fun onSendMessageError(reason: String) {
         aapsLogger.debug(LTag.PUMPCOMM, "<<<<< error during send message $reason")
-        // TODO 
+        currentState.onSendMessageError(reason)
     }
 
     /** Service stuff */
@@ -269,6 +304,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         open fun waitForResponse(): Boolean {
             return false
+        }
+
+        open fun onSendMessageError(reason: String) {
+            aapsLogger.debug(LTag.PUMPCOMM, "onSendMessageError: " + this.toString() + "reason: $reason")
         }
     }
 
@@ -350,16 +389,18 @@ class MedtrumService : DaggerService(), BLECommCallback {
         override fun onIndication(data: ByteArray) {
             if (mPacket?.handleResponse(data) == true) {
                 // Succes!
-                val currTimeSec = dateUtil.nowWithoutMilliseconds() / 1000
-                if (abs(timeUtil.convertPumpTimeToSystemTimeSeconds(medtrumPump.lastTimeReceivedFromPump) - currTimeSec) <= 5) { // Allow 5 sec deviation
+                val currTime = dateUtil.nowWithoutMilliseconds()
+                if (abs(medtrumPump.lastTimeReceivedFromPump - currTime) <= T.secs(5).msecs()) { // Allow 5 sec deviation
                     toState(SynchronizeState())
                 } else {
                     aapsLogger.debug(
                         LTag.PUMPCOMM,
-                        "GetTimeState.onIndication need to set time. systemTime: $currTimeSec PumpTime: ${medtrumPump.lastTimeReceivedFromPump} Pump Time to system time: " + timeUtil.convertPumpTimeToSystemTimeSeconds(
+                        "GetTimeState.onIndication need to set time. systemTime: $currTime PumpTime: ${medtrumPump.lastTimeReceivedFromPump} Pump Time to system time: " + timeUtil
+                            .convertPumpTimeToSystemTimeMillis(
                             medtrumPump.lastTimeReceivedFromPump
                         )
                     )
+                    // TODO: Setting time cancels any TBR, so we need to handle that and cancel? or let AAPS handle time syncs?
                     toState(SetTimeState())
                 }
             } else if (mPacket?.failed == true) {
@@ -493,6 +534,12 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         override fun onDisconnected() {
             super.onDisconnected()
+            responseHandled = true
+            responseSuccess = false
+        }
+
+        override fun onSendMessageError(reason: String) {
+            super.onSendMessageError(reason)
             responseHandled = true
             responseSuccess = false
         }

@@ -46,9 +46,9 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
                         EventType.ACTIVATION_CLICKED   -> requireContext().apply {
                             val step = convertToPatchStep(medtrumPump.pumpState)
                             // TODO is stil needed?
-                            if (step != PatchStep.PREPARE_PATCH) {
-                                aapsLogger.warn(LTag.PUMP, "MedtrumOverviewFragment: Patch already in activation process, going to $step")
-                            }
+                            // if (step != PatchStep.PREPARE_PATCH) {
+                            //     aapsLogger.warn(LTag.PUMP, "MedtrumOverviewFragment: Patch already in activation process, going to $step")
+                            // }
                             startActivity(MedtrumActivity.createIntentFromMenu(this, step))
                         }
 

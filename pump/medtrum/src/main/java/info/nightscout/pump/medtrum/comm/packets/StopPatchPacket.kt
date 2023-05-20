@@ -4,6 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.pump.medtrum.comm.enums.CommandType.STOP_PATCH
+import info.nightscout.pump.medtrum.extension.toLong
 import javax.inject.Inject
 
 class StopPatchPacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
@@ -27,7 +28,7 @@ class StopPatchPacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
         val success = super.handleResponse(data)
         if (success) {
             val stopSequence = data.copyOfRange(RESP_STOP_SEQUENCE_START, RESP_STOP_SEQUENCE_END).toInt()
-            val stopPatchId = data.copyOfRange(RESP_STOP_PATCH_ID_START, RESP_STOP_PATCH_ID_END).toInt()
+            val stopPatchId = data.copyOfRange(RESP_STOP_PATCH_ID_START, RESP_STOP_PATCH_ID_END).toLong()
 
             medtrumPump.handleStopStatusUpdate(stopSequence, stopPatchId)
         }

@@ -2,6 +2,7 @@ package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
+import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.extension.toByteArray
 import org.junit.jupiter.api.Test
@@ -23,7 +24,9 @@ class AuthorizePacketTest : MedtrumTestBase() {
     @Test fun getRequestGivenPacketAndSNWhenCalledThenReturnAuthorizePacket() {
         // Inputs
         val opCode = 5
-        medtrumPump.pumpSN = 2859923929
+        val _pumpSN = MedtrumPump::class.java.getDeclaredField("_pumpSN")
+        _pumpSN.isAccessible = true
+        _pumpSN.setLong(medtrumPump, 2859923929)
         medtrumPump.patchSessionToken = 667
 
         // Call
