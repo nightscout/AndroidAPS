@@ -3,8 +3,8 @@ package info.nightscout.rx.weardata
 import info.nightscout.rx.events.Event
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
-import java.util.*
-import kotlin.collections.ArrayList
+import org.joda.time.DateTime
+import java.util.Objects
 
 @Serializable
 sealed class EventData : Event() {
@@ -93,11 +93,12 @@ sealed class EventData : Event() {
 
     @Serializable
     data class ActionHeartRate(
-        val samplingStartMillis: Long,
-        val samplingEndMillis: Long,
-        val beatsPerMinute: Int,
+        val duration: Long,
+        val timestamp: Long,
+        val beatsPerMinute: Double,
         val device: String): EventData() {
-        override fun toString() = "HR $beatsPerMinute [${Date(samplingStartMillis)}..${Date(samplingEndMillis)}] $device"
+        override fun toString() =
+            "HR ${beatsPerMinute.toInt()} at ${DateTime(timestamp)} for ${duration / 1000.0}sec $device"
     }
 
     @Serializable

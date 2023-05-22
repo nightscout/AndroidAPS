@@ -9,22 +9,54 @@ import android.hardware.SensorManager
 import android.os.Build
 import androidx.annotation.VisibleForTesting
 import info.nightscout.androidaps.comm.IntentWearToMobile
+import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.EventData
-import java.lang.Long.max
-import java.lang.Long.min
+import io.reactivex.rxjava3.disposables.Disposable
+import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.ReentrantLock
+import kotlin.concurrent.withLock
+import kotlin.math.roundToInt
 
 /**
- * Gets heart rate readings from watch and sends them once per minute to the phone.
+ * Gets heart rate readings from watch and sends them to the phone.
+ *
+ * The Android API doesn't define how often heart rate events are sent do the
+ * listener, it could be once per second or only when the heart rate changes.
+ *
+ * Heart rate is not a point in time measurement but is always sampled over a
+ * certain time, i.e. you count the the number of heart beats and divide by the
+ * minutes that have passed. Therefore, the provided value has to be for the past.
+ * However, we ignore this here.
+ *
+ * We don't need very exact values, but rather values that are easy to consume
+ * and don't produce too much data that would cause much battery consumption.
+ * Therefore, this class averages the heart rate over a minute ([samplingIntervalMillis])
+ * and sends this value to the phone.
+ *
+ * We will not always get valid values, e.g. if the watch is taken of. The listener
+ * ignores such time unless we don't get good values for more than 90% of time. Since
+ * heart rate doesn't change so fast this should be good enough.
  */
 class HeartRateListener(
     private val ctx: Context,
-    private val aapsLogger: AAPSLogger
-) :  SensorEventListener {
+    private val aapsLogger: AAPSLogger,
+    aapsSchedulers: AapsSchedulers,
+    now: Long = System.currentTimeMillis(),
+) :  SensorEventListener, Disposable {
 
+    /** How often we send values to the phone. */
     private val samplingIntervalMillis = 60_000L
-    private var sampler: Sampler? = null
+    private val sampler = Sampler(now)
+    private var schedule: Disposable? = null
+
+    /** We only use values with these accuracies and ignore NO_CONTACT and UNRELIABLE. */
+    private val goodAccuracies = arrayOf(
+        SensorManager.SENSOR_STATUS_ACCURACY_LOW,
+        SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM,
+        SensorManager.SENSOR_STATUS_ACCURACY_HIGH,
+    )
 
     init {
         aapsLogger.info(LTag.WEAR, "Create ${javaClass.simpleName}")
@@ -39,24 +71,51 @@ class HeartRateListener(
                 sensorManager.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL)
             }
         }
+        schedule = aapsSchedulers.io.schedulePeriodicallyDirect(
+            ::send, samplingIntervalMillis, samplingIntervalMillis, TimeUnit.MILLISECONDS)
     }
+
+    /**
+     * Gets the most recent heart rate reading and null if there is no valid
+     * value at the moment.
+     */
+    val currentHeartRateBpm get() = sampler.currentBpm?.roundToInt()
 
     @VisibleForTesting
     var sendHeartRate: (EventData.ActionHeartRate)->Unit = { hr -> ctx.startService(IntentWearToMobile(ctx, hr)) }
 
-    fun onDestroy() {
-        aapsLogger.info(LTag.WEAR, "Destroy ${javaClass.simpleName}")
+    override fun isDisposed() = schedule == null
+
+    override fun dispose() {
+        aapsLogger.info(LTag.WEAR, "Dispose ${javaClass.simpleName}")
+        schedule?.dispose()
         (ctx.getSystemService(SENSOR_SERVICE) as SensorManager?)?.unregisterListener(this)
     }
 
-    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+    /** Sends currently sampled value to the phone. Executed every [samplingIntervalMillis]. */
+    private fun send() {
+        send(System.currentTimeMillis())
     }
 
-    private fun send(sampler: Sampler) {
-        sampler.heartRate.let { hr ->
+    @VisibleForTesting
+    fun send(timestampMillis: Long) {
+        sampler.getAndReset(timestampMillis)?.let { hr ->
             aapsLogger.info(LTag.WEAR, "Send heart rate $hr")
             sendHeartRate(hr)
         }
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor, accuracy: Int) {
+        onAccuracyChanged(sensor.type, accuracy, System.currentTimeMillis())
+    }
+
+    @VisibleForTesting
+    fun onAccuracyChanged(sensorType: Int, accuracy: Int, timestampMillis: Long) {
+        if (sensorType != Sensor.TYPE_HEART_RATE) {
+            aapsLogger.error(LTag.WEAR, "Invalid SensorEvent $sensorType $accuracy")
+            return
+        }
+        if (accuracy !in goodAccuracies) sampler.setHeartRate(timestampMillis, null)
     }
 
     override fun onSensorChanged(event: SensorEvent) {
@@ -64,46 +123,64 @@ class HeartRateListener(
     }
 
     @VisibleForTesting
-    fun onSensorChanged(sensorType: Int?, accuracy: Int, timestamp: Long, values: FloatArray) {
+    fun onSensorChanged(sensorType: Int?, accuracy: Int, timestampMillis: Long, values: FloatArray) {
         if (sensorType == null || sensorType != Sensor.TYPE_HEART_RATE || values.isEmpty()) {
-            aapsLogger.error(LTag.WEAR, "Invalid SensorEvent $sensorType $accuracy $timestamp ${values.joinToString()}")
+            aapsLogger.error(LTag.WEAR, "Invalid SensorEvent $sensorType $accuracy $timestampMillis ${values.joinToString()}")
             return
         }
-        when (accuracy) {
-            SensorManager.SENSOR_STATUS_NO_CONTACT -> return
-            SensorManager.SENSOR_STATUS_UNRELIABLE -> return
-        }
-        val heartRate = values[0].toInt()
-        sampler = sampler.let { s ->
-            if (s == null || s.age(timestamp) !in 0..120_000 ) {
-                Sampler(timestamp, heartRate)
-            } else if (s.age(timestamp) >= samplingIntervalMillis) {
-                send(s)
-                Sampler(timestamp, heartRate)
-            } else {
-                s.addHeartRate(timestamp, heartRate)
-                s
-            }
-        }
+        val heartRate = values[0].toDouble().takeIf { accuracy in goodAccuracies }
+        sampler.setHeartRate(timestampMillis, heartRate)
     }
 
-    private class Sampler(timestampMillis: Long, heartRate: Int) {
+    private class Sampler(timestampMillis: Long) {
         private var startMillis: Long = timestampMillis
-        private var endMillis: Long = timestampMillis
-        private var valueCount: Int = 1
-        private var valueSum: Int = heartRate
+        private var lastEventMillis: Long = timestampMillis
+        /** Number of heart beats sampled so far. */
+        private var beats: Double = 0.0
+        /** Time we could sample valid values during the current sampling interval. */
+        private var activeMillis: Long = 0
         private val device = (Build.MANUFACTURER ?: "unknown") + " " + (Build.MODEL ?: "unknown")
+        private val lock = ReentrantLock()
 
-        val beatsPerMinute get() = valueSum / valueCount
-        val heartRate get() = EventData.ActionHeartRate(startMillis, endMillis, beatsPerMinute, device)
+        var currentBpm: Double? = null
+            get() = field
+            private set(value) { field = value }
 
-        fun age(timestampMillis: Long) = timestampMillis - startMillis
+        private fun Long.toMinute(): Double = this / 60_000.0
 
-        fun addHeartRate(timestampMillis: Long, heartRate: Int) {
-            startMillis = min(startMillis, timestampMillis)
-            endMillis = max(endMillis, timestampMillis)
-            valueCount++
-            valueSum += heartRate
+        private fun fix(timestampMillis: Long) {
+            currentBpm?.let { bpm ->
+                val elapsed = timestampMillis - lastEventMillis
+                beats += elapsed.toMinute() * bpm
+                activeMillis += elapsed
+            }
+            lastEventMillis = timestampMillis
+        }
+
+        /** Gets the current sampled value and resets the samplers clock to the given timestamp. */
+        fun getAndReset(timestampMillis: Long): EventData.ActionHeartRate? {
+            lock.withLock {
+                fix(timestampMillis)
+                return if (10 * activeMillis > lastEventMillis - startMillis) {
+                    val bpm = beats / activeMillis.toMinute()
+                    EventData.ActionHeartRate(timestampMillis - startMillis, timestampMillis, bpm, device)
+                } else {
+                    null
+                }.also {
+                    startMillis = timestampMillis
+                    lastEventMillis = timestampMillis
+                    beats = 0.0
+                    activeMillis = 0
+                }
+            }
+        }
+
+        fun setHeartRate(timestampMillis: Long, heartRate: Double?) {
+            lock.withLock {
+                if (timestampMillis < lastEventMillis) return
+                fix(timestampMillis)
+                currentBpm = heartRate
+            }
         }
     }
 }

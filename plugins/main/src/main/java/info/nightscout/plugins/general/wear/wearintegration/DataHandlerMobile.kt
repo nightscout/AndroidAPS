@@ -1241,10 +1241,10 @@ class DataHandlerMobile @Inject constructor(
     private fun handleHeartRate(actionHeartRate: EventData.ActionHeartRate) {
         aapsLogger.debug(LTag.WEAR, "Heart rate received $actionHeartRate from ${actionHeartRate.sourceNodeId}")
         val hr = HeartRate(
-            duration = actionHeartRate.samplingEndMillis - actionHeartRate.samplingStartMillis,
-            timestamp = actionHeartRate.samplingEndMillis,
-            beatsPerMinute = actionHeartRate.beatsPerMinute.toDouble(),
+            duration = actionHeartRate.duration,
+            timestamp = actionHeartRate.timestamp,
+            beatsPerMinute = actionHeartRate.beatsPerMinute,
             device = actionHeartRate.device)
-        repository.runTransaction(InsertOrUpdateHeartRateTransaction(hr))
+        repository.runTransaction(InsertOrUpdateHeartRateTransaction(hr)).blockingAwait()
     }
 }

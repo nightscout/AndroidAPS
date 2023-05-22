@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.interaction
 
-import preference.WearPreferenceActivity
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -9,7 +8,7 @@ import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-
+import preference.WearPreferenceActivity
 import javax.inject.Inject
 
 class ConfigurationActivity : WearPreferenceActivity() {

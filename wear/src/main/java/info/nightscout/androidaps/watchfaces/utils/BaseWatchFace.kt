@@ -152,10 +152,15 @@ abstract class BaseWatchFace : WatchFace() {
 
     private fun updateHeartRateListener() {
         if (sp.getBoolean(R.string.key_heart_rate_sampling, false)) {
-            heartRateListener = heartRateListener ?: HeartRateListener(this, aapsLogger)
+            if (heartRateListener == null) {
+                heartRateListener = HeartRateListener(
+                    this, aapsLogger, aapsSchedulers).also { hrl -> disposable += hrl }
+            }
         } else {
-            heartRateListener?.onDestroy()
-            heartRateListener = null
+            heartRateListener?.let { hrl ->
+                disposable.remove(hrl)
+                heartRateListener = null
+            }
         }
     }
 
@@ -240,7 +245,6 @@ abstract class BaseWatchFace : WatchFace() {
 
     override fun onDestroy() {
         disposable.clear()
-        heartRateListener?.onDestroy()
         simpleUi.onDestroy()
         super.onDestroy()
     }
