@@ -92,7 +92,6 @@ class BLEComm @Inject internal constructor(
 
     var isConnected = false // TODO: These may be removed have no function
     var isConnecting = false// TODO: These may be removed have no function
-    private var retryCounter = 0
     private var uartWrite: BluetoothGattCharacteristic? = null
     private var uartRead: BluetoothGattCharacteristic? = null
 
@@ -102,6 +101,7 @@ class BLEComm @Inject internal constructor(
 
     private var mDeviceSN: Long = 0
     private var mCallback: BLECommCallback? = null
+    private var mDevice: BluetoothDevice? = null
 
     fun setCallback(callback: BLECommCallback?) {
         this.mCallback = callback
@@ -144,6 +144,7 @@ class BLEComm @Inject internal constructor(
         mBluetoothAdapter?.bluetoothLeScanner?.stopScan(mScanCallback)
     }
 
+    @Synchronized
     fun connect(from: String, deviceSN: Long): Boolean {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
             ActivityCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_CONNECT) != PackageManager.PERMISSION_GRANTED
@@ -157,10 +158,20 @@ class BLEComm @Inject internal constructor(
             aapsLogger.error("Unable to obtain a BluetoothAdapter.")
             return false
         }
-        mDeviceSN = deviceSN
-        isConnecting = true
-        retryCounter = 0
-        startScan()
+
+        if (mDevice != null && mDeviceSN == deviceSN) {
+            // Skip scanning and directly connect to gatt
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Skipping scan and directly connecting to gatt")
+            isConnecting = true
+            connectGatt(mDevice!!)
+        } else {
+            // Scan for device
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Scanning for device")
+            mDeviceSN = deviceSN
+            isConnecting = true
+            startScan()
+        }
+
         return true
     }
 
@@ -215,6 +226,7 @@ class BLEComm @Inject internal constructor(
             if (manufacturerData?.getDeviceSN() == mDeviceSN) {
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Found our device! deviceSN: " + manufacturerData.getDeviceSN())
                 stopScan()
+                mDevice = result.device
                 connectGatt(result.device)
             }
         }
@@ -376,20 +388,11 @@ class BLEComm @Inject internal constructor(
                                     mBluetoothGatt?.discoverServices()
                                 }, WRITE_DELAY_MILLIS)
         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
-            if (status == 133 && isConnecting && retryCounter < 3) {
-                // Special case for status 133 when we are connecting
-                // We need to close gatt and try to reconnect
-                aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange status 133")
-                close()
-                startScan()
-                retryCounter++
-            } else {
-                close()
-                isConnected = false
-                isConnecting = false
-                mCallback?.onBLEDisconnected()
-                aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnectedS
-            }
+            close()
+            isConnected = false
+            isConnecting = false
+            mCallback?.onBLEDisconnected()
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Device was disconnected " + gatt.device.name) //Device was disconnected
         }
     }
 

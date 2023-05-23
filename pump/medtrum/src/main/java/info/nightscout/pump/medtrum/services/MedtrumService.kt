@@ -329,6 +329,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     // State for connect flow, could be replaced by commandState and steps in connect()
     private inner class AuthState : State() {
+        val retryCounter = 0
 
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached AuthState")
@@ -346,8 +347,15 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 toState(GetDeviceTypeState())
             } else if (mPacket?.failed == true) {
                 // Failure
-                bleComm.disconnect("Failure")
-                toState(IdleState())
+                // retry twice
+                // TODO: Test and see if this can be removed
+                if (retryCounter < 2) {
+                    aapsLogger.error(LTag.PUMPCOMM, "AuthState failed!, retrying")
+                    mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+                } else {
+                    bleComm.disconnect("Failure")
+                    toState(IdleState())
+                }
             }
         }
     }

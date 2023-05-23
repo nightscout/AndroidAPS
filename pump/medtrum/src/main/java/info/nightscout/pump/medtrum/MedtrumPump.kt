@@ -261,7 +261,7 @@ class MedtrumPump @Inject constructor(
                 aapsLogger.debug(LTag.PUMP, "getCurrentHourlyBasalFromMedtrumProfileArray: basal: $basal")
                 break
             }
-            aapsLogger.debug(LTag.PUMP, "getCurrentHourlyBasalFromMedtrumProfileArray: rate: $rate, startMinutes: $startMinutes, endMinutes: $endMinutes")
+            // aapsLogger.debug(LTag.PUMP, "getCurrentHourlyBasalFromMedtrumProfileArray: rate: $rate, startMinutes: $startMinutes, endMinutes: $endMinutes")
         }
         return basal
     }
@@ -275,8 +275,9 @@ class MedtrumPump @Inject constructor(
             LTag.PUMP,
             "handleBasalStatusUpdate: basalType: $basalType basalValue: $basalRate basalSequence: $basalSequence basalPatchId: $basalPatchId basalStartTime: $basalStartTime " + "receivedTime: $receivedTime"
         )
-        if (basalType.isTempBasal()) {
-            // TODO: Is this the correct place to sync temporaryBasalInfo? Note: it will be removed after getting it once, So this would only apply when called in setTempBasalPacket, maybe first check if basal entry already exists and leave this here, then we can also let the onNotification stuff sync basal?
+        val expectedTemporaryBasal = pumpSync.expectedPumpState().temporaryBasal
+        if (basalType.isTempBasal() && expectedTemporaryBasal?.pumpId != basalStartTime) {
+            // Note: temporaryBasalInfo will be removed from temporaryBasalStorage after this call
             val temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(basalStartTime, basalRate)
 
             // If duration is unknown, no way to get it now, set patch lifetime as duration
@@ -293,9 +294,9 @@ class MedtrumPump @Inject constructor(
             )
             aapsLogger.debug(
                 LTag.PUMPCOMM,
-                "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " + "Rate: $basalRate Duration: ${duration}min"
+                "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " + "Rate: $basalRate Duration: ${duration}"
             )
-        } else if (basalType.isSuspendedByPump()) {
+        } else if (basalType.isSuspendedByPump() && expectedTemporaryBasal?.pumpId != basalStartTime) {
             val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
                 timestamp = basalStartTime,
                 rate = 0.0,

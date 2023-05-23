@@ -127,9 +127,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
                 LTag.PUMPCOMM,
                 "Basal type: $basalType, basal sequence: $basalSequence, basal patch id: $basalPatchId, basal time: $basalTime, basal rate: $basalRate, basal delivery: $basalDelivery"
             )
-            // TODO: Check if basal is known, if not add it
-            // medtrumPump.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalTime)
-            // TODO: Handle basal delivery
+            medtrumPump.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalTime)
             offset += 12
         }
 

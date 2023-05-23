@@ -16,10 +16,10 @@ open class MedtrumPacket(protected var injector: HasAndroidInjector) {
 
     companion object {
 
-        private const val RESP_OPCODE_START = 1
-        private const val RESP_OPCODE_END = RESP_OPCODE_START + 1
-        private const val RESP_RESULT_START = 4
-        private const val RESP_RESULT_END = RESP_RESULT_START + 2
+        const val RESP_OPCODE_START = 1
+        const val RESP_OPCODE_END = RESP_OPCODE_START + 1
+        const val RESP_RESULT_START = 4
+        const val RESP_RESULT_END = RESP_RESULT_START + 2
 
         private const val RESP_WAITING = 16384
     }

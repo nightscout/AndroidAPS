@@ -125,7 +125,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                     aapsLogger.debug(
                                         LTag.PUMPCOMM,
                                         "handleBasalStatusUpdate from record: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_SYNC: ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " +
-                                            "Rate: $basalRate Duration: ${duration}min"
+                                            "Rate: $basalRate Duration: ${duration}"
                                     )
                                 } else { // Sync only end ?
                                     pumpSync.syncStopTemporaryBasalWithPumpId(
@@ -136,7 +136,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                     )
                                     aapsLogger.warn(
                                         LTag.PUMPCOMM,
-                                        "handleBasalStatusUpdate from record: EVENT TEMP_END ($basalType) ${dateUtil.dateAndTimeString(basalEndTime)} ($basalEndTime) " + "Rate: $basalRate Duration: ${duration}min"
+                                        "handleBasalStatusUpdate from record: EVENT TEMP_END ($basalType) ${dateUtil.dateAndTimeString(basalEndTime)} ($basalEndTime) " + "Rate: $basalRate Duration: ${duration}"
                                     )
                                 }
                             }
@@ -156,7 +156,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                 aapsLogger.debug(
                                     LTag.PUMPCOMM,
                                     "handleBasalStatusUpdate from record: ${if (newRecord) "**NEW** " else ""}EVENT SUSPEND: ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " +
-                                        "Rate: $basalRate Duration: ${duration}min"
+                                        "Rate: $basalRate Duration: ${duration}"
                                 )
 
                             }
