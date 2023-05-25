@@ -292,14 +292,11 @@ class NSAndroidClientImpl(
                     lastModified = response.body()?.lastModified
                 )
             } else throw UnknownResponseNightscoutException()
-        } else if (response.code() in 400..499) {
-            return@callWrapper CreateUpdateResponse(
-                response = response.code(),
-                identifier = null,
-                errorResponse = response.errorBody()?.string() ?: response.message()
-            )
-        } else
-            throw UnsuccessfullNightscoutException(response.errorBody()?.string() ?: response.message())
+        } else return@callWrapper CreateUpdateResponse(
+            response = response.code(),
+            identifier = null,
+            errorResponse = response.errorBody()?.string() ?: response.message()
+        )
     }
 
     override suspend fun createTreatment(nsTreatment: NSTreatment): CreateUpdateResponse = callWrapper(dispatcher) {

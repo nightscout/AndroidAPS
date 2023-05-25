@@ -188,7 +188,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         smallHeight = screenHeight <= Constants.SMALL_HEIGHT
         val landscape = screenHeight < screenWidth
 
-        skinProvider.activeSkin().preProcessLandscapeOverviewLayout(dm, binding, landscape, rh.gb(info.nightscout.shared.R.bool.isTablet), smallHeight)
+        skinProvider.activeSkin().preProcessLandscapeOverviewLayout(binding, landscape, rh.gb(info.nightscout.shared.R.bool.isTablet), smallHeight)
         binding.nsclientCard.visibility = config.NSCLIENT.toVisibility()
 
         binding.notifications.setHasFixedSize(false)
@@ -841,11 +841,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
                         info.nightscout.core.ui.R.attr.ribbonWarningColor
                     else info.nightscout.core.ui.R.attr.ribbonDefaultColor
-                } else if (it is ProfileSealed.PS) {
-                    info.nightscout.core.ui.R.attr.ribbonDefaultColor
-                } else {
-                    info.nightscout.core.ui.R.attr.ribbonDefaultColor
-                }
+                 } else info.nightscout.core.ui.R.attr.ribbonDefaultColor
             } ?: info.nightscout.core.ui.R.attr.ribbonCriticalColor
 
             val profileTextColor = profile?.let {
@@ -853,11 +849,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     if (it.value.originalPercentage != 100 || it.value.originalTimeshift != 0L || it.value.originalDuration != 0L)
                         info.nightscout.core.ui.R.attr.ribbonTextWarningColor
                     else info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
-                } else if (it is ProfileSealed.PS) {
-                    info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
-                } else {
-                    info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
-                }
+                } else info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
             } ?: info.nightscout.core.ui.R.attr.ribbonTextDefaultColor
             setRibbon(binding.activeProfile, profileTextColor, profileBackgroundColor, profileFunction.getProfileNameWithRemainingTime())
         }
@@ -899,14 +891,12 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         binding.statusLightsLayout.apply {
             cannulaOrPatch.setImageResource(if (isPatchPump) info.nightscout.core.main.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula)
             cannulaOrPatch.contentDescription = rh.gs(if (isPatchPump) R.string.statuslights_patch_pump_age else R.string.statuslights_cannula_age)
-            cannulaOrPatch.scaleX = if (isPatchPump) 1.4f else 2f
-            cannulaOrPatch.scaleY = cannulaOrPatch.scaleX
             insulinAge.visibility = isPatchPump.not().toVisibility()
             batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
             pbAge.visibility = (pump.pumpDescription.isBatteryReplaceable || pump.isBatteryChangeLoggingEnabled()).toVisibility()
             val useBatteryLevel = (pump.model() == PumpType.OMNIPOD_EROS)
                 || (pump.model() != PumpType.ACCU_CHEK_COMBO && pump.model() != PumpType.OMNIPOD_DASH)
-            batteryLevel.visibility = useBatteryLevel.toVisibility()
+            pbLevel.visibility = useBatteryLevel.toVisibility()
             statusLightsLayout.visibility = (sp.getBoolean(R.string.key_show_statuslights, true) || config.NSCLIENT).toVisibility()
         }
         statusLightHandler.updateStatusLights(
@@ -917,7 +907,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.statusLightsLayout.sensorAge,
             null,
             binding.statusLightsLayout.pbAge,
-            binding.statusLightsLayout.batteryLevel
+            binding.statusLightsLayout.pbLevel
         )
     }
 

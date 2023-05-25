@@ -18,7 +18,6 @@
     <string name="objectives_autosens_objective">필요하면 Basal과 비율을 조절하고, auto-sens를 활성화합니다</string>
     <string name="objectives_autosens_gate">섭취한 탄수화물양을 입력하고 1주일동안 낮시간대에 loop를 성공적으로 사용하여 봅니다</string>
     <string name="objectives_smb_objective">낮시간대에 SMB(Super Micro Bolus)같은 추가기능을 활성화해 사용해봅니다</string>
-    <string name="objectives_smb_gate">SMB가 잘 작동하게 하기위해서 wiki를 반드시 읽은 다음 maxIOB 값을 올려보세요! maxIOB=평균 식사 Bolus + 3 x 최대하루 Basal이면 적당한 시작값입니다</string>
     <string name="objectives_auto_objective">자동화 사용</string>
     <string name="objectives_manualenacts">수동 주입</string>
     <string name="accomplished">완료: %1$s</string>

@@ -141,7 +141,6 @@
     <string name="error_in_basal_values">Грешка в базалните стойности</string>
     <string name="error_in_target_values">Грешка в стойностите за цел</string>
     <string name="error_in_isf_values">Грешка в стойностите за чувствителност (ISF)</string>
-    <string name="profile_name_contains_dot">Името на профила съдържа точка.\nТова не се поддържа от НС.\nПрофилът не е качен в НС.</string>
     <string name="invalid_profile_not_accepted">Невалиден профил %1$s не приет от NS</string>
     <string name="view">Изглед</string>
     <string name="errors">Грешки</string>

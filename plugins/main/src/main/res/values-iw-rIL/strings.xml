@@ -141,7 +141,6 @@
     <string name="error_in_basal_values">שגיאה בערכי המינון הבזאלי</string>
     <string name="error_in_target_values">שגיאה בערכי המטרה</string>
     <string name="error_in_isf_values">שגיאה בערכי יחס התיקון</string>
-    <string name="profile_name_contains_dot">שם הפרופיל מכיל נקודות.\nשם כזה אינו נתמך ע\"י Nightscout \n הפרופיל לא הועלה ל-Nightscout.</string>
     <string name="invalid_profile_not_accepted">הפרופיל הבלתי חוקי %1$s מ-Nightscout לא מאושר</string>
     <string name="view">תצוגה</string>
     <string name="errors">שגיאות</string>

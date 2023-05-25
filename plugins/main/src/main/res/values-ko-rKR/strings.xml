@@ -123,7 +123,6 @@
     <string name="save_or_reset_changes_first">우선 현재 변경사항을을 저장하거나 재설정하세요</string>
     <string name="delete_current_profile">현재 프로파일을 삭제 하시겠습니까?</string>
     <string name="units_colon">단위:</string>
-    <string name="profile_name_contains_dot">프로파일명에 점을 포함하고 있습니다.\n이는 NS에서 지원하지 않습니다.\n프로파일이 NS에 업로드되지 않습니다.</string>
     <string name="errors">에러</string>
     <string name="profile_name">프로파일명:</string>
     <string name="a11y_delete_current_profile">현재 프로파일을 삭제 하시겠습니까</string>

@@ -12,6 +12,7 @@
         android:focusable="true">
 
         <TextView
+            android:id="@+id/sensor_label"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:gravity="center_vertical"
@@ -84,6 +85,7 @@
         android:focusable="true">
 
         <TextView
+            android:id="@+id/insulin_label"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:gravity="center_vertical"
@@ -272,7 +274,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/battery_level"
+            android:id="@+id/pb_level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"

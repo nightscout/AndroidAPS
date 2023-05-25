@@ -26,7 +26,8 @@
 
         <activity
             android:name=".activities.TDDStatsActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name="info.nightscout.ui.activities.BolusProgressHelperActivity"
             android:exported="false"

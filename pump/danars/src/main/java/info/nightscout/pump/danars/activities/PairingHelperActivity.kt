@@ -4,10 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.pump.danars.dialogs.PairingProgressDialog
 
-class PairingHelperActivity : DaggerAppCompatActivity() {
+class PairingHelperActivity : TranslatedDaggerAppCompatActivity() {
 
     var dialog: PairingProgressDialog? = null
 

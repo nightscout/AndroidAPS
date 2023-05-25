@@ -5,14 +5,14 @@ import android.view.View
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
-import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.configuration.R
 import info.nightscout.configuration.databinding.ActivityLogsettingBinding
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.rx.interfaces.L
 import info.nightscout.rx.interfaces.LogElement
 import javax.inject.Inject
 
-class LogSettingActivity : DaggerAppCompatActivity() {
+class LogSettingActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var l: L
 

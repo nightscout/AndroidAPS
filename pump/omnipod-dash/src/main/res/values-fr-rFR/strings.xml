@@ -42,7 +42,7 @@
     <string name="profile_set_ok">Paramétrage du profil OK</string>
     <string name="suspend_delivery_is_unconfirmed">Arrêt de la livraison n\'est pas confirmé! Veuillez actualiser manuellement le statut du Pod depuis l\'onglet Omnipod et reprendre la livraison si nécessaire.</string>
     <string name="insulin_delivery_suspended">Injection d\'insuline suspendue</string>
-    <string name="timezone_on_pod_is_different_from_the_timezone">Le fuseau horaire du pod est différent du fuseau horaire du téléphone. Le débit de basal est incorrect. Changez de profil pour le corriger</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">L\'heure du pod est différente de l\'heure du téléphone. Changez de profil pour corriger le débit de basal.</string>
     <string name="failed_to_set_the_new_basal_profile">Échec de définition du nouveau profil de basal. Livraison suspendue</string>
     <string name="setting_basal_profile_might_have_failed">Le paramétrage du profil de basal a peut-être échoué. L\'injection peut être suspendue ! Actualisez manuellement l\'état du Pod à partir de l\'onglet Omnipod et reprenez l\'injection si nécessaire.</string>
     <string name="bolus_delivery_status_uncertain">Statut de l\'injection du bolus incertain. Rafraîchir le statut du pod pour confirmer ou refuser.</string>

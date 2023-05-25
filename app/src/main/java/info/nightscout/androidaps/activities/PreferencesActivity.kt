@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.activities
 
-import android.content.Context
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -10,7 +9,6 @@ import androidx.preference.PreferenceScreen
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityPreferencesBinding
 import info.nightscout.configuration.activities.DaggerAppCompatActivityWithResult
-import info.nightscout.core.ui.locale.LocaleHelper
 
 class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragmentCompat.OnPreferenceStartScreenCallback {
 
@@ -64,10 +62,6 @@ class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragm
         }
         supportFragmentManager.beginTransaction().replace(R.id.frame_layout, fragment, pref.key).addToBackStack(pref.key).commit()
         return true
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean =

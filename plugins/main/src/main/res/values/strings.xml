@@ -156,7 +156,7 @@
     <string name="error_in_basal_values">Error in basal values</string>
     <string name="error_in_target_values">Error in target values</string>
     <string name="error_in_isf_values">Error in ISF values</string>
-    <string name="profile_name_contains_dot">Profile name contains dots.\nThis is not supported by NS.\nProfile is not uploaded to NS.</string>
+    <string name="profile_name_contains_dot">Some of profile names contains dots.\nThis is not supported by NS.\nProfiles will not be uploaded to NS.</string>
     <string name="invalid_profile_not_accepted">Invalid profile %1$s not accepted from NS</string>
     <string name="view">View</string>
     <string name="errors">Errors</string>

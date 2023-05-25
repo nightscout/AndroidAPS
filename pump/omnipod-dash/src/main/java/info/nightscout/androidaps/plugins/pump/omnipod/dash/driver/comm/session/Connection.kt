@@ -56,6 +56,8 @@ class Connection(
 
     private val bluetoothManager: BluetoothManager? = context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?
 
+    private var _connectionWaitCond: ConnectionWaitCondition? = null
+
     @Volatile
     var session: Session? = null
 
@@ -65,6 +67,7 @@ class Connection(
     @Synchronized
     fun connect(connectionWaitCond: ConnectionWaitCondition) {
         aapsLogger.debug("Connecting connectionWaitCond=$connectionWaitCond")
+        _connectionWaitCond = connectionWaitCond
         podState.connectionAttempts++
         podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTING
         val autoConnect = false
@@ -80,6 +83,7 @@ class Connection(
         val before = SystemClock.elapsedRealtime()
         if (waitForConnection(connectionWaitCond) !is Connected) {
             podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.DISCONNECTED
+            _connectionWaitCond = null
             throw FailedToConnectException(podDevice.address)
         }
         val waitedMs = SystemClock.elapsedRealtime() - before
@@ -92,6 +96,7 @@ class Connection(
             connectionWaitCond.timeoutMs = newTimeout
         }
         podState.bluetoothConnectionState = OmnipodDashPodStateManager.BluetoothConnectionState.CONNECTED
+        _connectionWaitCond = null
 
         val discoverer = ServiceDiscoverer(aapsLogger, gatt, bleCommCallbacks, this)
         val discovered = discoverer.discoverServices(connectionWaitCond)
@@ -200,7 +205,14 @@ class Connection(
     // This will be called from a different thread !!!
     override fun onConnectionLost(status: Int) {
         aapsLogger.info(LTag.PUMPBTCOMM, "Lost connection with status: $status")
-        disconnect(false)
+        // Check if waiting for connection, if so, stop waiting
+        _connectionWaitCond?.stopConnection?.let {
+            if (it.count > 0) {
+                _connectionWaitCond?.stopConnection?.countDown()
+            }
+        }
+        // BLE disconnected, so need to close gatt
+        disconnect(true)
     }
 
     companion object {

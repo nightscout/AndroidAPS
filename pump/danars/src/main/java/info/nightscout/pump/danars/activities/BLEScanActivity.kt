@@ -20,7 +20,7 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
-import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.extensions.safeEnable
 import info.nightscout.interfaces.pump.BlePreCheck
@@ -32,7 +32,7 @@ import info.nightscout.shared.sharedPreferences.SP
 import java.util.regex.Pattern
 import javax.inject.Inject
 
-class BLEScanActivity : DaggerAppCompatActivity() {
+class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var sp: SP
     @Inject lateinit var blePreCheck: BlePreCheck

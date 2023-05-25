@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Bundle
@@ -38,9 +39,10 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
 
         binding.apply {
-            viewModel = ViewModelProvider(this@EopatchActivity, viewModelFactory).get(EopatchViewModel::class.java)
+            viewModel = ViewModelProvider(this@EopatchActivity, viewModelFactory)[EopatchViewModel::class.java]
             viewModel?.apply {
                 processIntent(intent)
 
@@ -254,7 +256,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
         mProgressDialog?.let {
             try {
                 mProgressDialog?.dismiss()
-            } catch (e: IllegalStateException) {
+            } catch (ignored: IllegalStateException) {
             }
             mProgressDialog = null
         }
@@ -264,7 +266,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
         mPatchCommCheckDialog?.let {
             try {
                 mPatchCommCheckDialog?.dismiss()
-            } catch (e: IllegalStateException) {
+            } catch (ignored: IllegalStateException) {
             }
             mPatchCommCheckDialog = null
         }

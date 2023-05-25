@@ -3,7 +3,7 @@
     <!-- PumoCommon - Pump Abstract -->
     <string name="pump_operation_not_supported_by_pump_driver">Pompa ir/ar jos valdiklis nepalaiko operacijos.</string>
     <string name="pump_operation_not_yet_supported_by_pump">Pompa dar nepalaiko operacijos.</string>
-    <string name="common_resultok">Gerai</string>
+    <string name="common_resultok">OK</string>
     <string name="pump_serial_number">Pompos serijos Nr.</string>
     <string name="bolus_delivered_so_far">%1$.2f v iš %2$.2f v suleista</string>
     <!-- PumpCommon - Pump Status -->

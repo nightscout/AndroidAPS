@@ -135,7 +135,6 @@
     <string name="error_in_basal_values">基础率数值错误</string>
     <string name="error_in_target_values">目标数值错误</string>
     <string name="error_in_isf_values">ISF数值错误</string>
-    <string name="profile_name_contains_dot">配置文件名称包含点。\n这不受 NS 支持。\n配置未上载到 NS。</string>
     <string name="invalid_profile_not_accepted">不接受来自NS的无效配置文件%1$s</string>
     <string name="view">查看</string>
     <string name="errors">错误</string>
