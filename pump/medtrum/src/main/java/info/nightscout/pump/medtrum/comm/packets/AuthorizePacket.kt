@@ -41,14 +41,6 @@ class AuthorizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
     }
 
     override fun handleResponse(data: ByteArray): Boolean {
-        if (data.size > 3) {
-            val incomingOpCode: Byte = data.copyOfRange(RESP_OPCODE_START, RESP_OPCODE_END).first()
-            if (incomingOpCode == CommandType.SUBSCRIBE.code) {
-                // TODO: Test and see if this can be removed
-                aapsLogger.error(LTag.PUMPCOMM, "handleResponse: Got subscribe response instead of authorize response, handling subscribe packet")
-                return SubscribePacket(injector).handleResponse(data)
-            }
-        }
         val success = super.handleResponse(data)
         if (success) {
             deviceType = data.copyOfRange(RESP_DEVICE_TYPE_START, RESP_DEVICE_TYPE_END).toInt()

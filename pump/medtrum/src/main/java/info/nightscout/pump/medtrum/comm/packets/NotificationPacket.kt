@@ -98,13 +98,10 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             aapsLogger.debug(LTag.PUMPCOMM, "Normal bolus notification received")
             var bolusData = data.copyOfRange(offset, offset + 1).toInt()
             var bolusType = bolusData and 0x7F
-            var bolusCompleted = (bolusData shr 7) and 0x01 // TODO: Check for other flags here :)
+            val bolusCompleted: Boolean = ((bolusData shr 7) and 0x01) != 0 // TODO: Check for other flags here :)
             var bolusDelivered = data.copyOfRange(offset + 1, offset + 3).toInt() * 0.05
-            // TODO Sync bolus flow:
-            // If bolus is known add status
-            // If bolus is not known start read bolus
-            // When bolus is completed, remove bolus from medtrumPump
             aapsLogger.debug(LTag.PUMPCOMM, "Bolus type: $bolusType, bolusData: $bolusData bolus completed: $bolusCompleted, bolus delivered: $bolusDelivered")
+            medtrumPump.handleBolusStatusUpdate(bolusType, bolusCompleted, bolusDelivered)
             offset += 3
         }
 

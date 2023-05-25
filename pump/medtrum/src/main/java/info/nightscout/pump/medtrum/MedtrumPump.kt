@@ -12,6 +12,7 @@ import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
+import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -66,7 +67,15 @@ class MedtrumPump @Inject constructor(
         set(value) {
             _primeProgress.value = value
         }
-
+        
+    private val _lastBasalRate = MutableStateFlow(0.0)
+    val lastBasalRateFlow: StateFlow<Double> = _lastBasalRate
+    var lastBasalRate: Double
+        get() = _lastBasalRate.value
+        set(value) {
+            _lastBasalRate.value = value
+        }
+    
     /** Stuff stored in SP */
     private var _patchSessionToken = 0L
     var patchSessionToken: Long
@@ -136,9 +145,17 @@ class MedtrumPump @Inject constructor(
     var alarmFlags = 0
     var alarmParameter = 0
 
+    // bolus status
+    var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
+    var bolusAmountToBeDelivered = 0.0 // amount to be delivered
+    var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
+    var bolusStopped = false // bolus finished
+    var bolusStopForced = false // bolus forced to stop by user
+    var bolusDone = false // success end
+
     // Last basal status update 
     // TODO: Save this in SP?
-    var lastBasalRate = 0.0
+    
     var lastBasalSequence = 0
     var lastBasalPatchId = 0L
     var lastBasalStartTime = 0L
@@ -268,6 +285,17 @@ class MedtrumPump @Inject constructor(
 
     fun handleBasalStatusUpdate(basalType: BasalType, basalValue: Double, basalSequence: Int, basalPatchId: Long, basalStartTime: Long) {
         handleBasalStatusUpdate(basalType, basalValue, basalSequence, basalPatchId, basalStartTime, dateUtil.now())
+    }
+
+    fun handleBolusStatusUpdate(bolusType: Int, bolusCompleted: Boolean, amountDelivered: Double) {
+        aapsLogger.debug(LTag.PUMP, "handleBolusStatusUpdate: bolusType: $bolusType bolusCompleted: $bolusCompleted amountDelivered: $amountDelivered")
+        bolusProgressLastTimeStamp = dateUtil.now()
+        if (bolusCompleted) {
+            bolusDone = true
+            bolusingTreatment?.insulin = amountDelivered
+        } else {
+            bolusingTreatment?.insulin = amountDelivered     
+        }
     }
 
     fun handleBasalStatusUpdate(basalType: BasalType, basalRate: Double, basalSequence: Int, basalPatchId: Long, basalStartTime: Long, receivedTime: Long) {

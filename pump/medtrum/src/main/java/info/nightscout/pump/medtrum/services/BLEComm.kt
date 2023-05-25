@@ -90,8 +90,8 @@ class BLEComm @Inject internal constructor(
     private val mBluetoothAdapter: BluetoothAdapter? get() = (context.getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager?)?.adapter
     private var mBluetoothGatt: BluetoothGatt? = null
 
-    var isConnected = false // TODO: These may be removed have no function
-    var isConnecting = false// TODO: These may be removed have no function
+    private var isConnected = false // Only to track internal ble state
+    private var isConnecting = false // Only to track internal ble state
     private var uartWrite: BluetoothGattCharacteristic? = null
     private var uartRead: BluetoothGattCharacteristic? = null
 
@@ -126,14 +126,12 @@ class BLEComm @Inject internal constructor(
 
 
         isConnected = false
-        // TODO: Maybe replace this  by (or add) a isScanning parameter?
         isConnecting = true
 
         // Find our Medtrum Device!
         filters.add(
             ScanFilter.Builder().setDeviceName("MT").build()
         )
-        // TODO Check if we need to add MAC for reconnects? Not sure if otherwise we can find the device
         mBluetoothAdapter?.bluetoothLeScanner?.startScan(filters, settings, mScanCallback)
         return true
     }
@@ -159,6 +157,9 @@ class BLEComm @Inject internal constructor(
             return false
         }
 
+        // TODO: THIS IS A WORKAROUND TEST
+        mWritePackets = WriteCommandPackets()
+
         if (mDevice != null && mDeviceSN == deviceSN) {
             // Skip scanning and directly connect to gatt
             aapsLogger.debug(LTag.PUMPBTCOMM, "Skipping scan and directly connecting to gatt")
@@ -178,7 +179,7 @@ class BLEComm @Inject internal constructor(
     /** Connect flow: 2. When device is found this is called by onScanResult() */
     @SuppressLint("MissingPermission")
     @Synchronized
-    fun connectGatt(device: BluetoothDevice) {
+    private fun connectGatt(device: BluetoothDevice) {
         mBluetoothGatt =
             device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE)
     }
@@ -196,12 +197,14 @@ class BLEComm @Inject internal constructor(
         if (isConnecting) {
             stopScan()
         }
-        mBluetoothGatt?.disconnect()
-    }
-
-    @Synchronized
-    fun stopConnecting() {
-        isConnecting = false
+        if (isConnected) {
+            mBluetoothGatt?.disconnect()
+        } else {
+            close()
+            isConnected = false
+            isConnecting = false
+            mCallback?.onBLEDisconnected()
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -347,8 +350,6 @@ class BLEComm @Inject internal constructor(
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Notifications enabled!")
                 /** Connect flow: 6. Connected */
                 mCallback?.onBLEConnected()
-                isConnected = true
-                isConnecting = false
             }
         }
     }
@@ -384,9 +385,9 @@ class BLEComm @Inject internal constructor(
     private fun onConnectionStateChangeSynchronized(gatt: BluetoothGatt, status: Int, newState: Int) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "onConnectionStateChange newState: " + newState + " status: " + status)
         if (newState == BluetoothProfile.STATE_CONNECTED) {
-            handler.postDelayed({
-                                    mBluetoothGatt?.discoverServices()
-                                }, WRITE_DELAY_MILLIS)
+            isConnected = true
+            isConnecting = false
+            mBluetoothGatt?.discoverServices()
         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
             close()
             isConnected = false

@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
+import android.os.SystemClock
 import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -14,6 +15,7 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.medtrum.MedtrumPlugin
@@ -42,6 +44,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
+import kotlin.math.round
 
 class MedtrumService : DaggerService(), BLECommCallback {
 
@@ -130,12 +133,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun stopConnecting() {
-        // TODO proper way for this might need send commands etc
-        bleComm.stopConnecting()
+        bleComm.disconnect("stopConnecting")
     }
 
     fun disconnect(from: String) {
-        // TODO proper way for this might need send commands etc
         bleComm.disconnect(from)
     }
 
@@ -155,14 +156,58 @@ class MedtrumService : DaggerService(), BLECommCallback {
         }
     }
 
-    fun bolus(insulin: Double, carbs: Int, carbTime: Long, t: EventOverviewBolusProgress.Treatment): Boolean {
+    fun setBolus(insulin: Double, t: EventOverviewBolusProgress.Treatment): Boolean {
         if (!isConnected) return false
-        // TODO
-        return false
+        val result = sendPacketAndGetResponse(SetBolusPacket(injector, insulin))
+
+        medtrumPump.bolusDone = false
+        medtrumPump.bolusingTreatment = t
+        medtrumPump.bolusAmountToBeDelivered = insulin
+        medtrumPump.bolusStopped = false
+        medtrumPump.bolusStopForced = false
+        medtrumPump.bolusProgressLastTimeStamp = dateUtil.now()
+
+        val bolusStart = System.currentTimeMillis()
+        
+        val bolusingEvent = EventOverviewBolusProgress
+        while (medtrumPump.bolusStopped == false && result == true && medtrumPump.bolusDone == false) {
+            SystemClock.sleep(100)
+            if (System.currentTimeMillis() - medtrumPump.bolusProgressLastTimeStamp > T.secs(15).msecs()) {
+                medtrumPump.bolusStopped = true
+                medtrumPump.bolusStopForced = true
+                aapsLogger.debug(LTag.PUMPCOMM, "Communication stopped")
+                bleComm.disconnect("Communication stopped")
+            } else {
+                bolusingEvent.t = medtrumPump.bolusingTreatment
+                bolusingEvent.status = rh.gs(info.nightscout.pump.common.R.string.bolus_delivered_so_far, medtrumPump.bolusingTreatment?.insulin, medtrumPump.bolusAmountToBeDelivered)
+                bolusingEvent.percent = round((medtrumPump.bolusingTreatment?.insulin?.div(medtrumPump.bolusAmountToBeDelivered) ?: 0.0) * 100).toInt() - 1
+                rxBus.send(bolusingEvent)
+            }
+        }
+        
+        bolusingEvent.t = medtrumPump.bolusingTreatment
+        bolusingEvent.percent = 99
+        medtrumPump.bolusingTreatment = null
+
+        val bolusDurationInMSec = (insulin * 60 * 1000)
+        val expectedEnd = bolusStart + bolusDurationInMSec + 2000
+        while (System.currentTimeMillis() < expectedEnd) {
+            SystemClock.sleep(1000)
+        }
+
+        // Do not call update status directly, reconnection may be needed
+        commandQueue.readStatus(rh.gs(info.nightscout.pump.medtrum.R.string.gettingbolusstatus), object : Callback() {
+            override fun run() {
+                rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingbolusstatus)))
+                bolusingEvent.percent = 100
+            }
+        }) 
+        return result
     }
 
-    fun bolusStop() {
-        // TODO
+    fun stopBolus() {
+        var result = sendPacketAndGetResponse(CancelBolusPacket(injector))
+        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop: result: $result")
     }
 
     fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {
@@ -190,12 +235,15 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun updateBasalsInPump(profile: Profile): Boolean {
-        var result = false
-        val packet = medtrumPump.buildMedtrumProfileArray(profile)?.let { SetBasalProfilePacket(injector, it) }
-        result = packet?.let { sendPacketAndGetResponse(it) } == true
-
-        // TODO: We might want to get rid of this and cancel the TBR before we set the basal profile
+        var result = true
         // Update basal affects the TBR records (the pump will cancel the TBR, set our basal profile, and resume the TBR in a new record)
+        // Cancel any TBR in progress
+        if (medtrumPump.tempBasalInProgress) {
+            result = sendPacketAndGetResponse(CancelTempBasalPacket(injector))
+        }
+        val packet = medtrumPump.buildMedtrumProfileArray(profile)?.let { SetBasalProfilePacket(injector, it) }
+        if (result) result = packet?.let { sendPacketAndGetResponse(it) } == true
+
         // Get history records, this will update the pump state and add changes in TBR to AAPS history
         if (result) result = syncRecords()
 
@@ -211,7 +259,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
     private fun syncRecords(): Boolean {
         aapsLogger.debug(LTag.PUMP, "syncRecords: called!, syncedSequenceNumber: ${medtrumPump.syncedSequenceNumber}, currentSequenceNumber: ${medtrumPump.currentSequenceNumber}")
         var result = false
-        // TODO: Check if we need to sync older records as well
         // Note: medtrum app fetches all records when they sync?
         for (sequence in medtrumPump.syncedSequenceNumber..medtrumPump.currentSequenceNumber) {
             result = sendPacketAndGetResponse(GetRecordPacket(injector, sequence))

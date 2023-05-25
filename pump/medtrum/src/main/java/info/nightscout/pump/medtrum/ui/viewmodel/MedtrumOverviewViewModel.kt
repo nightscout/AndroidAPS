@@ -10,6 +10,7 @@ import info.nightscout.pump.medtrum.ui.event.UIEvent
 import info.nightscout.pump.medtrum.ui.viewmodel.BaseViewModel
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.pump.medtrum.MedtrumPump
+import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.ConnectionState
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.rx.AapsSchedulers
@@ -17,6 +18,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.CoroutineScope
@@ -27,6 +29,7 @@ import javax.inject.Inject
 
 class MedtrumOverviewViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
+    private val rh: ResourceHelper,
     private val rxBus: RxBus,
     private val aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
@@ -47,6 +50,10 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val _isPatchActivated = SingleLiveEvent<Boolean>()
     val isPatchActivated: LiveData<Boolean>
         get() = _isPatchActivated
+
+    private val _runningBasalRate = SingleLiveEvent<String>()
+    val runningBasalRate: LiveData<String>
+        get() = _runningBasalRate
 
     init {
         scope.launch {
@@ -75,6 +82,12 @@ class MedtrumOverviewViewModel @Inject constructor(
                 } else {
                     _isPatchActivated.postValue(false)
                 }
+            }
+        }
+        scope.launch {
+            medtrumPump.lastBasalRateFlow.collect { rate ->
+                aapsLogger.debug(LTag.PUMP, "MedtrumViewModel runningBasalRateFlow: $rate")
+                _runningBasalRate.postValue(String.format(rh.gs(R.string.current_basal_rate), rate))
             }
         }
     }

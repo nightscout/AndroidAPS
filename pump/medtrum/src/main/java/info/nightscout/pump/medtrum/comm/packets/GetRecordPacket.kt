@@ -1,11 +1,13 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
+import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.CommandType.GET_RECORD
 import info.nightscout.pump.medtrum.comm.enums.BasalType
+import info.nightscout.pump.medtrum.comm.enums.BolusType
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.pump.medtrum.extension.toLong
@@ -20,6 +22,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
     @Inject lateinit var medtrumPump: MedtrumPump
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var temporaryBasalStorage: TemporaryBasalStorage
+    @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var dateUtil: DateUtil
 
     companion object {
@@ -85,6 +88,51 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                 when (recordType) {
                     BOLUS_RECORD, BOLUS_RECORD_ALT -> {
                         aapsLogger.debug(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BOLUS_RECORD")
+                        val typeAndWizard = data.copyOfRange(RESP_RECORD_DATA_START, RESP_RECORD_DATA_START + 1).toInt()
+                        val bolusCause = data.copyOfRange(RESP_RECORD_DATA_START + 1, RESP_RECORD_DATA_START + 2).toInt()
+                        val unknown = data.copyOfRange(RESP_RECORD_DATA_START + 2, RESP_RECORD_DATA_START + 4).toInt()
+                        val bolusStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_RECORD_DATA_START + 4, RESP_RECORD_DATA_START + 8).toLong())
+                        val bolusNormalAmount = data.copyOfRange(RESP_RECORD_DATA_START + 8, RESP_RECORD_DATA_START + 10).toInt() * 0.05
+                        val bolusNormalDelivered = data.copyOfRange(RESP_RECORD_DATA_START + 10, RESP_RECORD_DATA_START + 12).toInt() * 0.05
+                        val bolusExtendedAmount = data.copyOfRange(RESP_RECORD_DATA_START + 12, RESP_RECORD_DATA_START + 14).toInt() * 0.05
+                        val bolusExtendedDuration = data.copyOfRange(RESP_RECORD_DATA_START + 14, RESP_RECORD_DATA_START + 16).toInt()
+                        val bolusExtendedDelivered = data.copyOfRange(RESP_RECORD_DATA_START + 16, RESP_RECORD_DATA_START + 18).toInt() * 0.05
+                        val bolusCarb = data.copyOfRange(RESP_RECORD_DATA_START + 18, RESP_RECORD_DATA_START + 20).toInt()
+                        val bolusGlucose = data.copyOfRange(RESP_RECORD_DATA_START + 20, RESP_RECORD_DATA_START + 22).toInt()
+                        val bolusIOB = data.copyOfRange(RESP_RECORD_DATA_START + 22, RESP_RECORD_DATA_START + 24).toInt()
+                        val unkown1 = data.copyOfRange(RESP_RECORD_DATA_START + 24, RESP_RECORD_DATA_START + 26).toInt()
+                        val unkown2 = data.copyOfRange(RESP_RECORD_DATA_START + 26, RESP_RECORD_DATA_START + 28).toInt()
+                        val bolusType = enumValues<BolusType>()[typeAndWizard and 0x0F]
+                        val bolusWizard = (typeAndWizard and 0xF0) != 0
+                        aapsLogger.debug(
+                            LTag.PUMPCOMM,
+                            "GetRecordPacket HandleResponse: BOLUS_RECORD: typeAndWizard: $typeAndWizard, bolusCause: $bolusCause, unknown: $unknown, bolusStartTime: $bolusStartTime, " + "bolusNormalAmount: $bolusNormalAmount, bolusNormalDelivered: $bolusNormalDelivered, bolusExtendedAmount: $bolusExtendedAmount, bolusExtendedDuration: $bolusExtendedDuration, " + "bolusExtendedDelivered: $bolusExtendedDelivered, bolusCarb: $bolusCarb, bolusGlucose: $bolusGlucose, bolusIOB: $bolusIOB, unkown1: $unkown1, unkown2: $unkown2, " + "bolusType: $bolusType, bolusWizard: $bolusWizard"
+                        )
+                        if (bolusType == BolusType.NORMAL) {
+                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStartTime, bolusNormalDelivered)
+                            val newRecord = pumpSync.syncBolusWithPumpId(
+                                timestamp = bolusStartTime,
+                                amount = bolusNormalDelivered,
+                                type = detailedBolusInfo?.bolusType,
+                                pumpId = bolusStartTime,
+                                pumpType = medtrumPump.pumpType,
+                                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                            )
+                            aapsLogger.debug(
+                                LTag.PUMPCOMM,
+                                "from record: ${if (newRecord) "**NEW** " else ""}EVENT BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U "
+                            )
+                            if (!newRecord && detailedBolusInfo != null) {
+                                // detailedInfo can be from another similar record. Reinsert
+                                detailedBolusInfoStorage.add(detailedBolusInfo)
+                            }
+                        } else {
+                            aapsLogger.error(
+                                LTag.PUMPCOMM,
+                                "from record: EVENT BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) " + "Bolus type: $bolusType not supported"
+                            )
+                        }
+
                     }
 
                     BASAL_RECORD, BASAL_RECORD_ALT -> {

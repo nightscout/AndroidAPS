@@ -8,12 +8,15 @@ import android.os.IBinder
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.interfaces.constraints.Constraint
+import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpPluginBase
@@ -52,6 +55,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlin.math.abs
 import kotlin.math.round
 
 @Singleton class MedtrumPlugin @Inject constructor(
@@ -59,6 +63,7 @@ import kotlin.math.round
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     commandQueue: CommandQueue,
+    private val constraintChecker: Constraints,
     private val sp: SP,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
@@ -69,6 +74,7 @@ import kotlin.math.round
     private val uiInteraction: UiInteraction,
     private val profileFunction: ProfileFunction,
     private val pumpSync: PumpSync,
+    private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val temporaryBasalStorage: TemporaryBasalStorage
 ) : PumpPluginBase(
     PluginDescription()
@@ -204,7 +210,7 @@ import kotlin.math.round
     }
 
     override fun lastDataTime(): Long {
-        return medtrumPump.lastTimeReceivedFromPump * 1000L
+        return medtrumPump.lastTimeReceivedFromPump
     }
 
     override val baseBasalRate: Double
@@ -216,14 +222,46 @@ import kotlin.math.round
     override val batteryLevel: Int
         get() = 0 // TODO
 
+    @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
-        return PumpEnactResult(injector) // TODO
+        aapsLogger.debug(LTag.PUMP, "deliverTreatment: " + detailedBolusInfo.insulin + "U")
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
+        detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
+        return if (detailedBolusInfo.insulin > 0 && detailedBolusInfo.carbs == 0.0) {
+            aapsLogger.debug(LTag.PUMP, "deliverTreatment: Delivering bolus: " + detailedBolusInfo.insulin + "U")
+            detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
+            val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
+            val connectionOK = medtrumService?.setBolus(detailedBolusInfo.insulin, t) ?: false
+            val result = PumpEnactResult(injector)
+            result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
+            result.bolusDelivered = t.insulin
+            if (!result.success) {
+                // Todo error code?
+                result.comment = "error"
+            } else {
+                result.comment = "ok"
+            }
+            aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Success: ${result.success} Asked: ${detailedBolusInfo.insulin} Delivered: ${result.bolusDelivered}")
+            result
+        } else {
+            aapsLogger.debug(LTag.PUMP, "deliverTreatment: Invalid input")
+            val result = PumpEnactResult(injector)
+            result.success = false
+            result.bolusDelivered = 0.0
+            result.comment = rh.gs(info.nightscout.core.ui.R.string.invalid_input)
+            aapsLogger.error("deliverTreatment: Invalid input")
+            result
+        }
     }
 
     override fun stopBolusDelivering() {
-        // TODO
+        if (!isInitialized()) return
+
+        aapsLogger.info(LTag.PUMP, "stopBolusDelivering")
+        medtrumService?.stopBolus()
     }
 
+    @Synchronized
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult {
         if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
 

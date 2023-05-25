@@ -12,12 +12,14 @@
     <string name="key_synced_sequence_number" translatable="false">synced_sequence_number</string>
 
     <string name="medtrum">Medtrum</string>
-    <string name="medtrum_pump_shortname">MEDTRUM</string>
+    <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Medtrum Nano</string>
     <string name="medtrumpump_settings">Medtrum pump settings</string>
     
     <!-- overview fragment -->
     <string name="medtrum_ble_status">BLE Status</string>
+    <string name="current_basal_label">Active basal</string>
+    <string name="current_basal_rate"> %.2f U/h</string>
     <string name="string_new_patch">Start new patch</string>
     <string name="string_stop_patch">Stop patch</string>
 
@@ -39,6 +41,9 @@
     <!-- settings-->
     <string name="snInput_title">SN</string>
     <string name="snInput_summary">Serial number pump base</string>
+
+    <string name="waitingforestimatedbolusend">Waiting for bolus end. Remaining %1$d sec.</string>
+    <string name="gettingbolusstatus">Getting bolus status</string>
 
 
 </resources>
