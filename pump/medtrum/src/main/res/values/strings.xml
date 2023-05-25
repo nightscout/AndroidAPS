@@ -18,7 +18,11 @@
     
     <!-- overview fragment -->
     <string name="medtrum_ble_status">BLE Status</string>
-    <string name="current_basal_label">Active basal</string>
+    <string name="pump_state_label">Pump state</string>
+    <string name="reservoir_label"> Reservoir</string>
+    <string name="reservoir_level"> %.2f U</string>
+    <string name="current_basal_type_label">Basal type</string>
+    <string name="current_basal_label">Basal rate</string>
     <string name="current_basal_rate"> %.2f U/h</string>
     <string name="string_new_patch">Start new patch</string>
     <string name="string_stop_patch">Stop patch</string>

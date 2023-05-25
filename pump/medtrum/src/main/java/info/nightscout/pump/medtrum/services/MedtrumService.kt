@@ -191,7 +191,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         val bolusDurationInMSec = (insulin * 60 * 1000)
         val expectedEnd = bolusStart + bolusDurationInMSec + 2000
-        while (System.currentTimeMillis() < expectedEnd) {
+        while (System.currentTimeMillis() < expectedEnd && result == true) {
             SystemClock.sleep(1000)
         }
 

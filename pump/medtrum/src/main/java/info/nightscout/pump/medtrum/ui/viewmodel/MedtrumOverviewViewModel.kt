@@ -51,9 +51,21 @@ class MedtrumOverviewViewModel @Inject constructor(
     val isPatchActivated: LiveData<Boolean>
         get() = _isPatchActivated
 
+    private val _pumpState = SingleLiveEvent<String>()
+    val pumpState: LiveData<String>
+        get() = _pumpState
+
+    private val _basalType = SingleLiveEvent<String>()
+    val basalType: LiveData<String>
+        get() = _basalType
+
     private val _runningBasalRate = SingleLiveEvent<String>()
     val runningBasalRate: LiveData<String>
         get() = _runningBasalRate
+
+    private val _reservoir = SingleLiveEvent<String>()
+    val reservoir: LiveData<String>
+        get() = _reservoir
 
     init {
         scope.launch {
@@ -88,6 +100,24 @@ class MedtrumOverviewViewModel @Inject constructor(
             medtrumPump.lastBasalRateFlow.collect { rate ->
                 aapsLogger.debug(LTag.PUMP, "MedtrumViewModel runningBasalRateFlow: $rate")
                 _runningBasalRate.postValue(String.format(rh.gs(R.string.current_basal_rate), rate))
+            }
+        }
+        scope.launch {
+            medtrumPump.pumpStateFlow.collect { state ->
+                aapsLogger.debug(LTag.PUMP, "MedtrumViewModel pumpStateFlow: $state")
+                _pumpState.postValue(state.toString())
+            }
+        }
+        scope.launch {
+            medtrumPump.reservoirFlow.collect { reservoir ->
+                aapsLogger.debug(LTag.PUMP, "MedtrumViewModel reservoirFlow: $reservoir")
+                _reservoir.postValue(String.format(rh.gs(R.string.reservoir_level), reservoir))
+            }
+        }
+        scope.launch {
+            medtrumPump.lastBasalTypeFlow.collect { basalType ->
+                aapsLogger.debug(LTag.PUMP, "MedtrumViewModel basalTypeFlow: $basalType")
+                _basalType.postValue(basalType.toString())
             }
         }
     }

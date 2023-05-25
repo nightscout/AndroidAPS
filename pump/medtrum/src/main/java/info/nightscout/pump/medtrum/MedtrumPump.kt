@@ -75,6 +75,14 @@ class MedtrumPump @Inject constructor(
         set(value) {
             _lastBasalRate.value = value
         }
+
+    private val _reservoir = MutableStateFlow(0.0)
+    val reservoirFlow: StateFlow<Double> = _reservoir
+    var reservoir: Double
+        get() = _reservoir.value
+        set(value) {
+            _reservoir.value = value
+        }
     
     /** Stuff stored in SP */
     private var _patchSessionToken = 0L
@@ -118,12 +126,13 @@ class MedtrumPump @Inject constructor(
             sp.putString(R.string.key_actual_basal_profile, encodedString)
         }
 
-    private var _lastBasalType: BasalType = BasalType.NONE
+    private var _lastBasalType: MutableStateFlow<BasalType> = MutableStateFlow(BasalType.NONE)
+    val lastBasalTypeFlow: StateFlow<BasalType> = _lastBasalType
     var lastBasalType: BasalType
-        get() = _lastBasalType
+        get() = _lastBasalType.value
         set(value) {
-            _lastBasalType = value
-            sp.putInt(R.string.key_last_basal_type, value.ordinal)
+            _lastBasalType.value = value
+            sp.putInt(R.string.key_last_basal_type, value.ordinal) // TODO is this still needed in SP?
         }
 
     private var _pumpSN = 0L
@@ -137,7 +146,6 @@ class MedtrumPump @Inject constructor(
     var patchStartTime = 0L // Time in seconds!
     var patchAge = 0L // Time in seconds!
 
-    var reservoir = 0.0
 
     var batteryVoltage_A = 0.0
     var batteryVoltage_B = 0.0
@@ -187,7 +195,7 @@ class MedtrumPump @Inject constructor(
         _currentSequenceNumber = sp.getInt(R.string.key_current_sequence_number, 0)
         _patchId = sp.getLong(R.string.key_patch_id, 0L)
         _syncedSequenceNumber = sp.getInt(R.string.key_synced_sequence_number, 0)
-        _lastBasalType = enumValues<BasalType>()[sp.getInt(R.string.key_last_basal_type, 0)]
+        lastBasalType = enumValues<BasalType>()[sp.getInt(R.string.key_last_basal_type, 0)] // TODO: is this nice?
 
         val encodedString = sp.getString(R.string.key_actual_basal_profile, "0")
         try {
@@ -328,6 +336,21 @@ class MedtrumPump @Inject constructor(
             val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
                 timestamp = basalStartTime,
                 rate = 0.0,
+                duration = T.mins(4800).msecs(), // TODO MAGIC NUMBER
+                isAbsolute = true,
+                type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
+                pumpId = basalStartTime,
+                pumpType = pumpType,
+                pumpSerial = pumpSN.toString(radix = 16)
+            )
+            aapsLogger.debug(
+                LTag.PUMPCOMM,
+                "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_END ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime)"
+            )
+        } else if (basalType == BasalType.NONE && expectedTemporaryBasal?.pumpId != basalStartTime) { // Also some sort of suspend or unkown by pump
+            val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
+                timestamp = basalStartTime,
+                rate = basalRate,
                 duration = T.mins(4800).msecs(), // TODO MAGIC NUMBER
                 isAbsolute = true,
                 type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
