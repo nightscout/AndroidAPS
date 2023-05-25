@@ -96,7 +96,8 @@ class BLEComm @Inject internal constructor(
     private var uartRead: BluetoothGattCharacteristic? = null
 
     // Read and write buffers
-    private var mWritePackets = WriteCommandPackets()
+    private var mWritePackets: WriteCommandPackets? = null
+    private var mWriteSequenceNumber: Int = 0
     private var mReadPacket: ReadDataPacket? = null
 
     private var mDeviceSN: Long = 0
@@ -157,9 +158,6 @@ class BLEComm @Inject internal constructor(
             return false
         }
 
-        // TODO: THIS IS A WORKAROUND TEST
-        mWritePackets = WriteCommandPackets()
-
         if (mDevice != null && mDeviceSN == deviceSN) {
             // Skip scanning and directly connect to gatt
             aapsLogger.debug(LTag.PUMPBTCOMM, "Skipping scan and directly connecting to gatt")
@@ -180,6 +178,8 @@ class BLEComm @Inject internal constructor(
     @SuppressLint("MissingPermission")
     @Synchronized
     private fun connectGatt(device: BluetoothDevice) {
+        // Reset sequence counter
+        mWriteSequenceNumber = 0
         mBluetoothGatt =
             device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE)
     }
@@ -280,10 +280,12 @@ class BLEComm @Inject internal constructor(
 
             if (status == BluetoothGatt.GATT_SUCCESS) {
                 // Check if we need to finish our command!
-                synchronized(mWritePackets) {
-                    val value: ByteArray? = mWritePackets.getNextPacket()
-                    if (value != null) {
-                        writeCharacteristic(uartWriteBTGattChar, value)
+                mWritePackets?.let {
+                    synchronized(it) {
+                        val value: ByteArray? = mWritePackets?.getNextPacket()
+                        if (value != null) {
+                            writeCharacteristic(uartWriteBTGattChar, value)
+                        }
                     }
                 }
             } else {
@@ -397,21 +399,21 @@ class BLEComm @Inject internal constructor(
         }
     }
 
+    @Synchronized
     fun sendMessage(message: ByteArray) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage message = " + Arrays.toString(message))
-        if (!mWritePackets.allPacketsConsumed()) {
+        if (mWritePackets?.allPacketsConsumed() == false) {
             aapsLogger.error(LTag.PUMPBTCOMM, "sendMessage not all packets consumed!! unable to sent message!")
             return
         }
-        synchronized(mWritePackets) {
-            mWritePackets.setData(message)
-            val value: ByteArray? = mWritePackets.getNextPacket()
-            if (value != null) {
-                writeCharacteristic(uartWriteBTGattChar, value)
-            } else {
-                aapsLogger.error(LTag.PUMPBTCOMM, "sendMessage error in writePacket!")
-                mCallback?.onSendMessageError("error in writePacket!")
-            }
+        mWritePackets = WriteCommandPackets(message, mWriteSequenceNumber)
+        mWriteSequenceNumber = (mWriteSequenceNumber + 1) % 256
+        val value: ByteArray? = mWritePackets?.getNextPacket()
+        if (value != null) {
+            writeCharacteristic(uartWriteBTGattChar, value)
+        } else {
+            aapsLogger.error(LTag.PUMPBTCOMM, "sendMessage error in writePacket!")
+            mCallback?.onSendMessageError("error in writePacket!")
         }
     }
 
@@ -424,18 +426,6 @@ class BLEComm @Inject internal constructor(
             return null
         }
         return mBluetoothGatt?.getService(UUID.fromString(SERVICE_UUID))
-    }
-
-    private fun getGattCharacteristic(uuid: UUID): BluetoothGattCharacteristic? {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "getGattCharacteristic $uuid")
-        val service = getGattService()
-        if (mBluetoothAdapter == null || mBluetoothGatt == null || service == null) {
-            aapsLogger.error("BluetoothAdapter not initialized_ERROR")
-            isConnecting = false
-            isConnected = false
-            return null
-        }
-        return service.getCharacteristic(uuid)
     }
 
     @Suppress("DEPRECATION")
