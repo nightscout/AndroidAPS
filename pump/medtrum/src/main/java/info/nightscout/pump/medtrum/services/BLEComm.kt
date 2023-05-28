@@ -195,14 +195,15 @@ class BLEComm @Inject internal constructor(
         }
         aapsLogger.debug(LTag.PUMPBTCOMM, "disconnect from: $from")
         if (isConnecting) {
+            isConnecting = false
             stopScan()
-        }
+            SystemClock.sleep(100)
+        }        
         if (isConnected) {
             mBluetoothGatt?.disconnect()
         } else {
             close()
             isConnected = false
-            isConnecting = false
             mCallback?.onBLEDisconnected()
         }
     }
@@ -391,6 +392,13 @@ class BLEComm @Inject internal constructor(
             isConnecting = false
             mBluetoothGatt?.discoverServices()
         } else if (newState == BluetoothProfile.STATE_DISCONNECTED) {
+            if (isConnecting) {
+                // When we are disconnected during connecting, we reset the device address to force a new scan
+                aapsLogger.warn(LTag.PUMPBTCOMM, "Disconnected while connecting! Reset device address")
+                mDevice = null
+                // Wait a bit before retrying
+                SystemClock.sleep(2000)                
+            }
             close()
             isConnected = false
             isConnecting = false
