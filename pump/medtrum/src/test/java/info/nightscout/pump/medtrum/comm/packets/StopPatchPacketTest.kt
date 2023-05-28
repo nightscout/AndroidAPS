@@ -41,7 +41,7 @@ class StopPatchPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        val expectedPatchId = 146
+        val expectedPatchId = 146L
         val expectedStopSequence = 23
         assertEquals(expectedPatchId, medtrumPump.lastStopPatchId)
         assertEquals(expectedStopSequence, medtrumPump.lastStopSequence)

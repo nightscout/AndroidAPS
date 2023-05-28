@@ -4,6 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.comm.enums.AlarmSetting
+import info.nightscout.pump.medtrum.comm.enums.BasalType
 import org.junit.jupiter.api.Test
 import org.junit.Assert.*
 
@@ -56,12 +57,12 @@ class ActivatePacketTest : MedtrumTestBase() {
 
         // Expected values
         val expectedPatchId = 41L
-        val expectedTime = 1675605528L
-        val exptectedBasalType = 1
+        val expectedTime = 1675605528000L
+        val exptectedBasalType = BasalType.STANDARD
         val expectedBasalRate = 1.5
         val expectedBasalSequence = 1
-        val expectedBasalPatchId = 41
-        val expectedBasalStart = 1675605528L
+        val expectedBasalPatchId = 41L
+        val expectedBasalStart = 1675605528000L
 
         assertEquals(true, result)
         assertEquals(expectedPatchId, medtrumPump.patchId)

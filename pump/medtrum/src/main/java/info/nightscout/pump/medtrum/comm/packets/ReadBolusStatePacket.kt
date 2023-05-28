@@ -4,6 +4,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.comm.enums.CommandType.READ_BOLUS_STATE
 
 class ReadBolusStatePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
+    // UNUSED
+    // Bolus sync is currently done by getting the records and syncing then with AAPS pumpSync there
 
     var bolusData: ByteArray = byteArrayOf()
 
@@ -20,7 +22,7 @@ class ReadBolusStatePacket(injector: HasAndroidInjector) : MedtrumPacket(injecto
     override fun handleResponse(data: ByteArray): Boolean {
         val success = super.handleResponse(data)
         if (success) {
-            // TODO: Handle bolus data here
+            // UNUSED
             bolusData = data.copyOfRange(RESP_BOLUS_DATA_START, data.size)
         }
 

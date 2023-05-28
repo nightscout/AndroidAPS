@@ -3,6 +3,7 @@ package info.nightscout.pump.medtrum.comm.packets
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
+import info.nightscout.pump.medtrum.comm.enums.BasalType
 import org.junit.jupiter.api.Test
 import org.junit.Assert.*
 
@@ -45,11 +46,11 @@ class SetTempBasalPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        val expectedBasalType = 6
+        val expectedBasalType = BasalType.ABSOLUTE_TEMP
         val expectedBasalRate = 1.25
         val expectedBasalSequence = 2
-        val expectedStartTime = 1679575112L
-        val expectedPatchId = 146
+        val expectedStartTime = 1679575112000L
+        val expectedPatchId = 146L
 
         assertTrue(result)
         assertEquals(expectedBasalType, medtrumPump.lastBasalType)

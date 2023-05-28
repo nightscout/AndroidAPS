@@ -6,7 +6,6 @@ import info.nightscout.pump.medtrum.comm.enums.CommandType.SYNCHRONIZE
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
-import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 

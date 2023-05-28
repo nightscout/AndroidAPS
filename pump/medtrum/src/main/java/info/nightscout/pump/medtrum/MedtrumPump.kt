@@ -1,7 +1,6 @@
 package info.nightscout.pump.medtrum
 
 import android.util.Base64
-import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
@@ -123,7 +122,7 @@ class MedtrumPump @Inject constructor(
         set(value) {
             _actualBasalProfile = value
             val encodedString = Base64.encodeToString(value, Base64.DEFAULT)
-            sp.putString(R.string.key_actual_basal_profile, encodedString)
+            sp.putString(R.string.key_actual_basal_profile, encodedString?: "")
         }
 
     private var _lastBasalType: MutableStateFlow<BasalType> = MutableStateFlow(BasalType.NONE)
@@ -311,7 +310,7 @@ class MedtrumPump @Inject constructor(
             LTag.PUMP,
             "handleBasalStatusUpdate: basalType: $basalType basalValue: $basalRate basalSequence: $basalSequence basalPatchId: $basalPatchId basalStartTime: $basalStartTime " + "receivedTime: $receivedTime"
         )
-        val expectedTemporaryBasal = pumpSync.expectedPumpState().temporaryBasal
+        val expectedTemporaryBasal = pumpSync.expectedPumpState()?.temporaryBasal
         if (basalType.isTempBasal() && expectedTemporaryBasal?.pumpId != basalStartTime) {
             // Note: temporaryBasalInfo will be removed from temporaryBasalStorage after this call
             val temporaryBasalInfo = temporaryBasalStorage.findTemporaryBasal(basalStartTime, basalRate)
@@ -330,7 +329,7 @@ class MedtrumPump @Inject constructor(
             )
             aapsLogger.debug(
                 LTag.PUMPCOMM,
-                "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " + "Rate: $basalRate Duration: ${duration}"
+                "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " + "Rate: $basalRate Duration: ${duration} temporaryBasalInfo: $temporaryBasalInfo, expectedTemporaryBasal: $expectedTemporaryBasal"
             )
         } else if (basalType.isSuspendedByPump() && expectedTemporaryBasal?.pumpId != basalStartTime) {
             val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
@@ -345,7 +344,7 @@ class MedtrumPump @Inject constructor(
             )
             aapsLogger.debug(
                 LTag.PUMPCOMM,
-                "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_END ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime)"
+                "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) expectedTemporaryBasal: $expectedTemporaryBasal"
             )
         } else if (basalType == BasalType.NONE && expectedTemporaryBasal?.pumpId != basalStartTime) { // Also some sort of suspend or unkown by pump
             val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
@@ -360,7 +359,7 @@ class MedtrumPump @Inject constructor(
             )
             aapsLogger.debug(
                 LTag.PUMPCOMM,
-                "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_END ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime)"
+                "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) expectedTemporaryBasal: $expectedTemporaryBasal"
             )
         }
 

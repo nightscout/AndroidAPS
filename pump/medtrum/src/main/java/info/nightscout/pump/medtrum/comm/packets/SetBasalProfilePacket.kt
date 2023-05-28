@@ -50,8 +50,6 @@ class SetBasalProfilePacket(injector: HasAndroidInjector, private val basalProfi
 
             // Update the actual basal profile
             medtrumPump.actualBasalProfile = basalProfile
-            // TODO: Do we need to let AAPS know? Maybe depends on where we cancel TBR if we need to
-            // TODO: Handle history entry
             medtrumPump.handleBasalStatusUpdate(basalType, basalValue, basalSequence, basalPatchId, basalStartTime)
         }
         return success

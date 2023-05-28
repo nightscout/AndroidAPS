@@ -14,7 +14,6 @@ import info.nightscout.pump.medtrum.extension.toLong
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import javax.inject.Inject
 
 class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int) : MedtrumPacket(injector) {

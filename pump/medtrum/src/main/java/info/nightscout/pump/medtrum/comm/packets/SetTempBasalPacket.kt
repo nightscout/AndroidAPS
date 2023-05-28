@@ -60,11 +60,6 @@ class SetTempBasalPacket(injector: HasAndroidInjector, private val absoluteRate:
             val basalStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_BASAL_START_TIME_START, RESP_BASAL_START_TIME_END).toLong())
             aapsLogger.debug(LTag.PUMPCOMM, "Basal status update: type=$basalType, rate=$basalRate, sequence=$basalSequence, patchId=$basalPatchId, startTime=$basalStartTime, rawTime=$rawTime")
 
-            // TODO: For debugging remove later
-            val pumpTime = MedtrumTimeUtil().getCurrentTimePumpSeconds()
-            val systemTime = System.currentTimeMillis()
-            aapsLogger.debug(LTag.PUMPCOMM, "Pump time: $pumpTime, System time: $systemTime")
-
             medtrumPump.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalStartTime)
         }
         return success

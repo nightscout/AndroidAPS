@@ -35,12 +35,28 @@ class GetRecordPacketTest : MedtrumTestBase() {
     }
 
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
-        assertTrue(false)
-        // TODO: Implement history and test
+        // Inputs
+        val data = byteArrayOf(35, 99, 9, 1, 0, 0, -86, 28, 2, -1, -5, -40, -27, -18, 14, 0, -64, 1, -91, -20, -82, 17, -91, -20, -82, 17, 1, 0, 26, 0, 0, 0, -102, 0, -48)
+
+        // Call
+        val packet = GetRecordPacket(packetInjector, 0)
+        val result = packet.handleResponse(data)
+
+        // Expected values
+        assertEquals(true, result)
+        assertEquals(false, packet.failed)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
-        assertTrue(false)
-        // TODO: Implement history and test
+        // Inputs
+        val data = byteArrayOf(35, 99, 9, 1, 0, 0, -86, 28, 2, -1, -5, -40, -27, -18, 14, 0, -64)
+
+        // Call
+        val packet = GetRecordPacket(packetInjector, 0)
+        val result = packet.handleResponse(data)
+
+        // Expected values
+        assertEquals(false, result)
+        assertEquals(true, packet.failed)
     }
 }

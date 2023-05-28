@@ -4,14 +4,12 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
-import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.pump.medtrum.extension.toLong
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
-import kotlin.experimental.and
 
 class NotificationPacket(val injector: HasAndroidInjector) {
 
@@ -107,7 +105,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         if (fieldMask and MASK_EXTENDED_BOLUS != 0) {
             aapsLogger.error(LTag.PUMPCOMM, "Extended bolus notification received, extended bolus not supported!")
-            // TODO Handle error and stop pump if this happens
+            // TODO Handle error and stop pump if this happens?
             offset += 3
         }
 
@@ -144,7 +142,6 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         if (fieldMask and MASK_LIFE_TIME != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Life time notification received")
-            // TODO Check if timezone offset needs to be added
             medtrumPump.patchAge = data.copyOfRange(offset, offset + 4).toLong()
             aapsLogger.debug(LTag.PUMPCOMM, "Patch age: ${medtrumPump.patchAge}")
             offset += 4
@@ -162,7 +159,6 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         if (fieldMask and MASK_STORAGE != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Storage notification received")
-            // TODO, trigger check for new sequence?
             val sequence = data.copyOfRange(offset, offset + 2).toInt()
             if (sequence > medtrumPump.currentSequenceNumber) {
                 medtrumPump.currentSequenceNumber = sequence
