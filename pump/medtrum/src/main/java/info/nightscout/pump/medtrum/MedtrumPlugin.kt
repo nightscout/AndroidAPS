@@ -236,8 +236,8 @@ import kotlin.math.round
             result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
             result.bolusDelivered = t.insulin
             if (!result.success) {
-                // Todo error code?
-                result.comment = "error"
+                // Note: There are no error codes
+                result.comment = "failed"
             } else {
                 result.comment = "ok"
             }
@@ -266,8 +266,8 @@ import kotlin.math.round
         if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
 
         aapsLogger.info(LTag.PUMP, "setTempBasalAbsolute - absoluteRate: $absoluteRate, durationInMinutes: $durationInMinutes, enforceNew: $enforceNew")
-        // round rate to 0.05
-        val pumpRate = round(absoluteRate * 20) / 20 // TODO: Maybe replace by constraints thing
+        // round rate to pump rate
+        val pumpRate = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
         temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), pumpRate, true, tbrType, 0L, 0L))
         val connectionOk = medtrumService?.setTempBasal(pumpRate, durationInMinutes) ?: false
         if (connectionOk
@@ -307,7 +307,7 @@ import kotlin.math.round
     }
 
     override fun cancelExtendedBolus(): PumpEnactResult {
-        return PumpEnactResult(injector) // TODO
+        return PumpEnactResult(injector)
     }
 
     override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
@@ -333,10 +333,10 @@ import kotlin.math.round
         return ""// TODO
     }
 
-    override val isFakingTempsByExtendedBoluses: Boolean = false //TODO
+    override val isFakingTempsByExtendedBoluses: Boolean = false
 
     override fun loadTDDs(): PumpEnactResult {
-        return PumpEnactResult(injector) // TODO
+        return PumpEnactResult(injector) // Note: Can implement this if we implement history fully (no priority)
     }
 
     override fun canHandleDST(): Boolean {

@@ -66,7 +66,15 @@ class MedtrumPump @Inject constructor(
         set(value) {
             _primeProgress.value = value
         }
-        
+    
+    private var _lastBasalType: MutableStateFlow<BasalType> = MutableStateFlow(BasalType.NONE)
+    val lastBasalTypeFlow: StateFlow<BasalType> = _lastBasalType
+    var lastBasalType: BasalType
+        get() = _lastBasalType.value
+        set(value) {
+            _lastBasalType.value = value
+        }        
+    
     private val _lastBasalRate = MutableStateFlow(0.0)
     val lastBasalRateFlow: StateFlow<Double> = _lastBasalRate
     var lastBasalRate: Double
@@ -125,15 +133,6 @@ class MedtrumPump @Inject constructor(
             sp.putString(R.string.key_actual_basal_profile, encodedString?: "")
         }
 
-    private var _lastBasalType: MutableStateFlow<BasalType> = MutableStateFlow(BasalType.NONE)
-    val lastBasalTypeFlow: StateFlow<BasalType> = _lastBasalType
-    var lastBasalType: BasalType
-        get() = _lastBasalType.value
-        set(value) {
-            _lastBasalType.value = value
-            sp.putInt(R.string.key_last_basal_type, value.ordinal) // TODO is this still needed in SP?
-        }
-
     private var _pumpSN = 0L
     val pumpSN: Long
         get() = _pumpSN
@@ -161,8 +160,6 @@ class MedtrumPump @Inject constructor(
     var bolusDone = false // success end
 
     // Last basal status update 
-    // TODO: Save this in SP?
-    
     var lastBasalSequence = 0
     var lastBasalPatchId = 0L
     var lastBasalStartTime = 0L
@@ -194,7 +191,6 @@ class MedtrumPump @Inject constructor(
         _currentSequenceNumber = sp.getInt(R.string.key_current_sequence_number, 0)
         _patchId = sp.getLong(R.string.key_patch_id, 0L)
         _syncedSequenceNumber = sp.getInt(R.string.key_synced_sequence_number, 0)
-        lastBasalType = enumValues<BasalType>()[sp.getInt(R.string.key_last_basal_type, 0)] // TODO: is this nice?
 
         val encodedString = sp.getString(R.string.key_actual_basal_profile, "0")
         try {

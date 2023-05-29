@@ -41,6 +41,11 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
@@ -74,6 +79,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     private var currentState: State = IdleState()
     private var mPacket: MedtrumPacket? = null
+
+    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
     
     val isConnected: Boolean
         get() = medtrumPump.connectionState == ConnectionState.CONNECTED
@@ -100,8 +107,9 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     override fun onDestroy() {
-        disposable.clear()
         super.onDestroy()
+        disposable.clear()
+        scope.cancel()
     }
 
     fun connect(from: String): Boolean {
@@ -141,12 +149,9 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun readPumpStatus() {
-        // TODO decide what we need to do here
-        var result = false
-
         // Most of these things are already done when a connection is setup, but wo dont know how long the pump was connected for?
         // So just do a syncronize to make sure we have the latest data
-        result = sendPacketAndGetResponse(SynchronizePacket(injector))
+        var result = sendPacketAndGetResponse(SynchronizePacket(injector))
 
         // Sync records (based on the info we have from the sync)
         if (result) result = syncRecords()
@@ -224,9 +229,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun cancelTempBasal(): Boolean {
-        var result = false
-
-        result = sendPacketAndGetResponse(CancelTempBasalPacket(injector))
+        var result = sendPacketAndGetResponse(CancelTempBasalPacket(injector))
 
         // Get history records, this will update the pump state
         if (result) result = syncRecords()
@@ -330,6 +333,9 @@ class MedtrumService : DaggerService(), BLECommCallback {
     // State class, Can we move this to different file?
     private abstract inner class State {
 
+        protected var responseHandled = false
+        protected var responseSuccess = false
+
         open fun onEnter() {}
         open fun onIndication(data: ByteArray) {
             aapsLogger.debug(LTag.PUMPCOMM, "onIndication: " + this.toString() + "Should not be called here!")
@@ -339,22 +345,39 @@ class MedtrumService : DaggerService(), BLECommCallback {
             aapsLogger.debug(LTag.PUMPCOMM, "onConnected")
         }
 
-        open fun onDisconnected() {
+        fun onDisconnected() {
             aapsLogger.debug(LTag.PUMPCOMM, "onDisconnected")
             medtrumPump.connectionState = ConnectionState.DISCONNECTED
             if (medtrumPump.patchActivated) {
                 rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
             }
-            // TODO: Check flow for this
+            responseHandled = true
+            responseSuccess = false
             toState(IdleState())
         }
 
-        open fun waitForResponse(): Boolean {
-            return false
+        fun waitForResponse(): Boolean {
+            val startTime = System.currentTimeMillis()
+            val timeoutMillis = T.secs(45).msecs()
+            while (!responseHandled) {
+                if (System.currentTimeMillis() - startTime > timeoutMillis) {
+                    // If we haven't received a response in the specified time, assume the command failed
+                    aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service State timeout")
+                    // Disconnect to cancel any outstanding commands and go back to ready state
+                    bleComm.disconnect("Timeout")
+                    toState(IdleState())
+                    return false
+                }
+                SystemClock.sleep(100)
+            }
+            aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service State responseHandled: $responseHandled responseSuccess: $responseSuccess")
+            return responseSuccess
         }
 
-        open fun onSendMessageError(reason: String) {
+        fun onSendMessageError(reason: String) {
             aapsLogger.debug(LTag.PUMPCOMM, "onSendMessageError: " + this.toString() + "reason: $reason")
+            responseHandled = true
+            responseSuccess = false
         }
     }
 
@@ -368,13 +391,9 @@ class MedtrumService : DaggerService(), BLECommCallback {
             super.onConnected()
             toState(AuthState())
         }
-
-        override fun onDisconnected() {
-            super.onDisconnected()
-        }
     }
 
-    // State for connect flow, could be replaced by commandState and steps in connect()
+    // State for connect flow
     private inner class AuthState : State() {
         val retryCounter = 0
 
@@ -382,11 +401,16 @@ class MedtrumService : DaggerService(), BLECommCallback {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached AuthState")
             mPacket = AuthorizePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            scope.launch {
+                waitForResponse()
+            }
         }
 
         override fun onIndication(data: ByteArray) {
             if (mPacket?.handleResponse(data) == true) {
                 // Succes!
+                responseHandled = true
+                responseSuccess = true
                 // TODO Get pump version info
                 val deviceType = (mPacket as AuthorizePacket).deviceType
                 val swVersion = (mPacket as AuthorizePacket).swVersion
@@ -394,31 +418,31 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 toState(GetDeviceTypeState())
             } else if (mPacket?.failed == true) {
                 // Failure
-                // retry twice
-                // TODO: Test and see if this can be removed
-                if (retryCounter < 2) {
-                    aapsLogger.error(LTag.PUMPCOMM, "AuthState failed!, retrying")
-                    mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
-                } else {
-                    bleComm.disconnect("Failure")
-                    toState(IdleState())
-                }
+                responseHandled = true
+                responseSuccess = false
+                bleComm.disconnect("Failure")
+                toState(IdleState())
             }
         }
     }
 
-    // State for connect flow, could be replaced by commandState and steps in connect()
+    // State for connect flow
     private inner class GetDeviceTypeState : State() {
 
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached GetDeviceTypeState")
             mPacket = GetDeviceTypePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            scope.launch {
+                waitForResponse()
+            }
         }
 
         override fun onIndication(data: ByteArray) {
             if (mPacket?.handleResponse(data) == true) {
                 // Succes!
+                responseHandled = true
+                responseSuccess = true
                 // TODO Get device type and SN
                 val deviceType = (mPacket as GetDeviceTypePacket).deviceType
                 val deviceSN = (mPacket as GetDeviceTypePacket).deviceSN
@@ -426,24 +450,31 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 toState(GetTimeState())
             } else if (mPacket?.failed == true) {
                 // Failure
+                responseHandled = true
+                responseSuccess = false
                 bleComm.disconnect("Failure")
                 toState(IdleState())
             }
         }
     }
 
-    // State for connect flow, could be replaced by commandState and steps in connect()
+    // State for connect flow
     private inner class GetTimeState : State() {
 
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached GetTimeState")
             mPacket = GetTimePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            scope.launch {
+                waitForResponse()
+            }
         }
 
         override fun onIndication(data: ByteArray) {
             if (mPacket?.handleResponse(data) == true) {
                 // Succes!
+                responseHandled = true
+                responseSuccess = true
                 val currTime = dateUtil.nowWithoutMilliseconds()
                 if (abs(medtrumPump.lastTimeReceivedFromPump - currTime) <= T.secs(5).msecs()) { // Allow 5 sec deviation
                     toState(SynchronizeState())
@@ -460,90 +491,120 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 }
             } else if (mPacket?.failed == true) {
                 // Failure
+                responseHandled = true
+                responseSuccess = false
                 bleComm.disconnect("Failure")
                 toState(IdleState())
             }
         }
     }
 
-    // State for connect flow, could be replaced by commandState and steps in connect()
+    // State for connect flow
     private inner class SetTimeState : State() {
 
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached SetTimeState")
             mPacket = SetTimePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            scope.launch {
+                waitForResponse()
+            }
         }
 
         override fun onIndication(data: ByteArray) {
             if (mPacket?.handleResponse(data) == true) {
                 // Succes!
+                responseHandled = true
+                responseSuccess = true
                 toState(SetTimeZoneState())
             } else if (mPacket?.failed == true) {
                 // Failure
+                responseHandled = true
+                responseSuccess = false
                 bleComm.disconnect("Failure")
                 toState(IdleState())
             }
         }
     }
 
-    // State for connect flow, could be replaced by commandState and steps in connect()
+    // State for connect flow
     private inner class SetTimeZoneState : State() {
 
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached SetTimeZoneState")
             mPacket = SetTimeZonePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            scope.launch {
+                waitForResponse()
+            }
         }
 
         override fun onIndication(data: ByteArray) {
             if (mPacket?.handleResponse(data) == true) {
                 // Succes!
+                responseHandled = true
+                responseSuccess = true
                 toState(SynchronizeState())
             } else if (mPacket?.failed == true) {
                 // Failure
+                responseHandled = true
+                responseSuccess = false
                 bleComm.disconnect("Failure")
                 toState(IdleState())
             }
         }
     }
 
-    // State for connect flow, could be replaced by commandState and steps in connect()
+    // State for connect flow
     private inner class SynchronizeState : State() {
 
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached SynchronizeState")
             mPacket = SynchronizePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            scope.launch {
+                waitForResponse()
+            }
         }
 
         override fun onIndication(data: ByteArray) {
             if (mPacket?.handleResponse(data) == true) {
                 // Succes!
+                responseHandled = true
+                responseSuccess = true
                 toState(SubscribeState())
             } else if (mPacket?.failed == true) {
                 // Failure
+                responseHandled = true
+                responseSuccess = false
                 bleComm.disconnect("Failure")
                 toState(IdleState())
             }
         }
     }
 
-    // State for connect flow, could be replaced by commandState and steps in connect()
+    // State for connect flow
     private inner class SubscribeState : State() {
 
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached SubscribeState")
             mPacket = SubscribePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            scope.launch {
+                waitForResponse()
+            }
         }
 
         override fun onIndication(data: ByteArray) {
             if (mPacket?.handleResponse(data) == true) {
                 // Succes!
+                responseHandled = true
+                responseSuccess = true
                 toState(ReadyState())
             } else if (mPacket?.failed == true) {
                 // Failure
+                responseHandled = true
+                responseSuccess = false
                 bleComm.disconnect("Failure")
                 toState(IdleState())
             }
@@ -566,9 +627,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
     // This state is when a command is send and we wait for a response for that command
     private inner class CommandState : State() {
 
-        private var responseHandled = false
-        private var responseSuccess = false
-
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached CommandState")
         }
@@ -585,35 +643,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 responseSuccess = false
                 toState(ReadyState())
             }
-        }
-
-        override fun onDisconnected() {
-            super.onDisconnected()
-            responseHandled = true
-            responseSuccess = false
-        }
-
-        override fun onSendMessageError(reason: String) {
-            super.onSendMessageError(reason)
-            responseHandled = true
-            responseSuccess = false
-        }
-
-        override fun waitForResponse(): Boolean {
-            val startTime = System.currentTimeMillis()
-            val timeoutMillis = T.secs(45).msecs()
-            while (!responseHandled) {
-                if (System.currentTimeMillis() - startTime > timeoutMillis) {
-                    // If we haven't received a response in the specified time, assume the command failed
-                    aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service CommandState timeout")
-                    // Disconnect to cancel any outstanding commands and go back to ready state
-                    bleComm.disconnect("Timeout")
-                    toState(ReadyState())
-                    return false
-                }
-                Thread.sleep(100)
-            }
-            return responseSuccess
         }
     }
 }
