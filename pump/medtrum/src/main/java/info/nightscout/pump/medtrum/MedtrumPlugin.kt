@@ -151,8 +151,6 @@ import kotlin.math.round
     override fun connect(reason: String) {
         if (medtrumPump.patchActivated) {
             aapsLogger.debug(LTag.PUMP, "Medtrum connect - reason:$reason")
-            aapsLogger.debug(LTag.PUMP, "Medtrum connect - service::$medtrumService")
-            // aapsLogger.debug(LTag.PUMP, "Medtrum connect - mDeviceSN:$mDeviceSN")
             if (medtrumService != null) {
                 aapsLogger.debug(LTag.PUMP, "Medtrum connect - Attempt connection!")
                 val success = medtrumService?.connect(reason) ?: false

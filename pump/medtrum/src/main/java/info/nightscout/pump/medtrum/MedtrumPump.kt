@@ -306,6 +306,7 @@ class MedtrumPump @Inject constructor(
             LTag.PUMP,
             "handleBasalStatusUpdate: basalType: $basalType basalValue: $basalRate basalSequence: $basalSequence basalPatchId: $basalPatchId basalStartTime: $basalStartTime " + "receivedTime: $receivedTime"
         )
+        @Suppress("UNNECESSARY_SAFE_CALL") // Safe call to allow mocks to retun null
         val expectedTemporaryBasal = pumpSync.expectedPumpState()?.temporaryBasal
         if (basalType.isTempBasal() && expectedTemporaryBasal?.pumpId != basalStartTime) {
             // Note: temporaryBasalInfo will be removed from temporaryBasalStorage after this call

@@ -114,15 +114,18 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             val basalType = enumValues<BasalType>()[data.copyOfRange(offset, offset + 1).toInt()]
             var basalSequence = data.copyOfRange(offset + 1, offset + 3).toInt()
             var basalPatchId = data.copyOfRange(offset + 3, offset + 5).toLong()
-            var basalTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset + 5, offset + 9).toLong())
+            var basalStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset + 5, offset + 9).toLong())
             var basalRateAndDelivery = data.copyOfRange(offset + 9, offset + 12).toInt()
             var basalRate = (basalRateAndDelivery and 0xFFF) * 0.05
             var basalDelivery = (basalRateAndDelivery shr 12) * 0.05
             aapsLogger.debug(
                 LTag.PUMPCOMM,
-                "Basal type: $basalType, basal sequence: $basalSequence, basal patch id: $basalPatchId, basal time: $basalTime, basal rate: $basalRate, basal delivery: $basalDelivery"
+                "Basal type: $basalType, basal sequence: $basalSequence, basal patch id: $basalPatchId, basal time: $basalStartTime, basal rate: $basalRate, basal delivery: $basalDelivery"
             )
-            medtrumPump.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalTime)
+            // Don't spam with basal updates here, only if the running basal rate has changed, or a new basal is set
+            if (medtrumPump.lastBasalRate != basalRate || medtrumPump.lastBasalStartTime != basalStartTime) {
+                medtrumPump.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalStartTime)
+            }            
             offset += 12
         }
 
