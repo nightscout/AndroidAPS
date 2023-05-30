@@ -19,6 +19,7 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import java.util.GregorianCalendar
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.round
@@ -160,12 +161,13 @@ class MedtrumPump @Inject constructor(
     var bolusDone = false // success end
 
     // Last basal status update 
+    // TODO maybe make basal parameters private? So we are forced to update trough handleBasalStatusUpdate
     var lastBasalSequence = 0
     var lastBasalPatchId = 0L
     var lastBasalStartTime = 0L
 
     val baseBasalRate: Double
-        get() = getCurrentHourlyBasalFromMedtrumProfileArray(actualBasalProfile)
+        get() = getHourlyBasalFromMedtrumProfileArray(actualBasalProfile, dateUtil.now())
 
     // TBR status
     val tempBasalInProgress: Boolean
@@ -252,15 +254,17 @@ class MedtrumPump @Inject constructor(
         return (list.size).toByteArray(1) + basals
     }
 
-    fun getCurrentHourlyBasalFromMedtrumProfileArray(basalProfile: ByteArray): Double {
+    fun getHourlyBasalFromMedtrumProfileArray(basalProfile: ByteArray, timestamp: Long): Double {
         val basalCount = basalProfile[0].toInt()
         var basal = 0.0
         if (basalProfile.size < 4 || (basalProfile.size - 1) % 3 != 0 || basalCount > 24) {
-            aapsLogger.debug(LTag.PUMP, "getCurrentHourlyBasalFromMedtrumProfileArray: No valid basal profile set")
+            aapsLogger.debug(LTag.PUMP, "getHourlyBasalFromMedtrumProfileArray: No valid basal profile set")
             return basal
         }
 
-        val hourOfDayMinutes = dateUtil.dateAndTimeString(dateUtil.now()).substring(11, 13).toInt() * 60 + dateUtil.dateAndTimeString(dateUtil.now()).substring(14, 16).toInt()
+        val date = GregorianCalendar()
+        date.timeInMillis = timestamp
+        val hourOfDayMinutes = date.get(GregorianCalendar.HOUR_OF_DAY) * 60 + date.get(GregorianCalendar.MINUTE)
 
         for (index in 0 until basalCount) {
             val currentIndex = 1 + (index * 3)
@@ -278,10 +282,10 @@ class MedtrumPump @Inject constructor(
 
             if (hourOfDayMinutes in startMinutes until endMinutes) {
                 basal = rate
-                aapsLogger.debug(LTag.PUMP, "getCurrentHourlyBasalFromMedtrumProfileArray: basal: $basal")
+                aapsLogger.debug(LTag.PUMP, "getHourlyBasalFromMedtrumProfileArray: basal: $basal")
                 break
             }
-            // aapsLogger.debug(LTag.PUMP, "getCurrentHourlyBasalFromMedtrumProfileArray: rate: $rate, startMinutes: $startMinutes, endMinutes: $endMinutes")
+            // aapsLogger.debug(LTag.PUMP, "getHourlyBasalFromMedtrumProfileArray: rate: $rate, startMinutes: $startMinutes, endMinutes: $endMinutes")
         }
         return basal
     }
