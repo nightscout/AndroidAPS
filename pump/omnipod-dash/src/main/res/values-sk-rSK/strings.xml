@@ -11,7 +11,6 @@
     <string name="omnipod_dash_history_type">Typ:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f JI</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f JI, Sach=%2$.1f g</string>
-    <string name="omnipod_dash_history_tbr_value">Rýchlosť: %1$.2f JI, Doba trvania: %2$d minút</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Stav Bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Adresa Bluetooth</string>
@@ -31,7 +30,6 @@
     <string name="omnipod_dash_command_not_sent">Príkaz nebol odoslaný</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Príkaz nebol prijatý Podom</string>
     <string name="omnipod_dash_unknown">Neznámy stav príkazu</string>
-    <string name="omnipod_common_history_tbr_value">Rýchlosť: %1$.2f JI, Doba trvania: %2$d minút</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f JI</string>
     <string name="omnipod_common_alert_delivery_suspended">Podávanie inzulínu je pozastavené</string>
     <string name="omnipod_dash_connection_lost">Stratilo sa spojenie s Podom</string>
