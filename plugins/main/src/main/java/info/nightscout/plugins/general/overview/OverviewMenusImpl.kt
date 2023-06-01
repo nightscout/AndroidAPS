@@ -47,7 +47,8 @@ class OverviewMenusImpl @Inject constructor(
         BGI(R.string.overview_show_bgi, info.nightscout.core.ui.R.attr.bgiColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.bgi_shortname),
         SEN(R.string.overview_show_sensitivity, info.nightscout.core.ui.R.attr.ratioColor, info.nightscout.core.ui.R.attr.menuTextColorInverse, primary = false, secondary = true, shortnameId = R.string.sensitivity_shortname),
         ACT(R.string.overview_show_activity, info.nightscout.core.ui.R.attr.activityColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.activity_shortname),
-        DEVSLOPE(R.string.overview_show_deviation_slope, info.nightscout.core.ui.R.attr.devSlopePosColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.devslope_shortname)
+        DEVSLOPE(R.string.overview_show_deviation_slope, info.nightscout.core.ui.R.attr.devSlopePosColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.devslope_shortname),
+        HR(R.string.overview_show_heartRate, info.nightscout.core.ui.R.attr.heartRateColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.heartRate_shortname),
     }
 
     companion object {
