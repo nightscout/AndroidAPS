@@ -11,7 +11,6 @@
     <string name="omnipod_dash_history_type">סוג:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f יח\'</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f יח\', פחמ\'= %2$.1f גר\'</string>
-    <string name="omnipod_dash_history_tbr_value">מינון: %1$.2f יח\', משך: %2$d דק\'</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">מצב בלוטות\'</string>
     <string name="omnipod_dash_overview_bluetooth_address">כתובת בלוטות\'</string>
@@ -31,7 +30,6 @@
     <string name="omnipod_dash_command_not_sent">הפקודה לא נשלחה</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">הפקודה לא התקבלה ע\"י הפוד</string>
     <string name="omnipod_dash_unknown">מצב הפקודה לא ידוע</string>
-    <string name="omnipod_common_history_tbr_value">מינון: %1$.2f יח\', משך: %2$d דק\'</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f יח\'</string>
     <string name="omnipod_common_alert_delivery_suspended">הזרקת האינסולין מופסקת</string>
     <string name="omnipod_dash_connection_lost">אבד החיבור לפוד</string>
