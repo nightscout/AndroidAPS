@@ -144,8 +144,6 @@ class PatchConfig: IPreference<PatchConfig> {
         this.standardBolusInjectCount = 0
         this.extendedBolusInjectCount = 0
         this.basalInjectCount = 0
-        this.lowReservoirAlertAmount = 10
-        this.patchExpireAlertTime = 4
         this.remainedInsulin = 0f
     }
 

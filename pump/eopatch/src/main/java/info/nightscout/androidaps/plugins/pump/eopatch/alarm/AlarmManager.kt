@@ -14,6 +14,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.code.AlarmCategory
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventEoPatchAlarm
+import info.nightscout.androidaps.plugins.pump.eopatch.extension.takeOne
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.vo.Alarms
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -160,10 +161,11 @@ class AlarmManager @Inject constructor() : IAlarmManager {
             id = Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000),
             text = alarmMsg,
             level = Notification.URGENT,
-            buttonText = R.string.confirm,
+            buttonText = (alarmCode == B001).takeOne(R.string.string_resume, R.string.confirm),
             action = {
                 compositeDisposable.add(
                     Single.just(isValid(alarmCode))
+                        .observeOn(aapsSchedulers.main)  //don't remove
                         .flatMap { isValid ->
                             return@flatMap if (isValid) mAlarmProcess.doAction(context, alarmCode)
                             else Single.just(IAlarmProcess.ALARM_HANDLED)
@@ -179,18 +181,17 @@ class AlarmManager @Inject constructor() : IAlarmManager {
                                     )
                                 }
                                 updateState(alarmCode, AlarmState.HANDLE)
+                            }else if(ret == IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP){
+                                pm.getAlarms().needToStopBeep.add(alarmCode)
+                                updateState(alarmCode, AlarmState.HANDLE)
                             } else {
-                                uiInteraction.addNotification(
-                                    id = Notification.EOELOW_PATCH_ALERTS + (alarmCode.aeCode + 10000),
-                                    text = alarmMsg,
-                                    level = Notification.URGENT
-                                )
+                                showNotification(alarmCode)
                             }
                         }
                 )
             },
             soundId = info.nightscout.core.ui.R.raw.error,
-            date = pm.getPatchConfig().patchWakeupTimestamp + TimeUnit.SECONDS.toMillis(timeOffset)
+            date = pm.getAlarms().getOccuredAlarmTimestamp(alarmCode)
         )
 
     }

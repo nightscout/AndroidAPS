@@ -36,11 +36,10 @@ public class StartBondTask extends TaskBase {
                 })
                 .filter(result -> result == BluetoothDevice.BOND_BONDED)
                 .map(result -> true)
-                .timeout(60, TimeUnit.SECONDS)
+                .timeout(35, TimeUnit.SECONDS)
                 .doOnNext(v -> prefSetMacAddress(mac))
                 .doOnError(e -> {
                     prefSetMacAddress("");
-                    aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StartBondTask error");
                 })
                 .firstOrError();
     }
