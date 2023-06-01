@@ -11,7 +11,6 @@
     <string name="omnipod_dash_history_type">Typ:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, Węgl.=%2$.1f g</string>
-    <string name="omnipod_dash_history_tbr_value">Dawka: %1$.2f U, Czas trwania: %2$d min</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Status Bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Adres Bluetooth</string>
@@ -31,7 +30,6 @@
     <string name="omnipod_dash_command_not_sent">Polecenie nie wysłane</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Polecenie nie odebrane przez poda</string>
     <string name="omnipod_dash_unknown">Nieznany stan polecenia</string>
-    <string name="omnipod_common_history_tbr_value">Dawka: %1$.2f U, Czas trwania: %2$d min</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Podawanie insuliny zawieszone</string>
     <string name="omnipod_dash_connection_lost">Utracono połączenie z Podem</string>
