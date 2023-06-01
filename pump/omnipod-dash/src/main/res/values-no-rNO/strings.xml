@@ -11,7 +11,6 @@
     <string name="omnipod_dash_history_type">Type:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f E</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f E, KH=%2$.1f g</string>
-    <string name="omnipod_dash_history_tbr_value">Dosering: %1$.2f E, varighet: %2$d min</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth-status</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth-adresse</string>
@@ -31,7 +30,6 @@
     <string name="omnipod_dash_command_not_sent">Kommando ikke sendt</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Kommandoen ikke mottatt av podden</string>
     <string name="omnipod_dash_unknown">Ukjent tilstand for kommandoen</string>
-    <string name="omnipod_common_history_tbr_value">Dosering: %1$.2f E, varighet: %2$d min</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulintilførsel er suspendert</string>
     <string name="omnipod_dash_connection_lost">Mistet tilkoblingen til pod</string>
