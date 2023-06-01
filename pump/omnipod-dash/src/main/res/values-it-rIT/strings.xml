@@ -11,7 +11,6 @@
     <string name="omnipod_dash_history_type">Tipo:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, CHO=%2$.1f g</string>
-    <string name="omnipod_dash_history_tbr_value">Tasso: %1$.2f U, durata: %2$d minuti</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Stato bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Indirizzo bluetooth</string>
@@ -31,7 +30,6 @@
     <string name="omnipod_dash_command_not_sent">Comando non inviato</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Comando non ricevuto dal pod</string>
     <string name="omnipod_dash_unknown">Stato sconosciuto per il comando</string>
-    <string name="omnipod_common_history_tbr_value">Tasso: %1$.2f U, durata: %2$d minuti</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">L\'erogazione di insulina è sospesa</string>
     <string name="omnipod_dash_connection_lost">Persa connessione al pod</string>
