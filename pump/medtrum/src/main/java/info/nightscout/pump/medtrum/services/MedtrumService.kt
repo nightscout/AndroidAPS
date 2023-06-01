@@ -72,6 +72,11 @@ class MedtrumService : DaggerService(), BLECommCallback {
     @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var dateUtil: DateUtil
 
+    companion object {
+        // TODO: Test and further increase?
+        private const val COMMAND_TIMEOUT_SEC: Long = 60
+    }
+
     val timeUtil = MedtrumTimeUtil()
 
     private val disposable = CompositeDisposable()
@@ -272,10 +277,12 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     /** BLECommCallbacks */
     override fun onBLEConnected() {
+        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onBLEConnected")
         currentState.onConnected()
     }
 
     override fun onBLEDisconnected() {
+        aapsLogger.debug(LTag.PUMPCOMM, "<<<<< onBLEDisconnected")
         currentState.onDisconnected()
     }
 
@@ -358,7 +365,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         fun waitForResponse(): Boolean {
             val startTime = System.currentTimeMillis()
-            val timeoutMillis = T.secs(45).msecs()
+            val timeoutMillis = T.secs(COMMAND_TIMEOUT_SEC).msecs()
             while (!responseHandled) {
                 if (System.currentTimeMillis() - startTime > timeoutMillis) {
                     // If we haven't received a response in the specified time, assume the command failed

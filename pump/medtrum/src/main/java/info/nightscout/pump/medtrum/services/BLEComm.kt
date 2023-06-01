@@ -125,10 +125,6 @@ class BLEComm @Inject internal constructor(
             .build()
         val filters = mutableListOf<ScanFilter>()
 
-
-        isConnected = false
-        isConnecting = true
-
         // Find our Medtrum Device!
         filters.add(
             ScanFilter.Builder().setDeviceName("MT").build()
@@ -158,16 +154,16 @@ class BLEComm @Inject internal constructor(
             return false
         }
 
+        isConnected = false
+        isConnecting = true
         if (mDevice != null && mDeviceSN == deviceSN) {
             // Skip scanning and directly connect to gatt
             aapsLogger.debug(LTag.PUMPBTCOMM, "Skipping scan and directly connecting to gatt")
-            isConnecting = true
             connectGatt(mDevice!!)
         } else {
             // Scan for device
             aapsLogger.debug(LTag.PUMPBTCOMM, "Scanning for device")
             mDeviceSN = deviceSN
-            isConnecting = true
             startScan()
         }
 
@@ -180,8 +176,14 @@ class BLEComm @Inject internal constructor(
     private fun connectGatt(device: BluetoothDevice) {
         // Reset sequence counter
         mWriteSequenceNumber = 0
-        mBluetoothGatt =
+        if (mBluetoothGatt == null) {
+            mBluetoothGatt =
             device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE)
+        } else {
+            // Already connected?, this should not happen force disconnect
+            aapsLogger.error(LTag.PUMPBTCOMM, "connectGatt, mBluetoothGatt is not null")
+            disconnect("connectGatt, mBluetoothGatt is not null")
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -200,8 +202,10 @@ class BLEComm @Inject internal constructor(
             SystemClock.sleep(100)
         }        
         if (isConnected) {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Connected, disconnecting")
             mBluetoothGatt?.disconnect()
         } else {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "Not connected, closing gatt")
             close()
             isConnected = false
             mCallback?.onBLEDisconnected()
@@ -212,6 +216,7 @@ class BLEComm @Inject internal constructor(
     @Synchronized fun close() {
         aapsLogger.debug(LTag.PUMPBTCOMM, "BluetoothAdapter close")
         mBluetoothGatt?.close()
+        SystemClock.sleep(100)
         mBluetoothGatt = null
     }
 
