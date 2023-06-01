@@ -9,6 +9,7 @@ data class HistoryRecord(
     val commandType: OmnipodCommandType,
     val initialResult: InitialResult,
     val record: Record?,
+    val totalAmountDelivered: Double?,
     val resolvedResult: ResolvedResult?,
     val resolvedAt: Long?
 ) {

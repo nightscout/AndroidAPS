@@ -16,6 +16,10 @@ enum class DeliveryStatus(override val value: Byte) : HasValue {
         return value in arrayOf(BOLUS_AND_BASAL_ACTIVE.value, BOLUS_AND_TEMP_BASAL_ACTIVE.value)
     }
 
+    fun basalActive(): Boolean {
+        return value in arrayOf(BOLUS_AND_BASAL_ACTIVE.value, BASAL_ACTIVE.value)
+    }
+
     fun tempBasalActive(): Boolean {
         return value in arrayOf(BOLUS_AND_TEMP_BASAL_ACTIVE.value, TEMP_BASAL_ACTIVE.value)
     }
