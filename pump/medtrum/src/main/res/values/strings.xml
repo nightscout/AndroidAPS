@@ -47,6 +47,7 @@
 
     <string name="waitingforestimatedbolusend">Waiting for bolus end. Remaining %1$d sec.</string>
     <string name="gettingbolusstatus">Getting bolus status</string>
+    <string name="gettingtempbasalstatus">Getting temporary basal status</string>
 
 
 </resources>

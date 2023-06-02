@@ -74,7 +74,9 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     companion object {
         // TODO: Test and further increase?
-        private const val COMMAND_TIMEOUT_SEC: Long = 60
+        private const val COMMAND_DEFAULT_TIMEOUT_SEC: Long = 60
+        private const val COMMAND_SYNC_TIMEOUT_SEC: Long = 120
+        private const val COMMAND_CONNECTING_TIMEOUT_SEC: Long = 30
     }
 
     val timeUtil = MedtrumTimeUtil()
@@ -142,7 +144,12 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun deactivatePatch(): Boolean {
-        return sendPacketAndGetResponse(StopPatchPacket(injector))
+        var result = true
+        if (medtrumPump.tempBasalInProgress) {
+            result = sendPacketAndGetResponse(CancelTempBasalPacket(injector))
+        }
+        if (result) result = sendPacketAndGetResponse(StopPatchPacket(injector))
+        return result
     }
 
     fun stopConnecting() {
@@ -227,8 +234,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
         }
         if (result) result = sendPacketAndGetResponse(SetTempBasalPacket(injector, absoluteRate, durationInMinutes))
 
-        // Get history records, this will update the pump state
-        if (result) result = syncRecords()
+        // Get history records, this will update the prevoius basals 
+        // Do not call update status directly, reconnection may be needed
+        commandQueue.readStatus(rh.gs(info.nightscout.pump.medtrum.R.string.gettingtempbasalstatus), object : Callback() {
+            override fun run() {
+                rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingtempbasalstatus)))
+            }
+        }) 
 
         return result
     }
@@ -236,8 +248,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
     fun cancelTempBasal(): Boolean {
         var result = sendPacketAndGetResponse(CancelTempBasalPacket(injector))
 
-        // Get history records, this will update the pump state
-        if (result) result = syncRecords()
+        // Get history records, this will update the prevoius basals 
+        // Do not call update status directly, reconnection may be needed
+        commandQueue.readStatus(rh.gs(info.nightscout.pump.medtrum.R.string.gettingtempbasalstatus), object : Callback() {
+            override fun run() {
+                rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingtempbasalstatus)))
+            }
+        }) 
 
         return result
     }
@@ -266,11 +283,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
     /** This gets the history records from the pump */
     private fun syncRecords(): Boolean {
         aapsLogger.debug(LTag.PUMP, "syncRecords: called!, syncedSequenceNumber: ${medtrumPump.syncedSequenceNumber}, currentSequenceNumber: ${medtrumPump.currentSequenceNumber}")
-        var result = false
+        var result = true
         // Note: medtrum app fetches all records when they sync?
-        for (sequence in medtrumPump.syncedSequenceNumber..medtrumPump.currentSequenceNumber) {
-            result = sendPacketAndGetResponse(GetRecordPacket(injector, sequence))
-            if (!result) break
+        if (medtrumPump.syncedSequenceNumber < medtrumPump.currentSequenceNumber) {
+            for (sequence in (medtrumPump.syncedSequenceNumber + 1)..medtrumPump.currentSequenceNumber) {
+                result = sendPacketAndGetResponse(GetRecordPacket(injector, sequence))
+                if (result == false) break
+            }
         }
         return result
     }
@@ -324,13 +343,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
         currentState.onEnter()
     }
 
-    private fun sendPacketAndGetResponse(packet: MedtrumPacket): Boolean {
+    private fun sendPacketAndGetResponse(packet: MedtrumPacket, timeout: Long = COMMAND_DEFAULT_TIMEOUT_SEC): Boolean {
         var result = false
         if (currentState is ReadyState) {
             toState(CommandState())
             mPacket = packet
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
-            result = currentState.waitForResponse()
+            result = currentState.waitForResponse(timeout)
         } else {
             aapsLogger.error(LTag.PUMPCOMM, "Send packet attempt when in non Ready state")
         }
@@ -363,9 +382,9 @@ class MedtrumService : DaggerService(), BLECommCallback {
             toState(IdleState())
         }
 
-        fun waitForResponse(): Boolean {
+        fun waitForResponse(timeout: Long): Boolean {
             val startTime = System.currentTimeMillis()
-            val timeoutMillis = T.secs(COMMAND_TIMEOUT_SEC).msecs()
+            val timeoutMillis = T.secs(timeout).msecs()
             while (!responseHandled) {
                 if (System.currentTimeMillis() - startTime > timeoutMillis) {
                     // If we haven't received a response in the specified time, assume the command failed
@@ -409,7 +428,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             mPacket = AuthorizePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
             scope.launch {
-                waitForResponse()
+                waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
         }
 
@@ -441,7 +460,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             mPacket = GetDeviceTypePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
             scope.launch {
-                waitForResponse()
+                waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
         }
 
@@ -473,7 +492,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             mPacket = GetTimePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
             scope.launch {
-                waitForResponse()
+                waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
         }
 
@@ -514,7 +533,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             mPacket = SetTimePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
             scope.launch {
-                waitForResponse()
+                waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
         }
 
@@ -542,7 +561,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             mPacket = SetTimeZonePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
             scope.launch {
-                waitForResponse()
+                waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
         }
 
@@ -570,7 +589,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             mPacket = SynchronizePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
             scope.launch {
-                waitForResponse()
+                waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
         }
 
@@ -598,7 +617,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             mPacket = SubscribePacket(injector)
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
             scope.launch {
-                waitForResponse()
+                waitForResponse(COMMAND_CONNECTING_TIMEOUT_SEC)
             }
         }
 

@@ -16,6 +16,8 @@ class CancelTempBasalPacketTest : MedtrumTestBase() {
             if (it is CancelTempBasalPacket) {
                 it.aapsLogger = aapsLogger
                 it.medtrumPump = medtrumPump
+                it.pumpSync = pumpSync
+                it.dateUtil = dateUtil
             }
         }
     }

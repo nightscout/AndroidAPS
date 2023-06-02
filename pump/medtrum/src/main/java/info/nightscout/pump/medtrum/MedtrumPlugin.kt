@@ -173,7 +173,10 @@ import kotlin.math.round
     override fun getPumpStatus(reason: String) {
         aapsLogger.debug(LTag.PUMP, "Medtrum getPumpStatus - reason:$reason")
         if (isInitialized()) {
-            medtrumService?.readPumpStatus()
+            val connectionOK = medtrumService?.readPumpStatus() ?: false
+            if (connectionOK == false) {
+                aapsLogger.error(LTag.PUMP, "Medtrum getPumpStatus failed")
+            }
         }
     }
 
