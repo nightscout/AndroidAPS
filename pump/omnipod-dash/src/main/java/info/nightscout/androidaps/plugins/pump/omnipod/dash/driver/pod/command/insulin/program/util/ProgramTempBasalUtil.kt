@@ -22,10 +22,15 @@ object ProgramTempBasalUtil {
     fun mapTempBasalToTenthPulsesPerSlot(durationInSlots: Int, rateInUnitsPerHour: Double): ShortArray {
         val pulsesPerHour = (rateInUnitsPerHour * 20).roundToInt().toShort()
         val tenthPulsesPerSlot = ShortArray(durationInSlots)
-        var i = 0
-        while (durationInSlots > i) {
-            tenthPulsesPerSlot[i] = (roundToHalf(pulsesPerHour / 2.0) * 10).toInt().toShort()
-            i++
+        val tenthPulsesPerSlotShort = if (pulsesPerHour == 0.toShort() && durationInSlots > 4) {
+            // Workaround for 0.0 U/h long temp basals being cancelled by pod
+            // This will result in a 0.01 U/h temp basal for 0temps > 120 minutes
+            1.toShort()
+        } else {
+            (roundToHalf(pulsesPerHour / 2.0) * 10).toInt().toShort()
+        }
+        for (i in tenthPulsesPerSlot.indices) {
+            tenthPulsesPerSlot[i] = tenthPulsesPerSlotShort
         }
         return tenthPulsesPerSlot
     }

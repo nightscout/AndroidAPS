@@ -8,14 +8,14 @@ import info.nightscout.androidaps.plugins.pump.eopatch.event.EventProgressDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.AlarmDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.dialogs.ProgressDialogHelper
 import info.nightscout.core.ui.R
-import info.nightscout.core.ui.activities.DialogAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
-class AlarmHelperActivity : DialogAppCompatActivity() {
+class AlarmHelperActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var sp : SP
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers

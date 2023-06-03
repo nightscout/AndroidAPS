@@ -1,6 +1,5 @@
 package info.nightscout.plugins.skins
 
-import android.util.DisplayMetrics
 import android.util.TypedValue.COMPLEX_UNIT_PX
 import android.view.View
 import android.widget.LinearLayout
@@ -18,16 +17,11 @@ interface SkinInterface {
     val secondaryGraphHeight: Int // in dp
 
     // no pre processing by default
-    fun preProcessLandscapeActionsLayout(dm: DisplayMetrics, binding: ActionsFragmentBinding) {
+    fun preProcessLandscapeActionsLayout(isLandscape: Boolean, binding: ActionsFragmentBinding) {
     }
 
-    fun preProcessLandscapeOverviewLayout(dm: DisplayMetrics, binding: OverviewFragmentBinding, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
-        // pre-process landscape mode
-        val screenWidth = dm.widthPixels
-        val screenHeight = dm.heightPixels
-        val landscape = screenHeight < screenWidth
-
-        if (landscape) {
+    fun preProcessLandscapeOverviewLayout(binding: OverviewFragmentBinding, isLandscape: Boolean, isTablet: Boolean, isSmallHeight: Boolean) {
+        if (isLandscape) {
             val iobLayout = binding.infoLayout.iobLayout
             val iobLayoutParams = iobLayout.layoutParams as ConstraintLayout.LayoutParams
             val timeLayout = binding.infoLayout.timeLayout
@@ -59,7 +53,7 @@ interface SkinInterface {
                     for (v in texts) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.3f)
                 }
                 binding.statusLightsLayout.apply {
-                    val texts = listOf(cannulaAge, insulinAge, reservoirLevel, sensorAge, pbAge, batteryLevel)
+                    val texts = listOf(cannulaAge, insulinAge, reservoirLevel, sensorAge, pbAge, pbLevel)
                     for (v in texts) v.setTextSize(COMPLEX_UNIT_PX, v.textSize * 1.3f)
                 }
                 timeLayout.orientation = LinearLayout.HORIZONTAL

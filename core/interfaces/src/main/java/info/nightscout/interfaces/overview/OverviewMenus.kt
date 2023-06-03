@@ -15,7 +15,8 @@ interface OverviewMenus {
         BGI,
         SEN,
         ACT,
-        DEVSLOPE
+        DEVSLOPE,
+        HR,
     }
 
     val setting: List<Array<Boolean>>

@@ -3,6 +3,7 @@ package info.nightscout.pump.combov2
 import android.content.Context
 import android.os.Build
 import info.nightscout.comboctl.android.AndroidBluetoothPermissionException
+import info.nightscout.comboctl.base.ComboException
 import info.nightscout.comboctl.main.BasalProfile
 import info.nightscout.comboctl.main.NUM_COMBO_BASAL_PROFILE_FACTORS
 import info.nightscout.interfaces.AndroidPermission
@@ -32,7 +33,37 @@ fun AAPSProfile.toComboCtlBasalProfile(): BasalProfile {
     return BasalProfile(factors)
 }
 
-suspend fun <T> runWithPermissionCheck(
+internal class RetryPermissionCheckException : ComboException("retry permission check")
+
+// Utility function to perform Android permission checks before running a block.
+// If the permissions are not given, wait for a little while, then retry.
+// This is needed for AAPS<->combov2 integration, since AAPS can start combov2
+// even _before_ the user granted AAPS BLUETOOTH_CONNECT etc. permissions.
+//
+// permissionsToCheckFor is a collection of permissions strings like
+// Manifest.permission.BLUETOOTH_SCAN. The function goes through the collection,
+// and checks each and every permission to see if they have all been granted.
+// Only if all have been granted will the block be executed.
+//
+// It is possible that within the block, some additional permission checks
+// are performed - in particular, these can be checks for permissions that
+// weren't part of the permissionsToCheckFor collection. If such a permission
+// is not granted, the block can throw AndroidBluetoothPermissionException.
+// That exception also specifies what exact permissions haven't been granted
+// (yet). runWithPermissionCheck() then adds these missing permissions to
+// permissionsToCheckFor, and tries its permission check again, this time
+// with these extra permissions included. That way, a failed permission
+// check within the block does not break anything, and instead, these
+// permissions too are re-checked by the same logic as the one that looks
+// at the initially specified permissions.
+//
+// Additionally, the block might perform other checks that are not directly
+// permissions but related to them. One example is a check to see if the
+// Bluetooth adapter is enabled in addition to checking for Bluetooth
+// permissions. When such custom checks fail, they can throw
+// RetryPermissionCheckException to inform this function that it should
+// retry its run, just as if a permission hadn't been granted.
+internal suspend fun <T> runWithPermissionCheck(
     context: Context,
     config: Config,
     aapsLogger: AAPSLogger,
@@ -53,12 +84,20 @@ suspend fun <T> runWithPermissionCheck(
                 }
 
                 if (notAllPermissionsGranted) {
-                    delay(1000) // Wait a little bit before retrying to avoid 100% CPU usage
+                    // Wait a little bit before retrying to avoid 100% CPU usage.
+                    // It is currently unknown if there is a way to instead get
+                    // some sort of event from Android to inform that the permissions
+                    // have now been granted, so we have to resort to polling,
+                    // at least for now.
+                    delay(1000)
                     continue
                 }
             }
 
             return block.invoke()
+        } catch (e: RetryPermissionCheckException) {
+            // See the above delay() call, which fulfills the exact same purpose.
+            delay(1000)
         } catch (e: AndroidBluetoothPermissionException) {
             permissions = permissionsToCheckFor union e.missingPermissions
         }

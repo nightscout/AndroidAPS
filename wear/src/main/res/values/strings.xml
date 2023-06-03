@@ -233,5 +233,6 @@
     <string name="old">old</string>
     <string name="old_warning">!old!</string>
     <string name="error">!err!</string>
-
+    <string name="key_heart_rate_sampling" translatable="false">heart_rate_sampling</string>
+    <string name="pref_heartRateSampling">Heart Rate</string>
 </resources>

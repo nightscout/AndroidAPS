@@ -141,7 +141,7 @@
     <string name="error_in_basal_values">Chyba v hodnotách bazálu</string>
     <string name="error_in_target_values">Chyba v cieľových hodnotách</string>
     <string name="error_in_isf_values">Chyba v hodnotách citlivosti</string>
-    <string name="profile_name_contains_dot">Názov profilu obsahuje bodky.\nToto nie je v NS podporované.\nProfil nie je prenesený do NS.</string>
+    <string name="profile_name_contains_dot">Názov profilu obsahuje bodky.\nToto nie je v NS podporované.\nProfil nebude prenesený do NS.</string>
     <string name="invalid_profile_not_accepted">Neplatný profil %1$s nebol akceptovaný z NS</string>
     <string name="view">Zobraziť</string>
     <string name="errors">Chyby</string>

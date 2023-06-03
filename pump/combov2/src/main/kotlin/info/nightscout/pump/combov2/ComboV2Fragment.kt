@@ -94,8 +94,13 @@ class ComboV2Fragment : DaggerFragment() {
                         binding.combov2DriverState.text = text
 
                         binding.combov2RefreshButton.isEnabled = when (connectionState) {
+                            // Enable the refresh button if:
+                            // 1. Pump is not connected (to be able to manually initiate a pump status update)
+                            // 2. Pump is suspended (in case the user resumed the pump and wants to update the status in AAPS)
+                            // 3. When an error happened (to manually clear the pumpErrorObserved flag and unlock the loop after dealing with the error)
                             ComboV2Plugin.DriverState.Disconnected,
-                            ComboV2Plugin.DriverState.Suspended -> true
+                            ComboV2Plugin.DriverState.Suspended,
+                            ComboV2Plugin.DriverState.Error-> true
                             else -> false
                         }
 

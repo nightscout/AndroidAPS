@@ -43,7 +43,12 @@ interface StoreDataForDb {
     val nsIdDeviceStatuses: MutableList<DeviceStatus>
     val nsIdFoods: MutableList<Food>
 
+    val deleteTreatment: MutableList<String>
+    val deleteGlucoseValue: MutableList<String>
+
+    fun updateDeletedGlucoseValuesInDb()
     fun storeTreatmentsToDb()
+    fun updateDeletedTreatmentsInDb()
     fun storeGlucoseValuesToDb()
     fun storeFoodsToDb()
     fun scheduleNsIdUpdate()

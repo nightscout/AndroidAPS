@@ -11,7 +11,6 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.R
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.DashHistory
@@ -21,6 +20,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.History
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.InitialResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.ResolvedResult
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.data.TempBasalRecord
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.utils.DateTimeUtil
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
@@ -33,7 +33,7 @@ import java.util.Calendar
 import java.util.GregorianCalendar
 import javax.inject.Inject
 
-class DashPodHistoryActivity : DaggerAppCompatActivity() {
+class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var dashHistory: DashHistory
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -213,6 +213,7 @@ class DashPodHistoryActivity : DaggerAppCompatActivity() {
                 holder.timeView.text = DateTimeUtil.toStringFromTimeInMillis(it.displayTimestamp())
                 setValue(it, holder.valueView)
                 setType(it, holder.typeView)
+                setAmount(it, holder.amountView)
             }
         }
 
@@ -297,6 +298,12 @@ class DashPodHistoryActivity : DaggerAppCompatActivity() {
             setTextViewColor(check_result = false, valueView, historyEntry)
         }
 
+        private fun setAmount(historyEntry: HistoryRecord, amountView: TextView) {
+            amountView.text = historyEntry.totalAmountDelivered?.let { rh.gs(R.string.omnipod_common_history_total_delivered, it) }
+            // Set some color
+            setTextViewColor(check_result = false, amountView, historyEntry)
+        }
+
         override fun getItemCount(): Int {
             return historyList.size
         }
@@ -306,6 +313,7 @@ class DashPodHistoryActivity : DaggerAppCompatActivity() {
             val timeView: TextView = itemView.findViewById(R.id.omnipod_history_time)
             val typeView: TextView = itemView.findViewById(R.id.omnipod_history_source)
             val valueView: TextView = itemView.findViewById(R.id.omnipod_history_description)
+            val amountView: TextView = itemView.findViewById(R.id.omnipod_history_amount)
         }
     }
 

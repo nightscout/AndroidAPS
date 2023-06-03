@@ -81,8 +81,17 @@ sealed class MainScreenContent {
  * Possible contents of alert (= warning/error) screens.
  */
 sealed class AlertScreenContent {
-    data class Warning(val code: Int) : AlertScreenContent()
-    data class Error(val code: Int) : AlertScreenContent()
+    enum class AlertScreenState {
+        TO_SNOOZE,
+        TO_CONFIRM,
+        // Used when the alert is an error. The text in error screens is not
+        // interpreted, since it is anyway fully up to the user to interpret it.
+        ERROR_TEXT,
+        HISTORY_ENTRY
+    }
+
+    data class Warning(val code: Int, val state: AlertScreenState) : AlertScreenContent()
+    data class Error(val code: Int, val state: AlertScreenState) : AlertScreenContent()
 
     /**
      * "Content" while the alert symbol & code currently are "blinked out".
@@ -1139,8 +1148,9 @@ class AlertScreenParser : Parser() {
                 OptionalParser(SingleGlyphTypeParser(Glyph.LargeSymbol::class)), // warning/error symbol
                 OptionalParser(SingleGlyphTypeParser(Glyph.LargeCharacter::class)), // "W" or "E"
                 OptionalParser(IntegerParser()), // warning/error number
-                OptionalParser(SingleGlyphTypeParser(Glyph.LargeSymbol::class)), // stop symbol (only with errors)
-                SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.CHECK))
+                OptionalParser(SingleGlyphTypeParser(Glyph.LargeSymbol::class)), // stop symbol (shown in suspended state)
+                SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.CHECK)),
+                StringParser() // snooze / confirm text
             )
         ).parse(parseContext)
 
@@ -1151,14 +1161,27 @@ class AlertScreenParser : Parser() {
 
         return when (parseResult.valueAtOrNull<Glyph>(0)) {
             Glyph.LargeSymbol(LargeSymbol.WARNING) -> {
+                val stateString = parseResult.valueAt<String>(4)
+                val alertState = when (knownScreenTitles[stateString]) {
+                    TitleID.ALERT_TO_SNOOZE -> AlertScreenContent.AlertScreenState.TO_SNOOZE
+                    TitleID.ALERT_TO_CONFIRM -> AlertScreenContent.AlertScreenState.TO_CONFIRM
+                    else -> return ParseResult.Failed
+                }
                 ParseResult.Value(ParsedScreen.AlertScreen(
-                    AlertScreenContent.Warning(parseResult.valueAt(2))
+                    AlertScreenContent.Warning(parseResult.valueAt(2), alertState)
                 ))
             }
 
             Glyph.LargeSymbol(LargeSymbol.ERROR) -> {
                 ParseResult.Value(ParsedScreen.AlertScreen(
-                    AlertScreenContent.Error(parseResult.valueAt(2))
+                    AlertScreenContent.Error(
+                        parseResult.valueAt(2),
+                        // We don't really care about the state string if an error is shown.
+                        // It's not like any logic here will interpret it; that text is
+                        // purely for the user. So, don't bother interpreting it here, and
+                        // just assign a generic ERROR_TEXT state value instead.
+                        AlertScreenContent.AlertScreenState.ERROR_TEXT
+                    )
                 ))
             }
 
@@ -1226,6 +1249,7 @@ class TemporaryBasalRatePercentageScreenParser : Parser() {
     override fun parseImpl(parseContext: ParseContext): ParseResult {
         val parseResult = SequenceParser(
             listOf(
+                OptionalParser(SingleGlyphParser(Glyph.SmallSymbol(SmallSymbol.PERCENT))),
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.BASAL)),
                 OptionalParser(IntegerParser()), // TBR percentage
                 SingleGlyphParser(Glyph.LargeSymbol(LargeSymbol.PERCENT)),
@@ -1654,7 +1678,10 @@ class MyDataErrorDataScreenParser : Parser() {
                 index = index,
                 totalNumEntries = totalNumEntries,
                 timestamp = timestamp,
-                alert = if (alertType == SmallSymbol.WARNING) AlertScreenContent.Warning(alertNumber) else AlertScreenContent.Error(alertNumber)
+                alert = if (alertType == SmallSymbol.WARNING)
+                    AlertScreenContent.Warning(alertNumber, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
+                else
+                    AlertScreenContent.Error(alertNumber, AlertScreenContent.AlertScreenState.HISTORY_ENTRY)
             )
         )
     }

@@ -273,7 +273,13 @@ class PumpSyncImplementation @Inject constructor(
                 pumpSerial = pumpSerial
             )
         )
-        uel.log(UserEntry.Action.CAREPORTAL, pumpType.source.toDbSource(), note, ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TherapyEventType(type.toDBbEventType()))
+        uel.log(
+            action = UserEntry.Action.CAREPORTAL,
+            source = pumpType.source.toDbSource(),
+            note = note,
+            timestamp = timestamp,
+            ValueWithUnit.Timestamp(timestamp), ValueWithUnit.TherapyEventType(type.toDBbEventType())
+        )
         repository.runTransactionForResult(InsertIfNewByTimestampTherapyEventTransaction(therapyEvent))
             .doOnError {
                 aapsLogger.error(LTag.DATABASE, "Error while saving TherapyEvent", it)

@@ -3,8 +3,7 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.media.MediaPlayer
-import android.media.RingtoneManager
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.MotionEvent
 import androidx.appcompat.app.AlertDialog
@@ -21,8 +20,6 @@ import info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel.EopatchViewM
 import info.nightscout.core.utils.extensions.safeGetSerializableExtra
 
 class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
-
-    private var mediaPlayer: MediaPlayer? = null
     private var mPatchCommCheckDialog: Dialog? = null
     private var mProgressDialog: AlertDialog? = null
 
@@ -38,9 +35,10 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
 
         binding.apply {
-            viewModel = ViewModelProvider(this@EopatchActivity, viewModelFactory).get(EopatchViewModel::class.java)
+            viewModel = ViewModelProvider(this@EopatchActivity, viewModelFactory)[EopatchViewModel::class.java]
             viewModel?.apply {
                 processIntent(intent)
 
@@ -79,26 +77,26 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                                    setResult(RESULT_DISCARDED)
 
                                    if (intent.getBooleanExtra(EXTRA_GO_HOME, true)) {
-                                       backToHome(false)
+                                       backToHome()
                                    } else {
                                        this@EopatchActivity.finish()
                                    }
                                 })
                         }
 
-                        PatchStep.COMPLETE                   -> backToHome(true)
+                        PatchStep.COMPLETE                   -> backToHome()
 
                         PatchStep.FINISH                     -> {
                             if (!intent.getBooleanExtra(EXTRA_START_FROM_MENU, false)
                                 || intent.getBooleanExtra(EXTRA_GO_HOME, true)
                             ) {
-                                backToHome(false)
+                                backToHome()
                             } else {
                                 this@EopatchActivity.finish()
                             }
                         }
 
-                        PatchStep.BACK_TO_HOME               -> backToHome(false)
+                        PatchStep.BACK_TO_HOME               -> backToHome()
                         PatchStep.CANCEL                     -> this@EopatchActivity.finish()
                         else                                 -> Unit
                     }
@@ -120,6 +118,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                 val step = intent.safeGetSerializableExtra(EXTRA_START_PATCH_STEP, PatchStep::class.java)
 
                 forceDiscard = intent.getBooleanExtra(EXTRA_FORCE_DISCARD, false)
+                isInAlarmHandling = intent.getBooleanExtra(EXTRA_IS_ALARM_HANDLING, false)
                 if (intent.getBooleanExtra(EXTRA_START_WITH_COMM_CHECK, false)) {
                     checkCommunication({
                         initializePatchStep(step)
@@ -218,6 +217,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                     }
                     // EventType.SHOW_BONDED_DIALOG           -> this@EopatchActivity.finish()
                     EventType.SHOW_DISCARD_DIALOG          -> {
+                        val cancelLabel = isInAlarmHandling.takeOne(null, getString(R.string.cancel))
                         info.nightscout.core.ui.dialogs.AlertDialogHelper.Builder(this@EopatchActivity).apply {
                             setTitle(R.string.string_discard_patch)
                             if (isBolusActive) {
@@ -236,7 +236,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                                     }
                                 }
                             }
-                            setNegativeButton(R.string.cancel) { _, _ ->
+                            setNegativeButton(cancelLabel) { _, _ ->
                                 dismissProgressDialog()
                                 updateIncompletePatchActivationReminder()
                             }
@@ -254,7 +254,7 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
         mProgressDialog?.let {
             try {
                 mProgressDialog?.dismiss()
-            } catch (e: IllegalStateException) {
+            } catch (ignored: IllegalStateException) {
             }
             mProgressDialog = null
         }
@@ -264,33 +264,14 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
         mPatchCommCheckDialog?.let {
             try {
                 mPatchCommCheckDialog?.dismiss()
-            } catch (e: IllegalStateException) {
+            } catch (ignored: IllegalStateException) {
             }
             mPatchCommCheckDialog = null
         }
     }
 
-    private fun backToHome(isActivated: Boolean) {
-        if (isActivated) {
-            mediaPlayer = MediaPlayer.create(this, RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))?.apply {
-                setOnCompletionListener {
-                    this@EopatchActivity.finish()
-                }
-                start()
-            }
-        }
-
+    private fun backToHome() {
         this@EopatchActivity.finish()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        mediaPlayer?.let {
-            it.stop()
-            it.release()
-            mediaPlayer = null
-        }
     }
 
     override fun onBackPressed() {
@@ -309,16 +290,18 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
         const val EXTRA_START_WITH_COMM_CHECK = "EXTRA_START_WITH_COMM_CHECK"
         const val EXTRA_GO_HOME = "EXTRA_GO_HOME"
         const val EXTRA_FORCE_DISCARD = "EXTRA_FORCE_DISCARD"
+        const val EXTRA_IS_ALARM_HANDLING = "EXTRA_IS_ALARM_HANDLING"
         const val NORMAL_TEMPERATURE_MIN = 4
         const val NORMAL_TEMPERATURE_MAX = 45
 
         @JvmStatic
         @JvmOverloads
-        fun createIntentForCheckConnection(context: Context, goHomeAfterDiscard: Boolean = true, forceDiscard: Boolean = false): Intent {
+        fun createIntentForCheckConnection(context: Context, goHomeAfterDiscard: Boolean = true, forceDiscard: Boolean = false, isAlarmHandling: Boolean = false): Intent {
             return Intent(context, EopatchActivity::class.java).apply {
                 putExtra(EXTRA_START_PATCH_STEP, PatchStep.CHECK_CONNECTION)
                 putExtra(EXTRA_GO_HOME, goHomeAfterDiscard)
                 putExtra(EXTRA_FORCE_DISCARD, forceDiscard)
+                putExtra(EXTRA_IS_ALARM_HANDLING, isAlarmHandling)
             }
         }
 

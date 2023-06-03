@@ -3,6 +3,7 @@ package info.nightscout.workflow
 import android.content.Context
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
+import com.jjoe64.graphview.series.LineGraphSeries
 import info.nightscout.core.events.EventIobCalculationProgress
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.graph.data.BolusDataPoint
@@ -10,6 +11,8 @@ import info.nightscout.core.graph.data.CarbsDataPoint
 import info.nightscout.core.graph.data.DataPointWithLabelInterface
 import info.nightscout.core.graph.data.EffectiveProfileSwitchDataPoint
 import info.nightscout.core.graph.data.ExtendedBolusDataPoint
+import info.nightscout.core.graph.data.FixedLineGraphSeries
+import info.nightscout.core.graph.data.HeartRateDataPoint
 import info.nightscout.core.graph.data.PointsWithLabelGraphSeries
 import info.nightscout.core.graph.data.TherapyEventDataPoint
 import info.nightscout.core.utils.receivers.DataWorkerStorage
@@ -128,6 +131,11 @@ class PrepareTreatmentsDataWorker(
         data.overviewData.treatmentsSeries = PointsWithLabelGraphSeries(filteredTreatments.toTypedArray())
         data.overviewData.therapyEventSeries = PointsWithLabelGraphSeries(filteredTherapyEvents.toTypedArray())
         data.overviewData.epsSeries = PointsWithLabelGraphSeries(filteredEps.toTypedArray())
+
+        data.overviewData.heartRateGraphSeries = LineGraphSeries<DataPointWithLabelInterface>(
+            repository.getHeartRatesFromTimeToTime(fromTime, endTime)
+                .map { hr -> HeartRateDataPoint(hr, rh) }
+                .toTypedArray()).apply { color = rh.gac(null, info.nightscout.core.ui.R.attr.heartRateColor) }
 
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TREATMENTS_DATA, 100, null))
         return Result.success()

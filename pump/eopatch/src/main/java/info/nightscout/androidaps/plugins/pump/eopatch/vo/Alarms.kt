@@ -7,6 +7,7 @@ import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import java.util.*
+import kotlin.collections.HashSet
 
 class Alarms: IPreference<Alarms> {
     @Transient
@@ -26,6 +27,8 @@ class Alarms: IPreference<Alarms> {
 
     var occurred = HashMap<AlarmCode, AlarmItem>()
 
+    var needToStopBeep = HashSet<AlarmCode>()
+
     init {
         initObject()
     }
@@ -36,6 +39,7 @@ class Alarms: IPreference<Alarms> {
     fun clear(){
         registered.clear()
         occurred.clear()
+        needToStopBeep.clear()
     }
 
     fun update(other: Alarms) {
@@ -73,6 +77,13 @@ class Alarms: IPreference<Alarms> {
     fun handle(alarmCode: AlarmCode) {
         if (isOccurring(alarmCode))
             occurred.remove(alarmCode)
+    }
+
+    fun getOccuredAlarmTimestamp(alarmCode: AlarmCode): Long{
+        return if(occurred.containsKey(alarmCode))
+            occurred.getValue(alarmCode).triggerTimeMilli
+        else
+            System.currentTimeMillis()
     }
 
     private fun isRegistered(alarmCode: AlarmCode): Boolean{

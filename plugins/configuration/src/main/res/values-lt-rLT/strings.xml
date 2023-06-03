@@ -8,7 +8,7 @@
     <string name="setupwizard_finish">UŽBAIGTI</string>
     <string name="welcometosetupwizard">Sveiki atvykę į sąrankos vedlį. Jis lydės jus per visą nustatymų procesą\n</string>
     <string name="end_user_license_agreement">Licencinė sutartis su vartotoju</string>
-    <string name="end_user_license_agreement_text">PROGRAMA NEGALI BŪTI NAUDOJAMA GYDYMO SPRENDIMAMS PRIIMTI. PAGAL GALIOJANČIUS ĮSTATYMUS PROGRAMA NESUTEIKIA JOKIŲ GARANTIJŲ VARTOTOJUI. JEI RAŠTU NENURODYTA KITAIP, PROGRAMOS AUTORINIŲ TEISIŲ TURĖTOJAS IR/AR KITOS ŠALYS PATEIKIA PROGRAMĄ \"KAIP YRA\" BE JOKIŲ GARANTIJŲ, TIEK AKIVAIZDŽIŲ, TIEK NUMANOMŲ, ĮSKAITANT, BET NEAPSIRIBOJANT GALIMYBĘ NAUDOTI PROGRAMĄ KOMERCINIAMS AR KITOKIEMS DALINIAMS TIKSLAMS. RIZIKĄ, KYLANČIĄ NAUDOJANT PROGRAMĄ PRISIIMA PATS VARTOTOJAS. JEI PROGRAMA VEIKIA NETINKAMAI, IŠLAIDOS, SUSIJUSIOS SU PROGRAMOS SERVISU, TAISYMU AR KOREGAVIMU, TENKA VARTOTOJUI.</string>
+    <string name="end_user_license_agreement_text">PROGRAMA NEGALI BŪTI NAUDOJAMA GYDYMO SPRENDIMAMS PRIIMTI. PAGAL GALIOJANČIUS ĮSTATYMUS PROGRAMA NESUTEIKIA JOKIŲ GARANTIJŲ VARTOTOJUI. JEI RAŠTU NENURODYTA KITAIP, PROGRAMOS AUTORINIŲ TEISIŲ TURĖTOJAS IR/AR KITOS ŠALYS PATEIKIA PROGRAMĄ \"KAIP YRA\" BE JOKIŲ GARANTIJŲ, TIEK AKIVAIZDŽIŲ, TIEK NUMANOMŲ, ĮSKAITANT, BET NEAPSIRIBOJANT, GALIMYBĘ NAUDOTI PROGRAMĄ KOMERCINIAMS AR KITOKIEMS DALINIAMS TIKSLAMS. RIZIKĄ, KYLANČIĄ NAUDOJANT PROGRAMĄ PRISIIMA PATS VARTOTOJAS. JEI PROGRAMA VEIKIA NETINKAMAI, IŠLAIDOS, SUSIJUSIOS SU PROGRAMOS SERVISU, TAISYMU AR KOREGAVIMU, TENKA VARTOTOJUI.</string>
     <string name="end_user_license_agreement_i_understand">SUPRATAU IR SUTINKU</string>
     <string name="display_settings">Ekrano nustatymai</string>
     <string name="low_mark">Žemoji riba</string>
@@ -39,8 +39,8 @@
     <string name="setupwizard_sensitivity_description">Jautrumo įskiepis yra naudojamas jautrumo aptikimui ir AAO skaičiavimams. Daugiau informacijos:</string>
     <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Pasirinkite vieną iš esamų algoritmų. Jie yra išdėstyti nuo seniausio iki naujausio. Naujesni algoritmai yra galingesni ir agresyvesni. Taigi jei esate naujas vartotojas, geriau pradėti nuo AMA, o ne naujesnio. Nepamirškite perskaityti dokumentaciją ir sukonfigūruoti jį prieš naudojant.</string>
-    <string name="setupwizard_pump_waiting_for_riley_link_connection">Sukonfigūruokite RileyLink žemiau. Pasirinkę RileyLink, galėsite tęsti diegimą, kai tik RileyLink būsena bus „Prisijungta“. Tai gali užtrukti minutę.\n</string>
-    <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galite tęsti, kai tik inicijuojama pompa.\n</string>
+    <string name="setupwizard_pump_waiting_for_riley_link_connection">Nustatykite RileyLink. Pasirinkę RileyLink, galėsite tęsti sąranką, kai tik RileyLink statusas bus „Prisijungta“. Tai gali užtrukti apie minutę.\n</string>
+    <string name="setupwizard_pump_pump_not_initialized"><b>Pastaba:</b> Sąranką galėsite tęsti, kai prijungsite pompą.\n</string>
     <string name="startobjective">Pradėti Jūsų pirmąjį tikslą</string>
     <string name="setupwizard_pump_riley_link_status">RileyLink statusas:</string>
     <string name="readstatus">Statuso nuskaitymas</string>

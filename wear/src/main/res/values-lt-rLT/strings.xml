@@ -75,7 +75,7 @@
     <string name="menu_carb">AV</string>
     <string name="menu_ecarb">iAV</string>
     <string name="menu_settings">Parametrai</string>
-    <string name="menu_status">Būsena</string>
+    <string name="menu_status">Statusas</string>
     <string name="menu_resync">Suderinti dar kartą</string>
     <string name="menu_prime_fill">Užpildymas</string>
     <string name="menu_none">Nėra</string>
@@ -180,12 +180,12 @@
     <string name="no_status">S: --</string>
     <string name="time_stamp_na_min_ago">Prieš -- min.</string>
     <string name="delta_na">--- mg/dl</string>
-    <string name="no_loop_status">Ciklo būsena nežinoma</string>
+    <string name="no_loop_status">Ciklo statusas nežinomas</string>
     <string name="cob_000g">000g</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00v</string>
-    <string name="snooze_alert">AAPS atidėti aliarmą</string>
-    <string name="sending_snooze">Atidėjimas siunčiamas AAPS</string>
+    <string name="snooze_alert">Nutildyti aliarmą AAPS</string>
+    <string name="sending_snooze">Nutildymas siunčiamas AAPS</string>
     <string name="short_hour">val</string>
     <string name="week_short">sav</string>
     <string name="day_short">d</string>

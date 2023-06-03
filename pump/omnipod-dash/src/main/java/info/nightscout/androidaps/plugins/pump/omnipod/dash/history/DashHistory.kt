@@ -3,6 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.history
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_BOLUS
 import info.nightscout.androidaps.plugins.pump.omnipod.common.definition.OmnipodCommandType.SET_TEMPORARY_BASAL
+import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.PodConstants.Companion.POD_PULSE_BOLUS_UNITS
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.CommandConfirmationDenied
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.CommandConfirmationSuccess
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.state.CommandSendingFailure
@@ -57,6 +58,7 @@ class DashHistory @Inject constructor(
         tempBasalRecord: TempBasalRecord? = null,
         bolusRecord: BolusRecord? = null,
         basalProfileRecord: BasalValuesRecord? = null,
+        totalAmountDeliveredRecord: Double? = null,
         resolveResult: ResolvedResult? = null,
         resolvedAt: Long? = null
     ): Single<Long> = Single.defer {
@@ -79,6 +81,7 @@ class DashHistory @Inject constructor(
                         tempBasalRecord = tempBasalRecord,
                         bolusRecord = bolusRecord,
                         basalProfileRecord = basalProfileRecord,
+                        totalAmountDelivered = totalAmountDeliveredRecord,
                         initialResult = initialResult,
                         resolvedResult = resolveResult,
                         resolvedAt = resolvedAt
@@ -99,18 +102,23 @@ class DashHistory @Inject constructor(
             logger.error(LTag.PUMP, "HistoryId not found to for updating from state")
             return@defer Completable.complete()
         }
-        when (podState.getCommandConfirmationFromState()) {
-            CommandSendingFailure ->
+
+        val setTotalAmountDelivered = dao.setTotalAmountDelivered(historyId, podState.pulsesDelivered?.times(POD_PULSE_BOLUS_UNITS))
+
+        val commandConfirmation = when (podState.getCommandConfirmationFromState()) {
+            CommandSendingFailure      ->
                 dao.setInitialResult(historyId, InitialResult.FAILURE_SENDING)
             CommandSendingNotConfirmed ->
                 dao.setInitialResult(historyId, InitialResult.SENT)
-            CommandConfirmationDenied ->
+            CommandConfirmationDenied  ->
                 markFailure(historyId)
             CommandConfirmationSuccess ->
                 dao.setInitialResult(historyId, InitialResult.SENT)
                     .andThen(markSuccess(historyId))
-            NoActiveCommand ->
+            NoActiveCommand            ->
                 Completable.complete()
         }
+
+        Completable.concat(listOf(setTotalAmountDelivered, commandConfirmation))
     }
 }

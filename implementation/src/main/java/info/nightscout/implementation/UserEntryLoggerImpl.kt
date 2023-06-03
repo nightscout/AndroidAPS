@@ -29,16 +29,14 @@ class UserEntryLoggerImpl @Inject constructor(
 
     private val compositeDisposable = CompositeDisposable()
 
-    override fun log(action: Action, source: Sources, note: String?, vararg listValues: ValueWithUnit?) = log(action, source, note, listValues.toList())
+    override fun log(action: Action, source: Sources, note: String?, timestamp: Long, vararg listValues: ValueWithUnit?) = log(action, source, note, timestamp, listValues.toList())
 
-    override fun log(action: Action, source: Sources, vararg listValues: ValueWithUnit?) = log(action, source, "", listValues.toList())
-
-    override fun log(action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>) {
+    override fun log(action: Action, source: Sources, note: String?, timestamp: Long, listValues: List<ValueWithUnit?>) {
         val filteredValues = listValues.toList().filterNotNull()
         log(
             listOf(
                 UserEntry(
-                    timestamp = dateUtil.now(),
+                    timestamp = timestamp,
                     action = action,
                     source = source,
                     note = note ?: "",
@@ -47,6 +45,12 @@ class UserEntryLoggerImpl @Inject constructor(
             )
         )
     }
+
+    override fun log(action: Action, source: Sources, note: String?, vararg listValues: ValueWithUnit?) = log(action, source, note, listValues.toList())
+
+    override fun log(action: Action, source: Sources, vararg listValues: ValueWithUnit?) = log(action, source, "", listValues.toList())
+
+    override fun log(action: Action, source: Sources, note: String?, listValues: List<ValueWithUnit?>) = log(action, source, note, dateUtil.now(), listValues)
 
     override fun log(entries: List<UserEntry>) {
         compositeDisposable += repository.runTransactionForResult(UserEntryTransaction(entries))

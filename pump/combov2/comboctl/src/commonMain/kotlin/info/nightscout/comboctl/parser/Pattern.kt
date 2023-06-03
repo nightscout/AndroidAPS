@@ -1414,6 +1414,15 @@ val glyphPatterns = mapOf<Glyph, Pattern>(
         "█    ",
         "█████"
     )),
+    Glyph.SmallCharacter('Ė') to Pattern(arrayOf(
+        "  █  ",
+        "     ",
+        "█████",
+        "█    ",
+        "████ ",
+        "█    ",
+        "█████"
+    )),
     Glyph.SmallCharacter('ę') to Pattern(arrayOf(
         "█████",
         "█    ",

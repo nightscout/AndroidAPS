@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -23,7 +23,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import java.text.DecimalFormat
 import javax.inject.Inject
 
-class DiaconnG8UserOptionsActivity : DaggerAppCompatActivity() {
+class DiaconnG8UserOptionsActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var context: Context

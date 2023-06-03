@@ -92,6 +92,9 @@
     <string name="patch_cancel_pairing">Annulla associazione</string>
     <string name="symbol_days">giorni</string>
     <string name="all_dose_unit">&#160;U</string>
+    <string name="insulin_suspend_msg1">Al momento della sospensione, il bolo &amp; la basale temporanea attualmente in erogazione verranno cancellati. \n\nVelocità : %1$s U/hr\nTempo rimanente  : %2$s\n&amp; Insulin to go : %3$.2f U</string>
+    <string name="insulin_suspend_msg2">Al momento della sospensione, il bolo attualmente in erogazione verrà cancellato. \n\nInsulin to go : %1$.2f U</string>
+    <string name="insulin_suspend_msg3">Al momento della sospensione, la basale temporanea attualmente in erogazione verrà cancellata. \n\nVelocità : %1$s U/hr\nTempo rimanente  : %2$s</string>
     <string name="insulin_suspend_msg4">L\'erogazione di insulina sarà sospesa.</string>
     <string name="string_change_patch">Scarta/Cambia patch</string>
     <string name="string_activate_patch">Attiva patch</string>
@@ -111,11 +114,13 @@
     <string name="retry">Riprova</string>
     <string name="string_caution_not_remove_needle_cap">[Caution] NON rimuovere la protezione dell\'ago e il supporto adesivo sino a ulteriori istruzioni.</string>
     <string name="string_are_you_sure_to_discard_current_patch">Sei sicuro di scartare la patch corrent?</string>
+    <string name="string_unconfirmed_bolus_info_discard_confirm_message">A causa di informazioni non confermate riguardo il bolo, il calcolo del bolo non può essere usato fino a %s.\n\nSei sicuro di voler scartare la patch corrente?</string>
     <string name="needle_insertion_error_1">Errore inserimento ago.</string>
     <string name="needle_insertion_error_2">Controlla che la direzione del foro rimanente dopo aver girato la leva sia dritta, quindi tocca \'Riprova\'.</string>
     <string name="needle_insertion_error_3">Tocca \'Scarta\' per disattivare la patch.</string>
     <string name="string_suspend_time_insulin_delivery_title">Tempo sospensione basale</string>
     <string name="string_resume_insulin_delivery_title">Riprendi erogazione insulina</string>
+    <string name="string_resume_insulin_delivery_message">Fine sospensione insulina.\nTocca \'Conferma\' per riprendere l\'erogazione di insulina.\n\n[Caution]\nL\'erogazione di insulina non riprenderà fino a quando non tocchi \'Conferma\'.\nSe non tocchi \'Conferma\', potresti sviluppare iperglicemia.</string>
     <string name="string_suspended_insulin_delivery_message">L\'erogazione di insulina è sospesa.</string>
     <string name="string_resumed_insulin_delivery_message">L\'erogazione di insulina è ripresa.</string>
     <string name="finish">Fine</string>

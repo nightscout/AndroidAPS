@@ -13,6 +13,7 @@ class HistoryMapper {
             initialResult = entity.initialResult,
             commandType = entity.commandType,
             record = entity.bolusRecord ?: entity.tempBasalRecord ?: entity.basalProfileRecord,
+            totalAmountDelivered = entity.totalAmountDelivered,
             resolvedResult = entity.resolvedResult,
             resolvedAt = entity.resolvedAt
         )

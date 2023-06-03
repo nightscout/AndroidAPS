@@ -141,7 +141,7 @@
     <string name="error_in_basal_values">Feil i basalverdiene</string>
     <string name="error_in_target_values">Feil i BS målverdier</string>
     <string name="error_in_isf_values">Feil i IF verdien</string>
-    <string name="profile_name_contains_dot">Profilnavnet inneholder prikker.\nDette støttes ikke av NS.\nProfilen er ikke lastet opp til NS.</string>
+    <string name="profile_name_contains_dot">Noen av profilnavnene inneholder punktum.\nDette støttes ikke av NS.\nProfilen er ikke lastet opp til NS.</string>
     <string name="invalid_profile_not_accepted">Ugyldig profil %1$s ikke akseptert fra NS</string>
     <string name="view">Visning</string>
     <string name="errors">Feil</string>

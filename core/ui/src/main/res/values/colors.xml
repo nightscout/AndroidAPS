@@ -153,6 +153,7 @@
     <color name="bgi">#00EEEE</color>
     <color name="devSlopePos">#FFFFFF00</color>
     <color name="devSlopeNeg">#FFFF00FF</color>
+    <color name="heartRate">#FFFFFF66</color>
     <color name="actionsConfirm">#F6CE22</color>
     <color name="deviations">#FF0000</color>
     <color name="cobAlert">#7484E2</color>

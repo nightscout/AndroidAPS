@@ -2,9 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application>
-        <activity android:name=".ui.EopatchActivity" />
-        <activity android:name=".ui.AlarmHelperActivity" />
-        <activity android:name=".ui.DialogHelperActivity" />
+        <activity
+            android:name=".ui.EopatchActivity"
+            android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize"/>
+        <activity
+            android:name=".ui.AlarmHelperActivity"
+            android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize"/>
+        <activity
+            android:name=".ui.DialogHelperActivity"
+            android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize"/>
         <receiver android:name=".OsAlarmReceiver"/>
 	</application>
 

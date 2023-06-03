@@ -164,7 +164,6 @@
     <string name="isf_short">Чувств</string>
     <string name="canceling_tbr_failed">Отмяната на временния базал е неуспешно</string>
     <string name="canceling_eb_failed">Неуспешно спиране на удължен болус</string>
-    <string name="virtualpump_uploadstatus_title">Качване на статус в NS или Tidepool</string>
     <string name="suspendloop_label">Изключен/забранен цикъл</string>
     <string name="iob_label">Активен Инсулин (IOB)</string>
     <!--    Protection-->
@@ -298,7 +297,6 @@
     <string name="uel_site_change">СМЯНА КАНЮЛА</string>
     <string name="uel_reservoir_change">СМЯНА НА РЕЗЕРВОАР</string>
     <string name="uel_calibration">КАЛИБРАЦИЯ</string>
-    <string name="uel_prime_bolus">БОЛУС ПЪЛНЕНЕНЕ</string>
     <string name="uel_treatment">ЛЕЧЕНИЕ</string>
     <string name="uel_careportal_ns_refresh">ОБНОВИ ПОРТАЛА ЗА ЛЕЧЕНИЯ NS</string>
     <string name="uel_profile_switch_ns_refresh">ОБНОВИ СМЯНАТА НА ПРОФИЛ NS</string>
@@ -463,10 +461,10 @@
     <string name="wizard_carbs_constraint">Нарушение на въхлехидратните ограничения!</string>
     <string name="wizard_explain_calc">Изчисляване (въглехидратно число: %1$.1f, инсулинова чувствителност: %2$.1f)</string>
     <string name="wizard_explain_carbs">Въглехидрати: %1$.2fЕ</string>
-    <string name="wizard_explain_cob">Остатъчни въглехидрати: %1$.0fg %2$.2fU</string>
-    <string name="wizard_explain_bg">Кръвна захар: %1$.2fU</string>
+    <string name="wizard_explain_cob">Активни въглехидрати: %1$.0fгр %2$.2fЕ</string>
+    <string name="wizard_explain_bg">КЗ: %1$.2fЕ</string>
     <string name="wizard_explain_iob">Остатъчен инсулин: %1$.2fU</string>
-    <string name="wizard_explain_superbolus">Суперболус: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Суперболус: %1$.2fЕ</string>
     <string name="wizard_explain_trend">15\' тенденция: %1$.2fЕ</string>
     <string name="wizard_explain_percent">Проценти: %1$.2fЕ x %2$d%% ≈ %3$.2fЕ</string>
     <string name="wizard_constraint_bolus_size">Нарушение в ограниичението на инсулин!\nНе може да бъде доставен %1$.2fЕ</string>
@@ -572,7 +570,7 @@
         <item quantity="other">%1$d минути</item>
     </plurals>
     <!--    Maintenance-->
-    <string name="cleanup_db_confirm">Искате ли да почистите базата данни\nТова ще премахне проследените промени и историята на данните, по-стари от 3 месеца.</string>
+    <string name="cleanup_db_confirm">Искате ли да изтриете базата данни\nТова ще премахне проследените промени и историята на данните, по-стари от 3 месеца.</string>
     <string name="cleanup_db_confirm_sync">Искате ли да изтриете базата данни?\nТова ще премахне проследените промени и историята на данните, по-стари от 3 месеца.\nИзвършването му ще ускори драстично пълната синхронизация.</string>
     <string name="cleared_entries">Изчистени записи</string>
 </resources>

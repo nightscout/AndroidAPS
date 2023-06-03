@@ -87,6 +87,7 @@ class OverviewDataImpl @Inject constructor(
         dsMinSeries = LineGraphSeries()
         treatmentsSeries = PointsWithLabelGraphSeries()
         epsSeries = PointsWithLabelGraphSeries()
+        heartRateGraphSeries = LineGraphSeries()
     }
 
     override fun initRange() {
@@ -322,4 +323,6 @@ class OverviewDataImpl @Inject constructor(
     override val dsMinScale = Scale()
     override var dsMaxSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
     override var dsMinSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
+    override var heartRateScale = Scale()
+    override var heartRateGraphSeries: LineGraphSeries<DataPointWithLabelInterface> = LineGraphSeries()
 }

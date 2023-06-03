@@ -19,7 +19,9 @@ enum class TitleID {
     BOLUS_DATA,
     ERROR_DATA,
     DAILY_TOTALS,
-    TBR_DATA
+    TBR_DATA,
+    ALERT_TO_SNOOZE,
+    ALERT_TO_CONFIRM
 }
 
 /**
@@ -46,6 +48,8 @@ val knownScreenTitles = mapOf(
     "ERROR DATA" to TitleID.ERROR_DATA,
     "DAILY TOTALS" to TitleID.DAILY_TOTALS,
     "TBR DATA" to TitleID.TBR_DATA,
+    "TO SNOOZE" to TitleID.ALERT_TO_SNOOZE,
+    "TO CONFIRM" to TitleID.ALERT_TO_CONFIRM,
 
     // Spanish
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -60,6 +64,8 @@ val knownScreenTitles = mapOf(
     "DATOS DE ERROR" to TitleID.ERROR_DATA,
     "TOTALES DIARIOS" to TitleID.DAILY_TOTALS,
     "DATOS DE DBT" to TitleID.TBR_DATA,
+    "REPETIR SEÑAL" to TitleID.ALERT_TO_SNOOZE,
+    "CONFIRMAR" to TitleID.ALERT_TO_CONFIRM,
 
     // French
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -74,6 +80,8 @@ val knownScreenTitles = mapOf(
     "ERREURS" to TitleID.ERROR_DATA,
     "QUANTITÉS JOURN." to TitleID.DAILY_TOTALS,
     "DBT" to TitleID.TBR_DATA,
+    "RAPPEL TARD" to TitleID.ALERT_TO_SNOOZE, // actually, the text is "RAPPEL + TARD", but the + symbol is ignored to simplify parsing
+    "POUR CONFIRMER" to TitleID.ALERT_TO_CONFIRM,
 
     // Italian
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -88,6 +96,8 @@ val knownScreenTitles = mapOf(
     "MEMORIA ALLARMI" to TitleID.ERROR_DATA,
     "TOTALI GIORNATA" to TitleID.DAILY_TOTALS,
     "MEMORIA PBT" to TitleID.TBR_DATA,
+    "RIPETI ALLARME" to TitleID.ALERT_TO_SNOOZE,
+    "PER CONFERMARE" to TitleID.ALERT_TO_CONFIRM,
 
     // Russian
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -102,6 +112,8 @@ val knownScreenTitles = mapOf(
     "ДАHHЫE OБ O ИБ." to TitleID.ERROR_DATA,
     "CУTOЧHЫE ДOЗЫ" to TitleID.DAILY_TOTALS,
     "ДАHHЫE O BБC" to TitleID.TBR_DATA,
+    "BЫKЛ. ЗBУK" to TitleID.ALERT_TO_SNOOZE,
+    "ПOДTBEPДИTЬ" to TitleID.ALERT_TO_CONFIRM,
 
     // Turkish
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -116,6 +128,8 @@ val knownScreenTitles = mapOf(
     "HATA VERİLERİ" to TitleID.ERROR_DATA,
     "GÜNLÜK TOPLAM" to TitleID.DAILY_TOTALS,
     "GBH VERİLERİ" to TitleID.TBR_DATA,
+    "ERTELE" to TitleID.ALERT_TO_SNOOZE,
+    "ONAYLA" to TitleID.ALERT_TO_CONFIRM,
 
     // Polish
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -130,6 +144,8 @@ val knownScreenTitles = mapOf(
     "DANE BŁĘDU" to TitleID.ERROR_DATA,
     "DZIEN. D. CAŁK." to TitleID.DAILY_TOTALS,
     "DANE TDP" to TitleID.TBR_DATA,
+    "ABY WYCISZYĆ" to TitleID.ALERT_TO_SNOOZE,
+    "ABY POTWIERDZ." to TitleID.ALERT_TO_CONFIRM,
 
     // Czech
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -144,6 +160,8 @@ val knownScreenTitles = mapOf(
     "ÚDAJE CHYB" to TitleID.ERROR_DATA,
     "CELK. DEN. DÁVKY" to TitleID.DAILY_TOTALS,
     "ÚDAJE DBD" to TitleID.TBR_DATA,
+    "ODLOŽIT" to TitleID.ALERT_TO_SNOOZE,
+    "POTVRDIT" to TitleID.ALERT_TO_CONFIRM,
 
     // Hungarian
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -158,6 +176,8 @@ val knownScreenTitles = mapOf(
     "HIBAADATOK" to TitleID.ERROR_DATA,
     "NAPI TELJES" to TitleID.DAILY_TOTALS,
     "TBR-ADATOK" to TitleID.TBR_DATA,
+    "NÉMÍTÁS" to TitleID.ALERT_TO_SNOOZE,
+    "JÓVÁHAGYÁS" to TitleID.ALERT_TO_CONFIRM,
 
     // Slovak
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -172,6 +192,8 @@ val knownScreenTitles = mapOf(
     "DÁTA O CHYBÁCH" to TitleID.ERROR_DATA,
     "SÚČTY DŇA" to TitleID.DAILY_TOTALS,
     "DBD DÁTA" to TitleID.TBR_DATA,
+    "STLMI" to TitleID.ALERT_TO_SNOOZE,
+    "POTVRDI" to TitleID.ALERT_TO_CONFIRM,
 
     // Romanian
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -186,6 +208,8 @@ val knownScreenTitles = mapOf(
     "DATE EROARE" to TitleID.ERROR_DATA,
     "TOTALURI ZILNICE" to TitleID.DAILY_TOTALS,
     "DATE RBT" to TitleID.TBR_DATA,
+    "OPRIRE SONERIE" to TitleID.ALERT_TO_SNOOZE,
+    "CONFIRMARE" to TitleID.ALERT_TO_CONFIRM,
 
     // Croatian
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -200,6 +224,8 @@ val knownScreenTitles = mapOf(
     "PODACI O GREŠK." to TitleID.ERROR_DATA,
     "UKUPNE DNEV.DOZE" to TitleID.DAILY_TOTALS,
     "PODACI O PBD-U" to TitleID.TBR_DATA,
+    "ZA ODGODU" to TitleID.ALERT_TO_SNOOZE,
+    "ZA POTVRDU" to TitleID.ALERT_TO_CONFIRM,
 
     // Dutch
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -214,6 +240,8 @@ val knownScreenTitles = mapOf(
     "FOUTENGEGEVENS" to TitleID.ERROR_DATA,
     "DAGTOTALEN" to TitleID.DAILY_TOTALS,
     "TBD-GEGEVENS" to TitleID.TBR_DATA,
+    "UITSTELLEN" to TitleID.ALERT_TO_SNOOZE,
+    "BEVESTIGEN" to TitleID.ALERT_TO_CONFIRM,
 
     // Greek
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -228,6 +256,8 @@ val knownScreenTitles = mapOf(
     "ΔEΔOМ. ΣΦАΛМАTΩN" to TitleID.ERROR_DATA,
     "HМEPHΣIO ΣΥNOΛO" to TitleID.DAILY_TOTALS,
     "ΔEΔOМENА П.B.P." to TitleID.TBR_DATA,
+    "ANAΣTOΛH" to TitleID.ALERT_TO_SNOOZE,
+    "EПIBEBАIΩΣH" to TitleID.ALERT_TO_CONFIRM,
 
     // Finnish
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -242,6 +272,8 @@ val knownScreenTitles = mapOf(
     "HÄLYTYSTIEDOT" to TitleID.ERROR_DATA,
     "PÄIV. KOK.ANNOS" to TitleID.DAILY_TOTALS,
     "TBA - TIEDOT" to TitleID.TBR_DATA,
+    "ILMOITA MYÖH." to TitleID.ALERT_TO_SNOOZE,
+    "VAHVISTA" to TitleID.ALERT_TO_CONFIRM,
 
     // Norwegian
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -256,6 +288,8 @@ val knownScreenTitles = mapOf(
     "FEILDATA" to TitleID.ERROR_DATA,
     "DØGNMENGDE" to TitleID.DAILY_TOTALS,
     "MBD-DATA" to TitleID.TBR_DATA,
+    "FOR Å SLUMRE" to TitleID.ALERT_TO_SNOOZE,
+    "FOR Å BEKREFTE" to TitleID.ALERT_TO_CONFIRM,
 
     // Portuguese
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -271,6 +305,8 @@ val knownScreenTitles = mapOf(
     "DADOS DE ERROS" to TitleID.ERROR_DATA, "DADOS DE ALARMES" to TitleID.ERROR_DATA,
     "TOTAIS DIÁRIOS" to TitleID.DAILY_TOTALS,
     "DADOS DBT" to TitleID.TBR_DATA,
+    "PARA SILENCIAR" to TitleID.ALERT_TO_SNOOZE,
+    "PARA CONFIRMAR" to TitleID.ALERT_TO_CONFIRM,
 
     // Swedish
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -285,6 +321,8 @@ val knownScreenTitles = mapOf(
     "FELDATA" to TitleID.ERROR_DATA,
     "DYGNSHISTORIK" to TitleID.DAILY_TOTALS,
     "TBD DATA" to TitleID.TBR_DATA,
+    "SNOOZE" to TitleID.ALERT_TO_SNOOZE,
+    "BEKRÄFTA" to TitleID.ALERT_TO_CONFIRM,
 
     // Danish
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -299,6 +337,8 @@ val knownScreenTitles = mapOf(
     "FEJLDATA" to TitleID.ERROR_DATA,
     "DAGLIG TOTAL" to TitleID.DAILY_TOTALS,
     "MBR-DATA" to TitleID.TBR_DATA,
+    "FOR AT UDSÆTTE" to TitleID.ALERT_TO_SNOOZE,
+    "FOR GODKEND" to TitleID.ALERT_TO_CONFIRM,
 
     // German
     "QUICK INFO" to TitleID.QUICK_INFO,
@@ -313,6 +353,40 @@ val knownScreenTitles = mapOf(
     "FEHLERMELDUNGEN" to TitleID.ERROR_DATA,
     "TAGESGESAMTMENGE" to TitleID.DAILY_TOTALS,
     "TBR-INFORMATION" to TitleID.TBR_DATA,
+    "NEU ERINNERN" to TitleID.ALERT_TO_SNOOZE,
+    "BESTÄTIGEN" to TitleID.ALERT_TO_CONFIRM,
+
+    // Slovenian
+    "QUICK INFO" to TitleID.QUICK_INFO,
+    "ODSTOTEK ZBO" to TitleID.TBR_PERCENTAGE,
+    "TRAJANJE ZBO" to TitleID.TBR_DURATION,
+    "URA" to TitleID.HOUR,
+    "MINUTE" to TitleID.MINUTE,
+    "LETO" to TitleID.YEAR,
+    "MESEC" to TitleID.MONTH,
+    "DAN" to TitleID.DAY,
+    "PODATKI O BOLUSU" to TitleID.BOLUS_DATA,
+    "PODATKI O NAPAKI" to TitleID.ERROR_DATA,
+    "DNEVNA PORABA" to TitleID.DAILY_TOTALS,
+    "PODATKI O ZBO" to TitleID.TBR_DATA,
+    "UTIŠANJE" to TitleID.ALERT_TO_SNOOZE,
+    "POTRDITEV" to TitleID.ALERT_TO_CONFIRM,
+
+    // Lithuanian
+    "QUICK INFO" to TitleID.QUICK_INFO,
+    "TBR REIKŠMĖS" to TitleID.TBR_PERCENTAGE,
+    "TBR TRUKMĖ" to TitleID.TBR_DURATION,
+    "VALANDA" to TitleID.HOUR,
+    "MINUTĖ" to TitleID.MINUTE,
+    "METAI" to TitleID.YEAR,
+    "MĖNUO" to TitleID.MONTH,
+    "DIENA" to TitleID.DAY,
+    "BOLIUSO DUOMENYS" to TitleID.BOLUS_DATA,
+    "KLAIDOS DUOMENYS" to TitleID.ERROR_DATA,
+    "BENDR. DIENOS K." to TitleID.DAILY_TOTALS,
+    "TBR DUOMENYS" to TitleID.TBR_DATA,
+    "NUTILDYTI" to TitleID.ALERT_TO_SNOOZE,
+    "PATVIRTINTI" to TitleID.ALERT_TO_CONFIRM,
 
     // Some pumps came preconfigured with a different quick info name
     "ACCU CHECK SPIRIT" to TitleID.QUICK_INFO

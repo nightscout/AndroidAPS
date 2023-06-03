@@ -8,8 +8,8 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import com.google.android.material.tabs.TabLayout
 import com.google.common.collect.Lists
-import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.core.profile.ProfileSealed
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -38,7 +38,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import java.text.DecimalFormat
 import javax.inject.Inject
 
-class ProfileHelperActivity : DaggerAppCompatActivity() {
+class ProfileHelperActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var tddCalculator: TddCalculator
     @Inject lateinit var profileFunction: ProfileFunction

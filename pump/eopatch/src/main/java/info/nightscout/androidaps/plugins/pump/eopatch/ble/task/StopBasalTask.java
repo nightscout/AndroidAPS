@@ -30,6 +30,8 @@ public class StopBasalTask extends TaskBase {
     @Inject PumpSync pumpSync;
     @Inject UserEntryLogger uel;
 
+    @Inject UpdateConnectionTask updateConnectionTask;
+
     private final BasalStop BASAL_STOP;
     private final BehaviorSubject<Boolean> bolusCheckSubject = BehaviorSubject.create();
     private final BehaviorSubject<Boolean> exbolusCheckSubject = BehaviorSubject.create();
@@ -93,13 +95,9 @@ public class StopBasalTask extends TaskBase {
                 .flatMap(v -> isReady())
 				.concatMapSingle(v -> BASAL_STOP.stop())
                 .doOnNext(this::checkResponse)
+                .doOnNext(v -> updateConnectionTask.enqueue())
                 .firstOrError()
-                .doOnSuccess(this::onBasalStopped)
                 .doOnError(e -> aapsLogger.error(LTag.PUMPCOMM, (e.getMessage() != null) ? e.getMessage() : "StopBasalTask error"));
-    }
-
-    private void onBasalStopped(BasalStopResponse response) {
-        enqueue(TaskFunc.UPDATE_CONNECTION);
     }
 
     public synchronized void enqueue() {

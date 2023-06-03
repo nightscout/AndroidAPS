@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.ui.activities.DialogAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.logging.UserEntryLogger
@@ -42,7 +42,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
     private var amount = 0.0
     private var id: Long = 0L
     private var state: String? = null
-    private var helpActivity: DialogAppCompatActivity? = null
+    private var helpActivity: TranslatedDaggerAppCompatActivity? = null
 
     fun setId(id: Long): BolusProgressDialog {
         this.id = id
@@ -55,7 +55,7 @@ class BolusProgressDialog : DaggerDialogFragment() {
         return this
     }
 
-    fun setHelperActivity(activity: DialogAppCompatActivity): BolusProgressDialog {
+    fun setHelperActivity(activity: TranslatedDaggerAppCompatActivity): BolusProgressDialog {
         helpActivity = activity
         return this
     }

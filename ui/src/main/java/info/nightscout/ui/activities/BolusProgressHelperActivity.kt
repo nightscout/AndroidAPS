@@ -1,10 +1,10 @@
 package info.nightscout.ui.activities
 
 import android.os.Bundle
-import info.nightscout.core.ui.activities.DialogAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.ui.dialogs.BolusProgressDialog
 
-class BolusProgressHelperActivity : DialogAppCompatActivity() {
+class BolusProgressHelperActivity : TranslatedDaggerAppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BolusProgressDialog()

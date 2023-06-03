@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.pump.common.R
 import info.nightscout.pump.common.databinding.PumpHistoryActivityBinding
@@ -22,12 +22,10 @@ import info.nightscout.pump.common.driver.history.PumpHistoryEntry
 import info.nightscout.pump.common.driver.history.PumpHistoryText
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
-class PumpHistoryActivity : DaggerAppCompatActivity() {
+class PumpHistoryActivity : TranslatedDaggerAppCompatActivity() {
 
-    @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var context: Context

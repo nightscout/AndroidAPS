@@ -164,7 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">ביטול בזאלי זמני נכשל</string>
     <string name="canceling_eb_failed">ביטול בולוס ממושך נכשל</string>
-    <string name="virtualpump_uploadstatus_title">סטטוס העלאה לנייטסקאוט או ל-Tidepool</string>
+    <string name="virtualpump_uploadstatus_title">העלה את סטטוס המשאבה לנייטסקאוט או ל-Tidepool</string>
     <string name="suspendloop_label">השבתת \\ השהיית לולאה</string>
     <string name="iob_label">אינסולין פעיל בגוף (IOB)</string>
     <!--    Protection-->
