@@ -164,7 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Zrušenie dočasného bazálu zlyhalo</string>
     <string name="canceling_eb_failed">Zastavenie predĺženého bolusu zlyhalo</string>
-    <string name="virtualpump_uploadstatus_title">Nahrať stav do NS, alebo Tidepool</string>
+    <string name="virtualpump_uploadstatus_title">Nahrávať stav pumpy do NS, alebo Tidepoolu</string>
     <string name="suspendloop_label">Deaktivovaný/pozastavený uzavretý okruh</string>
     <string name="iob_label">Aktívny inzulín (IOB)</string>
     <!--    Protection-->

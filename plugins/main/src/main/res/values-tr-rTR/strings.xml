@@ -141,7 +141,7 @@
     <string name="error_in_basal_values">Bazal değerlerde hata</string>
     <string name="error_in_target_values">Hedef değerlerde hata</string>
     <string name="error_in_isf_values">ISF değerinde hata</string>
-    <string name="profile_name_contains_dot">Profil adı noktalar içeriyor.\nBu NS tarafından desteklenmiyor.\n Profil NS\'a yüklenmez.</string>
+    <string name="profile_name_contains_dot">Profil adlarından bazıları noktalar içeriyor.\nBu, NS tarafından desteklenmiyor.\nProfiller NS\'ye yüklenmeyecek.</string>
     <string name="invalid_profile_not_accepted">Geçersiz profil %1$s NS tarafından kabul edilmiyor</string>
     <string name="view">Görünüm</string>
     <string name="errors">Hatalar</string>

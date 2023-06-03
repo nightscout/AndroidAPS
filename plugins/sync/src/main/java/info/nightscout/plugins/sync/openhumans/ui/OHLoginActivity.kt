@@ -15,13 +15,13 @@ import androidx.core.view.updatePadding
 import androidx.core.widget.NestedScrollView
 import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.button.MaterialButton
-import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import info.nightscout.plugins.sync.R
 import info.nightscout.plugins.sync.di.AuthUrl
 import info.nightscout.plugins.sync.di.ViewModelFactory
-import info.nightscout.plugins.sync.R
 import javax.inject.Inject
 
-class OHLoginActivity : DaggerAppCompatActivity() {
+class OHLoginActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject
     internal lateinit var viewModelFactory: ViewModelFactory

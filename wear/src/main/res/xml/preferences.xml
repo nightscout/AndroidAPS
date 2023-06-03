@@ -180,4 +180,11 @@
         android:summary="Input Design"
         android:title="@string/pref_moreWatchfaceSettings" />
 
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_heart_rate_sampling"
+        android:summary="Enable heart rate sampling."
+        android:title="@string/pref_heartRateSampling"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
 </PreferenceScreen>

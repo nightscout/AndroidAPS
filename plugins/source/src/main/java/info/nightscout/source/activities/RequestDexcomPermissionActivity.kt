@@ -1,10 +1,10 @@
 package info.nightscout.source.activities
 
 import android.os.Bundle
-import info.nightscout.core.ui.activities.DialogAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.source.DexcomPlugin
 
-class RequestDexcomPermissionActivity : DialogAppCompatActivity() {
+class RequestDexcomPermissionActivity : TranslatedDaggerAppCompatActivity() {
 
     private val requestCode = "AndroidAPS <3".map { it.code }.sum()
 

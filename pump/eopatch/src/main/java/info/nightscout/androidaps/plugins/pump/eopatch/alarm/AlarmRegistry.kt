@@ -17,6 +17,7 @@ import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -120,6 +121,7 @@ class AlarmRegistry @Inject constructor() : IAlarmRegistry {
         return Maybe.fromCallable {
             cancelOsAlarmInternal(alarmCode)
             val pendingIntent = createPendingIntent(alarmCode, 0)
+            aapsLogger.debug("[${alarmCode}] OS Alarm added. ${DateUtil(mContext).toISOString(triggerTime)}")
             mOsAlarmManager.setAlarmClock(AlarmClockInfo(triggerTime, pendingIntent), pendingIntent)
             alarmCode
         }

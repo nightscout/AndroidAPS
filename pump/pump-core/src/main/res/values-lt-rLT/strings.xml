@@ -2,7 +2,7 @@
 <resources>
     <!-- PumpDeviceState -->
     <string name="pump_status_never_contacted">Niekada nebuvo sujungta</string>
-    <string name="pump_status_sleeping">Užmigusi</string>
+    <string name="pump_status_sleeping">Miego režime</string>
     <string name="pump_status_waking_up">Pažadinimas</string>
     <string name="pump_status_active">Aktyvi</string>
     <string name="pump_status_error_comm">Ryšio klaida</string>

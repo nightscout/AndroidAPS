@@ -29,7 +29,7 @@ internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
     fun getLastId(): Long?
 
     @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE nightscoutId = :nsId AND referenceId IS NULL")
-    fun findByNSIdMaybe(nsId: String): Maybe<GlucoseValue>
+    fun findByNSId(nsId: String): GlucoseValue?
 
     @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE timestamp = :timestamp AND sourceSensor = :sourceSensor AND referenceId IS NULL")
     fun findByTimestampAndSensor(timestamp: Long, sourceSensor: GlucoseValue.SourceSensor): GlucoseValue?

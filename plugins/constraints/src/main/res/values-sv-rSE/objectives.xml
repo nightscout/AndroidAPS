@@ -18,7 +18,6 @@
     <string name="objectives_autosens_objective">Justera basaler och kvoter om det behövs. Aktivera sedan autosens</string>
     <string name="objectives_autosens_gate">1 veckas lyckad looping dagtid, där alla måltider lagts in</string>
     <string name="objectives_smb_objective">Aktiverar ytterligare funktioner för användning dagtid, t ex SMB</string>
-    <string name="objectives_smb_gate">Du måste läsa på wikin och öka max IOB för att få SMB att fungera bra. En bra start är att sätta max IOB till din genomsnittliga måltidsbolus plus 3 gånger den högsta basalen du har under ett dygn</string>
     <string name="objectives_auto_objective">Aktivera automatisering</string>
     <string name="objectives_manualenacts">Manuella justeringar</string>
     <string name="accomplished">Utfört: %1$s</string>

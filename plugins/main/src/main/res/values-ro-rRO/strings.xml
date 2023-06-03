@@ -129,7 +129,6 @@
     <string name="error_in_basal_values">Eroare in valorile ratei bazale</string>
     <string name="error_in_target_values">Eroare in valorile tinta</string>
     <string name="error_in_isf_values">Eroare in valorile ISF</string>
-    <string name="profile_name_contains_dot">Numele profilului conține puncte.\nAcest lucru nu este permis de NS.\nProfilul nu a fost înregistrat în NS.</string>
     <string name="invalid_profile_not_accepted">Profilul invalid din NS %1$s nu este acceptat</string>
     <string name="view">Vizualizare</string>
     <string name="errors">Erori</string>

@@ -116,7 +116,6 @@
     <string name="system_automation">Системна автомация</string>
     <string name="run_automations">Стартирай автомаций</string>
     <string name="add_automation">Добавяне на правило</string>
-    <string name="remove_sort">Премахни/сортирай</string>
     <string name="stop_processing">Спри изпълнението</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">П</string>

@@ -116,7 +116,6 @@
     <string name="system_automation">Systeem automatisering</string>
     <string name="run_automations">Automatisering uitvoeren</string>
     <string name="add_automation">Regel toevoegen</string>
-    <string name="remove_sort">Verwijderen/sorteren</string>
     <string name="stop_processing">Stop met verwerken</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">M</string>

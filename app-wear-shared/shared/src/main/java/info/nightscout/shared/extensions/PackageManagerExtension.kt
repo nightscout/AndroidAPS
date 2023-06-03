@@ -16,8 +16,12 @@ fun PackageManager.safeGetInstalledPackages(flags: Int): List<PackageInfo> =
  * Safe version of queryBroadcastReceivers depending on Android version running
  */
 fun PackageManager.safeQueryBroadcastReceivers(intent: Intent, flags: Int): List<ResolveInfo> =
-    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) queryBroadcastReceivers(intent, PackageManager.ResolveInfoFlags.of(flags.toLong()))
-    else @Suppress("DEPRECATION") queryBroadcastReceivers(intent, flags)
+    try {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) queryBroadcastReceivers(intent, PackageManager.ResolveInfoFlags.of(flags.toLong()))
+        else @Suppress("DEPRECATION") queryBroadcastReceivers(intent, flags)
+    } catch (ignored: Exception) {
+        emptyList()
+    }
 
 /**
  * Safe version of getPackageInfo depending on Android version running

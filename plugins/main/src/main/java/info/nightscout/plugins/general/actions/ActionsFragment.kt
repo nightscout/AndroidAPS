@@ -1,9 +1,7 @@
 package info.nightscout.plugins.general.actions
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -59,7 +57,6 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var ctx: Context
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -78,31 +75,22 @@ class ActionsFragment : DaggerFragment() {
 
     private val pumpCustomActions = HashMap<String, CustomAction>()
     private val pumpCustomButtons = ArrayList<SingleClickButton>()
-    private lateinit var dm: DisplayMetrics
 
     private var _binding: ActionsFragmentBinding? = null
 
     // This property is only valid between onCreateView and onDestroyView.
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
-        //check screen width
-        dm = DisplayMetrics()
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
-            @Suppress("DEPRECATION")
-            activity?.display?.getRealMetrics(dm)
-        } else {
-            @Suppress("DEPRECATION")
-            activity?.windowManager?.defaultDisplay?.getMetrics(dm)
-        }
-        _binding = ActionsFragmentBinding.inflate(inflater, container, false)
-        return binding.root
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        ActionsFragmentBinding.inflate(inflater, container, false).also { _binding = it }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        skinProvider.activeSkin().preProcessLandscapeActionsLayout(dm, binding)
+        val screenWidth = activity?.window?.decorView?.width ?: 0
+        val screenHeight = activity?.window?.decorView?.height ?: 0
+        val isLandscape = screenHeight < screenWidth
+        skinProvider.activeSkin().preProcessLandscapeActionsLayout(isLandscape, binding)
 
         binding.profileSwitch.setOnClickListener {
             activity?.let { activity ->
@@ -285,7 +273,7 @@ class ActionsFragment : DaggerFragment() {
         binding.tddStats.visibility = pump.pumpDescription.supportsTDDs.toVisibility()
         val isPatchPump = pump.pumpDescription.isPatchPump
         binding.status.apply {
-            cannulaOrPatch.text = if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
+            cannulaOrPatch.text = if (cannulaOrPatch.text.isEmpty()) "" else if (isPatchPump) rh.gs(R.string.patch_pump) else rh.gs(R.string.cannula)
             val imageResource = if (isPatchPump) info.nightscout.core.main.R.drawable.ic_patch_pump_outline else R.drawable.ic_cp_age_cannula
             cannulaOrPatch.setCompoundDrawablesWithIntrinsicBounds(imageResource, 0, 0, 0)
             batteryLayout.visibility = (!isPatchPump || pump.pumpDescription.useHardwareLink).toVisibility()
@@ -293,7 +281,11 @@ class ActionsFragment : DaggerFragment() {
             cannulaUsage.visibility = isPatchPump.not().toVisibility()
 
             if (!config.NSCLIENT) {
-                statusLightHandler.updateStatusLights(cannulaAge, cannulaUsage, insulinAge, reservoirLevel, sensorAge, sensorLevel, pbAge, batteryLevel)
+                statusLightHandler.updateStatusLights(
+                    cannulaAge, cannulaUsage, insulinAge,
+                    reservoirLevel, sensorAge, sensorLevel,
+                    pbAge, pbLevel
+                )
                 sensorLevelLabel.text = if (activeBgSource.sensorBatteryLevel == -1) "" else rh.gs(R.string.level_label)
             } else {
                 statusLightHandler.updateStatusLights(cannulaAge, cannulaUsage, insulinAge, null, sensorAge, null, pbAge, null)

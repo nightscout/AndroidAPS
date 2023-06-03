@@ -25,6 +25,7 @@
     <string name="master_password_summary">La password master viene usata per la crittografia del backup e per gestire la sicurezza nell\'applicazione. Ricordala o conservala in un luogo sicuro.</string>
     <string name="current_master_password">Password Master corrente</string>
     <string name="common_values">Usa i valori del cibo più abbondante che mangi di solito\n</string>
+    <string name="syncinfotext">Sincronizza i dati nel cloud. Puoi saltare questa parte ora, ma non sarai in grado di superare gli obiettivi fino a quando non avrai impostato il client Nightscout o Tidepool.</string>
     <string name="status">Stato:</string>
     <string name="patient_name">Nome paziente</string>
     <string name="patient_name_summary">Fornisci il nome del paziente o il nickname per distinguere questa configurazione tra altre</string>
@@ -64,6 +65,7 @@
     <string name="configbuilder_general">Generale</string>
     <string name="configbuilder_general_description">Questi sono alcuni plugin generali che potresti trovare utili.</string>
     <string name="configbuilder_sync">Sincronizzazione</string>
+    <string name="configbuilder_sync_description">Plugin caricamento e sincronizzazione dati.</string>
     <string name="configbuilder_constraints_description">Quali vincoli sono applicati?</string>
     <string name="configbuilder_loop">Loop</string>
     <string name="configbuilder_loop_description">Usalo per attivare l\'integrazione del loop di AAPS.</string>

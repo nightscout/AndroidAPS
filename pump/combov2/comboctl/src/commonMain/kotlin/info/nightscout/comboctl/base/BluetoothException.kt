@@ -23,3 +23,19 @@ open class BluetoothPermissionException(message: String?, cause: Throwable?) : B
     constructor(message: String) : this(message, null)
     constructor(cause: Throwable) : this(null, cause)
 }
+
+/**
+ * Exception thrown when trying to use Bluetooth even though the adapter is not enabled.
+ *
+ * Note that unlike [BluetoothNotAvailableException], here, the adapter _does_ exist,
+ * and is just currently turned off.
+ */
+open class BluetoothNotEnabledException : BluetoothException("Bluetooth is not enabled")
+
+/**
+ * Exception thrown when trying to use Bluetooth even though there no adapter available.
+ *
+ * "Not available" typically means that the platform has no Bluetooth hardware, or that
+ * said hardware is inaccessible.
+ */
+open class BluetoothNotAvailableException : BluetoothException("Bluetooth is not available - there is no usable adapter")

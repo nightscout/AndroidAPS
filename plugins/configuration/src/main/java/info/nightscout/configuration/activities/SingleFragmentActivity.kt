@@ -1,12 +1,10 @@
 package info.nightscout.configuration.activities
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import info.nightscout.configuration.R
-import info.nightscout.core.ui.locale.LocaleHelper
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.protection.ProtectionCheck
@@ -59,9 +57,5 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         if (plugin?.preferencesId != -1) menuInflater.inflate(R.menu.menu_single_fragment, menu)
         return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun attachBaseContext(newBase: Context) {
-        super.attachBaseContext(LocaleHelper.wrap(newBase))
     }
 }

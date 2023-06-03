@@ -113,12 +113,13 @@ class CommandQueueImplementation @Inject constructor(
                                return@subscribe
                            }
                            aapsLogger.debug(LTag.PROFILE, "onEventProfileSwitchChanged")
+                           val effective = repository.getEffectiveProfileSwitchActiveAt(dateUtil.now()).blockingGet()
                            profileFunction.getRequestedProfile()?.let {
                                setProfile(ProfileSealed.PS(it), it.interfaceIDs.nightscoutId != null, object : Callback() {
                                    override fun run() {
                                        if (!result.success) {
                                            uiInteraction.runAlarm(result.comment, rh.gs(info.nightscout.core.ui.R.string.failed_update_basal_profile), info.nightscout.core.ui.R.raw.boluserror)
-                                       } else if (result.enacted) {
+                                       } else if (result.enacted || effective is ValueWrapper.Existing && effective.value.originalEnd < dateUtil.now() && effective.value.originalDuration != 0L) {
                                            val nonCustomized = ProfileSealed.PS(it).convertToNonCustomizedProfile(dateUtil)
                                            EffectiveProfileSwitch(
                                                timestamp = dateUtil.now(),
@@ -421,7 +422,7 @@ class CommandQueueImplementation @Inject constructor(
     }
 
     // returns true if command is queued
-    override fun setProfile(profile: Profile, hasNsId: Boolean, callback: Callback?): Boolean {
+    fun setProfile(profile: ProfileSealed, hasNsId: Boolean, callback: Callback?): Boolean {
         if (isRunning(CommandType.BASAL_PROFILE)) {
             aapsLogger.debug(LTag.PUMPQUEUE, "Command is already executed")
             callback?.result(PumpEnactResult(injector).success(true).enacted(false))?.run()

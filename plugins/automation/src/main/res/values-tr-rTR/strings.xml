@@ -116,7 +116,6 @@
     <string name="system_automation">Sistem otomasyonu</string>
     <string name="run_automations">Otomasyonları çalıştır</string>
     <string name="add_automation">Kural ekle</string>
-    <string name="remove_sort">Kaldır/sırala</string>
     <string name="stop_processing">İşlemeyi durdur</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">Pzt</string>

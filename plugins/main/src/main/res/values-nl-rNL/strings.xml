@@ -141,7 +141,6 @@
     <string name="error_in_basal_values">Fout in basaal waarden</string>
     <string name="error_in_target_values">Fout in streefdoel</string>
     <string name="error_in_isf_values">Fout in ISF waarden</string>
-    <string name="profile_name_contains_dot">Profielnaam bevat punten.\nDit wordt niet ondersteund door NS.\nProfiel is niet geüpload naar NS.</string>
     <string name="invalid_profile_not_accepted">Ongeldig profiel %1$s niet geaccepteerd door NS</string>
     <string name="view">Weergeven</string>
     <string name="errors">Foutmeldingen</string>

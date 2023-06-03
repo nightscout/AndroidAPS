@@ -97,6 +97,7 @@
     <string name="diaconn_g8_resetemergencyoff">איפוס לאחר כיבוי חירום</string>
     <string name="diaconn_g8_resetbatteryreplacement">איפוס לאחר החלפת סוללה</string>
     <string name="diaconn_g8_resetaftercalibration">איפוס לאחר כיול</string>
+    <string name="diaconn_g8_resetpreshipment">איפוס הגדרה לאחר קדם-משלוח</string>
     <string name="diaconn_g8_resetunexpected">אתחול מערכת בלתי צפוי</string>
     <string name="diaconn_g8_reasoncomplete">הושלם</string>
     <string name="diaconn_g8_reasoninjectonblock">חסימת הזרקה</string>
@@ -119,13 +120,17 @@
     <string name="diaconn_g8_logmealfail">רישום המזון נכשל</string>
     <string name="diaconn_g8_logsuccess">הצלחה</string>
     <string name="diaconn_g8_logmealsuccess">רישום המזון הצליח</string>
+    <string name="diaconn_g8_errorcode_2">לא ניתן להגדיר - שגיאת פרמטר קלט.</string>
     <string name="diaconn_g8_errorcode_3">לא ניתן להגדיר שגיאת פרוטוקול ספציפי.</string>
     <string name="diaconn_g8_errorcode_4">הארוחה נרשמה, לא ניתן להזריק.</string>
     <string name="diaconn_g8_errorcode_6">בוטל על ידי המשאבה</string>
+    <string name="diaconn_g8_errorcode_7">בביצוע פעולות אחרות - הגבלת הגדרות האפליקציה.</string>
     <string name="diaconn_g8_errorcode_8">בזמן הזרקת בולוס, הזרקות אחרות אינן אפשריות.</string>
+    <string name="diaconn_g8_errorcode_9">נדרש לחדש את הזרקת הבאזלי</string>
     <string name="diaconn_g8_errorcode_10">בוטל עקב חוסר תגובה מהמשאבה.</string>
     <string name="diaconn_g8_errorcode_11">ההזרקה לא אפשרית עקב סוללה חלשה.</string>
     <string name="diaconn_g8_errorcode_12">חסר אינסולין, לא ניתן להזריק.</string>
+    <string name="diaconn_g8_errorcode_13">לא ניתן להזריק כיוון שזה חורג מהמגבלה.</string>
     <string name="diaconn_g8_errorcode_14">ההזרקה לא אפשרית כי היא חורגת מהמינון היומי המותר.</string>
     <string name="diaconn_g8_errorcode_15">לאחר סיום תצורת הבזאלי, תותר הזרקתו.</string>
     <string name="diaconn_g8_errotpreceivedyet">הפקודה לא נשלחה. בבקשה נסה שוב.</string>
@@ -135,6 +140,8 @@
     <string name="diaconn_g8_errorcode_32">בעת השהייה עקב סוכר נמוך, ההזרקה מוגבלת</string>
     <string name="diaconn_g8_errorcode_33">מצב השהייה עקב סוכר נמוך מופעל, פקודת ON נדחתה.</string>
     <string name="diaconn_g8_errorcode_34">מצב השהייה עקב סוכר נמוך כבוי, פקודת OFF נדחתה.</string>
+    <string name="diaconn_g8_errorcode_35">התחלת באזל זמני חדש נדחת כאשר באזלי זמני אחר כבר פעיל</string>
+    <string name="diaconn_g8_errorcode_36">הפסקת באזלי זמני נדחת כאשר לא פעיל באזלי זמני</string>
     <string name="diaconn_g8_cloudsend_summary">שלח יומני משאבה לענן Diaconn.</string>
     <string name="diaconn_g8_cloudsend_title">סנכרון Diaconn Cloud </string>
 </resources>

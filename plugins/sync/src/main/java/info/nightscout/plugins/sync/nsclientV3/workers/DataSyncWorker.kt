@@ -28,7 +28,10 @@ class DataSyncWorker(
             dataSyncSelectorV3.doUpload()
             rxBus.send(EventNSClientNewLog("► UPL", "End"))
         } else {
-            rxBus.send(EventNSClientNewLog("► ERROR", "Not connected or write permission"))
+            if (activePlugin.activeNsClient?.hasWritePermission == true)
+                rxBus.send(EventNSClientNewLog("► ERROR", "No write permission"))
+            else if (nsClientV3Plugin.wsConnected)
+                rxBus.send(EventNSClientNewLog("► ERROR", "Not connected"))
             // refresh token
             nsClientV3Plugin.scheduleIrregularExecution(refreshToken = true)
         }

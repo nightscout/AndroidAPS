@@ -192,7 +192,6 @@ public class PatchManagerImpl {
                         .filter(it -> patch.getConnectionState().isConnected())
                         .concatMapIterable(EventEoPatchAlarm::getAlarmCodes)
                         .filter(AlarmCode::isPatchOccurrenceAlert)
-                        .flatMap(it -> stopAeBeep(it.getAeCode()).toObservable())
                         .subscribe()
         );
 
@@ -247,6 +246,16 @@ public class PatchManagerImpl {
                                                 pc.setInfoReminder(buzzer);
                                                 pm.flushPatchConfig();
                                             }).map(patchBooleanResponse -> true);
+                                }
+                                return Single.just(true);
+                            })
+                            .flatMap(ret -> {
+                                if(!pm.getAlarms().getNeedToStopBeep().isEmpty()) {
+                                    return Observable.fromStream(pm.getAlarms().getNeedToStopBeep().stream())
+                                            .flatMapSingle(alarmCode -> stopAeBeep(alarmCode.getAeCode()).doOnSuccess(patchBooleanResponse -> {
+                                                pm.getAlarms().getNeedToStopBeep().remove(alarmCode);
+                                            }))
+                                            .lastOrError();
                                 }
                                 return Single.just(true);
                             })

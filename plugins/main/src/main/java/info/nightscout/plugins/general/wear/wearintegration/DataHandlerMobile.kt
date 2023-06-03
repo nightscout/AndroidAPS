@@ -19,6 +19,7 @@ import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.entities.HeartRate
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.TotalDailyDose
@@ -28,6 +29,7 @@ import info.nightscout.database.entities.interfaces.end
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CancelCurrentTemporaryTargetIfAnyTransaction
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentTemporaryTargetTransaction
+import info.nightscout.database.impl.transactions.InsertOrUpdateHeartRateTransaction
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
@@ -308,6 +310,10 @@ class DataHandlerMobile @Inject constructor(
                            aapsLogger.debug(LTag.WEAR, "WearException received $it from ${it.sourceNodeId}")
                            fabricPrivacy.logWearException(it)
                        }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.ActionHeartRate::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ handleHeartRate(it) }, fabricPrivacy::logException)
     }
 
     private fun handleTddStatus() {
@@ -1229,5 +1235,16 @@ class DataHandlerMobile @Inject constructor(
 
     @Synchronized private fun sendError(errorMessage: String) {
         rxBus.send(EventMobileToWear(EventData.ConfirmAction(rh.gs(info.nightscout.core.ui.R.string.error), errorMessage, returnCommand = EventData.Error(dateUtil.now())))) // ignore return path
+    }
+
+    /** Stores heart rate events coming from the Wear device. */
+    private fun handleHeartRate(actionHeartRate: EventData.ActionHeartRate) {
+        aapsLogger.debug(LTag.WEAR, "Heart rate received $actionHeartRate from ${actionHeartRate.sourceNodeId}")
+        val hr = HeartRate(
+            duration = actionHeartRate.duration,
+            timestamp = actionHeartRate.timestamp,
+            beatsPerMinute = actionHeartRate.beatsPerMinute,
+            device = actionHeartRate.device)
+        repository.runTransaction(InsertOrUpdateHeartRateTransaction(hr)).blockingAwait()
     }
 }

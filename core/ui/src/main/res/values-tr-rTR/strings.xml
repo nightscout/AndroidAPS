@@ -164,7 +164,7 @@
     <string name="isf_short">IDF İnsülin Duyarlılık Faktörü</string>
     <string name="canceling_tbr_failed">Geçici bazal iptali başarısız oldu</string>
     <string name="canceling_eb_failed">Yayma bolusun iptal edilmesi başarısız oldu</string>
-    <string name="virtualpump_uploadstatus_title">Durumu NS\'a veya Tidepool\'a yükleyin</string>
+    <string name="virtualpump_uploadstatus_title">Pompa durumunu NS veya Tidepool\'a yükleyin</string>
     <string name="suspendloop_label">Döngüyü Devre Dışı bırakma/Askıya alma</string>
     <string name="iob_label">Aktif İnsülin (AİNS)</string>
     <!--    Protection-->

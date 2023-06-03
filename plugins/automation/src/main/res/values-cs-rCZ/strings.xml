@@ -116,7 +116,6 @@
     <string name="system_automation">Automatizace systému</string>
     <string name="run_automations">Spustit automatizace</string>
     <string name="add_automation">Přidat pravidlo</string>
-    <string name="remove_sort">Odstranit/řadit</string>
     <string name="stop_processing">Zastavit zpracovávání</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">Po</string>

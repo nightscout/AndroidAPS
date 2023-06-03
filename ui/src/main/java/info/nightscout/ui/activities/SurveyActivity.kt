@@ -2,7 +2,7 @@ package info.nightscout.ui.activities
 
 import android.os.Bundle
 import android.widget.ArrayAdapter
-import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.InstanceId
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -15,7 +15,7 @@ import info.nightscout.ui.databinding.ActivitySurveyBinding
 import info.nightscout.ui.defaultProfile.DefaultProfile
 import javax.inject.Inject
 
-class SurveyActivity : DaggerAppCompatActivity() {
+class SurveyActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var profileFunction: ProfileFunction

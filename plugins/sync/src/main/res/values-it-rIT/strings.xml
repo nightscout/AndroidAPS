@@ -37,6 +37,7 @@
     <string name="ns_client_secret_dialog_message">Inserisci l\'API secret di NS (minimo 12 caratteri)</string>
     <string name="nsclient_token_title">Token di accesso NS</string>
     <string name="nsclient_token_dialog_title">Token di accesso NS</string>
+    <string name="nsclient_token_dialog_message">Token di accesso generato sulla pagina admin di NS (min 17 caratteri)</string>
     <string name="deliver_now">Invia ora</string>
     <string name="clear_queue">Cancella coda</string>
     <string name="show_queue">Mostra coda</string>
@@ -112,6 +113,7 @@
     <string name="xdrip_send_status_title">Invia statusline a xDrip+</string>
     <string name="xdrip_not_installed">xDrip+ non installato</string>
     <string name="calibration_sent">Calibrazione inviata a xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Invia dati glicemia e trattamenti a xDrip+. La sorgente dati \"xDrip+ Sync Follower\" deve essere selezionata e l\'accettazione dei dati deve essere abilitata in: Settings - Inter-app settings - Accept Glucose/Treatments</string>
     <string name="xdrip_local_broadcasts_title">Abilita trasmissioni a xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>

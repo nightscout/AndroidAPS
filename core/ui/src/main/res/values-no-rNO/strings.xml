@@ -164,7 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Kunne ikke avbryte midlertidig basal</string>
     <string name="canceling_eb_failed">Kunne ikke avbryte forlenget bolus</string>
-    <string name="virtualpump_uploadstatus_title">Last opp status til NS eller Tidepool</string>
+    <string name="virtualpump_uploadstatus_title">Last opp pumpestatus til NS eller Tidepool</string>
     <string name="suspendloop_label">Deaktivert/pauset loop</string>
     <string name="iob_label">Aktivt insulin (IOB)</string>
     <!--    Protection-->

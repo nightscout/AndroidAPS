@@ -12,8 +12,8 @@
     <string name="diaconn_g8_history_prime">Užpildyti sistemą</string>
     <string name="diaconn_g8_history_refill">Užpildymas</string>
     <string name="diaconn_g8_history_suspend">Sustabdyta</string>
-    <string name="diaconn_g8_pairingok">Sujungta</string>
-    <string name="diaconn_g8_waitingforpairing">Laukiama sujungimo</string>
+    <string name="diaconn_g8_pairingok">Susieta OK</string>
+    <string name="diaconn_g8_waitingforpairing">Laukiama susiejimo</string>
     <string name="diaconn_firmware_version">Versija</string>
     <string name="invalidpairing">Netinkama susiejimo informacija. Bandoma susieti iš naujo</string>
     <string name="gettingpumpsettings">Gaunami pompos nustatymai</string>
@@ -23,7 +23,7 @@
     <string name="approachingdailylimit">Artėja paros insulino limitas</string>
     <string name="startingbolus">Pradedamas boluso leidimas</string>
     <string name="waitingforestimatedbolusend">Laukiama boluso suleidimo pabaigos</string>
-    <string name="gettingbolusstatus">Gaunama boluso būklė</string>
+    <string name="gettingbolusstatus">Gaunamas boluso statusas</string>
     <string name="stoppingtempbasal">Stabdoma laikina bazė</string>
     <string name="settingtempbasal">Laikinos bazės nustatymas</string>
     <string name="settingextendedbolus">Ištęsto boluso nustatymas</string>
@@ -44,13 +44,13 @@
     <string name="selectedpump">Pasirinkta pompa</string>
     <string name="diaconn_g8_useextended_title">Naudoti ištęstinį bolusą &gt;200%%</string>
     <string name="diaconn_g8_visualizeextendedaspercentage_title">Rodyti ištęstinį boliusą kaip %%</string>
-    <string name="diaconn_g8_bluetooth_status">Bluetooth būklė</string>
+    <string name="diaconn_g8_bluetooth_status">Bluetooth statusas</string>
     <string name="diagonn_g8_tdd_label">BPD</string>
     <string name="bolus_step">Boluso žingsnis</string>
     <string name="basal_step">Bazės žingsnis</string>
     <string name="pump_firmware_label">Programinė įranga</string>
     <string name="diaconn_g8_user_options">VARTOTOJO PARINKTYS</string>
-    <string name="pairfirst">Atnaujinkite pompos ir telefono ryšį!</string>
+    <string name="pairfirst">Susiekite pompą su telefonu!</string>
     <string name="processinghistory">"Apdorojama "</string>
     <string name="apslastLogNum">aps_last_log_num</string>
     <string name="apsWrappingCount">aps_wrapping_count</string>
@@ -148,8 +148,8 @@
     <string name="diaconn_g8_logtubechange_summary">Įtraukti į Pastabas įvykį „Infuzijos vamzdelio pakeitimas“, jei jis aptinkamas istorijoje</string>
     <string name="diaconn_g8_logtempstart">Pradėta laikina bazė</string>
     <string name="diaconn_g8_errorcode_32">Negalima leisti insulino kol veikia sustabdymo prie žemos glikemijos režimas</string>
-    <string name="diaconn_g8_errorcode_33">Sustabdymo prie žemos glikemijos režimas aktyvus, komanda ĮJUNGTI atmesta.</string>
-    <string name="diaconn_g8_errorcode_34">Sustabdymo prie žemos glikemijos režimas išjungtas, komanda IŠJUNGTI atmesta.</string>
+    <string name="diaconn_g8_errorcode_33">Aktyvus stabdymo prie žemos glikemijos režimas, komanda ĮJUNGTI atmesta.</string>
+    <string name="diaconn_g8_errorcode_34">Išjungtas stabdymo prie žemos glikemijos režimas, komanda IŠJUNGTI atmesta.</string>
     <string name="diaconn_g8_errorcode_35">Laikinos bazės paleidimas atmestas, nes jau veikia nustatyta laikina bazė</string>
     <string name="diaconn_g8_errorcode_36">Laikinos bazės stabdymas atmestas, nes nėra nustatyta laikina bazė</string>
     <string name="diaconn_g8_cloudsend_summary">Siųsti pompos įrašus į Diaconn Cloud.</string>

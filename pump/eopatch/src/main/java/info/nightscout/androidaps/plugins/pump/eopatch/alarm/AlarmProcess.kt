@@ -35,6 +35,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.B012
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmCode.B018
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.BaseResponse
+import info.nightscout.androidaps.plugins.pump.eopatch.core.response.PatchBooleanResponse
 import info.nightscout.androidaps.plugins.pump.eopatch.core.response.TemperatureResponse
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventDialog
 import info.nightscout.androidaps.plugins.pump.eopatch.event.EventProgressDialog
@@ -55,6 +56,7 @@ interface IAlarmProcess {
         const val ALARM_UNHANDLED = 0
         const val ALARM_PAUSE = 1
         const val ALARM_HANDLED = 2
+        const val ALARM_HANDLED_BUT_NEED_STOP_BEEP = 3
     }
 }
 
@@ -68,14 +70,14 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
             A117, A118 -> patchDeactivationAction(context)
             A007 -> inappropriateTemperatureAction(context)
             A016 -> needleInsertionErrorAction(context)
-            B000, B003, B018 -> Single.just(IAlarmProcess.ALARM_HANDLED)
-            B005, B006 ->  Single.just(IAlarmProcess.ALARM_HANDLED)
+            B000 -> Single.just(IAlarmProcess.ALARM_HANDLED)
+            B003, B005, B006, B018 ->  stopAeBeepAction(context, code)
             B012 -> Single.just(IAlarmProcess.ALARM_HANDLED)
         }
     }
 
     private fun startActivityWithSingleTop(context: Context, intent: Intent) {
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         context.startActivity(intent)
     }
 
@@ -104,7 +106,7 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
             Single.fromCallable {
                 showCommunicationFailedDialog {
                     startActivityWithSingleTop(context,
-                        createIntentForCheckConnection(context, goHomeAfterDiscard = true, forceDiscard = true))
+                        createIntentForCheckConnection(context, goHomeAfterDiscard = true, forceDiscard = true, isAlarmHandling = true))
                 }
                 IAlarmProcess.ALARM_PAUSE
             }
@@ -115,6 +117,7 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
         return actionWithPatchCheckConnection(context) {
             patchManager.resumeBasal()
                 .map { obj: BaseResponse -> obj.isSuccess }
+                .onErrorReturn { false }
                 .flatMap { Single.just(it.takeOne(IAlarmProcess.ALARM_HANDLED, IAlarmProcess.ALARM_UNHANDLED)) }
         }
     }
@@ -146,6 +149,17 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
                 .filter{ok -> ok}
                 .flatMap { patchManager.resumeBasal().map { it.isSuccess.takeOne(IAlarmProcess.ALARM_HANDLED, IAlarmProcess.ALARM_UNHANDLED) }.toMaybe() }
                 .defaultIfEmpty(IAlarmProcess.ALARM_UNHANDLED)
+        }
+    }
+
+    private fun stopAeBeepAction(context: Context, alarm: AlarmCode): Single<Int> {
+        if (patchManager.patchConnectionState.isConnected) {
+            return patchManager.stopAeBeep(alarm.aeCode)
+                .map { obj: PatchBooleanResponse -> obj.isSuccess }
+                .onErrorReturn { false }
+                .flatMap { Single.just(it.takeOne(IAlarmProcess.ALARM_HANDLED, IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP)) }
+        }else{
+            return Single.just(IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP)
         }
     }
 }
