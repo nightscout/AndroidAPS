@@ -171,6 +171,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to sync records")
             return
         }
+        if (result) medtrumPump.lastConnection = System.currentTimeMillis()
     }
 
     fun setBolus(insulin: Double, t: EventOverviewBolusProgress.Treatment): Boolean {

@@ -87,7 +87,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         if (fieldMask and MASK_SUSPEND != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Suspend notification received")
-            medtrumPump.suspendTime = data.copyOfRange(offset, offset + 4).toLong()
+            medtrumPump.suspendTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
             aapsLogger.debug(LTag.PUMPCOMM, "Suspend time: ${medtrumPump.suspendTime}")
             offset += 4
         }

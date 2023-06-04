@@ -210,10 +210,7 @@ import kotlin.math.round
         return result
     }
 
-    override fun lastDataTime(): Long {
-        return medtrumPump.lastTimeReceivedFromPump
-    }
-
+    override fun lastDataTime(): Long = medtrumPump.lastConnection
     override val baseBasalRate: Double
         get() = medtrumPump.baseBasalRate
 

@@ -140,10 +140,11 @@ class MedtrumPump @Inject constructor(
 
     val pumpType: PumpType = PumpType.MEDTRUM_NANO // TODO, type based on pumpSN or pump activation/connection
 
-    var lastTimeReceivedFromPump = 0L // Time in seconds!
-    var suspendTime = 0L // Time in seconds!
-    var patchStartTime = 0L // Time in seconds!
-    var patchAge = 0L // Time in seconds!
+    var lastConnection = 0L // Time in ms!
+    var lastTimeReceivedFromPump = 0L // Time in ms! // TODO: Consider removing as is not used?
+    var suspendTime = 0L // Time in ms!
+    var patchStartTime = 0L // Time in ms!
+    var patchAge = 0L // Time in seconds?! // TODO: Not used
 
 
     var batteryVoltage_A = 0.0
