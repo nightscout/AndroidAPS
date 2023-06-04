@@ -49,7 +49,7 @@ data class EffectiveProfileSwitch(
     var originalTimeshift: Long,  // [milliseconds]
     var originalPercentage: Int, // 1 ~ XXX [%]
     var originalDuration: Long, // [milliseconds]
-    var originalEnd: Long, // not used (calculated from duration)
+    var originalEnd: Long = Long.MAX_VALUE, // calculated from duration, if no duration max value is used
     @Embedded
     var insulinConfiguration: InsulinConfiguration
 ) : TraceableDBEntry, DBEntryWithTime {
