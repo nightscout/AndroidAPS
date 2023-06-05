@@ -11,7 +11,6 @@
     <string name="omnipod_dash_history_type">Tip:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f Ü</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f Ü, CH=%2$.1f g</string>
-    <string name="omnipod_dash_history_tbr_value">Oran: %1$.2f Ü, süre: %2$d dakika</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth Durumu</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth Adresi</string>
@@ -31,7 +30,6 @@
     <string name="omnipod_dash_command_not_sent">Komut gönderilmedi</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Pod\'dan komut alınmadı</string>
     <string name="omnipod_dash_unknown">Bilinmeyen komut durumu</string>
-    <string name="omnipod_common_history_tbr_value">Oran: %1$.2f Ü, süre: %2$d dakika</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f Ü</string>
     <string name="omnipod_common_alert_delivery_suspended">İnsülin iletimi askıya alındı</string>
     <string name="omnipod_dash_connection_lost">Pod ile bağlantı koptu</string>

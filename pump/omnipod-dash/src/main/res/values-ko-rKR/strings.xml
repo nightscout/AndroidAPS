@@ -11,12 +11,10 @@
     <string name="omnipod_dash_history_type">종류:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
-    <string name="omnipod_dash_history_tbr_value">Rate: %1$.2f U, 기간: %2$d 분</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">블루투스 상태</string>
     <string name="omnipod_dash_overview_bluetooth_address">블루투스 주소</string>
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <!-- Exceptions -->
-    <string name="omnipod_common_history_tbr_value">Rate: %1$.2f U, 기간: %2$d 분</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
 </resources>
