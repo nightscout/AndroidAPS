@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a003">Le Patch a expiré\nLe Patch a été désactivé et la distribution d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a004">Occlusion\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a005">Échec de l\'auto-test au démarrage\nLe Patch a été désactivé. Changez le Patch.</string>
+</resources>
