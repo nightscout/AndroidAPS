@@ -123,7 +123,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         aapsLogger.debug(LTag.PUMP, "connect: called from: $from")
         if (currentState is IdleState) {
             medtrumPump.connectionState = ConnectionState.CONNECTING
-            if (medtrumPump.patchActivated) {
+            if (medtrumPlugin.isInitialized()) {
                 rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTING))
             }
             return bleComm.connect(from, medtrumPump.pumpSN)
@@ -149,6 +149,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
             result = sendPacketAndGetResponse(CancelTempBasalPacket(injector))
         }
         if (result) result = sendPacketAndGetResponse(StopPatchPacket(injector))
+        // Synchronize after deactivation to get update status
+        if (result) result = sendPacketAndGetResponse(SynchronizePacket(injector))
         return result
     }
 
@@ -162,8 +164,11 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     fun readPumpStatus() {
         // Most of these things are already done when a connection is setup, but wo dont know how long the pump was connected for?
+
+        // Send a poll patch, to workaround connection losses?
+        var result = sendPacketAndGetResponse(PollPatchPacket(injector))
         // So just do a syncronize to make sure we have the latest data
-        var result = sendPacketAndGetResponse(SynchronizePacket(injector))
+        if (result)  result = sendPacketAndGetResponse(SynchronizePacket(injector))
 
         // Sync records (based on the info we have from the sync)
         if (result) result = syncRecords()
@@ -288,7 +293,11 @@ class MedtrumService : DaggerService(), BLECommCallback {
         // Note: medtrum app fetches all records when they sync?
         if (medtrumPump.syncedSequenceNumber < medtrumPump.currentSequenceNumber) {
             for (sequence in (medtrumPump.syncedSequenceNumber + 1)..medtrumPump.currentSequenceNumber) {
-                result = sendPacketAndGetResponse(GetRecordPacket(injector, sequence))
+                // Send a poll patch, to workaround connection losses?
+                result = sendPacketAndGetResponse(PollPatchPacket(injector))
+                SystemClock.sleep(100)
+                // Get our record
+                if (result) result = sendPacketAndGetResponse(GetRecordPacket(injector, sequence))
                 if (result == false) break
             }
         }
@@ -375,7 +384,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         fun onDisconnected() {
             aapsLogger.debug(LTag.PUMPCOMM, "onDisconnected")
             medtrumPump.connectionState = ConnectionState.DISCONNECTED
-            if (medtrumPump.patchActivated) {
+            if (medtrumPlugin.isInitialized()) {
                 rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTED))
             }
             responseHandled = true
@@ -645,7 +654,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached ReadyState!")
             // Now we are fully connected and authenticated and we can start sending commands. Let AAPS know
             medtrumPump.connectionState = ConnectionState.CONNECTED
-            if (medtrumPump.patchActivated) {
+            if (medtrumPlugin.isInitialized()) {
                 rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
             }
         }

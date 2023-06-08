@@ -3,7 +3,7 @@
     <!-- MedtrumPump -->
     <string name="key_snInput" translatable="false">snInput</string> 
     <string name="key_medtrumpump_settings" translatable="false">medtrumpump_settings</string> 
-    <string name="key_patch_activated" translatable="false">medtrum_patch_activated</string>
+    <string name="key_pump_state" translatable="false">pump_state</string>
     <string name="key_session_token" translatable="false">medtrum_session_token</string>
     <string name="key_patch_id" translatable="false">patch_id</string>
     <string name="key_actual_basal_profile" translatable="false">actual_basal_profile</string>

@@ -36,8 +36,11 @@ class SynchronizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) 
         if (success) {
             var state = MedtrumPumpState.fromByte(data[RESP_STATE_START])
 
-            medtrumPump.pumpState = state
             aapsLogger.debug(LTag.PUMPCOMM, "SynchronizePacket: state: $state")
+            if (state != medtrumPump.pumpState) {
+                aapsLogger.debug(LTag.PUMPCOMM, "State changed from ${medtrumPump.pumpState} to $state")
+                medtrumPump.pumpState = state
+            }
 
             var fieldMask = data.copyOfRange(RESP_FIELDS_START, RESP_FIELDS_END).toInt()
             var syncData = data.copyOfRange(RESP_SYNC_DATA_START, data.size)

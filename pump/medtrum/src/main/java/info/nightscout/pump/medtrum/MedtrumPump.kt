@@ -42,13 +42,6 @@ class MedtrumPump @Inject constructor(
             _connectionState.value = value
         }
 
-    /** Patch activated state, mainly for UI, but also controls the connection flow,
-     *  if patch is not activated, AAPS cannot connect to the pump, we can then connect trough the activation flow.
-     *  Note: this is also saved in SP, by the set functions
-     */
-    private var _patchActivated = false
-    val patchActivated: Boolean
-        get() = _patchActivated
 
     // Pump state flow
     private val _pumpState = MutableStateFlow(MedtrumPumpState.NONE)
@@ -57,6 +50,7 @@ class MedtrumPump @Inject constructor(
         get() = _pumpState.value
         set(value) {
             _pumpState.value = value
+            sp.putInt(R.string.key_pump_state, value.state.toInt())
         }
 
     // Prime progress as state flow
@@ -189,23 +183,17 @@ class MedtrumPump @Inject constructor(
 
     init {
         // Load stuff from SP
-        _patchActivated = sp.getBoolean(R.string.key_patch_activated, false)
         _patchSessionToken = sp.getLong(R.string.key_session_token, 0L)
         _currentSequenceNumber = sp.getInt(R.string.key_current_sequence_number, 0)
         _patchId = sp.getLong(R.string.key_patch_id, 0L)
         _syncedSequenceNumber = sp.getInt(R.string.key_synced_sequence_number, 0)
+        _pumpState.value = MedtrumPumpState.fromByte(sp.getInt(R.string.key_pump_state, MedtrumPumpState.NONE.state.toInt()).toByte())
 
         val encodedString = sp.getString(R.string.key_actual_basal_profile, "0")
         try {
             _actualBasalProfile = Base64.decode(encodedString, Base64.DEFAULT)
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMP, "Error decoding basal profile from SP: $encodedString")
-        }
-
-        if (patchActivated) {
-            aapsLogger.debug(LTag.PUMP, "changePump: Patch is already activated, setting as ACTIVE")
-            // Set inital status as active will be updated on first connection       
-            pumpState = MedtrumPumpState.ACTIVE
         }
 
         loadUserSettingsFromSP()
@@ -223,20 +211,6 @@ class MedtrumPump @Inject constructor(
         } catch (e: NumberFormatException) {
             aapsLogger.debug(LTag.PUMP, "changePump: Invalid input!")
         }
-    }
-
-    fun setPatchActivatedState(activated: Boolean) {
-        aapsLogger.debug(LTag.PUMP, "setPatchActivatedState: $activated")
-        _patchActivated = activated
-        sp.putBoolean(R.string.key_patch_activated, activated)
-    }
-
-    /** When the activation/deactivation screen, and the connection flow needs to be controlled,
-     *  this can be used to set the ActivatedState without saving to SP, So when app is force closed the state is still maintained
-     */
-    fun setPatchActivatedStateTemp(activated: Boolean) {
-        aapsLogger.debug(LTag.PUMP, "setPatchActivatedStateTemp: $activated")
-        _patchActivated = activated
     }
 
     fun buildMedtrumProfileArray(nsProfile: Profile): ByteArray? {
@@ -348,14 +322,16 @@ class MedtrumPump @Inject constructor(
                 LTag.PUMPCOMM,
                 "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) expectedTemporaryBasal: $expectedTemporaryBasal"
             )
-        } else if (basalType == BasalType.NONE && expectedTemporaryBasal?.pumpId != basalStartTime) { // Also some sort of suspend or unkown by pump
+        } else if (basalType == BasalType.NONE && expectedTemporaryBasal?.rate != basalRate && expectedTemporaryBasal?.duration != T.mins(4800).msecs()) {
+            // Pump suspended, set fake TBR
+            // TODO: Maybe move this to separate function?
             val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
-                timestamp = basalStartTime,
+                timestamp = dateUtil.now(),
                 rate = basalRate,
                 duration = T.mins(4800).msecs(), // TODO MAGIC NUMBER
                 isAbsolute = true,
                 type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
-                pumpId = basalStartTime,
+                pumpId = dateUtil.now(),
                 pumpType = pumpType,
                 pumpSerial = pumpSN.toString(radix = 16)
             )

@@ -139,7 +139,7 @@ import kotlin.math.round
 
     override fun isConnected(): Boolean {
         // This is a workaround to prevent AAPS to trigger connects when we have no patch activated
-        return if (!medtrumPump.patchActivated) true else medtrumService?.isConnected ?: false
+        return if (!isInitialized()) true else medtrumService?.isConnected ?: false
     }
 
     override fun isConnecting(): Boolean = medtrumService?.isConnecting ?: false
@@ -149,7 +149,7 @@ import kotlin.math.round
     }
 
     override fun connect(reason: String) {
-        if (medtrumPump.patchActivated) {
+        if (isInitialized()) {
             aapsLogger.debug(LTag.PUMP, "Medtrum connect - reason:$reason")
             if (medtrumService != null) {
                 aapsLogger.debug(LTag.PUMP, "Medtrum connect - Attempt connection!")
@@ -167,7 +167,10 @@ import kotlin.math.round
     }
 
     override fun stopConnecting() {
-        medtrumService?.stopConnecting()
+        if (isInitialized()) {
+            aapsLogger.debug(LTag.PUMP, "Medtrum stopConnecting")
+            medtrumService?.stopConnecting()
+        }
     }
 
     override fun getPumpStatus(reason: String) {

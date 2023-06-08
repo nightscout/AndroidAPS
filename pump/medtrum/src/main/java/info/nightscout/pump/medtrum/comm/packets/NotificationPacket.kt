@@ -68,8 +68,10 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         val state = MedtrumPumpState.fromByte(notification[0])
         aapsLogger.debug(LTag.PUMPCOMM, "Notification state: $state, current state: ${medtrumPump.pumpState}")
 
-        // TODO: Do we need to emit an event on state change?
-        medtrumPump.pumpState = state
+        if (state != medtrumPump.pumpState) {
+            aapsLogger.debug(LTag.PUMPCOMM, "State changed from ${medtrumPump.pumpState} to $state")
+            medtrumPump.pumpState = state
+        }        
 
         if (notification.size > NOTIF_STATE_END) {
             handleMaskedMessage(notification.copyOfRange(NOTIF_STATE_END, notification.size))

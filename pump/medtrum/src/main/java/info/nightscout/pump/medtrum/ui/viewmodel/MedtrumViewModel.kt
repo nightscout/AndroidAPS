@@ -104,12 +104,10 @@ class MedtrumViewModel @Inject constructor(
                         }
 
                         MedtrumPumpState.ACTIVE, MedtrumPumpState.ACTIVE_ALT -> {
-                            medtrumPump.setPatchActivatedState(true)
                             updateSetupStep(SetupStep.ACTIVATED)
                         }
 
                         MedtrumPumpState.STOPPED                             -> {
-                            medtrumPump.setPatchActivatedState(false)
                             updateSetupStep(SetupStep.STOPPED)
                         }
 
@@ -137,8 +135,7 @@ class MedtrumViewModel @Inject constructor(
                     }
                     // TODO: For DEACTIVATE STATE we might want to move to force cancel screen
                     if (oldPatchStep == PatchStep.START_DEACTIVATION || oldPatchStep == PatchStep.DEACTIVATE) {
-                        // Deactivation was canceled
-                        medtrumPump.setPatchActivatedStateTemp(true)
+                        // What to do here?
                     }
                 }
 
@@ -166,16 +163,16 @@ class MedtrumViewModel @Inject constructor(
     }
 
     fun preparePatch() {
-        if (medtrumPump.patchActivated == true) {
-            aapsLogger.warn(LTag.PUMP, "preparePatch: already activated! conflicting state?")
-            // In this case user could have removed the patch without deactivating it?
-            medtrumPump.setPatchActivatedState(false)
+        // New session, generate new session token, only do this when not connected
+        if (medtrumService?.isConnected == false) {
+            aapsLogger.info(LTag.PUMP, "preparePatch: new session")
+            medtrumPump.patchSessionToken = Crypt().generateRandomToken()        
+            // Connect to pump
+            medtrumService?.connect("PreparePatch")
+        } else {
+            aapsLogger.error(LTag.PUMP, "preparePatch: Already connected when trying to prepare patch")
+            // Do nothing here, continue with old key and connection
         }
-        // New session, generate new session token
-        aapsLogger.info(LTag.PUMP, "preparePatch: new session")
-        medtrumPump.patchSessionToken = Crypt().generateRandomToken()        
-        // Connect to pump
-        medtrumService?.connect("PreparePatch")
     }
 
     fun startPrime() {
@@ -201,9 +198,6 @@ class MedtrumViewModel @Inject constructor(
     }
 
     fun startDeactivation() {
-        // Set active already to false, so UI can control the pump connection instead of AAPS pumpqueue
-        medtrumPump.setPatchActivatedStateTemp(false)
-
         // Start connecting if needed
         if (medtrumService?.isConnected == true) {
             updateSetupStep(SetupStep.READY_DEACTIVATE)
@@ -218,8 +212,6 @@ class MedtrumViewModel @Inject constructor(
             aapsLogger.info(LTag.PUMP, "deactivatePatch: success!")
         } else {
             aapsLogger.info(LTag.PUMP, "deactivatePatch: failure!")
-            // Check if this is needed, for now even when it failed, we assume the user will remove the patch and pumpbase
-            medtrumPump.setPatchActivatedStateTemp(true) // failed to activate, set activate state to true
             // TODO: State to force forget the patch or try again
             updateSetupStep(SetupStep.ERROR)
         }

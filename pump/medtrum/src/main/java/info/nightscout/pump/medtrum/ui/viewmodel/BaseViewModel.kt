@@ -36,6 +36,7 @@ abstract class BaseViewModel<N : MedtrumBaseNavigator> : ViewModel() {
         MedtrumPumpState.PRIMING                             -> PatchStep.PRIME
         MedtrumPumpState.PRIMED, MedtrumPumpState.EJECTED    -> PatchStep.ATTACH_PATCH
         MedtrumPumpState.ACTIVE, MedtrumPumpState.ACTIVE_ALT -> PatchStep.COMPLETE
+        MedtrumPumpState.STOPPED                             -> PatchStep.DEACTIVATION_COMPLETE
         else                                                 -> PatchStep.CANCEL
     }
 }

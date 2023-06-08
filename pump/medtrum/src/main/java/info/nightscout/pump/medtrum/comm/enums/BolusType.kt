@@ -5,8 +5,4 @@ enum class BolusType {
     NORMAL,
     EXTEND,
     COMBINATION;
-
-    fun getValue(): Int {
-        return ordinal
-    }
 }

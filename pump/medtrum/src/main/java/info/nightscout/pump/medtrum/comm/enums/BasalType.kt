@@ -44,10 +44,6 @@ enum class BasalType {
     AUTO_MODE_EXERCISE_START,
     AUTO_MODE_EXERCISE_EXIT;
 
-    fun getValue(): Int {
-        return ordinal
-    }
-
     fun isTempBasal(): Boolean {
         return this == ABSOLUTE_TEMP || this == RELATIVE_TEMP
     }
