@@ -149,7 +149,14 @@ class MedtrumViewModel @Inject constructor(
                     }
                 }
 
-                else                            -> {}
+                else                            -> {
+                    // Make sure we are connected, else dont move step
+                    if (medtrumService?.isConnected == false) {
+                        aapsLogger.info(LTag.PUMP, "moveStep: not connected, not moving step")
+                        return
+                    } else {                     
+                    }
+                }
             }
         }
 
