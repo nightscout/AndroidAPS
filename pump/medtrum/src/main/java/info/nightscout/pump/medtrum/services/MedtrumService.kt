@@ -10,10 +10,10 @@ import dagger.android.DaggerService
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraints
+import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
@@ -24,12 +24,11 @@ import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.ConnectionState
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.comm.packets.*
-import info.nightscout.pump.medtrum.extension.toInt
-import info.nightscout.pump.medtrum.extension.toLong
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventPumpStatusChanged
@@ -46,7 +45,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
-import java.util.*
 import javax.inject.Inject
 import kotlin.math.abs
 import kotlin.math.round
@@ -73,6 +71,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     @Inject lateinit var dateUtil: DateUtil
 
     companion object {
+
         // TODO: Test and further increase?
         private const val COMMAND_DEFAULT_TIMEOUT_SEC: Long = 60
         private const val COMMAND_SYNC_TIMEOUT_SEC: Long = 120
@@ -88,7 +87,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     private var mPacket: MedtrumPacket? = null
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
-    
+
     val isConnected: Boolean
         get() = medtrumPump.connectionState == ConnectionState.CONNECTED
     val isConnecting: Boolean
@@ -109,8 +108,45 @@ class MedtrumService : DaggerService(), BLECommCallback {
                                changePump()
                            }
                        }, fabricPrivacy::logException)
+        scope.launch {
+            medtrumPump.pumpStateFlow.collect { state ->
+                when (state) {
+                    MedtrumPumpState.LOWBG_SUSPENDED,
+                    MedtrumPumpState.LOWBG_SUSPENDED2,
+                    MedtrumPumpState.AUTO_SUSPENDED,
+                    MedtrumPumpState.HMAX_SUSPENDED,
+                    MedtrumPumpState.DMAX_SUSPENDED,
+                    MedtrumPumpState.SUSPENDED,
+                    MedtrumPumpState.PAUSED,
+                    MedtrumPumpState.OCCLUSION,
+                    MedtrumPumpState.EXPIRED,
+                    MedtrumPumpState.RESERVOIR_EMPTY,
+                    MedtrumPumpState.PATCH_FAULT,
+                    MedtrumPumpState.PATCH_FAULT2,
+                    MedtrumPumpState.BASE_FAULT,
+                    MedtrumPumpState.BATTERY_OUT,
+                    MedtrumPumpState.NO_CALIBRATION -> {
+                        // Pump suspended show error!
+                        uiInteraction.addNotificationWithSound(
+                            Notification.PUMP_ERROR,
+                            rh.gs(R.string.pump_error, state.toString()),
+                            Notification.URGENT,
+                            info.nightscout.core.ui.R.raw.alarm
+                        )
+                    }
+
+                    MedtrumPumpState.STOPPED        -> {
+                        rxBus.send(EventDismissNotification(Notification.PUMP_ERROR))
+                    }
+
+                    else                            -> {
+                        // Do nothing
+                    }
+                }
+            }
+        }
+
         changePump()
-        // TODO: We should probably listen to the pump state as well and handle some state changes? Or do we handle that in the packets or medtrumPump?
     }
 
     override fun onDestroy() {
@@ -168,7 +204,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         // Send a poll patch, to workaround connection losses?
         var result = sendPacketAndGetResponse(PollPatchPacket(injector))
         // So just do a syncronize to make sure we have the latest data
-        if (result)  result = sendPacketAndGetResponse(SynchronizePacket(injector))
+        if (result) result = sendPacketAndGetResponse(SynchronizePacket(injector))
 
         // Sync records (based on the info we have from the sync)
         if (result) result = syncRecords()
@@ -191,7 +227,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         medtrumPump.bolusProgressLastTimeStamp = dateUtil.now()
 
         val bolusStart = System.currentTimeMillis()
-        
+
         val bolusingEvent = EventOverviewBolusProgress
         while (medtrumPump.bolusStopped == false && result == true && medtrumPump.bolusDone == false) {
             SystemClock.sleep(100)
@@ -207,7 +243,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 rxBus.send(bolusingEvent)
             }
         }
-        
+
         bolusingEvent.t = medtrumPump.bolusingTreatment
         bolusingEvent.percent = 99
         medtrumPump.bolusingTreatment = null
@@ -224,7 +260,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingbolusstatus)))
                 bolusingEvent.percent = 100
             }
-        }) 
+        })
         return result
     }
 
@@ -246,7 +282,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             override fun run() {
                 rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingtempbasalstatus)))
             }
-        }) 
+        })
 
         return result
     }
@@ -260,7 +296,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             override fun run() {
                 rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingtempbasalstatus)))
             }
-        }) 
+        })
 
         return result
     }
@@ -297,7 +333,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 result = sendPacketAndGetResponse(PollPatchPacket(injector))
                 SystemClock.sleep(100)
                 // Get our record
-                if (result) result = sendPacketAndGetResponse(GetRecordPacket(injector, sequence))
+                if (result) result = sendPacketAndGetResponse(GetRecordPacket(injector, sequence), COMMAND_SYNC_TIMEOUT_SEC)
                 if (result == false) break
             }
         }
@@ -431,6 +467,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     // State for connect flow
     private inner class AuthState : State() {
+
         val retryCounter = 0
 
         override fun onEnter() {
@@ -519,8 +556,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
                         LTag.PUMPCOMM,
                         "GetTimeState.onIndication need to set time. systemTime: $currTime PumpTime: ${medtrumPump.lastTimeReceivedFromPump} Pump Time to system time: " + timeUtil
                             .convertPumpTimeToSystemTimeMillis(
-                            medtrumPump.lastTimeReceivedFromPump
-                        )
+                                medtrumPump.lastTimeReceivedFromPump
+                            )
                     )
                     // TODO: Setting time cancels any TBR, so we need to handle that and cancel? or let AAPS handle time syncs?
                     toState(SetTimeState())

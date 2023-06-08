@@ -14,6 +14,7 @@
     <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Medtrum Nano</string>
     <string name="medtrumpump_settings">Medtrum pump settings</string>
+    <string name="pump_error">Pump error: %1$s !! </string>
     
     <!-- overview fragment -->
     <string name="medtrum_ble_status">BLE Status</string>
