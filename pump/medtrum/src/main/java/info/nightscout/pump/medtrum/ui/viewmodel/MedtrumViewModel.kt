@@ -170,6 +170,11 @@ class MedtrumViewModel @Inject constructor(
     }
 
     fun preparePatch() {
+        // Make sure patch step is updated when already filled
+        // TODO: Maybe a nicer solution for this
+        if (medtrumPump.pumpState == MedtrumPumpState.FILLED) {
+            updateSetupStep(SetupStep.FILLED)
+        }
         // New session, generate new session token, only do this when not connected
         if (medtrumService?.isConnected == false) {
             aapsLogger.info(LTag.PUMP, "preparePatch: new session")
