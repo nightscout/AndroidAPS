@@ -44,12 +44,13 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
                 eventHandler.observe(viewLifecycleOwner) { evt ->
                     when (evt.peekContent()) {
                         EventType.ACTIVATION_CLICKED   -> requireContext().apply {
-                            var step = convertToPatchStep(medtrumPump.pumpState)
-                            if (step == PatchStep.DEACTIVATION_COMPLETE) {
-                                // Reset
-                                step = PatchStep.PREPARE_PATCH
-                            }
-                            startActivity(MedtrumActivity.createIntentFromMenu(this, step))
+                            // TODO: Check what to do with this, and if we need this, it currently messes up patch is last registered as priming
+                            // var step = convertToPatchStep(medtrumPump.pumpState)
+                            // if (step == PatchStep.DEACTIVATION_COMPLETE) {
+                            //     // Reset
+                            //     step = PatchStep.PREPARE_PATCH
+                            // }
+                            startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.PREPARE_PATCH))
                         }
 
                         EventType.DEACTIVATION_CLICKED -> requireContext().apply {
