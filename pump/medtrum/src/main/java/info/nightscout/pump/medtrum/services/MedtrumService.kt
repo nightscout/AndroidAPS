@@ -72,7 +72,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     companion object {
 
-        // TODO: Test and further increase?
         private const val COMMAND_DEFAULT_TIMEOUT_SEC: Long = 60
         private const val COMMAND_SYNC_TIMEOUT_SEC: Long = 120
         private const val COMMAND_CONNECTING_TIMEOUT_SEC: Long = 30
@@ -198,9 +197,12 @@ class MedtrumService : DaggerService(), BLECommCallback {
         bleComm.disconnect(from)
     }
 
-    fun readPumpStatus() {
-        // Most of these things are already done when a connection is setup, but wo dont know how long the pump was connected for?
+    fun readPumpStatus() {        
+        // Update pump events
+        loadEvents()
+    }
 
+    fun loadEvents(): Boolean {
         // Send a poll patch, to workaround connection losses?
         var result = sendPacketAndGetResponse(PollPatchPacket(injector))
         // So just do a syncronize to make sure we have the latest data
@@ -210,9 +212,11 @@ class MedtrumService : DaggerService(), BLECommCallback {
         if (result) result = syncRecords()
         if (!result) {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to sync records")
-            return
         }
         if (result) medtrumPump.lastConnection = System.currentTimeMillis()
+        aapsLogger.debug(LTag.PUMPCOMM, "Events loaded")
+        rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingpumpstatus)))
+        return result
     }
 
     fun setBolus(insulin: Double, t: EventOverviewBolusProgress.Treatment): Boolean {
@@ -250,13 +254,19 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         val bolusDurationInMSec = (insulin * 60 * 1000)
         val expectedEnd = bolusStart + bolusDurationInMSec + 2000
-        while (System.currentTimeMillis() < expectedEnd && result == true) {
+        while (System.currentTimeMillis() < expectedEnd && result == true && medtrumPump.bolusDone == false) {
             SystemClock.sleep(1000)
         }
 
         // Do not call update status directly, reconnection may be needed
-        commandQueue.readStatus(rh.gs(info.nightscout.pump.medtrum.R.string.gettingbolusstatus), object : Callback() {
+        commandQueue.loadEvents(object : Callback() {
             override fun run() {
+                if (this.result.success == false && isConnected == false) {
+                    // Reschedule loadEvents when we lost connection during the command
+                    aapsLogger.warn(LTag.PUMP, "loadEvents failed due to connection loss, rescheduling")
+                    commandQueue.loadEvents(this)
+                    return
+                }
                 rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingbolusstatus)))
                 bolusingEvent.percent = 100
             }
@@ -278,7 +288,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         // Get history records, this will update the prevoius basals 
         // Do not call update status directly, reconnection may be needed
-        commandQueue.readStatus(rh.gs(info.nightscout.pump.medtrum.R.string.gettingtempbasalstatus), object : Callback() {
+        commandQueue.loadEvents(object : Callback() {
             override fun run() {
                 rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingtempbasalstatus)))
             }
@@ -292,7 +302,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         // Get history records, this will update the prevoius basals 
         // Do not call update status directly, reconnection may be needed
-        commandQueue.readStatus(rh.gs(info.nightscout.pump.medtrum.R.string.gettingtempbasalstatus), object : Callback() {
+        commandQueue.loadEvents(object : Callback() {
             override fun run() {
                 rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingtempbasalstatus)))
             }
@@ -312,7 +322,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         if (result) result = packet?.let { sendPacketAndGetResponse(it) } == true
 
         // Get history records, this will update the pump state and add changes in TBR to AAPS history
-        if (result) result = syncRecords()
+        commandQueue.loadEvents(null)
 
         return result
     }
@@ -690,9 +700,11 @@ class MedtrumService : DaggerService(), BLECommCallback {
         override fun onEnter() {
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service reached ReadyState!")
             // Now we are fully connected and authenticated and we can start sending commands. Let AAPS know
-            medtrumPump.connectionState = ConnectionState.CONNECTED
-            if (medtrumPlugin.isInitialized()) {
-                rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
+            if (isConnected == false) {
+                medtrumPump.connectionState = ConnectionState.CONNECTED
+                if (medtrumPlugin.isInitialized()) {
+                    rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.CONNECTED))
+                }
             }
         }
     }

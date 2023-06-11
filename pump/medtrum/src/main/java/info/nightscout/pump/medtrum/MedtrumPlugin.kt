@@ -17,6 +17,7 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
+import info.nightscout.interfaces.pump.Medtrum
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpPluginBase
@@ -85,7 +86,7 @@ import kotlin.math.round
         .shortName(R.string.medtrum_pump_shortname)
         .preferencesId(R.xml.pref_medtrum_pump)
         .description(R.string.medtrum_pump_description), injector, aapsLogger, rh, commandQueue
-), Pump {
+), Pump, Medtrum {
 
     private val disposable = CompositeDisposable()
     private var medtrumService: MedtrumService? = null
@@ -270,16 +271,20 @@ import kotlin.math.round
         // round rate to pump rate
         val pumpRate = constraintChecker.applyBasalConstraints(Constraint(absoluteRate), profile).value()
         temporaryBasalStorage.add(PumpSync.PumpState.TemporaryBasal(dateUtil.now(), T.mins(durationInMinutes.toLong()).msecs(), pumpRate, true, tbrType, 0L, 0L))
-        val connectionOk = medtrumService?.setTempBasal(pumpRate, durationInMinutes) ?: false
-        if (connectionOk
-            && medtrumPump.tempBasalInProgress 
+        val connectionOK = medtrumService?.setTempBasal(pumpRate, durationInMinutes) ?: false
+        if (connectionOK
+            && medtrumPump.tempBasalInProgress
             && Math.abs(medtrumPump.tempBasalAbsoluteRate - pumpRate) <= 0.05
-            /*&& Math.abs(medtrumPump.tempBasalRemainingMinutes - durationInMinutes) <= 5*/) {
-        
-            return PumpEnactResult(injector).success(true).enacted(true).duration(/*medtrumPump.tempBasalRemainingMinutes*/durationInMinutes).absolute(medtrumPump.tempBasalAbsoluteRate).isPercent(false)
+        /*&& Math.abs(medtrumPump.tempBasalRemainingMinutes - durationInMinutes) <= 5*/) {
+
+            return PumpEnactResult(injector).success(true).enacted(true).duration(/*medtrumPump.tempBasalRemainingMinutes*/durationInMinutes).absolute(medtrumPump.tempBasalAbsoluteRate)
+                .isPercent(false)
                 .isTempCancel(false)
         } else {
-            aapsLogger.error(LTag.PUMP, "setTempBasalAbsolute failed, connectionOk: $connectionOk, tempBasalInProgress: ${medtrumPump.tempBasalInProgress}, tempBasalAbsoluteRate: ${medtrumPump.tempBasalAbsoluteRate}") //, tempBasalRemainingMinutes: ${medtrumPump.tempBasalRemainingMinutes}")
+            aapsLogger.error(
+                LTag.PUMP,
+                "setTempBasalAbsolute failed, connectionOK: $connectionOK, tempBasalInProgress: ${medtrumPump.tempBasalInProgress}, tempBasalAbsoluteRate: ${medtrumPump.tempBasalAbsoluteRate}"
+            ) //, tempBasalRemainingMinutes: ${medtrumPump.tempBasalRemainingMinutes}")
             return PumpEnactResult(injector).success(false).enacted(false).comment("Medtrum setTempBasalAbsolute failed")
         }
     }
@@ -298,11 +303,11 @@ import kotlin.math.round
         if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
 
         aapsLogger.info(LTag.PUMP, "cancelTempBasal - enforceNew: $enforceNew")
-        val connectionOk = medtrumService?.cancelTempBasal() ?: false
-        if (connectionOk && !medtrumPump.tempBasalInProgress) {
+        val connectionOK = medtrumService?.cancelTempBasal() ?: false
+        if (connectionOK && !medtrumPump.tempBasalInProgress) {
             return PumpEnactResult(injector).success(true).enacted(true).isTempCancel(true)
         } else {
-            aapsLogger.error(LTag.PUMP, "cancelTempBasal failed, connectionOk: $connectionOk, tempBasalInProgress: ${medtrumPump.tempBasalInProgress}")
+            aapsLogger.error(LTag.PUMP, "cancelTempBasal failed, connectionOK: $connectionOK, tempBasalInProgress: ${medtrumPump.tempBasalInProgress}")
             return PumpEnactResult(injector).success(false).enacted(false).comment("Medtrum cancelTempBasal failed")
         }
     }
@@ -356,5 +361,16 @@ import kotlin.math.round
     }
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+    }
+
+    // Medtrum interface
+    override fun loadEvents(): PumpEnactResult {
+        if (!isInitialized()) {
+            val result = PumpEnactResult(injector).success(false)
+            result.comment = "pump not initialized"
+            return result
+        }
+        val connectionOK = medtrumService?.loadEvents() ?: false
+        return PumpEnactResult(injector).success(connectionOK)
     }
 }

@@ -46,7 +46,9 @@
     <string name="snInput_title">SN</string>
     <string name="snInput_summary">Serial number pump base</string>
 
+    <!-- treatment state-->
     <string name="waitingforestimatedbolusend">Waiting for bolus end. Remaining %1$d sec.</string>
+    <string name="gettingpumpstatus">Getting pump status</string>
     <string name="gettingbolusstatus">Getting bolus status</string>
     <string name="gettingtempbasalstatus">Getting temporary basal status</string>
 
