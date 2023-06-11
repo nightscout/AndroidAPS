@@ -247,6 +247,14 @@ class LoopPlugin @Inject constructor(
                 return
             }
 
+            // Check if pump is not running, and wait for any pending commands to finish (e.g. bolus)
+            // Do this before calling usedAPS to make sure used IOB is correct
+            if (!isEmptyQueue()) {
+                aapsLogger.debug(LTag.APS, rh.gs(info.nightscout.core.ui.R.string.pump_busy))
+                rxBus.send(EventLoopSetLastRunGui(rh.gs(info.nightscout.core.ui.R.string.pump_busy)))
+                return
+            }
+
             // Check if pump info is loaded
             if (pump.baseBasalRate < 0.01) return
             val usedAPS = activePlugin.activeAPS
@@ -258,12 +266,6 @@ class LoopPlugin @Inject constructor(
             // Check if we have any result
             if (apsResult == null) {
                 rxBus.send(EventLoopSetLastRunGui(rh.gs(R.string.no_aps_selected)))
-                return
-            }
-
-            if (!isEmptyQueue()) {
-                aapsLogger.debug(LTag.APS, rh.gs(info.nightscout.core.ui.R.string.pump_busy))
-                rxBus.send(EventLoopSetLastRunGui(rh.gs(info.nightscout.core.ui.R.string.pump_busy)))
                 return
             }
 
