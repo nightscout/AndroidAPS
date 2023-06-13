@@ -324,7 +324,6 @@ Unerwartetes Verhalten.</string>
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Kein aktiver Profilwechsel!</string>
-    <string name="profile_message">Profil:\n\nZeitverschiebung: %1$\nProzent: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="no_profile">Kein Profil geladen</string>
     <string name="aps_only">Nur im APS-Modus anwendbar!</string>
