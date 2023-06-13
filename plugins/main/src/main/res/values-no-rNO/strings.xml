@@ -323,7 +323,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">t</string>
     <string name="no_active_profile">Det er ikke angitt noen aktiv profil!</string>
-    <string name="profile_message">Profil:\n\nTidsforskyving: %1$\nProsent: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="no_profile">Ingen profil valgt</string>
     <string name="aps_only">Bare bruk i APS-modus!</string>
