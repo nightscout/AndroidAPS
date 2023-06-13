@@ -372,7 +372,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">No active profile switch!</string>
-    <string name="profile_message">Profile:\n\nTimeshift: %1$\nPercentage: %2$d%%\"</string>
+    <string name="profile_message">Profile:\n\nTimeshift: %1$d\nPercentage: %2$d%%\"</string>
     <string name="key_wear_predictions" translatable="false">wear_predictions</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">No profile loaded</string>
