@@ -1,0 +1,23 @@
+<resources>
+    <string-array name="alarmSettings">
+        <!-- Nano doesnt have lights, other patches not yet supported -->
+        <!-- <item>Light, vibrate and beep</item> -->
+        <!-- <item>Light and vibrate</item> -->
+        <!-- <item>Light and beep</item> -->
+        <!-- <item>Light only</item> -->
+        <item>Vibrate and beep</item>
+        <item>Vibrate only</item>
+        <item>Beep only</item>
+        <item>None</item>
+    </string-array>
+    <string-array name="alarmSettingsValues" translatable="false">
+        <!-- <item>0</item> -->
+        <!-- <item>1</item> -->
+        <!-- <item>2</item> -->
+        <!-- <item>3</item> -->
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+</resources>

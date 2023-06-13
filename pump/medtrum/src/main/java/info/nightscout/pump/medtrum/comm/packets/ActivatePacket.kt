@@ -65,7 +65,7 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
         val autoSuspendTime: Byte = 12 // Not sure why, but pump needs this in order to activate
 
         val patchExpiration: Byte = medtrumPump.desiredPatchExpiration.toByte()
-        val alarmSetting: Byte = medtrumPump.desiredAlarmSetting
+        val alarmSetting: Byte = medtrumPump.desiredAlarmSetting.code
 
         val lowSuspend: Byte = 0
         val predictiveLowSuspend: Byte = 0

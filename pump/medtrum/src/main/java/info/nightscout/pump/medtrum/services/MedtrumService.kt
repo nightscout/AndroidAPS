@@ -103,8 +103,26 @@ class MedtrumService : DaggerService(), BLECommCallback {
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
-                           if (event.isChanged(rh.gs(info.nightscout.pump.medtrum.R.string.key_snInput))) {
-                               changePump()
+                           if (event.isChanged(rh.gs(info.nightscout.pump.medtrum.R.string.key_sn_input))) {
+                               medtrumPump.loadUserSettingsFromSP()
+                           }
+                           if (event.isChanged(rh.gs(info.nightscout.pump.medtrum.R.string.key_alarm_setting))
+                               || event.isChanged(rh.gs(info.nightscout.pump.medtrum.R.string.key_patch_expiration))
+                               || event.isChanged(rh.gs(info.nightscout.pump.medtrum.R.string.key_hourly_max_insulin))
+                               || event.isChanged(rh.gs(info.nightscout.pump.medtrum.R.string.key_daily_max_insulin))
+                           ) {
+                               medtrumPump.loadUserSettingsFromSP()
+                               commandQueue.setUserOptions(object : Callback() {
+                                   override fun run() {
+                                       if (medtrumPlugin.isInitialized() && this.result.success == false) {
+                                           uiInteraction.addNotification(
+                                               Notification.PUMP_SETTINGS_FAILED,
+                                               rh.gs(R.string.pump_setting_failed),
+                                               Notification.NORMAL,
+                                           )
+                                       }
+                                   }
+                               })
                            }
                        }, fabricPrivacy::logException)
         scope.launch {
@@ -173,7 +191,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             }
         }
 
-        changePump()
+        medtrumPump.loadFromSP()
     }
 
     override fun onDestroy() {
@@ -247,6 +265,11 @@ class MedtrumService : DaggerService(), BLECommCallback {
         return result
     }
 
+    fun setUserSettings(): Boolean {
+        rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.settingpumpsettings)))
+        return sendPacketAndGetResponse(SetPatchPacket(injector))
+    }
+
     fun setBolus(insulin: Double, t: EventOverviewBolusProgress.Treatment): Boolean {
         if (!isConnected) return false
         val result = sendPacketAndGetResponse(SetBolusPacket(injector, insulin))
@@ -314,7 +337,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         }
         if (result) result = sendPacketAndGetResponse(SetTempBasalPacket(injector, absoluteRate, durationInMinutes))
 
-        // Get history records, this will update the prevoius basals 
+        // Get history records, this will update the prevoius basals
         // Do not call update status directly, reconnection may be needed
         commandQueue.loadEvents(object : Callback() {
             override fun run() {
@@ -328,7 +351,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     fun cancelTempBasal(): Boolean {
         var result = sendPacketAndGetResponse(CancelTempBasalPacket(injector))
 
-        // Get history records, this will update the prevoius basals 
+        // Get history records, this will update the prevoius basals
         // Do not call update status directly, reconnection may be needed
         commandQueue.loadEvents(object : Callback() {
             override fun run() {
@@ -353,11 +376,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
         commandQueue.loadEvents(null)
 
         return result
-    }
-
-    fun changePump() {
-        aapsLogger.debug(LTag.PUMP, "changePump: called!")
-        medtrumPump.loadUserSettingsFromSP()
     }
 
     /** This gets the history records from the pump */

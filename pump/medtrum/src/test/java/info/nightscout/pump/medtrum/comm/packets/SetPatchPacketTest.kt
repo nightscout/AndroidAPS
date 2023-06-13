@@ -23,7 +23,7 @@ class SetPatchPacketTest : MedtrumTestBase() {
     @Test fun getRequestGivenValuesWhenCalledThenReturnValidArray() {
         // Inputs
         medtrumPump.desiredPatchExpiration = false
-        medtrumPump.desiredAlarmSetting = AlarmSetting.LIGHT_AND_VIBRATE.code
+        medtrumPump.desiredAlarmSetting = AlarmSetting.LIGHT_AND_VIBRATE
         medtrumPump.desiredDailyMaxInsulin = 40
         medtrumPump.desiredDailyMaxInsulin = 180
 
@@ -32,7 +32,7 @@ class SetPatchPacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        val expected = byteArrayOf(35, 1, 32, 3, 16, 14, 0, 0, 0, 0, 0, 0)
+        val expected = byteArrayOf(35, 1, 32, 3, 16, 14, 0, 0, 12, 0, 0, 30)
         assertEquals(expected.contentToString(), result.contentToString())
     }
 }

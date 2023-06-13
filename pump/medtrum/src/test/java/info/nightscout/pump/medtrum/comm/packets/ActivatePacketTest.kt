@@ -26,7 +26,7 @@ class ActivatePacketTest : MedtrumTestBase() {
     @Test fun getRequestGivenPacketWhenValuesSetThenReturnCorrectByteArray() {
         // Inputs
         medtrumPump.desiredPatchExpiration = true
-        medtrumPump.desiredAlarmSetting = AlarmSetting.BEEP_ONLY.code
+        medtrumPump.desiredAlarmSetting = AlarmSetting.BEEP_ONLY
         medtrumPump.desiredDailyMaxInsulin = 40
         medtrumPump.desiredDailyMaxInsulin = 180
 
@@ -44,7 +44,7 @@ class ActivatePacketTest : MedtrumTestBase() {
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
         // Inputs
         medtrumPump.desiredPatchExpiration = true
-        medtrumPump.desiredAlarmSetting = AlarmSetting.BEEP_ONLY.code
+        medtrumPump.desiredAlarmSetting = AlarmSetting.BEEP_ONLY
         medtrumPump.desiredDailyMaxInsulin = 40
         medtrumPump.desiredDailyMaxInsulin = 180
 

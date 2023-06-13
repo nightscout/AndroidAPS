@@ -67,6 +67,7 @@ class MedtrumViewModel @Inject constructor(
                             if (patchStep.value == PatchStep.START_DEACTIVATION) {
                                 updateSetupStep(SetupStep.READY_DEACTIVATE)
                             }
+                            medtrumPump.lastConnection = System.currentTimeMillis()
                         }
 
                         ConnectionState.DISCONNECTED -> {

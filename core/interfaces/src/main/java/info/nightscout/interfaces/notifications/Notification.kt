@@ -135,6 +135,7 @@ open class Notification {
         const val COMBO_UNKNOWN_TBR = 81
         const val BLUETOOTH_NOT_ENABLED = 82
         const val PATCH_NOT_ACTIVE = 83
+        const val PUMP_SETTINGS_FAILED = 84
 
         const val USER_MESSAGE = 1000
 

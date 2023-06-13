@@ -177,14 +177,13 @@ class MedtrumPump @Inject constructor(
     var lastStopSequence = 0
     var lastStopPatchId = 0L
 
-    // TODO set these setting on init
     // User settings (desired values, to be set on pump)
     var desiredPatchExpiration = false
-    var desiredAlarmSetting = AlarmSetting.LIGHT_VIBRATE_AND_BEEP.code
+    var desiredAlarmSetting = AlarmSetting.LIGHT_VIBRATE_AND_BEEP
     var desiredHourlyMaxInsulin: Int = 40
     var desiredDailyMaxInsulin: Int = 180
 
-    init {
+    fun loadFromSP() {
         // Load stuff from SP
         _patchSessionToken = sp.getLong(R.string.key_session_token, 0L)
         _currentSequenceNumber = sp.getInt(R.string.key_current_sequence_number, 0)
@@ -203,14 +202,14 @@ class MedtrumPump @Inject constructor(
     }
 
     fun loadUserSettingsFromSP() {
-        // TODO
-        // desiredPatchExpiration = sp.getBoolean(R.string.key_patch_expiration, false)
-        // desiredAlarmSetting = sp.getInt(R.string.key_alarm_setting, AlarmSetting.LIGHT_VIBRATE_AND_BEEP.code)
-        // desiredHourlyMaxInsulin = sp.getInt(R.string.key_hourly_max_insulin, 40)
-        // desiredDailyMaxInsulin = sp.getInt(R.string.key_daily_max_insulin, 180)
+        desiredPatchExpiration = sp.getBoolean(info.nightscout.pump.medtrum.R.string.key_patch_expiration, false)
+        val alarmSettingCode = sp.getString(info.nightscout.pump.medtrum.R.string.key_alarm_setting, AlarmSetting.LIGHT_VIBRATE_AND_BEEP.code.toString())?.toByte()
+        desiredAlarmSetting = AlarmSetting.values().firstOrNull { it.code == alarmSettingCode } ?: AlarmSetting.LIGHT_VIBRATE_AND_BEEP
+        desiredHourlyMaxInsulin = sp.getInt(info.nightscout.pump.medtrum.R.string.key_hourly_max_insulin, 40)
+        desiredDailyMaxInsulin = sp.getInt(info.nightscout.pump.medtrum.R.string.key_daily_max_insulin, 180)
 
         try {
-            _pumpSN = sp.getString(info.nightscout.pump.medtrum.R.string.key_snInput, " ").toLong(radix = 16)
+            _pumpSN = sp.getString(info.nightscout.pump.medtrum.R.string.key_sn_input, " ").toLong(radix = 16)
         } catch (e: NumberFormatException) {
             aapsLogger.debug(LTag.PUMP, "changePump: Invalid input!")
         }
