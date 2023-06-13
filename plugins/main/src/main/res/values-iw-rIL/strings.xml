@@ -325,7 +325,6 @@
     <string name="grams_short">גר\'</string>
     <string name="hour_short">ש\'</string>
     <string name="no_active_profile">לא הופעלה החלפת פרופיל!</string>
-    <string name="profile_message">פרופיל:\n\nהיסט זמן: %1$\nאחוז: %2$d%\"</string>
     <string name="tdd_line">%1$.2fיח\' %1$.0f%</string>
     <string name="no_profile">לא נטען פרופיל</string>
     <string name="aps_only">חל רק במצב APS!</string>
