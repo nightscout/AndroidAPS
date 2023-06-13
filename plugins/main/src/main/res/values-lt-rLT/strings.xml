@@ -323,7 +323,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">val</string>
     <string name="no_active_profile">Neparinktas aktyvus profilis!</string>
-    <string name="profile_message">Profilis:\n\nLaiko perstūmimas: %1$\nProcentai: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fv %1$.0f%%</string>
     <string name="no_profile">Profilis neįkeltas</string>
     <string name="aps_only">Tik APS režime!</string>
