@@ -177,8 +177,7 @@ class BLEComm @Inject internal constructor(
         // Reset sequence counter
         mWriteSequenceNumber = 0
         if (mBluetoothGatt == null) {
-            mBluetoothGatt =
-            device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE)
+            mBluetoothGatt = device.connectGatt(context, false, mGattCallback, BluetoothDevice.TRANSPORT_LE)
         } else {
             // Already connected?, this should not happen force disconnect
             aapsLogger.error(LTag.PUMPBTCOMM, "connectGatt, mBluetoothGatt is not null")
@@ -200,7 +199,7 @@ class BLEComm @Inject internal constructor(
             isConnecting = false
             stopScan()
             SystemClock.sleep(100)
-        }        
+        }
         if (isConnected) {
             aapsLogger.debug(LTag.PUMPBTCOMM, "Connected, disconnecting")
             mBluetoothGatt?.disconnect()
@@ -402,7 +401,7 @@ class BLEComm @Inject internal constructor(
                 aapsLogger.warn(LTag.PUMPBTCOMM, "Disconnected while connecting! Reset device address")
                 mDevice = null
                 // Wait a bit before retrying
-                SystemClock.sleep(2000)                
+                SystemClock.sleep(2000)
             }
             close()
             isConnected = false

@@ -110,13 +110,46 @@ class MedtrumService : DaggerService(), BLECommCallback {
         scope.launch {
             medtrumPump.pumpStateFlow.collect { state ->
                 when (state) {
+                    MedtrumPumpState.NONE,
+                    MedtrumPumpState.IDLE,
+                    MedtrumPumpState.FILLED,
+                    MedtrumPumpState.PRIMING,
+                    MedtrumPumpState.PRIMED,
+                    MedtrumPumpState.EJECTING,
+                    MedtrumPumpState.EJECTED,
+                    MedtrumPumpState.STOPPED        -> {
+                        rxBus.send(EventDismissNotification(Notification.PUMP_ERROR))
+                        rxBus.send(EventDismissNotification(Notification.PUMP_SUSPENDED))
+                        uiInteraction.addNotification(
+                            Notification.PATCH_NOT_ACTIVE,
+                            rh.gs(R.string.patch_not_active),
+                            Notification.URGENT,
+                        )
+                        medtrumPump.setFakeTBRIfNeeded()
+                    }
+
+                    MedtrumPumpState.ACTIVE,
+                    MedtrumPumpState.ACTIVE_ALT     -> {
+                        rxBus.send(EventDismissNotification(Notification.PATCH_NOT_ACTIVE))
+                        rxBus.send(EventDismissNotification(Notification.PUMP_SUSPENDED))
+                    }
+
                     MedtrumPumpState.LOWBG_SUSPENDED,
                     MedtrumPumpState.LOWBG_SUSPENDED2,
                     MedtrumPumpState.AUTO_SUSPENDED,
                     MedtrumPumpState.HMAX_SUSPENDED,
                     MedtrumPumpState.DMAX_SUSPENDED,
                     MedtrumPumpState.SUSPENDED,
-                    MedtrumPumpState.PAUSED,
+                    MedtrumPumpState.PAUSED         -> {
+                        // TODO: Message with reason
+                        uiInteraction.addNotification(
+                            Notification.PUMP_SUSPENDED,
+                            rh.gs(R.string.pump_is_suspended),
+                            Notification.NORMAL,
+                        )
+                        // Pump will report proper TBR for this
+                    }
+
                     MedtrumPumpState.OCCLUSION,
                     MedtrumPumpState.EXPIRED,
                     MedtrumPumpState.RESERVOIR_EMPTY,
@@ -125,21 +158,16 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     MedtrumPumpState.BASE_FAULT,
                     MedtrumPumpState.BATTERY_OUT,
                     MedtrumPumpState.NO_CALIBRATION -> {
-                        // Pump suspended show error!
+                        rxBus.send(EventDismissNotification(Notification.PATCH_NOT_ACTIVE))
+                        rxBus.send(EventDismissNotification(Notification.PUMP_SUSPENDED))
+                        // Pump suspended due to error, show error!
                         uiInteraction.addNotificationWithSound(
                             Notification.PUMP_ERROR,
                             rh.gs(R.string.pump_error, state.toString()),
                             Notification.URGENT,
                             info.nightscout.core.ui.R.raw.alarm
                         )
-                    }
-
-                    MedtrumPumpState.STOPPED        -> {
-                        rxBus.send(EventDismissNotification(Notification.PUMP_ERROR))
-                    }
-
-                    else                            -> {
-                        // Do nothing
+                        medtrumPump.setFakeTBRIfNeeded()
                     }
                 }
             }
@@ -197,7 +225,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         bleComm.disconnect(from)
     }
 
-    fun readPumpStatus() {        
+    fun readPumpStatus() {
         // Update pump events
         loadEvents()
     }
