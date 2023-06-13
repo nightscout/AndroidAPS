@@ -324,7 +324,6 @@
     <string name="grams_short">gr</string>
     <string name="hour_short">sa</string>
     <string name="no_active_profile">Etkin profil ayarlanmadı!</string>
-    <string name="profile_message">Profil:\n\nZaman Kayması: %1$\nYüzde: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fÜ %1$.0f%%</string>
     <string name="no_profile">Profil yüklenmedi</string>
     <string name="aps_only">Sadece APS modunda uygulayın!</string>
