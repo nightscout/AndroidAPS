@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a018">Errore batteria patch\nLa patch è stata disattivata e\nl\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a019">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_b001">Fine della sospensione dell\'insulina\nTocca \'Riprendi\' per riavviare l\'erogazione di insulina.</string>
+    <string name="string_b003">Livello serbatoio basso\nSostituisci la patch presto.</string>
+    <string name="string_b006">La patch scadrà presto\nCambia patch ora.</string>
+    <string name="string_b012">Attivazione patch incompleta\nCompleta il processo \'Attiva patch\'.</string>
+    <string name="string_b018">Batteria patch quasi scarica\nSii pronto a cambiare patch.</string>
+</resources>
