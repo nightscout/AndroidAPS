@@ -326,7 +326,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
-    <string name="profile_message">Profil:\n\nPosun času: %1$\nPercento: %2$d%%\"</string>
+    <string name="profile_message">Profil:\n\nPosunutie: %1$d\nPercento: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fJI %1$.0f%%</string>
     <string name="no_profile">Nie je vybraný žiadny profil</string>
     <string name="aps_only">Použiť iba v APS móde!</string>

@@ -322,7 +322,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">u</string>
     <string name="no_active_profile">Geen actieve profielwissel!</string>
-    <string name="profile_message">Profiel: \n\nTijdverschuiving: %1$\nPercentage: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="no_profile">Geen profiel geladen</string>
     <string name="aps_only">Alleen gebruiken in de APS modus!</string>

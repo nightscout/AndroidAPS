@@ -326,7 +326,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Sin cambio de perfil activo</string>
-    <string name="profile_message">Perfil:\n\nHorario: %1$\nPorcentaje: %2$d%%\"</string>
+    <string name="profile_message">Perfil:\n\nAjuste de tiempo: %1$d\nPorcentaje: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">Ningún perfil cargado</string>
     <string name="aps_only">Sólo se aplica en modo APS</string>

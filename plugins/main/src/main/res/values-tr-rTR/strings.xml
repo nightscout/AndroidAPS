@@ -254,6 +254,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Tahminler</string>
     <string name="overview_show_treatments">Tedaviler</string>
+    <string name="overview_show_heartRate">Nabız</string>
     <string name="overview_show_deviation_slope">Sapma eğimi</string>
     <string name="overview_show_activity">Aktivite</string>
     <string name="overview_show_bgi">Kan Şekeri Etkisi</string>
@@ -271,6 +272,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">EĞİMSAPMA</string>
     <string name="treatments_shortname">TEDAVİ</string>
+    <string name="heartRate_shortname">Nabız</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Grafik ölçeği</string>
     <string name="graph_menu_divider_header">Grafik</string>
@@ -324,7 +326,7 @@
     <string name="grams_short">gr</string>
     <string name="hour_short">sa</string>
     <string name="no_active_profile">Etkin profil ayarlanmadı!</string>
-    <string name="profile_message">Profil:\n\nZaman Kayması: %1$\nYüzde: %2$d%%\"</string>
+    <string name="profile_message">Profil:\n\nZaman Kayması: %1$d\nYüzde: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fÜ %1$.0f%%</string>
     <string name="no_profile">Profil yüklenmedi</string>
     <string name="aps_only">Sadece APS modunda uygulayın!</string>

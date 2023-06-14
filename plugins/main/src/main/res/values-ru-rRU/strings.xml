@@ -323,7 +323,6 @@
     <string name="grams_short">г</string>
     <string name="hour_short">ч</string>
     <string name="no_active_profile">Активный профиль не установлен!</string>
-    <string name="profile_message">Профиль:\n\nСдвиг по времени: %1$\nПроцент: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fед%1$.0f%%</string>
     <string name="no_profile">Профиль не загружен</string>
     <string name="aps_only">Применять только в режиме APS!</string>

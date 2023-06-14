@@ -193,4 +193,5 @@
     <string name="old">eski</string>
     <string name="old_warning">!eski!</string>
     <string name="error">!hata!</string>
+    <string name="pref_heartRateSampling">Nabız</string>
 </resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="string_a002">Réservoir vide\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a003">Le Patch a expiré\nLe Patch a été désactivé et la distribution d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a004">Occlusion\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a005">Échec de l\'auto-test au démarrage\nLe Patch a été désactivé. Changez le Patch.</string>
+    <string name="string_a007">Température inadaptée\nL\'injection d\'insuline ou \"L\'activation du Patch\" ont été arrêtées. Corrigez la température extrême maintenant.</string>
+    <string name="string_a016">Erreur d\'insertion d\'aiguille\nVérifiez la position du bouton et appuyez sur \'Réessayer\'.</string>
+    <string name="string_a018">Erreur batterie du Patch\nLe Patch a été désactivé et\nl\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a019">Erreur batterie du Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a020">Erreur d\'activation du Patch\nle processus \'Activer le Patch\' a expiré. Appuyez sur \'Confirmer\' pour désactiver le Patch actuel. Changez le Patch.</string>
+    <string name="string_a022">Erreur Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a023">Erreur Patch\nLe Patch a été désactivé et\n l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a034">Erreur Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a041">Erreur Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a042">Erreur Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a043">Erreur Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a044">Erreur Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a106">Erreur Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a107">Erreur Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a108">Erreur Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a116">Erreur Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a117">Erreur Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_a118">Erreur Patch\nLe Patch a été désactivé et l\'injection d\'insuline a été arrêtée. Changez le Patch maintenant.</string>
+    <string name="string_b000">La durée de vie du Patch expirera %s. Soyez prêt à changer le Patch.</string>
+    <string name="string_b001">Fin de la suspension d\'insuline\nAppuyez sur « Reprendre » pour redémarrer l\'injection d\'insuline.</string>
+    <string name="string_b003">Réservoir bas\nRemplacer le patch bientôt.</string>
+    <string name="string_b005">Le Patch a expiré\nChanger le Patch maintenant.</string>
+    <string name="string_b006">Le Patch va bientôt expirer\nChanger le Patch maintenant.</string>
+    <string name="string_b012">Activation du Patch incomplète\nTerminez le processus \'Activer le Patch\'.</string>
+    <string name="string_b018">Batterie du Patch faible\nSoyez prêt à changer le Patch.</string>
+</resources>
