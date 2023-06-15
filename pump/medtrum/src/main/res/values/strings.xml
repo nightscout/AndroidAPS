@@ -21,19 +21,29 @@
     <string name="medtrumpump_settings">Medtrum pump settings</string>
     <string name="pump_error">Pump error: %1$s !! </string>
     <string name="pump_is_suspended">Pump is suspended</string>
+    <string name="pump_is_suspended_hour_max">Pump is suspended due to hourly max insulin exceeded</string>
+    <string name="pump_is_suspended_day_max">Pump is suspended due to daily max insulin exceeded</string>
     <string name="patch_not_active">Patch not activated</string>
     <string name="pump_setting_failed">Setting user settings to pump failed!</string>
     
     <!-- overview fragment -->
-    <string name="medtrum_ble_status">BLE Status</string>
+    <string name="ble_status_label">BLE Status</string>
+    <string name="last_connected_label">Last connected</string>
     <string name="pump_state_label">Pump state</string>
+    <string name="active_alarms_label">Active alarms</string>
     <string name="reservoir_label"> Reservoir</string>
     <string name="reservoir_level"> %.2f U</string>
-    <string name="current_basal_type_label">Basal type</string>
-    <string name="current_basal_label">Basal rate</string>
+    <string name="basal_type_label">Basal type</string>
+    <string name="basal_rate_label">Basal rate</string>
     <string name="current_basal_rate"> %.2f U/h</string>
-    <string name="string_new_patch">Start new patch</string>
-    <string name="string_stop_patch">Stop patch</string>
+    <string name="pump_type_label">Pump type</string>
+    <string name="fw_version_label">FW version</string>
+    <string name="patch_no_label">Patch no</string>
+    <string name="patch_expiry_label">Patch expires</string>
+    <string name="refresh_label">Refresh</string>
+    <string name="reset_alarms_label">Reset alarms</string>
+    <string name="change_patch_label">Change patch</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
 
     <!-- wizard-->
     <string name="string_change_patch">Discard/Change Patch</string> <!-- TODO check-->

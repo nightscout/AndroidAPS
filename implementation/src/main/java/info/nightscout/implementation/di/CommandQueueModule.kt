@@ -14,6 +14,7 @@ import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
 import info.nightscout.implementation.queue.commands.CommandBolus
 import info.nightscout.implementation.queue.commands.CommandCancelExtendedBolus
 import info.nightscout.implementation.queue.commands.CommandCancelTempBasal
+import info.nightscout.implementation.queue.commands.CommandClearAlarms
 import info.nightscout.implementation.queue.commands.CommandCustomCommand
 import info.nightscout.implementation.queue.commands.CommandExtendedBolus
 import info.nightscout.implementation.queue.commands.CommandInsightSetTBROverNotification
@@ -32,6 +33,7 @@ abstract class CommandQueueModule {
     @ContributesAndroidInjector abstract fun commandExtendedBolusInjector(): CommandExtendedBolus
     @ContributesAndroidInjector abstract fun commandInsightSetTBROverNotificationInjector(): CommandInsightSetTBROverNotification
     @ContributesAndroidInjector abstract fun commandLoadEventsInjector(): CommandLoadEvents
+    @ContributesAndroidInjector abstract fun commandClearAlarmsInjector(): CommandClearAlarms
     @ContributesAndroidInjector abstract fun commandLoadHistoryInjector(): CommandLoadHistory
     @ContributesAndroidInjector abstract fun commandLoadTDDsInjector(): CommandLoadTDDs
     @ContributesAndroidInjector abstract fun commandReadStatusInjector(): CommandReadStatus

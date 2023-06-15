@@ -238,6 +238,11 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // add loadEvents
         commandQueue.loadEvents(null)
         Assertions.assertEquals(4, commandQueue.size())
+
+        // add clearAlarms
+        commandQueue.clearAlarms(null)
+        Assertions.assertEquals(5, commandQueue.size())
+        
         commandQueue.clear()
         commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
         commandQueue.pickup()
@@ -351,6 +356,22 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         Assertions.assertEquals(1, commandQueue.size())
         // next should be ignored
         commandQueue.loadEvents(null)
+        Assertions.assertEquals(1, commandQueue.size())
+    }
+
+    @Test
+    fun isClearAlarmsCommandInQueue() {
+        // given
+        Assertions.assertEquals(0, commandQueue.size())
+
+        // when
+        commandQueue.clearAlarms(null)
+
+        // then
+        Assertions.assertTrue(commandQueue.isLastScheduled(Command.CommandType.CLEAR_ALARMS))
+        Assertions.assertEquals(1, commandQueue.size())
+        // next should be ignored
+        commandQueue.clearAlarms(null)
         Assertions.assertEquals(1, commandQueue.size())
     }
 

@@ -383,4 +383,14 @@ import kotlin.math.round
         val connectionOK = medtrumService?.setUserSettings() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
+
+    override fun clearAlarms(): PumpEnactResult {
+        if (!isInitialized()) {
+            val result = PumpEnactResult(injector).success(false)
+            result.comment = "pump not initialized"
+            return result
+        }
+        val connectionOK = medtrumService?.clearAlarms() ?: false
+        return PumpEnactResult(injector).success(connectionOK)
+    }
 }

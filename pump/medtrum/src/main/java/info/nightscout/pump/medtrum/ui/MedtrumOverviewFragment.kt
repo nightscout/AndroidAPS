@@ -12,6 +12,7 @@ import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.EventType
 import info.nightscout.pump.medtrum.code.PatchStep
+import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -43,18 +44,12 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
             viewmodel?.apply {
                 eventHandler.observe(viewLifecycleOwner) { evt ->
                     when (evt.peekContent()) {
-                        EventType.ACTIVATION_CLICKED   -> requireContext().apply {
-                            // TODO: Check what to do with this, and if we need this, it currently messes up patch is last registered as priming
-                            // var step = convertToPatchStep(medtrumPump.pumpState)
-                            // if (step == PatchStep.DEACTIVATION_COMPLETE) {
-                            //     // Reset
-                            //     step = PatchStep.PREPARE_PATCH
-                            // }
-                            startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.PREPARE_PATCH))
-                        }
-
-                        EventType.DEACTIVATION_CLICKED -> requireContext().apply {
-                            startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.START_DEACTIVATION))
+                        EventType.CHANGE_PATCH_CLICKED -> requireContext().apply {
+                            if (medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED) {
+                                startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.START_DEACTIVATION))
+                            } else {
+                                startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.PREPARE_PATCH))
+                            }
                         }
                         else                           -> Unit
                     }

@@ -9,6 +9,7 @@ import info.nightscout.pump.medtrum.ui.event.SingleLiveEvent
 import info.nightscout.pump.medtrum.ui.event.UIEvent
 import info.nightscout.pump.medtrum.ui.viewmodel.BaseViewModel
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.ConnectionState
@@ -34,7 +35,8 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
     private val profileFunction: ProfileFunction,
-    private val medtrumPump: MedtrumPump
+    private val commandQueue: CommandQueue,
+    val medtrumPump: MedtrumPump
 ) : BaseViewModel<MedtrumBaseNavigator>() {
 
     private val scope = CoroutineScope(Dispatchers.Default)
@@ -43,29 +45,41 @@ class MedtrumOverviewViewModel @Inject constructor(
     val eventHandler: LiveData<UIEvent<EventType>>
         get() = _eventHandler
 
+    private val _canDoRefresh = SingleLiveEvent<Boolean>()
+    val canDoRefresh: LiveData<Boolean>
+        get() = _canDoRefresh
+
+    private val _canDoResetAlarms = SingleLiveEvent<Boolean>()
+    val canDoResetAlarms: LiveData<Boolean>
+        get() = _canDoResetAlarms
+
     private val _bleStatus = SingleLiveEvent<String>()
     val bleStatus: LiveData<String>
         get() = _bleStatus
 
-    private val _isPatchActivated = SingleLiveEvent<Boolean>()
-    val isPatchActivated: LiveData<Boolean>
-        get() = _isPatchActivated
+    private val _lastConnected = SingleLiveEvent<String>()
+    val lastConnected: LiveData<String>
+        get() = _lastConnected
 
-    private val _pumpState = SingleLiveEvent<String>()
-    val pumpState: LiveData<String>
-        get() = _pumpState
+    private val _activeAlarms = SingleLiveEvent<String>()
+    val activeAlarms: LiveData<String>
+        get() = _activeAlarms
 
-    private val _basalType = SingleLiveEvent<String>()
-    val basalType: LiveData<String>
-        get() = _basalType
+    private val _pumpType = SingleLiveEvent<String>()
+    val pumpType: LiveData<String>
+        get() = _pumpType
 
-    private val _runningBasalRate = SingleLiveEvent<String>()
-    val runningBasalRate: LiveData<String>
-        get() = _runningBasalRate
+    private val _fwVersion = SingleLiveEvent<String>()
+    val fwVersion: LiveData<String>
+        get() = _fwVersion
+    
+    private val _patchNo = SingleLiveEvent<String>()
+    val patchNo: LiveData<String>
+        get() = _patchNo
 
-    private val _reservoir = SingleLiveEvent<String>()
-    val reservoir: LiveData<String>
-        get() = _reservoir
+    private val _patchExpiry = SingleLiveEvent<String>()
+    val patchExpiry: LiveData<String>
+        get() = _patchExpiry
 
     init {
         scope.launch {
@@ -74,14 +88,21 @@ class MedtrumOverviewViewModel @Inject constructor(
                 when (state) {
                     ConnectionState.CONNECTING   -> {
                         _bleStatus.postValue("{fa-bluetooth-b spin}")
+                        _canDoRefresh.postValue(false)
                     }
 
                     ConnectionState.CONNECTED    -> {
                         _bleStatus.postValue("{fa-bluetooth}")
+                        _canDoRefresh.postValue(false)
                     }
 
                     ConnectionState.DISCONNECTED -> {
                         _bleStatus.postValue("{fa-bluetooth-b}")
+                        if (medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED) {
+                            _canDoRefresh.postValue(true)
+                        } else {
+                            _canDoRefresh.postValue(false)
+                        }
                     }
                 }
             }
@@ -89,35 +110,11 @@ class MedtrumOverviewViewModel @Inject constructor(
         scope.launch {
             medtrumPump.pumpStateFlow.collect { state ->
                 aapsLogger.debug(LTag.PUMP, "MedtrumViewModel pumpStateFlow: $state")
-                if (state > MedtrumPumpState.EJECTED && state < MedtrumPumpState.STOPPED) {
-                    _isPatchActivated.postValue(true)
+                if (medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED) {
+                    _canDoResetAlarms.postValue(true)
                 } else {
-                    _isPatchActivated.postValue(false)
+                    _canDoResetAlarms.postValue(false)
                 }
-            }
-        }
-        scope.launch {
-            medtrumPump.lastBasalRateFlow.collect { rate ->
-                aapsLogger.debug(LTag.PUMP, "MedtrumViewModel runningBasalRateFlow: $rate")
-                _runningBasalRate.postValue(String.format(rh.gs(R.string.current_basal_rate), rate))
-            }
-        }
-        scope.launch {
-            medtrumPump.pumpStateFlow.collect { state ->
-                aapsLogger.debug(LTag.PUMP, "MedtrumViewModel pumpStateFlow: $state")
-                _pumpState.postValue(state.toString())
-            }
-        }
-        scope.launch {
-            medtrumPump.reservoirFlow.collect { reservoir ->
-                aapsLogger.debug(LTag.PUMP, "MedtrumViewModel reservoirFlow: $reservoir")
-                _reservoir.postValue(String.format(rh.gs(R.string.reservoir_level), reservoir))
-            }
-        }
-        scope.launch {
-            medtrumPump.lastBasalTypeFlow.collect { basalType ->
-                aapsLogger.debug(LTag.PUMP, "MedtrumViewModel basalTypeFlow: $basalType")
-                _basalType.postValue(basalType.toString())
             }
         }
     }
@@ -127,18 +124,22 @@ class MedtrumOverviewViewModel @Inject constructor(
         scope.cancel()
     }
 
-    fun onClickActivation() {
-        aapsLogger.debug(LTag.PUMP, "Start Patch clicked!")
+    fun onClickRefresh() {
+        commandQueue.readStatus(rh.gs(R.string.requested_by_user), null)
+    }
+
+    fun onClickResetAlarms() {
+        commandQueue.clearAlarms(null)
+    }
+
+    fun onClickChangePatch() {
+        aapsLogger.debug(LTag.PUMP, "ChangePatch Patch clicked!")
         val profile = profileFunction.getProfile()
         if (profile == null) {
             _eventHandler.postValue(UIEvent(EventType.PROFILE_NOT_SET))
         } else {
-            _eventHandler.postValue(UIEvent(EventType.ACTIVATION_CLICKED))
+            _eventHandler.postValue(UIEvent(EventType.CHANGE_PATCH_CLICKED))
         }
     }
-
-    fun onClickDeactivation() {
-        aapsLogger.debug(LTag.PUMP, "Stop Patch clicked!")
-        _eventHandler.postValue(UIEvent(EventType.DEACTIVATION_CLICKED))
-    }
 }
+ 

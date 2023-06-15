@@ -75,6 +75,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
         private const val COMMAND_DEFAULT_TIMEOUT_SEC: Long = 60
         private const val COMMAND_SYNC_TIMEOUT_SEC: Long = 120
         private const val COMMAND_CONNECTING_TIMEOUT_SEC: Long = 30
+        private const val ALARM_HOURLY_MAX_CLEAR_CODE = 4
+        private const val ALARM_DAILY_MAX_CLEAR_CODE = 5
     }
 
     val timeUtil = MedtrumTimeUtil()
@@ -155,14 +157,28 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     MedtrumPumpState.LOWBG_SUSPENDED,
                     MedtrumPumpState.LOWBG_SUSPENDED2,
                     MedtrumPumpState.AUTO_SUSPENDED,
-                    MedtrumPumpState.HMAX_SUSPENDED,
-                    MedtrumPumpState.DMAX_SUSPENDED,
                     MedtrumPumpState.SUSPENDED,
                     MedtrumPumpState.PAUSED         -> {
-                        // TODO: Message with reason
                         uiInteraction.addNotification(
                             Notification.PUMP_SUSPENDED,
                             rh.gs(R.string.pump_is_suspended),
+                            Notification.NORMAL,
+                        )
+                        // Pump will report proper TBR for this
+                    }
+
+                    MedtrumPumpState.HMAX_SUSPENDED -> {
+                        uiInteraction.addNotification(
+                            Notification.PUMP_SUSPENDED,
+                            rh.gs(R.string.pump_is_suspended_hour_max),
+                            Notification.NORMAL,
+                        )
+                        // Pump will report proper TBR for this
+                    }
+                    MedtrumPumpState.DMAX_SUSPENDED -> {
+                        uiInteraction.addNotification(
+                            Notification.PUMP_SUSPENDED,
+                            rh.gs(R.string.pump_is_suspended_day_max),
                             Notification.NORMAL,
                         )
                         // Pump will report proper TBR for this
@@ -250,18 +266,49 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     fun loadEvents(): Boolean {
         // Send a poll patch, to workaround connection losses?
+        rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingpumpstatus)))
         var result = sendPacketAndGetResponse(PollPatchPacket(injector))
         // So just do a syncronize to make sure we have the latest data
         if (result) result = sendPacketAndGetResponse(SynchronizePacket(injector))
 
         // Sync records (based on the info we have from the sync)
         if (result) result = syncRecords()
-        if (!result) {
+        if (result) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Events loaded")
+            medtrumPump.lastConnection = System.currentTimeMillis()
+        } else {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to sync records")
         }
-        if (result) medtrumPump.lastConnection = System.currentTimeMillis()
-        aapsLogger.debug(LTag.PUMPCOMM, "Events loaded")
-        rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingpumpstatus)))
+        return result
+    }
+
+    fun clearAlarms(): Boolean {
+        var result = true
+        when (medtrumPump.pumpState) {
+            MedtrumPumpState.HMAX_SUSPENDED -> {
+                result = sendPacketAndGetResponse(ClearPumpAlarmPacket(injector, ALARM_HOURLY_MAX_CLEAR_CODE))
+            }
+            MedtrumPumpState.DMAX_SUSPENDED -> {
+                result = sendPacketAndGetResponse(ClearPumpAlarmPacket(injector, ALARM_DAILY_MAX_CLEAR_CODE))
+            }
+            else                   -> {
+                // Do nothing
+                // TODO: Remove me before release!!!
+                // Try to brute force the commands
+                aapsLogger.warn(LTag.PUMPCOMM, "Trying to clear alarms brutus!")
+                for (i in 0..100) {
+                    result = sendPacketAndGetResponse(ClearPumpAlarmPacket(injector, i))
+                    if (result) {
+                        aapsLogger.warn(LTag.PUMPCOMM, "Alarm cleared: $i")
+                        break
+                    }
+                }
+            }
+        }
+        // Resume suspended pump
+        // TODO: We might not want to do this for alarms which don't suspend the pump
+        if (result) result = sendPacketAndGetResponse(ResumePumpPacket(injector))
+        
         return result
     }
 
