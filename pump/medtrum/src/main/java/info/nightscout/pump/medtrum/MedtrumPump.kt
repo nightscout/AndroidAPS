@@ -183,7 +183,7 @@ class MedtrumPump @Inject constructor(
     var desiredHourlyMaxInsulin: Int = 40
     var desiredDailyMaxInsulin: Int = 180
 
-    fun loadFromSP() {
+    init {
         // Load stuff from SP
         _patchSessionToken = sp.getLong(R.string.key_session_token, 0L)
         _currentSequenceNumber = sp.getInt(R.string.key_current_sequence_number, 0)
@@ -197,8 +197,6 @@ class MedtrumPump @Inject constructor(
         } catch (e: Exception) {
             aapsLogger.error(LTag.PUMP, "Error decoding basal profile from SP: $encodedString")
         }
-
-        loadUserSettingsFromSP()
     }
 
     fun loadUserSettingsFromSP() {

@@ -191,7 +191,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             }
         }
 
-        medtrumPump.loadFromSP()
+        medtrumPump.loadUserSettingsFromSP()
     }
 
     override fun onDestroy() {
