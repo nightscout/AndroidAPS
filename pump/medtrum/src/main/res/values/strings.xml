@@ -9,6 +9,7 @@
     
     <string name="key_medtrumpump_settings" translatable="false">medtrumpump_settings</string> 
     <string name="key_pump_state" translatable="false">pump_state</string>
+    <string name="key_last_connection" translatable="false">last_connection</string>
     <string name="key_session_token" translatable="false">medtrum_session_token</string>
     <string name="key_patch_id" translatable="false">patch_id</string>
     <string name="key_actual_basal_profile" translatable="false">actual_basal_profile</string>
@@ -28,7 +29,7 @@
     
     <!-- overview fragment -->
     <string name="ble_status_label">BLE Status</string>
-    <string name="last_connected_label">Last connected</string>
+    <string name="last_connection_label">Last connected</string>
     <string name="pump_state_label">Pump state</string>
     <string name="active_alarms_label">Active alarms</string>
     <string name="reservoir_label"> Reservoir</string>
@@ -44,6 +45,7 @@
     <string name="reset_alarms_label">Reset alarms</string>
     <string name="change_patch_label">Change patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
+    <string name="expiry_not_enabled">Not enabled</string>
 
     <!-- wizard-->
     <string name="string_change_patch">Discard/Change Patch</string> <!-- TODO check-->
@@ -66,7 +68,7 @@
     <string name="alarm_setting_title">Alarm Settings</string>
     <string name="alarm_setting_summary">Select your preferred pump alarm settings.</string>
     <string name="patch_expiration_title">Patch Expiration</string>
-    <string name="patch_expiration_summary">Turn this on to get an alert 12 hours before the patch expiration. When enabled, the patch will expire after 3 days.</string>
+    <string name="patch_expiration_summary">Turn this on to get an alert 12 hours before the patch expiration. When enabled, the patch will expire after 3.5 days.</string>
     <string name="hourly_max_insulin_title">Hourly Maximum Insulin</string>
     <string name="hourly_max_insulin_summary">Specify the maximum units of insulin allowed per hour. If exceeded, the pump will suspend.</string>
     <string name="daily_max_insulin_title">Daily Maximum Insulin</string>

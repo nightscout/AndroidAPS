@@ -132,16 +132,23 @@ class MedtrumPump @Inject constructor(
             sp.putString(R.string.key_actual_basal_profile, encodedString ?: "")
         }
 
+    private var _lastConnection = 0L // Time in ms!
+    var lastConnection: Long
+        get() = _lastConnection
+        set(value) {
+            _lastConnection = value
+            sp.putLong(R.string.key_last_connection, value)
+        }
+
     private var _pumpSN = 0L
     val pumpSN: Long
         get() = _pumpSN
 
     val pumpType: PumpType = PumpType.MEDTRUM_NANO // TODO, type based on pumpSN or pump activation/connection
 
-    var lastConnection = 0L // Time in ms!
     var lastTimeReceivedFromPump = 0L // Time in ms! // TODO: Consider removing as is not used?
     var suspendTime = 0L // Time in ms!
-    var patchStartTime = 0L // Time in ms!
+    var patchStartTime = 0L // Time in ms! // TODO: save in SP
     var patchAge = 0L // Time in seconds?! // TODO: Not used
 
     var batteryVoltage_A = 0.0
@@ -186,6 +193,7 @@ class MedtrumPump @Inject constructor(
     init {
         // Load stuff from SP
         _patchSessionToken = sp.getLong(R.string.key_session_token, 0L)
+        _lastConnection = sp.getLong(R.string.key_last_connection, 0L)
         _currentSequenceNumber = sp.getInt(R.string.key_current_sequence_number, 0)
         _patchId = sp.getLong(R.string.key_patch_id, 0L)
         _syncedSequenceNumber = sp.getInt(R.string.key_synced_sequence_number, 0)

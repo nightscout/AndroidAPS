@@ -1,27 +1,21 @@
 package info.nightscout.pump.medtrum.ui.viewmodel
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.pump.medtrum.code.EventType
 import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
 import info.nightscout.pump.medtrum.ui.event.SingleLiveEvent
 import info.nightscout.pump.medtrum.ui.event.UIEvent
-import info.nightscout.pump.medtrum.ui.viewmodel.BaseViewModel
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.ConnectionState
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
-import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.kotlin.plusAssign
+import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -31,11 +25,9 @@ import javax.inject.Inject
 class MedtrumOverviewViewModel @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val rh: ResourceHelper,
-    private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy,
     private val profileFunction: ProfileFunction,
     private val commandQueue: CommandQueue,
+    private val dateUtil: DateUtil,
     val medtrumPump: MedtrumPump
 ) : BaseViewModel<MedtrumBaseNavigator>() {
 
@@ -57,9 +49,9 @@ class MedtrumOverviewViewModel @Inject constructor(
     val bleStatus: LiveData<String>
         get() = _bleStatus
 
-    private val _lastConnected = SingleLiveEvent<String>()
-    val lastConnected: LiveData<String>
-        get() = _lastConnected
+    private val _lastConnectionMinAgo = SingleLiveEvent<String>()
+    val lastConnectionMinAgo: LiveData<String>
+        get() = _lastConnectionMinAgo
 
     private val _activeAlarms = SingleLiveEvent<String>()
     val activeAlarms: LiveData<String>
@@ -105,6 +97,7 @@ class MedtrumOverviewViewModel @Inject constructor(
                         }
                     }
                 }
+                updateGUI()
             }
         }
         scope.launch {
@@ -115,6 +108,14 @@ class MedtrumOverviewViewModel @Inject constructor(
                 } else {
                     _canDoResetAlarms.postValue(false)
                 }
+                updateGUI()
+            }
+        }
+        // Periodically update gui
+        scope.launch {
+            while (true) {
+                updateGUI()
+                kotlinx.coroutines.delay(T.mins(1).msecs())
             }
         }
     }
@@ -139,6 +140,26 @@ class MedtrumOverviewViewModel @Inject constructor(
             _eventHandler.postValue(UIEvent(EventType.PROFILE_NOT_SET))
         } else {
             _eventHandler.postValue(UIEvent(EventType.CHANGE_PATCH_CLICKED))
+        }
+    }
+
+    fun updateGUI() {
+        // Update less dynamic values
+        val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastConnection
+        val agoMinutes = agoMilliseconds / 1000 / 60
+        _lastConnectionMinAgo.postValue(rh.gs(info.nightscout.shared.R.string.minago, agoMinutes))
+
+        // TODO: Update these values
+        // _activeAlarms.postValue(rh.gs(R.string.active_alarms, pump.activeAlarms))
+        // _pumpType.postValue(rh.gs(R.string.pump_type, pump.pumpType))
+        // _fwVersion.postValue(rh.gs(R.string.fw_version, pump.fwVersion))
+        // _patchNo.postValue(rh.gs(R.string.patch_no, pump.patchNo))
+
+        if (medtrumPump.desiredPatchExpiration) {
+            val expiry = medtrumPump.patchStartTime + T.hours(84).msecs()
+            _patchExpiry.postValue(dateUtil.dateAndTimeString(expiry))
+        } else {
+            _patchExpiry.postValue(rh.gs(R.string.expiry_not_enabled))
         }
     }
 }
