@@ -29,7 +29,7 @@ dependencies {
     implementation project(':core:utils')
     implementation project(':core:ui')
 
-    api 'com.google.guava:guava:31.1-jre'
+    api 'com.google.guava:guava:32.0.1-jre'
 
     //RxAndroidBle
     implementation "com.polidea.rxandroidble3:rxandroidble:1.17.2"

@@ -36,4 +36,7 @@ abstract class HistoryRecordDao {
 
     @Query("UPDATE historyrecords SET initialResult = :initialResult  WHERE id = :id ")
     abstract fun setInitialResult(id: Long, initialResult: InitialResult): Completable
+
+    @Query("UPDATE historyrecords SET totalAmountDelivered = :totalAmountDelivered WHERE id = :id ")
+    abstract fun setTotalAmountDelivered(id: Long, totalAmountDelivered: Double?): Completable
 }

@@ -253,6 +253,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prédictions</string>
     <string name="overview_show_treatments">Traitements</string>
+    <string name="overview_show_heartRate">Fréquence Cardiaque</string>
     <string name="overview_show_deviation_slope">Pente de déviations</string>
     <string name="overview_show_activity">Activité</string>
     <string name="overview_show_bgi">Impact glycémique</string>
@@ -270,6 +271,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">PENTEDEV</string>
     <string name="treatments_shortname">TRAIT</string>
+    <string name="heartRate_shortname">BPM</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Échelle du graph.</string>
     <string name="graph_menu_divider_header">Graph</string>
@@ -323,7 +325,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Aucun profil actif!</string>
-    <string name="profile_message">Profil :\n\nDécalage: %1$\nPourcentage: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">Aucun profil séléctionné</string>
     <string name="aps_only">S\'applique uniquement en mode APS!</string>

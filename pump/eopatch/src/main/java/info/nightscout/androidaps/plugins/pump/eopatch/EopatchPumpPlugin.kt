@@ -42,6 +42,7 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.functions.Consumer
+import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.subjects.BehaviorSubject
 import org.json.JSONException
 import org.json.JSONObject
@@ -86,30 +87,30 @@ class EopatchPumpPlugin @Inject constructor(
 
     override fun onStart() {
         super.onStart()
-        mDisposables.add(rxBus
-                             .toObservable(EventPreferenceChange::class.java)
-                             .observeOn(aapsSchedulers.io)
-                             .subscribe({ event: EventPreferenceChange ->
-                                            if (event.isChanged(rh.gs(SettingKeys.LOW_RESERVOIR_REMINDERS)) || event.isChanged(rh.gs(SettingKeys.EXPIRATION_REMINDERS))) {
-                                                patchManager.changeReminderSetting()
-                                            } else if (event.isChanged(rh.gs(SettingKeys.BUZZER_REMINDERS))) {
-                                                patchManager.changeBuzzerSetting()
-                                            }
-                                        }) { throwable: Throwable -> fabricPrivacy.logException(throwable) }
-        )
+        mDisposables += rxBus
+            .toObservable(EventPreferenceChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ event: EventPreferenceChange ->
+                           if (event.isChanged(rh.gs(SettingKeys.LOW_RESERVOIR_REMINDERS)) || event.isChanged(rh.gs(SettingKeys.EXPIRATION_REMINDERS))) {
+                               patchManager.changeReminderSetting()
+                           } else if (event.isChanged(rh.gs(SettingKeys.BUZZER_REMINDERS))) {
+                               patchManager.changeBuzzerSetting()
+                           }
+                       }, fabricPrivacy::logException)
 
-        mDisposables.add(rxBus
-                             .toObservable(EventAppInitialized::class.java)
-                             .observeOn(aapsSchedulers.io)
-                             .subscribe({
-                                            preferenceManager.init()
-                                            patchManager.init()
-                                            alarmManager.init()
-                                        }) { throwable: Throwable -> fabricPrivacy.logException(throwable) }
-        )
+        mDisposables += rxBus
+            .toObservable(EventAppInitialized::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           preferenceManager.init()
+                           patchManager.init()
+                           alarmManager.init()
+                       }, fabricPrivacy::logException)
+
         // following was moved from specialEnableCondition()
         // specialEnableCondition() is called too often to add there executive code
 
+        // This is a required code for maintaining the patch activation phase and maintaining the alarm. It should not be deleted.
         //BG -> FG, restart patch activation and trigger unhandled alarm
         if (preferenceManager.isInitDone()) {
             patchManager.checkActivationProcess()
@@ -199,12 +200,12 @@ class EopatchPumpPlugin @Inject constructor(
             val nb = preferenceManager.getNormalBasalManager().convertProfileToNormalBasal(profile)
             mDisposables.add(
                 patchManager.startBasal(nb)
-                        .observeOn(aapsSchedulers.main)
-                        .subscribe({ response ->
-                                       result.onNext(response.isSuccess)
-                                   }, {
-                                       result.onNext(false)
-                                   })
+                    .observeOn(aapsSchedulers.main)
+                    .subscribe({ response ->
+                                   result.onNext(response.isSuccess)
+                               }, {
+                                   result.onNext(false)
+                               })
             )
 
             do {

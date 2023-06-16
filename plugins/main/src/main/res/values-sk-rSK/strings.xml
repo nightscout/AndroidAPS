@@ -254,6 +254,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predikcie</string>
     <string name="overview_show_treatments">Ošetrenia</string>
+    <string name="overview_show_heartRate">Tepová frekvencia</string>
     <string name="overview_show_deviation_slope">Odchýlka sklonu</string>
     <string name="overview_show_activity">Aktivita</string>
     <string name="overview_show_bgi">Vplyv na glykémiu (BGI)</string>
@@ -271,6 +272,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">OŠET</string>
+    <string name="heartRate_shortname">TF</string>
     <string name="sensitivity_shortname">SENZ</string>
     <string name="graph_scale">Mierka grafu</string>
     <string name="graph_menu_divider_header">Graf</string>
@@ -324,7 +326,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie je nastavený žiadny aktívny profil!</string>
-    <string name="profile_message">Profil:\n\nPosun času: %1$\nPercento: %2$d%%\"</string>
+    <string name="profile_message">Profil:\n\nPosunutie: %1$d\nPercento: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fJI %1$.0f%%</string>
     <string name="no_profile">Nie je vybraný žiadny profil</string>
     <string name="aps_only">Použiť iba v APS móde!</string>

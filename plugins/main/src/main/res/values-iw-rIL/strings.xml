@@ -253,6 +253,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">חיזוי</string>
     <string name="overview_show_treatments">טיפולים</string>
+    <string name="overview_show_heartRate">דופק</string>
     <string name="overview_show_deviation_slope">שיפוע הסטייה</string>
     <string name="overview_show_activity">פעילות</string>
     <string name="overview_show_bgi">השפעת הסוכר בדם</string>
@@ -270,6 +271,7 @@
     <string name="abs_insulin_shortname">אבס\'</string>
     <string name="devslope_shortname">שיפוע</string>
     <string name="treatments_shortname">TREAT</string>
+    <string name="heartRate_shortname">דופק</string>
     <string name="sensitivity_shortname">רגישות</string>
     <string name="graph_scale">קנה מידה של הגרף</string>
     <string name="graph_menu_divider_header">גרף</string>
@@ -323,7 +325,6 @@
     <string name="grams_short">גר\'</string>
     <string name="hour_short">ש\'</string>
     <string name="no_active_profile">לא הופעלה החלפת פרופיל!</string>
-    <string name="profile_message">פרופיל:\n\nהיסט זמן: %1$\nאחוז: %2$d%\"</string>
     <string name="tdd_line">%1$.2fיח\' %1$.0f%</string>
     <string name="no_profile">לא נטען פרופיל</string>
     <string name="aps_only">חל רק במצב APS!</string>

@@ -213,6 +213,7 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
                 holder.timeView.text = DateTimeUtil.toStringFromTimeInMillis(it.displayTimestamp())
                 setValue(it, holder.valueView)
                 setType(it, holder.typeView)
+                setAmount(it, holder.amountView)
             }
         }
 
@@ -297,6 +298,12 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
             setTextViewColor(check_result = false, valueView, historyEntry)
         }
 
+        private fun setAmount(historyEntry: HistoryRecord, amountView: TextView) {
+            amountView.text = historyEntry.totalAmountDelivered?.let { rh.gs(R.string.omnipod_common_history_total_delivered, it) }
+            // Set some color
+            setTextViewColor(check_result = false, amountView, historyEntry)
+        }
+
         override fun getItemCount(): Int {
             return historyList.size
         }
@@ -306,6 +313,7 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
             val timeView: TextView = itemView.findViewById(R.id.omnipod_history_time)
             val typeView: TextView = itemView.findViewById(R.id.omnipod_history_source)
             val valueView: TextView = itemView.findViewById(R.id.omnipod_history_description)
+            val amountView: TextView = itemView.findViewById(R.id.omnipod_history_amount)
         }
     }
 

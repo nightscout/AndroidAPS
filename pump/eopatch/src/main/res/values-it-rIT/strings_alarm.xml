@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="string_a002">Serbatoio vuoto\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a003">Patch scaduta\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a004">Occlusione\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a005">Autotest di accensione non riuscito\nLa patch è stata disattivata. Cambia patch ora.</string>
+    <string name="string_a007">Temperatura inappropriata\nL\'erogazione di insulina o il processo \'Attiva patch\" sono stati fermati. Agisci ora per evitare temperature estreme.</string>
+    <string name="string_a016">Errore inserimento ago\nControlla la posizione della manopola e tocca \'Riprova\'.</string>
+    <string name="string_a018">Errore batteria patch\nLa patch è stata disattivata e\nl\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a019">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a020">Errore attivazione patch\nIl processo \'Attiva patch\' è scaduto. Tocca \'Conferma\' per disattivare la patch corrente. Cambia patch ora.</string>
+    <string name="string_a022">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a023">Errore batteria patch\nLa patch è stata disattivata e\nl\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a034">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a041">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a042">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a043">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a044">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a106">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a107">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a108">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a116">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a117">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_a118">Errore batteria patch\nLa patch è stata disattivata e l\'erogazione di insulina fermata. Cambia patch ora.</string>
+    <string name="string_b000">La durata operativa della patch scadrà %s. Sii pronto a cambiare patch.</string>
+    <string name="string_b001">Fine della sospensione dell\'insulina\nTocca \'Riprendi\' per riavviare l\'erogazione di insulina.</string>
+    <string name="string_b003">Livello serbatoio basso\nSostituisci la patch presto.</string>
+    <string name="string_b005">Durata operativa della patch scaduta\nCambia patch ora.</string>
+    <string name="string_b006">La patch scadrà presto\nCambia patch ora.</string>
+    <string name="string_b012">Attivazione patch incompleta\nCompleta il processo \'Attiva patch\'.</string>
+    <string name="string_b018">Batteria patch quasi scarica\nSii pronto a cambiare patch.</string>
+</resources>

@@ -59,7 +59,7 @@
     <string name="omnipod_common_overview_temp_basal_rate">Débit de Basal Temp.</string>
     <string name="omnipod_common_overview_base_basal_rate">Débit de Basal</string>
     <string name="omnipod_common_overview_reservoir">Réservoir</string>
-    <string name="omnipod_common_overview_pod_active_alerts">Activer Alertes Pod</string>
+    <string name="omnipod_common_overview_pod_active_alerts">Dernières alertes Pod</string>
     <string name="omnipod_common_overview_firmware_version">Version du firmware</string>
     <string name="omnipod_common_overview_time_on_pod">Heure du Pod</string>
     <string name="omnipod_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d minutes)</string>

@@ -11,7 +11,6 @@
     <string name="omnipod_dash_history_type">Tipas:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f v</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f v, AV=%2$.1f g</string>
-    <string name="omnipod_dash_history_tbr_value">Kiekis: %1$.2f v, trukmė: %2$d min</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth statusas</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth adresas</string>
@@ -31,7 +30,6 @@
     <string name="omnipod_dash_command_not_sent">Komanda nenusiųsta</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Pod negavo komandos</string>
     <string name="omnipod_dash_unknown">Nežinoma komandos būklė</string>
-    <string name="omnipod_common_history_tbr_value">Kiekis: %1$.2f v, trukmė: %2$d min</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f v</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulino tiekimas sustabdytas</string>
     <string name="omnipod_dash_connection_lost">Ryšys su Pod prarastas</string>

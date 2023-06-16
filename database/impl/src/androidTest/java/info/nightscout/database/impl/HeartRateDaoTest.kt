@@ -92,8 +92,26 @@ internal class HeartRateDaoTest {
         }
     }
 
-    companion object {
+    @Test
+    fun getFromTimeToTime() {
+        createDatabase().use { db ->
+            val dao = db.heartRateDao
+            val timestamp = System.currentTimeMillis()
+            val hr1 = createHeartRate(timestamp = timestamp, beatsPerMinute = 80.0)
+            val hr2 = createHeartRate(timestamp = timestamp + 1, beatsPerMinute = 150.0)
+            val hr3 = createHeartRate(timestamp = timestamp + 2, beatsPerMinute = 160.0)
+            dao.insertNewEntry(hr1)
+            dao.insertNewEntry(hr2)
+            dao.insertNewEntry(hr3)
 
+            assertEquals(listOf(hr1, hr2, hr3), dao.getFromTimeToTime(timestamp, timestamp + 2))
+            assertEquals(listOf(hr1, hr2), dao.getFromTimeToTime(timestamp, timestamp + 1))
+            assertEquals(listOf(hr2), dao.getFromTimeToTime(timestamp + 1, timestamp + 1))
+            assertTrue(dao.getFromTimeToTime(timestamp + 3, timestamp + 10).isEmpty())
+        }
+    }
+
+    companion object {
         private const val TEST_DB_NAME = "testDatabase"
 
         fun createHeartRate(timestamp: Long? = null, beatsPerMinute: Double = 80.0) =

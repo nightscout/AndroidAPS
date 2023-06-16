@@ -2,7 +2,7 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.8.21'
+        kotlin_version = '1.8.22'
         core_version = '1.10.1'
         rxjava_version = '3.1.6'
         rxandroid_version = '3.0.2'
@@ -11,11 +11,11 @@ buildscript {
         lifecycle_version = '2.6.1'
         dagger_version = '2.46.1'
         coroutines_version = '1.7.1'
-        activity_version = '1.7.1'
-        fragmentktx_version = '1.5.7'
+        activity_version = '1.7.2'
+        fragmentktx_version = '1.6.0'
         ormLite_version = '4.46'
         gson_version = '2.10.1'
-        nav_version = '2.5.3'
+        nav_version = '2.6.0'
         appcompat_version = '1.6.1'
         material_version = '1.9.0'
         gridlayout_version = '1.0.0'
@@ -59,7 +59,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.4.2'
         classpath 'com.google.gms:google-services:4.3.15'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.5'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.6'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -75,7 +75,7 @@ buildscript {
 plugins {
     // Test Gradle build, keep disabled under normal circumstances
     // id "com.osacky.doctor" version "0.8.1"
-    id "org.jlleitschuh.gradle.ktlint" version "11.3.2"
+    id "org.jlleitschuh.gradle.ktlint" version "11.4.0"
     id 'org.barfuin.gradle.jacocolog' version '3.1.0'
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
 }

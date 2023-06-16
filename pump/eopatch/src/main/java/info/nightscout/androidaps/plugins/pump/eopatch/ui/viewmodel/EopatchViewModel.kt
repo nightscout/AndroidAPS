@@ -74,6 +74,7 @@ class EopatchViewModel @Inject constructor(
         private const val MAX_ELAPSED_MILLIS_AFTER_EXPIRATION = -12L * 60 * 60 * 1000
     }
     var forceDiscard = false
+    var isInAlarmHandling = false
     var connectionTryCnt = 0
 
     val patchConfig: PatchConfig = patchManager.patchConfig
@@ -312,6 +313,7 @@ class EopatchViewModel @Inject constructor(
         CommonUtils.dispose(mCommCheckDisposable)
         updateIncompletePatchActivationReminder()
         dismissPatchCommCheckDialogInternal(false)
+        connectionTryCnt = 0
     }
 
     @Synchronized

@@ -254,6 +254,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predicciones</string>
     <string name="overview_show_treatments">Tratamientos</string>
+    <string name="overview_show_heartRate">Ritmo cardíaco</string>
     <string name="overview_show_deviation_slope">Pendiente de desviación</string>
     <string name="overview_show_activity">Actividad</string>
     <string name="overview_show_bgi">Impacto de glucosa en sangre</string>
@@ -271,6 +272,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRAT</string>
+    <string name="heartRate_shortname">RC</string>
     <string name="sensitivity_shortname">Sens</string>
     <string name="graph_scale">Escala gráfica</string>
     <string name="graph_menu_divider_header">Gráfico</string>
@@ -324,7 +326,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Sin cambio de perfil activo</string>
-    <string name="profile_message">Perfil:\n\nHorario: %1$\nPorcentaje: %2$d%%\"</string>
+    <string name="profile_message">Perfil:\n\nAjuste de tiempo: %1$d\nPorcentaje: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">Ningún perfil cargado</string>
     <string name="aps_only">Sólo se aplica en modo APS</string>
