@@ -125,7 +125,12 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                 // detailedInfo can be from another similar record. Reinsert
                                 detailedBolusInfoStorage.add(detailedBolusInfo)
                             }
+                            if (bolusStartTime > medtrumPump.lastBolusTime) {
+                                medtrumPump.lastBolusTime = bolusStartTime
+                                medtrumPump.lastBolusAmount = bolusNormalDelivered
+                            }
                         } else {
+                            // TODO: at least record the bolus
                             aapsLogger.error(
                                 LTag.PUMPCOMM,
                                 "from record: EVENT BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) " + "Bolus type: $bolusType not supported"

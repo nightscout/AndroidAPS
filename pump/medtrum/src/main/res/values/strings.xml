@@ -10,6 +10,8 @@
     <string name="key_medtrumpump_settings" translatable="false">medtrumpump_settings</string> 
     <string name="key_pump_state" translatable="false">pump_state</string>
     <string name="key_last_connection" translatable="false">last_connection</string>
+    <string name="key_last_bolus_time" translatable="false">last_bolus_time</string>
+    <string name="key_last_bolus_amount" translatable="false">last_bolus_amount</string>
     <string name="key_session_token" translatable="false">medtrum_session_token</string>
     <string name="key_patch_id" translatable="false">patch_id</string>
     <string name="key_device_type" translatable="false">device_type</string>
@@ -35,9 +37,7 @@
     <string name="last_connection_label">Last connected</string>
     <string name="pump_state_label">Pump state</string>
     <string name="active_alarms_label">Active alarms</string>
-    <string name="reservoir_label"> Reservoir</string>
     <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_label">Battery</string>
     <string name="battery_voltage"> %.2f V</string> 
     <string name="basal_type_label">Basal type</string>
     <string name="basal_rate_label">Basal rate</string>

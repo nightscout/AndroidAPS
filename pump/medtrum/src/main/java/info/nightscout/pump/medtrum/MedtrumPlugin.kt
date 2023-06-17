@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import android.text.format.DateFormat
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -31,6 +32,7 @@ import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
@@ -222,7 +224,7 @@ import kotlin.math.round
         get() = medtrumPump.reservoir
 
     override val batteryLevel: Int
-        get() = 0 // TODO
+        get() = 0 // We cannot determine battery level (yet)
 
     @Synchronized
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
@@ -317,7 +319,43 @@ import kotlin.math.round
     }
 
     override fun getJSONStatus(profile: Profile, profileName: String, version: String): JSONObject {
-        return JSONObject() // TODO
+        val now = System.currentTimeMillis()
+        if (medtrumPump.lastConnection + 60 * 60 * 1000L < System.currentTimeMillis()) {
+            return JSONObject()
+        }
+        val pumpJson = JSONObject()
+        val status = JSONObject()
+        val extended = JSONObject()
+        try {
+            status.put(
+                "status", if (!isSuspended()) "normal"
+                else if (isInitialized() && isSuspended()) "suspended"
+                else "no active patch"
+            )
+            status.put("timestamp", dateUtil.toISOString(medtrumPump.lastConnection))
+            if (medtrumPump.lastBolusTime != 0L) {
+                extended.put("lastBolus", dateUtil.dateAndTimeString(medtrumPump.lastBolusTime))
+                extended.put("lastBolusAmount", medtrumPump.lastBolusAmount)
+            }
+            val tb = pumpSync.expectedPumpState().temporaryBasal
+            if (tb != null) {
+                extended.put("TempBasalAbsoluteRate", tb.convertedToAbsolute(now, profile))
+                extended.put("TempBasalStart", dateUtil.dateAndTimeString(tb.timestamp))
+                extended.put("TempBasalRemaining", tb.plannedRemainingMinutes)
+            }
+            extended.put("BaseBasalRate", baseBasalRate)
+            try {
+                extended.put("ActiveProfile", profileName)
+            } catch (ignored: Exception) {
+            }
+            pumpJson.put("status", status)
+            pumpJson.put("extended", extended)
+            pumpJson.put("reservoir", medtrumPump.reservoir.toInt())
+            pumpJson.put("clock", dateUtil.toISOString(now))
+        } catch (e: JSONException) {
+            aapsLogger.error(LTag.PUMP, "Unhandled exception: $e")
+        }
+        return pumpJson
     }
 
     override fun manufacturer(): ManufacturerType {
@@ -336,7 +374,20 @@ import kotlin.math.round
         get() = PumpDescription(medtrumPump.pumpType)
 
     override fun shortStatus(veryShort: Boolean): String {
-        return ""// TODO
+        var ret = ""
+        if (medtrumPump.lastConnection != 0L) {
+            val agoMillis = System.currentTimeMillis() - medtrumPump.lastConnection
+            val agoMin = (agoMillis / 60.0 / 1000.0).toInt()
+            ret += "LastConn: $agoMin minAgo\n"
+        }
+        if (medtrumPump.lastBolusTime != 0L)
+            ret += "LastBolus: ${DecimalFormatter.to2Decimal(medtrumPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", medtrumPump.lastBolusTime)}\n"
+
+        if (medtrumPump.tempBasalInProgress)
+            ret += "Temp: ${medtrumPump.temporaryBasalToString()}\n"
+
+        ret += "Res: ${DecimalFormatter.to0Decimal(medtrumPump.reservoir)}U\n"
+        return ret
     }
 
     override val isFakingTempsByExtendedBoluses: Boolean = false
@@ -375,7 +426,7 @@ import kotlin.math.round
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        if (!isInitialized()) { 
+        if (!isInitialized()) {
             val result = PumpEnactResult(injector).success(false)
             result.comment = "pump not initialized"
             return result

@@ -9,7 +9,7 @@
 
         <EditTextPreference
             android:key="@string/key_sn_input"
-            android:summary="@string/sn_input_summary"
+            android:dialogMessage="@string/sn_input_summary"
             android:singleLine="true"
             android:title="@string/sn_input_title" />
 

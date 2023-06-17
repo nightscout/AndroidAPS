@@ -68,19 +68,13 @@ class MedtrumPump @Inject constructor(
 
     private var _lastBasalType: MutableStateFlow<BasalType> = MutableStateFlow(BasalType.NONE)
     val lastBasalTypeFlow: StateFlow<BasalType> = _lastBasalType
-    var lastBasalType: BasalType
+    val lastBasalType: BasalType
         get() = _lastBasalType.value
-        set(value) {
-            _lastBasalType.value = value
-        }
 
     private val _lastBasalRate = MutableStateFlow(0.0)
     val lastBasalRateFlow: StateFlow<Double> = _lastBasalRate
-    var lastBasalRate: Double
+    val lastBasalRate: Double
         get() = _lastBasalRate.value
-        set(value) {
-            _lastBasalRate.value = value
-        }
 
     private val _reservoir = MutableStateFlow(0.0)
     val reservoirFlow: StateFlow<Double> = _reservoir
@@ -141,6 +135,22 @@ class MedtrumPump @Inject constructor(
             sp.putString(R.string.key_actual_basal_profile, encodedString ?: "")
         }
 
+    private var _lastBolusTime = 0L // Time in ms!
+    var lastBolusTime: Long
+        get() = _lastBolusTime
+        set(value) {
+            _lastBolusTime = value
+            sp.putLong(R.string.key_last_bolus_time, value)
+        }
+
+    private var _lastBolusAmount = 0.0
+    var lastBolusAmount: Double
+        get() = _lastBolusAmount
+        set(value) {
+            _lastBolusAmount = value
+            sp.putDouble(R.string.key_last_bolus_amount, value)
+        }
+
     private var _lastConnection = 0L // Time in ms!
     var lastConnection: Long
         get() = _lastConnection
@@ -181,7 +191,6 @@ class MedtrumPump @Inject constructor(
 
     var lastTimeReceivedFromPump = 0L // Time in ms! // TODO: Consider removing as is not used?
     var suspendTime = 0L // Time in ms!
-    
     var patchAge = 0L // Time in seconds?! // TODO: Not used
 
 
@@ -196,11 +205,18 @@ class MedtrumPump @Inject constructor(
     var bolusStopForced = false // bolus forced to stop by user
     var bolusDone = false // success end
 
-    // Last basal status update 
-    // TODO maybe make basal parameters private? So we are forced to update trough handleBasalStatusUpdate
-    var lastBasalSequence = 0
-    var lastBasalPatchId = 0L
-    var lastBasalStartTime = 0L
+    // Last basal status update (from pump)
+    private var _lastBasalSequence = 0
+    val lastBasalSequence: Int
+        get() = _lastBasalSequence
+
+    private var _lastBasalPatchId = 0L
+    val lastBasalPatchId: Long
+        get() = _lastBasalPatchId
+    
+    private var _lastBasalStartTime = 0L
+    val lastBasalStartTime: Long
+        get() = _lastBasalStartTime
 
     val baseBasalRate: Double
         get() = getHourlyBasalFromMedtrumProfileArray(actualBasalProfile, dateUtil.now())
@@ -225,6 +241,8 @@ class MedtrumPump @Inject constructor(
         // Load stuff from SP
         _patchSessionToken = sp.getLong(R.string.key_session_token, 0L)
         _lastConnection = sp.getLong(R.string.key_last_connection, 0L)
+        _lastBolusTime = sp.getLong(R.string.key_last_bolus_time, 0L)
+        _lastBolusAmount = sp.getDouble(R.string.key_last_bolus_amount, 0.0)
         _currentSequenceNumber = sp.getInt(R.string.key_current_sequence_number, 0)
         _patchId = sp.getLong(R.string.key_patch_id, 0L)
         _syncedSequenceNumber = sp.getInt(R.string.key_synced_sequence_number, 0)
@@ -243,7 +261,7 @@ class MedtrumPump @Inject constructor(
 
     fun loadUserSettingsFromSP() {
         desiredPatchExpiration = sp.getBoolean(info.nightscout.pump.medtrum.R.string.key_patch_expiration, false)
-        val alarmSettingCode = sp.getString(info.nightscout.pump.medtrum.R.string.key_alarm_setting, AlarmSetting.LIGHT_VIBRATE_AND_BEEP.code.toString())?.toByte()
+        val alarmSettingCode = sp.getString(info.nightscout.pump.medtrum.R.string.key_alarm_setting, AlarmSetting.LIGHT_VIBRATE_AND_BEEP.code.toString()).toByte()
         desiredAlarmSetting = AlarmSetting.values().firstOrNull { it.code == alarmSettingCode } ?: AlarmSetting.LIGHT_VIBRATE_AND_BEEP
         desiredHourlyMaxInsulin = sp.getInt(info.nightscout.pump.medtrum.R.string.key_hourly_max_insulin, 40)
         desiredDailyMaxInsulin = sp.getInt(info.nightscout.pump.medtrum.R.string.key_daily_max_insulin, 180)
@@ -370,17 +388,17 @@ class MedtrumPump @Inject constructor(
         }
 
         // Update medtrum pump state
-        lastBasalType = basalType
-        lastBasalRate = basalRate
-        lastBasalSequence = basalSequence
+        _lastBasalType.value = basalType
+        _lastBasalRate.value = basalRate
+        _lastBasalSequence = basalSequence
         if (basalSequence > currentSequenceNumber) {
             currentSequenceNumber = basalSequence
         }
-        lastBasalPatchId = basalPatchId
+        _lastBasalPatchId = basalPatchId
         if (basalPatchId != patchId) {
             aapsLogger.error(LTag.PUMP, "handleBasalStatusUpdate: WTF? PatchId in status update does not match current patchId!")
         }
-        lastBasalStartTime = basalStartTime
+        _lastBasalStartTime = basalStartTime
     }
 
     fun handleStopStatusUpdate(stopSequence: Int, stopPatchId: Long) {
@@ -417,5 +435,9 @@ class MedtrumPump @Inject constructor(
             LTag.PUMPCOMM,
             "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START (FAKE)"
         )
+    }
+    fun temporaryBasalToString(): String {
+        if (!tempBasalInProgress) return ""
+        return tempBasalAbsoluteRate.toString() + "U/h"
     }
 }

@@ -53,6 +53,10 @@ class MedtrumOverviewViewModel @Inject constructor(
     val lastConnectionMinAgo: LiveData<String>
         get() = _lastConnectionMinAgo
 
+    private val _lastBolus = SingleLiveEvent<String>()
+    val lastBolus: LiveData<String>
+        get() = _lastBolus
+
     private val _activeAlarms = SingleLiveEvent<String>()
     val activeAlarms: LiveData<String>
         get() = _activeAlarms
@@ -64,7 +68,7 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val _fwVersion = SingleLiveEvent<String>()
     val fwVersion: LiveData<String>
         get() = _fwVersion
-    
+
     private val _patchNo = SingleLiveEvent<String>()
     val patchNo: LiveData<String>
         get() = _patchNo
@@ -148,6 +152,21 @@ class MedtrumOverviewViewModel @Inject constructor(
         val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastConnection
         val agoMinutes = agoMilliseconds / 1000 / 60
         _lastConnectionMinAgo.postValue(rh.gs(info.nightscout.shared.R.string.minago, agoMinutes))
+        if (medtrumPump.lastBolusTime != 0L) {
+            val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastBolusTime
+            val agoHours = agoMilliseconds.toDouble() / 60.0 / 60.0 / 1000.0
+            if (agoHours < 6)
+            // max 6h back
+                _lastBolus.postValue(
+                    dateUtil.timeString(medtrumPump.lastBolusTime) + " " + dateUtil.sinceString(medtrumPump.lastBolusTime, rh) + " " + rh.gs(
+                        info.nightscout.interfaces.R.string
+                            .format_insulin_units, medtrumPump
+                            .lastBolusAmount
+                    )
+                )
+            else
+                _lastBolus.postValue("")
+        }
 
         // TODO: Update these values
         // _activeAlarms.postValue(rh.gs(R.string.active_alarms, pump.activeAlarms))
