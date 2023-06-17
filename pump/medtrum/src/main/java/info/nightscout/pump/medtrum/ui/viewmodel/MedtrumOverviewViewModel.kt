@@ -151,9 +151,9 @@ class MedtrumOverviewViewModel @Inject constructor(
 
         // TODO: Update these values
         // _activeAlarms.postValue(rh.gs(R.string.active_alarms, pump.activeAlarms))
-        // _pumpType.postValue(rh.gs(R.string.pump_type, pump.pumpType))
-        // _fwVersion.postValue(rh.gs(R.string.fw_version, pump.fwVersion))
-        // _patchNo.postValue(rh.gs(R.string.patch_no, pump.patchNo))
+        _pumpType.postValue(medtrumPump.deviceType.toString())
+        _fwVersion.postValue(medtrumPump.swVersion)
+        _patchNo.postValue(medtrumPump.patchId.toString())
 
         if (medtrumPump.desiredPatchExpiration) {
             val expiry = medtrumPump.patchStartTime + T.hours(84).msecs()

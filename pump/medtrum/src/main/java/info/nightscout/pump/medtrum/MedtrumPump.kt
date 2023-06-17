@@ -90,6 +90,15 @@ class MedtrumPump @Inject constructor(
             _reservoir.value = value
         }
 
+    var batteryVoltage_A = 0.0 // Not used in UI
+    private val _batteryVoltage_B = MutableStateFlow(0.0)
+    val batteryVoltage_BFlow: StateFlow<Double> = _batteryVoltage_B
+    var batteryVoltage_B: Double
+        get() = _batteryVoltage_B.value
+        set(value) {
+            _batteryVoltage_B.value = value
+        }
+
     /** Stuff stored in SP */
     private var _patchSessionToken = 0L
     var patchSessionToken: Long
@@ -140,19 +149,41 @@ class MedtrumPump @Inject constructor(
             sp.putLong(R.string.key_last_connection, value)
         }
 
+    private var _deviceType: Int = 0 // As reported by pump
+    var deviceType: Int
+        get() = _deviceType
+        set(value) {
+            _deviceType = value
+            sp.putInt(R.string.key_device_type, value)
+        }
+    
+    private var _swVersion: String = "" // As reported by pump
+    var swVersion: String
+        get() = _swVersion
+        set(value) {
+            _swVersion = value
+            sp.putString(R.string.key_sw_version, value)
+        }
+    
+    private var _patchStartTime = 0L // Time in ms!
+    var patchStartTime: Long
+        get() = _patchStartTime
+        set(value) {
+            _patchStartTime = value
+            sp.putLong(R.string.key_patch_start_time, value)
+        }
+
     private var _pumpSN = 0L
     val pumpSN: Long
         get() = _pumpSN
 
-    val pumpType: PumpType = PumpType.MEDTRUM_NANO // TODO, type based on pumpSN or pump activation/connection
+    val pumpType: PumpType = PumpType.MEDTRUM_NANO // TODO, type based on deviceType from pump
 
     var lastTimeReceivedFromPump = 0L // Time in ms! // TODO: Consider removing as is not used?
     var suspendTime = 0L // Time in ms!
-    var patchStartTime = 0L // Time in ms! // TODO: save in SP
+    
     var patchAge = 0L // Time in seconds?! // TODO: Not used
 
-    var batteryVoltage_A = 0.0
-    var batteryVoltage_B = 0.0
 
     var alarmFlags = 0
     var alarmParameter = 0
@@ -198,6 +229,9 @@ class MedtrumPump @Inject constructor(
         _patchId = sp.getLong(R.string.key_patch_id, 0L)
         _syncedSequenceNumber = sp.getInt(R.string.key_synced_sequence_number, 0)
         _pumpState.value = MedtrumPumpState.fromByte(sp.getInt(R.string.key_pump_state, MedtrumPumpState.NONE.state.toInt()).toByte())
+        _deviceType = sp.getInt(R.string.key_device_type, 0)
+        _swVersion = sp.getString(R.string.key_sw_version, "")
+        _patchStartTime = sp.getLong(R.string.key_patch_start_time, 0L)
 
         val encodedString = sp.getString(R.string.key_actual_basal_profile, "0")
         try {

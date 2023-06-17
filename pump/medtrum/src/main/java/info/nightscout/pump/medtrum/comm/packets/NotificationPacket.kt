@@ -188,8 +188,12 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         if (fieldMask and MASK_START_TIME != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Start time notification received")
-            medtrumPump.patchStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
-            aapsLogger.debug(LTag.PUMPCOMM, "Patch start time: ${medtrumPump.patchStartTime}")
+            val patchStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
+            if (medtrumPump.patchStartTime != patchStartTime) {
+                aapsLogger.debug(LTag.PUMPCOMM, "Patch start time changed from ${medtrumPump.patchStartTime} to $patchStartTime")
+                medtrumPump.patchStartTime = patchStartTime
+            }
+            aapsLogger.debug(LTag.PUMPCOMM, "Patch start time: ${patchStartTime}")
             offset += 4
         }
 

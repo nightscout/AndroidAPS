@@ -12,6 +12,9 @@
     <string name="key_last_connection" translatable="false">last_connection</string>
     <string name="key_session_token" translatable="false">medtrum_session_token</string>
     <string name="key_patch_id" translatable="false">patch_id</string>
+    <string name="key_device_type" translatable="false">device_type</string>
+    <string name="key_sw_version" translatable="false">sw_version</string>
+    <string name="key_patch_start_time" translatable="false">patch_start_time</string>
     <string name="key_actual_basal_profile" translatable="false">actual_basal_profile</string>
     <string name="key_current_sequence_number" translatable="false">current_sequence_number</string>
     <string name="key_synced_sequence_number" translatable="false">synced_sequence_number</string>
@@ -34,6 +37,8 @@
     <string name="active_alarms_label">Active alarms</string>
     <string name="reservoir_label"> Reservoir</string>
     <string name="reservoir_level"> %.2f U</string>
+    <string name="battery_label">Battery</string>
+    <string name="battery_voltage"> %.2f V</string> 
     <string name="basal_type_label">Basal type</string>
     <string name="basal_rate_label">Basal rate</string>
     <string name="current_basal_rate"> %.2f U/h</string>

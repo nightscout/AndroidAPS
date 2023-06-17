@@ -586,11 +586,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             if (mPacket?.handleResponse(data) == true) {
                 // Succes!
                 responseHandled = true
-                responseSuccess = true
-                // TODO Get pump version info
-                val deviceType = (mPacket as AuthorizePacket).deviceType
-                val swVersion = (mPacket as AuthorizePacket).swVersion
-                aapsLogger.debug(LTag.PUMPCOMM, "GetDeviceTypeState: deviceType: $deviceType swVersion: $swVersion") // TODO remove me later
+                responseSuccess = true                
                 toState(GetDeviceTypeState())
             } else if (mPacket?.failed == true) {
                 // Failure

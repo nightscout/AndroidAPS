@@ -59,8 +59,8 @@ class AuthorizePacketTest : MedtrumTestBase() {
         val swString = "$swVerX.$swVerY.$swVerZ"
         assertTrue(result)
         assertFalse(packet.failed)
-        assertEquals(deviceType, packet.deviceType)
-        assertEquals(swString, packet.swVersion)
+        assertEquals(deviceType, medtrumPump.deviceType)
+        assertEquals(swString, medtrumPump.swVersion)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
