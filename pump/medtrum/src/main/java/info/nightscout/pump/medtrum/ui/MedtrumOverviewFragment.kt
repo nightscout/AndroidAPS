@@ -49,6 +49,7 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
                                 startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.START_DEACTIVATION))
                             } else {
                                 startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.PREPARE_PATCH))
+                                medtrumPump.pumpState = MedtrumPumpState.NONE // Reset pumpstate here, fetch on next connection
                             }
                         }
                         else                           -> Unit

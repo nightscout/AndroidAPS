@@ -9,6 +9,7 @@
     
     <string name="key_medtrumpump_settings" translatable="false">medtrumpump_settings</string> 
     <string name="key_pump_state" translatable="false">pump_state</string>
+    <string name="key_active_alarms" translatable="false">active_alarms</string>
     <string name="key_last_connection" translatable="false">last_connection</string>
     <string name="key_last_bolus_time" translatable="false">last_bolus_time</string>
     <string name="key_last_bolus_amount" translatable="false">last_bolus_amount</string>
@@ -51,6 +52,27 @@
     <string name="change_patch_label">Change patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
     <string name="expiry_not_enabled">Not enabled</string>
+
+    <!-- Alarm strings -->
+    <string name="alarm_none">None</string>
+    <string name="alarm_pump_low_battery">Pump low battery</string>
+    <string name="alarm_pump_low_reservoir">Pump low reservoir</string>
+    <string name="alarm_pump_expires_soon">Pump expires soon</string>
+    <string name="alarm_lowbg_suspended">Low BG suspended</string>
+    <string name="alarm_lowbg_suspended2">Low BG suspended 2</string>
+    <string name="alarm_auto_suspended">Auto suspended</string>
+    <string name="alarm_hmax_suspended">hourly max suspended</string>
+    <string name="alarm_dmax_suspended">daily max suspended</string>
+    <string name="alarm_suspended">Suspended</string>
+    <string name="alarm_paused">Paused</string>
+    <string name="alarm_occlusion">Occlusion</string>
+    <string name="alarm_expired">Expired</string>
+    <string name="alarm_reservoir_empty">Reservoir empty</string>
+    <string name="alarm_patch_fault">Patch fault</string>
+    <string name="alarm_patch_fault2">Patch fault 2</string>
+    <string name="alarm_base_fault">Base fault</string>
+    <string name="alarm_battery_out">Battery out</string>
+    <string name="alarm_no_calibration">No calibration</string>
 
     <!-- wizard-->
     <string name="string_change_patch">Discard/Change Patch</string> <!-- TODO check-->

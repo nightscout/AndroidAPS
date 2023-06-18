@@ -2,6 +2,7 @@ package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumPump
+import info.nightscout.pump.medtrum.comm.enums.AlarmState
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.extension.toInt
@@ -71,7 +72,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         if (state != medtrumPump.pumpState) {
             aapsLogger.debug(LTag.PUMPCOMM, "State changed from ${medtrumPump.pumpState} to $state")
             medtrumPump.pumpState = state
-        }        
+        }
 
         if (notification.size > NOTIF_STATE_END) {
             handleMaskedMessage(notification.copyOfRange(NOTIF_STATE_END, notification.size))
@@ -127,7 +128,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             // Don't spam with basal updates here, only if the running basal rate has changed, or a new basal is set
             if (medtrumPump.lastBasalRate != basalRate || medtrumPump.lastBasalStartTime != basalStartTime) {
                 medtrumPump.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalStartTime)
-            }            
+            }
             offset += 12
         }
 
@@ -178,11 +179,26 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         }
 
         if (fieldMask and MASK_ALARM != 0) {
-            aapsLogger.debug(LTag.PUMPCOMM, "Alarm notification received")
-            // Set only flags here, Alarms will be picked up by the state change
-            medtrumPump.alarmFlags = data.copyOfRange(offset, offset + 2).toInt()
-            medtrumPump.alarmParameter = data.copyOfRange(offset + 2, offset + 4).toInt()
-            aapsLogger.debug(LTag.PUMPCOMM, "Alarm flags: ${medtrumPump.alarmFlags}, alarm parameter: ${medtrumPump.alarmParameter}")
+            val alarmFlags = data.copyOfRange(offset, offset + 2).toInt()
+            val alarmParameter = data.copyOfRange(offset + 2, offset + 4).toInt()
+            aapsLogger.debug(LTag.PUMPCOMM, "Alarm notification received, Alarm flags: $alarmFlags, alarm parameter: $alarmParameter")
+
+            // If no alarm, clear activeAlarm list
+            if (alarmFlags == 0 && medtrumPump.activeAlarms.isNotEmpty()) {
+                medtrumPump.clearAlarmState()
+            } else if (alarmFlags != 0) {
+                // Check each alarm bit
+                for (i in 0..3) { // Only the first 3 flags are interesting for us, the rest we will get from the pump state
+                    val alarmState = AlarmState.values()[i]
+                    if ((alarmFlags shr i) and 1 != 0) {
+                        // If the alarm bit is set, add the corresponding alarm to activeAlarms
+                        medtrumPump.addAlarm(alarmState)
+                    } else if (medtrumPump.activeAlarms.contains(alarmState)) {
+                        // If the alarm bit is not set, and the corresponding alarm is in activeAlarms, remove it
+                        medtrumPump.removeAlarm(alarmState)
+                    }
+                }
+            }
             offset += 4
         }
 

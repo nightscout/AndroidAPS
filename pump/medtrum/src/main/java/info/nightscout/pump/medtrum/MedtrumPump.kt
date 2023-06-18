@@ -7,6 +7,7 @@ import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.pump.medtrum.code.ConnectionState
 import info.nightscout.pump.medtrum.comm.enums.AlarmSetting
+import info.nightscout.pump.medtrum.comm.enums.AlarmState
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.extension.toByteArray
@@ -19,7 +20,7 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import java.util.GregorianCalendar
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.round
@@ -55,6 +56,14 @@ class MedtrumPump @Inject constructor(
         set(value) {
             _pumpState.value = value
             sp.putInt(R.string.key_pump_state, value.state.toInt())
+        }
+
+    // Active alarms
+    private var _activeAlarms: EnumSet<AlarmState> = EnumSet.noneOf(AlarmState::class.java)
+    var activeAlarms: EnumSet<AlarmState>
+        get() = _activeAlarms
+        set(value) {
+            _activeAlarms = value
         }
 
     // Prime progress as state flow
@@ -251,6 +260,8 @@ class MedtrumPump @Inject constructor(
         _swVersion = sp.getString(R.string.key_sw_version, "")
         _patchStartTime = sp.getLong(R.string.key_patch_start_time, 0L)
 
+        loadActiveAlarms()
+
         val encodedString = sp.getString(R.string.key_actual_basal_profile, "0")
         try {
             _actualBasalProfile = Base64.decode(encodedString, Base64.DEFAULT)
@@ -436,8 +447,40 @@ class MedtrumPump @Inject constructor(
             "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START (FAKE)"
         )
     }
+
     fun temporaryBasalToString(): String {
         if (!tempBasalInProgress) return ""
         return tempBasalAbsoluteRate.toString() + "U/h"
+    }
+
+    fun addAlarm(alarm: AlarmState) {
+        activeAlarms.add(alarm)
+        saveActiveAlarms()
+    }
+    
+    fun removeAlarm(alarm: AlarmState) {
+        activeAlarms.remove(alarm)
+        saveActiveAlarms()
+    }
+
+    fun clearAlarmState() {
+        activeAlarms.clear()
+        saveActiveAlarms()
+    }
+
+    private fun saveActiveAlarms() {
+        val alarmsStr = activeAlarms.joinToString(separator = ",") { it.name }
+        sp.putString(R.string.key_active_alarms, alarmsStr)
+    }
+    
+    private fun loadActiveAlarms() {
+        val alarmsStr = sp.getString(R.string.key_active_alarms, "")
+        if (alarmsStr.isNullOrEmpty()) {
+            activeAlarms = EnumSet.noneOf(AlarmState::class.java)
+        } else {
+            activeAlarms = alarmsStr.split(",")
+                .mapNotNull { AlarmState.values().find { alarm -> alarm.name == it } }
+                .let { EnumSet.copyOf(it) }
+        }
     }
 }
