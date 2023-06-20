@@ -99,6 +99,7 @@ class BLEComm @Inject internal constructor(
     private var mWritePackets: WriteCommandPackets? = null
     private var mWriteSequenceNumber: Int = 0
     private var mReadPacket: ReadDataPacket? = null
+    private val readLock = Any()
 
     private var mDeviceSN: Long = 0
     private var mCallback: BLECommCallback? = null
@@ -268,14 +269,16 @@ class BLEComm @Inject internal constructor(
             if (characteristic.getUuid() == UUID.fromString(READ_UUID)) {
                 mCallback?.onNotification(value)
             } else if (characteristic.getUuid() == UUID.fromString(WRITE_UUID)) {
-                if (mReadPacket == null) {
-                    mReadPacket = ReadDataPacket(value)
-                } else {
-                    mReadPacket?.addData(value)
-                }
-                if (mReadPacket?.allDataReceived() == true) {
-                    mReadPacket?.getData()?.let { mCallback?.onIndication(it) }
-                    mReadPacket = null
+                synchronized(readLock) {
+                    if (mReadPacket == null) {
+                        mReadPacket = ReadDataPacket(value)
+                    } else {
+                        mReadPacket?.addData(value)
+                    }
+                    if (mReadPacket?.allDataReceived() == true) {
+                        mReadPacket?.getData()?.let { mCallback?.onIndication(it) }
+                        mReadPacket = null
+                    }
                 }
             }
         }
@@ -456,6 +459,7 @@ class BLEComm @Inject internal constructor(
                                     mBluetoothGatt?.writeCharacteristic(characteristic)
                                 }
                             }, WRITE_DELAY_MILLIS)
+        SystemClock.sleep(WRITE_DELAY_MILLIS)
     }
 
     private val uartWriteBTGattChar: BluetoothGattCharacteristic
