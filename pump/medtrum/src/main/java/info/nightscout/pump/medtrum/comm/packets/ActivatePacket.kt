@@ -107,13 +107,13 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
             pumpSync.insertTherapyEventIfNewWithTimestamp(
                 timestamp = System.currentTimeMillis(),
                 type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
-                pumpType = medtrumPump.pumpType,
+                pumpType = medtrumPump.pumpType(),
                 pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
             )
             pumpSync.insertTherapyEventIfNewWithTimestamp(
                 timestamp = System.currentTimeMillis(),
                 type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
-                pumpType = medtrumPump.pumpType,
+                pumpType = medtrumPump.pumpType(),
                 pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
             )
         }

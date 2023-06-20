@@ -53,7 +53,7 @@ class CancelTempBasalPacket(injector: HasAndroidInjector) : MedtrumPacket(inject
                 pumpSync.syncStopTemporaryBasalWithPumpId(
                     timestamp = basalStartTime, // Time of normal basal start = time of tbr end
                     endPumpId = basalStartTime,
-                    pumpType = medtrumPump.pumpType,
+                    pumpType = medtrumPump.pumpType(),
                     pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
                 )
                 aapsLogger.debug(

@@ -363,7 +363,7 @@ import kotlin.math.round
     }
 
     override fun model(): PumpType {
-        return medtrumPump.pumpType
+        return medtrumPump.pumpType()
     }
 
     override fun serialNumber(): String {
@@ -371,7 +371,7 @@ import kotlin.math.round
     }
 
     override val pumpDescription: PumpDescription
-        get() = PumpDescription(medtrumPump.pumpType)
+        get() = PumpDescription(medtrumPump.pumpType())
 
     override fun shortStatus(veryShort: Boolean): String {
         var ret = ""

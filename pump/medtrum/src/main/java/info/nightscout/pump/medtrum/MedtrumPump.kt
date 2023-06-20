@@ -15,6 +15,7 @@ import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
@@ -28,6 +29,7 @@ import kotlin.math.round
 @Singleton
 class MedtrumPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
+    private val rh: ResourceHelper,
     private val sp: SP,
     private val dateUtil: DateUtil,
     private val pumpSync: PumpSync,
@@ -168,7 +170,7 @@ class MedtrumPump @Inject constructor(
             sp.putLong(R.string.key_last_connection, value)
         }
 
-    private var _deviceType: Int = 0 // As reported by pump
+    private var _deviceType: Int = 80 // As reported by pump
     var deviceType: Int
         get() = _deviceType
         set(value) {
@@ -196,15 +198,9 @@ class MedtrumPump @Inject constructor(
     val pumpSN: Long
         get() = _pumpSN
 
-    val pumpType: PumpType = PumpType.MEDTRUM_NANO // TODO, type based on deviceType from pump
-
     var lastTimeReceivedFromPump = 0L // Time in ms! // TODO: Consider removing as is not used?
     var suspendTime = 0L // Time in ms!
     var patchAge = 0L // Time in seconds?! // TODO: Not used
-
-
-    var alarmFlags = 0
-    var alarmParameter = 0
 
     // bolus status
     var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
@@ -269,6 +265,12 @@ class MedtrumPump @Inject constructor(
             aapsLogger.error(LTag.PUMP, "Error decoding basal profile from SP: $encodedString")
         }
     }
+
+    fun pumpType(): PumpType = 
+        when(deviceType) {
+            80, 88 -> PumpType.MEDTRUM_NANO
+            else -> PumpType.MEDTRUM_UNTESTED
+        }
 
     fun loadUserSettingsFromSP() {
         desiredPatchExpiration = sp.getBoolean(info.nightscout.pump.medtrum.R.string.key_patch_expiration, false)
@@ -356,7 +358,7 @@ class MedtrumPump @Inject constructor(
             LTag.PUMP,
             "handleBasalStatusUpdate: basalType: $basalType basalValue: $basalRate basalSequence: $basalSequence basalPatchId: $basalPatchId basalStartTime: $basalStartTime " + "receivedTime: $receivedTime"
         )
-        @Suppress("UNNECESSARY_SAFE_CALL") // Safe call to allow mocks to retun null
+        @Suppress("UNNECESSARY_SAFE_CALL") // Safe call to allow mocks to return null
         val expectedTemporaryBasal = pumpSync.expectedPumpState()?.temporaryBasal
         if (basalType.isTempBasal() && expectedTemporaryBasal?.pumpId != basalStartTime) {
             // Note: temporaryBasalInfo will be removed from temporaryBasalStorage after this call
@@ -364,14 +366,19 @@ class MedtrumPump @Inject constructor(
 
             // If duration is unknown, no way to get it now, set patch lifetime as duration
             val duration = temporaryBasalInfo?.duration ?: T.mins(FAKE_TBR_LENGTH).msecs()
+            val adjustedBasalRate = if (basalType == BasalType.ABSOLUTE_TEMP) {
+                basalRate
+            } else {
+                (basalRate / baseBasalRate) * 100 // calculate the percentage of the original basal rate
+            }
             val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
                 timestamp = basalStartTime,
-                rate = basalRate, // TODO: Support percent here, this will break things? Check if this is correct
+                rate = adjustedBasalRate,
                 duration = duration,
                 isAbsolute = (basalType == BasalType.ABSOLUTE_TEMP),
                 type = temporaryBasalInfo?.type,
                 pumpId = basalStartTime,
-                pumpType = pumpType,
+                pumpType = pumpType(),
                 pumpSerial = pumpSN.toString(radix = 16)
             )
             aapsLogger.debug(
@@ -386,7 +393,7 @@ class MedtrumPump @Inject constructor(
                 isAbsolute = true,
                 type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
                 pumpId = basalStartTime,
-                pumpType = pumpType,
+                pumpType = pumpType(),
                 pumpSerial = pumpSN.toString(radix = 16)
             )
             aapsLogger.debug(
@@ -439,7 +446,7 @@ class MedtrumPump @Inject constructor(
             isAbsolute = true,
             type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
             pumpId = dateUtil.now(),
-            pumpType = pumpType,
+            pumpType = pumpType(),
             pumpSerial = pumpSN.toString(radix = 16)
         )
         aapsLogger.debug(
@@ -466,6 +473,31 @@ class MedtrumPump @Inject constructor(
     fun clearAlarmState() {
         activeAlarms.clear()
         saveActiveAlarms()
+    }
+
+    fun alarmStateToString(alarmState: AlarmState): String {
+        val stringId = when (alarmState) {
+            AlarmState.NONE               -> R.string.alarm_none
+            AlarmState.PUMP_LOW_BATTERY   -> R.string.alarm_pump_low_battery
+            AlarmState.PUMP_LOW_RESERVOIR -> R.string.alarm_pump_low_reservoir
+            AlarmState.PUMP_EXPIRES_SOON  -> R.string.alarm_pump_expires_soon
+            AlarmState.LOWBG_SUSPENDED    -> R.string.alarm_lowbg_suspended
+            AlarmState.LOWBG_SUSPENDED2   -> R.string.alarm_lowbg_suspended2
+            AlarmState.AUTO_SUSPENDED     -> R.string.alarm_auto_suspended
+            AlarmState.HMAX_SUSPENDED     -> R.string.alarm_hmax_suspended
+            AlarmState.DMAX_SUSPENDED     -> R.string.alarm_dmax_suspended
+            AlarmState.SUSPENDED          -> R.string.alarm_suspended
+            AlarmState.PAUSED             -> R.string.alarm_paused
+            AlarmState.OCCLUSION          -> R.string.alarm_occlusion
+            AlarmState.EXPIRED            -> R.string.alarm_expired
+            AlarmState.RESERVOIR_EMPTY    -> R.string.alarm_reservoir_empty
+            AlarmState.PATCH_FAULT        -> R.string.alarm_patch_fault
+            AlarmState.PATCH_FAULT2       -> R.string.alarm_patch_fault2
+            AlarmState.BASE_FAULT         -> R.string.alarm_base_fault
+            AlarmState.BATTERY_OUT        -> R.string.alarm_battery_out
+            AlarmState.NO_CALIBRATION     -> R.string.alarm_no_calibration
+        }
+        return rh.gs(stringId)
     }
 
     private fun saveActiveAlarms() {

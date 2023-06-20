@@ -412,7 +412,8 @@ enum class PumpType {
         isPatchPump = true,
         maxReservoirReading = 400,
         source = Source.Medtrum
-    );
+    ),
+    MEDTRUM_UNTESTED(description = "Medtrum untested", model = "untested", parent = MEDTRUM_NANO);
 
     val description: String
     var manufacturer: ManufacturerType? = null

@@ -15,6 +15,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpSync
+import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
@@ -473,7 +474,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 // Pump suspended due to error, show error!
                 uiInteraction.addNotificationWithSound(
                     Notification.PUMP_ERROR,
-                    rh.gs(R.string.pump_error, state.toString()),
+                    rh.gs(R.string.pump_error, alarmState?.let { medtrumPump.alarmStateToString(it) }),
                     Notification.URGENT,
                     info.nightscout.core.ui.R.raw.alarm
                 )
@@ -626,7 +627,21 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 // Succes!
                 responseHandled = true
                 responseSuccess = true
-                toState(GetDeviceTypeState())
+                // Check if we have a supported pump
+                if (medtrumPump.pumpType() == PumpType.MEDTRUM_UNTESTED) {
+                    // Throw error 
+                    aapsLogger.error(LTag.PUMPCOMM, "Unsupported pump type")
+                    uiInteraction.addNotificationWithSound(
+                        Notification.PUMP_ERROR,
+                        rh.gs(R.string.pump_unsupported, medtrumPump.deviceType),
+                        Notification.URGENT,
+                        info.nightscout.core.ui.R.raw.alarm
+                    )
+                    bleComm.disconnect("Unsupported pump")
+                    toState(IdleState())
+                } else {
+                    toState(GetDeviceTypeState())
+                }
             } else if (mPacket?.failed == true) {
                 // Failure
                 responseHandled = true

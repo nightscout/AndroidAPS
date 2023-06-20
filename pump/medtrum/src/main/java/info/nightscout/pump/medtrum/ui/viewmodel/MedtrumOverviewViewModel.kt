@@ -150,9 +150,11 @@ class MedtrumOverviewViewModel @Inject constructor(
 
     fun updateGUI() {
         // Update less dynamic values
-        val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastConnection
-        val agoMinutes = agoMilliseconds / 1000 / 60
-        _lastConnectionMinAgo.postValue(rh.gs(info.nightscout.shared.R.string.minago, agoMinutes))
+        if (medtrumPump.lastConnection != 0L) {
+            val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastConnection
+            val agoMinutes = agoMilliseconds / 1000 / 60
+            _lastConnectionMinAgo.postValue(rh.gs(info.nightscout.shared.R.string.minago, agoMinutes))
+        }
         if (medtrumPump.lastBolusTime != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastBolusTime
             val agoHours = agoMilliseconds.toDouble() / 60.0 / 60.0 / 1000.0
@@ -169,7 +171,7 @@ class MedtrumOverviewViewModel @Inject constructor(
                 _lastBolus.postValue("")
         }
 
-        val activeAlarmStrings = medtrumPump.activeAlarms.map { alarmStateToString(it) }
+        val activeAlarmStrings = medtrumPump.activeAlarms.map { medtrumPump.alarmStateToString(it) }
         _activeAlarms.postValue(activeAlarmStrings.joinToString("\n"))
         _pumpType.postValue(medtrumPump.deviceType.toString())
         _fwVersion.postValue(medtrumPump.swVersion)
@@ -181,31 +183,6 @@ class MedtrumOverviewViewModel @Inject constructor(
         } else {
             _patchExpiry.postValue(rh.gs(R.string.expiry_not_enabled))
         }
-    }
-
-    private fun alarmStateToString(alarmState: AlarmState): String {
-        val stringId = when (alarmState) {
-            AlarmState.NONE               -> R.string.alarm_none
-            AlarmState.PUMP_LOW_BATTERY   -> R.string.alarm_pump_low_battery
-            AlarmState.PUMP_LOW_RESERVOIR -> R.string.alarm_pump_low_reservoir
-            AlarmState.PUMP_EXPIRES_SOON  -> R.string.alarm_pump_expires_soon
-            AlarmState.LOWBG_SUSPENDED    -> R.string.alarm_lowbg_suspended
-            AlarmState.LOWBG_SUSPENDED2   -> R.string.alarm_lowbg_suspended2
-            AlarmState.AUTO_SUSPENDED     -> R.string.alarm_auto_suspended
-            AlarmState.HMAX_SUSPENDED     -> R.string.alarm_hmax_suspended
-            AlarmState.DMAX_SUSPENDED     -> R.string.alarm_dmax_suspended
-            AlarmState.SUSPENDED          -> R.string.alarm_suspended
-            AlarmState.PAUSED             -> R.string.alarm_paused
-            AlarmState.OCCLUSION          -> R.string.alarm_occlusion
-            AlarmState.EXPIRED            -> R.string.alarm_expired
-            AlarmState.RESERVOIR_EMPTY    -> R.string.alarm_reservoir_empty
-            AlarmState.PATCH_FAULT        -> R.string.alarm_patch_fault
-            AlarmState.PATCH_FAULT2       -> R.string.alarm_patch_fault2
-            AlarmState.BASE_FAULT         -> R.string.alarm_base_fault
-            AlarmState.BATTERY_OUT        -> R.string.alarm_battery_out
-            AlarmState.NO_CALIBRATION     -> R.string.alarm_no_calibration
-        }
-        return rh.gs(stringId)
     }
 }
  

@@ -94,7 +94,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                         val bolusNormalAmount = data.copyOfRange(RESP_RECORD_DATA_START + 8, RESP_RECORD_DATA_START + 10).toInt() * 0.05
                         val bolusNormalDelivered = data.copyOfRange(RESP_RECORD_DATA_START + 10, RESP_RECORD_DATA_START + 12).toInt() * 0.05
                         val bolusExtendedAmount = data.copyOfRange(RESP_RECORD_DATA_START + 12, RESP_RECORD_DATA_START + 14).toInt() * 0.05
-                        val bolusExtendedDuration = data.copyOfRange(RESP_RECORD_DATA_START + 14, RESP_RECORD_DATA_START + 16).toInt()
+                        val bolusExtendedDuration = data.copyOfRange(RESP_RECORD_DATA_START + 14, RESP_RECORD_DATA_START + 16).toLong() * 1000
                         val bolusExtendedDelivered = data.copyOfRange(RESP_RECORD_DATA_START + 16, RESP_RECORD_DATA_START + 18).toInt() * 0.05
                         val bolusCarb = data.copyOfRange(RESP_RECORD_DATA_START + 18, RESP_RECORD_DATA_START + 20).toInt()
                         val bolusGlucose = data.copyOfRange(RESP_RECORD_DATA_START + 20, RESP_RECORD_DATA_START + 22).toInt()
@@ -114,7 +114,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                 amount = bolusNormalDelivered,
                                 type = detailedBolusInfo?.bolusType,
                                 pumpId = bolusStartTime,
-                                pumpType = medtrumPump.pumpType,
+                                pumpType = medtrumPump.pumpType(),
                                 pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
                             )
                             aapsLogger.debug(
@@ -129,12 +129,54 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                 medtrumPump.lastBolusTime = bolusStartTime
                                 medtrumPump.lastBolusAmount = bolusNormalDelivered
                             }
-                        } else {
-                            // TODO: at least record the bolus
+                        } else if (bolusType == BolusType.EXTENDED) {
+                            val newRecord = pumpSync.syncExtendedBolusWithPumpId(
+                                timestamp = bolusStartTime,
+                                amount = bolusExtendedDelivered,
+                                duration = bolusExtendedDuration,
+                                isEmulatingTB = false,
+                                pumpId = bolusStartTime,
+                                pumpType = medtrumPump.pumpType(),
+                                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                            )
+                            aapsLogger.debug(
+                                LTag.PUMPCOMM,
+                                "from record: ${if (newRecord) "**NEW** " else ""}EVENT EXTENDED BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U "
+                            )
+                        } else if (bolusType == BolusType.COMBI) {
+                            // Note, this should never happen, as we don't use combo bolus
+                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStartTime, bolusNormalDelivered)
+                            val newRecord = pumpSync.syncBolusWithPumpId(
+                                timestamp = bolusStartTime,
+                                amount = bolusNormalDelivered,
+                                type = detailedBolusInfo?.bolusType,
+                                pumpId = bolusStartTime,
+                                pumpType = medtrumPump.pumpType(),
+                                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                            )
+                            pumpSync.syncExtendedBolusWithPumpId(
+                                timestamp = bolusStartTime,
+                                amount = bolusExtendedDelivered,
+                                duration = bolusExtendedDuration,
+                                isEmulatingTB = false,
+                                pumpId = bolusStartTime,
+                                pumpType = medtrumPump.pumpType(),
+                                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                            )
                             aapsLogger.error(
                                 LTag.PUMPCOMM,
-                                "from record: EVENT BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) " + "Bolus type: $bolusType not supported"
+                                "from record: ${if (newRecord) "**NEW** " else ""}EVENT COMBI BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U Extended: ${bolusExtendedDelivered} THIS SHOULD NOT HAPPEN!!!"
                             )
+                            if (!newRecord && detailedBolusInfo != null) {
+                                // detailedInfo can be from another similar record. Reinsert
+                                detailedBolusInfoStorage.add(detailedBolusInfo)
+                            }
+                            if (bolusStartTime > medtrumPump.lastBolusTime) {
+                                medtrumPump.lastBolusTime = bolusStartTime
+                                medtrumPump.lastBolusAmount = bolusNormalDelivered
+                            }
+                        } else {
+                            aapsLogger.error(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BOLUS_RECORD: Unknown bolus type: $bolusType")
                         }
 
                     }
@@ -171,7 +213,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                         isAbsolute = (basalType == BasalType.ABSOLUTE_TEMP),
                                         type = PumpSync.TemporaryBasalType.NORMAL,
                                         pumpId = basalStartTime,
-                                        pumpType = medtrumPump.pumpType,
+                                        pumpType = medtrumPump.pumpType(),
                                         pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
                                     )
                                     aapsLogger.debug(
@@ -183,7 +225,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                     pumpSync.syncStopTemporaryBasalWithPumpId(
                                         timestamp = basalEndTime,
                                         endPumpId = basalEndTime,
-                                        pumpType = medtrumPump.pumpType,
+                                        pumpType = medtrumPump.pumpType(),
                                         pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
                                     )
                                     aapsLogger.warn(
@@ -202,7 +244,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                     isAbsolute = true,
                                     type = PumpSync.TemporaryBasalType.PUMP_SUSPEND,
                                     pumpId = basalStartTime,
-                                    pumpType = medtrumPump.pumpType,
+                                    pumpType = medtrumPump.pumpType(),
                                     pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
                                 )
                                 aapsLogger.debug(
@@ -210,11 +252,9 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                     "handleBasalStatusUpdate from record: ${if (newRecord) "**NEW** " else ""}EVENT SUSPEND: ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " +
                                         "Rate: $basalRate Duration: ${duration}"
                                 )
-
                             }
                             else                                             -> {
                                 aapsLogger.error(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BASAL_RECORD: Unknown basal type: $basalType")
-                                // TODO: Error warning
                             }
                         }
                     }
