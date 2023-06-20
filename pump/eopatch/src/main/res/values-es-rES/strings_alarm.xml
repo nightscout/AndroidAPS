@@ -22,7 +22,7 @@
     <string name="string_a116">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
     <string name="string_a117">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
     <string name="string_a118">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
-    <string name="string_b000">La vida útil del parche expira %s. Prepárate para cambiar el parche.</string>
+    <string name="string_b000">La vida útil del parche expira el %s. Prepárate para cambiar el parche.</string>
     <string name="string_b001">Fin de la suspensión de insulina\nPulsa en \'Reanudar\' para reanudar la entrega de insulina.</string>
     <string name="string_b003">Reservorio bajo\nReemplaza el parche pronto.</string>
     <string name="string_b005">La vida útil del parche ha expirado\nCambia el parche ahora.</string>
