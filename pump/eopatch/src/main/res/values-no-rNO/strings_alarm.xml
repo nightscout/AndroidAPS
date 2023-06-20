@@ -1,2 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">Tomt reservoar\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a003">Patch utløpt\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a004">Blokkering oppdaget\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a005">Feil i oppstart selvtest\nPatch har blitt deaktivert. Bytt patch nå.</string>
+    <string name="string_a007">Upassende temperatur\nInsulintilførsel eller \'Aktiver patch\' prosess har stoppet. Unngå ekstrem temperatur nå.</string>
+    <string name="string_a016">Feil ved innsetting av kanyle\nSjekk knott-posisjon og trykk på \"Prøv på nytt\".</string>
+    <string name="string_a018">Patch batteri feil\nPatch er deaktivert og tilførselen\nav insulin stoppet. Skift patch nå.</string>
+    <string name="string_a019">Patch batteri feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a020">Patch aktiveringsfeil\n\'Aktiver patch prosess har utløpt. Trykk på \'Bekreft\' for å deaktivere gjeldende patch. Skift patch.</string>
+    <string name="string_a022">Patch feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a023">Patch feil\nPatch er deaktivert og tilførselen\nav insulin stoppet. Skift patch nå.</string>
+    <string name="string_a034">Patch feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a041">Patch feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a042">Patch feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a043">Patch feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a044">Patch feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a106">Patch feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a107">Patch feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a108">Patch feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a116">Patch feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a117">Patch feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_a118">Patch feil\nPatch er deaktivert og tilførselen av insulin stoppet. Skift patch nå.</string>
+    <string name="string_b000">Patch levetid utløper %s. Gjør deg klar til å bytte pach.</string>
+    <string name="string_b001">Slutten på insulin suspendering\nTrykk \'gjenopptatt\' for å starte insulintilførselen på nytt.</string>
+    <string name="string_b003">Lavt reservoarnivå\nBytt patch snart.</string>
+    <string name="string_b005">Patch levetid er utløpt\nBytt patch nå.</string>
+    <string name="string_b006">Patch levetid utløper snart\nBytt patch nå.</string>
+    <string name="string_b012">Ufullstendig aktivering av Patch\nFullfør \'Aktiver patch\' prosessen.</string>
+    <string name="string_b018">Patch lavt batterinivå\nVær klar til å bytte patch.</string>
+</resources>
