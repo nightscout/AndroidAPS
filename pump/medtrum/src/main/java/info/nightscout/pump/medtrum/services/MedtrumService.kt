@@ -174,8 +174,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
             result = sendPacketAndGetResponse(CancelTempBasalPacket(injector))
         }
         if (result) result = sendPacketAndGetResponse(StopPatchPacket(injector))
-        // Synchronize after deactivation to get update status
-        if (result) result = sendPacketAndGetResponse(SynchronizePacket(injector))
         return result
     }
 
@@ -193,19 +191,16 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun loadEvents(): Boolean {
-        // Send a poll patch, to workaround connection losses?
         rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingpumpstatus)))
-        var result = sendPacketAndGetResponse(PollPatchPacket(injector))
-        // So just do a syncronize to make sure we have the latest data
-        if (result) result = sendPacketAndGetResponse(SynchronizePacket(injector))
-
         // Sync records (based on the info we have from the sync)
-        if (result) result = syncRecords()
+        val result = syncRecords()
         if (result) {
             aapsLogger.debug(LTag.PUMPCOMM, "Events loaded")
             medtrumPump.lastConnection = System.currentTimeMillis()
         } else {
-            aapsLogger.error(LTag.PUMPCOMM, "Failed to sync records")
+            aapsLogger.error(LTag.PUMPCOMM, "Failed to load events")
+            // TODO: remove me before release
+            fabricPrivacy.logMessage("Medtrum LoadEvents: Failed to load events")
         }
         return result
     }
@@ -235,7 +230,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     }
                 }
             }
-
         }
         // Resume suspended pump
         if (medtrumPump.pumpState in listOf(MedtrumPumpState.LOWBG_SUSPENDED, MedtrumPumpState.PAUSED)) {
@@ -293,12 +287,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
         // Do not call update status directly, reconnection may be needed
         commandQueue.loadEvents(object : Callback() {
             override fun run() {
-                if (this.result.success == false && isConnected == false) {
-                    // Reschedule loadEvents when we lost connection during the command
-                    aapsLogger.warn(LTag.PUMP, "loadEvents failed due to connection loss, rescheduling")
-                    commandQueue.loadEvents(this)
-                    return
-                }
                 rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingbolusstatus)))
                 bolusingEvent.percent = 100
             }
@@ -366,11 +354,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
         // Note: medtrum app fetches all records when they sync?
         if (medtrumPump.syncedSequenceNumber < medtrumPump.currentSequenceNumber) {
             for (sequence in (medtrumPump.syncedSequenceNumber + 1)..medtrumPump.currentSequenceNumber) {
-                // Send a poll patch, to workaround connection losses?
-                result = sendPacketAndGetResponse(PollPatchPacket(injector))
+                result = sendPacketAndGetResponse(GetRecordPacket(injector, sequence), COMMAND_SYNC_TIMEOUT_SEC)
                 SystemClock.sleep(100)
-                // Get our record
-                if (result) result = sendPacketAndGetResponse(GetRecordPacket(injector, sequence), COMMAND_SYNC_TIMEOUT_SEC)
                 if (result == false) break
             }
         }
