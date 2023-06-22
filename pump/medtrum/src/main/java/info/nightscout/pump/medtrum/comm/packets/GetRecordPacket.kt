@@ -107,24 +107,40 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                             LTag.PUMPCOMM,
                             "GetRecordPacket HandleResponse: BOLUS_RECORD: typeAndWizard: $typeAndWizard, bolusCause: $bolusCause, unknown: $unknown, bolusStartTime: $bolusStartTime, " + "bolusNormalAmount: $bolusNormalAmount, bolusNormalDelivered: $bolusNormalDelivered, bolusExtendedAmount: $bolusExtendedAmount, bolusExtendedDuration: $bolusExtendedDuration, " + "bolusExtendedDelivered: $bolusExtendedDelivered, bolusCarb: $bolusCarb, bolusGlucose: $bolusGlucose, bolusIOB: $bolusIOB, unkown1: $unkown1, unkown2: $unkown2, " + "bolusType: $bolusType, bolusWizard: $bolusWizard"
                         )
+
                         if (bolusType == BolusType.NORMAL) {
                             val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStartTime, bolusNormalDelivered)
-                            val newRecord = pumpSync.syncBolusWithPumpId(
-                                timestamp = bolusStartTime,
-                                amount = bolusNormalDelivered,
-                                type = detailedBolusInfo?.bolusType,
-                                pumpId = bolusStartTime,
-                                pumpType = medtrumPump.pumpType(),
-                                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-                            )
+                            var newRecord = false
+                            if (detailedBolusInfo != null) {
+                                val success = pumpSync.syncBolusWithTempId(
+                                    timestamp = bolusStartTime,
+                                    amount = bolusNormalDelivered,
+                                    temporaryId = detailedBolusInfo.timestamp,
+                                    type = detailedBolusInfo.bolusType,
+                                    pumpId = bolusStartTime,
+                                    pumpType = medtrumPump.pumpType(),
+                                    pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                                )
+                                if (success == false) {
+                                    aapsLogger.warn(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BOLUS_RECORD: Failed to sync bolus with tempId: ${detailedBolusInfo.timestamp}")
+                                    // detailedInfo can be from another similar record. Reinsert
+                                    detailedBolusInfoStorage.add(detailedBolusInfo)
+                                }
+                            } else {
+                                newRecord = pumpSync.syncBolusWithPumpId(
+                                    timestamp = bolusStartTime,
+                                    amount = bolusNormalDelivered,
+                                    type = null,
+                                    pumpId = bolusStartTime,
+                                    pumpType = medtrumPump.pumpType(),
+                                    pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                                )
+                            }
+
                             aapsLogger.debug(
                                 LTag.PUMPCOMM,
                                 "from record: ${if (newRecord) "**NEW** " else ""}EVENT BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U "
                             )
-                            if (!newRecord && detailedBolusInfo != null) {
-                                // detailedInfo can be from another similar record. Reinsert
-                                detailedBolusInfoStorage.add(detailedBolusInfo)
-                            }
                             if (bolusStartTime > medtrumPump.lastBolusTime) {
                                 medtrumPump.lastBolusTime = bolusStartTime
                                 medtrumPump.lastBolusAmount = bolusNormalDelivered

@@ -77,7 +77,6 @@ import kotlin.math.round
     private val uiInteraction: UiInteraction,
     private val profileFunction: ProfileFunction,
     private val pumpSync: PumpSync,
-    private val detailedBolusInfoStorage: DetailedBolusInfoStorage,
     private val temporaryBasalStorage: TemporaryBasalStorage
 ) : PumpPluginBase(
     PluginDescription()
@@ -233,9 +232,8 @@ import kotlin.math.round
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
         return if (detailedBolusInfo.insulin > 0 && detailedBolusInfo.carbs == 0.0) {
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: Delivering bolus: " + detailedBolusInfo.insulin + "U")
-            detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
             val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
-            val connectionOK = medtrumService?.setBolus(detailedBolusInfo.insulin, t) ?: false
+            val connectionOK = medtrumService?.setBolus(detailedBolusInfo, t) ?: false
             val result = PumpEnactResult(injector)
             result.success = connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep
             result.bolusDelivered = t.insulin

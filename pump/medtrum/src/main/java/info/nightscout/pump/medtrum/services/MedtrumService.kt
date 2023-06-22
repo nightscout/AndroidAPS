@@ -14,6 +14,8 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
@@ -70,6 +72,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     @Inject lateinit var bleComm: BLEComm
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var pumpSync: PumpSync
+    @Inject lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
     @Inject lateinit var dateUtil: DateUtil
 
     companion object {
@@ -245,18 +248,39 @@ class MedtrumService : DaggerService(), BLECommCallback {
         return sendPacketAndGetResponse(SetPatchPacket(injector))
     }
 
-    fun setBolus(insulin: Double, t: EventOverviewBolusProgress.Treatment): Boolean {
+    fun setBolus(detailedBolusInfo: DetailedBolusInfo, t: EventOverviewBolusProgress.Treatment): Boolean {
         if (!isConnected) return false
+        val insulin = detailedBolusInfo.insulin
         val result = sendPacketAndGetResponse(SetBolusPacket(injector, insulin))
+
+        val bolusStart = System.currentTimeMillis()
 
         medtrumPump.bolusDone = false
         medtrumPump.bolusingTreatment = t
         medtrumPump.bolusAmountToBeDelivered = insulin
         medtrumPump.bolusStopped = false
         medtrumPump.bolusStopForced = false
-        medtrumPump.bolusProgressLastTimeStamp = dateUtil.now()
+        medtrumPump.bolusProgressLastTimeStamp = bolusStart
 
-        val bolusStart = System.currentTimeMillis()
+        detailedBolusInfo.timestamp = bolusStart // Make sure the timestamp is set to the start of the bolus
+        detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
+        // Sync the initial bolus
+        val newRecord = pumpSync.addBolusWithTempId(
+            timestamp = detailedBolusInfo.timestamp,
+            amount = detailedBolusInfo.insulin,
+            temporaryId = detailedBolusInfo.timestamp,
+            type = detailedBolusInfo.bolusType,
+            pumpType = medtrumPump.pumpType(),
+            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+        )
+        if (newRecord) {
+            aapsLogger.debug(
+                LTag.PUMPCOMM,
+                "set bolus: **NEW** EVENT BOLUS (tempId) ${dateUtil.dateAndTimeString(detailedBolusInfo.timestamp)} (${detailedBolusInfo.timestamp}) Bolus: ${detailedBolusInfo.insulin}U "
+            )
+        } else {
+            aapsLogger.error(LTag.PUMPCOMM, "Bolus with tempId ${detailedBolusInfo.timestamp} already exists")
+        }
 
         val bolusingEvent = EventOverviewBolusProgress
         while (medtrumPump.bolusStopped == false && result == true && medtrumPump.bolusDone == false) {
@@ -264,7 +288,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             if (System.currentTimeMillis() - medtrumPump.bolusProgressLastTimeStamp > T.secs(15).msecs()) {
                 medtrumPump.bolusStopped = true
                 medtrumPump.bolusStopForced = true
-                aapsLogger.debug(LTag.PUMPCOMM, "Communication stopped")
+                aapsLogger.warn(LTag.PUMPCOMM, "Communication stopped")
                 bleComm.disconnect("Communication stopped")
             } else {
                 bolusingEvent.t = medtrumPump.bolusingTreatment
