@@ -151,6 +151,81 @@
 
                 </TableRow>
 
+                <TableRow
+                    android:id="@+id/isf_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/isf_label"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/isf_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    <info.nightscout.core.ui.elements.NumberPicker
+                        android:id="@+id/isf"
+                        android:layout_width="130dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginBottom="2dp"
+                        app:customContentDescription="@string/isf_label" />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/ic_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/ic_label"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/ic_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    <info.nightscout.core.ui.elements.NumberPicker
+                        android:id="@+id/ic"
+                        android:layout_width="130dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginBottom="2dp"
+                        app:customContentDescription="@string/ic_label" />
+
+                </TableRow>
+
+                <TableRow
+                    android:id="@+id/timeshift_row"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/timeshift_label"
+                        android:layout_width="150dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginTop="1dp"
+                        android:text="@string/timeshift_label"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+                    <info.nightscout.core.ui.elements.NumberPicker
+                        android:id="@+id/timeshift"
+                        android:layout_width="130dp"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="1dp"
+                        android:layout_marginBottom="2dp"
+                        app:customContentDescription="@string/timeshift_label" />
+
+                </TableRow>
+
             </TableLayout>
 
             <LinearLayout
