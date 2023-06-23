@@ -72,7 +72,7 @@ class BLEComm @Inject internal constructor(
 
     companion object {
 
-        private const val WRITE_DELAY_MILLIS: Long = 100
+        private const val WRITE_DELAY_MILLIS: Long = 10
         private const val SERVICE_UUID = "669A9001-0008-968F-E311-6050405558B3"
         private const val READ_UUID = "669a9120-0008-968f-e311-6050405558b3"
         private const val WRITE_UUID = "669a9101-0008-968f-e311-6050405558b3"
@@ -455,11 +455,13 @@ class BLEComm @Inject internal constructor(
                                 } else {
                                     characteristic.value = data
                                     characteristic.writeType = BluetoothGattCharacteristic.WRITE_TYPE_DEFAULT
-                                    aapsLogger.debug(LTag.PUMPBTCOMM, "writeCharacteristic:" + Arrays.toString(data))
-                                    mBluetoothGatt?.writeCharacteristic(characteristic)
+                                    aapsLogger.debug(LTag.PUMPBTCOMM, "writeCharacteristic: ${Arrays.toString(data)}")
+                                    val success = mBluetoothGatt?.writeCharacteristic(characteristic)
+                                    if (success != true) {
+                                        mCallback?.onSendMessageError("Failed to write characteristic")
+                                    }
                                 }
                             }, WRITE_DELAY_MILLIS)
-        SystemClock.sleep(WRITE_DELAY_MILLIS)
     }
 
     private val uartWriteBTGattChar: BluetoothGattCharacteristic

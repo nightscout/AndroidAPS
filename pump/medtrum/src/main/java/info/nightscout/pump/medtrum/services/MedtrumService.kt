@@ -92,7 +92,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
     private var currentState: State = IdleState()
     private var mPacket: MedtrumPacket? = null
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main.immediate)
+    private val scope = CoroutineScope(Dispatchers.Default)
 
     val isConnected: Boolean
         get() = medtrumPump.connectionState == ConnectionState.CONNECTED
