@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.eopatch.ui
+package info.nightscout.pump.medtrum.ui
 
 import android.os.Bundle
 import android.view.View
@@ -30,19 +30,7 @@ class MedtrumStartDeactivationFragment : MedtrumBaseFragment<FragmentMedtrumStar
         binding.apply {
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MedtrumViewModel::class.java)
             viewModel?.apply {
-                setupStep.observe(viewLifecycleOwner) {
-                    when (it) {
-                        MedtrumViewModel.SetupStep.READY_DEACTIVATE -> btnPositive.visibility = View.VISIBLE
-
-                        MedtrumViewModel.SetupStep.ERROR            -> {
-                            ToastUtils.errorToast(requireContext(), "Error deactivate") // TODO: String resource and show error message
-                            moveStep(PatchStep.CANCEL)
-                        }
-
-                        else                                        -> Unit // Nothing to do here
-                    }
-                }
-                startDeactivation()
+                updateSetupStep(MedtrumViewModel.SetupStep.START_DEACTIVATION)
             }
         }
     }

@@ -414,12 +414,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
         // Map the pump state to a notification
         when (state) {
             MedtrumPumpState.NONE,
-            MedtrumPumpState.IDLE,
-            MedtrumPumpState.FILLED,
-            MedtrumPumpState.PRIMING,
-            MedtrumPumpState.PRIMED,
-            MedtrumPumpState.EJECTING,
-            MedtrumPumpState.EJECTED,
             MedtrumPumpState.STOPPED        -> {
                 rxBus.send(EventDismissNotification(Notification.PUMP_ERROR))
                 rxBus.send(EventDismissNotification(Notification.PUMP_SUSPENDED))
@@ -428,6 +422,18 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     rh.gs(R.string.patch_not_active),
                     Notification.URGENT,
                 )
+                medtrumPump.setFakeTBRIfNeeded()
+                medtrumPump.clearAlarmState()
+            }
+
+            MedtrumPumpState.IDLE,
+            MedtrumPumpState.FILLED,
+            MedtrumPumpState.PRIMING,
+            MedtrumPumpState.PRIMED,
+            MedtrumPumpState.EJECTING,
+            MedtrumPumpState.EJECTED        -> {
+                rxBus.send(EventDismissNotification(Notification.PUMP_ERROR))
+                rxBus.send(EventDismissNotification(Notification.PUMP_SUSPENDED))
                 medtrumPump.setFakeTBRIfNeeded()
                 medtrumPump.clearAlarmState()
             }
@@ -599,7 +605,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         }
 
         fun onSendMessageError(reason: String) {
-            aapsLogger.debug(LTag.PUMPCOMM, "onSendMessageError: " + this.toString() + "reason: $reason")
+            aapsLogger.warn(LTag.PUMPCOMM, "onSendMessageError: " + this.toString() + "reason: $reason")
             responseHandled = true
             responseSuccess = false
         }

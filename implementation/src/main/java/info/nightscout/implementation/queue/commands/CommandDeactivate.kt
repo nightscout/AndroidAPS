@@ -11,10 +11,10 @@ import info.nightscout.interfaces.queue.Command
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
-class CommandClearAlarms(
+class CommandDeactivate(
     injector: HasAndroidInjector,
     callback: Callback?
-) : Command(injector, CommandType.CLEAR_ALARMS, callback) {
+) : Command(injector, CommandType.DEACTIVATE, callback) {
 
     @Inject lateinit var activePlugin: ActivePlugin
 
@@ -23,15 +23,15 @@ class CommandClearAlarms(
 
         if (pump is Medtrum) {
             val medtrumPump = pump as Medtrum
-            val r = medtrumPump.clearAlarms()
+            val r = medtrumPump.deactivate()
             aapsLogger.debug(LTag.PUMPQUEUE, "Result success: ${r.success} enacted: ${r.enacted}")
             callback?.result(r)?.run()
         }
     }
 
-    override fun status(): String = rh.gs(info.nightscout.core.ui.R.string.clear_alarms)
+    override fun status(): String = rh.gs(info.nightscout.core.ui.R.string.deactivate)
 
-    override fun log(): String = "CLEAR ALARMS"
+    override fun log(): String = "DEACTIVATE"
     override fun cancel() {
         aapsLogger.debug(LTag.PUMPQUEUE, "Result cancel")
         callback?.result(PumpEnactResult(injector).success(false).comment(info.nightscout.core.ui.R.string.connectiontimedout))?.run()

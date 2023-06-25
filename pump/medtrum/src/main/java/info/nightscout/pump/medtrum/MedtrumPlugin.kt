@@ -82,7 +82,7 @@ import kotlin.math.round
     PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(MedtrumOverviewFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_eopatch2_128) // TODO
+        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_generic_icon) // TODO
         .pluginName(R.string.medtrum)
         .shortName(R.string.medtrum_pump_shortname)
         .preferencesId(R.xml.pref_medtrum_pump)
@@ -440,6 +440,16 @@ import kotlin.math.round
             return result
         }
         val connectionOK = medtrumService?.clearAlarms() ?: false
+        return PumpEnactResult(injector).success(connectionOK)
+    }
+
+    override fun deactivate(): PumpEnactResult {
+        // if (!isInitialized()) {
+        //     val result = PumpEnactResult(injector).success(false)
+        //     result.comment = "pump not initialized"
+        //     return result
+        // }
+        val connectionOK = medtrumService?.deactivatePatch() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
 }

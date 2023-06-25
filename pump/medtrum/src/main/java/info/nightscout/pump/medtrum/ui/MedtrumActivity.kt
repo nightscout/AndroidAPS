@@ -3,21 +3,29 @@ package info.nightscout.pump.medtrum.ui
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.media.MediaPlayer
 import android.media.RingtoneManager
 import android.os.Bundle
 import android.view.MotionEvent
+import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumActivateFragment
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumAttachPatchFragment
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumDeactivatePatchFragment
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumPreparePatchFragment
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumPrimeFragment
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumStartDeactivationFragment
+import info.nightscout.pump.medtrum.ui.MedtrumActivateCompleteFragment
+import info.nightscout.pump.medtrum.ui.MedtrumActivateFragment
+import info.nightscout.pump.medtrum.ui.MedtrumAttachPatchFragment
+import info.nightscout.pump.medtrum.ui.MedtrumDeactivatePatchFragment
+import info.nightscout.pump.medtrum.ui.MedtrumDeactivationCompleteFragment
+import info.nightscout.pump.medtrum.ui.MedtrumPreparePatchConnectFragment
+import info.nightscout.pump.medtrum.ui.MedtrumPreparePatchFragment
+import info.nightscout.pump.medtrum.ui.MedtrumPrimeCompleteFragment
+import info.nightscout.pump.medtrum.ui.MedtrumPrimeFragment
+import info.nightscout.pump.medtrum.ui.MedtrumPrimingFragment
+import info.nightscout.pump.medtrum.ui.MedtrumStartDeactivationFragment
 import info.nightscout.core.utils.extensions.safeGetSerializableExtra
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.PatchStep
+import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.databinding.ActivityMedtrumBinding
 import info.nightscout.pump.medtrum.extension.replaceFragmentInActivity
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel
@@ -36,6 +44,8 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         binding.apply {
             viewModel = ViewModelProvider(this@MedtrumActivity, viewModelFactory).get(MedtrumViewModel::class.java)
@@ -45,15 +55,33 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
                 patchStep.observe(this@MedtrumActivity) {
                     when (it) {
                         PatchStep.PREPARE_PATCH         -> setupViewFragment(MedtrumPreparePatchFragment.newInstance())
+                        PatchStep.PREPARE_PATCH_CONNECT -> setupViewFragment(MedtrumPreparePatchConnectFragment.newInstance())
                         PatchStep.PRIME                 -> setupViewFragment(MedtrumPrimeFragment.newInstance())
+                        PatchStep.PRIMING               -> setupViewFragment(MedtrumPrimingFragment.newInstance())
+                        PatchStep.PRIME_COMPLETE        -> setupViewFragment(MedtrumPrimeCompleteFragment.newInstance())
                         PatchStep.ATTACH_PATCH          -> setupViewFragment(MedtrumAttachPatchFragment.newInstance())
                         PatchStep.ACTIVATE              -> setupViewFragment(MedtrumActivateFragment.newInstance())
-                        PatchStep.COMPLETE              -> this@MedtrumActivity.finish() // TODO proper finish
-                        PatchStep.CANCEL                -> this@MedtrumActivity.finish()
+                        PatchStep.ACTIVATE_COMPLETE     -> setupViewFragment(MedtrumActivateCompleteFragment.newInstance())
+                        PatchStep.COMPLETE              -> this@MedtrumActivity.finish()
+                        PatchStep.ERROR                 -> Unit // Do nothing, let activity handle this
+
+                        PatchStep.CANCEL                -> {
+                            if (setupStep.value !in listOf(MedtrumViewModel.SetupStep.ACTIVATED, MedtrumViewModel.SetupStep.START_DEACTIVATION, MedtrumViewModel.SetupStep.STOPPED)) {
+                                resetPumpState()
+                            }
+                            this@MedtrumActivity.finish()
+                        }
+
                         PatchStep.START_DEACTIVATION    -> setupViewFragment(MedtrumStartDeactivationFragment.newInstance())
                         PatchStep.DEACTIVATE            -> setupViewFragment(MedtrumDeactivatePatchFragment.newInstance())
-                        PatchStep.DEACTIVATION_COMPLETE -> this@MedtrumActivity.finish() // TODO proper finish
-                        else                            -> Unit
+
+                        PatchStep.FORCE_DEACTIVATION    -> {
+                            medtrumPump.pumpState = MedtrumPumpState.STOPPED
+                            moveStep(PatchStep.DEACTIVATION_COMPLETE)
+                        }
+
+                        PatchStep.DEACTIVATION_COMPLETE -> setupViewFragment(MedtrumDeactivationCompleteFragment.newInstance())
+                        null                            -> Unit
                     }
                 }
             }
@@ -69,7 +97,9 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
         binding.viewModel?.apply {
             intent?.run {
                 val step = intent.safeGetSerializableExtra(EXTRA_START_PATCH_STEP, PatchStep::class.java)
-                initializePatchStep(step)
+                if (step != null) {
+                    initializePatchStep(step)
+                }
             }
         }
     }

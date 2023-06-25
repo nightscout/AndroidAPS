@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.plugins.pump.eopatch.ui
+package info.nightscout.pump.medtrum.ui
 
 import android.os.Bundle
 import android.view.View
@@ -11,11 +11,13 @@ import info.nightscout.pump.medtrum.ui.MedtrumBaseFragment
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class MedtrumDeactivatePatchFragment : MedtrumBaseFragment<FragmentMedtrumDeactivatePatchBinding>() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rh: ResourceHelper
 
     companion object {
 
@@ -32,11 +34,16 @@ class MedtrumDeactivatePatchFragment : MedtrumBaseFragment<FragmentMedtrumDeacti
             viewModel?.apply {
                 setupStep.observe(viewLifecycleOwner) {
                     when (it) {
-                        MedtrumViewModel.SetupStep.STOPPED -> btnPositive.visibility = View.VISIBLE
+                        MedtrumViewModel.SetupStep.STOPPED -> {
+                            moveStep(PatchStep.DEACTIVATION_COMPLETE)
+                        }
 
                         MedtrumViewModel.SetupStep.ERROR   -> {
-                            ToastUtils.errorToast(requireContext(), "Error deactivate") // TODO: String resource and show error message
-                            moveStep(PatchStep.CANCEL)
+                            moveStep(PatchStep.ERROR)
+                            updateSetupStep(MedtrumViewModel.SetupStep.START_DEACTIVATION) // Reset setup step
+                            binding.textDeactivatingPump.text = rh.gs(R.string.deactivating_error)
+                            binding.btnNegative.visibility = View.VISIBLE
+                            binding.btnPositive.visibility = View.VISIBLE
                         }
 
                         else                               -> Unit // Nothing to do here

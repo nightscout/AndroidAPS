@@ -6,31 +6,31 @@ import androidx.lifecycle.ViewModelProvider
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.PatchStep
-import info.nightscout.pump.medtrum.databinding.FragmentMedtrumPreparePatchBinding
+import info.nightscout.pump.medtrum.databinding.FragmentMedtrumDeactivationCompleteBinding
 import info.nightscout.pump.medtrum.ui.MedtrumBaseFragment
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 
-class MedtrumPreparePatchFragment : MedtrumBaseFragment<FragmentMedtrumPreparePatchBinding>() {
+class MedtrumDeactivationCompleteFragment : MedtrumBaseFragment<FragmentMedtrumDeactivationCompleteBinding>() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
 
     companion object {
 
-        fun newInstance(): MedtrumPreparePatchFragment = MedtrumPreparePatchFragment()
+        fun newInstance(): MedtrumDeactivationCompleteFragment = MedtrumDeactivationCompleteFragment()
     }
 
-    override fun getLayoutId(): Int = R.layout.fragment_medtrum_prepare_patch
+    override fun getLayoutId(): Int = R.layout.fragment_medtrum_deactivation_complete
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        aapsLogger.debug(LTag.PUMP, "MedtrumPreparePatchFragment onViewCreated")
+        aapsLogger.debug(LTag.PUMP, "MedtrumStartDeactivationFragment onViewCreated")
         binding.apply {
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MedtrumViewModel::class.java)
             viewModel?.apply {
-                preparePatch()
+                // Nothing to do here (yet)
             }
         }
     }

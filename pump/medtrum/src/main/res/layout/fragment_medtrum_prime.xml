@@ -25,6 +25,37 @@
             android:layout_height="wrap_content"
             tools:context=".ui.MedtrumActivity">
 
+
+            <TextView
+                android:id="@+id/text_half_press_needle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:text="@string/half_press_needle"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/do_not_attach"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="40dp"
+                android:gravity="center"
+                android:text="@string/do_not_attach_to_body"
+                android:textColor="@color/red"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/layout_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_button"
                 android:layout_width="match_parent"
@@ -49,16 +80,16 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:contentDescription="@string/string_next"
-                    android:text="@string/string_next"
-                    android:visibility="gone"
+                    android:contentDescription="@string/next"
+                    android:text="@string/next"
+                    android:visibility="visible"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/btn_negative"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.ATTACH_PATCH)}"
+                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.PRIMING)}"
                     tools:visibility="visible" />
             </androidx.constraintlayout.widget.ConstraintLayout>
-            
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>

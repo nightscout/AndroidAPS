@@ -29,14 +29,4 @@ abstract class BaseViewModel<N : MedtrumBaseNavigator> : ViewModel() {
     fun finish() = navigator?.finish()
 
     fun Disposable.addTo() = apply { compositeDisposable.add(this) }
-
-    fun convertToPatchStep(pumpState: MedtrumPumpState) = when (pumpState) {
-        MedtrumPumpState.NONE, MedtrumPumpState.IDLE         -> PatchStep.PREPARE_PATCH
-        MedtrumPumpState.FILLED                              -> PatchStep.PREPARE_PATCH
-        MedtrumPumpState.PRIMING                             -> PatchStep.PRIME
-        MedtrumPumpState.PRIMED, MedtrumPumpState.EJECTED    -> PatchStep.ATTACH_PATCH
-        MedtrumPumpState.ACTIVE, MedtrumPumpState.ACTIVE_ALT -> PatchStep.COMPLETE
-        MedtrumPumpState.STOPPED                             -> PatchStep.DEACTIVATION_COMPLETE
-        else                                                 -> PatchStep.CANCEL
-    }
 }

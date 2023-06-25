@@ -25,6 +25,20 @@
             android:layout_height="wrap_content"
             tools:context=".ui.MedtrumActivity">
 
+            <TextView
+                android:id="@+id/text_activating_pump"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:text="@string/activating_pump"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_button"
                 android:layout_width="match_parent"
@@ -49,16 +63,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:contentDescription="@string/string_start_complete"
-                    android:text="@string/string_start_complete"
+                    android:contentDescription="@string/retry"
+                    android:text="@string/retry"
                     android:visibility="gone"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/btn_negative"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.COMPLETE)}"
+                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.ACTIVATE)}"
                     tools:visibility="visible" />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
-            
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>

@@ -112,7 +112,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                             val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStartTime, bolusNormalDelivered)
                             var newRecord = false
                             if (detailedBolusInfo != null) {
-                                val success = pumpSync.syncBolusWithTempId(
+                                val syncOk = pumpSync.syncBolusWithTempId(
                                     timestamp = bolusStartTime,
                                     amount = bolusNormalDelivered,
                                     temporaryId = detailedBolusInfo.timestamp,
@@ -121,7 +121,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                     pumpType = medtrumPump.pumpType(),
                                     pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
                                 )
-                                if (success == false) {
+                                if (syncOk == false) {
                                     aapsLogger.warn(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BOLUS_RECORD: Failed to sync bolus with tempId: ${detailedBolusInfo.timestamp}")
                                     // detailedInfo can be from another similar record. Reinsert
                                     detailedBolusInfoStorage.add(detailedBolusInfo)

@@ -25,6 +25,50 @@
             android:layout_height="wrap_content"
             tools:context=".ui.MedtrumActivity">
 
+            <TextView
+                android:id="@+id/text_serial_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:text="@{@string/base_serial(viewModel.medtrumPump.pumpSN)}"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_no_active_patch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:text="@string/patch_begin_activation"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_serial_number" />
+
+            <TextView
+                android:id="@+id/text_no_active_patch_note"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="40dp"
+                android:gravity="center"
+                android:text="@string/patch_not_active_note"
+                android:textColor="@color/red"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/layout_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_button"
                 android:layout_width="match_parent"
@@ -32,6 +76,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
+
 
                 <Button
                     android:id="@+id/btn_negative"
@@ -49,14 +94,12 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="6dp"
-                    android:contentDescription="@string/string_start_prime"
-                    android:text="@string/string_start_prime"
-                    android:visibility="gone"
+                    android:contentDescription="@string/next"
+                    android:text="@string/next"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/btn_negative"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.PRIME)}"
-                    tools:visibility="visible" />
+                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.PREPARE_PATCH_CONNECT)}" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

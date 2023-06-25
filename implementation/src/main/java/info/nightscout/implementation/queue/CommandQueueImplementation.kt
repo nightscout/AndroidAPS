@@ -24,6 +24,7 @@ import info.nightscout.implementation.queue.commands.CommandCancelExtendedBolus
 import info.nightscout.implementation.queue.commands.CommandCancelTempBasal
 import info.nightscout.implementation.queue.commands.CommandClearAlarms
 import info.nightscout.implementation.queue.commands.CommandCustomCommand
+import info.nightscout.implementation.queue.commands.CommandDeactivate
 import info.nightscout.implementation.queue.commands.CommandExtendedBolus
 import info.nightscout.implementation.queue.commands.CommandInsightSetTBROverNotification
 import info.nightscout.implementation.queue.commands.CommandLoadEvents
@@ -546,6 +547,19 @@ class CommandQueueImplementation @Inject constructor(
         removeAll(CommandType.CLEAR_ALARMS)
         // add new command to queue
         add(CommandClearAlarms(injector, callback))
+        notifyAboutNewCommand()
+        return true
+    }
+
+    override fun deactivate(callback: Callback?): Boolean {
+        if (isRunning(CommandType.DEACTIVATE)) {
+            callback?.result(executingNowError())?.run()
+            return false
+        }
+        // remove all unfinished
+        removeAll(CommandType.DEACTIVATE)
+        // add new command to queue
+        add(CommandDeactivate(injector, callback))
         notifyAboutNewCommand()
         return true
     }

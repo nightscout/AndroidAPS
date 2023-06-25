@@ -242,6 +242,10 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // add clearAlarms
         commandQueue.clearAlarms(null)
         Assertions.assertEquals(5, commandQueue.size())
+
+        // add deactivate
+        commandQueue.deactivate(null)
+        Assertions.assertEquals(6, commandQueue.size())
         
         commandQueue.clear()
         commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
@@ -372,6 +376,22 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         Assertions.assertEquals(1, commandQueue.size())
         // next should be ignored
         commandQueue.clearAlarms(null)
+        Assertions.assertEquals(1, commandQueue.size())
+    }
+
+    @Test
+    fun isDeactivateCommandInQueue() {
+        // given
+        Assertions.assertEquals(0, commandQueue.size())
+
+        // when
+        commandQueue.deactivate(null)
+
+        // then
+        Assertions.assertTrue(commandQueue.isLastScheduled(Command.CommandType.DEACTIVATE))
+        Assertions.assertEquals(1, commandQueue.size())
+        // next should be ignored
+        commandQueue.deactivate(null)
         Assertions.assertEquals(1, commandQueue.size())
     }
 

@@ -3,13 +3,17 @@ package info.nightscout.pump.medtrum.code
 enum class PatchStep {
     START_DEACTIVATION,
     DEACTIVATE,
+    FORCE_DEACTIVATION,
     DEACTIVATION_COMPLETE,
     PREPARE_PATCH,
+    PREPARE_PATCH_CONNECT,
     PRIME,
+    PRIMING,
+    PRIME_COMPLETE,
     ATTACH_PATCH,
     ACTIVATE,
+    ACTIVATE_COMPLETE,
+    ERROR,
     CANCEL,
-    COMPLETE,
-    BACK_TO_HOME,
-    FINISH;
+    COMPLETE;
 }

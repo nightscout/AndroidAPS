@@ -7,13 +7,18 @@ import dagger.Module
 import dagger.Provides
 import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumActivateFragment
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumAttachPatchFragment
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumDeactivatePatchFragment
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumPreparePatchFragment
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumPrimeFragment
-import info.nightscout.androidaps.plugins.pump.eopatch.ui.MedtrumStartDeactivationFragment
 import info.nightscout.pump.medtrum.services.MedtrumService
+import info.nightscout.pump.medtrum.ui.MedtrumActivateCompleteFragment
+import info.nightscout.pump.medtrum.ui.MedtrumActivateFragment
+import info.nightscout.pump.medtrum.ui.MedtrumAttachPatchFragment
+import info.nightscout.pump.medtrum.ui.MedtrumDeactivatePatchFragment
+import info.nightscout.pump.medtrum.ui.MedtrumDeactivationCompleteFragment
+import info.nightscout.pump.medtrum.ui.MedtrumPreparePatchConnectFragment
+import info.nightscout.pump.medtrum.ui.MedtrumPreparePatchFragment
+import info.nightscout.pump.medtrum.ui.MedtrumPrimeCompleteFragment
+import info.nightscout.pump.medtrum.ui.MedtrumPrimeFragment
+import info.nightscout.pump.medtrum.ui.MedtrumPrimingFragment
+import info.nightscout.pump.medtrum.ui.MedtrumStartDeactivationFragment
 import info.nightscout.pump.medtrum.ui.MedtrumActivity
 import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel
@@ -62,11 +67,27 @@ abstract class MedtrumModule {
 
     @FragmentScope
     @ContributesAndroidInjector
+    internal abstract fun contributesDeactivationCompleteFragment(): MedtrumDeactivationCompleteFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
     internal abstract fun contributesPreparePatchFragment(): MedtrumPreparePatchFragment
 
     @FragmentScope
     @ContributesAndroidInjector
+    internal abstract fun contributesPreparePatchConnectFragment(): MedtrumPreparePatchConnectFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
     internal abstract fun contributesPrimeFragment(): MedtrumPrimeFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    internal abstract fun contributesPrimeCompleteFragment(): MedtrumPrimeCompleteFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    internal abstract fun contributesPrimingFragment(): MedtrumPrimingFragment
 
     @FragmentScope
     @ContributesAndroidInjector
@@ -75,6 +96,10 @@ abstract class MedtrumModule {
     @FragmentScope
     @ContributesAndroidInjector
     internal abstract fun contributesActivateFragment(): MedtrumActivateFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    internal abstract fun contributesActivateCompleteFragment(): MedtrumActivateCompleteFragment
 
     // ACTIVITIES
     @ContributesAndroidInjector

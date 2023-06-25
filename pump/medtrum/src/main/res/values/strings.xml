@@ -24,7 +24,7 @@
 
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
-    <string name="medtrum_pump_description">Medtrum Nano</string>
+    <string name="medtrum_pump_description">Pump integration for Medtrum Nano</string>
     <string name="medtrumpump_settings">Medtrum pump settings</string>
     <string name="pump_error">Pump error: %1$s !! </string>
     <string name="pump_unsupported">Pump untested: %1$d! Please contact us at discord or github for support</string>
@@ -76,19 +76,45 @@
     <string name="alarm_no_calibration">No calibration</string>
 
     <!-- wizard-->
-    <string name="string_change_patch">Discard/Change Patch</string> <!-- TODO check-->
-    <string name="string_next">Next</string>
-    <string name="string_start_prime">Start priming</string>
-    <string name="string_start_activate">Start activation</string>
     <string name="string_start_complete">Complete</string>
     <string name="string_start_deactivate">Deactivate patch</string>
 
-    <string name ="step_prepare_patch">Prepare patch</string>
-    <string name ="step_prime">Priming</string>
-    <string name ="step_attach">Attach patch</string>
-    <string name ="step_activate">Activation</string>
-    <string name ="step_complete">Complete</string>
-    <string name ="step_deactivate">Deactivation</string>
+    <string name ="step_prepare_patch">Activate Patch</string>
+    <string name ="step_prepare_patch_connect">Connect and Fill</string>
+    <string name ="step_prime">Prime</string>
+    <string name ="step_priming">Priming</string>
+    <string name ="step_priming_complete">Priming Complete</string>
+    <string name ="step_attach">Attach Patch</string>
+    <string name ="step_activate">Activating...</string>
+    <string name ="step_activate_complete">Activation Complete</string>
+    <string name ="step_deactivate">Deactivate Patch</string>
+    <string name ="step_deactivating">Deactivating...</string>
+    <string name ="step_deactivate_complete">Patch deactivated</string>
+
+    <string name="base_serial">Pump Base Serial: %1$X</string>
+    <string name="patch_begin_activation">No active patch. Press <b>Next</b> to begin the activation process.</string>
+    <string name="patch_not_active_note">Pump base should not be connected to the patch unil the next step!</string>
+    <string name="connect_pump_base">Connect pump base to a new patch, remove the residual air and fill with insulin, then press <b>Next</b>.</string>
+    <string name="note_min_70_units">Note: A minimum of 70 units is required for actvation.</string>
+    <string name="do_not_attach_to_body">Do not attach the patch to the body yet.</string>
+    <string name="half_press_needle">Half-press needle button. Then tap <b>Next</b> to start prime.</string>
+    <string name="wait_for_priming">Please wait for the priming to complete.</string>
+    <string name="priming_error">Failed to prime, press <b>Retry</b> to try again.</string>
+    <string name="press_next">Press <b>Next</b> to continue.</string>
+    <string name='attach_patch_to_body'>Remove the safety lock. Attach the pump to the body. Press the needle button.</string>
+    <string name="remove_safety_lock">Remove the safety lock. Attach the pump to the body. Press the needle button.</string>
+    <string name="activating_pump">Activating pump and settng initial basal rate. Please Wait.</string>
+    <string name="activating_error">Failed to activate, press <b>Retry</b> to try again.</string>
+    <string name="activating_complete">New patch activated. %.2f Units remaining.</string>
+    <string name="press_OK_to_return">Press <b>OK</b> to return to main screen.</string>
+
+    <string name="deactivate_sure">Are you sure that you want to deactivate the current patch?</string>
+    <string name="press_next_or_cancel">Press <b>Next</b> to deactivate or <b>Cancel</b> to return to main screen.</string>
+    <string name="deactivating_pump">Deactivating patch. Please Wait.</string>
+    <string name="deactivating_error">Failed to deactivate, press <b>Next</b> to forget patch.</string>
+    <string name="retract_needle">Retract needle. Remove patch from body.</string>
+    <string name="remove_base_discard_patch">Remove pump base and dispose of used patch appropriately.</string>
+    <string name="press_next_or_OK">Press <b>OK</b> to return to main screen. Press <b>Next</b> to start activation of new patch.</string>
 
     <!-- settings-->
     <string name="sn_input_title">Serial Number</string>

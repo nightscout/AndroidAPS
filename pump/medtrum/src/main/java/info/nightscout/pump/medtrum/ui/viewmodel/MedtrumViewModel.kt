@@ -3,6 +3,8 @@ package info.nightscout.pump.medtrum.ui.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.interfaces.queue.Callback
+import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.R
@@ -35,7 +37,8 @@ class MedtrumViewModel @Inject constructor(
     private val aapsSchedulers: AapsSchedulers,
     private val fabricPrivacy: FabricPrivacy,
     private val medtrumPlugin: MedtrumPlugin,
-    private val medtrumPump: MedtrumPump,
+    private val commandQueue: CommandQueue,
+    val medtrumPump: MedtrumPump,
     private val sp: SP
 ) : BaseViewModel<MedtrumBaseNavigator>() {
 
@@ -55,24 +58,42 @@ class MedtrumViewModel @Inject constructor(
         get() = _eventHandler
 
     private var mInitPatchStep: PatchStep? = null
+    private var connectRetryCounter = 0
 
     init {
-        // TODO destroy scope
         scope.launch {
             medtrumPump.connectionStateFlow.collect { state ->
                 aapsLogger.debug(LTag.PUMP, "MedtrumViewModel connectionStateFlow: $state")
                 if (patchStep.value != null) {
                     when (state) {
                         ConnectionState.CONNECTED    -> {
-                            if (patchStep.value == PatchStep.START_DEACTIVATION) {
-                                updateSetupStep(SetupStep.READY_DEACTIVATE)
-                            }
                             medtrumPump.lastConnection = System.currentTimeMillis()
                         }
 
-                        ConnectionState.DISCONNECTED -> {
-                            if (patchStep.value != PatchStep.DEACTIVATION_COMPLETE && patchStep.value != PatchStep.COMPLETE && patchStep.value != PatchStep.CANCEL) {
+                        ConnectionState.DISCONNECTED -> { // TODO: This is getting ridiciolous, refactor
+                            if (patchStep.value != PatchStep.START_DEACTIVATION
+                                && patchStep.value != PatchStep.DEACTIVATE
+                                && patchStep.value != PatchStep.FORCE_DEACTIVATION
+                                && patchStep.value != PatchStep.DEACTIVATION_COMPLETE
+                                && patchStep.value != PatchStep.ACTIVATE_COMPLETE
+                                && patchStep.value != PatchStep.CANCEL
+                                && patchStep.value != PatchStep.ERROR
+                                && patchStep.value != PatchStep.PREPARE_PATCH
+                                && patchStep.value != PatchStep.PREPARE_PATCH_CONNECT
+                            ) {
                                 medtrumService?.connect("Try reconnect from viewModel")
+                            }
+                            if (patchStep.value == PatchStep.PREPARE_PATCH_CONNECT) {
+                                // We are disconnected during prepare patch connect, this means we failed to connect (wrong session token?)
+                                // Retry 3 times, then give up
+                                if (connectRetryCounter < 3) {
+                                    connectRetryCounter++
+                                    aapsLogger.info(LTag.PUMP, "preparePatchConnect: retry $connectRetryCounter")
+                                    medtrumService?.connect("Try reconnect from viewModel")
+                                } else {
+                                    aapsLogger.info(LTag.PUMP, "preparePatchConnect: failed to connect")
+                                    updateSetupStep(SetupStep.ERROR)
+                                }
                             }
                         }
 
@@ -132,21 +153,30 @@ class MedtrumViewModel @Inject constructor(
         if (oldPatchStep != newPatchStep) {
             when (newPatchStep) {
                 PatchStep.CANCEL                -> {
-                    if (medtrumService?.isConnected == true || medtrumService?.isConnecting == true) medtrumService?.disconnect("Cancel") else {
-                    }
-                    // TODO: For DEACTIVATE STATE we might want to move to force cancel screen
-                    if (oldPatchStep == PatchStep.START_DEACTIVATION || oldPatchStep == PatchStep.DEACTIVATE) {
-                        // What to do here?
-                    }
+                    // TODO: Are you sure?
+                    // TODO: Dont disconnect when deactivating
+                    medtrumService?.disconnect("Cancel")
                 }
 
                 PatchStep.COMPLETE              -> {
-                    if (medtrumService?.isConnected == true || medtrumService?.isConnecting == true) medtrumService?.disconnect("Complete") else {
-                    }
+                    medtrumService?.disconnect("Complete")
                 }
 
-                PatchStep.DEACTIVATION_COMPLETE -> {
-                    if (medtrumService?.isConnected == true || medtrumService?.isConnecting == true) medtrumService?.disconnect("DeactivationComplete") else {
+                PatchStep.START_DEACTIVATION,
+                PatchStep.DEACTIVATE,
+                PatchStep.FORCE_DEACTIVATION,
+                PatchStep.DEACTIVATION_COMPLETE,
+                PatchStep.PREPARE_PATCH         -> {
+                    // Do nothing, deactivation uses commandQueue to control connection
+                }
+
+                PatchStep.PREPARE_PATCH_CONNECT -> {
+                    // Make sure we are disconnected, else dont move step
+                    if (medtrumService?.isConnected == true) {
+                        // TODO, replace with error message
+                        aapsLogger.info(LTag.PUMP, "moveStep: connected, not moving step")
+                        return
+                    } else {
                     }
                 }
 
@@ -155,7 +185,7 @@ class MedtrumViewModel @Inject constructor(
                     if (medtrumService?.isConnected == false) {
                         aapsLogger.info(LTag.PUMP, "moveStep: not connected, not moving step")
                         return
-                    } else {                     
+                    } else {
                     }
                 }
             }
@@ -166,101 +196,108 @@ class MedtrumViewModel @Inject constructor(
         aapsLogger.info(LTag.PUMP, "moveStep: $oldPatchStep -> $newPatchStep")
     }
 
-    fun initializePatchStep(step: PatchStep?) {
+    fun initializePatchStep(step: PatchStep) {
         mInitPatchStep = prepareStep(step)
     }
 
     fun preparePatch() {
-        // Make sure patch step is updated when already filled
-        // TODO: Maybe a nicer solution for this
-        if (medtrumPump.pumpState == MedtrumPumpState.FILLED) {
-            updateSetupStep(SetupStep.FILLED)
-        }
-        // New session, generate new session token, only do this when not connected
-        if (medtrumService?.isConnected == false) {
-            aapsLogger.info(LTag.PUMP, "preparePatch: new session")
-            medtrumPump.patchSessionToken = Crypt().generateRandomToken()        
-            // Connect to pump
-            medtrumService?.connect("PreparePatch")
-        } else {
-            aapsLogger.error(LTag.PUMP, "preparePatch: Already connected when trying to prepare patch")
-            // Do nothing here, continue with old key and connection
+        medtrumService?.disconnect("PreparePatch")
+    }
+
+    fun preparePatchConnect() {
+        scope.launch {
+            if (medtrumService?.isConnected == false) {
+                aapsLogger.info(LTag.PUMP, "preparePatch: new session")
+                // New session, generate new session token, only do this when not connected
+                medtrumPump.patchSessionToken = Crypt().generateRandomToken()
+                // Connect to pump
+                medtrumService?.connect("PreparePatch")
+            } else {
+                aapsLogger.error(LTag.PUMP, "preparePatch: Already connected when trying to prepare patch")
+                // Do nothing, we are already connected
+            }
         }
     }
 
     fun startPrime() {
-        if (medtrumPump.pumpState == MedtrumPumpState.PRIMING) {
-            aapsLogger.info(LTag.PUMP, "startPrime: already priming!")
-        } else {
-            if (medtrumService?.startPrime() == true) {
-                aapsLogger.info(LTag.PUMP, "startPrime: success!")
+        scope.launch {
+            if (medtrumPump.pumpState == MedtrumPumpState.PRIMING) {
+                aapsLogger.info(LTag.PUMP, "startPrime: already priming!")
             } else {
-                aapsLogger.info(LTag.PUMP, "startPrime: failure!")
-                updateSetupStep(SetupStep.ERROR)
+                if (medtrumService?.startPrime() == true) {
+                    aapsLogger.info(LTag.PUMP, "startPrime: success!")
+                } else {
+                    aapsLogger.info(LTag.PUMP, "startPrime: failure!")
+                    updateSetupStep(SetupStep.ERROR)
+                }
             }
         }
     }
 
     fun startActivate() {
-        if (medtrumService?.startActivate() == true) {
-            aapsLogger.info(LTag.PUMP, "startActivate: success!")
-        } else {
-            aapsLogger.info(LTag.PUMP, "startActivate: failure!")
-            updateSetupStep(SetupStep.ERROR)
+        scope.launch {
+            if (medtrumService?.startActivate() == true) {
+                aapsLogger.info(LTag.PUMP, "startActivate: success!")
+            } else {
+                aapsLogger.info(LTag.PUMP, "startActivate: failure!")
+                updateSetupStep(SetupStep.ERROR)
+            }
         }
-    }
-
-    fun startDeactivation() {
-        // Start connecting if needed
-        if (medtrumService?.isConnected == true) {
-            updateSetupStep(SetupStep.READY_DEACTIVATE)
-        } else if (medtrumService?.isConnecting != true) {
-            medtrumService?.connect("StartDeactivation")
-        }
-        // TODO: Also start timer to check if connection is made, if timed out show force forget patch
     }
 
     fun deactivatePatch() {
-        if (medtrumService?.deactivatePatch() == true) {
-            aapsLogger.info(LTag.PUMP, "deactivatePatch: success!")
-        } else {
-            aapsLogger.info(LTag.PUMP, "deactivatePatch: failure!")
-            // TODO: State to force forget the patch or try again
-            updateSetupStep(SetupStep.ERROR)
-        }
-    }
-
-    private fun prepareStep(step: PatchStep?): PatchStep {
-        (step ?: convertToPatchStep(medtrumPump.pumpState)).let { newStep ->
-            when (newStep) {
-                PatchStep.PREPARE_PATCH                            -> R.string.step_prepare_patch
-                PatchStep.PRIME                                    -> R.string.step_prime
-                PatchStep.ATTACH_PATCH                             -> R.string.step_attach
-                PatchStep.ACTIVATE                                 -> R.string.step_activate
-                PatchStep.COMPLETE                                 -> R.string.step_complete
-                PatchStep.START_DEACTIVATION, PatchStep.DEACTIVATE -> R.string.step_deactivate
-                PatchStep.DEACTIVATION_COMPLETE                    -> R.string.step_complete
-                else                                               -> _title.value
-            }.let {
-                aapsLogger.info(LTag.PUMP, "prepareStep: title before cond: $it")
-                if (_title.value != it) {
-                    aapsLogger.info(LTag.PUMP, "prepareStep: title: $it")
-                    _title.postValue(it)
+        commandQueue.deactivate(object : Callback() {
+            override fun run() {
+                if (this.result.success) {
+                    // Do nothing, state change will handle this
+                } else {
+                    updateSetupStep(SetupStep.ERROR)
                 }
             }
-
-            patchStep.postValue(newStep)
-
-            return newStep
-        }
+        })
     }
 
-    enum class SetupStep { INITIAL, FILLED, PRIMED, ACTIVATED, ERROR, START_DEACTIVATION, STOPPED, READY_DEACTIVATE
+    fun resetPumpState() {
+        medtrumPump.pumpState = MedtrumPumpState.NONE
+    }
+
+    private fun prepareStep(newStep: PatchStep): PatchStep {
+        val stringResId = when (newStep) {
+            PatchStep.PREPARE_PATCH         -> R.string.step_prepare_patch
+            PatchStep.PREPARE_PATCH_CONNECT -> R.string.step_prepare_patch_connect
+            PatchStep.PRIME                 -> R.string.step_prime
+            PatchStep.PRIMING               -> R.string.step_priming
+            PatchStep.PRIME_COMPLETE        -> R.string.step_priming_complete
+            PatchStep.ATTACH_PATCH          -> R.string.step_attach
+            PatchStep.ACTIVATE              -> R.string.step_activate
+            PatchStep.ACTIVATE_COMPLETE     -> R.string.step_activate_complete
+            PatchStep.START_DEACTIVATION    -> R.string.step_deactivate
+            PatchStep.DEACTIVATE            -> R.string.step_deactivating
+            PatchStep.DEACTIVATION_COMPLETE -> R.string.step_deactivate_complete
+            PatchStep.COMPLETE,
+            PatchStep.FORCE_DEACTIVATION,
+            PatchStep.ERROR,
+            PatchStep.CANCEL                -> _title.value
+        }
+
+        val currentTitle = _title.value
+        aapsLogger.info(LTag.PUMP, "prepareStep: title before cond: $stringResId")
+        if (currentTitle != stringResId) {
+            aapsLogger.info(LTag.PUMP, "prepareStep: title: $stringResId")
+            _title.postValue(stringResId)
+        }
+
+        patchStep.postValue(newStep)
+
+        return newStep
+    }
+
+    enum class SetupStep { INITIAL, FILLED, PRIMED, ACTIVATED, ERROR, START_DEACTIVATION, STOPPED
     }
 
     val setupStep = MutableLiveData<SetupStep>()
 
-    private fun updateSetupStep(newSetupStep: SetupStep) {
+    fun updateSetupStep(newSetupStep: SetupStep) {
         aapsLogger.info(LTag.PUMP, "curSetupStep: ${setupStep.value}, newSetupStep: $newSetupStep")
         setupStep.postValue(newSetupStep)
     }

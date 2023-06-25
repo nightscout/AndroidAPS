@@ -26,18 +26,48 @@
             tools:context=".ui.MedtrumActivity">
 
             <TextView
-                android:id="@+id/text_deactivating_pump"
+                android:id="@+id/text_connect_pump_base"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="5dp"
                 android:gravity="center"
-                android:text="@string/deactivating_pump"
+                android:text="@string/connect_pump_base"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_note_min_70"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:text="@string/note_min_70_units"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_connect_pump_base" />
+
+            <TextView
+                android:id="@+id/do_not_attach"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_marginBottom="40dp"
+                android:gravity="center"
+                android:text="@string/do_not_attach_to_body"
+                android:textColor="@color/red"
+                android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/layout_button"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_button"
@@ -53,12 +83,10 @@
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/cancel"
                     android:text="@string/cancel"
-                    android:visibility="gone"
                     app:layout_constraintEnd_toStartOf="@id/btn_positive"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.CANCEL)}"
-                    tools:visibility="visible" />
+                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.CANCEL)}" />
 
                 <Button
                     android:id="@+id/btn_positive"
@@ -71,7 +99,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@id/btn_negative"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.FORCE_DEACTIVATION)}"
+                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.PRIME)}"
                     tools:visibility="visible" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
