@@ -3,6 +3,7 @@ package info.nightscout.pump.medtrum.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.PatchStep
@@ -11,11 +12,13 @@ import info.nightscout.pump.medtrum.ui.MedtrumBaseFragment
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class MedtrumStartDeactivationFragment : MedtrumBaseFragment<FragmentMedtrumStartDeactivationBinding>() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rh: ResourceHelper
 
     companion object {
 
@@ -31,6 +34,13 @@ class MedtrumStartDeactivationFragment : MedtrumBaseFragment<FragmentMedtrumStar
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MedtrumViewModel::class.java)
             viewModel?.apply {
                 updateSetupStep(MedtrumViewModel.SetupStep.START_DEACTIVATION)
+            }
+            btnPositive.setOnClickListener {
+                OKDialog.showConfirmation(requireActivity(), rh.gs(R.string.medtrum_deactivate_pump_confirm)) {
+                    viewModel?.apply {
+                        moveStep(PatchStep.DEACTIVATE)
+                    }
+                }
             }
         }
     }
