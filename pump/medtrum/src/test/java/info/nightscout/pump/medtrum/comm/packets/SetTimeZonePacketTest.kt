@@ -38,4 +38,19 @@ class SetTimeZonePacketTest : MedtrumTestBase() {
         assertEquals(7, result.size)
         assertEquals(expectedByteArray.contentToString(), result.contentToString())
     }
+
+    @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
+        // Inputs
+        val response = byteArrayOf(7, 10, 3, 0, 0, 0, -38)
+
+        // Call
+        val packet = SetTimeZonePacket(packetInjector)
+        val result = packet.handleResponse(response)
+
+        // Expected values
+        val expectedOffsetMins = dateUtil.getTimeZoneOffsetMinutes(dateUtil.now())
+
+        assertTrue(result)
+        assertEquals(expectedOffsetMins, medtrumPump.pumpTimeZoneOffset)
+    }
 }

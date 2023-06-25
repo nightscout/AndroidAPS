@@ -38,6 +38,7 @@ import info.nightscout.implementation.queue.commands.CommandStartPump
 import info.nightscout.implementation.queue.commands.CommandStopPump
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.implementation.queue.commands.CommandTempBasalPercent
+import info.nightscout.implementation.queue.commands.CommandUpdateTime
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
@@ -560,6 +561,19 @@ class CommandQueueImplementation @Inject constructor(
         removeAll(CommandType.DEACTIVATE)
         // add new command to queue
         add(CommandDeactivate(injector, callback))
+        notifyAboutNewCommand()
+        return true
+    }
+
+    override fun updateTime(callback: Callback?): Boolean {
+        if (isRunning(CommandType.UPDATE_TIME)) {
+            callback?.result(executingNowError())?.run()
+            return false
+        }
+        // remove all unfinished
+        removeAll(CommandType.UPDATE_TIME)
+        // add new command to queue
+        add(CommandUpdateTime(injector, callback))
         notifyAboutNewCommand()
         return true
     }

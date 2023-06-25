@@ -395,6 +395,7 @@
     <string name="load_events">LOAD EVENTS</string>
     <string name="clear_alarms">CLEAR_ALARMS</string>
     <string name="deactivate">DEACTIVATE</string>
+    <string name="update_time">UPDATE TIME</string>
     <string name="load_history">LOAD HISTORY %1$d</string>
     <string name="load_tdds">LOAD TDDs</string>
     <string name="set_profile">SET PROFILE</string>

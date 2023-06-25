@@ -9,4 +9,5 @@ interface Medtrum {
     fun setUserOptions(): PumpEnactResult           // set user settings
     fun clearAlarms(): PumpEnactResult              // clear alarms
     fun deactivate(): PumpEnactResult               // deactivate patch
+    fun updateTime(): PumpEnactResult               // update time
 }

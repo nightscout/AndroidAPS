@@ -189,8 +189,42 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun readPumpStatus() {
-        // Update pump events
+        rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingpumpstatus)))
+        // Update time if needed
+        if (medtrumPump.needTimeUpdate || medtrumPump.pumpTimeZoneOffset != dateUtil.getTimeZoneOffsetMinutes(dateUtil.now())) {
+            aapsLogger.warn(LTag.PUMPCOMM, "Pump time update from readPumpStatus")
+            timeUpdateNotification(updateTime(false))
+        }
+        // Update history
         loadEvents()
+    }
+
+    fun timeUpdateNotification(updateSuccess: Boolean) {
+        if (updateSuccess) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Pump time updated")
+            medtrumPump.needTimeUpdate = false
+            uiInteraction.addNotification(
+                Notification.INSIGHT_DATE_TIME_UPDATED, // :---)
+                rh.gs(info.nightscout.core.ui.R.string.pump_time_updated),
+                Notification.INFO,
+            )
+        } else {
+            aapsLogger.error(LTag.PUMPCOMM, "Failed to update pump time")
+            uiInteraction.addNotification(
+                Notification.PUMP_TIMEZONE_UPDATE_FAILED,
+                rh.gs(R.string.pump_time_update_failed),
+                Notification.URGENT,
+            )
+        }
+    }
+
+    fun updateTime(needLoadHistory: Boolean = true): Boolean {
+        var result = sendPacketAndGetResponse(SetTimePacket(injector))
+        if (result) result = sendPacketAndGetResponse(SetTimeZonePacket(injector))
+        if (needLoadHistory) {
+            if (result) result = loadEvents()
+        }
+        return result
     }
 
     fun loadEvents(): Boolean {
@@ -785,6 +819,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 // Succes!
                 responseHandled = true
                 responseSuccess = true
+                medtrumPump.needTimeUpdate = false
+                timeUpdateNotification(true)
                 toState(SynchronizeState())
             } else if (mPacket?.failed == true) {
                 // Failure

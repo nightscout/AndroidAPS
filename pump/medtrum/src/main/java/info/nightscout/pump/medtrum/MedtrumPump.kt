@@ -177,7 +177,7 @@ class MedtrumPump @Inject constructor(
             _deviceType = value
             sp.putInt(R.string.key_device_type, value)
         }
-    
+
     private var _swVersion: String = "" // As reported by pump
     var swVersion: String
         get() = _swVersion
@@ -185,7 +185,7 @@ class MedtrumPump @Inject constructor(
             _swVersion = value
             sp.putString(R.string.key_sw_version, value)
         }
-    
+
     private var _patchStartTime = 0L // Time in ms!
     var patchStartTime: Long
         get() = _patchStartTime
@@ -194,10 +194,19 @@ class MedtrumPump @Inject constructor(
             sp.putLong(R.string.key_patch_start_time, value)
         }
 
+    private var _pumpTimeZoneOffset = 0 // As reported by pump
+    var pumpTimeZoneOffset: Int
+        get() = _pumpTimeZoneOffset
+        set(value) {
+            _pumpTimeZoneOffset = value
+            sp.putInt(R.string.key_pump_time_zone_offset, value)
+        }
+
     private var _pumpSN = 0L
     val pumpSN: Long
         get() = _pumpSN
 
+    var needTimeUpdate = false
     var lastTimeReceivedFromPump = 0L // Time in ms! // TODO: Consider removing as is not used?
     var suspendTime = 0L // Time in ms!
     var patchAge = 0L // Time in seconds?! // TODO: Not used
@@ -218,7 +227,7 @@ class MedtrumPump @Inject constructor(
     private var _lastBasalPatchId = 0L
     val lastBasalPatchId: Long
         get() = _lastBasalPatchId
-    
+
     private var _lastBasalStartTime = 0L
     val lastBasalStartTime: Long
         get() = _lastBasalStartTime
@@ -255,6 +264,7 @@ class MedtrumPump @Inject constructor(
         _deviceType = sp.getInt(R.string.key_device_type, 0)
         _swVersion = sp.getString(R.string.key_sw_version, "")
         _patchStartTime = sp.getLong(R.string.key_patch_start_time, 0L)
+        _pumpTimeZoneOffset = sp.getInt(R.string.key_pump_time_zone_offset, 0)
 
         loadActiveAlarms()
 
@@ -266,10 +276,10 @@ class MedtrumPump @Inject constructor(
         }
     }
 
-    fun pumpType(): PumpType = 
-        when(deviceType) {
+    fun pumpType(): PumpType =
+        when (deviceType) {
             80, 88 -> PumpType.MEDTRUM_NANO
-            else -> PumpType.MEDTRUM_UNTESTED
+            else   -> PumpType.MEDTRUM_UNTESTED
         }
 
     fun loadUserSettingsFromSP() {
@@ -464,7 +474,7 @@ class MedtrumPump @Inject constructor(
         activeAlarms.add(alarm)
         saveActiveAlarms()
     }
-    
+
     fun removeAlarm(alarm: AlarmState) {
         activeAlarms.remove(alarm)
         saveActiveAlarms()
@@ -504,7 +514,7 @@ class MedtrumPump @Inject constructor(
         val alarmsStr = activeAlarms.joinToString(separator = ",") { it.name }
         sp.putString(R.string.key_active_alarms, alarmsStr)
     }
-    
+
     private fun loadActiveAlarms() {
         val alarmsStr = sp.getString(R.string.key_active_alarms, "")
         if (alarmsStr.isNullOrEmpty()) {

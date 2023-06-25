@@ -30,6 +30,7 @@ abstract class Command(
         STOP_PUMP,
         CLEAR_ALARMS, // so far only Medtrum specific
         DEACTIVATE, // so far only Medtrum specific
+        UPDATE_TIME, // so far only Medtrum specific
         INSIGHT_SET_TBR_OVER_ALARM, // insight only
         CUSTOM_COMMAND
     }

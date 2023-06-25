@@ -246,6 +246,10 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // add deactivate
         commandQueue.deactivate(null)
         Assertions.assertEquals(6, commandQueue.size())
+
+        // add updateTime
+        commandQueue.updateTime(null)
+        Assertions.assertEquals(7, commandQueue.size())
         
         commandQueue.clear()
         commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
@@ -392,6 +396,22 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         Assertions.assertEquals(1, commandQueue.size())
         // next should be ignored
         commandQueue.deactivate(null)
+        Assertions.assertEquals(1, commandQueue.size())
+    }
+
+    @Test
+    fun isUpdateTimeCommandInQueue() {
+        // given
+        Assertions.assertEquals(0, commandQueue.size())
+
+        // when
+        commandQueue.updateTime(null)
+
+        // then
+        Assertions.assertTrue(commandQueue.isLastScheduled(Command.CommandType.UPDATE_TIME))
+        Assertions.assertEquals(1, commandQueue.size())
+        // next should be ignored
+        commandQueue.updateTime(null)
         Assertions.assertEquals(1, commandQueue.size())
     }
 

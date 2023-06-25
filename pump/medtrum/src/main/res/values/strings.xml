@@ -21,6 +21,7 @@
     <string name="key_actual_basal_profile" translatable="false">actual_basal_profile</string>
     <string name="key_current_sequence_number" translatable="false">current_sequence_number</string>
     <string name="key_synced_sequence_number" translatable="false">synced_sequence_number</string>
+    <string name="key_pump_time_zone_offset" translatable="false">pump_time_zone_offset</string>
 
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
@@ -74,6 +75,7 @@
     <string name="alarm_base_fault">Base fault</string>
     <string name="alarm_battery_out">Battery out</string>
     <string name="alarm_no_calibration">No calibration</string>
+    <string name="pump_time_update_failed">Failed to update pump timezone, snooze message and refresh manually.</string>
 
     <!-- wizard-->
     <string name="string_start_complete">Complete</string>

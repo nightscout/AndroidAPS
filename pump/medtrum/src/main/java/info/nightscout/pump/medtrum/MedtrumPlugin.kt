@@ -29,6 +29,7 @@ import info.nightscout.interfaces.pump.actions.CustomActionType
 import info.nightscout.interfaces.pump.defs.ManufacturerType
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.pump.defs.PumpType
+import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.UiInteraction
@@ -394,10 +395,6 @@ import kotlin.math.round
         return PumpEnactResult(injector) // Note: Can implement this if we implement history fully (no priority)
     }
 
-    override fun canHandleDST(): Boolean {
-        return false
-    }
-
     override fun getCustomActions(): List<CustomAction>? {
         return null
     }
@@ -409,7 +406,20 @@ import kotlin.math.round
         return null
     }
 
+    override fun canHandleDST(): Boolean {
+        return true
+    }
+
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
+        medtrumPump.needTimeUpdate = true
+        // Update status to sync time with pump
+        if (isInitialized()) {
+            commandQueue.updateTime(object : Callback() {
+                override fun run() {
+                    medtrumService?.timeUpdateNotification(this.result.success)
+                }
+            })
+        }
     }
 
     // Medtrum interface
@@ -450,6 +460,16 @@ import kotlin.math.round
         //     return result
         // }
         val connectionOK = medtrumService?.deactivatePatch() ?: false
+        return PumpEnactResult(injector).success(connectionOK)
+    }
+
+    override fun updateTime(): PumpEnactResult {
+        if (!isInitialized()) {
+            val result = PumpEnactResult(injector).success(false)
+            result.comment = "pump not initialized"
+            return result
+        }
+        val connectionOK = medtrumService?.updateTime() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
 }
