@@ -41,11 +41,12 @@ class MedtrumPrimingFragment : MedtrumBaseFragment<FragmentMedtrumPrimingBinding
                             moveStep(PatchStep.ERROR)
                             updateSetupStep(MedtrumViewModel.SetupStep.FILLED) // Reset setup step
                             binding.textWaitForPriming.text = rh.gs(R.string.priming_error)
+                            binding.btnNegative.visibility = View.VISIBLE
                             binding.btnPositive.visibility = View.VISIBLE
                         }
 
                         else                              -> {
-                            ToastUtils.errorToast(requireContext(), "Unexpected state: $it") // TODO: String resource and show error message
+                            ToastUtils.errorToast(requireContext(), rh.gs(R.string.unexpected_state, it.toString()))
                             aapsLogger.error(LTag.PUMP, "Unexpected state: $it")
                         }
                     }

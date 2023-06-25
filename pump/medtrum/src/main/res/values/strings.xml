@@ -90,6 +90,7 @@
     <string name ="step_deactivate">Deactivate Patch</string>
     <string name ="step_deactivating">Deactivating...</string>
     <string name ="step_deactivate_complete">Patch deactivated</string>
+    <string name ="unexpected_state">Unexpected state: %1$s</string>
 
     <string name="base_serial">Pump Base Serial: %1$X</string>
     <string name="patch_begin_activation">No active patch. Press <b>Next</b> to begin the activation process.</string>
@@ -112,7 +113,7 @@
     <string name="medtrum_deactivate_pump_confirm">Are you sure? This action cannot be reversed!!</string>
     <string name="press_next_or_cancel">Press <b>Next</b> to deactivate or <b>Cancel</b> to return to main screen.</string>
     <string name="deactivating_pump">Deactivating patch. Please Wait.</string>
-    <string name="deactivating_error">Failed to deactivate, press <b>Next</b> to forget patch.</string>
+    <string name="deactivating_error">Failed to deactivate, press <b>Discard</b> to forget patch.</string>
     <string name="retract_needle">Retract needle. Remove patch from body.</string>
     <string name="remove_base_discard_patch">Remove pump base and dispose of used patch appropriately.</string>
     <string name="press_next_or_OK">Press <b>OK</b> to return to main screen. Press <b>Next</b> to start activation of new patch.</string>

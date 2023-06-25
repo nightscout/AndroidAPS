@@ -10,7 +10,6 @@ import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.ConnectionState
-import info.nightscout.pump.medtrum.comm.enums.AlarmState
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

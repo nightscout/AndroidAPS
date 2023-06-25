@@ -5,17 +5,17 @@ import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.R
-import info.nightscout.pump.medtrum.code.PatchStep
 import info.nightscout.pump.medtrum.databinding.FragmentMedtrumAttachPatchBinding
-import info.nightscout.pump.medtrum.ui.MedtrumBaseFragment
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class MedtrumAttachPatchFragment : MedtrumBaseFragment<FragmentMedtrumAttachPatchBinding>() {
 
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var rh: ResourceHelper
 
     companion object {
 
@@ -34,13 +34,9 @@ class MedtrumAttachPatchFragment : MedtrumBaseFragment<FragmentMedtrumAttachPatc
                     when (it) {
                         MedtrumViewModel.SetupStep.INITIAL,
                         MedtrumViewModel.SetupStep.PRIMED -> Unit // Nothing to do here, previous state
-                        MedtrumViewModel.SetupStep.ERROR  -> {
-                            ToastUtils.errorToast(requireContext(), "Error attach patch") // TODO: String resource and show error message
-                            moveStep(PatchStep.CANCEL)
-                        }
 
                         else                              -> {
-                            ToastUtils.errorToast(requireContext(), "Unexpected state: $it") // TODO: String resource and show error message
+                            ToastUtils.errorToast(requireContext(), rh.gs(R.string.unexpected_state, it.toString()))
                             aapsLogger.error(LTag.PUMP, "Unexpected state: $it")
                         }
                     }

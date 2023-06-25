@@ -1,27 +1,12 @@
 package info.nightscout.pump.medtrum.ui
 
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.media.MediaPlayer
-import android.media.RingtoneManager
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.WindowManager
-import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
-import info.nightscout.pump.medtrum.ui.MedtrumActivateCompleteFragment
-import info.nightscout.pump.medtrum.ui.MedtrumActivateFragment
-import info.nightscout.pump.medtrum.ui.MedtrumAttachPatchFragment
-import info.nightscout.pump.medtrum.ui.MedtrumDeactivatePatchFragment
-import info.nightscout.pump.medtrum.ui.MedtrumDeactivationCompleteFragment
-import info.nightscout.pump.medtrum.ui.MedtrumPreparePatchConnectFragment
-import info.nightscout.pump.medtrum.ui.MedtrumPreparePatchFragment
-import info.nightscout.pump.medtrum.ui.MedtrumPrimeCompleteFragment
-import info.nightscout.pump.medtrum.ui.MedtrumPrimeFragment
-import info.nightscout.pump.medtrum.ui.MedtrumPrimingFragment
-import info.nightscout.pump.medtrum.ui.MedtrumStartDeactivationFragment
 import info.nightscout.core.utils.extensions.safeGetSerializableExtra
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.PatchStep
@@ -35,10 +20,6 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
     override fun getLayoutId(): Int = R.layout.activity_medtrum
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        if (event.actionMasked == MotionEvent.ACTION_UP) {
-            // TODO
-        }
-
         return super.dispatchTouchEvent(event)
     }
 
@@ -106,12 +87,11 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
 
     override fun onDestroy() {
         super.onDestroy()
-        // TODO
     }
 
     override fun onBackPressed() {
         binding.viewModel?.apply {
-            // TODO DEACTIVATION ?
+            // Do nothing
         }
     }
 

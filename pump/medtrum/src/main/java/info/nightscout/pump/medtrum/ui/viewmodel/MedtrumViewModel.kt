@@ -2,7 +2,6 @@ package info.nightscout.pump.medtrum.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.pump.medtrum.MedtrumPlugin
@@ -17,13 +16,8 @@ import info.nightscout.pump.medtrum.encryption.Crypt
 import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
 import info.nightscout.pump.medtrum.ui.event.SingleLiveEvent
 import info.nightscout.pump.medtrum.ui.event.UIEvent
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.sharedPreferences.SP
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
@@ -31,15 +25,10 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class MedtrumViewModel @Inject constructor(
-    private val rh: ResourceHelper,
     private val aapsLogger: AAPSLogger,
-    private val rxBus: RxBus,
-    private val aapsSchedulers: AapsSchedulers,
-    private val fabricPrivacy: FabricPrivacy,
     private val medtrumPlugin: MedtrumPlugin,
     private val commandQueue: CommandQueue,
-    val medtrumPump: MedtrumPump,
-    private val sp: SP
+    val medtrumPump: MedtrumPump
 ) : BaseViewModel<MedtrumBaseNavigator>() {
 
     val patchStep = MutableLiveData<PatchStep>()
@@ -70,16 +59,14 @@ class MedtrumViewModel @Inject constructor(
                             medtrumPump.lastConnection = System.currentTimeMillis()
                         }
 
-                        ConnectionState.DISCONNECTED -> { // TODO: This is getting ridiciolous, refactor
-                            if (patchStep.value != PatchStep.START_DEACTIVATION
-                                && patchStep.value != PatchStep.DEACTIVATE
-                                && patchStep.value != PatchStep.FORCE_DEACTIVATION
-                                && patchStep.value != PatchStep.DEACTIVATION_COMPLETE
-                                && patchStep.value != PatchStep.ACTIVATE_COMPLETE
-                                && patchStep.value != PatchStep.CANCEL
-                                && patchStep.value != PatchStep.ERROR
-                                && patchStep.value != PatchStep.PREPARE_PATCH
-                                && patchStep.value != PatchStep.PREPARE_PATCH_CONNECT
+                        ConnectionState.DISCONNECTED -> {
+                            if (patchStep.value in listOf(
+                                    PatchStep.PRIME,
+                                    PatchStep.PRIMING,
+                                    PatchStep.PRIME_COMPLETE,
+                                    PatchStep.ATTACH_PATCH,
+                                    PatchStep.ACTIVATE
+                                )
                             ) {
                                 medtrumService?.connect("Try reconnect from viewModel")
                             }
@@ -117,8 +104,7 @@ class MedtrumViewModel @Inject constructor(
                         }
 
                         MedtrumPumpState.PRIMING                             -> {
-                            // updateSetupStep(SetupStep.PRIMING)
-                            // TODO: What to do here? start prime counter?
+                            // Do Nothing, wait for priming to complete
                         }
 
                         MedtrumPumpState.PRIMED, MedtrumPumpState.EJECTED    -> {
@@ -153,8 +139,15 @@ class MedtrumViewModel @Inject constructor(
         if (oldPatchStep != newPatchStep) {
             when (newPatchStep) {
                 PatchStep.CANCEL                -> {
-                    // TODO: Are you sure?
-                    // TODO: Dont disconnect when deactivating
+                    if (oldPatchStep !in listOf(
+                            PatchStep.START_DEACTIVATION,
+                            PatchStep.DEACTIVATE,
+                            PatchStep.FORCE_DEACTIVATION,
+                            PatchStep.DEACTIVATION_COMPLETE
+                        )
+                    ) {
+                        medtrumService?.disconnect("Cancel")
+                    }
                     medtrumService?.disconnect("Cancel")
                 }
 
@@ -173,7 +166,6 @@ class MedtrumViewModel @Inject constructor(
                 PatchStep.PREPARE_PATCH_CONNECT -> {
                     // Make sure we are disconnected, else dont move step
                     if (medtrumService?.isConnected == true) {
-                        // TODO, replace with error message
                         aapsLogger.info(LTag.PUMP, "moveStep: connected, not moving step")
                         return
                     } else {

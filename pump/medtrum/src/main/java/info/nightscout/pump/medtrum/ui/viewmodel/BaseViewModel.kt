@@ -1,8 +1,6 @@
 package info.nightscout.pump.medtrum.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
-import info.nightscout.pump.medtrum.code.PatchStep
-import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable

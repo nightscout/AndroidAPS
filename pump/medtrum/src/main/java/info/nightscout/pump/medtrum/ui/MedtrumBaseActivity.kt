@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.core.ui.R
 import info.nightscout.pump.medtrum.di.MedtrumPluginQualifier
-import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
 import info.nightscout.rx.AapsSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
