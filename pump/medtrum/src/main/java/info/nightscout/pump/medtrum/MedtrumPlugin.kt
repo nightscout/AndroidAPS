@@ -412,7 +412,6 @@ import kotlin.math.round
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
         medtrumPump.needTimeUpdate = true
-        // Update status to sync time with pump
         if (isInitialized()) {
             commandQueue.updateTime(object : Callback() {
                 override fun run() {

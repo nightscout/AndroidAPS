@@ -19,6 +19,7 @@ class SetTimeZonePacketTest : MedtrumTestBase() {
             }
             if (it is SetTimeZonePacket) {
                 it.dateUtil = dateUtil
+                it.medtrumPump = medtrumPump
             }
         }
     }
@@ -41,14 +42,14 @@ class SetTimeZonePacketTest : MedtrumTestBase() {
 
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
         // Inputs
-        val response = byteArrayOf(7, 10, 3, 0, 0, 0, -38)
+        val response = byteArrayOf(7, 12, 4, 0, 0, 0, -78)
 
         // Call
         val packet = SetTimeZonePacket(packetInjector)
         val result = packet.handleResponse(response)
 
         // Expected values
-        val expectedOffsetMins = dateUtil.getTimeZoneOffsetMinutes(dateUtil.now())
+        val expectedOffsetMins = 0
 
         assertTrue(result)
         assertEquals(expectedOffsetMins, medtrumPump.pumpTimeZoneOffset)

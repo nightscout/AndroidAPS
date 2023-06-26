@@ -21,6 +21,6 @@ open class MedtrumTestBase: TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        medtrumPump = MedtrumPump(aapsLogger, sp, dateUtil, pumpSync, temporaryBasalStorage)
+        medtrumPump = MedtrumPump(aapsLogger, rh, sp, dateUtil, pumpSync, temporaryBasalStorage)
     }
 }
