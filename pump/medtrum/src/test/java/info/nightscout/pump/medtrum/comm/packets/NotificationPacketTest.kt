@@ -59,7 +59,6 @@ class NotificationPacketTest : MedtrumTestBase() {
 
         // Expected values
         assertEquals(167, medtrumPump.currentSequenceNumber)
-        // TODO: Test error notif on wrong patch id
     }
 
     @Test fun handleNotificationGivenBolusInProgressThenDataSaved() {

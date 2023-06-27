@@ -276,16 +276,16 @@ import kotlin.math.round
         if (connectionOK
             && medtrumPump.tempBasalInProgress
             && Math.abs(medtrumPump.tempBasalAbsoluteRate - pumpRate) <= 0.05
-        /*&& Math.abs(medtrumPump.tempBasalRemainingMinutes - durationInMinutes) <= 5*/) {
+        ) {
 
-            return PumpEnactResult(injector).success(true).enacted(true).duration(/*medtrumPump.tempBasalRemainingMinutes*/durationInMinutes).absolute(medtrumPump.tempBasalAbsoluteRate)
+            return PumpEnactResult(injector).success(true).enacted(true).duration(durationInMinutes).absolute(medtrumPump.tempBasalAbsoluteRate)
                 .isPercent(false)
                 .isTempCancel(false)
         } else {
             aapsLogger.error(
                 LTag.PUMP,
                 "setTempBasalAbsolute failed, connectionOK: $connectionOK, tempBasalInProgress: ${medtrumPump.tempBasalInProgress}, tempBasalAbsoluteRate: ${medtrumPump.tempBasalAbsoluteRate}"
-            ) //, tempBasalRemainingMinutes: ${medtrumPump.tempBasalRemainingMinutes}")
+            )
             return PumpEnactResult(injector).success(false).enacted(false).comment("Medtrum setTempBasalAbsolute failed")
         }
     }
@@ -453,11 +453,6 @@ import kotlin.math.round
     }
 
     override fun deactivate(): PumpEnactResult {
-        // if (!isInitialized()) {
-        //     val result = PumpEnactResult(injector).success(false)
-        //     result.comment = "pump not initialized"
-        //     return result
-        // }
         val connectionOK = medtrumService?.deactivatePatch() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }

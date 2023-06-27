@@ -599,6 +599,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         protected var responseHandled = false
         protected var responseSuccess = false
+        protected var sendRetryCounter = 0
 
         open fun onEnter() {}
         open fun onIndication(data: ByteArray) {
@@ -632,7 +633,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                     toState(IdleState())
                     return false
                 }
-                SystemClock.sleep(100)
+                SystemClock.sleep(25)
             }
             aapsLogger.debug(LTag.PUMPCOMM, "Medtrum Service State responseHandled: $responseHandled responseSuccess: $responseSuccess")
             return responseSuccess
@@ -640,8 +641,16 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         fun onSendMessageError(reason: String) {
             aapsLogger.warn(LTag.PUMPCOMM, "onSendMessageError: " + this.toString() + "reason: $reason")
-            responseHandled = true
-            responseSuccess = false
+            // Retry 3 times
+            if (sendRetryCounter < 3) {
+                sendRetryCounter++
+                mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
+            } else {
+                responseHandled = true
+                responseSuccess = false
+                bleComm.disconnect("onSendMessageError")
+                toState(IdleState())
+            }
         }
     }
 
@@ -718,10 +727,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 // Succes!
                 responseHandled = true
                 responseSuccess = true
-                // TODO Get device type and SN
+                // Place holder, not really used (yet)
                 val deviceType = (mPacket as GetDeviceTypePacket).deviceType
                 val deviceSN = (mPacket as GetDeviceTypePacket).deviceSN
-                aapsLogger.debug(LTag.PUMPCOMM, "GetDeviceTypeState: deviceType: $deviceType deviceSN: $deviceSN") // TODO remove me later
+                aapsLogger.debug(LTag.PUMPCOMM, "GetDeviceTypeState: deviceType: $deviceType deviceSN: $deviceSN")
                 toState(GetTimeState())
             } else if (mPacket?.failed == true) {
                 // Failure
@@ -761,7 +770,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
                                 medtrumPump.lastTimeReceivedFromPump
                             )
                     )
-                    // TODO: Setting time cancels any TBR, so we need to handle that and cancel? or let AAPS handle time syncs?
                     toState(SetTimeState())
                 }
             } else if (mPacket?.failed == true) {

@@ -57,7 +57,6 @@ class SynchronizePacketTest : MedtrumTestBase() {
         assertEquals(true, result)
         assertEquals(false, packet.failed)
         assertEquals(state, packet.medtrumPump.pumpState.state)
-        // TODO: Maybe test cutting behavoir
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {

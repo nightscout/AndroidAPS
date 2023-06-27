@@ -99,7 +99,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             aapsLogger.debug(LTag.PUMPCOMM, "Normal bolus notification received")
             var bolusData = data.copyOfRange(offset, offset + 1).toInt()
             var bolusType = bolusData and 0x7F
-            val bolusCompleted: Boolean = ((bolusData shr 7) and 0x01) != 0 // TODO: Check for other flags here :)
+            val bolusCompleted: Boolean = ((bolusData shr 7) and 0x01) != 0
             var bolusDelivered = data.copyOfRange(offset + 1, offset + 3).toInt() * 0.05
             aapsLogger.debug(LTag.PUMPCOMM, "Bolus type: $bolusType, bolusData: $bolusData bolus completed: $bolusCompleted, bolus delivered: $bolusDelivered")
             medtrumPump.handleBolusStatusUpdate(bolusType, bolusCompleted, bolusDelivered)
@@ -171,8 +171,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             }
             val patchId = data.copyOfRange(offset + 2, offset + 4).toLong()
             if (patchId != medtrumPump.patchId) {
-                aapsLogger.error(LTag.PUMPCOMM, "handleMaskedMessage: WTF? We got wrong patch id!")
-                // TODO: We should terminate session or stop patch here? or at least throw error? THis can be thrown during activation process though
+                aapsLogger.warn(LTag.PUMPCOMM, "handleMaskedMessage: We got wrong patch id!")
             }
             aapsLogger.debug(LTag.PUMPCOMM, "Last known sequence number: ${medtrumPump.currentSequenceNumber}, patch id: ${patchId}")
             offset += 4

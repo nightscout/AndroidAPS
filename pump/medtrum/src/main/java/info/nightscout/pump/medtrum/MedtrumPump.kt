@@ -207,9 +207,9 @@ class MedtrumPump @Inject constructor(
         get() = _pumpSN
 
     var needTimeUpdate = false
-    var lastTimeReceivedFromPump = 0L // Time in ms! // TODO: Consider removing as is not used?
+    var lastTimeReceivedFromPump = 0L // Time in ms!
     var suspendTime = 0L // Time in ms!
-    var patchAge = 0L // Time in seconds?! // TODO: Not used
+    var patchAge = 0L // Time in seconds?! // As reported by pump, not used (yet)
 
     // bolus status
     var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
