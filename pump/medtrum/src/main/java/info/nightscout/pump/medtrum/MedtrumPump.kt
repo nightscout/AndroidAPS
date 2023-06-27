@@ -206,7 +206,7 @@ class MedtrumPump @Inject constructor(
     val pumpSN: Long
         get() = _pumpSN
 
-    var needTimeUpdate = false
+    var needCheckTimeUpdate = false
     var lastTimeReceivedFromPump = 0L // Time in ms!
     var suspendTime = 0L // Time in ms!
     var patchAge = 0L // Time in seconds?! // As reported by pump, not used (yet)

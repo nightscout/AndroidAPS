@@ -411,11 +411,15 @@ import kotlin.math.round
     }
 
     override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {
-        medtrumPump.needTimeUpdate = true
+        medtrumPump.needCheckTimeUpdate = true
         if (isInitialized()) {
             commandQueue.updateTime(object : Callback() {
                 override fun run() {
-                    medtrumService?.timeUpdateNotification(this.result.success)
+                    if (this.result.success == false) {
+                        aapsLogger.error(LTag.PUMP, "Medtrum time update failed")
+                        // Only notify here on failure (connection may be failed), service will handle success
+                        medtrumService?.timeUpdateNotification(false)
+                    }
                 }
             })
         }
@@ -463,7 +467,7 @@ import kotlin.math.round
             result.comment = "pump not initialized"
             return result
         }
-        val connectionOK = medtrumService?.updateTime() ?: false
+        val connectionOK = medtrumService?.updateTimeIfNeeded() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
 }

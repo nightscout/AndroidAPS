@@ -190,19 +190,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     fun readPumpStatus() {
         rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.medtrum.R.string.gettingpumpstatus)))
-        // Update time if needed
-        if (medtrumPump.needTimeUpdate || medtrumPump.pumpTimeZoneOffset != dateUtil.getTimeZoneOffsetMinutes(dateUtil.now())) {
-            aapsLogger.warn(LTag.PUMPCOMM, "Pump time update from readPumpStatus")
-            timeUpdateNotification(updateTime(false))
-        }
-        // Update history
+        updateTimeIfNeeded(false)
         loadEvents()
     }
 
     fun timeUpdateNotification(updateSuccess: Boolean) {
         if (updateSuccess) {
             aapsLogger.debug(LTag.PUMPCOMM, "Pump time updated")
-            medtrumPump.needTimeUpdate = false
             uiInteraction.addNotification(
                 Notification.INSIGHT_DATE_TIME_UPDATED, // :---)
                 rh.gs(info.nightscout.core.ui.R.string.pump_time_updated),
@@ -218,12 +212,20 @@ class MedtrumService : DaggerService(), BLECommCallback {
         }
     }
 
-    fun updateTime(needLoadHistory: Boolean = true): Boolean {
-        var result = sendPacketAndGetResponse(SetTimePacket(injector))
-        if (result) result = sendPacketAndGetResponse(SetTimeZonePacket(injector))
+    fun updateTimeIfNeeded(needLoadHistory: Boolean = true): Boolean {
+        // Note we only check timeZone here, time is updated each connection attempt if needed, because the pump requires it to be checked
+        // But we dont check timeZone each time, therefore we do it here (if needed)
+        var result = true
+        if (medtrumPump.pumpTimeZoneOffset != dateUtil.getTimeZoneOffsetMinutes(dateUtil.now())) {
+            result = sendPacketAndGetResponse(SetTimePacket(injector))
+            if (result) result = sendPacketAndGetResponse(SetTimeZonePacket(injector))
+            timeUpdateNotification(result)
+        }
+        // Do this here, because TBR can be cancelled due to time change by connect flow
         if (needLoadHistory) {
             if (result) result = loadEvents()
         }
+        if (result) medtrumPump.needCheckTimeUpdate = false        
         return result
     }
 
@@ -832,7 +834,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 // Succes!
                 responseHandled = true
                 responseSuccess = true
-                medtrumPump.needTimeUpdate = false
+                medtrumPump.needCheckTimeUpdate = false
                 timeUpdateNotification(true)
                 toState(SynchronizeState())
             } else if (mPacket?.failed == true) {
