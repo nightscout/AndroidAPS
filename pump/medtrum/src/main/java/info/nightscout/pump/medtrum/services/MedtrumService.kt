@@ -286,6 +286,11 @@ class MedtrumService : DaggerService(), BLECommCallback {
         if (!isConnected) return false
         val insulin = detailedBolusInfo.insulin
         val result = sendPacketAndGetResponse(SetBolusPacket(injector, insulin))
+        if (result == false) {
+            aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
+            commandQueue.loadEvents(null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
+            return false
+        }
 
         val bolusStart = System.currentTimeMillis()
 
