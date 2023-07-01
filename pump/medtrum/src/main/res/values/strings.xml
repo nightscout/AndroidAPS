@@ -93,6 +93,7 @@
     <string name ="step_deactivate">Deactivate Patch</string>
     <string name ="step_deactivating">Deactivating...</string>
     <string name ="step_deactivate_complete">Patch deactivated</string>
+    <string name ="step_retry_activation">Activation in progress</string>
     <string name ="unexpected_state">Unexpected state: %1$s</string>
 
     <string name="base_serial">Pump Base Serial: %1$X</string>
@@ -121,6 +122,10 @@
     <string name="retract_needle">Retract needle. Remove patch from body.</string>
     <string name="remove_base_discard_patch">Remove pump base and dispose of used patch appropriately.</string>
     <string name="press_next_or_OK">Press <b>OK</b> to return to main screen. Press <b>Next</b> to start activation of new patch.</string>
+
+    <string name="activation_in_progress">Oops! Something went wrong, it seems there is already an activation in progress.</string>
+    <string name="press_retry_or_discard">Press <b>Next</b> to resume the activation or <b>Discard</b> to reset the activation status.</string>
+    <string name="reading_activation_status">Please wait, reading activation status from pump.</string>
 
     <!-- settings-->
     <string name="sn_input_title">Serial Number</string>

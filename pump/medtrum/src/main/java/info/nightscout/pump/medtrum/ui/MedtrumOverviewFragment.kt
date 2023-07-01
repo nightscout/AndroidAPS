@@ -41,9 +41,10 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
                         EventType.CHANGE_PATCH_CLICKED -> requireContext().apply {
                             if (medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED) {
                                 startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.START_DEACTIVATION))
-                            } else {
+                            } else if (medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE)) {
                                 startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.PREPARE_PATCH))
-                                medtrumPump.pumpState = MedtrumPumpState.NONE // Reset pumpstate here, fetch on next connection
+                            } else {
+                                startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.RETRY_ACTIVATION))
                             }
                         }
                         else                           -> Unit

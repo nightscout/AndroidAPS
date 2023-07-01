@@ -70,7 +70,7 @@ class MedtrumViewModel @Inject constructor(
                             ) {
                                 medtrumService?.connect("Try reconnect from viewModel")
                             }
-                            if (patchStep.value == PatchStep.PREPARE_PATCH_CONNECT) {
+                            if (patchStep.value in listOf(PatchStep.PREPARE_PATCH_CONNECT, PatchStep.RETRY_ACTIVATION_CONNECT)) {
                                 // We are disconnected during prepare patch connect, this means we failed to connect (wrong session token?)
                                 // Retry 3 times, then give up
                                 if (connectRetryCounter < 3) {
@@ -104,7 +104,7 @@ class MedtrumViewModel @Inject constructor(
                         }
 
                         MedtrumPumpState.PRIMING                             -> {
-                            // Do Nothing, wait for priming to complete
+                            updateSetupStep(SetupStep.PRIMING)
                         }
 
                         MedtrumPumpState.PRIMED, MedtrumPumpState.EJECTED    -> {
@@ -138,7 +138,7 @@ class MedtrumViewModel @Inject constructor(
 
         if (oldPatchStep != newPatchStep) {
             when (newPatchStep) {
-                PatchStep.CANCEL                -> {
+                PatchStep.CANCEL                   -> {
                     if (oldPatchStep !in listOf(
                             PatchStep.START_DEACTIVATION,
                             PatchStep.DEACTIVATE,
@@ -151,7 +151,7 @@ class MedtrumViewModel @Inject constructor(
                     medtrumService?.disconnect("Cancel")
                 }
 
-                PatchStep.COMPLETE              -> {
+                PatchStep.COMPLETE                 -> {
                     medtrumService?.disconnect("Complete")
                 }
 
@@ -159,11 +159,13 @@ class MedtrumViewModel @Inject constructor(
                 PatchStep.DEACTIVATE,
                 PatchStep.FORCE_DEACTIVATION,
                 PatchStep.DEACTIVATION_COMPLETE,
-                PatchStep.PREPARE_PATCH         -> {
+                PatchStep.PREPARE_PATCH,
+                PatchStep.RETRY_ACTIVATION,
+                PatchStep.RETRY_ACTIVATION_CONNECT -> {
                     // Do nothing, deactivation uses commandQueue to control connection
                 }
 
-                PatchStep.PREPARE_PATCH_CONNECT -> {
+                PatchStep.PREPARE_PATCH_CONNECT    -> {
                     // Make sure we are disconnected, else dont move step
                     if (medtrumService?.isConnected == true) {
                         aapsLogger.info(LTag.PUMP, "moveStep: connected, not moving step")
@@ -172,7 +174,7 @@ class MedtrumViewModel @Inject constructor(
                     }
                 }
 
-                else                            -> {
+                else                               -> {
                     // Make sure we are connected, else dont move step
                     if (medtrumService?.isConnected == false) {
                         aapsLogger.info(LTag.PUMP, "moveStep: not connected, not moving step")
@@ -188,6 +190,13 @@ class MedtrumViewModel @Inject constructor(
         aapsLogger.info(LTag.PUMP, "moveStep: $oldPatchStep -> $newPatchStep")
     }
 
+    fun forceMoveStep(newPatchStep: PatchStep) {
+        val oldPatchStep = patchStep.value
+
+        prepareStep(newPatchStep)
+        aapsLogger.info(LTag.PUMP, "forceMoveStep: $oldPatchStep -> $newPatchStep")
+    }
+
     fun initializePatchStep(step: PatchStep) {
         mInitPatchStep = prepareStep(step)
     }
@@ -200,7 +209,7 @@ class MedtrumViewModel @Inject constructor(
         scope.launch {
             if (medtrumService?.isConnected == false) {
                 aapsLogger.info(LTag.PUMP, "preparePatch: new session")
-                // New session, generate new session token, only do this when not connected
+                // New session, generate new session token
                 medtrumPump.patchSessionToken = Crypt().generateRandomToken()
                 // Connect to pump
                 medtrumService?.connect("PreparePatch")
@@ -256,27 +265,39 @@ class MedtrumViewModel @Inject constructor(
         })
     }
 
-    fun resetPumpState() {
-        medtrumPump.pumpState = MedtrumPumpState.NONE
+    fun retryActivationConnect() {
+        scope.launch {
+            if (medtrumService?.isConnected == false) {
+                // Reset medtrum pump state, we will pickup pomp state on connect
+                medtrumPump.pumpState = MedtrumPumpState.NONE
+                medtrumService?.connect("RetryActivationConnect")
+            } else {
+                aapsLogger.error(LTag.PUMP, "retryActivationConnect: Already connected when trying to prepare patch")
+                updateSetupStep(SetupStep.ERROR)
+            }
+        }
     }
 
     private fun prepareStep(newStep: PatchStep): PatchStep {
         val stringResId = when (newStep) {
-            PatchStep.PREPARE_PATCH         -> R.string.step_prepare_patch
-            PatchStep.PREPARE_PATCH_CONNECT -> R.string.step_prepare_patch_connect
-            PatchStep.PRIME                 -> R.string.step_prime
-            PatchStep.PRIMING               -> R.string.step_priming
-            PatchStep.PRIME_COMPLETE        -> R.string.step_priming_complete
-            PatchStep.ATTACH_PATCH          -> R.string.step_attach
-            PatchStep.ACTIVATE              -> R.string.step_activate
-            PatchStep.ACTIVATE_COMPLETE     -> R.string.step_activate_complete
-            PatchStep.START_DEACTIVATION    -> R.string.step_deactivate
-            PatchStep.DEACTIVATE            -> R.string.step_deactivating
-            PatchStep.DEACTIVATION_COMPLETE -> R.string.step_deactivate_complete
+            PatchStep.PREPARE_PATCH            -> R.string.step_prepare_patch
+            PatchStep.PREPARE_PATCH_CONNECT    -> R.string.step_prepare_patch_connect
+            PatchStep.PRIME                    -> R.string.step_prime
+            PatchStep.PRIMING                  -> R.string.step_priming
+            PatchStep.PRIME_COMPLETE           -> R.string.step_priming_complete
+            PatchStep.ATTACH_PATCH             -> R.string.step_attach
+            PatchStep.ACTIVATE                 -> R.string.step_activate
+            PatchStep.ACTIVATE_COMPLETE        -> R.string.step_activate_complete
+            PatchStep.START_DEACTIVATION       -> R.string.step_deactivate
+            PatchStep.DEACTIVATE               -> R.string.step_deactivating
+            PatchStep.DEACTIVATION_COMPLETE    -> R.string.step_deactivate_complete
+            PatchStep.RETRY_ACTIVATION,
+            PatchStep.RETRY_ACTIVATION_CONNECT -> R.string.step_retry_activation
+
             PatchStep.COMPLETE,
             PatchStep.FORCE_DEACTIVATION,
             PatchStep.ERROR,
-            PatchStep.CANCEL                -> _title.value
+            PatchStep.CANCEL                   -> _title.value
         }
 
         val currentTitle = _title.value
@@ -291,7 +312,7 @@ class MedtrumViewModel @Inject constructor(
         return newStep
     }
 
-    enum class SetupStep { INITIAL, FILLED, PRIMED, ACTIVATED, ERROR, START_DEACTIVATION, STOPPED
+    enum class SetupStep { INITIAL, FILLED, PRIMING, PRIMED, ACTIVATED, ERROR, START_DEACTIVATION, STOPPED
     }
 
     val setupStep = MutableLiveData<SetupStep>()

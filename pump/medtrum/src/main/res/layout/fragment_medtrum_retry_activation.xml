@@ -26,32 +26,33 @@
             tools:context=".ui.MedtrumActivity">
 
             <TextView
-                android:id="@+id/text_activating_complete"
+                android:id="@+id/text_activation_in_progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="5dp"
                 android:gravity="center"
-                android:text="@{@string/activating_complete(viewModel.medtrumPump.reservoir)}"
+                android:text="@string/activation_in_progress"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/text_press_OK_to_return"
+                android:id="@+id/text_press_retry_or_discard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
                 android:gravity="center"
-                android:text="@string/press_OK_to_return"
+                android:text="@string/press_retry_or_discard"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/text_activating_complete" />
+                app:layout_constraintTop_toBottomOf="@+id/text_activation_in_progress" />
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_button"
@@ -61,15 +62,28 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
+
+                <Button
+                    android:id="@+id/btn_negative"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/discard"
+                    android:text="@string/discard"
+                    app:layout_constraintEnd_toStartOf="@id/btn_positive"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <Button
                     android:id="@+id/btn_positive"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/ok"
-                    android:text="@string/ok"
+                    android:layout_marginStart="6dp"
+                    android:contentDescription="@string/next"
+                    android:text="@string/next"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btn_negative"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.COMPLETE)}" />
+                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.RETRY_ACTIVATION_CONNECT)}" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>

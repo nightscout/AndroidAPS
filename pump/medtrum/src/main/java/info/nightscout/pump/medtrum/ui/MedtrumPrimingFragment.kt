@@ -34,10 +34,11 @@ class MedtrumPrimingFragment : MedtrumBaseFragment<FragmentMedtrumPrimingBinding
                 setupStep.observe(viewLifecycleOwner) {
                     when (it) {
                         MedtrumViewModel.SetupStep.INITIAL,
-                        MedtrumViewModel.SetupStep.FILLED -> Unit // Nothing to do here, previous state
-                        MedtrumViewModel.SetupStep.PRIMED -> moveStep(PatchStep.PRIME_COMPLETE)
+                        MedtrumViewModel.SetupStep.FILLED,
+                        MedtrumViewModel.SetupStep.PRIMING -> Unit // Nothing to do here
+                        MedtrumViewModel.SetupStep.PRIMED  -> moveStep(PatchStep.PRIME_COMPLETE)
 
-                        MedtrumViewModel.SetupStep.ERROR  -> {
+                        MedtrumViewModel.SetupStep.ERROR   -> {
                             moveStep(PatchStep.ERROR)
                             updateSetupStep(MedtrumViewModel.SetupStep.FILLED) // Reset setup step
                             binding.textWaitForPriming.text = rh.gs(R.string.priming_error)
@@ -45,7 +46,7 @@ class MedtrumPrimingFragment : MedtrumBaseFragment<FragmentMedtrumPrimingBinding
                             binding.btnPositive.visibility = View.VISIBLE
                         }
 
-                        else                              -> {
+                        else                               -> {
                             ToastUtils.errorToast(requireContext(), rh.gs(R.string.unexpected_state, it.toString()))
                             aapsLogger.error(LTag.PUMP, "Unexpected state: $it")
                         }

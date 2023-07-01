@@ -157,6 +157,9 @@ class BLEComm @Inject internal constructor(
 
         isConnected = false
         isConnecting = true
+        mWritePackets = null
+        mReadPacket = null
+
         if (mDevice != null && mDeviceSN == deviceSN) {
             // Skip scanning and directly connect to gatt
             aapsLogger.debug(LTag.PUMPBTCOMM, "Skipping scan and directly connecting to gatt")

@@ -21,6 +21,8 @@ import info.nightscout.pump.medtrum.ui.MedtrumPrimingFragment
 import info.nightscout.pump.medtrum.ui.MedtrumStartDeactivationFragment
 import info.nightscout.pump.medtrum.ui.MedtrumActivity
 import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
+import info.nightscout.pump.medtrum.ui.MedtrumRetryActivationConnectFragment
+import info.nightscout.pump.medtrum.ui.MedtrumRetryActivationFragment
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel
 import info.nightscout.pump.medtrum.ui.viewmodel.ViewModelFactory
@@ -76,6 +78,13 @@ abstract class MedtrumModule {
     @FragmentScope
     @ContributesAndroidInjector
     internal abstract fun contributesPreparePatchConnectFragment(): MedtrumPreparePatchConnectFragment
+
+    @FragmentScope
+    @ContributesAndroidInjector
+    internal abstract fun contributesRetryActivationFragment(): MedtrumRetryActivationFragment
+    @FragmentScope
+    @ContributesAndroidInjector
+    internal abstract fun contributesRetryActivationConnectFragment(): MedtrumRetryActivationConnectFragment
 
     @FragmentScope
     @ContributesAndroidInjector

@@ -35,34 +35,29 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
 
                 patchStep.observe(this@MedtrumActivity) {
                     when (it) {
-                        PatchStep.PREPARE_PATCH         -> setupViewFragment(MedtrumPreparePatchFragment.newInstance())
-                        PatchStep.PREPARE_PATCH_CONNECT -> setupViewFragment(MedtrumPreparePatchConnectFragment.newInstance())
-                        PatchStep.PRIME                 -> setupViewFragment(MedtrumPrimeFragment.newInstance())
-                        PatchStep.PRIMING               -> setupViewFragment(MedtrumPrimingFragment.newInstance())
-                        PatchStep.PRIME_COMPLETE        -> setupViewFragment(MedtrumPrimeCompleteFragment.newInstance())
-                        PatchStep.ATTACH_PATCH          -> setupViewFragment(MedtrumAttachPatchFragment.newInstance())
-                        PatchStep.ACTIVATE              -> setupViewFragment(MedtrumActivateFragment.newInstance())
-                        PatchStep.ACTIVATE_COMPLETE     -> setupViewFragment(MedtrumActivateCompleteFragment.newInstance())
-                        PatchStep.COMPLETE              -> this@MedtrumActivity.finish()
-                        PatchStep.ERROR                 -> Unit // Do nothing, let activity handle this
+                        PatchStep.PREPARE_PATCH            -> setupViewFragment(MedtrumPreparePatchFragment.newInstance())
+                        PatchStep.PREPARE_PATCH_CONNECT    -> setupViewFragment(MedtrumPreparePatchConnectFragment.newInstance())
+                        PatchStep.PRIME                    -> setupViewFragment(MedtrumPrimeFragment.newInstance())
+                        PatchStep.PRIMING                  -> setupViewFragment(MedtrumPrimingFragment.newInstance())
+                        PatchStep.PRIME_COMPLETE           -> setupViewFragment(MedtrumPrimeCompleteFragment.newInstance())
+                        PatchStep.ATTACH_PATCH             -> setupViewFragment(MedtrumAttachPatchFragment.newInstance())
+                        PatchStep.ACTIVATE                 -> setupViewFragment(MedtrumActivateFragment.newInstance())
+                        PatchStep.ACTIVATE_COMPLETE        -> setupViewFragment(MedtrumActivateCompleteFragment.newInstance())
+                        PatchStep.CANCEL,
+                        PatchStep.COMPLETE                 -> this@MedtrumActivity.finish()
+                        PatchStep.ERROR                    -> Unit // Do nothing, let activity handle this
+                        PatchStep.RETRY_ACTIVATION         -> setupViewFragment(MedtrumRetryActivationFragment.newInstance())
+                        PatchStep.RETRY_ACTIVATION_CONNECT -> setupViewFragment(MedtrumRetryActivationConnectFragment.newInstance())
+                        PatchStep.START_DEACTIVATION       -> setupViewFragment(MedtrumStartDeactivationFragment.newInstance())
+                        PatchStep.DEACTIVATE               -> setupViewFragment(MedtrumDeactivatePatchFragment.newInstance())
 
-                        PatchStep.CANCEL                -> {
-                            if (setupStep.value !in listOf(MedtrumViewModel.SetupStep.ACTIVATED, MedtrumViewModel.SetupStep.START_DEACTIVATION, MedtrumViewModel.SetupStep.STOPPED)) {
-                                resetPumpState()
-                            }
-                            this@MedtrumActivity.finish()
-                        }
-
-                        PatchStep.START_DEACTIVATION    -> setupViewFragment(MedtrumStartDeactivationFragment.newInstance())
-                        PatchStep.DEACTIVATE            -> setupViewFragment(MedtrumDeactivatePatchFragment.newInstance())
-
-                        PatchStep.FORCE_DEACTIVATION    -> {
+                        PatchStep.FORCE_DEACTIVATION       -> {
                             medtrumPump.pumpState = MedtrumPumpState.STOPPED
                             moveStep(PatchStep.DEACTIVATION_COMPLETE)
                         }
 
-                        PatchStep.DEACTIVATION_COMPLETE -> setupViewFragment(MedtrumDeactivationCompleteFragment.newInstance())
-                        null                            -> Unit
+                        PatchStep.DEACTIVATION_COMPLETE    -> setupViewFragment(MedtrumDeactivationCompleteFragment.newInstance())
+                        null                               -> Unit
                     }
                 }
             }
