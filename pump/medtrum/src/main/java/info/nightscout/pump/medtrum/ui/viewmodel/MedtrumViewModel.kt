@@ -243,7 +243,14 @@ class MedtrumViewModel @Inject constructor(
                 if (this.result.success) {
                     // Do nothing, state change will handle this
                 } else {
-                    updateSetupStep(SetupStep.ERROR)
+                    if (medtrumPump.pumpState >= MedtrumPumpState.OCCLUSION && medtrumPump.pumpState <= MedtrumPumpState.NO_CALIBRATION) {
+                        // We are in a fault state, we need to force deactivation
+                        aapsLogger.info(LTag.PUMP, "deactivatePatch: force deactivation")
+                        medtrumPump.pumpState = MedtrumPumpState.STOPPED
+                    } else {
+                        aapsLogger.info(LTag.PUMP, "deactivatePatch: failure!")
+                        updateSetupStep(SetupStep.ERROR)
+                    }
                 }
             }
         })

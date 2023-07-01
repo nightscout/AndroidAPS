@@ -443,7 +443,7 @@ class MedtrumPump @Inject constructor(
 
     fun setFakeTBRIfNeeded() {
         val expectedTemporaryBasal = pumpSync.expectedPumpState().temporaryBasal
-        if (expectedTemporaryBasal?.rate != 0.0 && expectedTemporaryBasal?.duration != T.mins(FAKE_TBR_LENGTH).msecs()) {
+        if (expectedTemporaryBasal?.duration != T.mins(FAKE_TBR_LENGTH).msecs()) {
             setFakeTBR()
         }
     }
