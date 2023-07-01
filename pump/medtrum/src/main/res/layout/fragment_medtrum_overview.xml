@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
         <variable
             name="viewmodel"
             type="info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel" />
@@ -295,7 +296,7 @@
                         android:layout_marginEnd="20dp"
                         android:layout_marginBottom="5dp"
                         android:background="?android:attr/dividerHorizontal" />
-                    
+
                     <!-- Active Alarms -->
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -606,7 +607,7 @@
                         android:background="?android:attr/dividerHorizontal" />
 
                 </LinearLayout>
-                
+
             </LinearLayout>
 
         </ScrollView>
@@ -619,34 +620,43 @@
             android:orientation="horizontal">
 
             <!-- Refresh button -->
-            <Button
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/refreshButton"
-                style="@style/ButtonMediumFontStyle"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:drawableTop="@drawable/ic_refresh_conn"
+                android:ellipsize="end"
                 android:enabled="@{viewmodel.canDoRefresh}"
+                android:maxLines="2"
                 android:text="@string/refresh_label"
                 app:onSafeClick="@{() -> viewmodel.onClickRefresh()}" />
 
             <!-- Reset Alarms button -->
-            <Button
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/resetAlarmsButton"
-                style="@style/ButtonMediumFontStyle"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/reset_alarms_label"
+                android:drawableTop="@drawable/ic_silence_alerts"
+                android:ellipsize="end"
                 android:enabled="@{viewmodel.canDoResetAlarms}"
+                android:maxLines="2"
+                android:text="@string/reset_alarms_label"
                 app:onSafeClick="@{() -> viewmodel.onClickResetAlarms()}" />
 
             <!-- Change Patch button -->
-            <Button
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/changePatchButton"
-                style="@style/ButtonMediumFontStyle"
+                style="@style/ButtonSmallFontStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
+                android:drawableTop="@drawable/ic_actions_refill"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:text="@string/change_patch_label"
                 app:onSafeClick="@{() -> viewmodel.onClickChangePatch()}" />
 
