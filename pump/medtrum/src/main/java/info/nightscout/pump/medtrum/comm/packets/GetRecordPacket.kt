@@ -220,35 +220,26 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
 
                             BasalType.ABSOLUTE_TEMP, BasalType.RELATIVE_TEMP -> {
                                 aapsLogger.debug(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BASAL_RECORD: Absolute temp basal")
-                                val duration = (basalEndTime - basalStartTime)
-                                if (duration > 0) { // Sync start and end
-                                    val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
-                                        timestamp = basalStartTime,
-                                        rate = if (basalType == BasalType.ABSOLUTE_TEMP) basalRate else basalPercent.toDouble(),
-                                        duration = duration,
-                                        isAbsolute = (basalType == BasalType.ABSOLUTE_TEMP),
-                                        type = PumpSync.TemporaryBasalType.NORMAL,
-                                        pumpId = basalStartTime,
-                                        pumpType = medtrumPump.pumpType(),
-                                        pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-                                    )
-                                    aapsLogger.debug(
-                                        LTag.PUMPCOMM,
-                                        "handleBasalStatusUpdate from record: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_SYNC: ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " +
-                                            "Rate: $basalRate Duration: ${duration}"
-                                    )
-                                } else { // Sync only end ?
-                                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                                        timestamp = basalEndTime,
-                                        endPumpId = basalEndTime,
-                                        pumpType = medtrumPump.pumpType(),
-                                        pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-                                    )
-                                    aapsLogger.warn(
-                                        LTag.PUMPCOMM,
-                                        "handleBasalStatusUpdate from record: EVENT TEMP_END ($basalType) ${dateUtil.dateAndTimeString(basalEndTime)} ($basalEndTime) " + "Rate: $basalRate Duration: ${duration}"
-                                    )
-                                }
+                                var duration = (basalEndTime - basalStartTime)
+                                // Work around for pumpSync not accepting 0 duration.
+                                // sometimes we get 0 duration for very short basal because the pump only reports time in seconds
+                                if (duration < 250) duration = 250 // 250ms to make sure timestamp is unique
+
+                                val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
+                                    timestamp = basalStartTime,
+                                    rate = if (basalType == BasalType.ABSOLUTE_TEMP) basalRate else basalPercent.toDouble(),
+                                    duration = duration,
+                                    isAbsolute = (basalType == BasalType.ABSOLUTE_TEMP),
+                                    type = PumpSync.TemporaryBasalType.NORMAL,
+                                    pumpId = basalStartTime,
+                                    pumpType = medtrumPump.pumpType(),
+                                    pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                                )
+                                aapsLogger.debug(
+                                    LTag.PUMPCOMM,
+                                    "handleBasalStatusUpdate from record: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_SYNC: ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " +
+                                        "Rate: $basalRate Duration: ${duration}"
+                                )
                             }
                             in BasalType.SUSPEND_LOW_GLUCOSE..BasalType.STOP -> {
                                 aapsLogger.debug(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BASAL_RECORD: Suspend basal")

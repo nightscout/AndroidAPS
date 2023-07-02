@@ -50,15 +50,15 @@ class CancelTempBasalPacket(injector: HasAndroidInjector) : MedtrumPacket(inject
 
             if (basalType == BasalType.STANDARD) {
                 // If we have standard here, means TBR is cancelled successfully
-                pumpSync.syncStopTemporaryBasalWithPumpId(
-                    timestamp = basalStartTime, // Time of normal basal start = time of tbr end
-                    endPumpId = basalStartTime,
+                val success = pumpSync.syncStopTemporaryBasalWithPumpId(
+                    timestamp = basalStartTime + 250, // Time of normal basal start = time of tbr end
+                    endPumpId = basalStartTime + 250, // +250ms Make sure there is time between start and stop of TBR
                     pumpType = medtrumPump.pumpType(),
                     pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
                 )
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
-                    "CancelTempBasalPacket: EVENT TEMP_END ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) "
+                    "CancelTempBasalPacket: EVENT TEMP_END ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) success: $success"
                 )
             }
         }

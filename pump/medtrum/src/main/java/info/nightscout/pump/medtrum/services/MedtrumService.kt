@@ -266,6 +266,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                             aapsLogger.warn(LTag.PUMPCOMM, "Alarm cleared: $i")
                             break
                         }
+                        SystemClock.sleep(50)
                     }
                 }
             }

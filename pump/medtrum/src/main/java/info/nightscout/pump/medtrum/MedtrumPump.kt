@@ -413,6 +413,18 @@ class MedtrumPump @Inject constructor(
         } else if (basalType == BasalType.NONE && expectedTemporaryBasal?.rate != basalRate && expectedTemporaryBasal?.duration != T.mins(FAKE_TBR_LENGTH).msecs()) {
             // Pump suspended, set fake TBR
             setFakeTBR()
+        } else if (basalType == BasalType.STANDARD) {
+            if (expectedTemporaryBasal != null && System.currentTimeMillis() - basalStartTime > 1000) {
+                // Pump resumed, but end was not synced before, sync it now
+                aapsLogger.warn(LTag.PUMPCOMM, "handleBasalStatusUpdate: Pump resumed, but end was not synced before, sync it now")
+                val success = pumpSync.syncStopTemporaryBasalWithPumpId(
+                    timestamp = basalStartTime + 500, // Time of normal basal start = time of tbr end 
+                    endPumpId = basalStartTime + 500, // +500ms Make sure there is time between start and stop of TBR
+                    pumpType = pumpType(),
+                    pumpSerial = pumpSN.toString(radix = 16)
+                )
+                aapsLogger.warn(LTag.PUMPCOMM, "handleBasalStatusUpdate: EVENT TEMP_END ${dateUtil.dateAndTimeString(basalStartTime)}   ($basalStartTime) success: $success")
+            }
         }
 
         // Update medtrum pump state
