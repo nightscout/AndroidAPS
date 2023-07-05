@@ -549,29 +549,39 @@ class DiaconnG8Service : DaggerService() {
 
         // temp state check
         sendMessage(TempBasalInquirePacket(injector))
+        val result : DiaconnG8Packet
+        if(diaconnG8Pump.isPumpVersionGe3_53) {
+            val tbrPacket = TempBasalSettingPacket(injector, 3, ((durationInHours * 60) / 15).toInt(), ((absoluteRate * 100) + 1000).toInt())
+            sendMessage(tbrPacket, 100)
+            result = tbrPacket
+            if (!processConfirm(tbrPacket.msgType)) return false
+        } else {
 
-        if (diaconnG8Pump.tbStatus == 1) {
-            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.stoppingtempbasal)))
-            val msgPacket = TempBasalSettingPacket(injector, 2, diaconnG8Pump.tbTime, diaconnG8Pump.tbInjectRateRatio)
-            // tempbasal stop
-            sendMessage(msgPacket, 100)
+            if (diaconnG8Pump.tbStatus == 1) {
+                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.stoppingtempbasal)))
+                val tbrPacket = TempBasalSettingPacket(injector, 2, diaconnG8Pump.tbTime, diaconnG8Pump.tbInjectRateRatio)
+                // tempbasal stop
+                sendMessage(tbrPacket, 100)
+                // otp process
+                if (!processConfirm(tbrPacket.msgType)) return false
+                diaconnG8Pump.tempBasalStart = dateUtil.now()
+            }
+            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingtempbasal)))
+            val tbInjectRate = ((absoluteRate * 100) + 1000).toInt()
+            val tbrPacket = TempBasalSettingPacket(injector, 1, ((durationInHours * 60) / 15).toInt(), tbInjectRate)
+            sendMessage(tbrPacket, 100)
+            result = tbrPacket
             // otp process
-            if (!processConfirm(msgPacket.msgType)) return false
-            diaconnG8Pump.tempBasalStart = dateUtil.now()
+            if (!processConfirm(tbrPacket.msgType)) return false
+            // pump tempbasal status inquire
         }
-        rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingtempbasal)))
-        val tbInjectRate = ((absoluteRate * 100) + 1000).toInt()
-        val msgTBR = TempBasalSettingPacket(injector, 1, ((durationInHours * 60) / 15).toInt(), tbInjectRate)
-        sendMessage(msgTBR, 100)
-        // otp process
-        if (!processConfirm(msgTBR.msgType)) return false
-        // pump tempbasal status inquire
+
         sendMessage(TempBasalInquirePacket(injector))
         loadHistory()
         val tbr = pumpSync.expectedPumpState().temporaryBasal
         diaconnG8Pump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return msgTBR.success()
+        return result.success()
     }
 
     fun tempBasalShortDuration(absoluteRate: Double, durationInMinutes: Int): Boolean {
@@ -581,28 +591,40 @@ class DiaconnG8Service : DaggerService() {
         }
 
         // temp state check
+        val result:DiaconnG8Packet
         sendMessage(TempBasalInquirePacket(injector))
-        if (diaconnG8Pump.tbStatus == 1) {
-            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.stoppingtempbasal)))
-            val msgPacket = TempBasalSettingPacket(injector, 2, diaconnG8Pump.tbTime, diaconnG8Pump.tbInjectRateRatio)
-            // tempbasal stop
-            sendMessage(msgPacket, 100)
+        if(diaconnG8Pump.isPumpVersionGe3_53) {
+            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingtempbasal)))
+            val tbrSettingPacket = TempBasalSettingPacket(injector, 3, 2, ((absoluteRate * 100) + 1000).toInt())
+            sendMessage(tbrSettingPacket, 100)
+            result=tbrSettingPacket
             // otp process
-            if (!processConfirm(msgPacket.msgType)) return false
-            SystemClock.sleep(500)
+            if (!processConfirm(tbrSettingPacket.msgType)) return false
+            sendMessage(TempBasalInquirePacket(injector))
+        } else {
+            if (diaconnG8Pump.tbStatus == 1) {
+                rxBus.send(EventPumpStatusChanged(rh.gs(R.string.stoppingtempbasal)))
+                val tbrPacket = TempBasalSettingPacket(injector, 2, diaconnG8Pump.tbTime, diaconnG8Pump.tbInjectRateRatio)
+                // tempbasal stop
+                sendMessage(tbrPacket, 100)
+                // otp process
+                if (!processConfirm(tbrPacket.msgType)) return false
+                SystemClock.sleep(500)
+            }
+            rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingtempbasal)))
+            val tbInjectRate = absoluteRate * 100 + 1000
+            val msgTBR = TempBasalSettingPacket(injector, 1, 2, tbInjectRate.toInt())
+            sendMessage(msgTBR, 100)
+            result=msgTBR
+            // otp process
+            if (!processConfirm(msgTBR.msgType)) return false
         }
-        rxBus.send(EventPumpStatusChanged(rh.gs(R.string.settingtempbasal)))
-        val tbInjectRate = absoluteRate * 100 + 1000
-        val msgTBR = TempBasalSettingPacket(injector, 1, 2, tbInjectRate.toInt())
-        sendMessage(msgTBR, 100)
-        // otp process
-        if (!processConfirm(msgTBR.msgType)) return false
         sendMessage(TempBasalInquirePacket(injector))
         loadHistory()
         val tbr = pumpSync.expectedPumpState().temporaryBasal
         diaconnG8Pump.fromTemporaryBasal(tbr)
         rxBus.send(EventPumpStatusChanged(EventPumpStatusChanged.Status.DISCONNECTING))
-        return msgTBR.success()
+        return result.success()
     }
 
     fun tempBasalStop(): Boolean {
