@@ -322,6 +322,7 @@ class DiaconnG8Service : DaggerService() {
             for (i in 0 until loopSize) {
                 val startLogNo: Int = start + i * pumpLogPageSize
                 val endLogNo: Int = startLogNo + min(end - startLogNo, pumpLogPageSize)
+                aapsLogger.debug(LTag.PUMPCOMM, "pumplog request : $startLogNo ~ $endLogNo")
                 val msg = BigLogInquirePacket(injector, startLogNo, endLogNo, 100)
                 sendMessage(msg, 500)
             }
@@ -500,15 +501,27 @@ class DiaconnG8Service : DaggerService() {
         val bolusDurationInMSec = (insulin * speed * 1000).toLong()
         val expectedEnd = bolusStart + bolusDurationInMSec + 3500L
         val totalwaitTime = (expectedEnd - System.currentTimeMillis()) / 1000
+        // reset bolus progress history
+        diaconnG8Pump.bolusingInjProgress = 0
+        diaconnG8Pump.bolusingSetAmount = 0.0
+        diaconnG8Pump.bolusingInjAmount = 0.0
+
         if (diaconnG8Pump.isReadyToBolus) {
+            var progressPecent = 0
             while (!diaconnG8Pump.bolusDone) {
-                val waitTime = (expectedEnd - System.currentTimeMillis()) / 1000
-                bolusingEvent.status = String.format(rh.gs(R.string.waitingforestimatedbolusend), if (waitTime < 0) 0 else waitTime)
-                var progressPecent = 0
-                if (totalwaitTime > waitTime && totalwaitTime > 0) {
-                    progressPecent = ((totalwaitTime - waitTime) * 100 / totalwaitTime).toInt()
+                if(diaconnG8Pump.isPumpVersionGe3_53) {
+                    progressPecent = diaconnG8Pump.bolusingInjProgress
+                    //bolusingEvent.status = String.format(rh.gs(R.string.waitingforestimatedbolusend), progressPecent)
+                    bolusingEvent.status = "볼러스 주입중 ${diaconnG8Pump.bolusingInjAmount}U / ${diaconnG8Pump.bolusingSetAmount}U (${progressPecent}%)"
+                    bolusingEvent.percent = min(progressPecent, 100)
+                } else {
+                    val waitTime = (expectedEnd - System.currentTimeMillis()) / 1000
+                    bolusingEvent.status = String.format(rh.gs(R.string.waitingforestimatedbolusend), if (waitTime < 0) 0 else waitTime)
+                    if (totalwaitTime > waitTime && totalwaitTime > 0) {
+                        progressPecent = ((totalwaitTime - waitTime) * 100 / totalwaitTime).toInt()
+                    }
+                    bolusingEvent.percent = min(progressPecent, 100)
                 }
-                bolusingEvent.percent = min(progressPecent, 100)
                 rxBus.send(bolusingEvent)
                 SystemClock.sleep(200)
             }
@@ -522,7 +535,9 @@ class DiaconnG8Service : DaggerService() {
                 rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingbolusstatus)))
                 sendMessage(InjectionSnackInquirePacket(injector), 2000) // last bolus
                 // 볼러스 결과 보고패킷에서 처리함.
-                bolusingEvent.percent = 100
+                if(!diaconnG8Pump.isPumpVersionGe3_53) {
+                    bolusingEvent.percent = 100
+                }
                 rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.shared.R.string.disconnecting)))
             }
         })
