@@ -71,7 +71,7 @@ class ProfileFunctionImpl @Inject constructor(
     override fun getProfileNameWithRemainingTime(): String =
         getProfileName(System.currentTimeMillis(), customized = true, showRemainingTime = true)
 
-    fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String {
+    private fun getProfileName(time: Long, customized: Boolean, showRemainingTime: Boolean): String {
         var profileName = rh.gs(info.nightscout.core.ui.R.string.no_profile_set)
 
         val profileSwitch = repository.getEffectiveProfileSwitchActiveAt(time).blockingGet()

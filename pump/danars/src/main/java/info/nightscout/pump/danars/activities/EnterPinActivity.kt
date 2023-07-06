@@ -2,7 +2,7 @@ package info.nightscout.pump.danars.activities
 
 import android.os.Bundle
 import android.util.Base64
-import dagger.android.support.DaggerAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.hexStringToByteArray
@@ -21,7 +21,7 @@ import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import kotlin.experimental.xor
 
-class EnterPinActivity : DaggerAppCompatActivity() {
+class EnterPinActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var danaRSPlugin: DanaRSPlugin

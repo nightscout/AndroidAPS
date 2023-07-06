@@ -7,14 +7,15 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
-import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.androidaps.plugins.pump.eopatch.dagger.EopatchPluginQualifier
 import info.nightscout.core.ui.R
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.rx.AapsSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
-abstract class EoBaseActivity<B : ViewDataBinding> : DaggerAppCompatActivity(), EoBaseNavigator {
+abstract class EoBaseActivity<B : ViewDataBinding> : TranslatedDaggerAppCompatActivity(), EoBaseNavigator {
+
     @Inject
     @EopatchPluginQualifier
     lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -48,7 +49,7 @@ abstract class EoBaseActivity<B : ViewDataBinding> : DaggerAppCompatActivity(), 
     }
 
     override fun finish(finishAffinity: Boolean) {
-        if(finishAffinity) {
+        if (finishAffinity) {
             finishAffinity()
         } else {
             finish()

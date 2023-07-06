@@ -2,40 +2,40 @@
 
 buildscript {
     ext {
-        kotlin_version = '1.8.10'
-        core_version = '1.9.0'
+        kotlin_version = '1.8.22'
+        core_version = '1.10.1'
         rxjava_version = '3.1.6'
         rxandroid_version = '3.0.2'
         rxkotlin_version = '3.0.1'
-        room_version = '2.5.0'
-        lifecycle_version = '2.5.1'
-        dagger_version = '2.45'
-        coroutines_version = '1.6.4'
-        activity_version = '1.6.1'
-        fragmentktx_version = '1.5.5'
+        room_version = '2.5.2'
+        lifecycle_version = '2.6.1'
+        dagger_version = '2.46.1'
+        coroutines_version = '1.7.1'
+        activity_version = '1.7.2'
+        fragmentktx_version = '1.6.0'
         ormLite_version = '4.46'
         gson_version = '2.10.1'
-        nav_version = '2.5.3'
+        nav_version = '2.6.0'
         appcompat_version = '1.6.1'
-        material_version = '1.8.0'
+        material_version = '1.9.0'
         gridlayout_version = '1.0.0'
         constraintlayout_version = '2.1.4'
         preferencektx_version = '1.2.0'
         commonslang3_version = '3.12.0'
-        commonscodec_version = '1.15'
+        commonscodec_version = '1.16.0'
         jodatime_version = '2.10.14'
-        work_version = '2.8.0'
-        tink_version = '1.8.0'
+        work_version = '2.8.1'
+        tink_version = '1.9.0'
         json_version = '20220320'
-        joda_version = '2.12.1.1'
+        joda_version = '2.12.5'
         swipe_version = '1.1.0'
 
         junit_version = '4.13.2'
-        junit_jupiter_version = '5.9.2'
+        junit_jupiter_version = '5.9.3'
         mockito_version = '4.6.1'
         dexmaker_version = '1.2'
         retrofit2_version = '2.9.0'
-        okhttp3_version = '4.10.0'
+        okhttp3_version = '4.11.0'
         byteBuddy_version = '1.12.8'
 
         androidx_junit_version = '1.1.4'
@@ -49,7 +49,7 @@ buildscript {
         play_services_location_version = '21.0.1'
 
         kotlinx_datetime_version = '0.4.0'
-        kotlinx_serialization_version = '1.5.0'
+        kotlinx_serialization_version = '1.5.1'
     }
     repositories {
         google()
@@ -58,8 +58,8 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.4.2'
-        classpath 'com.google.gms:google-services:4.3.14'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.4'
+        classpath 'com.google.gms:google-services:4.3.15'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.6'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -75,7 +75,7 @@ buildscript {
 plugins {
     // Test Gradle build, keep disabled under normal circumstances
     // id "com.osacky.doctor" version "0.8.1"
-    id "org.jlleitschuh.gradle.ktlint" version "11.3.1"
+    id "org.jlleitschuh.gradle.ktlint" version "11.4.2"
     id 'org.barfuin.gradle.jacocolog' version '3.1.0'
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
 }

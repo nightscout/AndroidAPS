@@ -137,7 +137,6 @@
     <string name="error_in_basal_values">Fejl i basal rate værdier</string>
     <string name="error_in_target_values">Fejl i målværdier</string>
     <string name="error_in_isf_values">Fejl i ISF-værdier</string>
-    <string name="profile_name_contains_dot">Profilnavn indeholder punktum.\nDette understøttes ikke af NS.\nProfilen er ikke uploadet til NS.</string>
     <string name="invalid_profile_not_accepted">Ugyldig profil %1$s blev ikke accepteret fra NS</string>
     <string name="view">Vis</string>
     <string name="errors">Fejl</string>

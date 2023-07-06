@@ -1,17 +1,17 @@
 package info.nightscout.ui.activities
 
 import android.os.Bundle
-import info.nightscout.ui.services.AlarmSoundService
-import info.nightscout.core.ui.activities.DialogAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.ui.alertDialogs.ErrorDialog
+import info.nightscout.ui.services.AlarmSoundService
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 
-class ErrorHelperActivity : DialogAppCompatActivity() {
+class ErrorHelperActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var sp: SP
     @Inject lateinit var repository: AppRepository

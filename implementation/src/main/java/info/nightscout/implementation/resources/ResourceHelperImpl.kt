@@ -19,6 +19,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.view.ContextThemeWrapper
 import androidx.core.content.ContextCompat
 import info.nightscout.core.ui.getThemeColor
+import info.nightscout.core.ui.locale.LocaleHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.shared.interfaces.ResourceHelper
 import java.util.Locale
@@ -29,15 +30,12 @@ import javax.inject.Inject
  */
 class ResourceHelperImpl @Inject constructor(var context: Context, private val fabricPrivacy: FabricPrivacy) : ResourceHelper {
 
-    override fun updateContext(ctx: Context?) {
-        ctx?.let { context = it }
-    }
-
-    override fun gs(@StringRes id: Int): String = context.getString(id)
+    override fun gs(@StringRes id: Int): String =
+        context.createConfigurationContext(Configuration().apply { setLocale(LocaleHelper.currentLocale(context)) }).resources.getString(id)
 
     override fun gs(@StringRes id: Int, vararg args: Any?): String {
         return try {
-            context.getString(id, *args)
+            context.createConfigurationContext(Configuration().apply { setLocale(LocaleHelper.currentLocale(context)) }).resources.getString(id, *args)
         } catch (exception: Exception) {
             val resourceName = context.resources.getResourceEntryName(id)
             val resourceValue = context.getString(id)

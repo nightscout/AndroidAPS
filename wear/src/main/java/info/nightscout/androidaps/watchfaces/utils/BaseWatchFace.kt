@@ -20,6 +20,7 @@ import dagger.android.AndroidInjection
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.data.RawDisplayData
 import info.nightscout.androidaps.events.EventWearPreferenceChange
+import info.nightscout.androidaps.heartrate.HeartRateListener
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity
 import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
@@ -99,6 +100,7 @@ abstract class BaseWatchFace : WatchFace() {
 
     private var mLastSvg = ""
     private var mLastDirection = ""
+    private var heartRateListener: HeartRateListener? = null
 
     override fun onCreate() {
         // Not derived from DaggerService, do injection here
@@ -115,6 +117,7 @@ abstract class BaseWatchFace : WatchFace() {
             .subscribe { event: EventWearPreferenceChange ->
                 simpleUi.updatePreferences()
                 if (event.changedKey != null && event.changedKey == "delta_granularity") rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace:onSharedPreferenceChanged")))
+                if (event.changedKey == getString(R.string.key_heart_rate_sampling)) updateHeartRateListener()
                 if (layoutSet) setDataFields()
                 invalidate()
             }
@@ -139,11 +142,26 @@ abstract class BaseWatchFace : WatchFace() {
         layoutView = binding.root
         performViewSetup()
         rxBus.send(EventWearToMobile(ActionResendData("BaseWatchFace::onCreate")))
+        updateHeartRateListener()
     }
 
     private fun forceUpdate() {
         setDataFields()
         invalidate()
+    }
+
+    private fun updateHeartRateListener() {
+        if (sp.getBoolean(R.string.key_heart_rate_sampling, false)) {
+            if (heartRateListener == null) {
+                heartRateListener = HeartRateListener(
+                    this, aapsLogger, aapsSchedulers).also { hrl -> disposable += hrl }
+            }
+        } else {
+            heartRateListener?.let { hrl ->
+                disposable.remove(hrl)
+                heartRateListener = null
+            }
+        }
     }
 
     override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {

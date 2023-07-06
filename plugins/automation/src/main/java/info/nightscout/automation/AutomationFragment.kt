@@ -16,6 +16,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.core.util.forEach
+import androidx.core.view.MenuCompat
 import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -97,7 +98,7 @@ class AutomationFragment : DaggerFragment(), OnStartDragListener, MenuProvider {
         actionHelper.onCreateOptionsMenu(menu, inflater)
         menu.add(Menu.FIRST, ID_MENU_ADD, 0, rh.gs(R.string.add_automation)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
         menu.add(Menu.FIRST, ID_MENU_RUN, 0, rh.gs(R.string.run_automations)).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER)
-        menu.setGroupDividerEnabled(true)
+        MenuCompat.setGroupDividerEnabled(menu, true)
     }
 
     override fun onMenuItemSelected(item: MenuItem): Boolean =

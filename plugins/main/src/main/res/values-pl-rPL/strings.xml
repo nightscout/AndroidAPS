@@ -141,7 +141,7 @@
     <string name="error_in_basal_values">Błąd w wartościach bazy</string>
     <string name="error_in_target_values">Błąd w wartościach docelowych</string>
     <string name="error_in_isf_values">Błąd w wartościach ISF</string>
-    <string name="profile_name_contains_dot">Nazwa profilu zawiera kropki.\nTo nie jest obsługiwane przez NS.\nProfil nie zostanie przesyłany do NS.</string>
+    <string name="profile_name_contains_dot">Nazwa któregoś z profili zawiera kropki.\nTo nie jest obsługiwane przez NS.\nProfile nie zostaną przesłane do NS.</string>
     <string name="invalid_profile_not_accepted">Błędny profil %1$s nie został zaakceptowany z NS</string>
     <string name="view">Podgląd</string>
     <string name="errors">Błędy</string>
@@ -323,7 +323,6 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie ustawiono aktywnego profilu!</string>
-    <string name="profile_message">Profil:\n\nZmiana czasu: %1$\nProcent: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">Nie załadowano profilu</string>
     <string name="aps_only">Stosuje się tylko w trybie APS!</string>

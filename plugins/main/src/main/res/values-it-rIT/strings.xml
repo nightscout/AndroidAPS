@@ -141,7 +141,7 @@
     <string name="error_in_basal_values">Errore nei valori della basale</string>
     <string name="error_in_target_values">Errore nei valori del target</string>
     <string name="error_in_isf_values">Errore nei valori ISF</string>
-    <string name="profile_name_contains_dot">Il nome profilo contiene dei punti.\nQuesto non è supportato da NS.\nIl profilo non viene caricato in NS.</string>
+    <string name="profile_name_contains_dot">Alcuni nomi profilo contengono punti.\nQuesto non è supportato da NS.\nI profili non verranno caricati su NS.</string>
     <string name="invalid_profile_not_accepted">Profilo %1$s non valido - non accettato da NS</string>
     <string name="view">Vista</string>
     <string name="errors">Errori</string>
@@ -253,6 +253,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predizioni</string>
     <string name="overview_show_treatments">Trattamenti</string>
+    <string name="overview_show_heartRate">Frequenza cardiaca</string>
     <string name="overview_show_deviation_slope">Pendenza deviazione</string>
     <string name="overview_show_activity">Attività</string>
     <string name="overview_show_bgi">Impatto glicemia (BGI)</string>
@@ -270,6 +271,7 @@
     <string name="abs_insulin_shortname">ASS</string>
     <string name="devslope_shortname">PENDEV</string>
     <string name="treatments_shortname">TRATT</string>
+    <string name="heartRate_shortname">FC</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Scala del grafico</string>
     <string name="graph_menu_divider_header">Grafico</string>
@@ -323,7 +325,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nessun cambio profilo attivo!</string>
-    <string name="profile_message">Profilo:\n\nTimeshift: %1$\nPercentuale: %2$d%%\"</string>
+    <string name="profile_message">Profilo:\n\nTimeshift: %1$d\nPercentuale: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">Nessun profilo caricato</string>
     <string name="aps_only">Si applica solo in modalità APS!</string>

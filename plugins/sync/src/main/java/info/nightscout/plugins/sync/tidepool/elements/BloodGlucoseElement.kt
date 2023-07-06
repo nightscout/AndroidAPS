@@ -21,7 +21,7 @@ class BloodGlucoseElement(therapyEvent: TherapyEvent, dateUtil: DateUtil)
     var value: Int = 0
 
     init {
-        type = "cbg"
+        type = "smbg"
         subType = "manual" // TODO
         value = if (therapyEvent.glucose != null)
             Profile.toMgdl(therapyEvent.glucose!!, therapyEvent.glucoseUnit.toMainUnit()).toInt()

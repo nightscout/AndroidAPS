@@ -193,4 +193,5 @@
     <string name="old">ancien</string>
     <string name="old_warning">!ancien!</string>
     <string name="error">!err!</string>
+    <string name="pref_heartRateSampling">Fréquence Cardiaque</string>
 </resources>

@@ -141,7 +141,7 @@
     <string name="error_in_basal_values">Feil i basalverdiene</string>
     <string name="error_in_target_values">Feil i BS målverdier</string>
     <string name="error_in_isf_values">Feil i IF verdien</string>
-    <string name="profile_name_contains_dot">Profilnavnet inneholder prikker.\nDette støttes ikke av NS.\nProfilen er ikke lastet opp til NS.</string>
+    <string name="profile_name_contains_dot">Noen av profilnavnene inneholder punktum.\nDette støttes ikke av NS.\nProfilen er ikke lastet opp til NS.</string>
     <string name="invalid_profile_not_accepted">Ugyldig profil %1$s ikke akseptert fra NS</string>
     <string name="view">Visning</string>
     <string name="errors">Feil</string>
@@ -253,6 +253,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognoser</string>
     <string name="overview_show_treatments">Behandlinger</string>
+    <string name="overview_show_heartRate">Puls</string>
     <string name="overview_show_deviation_slope">Avvikskurve</string>
     <string name="overview_show_activity">Aktivitet</string>
     <string name="overview_show_bgi">Blodsukkerpåvirkning</string>
@@ -270,6 +271,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEH</string>
+    <string name="heartRate_shortname">HR</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graf skala</string>
     <string name="graph_menu_divider_header">Graf</string>
@@ -323,7 +325,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">t</string>
     <string name="no_active_profile">Det er ikke angitt noen aktiv profil!</string>
-    <string name="profile_message">Profil:\n\nTidsforskyving: %1$\nProsent: %2$d%%\"</string>
+    <string name="profile_message">Profil:\n\nTidsforskyving: %1$d$\nProsent: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="no_profile">Ingen profil valgt</string>
     <string name="aps_only">Bare bruk i APS-modus!</string>

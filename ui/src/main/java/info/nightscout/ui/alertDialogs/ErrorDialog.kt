@@ -10,7 +10,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.view.WindowManager
 import dagger.android.support.DaggerDialogFragment
-import info.nightscout.core.ui.activities.DialogAppCompatActivity
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
 import info.nightscout.interfaces.logging.UserEntryLogger
@@ -26,7 +26,7 @@ class ErrorDialog : DaggerDialogFragment() {
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var uel: UserEntryLogger
 
-    var helperActivity: DialogAppCompatActivity? = null
+    var helperActivity: TranslatedDaggerAppCompatActivity? = null
     var status: String = ""
     var title: String = ""
     var sound: Int = 0

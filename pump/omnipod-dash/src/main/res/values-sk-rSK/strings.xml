@@ -6,12 +6,12 @@
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">História Podu</string>
     <string name="omnipod_dash_history_item_description">Popis</string>
+    <string name="omnipod_dash_history_item_amount">Množstvo</string>
     <string name="omnipod_dash_history_item_source">Zdroj</string>
     <string name="omnipod_dash_history_item_date">Dátum</string>
     <string name="omnipod_dash_history_type">Typ:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f JI</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f JI, Sach=%2$.1f g</string>
-    <string name="omnipod_dash_history_tbr_value">Rýchlosť: %1$.2f JI, Doba trvania: %2$d minút</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Stav Bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Adresa Bluetooth</string>
@@ -31,9 +31,10 @@
     <string name="omnipod_dash_command_not_sent">Príkaz nebol odoslaný</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Príkaz nebol prijatý Podom</string>
     <string name="omnipod_dash_unknown">Neznámy stav príkazu</string>
-    <string name="omnipod_common_history_tbr_value">Rýchlosť: %1$.2f JI, Doba trvania: %2$d minút</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f JI/h, %2$d minút</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f JI</string>
     <string name="omnipod_common_alert_delivery_suspended">Podávanie inzulínu je pozastavené</string>
+    <string name="omnipod_common_history_total_delivered">Celkovo podané: %1$.2f JI</string>
     <string name="omnipod_dash_connection_lost">Stratilo sa spojenie s Podom</string>
     <string name="omnipod_dash_bolus_already_in_progress">Už sa podáva iný bolus</string>
     <string name="omnipod_dash_not_enough_insulin">Nedostatok inzulínu v zásobníku</string>
@@ -46,6 +47,7 @@
     <string name="failed_to_set_the_new_basal_profile">Chyba pri potvrdení nového profilu. Podávanie inzulínu pozastavené</string>
     <string name="setting_basal_profile_might_have_failed">Nastavenie bazálneho profilu pravdepodobne zlyhalo. Podávanie inzulínu môže byť pozastavené! Manuálne obnovte stav Podu zo záložky Omnipod a pokračujte v podávaní inzulínu, ak je to potrebné.</string>
     <string name="bolus_delivery_status_uncertain">Stav podávania inzulínu je neurčitý. Na potvrdenie, alebo zamietnutie aktualizujte stav Podu.</string>
+    <string name="temp_basal_out_of_sync">Stav dočasného bazálu nie je ako očakávaný! Pokiaľ bol predtým dočasný bazál spustený, bol zrušený. Skontrolujte prosím podaný inzulín a históriu Podu.</string>
     <string name="checking_delivery_status">Kontrola stavu podávania inzulínu</string>
     <string name="setting_temp_basal_might_have_basal_failed">Nastavenie dočasného bazálu mohlo byť neúspešné. Ak bol predtým spustený dočasný bazál, mohol byť zrušený. Manuálne obnovte stav Podu zo záložky Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Výsledok zrušenia dočasného bazálu je neurčitý</string>

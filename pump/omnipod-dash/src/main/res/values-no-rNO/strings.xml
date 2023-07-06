@@ -6,12 +6,12 @@
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Pod-historikk</string>
     <string name="omnipod_dash_history_item_description">Beskrivelse</string>
+    <string name="omnipod_dash_history_item_amount">Mengde</string>
     <string name="omnipod_dash_history_item_source">Kilde</string>
     <string name="omnipod_dash_history_item_date">Dato</string>
     <string name="omnipod_dash_history_type">Type:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f E</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f E, KH=%2$.1f g</string>
-    <string name="omnipod_dash_history_tbr_value">Dosering: %1$.2f E, varighet: %2$d min</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth-status</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth-adresse</string>
@@ -31,9 +31,10 @@
     <string name="omnipod_dash_command_not_sent">Kommando ikke sendt</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Kommandoen ikke mottatt av podden</string>
     <string name="omnipod_dash_unknown">Ukjent tilstand for kommandoen</string>
-    <string name="omnipod_common_history_tbr_value">Dosering: %1$.2f E, varighet: %2$d min</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f E/t, %2$d minutter</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f E</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulintilførsel er suspendert</string>
+    <string name="omnipod_common_history_total_delivered">Totalt levert: %1$.2f E</string>
     <string name="omnipod_dash_connection_lost">Mistet tilkoblingen til pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">En annen bolusdose blir levert</string>
     <string name="omnipod_dash_not_enough_insulin">Ikke nok insulin igjen i reservoaret</string>
@@ -46,6 +47,7 @@
     <string name="failed_to_set_the_new_basal_profile">Kunne ikke sette ny basalprofil. Insulintilførsel er pauset</string>
     <string name="setting_basal_profile_might_have_failed">Endring av basalprofil kan ha feilet. Insulinlevering kan bli stoppet! Vennligst velg Oppdater Pod fra Omnipod-fanen og velg gjenoppta levering hvis nødvendig.</string>
     <string name="bolus_delivery_status_uncertain">Status for levering av bolusdoser er usikker. Oppdater pod-statusen for å verifisere.</string>
+    <string name="temp_basal_out_of_sync">Midlertidig basalstatus er ikke som forventet! Dersom en midlertidig basal tidligere kjørte, har den blitt avbrutt. Kontroller levert insulin og pod historikk</string>
     <string name="checking_delivery_status">Kontrollerer leveringsstatus</string>
     <string name="setting_temp_basal_might_have_basal_failed">Innstillingen av midl. basal kan ha feilet. Hvis en midl. basal allerede var aktivert, så har den blitt kansellert. Vennligst oppdater Pod-statusen manuelt fra Omnipod-fanen.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Kansellering av midl. basal er ikke bekreftet</string>

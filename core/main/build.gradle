@@ -23,7 +23,7 @@ dependencies {
 
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
 
-    api 'com.google.guava:guava:31.1-jre'
+    api 'com.google.guava:guava:32.0.1-jre'
 
     api "androidx.activity:activity-ktx:$activity_version"
     api "androidx.appcompat:appcompat:$appcompat_version"

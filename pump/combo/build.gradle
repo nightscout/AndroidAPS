@@ -23,6 +23,6 @@ dependencies {
     implementation project(':app-wear-shared:shared')
 
     // RuffyScripter
-    api 'com.google.guava:guava:31.1-jre'
+    api 'com.google.guava:guava:32.0.1-jre'
 
 }

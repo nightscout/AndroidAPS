@@ -11,7 +11,6 @@
     <string name="omnipod_dash_history_type">Тип:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f ед</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f ед %2$.1f ГУ</string>
-    <string name="omnipod_dash_history_tbr_value">Баз Скорость: %1$.2f ед, Продолжительность: %2$d мин</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Состояние Bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Адрес Bluetooth</string>
@@ -31,7 +30,6 @@
     <string name="omnipod_dash_command_not_sent">Команда не отправлена</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Команда не получена помпой</string>
     <string name="omnipod_dash_unknown">Состояние команды неясно</string>
-    <string name="omnipod_common_history_tbr_value">Баз Скорость: %1$.2f ед, Продолжительность: %2$d мин</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f ед</string>
     <string name="omnipod_common_alert_delivery_suspended">Введение инсулина приостановлено</string>
     <string name="omnipod_dash_connection_lost">Потеряно соединение с подом</string>

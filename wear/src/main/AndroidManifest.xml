@@ -7,6 +7,7 @@
     <uses-permission android:name="com.google.android.permission.PROVIDE_BACKGROUND" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
 
     <uses-sdk tools:overrideLibrary="androidx.wear.tiles" />
 
@@ -267,6 +268,10 @@
                     android:scheme="wear" />
             </intent-filter>
         </service>
+
+        <service
+            android:name=".heartrate.HeartRateListener"
+            android:exported="true" />
 
         <service
             android:name=".complications.LongStatusComplication"

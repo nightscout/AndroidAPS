@@ -119,7 +119,7 @@
     <string name="current_profile">Aktuálny profil</string>
     <string name="available_profile">Dostupný profil</string>
     <string name="format_with_tdd">Vek: %1$.0f CDD: %2$.0f JI</string>
-    <string name="format_with_tdd_and_pct">Vek: %1$.0f CDD: %2$.0f JI %3$d%%</string>
+    <string name="format_with_tdd_and_pct">Vek: %1$d CDD: %2$.0f JI %3$d%%</string>
     <string name="format_with_weight">Vek: %1$.0f Hmotnosť: %2$.0f kg</string>
     <string name="dpv_default_profile">Predvolený DPV profil</string>
     <string name="invalid_pct">Neplatný vstup %</string>

@@ -24,8 +24,6 @@
     <string name="objectives_autosens_gate">Loope eine Woche tagsüber mit regelmäßiger Kohlenhydrat-Eingabe</string>
     <string name="objectives_autosens_learned">Wenn Ihr Autosens Ergebnis nicht stündlich schwankt, um die angestrebten 100 % ist das verwendete Profil wahrscheinlich falsch.</string>
     <string name="objectives_smb_objective">Aktiviere zusätzliche Funktionen für die Nutzung tagsüber wie z. B. SMB</string>
-    <string name="objectives_smb_gate">Lies das Wiki und erhöhe maxIOB, damit der SMB gut funktioniert. Ein guter Anfang ist
-die Formel maxIOB = durchschnittlicher Essensbolus + 3 x höchste Basalrate</string>
     <string name="objectives_smb_learned">Die Verwendung von SMB ist Dein Ziel. Der Oref1-Algorithmus wurde entwickelt, um Dir auch mit Boli zu helfen. Du solltest nicht den vollen Bolus für Dein Essen geben, sondern nur einen Teil davon abgeben und es AAPS überlassen bei Bedarf den notwendigen Rest entsprechend dem Blutzuckerverlauf zugeben zu lassen. Auf diese Weise hast Du mehr Platz für falsch berechnete Kohlenhydrate. Wusstest Du, dass Du einen Prozentsatz bei Verwendung des Bolusrechners festlegen kannst, um die Größe des Bolus zu reduzieren?</string>
     <string name="objectives_auto_objective">Automatisierung aktivieren</string>
     <string name="objectives_auto_gate">Lies in der Dokumentation nach, wie die Automation funktioniert. Richte Dir erst einfache Regeln ein. Zunächst sollte AAPS keine Änderungen vornehmen, sondern Dir nur eine Benachrichtigung anzeigen. Wenn Du Dir sicher bist, dass die Automation im richtigen Moment angetriggert wird, dann kannst Du die Benachrichtigung durch eine Aktion ersetzen (https://androidaps.readthedocs.io/de/latest/CROWDIN/de/Usage/Automation.html)</string>

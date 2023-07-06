@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<resources>
+    <string name="string_a002">Reservorio vacío\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a003">Parche expirado\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a004">Oclusión\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a005">Error en la prueba de encendido\nEl parche ha sido desactivado. Cambia el parche ahora.</string>
+    <string name="string_a007">Temperatura inadecuada\nEntrega de insulina o proceso de  \'Activar parche\' detenido. Evita la temperatura extrema ahora.</string>
+    <string name="string_a016">Error en la insercción de la aguja\nComprueba la posición de la palanca y pulsa en \'Reintentar\'.</string>
+    <string name="string_a018">Error de batería del parche\nEl parche ha sido desactivado y\se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a019">Error de batería del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a020">Error en la activación del parche\n\'El proceso de \'Activar parche\' ha expirdado. Pulsa\'Confirmar\'para desactivar el parche actual. Cambia el parche ahora.</string>
+    <string name="string_a022">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a023">Error del parche\nEl parche ha sido desactivado y\se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a034">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a041">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a042">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a043">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a044">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a106">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a107">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a108">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a116">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a117">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_a118">Error del parche\nEl parche ha sido desactivado y se ha detenido la entrega de insulina. Cambia el parche ahora.</string>
+    <string name="string_b000">La vida útil del parche expira %s. Prepárate para cambiar el parche.</string>
+    <string name="string_b001">Fin de la suspensión de insulina\nPulsa en \'Reanudar\' para reanudar la entrega de insulina.</string>
+    <string name="string_b003">Reservorio bajo\nReemplaza el parche pronto.</string>
+    <string name="string_b005">La vida útil del parche ha expirado\nCambia el parche ahora.</string>
+    <string name="string_b006">El parche expira pronto\nCambia el parche ahora.</string>
+    <string name="string_b012">Activación incompleta del parche\nCompleta el proceso de \'Activar parche\'.</string>
+    <string name="string_b018">Batería baja del parche\nPrepárate para cambiar el parche.</string>
+</resources>

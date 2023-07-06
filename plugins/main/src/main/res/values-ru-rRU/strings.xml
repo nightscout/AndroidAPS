@@ -141,7 +141,7 @@
     <string name="error_in_basal_values">Ошибка в величине базала</string>
     <string name="error_in_target_values">Ошибка в целевых значениях</string>
     <string name="error_in_isf_values">Ошибка в значении фактора чувствительности к инсулину ISF</string>
-    <string name="profile_name_contains_dot">Имя профиля содержит точки.\nЭто не поддерживается NS.\nПрофиль не выгружен в NS.</string>
+    <string name="profile_name_contains_dot">В некоторых наименованиях профиля содержатся точки.\nЭто не поддерживается NS.\nПрофиль не выгружен в NS.</string>
     <string name="invalid_profile_not_accepted">Неверный профиль %1$s не принят из NS</string>
     <string name="view">Смотреть</string>
     <string name="errors">Ошибки</string>
@@ -323,7 +323,6 @@
     <string name="grams_short">г</string>
     <string name="hour_short">ч</string>
     <string name="no_active_profile">Активный профиль не установлен!</string>
-    <string name="profile_message">Профиль:\n\nСдвиг по времени: %1$\nПроцент: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fед%1$.0f%%</string>
     <string name="no_profile">Профиль не загружен</string>
     <string name="aps_only">Применять только в режиме APS!</string>

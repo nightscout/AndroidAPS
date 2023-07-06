@@ -24,7 +24,6 @@
     <string name="objectives_autosens_gate">1 savaitę praleiskite sėkmingai naudodami uždarąjį ciklą dienos metu ir įvesdami visus valgomus angliavandenius</string>
     <string name="objectives_autosens_learned">Jei Jūsų autosens rezultatai nesvyruoja apie 100%, tikėtina, kad profilis turi klaidų.</string>
     <string name="objectives_smb_objective">Dienos metu aktyvuokite papildomas funkcijas, tokias kaip SMB (Super Mikro Bolusas)</string>
-    <string name="objectives_smb_gate">Norėdami, kad SMB veiktų gerai, turite perskaityti dokumentaciją ir padidinti max AIO! Pradžiai patartina skaičiuoti taip: maxAIO=(didžiausia valandinė bazė x 3) + vidutinis bolusas</string>
     <string name="objectives_smb_learned">SMB yra Jūsų tikslas. Oref1 algoritmas sukurtas taip, kad taptų Jums pagalba su bolusavimu. Jūs galite nesileisti viso boluso maistui, susileiskite dalį, o AAPS padarys likusį darbą, jei reikės. Taip išvengsite klaidų dėl neteisingai apskaičiuotų AV. Ar žinote, kad galite skaičiuotuve nurodyti, kiek % apskaičiuoto boluso suleisti?</string>
     <string name="objectives_auto_objective">Automatizavimo įjungimas</string>
     <string name="objectives_auto_gate">Perskaitykite dokumentaciją apie automatizacijos veikimą. Nustatykite kelias paprastas taisykles. Nustatykite, kad AAPS tik parodytų pranešimą, o ne atliktų realų veiksmą. Kai įsitikinsite, kad automatizacija suveikia reikalingu metu, vietoj pranešimo įjunkite veiksmą. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>
@@ -40,7 +39,7 @@
     <string name="objectives_usedisconnectpump">Imituokite maudynes duše. Atjunkite pompą 1 valandai (ilgai paspauskite Atviras Ciklas)</string>
     <string name="objectives_usereconnectpump">... ir iš naujo prisijunkite tuo pačiu būdu</string>
     <string name="objectives_usetemptarget">Nustatykite 10 min trukmės laikiną tikslą (ilgai spausti ant dabartinio tikslo)</string>
-    <string name="objectives_useactions">Konfigūracijoje įjunkite Veiksmų įskiepį, nustatykite jį matomą ir jo turinio rodymą viršutiniame meniu</string>
+    <string name="objectives_useactions">Konfigūracijoje įjunkite Veiksmų įskiepį, padarykite jį ir jo turinį matomą viršutiniame meniu</string>
     <string name="objectives_useloop">Parodyti Ciklo įskiepio turinį</string>
     <string name="objectives_usescale">Panaudokite vaizdo dydžio keitimo funkciją ilgai spaudžiant ant glikemijos kreivės</string>
     <string name="objectives_exam_objective">Patvirtinkite savo žinias</string>

@@ -129,7 +129,6 @@
     <string name="error_in_basal_values">Fel i basaldoser</string>
     <string name="error_in_target_values">Fel i målvärden</string>
     <string name="error_in_isf_values">Fel i korrektionskvoter</string>
-    <string name="profile_name_contains_dot">Profilnamnet innehåller punkter.\nDetta stöds inte av NS.\nProfil överförs inte till NS.</string>
     <string name="invalid_profile_not_accepted">Ogiltig profil %1$s från NS accepteras inte</string>
     <string name="view">Visa</string>
     <string name="errors">Fel</string>

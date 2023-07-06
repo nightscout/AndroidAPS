@@ -141,7 +141,6 @@
     <string name="error_in_basal_values">Fehler in den Basalwerten</string>
     <string name="error_in_target_values">Fehler in den Zielwerten</string>
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
-    <string name="profile_name_contains_dot">Profilname enthält Punkte.\nDies wird von NS nicht unterstützt.\nProfil wird nicht zu NS hochgeladen.</string>
     <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
     <string name="view">Ansicht</string>
     <string name="errors">Fehler</string>
@@ -325,7 +324,6 @@ Unerwartetes Verhalten.</string>
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Kein aktiver Profilwechsel!</string>
-    <string name="profile_message">Profil:\n\nZeitverschiebung: %1$\nProzent: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="no_profile">Kein Profil geladen</string>
     <string name="aps_only">Nur im APS-Modus anwendbar!</string>

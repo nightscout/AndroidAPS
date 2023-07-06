@@ -24,7 +24,7 @@
     <string name="objectives_autosens_gate">Una semana con éxito en bucle cerrado durante el día con entrada regular de carbohidratos</string>
     <string name="objectives_autosens_learned">Si el resultado de tu autosens no oscila en torno al 100% es probable que tu perfil esté equivocado.</string>
     <string name="objectives_smb_objective">Habilitar funciones adicionales para uso durante el día como SMB</string>
-    <string name="objectives_smb_gate">¡Debes leer el wiki y subir maxIOB para que SMB funcione bien! Para comenzar un buen valor sería maxIOB = bolo de comida medio + 3 x máximo basal diario</string>
+    <string name="objectives_smb_gate">Debes leer la wiki y aumentar el valor de maxIOB para que SMB funcione bien. Un buen comienzo sería maxIOB = bolo de comida promedio + 3x máxima basal diaria</string>
     <string name="objectives_smb_learned">Utilizar SMB es su objetivo. El algoritmo Oref1 fue diseñado para ayudarle también con sus bolos. No debe dar un bolo completo para su comida, sino sólo una parte y dejar que AAPS le dé el resto si es necesario. De esta forma tendrás más espacio para los carbohidratos mal calculados. ¿Sabías que puedes establecer un porcentaje del resultado de la calculadora de bolo para reducir el tamaño del bolo?</string>
     <string name="objectives_auto_objective">Activar automatización</string>
     <string name="objectives_auto_gate">Lee la documentación sobre el funcionamiento de la automatización. Configure sus primeras reglas simples. En lugar de una acción, deja que AAPS muestre sólo una notificación. Cuando esté seguro de que la automatización se activa en el momento adecuado, sustituya la notificación por una acción real. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>

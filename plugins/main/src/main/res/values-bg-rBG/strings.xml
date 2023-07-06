@@ -141,7 +141,6 @@
     <string name="error_in_basal_values">Грешка в базалните стойности</string>
     <string name="error_in_target_values">Грешка в стойностите за цел</string>
     <string name="error_in_isf_values">Грешка в стойностите за чувствителност (ISF)</string>
-    <string name="profile_name_contains_dot">Името на профила съдържа точка.\nТова не се поддържа от НС.\nПрофилът не е качен в НС.</string>
     <string name="invalid_profile_not_accepted">Невалиден профил %1$s не приет от NS</string>
     <string name="view">Изглед</string>
     <string name="errors">Грешки</string>
@@ -323,7 +322,6 @@
     <string name="grams_short">гр.</string>
     <string name="hour_short">ч</string>
     <string name="no_active_profile">Не е настроен активен профил!</string>
-    <string name="profile_message">Профил:\n\nСмяна на времето: %1$\nПроценти: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fЕ %1$.0f%%</string>
     <string name="no_profile">Не е зареден профил</string>
     <string name="aps_only">Прилагане само в режим АПС!</string>

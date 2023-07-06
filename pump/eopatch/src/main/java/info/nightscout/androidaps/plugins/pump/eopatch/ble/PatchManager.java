@@ -360,20 +360,11 @@ public class PatchManager implements IPatchManager {
 
         if (detailedBolusInfo.insulin > 0) {
             pumpSync.syncBolusWithPumpId(
-                    detailedBolusInfo.timestamp,
+                    dateUtil.now(), // Use real timestamp to have it different from carbs (otherwise NS sync fail)
                     detailedBolusInfo.insulin,
                     detailedBolusInfo.getBolusType(),
                     dateUtil.now(),
                     PumpType.EOFLOW_EOPATCH2,
-                    patchManager.pm.getPatchSerial()
-            );
-        }
-        if (detailedBolusInfo.carbs > 0) {
-            pumpSync.syncCarbsWithTimestamp(
-                    detailedBolusInfo.getCarbsTimestamp() != null ? detailedBolusInfo.getCarbsTimestamp() : detailedBolusInfo.timestamp,
-                    detailedBolusInfo.carbs,
-                    null,
-                    PumpType.USER,
                     patchManager.pm.getPatchSerial()
             );
         }

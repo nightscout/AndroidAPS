@@ -14,6 +14,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.alarm.AlarmProcess
 import info.nightscout.androidaps.plugins.pump.eopatch.alarm.IAlarmProcess
 import info.nightscout.androidaps.plugins.pump.eopatch.bindingadapters.setOnSafeClickListener
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
+import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
 import info.nightscout.androidaps.plugins.pump.eopatch.databinding.DialogAlarmBinding
 import info.nightscout.androidaps.plugins.pump.eopatch.ui.AlarmHelperActivity
 import info.nightscout.core.ui.R
@@ -32,6 +33,7 @@ class AlarmDialog : DaggerDialogFragment() {
     @Inject lateinit var patchManager: IPatchManager
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var pm: IPreferenceManager
 
     var helperActivity: AlarmHelperActivity? = null
     var alarmCode: AlarmCode? = null
@@ -84,7 +86,10 @@ class AlarmDialog : DaggerDialogFragment() {
                     .subscribeOn(aapsSchedulers.io)
                     .subscribe ({ ret ->
                         aapsLogger.debug("Alarm processing result :${ret}")
-                        if (ret == IAlarmProcess.ALARM_HANDLED) {
+                        if (ret == IAlarmProcess.ALARM_HANDLED || ret == IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP) {
+                            if(ret == IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP){
+                                pm.getAlarms().needToStopBeep.add(ac)
+                            }
                             alarmCode?.let{
                                 patchManager.preferenceManager.getAlarms().handle(it)
                                 patchManager.preferenceManager.flushAlarms()

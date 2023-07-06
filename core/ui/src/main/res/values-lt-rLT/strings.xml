@@ -23,7 +23,7 @@
     <string name="mgdl">mg/dl</string>
     <string name="mmol">mmol/l</string>
     <string name="save">Išsaugoti</string>
-    <string name="snooze">Snausti</string>
+    <string name="snooze">Nutildyti</string>
     <string name="virtual_pump">Virtuali pompa</string>
     <string name="constraints">Apribojimai</string>
     <string name="superbolus">Superbolus</string>
@@ -82,7 +82,7 @@
     <string name="bluetooth">Bluetooth</string>
     <string name="btwatchdog_title">BT Watchdog</string>
     <string name="btwatchdog_summary">Vienai sekundei išjungia telefono bluetooth, jei ryšys su pompa nutrūksta. Gali būti veiksminga kai kuriems telefonų modeliams, turintiems BT problemų.</string>
-    <string name="virtualpump_resultok">Gerai</string>
+    <string name="virtualpump_resultok">OK</string>
     <string name="pump_time_updated">Pompos laikas pakeistas</string>
     <string name="exit">Išeiti</string>
     <string name="removerecord">Ištrinti įrašą</string>
@@ -232,7 +232,7 @@
     <string name="hypo">Hipo</string>
     <string name="activity">Aktyvumas</string>
     <string name="wear">Išmanieji laikrodžiai</string>
-    <string name="automation">Automatiškai</string>
+    <string name="automation">Automatizacija</string>
     <string name="custom">Pasirinktinis</string>
     <string name="loop">Ciklas</string>
     <string name="ns">NS</string>
@@ -525,7 +525,7 @@
     <!--    Dialogs-->
     <string name="confirmation">Patvirtinimas</string>
     <string name="message">Pranešimas</string>
-    <string name="ok">Gerai</string>
+    <string name="ok">OK</string>
     <string name="cancel">Atšaukti</string>
     <string name="dismiss">ATMESTI</string>
     <string name="yes">Taip</string>

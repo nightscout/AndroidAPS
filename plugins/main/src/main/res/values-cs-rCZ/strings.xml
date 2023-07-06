@@ -141,7 +141,7 @@
     <string name="error_in_basal_values">Chyba v hodnotách bazálu</string>
     <string name="error_in_target_values">Chyba v hodnotách cílové gl.</string>
     <string name="error_in_isf_values">Chyba v hodnotách inz. citlivosti</string>
-    <string name="profile_name_contains_dot">Název profilu obsahuje tečky.\nToto není v NS podporováno.\nProfil není přenesen do NS.</string>
+    <string name="profile_name_contains_dot">Některý název profilu obsahuje tečky.\nToto není v NS podporováno.\nProfily nebudou přeneseny do NS.</string>
     <string name="invalid_profile_not_accepted">Neplatný profil %1$s nebyl přijat z NS</string>
     <string name="view">Zobrazit</string>
     <string name="errors">Chyby</string>
@@ -253,6 +253,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predikce</string>
     <string name="overview_show_treatments">Ošetření</string>
+    <string name="overview_show_heartRate">Tepová frekvence</string>
     <string name="overview_show_deviation_slope">Odchylka sklonu</string>
     <string name="overview_show_activity">Aktivita</string>
     <string name="overview_show_bgi">Vliv na hladinu glukózy</string>
@@ -270,6 +271,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">OŠET</string>
+    <string name="heartRate_shortname">TF</string>
     <string name="sensitivity_shortname">SENZ</string>
     <string name="graph_scale">Měřítko grafu</string>
     <string name="graph_menu_divider_header">Graf</string>
@@ -323,7 +325,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Není nastaven žádný aktivní profil!</string>
-    <string name="profile_message">Profil:\n\nPosunutí: %1$\nProcento: %2$d%%\"</string>
+    <string name="profile_message">Profil:\n\nPosunutí: %1$d\nProcento: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">Není vybrán žádný profil</string>
     <string name="aps_only">Použít pouze v APS módu!</string>

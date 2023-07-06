@@ -156,7 +156,7 @@
     <string name="error_in_basal_values">Error in basal values</string>
     <string name="error_in_target_values">Error in target values</string>
     <string name="error_in_isf_values">Error in ISF values</string>
-    <string name="profile_name_contains_dot">Profile name contains dots.\nThis is not supported by NS.\nProfile is not uploaded to NS.</string>
+    <string name="profile_name_contains_dot">Some of profile names contains dots.\nThis is not supported by NS.\nProfiles will not be uploaded to NS.</string>
     <string name="invalid_profile_not_accepted">Invalid profile %1$s not accepted from NS</string>
     <string name="view">View</string>
     <string name="errors">Errors</string>
@@ -291,6 +291,7 @@
 
     <string name="overview_show_predictions">Predictions</string>
     <string name="overview_show_treatments">Treatments</string>
+    <string name="overview_show_heartRate">Heart Rate</string>
     <string name="overview_show_deviation_slope">Deviation slope</string>
     <string name="overview_show_activity">Activity</string>
     <string name="overview_show_bgi">Blood Glucose Impact</string>
@@ -308,6 +309,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TREAT</string>
+    <string name="heartRate_shortname">HR</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graph scale</string>
     <string name="graph_menu_divider_header">Graph</string>
@@ -370,7 +372,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">No active profile switch!</string>
-    <string name="profile_message">Profile:\n\nTimeshift: %1$\nPercentage: %2$d%%\"</string>
+    <string name="profile_message">Profile:\n\nTimeshift: %1$d\nPercentage: %2$d%%\"</string>
     <string name="key_wear_predictions" translatable="false">wear_predictions</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">No profile loaded</string>

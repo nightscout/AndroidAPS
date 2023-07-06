@@ -26,7 +26,7 @@
     <string name="objectives_autosens_gate">1 week successful daytime looping with regular carb entry</string>
     <string name="objectives_autosens_learned">If your autosens result is not oscillating around 100% your profile probably wrong.</string>
     <string name="objectives_smb_objective">Enabling additional features for daytime use, such as SMB</string>
-    <string name="objectives_smb_gate">You must read the wiki and rise maxIOB to get SMBs working fine! A good start is maxIOB=average mealbolus + 3 x max daily basal</string>
+    <string name="objectives_smb_gate">You must read the wiki and raise maxIOB to get SMBs working fine! A good start is maxIOB=average mealbolus + 3 x max daily basal</string>
     <string name="objectives_smb_learned">Using SMB is your goal. Oref1 algorithm was designed to help you with your boluses as well. You should not give full bolus for your food but only part of it and let AAPS give you the rest if needed. This way you have more space for miscalculated carbs. Did you know that you can set a percentage of bolus calculator result to reduce the size of bolus?</string>
     <string name="objectives_auto_objective">Enabling automation</string>
     <string name="objectives_auto_gate">Read the docs on how automation works. Set up your first simple rules. Instead of action let AAPS display only notification. When you are sure automation is triggered at the right time replace notification by real action. (https://wiki.aaps.app/en/latest/Usage/Automation.html)</string>

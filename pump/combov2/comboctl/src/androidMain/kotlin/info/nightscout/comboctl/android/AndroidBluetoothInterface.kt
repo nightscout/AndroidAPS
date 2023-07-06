@@ -334,9 +334,9 @@ class AndroidBluetoothInterface(private val androidContext: Context) : Bluetooth
 
         runIfScanPermissionGranted(androidContext) {
             @SuppressLint("MissingPermission")
-            if (bluetoothAdapter!!.isDiscovering) {
+            if (bluetoothAdapter.isDiscovering) {
                 logger(LogLevel.DEBUG) { "Stopping discovery" }
-                bluetoothAdapter!!.cancelDiscovery()
+                bluetoothAdapter.cancelDiscovery()
             }
         }
 
