@@ -253,6 +253,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Прогнозирование</string>
     <string name="overview_show_treatments">Терапия</string>
+    <string name="overview_show_heartRate">Частота сердечных сокращений</string>
     <string name="overview_show_deviation_slope">Линия отклонения</string>
     <string name="overview_show_activity">Активность</string>
     <string name="overview_show_bgi">Влияние ГК</string>
@@ -270,6 +271,7 @@
     <string name="abs_insulin_shortname">НАДО</string>
     <string name="devslope_shortname">ЛИНОТКЛН</string>
     <string name="treatments_shortname">НАЗНАЧ</string>
+    <string name="heartRate_shortname">ЧСС</string>
     <string name="sensitivity_shortname">ЧУВСТВ</string>
     <string name="graph_scale">Масштаб графика</string>
     <string name="graph_menu_divider_header">График</string>
@@ -323,6 +325,7 @@
     <string name="grams_short">г</string>
     <string name="hour_short">ч</string>
     <string name="no_active_profile">Активный профиль не установлен!</string>
+    <string name="profile_message">Профиль:\n\nСдвиг по времени: %1$d$\nПроцент: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fед%1$.0f%%</string>
     <string name="no_profile">Профиль не загружен</string>
     <string name="aps_only">Применять только в режиме APS!</string>
