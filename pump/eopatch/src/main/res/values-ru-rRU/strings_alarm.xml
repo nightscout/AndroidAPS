@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">Резервуар пуст\n POD деактивирован, подача инсулина прекращена. Замените POD.</string>
+    <string name="string_a003">Истек срок POD\n POD деактивирован, подача инсулина прекращена. Замените POD.</string>
+    <string name="string_a004">Закупорка\n POD деактивирован, подача инсулина прекращена. Замените POD.</string>
+    <string name="string_a005">Ошибка самотестирования при включении\n POD деактивирован. Замените POD.</string>
+    <string name="string_a007">Неверная температура\nПодача инсулина или процесс активации POD остановлен. Приведите темрературу к норме.</string>
+    <string name="string_a016">Ошибка ввода иглы\n Проверьте положение активатора и нажмите \"Повтор\".</string>
+    <string name="string_a018">Ошибка батареи POD\n POD деактивирован, \nподача инсулина прекращена. Замените POD.</string>
+    <string name="string_a019">Ошибка батареи POD\n POD деактивирован, подача инсулина прекращена. Замените POD.</string>
+</resources>
