@@ -6,6 +6,7 @@
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Журнал помпы</string>
     <string name="omnipod_dash_history_item_description">Описание</string>
+    <string name="omnipod_dash_history_item_amount">Количество</string>
     <string name="omnipod_dash_history_item_source">Источник</string>
     <string name="omnipod_dash_history_item_date">Дата</string>
     <string name="omnipod_dash_history_type">Тип:</string>
@@ -30,8 +31,10 @@
     <string name="omnipod_dash_command_not_sent">Команда не отправлена</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Команда не получена помпой</string>
     <string name="omnipod_dash_unknown">Состояние команды неясно</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f ед/ч, %2$d минут</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f ед</string>
     <string name="omnipod_common_alert_delivery_suspended">Введение инсулина приостановлено</string>
+    <string name="omnipod_common_history_total_delivered">Всего подано: %1$.2f ед</string>
     <string name="omnipod_dash_connection_lost">Потеряно соединение с подом</string>
     <string name="omnipod_dash_bolus_already_in_progress">Вводится еще один болюс</string>
     <string name="omnipod_dash_not_enough_insulin">В резервуаре недостаточно инсулина</string>
