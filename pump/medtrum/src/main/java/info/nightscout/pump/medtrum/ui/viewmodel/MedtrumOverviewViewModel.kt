@@ -107,11 +107,12 @@ class MedtrumOverviewViewModel @Inject constructor(
         scope.launch {
             medtrumPump.pumpStateFlow.collect { state ->
                 aapsLogger.debug(LTag.PUMP, "MedtrumViewModel pumpStateFlow: $state")
-                if (medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED) {
-                    _canDoResetAlarms.postValue(true)
-                } else {
-                    _canDoResetAlarms.postValue(false)
-                }
+                _canDoResetAlarms.postValue(
+                    medtrumPump.pumpState in listOf(
+                        MedtrumPumpState.PAUSED, MedtrumPumpState.HMAX_SUSPENDED, MedtrumPumpState.DMAX_SUSPENDED
+                    )
+                )
+
                 updateGUI()
             }
         }
@@ -161,13 +162,10 @@ class MedtrumOverviewViewModel @Inject constructor(
             // max 6h back
                 _lastBolus.postValue(
                     dateUtil.timeString(medtrumPump.lastBolusTime) + " " + dateUtil.sinceString(medtrumPump.lastBolusTime, rh) + " " + rh.gs(
-                        info.nightscout.interfaces.R.string
-                            .format_insulin_units, medtrumPump
-                            .lastBolusAmount
+                        info.nightscout.interfaces.R.string.format_insulin_units, medtrumPump.lastBolusAmount
                     )
                 )
-            else
-                _lastBolus.postValue("")
+            else _lastBolus.postValue("")
         }
 
         val activeAlarmStrings = medtrumPump.activeAlarms.map { medtrumPump.alarmStateToString(it) }

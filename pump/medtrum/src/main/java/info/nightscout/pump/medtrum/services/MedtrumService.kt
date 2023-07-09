@@ -225,7 +225,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         if (needLoadHistory) {
             if (result) result = loadEvents()
         }
-        if (result) medtrumPump.needCheckTimeUpdate = false        
+        if (result) medtrumPump.needCheckTimeUpdate = false
         return result
     }
 
@@ -238,15 +238,18 @@ class MedtrumService : DaggerService(), BLECommCallback {
             medtrumPump.lastConnection = System.currentTimeMillis()
         } else {
             aapsLogger.error(LTag.PUMPCOMM, "Failed to load events")
-            // TODO: remove me before release
-            fabricPrivacy.logMessage("Medtrum LoadEvents: Failed to load events")
         }
         return result
     }
 
     fun clearAlarms(): Boolean {
         var result = true
-        if (medtrumPump.activeAlarms.isNotEmpty()) {
+        if (medtrumPump.pumpState in listOf(
+                MedtrumPumpState.PAUSED,
+                MedtrumPumpState.HMAX_SUSPENDED,
+                MedtrumPumpState.DMAX_SUSPENDED
+            )
+        ) {
             when (medtrumPump.pumpState) {
                 MedtrumPumpState.HMAX_SUSPENDED -> {
                     result = sendPacketAndGetResponse(ClearPumpAlarmPacket(injector, ALARM_HOURLY_MAX_CLEAR_CODE))
@@ -257,26 +260,12 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 }
 
                 else                            -> {
-                    // TODO: Remove me before release!!!
-                    // Try to brute force the commands
-                    aapsLogger.warn(LTag.PUMPCOMM, "Trying to clear alarms brutus!")
-                    for (i in 0..100) {
-                        result = sendPacketAndGetResponse(ClearPumpAlarmPacket(injector, i))
-                        if (result) {
-                            aapsLogger.warn(LTag.PUMPCOMM, "Alarm cleared: $i")
-                            break
-                        }
-                        SystemClock.sleep(50)
-                    }
+                    // Nothing to reset
                 }
             }
-        }
-        // Resume suspended pump
-        if (medtrumPump.pumpState in listOf(MedtrumPumpState.LOWBG_SUSPENDED, MedtrumPumpState.PAUSED)) {
+            // Resume suspended pump
             if (result) result = sendPacketAndGetResponse(ResumePumpPacket(injector))
         }
-        if (result) result = sendPacketAndGetResponse(ResumePumpPacket(injector))
-
         return result
     }
 
@@ -695,7 +684,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 responseSuccess = true
                 // Check if we have a supported pump
                 if (medtrumPump.pumpType() == PumpType.MEDTRUM_UNTESTED) {
-                    // Throw error 
+                    // Throw error
                     aapsLogger.error(LTag.PUMPCOMM, "Unsupported pump type")
                     uiInteraction.addNotificationWithSound(
                         Notification.PUMP_ERROR,

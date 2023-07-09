@@ -7,6 +7,9 @@
         <variable
             name="viewmodel"
             type="info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel" />
+
+        <import type="android.view.View" />
+
     </data>
 
     <RelativeLayout
@@ -645,6 +648,7 @@
                 android:enabled="@{viewmodel.canDoResetAlarms}"
                 android:maxLines="2"
                 android:text="@string/reset_alarms_label"
+                android:visibility="@{viewmodel.canDoResetAlarms ? View.VISIBLE : View.GONE}"
                 app:onSafeClick="@{() -> viewmodel.onClickResetAlarms()}" />
 
             <!-- Change Patch button -->
