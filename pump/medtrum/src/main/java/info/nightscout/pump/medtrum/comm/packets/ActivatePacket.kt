@@ -97,9 +97,6 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
             medtrumPump.lastTimeReceivedFromPump = time
             medtrumPump.currentSequenceNumber = basalSequence // We are activated, set the new seq nr
             medtrumPump.syncedSequenceNumber = basalSequence // We are activated, reset the synced seq nr ()
-            // Update the actual basal profile
-            medtrumPump.actualBasalProfile = basalProfile
-            medtrumPump.handleBasalStatusUpdate(basalType, basalValue, basalSequence, basalPatchId, basalStartTime, time)
 
             // Update the pump in the database, technically this is not a new pump only new patch, but still TBR's etc need to be cannceled
             pumpSync.connectNewPump()
@@ -116,6 +113,10 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
                 pumpType = medtrumPump.pumpType(),
                 pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
             )
+
+            // Update the actual basal profile
+            medtrumPump.actualBasalProfile = basalProfile
+            medtrumPump.handleBasalStatusUpdate(basalType, basalValue, basalSequence, basalPatchId, basalStartTime, time)
         }
 
         return success

@@ -1,7 +1,6 @@
 package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.comm.enums.CommandType.CANCEL_TEMP_BASAL
 import info.nightscout.pump.medtrum.comm.enums.BasalType
@@ -15,7 +14,6 @@ import javax.inject.Inject
 class CancelTempBasalPacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
 
     @Inject lateinit var medtrumPump: MedtrumPump
-    @Inject lateinit var pumpSync: PumpSync
     @Inject lateinit var dateUtil: DateUtil
 
     companion object {
@@ -47,20 +45,6 @@ class CancelTempBasalPacket(injector: HasAndroidInjector) : MedtrumPacket(inject
             val basalStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_BASAL_START_TIME_START, RESP_BASAL_START_TIME_END).toLong())
 
             medtrumPump.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalStartTime)
-
-            if (basalType == BasalType.STANDARD) {
-                // If we have standard here, means TBR is cancelled successfully
-                val success = pumpSync.syncStopTemporaryBasalWithPumpId(
-                    timestamp = basalStartTime + 250, // Time of normal basal start = time of tbr end
-                    endPumpId = basalStartTime + 250, // +250ms Make sure there is time between start and stop of TBR
-                    pumpType = medtrumPump.pumpType(),
-                    pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-                )
-                aapsLogger.debug(
-                    LTag.PUMPCOMM,
-                    "CancelTempBasalPacket: EVENT TEMP_END ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) success: $success"
-                )
-            }
         }
         return success
     }
