@@ -16,33 +16,19 @@ import android.bluetooth.le.ScanResult
 import android.bluetooth.le.ScanSettings
 import android.bluetooth.le.ScanFilter
 import android.content.Context
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.app.ActivityCompat
-import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.notify
-import info.nightscout.core.utils.waitMillis
-import info.nightscout.interfaces.notifications.Notification
-import info.nightscout.interfaces.pump.PumpSync
-import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.pump.medtrum.comm.WriteCommandPackets
 import info.nightscout.pump.medtrum.comm.ManufacturerData
 import info.nightscout.pump.medtrum.comm.ReadDataPacket
-import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventDismissNotification
-import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import java.util.UUID
 import java.util.Arrays
 import javax.inject.Inject
@@ -59,15 +45,8 @@ interface BLECommCallback {
 
 @Singleton
 class BLEComm @Inject internal constructor(
-    private val injector: HasAndroidInjector,
     private val aapsLogger: AAPSLogger,
-    private val rh: ResourceHelper,
-    private val context: Context,
-    private val rxBus: RxBus,
-    private val sp: SP,
-    private val pumpSync: PumpSync,
-    private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction
+    private val context: Context
 ) {
 
     companion object {

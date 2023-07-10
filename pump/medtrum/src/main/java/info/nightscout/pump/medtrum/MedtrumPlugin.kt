@@ -15,9 +15,7 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.Medtrum
 import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
@@ -41,26 +39,20 @@ import info.nightscout.pump.medtrum.services.MedtrumService
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
-import info.nightscout.rx.events.EventAppInitialized
 import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventOverviewBolusProgress
-import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.functions.Consumer
 import io.reactivex.rxjava3.kotlin.plusAssign
-import io.reactivex.rxjava3.subjects.BehaviorSubject
 import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlin.math.abs
-import kotlin.math.round
 
 @Singleton class MedtrumPlugin @Inject constructor(
     injector: HasAndroidInjector,
@@ -68,7 +60,6 @@ import kotlin.math.round
     rh: ResourceHelper,
     commandQueue: CommandQueue,
     private val constraintChecker: Constraints,
-    private val sp: SP,
     private val aapsSchedulers: AapsSchedulers,
     private val rxBus: RxBus,
     private val context: Context,
@@ -76,7 +67,6 @@ import kotlin.math.round
     private val dateUtil: DateUtil,
     private val medtrumPump: MedtrumPump,
     private val uiInteraction: UiInteraction,
-    private val profileFunction: ProfileFunction,
     private val pumpSync: PumpSync,
     private val temporaryBasalStorage: TemporaryBasalStorage
 ) : PumpPluginBase(
