@@ -47,12 +47,12 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         private const val MASK_SETUP = 0x10
         private const val MASK_RESERVOIR = 0x20
-        private const val MASK_LIFE_TIME = 0x40
+        private const val MASK_START_TIME = 0x40
         private const val MASK_BATTERY = 0x80
 
         private const val MASK_STORAGE = 0x100
         private const val MASK_ALARM = 0x200
-        private const val MASK_START_TIME = 0x400
+        private const val MASK_AGE = 0x400
         private const val MASK_UNKNOWN_1 = 0x800
 
         private const val MASK_UNUSED_CGM = 0x1000
@@ -146,10 +146,14 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             offset += 2
         }
 
-        if (fieldMask and MASK_LIFE_TIME != 0) {
-            aapsLogger.debug(LTag.PUMPCOMM, "Life time notification received")
-            medtrumPump.patchAge = data.copyOfRange(offset, offset + 4).toLong()
-            aapsLogger.debug(LTag.PUMPCOMM, "Patch age: ${medtrumPump.patchAge}")
+        if (fieldMask and MASK_START_TIME != 0) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Start time notification received")
+            val patchStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
+            if (medtrumPump.patchStartTime != patchStartTime) {
+                aapsLogger.debug(LTag.PUMPCOMM, "Patch start time changed from ${medtrumPump.patchStartTime} to $patchStartTime")
+                medtrumPump.patchStartTime = patchStartTime
+            }
+            aapsLogger.debug(LTag.PUMPCOMM, "Patch start time: ${patchStartTime}")
             offset += 4
         }
 
@@ -201,14 +205,10 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             offset += 4
         }
 
-        if (fieldMask and MASK_START_TIME != 0) {
-            aapsLogger.debug(LTag.PUMPCOMM, "Start time notification received")
-            val patchStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
-            if (medtrumPump.patchStartTime != patchStartTime) {
-                aapsLogger.debug(LTag.PUMPCOMM, "Patch start time changed from ${medtrumPump.patchStartTime} to $patchStartTime")
-                medtrumPump.patchStartTime = patchStartTime
-            }
-            aapsLogger.debug(LTag.PUMPCOMM, "Patch start time: ${patchStartTime}")
+        if (fieldMask and MASK_AGE != 0) {
+            aapsLogger.debug(LTag.PUMPCOMM, "Age notification received")
+            medtrumPump.patchAge = data.copyOfRange(offset, offset + 4).toLong()
+            aapsLogger.debug(LTag.PUMPCOMM, "Patch age: ${medtrumPump.patchAge}")
             offset += 4
         }
 
