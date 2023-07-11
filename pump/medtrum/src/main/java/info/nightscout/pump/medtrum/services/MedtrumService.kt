@@ -276,13 +276,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
     fun setBolus(detailedBolusInfo: DetailedBolusInfo, t: EventOverviewBolusProgress.Treatment): Boolean {
         if (!isConnected) return false
         val insulin = detailedBolusInfo.insulin
-        val result = sendPacketAndGetResponse(SetBolusPacket(injector, insulin))
-        if (result == false) {
-            aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
-            commandQueue.loadEvents(null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
-            return false
-        }
-
         val bolusStart = System.currentTimeMillis()
 
         medtrumPump.bolusDone = false
@@ -291,6 +284,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
         medtrumPump.bolusStopped = false
         medtrumPump.bolusStopForced = false
         medtrumPump.bolusProgressLastTimeStamp = bolusStart
+        
+        val result = sendPacketAndGetResponse(SetBolusPacket(injector, insulin))
+        if (result == false) {
+            aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
+            commandQueue.loadEvents(null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
+            return false
+        }
 
         detailedBolusInfo.timestamp = bolusStart // Make sure the timestamp is set to the start of the bolus
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
