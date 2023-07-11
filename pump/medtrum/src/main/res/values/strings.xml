@@ -133,7 +133,7 @@
     <string name="alarm_setting_title">Alarm Settings</string>
     <string name="alarm_setting_summary">Select your preferred pump alarm settings.</string>
     <string name="patch_expiration_title">Patch Expiration</string>
-    <string name="patch_expiration_summary">Turn this on to get an alert 12 hours before the patch expiration. When enabled, the patch will expire after 3.5 days.</string>
+    <string name="patch_expiration_summary">When enabled, the patch will expire after 3 days, with a grace period of 8 hours after that.</string>
     <string name="hourly_max_insulin_title">Hourly Maximum Insulin</string>
     <string name="hourly_max_insulin_summary">Specify the maximum units of insulin allowed per hour. If exceeded, the pump will suspend.</string>
     <string name="daily_max_insulin_title">Daily Maximum Insulin</string>

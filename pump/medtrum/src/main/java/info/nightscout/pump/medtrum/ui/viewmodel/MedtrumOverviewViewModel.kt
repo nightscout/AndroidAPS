@@ -180,7 +180,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         _patchNo.postValue(medtrumPump.patchId.toString())
 
         if (medtrumPump.desiredPatchExpiration) {
-            val expiry = medtrumPump.patchStartTime + T.hours(84).msecs()
+            val expiry = medtrumPump.patchStartTime + T.hours(72).msecs()
             _patchExpiry.postValue(dateUtil.dateAndTimeString(expiry))
         } else {
             _patchExpiry.postValue(rh.gs(R.string.expiry_not_enabled))
