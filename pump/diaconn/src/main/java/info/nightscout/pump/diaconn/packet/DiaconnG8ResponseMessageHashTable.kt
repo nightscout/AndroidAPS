@@ -48,5 +48,6 @@ class DiaconnG8ResponseMessageHashTable @Inject constructor(val injector: HasAnd
         put(BatteryWarningReportPacket(injector))
         put(InjectionBlockReportPacket(injector))
         put(BolusSpeedSettingReportPacket(injector))
+        put(InjectionProgressReportPacket(injector))
     }
 }

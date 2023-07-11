@@ -43,6 +43,7 @@ import info.nightscout.pump.diaconn.packet.InjectionCancelSettingResponsePacket
 import info.nightscout.pump.diaconn.packet.InjectionExtendedBolusResultReportPacket
 import info.nightscout.pump.diaconn.packet.InjectionExtendedBolusSettingPacket
 import info.nightscout.pump.diaconn.packet.InjectionExtendedBolusSettingResponsePacket
+import info.nightscout.pump.diaconn.packet.InjectionProgressReportPacket
 import info.nightscout.pump.diaconn.packet.InjectionSnackInquirePacket
 import info.nightscout.pump.diaconn.packet.InjectionSnackInquireResponsePacket
 import info.nightscout.pump.diaconn.packet.InjectionSnackResultReportPacket
@@ -150,6 +151,7 @@ abstract class DiaconnG8PacketModule {
     @ContributesAndroidInjector abstract fun contributesBigAPSMainInfoInquireResponsePacket(): BigAPSMainInfoInquireResponsePacket
     @ContributesAndroidInjector abstract fun contributesSerialNumInquirePacket(): SerialNumInquirePacket
     @ContributesAndroidInjector abstract fun contributesSerialNumInquireResponsePacket(): SerialNumInquireResponsePacket
+    @ContributesAndroidInjector abstract fun contributesInjectionProgressReportPacket(): InjectionProgressReportPacket
 
 
 }
