@@ -55,11 +55,11 @@ class MedtrumViewModel @Inject constructor(
                 aapsLogger.debug(LTag.PUMP, "MedtrumViewModel connectionStateFlow: $state")
                 if (patchStep.value != null) {
                     when (state) {
-                        ConnectionState.CONNECTED    -> {
+                        ConnectionState.CONNECTED                                 -> {
                             medtrumPump.lastConnection = System.currentTimeMillis()
                         }
 
-                        ConnectionState.DISCONNECTED -> {
+                        ConnectionState.DISCONNECTED                              -> {
                             if (patchStep.value in listOf(
                                     PatchStep.PRIME,
                                     PatchStep.PRIMING,
@@ -84,7 +84,7 @@ class MedtrumViewModel @Inject constructor(
                             }
                         }
 
-                        ConnectionState.CONNECTING   -> {
+                        ConnectionState.CONNECTING, ConnectionState.DISCONNECTING -> {
                         }
                     }
                 }

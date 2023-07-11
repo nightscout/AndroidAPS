@@ -82,23 +82,28 @@ class MedtrumOverviewViewModel @Inject constructor(
             medtrumPump.connectionStateFlow.collect { state ->
                 aapsLogger.debug(LTag.PUMP, "MedtrumViewModel connectionStateFlow: $state")
                 when (state) {
-                    ConnectionState.CONNECTING   -> {
+                    ConnectionState.CONNECTING    -> {
                         _bleStatus.postValue("{fa-bluetooth-b spin}")
                         _canDoRefresh.postValue(false)
                     }
 
-                    ConnectionState.CONNECTED    -> {
+                    ConnectionState.CONNECTED     -> {
                         _bleStatus.postValue("{fa-bluetooth}")
                         _canDoRefresh.postValue(false)
                     }
 
-                    ConnectionState.DISCONNECTED -> {
+                    ConnectionState.DISCONNECTED  -> {
                         _bleStatus.postValue("{fa-bluetooth-b}")
                         if (medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED) {
                             _canDoRefresh.postValue(true)
                         } else {
                             _canDoRefresh.postValue(false)
                         }
+                    }
+
+                    ConnectionState.DISCONNECTING -> {
+                        _bleStatus.postValue("{fa-bluetooth-b spin}")
+                        _canDoRefresh.postValue(false)
                     }
                 }
                 updateGUI()
