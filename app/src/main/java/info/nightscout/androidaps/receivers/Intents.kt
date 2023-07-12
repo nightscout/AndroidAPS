@@ -43,6 +43,9 @@ interface Intents {
         // Patched SI App -> AAPS
         const val SIAPP_BG = "cn.diyaps.sharing.SI_APP"
 
+        // Patched Sino App -> AAPS
+        const val SINOAPP_BG = "cn.diyaps.sharing.SINO_APP"
+
         // Broadcast status
         const val AAPS_BROADCAST = "info.nightscout.androidaps.status"
     }

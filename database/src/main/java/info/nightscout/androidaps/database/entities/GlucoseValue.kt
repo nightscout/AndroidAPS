@@ -113,6 +113,7 @@ data class GlucoseValue(
         EVERSENSE("Eversense"),
         AIDEX("GlucoRx Aidex"),
         SIApp("SI App"),
+        SinoApp("SI App"),
         RANDOM("Random"),
         UNKNOWN("Unknown"),
 

@@ -61,6 +61,12 @@ open class DataReceiver : DaggerBroadcastReceiver() {
                         it.copyString("collection", bundle)
                         it.copyString("data", bundle)
                     }.build()).build()
+            Intents.SINOAPP_BG                       ->
+                OneTimeWorkRequest.Builder(PathedSinoAppPlugin.PathedSinoAppWorker::class.java)
+                    .setInputData(Data.Builder().also {
+                        it.copyString("collection", bundle)
+                        it.copyString("data", bundle)
+                    }.build()).build()
             Telephony.Sms.Intents.SMS_RECEIVED_ACTION ->
                 OneTimeWorkRequest.Builder(SmsCommunicatorPlugin.SmsCommunicatorWorker::class.java)
                     .setInputData(dataWorker.storeInputData(bundle, intent.action)).build()
