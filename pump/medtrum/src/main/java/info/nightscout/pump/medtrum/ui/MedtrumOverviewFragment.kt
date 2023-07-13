@@ -34,7 +34,7 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
-            viewmodel = ViewModelProvider(this@MedtrumOverviewFragment, viewModelFactory).get(MedtrumOverviewViewModel::class.java)
+            viewmodel = ViewModelProvider(requireActivity(), viewModelFactory)[MedtrumOverviewViewModel::class.java]
             viewmodel?.apply {
                 eventHandler.observe(viewLifecycleOwner) { evt ->
                     when (evt.peekContent()) {
