@@ -57,7 +57,6 @@
                     app:layout_constraintEnd_toStartOf="@id/btn_positive"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.CANCEL)}"
                     tools:visibility="visible" />
 
                 <Button

@@ -3,8 +3,10 @@ package info.nightscout.pump.medtrum.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.R
+import info.nightscout.pump.medtrum.code.PatchStep
 import info.nightscout.pump.medtrum.databinding.FragmentMedtrumAttachPatchBinding
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel
 import info.nightscout.rx.logging.AAPSLogger
@@ -28,7 +30,7 @@ class MedtrumAttachPatchFragment : MedtrumBaseFragment<FragmentMedtrumAttachPatc
         super.onViewCreated(view, savedInstanceState)
         aapsLogger.debug(LTag.PUMP, "MedtrumAttachPatchFragment onViewCreated")
         binding.apply {
-            viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MedtrumViewModel::class.java)
+            viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MedtrumViewModel::class.java]
             viewModel?.apply {
                 setupStep.observe(viewLifecycleOwner) {
                     when (it) {
@@ -39,6 +41,13 @@ class MedtrumAttachPatchFragment : MedtrumBaseFragment<FragmentMedtrumAttachPatc
                             ToastUtils.errorToast(requireContext(), rh.gs(R.string.unexpected_state, it.toString()))
                             aapsLogger.error(LTag.PUMP, "Unexpected state: $it")
                         }
+                    }
+                }
+            }
+            btnNegative.setOnClickListener {
+                OKDialog.showConfirmation(requireActivity(), rh.gs(R.string.cancel_sure)) {
+                    viewModel?.apply {
+                        moveStep(PatchStep.CANCEL)
                     }
                 }
             }

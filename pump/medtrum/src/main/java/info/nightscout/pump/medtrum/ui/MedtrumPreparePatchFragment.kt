@@ -26,7 +26,7 @@ class MedtrumPreparePatchFragment : MedtrumBaseFragment<FragmentMedtrumPreparePa
         super.onViewCreated(view, savedInstanceState)
         aapsLogger.debug(LTag.PUMP, "MedtrumPreparePatchFragment onViewCreated")
         binding.apply {
-            viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MedtrumViewModel::class.java)
+            viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MedtrumViewModel::class.java]
             viewModel?.apply {
                 preparePatch()
             }

@@ -30,7 +30,7 @@ class MedtrumStartDeactivationFragment : MedtrumBaseFragment<FragmentMedtrumStar
         super.onViewCreated(view, savedInstanceState)
         aapsLogger.debug(LTag.PUMP, "MedtrumStartDeactivationFragment onViewCreated")
         binding.apply {
-            viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MedtrumViewModel::class.java)
+            viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MedtrumViewModel::class.java]
             viewModel?.apply {
                 updateSetupStep(MedtrumViewModel.SetupStep.START_DEACTIVATION)
             }

@@ -55,8 +55,7 @@
                     android:contentDescription="@string/cancel"
                     android:text="@string/cancel"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.CANCEL)}" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

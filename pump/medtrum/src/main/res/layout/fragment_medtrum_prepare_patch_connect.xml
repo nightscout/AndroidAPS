@@ -85,8 +85,7 @@
                     android:text="@string/cancel"
                     app:layout_constraintEnd_toStartOf="@id/btn_positive"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.CANCEL)}" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
                     android:id="@+id/btn_positive"

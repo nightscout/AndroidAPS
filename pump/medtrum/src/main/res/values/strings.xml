@@ -115,6 +115,7 @@
     <string name="press_OK_to_return">Press <b>OK</b> to return to main screen.</string>
 
     <string name="deactivate_sure">Are you sure that you want to deactivate the current patch?</string>
+    <string name="cancel_sure">Are you sure that you want to cancel the activation?</string>
     <string name="medtrum_deactivate_pump_confirm">Are you sure? This action cannot be reversed!!</string>
     <string name="press_next_or_cancel">Press <b>Next</b> to deactivate or <b>Cancel</b> to return to main screen.</string>
     <string name="deactivating_pump">Deactivating patch. Please Wait.</string>

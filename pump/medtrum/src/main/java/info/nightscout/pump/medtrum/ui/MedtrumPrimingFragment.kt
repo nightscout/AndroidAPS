@@ -3,6 +3,7 @@ package info.nightscout.pump.medtrum.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.PatchStep
@@ -29,7 +30,7 @@ class MedtrumPrimingFragment : MedtrumBaseFragment<FragmentMedtrumPrimingBinding
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MedtrumViewModel::class.java)
+            viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MedtrumViewModel::class.java]
             viewModel?.apply {
                 setupStep.observe(viewLifecycleOwner) {
                     when (it) {
@@ -53,6 +54,13 @@ class MedtrumPrimingFragment : MedtrumBaseFragment<FragmentMedtrumPrimingBinding
                     }
                 }
                 startPrime()
+            }
+            btnNegative.setOnClickListener {
+                OKDialog.showConfirmation(requireActivity(), rh.gs(R.string.cancel_sure)) {
+                    viewModel?.apply {
+                        moveStep(PatchStep.CANCEL)
+                    }
+                }
             }
         }
     }

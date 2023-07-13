@@ -27,7 +27,7 @@ class MedtrumActivateCompleteFragment : MedtrumBaseFragment<FragmentMedtrumActiv
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.apply {
-            viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MedtrumViewModel::class.java)
+            viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MedtrumViewModel::class.java]
             viewModel?.apply {
                 setupStep.observe(viewLifecycleOwner) {
                     when (it) {

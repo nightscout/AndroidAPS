@@ -30,7 +30,7 @@ class MedtrumRetryActivationFragment : MedtrumBaseFragment<FragmentMedtrumRetryA
         super.onViewCreated(view, savedInstanceState)
         aapsLogger.debug(LTag.PUMP, "MedtrumRetryActivationFragment onViewCreated")
         binding.apply {
-            viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(MedtrumViewModel::class.java)
+            viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MedtrumViewModel::class.java]
             viewModel?.apply {
                 preparePatch() // Use this to make sure we are disconnceted at this stage
             }
