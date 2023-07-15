@@ -98,7 +98,6 @@ Probeer opnieuw te koppelen</string>
     <string name="combov2_set_emulated_100_tbr">Stel geëmuleerde 100% TBR in</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Wachten tot geëmuleerde 100% TBR is beëindigd</string>
     <string name="combov2_ignoring_redundant_100_tbr">Overbodig 100% TBR verzoek wordt genegeerd</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Onverwachte limiet opgetreden tijdens het aanpassen van TBR: doel percentage was %1$d%%, raak een limiet op %1$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Kan absolute TBR niet instellen als basaalstand nul is</string>
     <string name="combov2_pair_with_pump_summary">Koppel AndroidAPS en Android met een Accu-Chek Combo pomp die momenteel niet is gekoppeld</string>
     <string name="combov2_unpair_pump_summary">Ontkoppel AndroidAPS en Android van de huidige Accu-Chek Combo pomp</string>
