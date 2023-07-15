@@ -98,7 +98,6 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_set_emulated_100_tbr">Emülasyonlu %100 GBO\'ına ayarla</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Devam eden emülasyonlu %100 GBO\'nın bitmesine izin ver</string>
     <string name="combov2_ignoring_redundant_100_tbr">Gereksiz %100 GBO isteği yoksayılıyor</string>
-    <string name="combov2_hit_unexpected_tbr_limit">GBO ayarlanırken beklenmeyen bir sınırla karşılaşıldı: hedef yüzde %1$d%% idi, fakat %1$d%%\'de bir sınıra ulaştı</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Temel bazal oran sıfırsa mutlak GBO ayarlanamaz</string>
     <string name="combov2_pair_with_pump_summary">AndroidAPS ile şu anda eşleştirilmemiş bir Accu-Chek Combo pompasını eşleştirin</string>
     <string name="combov2_unpair_pump_summary">Şu anda eşleştirilmiş olan Accu-Chek Combo pompasından AndroidAPS ve Android\'in eşlemesini kaldırın</string>
