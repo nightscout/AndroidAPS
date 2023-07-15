@@ -110,7 +110,7 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_set_emulated_100_tbr">Set emulated 100% TBR</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Letting ongoing emulated 100% TBR finish</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignoring redundant 100% TBR request</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Unexpected limit encountered while adjusting TBR: target percentage was %1$d%%, hit a limit at %1$d%%</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Unexpected limit encountered while adjusting TBR: target percentage was %1$d%%, hit a limit at %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Cannot set absolute TBR if base basal rate is zero</string>
     <string name="combov2_pair_with_pump_summary">Pair AndroidAPS and Android with a currently unpaired Accu-Chek Combo pump</string>
     <string name="combov2_unpair_pump_summary">Unpair AndroidAPS and Android from the currently paired Accu-Chek Combo pump</string>
