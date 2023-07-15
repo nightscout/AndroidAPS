@@ -6,7 +6,7 @@
     <string name="category_alerts">Alertas</string>
     <string name="low_reservoir">Alertas de reservorio bajo</string>
     <string name="patch_expiration_reminders">Recordatorio de expiración del parche</string>
-    <string name="patch_buzzer_reminders">Recordatorios de pitidos del parche</string>
+    <string name="patch_buzzer_reminders">Recordatorios de sonidos del parche</string>
     <string name="time_format_a_h_mm">h:mm a</string>
     <string name="eopatch_ble_status">Estado del Bluetooth</string>
     <string name="eopatch_serial_number">Número de serie</string>
@@ -43,7 +43,7 @@
     <string name="patch_comm_error_during_discard_desc_1">Para la desactivación normal, pulse \'Reintentar\'</string>
     <string name="patch_comm_error_during_discard_desc_2">Para desactivar unilateralmente, pulse \"Remover\".</string>
     <string name="patch_manually_turning_off_alarm_title">Apagar manualmente la alarma del parche</string>
-    <string name="patch_manually_turning_off_alarm_desc_1">Si se desactiva unilateralmente durante un error de comunicación, es posible que el pitido de alarma del parche no deje de sonar</string>
+    <string name="patch_manually_turning_off_alarm_desc_1">Si se desactiva unilateralmente durante un error de comunicación, es posible que el sonido de alarma del parche no deje de sonar.</string>
     <string name="patch_manually_turning_off_alarm_desc_2">En este caso, puede detenerlo completamente pinchando el puerto de liberación manual de la alarma en el parche, como se indica a continuación:</string>
     <string name="patch_manually_turning_off_alarm_step_1">1. Retire el parche de su cuerpo y despegue la cinta adhesiva</string>
     <string name="patch_manually_turning_off_alarm_step_2">2. Con un clip, perfore con fuerza el orificio situado junto al puerto de llenado de insulina</string>
@@ -52,7 +52,6 @@
     <string name="patch_step_desc_1">1.</string>
     <string name="patch_wake_up_desc_1">Llene un nuevo parche con insulina a temperatura ambiente. Compruebe el ángulo de la jeringa</string>
     <string name="patch_step_desc_2">2.</string>
-    <string name="patch_wake_up_desc_2">Comprueba que suena 1 pitido</string>
     <string name="patch_start_pairing">Iniciar emparejamiento</string>
     <string name="patch_connect_new">Emparejamiento del parche</string>
     <string name="patch_connect_new_step">2/6</string>
@@ -74,8 +73,8 @@
     <string name="patch_rotate_knob">Inserción de la aguja</string>
     <string name="patch_rotate_knob_step">6/6</string>
     <string name="patch_rotate_knob_desc_1">Gira la palanca de accionamiento de la aguja más de 100° para insertar la aguja y, a continuación, gírala completamente para extraerla</string>
-    <string name="patch_rotate_knob_desc_2">Comprueba si suena 1 pitido y, a continuación, pulsa en \"Siguiente\"</string>
-    <string name="patch_rotate_knob_desc_2_needle_insertion_error">Comprueba si suena 1 pitido y pulsa en \"Reintentar\"</string>
+    <string name="patch_rotate_knob_desc_2">Comprueba si suena 1 pitido y luego pulsa en \"Siguiente\".</string>
+    <string name="patch_rotate_knob_desc_2_needle_insertion_error">Comprueba si suena 1 pitido y luego pulsa en \"Reintentar\".</string>
     <string name="patch_basal_schedule">¡Activación del parche completada!</string>
     <string name="patch_basal_schedule_desc_1">El programa \'%1$s\' ha sido habilitado</string>
     <string name="patch_basal_schedule_desc_2">Te avisa cuando el parche está a punto de caducar.\nCambia la hora del recordatorio si es necesario</string>
