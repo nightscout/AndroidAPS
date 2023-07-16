@@ -73,7 +73,7 @@
                         android:gravity="center_horizontal"
                         android:paddingStart="2dp"
                         android:paddingEnd="2dp"
-                        android:text=":"
+                        android:text="@string/colon"
                         android:textSize="16sp" />
 
                     <com.joanzapata.iconify.widget.IconTextView
