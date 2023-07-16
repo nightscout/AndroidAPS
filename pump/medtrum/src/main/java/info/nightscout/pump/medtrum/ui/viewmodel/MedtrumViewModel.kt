@@ -140,6 +140,7 @@ class MedtrumViewModel @Inject constructor(
             when (newPatchStep) {
                 PatchStep.CANCEL                   -> {
                     if (oldPatchStep !in listOf(
+                            PatchStep.PREPARE_PATCH,
                             PatchStep.START_DEACTIVATION,
                             PatchStep.DEACTIVATE,
                             PatchStep.FORCE_DEACTIVATION,
@@ -148,7 +149,6 @@ class MedtrumViewModel @Inject constructor(
                     ) {
                         medtrumService?.disconnect("Cancel")
                     }
-                    medtrumService?.disconnect("Cancel")
                 }
 
                 PatchStep.COMPLETE                 -> {

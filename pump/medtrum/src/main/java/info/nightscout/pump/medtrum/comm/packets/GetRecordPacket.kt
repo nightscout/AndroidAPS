@@ -223,7 +223,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                 var duration = (basalEndTime - basalStartTime)
                                 // Work around for pumpSync not accepting 0 duration.
                                 // sometimes we get 0 duration for very short basal because the pump only reports time in seconds
-                                if (duration < 250) duration = 250 // 250ms to make sure timestamp is unique
+                                if (duration < 250) duration = 250 // 250ms to make sure AAPS accepts it
 
                                 val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
                                     timestamp = basalStartTime,

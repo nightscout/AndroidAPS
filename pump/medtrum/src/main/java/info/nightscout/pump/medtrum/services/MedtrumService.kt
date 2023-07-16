@@ -240,7 +240,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     fun loadEvents(): Boolean {
         rxBus.send(EventPumpStatusChanged(rh.gs(R.string.gettingpumpstatus)))
-        // Sync records (based on the info we have from the sync)
+        // Sync records
         val result = syncRecords()
         if (result) {
             aapsLogger.debug(LTag.PUMPCOMM, "Events loaded")

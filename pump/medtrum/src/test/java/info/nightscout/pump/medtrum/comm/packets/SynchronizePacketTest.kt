@@ -93,10 +93,10 @@ class SynchronizePacketTest : MedtrumTestBase() {
         assertEquals(25, packet.medtrumPump.lastBasalSequence)
         assertEquals(14, packet.medtrumPump.lastBasalPatchId)
         assertEquals(1685126612000, packet.medtrumPump.lastBasalStartTime)
+        assertEquals(8123, packet.medtrumPump.patchAge)
         assertEquals(186.80, packet.medtrumPump.reservoir, 0.01)
-        assertEquals(296585720, packet.medtrumPump.patchAge)
+        assertEquals(1685120120000, packet.medtrumPump.patchStartTime)
         assertEquals(5.96875, packet.medtrumPump.batteryVoltage_A, 0.01)
         assertEquals(2.8125, packet.medtrumPump.batteryVoltage_B, 0.01)
-        assertEquals(1388542523000, packet.medtrumPump.patchStartTime)
     }
 }
