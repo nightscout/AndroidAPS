@@ -206,6 +206,15 @@ class MedtrumPump @Inject constructor(
     val pumpSN: Long
         get() = _pumpSN
 
+    val pumpSNFromSP: Long
+        get() =
+            try {
+                sp.getString(R.string.key_sn_input, "0").toLong(radix = 16)
+            } catch (e: NumberFormatException) {
+                aapsLogger.debug(LTag.PUMP, "pumpSNFromSP: Invalid input!")
+                0L
+            }
+
     var needCheckTimeUpdate = false
     var lastTimeReceivedFromPump = 0L // Time in ms!
     var suspendTime = 0L // Time in ms!
@@ -288,12 +297,8 @@ class MedtrumPump @Inject constructor(
         desiredAlarmSetting = AlarmSetting.values().firstOrNull { it.code == alarmSettingCode } ?: AlarmSetting.LIGHT_VIBRATE_AND_BEEP
         desiredHourlyMaxInsulin = sp.getInt(info.nightscout.pump.medtrum.R.string.key_hourly_max_insulin, 40)
         desiredDailyMaxInsulin = sp.getInt(info.nightscout.pump.medtrum.R.string.key_daily_max_insulin, 180)
+        _pumpSN = pumpSNFromSP
 
-        try {
-            _pumpSN = sp.getString(info.nightscout.pump.medtrum.R.string.key_sn_input, " ").toLong(radix = 16)
-        } catch (e: NumberFormatException) {
-            aapsLogger.debug(LTag.PUMP, "changePump: Invalid input!")
-        }
     }
 
     fun buildMedtrumProfileArray(nsProfile: Profile): ByteArray? {

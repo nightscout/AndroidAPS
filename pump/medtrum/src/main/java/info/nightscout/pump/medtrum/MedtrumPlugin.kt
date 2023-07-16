@@ -356,7 +356,8 @@ import kotlin.math.abs
     }
 
     override fun serialNumber(): String {
-        return medtrumPump.pumpSN.toString(radix = 16)
+        // Load from SP here, because this value will be get before pump is initialized
+        return medtrumPump.pumpSNFromSP.toString(radix = 16)
     }
 
     override val pumpDescription: PumpDescription
