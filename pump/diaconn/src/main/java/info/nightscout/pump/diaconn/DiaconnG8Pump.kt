@@ -21,13 +21,14 @@ class DiaconnG8Pump @Inject constructor(
 ) {
 
     var isPumpLogUploadFailed: Boolean = false
-
     //var bleResultInfo: Pair<Int?, Boolean> = Pair(null, false)
     var bolusConfirmMessage: Byte = 0
+
     var isReadyToBolus: Boolean = false
     var maxBolusePerDay: Double = 0.0
     var pumpIncarnationNum: Int = 65536
     var isPumpVersionGe2_63: Boolean = false // is pumpVersion higher then 2.63
+    var isPumpVersionGe3_53: Boolean = false // is pumpVersion higher then 3.42
     var insulinWarningGrade: Int =0
     var insulinWarningProcess: Int =0
     var insulinWarningRemain: Int =0
@@ -362,6 +363,11 @@ class DiaconnG8Pump @Inject constructor(
     var baseAmount24 = 0.0 // 주입량 24(량*100, 23.25->2325, 15.2->1520)
 
     var otpNumber = 0
+
+    var bolusingSetAmount = 0.0
+    var bolusingInjAmount = 0.0
+    var bolusingSpeed = 0
+    var bolusingInjProgress = 0
 
     companion object {
         // User settings

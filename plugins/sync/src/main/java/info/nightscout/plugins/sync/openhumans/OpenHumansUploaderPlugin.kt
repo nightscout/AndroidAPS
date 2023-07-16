@@ -563,7 +563,7 @@ class OpenHumansUploaderPlugin @Inject internal constructor(
             .setBackoffCriteria(BackoffPolicy.LINEAR, 20, TimeUnit.MINUTES)
             .setInitialDelay(if (delay) 1 else 0, TimeUnit.DAYS)
             .build()
-        WorkManager.getInstance(context).enqueueUniquePeriodicWork(WORK_NAME_PERIODIC, if (replace) ExistingPeriodicWorkPolicy.REPLACE else ExistingPeriodicWorkPolicy.KEEP, workRequest)
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(WORK_NAME_PERIODIC, if (replace) ExistingPeriodicWorkPolicy.UPDATE else ExistingPeriodicWorkPolicy.KEEP, workRequest)
     }
 
     internal fun uploadNow() {

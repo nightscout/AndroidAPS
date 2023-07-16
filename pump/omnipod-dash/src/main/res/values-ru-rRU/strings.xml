@@ -6,6 +6,7 @@
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Журнал помпы</string>
     <string name="omnipod_dash_history_item_description">Описание</string>
+    <string name="omnipod_dash_history_item_amount">Количество</string>
     <string name="omnipod_dash_history_item_source">Источник</string>
     <string name="omnipod_dash_history_item_date">Дата</string>
     <string name="omnipod_dash_history_type">Тип:</string>
@@ -30,8 +31,10 @@
     <string name="omnipod_dash_command_not_sent">Команда не отправлена</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Команда не получена помпой</string>
     <string name="omnipod_dash_unknown">Состояние команды неясно</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f ед/ч, %2$d минут</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f ед</string>
     <string name="omnipod_common_alert_delivery_suspended">Введение инсулина приостановлено</string>
+    <string name="omnipod_common_history_total_delivered">Всего подано: %1$.2f ед</string>
     <string name="omnipod_dash_connection_lost">Потеряно соединение с подом</string>
     <string name="omnipod_dash_bolus_already_in_progress">Вводится еще один болюс</string>
     <string name="omnipod_dash_not_enough_insulin">В резервуаре недостаточно инсулина</string>
@@ -44,6 +47,7 @@
     <string name="failed_to_set_the_new_basal_profile">Не удалось установить новый базовый профиль. Подача инсулина приостановлена</string>
     <string name="setting_basal_profile_might_have_failed">Возможно не удалось задать базальный профиль. Подача инсулина может быть приостановлена! Обновите вручную состояние Pod на вкладке Omnipod и при необходимости возобновите процесс подачи.</string>
     <string name="bolus_delivery_status_uncertain">Статус подачи болюса неясен. Обновите статус pod, чтобы подтвердить или отклонить.</string>
+    <string name="temp_basal_out_of_sync">Неожиданное состояние врем базала! Если перед этим подавался врем базал, то он отменен. Проверьте кол-во поданного инсулина и журнал событий POD</string>
     <string name="checking_delivery_status">Выполняется проверка статуса подачи</string>
     <string name="setting_temp_basal_might_have_basal_failed">Установка врем базала могла иметь сбой. Если временный базал запущен ранее, он был отменен. Вручную обновите статус Pod на вкладке Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Результат отмены временного базала неясен</string>

@@ -31,6 +31,7 @@ import info.nightscout.automation.triggers.TriggerBolusAgo
 import info.nightscout.automation.triggers.TriggerCOB
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.automation.triggers.TriggerDelta
+import info.nightscout.automation.triggers.TriggerHeartRate
 import info.nightscout.automation.triggers.TriggerIob
 import info.nightscout.automation.triggers.TriggerLocation
 import info.nightscout.automation.triggers.TriggerProfilePercent
@@ -41,6 +42,7 @@ import info.nightscout.automation.triggers.TriggerTempTargetValue
 import info.nightscout.automation.triggers.TriggerTime
 import info.nightscout.automation.triggers.TriggerTimeRange
 import info.nightscout.automation.triggers.TriggerWifiSsid
+import info.nightscout.automation.ui.TimerUtil
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.GlucoseUnit
@@ -53,7 +55,6 @@ import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.automation.ui.TimerUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventBTChange
@@ -406,6 +407,7 @@ class AutomationPlugin @Inject constructor(
             TriggerBolusAgo(injector),
             TriggerPumpLastConnection(injector),
             TriggerBTDevice(injector),
+            TriggerHeartRate(injector),
         )
     }
 

@@ -214,6 +214,7 @@ class BigMainInfoInquireResponsePacket(
 
         //incarnation no 처리
         diaconnG8Pump.isPumpVersionGe2_63 = PumpLogUtil.isPumpVersionGe(sp.getString(rh.gs(R.string.pumpversion), ""), 2, 63)
+        diaconnG8Pump.isPumpVersionGe3_53 = PumpLogUtil.isPumpVersionGe(sp.getString(rh.gs(R.string.pumpversion), ""), 3, 53)
 
         aapsLogger.debug(LTag.PUMPCOMM, "result > " + diaconnG8Pump.result)
         aapsLogger.debug(LTag.PUMPCOMM, "systemRemainInsulin > " + diaconnG8Pump.systemRemainInsulin)

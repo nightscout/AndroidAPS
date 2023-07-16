@@ -22,7 +22,6 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
-import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -51,7 +50,6 @@ interface IAlarmManager {
 class AlarmManager @Inject constructor() : IAlarmManager {
     @Inject lateinit var patchManager: IPatchManager
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var resourceHelper: ResourceHelper
     @Inject lateinit var rxBus: RxBus
@@ -71,6 +69,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
     private var alarmDisposable: Disposable? = null
 
+    @Suppress("unused")
     @Inject
     fun onInit() {
         mAlarmProcess = AlarmProcess(patchManager, rxBus)
@@ -150,7 +149,7 @@ class AlarmManager @Inject constructor() : IAlarmManager {
         context.startActivity(i)
     }
 
-    private fun showNotification(alarmCode: AlarmCode, timeOffset: Long = 0L) {
+    private fun showNotification(alarmCode: AlarmCode) {
         var alarmMsg = resourceHelper.gs(alarmCode.resId)
         if (alarmCode == B000) {
             val expireTimeValue = pm.getPatchWakeupTimestamp() + TimeUnit.HOURS.toMillis(84)
@@ -171,21 +170,25 @@ class AlarmManager @Inject constructor() : IAlarmManager {
                             else Single.just(IAlarmProcess.ALARM_HANDLED)
                         }
                         .subscribe { ret ->
-                            if (ret == IAlarmProcess.ALARM_HANDLED) {
-                                if (alarmCode == B001) {
-                                    pumpSync.syncStopTemporaryBasalWithPumpId(
-                                        timestamp = dateUtil.now(),
-                                        endPumpId = dateUtil.now(),
-                                        pumpType = PumpType.EOFLOW_EOPATCH2,
-                                        pumpSerial = patchManager.patchConfig.patchSerialNumber
-                                    )
+                            when (ret) {
+                                IAlarmProcess.ALARM_HANDLED                    -> {
+                                    if (alarmCode == B001) {
+                                        pumpSync.syncStopTemporaryBasalWithPumpId(
+                                            timestamp = dateUtil.now(),
+                                            endPumpId = dateUtil.now(),
+                                            pumpType = PumpType.EOFLOW_EOPATCH2,
+                                            pumpSerial = patchManager.patchConfig.patchSerialNumber
+                                        )
+                                    }
+                                    updateState(alarmCode, AlarmState.HANDLE)
                                 }
-                                updateState(alarmCode, AlarmState.HANDLE)
-                            }else if(ret == IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP){
-                                pm.getAlarms().needToStopBeep.add(alarmCode)
-                                updateState(alarmCode, AlarmState.HANDLE)
-                            } else {
-                                showNotification(alarmCode)
+
+                                IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP -> {
+                                    pm.getAlarms().needToStopBeep.add(alarmCode)
+                                    updateState(alarmCode, AlarmState.HANDLE)
+                                }
+
+                                else                                           -> showNotification(alarmCode)
                             }
                         }
                 )

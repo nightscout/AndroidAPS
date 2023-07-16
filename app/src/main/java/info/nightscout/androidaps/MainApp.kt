@@ -136,7 +136,7 @@ class MainApp : DaggerApplication() {
         )
         WorkManager.getInstance(this).enqueueUniquePeriodicWork(
             KeepAliveWorker.KA_0,
-            ExistingPeriodicWorkPolicy.REPLACE,
+            ExistingPeriodicWorkPolicy.UPDATE,
             PeriodicWorkRequest.Builder(KeepAliveWorker::class.java, 15, TimeUnit.MINUTES)
                 .setInputData(Data.Builder().putString("schedule", KeepAliveWorker.KA_0).build())
                 .setInitialDelay(5, TimeUnit.SECONDS)

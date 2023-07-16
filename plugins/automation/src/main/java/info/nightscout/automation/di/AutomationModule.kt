@@ -38,6 +38,7 @@ import info.nightscout.automation.triggers.TriggerCOB
 import info.nightscout.automation.triggers.TriggerConnector
 import info.nightscout.automation.triggers.TriggerDelta
 import info.nightscout.automation.triggers.TriggerDummy
+import info.nightscout.automation.triggers.TriggerHeartRate
 import info.nightscout.automation.triggers.TriggerIob
 import info.nightscout.automation.triggers.TriggerLocation
 import info.nightscout.automation.triggers.TriggerProfilePercent
@@ -75,6 +76,7 @@ abstract class AutomationModule {
     @ContributesAndroidInjector abstract fun triggerConnectorInjector(): TriggerConnector
     @ContributesAndroidInjector abstract fun triggerDeltaInjector(): TriggerDelta
     @ContributesAndroidInjector abstract fun triggerDummyInjector(): TriggerDummy
+    @ContributesAndroidInjector abstract fun triggerHeartRateInjector(): TriggerHeartRate
     @ContributesAndroidInjector abstract fun triggerIobInjector(): TriggerIob
     @ContributesAndroidInjector abstract fun triggerLocationInjector(): TriggerLocation
     @ContributesAndroidInjector abstract fun triggerProfilePercentInjector(): TriggerProfilePercent
