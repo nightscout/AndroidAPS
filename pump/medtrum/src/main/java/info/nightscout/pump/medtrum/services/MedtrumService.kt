@@ -449,6 +449,12 @@ class MedtrumService : DaggerService(), BLECommCallback {
         }
         if (alarmState != null && alarmState != AlarmState.NONE) {
             medtrumPump.addAlarm(alarmState)
+            pumpSync.insertAnnouncement(
+                medtrumPump.alarmStateToString(alarmState),
+                null,
+                medtrumPump.pumpType(),
+                medtrumPump.pumpSN.toString(radix = 16)
+            )
         }
 
         // Map the pump state to a notification
