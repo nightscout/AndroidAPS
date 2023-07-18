@@ -3,6 +3,7 @@ package info.nightscout.pump.medtrum.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.databinding.FragmentMedtrumOverviewBinding
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel
@@ -20,6 +21,7 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var medtrumPump: MedtrumPump
+    @Inject lateinit var protectionCheck: ProtectionCheck
 
     private var disposable: CompositeDisposable = CompositeDisposable()
 
@@ -39,14 +41,28 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
                 eventHandler.observe(viewLifecycleOwner) { evt ->
                     when (evt.peekContent()) {
                         EventType.CHANGE_PATCH_CLICKED -> requireContext().apply {
-                            if (medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED) {
-                                startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.START_DEACTIVATION))
-                            } else if (medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE)) {
-                                startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.PREPARE_PATCH))
-                            } else {
-                                startActivity(MedtrumActivity.createIntentFromMenu(this, PatchStep.RETRY_ACTIVATION))
-                            }
+                            protectionCheck.queryProtection(
+                                requireActivity(),
+                                ProtectionCheck.Protection.PREFERENCES,
+                                {
+                                    val nextStep = when {
+                                        medtrumPump.pumpState > MedtrumPumpState.EJECTED && medtrumPump.pumpState < MedtrumPumpState.STOPPED -> {
+                                            PatchStep.START_DEACTIVATION
+                                        }
+
+                                        medtrumPump.pumpState in listOf(MedtrumPumpState.STOPPED, MedtrumPumpState.NONE)                     -> {
+                                            PatchStep.PREPARE_PATCH
+                                        }
+
+                                        else                                                                                                 -> {
+                                            PatchStep.RETRY_ACTIVATION
+                                        }
+                                    }
+                                    startActivity(MedtrumActivity.createIntentFromMenu(this, nextStep))
+                                }
+                            )
                         }
+
                         else                           -> Unit
                     }
                 }
