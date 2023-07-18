@@ -88,7 +88,7 @@
     <string name="combov2_set_emulated_100_tbr">Définir l\'émulation 100% TBR</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Laisser se terminer l\'émulation 100% TBR en cours</string>
     <string name="combov2_ignoring_redundant_100_tbr">Requête 100% DBT redondante ignorée</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Limite inattendue lors de l’ajustement du DBT: le pourcentage cible de %1$d%%, a dépassé la limite de %1$d%%</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Limite inattendue lors de l’ajustement du DBT: le pourcentage cible de %1$d%%, a dépassé la limite de %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Impossible de définir le DBT absolu si le débit de basal est zéro</string>
     <string name="combov2_pair_with_pump_summary">Appairer AndroidAPS et Android avec une pompe Accu-Chek Combo non appariée</string>
     <string name="combov2_unpair_pump_summary">Dissocier AndroidAPS et Android de la pompe Accu-Chek Combo actuelle</string>

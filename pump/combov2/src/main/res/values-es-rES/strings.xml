@@ -97,7 +97,7 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_set_emulated_100_tbr">Establecer la emulación del TBR al 100%</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Permitir finalizar la emulación del 100% del TBR en curso</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignorar la solicitud del 100% del TBR redundate</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Límite inesperado encontrado al ajustar TBR: el porcentaje objetivo fue de %1$d%%, alcanzó un límite de %1$d%%</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Se ha encontrado un límite inesperado al ajustar el TBR: El porcentaje objetivo era %1$d%%, se ha encontrado un límite en %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">No se puede establecer el TBR absoluto si la tasa basal base es cero</string>
     <string name="combov2_pair_with_pump_summary">Emparejar AndroidAPS y Android con una bomba Accu-Chek Combo actualmente no emparejada</string>
     <string name="combov2_unpair_pump_summary">Desemparejar AndroidAPS y Android desde la bomba Accu-Chek Combo actualmente emparejada</string>

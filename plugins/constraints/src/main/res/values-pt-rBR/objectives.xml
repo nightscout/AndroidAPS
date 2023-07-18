@@ -51,7 +51,7 @@
     <string name="objectives_exam_learned_isf">Você aprendeu o significado do valor do FS e como ele afeta a quantidade de insulina usada para correção da glicemia.</string>
     <string name="objectives_exam_learned_ic">Você aprendeu o significado do valor IC e como ele afeta a quantidade de insulina necessária para cobrir carboidratos.</string>
     <string name="objectives_exam_learned_hypott">O alvo de glicemia temporária para hipoglicemia é usada apenas para prevenir uma super correção após a hipoglicemia, quando geralmente há um acúmulo de IA negativo. Ações adicionais devem ser avaliadas para prevenir essa situação novamente no futuro.</string>
-    <string name="objectives_exam_learned_profileswitch">Usar porcentagens não afeta as metas de glicemia, mas o basal, ISF e IC são ajustados para fornecer mais insulina (acima de 100%) ou menos insulina (abaixo de 100%).</string>
+    <string name="objectives_exam_learned_profileswitch">Usar porcentagens não afeta as metas de glicemia, mas o basal, ISF e IC são ajustados para fornecer mais insulina (acima de 100%%) ou menos insulina (abaixo de 100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">Usando mudança de horário (timeshift) no perfil, você pode adaptar o perfil circadiano às irregularidades, como acordar tarde.</string>
     <string name="objectives_exam_learned_profileswitch4">Editar o perfil em si não é suficiente para aplicar as mudança. Ainda é necessário fazer uma troca de perfil para ativar as alterações.</string>
     <string name="objectives_exam_learned_exercise">Você deve reduzir a quantidade de insulina no corpo pelo menos 1 hora antes de começar o exercício selecionando um perfil com menos de 100%.</string>

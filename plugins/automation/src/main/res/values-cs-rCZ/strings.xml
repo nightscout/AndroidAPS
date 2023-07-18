@@ -92,6 +92,8 @@
     <string name="lastboluscompared">Poslední bolus %1$s před %2$s min</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Tepová frekvence</string>
+    <string name="triggerHeartRateDesc">TF %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Vzdálenost [m]:</string>
     <string name="recurringTime">Opakující se čas</string>

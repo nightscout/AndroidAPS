@@ -98,7 +98,6 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_set_emulated_100_tbr">Angi emulert 100% TBR</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Lar aktive emulert 100% TBR få avslutte</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignorerer redundant 100% TBR forespørsel</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Uventet begrensning oppsto ved justering av TBR: målprosenten var %1$d%%, nådde grense på %1$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Kan ikke sette absolutt TBR hvis basalraten er null</string>
     <string name="combov2_pair_with_pump_summary">Sammenkoble AndroidAPS og Android med en ikke-tilkoblet Accu-Chek Combo pumpe</string>
     <string name="combov2_unpair_pump_summary">Koble fra AndroidAPS og Android fra den ilkoblede Accu-Chek Combo pumpen</string>

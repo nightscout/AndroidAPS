@@ -52,8 +52,7 @@
     <string name="objectives_exam_learned_isf">İDF değerinin anlamını ve kan şekeri düzeltmesi için ne kadar insülin kullanacağınızı öğrendiniz.</string>
     <string name="objectives_exam_learned_ic">Kİ oranının anlamını ve karbonhidratları karşılamak için gereken insülin miktarını nasıl hesaplayacağınızı öğrendiniz.</string>
     <string name="objectives_exam_learned_hypott">Hipo geçici hedefi yalnızca genellikle birikmiş negatif AİNS olduğunda, hipodan sonra aşırı düzeltmeyi önlemek için kullanılır. Gelecekte bu durumu tekrar önlemek için ek eylemler değerlendirilmelidir.</string>
-    <string name="objectives_exam_learned_profileswitch">Yüzde kullanmak, hedef KŞ\'leri etkilemez ancak bazal, İDF ve Kİ daha fazla insülin (%100\'ün üzerinde) veya daha az insülin (%100\'ün altında) verecek şekilde ayarlanır.</string>
-    <string name="objectives_exam_learned_profileswitchtime">Profil değiştirmede zaman kaymasını kullanarak sirkadiyen profili geç uyanma gibi düzensizliklere göre ayarlayabilirsiniz.</string>
+    <string name="objectives_exam_learned_profileswitch">Yüzde kullanmak, hedef KŞ\'leri etkilemez ancak bazal, İDF ve Kİ daha fazla insülin (%%100\'ün üzerinde) veya daha az insülin (%%100\'ün altında) verecek şekilde ayarlanır.</string>
     <string name="objectives_exam_learned_profileswitch4">Değişiklik yapmak için profili düzenlemek yeterli değildir. Değişiklikleri etkinleştirmek için yine de bir profil değiştirme yapmanız gerekir.</string>
     <string name="objectives_exam_learned_exercise">%100\'ün altında bir profil seçerek egzersize başlamadan en az 1 saat önce vücuttaki insülin miktarını azaltmalısınız.</string>
     <string name="objectives_exam_learned_exercise2">Egzersizden en az 1 saat önce daha yüksek geçici hedef belirlemek, vücuttaki insülin miktarının azalmasına da yardımcı olur.</string>

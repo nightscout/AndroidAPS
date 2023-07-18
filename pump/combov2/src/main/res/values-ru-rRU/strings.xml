@@ -98,7 +98,6 @@
     <string name="combov2_set_emulated_100_tbr">Установить эмуляцию. временного базала TBR 100%</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Позволить завершиться текущей эмуляции временного базала 100% TBR</string>
     <string name="combov2_ignoring_redundant_100_tbr">Игнорирование избыточного запроса на 100% TBR</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Непредвиденный предел, встретившийся при настройке TBR: целевой процент составил %1$d%%, а достиг предела %1$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Невозможно установить абсолютный TBR, если базовая скорость равна нулю</string>
     <string name="combov2_pair_with_pump_summary">Выполнить сопряжение AndroidAPS и Android с помпой Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Отключить AndroidAPS и AndroidAPS от помпы Accu-Chek Combo</string>

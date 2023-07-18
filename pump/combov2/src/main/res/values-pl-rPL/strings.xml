@@ -97,7 +97,6 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
     <string name="combov2_set_emulated_100_tbr">Ustaw emulowane 100% TBR</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Oczekiwanie na zakończenie emulowanego 100% TBR w toku</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignorowanie zbędnego żądania o 100% TBR</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Napotkano nieoczekiwany limit podczas dostosowywania TBR: oczekiwany docelowy procent %1$d%%, osiągnął limit przy %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Nie można ustawić bezwzględnego TBR, jeśli wyjściowa dawka bazowa jest zerowa</string>
     <string name="combov2_pair_with_pump_summary">Sparuj AAPS i Androida z aktualnie niesparowaną pompą Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Usuń parowanie AAPS i Androida z aktualnie sparowanej pompy Accu-Chek Combo</string>

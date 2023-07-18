@@ -97,7 +97,6 @@
     <string name="combov2_set_emulated_100_tbr">Задайте емулиран 100% Временен базал</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Оставяне на текущия емулиран 100% Временен базал Завършено</string>
     <string name="combov2_ignoring_redundant_100_tbr">Игнориране на излишна заявка за 100% Временен базал</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Възникна неочакван лимит при коригиране на Временния базал: целевият процент беше %1$d%%, достигна лимит от %1$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Не може да се зададе абсолютен Временен базал, ако той е нула</string>
     <string name="combov2_pair_with_pump_summary">Сдвоете AndroidAPS и Android с несвързана в момента помпа Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Раздвоете AndroidAPS и Android със свързаната в момента помпа Accu-Chek Combo</string>
