@@ -768,17 +768,12 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 // Succes!
                 responseHandled = true
                 responseSuccess = true
-                val currTime = dateUtil.nowWithoutMilliseconds()
-                if (abs(medtrumPump.lastTimeReceivedFromPump - currTime) <= T.secs(5).msecs()) { // Allow 5 sec deviation
+                val currTime = dateUtil.now()
+                aapsLogger.debug(LTag.PUMPCOMM, "GetTimeState.onIndication systemTime: $currTime, pumpTime: ${medtrumPump.lastTimeReceivedFromPump}")
+                if (abs(medtrumPump.lastTimeReceivedFromPump - currTime) <= T.secs(10).msecs()) { // Allow 10 sec deviation
                     toState(SynchronizeState())
                 } else {
-                    aapsLogger.debug(
-                        LTag.PUMPCOMM,
-                        "GetTimeState.onIndication need to set time. systemTime: $currTime PumpTime: ${medtrumPump.lastTimeReceivedFromPump} Pump Time to system time: " + timeUtil
-                            .convertPumpTimeToSystemTimeMillis(
-                                medtrumPump.lastTimeReceivedFromPump
-                            )
-                    )
+                    aapsLogger.warn(LTag.PUMPCOMM, "GetTimeState.onIndication time difference too big, setting time")
                     toState(SetTimeState())
                 }
             } else if (mPacket?.failed == true) {
