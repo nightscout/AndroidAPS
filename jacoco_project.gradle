@@ -1,12 +1,7 @@
 apply plugin: 'jacoco'
 
 jacoco {
-    toolVersion '0.8.7'
-}
-
-tasks.withType(Test) {
-    jacoco.includeNoLocationClasses = true
-    jacoco.excludes = ['jdk.internal.*']
+    toolVersion '0.8.10'
 }
 
 project.afterEvaluate {
@@ -74,8 +69,8 @@ project.afterEvaluate {
 
         def executions = subprojects.collect { proj ->
             variants.collect { variant ->
-                def path = "${proj.buildDir}/jacoco/test${variant.capitalize()}UnitTest.exec"
-                //printf('Collecting execution data from: %s\n', path)
+                def path = "${proj.buildDir}/outputs/unit_test_code_coverage/${variant}UnitTest/test${variant.capitalize()}UnitTest.exec"
+                // printf('Collecting execution data from: %s\n', path)
                 if ((new File(path)).exists()) path else null
             }
         }.flatten()

@@ -55,10 +55,9 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://plugins.gradle.org/m2/" } // jacoco 0.2
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath 'com.android.tools.build:gradle:8.0.2'
         classpath 'com.google.gms:google-services:4.3.15'
         classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.7'
 
@@ -68,7 +67,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
-        classpath 'com.hiya:jacoco-android:0.2'
+        classpath "org.jacoco:org.jacoco.core:0.8.10"
         classpath "com.vanniktech:gradle-dependency-graph-generator-plugin:0.8.0"
     }
 }
@@ -77,6 +76,7 @@ plugins {
     // Test Gradle build, keep disabled under normal circumstances
     // id "com.osacky.doctor" version "0.8.1"
     id "org.jlleitschuh.gradle.ktlint" version "11.5.0"
+    // Aggregates and/or logs Jacoco test coverage to the Gradle build log
     id 'org.barfuin.gradle.jacocolog' version '3.1.0'
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
 }
@@ -104,8 +104,10 @@ allprojects {
     }
 
     apply plugin: 'org.jlleitschuh.gradle.ktlint'
+    apply plugin: 'jacoco'
 }
 
+// Setup all al reports aggregation
 apply from: 'jacoco_project.gradle'
 
 task clean(type: Delete) {
