@@ -42,7 +42,7 @@ import kotlin.math.sqrt
 
 private const val SPACING_ACTIONS = 3f
 private const val ICON_SIZE_FRACTION = 0.4f // Percentage of button diameter
-private const val BUTTON_COLOR = R.color.gray_850
+private val BUTTON_COLOR = R.color.gray_850
 private const val LARGE_SCREEN_WIDTH_DP = 210
 
 interface TileSource {
