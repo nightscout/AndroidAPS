@@ -493,29 +493,37 @@ class DataSyncSelectorV1Impl @Inject constructor(
         rxBus.send(EventNSClientUpdateGuiQueue())
         appRepository.getNextSyncElementTemporaryBasal(startId).blockingGet()?.let { tb ->
             aapsLogger.info(LTag.NSCLIENT, "Loading TemporaryBasal data Start: $startId ${tb.first} forID: ${tb.second.id} ")
-            when {
-                // new record with existing NS id => must be coming from NS => ignore
-                tb.first.id == tb.second.id && tb.first.interfaceIDs.nightscoutId != null -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Loaded from NS: ${tb.second.id} ")
-                    confirmLastTemporaryBasalIdIfGreater(tb.second.id)
-                    processChangedTemporaryBasals()
-                    return
+            val profile = profileFunction.getProfile(tb.first.timestamp)
+            if (profile != null) {
+                when {
+                    // new record with existing NS id => must be coming from NS => ignore
+                    tb.first.id == tb.second.id && tb.first.interfaceIDs.nightscoutId != null -> {
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Loaded from NS: ${tb.second.id} ")
+                        confirmLastTemporaryBasalIdIfGreater(tb.second.id)
+                        processChangedTemporaryBasals()
+                        return
+                    }
+                    // only NsId changed, no need to upload
+                    tb.first.onlyNsIdAdded(tb.second)                                         -> {
+                        aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Only NS id changed ID: ${tb.second.id} ")
+                        confirmLastTemporaryBasalIdIfGreater(tb.second.id)
+                        processChangedTemporaryBasals()
+                        return
+                    }
+                    // without nsId = create new
+                    tb.first.interfaceIDs.nightscoutId == null                                ->
+                        activePlugin.activeNsClient?.nsAdd("treatments", DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id), "$startId/$lastDbId", profile)
+                    // with nsId = update
+                    tb.first.interfaceIDs.nightscoutId != null                                ->
+                        activePlugin.activeNsClient?.nsUpdate("treatments", DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id), "$startId/$lastDbId", profile)
                 }
-                // only NsId changed, no need to upload
-                tb.first.onlyNsIdAdded(tb.second)                                         -> {
-                    aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Only NS id changed ID: ${tb.second.id} ")
-                    confirmLastTemporaryBasalIdIfGreater(tb.second.id)
-                    processChangedTemporaryBasals()
-                    return
-                }
-                // without nsId = create new
-                tb.first.interfaceIDs.nightscoutId == null                                ->
-                    activePlugin.activeNsClient?.nsAdd("treatments", DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id), "$startId/$lastDbId")
-                // with nsId = update
-                tb.first.interfaceIDs.nightscoutId != null                                ->
-                    activePlugin.activeNsClient?.nsUpdate("treatments", DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id), "$startId/$lastDbId")
+                return
+            } else {
+                aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. No profile: ${tb.second.id} ")
+                confirmLastTemporaryBasalIdIfGreater(tb.second.id)
+                processChangedTemporaryBasals()
+                return
             }
-            return
         }
     }
 
@@ -557,10 +565,10 @@ class DataSyncSelectorV1Impl @Inject constructor(
                     }
                     // without nsId = create new
                     eb.first.interfaceIDs.nightscoutId == null                                ->
-                        activePlugin.activeNsClient?.nsAdd("treatments", DataSyncSelector.PairExtendedBolus(eb.first, eb.second.id), "$startId/$lastDbId")
+                        activePlugin.activeNsClient?.nsAdd("treatments", DataSyncSelector.PairExtendedBolus(eb.first, eb.second.id), "$startId/$lastDbId", profile)
                     // with nsId = update
                     eb.first.interfaceIDs.nightscoutId != null                                ->
-                        activePlugin.activeNsClient?.nsUpdate("treatments", DataSyncSelector.PairExtendedBolus(eb.first, eb.second.id), "$startId/$lastDbId")
+                        activePlugin.activeNsClient?.nsUpdate("treatments", DataSyncSelector.PairExtendedBolus(eb.first, eb.second.id), "$startId/$lastDbId", profile)
                 }
                 return
             } else {
