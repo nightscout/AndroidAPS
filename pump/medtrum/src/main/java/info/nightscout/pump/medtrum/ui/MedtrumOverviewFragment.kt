@@ -3,6 +3,7 @@ package info.nightscout.pump.medtrum.ui
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.databinding.FragmentMedtrumOverviewBinding
@@ -62,6 +63,8 @@ class MedtrumOverviewFragment : MedtrumBaseFragment<FragmentMedtrumOverviewBindi
                                 }
                             )
                         }
+
+                        EventType.PROFILE_NOT_SET      -> ToastUtils.infoToast(requireContext(), R.string.no_profile_selected)
 
                         else                           -> Unit
                     }

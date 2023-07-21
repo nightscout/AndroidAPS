@@ -82,19 +82,20 @@
     <string name="next">Next</string>
     <string name="discard">Discard</string>
 
-    <string name ="step_prepare_patch">Activate Patch</string>
-    <string name ="step_prepare_patch_connect">Connect and Fill</string>
-    <string name ="step_prime">Prime</string>
-    <string name ="step_priming">Priming</string>
-    <string name ="step_priming_complete">Priming Complete</string>
-    <string name ="step_attach">Attach Patch</string>
-    <string name ="step_activate">Activating...</string>
-    <string name ="step_activate_complete">Activation Complete</string>
-    <string name ="step_deactivate">Deactivate Patch</string>
-    <string name ="step_deactivating">Deactivating...</string>
-    <string name ="step_deactivate_complete">Patch deactivated</string>
-    <string name ="step_retry_activation">Activation in progress</string>
-    <string name ="unexpected_state">Unexpected state: %1$s</string>
+    <string name="step_prepare_patch">Activate Patch</string>
+    <string name="step_prepare_patch_connect">Connect and Fill</string>
+    <string name="step_prime">Prime</string>
+    <string name="step_priming">Priming</string>
+    <string name="step_priming_complete">Priming Complete</string>
+    <string name="step_attach">Attach Patch</string>
+    <string name="step_activate">Activating...</string>
+    <string name="step_activate_complete">Activation Complete</string>
+    <string name="step_deactivate">Deactivate Patch</string>
+    <string name="step_deactivating">Deactivating...</string>
+    <string name="step_deactivate_complete">Patch deactivated</string>
+    <string name="step_retry_activation">Activation in progress</string>
+    <string name="unexpected_state">Unexpected state: %1$s</string>
+    <string name="no_profile_selected">No profile selected. Please select a profile and try again.</string>
 
     <string name="base_serial">Pump Base Serial: %1$X</string>
     <string name="patch_begin_activation">No active patch. Press <b>Next</b> to begin the activation process.</string>
