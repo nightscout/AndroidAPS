@@ -241,11 +241,11 @@ class BLEComm @Inject internal constructor(
         }
 
         override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicRead status = " + status)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicRead data: " + characteristic.value.contentToString() + " UUID: " + characteristic.getUuid().toString() + " status: " + status)
         }
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicChanged data: " + characteristic.value + "UUID: " + characteristic.getUuid().toString())
+            aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicChanged data: " + characteristic.value.contentToString() + " UUID: " + characteristic.getUuid().toString())
 
             val value = characteristic.getValue()
             if (characteristic.getUuid() == UUID.fromString(READ_UUID)) {
