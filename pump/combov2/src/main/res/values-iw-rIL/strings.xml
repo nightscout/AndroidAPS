@@ -90,11 +90,9 @@
     <string name="combov2_set_emulated_100_tbr">הגדר בזאלי זמני 100% מדומה</string>
     <string name="combov2_letting_emulated_100_tbr_finish">מאפשר לבזאלי הזמני 100% המדומה לסיים</string>
     <string name="combov2_ignoring_redundant_100_tbr">מתעלם מבקשה מיותרת של בזאלי זמני 100%</string>
-    <string name="combov2_hit_unexpected_tbr_limit">נמצאה מגבלה בלתי צפוי בעת הגדרת בזאלי זמני: אחוז המטרה היה %1$d% והגיע למגבלה ב-%1$d%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">לא ניתן להגדיר בזאלי זמני אם המינון הבזאלי הבסיסי הוא 0</string>
     <string name="combov2_pair_with_pump_summary">צימוד AndroidAPS ואנדרואיד עם משאבת Accu-Chek combo שאינה מצומדת</string>
     <string name="combov2_unpair_pump_summary">ביטול צימוד AndroidAPS ואנדרואיד ממשאבת Accu-Chek combo המצומדת</string>
-    <string name="combov2_unknown_tbr_detected">נמצא בזאלי זמני בלתי ידוע והוא נעצר; אחוזים: %1$d%; זמן שנשאר: %2$s</string>
     <string name="combov2_connection_error">שגיאת חיבור: %1$s</string>
     <string name="combov2_short_status_last_connection">חיבור אחרון: לפני %1$d דקות</string>
     <string name="combov2_short_status_alert">התראה: %s</string>

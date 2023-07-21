@@ -97,7 +97,6 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_set_emulated_100_tbr">Nustatyti imitacinę 100% bazę</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Leisti užbaigti imitacinę 100% bazę</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignoruoti perteklines 100% bazės užklausas</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Nustatant laikiną bazę pasiektas nenumatytas limitas: LB tikslas %1$d%%, limitas %1$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Negalima nustatyti absoliučios laikinos bazės, jei pagrindinė bazė yra nulinė</string>
     <string name="combov2_pair_with_pump_summary">Susieti AndroidAPS su dar nesusieta Accu-Chek Combo pompa</string>
     <string name="combov2_unpair_pump_summary">Atsieti AndroidAPS ir Android nuo dabartinės susietos Accu-Chek Combo pompos</string>

@@ -52,7 +52,7 @@
     <string name="objectives_exam_learned_isf">למדתם את משמעות הערך ISF וכיצד הוא משפיע על כמות האינסולין המשמשת לתיקון הסוכר בדם.</string>
     <string name="objectives_exam_learned_ic">למדתם את משמעות הערך IC וכיצד הוא משפיע על כמות האינסולין הדרושה לכיסוי פחמימות.</string>
     <string name="objectives_exam_learned_hypott">ערך מטרה זמני היפו משמש רק כדי למנוע תיקון ביתר לאחר היפו, כאשר בדרך כלל יש אינסולין פעיל שלילי שהצטבר. יש לשקול לבצע פעולות נוספות כדי למנוע מצב כזה בעתיד.</string>
-    <string name="objectives_exam_learned_profileswitch">השימוש באחוז אינו משפיע על ערכי המטרה של הסוכר, אבל כן משפיע על המינונים הבזאליים, על ה-ISF ועל ה-IC כך שיוזרק יותר אינסולין (מעל 100%) או פחות אינסולין (מתחת ל-100%).</string>
+    <string name="objectives_exam_learned_profileswitch">השימוש באחוז אינו משפיע על ערכי המטרה של הסוכר, אבל כן משפיע על המינונים הבזאליים, על ה-ISF ועל ה-IC כך שיוזרק יותר אינסולין (מעל 100%%) או פחות אינסולין (מתחת ל-100%%).</string>
     <string name="objectives_exam_learned_profileswitchtime">על ידי שימוש בהיסט זמן בהחלפת הפרופיל, אתם יכולים להתאים את הפרופיל הצירקדי לאי סדרים כמו השכמה מאוחרת.</string>
     <string name="objectives_exam_learned_profileswitch4">עריכת הפרופיל עצמו אינה מספיקה כדי לבצע שינוי. אתם עדיין צריכים לבצע החלפת פרופיל כדי להפעיל שינויים.</string>
     <string name="objectives_exam_learned_exercise">עליכם להפחית את כמות האינסולין בגוף לפחות שעה אחת לפני תחילת האימון על ידי בחירת פרופיל מתחת ל-100%.</string>

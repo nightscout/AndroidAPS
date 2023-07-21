@@ -98,7 +98,6 @@ Schaltflächen gleichzeitig, um das Paar abzubrechen)\n
     <string name="combov2_set_emulated_100_tbr">Emulierte 100% TBR festlegen</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Lass die laufende Emulation der 100% TBR abschließen</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignoriere redundante 100% TBR-Anfrage</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Unerwartetes Limit beim Anpassen des TBR gefunden: Ziel Prozentsatz war %1$d%%, Limit bei %1$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Absolute TBR kann nicht gesetzt werden, wenn die Basisbasalrate 0 ist</string>
     <string name="combov2_pair_with_pump_summary">Verbinde AndroidAPS und Android mit einer derzeit nicht verbundenen Accu-Chek Combo Pumpe</string>
     <string name="combov2_unpair_pump_summary">Trenne AndroidAPS und Android von der aktuell verbundenen Accu-Chek Combo Pumpe</string>

@@ -363,7 +363,8 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
                     menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
-                    menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
+                    menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] ||
+                    menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal]
                 ).toVisibility()
             secondaryGraphsData[g].performUpdate()
         }

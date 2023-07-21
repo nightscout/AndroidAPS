@@ -98,7 +98,6 @@ botão ao mesmo tempo para cancelar o emparelhamento)\n
     <string name="combov2_set_emulated_100_tbr">Definir emulação 100% de TBT</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Deixando a taxa basal temporária emulada de 100% continuar até o final</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignorando uma solicitação redundante de taxa basal temporária emulada de 100%</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Limite inesperado encontrado ao ajustar a TBT: porcentagem alvo foi %1$d%%, atingiu um limite em %1$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Não é possível definir TBT absoluto se a taxa basal de base é zero</string>
     <string name="combov2_pair_with_pump_summary">Desemparelhar o AndroidAPS e o Android da bomba Accu-Chek Combo pareada</string>
     <string name="combov2_unpair_pump_summary">Desemparelhar o AndroidAPS e o Android da bomba Accu-Chek Combo atualmente pareada</string>

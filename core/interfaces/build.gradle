@@ -5,7 +5,6 @@ plugins {
     id 'kotlin-allopen'
     id 'kotlin-parcelize'
     id 'kotlinx-serialization'
-    id 'com.hiya.jacoco-android'
 }
 
 apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
