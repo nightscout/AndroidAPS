@@ -451,7 +451,7 @@
     <string name="bolus_advisor">Assistant bolus</string>
     <string name="bolus_advisor_message">Vous avez une glycémie élevée. Au lieu de manger maintenant, il est recommandé d\'attendre une meilleure glycémie. Voulez-vous faire un bolus de correction maintenant et avoir une alerte quand il sera temps de manger ? Dans ce cas, aucun glucide ne sera enregistré et vous devrez utiliser l\'assistant à nouveau lorsque nous vous le rappelons.</string>
     <string name="cobvsiob">GA vs IA</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorption lente des glucides détectée : %2$d%% du temps. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors plus d\'insuline pourrait être délivré !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorption lente des glucides détectée dans %2$d%% des cas. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors trop d\'insuline pourrait être injectée !!!!!</font>]]></string>
     <string name="partialboluswizard">Injecter ce pourcentage du bolus calculé par l’assistant [%]</string>
     <string name="bolus_constraint_applied_warn">Contrainte de Bolus appliquée : %1$.2f U vers %2$.2f U</string>
     <string name="bolus_recorded_only">Les bolus seront seulement enregistrés (pas délivrés par la pompe)</string>
