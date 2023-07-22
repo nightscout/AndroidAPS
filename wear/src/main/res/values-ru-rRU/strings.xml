@@ -184,7 +184,7 @@
     <string name="cob_000g">000г</string>
     <string name="svg_00_0" comment="use , or . only">00,0</string>
     <string name="iob_0_00u">0,00 ед</string>
-    <string name="snooze_alert">Отложить оповещения AAPS</string>
+    <string name="snooze_alert">Оповещение о переходе AAPS в режим энергосбережения</string>
     <string name="sending_snooze">Отправка команды отложить оповещения AAPS</string>
     <string name="short_hour">ч</string>
     <string name="week_short">н</string>
