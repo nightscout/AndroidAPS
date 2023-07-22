@@ -527,7 +527,7 @@
     <string name="message">Сообщение</string>
     <string name="ok">OK</string>
     <string name="cancel">Отменить</string>
-    <string name="dismiss">ОТКЛОНИТЬ</string>
+    <string name="dismiss">УБРАТЬ</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="close">Закрыть</string>
