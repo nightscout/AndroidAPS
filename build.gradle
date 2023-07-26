@@ -10,7 +10,7 @@ buildscript {
         room_version = '2.5.2'
         lifecycle_version = '2.6.1'
         dagger_version = '2.47'
-        coroutines_version = '1.7.2'
+        coroutines_version = '1.7.3'
         activity_version = '1.7.2'
         fragmentktx_version = '1.6.0'
         ormLite_version = '4.46'
