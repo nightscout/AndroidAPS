@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.eopatch.ui.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.map
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPatchManager
 import info.nightscout.androidaps.plugins.pump.eopatch.ble.IPreferenceManager
@@ -83,7 +83,7 @@ class EopatchOverviewViewModel @Inject constructor(
     private var mBasalRateDisposable: Disposable? = null
 
     val patchRemainingInsulin: LiveData<String>
-        get() = Transformations.map(_patchRemainingInsulin) { insulin ->
+        get() = _patchRemainingInsulin.map { insulin ->
             when {
                 insulin > 50f -> "50+ U"
                 insulin < 1f -> "0 U"
@@ -217,7 +217,7 @@ class EopatchOverviewViewModel @Inject constructor(
             .observeOn(aapsSchedulers.main)
             .subscribe({ response ->
                 if (response.isSuccess) {
-                    var result = pumpSync.syncTemporaryBasalWithPumpId(
+                    val result = pumpSync.syncTemporaryBasalWithPumpId(
                         timestamp = dateUtil.now(),
                         rate = 0.0,
                         duration = T.mins((pauseDurationHour * 60).toLong()).msecs(),
@@ -251,7 +251,7 @@ class EopatchOverviewViewModel @Inject constructor(
                         pumpType = PumpType.EOFLOW_EOPATCH2,
                         pumpSerial = patchManager.patchConfig.patchSerialNumber
                     )
-                    UIEvent(EventType.RESUME_BASAL_SUCCESS).let { _eventHandler.postValue(it) }
+                    UIEvent(EventType.RESUME_BASAL_SUCCESS).let { event -> _eventHandler.postValue(event) }
                     stopPauseTimeUpdate()
                 } else {
                     _eventHandler.postValue(UIEvent(EventType.RESUME_BASAL_FAILED))
