@@ -1028,6 +1028,10 @@
     <string name="blocked_by_connectivity">被连接选项阻止</string>
 
     <!-- Patched SI App -->
-    <string name="patched_si_app">硅基补丁版</string>
-    <string name="description_source_patched_si_app">从硅基补丁版App接收血糖值。</string>
+    <string name="patched_si_app">X基补丁版</string>
+    <string name="description_source_patched_si_app">从X基补丁版App接收血糖值。</string>
+
+    <!-- Patched Sino App -->
+    <string name="patched_sino_app">爱看补丁版</string>
+    <string name="description_source_patched_sino_app">从爱看补丁版App接收血糖值。</string>
 </resources>

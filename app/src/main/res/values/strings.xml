@@ -1254,7 +1254,9 @@
 
     <!-- Patched SI App -->
     <string name="patched_si_app">Patched SI App</string>
+    <string name="patched_sino_app">Patched Sino App</string>
     <string name="description_source_patched_si_app">Receive BG values from the Patched SI App.</string>
+    <string name="description_source_patched_sino_app">Receive BG values from the Patched Sino App.</string>
     <string name="about_plugin">WeChat official Account/Douyin: 一型码农Lex</string>
 
 </resources>

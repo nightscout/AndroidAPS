@@ -379,6 +379,12 @@ abstract class PluginsModule {
     @Binds
     @AllConfigs
     @IntoMap
+    @IntKey(472)
+    abstract fun bindPatchedSinoAppPlugin(plugin: PathedSinoAppPlugin): PluginBase
+
+    @Binds
+    @AllConfigs
+    @IntoMap
     @IntKey(475)
     abstract fun bindRandomBgPlugin(plugin: RandomBgPlugin): PluginBase
 
