@@ -1,6 +1,6 @@
 android {
 
-    flavorDimensions "standard"
+    flavorDimensions = ["standard"]
     productFlavors {
         full {
             dimension "standard"

@@ -57,7 +57,7 @@ android {
         viewBinding true
     }
 
-    flavorDimensions "standard"
+    flavorDimensions = ["standard"]
     productFlavors {
         full {
             applicationId "info.nightscout.androidaps"
