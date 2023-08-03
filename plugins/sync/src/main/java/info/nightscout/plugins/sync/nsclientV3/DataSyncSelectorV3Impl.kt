@@ -489,6 +489,7 @@ class DataSyncSelectorV3Impl @Inject constructor(
             queueCounter.tbrsRemaining = lastDbId - startId
             rxBus.send(EventNSClientUpdateGuiQueue())
             appRepository.getNextSyncElementTemporaryBasal(startId).blockingGet()?.let { tb ->
+                val profile = profileFunction.getProfile(tb.first.timestamp)
                 //aapsLogger.info(LTag.NSCLIENT, "Loading TemporaryBasal data Start: $startId ${tb.first} forID: ${tb.second.id} ")
                 when {
                     // new record with existing NS id => must be coming from NS => ignore
@@ -499,10 +500,10 @@ class DataSyncSelectorV3Impl @Inject constructor(
                         aapsLogger.info(LTag.NSCLIENT, "Ignoring TemporaryBasal. Only NS id changed ID: ${tb.second.id} ")
                     // without nsId = create new
                     tb.first.interfaceIDs.nightscoutId == null                                ->
-                        cont = activePlugin.activeNsClient?.nsAdd("treatments", DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id), "$startId/$lastDbId") ?: false
+                        cont = activePlugin.activeNsClient?.nsAdd("treatments", DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id), "$startId/$lastDbId", profile) ?: false
                     // with nsId = update
                     tb.first.interfaceIDs.nightscoutId != null                                ->
-                        cont = activePlugin.activeNsClient?.nsUpdate("treatments", DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id), "$startId/$lastDbId") ?: false
+                        cont = activePlugin.activeNsClient?.nsUpdate("treatments", DataSyncSelector.PairTemporaryBasal(tb.first, tb.second.id), "$startId/$lastDbId", profile) ?: false
                 }
                 if (cont) confirmLastTemporaryBasalIdIfGreater(tb.second.id)
             } ?: run {
