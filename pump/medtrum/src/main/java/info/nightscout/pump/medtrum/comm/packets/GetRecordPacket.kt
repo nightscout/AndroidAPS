@@ -9,11 +9,13 @@ import info.nightscout.pump.medtrum.comm.enums.CommandType.GET_RECORD
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.BolusType
 import info.nightscout.pump.medtrum.extension.toByteArray
+import info.nightscout.pump.medtrum.extension.toFloat
 import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.pump.medtrum.extension.toLong
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import javax.inject.Inject
 
 class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int) : MedtrumPacket(injector) {
@@ -241,6 +243,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                         "Rate: $basalRate Duration: ${duration}"
                                 )
                             }
+
                             in BasalType.SUSPEND_LOW_GLUCOSE..BasalType.STOP -> {
                                 aapsLogger.debug(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BASAL_RECORD: Suspend basal")
                                 val duration = (basalEndTime - basalStartTime)
@@ -260,6 +263,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                         "Rate: $basalRate Duration: ${duration}"
                                 )
                             }
+
                             else                                             -> {
                                 aapsLogger.error(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BASAL_RECORD: Unknown basal type: $basalType")
                             }
@@ -292,6 +296,46 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
 
                     TDD_RECORD                     -> {
                         aapsLogger.debug(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: TDD_RECORD")
+                        val timestamp = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_RECORD_DATA_START, RESP_RECORD_DATA_START + 4).toLong())
+                        val timeZoneOffset = data.copyOfRange(RESP_RECORD_DATA_START + 4, RESP_RECORD_DATA_START + 6).toInt()
+                        val tddMins = data.copyOfRange(RESP_RECORD_DATA_START + 6, RESP_RECORD_DATA_START + 8).toInt()
+                        val glucoseRecordTime = data.copyOfRange(RESP_RECORD_DATA_START + 8, RESP_RECORD_DATA_START + 12).toLong()
+                        val tdd = data.copyOfRange(RESP_RECORD_DATA_START + 12, RESP_RECORD_DATA_START + 16).toFloat()
+                        val basalTdd = data.copyOfRange(RESP_RECORD_DATA_START + 16, RESP_RECORD_DATA_START + 20).toFloat()
+                        val glucose = data.copyOfRange(RESP_RECORD_DATA_START + 20, RESP_RECORD_DATA_START + 24).toFloat()
+                        val unknown = data.copyOfRange(RESP_RECORD_DATA_START + 24, RESP_RECORD_DATA_START + 28).toFloat()
+                        val meanSomething = data.copyOfRange(RESP_RECORD_DATA_START + 28, RESP_RECORD_DATA_START + 32).toFloat()
+                        val usedTdd = data.copyOfRange(RESP_RECORD_DATA_START + 32, RESP_RECORD_DATA_START + 36).toFloat()
+                        val usedIBasal = data.copyOfRange(RESP_RECORD_DATA_START + 36, RESP_RECORD_DATA_START + 40).toFloat()
+                        val usedSgBasal = data.copyOfRange(RESP_RECORD_DATA_START + 40, RESP_RECORD_DATA_START + 44).toFloat()
+                        val usedUMax = data.copyOfRange(RESP_RECORD_DATA_START + 44, RESP_RECORD_DATA_START + 48).toFloat()
+                        val newTdd = data.copyOfRange(RESP_RECORD_DATA_START + 48, RESP_RECORD_DATA_START + 52).toFloat()
+                        val newIBasal = data.copyOfRange(RESP_RECORD_DATA_START + 52, RESP_RECORD_DATA_START + 56).toFloat()
+                        val newSgBasal = data.copyOfRange(RESP_RECORD_DATA_START + 56, RESP_RECORD_DATA_START + 60).toFloat()
+                        val newUMax = data.copyOfRange(RESP_RECORD_DATA_START + 60, RESP_RECORD_DATA_START + 64).toFloat()
+
+                        aapsLogger.debug(
+                            LTag.PUMPCOMM, "TDD_RECORD: timestamp: $timestamp, timeZoneOffset: $timeZoneOffset, tddMins: $tddMins, glucoseRecordTime: $glucoseRecordTime, tdd: " +
+                                "$tdd, basalTdd: $basalTdd, glucose: $glucose, unknown: $unknown, meanSomething: $meanSomething, usedTdd: $usedTdd, usedIBasal: $usedIBasal, usedSgBasal: " +
+                                "$usedSgBasal, usedUMax: $usedUMax, newTdd: $newTdd, newIBasal: $newIBasal, newSgBasal: $newSgBasal, newUMax: $newUMax"
+                        )
+
+                        val newRecord = pumpSync.createOrUpdateTotalDailyDose(
+                            timestamp = timestamp,
+                            bolusAmount = (tdd - basalTdd).toDouble(),
+                            basalAmount = basalTdd.toDouble(),
+                            totalAmount = tdd.toDouble(),
+                            pumpId = timestamp,
+                            pumpType = medtrumPump.pumpType(),
+                            pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                        )
+
+                        aapsLogger.debug(
+                            LTag.PUMPCOMM,
+                            "handleBasalStatusUpdate from record: ${if (newRecord) "**NEW** " else ""}EVENT TDD: ${dateUtil.dateAndTimeString(timestamp)} ($timestamp) " +
+                                "TDD: $tdd, BasalTDD: $basalTdd, BolusTDD: ${tdd - basalTdd}"
+                        )
+
                     }
 
                     else                           -> {

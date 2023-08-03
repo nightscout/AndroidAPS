@@ -26,3 +26,16 @@ fun ByteArray.toInt(): Int {
     }
     return result
 }
+
+fun ByteArray.toFloat(): Float {
+    require(this.size == 4) {
+        "Array size must be == 4 for 'toFloat' conversion operation"
+    }
+    var asInt = 0
+    for (i in this.indices) {
+        val byte = this[i]
+        val shifted = (byte.toInt() and 0xFF) shl 8 * i
+        asInt = asInt or shifted
+    }
+    return Float.fromBits(asInt)
+}
