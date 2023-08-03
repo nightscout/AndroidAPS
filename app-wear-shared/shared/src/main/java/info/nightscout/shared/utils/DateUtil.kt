@@ -96,9 +96,9 @@ class DateUtil @Inject constructor(private val context: Context) {
         return calendar.timeInMillis
     }
 
-    fun toSeconds(hh_colon_mm: String): Int {
+    fun toSeconds(hhColonMm: String): Int {
         val p = Pattern.compile("(\\d+):(\\d+)( a.m.| p.m.| AM| PM|AM|PM|)")
-        val m = p.matcher(hh_colon_mm)
+        val m = p.matcher(hhColonMm)
         var retVal = 0
         if (m.find()) {
             retVal = SafeParse.stringToInt(m.group(1)) * 60 * 60 + SafeParse.stringToInt(m.group(2)) * 60
@@ -338,8 +338,8 @@ class DateUtil @Inject constructor(private val context: Context) {
             minutes = rh.gs(R.string.shortminute)
         }
         var result = ""
-        if (diff[TimeUnit.DAYS]!! > 0) result += diff[TimeUnit.DAYS].toString() + days
-        if (diff[TimeUnit.HOURS]!! > 0) result += diff[TimeUnit.HOURS].toString() + hours
+        if (diff.getOrDefault(TimeUnit.DAYS, -1) > 0) result += diff[TimeUnit.DAYS].toString() + days
+        if (diff.getOrDefault(TimeUnit.HOURS, -1) > 0) result += diff[TimeUnit.HOURS].toString() + hours
         if (diff[TimeUnit.DAYS] == 0L) result += diff[TimeUnit.MINUTES].toString() + minutes
         return result
     }
@@ -364,6 +364,7 @@ class DateUtil @Inject constructor(private val context: Context) {
                     if (t > 28) {
                         unit = rh.gs(R.string.unit_week)
                         t /= 7
+                        @Suppress("KotlinConstantConditions")
                         if (t != 1L) unit = rh.gs(R.string.unit_weeks)
                     }
                 }
@@ -402,8 +403,8 @@ class DateUtil @Inject constructor(private val context: Context) {
         } else {
             thisDf = DecimalFormat("#", dfs)
         }
-        thisDf!!.maximumFractionDigits = digits
-        return thisDf.format(x)
+        thisDf?.maximumFractionDigits = digits
+        return thisDf?.format(x) ?: ""
     }
 
     fun formatHHMM(timeAsSeconds: Int): String {
@@ -428,9 +429,9 @@ class DateUtil @Inject constructor(private val context: Context) {
     fun timeStampToUtcDateMillis(timestamp: Long): Long {
         val current = Calendar.getInstance().apply { timeInMillis = timestamp }
         return Calendar.getInstance().apply {
-            set(Calendar.YEAR, current.get(Calendar.YEAR))
-            set(Calendar.MONTH, current.get(Calendar.MONTH))
-            set(Calendar.DAY_OF_MONTH, current.get(Calendar.DAY_OF_MONTH))
+            set(Calendar.YEAR, current[Calendar.YEAR])
+            set(Calendar.MONTH, current[Calendar.MONTH])
+            set(Calendar.DAY_OF_MONTH, current[Calendar.DAY_OF_MONTH])
         }.timeInMillis
     }
 
@@ -438,9 +439,9 @@ class DateUtil @Inject constructor(private val context: Context) {
         val selected = Calendar.getInstance().apply { timeInMillis = dateUtcMillis }
         return Calendar.getInstance().apply {
             timeInMillis = timestamp
-            set(Calendar.YEAR, selected.get(Calendar.YEAR))
-            set(Calendar.MONTH, selected.get(Calendar.MONTH))
-            set(Calendar.DAY_OF_MONTH, selected.get(Calendar.DAY_OF_MONTH))
+            set(Calendar.YEAR, selected[Calendar.YEAR])
+            set(Calendar.MONTH, selected[Calendar.MONTH])
+            set(Calendar.DAY_OF_MONTH, selected[Calendar.DAY_OF_MONTH])
         }.timeInMillis
     }
 

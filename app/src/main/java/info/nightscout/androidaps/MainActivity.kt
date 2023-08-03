@@ -469,7 +469,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
      * Check for existing PasswordReset file and
      * reset password to SN of active pump if file exists
      */
-    fun passwordResetCheck(context: Context) {
+    private fun passwordResetCheck(context: Context) {
         val passwordReset = File(fileListProvider.ensureExtraDirExists(), "PasswordReset")
         if (passwordReset.exists()) {
             val sn = activePlugin.activePump.serialNumber()
