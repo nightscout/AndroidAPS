@@ -181,7 +181,7 @@ class Widget : AppWidgetProvider() {
     private fun updateIobCob(views: RemoteViews) {
         views.setTextViewText(R.id.iob, overviewData.iobText(iobCobCalculator))
         // cob
-        var cobText = overviewData.cobInfo(iobCobCalculator).displayText(rh, dateUtil, isDev = false) ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
+        var cobText = overviewData.cobInfo(iobCobCalculator).displayText(rh) ?: rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
 
         val constraintsProcessed = loop.lastRun?.constraintsProcessed
         val lastRun = loop.lastRun
