@@ -97,6 +97,7 @@
     <string name="key_objectiveusereconnect" translatable="false">ObjectivesReconnectUsed</string>
     <string name="key_aps_mode" translatable="false">aps_mode</string>
     <string name="key_boluswizard_percentage" translatable="false">boluswizard_percentage</string>
+    <string name="key_reset_boluswizard_percentage_time" translatable="false">key_reset_boluswizard_percentage_time</string>
     <string name="key_usesuperbolus" translatable="false">key_usersuperbolus</string>
     <string name="key_treatmentssafety_maxbolus" translatable="false">treatmentssafety_maxbolus</string>
     <string name="key_patient_name" translatable="false">patient_name</string>

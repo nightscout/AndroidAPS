@@ -16,6 +16,7 @@ import info.nightscout.core.utils.extensions.storeDouble
 import info.nightscout.core.utils.extensions.storeInt
 import info.nightscout.core.utils.extensions.storeString
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Overview
 import info.nightscout.interfaces.overview.OverviewMenus
@@ -150,6 +151,11 @@ class OverviewPlugin @Inject constructor(
                 it.isEnabled = false
             }
         }
+        if (!config.isEngineeringMode())
+            (preferenceFragment.findPreference(rh.gs(info.nightscout.core.utils.R.string.key_reset_boluswizard_percentage_time)) as ValidatingEditTextPreference?)?.let {
+                it.isVisible = false
+                it.isEnabled = false
+            }
     }
 
     override fun configuration(): JSONObject =
