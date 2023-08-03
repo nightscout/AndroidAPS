@@ -171,6 +171,7 @@ public class SerialIOThread extends Thread {
             aapsLogger.error(LTag.PUMPBTCOMM, "Reply not received " + message.getMessageName());
             if (message.getCommand() == 0xF0F1) {
                 danaPump.setNewPump(false);
+                danaPump.reset();
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Old firmware detected");
             }
         }
