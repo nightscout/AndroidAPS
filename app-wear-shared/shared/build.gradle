@@ -16,7 +16,7 @@ android {
 
     namespace 'info.nightscout.shared'
     defaultConfig {
-        minSdkVersion 23  // for wear
+        minSdkVersion 25  // for wear
     }
 }
 

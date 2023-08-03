@@ -43,10 +43,10 @@ def generateGitBuild = { ->
 }
 
 android {
-    compileSdkVersion 33
+    compileSdk 33
 
     defaultConfig {
-        minSdkVersion 23
+        minSdkVersion 25
         targetSdkVersion 29
         versionCode 2
         versionName "1.0.3"
