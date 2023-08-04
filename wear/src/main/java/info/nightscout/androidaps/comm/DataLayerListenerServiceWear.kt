@@ -12,6 +12,7 @@ import info.nightscout.androidaps.interaction.utils.Persistence
 import info.nightscout.androidaps.interaction.utils.WearUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventWearDataToMobile
 import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -43,6 +44,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
     private val disposable = CompositeDisposable()
 
     private val rxPath get() = getString(info.nightscout.shared.R.string.path_rx_bridge)
+    private val rxDataPath get() = getString(info.nightscout.shared.R.string.path_rx_data_bridge)
 
     override fun onCreate() {
         AndroidInjection.inject(this)
@@ -53,6 +55,12 @@ class DataLayerListenerServiceWear : WearableListenerService() {
             .observeOn(aapsSchedulers.io)
             .subscribe {
                 sendMessage(rxPath, it.payload.serialize())
+            }
+        disposable += rxBus
+            .toObservable(EventWearDataToMobile::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe {
+                sendMessage(rxDataPath, it.payload.serializeByte())
             }
     }
 
@@ -95,6 +103,14 @@ class DataLayerListenerServiceWear : WearableListenerService() {
             rxPath -> {
                 aapsLogger.debug(LTag.WEAR, "onMessageReceived: ${String(messageEvent.data)}")
                 val command = EventData.deserialize(String(messageEvent.data))
+                rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
+                // Use this sender
+                transcriptionNodeId = messageEvent.sourceNodeId
+                aapsLogger.debug(LTag.WEAR, "Updated node: $transcriptionNodeId")
+            }
+            rxDataPath -> {
+                aapsLogger.debug(LTag.WEAR, "onMessageReceived: ${messageEvent.data}")
+                val command = EventData.deserializeByte(messageEvent.data)
                 rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
                 // Use this sender
                 transcriptionNodeId = messageEvent.sourceNodeId

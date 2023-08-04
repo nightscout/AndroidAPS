@@ -22,6 +22,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.configuration.R
 import info.nightscout.configuration.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.configuration.maintenance.dialogs.PrefImportSummaryDialog
+import info.nightscout.configuration.maintenance.formats.ZipCustomWatchfaceFormat
 import info.nightscout.configuration.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.dialogs.TwoMessagesAlertDialog
@@ -55,6 +56,7 @@ import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventDiaconnG8PumpLogReset
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -84,7 +86,8 @@ class ImportExportPrefsImpl @Inject constructor(
     private val prefFileList: PrefFileListProvider,
     private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val customWatchfaceCWFFormat: ZipCustomWatchfaceFormat
 ) : ImportExportPrefs {
 
     override fun prefsFileExists(): Boolean {
@@ -295,6 +298,27 @@ class ImportExportPrefsImpl @Inject constructor(
             ToastUtils.errorToast(activity, rh.gs(R.string.goto_main_try_again))
             log.error(LTag.CORE, "Internal android framework exception", e)
         }
+    }
+
+    override fun importCustomWatchface(fragment: Fragment) {
+        fragment.activity?.let { importCustomWatchface(it) }
+    }
+    override fun importCustomWatchface(activity: FragmentActivity) {
+        try {
+            if (activity is DaggerAppCompatActivityWithResult)
+                activity.callForCustomWatchfaceFile.launch(null)
+        } catch (e: IllegalArgumentException) {
+            // this exception happens on some early implementations of ActivityResult contracts
+            // when registered and called for the second time
+            ToastUtils.errorToast(activity, rh.gs(R.string.goto_main_try_again))
+            log.error(LTag.CORE, "Internal android framework exception", e)
+        }
+    }
+
+    override fun exportCustomWatchface(customWatchface: EventData.ActionSetCustomWatchface) {
+        prefFileList.ensureExportDirExists()
+        val newFile = prefFileList.newCwfFile(customWatchface.name)
+        customWatchfaceCWFFormat.saveCustomWatchface(newFile,customWatchface)
     }
 
     override fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile) {

@@ -361,6 +361,11 @@
     <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>
     <string name="wear_predictions_summary">Show the predictions on the watchface.</string>
     <string name="wear_predictions_title">Predictions</string>
+    <string name="wear_custom_watchface">Custom Watchface: %1$s</string>
+    <string name="wear_load_watchface">Load Watchface</string>
+    <string name="wear_send_watchface">Send Watchface</string>
+    <string name="wear_export_watchface">Export Watchface</string>
+    <string name="wear_new_custom_watchface_received">New watchface received from watch</string>
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
 

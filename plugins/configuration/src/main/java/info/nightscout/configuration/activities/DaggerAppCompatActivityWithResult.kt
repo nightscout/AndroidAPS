@@ -8,6 +8,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import dagger.android.support.DaggerAppCompatActivity
 import info.nightscout.configuration.R
+import info.nightscout.configuration.maintenance.CustomWatchfaceFileContract
 import info.nightscout.configuration.maintenance.PrefsFileContract
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.locale.LocaleHelper
@@ -54,6 +55,8 @@ open class DaggerAppCompatActivityWithResult : DaggerAppCompatActivity() {
             importExportPrefs.importSharedPreferences(this, it)
         }
     }
+
+    val callForCustomWatchfaceFile = registerForActivityResult(CustomWatchfaceFileContract()) { }
 
     val callForBatteryOptimization = registerForActivityResult(OptimizationPermissionContract()) {
         updateButtons()

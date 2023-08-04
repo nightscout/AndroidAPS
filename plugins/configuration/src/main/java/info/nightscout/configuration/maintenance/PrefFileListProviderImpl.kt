@@ -6,8 +6,10 @@ import dagger.Lazy
 import dagger.Reusable
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.configuration.R
+import info.nightscout.configuration.maintenance.formats.ZipCustomWatchfaceFormat
 import info.nightscout.configuration.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.maintenance.CustomWatchfaceFile
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.maintenance.PrefMetadata
 import info.nightscout.interfaces.maintenance.PrefMetadataMap
@@ -34,6 +36,7 @@ class PrefFileListProviderImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val config: Lazy<Config>,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
+    private val customWatchfaceCWFFormat: ZipCustomWatchfaceFormat,
     private val storage: Storage,
     private val versionCheckerUtils: VersionCheckerUtils,
     context: Context
@@ -88,6 +91,20 @@ class PrefFileListProviderImpl @Inject constructor(
         return prefFiles
     }
 
+    override fun listCustomWatchfaceFiles(): MutableList<CustomWatchfaceFile> {
+        val customWatchfaceFiles = mutableListOf<CustomWatchfaceFile>()
+
+        // searching dedicated dir, only for new CWF format
+        exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipCustomWatchfaceFormat.CUSTOM_WF_EXTENTION) }.forEach { file ->
+            // Here loadCustomWatchface will unzip, check and load CustomWatchface
+            customWatchfaceCWFFormat.loadCustomWatchface(file)?.also { customWatchface ->
+                customWatchfaceFiles.add(CustomWatchfaceFile(file.name, file, exportsPath, customWatchface.json, customWatchface.metadata, customWatchface.drawableDatas))
+            }
+        }
+
+        return customWatchfaceFiles
+    }
+
     private fun metadataFor(loadMetadata: Boolean, contents: String): PrefMetadataMap {
         if (!loadMetadata) {
             return mapOf()
@@ -127,6 +144,10 @@ class PrefFileListProviderImpl @Inject constructor(
     override fun newExportCsvFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         return File(exportsPath, timeLocal + "_UserEntry.csv")
+    }
+    override fun newCwfFile(filename: String): File {
+        val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
+        return File(exportsPath, "${filename}_$timeLocal${ZipCustomWatchfaceFormat.CUSTOM_WF_EXTENTION}")
     }
 
     // check metadata for known issues, change their status and add info with explanations

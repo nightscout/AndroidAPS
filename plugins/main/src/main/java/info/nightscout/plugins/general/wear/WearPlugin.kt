@@ -54,6 +54,8 @@ class WearPlugin @Inject constructor(
     private val disposable = CompositeDisposable()
 
     var connectedDevice = "---"
+    var customWatchfaceSerialized = ""
+    var savedCustomWatchface: EventData.ActionSetCustomWatchface? = null
 
     override fun onStart() {
         super.onStart()

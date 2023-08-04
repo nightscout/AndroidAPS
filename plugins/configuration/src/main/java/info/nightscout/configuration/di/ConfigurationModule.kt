@@ -11,8 +11,10 @@ import info.nightscout.configuration.configBuilder.RunningConfigurationImpl
 import info.nightscout.configuration.maintenance.ImportExportPrefsImpl
 import info.nightscout.configuration.maintenance.MaintenanceFragment
 import info.nightscout.configuration.maintenance.PrefFileListProviderImpl
+import info.nightscout.configuration.maintenance.activities.CustomWatchfaceImportListActivity
 import info.nightscout.configuration.maintenance.activities.LogSettingActivity
 import info.nightscout.configuration.maintenance.activities.PrefImportListActivity
+import info.nightscout.configuration.maintenance.formats.ZipCustomWatchfaceFormat
 import info.nightscout.configuration.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.ConfigBuilder
@@ -34,6 +36,8 @@ abstract class ConfigurationModule {
     @ContributesAndroidInjector abstract fun contributesConfigBuilderFragment(): ConfigBuilderFragment
     @ContributesAndroidInjector abstract fun contributesCsvExportWorker(): ImportExportPrefsImpl.CsvExportWorker
     @ContributesAndroidInjector abstract fun contributesPrefImportListActivity(): PrefImportListActivity
+    @ContributesAndroidInjector abstract fun contributesCustomWatchfaceImportListActivity(): CustomWatchfaceImportListActivity
+    @ContributesAndroidInjector abstract fun contributesZipCustomWatchfaceFormat(): ZipCustomWatchfaceFormat
     @ContributesAndroidInjector abstract fun encryptedPrefsFormatInjector(): EncryptedPrefsFormat
     @ContributesAndroidInjector abstract fun prefImportListProviderInjector(): PrefFileListProvider
 

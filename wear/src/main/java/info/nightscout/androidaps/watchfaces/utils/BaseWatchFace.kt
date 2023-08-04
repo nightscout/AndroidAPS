@@ -36,6 +36,7 @@ import info.nightscout.shared.extensions.toVisibilityKeepSpace
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import javax.inject.Inject
 import kotlin.math.floor
@@ -78,12 +79,15 @@ abstract class BaseWatchFace : WatchFace() {
     var gridColor = Color.WHITE
     var basalBackgroundColor = Color.BLUE
     var basalCenterColor = Color.BLUE
+    var carbColor = Color.GREEN
     private var bolusColor = Color.MAGENTA
     private var lowResMode = false
     private var layoutSet = false
     var bIsRound = false
     var dividerMatchesBg = false
     var pointSize = 2
+    var enableSecond = false
+    var updateSecond: Disposable? = null
 
     // Tapping times
     private var sgvTapTime: Long = 0
@@ -245,12 +249,13 @@ abstract class BaseWatchFace : WatchFace() {
 
     override fun onDestroy() {
         disposable.clear()
+        updateSecond?.dispose()
         simpleUi.onDestroy()
         super.onDestroy()
     }
 
     override fun getInteractiveModeUpdateRate(): Long {
-        return 60 * 1000L // Only call onTimeChanged every 60 seconds
+        return if (enableSecond) 1000L else 60 * 1000L // Only call onTimeChanged every 60 seconds
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -271,6 +276,8 @@ abstract class BaseWatchFace : WatchFace() {
             missedReadingAlert()
             checkVibrateHourly(oldTime, newTime)
             if (!simpleUi.isEnabled(currentWatchMode)) setDataFields()
+        } else if (layoutSet && !simpleUi.isEnabled(currentWatchMode) && enableSecond && newTime.hasSecondChanged(oldTime)) {
+            setSecond()
         }
     }
 
@@ -349,9 +356,10 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     private fun setDateAndTime() {
-        binding.time?.text = if(binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString()
+        binding.time?.text = if(binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString() + if (enableSecond) ":" + dateUtil.secondString() else ""
         binding.hour?.text = dateUtil.hourString()
         binding.minute?.text = dateUtil.minuteString()
+        binding.second?.text = dateUtil.secondString()
         binding.dateTime?.visibility = sp.getBoolean(R.string.key_show_date, false).toVisibility()
         binding.dayName?.text = dateUtil.dayNameString()
         binding.day?.text = dateUtil.dayString()
@@ -360,7 +368,12 @@ abstract class BaseWatchFace : WatchFace() {
         binding.timePeriod?.text = dateUtil.amPm()
     }
 
-    private fun setColor() {
+    open fun setSecond() {
+        binding.time?.text = if(binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString() + if (enableSecond) ":" + dateUtil.secondString() else ""
+        binding.second?.text = dateUtil.secondString()
+    }
+
+    fun setColor() {
         dividerMatchesBg = sp.getBoolean(R.string.key_match_divider, false)
         when {
             lowResMode                             -> setColorLowRes()
@@ -382,6 +395,14 @@ abstract class BaseWatchFace : WatchFace() {
         if (simpleUi.isEnabled(currentWatchMode)) simpleUi.setAntiAlias(currentWatchMode)
         else setDataFields()
         invalidate()
+        /*
+        if (enableSecond)
+            if (updateSecond == null)
+                updateSecond = aapsSchedulers.io.schedulePeriodicallyDirect(
+                        ::setSecond, 1000L, 1000L, TimeUnit.MILLISECONDS)
+        else
+            updateSecond?.dispose()
+         */
     }
 
     private fun isLowRes(watchMode: WatchMode): Boolean {
@@ -409,12 +430,12 @@ abstract class BaseWatchFace : WatchFace() {
                 if (lowResMode)
                     BgGraphBuilder(
                         sp, dateUtil, graphData.entries, treatmentData.predictions, treatmentData.temps, treatmentData.basals, treatmentData.boluses, pointSize,
-                        midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe
+                        midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, carbColor, timeframe
                     )
                 else
                     BgGraphBuilder(
                         sp, dateUtil, graphData.entries, treatmentData.predictions, treatmentData.temps, treatmentData.basals, treatmentData.boluses,
-                        pointSize, highColor, lowColor, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, Color.GREEN, timeframe
+                        pointSize, highColor, lowColor, midColor, gridColor, basalBackgroundColor, basalCenterColor, bolusColor, carbColor, timeframe
                     )
             binding.chart?.lineChartData = bgGraphBuilder.lineData()
             binding.chart?.isViewportCalculationEnabled = true
