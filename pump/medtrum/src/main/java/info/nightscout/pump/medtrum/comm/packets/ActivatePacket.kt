@@ -75,10 +75,6 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
         val dailyMaxInsulin: Int = round(medtrumPump.desiredDailyMaxInsulin / 0.05).toInt()
         val currentTDD: Double = tddCalculator.calculateToday()?.totalAmount?.div(0.05) ?: 0.0
 
-        // Update the pump in the database, technically this is not a new pump only new patch, but still TBR's etc need to be cannceled
-        // Do it here, to make sure TBR's are cancelled by AAPS before new information comes in from the pump
-        pumpSync.connectNewPump()
-
         return byteArrayOf(opCode) + autoSuspendEnable + autoSuspendTime + patchExpiration + alarmSetting + lowSuspend + predictiveLowSuspend + predictiveLowSuspendRange + hourlyMaxInsulin.toByteArray(
             2
         ) + dailyMaxInsulin.toByteArray(2) + currentTDD.toInt().toByteArray(2) + 1.toByte() + basalProfile

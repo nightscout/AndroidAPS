@@ -110,7 +110,10 @@ class MedtrumService : DaggerService(), BLECommCallback {
             .observeOn(aapsSchedulers.io)
             .subscribe({ event ->
                            if (event.isChanged(rh.gs(R.string.key_sn_input))) {
+                               aapsLogger.debug(LTag.PUMPCOMM, "Serial number changed, reporting new pump!")
+                               pumpSync.connectNewPump()
                                medtrumPump.loadUserSettingsFromSP()
+                               medtrumPump.setFakeTBRIfNeeded()
                            }
                            if (event.isChanged(rh.gs(R.string.key_alarm_setting))
                                || event.isChanged(rh.gs(R.string.key_patch_expiration))
