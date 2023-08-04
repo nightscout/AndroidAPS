@@ -21,7 +21,7 @@ dependencies {
     implementation project(':app-wear-shared:shared')
 
     //Firebase
-    api platform('com.google.firebase:firebase-bom:32.2.0')
+    api platform('com.google.firebase:firebase-bom:32.2.2')
     api "com.google.firebase:firebase-analytics-ktx"
     api "com.google.firebase:firebase-crashlytics-ktx"
     // StatsActivity not in use now
