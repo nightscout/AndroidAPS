@@ -140,4 +140,5 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_go_back">Go back</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Cannot perform pairing because the driver is not initialized. This typically happens because the necessary Bluetooth permissions have not been granted. Go back, grant the Bluetooth permissions, then try again to pair.</string>
     <string name="combov2_bluetooth_disabled">Cannot start driver - Bluetooth is disabled</string>
+    <string name="combov2_bluetooth_not_supported">Driver cannot run - this device does not support Bluetooth</string>
 </resources>
