@@ -600,16 +600,26 @@
 
                     </LinearLayout>
 
-                    <View
-                        android:layout_width="fill_parent"
-                        android:layout_height="2dip"
-                        android:layout_marginStart="20dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginEnd="20dp"
-                        android:layout_marginBottom="5dp"
-                        android:background="?android:attr/dividerHorizontal" />
-
                 </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="?android:attr/dividerHorizontal" />
+
+                <ImageView
+                    android:id="@+id/medtrum_icon"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/pump_icon"
+                    android:paddingTop="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_medtrum_128" />
 
             </LinearLayout>
 

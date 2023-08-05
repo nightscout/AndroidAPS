@@ -75,7 +75,7 @@ import kotlin.math.abs
     PluginDescription()
         .mainType(PluginType.PUMP)
         .fragmentClass(MedtrumOverviewFragment::class.java.name)
-        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_generic_icon) // TODO
+        .pluginIcon(info.nightscout.core.ui.R.drawable.ic_medtrum_128)
         .pluginName(R.string.medtrum)
         .shortName(R.string.medtrum_pump_shortname)
         .preferencesId(R.xml.pref_medtrum_pump)
