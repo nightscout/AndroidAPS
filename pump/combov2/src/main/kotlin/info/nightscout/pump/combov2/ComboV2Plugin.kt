@@ -349,7 +349,7 @@ class ComboV2Plugin @Inject constructor (
                     } catch (_: BluetoothNotEnabledException) {
                         uiInteraction.addNotification(
                             Notification.BLUETOOTH_NOT_ENABLED,
-                            text = rh.gs(info.nightscout.core.ui.R.string.ble_not_enabled),
+                            text = rh.gs(R.string.combov2_bluetooth_disabled),
                             level = Notification.INFO
                         )
 
@@ -761,7 +761,7 @@ class ComboV2Plugin @Inject constructor (
         } catch (_: BluetoothNotEnabledException) {
             uiInteraction.addNotification(
                 Notification.BLUETOOTH_NOT_ENABLED,
-                text = rh.gs(info.nightscout.core.ui.R.string.ble_not_enabled),
+                text = rh.gs(R.string.combov2_bluetooth_disabled),
                 level = Notification.INFO
             )
         } catch (e: Exception) {
