@@ -72,7 +72,6 @@ class CustomWatchface : BaseWatchFace() {
 
     override fun setColorDark() {
         setWatchfaceStyle()
-        //@ColorInt val batteryOkColor = ContextCompat.getColor(this, R.color.dark_midColor)
         binding.mainLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background))
         binding.sgv.setTextColor(bgColor)
         binding.direction.setTextColor(bgColor)
@@ -135,6 +134,7 @@ class CustomWatchface : BaseWatchFace() {
                 -1L  -> lowColor
                 else -> midColor
             }
+
             binding.mainLayout.forEach { view ->
                 view.tag?.let { tag ->
                     if (json.has(tag.toString())) {
@@ -147,7 +147,6 @@ class CustomWatchface : BaseWatchFace() {
                         params.leftMargin = if (viewjson.has("leftmargin")) (viewjson.getInt("leftmargin") * zoomFactor).toInt() else 0
                         view.setLayoutParams(params)
                         view.visibility = if (viewjson.has("visibility")) setVisibility(viewjson.getString("visibility")) else View.GONE
-
                         if (view is TextView) {
                             view.rotation = if (viewjson.has("rotation")) viewjson.getInt("rotation").toFloat() else 0F
                             view.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((if (viewjson.has("textsize")) viewjson.getInt("textsize") else 22) * zoomFactor).toFloat())
@@ -364,9 +363,8 @@ class CustomWatchface : BaseWatchFace() {
 
     private fun changeDrawableColor(color: Int): ColorFilter {
         val colorMatrix = ColorMatrix()
-        colorMatrix.setSaturation(0f) // 0 désature l'image, 1 la laisse inchangée.
+        colorMatrix.setSaturation(0f)
 
-        // Modifier la teinte de couleur (couleur de fond)
         colorMatrix.postConcat(
             ColorMatrix(
                 floatArrayOf(
@@ -377,13 +375,7 @@ class CustomWatchface : BaseWatchFace() {
                 )
             )
         )
-
-        // Appliquer la matrice de couleur au ColorFilter
         return ColorMatrixColorFilter(colorMatrix)
-
-        // Appliquer le ColorFilter au Drawable
-        //drawable.colorFilter = colorFilter
-        //return drawable
     }
 
     private fun getColor(color: String): Int {

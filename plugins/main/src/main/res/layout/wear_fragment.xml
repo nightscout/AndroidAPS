@@ -121,11 +121,11 @@
                     android:paddingEnd="0dp"
                     android:text="@string/wear_load_watchface"
                     android:textSize="11sp"
-                    app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="0" />
-
+                    app:layout_row="0"
+                    app:layout_column="0" />
+<!--
                 <info.nightscout.core.ui.elements.SingleClickButton
                     android:id="@+id/send_custom"
                     style="@style/GrayButton"
@@ -140,7 +140,7 @@
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
                     app:layout_row="0" />
-
+-->
                 <info.nightscout.core.ui.elements.SingleClickButton
                     android:id="@+id/export_custom"
                     style="@style/GrayButton"
@@ -152,10 +152,10 @@
                     android:text="@string/wear_export_watchface"
                     android:textSize="11sp"
                     android:visibility="visible"
-                    app:layout_column="0"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="1" />
+                    app:layout_row="0"
+                    app:layout_column="1" />
 
                 <info.nightscout.core.ui.elements.SingleClickButton
                     android:id="@+id/default_custom"
@@ -168,10 +168,10 @@
                     android:text="@string/wear_default_watchface"
                     android:textSize="11sp"
                     android:visibility="visible"
-                    app:layout_column="1"
                     app:layout_columnWeight="1"
                     app:layout_gravity="fill"
-                    app:layout_row="1" />
+                    app:layout_row="1"
+                    app:layout_column="0" />
 
             </androidx.gridlayout.widget.GridLayout>
 
