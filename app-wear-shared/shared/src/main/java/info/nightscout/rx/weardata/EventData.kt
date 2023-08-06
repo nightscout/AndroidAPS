@@ -14,15 +14,15 @@ sealed class EventData : Event() {
 
     fun serialize() = Json.encodeToString(serializer(), this)
 
+    @ExperimentalSerializationApi
     fun serializeByte() = ProtoBuf.encodeToByteArray(serializer(), this)
     companion object {
-
         fun deserialize(json: String) = try {
             Json.decodeFromString(serializer(), json)
         } catch (ignored: Exception) {
             Error(System.currentTimeMillis())
         }
-
+        @ExperimentalSerializationApi
         fun deserializeByte(byteArray: ByteArray) = try {
             ProtoBuf.decodeFromByteArray(serializer(), byteArray)
         } catch (ignored: Exception) {
@@ -153,7 +153,7 @@ sealed class EventData : Event() {
     @Serializable
     data class ActionGetCustomWatchface(
         val customWatchface: ActionSetCustomWatchface,
-        val exportFile: Boolean
+        val exportFile: Boolean = false
     ) : EventData()
 
     @Serializable
@@ -283,9 +283,7 @@ sealed class EventData : Event() {
     }
     @Serializable
     data class ActionSetCustomWatchface(
-        val name: String,
-        val json: String,
-        val drawableDataMap: CustomWatchfaceDrawableDataMap
+        val customWatchfaceData: CustomWatchfaceData
     ) : EventData()
 
     @Serializable

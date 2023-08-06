@@ -45,6 +45,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
 
 class DataLayerListenerServiceMobile : WearableListenerService() {
@@ -82,7 +83,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
 
     private val rxPath get() = getString(info.nightscout.shared.R.string.path_rx_bridge)
     private val rxDataPath get() = getString(info.nightscout.shared.R.string.path_rx_data_bridge)
-
+    @ExperimentalSerializationApi
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
@@ -131,7 +132,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
         }
         super.onDataChanged(dataEvents)
     }
-
+    @ExperimentalSerializationApi
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
 

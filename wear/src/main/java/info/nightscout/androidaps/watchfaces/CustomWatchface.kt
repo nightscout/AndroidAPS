@@ -26,12 +26,14 @@ import androidx.viewbinding.ViewBinding
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityCustomBinding
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
+import info.nightscout.rx.weardata.CustomWatchfaceData
 import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
 import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataMap
 import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey
 import info.nightscout.rx.weardata.DrawableData
 import info.nightscout.rx.weardata.DrawableFormat
 import info.nightscout.rx.weardata.EventData
+import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.extensions.toVisibility
 import org.joda.time.TimeOfDay
 import org.json.JSONObject
@@ -111,23 +113,14 @@ class CustomWatchface : BaseWatchFace() {
         binding.second.text = dateUtil.secondString()
         // rotate the second hand.
         binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
-        //aapsLogger.debug("XXXXXX Setsecond calles:")
     }
 
     private fun setWatchfaceStyle() {
-        bgColor = when (singleBg.sgvLevel) {
-            1L   -> highColor
-            0L   -> midColor
-            -1L  -> lowColor
-            else -> midColor
-        }
         val customWatchface = persistence.readCustomWatchface() ?: persistence.readCustomWatchface(true)
-        //aapsLogger.debug("XXXXX + setWatchfaceStyle Json ${customWatchface?.json}")
         customWatchface?.let { customWatchface ->
-            val json = JSONObject(customWatchface.json)
-            val drawableDataMap = customWatchface.drawableDataMap
+            val json = JSONObject(customWatchface.customWatchfaceData.json)
+            val drawableDataMap = customWatchface.customWatchfaceData.drawableDatas
             enableSecond = (if (json.has("enableSecond")) json.getBoolean("enableSecond") else false) && sp.getBoolean(R.string.key_show_seconds, true)
-            //aapsLogger.debug("XXXXXX json File (beginning):" + customWatchface.json)
 
             highColor = if (json.has("highColor")) Color.parseColor(json.getString("highColor")) else ContextCompat.getColor(this, R.color.dark_highColor)
             midColor = if (json.has("midColor")) Color.parseColor(json.getString("midColor")) else ContextCompat.getColor(this, R.color.inrange)
@@ -136,13 +129,16 @@ class CustomWatchface : BaseWatchFace() {
             carbColor = if (json.has("carbColor")) Color.parseColor(json.getString("carbColor")) else ContextCompat.getColor(this, R.color.carbs)
             gridColor = if (json.has("gridColor")) Color.parseColor(json.getString("gridColor")) else ContextCompat.getColor(this, R.color.carbs)
             pointSize = if (json.has("pointSize")) json.getInt("pointSize") else 2
-            aapsLogger.debug("XXXXXX enableSecond $enableSecond ${sp.getBoolean(R.string.key_show_seconds, false)} pointSize $pointSize")
+            bgColor = when (singleBg.sgvLevel) {
+                1L   -> highColor
+                0L   -> midColor
+                -1L  -> lowColor
+                else -> midColor
+            }
             binding.mainLayout.forEach { view ->
-                //aapsLogger.debug("XXXXXX view:" + view.tag.toString())
                 view.tag?.let { tag ->
                     if (json.has(tag.toString())) {
                         var viewjson = json.getJSONObject(tag.toString())
-                        //aapsLogger.debug("XXXXXX \"" + tag.toString() + "\": " + viewjson.toString(4))
                         var wrapContent = LayoutParams.WRAP_CONTENT
                         val width = if (viewjson.has("width")) (viewjson.getInt("width") * zoomFactor).toInt() else wrapContent
                         val height = if (viewjson.has("height")) (viewjson.getInt("height") * zoomFactor).toInt() else wrapContent
@@ -191,6 +187,7 @@ class CustomWatchface : BaseWatchFace() {
     private fun defaultWatchface(): EventData.ActionSetCustomWatchface {
         val metadata = JSONObject()
             .put(CustomWatchfaceMetadataKey.CWF_NAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
+            .put(CustomWatchfaceMetadataKey.CWF_FILENAME.key, getString(R.string.wear_default_watchface))
             .put(CustomWatchfaceMetadataKey.CWF_AUTHOR.key, "Philoul")
             .put(CustomWatchfaceMetadataKey.CWF_CREATED_AT.key, dateUtil.dateString(dateUtil.now()))
             .put(CustomWatchfaceMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)
@@ -248,12 +245,13 @@ class CustomWatchface : BaseWatchFace() {
                 )
             }
         }
-        val drawableDatas: CustomWatchfaceDrawableDataMap = mutableMapOf()
+        val metadataMap = ZipWatchfaceFormat.loadMetadata(json)
+        val drawableDataMap: CustomWatchfaceDrawableDataMap = mutableMapOf()
         getResourceByteArray(info.nightscout.shared.R.drawable.watchface_custom)?.let {
-            val drawableDataMap = DrawableData(it,DrawableFormat.PNG)
-            drawableDatas[CustomWatchfaceDrawableDataKey.CUSTOM_WATCHFACE] = drawableDataMap
+            val drawableData = DrawableData(it,DrawableFormat.PNG)
+            drawableDataMap[CustomWatchfaceDrawableDataKey.CUSTOM_WATCHFACE] = drawableData
         }
-        return EventData.ActionSetCustomWatchface(getString(info.nightscout.shared.R.string.wear_default_watchface),json.toString(4),drawableDatas)
+        return EventData.ActionSetCustomWatchface(CustomWatchfaceData(json.toString(4), metadataMap, drawableDataMap))
     }
 
     private fun setDefaultColors() {

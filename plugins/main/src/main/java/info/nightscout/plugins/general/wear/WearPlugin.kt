@@ -18,6 +18,7 @@ import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.weardata.CustomWatchfaceData
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -55,7 +56,7 @@ class WearPlugin @Inject constructor(
 
     var connectedDevice = "---"
     var customWatchfaceSerialized = ""
-    var savedCustomWatchface: EventData.ActionSetCustomWatchface? = null
+    var savedCustomWatchface: CustomWatchfaceData? = null
 
     override fun onStart() {
         super.onStart()

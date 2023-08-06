@@ -60,7 +60,6 @@ import info.nightscout.plugins.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileToWear
-import info.nightscout.rx.events.EventWearCwfExported
 import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -1262,14 +1261,10 @@ class DataHandlerMobile @Inject constructor(
 
     private fun handleGetCustomWatchface(command: EventData.ActionGetCustomWatchface) {
         val customWatchface = command.customWatchface
-        aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${command.sourceNodeId}: ${customWatchface.json}")
-        //Update Wear Fragment
-        sp.putString(info.nightscout.shared.R.string.key_custom_watchface, customWatchface.serialize())
-        //rxBus.send(EventWearCwfExported(customWatchface))
-        rxBus.send(EventWearUpdateGui())
+        aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${command.sourceNodeId}: ${customWatchface.customWatchfaceData.json}")
+        rxBus.send(EventWearUpdateGui(customWatchface.customWatchfaceData, command.exportFile))
         if (command.exportFile)
-            importExportPrefs.exportCustomWatchface(customWatchface)
-        //Implement here a record within SP and a save within exports subfolder as zipFile
+            importExportPrefs.exportCustomWatchface(customWatchface.customWatchfaceData)
 
     }
 

@@ -10,7 +10,6 @@ import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
-import info.nightscout.interfaces.maintenance.CustomWatchfaceFile
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.configuration.databinding.CustomWatchfaceImportListActivityBinding
 import info.nightscout.configuration.R
@@ -18,6 +17,7 @@ import info.nightscout.configuration.databinding.CustomWatchfaceImportListItemBi
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileDataToWear
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.weardata.CustomWatchfaceData
 import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
 import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey.*
 import info.nightscout.rx.weardata.EventData
@@ -51,7 +51,7 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
         binding.recyclerview.adapter = RecyclerViewAdapter(prefFileListProvider.listCustomWatchfaceFiles())
     }
 
-    inner class RecyclerViewAdapter internal constructor(private var customWatchfaceFileList: List<CustomWatchfaceFile>) : RecyclerView.Adapter<RecyclerViewAdapter.PrefFileViewHolder>() {
+    inner class RecyclerViewAdapter internal constructor(private var customWatchfaceFileList: List<CustomWatchfaceData>) : RecyclerView.Adapter<RecyclerViewAdapter.PrefFileViewHolder>() {
 
         inner class PrefFileViewHolder(val customWatchfaceImportListItemBinding: CustomWatchfaceImportListItemBinding) : RecyclerView.ViewHolder(customWatchfaceImportListItemBinding.root) {
 
@@ -59,14 +59,12 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
                 with(customWatchfaceImportListItemBinding) {
                     root.isClickable = true
                     customWatchfaceImportListItemBinding.root.setOnClickListener {
-                        val customWatchfaceFile = filelistName.tag as CustomWatchfaceFile
-                        val customWF = EventData.ActionSetCustomWatchface(customWatchfaceFile.metadata[CWF_NAME] ?:"", customWatchfaceFile.json, customWatchfaceFile.drawableFiles)
-                        sp.putString(info.nightscout.shared.R.string.key_custom_watchface, customWF.serialize())
+                        val customWatchfaceFile = filelistName.tag as CustomWatchfaceData
+                        val customWF = EventData.ActionSetCustomWatchface(customWatchfaceFile)
                         val i = Intent()
                         setResult(FragmentActivity.RESULT_OK, i)
+                        //rxBus.send(EventWearUpdateGui(customWatchfaceFile))
                         rxBus.send(EventMobileDataToWear(customWF))
-                        aapsLogger.debug("XXXXX EventMobileDataToWear sent")
-
                         finish()
                     }
                 }
@@ -85,13 +83,12 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
         override fun onBindViewHolder(holder: PrefFileViewHolder, position: Int) {
             val customWatchfaceFile = customWatchfaceFileList[position]
             val metadata = customWatchfaceFile.metadata
-            val drawable = customWatchfaceFile.drawableFiles[CustomWatchfaceDrawableDataKey
+            val drawable = customWatchfaceFile.drawableDatas[CustomWatchfaceDrawableDataKey
                 .CUSTOM_WATCHFACE]?.toDrawable(resources)
             with(holder.customWatchfaceImportListItemBinding) {
-                filelistName.text = rh.gs(R.string.wear_import_filename, customWatchfaceFile.file.name)
+                filelistName.text = rh.gs(info.nightscout.shared.R.string.metadata_wear_import_filename, metadata[CWF_FILENAME])
                 filelistName.tag = customWatchfaceFile
                 customWatchface.setImageDrawable(drawable)
-                filelistDir.text = rh.gs(R.string.wear_import_directory, customWatchfaceFile.file.parentFile?.absolutePath)
                 customName.text = rh.gs(CWF_NAME.label, metadata[CWF_NAME])
                 author.text = rh.gs(CWF_AUTHOR.label, metadata[CWF_AUTHOR] ?:"")
                 createdAt.text = rh.gs(CWF_CREATED_AT.label, metadata[CWF_CREATED_AT] ?:"")

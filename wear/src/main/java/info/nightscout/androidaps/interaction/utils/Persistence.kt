@@ -172,7 +172,7 @@ open class Persistence @Inject constructor(
 
     fun store(customWatchface: EventData.ActionSetCustomWatchface, isdefault: Boolean = false) {
         putString(if (isdefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, customWatchface.serialize())
-        aapsLogger.debug(LTag.WEAR, "Stored Custom Watchface ${customWatchface.name} ${isdefault}: $customWatchface")
+        aapsLogger.debug(LTag.WEAR, "Stored Custom Watchface ${customWatchface.customWatchfaceData} ${isdefault}: $customWatchface")
     }
 
     fun setDefaultWatchface() {

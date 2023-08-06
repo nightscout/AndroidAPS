@@ -22,7 +22,6 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.configuration.R
 import info.nightscout.configuration.activities.DaggerAppCompatActivityWithResult
 import info.nightscout.configuration.maintenance.dialogs.PrefImportSummaryDialog
-import info.nightscout.configuration.maintenance.formats.ZipCustomWatchfaceFormat
 import info.nightscout.configuration.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.dialogs.TwoMessagesAlertDialog
@@ -56,7 +55,9 @@ import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventDiaconnG8PumpLogReset
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import info.nightscout.rx.weardata.EventData
+import info.nightscout.rx.weardata.CustomWatchfaceData
+import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey
+import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -86,8 +87,7 @@ class ImportExportPrefsImpl @Inject constructor(
     private val prefFileList: PrefFileListProvider,
     private val uel: UserEntryLogger,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction,
-    private val customWatchfaceCWFFormat: ZipCustomWatchfaceFormat
+    private val uiInteraction: UiInteraction
 ) : ImportExportPrefs {
 
     override fun prefsFileExists(): Boolean {
@@ -315,10 +315,10 @@ class ImportExportPrefsImpl @Inject constructor(
         }
     }
 
-    override fun exportCustomWatchface(customWatchface: EventData.ActionSetCustomWatchface) {
+    override fun exportCustomWatchface(customWatchface: CustomWatchfaceData) {
         prefFileList.ensureExportDirExists()
-        val newFile = prefFileList.newCwfFile(customWatchface.name)
-        customWatchfaceCWFFormat.saveCustomWatchface(newFile,customWatchface)
+        val newFile = prefFileList.newCwfFile(customWatchface.metadata[CustomWatchfaceMetadataKey.CWF_FILENAME] ?:"")
+        ZipWatchfaceFormat.saveCustomWatchface(newFile, customWatchface)
     }
 
     override fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile) {

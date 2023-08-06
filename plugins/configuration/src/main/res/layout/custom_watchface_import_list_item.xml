@@ -60,23 +60,6 @@
                 tools:ignore="HardcodedText" />
 
             <TextView
-                android:id="@+id/filelist_dir"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="5dp"
-                android:layout_marginTop="0dp"
-                android:ellipsize="none"
-                android:maxLines="2"
-                android:paddingStart="0dp"
-                android:paddingEnd="10dp"
-                android:scrollHorizontally="false"
-                android:text="File dir here"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="?attr/importListFileNameColor"
-                android:textSize="11sp"
-                tools:ignore="HardcodedText" />
-
-            <TextView
                 android:id="@+id/filelist_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

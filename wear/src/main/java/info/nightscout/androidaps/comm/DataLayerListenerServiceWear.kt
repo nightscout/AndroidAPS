@@ -22,6 +22,7 @@ import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import kotlinx.coroutines.*
 import kotlinx.coroutines.tasks.await
+import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
 
 class DataLayerListenerServiceWear : WearableListenerService() {
@@ -45,7 +46,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
 
     private val rxPath get() = getString(info.nightscout.shared.R.string.path_rx_bridge)
     private val rxDataPath get() = getString(info.nightscout.shared.R.string.path_rx_data_bridge)
-
+    @ExperimentalSerializationApi
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
@@ -95,7 +96,7 @@ class DataLayerListenerServiceWear : WearableListenerService() {
         }
         super.onDataChanged(dataEvents)
     }
-
+    @ExperimentalSerializationApi
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
 

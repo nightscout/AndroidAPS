@@ -6,10 +6,8 @@ import dagger.Lazy
 import dagger.Reusable
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.configuration.R
-import info.nightscout.configuration.maintenance.formats.ZipCustomWatchfaceFormat
 import info.nightscout.configuration.maintenance.formats.EncryptedPrefsFormat
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.maintenance.CustomWatchfaceFile
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.interfaces.maintenance.PrefMetadata
 import info.nightscout.interfaces.maintenance.PrefMetadataMap
@@ -19,6 +17,8 @@ import info.nightscout.interfaces.maintenance.PrefsMetadataKey
 import info.nightscout.interfaces.maintenance.PrefsStatus
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
+import info.nightscout.rx.weardata.CustomWatchfaceData
+import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.joda.time.DateTime
 import org.joda.time.Days
@@ -36,7 +36,6 @@ class PrefFileListProviderImpl @Inject constructor(
     private val rh: ResourceHelper,
     private val config: Lazy<Config>,
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
-    private val customWatchfaceCWFFormat: ZipCustomWatchfaceFormat,
     private val storage: Storage,
     private val versionCheckerUtils: VersionCheckerUtils,
     context: Context
@@ -91,14 +90,14 @@ class PrefFileListProviderImpl @Inject constructor(
         return prefFiles
     }
 
-    override fun listCustomWatchfaceFiles(): MutableList<CustomWatchfaceFile> {
-        val customWatchfaceFiles = mutableListOf<CustomWatchfaceFile>()
+    override fun listCustomWatchfaceFiles(): MutableList<CustomWatchfaceData> {
+        val customWatchfaceFiles = mutableListOf<CustomWatchfaceData>()
 
         // searching dedicated dir, only for new CWF format
-        exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipCustomWatchfaceFormat.CUSTOM_WF_EXTENTION) }.forEach { file ->
+        exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CUSTOM_WF_EXTENTION) }.forEach { file ->
             // Here loadCustomWatchface will unzip, check and load CustomWatchface
-            customWatchfaceCWFFormat.loadCustomWatchface(file)?.also { customWatchface ->
-                customWatchfaceFiles.add(CustomWatchfaceFile(file.name, file, exportsPath, customWatchface.json, customWatchface.metadata, customWatchface.drawableDatas))
+            ZipWatchfaceFormat.loadCustomWatchface(file)?.also { customWatchface ->
+                customWatchfaceFiles.add(customWatchface)
             }
         }
 
@@ -147,7 +146,7 @@ class PrefFileListProviderImpl @Inject constructor(
     }
     override fun newCwfFile(filename: String): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
-        return File(exportsPath, "${filename}_$timeLocal${ZipCustomWatchfaceFormat.CUSTOM_WF_EXTENTION}")
+        return File(exportsPath, "${filename}_$timeLocal${ZipWatchfaceFormat.CUSTOM_WF_EXTENTION}")
     }
 
     // check metadata for known issues, change their status and add info with explanations

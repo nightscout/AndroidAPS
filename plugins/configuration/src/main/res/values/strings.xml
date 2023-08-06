@@ -166,8 +166,6 @@
 
     <!-- Custom Watchface -->
     <string name="wear_import_custom_watchface_title">Select Custom Watchface</string>
-    <string name="wear_import_directory" comment="placeholder is for imported watchface path">Directory: %1$s</string>
-    <string name="wear_import_filename">File name: %1$s</string>
 
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
