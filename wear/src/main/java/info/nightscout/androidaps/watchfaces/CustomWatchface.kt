@@ -186,7 +186,7 @@ class CustomWatchface : BaseWatchFace() {
     private fun defaultWatchface(): EventData.ActionSetCustomWatchface {
         val metadata = JSONObject()
             .put(CustomWatchfaceMetadataKey.CWF_NAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
-            .put(CustomWatchfaceMetadataKey.CWF_FILENAME.key, getString(R.string.wear_default_watchface))
+            .put(CustomWatchfaceMetadataKey.CWF_FILENAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
             .put(CustomWatchfaceMetadataKey.CWF_AUTHOR.key, "Philoul")
             .put(CustomWatchfaceMetadataKey.CWF_CREATED_AT.key, dateUtil.dateString(dateUtil.now()))
             .put(CustomWatchfaceMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)

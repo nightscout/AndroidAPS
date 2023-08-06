@@ -1,6 +1,7 @@
 package info.nightscout.rx.weardata
 
 import info.nightscout.rx.events.Event
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import kotlinx.serialization.protobuf.ProtoBuf

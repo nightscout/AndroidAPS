@@ -65,9 +65,6 @@ class WearFragment : DaggerFragment() {
             rxBus.send(EventMobileToWear(EventData.ActionrequestSetDefaultWatchface(dateUtil.now())))
             updateGui()
         }
-        binding.sendCustom.setOnClickListener {
-            wearPlugin.savedCustomWatchface?.let { cwf -> rxBus.send(EventMobileDataToWear(EventData.ActionSetCustomWatchface(cwf))) }
-        }
         binding.exportCustom.setOnClickListener {
             wearPlugin.savedCustomWatchface?.let { importExportPrefs.exportCustomWatchface(it) }
                 ?: apply { rxBus.send(EventMobileToWear(EventData.ActionrequestCustomWatchface(true)))}
@@ -106,11 +103,9 @@ class WearFragment : DaggerFragment() {
         _binding ?: return
         wearPlugin.savedCustomWatchface?.let {
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, it.metadata[CustomWatchfaceMetadataKey.CWF_NAME])
-            binding.sendCustom.visibility = View.VISIBLE
             binding.coverChart.setImageDrawable(it.drawableDatas[CustomWatchfaceDrawableDataKey.CUSTOM_WATCHFACE]?.toDrawable(resources))
         } ?:apply {
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, rh.gs(info.nightscout.shared.R.string.wear_default_watchface))
-            binding.sendCustom.visibility = View.INVISIBLE
             binding.coverChart.setImageDrawable(null)
         }
         binding.connectedDevice.text = wearPlugin.connectedDevice
