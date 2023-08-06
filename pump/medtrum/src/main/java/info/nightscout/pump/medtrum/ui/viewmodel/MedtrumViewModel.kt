@@ -1,5 +1,6 @@
 package info.nightscout.pump.medtrum.ui.viewmodel
 
+import android.os.SystemClock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import info.nightscout.interfaces.queue.Callback
@@ -255,6 +256,8 @@ class MedtrumViewModel @Inject constructor(
                     if (medtrumPump.pumpState >= MedtrumPumpState.OCCLUSION && medtrumPump.pumpState <= MedtrumPumpState.NO_CALIBRATION) {
                         // We are in a fault state, we need to force deactivation
                         aapsLogger.info(LTag.PUMP, "deactivatePatch: force deactivation")
+                        medtrumService?.disconnect("ForceDeactivation")
+                        SystemClock.sleep(1000)
                         medtrumPump.pumpState = MedtrumPumpState.STOPPED
                     } else {
                         aapsLogger.info(LTag.PUMP, "deactivatePatch: failure!")

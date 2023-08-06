@@ -187,6 +187,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
         if (medtrumPump.tempBasalInProgress) {
             result = sendPacketAndGetResponse(CancelTempBasalPacket(injector))
         }
+        // Make sure we have all events of this patch if possible
+        loadEvents()
         if (result) result = sendPacketAndGetResponse(StopPatchPacket(injector))
         return result
     }
