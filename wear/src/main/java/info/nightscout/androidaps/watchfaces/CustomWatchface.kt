@@ -117,9 +117,9 @@ class CustomWatchface : BaseWatchFace() {
 
     private fun setWatchfaceStyle() {
         val customWatchface = persistence.readCustomWatchface() ?: persistence.readCustomWatchface(true)
-        customWatchface?.let { customWatchface ->
-            val json = JSONObject(customWatchface.customWatchfaceData.json)
-            val drawableDataMap = customWatchface.customWatchfaceData.drawableDatas
+        customWatchface?.let {
+            val json = JSONObject(it.customWatchfaceData.json)
+            val drawableDataMap = it.customWatchfaceData.drawableDatas
             enableSecond = (if (json.has("enableSecond")) json.getBoolean("enableSecond") else false) && sp.getBoolean(R.string.key_show_seconds, true)
 
             highColor = if (json.has("highColor")) Color.parseColor(json.getString("highColor")) else ContextCompat.getColor(this, R.color.dark_highColor)

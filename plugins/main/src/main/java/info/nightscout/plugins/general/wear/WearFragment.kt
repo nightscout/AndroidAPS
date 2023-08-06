@@ -82,7 +82,7 @@ class WearFragment : DaggerFragment() {
             .subscribe({
                            it.customWatchfaceData?.let { wearPlugin.savedCustomWatchface = it }
                            if (it.exportFile)
-                               ToastUtils.okToast(context,rh.gs(R.string.wear_new_custom_watchface_received))
+                               ToastUtils.okToast(activity, rh.gs(R.string.wear_new_custom_watchface_exported))
                            updateGui()
                        }, fabricPrivacy::logException)
         if (wearPlugin.savedCustomWatchface == null)
