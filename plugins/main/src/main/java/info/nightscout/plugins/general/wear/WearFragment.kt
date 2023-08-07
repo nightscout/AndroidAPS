@@ -19,6 +19,7 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
 import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey
 import info.nightscout.rx.weardata.EventData
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -109,6 +110,7 @@ class WearFragment : DaggerFragment() {
             binding.coverChart.setImageDrawable(null)
         }
         binding.connectedDevice.text = wearPlugin.connectedDevice
+        binding.customWatchfaceLayout.visibility = (wearPlugin.connectedDevice != rh.gs(R.string.no_watch_connected)).toVisibility()
     }
 
     private fun loadCustom(cwf: EventData.ActionSetCustomWatchface) {
