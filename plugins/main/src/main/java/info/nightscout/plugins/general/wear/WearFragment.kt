@@ -16,6 +16,7 @@ import info.nightscout.rx.events.EventMobileDataToWear
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.weardata.CustomWatchfaceData
 import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
 import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey
 import info.nightscout.rx.weardata.EventData
@@ -78,7 +79,7 @@ class WearFragment : DaggerFragment() {
             .toObservable(EventWearUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                           it.customWatchfaceData?.let { wearPlugin.savedCustomWatchface = it }
+                           it.customWatchfaceData?.let { loadCustom(it) }
                            if (it.exportFile)
                                ToastUtils.okToast(activity, rh.gs(R.string.wear_new_custom_watchface_exported))
                            updateGui()
@@ -113,7 +114,7 @@ class WearFragment : DaggerFragment() {
         binding.customWatchfaceLayout.visibility = (wearPlugin.connectedDevice != rh.gs(R.string.no_watch_connected)).toVisibility()
     }
 
-    private fun loadCustom(cwf: EventData.ActionSetCustomWatchface) {
-        wearPlugin.savedCustomWatchface = cwf.customWatchfaceData
+    private fun loadCustom(cwf: CustomWatchfaceData) {
+        wearPlugin.savedCustomWatchface = cwf
     }
 }
