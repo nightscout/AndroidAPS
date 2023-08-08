@@ -36,8 +36,10 @@ import info.nightscout.shared.extensions.toVisibilityKeepSpace
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
-import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.kotlin.plusAssign
+import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledFuture
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.floor
 
@@ -87,7 +89,14 @@ abstract class BaseWatchFace : WatchFace() {
     var dividerMatchesBg = false
     var pointSize = 2
     var enableSecond = false
-    var updateSecond: Disposable? = null
+
+    // SecondUpdater (Ambient mode)
+    private val mScheduledSecondUpdaterPool = Executors.newScheduledThreadPool(2)
+    private var mScheduledSecondUpdater: ScheduledFuture<*>? = null
+    private val mSecondUpdater = Runnable {
+        setSecond()
+        invalidate()
+    }
 
     // Tapping times
     private var sgvTapTime: Long = 0
@@ -249,8 +258,9 @@ abstract class BaseWatchFace : WatchFace() {
 
     override fun onDestroy() {
         disposable.clear()
-        updateSecond?.dispose()
         simpleUi.onDestroy()
+        cancelSecondUpdater()
+        mScheduledSecondUpdaterPool.shutdown()
         super.onDestroy()
     }
 
@@ -394,16 +404,16 @@ abstract class BaseWatchFace : WatchFace() {
         lowResMode = isLowRes(watchMode)
         if (simpleUi.isEnabled(currentWatchMode)) simpleUi.setAntiAlias(currentWatchMode)
         else setDataFields()
+        if (watchMode == WatchMode.AMBIENT && enableSecond) {
+            val initialDelay = 1000L - System.currentTimeMillis() % 1000L
+            mScheduledSecondUpdater = mScheduledSecondUpdaterPool.scheduleAtFixedRate(mSecondUpdater, initialDelay, 1000L, TimeUnit.MILLISECONDS)
+        } else {
+            cancelSecondUpdater()
+        }
         invalidate()
-        /*
-        if (enableSecond)
-            if (updateSecond == null)
-                updateSecond = aapsSchedulers.io.schedulePeriodicallyDirect(
-                        ::setSecond, 1000L, 1000L, TimeUnit.MILLISECONDS)
-        else
-            updateSecond?.dispose()
-         */
     }
+
+    private fun cancelSecondUpdater() = mScheduledSecondUpdater?.cancel(true)
 
     private fun isLowRes(watchMode: WatchMode): Boolean {
         return watchMode == WatchMode.LOW_BIT || watchMode == WatchMode.LOW_BIT_BURN_IN

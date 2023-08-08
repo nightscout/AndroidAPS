@@ -112,6 +112,7 @@ class CustomWatchface : BaseWatchFace() {
         binding.second.text = dateUtil.secondString()
         // rotate the second hand.
         binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
+        //aapsLogger.debug("XXXXX SetSecond")
     }
 
     private fun setWatchfaceStyle() {
