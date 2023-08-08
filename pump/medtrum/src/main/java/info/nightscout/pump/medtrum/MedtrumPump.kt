@@ -224,9 +224,8 @@ class MedtrumPump @Inject constructor(
     var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
     var bolusAmountToBeDelivered = 0.0 // amount to be delivered
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
-    var bolusStopped = false // bolus finished
-    var bolusStopForced = false // bolus forced to stop by user
-    var bolusDone = false // success end
+    var bolusStopped = false // bolus stopped by user
+    var bolusDone = false // Bolus completed or stopped on pump
 
     // Last basal status update (from pump)
     private var _lastBasalSequence = 0
@@ -353,19 +352,15 @@ class MedtrumPump @Inject constructor(
         return basal
     }
 
-    fun handleBasalStatusUpdate(basalType: BasalType, basalValue: Double, basalSequence: Int, basalPatchId: Long, basalStartTime: Long) {
-        handleBasalStatusUpdate(basalType, basalValue, basalSequence, basalPatchId, basalStartTime, dateUtil.now())
-    }
-
     fun handleBolusStatusUpdate(bolusType: Int, bolusCompleted: Boolean, amountDelivered: Double) {
         aapsLogger.debug(LTag.PUMP, "handleBolusStatusUpdate: bolusType: $bolusType bolusCompleted: $bolusCompleted amountDelivered: $amountDelivered")
         bolusProgressLastTimeStamp = dateUtil.now()
-        if (bolusCompleted) {
-            bolusDone = true
-            bolusingTreatment?.insulin = amountDelivered
-        } else {
-            bolusingTreatment?.insulin = amountDelivered
-        }
+        bolusingTreatment?.insulin = amountDelivered
+        bolusDone = bolusCompleted
+    }
+
+    fun handleBasalStatusUpdate(basalType: BasalType, basalValue: Double, basalSequence: Int, basalPatchId: Long, basalStartTime: Long) {
+        handleBasalStatusUpdate(basalType, basalValue, basalSequence, basalPatchId, basalStartTime, dateUtil.now())
     }
 
     fun handleBasalStatusUpdate(basalType: BasalType, basalRate: Double, basalSequence: Int, basalPatchId: Long, basalStartTime: Long, receivedTime: Long) {

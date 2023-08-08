@@ -16,6 +16,7 @@ import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
+import info.nightscout.interfaces.pump.BolusProgressData
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
@@ -290,6 +291,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
     fun setBolus(detailedBolusInfo: DetailedBolusInfo, t: EventOverviewBolusProgress.Treatment): Boolean {
         if (!isConnected) return false
+        if (BolusProgressData.stopPressed) return false
         val insulin = detailedBolusInfo.insulin
         val bolusStart = System.currentTimeMillis()
 
@@ -297,13 +299,19 @@ class MedtrumService : DaggerService(), BLECommCallback {
         medtrumPump.bolusingTreatment = t
         medtrumPump.bolusAmountToBeDelivered = insulin
         medtrumPump.bolusStopped = false
-        medtrumPump.bolusStopForced = false
         medtrumPump.bolusProgressLastTimeStamp = bolusStart
 
-        val result = sendPacketAndGetResponse(SetBolusPacket(injector, insulin))
-        if (result == false) {
-            aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
-            commandQueue.loadEvents(null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
+        if (insulin > 0 && !medtrumPump.bolusStopped) {
+            val result = sendPacketAndGetResponse(SetBolusPacket(injector, insulin))
+            if (result == false) {
+                aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
+                commandQueue.loadEvents(null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
+                t.insulin = 0.0
+                return false
+            }
+        } else {
+            aapsLogger.debug(LTag.PUMPCOMM, "Bolus not set, insulin: $insulin, bolusStopped: ${medtrumPump.bolusStopped}")
+            t.insulin = 0.0
             return false
         }
 
@@ -328,11 +336,12 @@ class MedtrumService : DaggerService(), BLECommCallback {
         }
 
         val bolusingEvent = EventOverviewBolusProgress
-        while (medtrumPump.bolusStopped == false && result == true && medtrumPump.bolusDone == false) {
+        var communicationLost = false
+
+        while (!medtrumPump.bolusStopped && !medtrumPump.bolusDone && !communicationLost) {
             SystemClock.sleep(100)
-            if (System.currentTimeMillis() - medtrumPump.bolusProgressLastTimeStamp > T.secs(15).msecs()) {
-                medtrumPump.bolusStopped = true
-                medtrumPump.bolusStopForced = true
+            if (System.currentTimeMillis() - medtrumPump.bolusProgressLastTimeStamp > T.secs(20).msecs()) {
+                communicationLost = true
                 aapsLogger.warn(LTag.PUMPCOMM, "Communication stopped")
                 disconnect("Communication stopped")
             } else {
@@ -343,14 +352,33 @@ class MedtrumService : DaggerService(), BLECommCallback {
             }
         }
 
-        bolusingEvent.t = medtrumPump.bolusingTreatment
         bolusingEvent.percent = 99
-        medtrumPump.bolusingTreatment = null
-
         val bolusDurationInMSec = (insulin * 60 * 1000)
         val expectedEnd = bolusStart + bolusDurationInMSec + 2000
-        while (System.currentTimeMillis() < expectedEnd && result == true && medtrumPump.bolusDone == false) {
+        while (System.currentTimeMillis() < expectedEnd && !medtrumPump.bolusDone) {
             SystemClock.sleep(1000)
+        }
+
+        bolusingEvent.t = medtrumPump.bolusingTreatment
+        medtrumPump.bolusingTreatment = null
+
+        if (medtrumPump.bolusStopped && t.insulin == 0.0) {
+            // In this case we don't get a bolus end event, so need to remove all the stuff added previously
+            val syncOk = pumpSync.syncBolusWithTempId(
+                timestamp = bolusStart,
+                amount = 0.0,
+                temporaryId = bolusStart,
+                type = detailedBolusInfo.bolusType,
+                pumpId = bolusStart,
+                pumpType = medtrumPump.pumpType(),
+                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+            )
+            aapsLogger.debug(
+                LTag.PUMPCOMM,
+                "set bolus: **SYNC** EVENT BOLUS (tempId) ${dateUtil.dateAndTimeString(detailedBolusInfo.timestamp)} (${bolusStart}) Bolus: ${0.0}U SyncOK: $syncOk"
+            )
+            // remove detailed bolus info
+            detailedBolusInfoStorage.findDetailedBolusInfo(bolusStart, detailedBolusInfo.insulin)
         }
 
         // Do not call update status directly, reconnection may be needed
@@ -360,12 +388,23 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 bolusingEvent.percent = 100
             }
         })
-        return result
+        return true
     }
 
     fun stopBolus() {
-        var result = sendPacketAndGetResponse(CancelBolusPacket(injector))
-        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop: result: $result")
+        aapsLogger.debug(LTag.PUMPCOMM, "bolusStop >>>>> @ " + if (medtrumPump.bolusingTreatment == null) "" else medtrumPump.bolusingTreatment?.insulin)
+        if (isConnected) {
+            var success = sendPacketAndGetResponse(CancelBolusPacket(injector))
+            var timeout = System.currentTimeMillis() + T.secs(30).msecs()
+            while (!success && System.currentTimeMillis() < timeout) {
+                success = sendPacketAndGetResponse(CancelBolusPacket(injector))
+                SystemClock.sleep(200)
+            }
+            aapsLogger.debug(LTag.PUMPCOMM, "bolusStop success: $success")
+            medtrumPump.bolusStopped = true
+        } else {
+            medtrumPump.bolusStopped = true
+        }
     }
 
     fun setTempBasal(absoluteRate: Double, durationInMinutes: Int): Boolean {
