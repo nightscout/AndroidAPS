@@ -75,7 +75,7 @@ buildscript {
 plugins {
     // Test Gradle build, keep disabled under normal circumstances
     // id "com.osacky.doctor" version "0.8.1"
-    id "org.jlleitschuh.gradle.ktlint" version "11.5.0"
+    id "org.jlleitschuh.gradle.ktlint" version "11.5.1"
     // Aggregates and/or logs Jacoco test coverage to the Gradle build log
     id 'org.barfuin.gradle.jacocolog' version '3.1.0'
     id 'org.jetbrains.kotlin.android' version "$kotlin_version" apply false
