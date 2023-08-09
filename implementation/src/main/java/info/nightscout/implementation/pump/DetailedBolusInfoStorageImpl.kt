@@ -83,7 +83,7 @@ class DetailedBolusInfoStorageImpl @Inject constructor(
 
     private fun loadStore(): ArrayList<DetailedBolusInfo> {
         val jsonString = sp.getString(rh.gs(R.string.bolus_storage), "")
-        return if (jsonString.isNotEmpty()) {
+        return if (jsonString != null && jsonString.isNotEmpty()) {
             val type = object : TypeToken<List<DetailedBolusInfo>>() {}.type
             Gson().fromJson(jsonString, type)
         } else {
