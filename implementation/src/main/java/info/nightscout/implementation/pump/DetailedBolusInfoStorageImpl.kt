@@ -78,11 +78,11 @@ class DetailedBolusInfoStorageImpl @Inject constructor(
             lastTwoEntries = ArrayList(store.subList(store.size - 2, store.size))
         }
         val jsonString = Gson().toJson(lastTwoEntries)
-        sp.putString(rh.gs(R.string.bolus_storage), jsonString)
+        sp.putString(rh.gs(R.string.key_bolus_storage), jsonString)
     }
 
     private fun loadStore(): ArrayList<DetailedBolusInfo> {
-        val jsonString = sp.getString(rh.gs(R.string.bolus_storage), "")
+        val jsonString = sp.getString(rh.gs(R.string.key_bolus_storage), "")
         return if (jsonString != null && jsonString.isNotEmpty()) {
             val type = object : TypeToken<List<DetailedBolusInfo>>() {}.type
             Gson().fromJson(jsonString, type)
