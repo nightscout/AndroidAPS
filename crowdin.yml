@@ -71,6 +71,10 @@ files:
     translation: /pump/danars/src/main/res/values-%android_code%/strings.xml
   - source: /pump/medtronic/src/main/res/values/strings.xml
     translation: /pump/medtronic/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/medtrum/src/main/res/values/strings.xml
+    translation: /pump/medtrum/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/medtrum/src/main/res/values/arrays.xml
+    translation: /pump/medtrum/src/main/res/values-%android_code%/arrays.xml
   - source: /pump/omnipod-common/src/main/res/values/strings.xml
     translation: /pump/omnipod-common/src/main/res/values-%android_code%/strings.xml
   - source: /pump/omnipod-dash/src/main/res/values/strings.xml
