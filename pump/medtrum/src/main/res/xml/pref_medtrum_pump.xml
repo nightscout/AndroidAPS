@@ -1,0 +1,52 @@
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:validate="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="@string/key_medtrumpump_settings"
+        android:title="@string/medtrumpump_settings"
+        app:initialExpandedChildrenCount="0">
+
+        <EditTextPreference
+            android:key="@string/key_sn_input"
+            android:dialogMessage="@string/sn_input_summary"
+            android:singleLine="true"
+            android:title="@string/sn_input_title" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_patch_expiration"
+            android:title="@string/patch_expiration_title"
+            android:summary="@string/patch_expiration_summary" />
+
+        <ListPreference
+            android:defaultValue="4"
+            android:key="@string/key_alarm_setting"
+            android:title="@string/alarm_setting_title"
+            android:dialogTitle="@string/alarm_setting_summary"
+            android:entries="@array/alarmSettings"
+            android:entryValues="@array/alarmSettingsValues" />
+
+        <info.nightscout.core.validators.ValidatingEditTextPreference
+            android:defaultValue="30"
+            android:inputType="number"
+            android:key="@string/key_hourly_max_insulin"
+            android:title="@string/hourly_max_insulin_title"
+            android:dialogMessage="@string/hourly_max_insulin_summary"
+            validate:maxNumber="40"
+            validate:minNumber="10"
+            validate:testType="numericRange" />
+
+        <info.nightscout.core.validators.ValidatingEditTextPreference
+            android:defaultValue="100"
+            android:inputType="number"
+            android:key="@string/key_daily_max_insulin"
+            android:title="@string/daily_max_insulin_title"
+            android:dialogMessage="@string/daily_max_insulin_summary"
+            validate:maxNumber="180"
+            validate:minNumber="25"
+            validate:testType="numericRange" />
+
+    </PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

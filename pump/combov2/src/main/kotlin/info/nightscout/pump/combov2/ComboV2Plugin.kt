@@ -2226,7 +2226,7 @@ class ComboV2Plugin @Inject constructor (
             // only shows up in the Combo fragment.
             if (newState == DriverState.Suspended) {
                 uiInteraction.addNotification(
-                    Notification.COMBO_PUMP_SUSPENDED,
+                    Notification.PUMP_SUSPENDED,
                     text = rh.gs(R.string.combov2_pump_is_suspended),
                     level = Notification.NORMAL
                 )
