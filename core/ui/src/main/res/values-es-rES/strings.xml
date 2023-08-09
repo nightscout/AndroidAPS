@@ -376,6 +376,9 @@
     <string name="carbs_g">CARBOHIDRATOS %1$d g</string>
     <string name="extended_bolus_u_min">BOLO EXTENDIDO %1$.2f U %2$d min</string>
     <string name="load_events">CARGAR EVENTOS</string>
+    <string name="clear_alarms">BORRAR ALARMAS</string>
+    <string name="deactivate">DESACTIVAR</string>
+    <string name="update_time">ACTUALIZAR HORA</string>
     <string name="load_history">CARGAR HISTORIAL %1$d</string>
     <string name="load_tdds">CARGAR TDDs</string>
     <string name="set_profile">ESTABLECER PERFIL</string>
