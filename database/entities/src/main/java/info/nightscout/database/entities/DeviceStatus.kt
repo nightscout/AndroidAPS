@@ -5,6 +5,7 @@ import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
 import info.nightscout.database.entities.embedments.InterfaceIDs
+import info.nightscout.database.entities.interfaces.DBEntry
 import info.nightscout.database.entities.interfaces.DBEntryWithTime
 import java.util.TimeZone
 
@@ -17,7 +18,7 @@ import java.util.TimeZone
     ])
 data class DeviceStatus(
     @PrimaryKey(autoGenerate = true)
-    var id: Long = 0,
+    override var id: Long = 0,
     @Embedded
     var interfaceIDs_backing: InterfaceIDs? = null,
     override var timestamp: Long,
@@ -31,7 +32,7 @@ data class DeviceStatus(
     var isCharging: Boolean?,
     var configuration: String? = null
 
-) : DBEntryWithTime {
+) : DBEntry, DBEntryWithTime {
 
     var interfaceIDs: InterfaceIDs
         get() {

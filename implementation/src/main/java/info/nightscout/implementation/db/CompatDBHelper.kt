@@ -3,6 +3,7 @@ package info.nightscout.implementation.db
 import android.content.Context
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.Carbs
+import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.Food
@@ -15,6 +16,7 @@ import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventDeviceStatusChange
 import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.rx.events.EventExtendedBolusChange
 import info.nightscout.rx.events.EventFoodDatabaseChanged
@@ -108,6 +110,10 @@ class CompatDBHelper @Inject constructor(
             it.filterIsInstance<OfflineEvent>().firstOrNull()?.let { oe ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventOfflineChange $oe")
                 rxBus.send(EventOfflineChange())
+            }
+            it.filterIsInstance<DeviceStatus>().firstOrNull()?.let { ds ->
+                aapsLogger.debug(LTag.DATABASE, "Firing EventDeviceStatusChange $ds")
+                rxBus.send(EventDeviceStatusChange())
             }
         }
 }

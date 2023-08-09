@@ -17,11 +17,11 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.source.NSClientSource
-import info.nightscout.interfaces.sync.DataSyncSelectorV3
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
+import info.nightscout.plugins.sync.nsclientV3.DataSyncSelectorV3
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSSvgV3
 import info.nightscout.rx.bus.RxBus
