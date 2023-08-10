@@ -1,8 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MedtrumPump -->
+    <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_description">Integrace pumpy Medtrum Nano</string>
+    <string name="medtrumpump_settings">Nastavení pumpy Medtrum</string>
+    <string name="pump_error">Chyba pumpy: %1$s!! </string>
+    <string name="pump_unsupported">Nevyzkoušená pumpa: %1$d! Kontaktujte nás na Discordu nebo Githubu, kde získáte podporu.</string>
+    <string name="pump_is_suspended">Pumpa je pozastavena</string>
+    <string name="pump_is_suspended_hour_max">Pumpa je pozastavena kvůli překročení maximálního množství inzulínu za hodinu</string>
+    <string name="pump_is_suspended_day_max">Pumpa je pozastavena kvůli překročení maximálního množství inzulínu za den</string>
+    <string name="pump_setting_failed">Načtení uživatelského nastavení do pumpy selhalo!</string>
     <!-- overview fragment -->
+    <string name="ble_status_label">Stav BLE</string>
+    <string name="last_connection_label">Naposledy připojeno</string>
+    <string name="pump_state_label">Stav pumpy</string>
+    <string name="active_alarms_label">Aktivní alarmy</string>
+    <string name="reservoir_level"> %.2f U</string>
+    <string name="battery_voltage"> %.2f V</string>
+    <string name="basal_type_label">Typ bazálu</string>
+    <string name="basal_rate_label">Bazální dávka</string>
+    <string name="current_basal_rate"> %.2f U/h</string>
+    <string name="pump_type_label">Typ pumpy</string>
+    <string name="fw_version_label">Verze FW</string>
+    <string name="refresh_label">Obnovit</string>
+    <string name="reset_alarms_label">Resetovat alarmy</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Vyžádáno uživatelem</string>
     <!-- Alarm strings -->
+    <string name="alarm_pump_low_battery">Téměř vybitá baterie pumpy</string>
+    <string name="alarm_pump_low_reservoir">Téměř prázdný zásobník pumpy</string>
+    <string name="alarm_paused">Pozastaveno</string>
+    <string name="alarm_occlusion">Okluze</string>
+    <string name="alarm_reservoir_empty">Prázdný zásobník</string>
     <!-- wizard-->
     <!-- settings-->
     <!-- treatment state-->
