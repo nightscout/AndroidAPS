@@ -33,7 +33,7 @@ dependencies {
     // OpenHuman
     api "com.squareup.okhttp3:okhttp:$okhttp3_version"
     api "com.squareup.retrofit2:retrofit:$retrofit2_version"
-    api "androidx.browser:browser:1.5.0"
+    api "androidx.browser:browser:1.6.0"
     api "androidx.work:work-runtime-ktx:$work_version"
     api "com.google.android.material:material:$material_version"
 
