@@ -1,9 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MedtrumPump -->
+    <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_description">Intégration de pompe pour Medtrum Nano</string>
+    <string name="medtrumpump_settings">Paramètres de la pompe Medtrum</string>
+    <string name="pump_error">Erreur pompe: %1$s!! </string>
+    <string name="pump_unsupported">Pompe non testée : %1$d! Veuillez nous contacter sur discord ou github pour obtenir de l\'aide</string>
+    <string name="pump_is_suspended">La pompe est suspendue</string>
+    <string name="pump_is_suspended_hour_max">La pompe est suspendue, la quantité maximum d\'insuline par heure est dépassée</string>
+    <string name="pump_is_suspended_day_max">La pompe est suspendue, la quantité maximum d\'insuline par jour est dépassée</string>
+    <string name="patch_not_active">Patch non activé</string>
+    <string name="pump_setting_failed">La configuration des paramètres de la pompe a échoué!</string>
     <!-- overview fragment -->
+    <string name="ble_status_label">État BT</string>
+    <string name="last_connection_label">Dernière connexion</string>
+    <string name="pump_state_label">État de la pompe</string>
+    <string name="active_alarms_label">Alarmes actives</string>
+    <string name="reservoir_level"> %.2f U</string>
+    <string name="battery_voltage"> %.2f V</string>
+    <string name="current_basal_rate"> %.2f U/h</string>
+    <string name="pump_type_label">Type de pompe</string>
+    <string name="fw_version_label">Version du FW</string>
+    <string name="patch_no_label">N° du Patch</string>
+    <string name="patch_expiry_label">Expiration du Patch</string>
+    <string name="refresh_label">Actualiser</string>
+    <string name="reset_alarms_label">Réinitialiser les alarmes</string>
+    <string name="change_patch_label">Changer le Patch</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Demandé par l\'utilisateur</string>
+    <string name="expiry_not_enabled">Non activé</string>
     <!-- Alarm strings -->
+    <string name="alarm_none">Aucun</string>
+    <string name="alarm_pump_low_battery">Batterie de la pompe faible</string>
+    <string name="alarm_pump_low_reservoir">Réservoir bas</string>
+    <string name="alarm_pump_expires_soon">La pompe expire bientôt</string>
+    <string name="alarm_occlusion">Occlusion</string>
+    <string name="alarm_expired">Expiré</string>
+    <string name="alarm_reservoir_empty">Réservoir vide</string>
+    <string name="alarm_patch_fault">Défaut Patch</string>
+    <string name="alarm_patch_fault2">Défaut Patch 2</string>
     <!-- wizard-->
+    <string name="retry">Réessayer</string>
+    <string name="next">Suivant</string>
+    <string name="discard">Retirer</string>
+    <string name="step_prepare_patch">Activer le Patch</string>
+    <string name="step_prepare_patch_connect">Connecter et remplir</string>
+    <string name="step_prime">Amorcer</string>
+    <string name="step_priming">Amorçage</string>
+    <string name="step_priming_complete">Amorçage terminé</string>
+    <string name="step_attach">Fixer le Patch</string>
+    <string name="step_activate">En cours d\'activation...</string>
     <!-- settings-->
     <!-- treatment state-->
 </resources>
