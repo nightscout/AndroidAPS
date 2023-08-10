@@ -37,9 +37,6 @@ import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
-import java.util.concurrent.Executors
-import java.util.concurrent.ScheduledFuture
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import kotlin.math.floor
 
@@ -89,14 +86,8 @@ abstract class BaseWatchFace : WatchFace() {
     var dividerMatchesBg = false
     var pointSize = 2
     var enableSecond = false
-
-    // SecondUpdater (Ambient mode)
-    private val mScheduledSecondUpdaterPool = Executors.newScheduledThreadPool(2)
-    private var mScheduledSecondUpdater: ScheduledFuture<*>? = null
-    private val mSecondUpdater = Runnable {
-        setSecond()
-        invalidate()
-    }
+    val showSecond: Boolean
+        get() = enableSecond && currentWatchMode == WatchMode.INTERACTIVE
 
     // Tapping times
     private var sgvTapTime: Long = 0
@@ -259,13 +250,11 @@ abstract class BaseWatchFace : WatchFace() {
     override fun onDestroy() {
         disposable.clear()
         simpleUi.onDestroy()
-        cancelSecondUpdater()
-        mScheduledSecondUpdaterPool.shutdown()
         super.onDestroy()
     }
 
     override fun getInteractiveModeUpdateRate(): Long {
-        return if (enableSecond) 1000L else 60 * 1000L // Only call onTimeChanged every 60 seconds
+        return if (showSecond) 1000L else 60 * 1000L // Only call onTimeChanged every 60 seconds
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -286,7 +275,7 @@ abstract class BaseWatchFace : WatchFace() {
             missedReadingAlert()
             checkVibrateHourly(oldTime, newTime)
             if (!simpleUi.isEnabled(currentWatchMode)) setDataFields()
-        } else if (layoutSet && !simpleUi.isEnabled(currentWatchMode) && enableSecond && newTime.hasSecondChanged(oldTime)) {
+        } else if (layoutSet && !simpleUi.isEnabled(currentWatchMode) && showSecond && newTime.hasSecondChanged(oldTime)) {
             setSecond()
         }
     }
@@ -366,21 +355,26 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     private fun setDateAndTime() {
-        binding.time?.text = if(binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString() + if (enableSecond) ":" + dateUtil.secondString() else ""
+        binding.time?.text = if(binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString()
         binding.hour?.text = dateUtil.hourString()
         binding.minute?.text = dateUtil.minuteString()
-        binding.second?.text = dateUtil.secondString()
         binding.dateTime?.visibility = sp.getBoolean(R.string.key_show_date, false).toVisibility()
         binding.dayName?.text = dateUtil.dayNameString()
         binding.day?.text = dateUtil.dayString()
         binding.month?.text = dateUtil.monthString()
         binding.timePeriod?.visibility = android.text.format.DateFormat.is24HourFormat(this).not().toVisibility()
         binding.timePeriod?.text = dateUtil.amPm()
+        if (showSecond)
+            setSecond()
     }
 
     open fun setSecond() {
-        binding.time?.text = if(binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString() + if (enableSecond) ":" + dateUtil.secondString() else ""
+        binding.time?.text = if(binding.timePeriod == null) dateUtil.timeString() else dateUtil.hourString() + ":" + dateUtil.minuteString() + if (showSecond) ":" + dateUtil.secondString() else ""
         binding.second?.text = dateUtil.secondString()
+    }
+
+    open fun updateSecondVisibility() {
+        binding.second?.visibility = showSecond.toVisibility()
     }
 
     fun setColor() {
@@ -401,19 +395,14 @@ abstract class BaseWatchFace : WatchFace() {
     }
 
     override fun onWatchModeChanged(watchMode: WatchMode) {
+        updateSecondVisibility()    // will show second if enabledSecond and Interactive mode, hide in other situation
+        setSecond()                 // will remove second from main date and time if not in Interactive mode
         lowResMode = isLowRes(watchMode)
         if (simpleUi.isEnabled(currentWatchMode)) simpleUi.setAntiAlias(currentWatchMode)
-        else setDataFields()
-        if (watchMode == WatchMode.AMBIENT && enableSecond) {
-            val initialDelay = 1000L - System.currentTimeMillis() % 1000L
-            mScheduledSecondUpdater = mScheduledSecondUpdaterPool.scheduleAtFixedRate(mSecondUpdater, initialDelay, 1000L, TimeUnit.MILLISECONDS)
-        } else {
-            cancelSecondUpdater()
-        }
+        else
+            setDataFields()
         invalidate()
     }
-
-    private fun cancelSecondUpdater() = mScheduledSecondUpdater?.cancel(true)
 
     private fun isLowRes(watchMode: WatchMode): Boolean {
         return watchMode == WatchMode.LOW_BIT || watchMode == WatchMode.LOW_BIT_BURN_IN

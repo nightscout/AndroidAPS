@@ -108,11 +108,16 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     override fun setSecond() {
-        binding.time.text = "${dateUtil.hourString()}:${dateUtil.minuteString()}" + if (enableSecond) ":${dateUtil.secondString()}" else ""
+        binding.time.text = "${dateUtil.hourString()}:${dateUtil.minuteString()}" + if (showSecond) ":${dateUtil.secondString()}" else ""
         binding.second.text = dateUtil.secondString()
         // rotate the second hand.
         binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
-        //aapsLogger.debug("XXXXX SetSecond")
+        //aapsLogger.debug("XXXXX SetSecond $watchModeString")
+    }
+
+    override fun updateSecondVisibility() {
+        binding.second.visibility = (enableSecond && showSecond).toVisibility()
+        binding.secondHand.visibility = (enableSecond && showSecond).toVisibility()
     }
 
     private fun setWatchfaceStyle() {
@@ -179,8 +184,7 @@ class CustomWatchface : BaseWatchFace() {
                     }
                 }
             }
-            binding.second.visibility= ((binding.second.visibility==View.VISIBLE) && enableSecond).toVisibility()
-            binding.secondHand.visibility= ((binding.secondHand.visibility==View.VISIBLE) && enableSecond).toVisibility()
+            updateSecondVisibility()
         }
     }
 
