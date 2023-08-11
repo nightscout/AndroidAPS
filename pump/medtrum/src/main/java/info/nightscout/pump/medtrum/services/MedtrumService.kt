@@ -459,11 +459,9 @@ class MedtrumService : DaggerService(), BLECommCallback {
     private fun syncRecords(): Boolean {
         aapsLogger.debug(LTag.PUMP, "syncRecords: called!, syncedSequenceNumber: ${medtrumPump.syncedSequenceNumber}, currentSequenceNumber: ${medtrumPump.currentSequenceNumber}")
         var result = true
-        // Note: medtrum app fetches all records when they sync?
         if (medtrumPump.syncedSequenceNumber < medtrumPump.currentSequenceNumber) {
             for (sequence in (medtrumPump.syncedSequenceNumber + 1)..medtrumPump.currentSequenceNumber) {
                 result = sendPacketAndGetResponse(GetRecordPacket(injector, sequence), COMMAND_SYNC_TIMEOUT_SEC)
-                SystemClock.sleep(100)
                 if (result == false) break
             }
         }
@@ -644,6 +642,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             mPacket = packet
             mPacket?.getRequest()?.let { bleComm.sendMessage(it) }
             result = currentState.waitForResponse(timeout)
+            SystemClock.sleep(100)
         } else {
             aapsLogger.error(LTag.PUMPCOMM, "Send packet attempt when in non Ready state")
         }
