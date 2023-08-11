@@ -17,6 +17,7 @@ import info.nightscout.rx.events.EventLoopUpdateGui
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.weardata.CustomWatchfaceData
 import info.nightscout.rx.weardata.EventData
@@ -91,6 +92,10 @@ class WearPlugin @Inject constructor(
             .toObservable(EventLoopUpdateGui::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ dataHandlerMobile.resendData("EventLoopUpdateGui") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventWearUpdateGui::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({ it.customWatchfaceData?.let { cwf -> savedCustomWatchface = cwf } }, fabricPrivacy::logException)
     }
 
     override fun onStop() {

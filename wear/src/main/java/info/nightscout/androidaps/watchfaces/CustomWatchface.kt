@@ -116,75 +116,79 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     override fun updateSecondVisibility() {
-        binding.second.visibility = (enableSecond && showSecond).toVisibility()
-        binding.secondHand.visibility = (enableSecond && showSecond).toVisibility()
+        binding.second.visibility = showSecond.toVisibility()
+        binding.secondHand.visibility = showSecond.toVisibility()
     }
 
     private fun setWatchfaceStyle() {
         val customWatchface = persistence.readCustomWatchface() ?: persistence.readCustomWatchface(true)
         customWatchface?.let {
-            val json = JSONObject(it.customWatchfaceData.json)
-            val drawableDataMap = it.customWatchfaceData.drawableDatas
-            enableSecond = (if (json.has("enableSecond")) json.getBoolean("enableSecond") else false) && sp.getBoolean(R.string.key_show_seconds, true)
+            try {
+                val json = JSONObject(it.customWatchfaceData.json)
+                val drawableDataMap = it.customWatchfaceData.drawableDatas
+                enableSecond = (if (json.has("enableSecond")) json.getBoolean("enableSecond") else false) && sp.getBoolean(R.string.key_show_seconds, true)
 
-            highColor = if (json.has("highColor")) Color.parseColor(json.getString("highColor")) else ContextCompat.getColor(this, R.color.dark_highColor)
-            midColor = if (json.has("midColor")) Color.parseColor(json.getString("midColor")) else ContextCompat.getColor(this, R.color.inrange)
-            lowColor = if (json.has("lowColor")) Color.parseColor(json.getString("lowColor")) else ContextCompat.getColor(this, R.color.low)
-            lowBatColor = if (json.has("lowBatColor")) Color.parseColor(json.getString("lowBatColor")) else ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty)
-            carbColor = if (json.has("carbColor")) Color.parseColor(json.getString("carbColor")) else ContextCompat.getColor(this, R.color.carbs)
-            gridColor = if (json.has("gridColor")) Color.parseColor(json.getString("gridColor")) else ContextCompat.getColor(this, R.color.carbs)
-            pointSize = if (json.has("pointSize")) json.getInt("pointSize") else 2
-            bgColor = when (singleBg.sgvLevel) {
-                1L   -> highColor
-                0L   -> midColor
-                -1L  -> lowColor
-                else -> midColor
-            }
+                highColor = if (json.has("highColor")) Color.parseColor(json.getString("highColor")) else ContextCompat.getColor(this, R.color.dark_highColor)
+                midColor = if (json.has("midColor")) Color.parseColor(json.getString("midColor")) else ContextCompat.getColor(this, R.color.inrange)
+                lowColor = if (json.has("lowColor")) Color.parseColor(json.getString("lowColor")) else ContextCompat.getColor(this, R.color.low)
+                lowBatColor = if (json.has("lowBatColor")) Color.parseColor(json.getString("lowBatColor")) else ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty)
+                carbColor = if (json.has("carbColor")) Color.parseColor(json.getString("carbColor")) else ContextCompat.getColor(this, R.color.carbs)
+                gridColor = if (json.has("gridColor")) Color.parseColor(json.getString("gridColor")) else ContextCompat.getColor(this, R.color.carbs)
+                pointSize = if (json.has("pointSize")) json.getInt("pointSize") else 2
+                bgColor = when (singleBg.sgvLevel) {
+                    1L   -> highColor
+                    0L   -> midColor
+                    -1L  -> lowColor
+                    else -> midColor
+                }
 
-            binding.mainLayout.forEach { view ->
-                view.tag?.let { tag ->
-                    if (json.has(tag.toString())) {
-                        var viewjson = json.getJSONObject(tag.toString())
-                        var wrapContent = LayoutParams.WRAP_CONTENT
-                        val width = if (viewjson.has("width")) (viewjson.getInt("width") * zoomFactor).toInt() else wrapContent
-                        val height = if (viewjson.has("height")) (viewjson.getInt("height") * zoomFactor).toInt() else wrapContent
-                        var params = FrameLayout.LayoutParams(width, height)
-                        params.topMargin = if (viewjson.has("topmargin")) (viewjson.getInt("topmargin") * zoomFactor).toInt() else 0
-                        params.leftMargin = if (viewjson.has("leftmargin")) (viewjson.getInt("leftmargin") * zoomFactor).toInt() else 0
-                        view.setLayoutParams(params)
-                        view.visibility = if (viewjson.has("visibility")) setVisibility(viewjson.getString("visibility")) else View.GONE
-                        if (view is TextView) {
-                            view.rotation = if (viewjson.has("rotation")) viewjson.getInt("rotation").toFloat() else 0F
-                            view.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((if (viewjson.has("textsize")) viewjson.getInt("textsize") else 22) * zoomFactor).toFloat())
-                            view.gravity = setGravity(if (viewjson.has("gravity")) viewjson.getString("gravity") else "center")
-                            view.setTypeface(
-                                setFont(if (viewjson.has("font")) viewjson.getString("font") else "sans-serif"),
-                                Style.fromKey( viewjson.getString("fontStyle")).typeface
-                            )
-                            if (viewjson.has("fontColor"))
-                                view.setTextColor(getColor(viewjson.getString("fontColor")))
-                        }
+                binding.mainLayout.forEach { view ->
+                    view.tag?.let { tag ->
+                        if (json.has(tag.toString())) {
+                            var viewjson = json.getJSONObject(tag.toString())
+                            var wrapContent = LayoutParams.WRAP_CONTENT
+                            val width = if (viewjson.has("width")) (viewjson.getInt("width") * zoomFactor).toInt() else wrapContent
+                            val height = if (viewjson.has("height")) (viewjson.getInt("height") * zoomFactor).toInt() else wrapContent
+                            var params = FrameLayout.LayoutParams(width, height)
+                            params.topMargin = if (viewjson.has("topmargin")) (viewjson.getInt("topmargin") * zoomFactor).toInt() else 0
+                            params.leftMargin = if (viewjson.has("leftmargin")) (viewjson.getInt("leftmargin") * zoomFactor).toInt() else 0
+                            view.setLayoutParams(params)
+                            view.visibility = if (viewjson.has("visibility")) setVisibility(viewjson.getString("visibility")) else View.GONE
+                            if (view is TextView) {
+                                view.rotation = if (viewjson.has("rotation")) viewjson.getInt("rotation").toFloat() else 0F
+                                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((if (viewjson.has("textsize")) viewjson.getInt("textsize") else 22) * zoomFactor).toFloat())
+                                view.gravity = setGravity(if (viewjson.has("gravity")) viewjson.getString("gravity") else "center")
+                                view.setTypeface(
+                                    setFont(if (viewjson.has("font")) viewjson.getString("font") else "sans-serif"),
+                                    setStyle(if (viewjson.has("fontStyle")) viewjson.getString("fontStyle") else "normal")
+                                )
+                                if (viewjson.has("fontColor"))
+                                    view.setTextColor(getColor(viewjson.getString("fontColor")))
+                            }
 
-                        if (view is ImageView) {
-                            view.clearColorFilter()
-                            drawableDataMap[CustomWatchfaceDrawableDataKey.fromKey(tag.toString())]?.toDrawable(resources)?.also {
-                                if (viewjson.has("color"))
-                                    it.colorFilter = changeDrawableColor(getColor(viewjson.getString("color")))
-                                else
-                                    it.clearColorFilter()
-                                view.setImageDrawable(it)
-                            } ?: apply {
-                                view.setImageDrawable(CustomWatchfaceDrawableDataKey.fromKey(tag.toString()).icon?.let { context.getDrawable(it) })
-                                if (viewjson.has("color"))
-                                    view.setColorFilter(getColor(viewjson.getString("color")))
-                                else
-                                    view.clearColorFilter()
+                            if (view is ImageView) {
+                                view.clearColorFilter()
+                                drawableDataMap[CustomWatchfaceDrawableDataKey.fromKey(tag.toString())]?.toDrawable(resources)?.also {
+                                    if (viewjson.has("color"))
+                                        it.colorFilter = changeDrawableColor(getColor(viewjson.getString("color")))
+                                    else
+                                        it.clearColorFilter()
+                                    view.setImageDrawable(it)
+                                } ?: apply {
+                                    view.setImageDrawable(CustomWatchfaceDrawableDataKey.fromKey(tag.toString()).icon?.let { context.getDrawable(it) })
+                                    if (viewjson.has("color"))
+                                        view.setColorFilter(getColor(viewjson.getString("color")))
+                                    else
+                                        view.clearColorFilter()
+                                }
                             }
                         }
                     }
                 }
+                updateSecondVisibility()
+            } catch (e:Exception) {
+                persistence.store(defaultWatchface(), false) // relaod correct values to avoid crash of watchface
             }
-            updateSecondVisibility()
         }
     }
 
@@ -221,7 +225,7 @@ class CustomWatchface : BaseWatchFace() {
                         .put("textsize", view.textSize.toInt())
                         .put("gravity", getGravity(view.gravity))
                         .put("font", getFont(view.typeface))
-                        .put("fontStyle", Style.fromTypeface(view.typeface.style).key)
+                        .put("fontStyle", getStyle(view.typeface.style))
                         .put("fontColor", String.format("#%06X", 0xFFFFFF and view.currentTextColor))
                 )
             }
@@ -321,32 +325,22 @@ class CustomWatchface : BaseWatchFace() {
         else                                                                -> "default"
     }
 
-    enum class Style(val key: String, val typeface: Int) {
-        NORMAL("normal", Typeface.NORMAL),
-        BOLD("bold", Typeface.BOLD),
-        BOLD_ITALIC("bold-italic", Typeface.BOLD_ITALIC),
-        ITALIC("italic", Typeface.ITALIC);
-        companion object {
-            private val keyToEnumMap = HashMap<String, Style>()
-            private val typefaceToEnumMap = HashMap<Int, Style>()
-            init {
-                for (value in values()) keyToEnumMap[value.key] = value
-                for (value in values()) typefaceToEnumMap[value.typeface] = value
-            }
-            fun fromKey(key: String?): Style =
-                if (keyToEnumMap.containsKey(key)) {
-                    keyToEnumMap[key] ?:NORMAL
-                } else {
-                    NORMAL
-                }
-            fun fromTypeface(typeface: Int?): Style =
-                if (typefaceToEnumMap.containsKey(typeface)) {
-                    typefaceToEnumMap[typeface] ?:NORMAL
-                } else {
-                    NORMAL
-                }
-        }
+    private fun setStyle(style: String): Int = when (style) {
+        "normal"      -> Typeface.NORMAL
+        "bold"        -> Typeface.BOLD
+        "bold-italic" -> Typeface.BOLD_ITALIC
+        "italic"      -> Typeface.ITALIC
+        else          -> Typeface.NORMAL
     }
+
+    private fun getStyle(style: Int): String = when (style) {
+        Typeface.NORMAL      -> "normal"
+        Typeface.BOLD        -> "bold"
+        Typeface.BOLD_ITALIC -> "bold-italic"
+        Typeface.ITALIC      -> "italic"
+        else                 -> "normal"
+    }
+
     fun getResourceByteArray(resourceId: Int): ByteArray? {
         val inputStream = resources.openRawResource(resourceId)
         val byteArrayOutputStream = ByteArrayOutputStream()
@@ -387,7 +381,11 @@ class CustomWatchface : BaseWatchFace() {
         if (color == "bgColor")
             return bgColor
         else
-            return Color.parseColor(color)
+            return try {
+                Color.parseColor(color)
+            } catch (e: Exception) {
+                Color.GRAY
+            }
     }
 
 }
