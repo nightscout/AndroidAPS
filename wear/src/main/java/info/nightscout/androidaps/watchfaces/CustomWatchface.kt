@@ -168,6 +168,8 @@ class CustomWatchface : BaseWatchFace() {
                                 )
                                 if (viewjson.has("fontColor"))
                                     view.setTextColor(getColor(viewjson.getString("fontColor")))
+                                if (viewjson.has("textvalue"))
+                                    view.text = viewjson.getString("textvalue")
                             }
 
                             if (view is ImageView) {
@@ -399,6 +401,8 @@ class CustomWatchface : BaseWatchFace() {
         BACKGROUND(CustomWatchfaceDrawableDataKey.BACKGROUND.key, R.id.background, null),
         CHART("chart", R.id.chart, null),
         COVER_CHART(CustomWatchfaceDrawableDataKey.COVERCHART.key, R.id.cover_chart, null),
+        FREETEXT1("freetext1", R.id.freetext1, null),
+        FREETEXT2("freetext2", R.id.freetext2, null),
         IOB1("iob1", R.id.iob1, R.string.key_show_iob),
         IOB2("iob2", R.id.iob2, R.string.key_show_iob),
         COB1("cob1", R.id.cob1, R.string.key_show_cob),
