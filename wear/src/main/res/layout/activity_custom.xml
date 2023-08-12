@@ -9,7 +9,6 @@
 
     <ImageView
         android:id="@+id/background"
-        android:tag="background"
         android:layout_width="400px"
         android:layout_height="400px"
         android:layout_marginTop="0px"
@@ -20,7 +19,6 @@
 
     <lecho.lib.hellocharts.view.LineChartView
         android:id="@+id/chart"
-        android:tag="chart"
         android:layout_width="400px"
         android:layout_height="170px"
         android:layout_marginTop="230px"
@@ -29,7 +27,6 @@
 
     <ImageView
         android:id="@+id/cover_chart"
-        android:tag="cover_chart"
         android:layout_width="400px"
         android:layout_height="400px"
         android:layout_marginTop="0px"
@@ -39,7 +36,6 @@
 
     <TextView
         android:id="@+id/iob1"
-        android:tag="iob1"
         android:layout_width="130px"
         android:layout_height="33px"
         android:layout_marginTop="168px"
@@ -51,7 +47,6 @@
 
     <TextView
         android:id="@+id/iob2"
-        android:tag="iob2"
         android:layout_width="130px"
         android:layout_height="33px"
         android:layout_marginTop="196px"
@@ -64,7 +59,6 @@
 
     <TextView
         android:id="@+id/cob1"
-        android:tag="cob1"
         android:layout_width="120px"
         android:layout_height="33px"
         android:layout_marginTop="168px"
@@ -76,7 +70,6 @@
 
     <TextView
         android:id="@+id/cob2"
-        android:tag="cob2"
         android:layout_width="120px"
         android:layout_height="33px"
         android:layout_marginTop="196px"
@@ -89,7 +82,6 @@
 
     <TextView
         android:id="@+id/delta"
-        android:tag="delta"
         android:layout_width="59px"
         android:layout_height="32px"
         android:layout_marginTop="133px"
@@ -102,7 +94,6 @@
 
     <TextView
         android:id="@+id/avg_delta"
-        android:tag="avg_delta"
         android:layout_width="59px"
         android:layout_height="32px"
         android:layout_marginTop="133px"
@@ -116,7 +107,6 @@
 
     <TextView
         android:id="@+id/uploader_battery"
-        android:tag="uploader_battery"
         android:layout_width="60px"
         android:layout_height="32px"
         android:gravity="center"
@@ -130,7 +120,6 @@
 
     <TextView
         android:id="@+id/rig_battery"
-        android:tag="rig_battery"
         android:layout_width="60px"
         android:layout_height="32px"
         android:gravity="center"
@@ -145,7 +134,6 @@
 
     <TextView
         android:id="@+id/basalRate"
-        android:tag="basalRate"
         android:layout_width="91px"
         android:layout_height="32px"
         android:layout_marginTop="133px"
@@ -159,7 +147,6 @@
 
     <TextView
         android:id="@+id/bgi"
-        android:tag="bgi"
         android:layout_width="60px"
         android:layout_height="32px"
         android:layout_marginTop="133px"
@@ -174,7 +161,6 @@
 
     <TextView
         android:id="@+id/time"
-        android:tag="time"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginTop="151px"
@@ -189,7 +175,6 @@
     <!-- hour -->
     <TextView
         android:id="@+id/hour"
-        android:tag="hour"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginTop="151px"
@@ -204,7 +189,6 @@
     <!-- minute -->
     <TextView
         android:id="@+id/minute"
-        android:tag="minute"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginTop="158px"
@@ -217,7 +201,6 @@
     <!-- minute -->
     <TextView
         android:id="@+id/second"
-        android:tag="second"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginTop="158px"
@@ -233,7 +216,6 @@
 
     <TextView
         android:id="@+id/timePeriod"
-        android:tag="timePeriod"
         android:layout_width="0px"
         android:layout_height="0px"
         android:layout_marginLeft="210px"
@@ -247,7 +229,6 @@
 
     <TextView
         android:id="@+id/day_name"
-        android:tag="day_name"
         android:layout_width="56px"
         android:layout_height="36px"
         android:layout_marginTop="172px"
@@ -262,7 +243,6 @@
 
     <TextView
         android:id="@+id/day"
-        android:tag="day"
         android:layout_width="56px"
         android:layout_height="36px"
         android:layout_marginTop="198px"
@@ -275,7 +255,6 @@
 
     <TextView
         android:id="@+id/month"
-        android:tag="month"
         android:layout_width="50px"
         android:layout_height="36px"
         android:layout_marginTop="180px"
@@ -288,7 +267,6 @@
 
     <TextView
         android:id="@+id/loop"
-        android:tag="loop"
         android:layout_width="50px"
         android:layout_height="50px"
         android:layout_marginTop="61px"
@@ -302,7 +280,6 @@
 
     <TextView
         android:id="@+id/direction"
-        android:tag="direction"
         android:layout_width="52px"
         android:layout_height="52px"
         android:layout_marginTop="26px"
@@ -315,7 +292,6 @@
 
     <TextView
         android:id="@+id/timestamp"
-        android:tag="timestamp"
         android:layout_width="52px"
         android:layout_height="34px"
         android:gravity="left"
@@ -328,7 +304,6 @@
 
     <TextView
         android:id="@+id/sgv"
-        android:tag="sgv"
         android:layout_width="400px"
         android:layout_height="100px"
         android:gravity="center"
@@ -342,7 +317,6 @@
 
     <ImageView
         android:id="@+id/cover_plate"
-        android:tag="cover_plate"
         android:layout_width="400px"
         android:layout_height="400px"
         android:orientation="vertical"
@@ -351,7 +325,6 @@
 
     <ImageView
         android:id="@+id/hour_hand"
-        android:tag="hour_hand"
         android:layout_width="400px"
         android:layout_height="400px"
         android:orientation="vertical"
@@ -360,7 +333,6 @@
 
     <ImageView
         android:id="@+id/minute_hand"
-        android:tag="minute_hand"
         android:layout_width="400px"
         android:layout_height="400px"
         android:orientation="vertical"
@@ -369,7 +341,6 @@
 
     <ImageView
         android:id="@+id/second_hand"
-        android:tag="second_hand"
         android:layout_width="400px"
         android:layout_height="400px"
         android:orientation="vertical"

@@ -19,6 +19,8 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.IdRes
+import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEach
@@ -35,6 +37,8 @@ import info.nightscout.rx.weardata.DrawableFormat
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.extensions.toVisibilityKeepSpace
+import info.nightscout.shared.sharedPreferences.SP
 import org.joda.time.TimeOfDay
 import org.json.JSONObject
 import java.io.ByteArrayOutputStream
@@ -143,9 +147,9 @@ class CustomWatchface : BaseWatchFace() {
                 }
 
                 binding.mainLayout.forEach { view ->
-                    view.tag?.let { tag ->
-                        if (json.has(tag.toString())) {
-                            var viewjson = json.getJSONObject(tag.toString())
+                    CustomViews.fromId(view.id)?.let { id ->
+                        if (json.has(id.key)) {
+                            var viewjson = json.getJSONObject(id.key)
                             var wrapContent = LayoutParams.WRAP_CONTENT
                             val width = if (viewjson.has("width")) (viewjson.getInt("width") * zoomFactor).toInt() else wrapContent
                             val height = if (viewjson.has("height")) (viewjson.getInt("height") * zoomFactor).toInt() else wrapContent
@@ -153,7 +157,7 @@ class CustomWatchface : BaseWatchFace() {
                             params.topMargin = if (viewjson.has("topmargin")) (viewjson.getInt("topmargin") * zoomFactor).toInt() else 0
                             params.leftMargin = if (viewjson.has("leftmargin")) (viewjson.getInt("leftmargin") * zoomFactor).toInt() else 0
                             view.setLayoutParams(params)
-                            view.visibility = if (viewjson.has("visibility")) setVisibility(viewjson.getString("visibility")) else View.GONE
+                            view.visibility = if (viewjson.has("visibility")) setVisibility(viewjson.getString("visibility"), id.visibility(sp)) else View.GONE
                             if (view is TextView) {
                                 view.rotation = if (viewjson.has("rotation")) viewjson.getInt("rotation").toFloat() else 0F
                                 view.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((if (viewjson.has("textsize")) viewjson.getInt("textsize") else 22) * zoomFactor).toFloat())
@@ -168,14 +172,14 @@ class CustomWatchface : BaseWatchFace() {
 
                             if (view is ImageView) {
                                 view.clearColorFilter()
-                                drawableDataMap[CustomWatchfaceDrawableDataKey.fromKey(tag.toString())]?.toDrawable(resources)?.also {
+                                drawableDataMap[CustomWatchfaceDrawableDataKey.fromKey(id.key)]?.toDrawable(resources)?.also {
                                     if (viewjson.has("color"))
                                         it.colorFilter = changeDrawableColor(getColor(viewjson.getString("color")))
                                     else
                                         it.clearColorFilter()
                                     view.setImageDrawable(it)
                                 } ?: apply {
-                                    view.setImageDrawable(CustomWatchfaceDrawableDataKey.fromKey(tag.toString()).icon?.let { context.getDrawable(it) })
+                                    view.setImageDrawable(CustomWatchfaceDrawableDataKey.fromKey(id.key).icon?.let { context.getDrawable(it) })
                                     if (viewjson.has("color"))
                                         view.setColorFilter(getColor(viewjson.getString("color")))
                                     else
@@ -212,45 +216,47 @@ class CustomWatchface : BaseWatchFace() {
 
         binding.mainLayout.forEach { view ->
             val params = view.layoutParams as FrameLayout.LayoutParams
-            if (view is TextView) {
-                json.put(
-                    view.tag.toString(),
-                    JSONObject()
-                        .put("width", (params.width / zoomFactor).toInt())
-                        .put("height", (params.height / zoomFactor).toInt())
-                        .put("topmargin", (params.topMargin / zoomFactor).toInt())
-                        .put("leftmargin", (params.leftMargin / zoomFactor).toInt())
-                        .put("rotation", view.rotation.toInt())
-                        .put("visibility", getVisibility(view.visibility))
-                        .put("textsize", view.textSize.toInt())
-                        .put("gravity", getGravity(view.gravity))
-                        .put("font", getFont(view.typeface))
-                        .put("fontStyle", getStyle(view.typeface.style))
-                        .put("fontColor", String.format("#%06X", 0xFFFFFF and view.currentTextColor))
-                )
-            }
-            if (view is ImageView) {
-                //view.backgroundTintList =
-                json.put(
-                    view.tag.toString(),
-                    JSONObject()
-                        .put("width", (params.width / zoomFactor).toInt())
-                        .put("height", (params.height / zoomFactor).toInt())
-                        .put("topmargin", (params.topMargin / zoomFactor).toInt())
-                        .put("leftmargin", (params.leftMargin / zoomFactor).toInt())
-                        .put("visibility", getVisibility(view.visibility))
-                )
-            }
-            if (view is lecho.lib.hellocharts.view.LineChartView) {
-                json.put(
-                    view.tag.toString(),
-                    JSONObject()
-                        .put("width", (params.width / zoomFactor).toInt())
-                        .put("height", (params.height / zoomFactor).toInt())
-                        .put("topmargin", (params.topMargin / zoomFactor).toInt())
-                        .put("leftmargin", (params.leftMargin / zoomFactor).toInt())
-                        .put("visibility", getVisibility(view.visibility))
-                )
+            CustomViews.fromId(view.id)?.let {
+                if (view is TextView) {
+                    json.put(
+                        it.key,
+                        JSONObject()
+                            .put("width", (params.width / zoomFactor).toInt())
+                            .put("height", (params.height / zoomFactor).toInt())
+                            .put("topmargin", (params.topMargin / zoomFactor).toInt())
+                            .put("leftmargin", (params.leftMargin / zoomFactor).toInt())
+                            .put("rotation", view.rotation.toInt())
+                            .put("visibility", getVisibility(view.visibility))
+                            .put("textsize", view.textSize.toInt())
+                            .put("gravity", getGravity(view.gravity))
+                            .put("font", getFont(view.typeface))
+                            .put("fontStyle", getStyle(view.typeface.style))
+                            .put("fontColor", String.format("#%06X", 0xFFFFFF and view.currentTextColor))
+                    )
+                }
+                if (view is ImageView) {
+                    //view.backgroundTintList =
+                    json.put(
+                        it.key,
+                        JSONObject()
+                            .put("width", (params.width / zoomFactor).toInt())
+                            .put("height", (params.height / zoomFactor).toInt())
+                            .put("topmargin", (params.topMargin / zoomFactor).toInt())
+                            .put("leftmargin", (params.leftMargin / zoomFactor).toInt())
+                            .put("visibility", getVisibility(view.visibility))
+                    )
+                }
+                if (view is lecho.lib.hellocharts.view.LineChartView) {
+                    json.put(
+                        it.key,
+                        JSONObject()
+                            .put("width", (params.width / zoomFactor).toInt())
+                            .put("height", (params.height / zoomFactor).toInt())
+                            .put("topmargin", (params.topMargin / zoomFactor).toInt())
+                            .put("leftmargin", (params.leftMargin / zoomFactor).toInt())
+                            .put("visibility", getVisibility(view.visibility))
+                    )
+                }
             }
         }
         val metadataMap = ZipWatchfaceFormat.loadMetadata(json)
@@ -271,9 +277,9 @@ class CustomWatchface : BaseWatchFace() {
         gridColor = Color.WHITE
     }
 
-    private fun setVisibility(visibility: String): Int = when (visibility) {
-        "visible"   -> View.VISIBLE
-        "invisible" -> View.INVISIBLE
+    private fun setVisibility(visibility: String, pref: Boolean = true): Int = when (visibility) {
+        "visible"   -> pref.toVisibility()
+        "invisible" -> pref.toVisibilityKeepSpace()
         "gone"      -> View.GONE
         else        -> View.GONE
     }
@@ -386,6 +392,66 @@ class CustomWatchface : BaseWatchFace() {
             } catch (e: Exception) {
                 Color.GRAY
             }
+    }
+
+    enum class CustomViews(val key: String, @IdRes val id: Int, @StringRes val pref: Int?) {
+
+        BACKGROUND(CustomWatchfaceDrawableDataKey.BACKGROUND.key, R.id.background, null),
+        CHART("chart", R.id.chart, null),
+        COVER_CHART(CustomWatchfaceDrawableDataKey.COVERCHART.key, R.id.cover_chart, null),
+        IOB1("iob1", R.id.iob1, R.string.key_show_iob),
+        IOB2("iob2", R.id.iob2, R.string.key_show_iob),
+        COB1("cob1", R.id.cob1, R.string.key_show_cob),
+        COB2("cob2", R.id.cob2, R.string.key_show_cob),
+        DELTA("delta", R.id.delta, R.string.key_show_delta),
+        AVG_DELTA("avg_delta", R.id.avg_delta, R.string.key_show_avg_delta),
+        UPLOADER_BATTERY("uploader_battery", R.id.uploader_battery, R.string.key_show_uploader_battery),
+        RIG_BATTERY("rig_battery", R.id.rig_battery, R.string.key_show_rig_battery),
+        BASALRATE("basalRate", R.id.basalRate, R.string.key_show_temp_basal),
+        BGI("bgi", R.id.bgi, null),
+        TIME("time", R.id.time, null),
+        HOUR("hour", R.id.hour, null),
+        MINUTE("minute", R.id.minute, null),
+        SECOND("second", R.id.second, R.string.key_show_seconds),
+        TIMEPERIOD("timePeriod", R.id.timePeriod, null),
+        DAY_NAME("day_name", R.id.day_name, null),
+        DAY("day", R.id.day, null),
+        MONTH("month", R.id.month, null),
+        LOOP("loop", R.id.loop, R.string.key_show_external_status),
+        DIRECTION("direction", R.id.direction, R.string.key_show_direction),
+        TIMESTAMP("timestamp", R.id.timestamp, R.string.key_show_ago),
+        SGV("sgv", R.id.sgv, R.string.key_show_bg),
+        COVER_PLATE(CustomWatchfaceDrawableDataKey.COVERPLATE.key, R.id.cover_plate, null),
+        HOUR_HABD(CustomWatchfaceDrawableDataKey.HOURHAND.key, R.id.hour_hand, null),
+        MINUTE_HAND(CustomWatchfaceDrawableDataKey.MINUTEHAND.key, R.id.minute_hand, null),
+        SECOND_HAND(CustomWatchfaceDrawableDataKey.SECONDHAND.key, R.id.second_hand, R.string.key_show_seconds);
+
+        companion object {
+
+            private val keyToEnumMap = HashMap<String, CustomViews>()
+            private val idToEnumMap = HashMap<Int, CustomViews>()
+
+            init {
+                for (value in values()) keyToEnumMap[value.key] = value
+                for (value in values()) idToEnumMap[value.id] = value
+            }
+
+            fun fromKey(key: String): CustomViews? =
+                if (keyToEnumMap.containsKey(key)) {
+                    keyToEnumMap[key]
+                } else {
+                    null
+                }
+            fun fromId(id: Int): CustomViews? =
+                if (idToEnumMap.containsKey(id)) {
+                    idToEnumMap[id]
+                } else {
+                    null
+                }
+        }
+
+        fun visibility(sp: SP): Boolean = this.pref?.let { sp.getBoolean(it, true) }
+            ?: true
     }
 
 }
