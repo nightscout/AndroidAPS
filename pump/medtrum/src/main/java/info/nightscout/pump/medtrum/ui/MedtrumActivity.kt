@@ -43,13 +43,21 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
                         PatchStep.ATTACH_PATCH             -> setupViewFragment(MedtrumAttachPatchFragment.newInstance())
                         PatchStep.ACTIVATE                 -> setupViewFragment(MedtrumActivateFragment.newInstance())
                         PatchStep.ACTIVATE_COMPLETE        -> setupViewFragment(MedtrumActivateCompleteFragment.newInstance())
-                        PatchStep.CANCEL,
-                        PatchStep.COMPLETE                 -> this@MedtrumActivity.finish()
                         PatchStep.ERROR                    -> Unit // Do nothing, let activity handle this
                         PatchStep.RETRY_ACTIVATION         -> setupViewFragment(MedtrumRetryActivationFragment.newInstance())
                         PatchStep.RETRY_ACTIVATION_CONNECT -> setupViewFragment(MedtrumRetryActivationConnectFragment.newInstance())
                         PatchStep.START_DEACTIVATION       -> setupViewFragment(MedtrumStartDeactivationFragment.newInstance())
                         PatchStep.DEACTIVATE               -> setupViewFragment(MedtrumDeactivatePatchFragment.newInstance())
+
+                        PatchStep.CANCEL                   -> {
+                            handleCancel()
+                            this@MedtrumActivity.finish()
+                        }
+
+                        PatchStep.COMPLETE                 -> {
+                            handleComplete()
+                            this@MedtrumActivity.finish()
+                        }
 
                         PatchStep.FORCE_DEACTIVATION       -> {
                             medtrumPump.pumpState = MedtrumPumpState.STOPPED
