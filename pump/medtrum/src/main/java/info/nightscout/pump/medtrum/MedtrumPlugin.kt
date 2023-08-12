@@ -7,6 +7,7 @@ import android.content.ServiceConnection
 import android.os.IBinder
 import android.text.format.DateFormat
 import androidx.preference.EditTextPreference
+import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.toast.ToastUtils
@@ -122,8 +123,29 @@ import kotlin.math.abs
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
-        val serialSetting = preferenceFragment.findPreference(rh.gs(R.string.key_sn_input)) as EditTextPreference?
-        serialSetting?.isEnabled = !isInitialized()
+        preferenceFragment.findPreference<EditTextPreference>(rh.gs(R.string.key_sn_input))?.isEnabled = !isInitialized()
+
+        val alarmSetting = preferenceFragment.findPreference<ListPreference>(rh.gs(R.string.key_alarm_setting))
+        val allAlarmEntries = preferenceFragment.resources.getStringArray(R.array.alarmSettings)
+        val allAlarmValues = preferenceFragment.resources.getStringArray(R.array.alarmSettingsValues)
+
+        if (allAlarmEntries.size < 8 || allAlarmValues.size < 8) {
+            aapsLogger.error(LTag.PUMP, "Alarm settings array is not complete")
+            return
+        }
+
+        when (medtrumPump.pumpType()) {
+            PumpType.MEDTRUM_NANO -> {
+                alarmSetting?.entries = arrayOf(allAlarmEntries[6], allAlarmEntries[7]) // "Beep", "Silent"
+                alarmSetting?.entryValues = arrayOf(allAlarmValues[6], allAlarmValues[7]) // "6", "7"
+            }
+
+            else                  -> {
+                // Use Nano settings for unknown pumps
+                alarmSetting?.entries = arrayOf(allAlarmEntries[6], allAlarmEntries[7]) // "Beep", "Silent"
+                alarmSetting?.entryValues = arrayOf(allAlarmValues[6], allAlarmValues[7]) // "6", "7"
+            }
+        }
     }
 
     override fun isInitialized(): Boolean {
