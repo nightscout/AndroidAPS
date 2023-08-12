@@ -3,9 +3,9 @@
         <item>Light, vibrate and beep</item>
         <item>Light and vibrate</item>
         <item>Light and beep</item>
-        <item>Light only</item>
+        <item>Light</item>
         <item>Vibrate and beep</item>
-        <item>Vibrate only</item>
+        <item>Vibrate</item>
         <item>Beep</item>
         <item>Silent</item>
     </string-array>
