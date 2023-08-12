@@ -54,7 +54,7 @@ class CustomWatchface : BaseWatchFace() {
     private var lowBatColor = Color.RED
     private var bgColor = Color.WHITE
 
-    val CUSTOM_VERSION = "v0.1"
+    val CUSTOM_VERSION = "v0.2"
 
     @Suppress("DEPRECATION")
     override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
