@@ -28,6 +28,7 @@ import androidx.viewbinding.ViewBinding
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityCustomBinding
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
+import info.nightscout.rx.weardata.CUSTOM_VERSION
 import info.nightscout.rx.weardata.CustomWatchfaceData
 import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
 import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataMap
@@ -54,7 +55,6 @@ class CustomWatchface : BaseWatchFace() {
     private var lowBatColor = Color.RED
     private var bgColor = Color.WHITE
 
-    val CUSTOM_VERSION = "v0.2"
 
     @Suppress("DEPRECATION")
     override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
@@ -168,6 +168,7 @@ class CustomWatchface : BaseWatchFace() {
                                 )
                                 if (viewjson.has("fontColor"))
                                     view.setTextColor(getColor(viewjson.getString("fontColor")))
+
                                 if (viewjson.has("textvalue"))
                                     view.text = viewjson.getString("textvalue")
                             }
@@ -187,6 +188,11 @@ class CustomWatchface : BaseWatchFace() {
                                     else
                                         view.clearColorFilter()
                                 }
+                            }
+                        } else {
+                            view.visibility = View.GONE
+                            if (view is TextView) {
+                                view.text = ""
                             }
                         }
                     }
