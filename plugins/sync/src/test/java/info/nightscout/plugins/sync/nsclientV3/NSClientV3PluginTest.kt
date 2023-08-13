@@ -45,7 +45,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var receiverDelegate: ReceiverDelegate
     @Mock lateinit var uiInteraction: UiInteraction
-    @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3Impl
+    @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3
     @Mock lateinit var nsAndroidClient: NSAndroidClient
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var nsClientSource: NSClientSource

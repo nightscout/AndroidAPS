@@ -8,7 +8,7 @@ import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.sync.NsClient
-import info.nightscout.plugins.sync.nsclientV3.DataSyncSelectorV3Impl
+import info.nightscout.plugins.sync.nsclientV3.DataSyncSelectorV3
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.rx.bus.RxBus
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,7 +24,7 @@ import org.mockito.Mockito.`when`
 internal class DataSyncWorkerTest : TestBase() {
 
     @Mock lateinit var fabricPrivacy: FabricPrivacy
-    @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3Impl
+    @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var nsClient: NsClient
     @Mock lateinit var rxBus: RxBus

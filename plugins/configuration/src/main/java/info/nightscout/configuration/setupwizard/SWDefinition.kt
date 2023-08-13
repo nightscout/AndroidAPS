@@ -35,6 +35,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.pump.Medtrum
 import info.nightscout.interfaces.pump.OmnipodDash
 import info.nightscout.interfaces.pump.OmnipodEros
 import info.nightscout.interfaces.queue.CommandQueue
@@ -319,23 +320,24 @@ class SWDefinition @Inject constructor(
                      .text(R.string.readstatus)
                      .action { commandQueue.readStatus(rh.gs(info.nightscout.core.ui.R.string.clicked_connect_to_pump), null) }
                      .visibility {
-                         // Hide for Omnipod, because as we don't require a Pod to be paired in the setup wizard,
+                         // Hide for Omnipod and Medtrum, because as we don't require a Pod/Patch to be paired in the setup wizard,
                          // Getting the status might not be possible
-                         activePlugin.activePump !is OmnipodEros && activePlugin.activePump !is OmnipodDash
+                         activePlugin.activePump !is OmnipodEros && activePlugin.activePump !is OmnipodDash && activePlugin.activePump !is Medtrum
                      })
             .add(SWEventListener(injector, EventPumpStatusChanged::class.java)
-                     .visibility { activePlugin.activePump !is OmnipodEros && activePlugin.activePump !is OmnipodDash })
+                     .visibility { activePlugin.activePump !is OmnipodEros && activePlugin.activePump !is OmnipodDash && activePlugin.activePump !is Medtrum })
             .validator { isPumpInitialized() }
 
     private fun isPumpInitialized(): Boolean {
         val activePump = activePlugin.activePump
 
-        // For Omnipod, activating a Pod can be done after setup through the Omnipod fragment
-        // For the Eros model, consider the pump initialized when a RL has been configured successfully
-        // For Dash model, consider the pump setup without any extra conditions
+        // For Omnipod and Medtrum, activating a Pod/Patch can be done after setup through the pump fragment
+        // For the Eros, consider the pump initialized when a RL has been configured successfully
+        // For all others, consider the pump setup without any extra conditions
         return activePump.isInitialized()
             || (activePump is OmnipodEros && activePump.isRileyLinkReady())
             || activePump is OmnipodDash
+            || activePump is Medtrum
     }
 
     private val screenAps

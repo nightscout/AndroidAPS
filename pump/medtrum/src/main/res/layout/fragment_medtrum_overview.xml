@@ -1,0 +1,679 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewmodel"
+            type="info.nightscout.pump.medtrum.ui.viewmodel.MedtrumOverviewViewModel" />
+
+        <import type="android.view.View" />
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/medtrum_overview_buttons"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="5dp">
+
+                    <!-- BLE Status -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/ble_status_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <com.joanzapata.iconify.widget.IconTextView
+                            android:id="@+id/ble_status"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@{viewmodel.bleStatus}"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dip"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="?android:attr/dividerHorizontal" />
+
+                    <!-- Last Connected -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/last_connection_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/last_connection"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@{viewmodel.lastConnectionMinAgo}"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dip"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="?android:attr/dividerHorizontal" />
+
+                    <!-- Pump State -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/pump_state_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/pump_state"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@{viewmodel.medtrumPump.pumpStateFlow.toString()}"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Basal Type -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/basal_type_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/basal_type"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@{viewmodel.medtrumPump.lastBasalTypeFlow.toString()}"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Basal Rate -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/basal_rate_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/basal_rate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text='@{@string/current_basal_rate(viewmodel.medtrumPump.lastBasalRateFlow)}'
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Last bolus -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/last_bolus_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/last_bolus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text='@{viewmodel.lastBolus}'
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dip"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="?android:attr/dividerHorizontal" />
+
+                    <!-- Active Alarms -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/active_alarms_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/active_alarms"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@{viewmodel.activeAlarms}"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dip"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="?android:attr/dividerHorizontal" />
+
+                    <!-- Reservoir -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/reservoir_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/reservoir"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text='@{@string/reservoir_level(viewmodel.medtrumPump.reservoirFlow)}'
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- Battery voltage -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/battery_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/battery"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text='@{@string/battery_voltage(viewmodel.medtrumPump.batteryVoltage_BFlow)}'
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="fill_parent"
+                        android:layout_height="2dip"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginEnd="20dp"
+                        android:layout_marginBottom="5dp"
+                        android:background="?android:attr/dividerHorizontal" />
+
+                    <!-- PumpType -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/pump_type_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/pump_type"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@{viewmodel.pumpType}"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <!-- FW Version -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/fw_version_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/fw_version"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@{viewmodel.fwVersion}"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <!-- Patch No -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/patch_no_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/patch_no"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@{viewmodel.patchNo}"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+                    <!-- Expiry? -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/patch_expiry_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/patch_expiry"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@{viewmodel.patchExpiry}"
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="2dip"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="?android:attr/dividerHorizontal" />
+
+                <ImageView
+                    android:id="@+id/medtrum_icon"
+                    android:layout_width="128dp"
+                    android:layout_height="128dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/pump_icon"
+                    android:paddingTop="10dp"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_medtrum_128" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/medtrum_overview_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal">
+
+            <!-- Refresh button -->
+            <info.nightscout.core.ui.elements.SingleClickButton
+                android:id="@+id/refreshButton"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_refresh_conn"
+                android:ellipsize="end"
+                android:enabled="@{viewmodel.canDoRefresh}"
+                android:maxLines="2"
+                android:text="@string/refresh_label"
+                app:onSafeClick="@{() -> viewmodel.onClickRefresh()}" />
+
+            <!-- Reset Alarms button -->
+            <info.nightscout.core.ui.elements.SingleClickButton
+                android:id="@+id/resetAlarmsButton"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_silence_alerts"
+                android:ellipsize="end"
+                android:enabled="@{viewmodel.canDoResetAlarms}"
+                android:maxLines="2"
+                android:text="@string/reset_alarms_label"
+                android:visibility="@{viewmodel.canDoResetAlarms ? View.VISIBLE : View.GONE}"
+                app:onSafeClick="@{() -> viewmodel.onClickResetAlarms()}" />
+
+            <!-- Change Patch button -->
+            <info.nightscout.core.ui.elements.SingleClickButton
+                android:id="@+id/changePatchButton"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:drawableTop="@drawable/ic_actions_refill"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:text="@string/change_patch_label"
+                app:onSafeClick="@{() -> viewmodel.onClickChangePatch()}" />
+
+        </LinearLayout>
+    </RelativeLayout>
+</layout>

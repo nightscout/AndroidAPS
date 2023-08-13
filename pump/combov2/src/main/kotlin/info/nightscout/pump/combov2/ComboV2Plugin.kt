@@ -1102,7 +1102,17 @@ class ComboV2Plugin @Inject constructor (
                 reportFinishedBolus(R.string.combov2_bolus_delivery_failed, pumpEnactResult, succeeded = false)
             } finally {
                 // The delivery was enacted if even a partial amount was infused.
-                pumpEnactResult.enacted = acquiredPump.lastBolusFlow.value?.let { it.bolusAmount > 0 } ?: false
+                acquiredPump.lastBolusFlow.value?.also {
+                    pumpEnactResult.enacted = (it.bolusAmount > 0)
+                    pumpEnactResult.bolusDelivered = it.bolusAmount.cctlBolusToIU()
+                } ?: run {
+                    pumpEnactResult.enacted = false
+                    pumpEnactResult.bolusDelivered = 0.0
+                }
+                aapsLogger.debug(
+                    LTag.PUMP,
+                    "Pump enact result: success ${pumpEnactResult.success} enacted ${pumpEnactResult.enacted} bolusDelivered ${pumpEnactResult.bolusDelivered}"
+                )
                 bolusJob = null
                 bolusProgressJob.cancelAndJoin()
             }
@@ -2216,7 +2226,7 @@ class ComboV2Plugin @Inject constructor (
             // only shows up in the Combo fragment.
             if (newState == DriverState.Suspended) {
                 uiInteraction.addNotification(
-                    Notification.COMBO_PUMP_SUSPENDED,
+                    Notification.PUMP_SUSPENDED,
                     text = rh.gs(R.string.combov2_pump_is_suspended),
                     level = Notification.NORMAL
                 )

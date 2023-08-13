@@ -25,7 +25,6 @@ import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.nsclient.NSAlarm
 import info.nightscout.interfaces.nsclient.NSSettingsStatus
 import info.nightscout.interfaces.nsclient.StoreDataForDb
-import info.nightscout.interfaces.sync.DataSyncSelectorV1
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.interfaces.utils.JsonHelper.safeGetStringAllowNull
@@ -34,6 +33,7 @@ import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsShared.events.EventConnectivityOptionChanged
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientStatus
 import info.nightscout.plugins.sync.nsShared.events.EventNSClientUpdateGuiStatus
+import info.nightscout.plugins.sync.nsclient.DataSyncSelectorV1
 import info.nightscout.plugins.sync.nsclient.NSClientPlugin
 import info.nightscout.plugins.sync.nsclient.acks.NSAddAck
 import info.nightscout.plugins.sync.nsclient.acks.NSAuthAck
@@ -179,6 +179,18 @@ import javax.inject.Inject
             .toObservable(EventNewHistoryData::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ resend("NEW_DATA") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventDeviceStatusChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ resend("EventDeviceStatusChange") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventTherapyEventChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ resend("EventTherapyEventChange") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventOfflineChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ resend("EventOfflineChange") }, fabricPrivacy::logException)
     }
 
     override fun onDestroy() {
@@ -541,6 +553,7 @@ import javax.inject.Inject
                         }
                     }
                     rxBus.send(EventNSClientNewLog("◄ LAST", dateUtil.dateAndTimeString(latestDateInReceivedData)))
+                    resend("LAST")
                 } catch (e: JSONException) {
                     aapsLogger.error("Unhandled exception", e)
                 }
@@ -551,7 +564,7 @@ import javax.inject.Inject
         }
     }
 
-    fun dbUpdate(collection: String, _id: String?, data: JSONObject?, originalObject: Any, progress: String) {
+    fun dbUpdate(collection: String, @Suppress("LocalVariableName") _id: String?, data: JSONObject?, originalObject: Any, progress: String) {
         try {
             if (_id == null) return
             if (!isConnected || !hasWriteAuth) return
@@ -595,10 +608,10 @@ import javax.inject.Inject
         if (!isConnected || !hasWriteAuth) return@runBlocking
         scope.async {
             if (socket?.connected() != true) return@async
-            if (lastAckTime > System.currentTimeMillis() - 10 * 1000L) {
-                aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastAckTime: " + (System.currentTimeMillis() - lastAckTime) / 1000L + " sec")
-                return@async
-            }
+            // if (lastAckTime > System.currentTimeMillis() - 10 * 1000L) {
+            //     aapsLogger.debug(LTag.NSCLIENT, "Skipping resend by lastAckTime: " + (System.currentTimeMillis() - lastAckTime) / 1000L + " sec")
+            //     return@async
+            // }
             rxBus.send(EventNSClientNewLog("● QUEUE", "Resend started: $reason"))
             dataSyncSelectorV1.doUpload()
             rxBus.send(EventNSClientNewLog("● QUEUE", "Resend ended: $reason"))

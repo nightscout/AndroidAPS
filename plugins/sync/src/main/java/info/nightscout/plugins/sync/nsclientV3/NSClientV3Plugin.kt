@@ -30,7 +30,6 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.interfaces.sync.DataSyncSelector
-import info.nightscout.interfaces.sync.DataSyncSelectorV3
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
 import info.nightscout.interfaces.ui.UiInteraction
@@ -66,11 +65,14 @@ import info.nightscout.plugins.sync.nsclientV3.workers.LoadTreatmentsWorker
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventDeviceStatusChange
 import info.nightscout.rx.events.EventDismissNotification
 import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.events.EventNewHistoryData
+import info.nightscout.rx.events.EventOfflineChange
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventSWSyncStatus
+import info.nightscout.rx.events.EventTherapyEventChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.sdk.NSAndroidClientImpl
@@ -224,6 +226,18 @@ class NSClientV3Plugin @Inject constructor(
             .toObservable(EventNewHistoryData::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ executeUpload("NEW_DATA", forceNew = false) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventDeviceStatusChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ executeUpload("EventDeviceStatusChange", forceNew = false) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventTherapyEventChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ executeUpload("EventTherapyEventChange", forceNew = false) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventOfflineChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ executeUpload("EventOfflineChange", forceNew = false) }, fabricPrivacy::logException)
 
         runLoop = Runnable {
             var refreshInterval = T.mins(5).msecs()

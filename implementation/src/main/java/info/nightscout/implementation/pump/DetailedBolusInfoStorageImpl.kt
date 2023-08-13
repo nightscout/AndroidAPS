@@ -1,11 +1,15 @@
 package info.nightscout.implementation.pump
 
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.implementation.R
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,10 +18,12 @@ import kotlin.math.abs
 @OpenForTesting
 @Singleton
 class DetailedBolusInfoStorageImpl @Inject constructor(
-    val aapsLogger: AAPSLogger
+    val aapsLogger: AAPSLogger,
+    val sp: SP,
+    val rh: ResourceHelper
 ) : DetailedBolusInfoStorage {
 
-    val store = ArrayList<DetailedBolusInfo>()
+    val store = loadStore()
 
     fun DetailedBolusInfo.toJsonString(): String = Gson().toJson(this)
 
@@ -25,6 +31,7 @@ class DetailedBolusInfoStorageImpl @Inject constructor(
     override fun add(detailedBolusInfo: DetailedBolusInfo) {
         aapsLogger.debug("Stored bolus info: ${detailedBolusInfo.toJsonString()}")
         store.add(detailedBolusInfo)
+        saveStore()
     }
 
     @Synchronized
@@ -36,6 +43,7 @@ class DetailedBolusInfoStorageImpl @Inject constructor(
             if (bolusTime > d.timestamp - T.mins(1).msecs() && bolusTime < d.timestamp + T.mins(1).msecs() && abs(store[i].insulin - bolus) < 0.01) {
                 aapsLogger.debug(LTag.PUMP, "Using & removing bolus info for time $bolusTime: ${store[i]}")
                 store.removeAt(i)
+                saveStore()
                 return d
             }
         }
@@ -45,6 +53,7 @@ class DetailedBolusInfoStorageImpl @Inject constructor(
             if (bolusTime > d.timestamp - T.mins(1).msecs() && bolusTime < d.timestamp + T.mins(1).msecs() && bolus <= store[i].insulin + 0.01) {
                 aapsLogger.debug(LTag.PUMP, "Using TIME-ONLY & removing bolus info for time $bolusTime: ${store[i]}")
                 store.removeAt(i)
+                saveStore()
                 return d
             }
         }
@@ -60,5 +69,25 @@ class DetailedBolusInfoStorageImpl @Inject constructor(
         //Not found
         aapsLogger.debug(LTag.PUMP, "Bolus info not found for time $bolusTime")
         return null
+    }
+
+    private fun saveStore() {
+        var lastTwoEntries = store
+        // Only save last two entries, to avoid too much data in preferences
+        if (store.size > 2) {
+            lastTwoEntries = ArrayList(store.subList(store.size - 2, store.size))
+        }
+        val jsonString = Gson().toJson(lastTwoEntries)
+        sp.putString(rh.gs(R.string.key_bolus_storage), jsonString)
+    }
+
+    private fun loadStore(): ArrayList<DetailedBolusInfo> {
+        val jsonString = sp.getString(rh.gs(R.string.key_bolus_storage), "")
+        return if (jsonString.isNotEmpty()) {
+            val type = object : TypeToken<List<DetailedBolusInfo>>() {}.type
+            Gson().fromJson(jsonString, type)
+        } else {
+            ArrayList()
+        }
     }
 }

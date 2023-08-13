@@ -46,6 +46,7 @@ import info.nightscout.plugins.sync.tidepool.TidepoolPlugin
 import info.nightscout.plugins.sync.xdrip.XdripPlugin
 import info.nightscout.pump.combo.ComboPlugin
 import info.nightscout.pump.combov2.ComboV2Plugin
+import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.diaconn.DiaconnG8Plugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.sensitivity.SensitivityAAPSPlugin
@@ -208,6 +209,12 @@ abstract class PluginsListModule {
     @IntoMap
     @IntKey(156)
     abstract fun bindEopatchPumpPlugin(plugin: EopatchPumpPlugin): PluginBase
+
+    @Binds
+    @PumpDriver
+    @IntoMap
+    @IntKey(160)
+    abstract fun bindMedtrumPlugin(plugin: MedtrumPlugin): PluginBase
 
     @Binds
     @AllConfigs

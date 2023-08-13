@@ -31,6 +31,9 @@ interface CommandQueue {
     fun setUserOptions(callback: Callback?): Boolean
     fun loadTDDs(callback: Callback?): Boolean
     fun loadEvents(callback: Callback?): Boolean
+    fun clearAlarms(callback: Callback?): Boolean
+    fun deactivate(callback: Callback?): Boolean
+    fun updateTime(callback: Callback?): Boolean
     fun customCommand(customCommand: CustomCommand, callback: Callback?): Boolean
     fun isCustomCommandRunning(customCommandType: Class<out CustomCommand>): Boolean
     fun isCustomCommandInQueue(customCommandType: Class<out CustomCommand>): Boolean

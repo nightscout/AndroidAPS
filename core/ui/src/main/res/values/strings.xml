@@ -393,6 +393,9 @@
     <string name="carbs_g">CARBS %1$d g</string>
     <string name="extended_bolus_u_min">EXTENDED BOLUS %1$.2f U %2$d min</string>
     <string name="load_events">LOAD EVENTS</string>
+    <string name="clear_alarms">CLEAR ALARMS</string>
+    <string name="deactivate">DEACTIVATE</string>
+    <string name="update_time">UPDATE TIME</string>
     <string name="load_history">LOAD HISTORY %1$d</string>
     <string name="load_tdds">LOAD TDDs</string>
     <string name="set_profile">SET PROFILE</string>
