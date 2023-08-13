@@ -90,6 +90,30 @@
     <string name="deactivate_sure">Êtes-vous sûr de vouloir désactiver le Patch actuel ?</string>
     <string name="cancel_sure">Êtes-vous sûr de vouloir annuler l\'activation?</string>
     <string name="medtrum_deactivate_pump_confirm">Êtes-vous certain ? Cette action est irréversible!!</string>
+    <string name="press_next_or_cancel">Appuyez sur <b>Suivant</b> pour désactiver ou <b>Annuler</b> pour revenir à l\'écran principal.</string>
+    <string name="deactivating_pump">Désactivation du Patch. Veuillez patienter.</string>
+    <string name="deactivating_error">Échec de la désactivation, appuyez sur <b>Supprimer</b> pour oublier le Patch.</string>
+    <string name="retract_needle">Retirer l\'aiguille. Retirer le Patch du corps.</string>
+    <string name="remove_base_discard_patch">Retirez la base de la pompe et jetez le Patch utilisé de façon appropriée.</string>
+    <string name="press_next_or_OK">Appuyez sur <b>OK</b> pour revenir à l\'écran principal. Appuyez sur <b>Suivant</b> pour démarrer l\'activation du nouveau Patch.</string>
+    <string name="activation_in_progress">Oups ! Quelque chose s\'est mal passé, il semble qu\'il y ait déjà une activation en cours.</string>
+    <string name="press_retry_or_discard">Appuyez sur <b>Suivant</b> pour reprendre l\'activation ou <b>Supprimer</b> pour réinitialiser l\'état d\'activation.</string>
+    <string name="reading_activation_status">Veuillez patienter, lecture de l\'état d\'activation de la pompe.</string>
     <!-- settings-->
+    <string name="sn_input_title">Numéro de série</string>
+    <string name="sn_input_summary">Entrez le numéro de série de la base de votre pompe.</string>
+    <string name="alarm_setting_title">Paramètres d\'Alarme</string>
+    <string name="alarm_setting_summary">Sélectionnez vos préférences d’alarme de votre pompe.</string>
+    <string name="patch_expiration_title">Expiration du Patch</string>
+    <string name="patch_expiration_summary">Lorsqu\'il est activé, le Patch expirera après 3 jours, avec un délai de grâce de 8 heures au-delà.</string>
+    <string name="hourly_max_insulin_title">Insuline maximale horaire</string>
+    <string name="hourly_max_insulin_summary">Spécifiez le nombre maximum d\'unités d\'insuline autorisées par heure. Si ce montant est dépassé, la pompe sera suspendue.</string>
+    <string name="daily_max_insulin_title">Insuline maximale quotidienne</string>
+    <string name="daily_max_insulin_summary">Spécifiez le nombre maximum d\'unités d\'insuline autorisées par jour. Si ce montant est dépassé, la pompe sera suspendue.</string>
     <!-- treatment state-->
+    <string name="waitingforestimatedbolusend">Bolus en cours. %1$d sec. restantes.</string>
+    <string name="gettingpumpstatus">Obtenir l\'état de la pompe</string>
+    <string name="gettingbolusstatus">Obtenir l\'état du bolus</string>
+    <string name="gettingtempbasalstatus">Obtenir l\'état du basal temporaire</string>
+    <string name="settingpumpsettings">Réglage des paramètres utilisateur</string>
 </resources>
