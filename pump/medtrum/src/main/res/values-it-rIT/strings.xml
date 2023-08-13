@@ -3,6 +3,10 @@
     <!-- MedtrumPump -->
     <!-- overview fragment -->
     <!-- Alarm strings -->
+    <string name="alarm_paused">In pausa</string>
+    <string name="alarm_occlusion">Occlusione</string>
+    <string name="alarm_expired">Scaduto</string>
+    <string name="alarm_reservoir_empty">Serbatoio vuoto</string>
     <!-- wizard-->
     <!-- settings-->
     <!-- treatment state-->
