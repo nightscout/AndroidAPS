@@ -1,14 +1,2 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <string-array name="alarmSettings">
-        <!-- Nano doesnt have lights, other patches not yet supported -->
-        <!-- <item>Light, vibrate and beep</item> -->
-        <!-- <item>Light and vibrate</item> -->
-        <!-- <item>Light and beep</item> -->
-        <!-- <item>Light only</item> -->
-        <item>Vibreur et bip</item>
-        <item>Vibreur uniquement</item>
-        <item>Bip uniquement</item>
-        <item>Aucun</item>
-    </string-array>
-</resources>
+<resources></resources>
