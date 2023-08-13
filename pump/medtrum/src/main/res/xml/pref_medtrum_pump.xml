@@ -20,7 +20,7 @@
             android:summary="@string/patch_expiration_summary" />
 
         <ListPreference
-            android:defaultValue="4"
+            android:defaultValue="6"
             android:key="@string/key_alarm_setting"
             android:title="@string/alarm_setting_title"
             android:dialogTitle="@string/alarm_setting_summary"
@@ -28,7 +28,7 @@
             android:entryValues="@array/alarmSettingsValues" />
 
         <info.nightscout.core.validators.ValidatingEditTextPreference
-            android:defaultValue="30"
+            android:defaultValue="25"
             android:inputType="number"
             android:key="@string/key_hourly_max_insulin"
             android:title="@string/hourly_max_insulin_title"
@@ -38,7 +38,7 @@
             validate:testType="numericRange" />
 
         <info.nightscout.core.validators.ValidatingEditTextPreference
-            android:defaultValue="100"
+            android:defaultValue="80"
             android:inputType="number"
             android:key="@string/key_daily_max_insulin"
             android:title="@string/daily_max_insulin_title"

@@ -34,15 +34,17 @@ class MedtrumRetryActivationConnectFragment : MedtrumBaseFragment<FragmentMedtru
             viewModel?.apply {
 
                 setupStep.observe(viewLifecycleOwner) {
-                    when (it) {
-                        MedtrumViewModel.SetupStep.INITIAL   -> Unit // Nothing to do here
-                        MedtrumViewModel.SetupStep.FILLED    -> forceMoveStep(PatchStep.PRIME)
-                        MedtrumViewModel.SetupStep.PRIMING   -> forceMoveStep(PatchStep.PRIMING)
-                        MedtrumViewModel.SetupStep.PRIMED    -> forceMoveStep(PatchStep.PRIME_COMPLETE)
-                        MedtrumViewModel.SetupStep.ACTIVATED -> forceMoveStep(PatchStep.ACTIVATE_COMPLETE)
+                    if (patchStep.value != PatchStep.CANCEL) {
+                        when (it) {
+                            MedtrumViewModel.SetupStep.INITIAL   -> Unit // Nothing to do here
+                            MedtrumViewModel.SetupStep.FILLED    -> forceMoveStep(PatchStep.PRIME)
+                            MedtrumViewModel.SetupStep.PRIMING   -> forceMoveStep(PatchStep.PRIMING)
+                            MedtrumViewModel.SetupStep.PRIMED    -> forceMoveStep(PatchStep.PRIME_COMPLETE)
+                            MedtrumViewModel.SetupStep.ACTIVATED -> forceMoveStep(PatchStep.ACTIVATE_COMPLETE)
 
-                        else                                 -> {
-                            aapsLogger.error(LTag.PUMP, "Unexpected state: $it")
+                            else                                 -> {
+                                aapsLogger.error(LTag.PUMP, "Unexpected state: $it")
+                            }
                         }
                     }
                 }
