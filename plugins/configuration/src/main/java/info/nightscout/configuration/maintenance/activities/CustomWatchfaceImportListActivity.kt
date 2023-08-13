@@ -14,12 +14,15 @@ import info.nightscout.interfaces.maintenance.PrefFileListProvider
 import info.nightscout.configuration.databinding.CustomWatchfaceImportListActivityBinding
 import info.nightscout.configuration.R
 import info.nightscout.configuration.databinding.CustomWatchfaceImportListItemBinding
+import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileDataToWear
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.weardata.CUSTOM_VERSION
 import info.nightscout.rx.weardata.CustomWatchfaceData
 import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
 import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey.*
+import info.nightscout.rx.weardata.CustomWatchfaceMetadataMap
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -32,9 +35,9 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
     @Inject lateinit var prefFileListProvider: PrefFileListProvider
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
 
     private lateinit var binding: CustomWatchfaceImportListActivityBinding
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +66,6 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
                         val customWF = EventData.ActionSetCustomWatchface(customWatchfaceFile)
                         val i = Intent()
                         setResult(FragmentActivity.RESULT_OK, i)
-                        //rxBus.send(EventWearUpdateGui(customWatchfaceFile))
                         rxBus.send(EventMobileDataToWear(customWF))
                         finish()
                     }
@@ -93,7 +95,8 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
                 author.text = rh.gs(CWF_AUTHOR.label, metadata[CWF_AUTHOR] ?:"")
                 createdAt.text = rh.gs(CWF_CREATED_AT.label, metadata[CWF_CREATED_AT] ?:"")
                 cwfVersion.text = rh.gs(CWF_VERSION.label, metadata[CWF_VERSION] ?:"")
-
+                val colorAttr = if (checkCustomVersion(metadata)) info.nightscout.core.ui.R.attr.metadataTextOkColor else info.nightscout.core.ui.R.attr.metadataTextWarningColor
+                cwfVersion.setTextColor(rh.gac(cwfVersion.context, colorAttr))
             }
         }
     }
@@ -106,4 +109,13 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
         return super.onOptionsItemSelected(item)
     }
 
+    private fun checkCustomVersion(metadata: CustomWatchfaceMetadataMap): Boolean {
+        metadata[CWF_VERSION]?.let { version ->
+            val currentAppVer = versionCheckerUtils.versionDigits(CUSTOM_VERSION)
+            val metadataVer = versionCheckerUtils.versionDigits(version)
+            //Only check that Loaded Watchface version is lower or equal to Wear CustomWatchface version
+            return ((currentAppVer.size >= 2) && (metadataVer.size >= 2) && (currentAppVer[0] >= metadataVer[0]))
+        }
+        return false
+    }
 }
