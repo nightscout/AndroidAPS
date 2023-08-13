@@ -20,7 +20,7 @@ buildscript {
         material_version = '1.9.0'
         gridlayout_version = '1.0.0'
         constraintlayout_version = '2.1.4'
-        preferencektx_version = '1.2.0'
+        preferencektx_version = '1.2.1'
         commonslang3_version = '3.13.0'
         commonscodec_version = '1.16.0'
         guava_version = '32.1.2-jre'
