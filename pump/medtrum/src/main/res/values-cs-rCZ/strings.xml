@@ -10,6 +10,7 @@
     <string name="pump_is_suspended">Pumpa je pozastavena</string>
     <string name="pump_is_suspended_hour_max">Pumpa je pozastavena kvůli překročení maximálního množství inzulínu za hodinu</string>
     <string name="pump_is_suspended_day_max">Pumpa je pozastavena kvůli překročení maximálního množství inzulínu za den</string>
+    <string name="patch_not_active">Patch není aktivován</string>
     <string name="pump_setting_failed">Načtení uživatelského nastavení do pumpy selhalo!</string>
     <!-- overview fragment -->
     <string name="ble_status_label">Stav BLE</string>
@@ -23,12 +24,18 @@
     <string name="current_basal_rate"> %.2f U/h</string>
     <string name="pump_type_label">Typ pumpy</string>
     <string name="fw_version_label">Verze FW</string>
+    <string name="patch_no_label">Č. patche</string>
+    <string name="patch_expiry_label">Patch vyprší</string>
     <string name="refresh_label">Obnovit</string>
     <string name="reset_alarms_label">Resetovat alarmy</string>
+    <string name="change_patch_label">Vyměnit patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Vyžádáno uživatelem</string>
+    <string name="expiry_not_enabled">Nepovoleno</string>
     <!-- Alarm strings -->
+    <string name="alarm_none">Žádný</string>
     <string name="alarm_pump_low_battery">Téměř vybitá baterie pumpy</string>
     <string name="alarm_pump_low_reservoir">Téměř prázdný zásobník pumpy</string>
+    <string name="alarm_pump_expires_soon">Pumpa brzy vyprší</string>
     <string name="alarm_paused">Pozastaveno</string>
     <string name="alarm_occlusion">Okluze</string>
     <string name="alarm_reservoir_empty">Prázdný zásobník</string>
