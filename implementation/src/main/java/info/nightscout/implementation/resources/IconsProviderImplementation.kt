@@ -11,7 +11,7 @@ class IconsProviderImplementation @Inject constructor(private val config: Config
 
     override fun getIcon(): Int =
         when {
-            config.NSCLIENT    -> info.nightscout.core.ui.R.mipmap.ic_blueowl
+            config.NSCLIENT    -> info.nightscout.core.ui.R.mipmap.ic_yellowowl
             config.PUMPCONTROL -> info.nightscout.core.ui.R.mipmap.ic_pumpcontrol
             else               -> info.nightscout.core.ui.R.mipmap.ic_launcher
         }
