@@ -19,6 +19,7 @@ import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.annotation.DrawableRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -74,11 +75,16 @@ class CustomWatchface : BaseWatchFace() {
             .build()
     }
 
+    override fun setDataFields() {
+        super.setDataFields()
+        binding.direction2.setImageDrawable(resources.getDrawable(TrendArrow.fromSymbol(singleBg.slopeArrow).icon))
+    }
     override fun setColorDark() {
         setWatchfaceStyle()
         binding.mainLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background))
         binding.sgv.setTextColor(bgColor)
         binding.direction.setTextColor(bgColor)
+        binding.direction2.colorFilter = changeDrawableColor(bgColor)
 
         if (ageLevel != 1)
             binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
@@ -429,6 +435,7 @@ class CustomWatchface : BaseWatchFace() {
         MONTH("month", R.id.month, null),
         LOOP("loop", R.id.loop, R.string.key_show_external_status),
         DIRECTION("direction", R.id.direction, R.string.key_show_direction),
+        DIRECTION2("direction2", R.id.direction2, R.string.key_show_direction),
         TIMESTAMP("timestamp", R.id.timestamp, R.string.key_show_ago),
         SGV("sgv", R.id.sgv, R.string.key_show_bg),
         COVER_PLATE(CustomWatchfaceDrawableDataKey.COVERPLATE.key, R.id.cover_plate, null),
@@ -460,8 +467,29 @@ class CustomWatchface : BaseWatchFace() {
                 }
         }
 
+
         fun visibility(sp: SP): Boolean = this.pref?.let { sp.getBoolean(it, true) }
             ?: true
+    }
+
+
+    enum class TrendArrow(val text: String, val symbol: String,@DrawableRes val icon: Int) {
+        NONE("NONE", "??", R.drawable.ic_invalid),
+        TRIPLE_UP("TripleUp", "X", R.drawable.ic_invalid),
+        DOUBLE_UP("DoubleUp", "\u21c8", R.drawable.ic_doubleup),
+        SINGLE_UP("SingleUp", "\u2191", R.drawable.ic_singleup),
+        FORTY_FIVE_UP("FortyFiveUp", "\u2197", R.drawable.ic_fortyfiveup),
+        FLAT("Flat", "\u2192", R.drawable.ic_flat),
+        FORTY_FIVE_DOWN("FortyFiveDown", "\u2198",R.drawable.ic_fortyfivedown),
+        SINGLE_DOWN("SingleDown", "\u2193", R.drawable.ic_singledown),
+        DOUBLE_DOWN("DoubleDown", "\u21ca", R.drawable.ic_doubledown),
+        TRIPLE_DOWN("TripleDown", "X",R.drawable.ic_invalid)
+        ;
+
+        companion object {
+            fun fromSymbol(direction: String?) =
+                values().firstOrNull { it.symbol == direction } ?: NONE
+        }
     }
 
 }
