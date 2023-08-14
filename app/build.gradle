@@ -148,7 +148,7 @@ android {
             versionName version + "-aapsclient"
             manifestPlaceholders = [
                     appIcon     : "@mipmap/ic_yellowowl",
-                    appIconRound: "@null"
+                    appIconRound: "@mipmap/ic_yellowowl"
             ]
         }
         aapsclient2 {
@@ -157,8 +157,8 @@ android {
             resValue "string", "app_name", "AAPSClient2"
             versionName version + "-aapsclient"
             manifestPlaceholders = [
-                    appIcon     : "@mipmap/ic_yellowowl",
-                    appIconRound: "@null"
+                    appIcon     : "@mipmap/ic_blueowl",
+                    appIconRound: "@mipmap/ic_blueowl"
             ]
         }
     }
