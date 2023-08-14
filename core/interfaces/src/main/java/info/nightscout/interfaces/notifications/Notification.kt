@@ -137,6 +137,7 @@ open class Notification {
         const val PATCH_NOT_ACTIVE = 83
         const val PUMP_SETTINGS_FAILED = 84
         const val PUMP_TIMEZONE_UPDATE_FAILED = 85
+        const val BLUETOOTH_NOT_SUPPORTED = 86
 
         const val USER_MESSAGE = 1000
 

@@ -53,6 +53,7 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo scan timeout reached</string>
     <string name="combov2_pairing_failed_due_to_error">Pairing failed due to error: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Pairing aborted for unknown reasons</string>
+    <string name="combov2_pairing_invalid_pin_length">"Invalid pairing PIN length: need %1$d digits, got %2$d"</string>
     <string name="combov2_scanning_for_pump">Scanning for pump</string>
     <string name="combov2_establishing_bt_connection">Establishing Bluetooth connection (attempt no. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Performing handshake with pump</string>
@@ -139,4 +140,6 @@ buttons at the same time to cancel pairing)\n
     <string name="combov2_refresh_pump_status_after_error">Refreshing pump status after the pump reported an error</string>
     <string name="combov2_go_back">Go back</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Cannot perform pairing because the driver is not initialized. This typically happens because the necessary Bluetooth permissions have not been granted. Go back, grant the Bluetooth permissions, then try again to pair.</string>
+    <string name="combov2_bluetooth_disabled">Cannot start driver - Bluetooth is disabled</string>
+    <string name="combov2_bluetooth_not_supported">Driver cannot run - this device does not support Bluetooth</string>
 </resources>
