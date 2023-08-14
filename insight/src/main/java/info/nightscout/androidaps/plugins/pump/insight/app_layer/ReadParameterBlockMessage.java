@@ -33,7 +33,7 @@ public class ReadParameterBlockMessage extends AppLayerMessage {
 
     @Override
     protected void parse(ByteBuf byteBuf) throws Exception {
-        parameterBlock = ParameterBlockIDs.IDS.getType(byteBuf.readUInt16LE()).newInstance();
+        parameterBlock = ParameterBlockIDs.IDS.getType(byteBuf.readUInt16LE()).getDeclaredConstructor().newInstance();
         byteBuf.shift(2); //Restriction level
         parameterBlock.parse(byteBuf);
     }

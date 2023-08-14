@@ -107,7 +107,7 @@ public abstract class SatlMessage {
         if (clazz == null) throw new InvalidSatlCommandException();
         SatlMessage message = null;
         try {
-            message = clazz.newInstance();
+            message = clazz.getDeclaredConstructor().newInstance();
         } catch (Exception ignored) {
         }
         message.parse(ByteBuf.from(payload));
@@ -137,7 +137,7 @@ public abstract class SatlMessage {
         if (clazz == null) throw new InvalidSatlCommandException();
         SatlMessage message = null;
         try {
-            message = clazz.newInstance();
+            message = clazz.getDeclaredConstructor().newInstance();
         } catch (Exception ignored) {
         }
         message.parse(ByteBuf.from(payload));

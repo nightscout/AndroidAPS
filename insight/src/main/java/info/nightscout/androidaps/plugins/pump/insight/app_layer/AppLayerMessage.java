@@ -57,7 +57,7 @@ public class AppLayerMessage implements Comparable<AppLayerMessage> {
         Class<? extends AppLayerMessage> clazz = AppCommandIDs.IDS.getType(command);
         if (clazz == null) throw new UnknownAppCommandException();
         if (version != VERSION) throw new IncompatibleAppVersionException();
-        AppLayerMessage message = clazz.newInstance();
+        AppLayerMessage message = clazz.getDeclaredConstructor().newInstance();
         if (ServiceIDs.IDS.getType(service) == null) throw new UnknownServiceException();
         if (error != 0) {
             Class<? extends AppLayerErrorException> exceptionClass = AppErrorIDs.IDS.getType(error);

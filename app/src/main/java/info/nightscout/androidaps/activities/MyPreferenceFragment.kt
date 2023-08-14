@@ -236,7 +236,8 @@ class MyPreferenceFragment : PreferenceFragmentCompat(), OnSharedPreferenceChang
         if (filter != "") updateFilterVisibility(filter, preferenceScreen)
     }
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        key ?: return
         rxBus.send(EventPreferenceChange(key))
         if (key == rh.gs(info.nightscout.core.ui.R.string.key_language)) {
             rxBus.send(EventRebuildTabs(true))

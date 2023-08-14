@@ -21,6 +21,7 @@ class WearApp : DaggerApplication(), OnSharedPreferenceChangeListener {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var rxBus: RxBus
+    @Suppress("unused")
     @Inject lateinit var dataHandlerWear: DataHandlerWear // instantiate only
     @Inject lateinit var exceptionHandlerWear: ExceptionHandlerWear
 
@@ -38,7 +39,8 @@ class WearApp : DaggerApplication(), OnSharedPreferenceChangeListener {
             .application(this)
             .build()
 
-    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+        key ?: return
         // We trigger update on Complications
         LocalBroadcastManager.getInstance(this).sendBroadcast(Intent(DataLayerListenerServiceWear.INTENT_NEW_DATA))
         rxBus.send(EventWearPreferenceChange(key))

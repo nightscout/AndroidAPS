@@ -25,7 +25,7 @@ class SWPreference(injector: HasAndroidInjector, private val definition: SWDefin
     }
 
     private fun addConfiguration(layout: LinearLayout, xml: Int) {
-        (Class.forName(uiInteraction.myPreferenceFragment.name).newInstance() as Fragment).also { fragment ->
+        (Class.forName(uiInteraction.myPreferenceFragment.name).getDeclaredConstructor().newInstance() as Fragment).also { fragment ->
             fragment.arguments = Bundle().also { it.putInt("id", xml) }
             definition.activity.supportFragmentManager.beginTransaction().run {
                 replace(layout.id, fragment)
