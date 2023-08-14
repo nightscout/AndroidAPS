@@ -9,6 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -186,13 +187,13 @@ class ComboV2PairingActivity : TranslatedDaggerAppCompatActivity() {
                     .launchIn(this)
             }
         }
-    }
-
-    override fun onBackPressed() {
-        aapsLogger.info(LTag.PUMP, "User pressed the back button; cancelling any ongoing pairing")
-        combov2Plugin.cancelPairing()
-        @Suppress("DEPRECATION")
-        super.onBackPressed()
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                aapsLogger.info(LTag.PUMP, "User pressed the back button; cancelling any ongoing pairing")
+                combov2Plugin.cancelPairing()
+                finish()
+            }
+        })
     }
 
     override fun onDestroy() {
