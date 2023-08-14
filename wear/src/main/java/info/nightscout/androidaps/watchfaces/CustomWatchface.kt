@@ -78,12 +78,16 @@ class CustomWatchface : BaseWatchFace() {
     override fun setDataFields() {
         super.setDataFields()
         binding.direction2.setImageDrawable(resources.getDrawable(TrendArrow.fromSymbol(singleBg.slopeArrow).icon))
+        // rotate the second hand.
+        binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
+        // rotate the minute hand.
+        binding.minuteHand.rotation = TimeOfDay().minuteOfHour * 6f
+        // rotate the hour hand.
+        binding.hourHand.rotation = TimeOfDay().hourOfDay * 30f + TimeOfDay().minuteOfHour * 0.5f
     }
     override fun setColorDark() {
         setWatchfaceStyle()
-        binding.mainLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background))
         binding.sgv.setTextColor(bgColor)
-        binding.direction.setTextColor(bgColor)
         binding.direction2.colorFilter = changeDrawableColor(bgColor)
 
         if (ageLevel != 1)
@@ -95,16 +99,6 @@ class CustomWatchface : BaseWatchFace() {
             1    -> binding.loop.setBackgroundResource(R.drawable.loop_green_25)
             else -> binding.loop.setBackgroundResource(R.drawable.loop_red_25)
         }
-
-        basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark)
-        basalCenterColor = ContextCompat.getColor(this, R.color.basal_light)
-
-        // rotate the second hand.
-        binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
-        // rotate the minute hand.
-        binding.minuteHand.rotation = TimeOfDay().minuteOfHour * 6f
-        // rotate the hour hand.
-        binding.hourHand.rotation = TimeOfDay().hourOfDay * 30f + TimeOfDay().minuteOfHour * 0.5f
 
         setupCharts()
     }
@@ -143,7 +137,9 @@ class CustomWatchface : BaseWatchFace() {
                 lowColor = if (json.has("lowColor")) Color.parseColor(json.getString("lowColor")) else ContextCompat.getColor(this, R.color.low)
                 lowBatColor = if (json.has("lowBatColor")) Color.parseColor(json.getString("lowBatColor")) else ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty)
                 carbColor = if (json.has("carbColor")) Color.parseColor(json.getString("carbColor")) else ContextCompat.getColor(this, R.color.carbs)
-                gridColor = if (json.has("gridColor")) Color.parseColor(json.getString("gridColor")) else ContextCompat.getColor(this, R.color.carbs)
+                basalBackgroundColor = if (json.has("basalBackgroundColor")) Color.parseColor(json.getString("basalBackgroundColor")) else ContextCompat.getColor(this, R.color.basal_dark)
+                basalCenterColor = if (json.has("basalCenterColor")) Color.parseColor(json.getString("basalCenterColor")) else ContextCompat.getColor(this, R.color.basal_light)
+                gridColor = if (json.has("gridColor")) Color.parseColor(json.getString("gridColor")) else Color.WHITE
                 pointSize = if (json.has("pointSize")) json.getInt("pointSize") else 2
                 bgColor = when (singleBg.sgvLevel) {
                     1L   -> highColor
@@ -224,6 +220,8 @@ class CustomWatchface : BaseWatchFace() {
             .put("lowColor", String.format("#%06X", 0xFFFFFF and lowColor))
             .put("lowBatColor", String.format("#%06X", 0xFFFFFF and lowBatColor))
             .put("carbColor", String.format("#%06X", 0xFFFFFF and carbColor))
+            .put("basalBackgroundColor", String.format("#%06X", 0xFFFFFF and basalBackgroundColor))
+            .put("basalCenterColor", String.format("#%06X", 0xFFFFFF and basalCenterColor))
             .put("gridColor", String.format("#%06X", 0xFFFFFF and Color.WHITE))
             .put("pointSize",2)
             .put("enableSecond", true)
@@ -287,6 +285,8 @@ class CustomWatchface : BaseWatchFace() {
         midColor = Color.parseColor("#00FF00")
         lowColor = Color.parseColor("#FF0000")
         carbColor = ContextCompat.getColor(this, R.color.carbs)
+        basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark)
+        basalCenterColor = ContextCompat.getColor(this, R.color.basal_light)
         lowBatColor = ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty)
         gridColor = Color.WHITE
     }
@@ -434,8 +434,7 @@ class CustomWatchface : BaseWatchFace() {
         DAY("day", R.id.day, null),
         MONTH("month", R.id.month, null),
         LOOP("loop", R.id.loop, R.string.key_show_external_status),
-        DIRECTION("direction", R.id.direction, R.string.key_show_direction),
-        DIRECTION2("direction2", R.id.direction2, R.string.key_show_direction),
+        DIRECTION("direction", R.id.direction2, R.string.key_show_direction),
         TIMESTAMP("timestamp", R.id.timestamp, R.string.key_show_ago),
         SGV("sgv", R.id.sgv, R.string.key_show_bg),
         COVER_PLATE(CustomWatchfaceDrawableDataKey.COVERPLATE.key, R.id.cover_plate, null),
@@ -444,27 +443,8 @@ class CustomWatchface : BaseWatchFace() {
         SECOND_HAND(CustomWatchfaceDrawableDataKey.SECONDHAND.key, R.id.second_hand, R.string.key_show_seconds);
 
         companion object {
-
-            private val keyToEnumMap = HashMap<String, CustomViews>()
-            private val idToEnumMap = HashMap<Int, CustomViews>()
-
-            init {
-                for (value in values()) keyToEnumMap[value.key] = value
-                for (value in values()) idToEnumMap[value.id] = value
-            }
-
-            fun fromKey(key: String): CustomViews? =
-                if (keyToEnumMap.containsKey(key)) {
-                    keyToEnumMap[key]
-                } else {
-                    null
-                }
-            fun fromId(id: Int): CustomViews? =
-                if (idToEnumMap.containsKey(id)) {
-                    idToEnumMap[id]
-                } else {
-                    null
-                }
+            fun fromKey(key: String): CustomViews? = values().firstOrNull { it.key == key }
+            fun fromId(id: Int): CustomViews? = values().firstOrNull { it.id == id }
         }
 
 
@@ -475,7 +455,7 @@ class CustomWatchface : BaseWatchFace() {
 
     enum class TrendArrow(val text: String, val symbol: String,@DrawableRes val icon: Int) {
         NONE("NONE", "??", R.drawable.ic_invalid),
-        TRIPLE_UP("TripleUp", "X", R.drawable.ic_invalid),
+        TRIPLE_UP("TripleUp", "X", R.drawable.ic_doubleup),
         DOUBLE_UP("DoubleUp", "\u21c8", R.drawable.ic_doubleup),
         SINGLE_UP("SingleUp", "\u2191", R.drawable.ic_singleup),
         FORTY_FIVE_UP("FortyFiveUp", "\u2197", R.drawable.ic_fortyfiveup),
@@ -483,7 +463,7 @@ class CustomWatchface : BaseWatchFace() {
         FORTY_FIVE_DOWN("FortyFiveDown", "\u2198",R.drawable.ic_fortyfivedown),
         SINGLE_DOWN("SingleDown", "\u2193", R.drawable.ic_singledown),
         DOUBLE_DOWN("DoubleDown", "\u21ca", R.drawable.ic_doubledown),
-        TRIPLE_DOWN("TripleDown", "X",R.drawable.ic_invalid)
+        TRIPLE_DOWN("TripleDown", "X",R.drawable.ic_doubledown)
         ;
 
         companion object {
