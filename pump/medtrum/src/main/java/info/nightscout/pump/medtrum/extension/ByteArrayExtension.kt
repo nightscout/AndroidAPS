@@ -21,7 +21,7 @@ fun ByteArray.toInt(): Int {
     var result = 0
     for (i in this.indices) {
         val byte = this[i]
-        val shifted = (byte.toInt() and 0xFF).toInt() shl 8 * i
+        val shifted = (byte.toInt() and 0xFF) shl 8 * i
         result = result or shifted
     }
     return result

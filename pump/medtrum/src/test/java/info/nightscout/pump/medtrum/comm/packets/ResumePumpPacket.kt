@@ -8,7 +8,7 @@ import org.junit.Assert.*
 
 class ResumePumpPacketTest : MedtrumTestBase() {
 
-    /** Test packet specific behavoir */
+    /** Test packet specific behavior */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {

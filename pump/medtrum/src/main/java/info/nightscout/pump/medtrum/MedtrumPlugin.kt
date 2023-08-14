@@ -295,7 +295,7 @@ import kotlin.math.abs
         val connectionOK = medtrumService?.setTempBasal(pumpRate, durationInMinutes) ?: false
         if (connectionOK
             && medtrumPump.tempBasalInProgress
-            && Math.abs(medtrumPump.tempBasalAbsoluteRate - pumpRate) <= 0.05
+            && abs(medtrumPump.tempBasalAbsoluteRate - pumpRate) <= 0.05
         ) {
 
             return PumpEnactResult(injector).success(true).enacted(true).duration(durationInMinutes).absolute(medtrumPump.tempBasalAbsoluteRate)
@@ -436,7 +436,7 @@ import kotlin.math.abs
         if (isInitialized()) {
             commandQueue.updateTime(object : Callback() {
                 override fun run() {
-                    if (this.result.success == false) {
+                    if (!this.result.success) {
                         aapsLogger.error(LTag.PUMP, "Medtrum time update failed")
                         // Only notify here on failure (connection may be failed), service will handle success
                         medtrumService?.timeUpdateNotification(false)

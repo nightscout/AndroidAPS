@@ -114,7 +114,7 @@ class MedtrumOverviewViewModel @Inject constructor(
                 aapsLogger.debug(LTag.PUMP, "MedtrumViewModel pumpStateFlow: $state")
                 _canDoResetAlarms.postValue(
                     medtrumPump.pumpState in listOf(
-                        MedtrumPumpState.PAUSED, MedtrumPumpState.HMAX_SUSPENDED, MedtrumPumpState.DMAX_SUSPENDED
+                        MedtrumPumpState.PAUSED, MedtrumPumpState.HOURLY_MAX_SUSPENDED, MedtrumPumpState.DAILY_MAX_SUSPENDED
                     )
                 )
 
@@ -153,7 +153,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         }
     }
 
-    fun updateGUI() {
+    private fun updateGUI() {
         // Update less dynamic values
         if (medtrumPump.lastConnection != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - medtrumPump.lastConnection

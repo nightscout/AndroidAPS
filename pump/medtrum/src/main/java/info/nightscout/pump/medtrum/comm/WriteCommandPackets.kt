@@ -9,21 +9,20 @@ class WriteCommandPackets(data: ByteArray, sequenceNumber: Int) {
 
     init {
         // PackageIndex: 0 initially, if there are multiple packets, for the first packet it is set to 0 (not included in CRC calculation but sent in actual header)
-        var pkgIndex = 0
-        var header = byteArrayOf(
+        val header = byteArrayOf(
             (data.size + 4).toByte(),
             data[0],
             sequenceNumber.toByte(),
-            pkgIndex.toByte()
+            0.toByte() // pkgIndex
         )
 
         var tmp: ByteArray = header + data.copyOfRange(1, data.size)
-        var totalCommand: ByteArray = tmp + calcCrc8(tmp, tmp.size).toByte()
+        val totalCommand: ByteArray = tmp + calcCrc8(tmp, tmp.size).toByte()
 
         if ((totalCommand.size - header.size) <= 15) {
             packages.add(totalCommand + 0.toByte())
         } else {
-            pkgIndex = 1
+            var pkgIndex = 1
             var remainingCommand = totalCommand.copyOfRange(4, totalCommand.size)
 
             while (remainingCommand.size > 15) {
@@ -52,13 +51,13 @@ class WriteCommandPackets(data: ByteArray, sequenceNumber: Int) {
     }
 
     fun allPacketsConsumed(): Boolean {
-        return !(index < packages.size)
+        return index >= packages.size
     }
 
     private fun calcCrc8(value: ByteArray, size: Int): Int {
         var crc8 = 0
         for (i in 0 until size) {
-            crc8 = CRC_8_TABLE[(value[i].toInt() and 255) xor (crc8 and 255)].toInt() and 255
+            crc8 = CRC_8_TABLE[(value[i].toInt() and 255) xor (crc8 and 255)] and 255
         }
         return crc8
     }

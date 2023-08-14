@@ -10,7 +10,7 @@ import org.junit.Assert.*
 
 class SetTimeZonePacketTest : MedtrumTestBase() {
 
-    /** Test packet specific behavoir */
+    /** Test packet specific behavior */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -28,14 +28,14 @@ class SetTimeZonePacketTest : MedtrumTestBase() {
         // Inputs
         val opCode = 12
         val time = MedtrumTimeUtil().getCurrentTimePumpSeconds()
-        val offsetMins = dateUtil.getTimeZoneOffsetMinutes(dateUtil.now())
+        val offsetMinutes = dateUtil.getTimeZoneOffsetMinutes(dateUtil.now())
 
         // Call
         val packet = SetTimeZonePacket(packetInjector)
         val result = packet.getRequest()
 
         // Expected values
-        val expectedByteArray = byteArrayOf(opCode.toByte()) + offsetMins.toByteArray(2) + time.toByteArray(4)
+        val expectedByteArray = byteArrayOf(opCode.toByte()) + offsetMinutes.toByteArray(2) + time.toByteArray(4)
         assertEquals(7, result.size)
         assertEquals(expectedByteArray.contentToString(), result.contentToString())
     }
@@ -49,9 +49,9 @@ class SetTimeZonePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        val expectedOffsetMins = 0
+        val expectedOffsetMinutes = 0
 
         assertTrue(result)
-        assertEquals(expectedOffsetMins, medtrumPump.pumpTimeZoneOffset)
+        assertEquals(expectedOffsetMinutes, medtrumPump.pumpTimeZoneOffset)
     }
 }

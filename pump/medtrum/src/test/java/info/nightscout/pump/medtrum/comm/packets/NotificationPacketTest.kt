@@ -5,14 +5,13 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
-import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import org.junit.jupiter.api.Test
 import org.junit.Assert.*
 
 class NotificationPacketTest : MedtrumTestBase() {
 
-    /** Test base behavoir of the Notification packet  */
+    /** Test base behavior of the Notification packet  */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -75,7 +74,7 @@ class NotificationPacketTest : MedtrumTestBase() {
         assertEquals(163.5, medtrumPump.reservoir, 0.01)
     }
 
-    @Test fun handleNotificationGivenBolusFinnishedThenDataSaved() {
+    @Test fun handleNotificationGivenBolusFinishedThenDataSaved() {
         // Inputs
         val data = byteArrayOf(32, 34, 17, -128, 33, 0, -89, 12, -80, 0, 14, 0, 0, 0, 0, 0, 0)
         medtrumPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, false, 1)

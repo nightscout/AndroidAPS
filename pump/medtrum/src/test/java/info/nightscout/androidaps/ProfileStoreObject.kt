@@ -18,7 +18,7 @@ import org.json.JSONException
 import org.json.JSONObject
 import javax.inject.Inject
 
-class ProfileStoreObject(val injector: HasAndroidInjector, override val data: JSONObject, val dateUtil: DateUtil) : ProfileStore {
+class ProfileStoreObject(injector: HasAndroidInjector, override val data: JSONObject, val dateUtil: DateUtil) : ProfileStore {
 
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var activePlugin: ActivePlugin

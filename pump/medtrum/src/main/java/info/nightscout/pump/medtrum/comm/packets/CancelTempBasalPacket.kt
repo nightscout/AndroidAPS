@@ -7,7 +7,6 @@ import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.extension.toInt
 import info.nightscout.pump.medtrum.extension.toLong
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
-import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 

@@ -3,7 +3,7 @@ package info.nightscout.pump.medtrum.comm
 import kotlin.experimental.and
 import info.nightscout.pump.medtrum.extension.toLong
 
-class ManufacturerData(private val manufacturerDataBytes: ByteArray) {
+class ManufacturerData(manufacturerDataBytes: ByteArray) {
     private var deviceID: Long = 0
     private var deviceType = 0
     private var version = 0
@@ -12,7 +12,7 @@ class ManufacturerData(private val manufacturerDataBytes: ByteArray) {
         setData(manufacturerDataBytes)
     }
 
-    fun setData(inputData: ByteArray) {
+    private fun setData(inputData: ByteArray) {
         var index = 0
         val deviceIDBytes: ByteArray = inputData.copyOfRange(index, index + 4)
         deviceID = deviceIDBytes.toLong()

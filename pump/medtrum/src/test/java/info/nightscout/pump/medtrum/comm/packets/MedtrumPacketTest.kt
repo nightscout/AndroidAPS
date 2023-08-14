@@ -9,7 +9,7 @@ import org.junit.Assert.*
 
 class MedtrumPacketTest : MedtrumTestBase() {
 
-    /** Test base behavoir of the medtrum packet  */
+    /** Test base behavior of the medtrum packet  */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -49,7 +49,7 @@ class MedtrumPacketTest : MedtrumTestBase() {
         assertEquals(packet.failed, false)
     }
 
-    @Test fun handleResponseGivenRepsonseWhenOpcodeIsIncorrectThenResultFalse() {
+    @Test fun handleResponseGivenResponseWhenOpcodeIsIncorrectThenResultFalse() {
         // Inputs
         val opCode = 1
         val responseCode = 0
@@ -81,7 +81,7 @@ class MedtrumPacketTest : MedtrumTestBase() {
         assertEquals(packet.failed, false)
     }
 
-    @Test fun handleResponseGivenResponseWhenRepsonseCodeIsErrorThenResultFalse() {
+    @Test fun handleResponseGivenResponseWhenResponseCodeIsErrorThenResultFalse() {
         // Inputs
         val opCode = 1
         val responseCode = 1
@@ -100,7 +100,6 @@ class MedtrumPacketTest : MedtrumTestBase() {
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
         // Inputs
         val opCode = 1
-        val responseCode = 0
         val response = byteArrayOf(0) + opCode.toByte() + 0x0 + 0x0
 
         // Call

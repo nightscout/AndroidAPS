@@ -5,11 +5,11 @@ enum class AlarmState {
     PUMP_LOW_BATTERY,       // Mapped from error flag 1
     PUMP_LOW_RESERVOIR,     // Mapped from error flag 2
     PUMP_EXPIRES_SOON,      // Mapped from error flag 3
-    LOWBG_SUSPENDED,        // Mapped from pump status 64
-    LOWBG_SUSPENDED2,       // Mapped from pump status 65
+    LOW_BG_SUSPENDED,       // Mapped from pump status 64
+    LOW_BG_SUSPENDED2,      // Mapped from pump status 65
     AUTO_SUSPENDED,         // Mapped from pump status 66
-    HMAX_SUSPENDED,         // Mapped from pump status 67
-    DMAX_SUSPENDED,         // Mapped from pump status 68
+    HOURLY_MAX_SUSPENDED,   // Mapped from pump status 67
+    DAILY_MAX_SUSPENDED,    // Mapped from pump status 68
     SUSPENDED,              // Mapped from pump status 69
     PAUSED,                 // Mapped from pump status 70
     OCCLUSION,              // Mapped from pump status 96
