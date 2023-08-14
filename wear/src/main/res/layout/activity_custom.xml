@@ -302,9 +302,9 @@
 
     <ImageView
         android:id="@+id/direction2"
-        android:layout_width="52px"
-        android:layout_height="52px"
-        android:layout_marginTop="28px"
+        android:layout_width="40px"
+        android:layout_height="40px"
+        android:layout_marginTop="36px"
         android:layout_marginLeft="291px"
         android:visibility="visible"
         android:src="@drawable/ic_invalid"
