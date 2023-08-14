@@ -376,6 +376,9 @@
     <string name="carbs_g">SACHARIDY %1$d g</string>
     <string name="extended_bolus_u_min">ROZLOŽENÝ BOLUS %1$.2f U %2$d min</string>
     <string name="load_events">NAČÍST UDÁLOSTI</string>
+    <string name="clear_alarms">SMAZAT ALARMY</string>
+    <string name="deactivate">DEAKTIVOVAT</string>
+    <string name="update_time">AKTUALIZOVAT ČAS</string>
     <string name="load_history">NAČÍST HISTORII %1$d</string>
     <string name="load_tdds">NAČÍST CDD</string>
     <string name="set_profile">NASTAVIT PROFIL</string>
