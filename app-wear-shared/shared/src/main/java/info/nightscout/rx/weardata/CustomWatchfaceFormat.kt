@@ -17,7 +17,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-val CUSTOM_VERSION = "0.4"
+val CUSTOM_VERSION = "0.5"
 enum class CustomWatchfaceDrawableDataKey(val key: String, @DrawableRes val icon: Int?, val fileName: String) {
     UNKNOWN("unknown", null, "Unknown"),
     CUSTOM_WATCHFACE("customWatchface", R.drawable.watchface_custom, "CustomWatchface"),
@@ -31,13 +31,12 @@ enum class CustomWatchfaceDrawableDataKey(val key: String, @DrawableRes val icon
     companion object {
         fun fromKey(key: String): CustomWatchfaceDrawableDataKey =
             values().firstOrNull { it.key == key } ?: UNKNOWN
-        fun fromFileName(file: String): CustomWatchfaceDrawableDataKey = values().firstOrNull { it.fileName == file } ?: UNKNOWN
+        fun fromFileName(file: String): CustomWatchfaceDrawableDataKey = values().firstOrNull { it.fileName == file.substringBeforeLast(".") } ?: UNKNOWN
     }
 }
 
 enum class DrawableFormat(val extension: String) {
     UNKNOWN(""),
-
     //XML("xml"),
     //SVG("svg"),
     JPG("jpg"),
@@ -93,13 +92,14 @@ enum class CustomWatchfaceMetadataKey(val key: String, @StringRes val label: Int
     CWF_FILENAME("filename", R.string.metadata_wear_import_filename),
     CWF_AUTHOR("author", R.string.metadata_label_watchface_author),
     CWF_CREATED_AT("created_at", R.string.metadata_label_watchface_created_at),
-    CWF_VERSION("cwf_version", R.string.metadata_label_watchface_version);
+    CWF_VERSION("cwf_version", R.string.metadata_label_plugin_version),
+    CWF_AUTHOR_VERSION("author_version", R.string.metadata_label_watchface_name_version),
+    CWF_COMMENT("comment", R.string.metadata_label_watchface_comment); // label not planed to be used for CWF_COMMENT
 
     companion object {
         fun fromKey(key: String): CustomWatchfaceMetadataKey? =
             values().firstOrNull { it.key == key }
     }
-
 }
 
 class ZipWatchfaceFormat {

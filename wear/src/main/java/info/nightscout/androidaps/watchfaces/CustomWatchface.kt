@@ -29,6 +29,7 @@ import androidx.viewbinding.ViewBinding
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityCustomBinding
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
+import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.CUSTOM_VERSION
 import info.nightscout.rx.weardata.CustomWatchfaceData
 import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
@@ -199,8 +200,10 @@ class CustomWatchface : BaseWatchFace() {
                         }
                     }
                 }
+                binding.background.visibility = View.VISIBLE
                 updateSecondVisibility()
             } catch (e:Exception) {
+                aapsLogger.debug(LTag.WEAR, "Crash during Custom watch load")
                 persistence.store(defaultWatchface(), false) // relaod correct values to avoid crash of watchface
             }
         }
@@ -212,7 +215,9 @@ class CustomWatchface : BaseWatchFace() {
             .put(CustomWatchfaceMetadataKey.CWF_FILENAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
             .put(CustomWatchfaceMetadataKey.CWF_AUTHOR.key, "Philoul")
             .put(CustomWatchfaceMetadataKey.CWF_CREATED_AT.key, dateUtil.dateString(dateUtil.now()))
+            .put(CustomWatchfaceMetadataKey.CWF_AUTHOR_VERSION.key, CUSTOM_VERSION)
             .put(CustomWatchfaceMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)
+            .put(CustomWatchfaceMetadataKey.CWF_COMMENT.key,getString(info.nightscout.shared.R.string.default_custom_watchface_comment))
         val json = JSONObject()
             .put("metadata", metadata)
             .put("highColor", String.format("#%06X", 0xFFFFFF and highColor))
@@ -247,7 +252,6 @@ class CustomWatchface : BaseWatchFace() {
                     )
                 }
                 if (view is ImageView) {
-                    //view.backgroundTintList =
                     json.put(
                         it.key,
                         JSONObject()
@@ -256,7 +260,7 @@ class CustomWatchface : BaseWatchFace() {
                             .put("topmargin", (params.topMargin / zoomFactor).toInt())
                             .put("leftmargin", (params.leftMargin / zoomFactor).toInt())
                             .put("visibility", getVisibility(view.visibility))
-                    )
+                        )
                 }
                 if (view is lecho.lib.hellocharts.view.LineChartView) {
                     json.put(
