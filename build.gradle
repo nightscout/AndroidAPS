@@ -15,7 +15,7 @@ buildscript {
         fragmentktx_version = '1.6.1'
         ormLite_version = '4.46'
         gson_version = '2.10.1'
-        nav_version = '2.6.0'
+        nav_version = '2.7.0'
         appcompat_version = '1.6.1'
         material_version = '1.9.0'
         gridlayout_version = '1.0.0'
