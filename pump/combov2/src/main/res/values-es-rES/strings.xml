@@ -47,6 +47,7 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Tiempo de espera de escaneo alcanzado</string>
     <string name="combov2_pairing_failed_due_to_error">No se pudo emparejar debido al error: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Emparejamiento abortado por razones desconocidas</string>
+    <string name="combov2_pairing_invalid_pin_length">"Longitud del PIN de emparejamiento inválida: Necesita %1$d digits, obtuvo %2$d"</string>
     <string name="combov2_scanning_for_pump">Buscando bomba</string>
     <string name="combov2_establishing_bt_connection">Estableciendo conexión Bluetooth (intento número %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Realizando emparejamiento con la bomba</string>
@@ -124,4 +125,6 @@ Si no puedes establecer ninguna conexión después de unos ~5 minutos:\n\n
     <string name="combov2_refresh_pump_status_after_error">Actualizando el estado de la bomba después de que informara de un error</string>
     <string name="combov2_go_back">Retroceder</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">No se puede realizar el emparejamiento porque el controlador no está inicializado. Esto suele ocurrir porque no se han concedido los permisos Bluetooth necesarios. Vuelve atrás, concede los permisos Bluetooth e intenta de nuevo el emparejamiento</string>
+    <string name="combov2_bluetooth_disabled">No se puede iniciar el controlador - El bluetooth está desactivado</string>
+    <string name="combov2_bluetooth_not_supported">El controlador no puede ejecutarse - este dispositivo no es compatible con Bluetooth</string>
 </resources>

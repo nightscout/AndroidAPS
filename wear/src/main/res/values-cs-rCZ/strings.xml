@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS(Kokpit)</string>
     <string name="label_watchface_steampunk">AAPS (Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS (vlastní)</string>
     <string name="label_actions_tile">AAPS(Akce)</string>
     <string name="label_temp_target_tile">AAPS(Doč. cíl)</string>
     <string name="label_quick_wizard_tile">AAPS(Rychlý bolus)</string>
@@ -143,6 +144,7 @@
     <string name="pref_simplify_ui_sum">Zobrazit pouze čas a glykémii</string>
     <string name="pref_vibrate_hourly">Vibrovat každou hodinu</string>
     <string name="pref_show_weeknumber">Zobrazit číslo týdne</string>
+    <string name="custom_pref_show_seconds">Zobrazovat sekundy</string>
     <string name="digitalstyle_pref_your_style">Váš styl:</string>
     <string name="digitalstyle_style_none">bez stylu</string>
     <string name="digitalstyle_style_minimal">minimalistický styl</string>

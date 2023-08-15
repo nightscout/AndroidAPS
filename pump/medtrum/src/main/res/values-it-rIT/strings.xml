@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- MedtrumPump -->
+    <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_shortname">MT</string>
+    <string name="pump_error">Errore micro: %1$s!! </string>
+    <string name="pump_is_suspended">Il micro è sospeso</string>
+    <!-- overview fragment -->
+    <string name="ble_status_label">Stato BLE</string>
+    <string name="last_connection_label">Ultima connessione</string>
+    <string name="pump_state_label">Stato micro</string>
+    <string name="reservoir_level"> %.2f U</string>
+    <string name="basal_type_label">Tipo basale</string>
+    <string name="basal_rate_label">Velocità basale</string>
+    <string name="current_basal_rate"> %.2f U/h</string>
+    <string name="pump_type_label">Tipo micro</string>
+    <string name="refresh_label">Aggiorna</string>
+    <string name="expiry_not_enabled">Non abilitato</string>
+    <!-- Alarm strings -->
+    <string name="alarm_none">Nessuno</string>
+    <string name="alarm_suspended">Sospeso</string>
+    <string name="alarm_paused">In pausa</string>
+    <string name="alarm_occlusion">Occlusione</string>
+    <string name="alarm_expired">Scaduto</string>
+    <string name="alarm_reservoir_empty">Serbatoio vuoto</string>
+    <!-- wizard-->
+    <!-- settings-->
+    <string name="sn_input_title">Numero seriale</string>
+    <string name="alarm_setting_title">Impostazioni allarmi</string>
+    <string name="patch_expiration_title">Scadenza patch</string>
+    <!-- treatment state-->
+</resources>

@@ -22,4 +22,5 @@
     <string name="connecting_for">Ag nascadh le %1$d s</string>
     <string name="connected">Nasctha</string>
     <string name="disconnecting">Dícheangal</string>
+    <!-- Custom Watchface -->
 </resources>
