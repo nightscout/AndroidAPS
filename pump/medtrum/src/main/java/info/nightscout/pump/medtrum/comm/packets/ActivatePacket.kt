@@ -55,7 +55,7 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
          * byte 6: predictiveLowSuspend      // Value for auto mode, not used for AAPS
          * byte 7: predictiveLowSuspendRange // Value for auto mode, not used for AAPS
          * byte 8-9: hourlyMaxInsulin        // Max hourly dose of insulin, divided by 0.05
-         * byte 10-11: daylyMaxSet           // Max daily dose of insulin, divided by 0.05
+         * byte 10-11: dailyMaxSet           // Max daily dose of insulin, divided by 0.05
          * byte 12-13: tddToday              // Current TDD (of present day), divided by 0.05
          * byte 14: 1                        // Always 1
          * bytes 15 - end                    // Basal profile > see MedtrumPump
@@ -98,7 +98,7 @@ class ActivatePacket(injector: HasAndroidInjector, private val basalProfile: Byt
             medtrumPump.currentSequenceNumber = basalSequence // We are activated, set the new seq nr
             medtrumPump.syncedSequenceNumber = basalSequence // We are activated, reset the synced seq nr ()
 
-            // Sync canula change
+            // Sync cannula change
             pumpSync.insertTherapyEventIfNewWithTimestamp(
                 timestamp = System.currentTimeMillis(),
                 type = DetailedBolusInfo.EventType.CANNULA_CHANGE,

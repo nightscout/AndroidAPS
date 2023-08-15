@@ -13,7 +13,7 @@ class SetTimeZonePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) 
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var medtrumPump: MedtrumPump
 
-    var offsetMins: Int = 0
+    private var offsetMinutes: Int = 0
 
     init {
         opCode = SET_TIME_ZONE.code
@@ -21,15 +21,15 @@ class SetTimeZonePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) 
 
     override fun getRequest(): ByteArray {
         val time = MedtrumTimeUtil().getCurrentTimePumpSeconds()
-        offsetMins = dateUtil.getTimeZoneOffsetMinutes(dateUtil.now())
-        if (offsetMins < 0) offsetMins += 65536
-        return byteArrayOf(opCode) + offsetMins.toByteArray(2) + time.toByteArray(4)
+        offsetMinutes = dateUtil.getTimeZoneOffsetMinutes(dateUtil.now())
+        if (offsetMinutes < 0) offsetMinutes += 65536
+        return byteArrayOf(opCode) + offsetMinutes.toByteArray(2) + time.toByteArray(4)
     }
 
     override fun handleResponse(data: ByteArray): Boolean {
         val success = super.handleResponse(data)
         if (success) {
-            medtrumPump.pumpTimeZoneOffset = offsetMins
+            medtrumPump.pumpTimeZoneOffset = offsetMinutes
         }
         return success
     }

@@ -241,16 +241,16 @@ class BLEComm @Inject internal constructor(
         }
 
         override fun onCharacteristicRead(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic, status: Int) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicRead data: " + characteristic.value.contentToString() + " UUID: " + characteristic.getUuid().toString() + " status: " + status)
+            aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicRead data: " + characteristic.value.contentToString() + " UUID: " + characteristic.uuid.toString() + " status: " + status)
         }
 
         override fun onCharacteristicChanged(gatt: BluetoothGatt, characteristic: BluetoothGattCharacteristic) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicChanged data: " + characteristic.value.contentToString() + " UUID: " + characteristic.getUuid().toString())
+            aapsLogger.debug(LTag.PUMPBTCOMM, "onCharacteristicChanged data: " + characteristic.value.contentToString() + " UUID: " + characteristic.uuid.toString())
 
-            val value = characteristic.getValue()
-            if (characteristic.getUuid() == UUID.fromString(READ_UUID)) {
+            val value = characteristic.value
+            if (characteristic.uuid == UUID.fromString(READ_UUID)) {
                 mCallback?.onNotification(value)
-            } else if (characteristic.getUuid() == UUID.fromString(WRITE_UUID)) {
+            } else if (characteristic.uuid == UUID.fromString(WRITE_UUID)) {
                 synchronized(readLock) {
                     if (mReadPacket == null) {
                         mReadPacket = ReadDataPacket(value)
@@ -398,7 +398,7 @@ class BLEComm @Inject internal constructor(
 
     @Synchronized
     fun sendMessage(message: ByteArray) {
-        aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage message = " + Arrays.toString(message))
+        aapsLogger.debug(LTag.PUMPBTCOMM, "sendMessage message = " + message.contentToString())
         if (mWritePackets?.allPacketsConsumed() == false) {
             aapsLogger.error(LTag.PUMPBTCOMM, "sendMessage not all packets consumed!! unable to sent message!")
             return
@@ -455,7 +455,7 @@ class BLEComm @Inject internal constructor(
         val gattService = getGattService() ?: return
         var uuid: String
         val gattCharacteristics = gattService.characteristics
-        for (i in 0..gattCharacteristics.size - 1) {
+        for (i in 0 until gattCharacteristics.size) {
             val gattCharacteristic = gattCharacteristics.get(i)
             // Check whether read or write properties is set, the pump needs us to enable notifications on all characteristics that have these properties
             if (gattCharacteristic.properties and NEEDS_ENABLE > 0) {

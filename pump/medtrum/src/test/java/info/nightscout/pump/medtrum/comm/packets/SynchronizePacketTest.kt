@@ -2,7 +2,6 @@ package info.nightscout.pump.medtrum.comm.packets
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
@@ -12,7 +11,7 @@ import org.junit.Assert.*
 
 class SynchronizePacketTest : MedtrumTestBase() {
 
-    /** Test packet specific behavoir */
+    /** Test packet specific behavior */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {

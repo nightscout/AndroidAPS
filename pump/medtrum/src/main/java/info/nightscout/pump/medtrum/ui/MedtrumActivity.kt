@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.WindowManager
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import info.nightscout.core.utils.extensions.safeGetSerializableExtra
 import info.nightscout.pump.medtrum.R
@@ -18,10 +19,6 @@ import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel
 class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_medtrum
-
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        return super.dispatchTouchEvent(event)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,6 +67,28 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
                 }
             }
         }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                binding.viewModel?.apply {
+                    when (patchStep.value) {
+                        PatchStep.PREPARE_PATCH,
+                        PatchStep.START_DEACTIVATION,
+                        PatchStep.RETRY_ACTIVATION      -> {
+                            handleCancel()
+                            this@MedtrumActivity.finish()
+                        }
+
+                        PatchStep.COMPLETE,
+                        PatchStep.DEACTIVATION_COMPLETE -> {
+                            handleComplete()
+                            this@MedtrumActivity.finish()
+                        }
+
+                        else                            -> Unit
+                    }
+                }
+            }
+        })
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -105,5 +124,4 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
     private fun setupViewFragment(baseFragment: MedtrumBaseFragment<*>) {
         replaceFragmentInActivity(baseFragment, R.id.framelayout_fragment, false)
     }
-
 }

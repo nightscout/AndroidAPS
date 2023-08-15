@@ -8,7 +8,6 @@ import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.PatchStep
 import info.nightscout.pump.medtrum.databinding.FragmentMedtrumPrimeCompleteBinding
-import info.nightscout.pump.medtrum.ui.MedtrumBaseFragment
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag

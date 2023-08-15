@@ -6,7 +6,7 @@ import org.junit.Assert.*
 class CryptTest {
 
     @Test
-    fun GivenSNExpectKey() {
+    fun givenSNExpectKey() {
         val crypt = Crypt()
 
         val input: Long  = 2859923929
@@ -16,7 +16,7 @@ class CryptTest {
     }
 
     @Test
-    fun GivenSNExpectReal() {
+    fun givenSNExpectReal() {
         val crypt = Crypt()
 
         val input: Long = 2859923929

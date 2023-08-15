@@ -10,11 +10,11 @@ enum class MedtrumPumpState(val state: Byte) {
     EJECTED(6),
     ACTIVE(32),
     ACTIVE_ALT(33),
-    LOWBG_SUSPENDED(64),
-    LOWBG_SUSPENDED2(65),
+    LOW_BG_SUSPENDED(64),
+    LOW_BG_SUSPENDED2(65),
     AUTO_SUSPENDED(66),
-    HMAX_SUSPENDED(67),
-    DMAX_SUSPENDED(68),
+    HOURLY_MAX_SUSPENDED(67),
+    DAILY_MAX_SUSPENDED(68),
     SUSPENDED(69),
     PAUSED(70),
     OCCLUSION(96),
@@ -28,6 +28,7 @@ enum class MedtrumPumpState(val state: Byte) {
     STOPPED(128.toByte());
 
     companion object {
+
         fun fromByte(state: Byte) = values().find { it.state == state }
             ?: throw IllegalAccessException("")
     }

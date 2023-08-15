@@ -10,7 +10,7 @@ import org.junit.Assert.*
 
 class ActivatePacketTest : MedtrumTestBase() {
 
-    /** Test packet specific behavoir */
+    /** Test packet specific behavior */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -58,7 +58,7 @@ class ActivatePacketTest : MedtrumTestBase() {
         // Expected values
         val expectedPatchId = 41L
         val expectedTime = 1675605528000L
-        val exptectedBasalType = BasalType.STANDARD
+        val expectedBasalType = BasalType.STANDARD
         val expectedBasalRate = 1.5
         val expectedBasalSequence = 1
         val expectedBasalPatchId = 41L
@@ -67,7 +67,7 @@ class ActivatePacketTest : MedtrumTestBase() {
         assertEquals(true, result)
         assertEquals(expectedPatchId, medtrumPump.patchId)
         assertEquals(expectedTime, medtrumPump.lastTimeReceivedFromPump)
-        assertEquals(exptectedBasalType, medtrumPump.lastBasalType)
+        assertEquals(expectedBasalType, medtrumPump.lastBasalType)
         assertEquals(expectedBasalRate, medtrumPump.lastBasalRate, 0.01)
         assertEquals(expectedBasalSequence, medtrumPump.lastBasalSequence)
         assertEquals(expectedBasalPatchId, medtrumPump.lastBasalPatchId)

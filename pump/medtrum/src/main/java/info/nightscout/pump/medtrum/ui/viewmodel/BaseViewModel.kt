@@ -9,7 +9,7 @@ import java.lang.ref.WeakReference
 abstract class BaseViewModel<N : MedtrumBaseNavigator> : ViewModel() {
 
     private var _navigator: WeakReference<N?>? = null
-    var navigator: N?
+    private var navigator: N?
         set(value) {
             _navigator = WeakReference(value)
         }

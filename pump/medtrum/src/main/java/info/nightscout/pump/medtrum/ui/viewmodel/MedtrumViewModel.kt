@@ -10,13 +10,10 @@ import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.ConnectionState
 import info.nightscout.pump.medtrum.services.MedtrumService
-import info.nightscout.pump.medtrum.code.EventType
 import info.nightscout.pump.medtrum.code.PatchStep
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.encryption.Crypt
 import info.nightscout.pump.medtrum.ui.MedtrumBaseNavigator
-import info.nightscout.pump.medtrum.ui.event.SingleLiveEvent
-import info.nightscout.pump.medtrum.ui.event.UIEvent
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import kotlinx.coroutines.CoroutineScope
@@ -42,10 +39,6 @@ class MedtrumViewModel @Inject constructor(
     private val _title = MutableLiveData<Int>(R.string.step_prepare_patch)
     val title: LiveData<Int>
         get() = _title
-
-    private val _eventHandler = SingleLiveEvent<UIEvent<EventType>>()
-    val eventHandler: LiveData<UIEvent<EventType>>
-        get() = _eventHandler
 
     private var oldPatchStep: PatchStep? = null
     private var mInitPatchStep: PatchStep? = null
@@ -155,7 +148,7 @@ class MedtrumViewModel @Inject constructor(
 
                 PatchStep.RETRY_ACTIVATION_CONNECT,
                 PatchStep.PREPARE_PATCH_CONNECT -> {
-                    // Make sure we are disconnected, else dont move step
+                    // Make sure we are disconnected, else don't move step
                     if (medtrumService?.isConnected == true) {
                         aapsLogger.info(LTag.PUMP, "moveStep: connected, not moving step")
                         return
@@ -167,7 +160,7 @@ class MedtrumViewModel @Inject constructor(
                 PatchStep.PRIME_COMPLETE,
                 PatchStep.ATTACH_PATCH,
                 PatchStep.ACTIVATE              -> {
-                    // Make sure we are connected, else dont move step
+                    // Make sure we are connected, else don't move step
                     if (medtrumService?.isConnected == false) {
                         aapsLogger.info(LTag.PUMP, "moveStep: not connected, not moving step")
                         return
@@ -321,7 +314,7 @@ class MedtrumViewModel @Inject constructor(
         aapsLogger.info(LTag.PUMP, "prepareStep: title before cond: $stringResId")
         if (currentTitle != stringResId) {
             aapsLogger.info(LTag.PUMP, "prepareStep: title: $stringResId")
-            _title.postValue(stringResId)
+            stringResId?.let { _title.postValue(it) }
         }
 
         patchStep.postValue(newStep)

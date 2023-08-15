@@ -19,7 +19,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
      * but a notification packet. It is sent by the pump to the phone
      * when the pump has a notification to send.
      *
-     * Notifications are sent regualary, regardless of the pump state.
+     * Notifications are sent regularly, regardless of the pump state.
      *
      * There can be multiple messages in one packet, this is noted by the fieldMask.
      *
@@ -97,10 +97,10 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         if (fieldMask and MASK_NORMAL_BOLUS != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Normal bolus notification received")
-            var bolusData = data.copyOfRange(offset, offset + 1).toInt()
-            var bolusType = bolusData and 0x7F
+            val bolusData = data.copyOfRange(offset, offset + 1).toInt()
+            val bolusType = bolusData and 0x7F
             val bolusCompleted: Boolean = ((bolusData shr 7) and 0x01) != 0
-            var bolusDelivered = data.copyOfRange(offset + 1, offset + 3).toInt() * 0.05
+            val bolusDelivered = data.copyOfRange(offset + 1, offset + 3).toInt() * 0.05
             aapsLogger.debug(LTag.PUMPCOMM, "Bolus type: $bolusType, bolusData: $bolusData bolus completed: $bolusCompleted, bolus delivered: $bolusDelivered")
             medtrumPump.handleBolusStatusUpdate(bolusType, bolusCompleted, bolusDelivered)
             offset += 3
@@ -115,12 +115,12 @@ class NotificationPacket(val injector: HasAndroidInjector) {
         if (fieldMask and MASK_BASAL != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Basal notification received")
             val basalType = enumValues<BasalType>()[data.copyOfRange(offset, offset + 1).toInt()]
-            var basalSequence = data.copyOfRange(offset + 1, offset + 3).toInt()
-            var basalPatchId = data.copyOfRange(offset + 3, offset + 5).toLong()
-            var basalStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset + 5, offset + 9).toLong())
-            var basalRateAndDelivery = data.copyOfRange(offset + 9, offset + 12).toInt()
-            var basalRate = (basalRateAndDelivery and 0xFFF) * 0.05
-            var basalDelivery = (basalRateAndDelivery shr 12) * 0.05
+            val basalSequence = data.copyOfRange(offset + 1, offset + 3).toInt()
+            val basalPatchId = data.copyOfRange(offset + 3, offset + 5).toLong()
+            val basalStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset + 5, offset + 9).toLong())
+            val basalRateAndDelivery = data.copyOfRange(offset + 9, offset + 12).toInt()
+            val basalRate = (basalRateAndDelivery and 0xFFF) * 0.05
+            val basalDelivery = (basalRateAndDelivery shr 12) * 0.05
             aapsLogger.debug(
                 LTag.PUMPCOMM,
                 "Basal type: $basalType, basal sequence: $basalSequence, basal patch id: $basalPatchId, basal time: $basalStartTime, basal rate: $basalRate, basal delivery: $basalDelivery"
@@ -159,7 +159,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         if (fieldMask and MASK_BATTERY != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Battery notification received")
-            var parameter = data.copyOfRange(offset, offset + 3).toInt()
+            val parameter = data.copyOfRange(offset, offset + 3).toInt()
             // Precision for voltage A is a guess, voltage B is the important one, threshold: < 2.64
             medtrumPump.batteryVoltage_A = (parameter and 0xFFF) / 512.0
             medtrumPump.batteryVoltage_B = (parameter shr 12) / 512.0
