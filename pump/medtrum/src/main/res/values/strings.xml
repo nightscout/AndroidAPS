@@ -6,8 +6,8 @@
     <string name="key_patch_expiration" translatable="false">patch_expiration</string>
     <string name="key_hourly_max_insulin" translatable="false">hourly_max_insulin</string>
     <string name="key_daily_max_insulin" translatable="false">daily_max_insulin</string>
-    
-    <string name="key_medtrumpump_settings" translatable="false">medtrumpump_settings</string> 
+
+    <string name="key_medtrum_pump_settings" translatable="false">medtrum_pump_setting</string>
     <string name="key_pump_state" translatable="false">pump_state</string>
     <string name="key_active_alarms" translatable="false">active_alarms</string>
     <string name="key_last_connection" translatable="false">last_connection</string>
@@ -26,7 +26,7 @@
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Pump integration for Medtrum Nano</string>
-    <string name="medtrumpump_settings">Medtrum pump settings</string>
+    <string name="medtrum_pump_setting">Medtrum pump settings</string>
     <string name="pump_error">Pump error: %1$s !! </string>
     <string name="pump_unsupported">Pump untested: %1$d! Please contact us at discord or github for support</string>
     <string name="pump_is_suspended">Pump is suspended</string>
@@ -34,14 +34,14 @@
     <string name="pump_is_suspended_day_max">Pump is suspended due to daily max insulin exceeded</string>
     <string name="patch_not_active">Patch not activated</string>
     <string name="pump_setting_failed">Setting user settings to pump failed!</string>
-    
+
     <!-- overview fragment -->
     <string name="ble_status_label">BLE Status</string>
     <string name="last_connection_label">Last connected</string>
     <string name="pump_state_label">Pump state</string>
     <string name="active_alarms_label">Active alarms</string>
     <string name="reservoir_level"> %.2f U</string>
-    <string name="battery_voltage"> %.2f V</string> 
+    <string name="battery_voltage"> %.2f V</string>
     <string name="basal_type_label">Basal type</string>
     <string name="basal_rate_label">Basal rate</string>
     <string name="current_basal_rate"> %.2f U/h</string>
@@ -60,11 +60,11 @@
     <string name="alarm_pump_low_battery">Pump low battery</string>
     <string name="alarm_pump_low_reservoir">Pump low reservoir</string>
     <string name="alarm_pump_expires_soon">Pump expires soon</string>
-    <string name="alarm_lowbg_suspended">Low BG suspended</string>
-    <string name="alarm_lowbg_suspended2">Low BG suspended 2</string>
+    <string name="alarm_low_bg_suspended">Low BG suspended</string>
+    <string name="alarm_low_bg_suspended2">Low BG suspended 2</string>
     <string name="alarm_auto_suspended">Auto suspended</string>
-    <string name="alarm_hmax_suspended">hourly max suspended</string>
-    <string name="alarm_dmax_suspended">daily max suspended</string>
+    <string name="alarm_hourly_max_suspended">hourly max suspended</string>
+    <string name="alarm_daily_max_suspended">daily max suspended</string>
     <string name="alarm_suspended">Suspended</string>
     <string name="alarm_paused">Paused</string>
     <string name="alarm_occlusion">Occlusion</string>
@@ -101,16 +101,15 @@
     <string name="patch_begin_activation">No active patch. Press <b>Next</b> to begin the activation process.</string>
     <string name="patch_not_active_note">Pump base should not be connected to the patch until the next step!</string>
     <string name="connect_pump_base">Connect pump base to a new patch, remove the residual air and fill with insulin, then press <b>Next</b>.</string>
-    <string name="note_min_70_units">Note: A minimum of 70 units is required for actvation.</string>
+    <string name="note_min_70_units">Note: A minimum of 70 units is required for activation.</string>
     <string name="do_not_attach_to_body">Do not attach the patch to the body yet.</string>
     <string name="half_press_needle">Half-press needle button. Then tap <b>Next</b> to start prime.</string>
     <string name="wait_for_priming">Please wait for the priming to complete.</string>
     <string name="priming_error">Failed to prime, press <b>Retry</b> to try again.</string>
     <string name="press_next">Press <b>Next</b> to continue.</string>
     <string name="press_next_to_start_activation">Press <b>Next</b> to start activation.</string>
-    <string name='attach_patch_to_body'>Remove the safety lock. Attach the pump to the body. Press the needle button.</string>
     <string name="remove_safety_lock">Remove the safety lock. Attach the pump to the body. Press the needle button.</string>
-    <string name="activating_pump">Activating pump and settng initial basal rate. Please Wait.</string>
+    <string name="activating_pump">Activating pump and setting initial basal rate. Please Wait.</string>
     <string name="activating_error">Failed to activate, press <b>Retry</b> to try again.</string>
     <string name="activating_complete">New patch activated. %.2f Units remaining.</string>
     <string name="press_OK_to_return">Press <b>OK</b> to return to main screen.</string>
@@ -142,10 +141,9 @@
     <string name="daily_max_insulin_summary">Specify the maximum units of insulin allowed per day. If exceeded, the pump will suspend.</string>
 
     <!-- treatment state-->
-    <string name="waitingforestimatedbolusend">Waiting for bolus end. Remaining %1$d sec.</string>
-    <string name="gettingpumpstatus">Getting pump status</string>
-    <string name="gettingbolusstatus">Getting bolus status</string>
-    <string name="gettingtempbasalstatus">Getting temporary basal status</string>
-    <string name="settingpumpsettings">Setting user options</string>
+    <string name="getting_pump_status">Getting pump status</string>
+    <string name="getting_bolus_status">Getting bolus status</string>
+    <string name="getting_temp_basal_status">Getting temporary basal status</string>
+    <string name="setting_pump_settings">Setting user options</string>
 
 </resources>
