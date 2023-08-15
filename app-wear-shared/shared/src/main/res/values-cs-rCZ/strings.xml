@@ -33,4 +33,11 @@
     <string name="connected">Připojeno</string>
     <string name="disconnecting">Odpojuji</string>
     <string name="waiting_for_disconnection">Čekám na odpojení</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Vytvořeno: %1$s</string>
+    <string name="metadata_label_watchface_author">Autor: %1$s</string>
+    <string name="metadata_label_watchface_name">Jméno %1$s</string>
+    <string name="metadata_wear_import_filename">Název souboru: %1$s</string>
+    <string name="metadata_label_watchface_version">Verze ciferníku: %1$s</string>
+    <string name="wear_default_watchface">Výchozí ciferník</string>
 </resources>
