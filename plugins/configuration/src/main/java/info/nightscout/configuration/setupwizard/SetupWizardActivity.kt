@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import dagger.android.HasAndroidInjector
 import info.nightscout.configuration.R
 import info.nightscout.configuration.activities.DaggerAppCompatActivityWithResult
@@ -64,6 +65,12 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
             generateLayout()
             updateButtons()
         }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (currentWizardPage == 0)
+                    OKDialog.showConfirmation(this@SetupWizardActivity, rh.gs(R.string.exitwizard)) { finish() } else showPreviousPage(null)
+            }
+        })
     }
 
     override fun onPause() {
@@ -134,10 +141,6 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
         }
     }
 
-    override fun onBackPressed() {
-        if (currentWizardPage == 0) OKDialog.showConfirmation(this, rh.gs(R.string.exitwizard)) { finish() } else showPreviousPage(null)
-    }
-
     @Suppress("UNUSED_PARAMETER")
     fun exitPressed(view: View?) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
@@ -147,7 +150,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
     @Suppress("UNUSED_PARAMETER")
     fun showNextPage(view: View?) {
         finish()
-        val intent = Intent(this, SetupWizardActivity::class.java)
+        val intent = Intent(this, SetupWizardActivity::class.java).setAction("info.nightscout.configuration.setupwizard.SetupWizardActivity")
         intent.putExtra(intentMessage, nextPage(null))
         startActivity(intent)
     }
@@ -155,7 +158,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
     @Suppress("UNUSED_PARAMETER")
     fun showPreviousPage(view: View?) {
         finish()
-        val intent = Intent(this, SetupWizardActivity::class.java)
+        val intent = Intent(this, SetupWizardActivity::class.java).setAction("info.nightscout.configuration.setupwizard.SetupWizardActivity")
         intent.putExtra(intentMessage, previousPage(null))
         startActivity(intent)
     }
@@ -164,7 +167,7 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
     @Suppress("UNUSED_PARAMETER")
     fun finishSetupWizard(view: View?) {
         sp.putBoolean(R.string.key_setupwizard_processed, true)
-        val intent = Intent(this, uiInteraction.mainActivity)
+        val intent = Intent(this, uiInteraction.mainActivity).setAction("info.nightscout.configuration.setupwizard.SetupWizardActivity")
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         startActivity(intent)
         finish()

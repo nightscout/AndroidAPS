@@ -9,7 +9,7 @@ import org.junit.Assert.*
 
 class SetBasalProfilePacketTest : MedtrumTestBase() {
 
-    /** Test packet specific behavoir */
+    /** Test packet specific behavior */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -36,12 +36,12 @@ class SetBasalProfilePacketTest : MedtrumTestBase() {
 
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
         // Inputs
-        val repsonse = byteArrayOf(18, 21, 16, 0, 0, 0, 1, 22, 0, 3, 0, -110, 0, -32, -18, 88, 17)
+        val response = byteArrayOf(18, 21, 16, 0, 0, 0, 1, 22, 0, 3, 0, -110, 0, -32, -18, 88, 17)
         val basalProfile = byteArrayOf(8, 2, 3, 4, -1, 0, 0, 0, 0)
 
         // Call
         val packet = SetBasalProfilePacket(packetInjector, basalProfile)
-        val result = packet.handleResponse(repsonse)
+        val result = packet.handleResponse(response)
 
         // Expected values
         val expectedBasalType = BasalType.STANDARD

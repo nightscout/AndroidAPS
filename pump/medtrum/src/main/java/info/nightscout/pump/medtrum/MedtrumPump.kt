@@ -291,11 +291,11 @@ class MedtrumPump @Inject constructor(
         }
 
     fun loadUserSettingsFromSP() {
-        desiredPatchExpiration = sp.getBoolean(info.nightscout.pump.medtrum.R.string.key_patch_expiration, false)
-        val alarmSettingCode = sp.getString(info.nightscout.pump.medtrum.R.string.key_alarm_setting, AlarmSetting.LIGHT_VIBRATE_AND_BEEP.code.toString()).toByte()
+        desiredPatchExpiration = sp.getBoolean(R.string.key_patch_expiration, false)
+        val alarmSettingCode = sp.getString(R.string.key_alarm_setting, AlarmSetting.LIGHT_VIBRATE_AND_BEEP.code.toString()).toByte()
         desiredAlarmSetting = AlarmSetting.values().firstOrNull { it.code == alarmSettingCode } ?: AlarmSetting.LIGHT_VIBRATE_AND_BEEP
-        desiredHourlyMaxInsulin = sp.getInt(info.nightscout.pump.medtrum.R.string.key_hourly_max_insulin, 40)
-        desiredDailyMaxInsulin = sp.getInt(info.nightscout.pump.medtrum.R.string.key_daily_max_insulin, 180)
+        desiredHourlyMaxInsulin = sp.getInt(R.string.key_hourly_max_insulin, 40)
+        desiredDailyMaxInsulin = sp.getInt(R.string.key_daily_max_insulin, 180)
         _pumpSN = pumpSNFromSP
 
     }
@@ -502,12 +502,12 @@ class MedtrumPump @Inject constructor(
             AlarmState.PUMP_LOW_BATTERY   -> R.string.alarm_pump_low_battery
             AlarmState.PUMP_LOW_RESERVOIR -> R.string.alarm_pump_low_reservoir
             AlarmState.PUMP_EXPIRES_SOON  -> R.string.alarm_pump_expires_soon
-            AlarmState.LOWBG_SUSPENDED    -> R.string.alarm_lowbg_suspended
-            AlarmState.LOWBG_SUSPENDED2   -> R.string.alarm_lowbg_suspended2
-            AlarmState.AUTO_SUSPENDED     -> R.string.alarm_auto_suspended
-            AlarmState.HMAX_SUSPENDED     -> R.string.alarm_hmax_suspended
-            AlarmState.DMAX_SUSPENDED     -> R.string.alarm_dmax_suspended
-            AlarmState.SUSPENDED          -> R.string.alarm_suspended
+            AlarmState.LOW_BG_SUSPENDED   -> R.string.alarm_low_bg_suspended
+            AlarmState.LOW_BG_SUSPENDED2  -> R.string.alarm_low_bg_suspended2
+            AlarmState.AUTO_SUSPENDED       -> R.string.alarm_auto_suspended
+            AlarmState.HOURLY_MAX_SUSPENDED -> R.string.alarm_hourly_max_suspended
+            AlarmState.DAILY_MAX_SUSPENDED  -> R.string.alarm_daily_max_suspended
+            AlarmState.SUSPENDED            -> R.string.alarm_suspended
             AlarmState.PAUSED             -> R.string.alarm_paused
             AlarmState.OCCLUSION          -> R.string.alarm_occlusion
             AlarmState.EXPIRED            -> R.string.alarm_expired
@@ -528,10 +528,10 @@ class MedtrumPump @Inject constructor(
 
     private fun loadActiveAlarms() {
         val alarmsStr = sp.getString(R.string.key_active_alarms, "")
-        if (alarmsStr.isNullOrEmpty()) {
-            activeAlarms = EnumSet.noneOf(AlarmState::class.java)
+        activeAlarms = if (alarmsStr.isEmpty()) {
+            EnumSet.noneOf(AlarmState::class.java)
         } else {
-            activeAlarms = alarmsStr.split(",")
+            alarmsStr.split(",")
                 .mapNotNull { AlarmState.values().find { alarm -> alarm.name == it } }
                 .let { EnumSet.copyOf(it) }
         }

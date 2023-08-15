@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.comm.enums.CommandType.CLEAR_ALARM
 import info.nightscout.pump.medtrum.extension.toByteArray
 
-class ClearPumpAlarmPacket(injector: HasAndroidInjector, val clearType: Int) : MedtrumPacket(injector) {
+class ClearPumpAlarmPacket(injector: HasAndroidInjector, private val clearType: Int) : MedtrumPacket(injector) {
 
     init {
         opCode = CLEAR_ALARM.code

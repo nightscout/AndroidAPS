@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
@@ -151,7 +152,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException)
         if (startWizard() && !isRunningRealPumpTest()) {
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
-                startActivity(Intent(this, SetupWizardActivity::class.java))
+                startActivity(Intent(this, SetupWizardActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
             })
         }
         androidPermission.notifyForStoragePermission(this)
@@ -163,6 +164,17 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             androidPermission.notifyForBtConnectPermission(this)
         }
         passwordResetCheck(this)
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START))
+                    binding.mainDrawerLayout.closeDrawers()
+                else if (menuOpen)
+                    menu?.close()
+                else if (binding.mainPager.currentItem != 0)
+                    binding.mainPager.currentItem = 0
+                else finish()
+            }
+        })
     }
 
     private fun checkPluginPreferences(viewPager: ViewPager2) {
@@ -219,9 +231,11 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     menuItem.setIcon(info.nightscout.core.ui.R.drawable.ic_settings)
                 }
                 menuItem.setOnMenuItemClickListener {
-                    val intent = Intent(this, SingleFragmentActivity::class.java)
-                    intent.putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
-                    startActivity(intent)
+                    startActivity(
+                        Intent(this, SingleFragmentActivity::class.java)
+                            .setAction("info.nightscout.androidaps.MainActivity")
+                            .putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
+                    )
                     binding.mainDrawerLayout.closeDrawers()
                     true
                 }
@@ -318,26 +332,28 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         when (item.itemId) {
             R.id.nav_preferences        -> {
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
-                    val i = Intent(this, PreferencesActivity::class.java)
-                    i.putExtra("id", -1)
-                    startActivity(i)
+                    startActivity(
+                        Intent(this, PreferencesActivity::class.java)
+                            .setAction("info.nightscout.androidaps.MainActivity")
+                            .putExtra("id", -1)
+                    )
                 })
                 return true
             }
 
             R.id.nav_historybrowser     -> {
-                startActivity(Intent(this, HistoryBrowseActivity::class.java))
+                startActivity(Intent(this, HistoryBrowseActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                 return true
             }
 
             R.id.nav_treatments         -> {
-                startActivity(Intent(this, TreatmentsActivity::class.java))
+                startActivity(Intent(this, TreatmentsActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                 return true
             }
 
             R.id.nav_setupwizard        -> {
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
-                    startActivity(Intent(this, SetupWizardActivity::class.java))
+                    startActivity(Intent(this, SetupWizardActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                 })
                 return true
             }
@@ -384,9 +400,11 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             R.id.nav_plugin_preferences -> {
                 val plugin = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem)
                 protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
-                    val i = Intent(this, PreferencesActivity::class.java)
-                    i.putExtra("id", plugin.preferencesId)
-                    startActivity(i)
+                    startActivity(
+                        Intent(this, PreferencesActivity::class.java)
+                            .setAction("info.nightscout.androidaps.MainActivity")
+                            .putExtra("id", plugin.preferencesId)
+                    )
                 })
                 return true
             }
@@ -397,33 +415,16 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                         }
             */
             R.id.nav_defaultprofile     -> {
-                startActivity(Intent(this, ProfileHelperActivity::class.java))
+                startActivity(Intent(this, ProfileHelperActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                 return true
             }
 
             R.id.nav_stats              -> {
-                startActivity(Intent(this, StatsActivity::class.java))
+                startActivity(Intent(this, StatsActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
                 return true
             }
         }
         return actionBarDrawerToggle.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.mainDrawerLayout.closeDrawers()
-            return
-        }
-        if (menuOpen) {
-            this.menu?.close()
-            return
-        }
-        if (binding.mainPager.currentItem != 0) {
-            binding.mainPager.currentItem = 0
-            return
-        }
-        @Suppress("DEPRECATION")
-        super.onBackPressed()
     }
 
     // Correct place for calling setUserStats() would be probably MainApp

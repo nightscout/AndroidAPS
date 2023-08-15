@@ -9,7 +9,7 @@ import org.junit.Assert.*
 
 class CancelTempBasalPacketTest : MedtrumTestBase() {
 
-    /** Test packet specific behavoir */
+    /** Test packet specific behavior */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -36,11 +36,11 @@ class CancelTempBasalPacketTest : MedtrumTestBase() {
 
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
         // Inputs
-        val repsonse = byteArrayOf(18, 25, 16, 0, 0, 0, 1, 22, 0, 3, 0, -110, 0, -32, -18, 88, 17)
+        val response = byteArrayOf(18, 25, 16, 0, 0, 0, 1, 22, 0, 3, 0, -110, 0, -32, -18, 88, 17)
 
         // Call
         val packet = CancelTempBasalPacket(packetInjector)
-        val result = packet.handleResponse(repsonse)
+        val result = packet.handleResponse(response)
 
         // Expected values
         val expectedBasalType = BasalType.STANDARD

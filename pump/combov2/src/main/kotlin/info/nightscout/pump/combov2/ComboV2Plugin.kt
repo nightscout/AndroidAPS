@@ -12,6 +12,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.comboctl.android.AndroidBluetoothInterface
 import info.nightscout.comboctl.base.BasicProgressStage
 import info.nightscout.comboctl.base.BluetoothException
+import info.nightscout.comboctl.base.BluetoothNotAvailableException
 import info.nightscout.comboctl.base.BluetoothNotEnabledException
 import info.nightscout.comboctl.base.ComboException
 import info.nightscout.comboctl.base.DisplayFrame
@@ -346,10 +347,24 @@ class ComboV2Plugin @Inject constructor (
                         _pairedStateUIFlow.value = paired
 
                         pumpManager = newPumpManager
+                    } catch (_: BluetoothNotAvailableException) {
+                        uiInteraction.addNotification(
+                            Notification.BLUETOOTH_NOT_SUPPORTED,
+                            text = rh.gs(R.string.combov2_bluetooth_not_supported),
+                            level = Notification.URGENT
+                        )
+
+                        // Deliberately _not_ setting the driver state here before
+                        // exiting this scope. We are essentially aborting the start
+                        // since Bluetooth is not supported by the hardware, so the
+                        // driver cannot do anything, and therefore cannot leave the
+                        // DriverState.NotInitialized state.
+                        aapsLogger.error(LTag.PUMP, "combov2 driver start cannot be completed since the hardware does not support Bluetooth")
+                        return@runWithPermissionCheck
                     } catch (_: BluetoothNotEnabledException) {
                         uiInteraction.addNotification(
                             Notification.BLUETOOTH_NOT_ENABLED,
-                            text = rh.gs(info.nightscout.core.ui.R.string.ble_not_enabled),
+                            text = rh.gs(R.string.combov2_bluetooth_disabled),
                             level = Notification.INFO
                         )
 
@@ -761,7 +776,7 @@ class ComboV2Plugin @Inject constructor (
         } catch (_: BluetoothNotEnabledException) {
             uiInteraction.addNotification(
                 Notification.BLUETOOTH_NOT_ENABLED,
-                text = rh.gs(info.nightscout.core.ui.R.string.ble_not_enabled),
+                text = rh.gs(R.string.combov2_bluetooth_disabled),
                 level = Notification.INFO
             )
         } catch (e: Exception) {

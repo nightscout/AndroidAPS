@@ -84,21 +84,21 @@ class MedtrumPumpTest : MedtrumTestBase() {
         val localTime2230 = LocalTime.of(22, 30)
         val zonedDateTime2230 = localDate.atTime(localTime2230).atZone(ZoneId.systemDefault())
         val time2230 = zonedDateTime2230.toInstant().toEpochMilli()
-        val result1 = medtrumPump.getHourlyBasalFromMedtrumProfileArray(profileArray!!, time2230)
+        val result1 = medtrumPump.getHourlyBasalFromMedtrumProfileArray(profileArray, time2230)
         assertEquals(1.7, result1, 0.01)
 
         // For 23:59
         val localTime2359 = LocalTime.of(23, 59)
         val zonedDateTime2359 = localDate.atTime(localTime2359).atZone(ZoneId.systemDefault())
         val time2359 = zonedDateTime2359.toInstant().toEpochMilli()
-        val result2 = medtrumPump.getHourlyBasalFromMedtrumProfileArray(profileArray!!, time2359)
+        val result2 = medtrumPump.getHourlyBasalFromMedtrumProfileArray(profileArray, time2359)
         assertEquals(2.0, result2, 0.01)
 
         // For 00:00
         val localTime0000 = LocalTime.of(0, 0)
         val zonedDateTime0000 = localDate.atTime(localTime0000).atZone(ZoneId.systemDefault())
         val time0000 = zonedDateTime0000.toInstant().toEpochMilli()
-        val result3 = medtrumPump.getHourlyBasalFromMedtrumProfileArray(profileArray!!, time0000)
+        val result3 = medtrumPump.getHourlyBasalFromMedtrumProfileArray(profileArray, time0000)
         assertEquals(2.1, result3, 0.01)
     }
 }

@@ -9,7 +9,7 @@ import org.junit.Assert.*
 
 class GetDeviceTypePacketTest : MedtrumTestBase() {
 
-    /** Test packet specific behavoir */
+    /** Test packet specific behavior */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {

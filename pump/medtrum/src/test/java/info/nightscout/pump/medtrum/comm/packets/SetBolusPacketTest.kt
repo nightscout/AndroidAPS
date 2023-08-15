@@ -8,7 +8,7 @@ import org.junit.Assert.*
 
 class SetBolusPacketTest : MedtrumTestBase() {
 
-    /** Test packet specific behavoir */
+    /** Test packet specific behavior */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {

@@ -23,7 +23,7 @@
     <string name="mgdl">мг/дл</string>
     <string name="mmol">ммоль/л</string>
     <string name="save">Сохранить</string>
-    <string name="snooze">Отложить</string>
+    <string name="snooze">Убрать оповещение</string>
     <string name="virtual_pump">Виртуальная помпа</string>
     <string name="constraints">Ограничения</string>
     <string name="superbolus">Суперболюс</string>
@@ -527,7 +527,7 @@
     <string name="message">Сообщение</string>
     <string name="ok">OK</string>
     <string name="cancel">Отменить</string>
-    <string name="dismiss">ОТКЛОНИТЬ</string>
+    <string name="dismiss">УБРАТЬ</string>
     <string name="yes">Да</string>
     <string name="no">Нет</string>
     <string name="close">Закрыть</string>

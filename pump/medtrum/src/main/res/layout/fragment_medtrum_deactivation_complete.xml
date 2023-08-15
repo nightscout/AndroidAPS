@@ -26,18 +26,32 @@
             tools:context=".ui.MedtrumActivity">
 
             <TextView
-                android:id="@+id/text_remove_base_discard_patch"
+                android:id="@+id/text_retract_needle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="20dp"
                 android:layout_marginEnd="5dp"
                 android:gravity="center"
-                android:text="@string/remove_base_discard_patch"
+                android:text="@string/retract_needle"
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_remove_base_discard_patch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:text="@string/remove_base_discard_patch"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_retract_needle" />
 
             <TextView
                 android:id="@+id/text_press_next_or_OK"

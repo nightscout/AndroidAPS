@@ -25,7 +25,7 @@ open class MedtrumPacket(protected var injector: HasAndroidInjector) {
     }
 
     init {
-        // @Suppress("LeakingThis")
+        @Suppress("LeakingThis")
         injector.androidInjector().inject(this)
     }
 
@@ -33,7 +33,7 @@ open class MedtrumPacket(protected var injector: HasAndroidInjector) {
         return byteArrayOf(opCode)
     }
 
-    /**  handles a response from the Medtrum pump, returns true if command was successfull, returns false if command failed or waiting for response */
+    /**  handles a response from the Medtrum pump, returns true if command was successful, returns false if command failed or waiting for response */
     open fun handleResponse(data: ByteArray): Boolean {
         // Check for broken packets
         if (RESP_RESULT_END > data.size) {

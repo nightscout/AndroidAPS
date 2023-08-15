@@ -243,6 +243,7 @@
     <string name="short_tabtitles">Krátké názvy modulů</string>
     <string name="overview_show_notes_field_in_dialogs_title">Zobrazovat kolonku poznámky v dialozích ošetření</string>
     <string name="deliverpartofboluswizard">Kalkulátor provede výpočet, ale dodána je pouze tato část inzulínu. Výhodné při používání SMB algoritmu.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Vydat celý bolus (100%), pokud je glykémie starší než</string>
     <string name="enable_bolus_advisor">Povolit poradce s bolusem</string>
     <string name="enable_bolus_advisor_summary">Při vysoké glykémii použijte připomenutí, abyste začali jíst později, namísto výsledku z kalkulátoru („prebolus“)</string>
     <string name="enablesuperbolus">Povolit superbolus</string>
@@ -315,6 +316,11 @@
     <string name="wear_notifysmb_summary">Ukazovat SMB na hodinkách jako normální bolus.</string>
     <string name="wear_predictions_summary">Zobrazovat predikce na hodinkách.</string>
     <string name="wear_predictions_title">Predikce</string>
+    <string name="wear_custom_watchface">Vlastní ciferník: %1$s</string>
+    <string name="wear_load_watchface">Nahrát ciferník</string>
+    <string name="wear_send_watchface">Odeslat ciferník</string>
+    <string name="wear_export_watchface">Exportovat ciferník</string>
+    <string name="wear_new_custom_watchface_exported">Vlastní ciferník exportován</string>
     <string name="resend_all_data">Znovu poslat všechna data</string>
     <string name="open_settings_on_wear">Otevřít nastavení na hodinkách Wear</string>
     <!--    PersistentNotification-->

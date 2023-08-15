@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.MotionEvent
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import info.nightscout.androidaps.plugins.pump.eopatch.R
@@ -103,6 +104,16 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
                 }
             }
         }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                binding.viewModel?.apply {
+                    when (patchStep.value) {
+                        PatchStep.SAFE_DEACTIVATION -> this@EopatchActivity.finish()
+                        else                        -> Unit
+                    }
+                }
+            }
+        })
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -272,15 +283,6 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
 
     private fun backToHome() {
         this@EopatchActivity.finish()
-    }
-
-    override fun onBackPressed() {
-        binding.viewModel?.apply{
-            when(patchStep.value){
-                PatchStep.SAFE_DEACTIVATION ->  this@EopatchActivity.finish()
-                else -> Unit
-            }
-        }
     }
 
     companion object {

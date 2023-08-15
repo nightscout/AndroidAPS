@@ -2,11 +2,11 @@
 
     <application>
         <activity
-            android:name="info.nightscout.androidaps.plugins.pump.common.ui.PumpBLEConfigActivity"
+            android:name="info.nightscout.pump.common.ui.PumpBLEConfigActivity"
             android:theme="@style/AppTheme"
             android:exported="false">
             <intent-filter>
-                <action android:name="info.nightscout.androidaps.plugins.pump.common.ui.PumpBLEConfigActivity" />
+                <action android:name="info.nightscout.pump.common.ui.PumpBLEConfigActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

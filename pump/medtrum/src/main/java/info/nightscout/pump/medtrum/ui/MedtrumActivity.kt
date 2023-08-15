@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.WindowManager
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
 import info.nightscout.core.utils.extensions.safeGetSerializableExtra
 import info.nightscout.pump.medtrum.R
@@ -19,17 +20,13 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
 
     override fun getLayoutId(): Int = R.layout.activity_medtrum
 
-    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
-        return super.dispatchTouchEvent(event)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
         binding.apply {
-            viewModel = ViewModelProvider(this@MedtrumActivity, viewModelFactory).get(MedtrumViewModel::class.java)
+            viewModel = ViewModelProvider(this@MedtrumActivity, viewModelFactory)[MedtrumViewModel::class.java]
             viewModel?.apply {
                 processIntent(intent)
 
@@ -70,6 +67,28 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
                 }
             }
         }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                binding.viewModel?.apply {
+                    when (patchStep.value) {
+                        PatchStep.PREPARE_PATCH,
+                        PatchStep.START_DEACTIVATION,
+                        PatchStep.RETRY_ACTIVATION      -> {
+                            handleCancel()
+                            this@MedtrumActivity.finish()
+                        }
+
+                        PatchStep.COMPLETE,
+                        PatchStep.DEACTIVATION_COMPLETE -> {
+                            handleComplete()
+                            this@MedtrumActivity.finish()
+                        }
+
+                        else                            -> Unit
+                    }
+                }
+            }
+        })
     }
 
     override fun onNewIntent(intent: Intent?) {
@@ -88,20 +107,10 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-    }
-
-    override fun onBackPressed() {
-        binding.viewModel?.apply {
-            // Do nothing
-        }
-    }
-
     companion object {
 
         const val EXTRA_START_PATCH_STEP = "EXTRA_START_PATCH_FRAGMENT_UI"
-        const val EXTRA_START_FROM_MENU = "EXTRA_START_FROM_MENU"
+        private const val EXTRA_START_FROM_MENU = "EXTRA_START_FROM_MENU"
 
         @JvmStatic fun createIntentFromMenu(context: Context, patchStep: PatchStep): Intent {
             return Intent(context, MedtrumActivity::class.java).apply {
@@ -115,5 +124,4 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
     private fun setupViewFragment(baseFragment: MedtrumBaseFragment<*>) {
         replaceFragmentInActivity(baseFragment, R.id.framelayout_fragment, false)
     }
-
 }

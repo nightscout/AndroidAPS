@@ -376,6 +376,7 @@
     <string name="carbs_g">CHO %1$d g</string>
     <string name="extended_bolus_u_min">BOLO ESTESO %1$.2f U %2$d min</string>
     <string name="load_events">CARICA EVENTI</string>
+    <string name="deactivate">DISATTIVA</string>
     <string name="load_history">CARICA STORICO %1$d</string>
     <string name="load_tdds">CARICA TDD</string>
     <string name="set_profile">IMPOSTA PROFILO</string>
@@ -453,6 +454,7 @@
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Rilevato assorbimento lento dei carboidrati: %2$d%% del tempo. Ricontrolla il tuo calcolo. COB potrebbero essere sovrastimati e potrebbe essere somministrata più insulina !!!!!</font>]]></string>
     <string name="partialboluswizard">Eroga parte del risultato del calcolatore [%]</string>
+    <string name="partialboluswizard_reset_time">Soglia tempo glicemia \"vecchia\" [min]</string>
     <string name="bolus_constraint_applied_warn">Vincolo bolo applicato: %1$.2f U a %2$.2f U</string>
     <string name="bolus_recorded_only">Il bolo sarà solo registrato (non erogato dal micro)</string>
     <string name="advisoralarm">Esegui allarme quando è tempo di mangiare</string>

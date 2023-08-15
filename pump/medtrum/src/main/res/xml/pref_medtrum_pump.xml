@@ -3,8 +3,8 @@
     xmlns:validate="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory
-        android:key="@string/key_medtrumpump_settings"
-        android:title="@string/medtrumpump_settings"
+        android:key="@string/key_medtrum_pump_settings"
+        android:title="@string/medtrum_pump_setting"
         app:initialExpandedChildrenCount="0">
 
         <EditTextPreference

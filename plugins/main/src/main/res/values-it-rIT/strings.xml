@@ -243,6 +243,7 @@
     <string name="short_tabtitles">Accorcia titoli schede</string>
     <string name="overview_show_notes_field_in_dialogs_title">Finestre tratt.nto: mostra campo note</string>
     <string name="deliverpartofboluswizard">Il calcolatore esegue il calcolo, ma solo questa parte dell\'insulina calcolata è erogata. Utile con algoritmo SMB.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Eroga bolo completo (100%) se la glicemia è più \"vecchia\" di</string>
     <string name="enable_bolus_advisor">Abilita consiglio bolo</string>
     <string name="enable_bolus_advisor_summary">Usa un promemoria per iniziare a mangiare invece del risultato del calcolatore durante la glicemia alta (\"pre-bolo\")</string>
     <string name="enablesuperbolus">Abilita superbolo nel calcolatore</string>

@@ -7,7 +7,6 @@ import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.PatchStep
 import info.nightscout.pump.medtrum.databinding.FragmentMedtrumRetryActivationBinding
-import info.nightscout.pump.medtrum.ui.MedtrumBaseFragment
 import info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -32,7 +31,7 @@ class MedtrumRetryActivationFragment : MedtrumBaseFragment<FragmentMedtrumRetryA
         binding.apply {
             viewModel = ViewModelProvider(requireActivity(), viewModelFactory)[MedtrumViewModel::class.java]
             viewModel?.apply {
-                preparePatch() // Use this to make sure we are disconnceted at this stage
+                preparePatch() // Use this to make sure we are disconnected at this stage
             }
             btnNegative.setOnClickListener {
                 OKDialog.showConfirmation(requireActivity(), rh.gs(R.string.medtrum_deactivate_pump_confirm)) {

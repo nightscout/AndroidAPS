@@ -376,6 +376,9 @@
     <string name="carbs_g">CARBOHIDRATOS %1$d g</string>
     <string name="extended_bolus_u_min">BOLO EXTENDIDO %1$.2f U %2$d min</string>
     <string name="load_events">CARGAR EVENTOS</string>
+    <string name="clear_alarms">BORRAR ALARMAS</string>
+    <string name="deactivate">DESACTIVAR</string>
+    <string name="update_time">ACTUALIZAR HORA</string>
     <string name="load_history">CARGAR HISTORIAL %1$d</string>
     <string name="load_tdds">CARGAR TDDs</string>
     <string name="set_profile">ESTABLECER PERFIL</string>
@@ -453,6 +456,7 @@
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>¡Se ha detectado una absorción lenta de carbohidratos: %2$d%% de tiempo. Comprueba de nuevo el cálculo. Los COB se pueden sobrestimar, por lo que se podría administrar más insulina de la cuenta!</font>]]></string>
     <string name="partialboluswizard">Administrar esta parte del resultado del asistente de bolos [%]</string>
+    <string name="partialboluswizard_reset_time">Antiguo umbral de tiempo de glucemia [min]</string>
     <string name="bolus_constraint_applied_warn">Restricción de bolo aplicada: %1$.2f U a %2$.2f U</string>
     <string name="bolus_recorded_only">El bolo sólo se anotará (no será entregado por la bomba)</string>
     <string name="advisoralarm">Ejecutar alarma cuando sea hora de comer</string>

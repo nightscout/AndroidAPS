@@ -15,7 +15,6 @@ import info.nightscout.pump.medtrum.extension.toLong
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.utils.T
 import javax.inject.Inject
 
 class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int) : MedtrumPacket(injector) {
@@ -38,9 +37,9 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
         private const val RESP_RECORD_UNKNOWN1_END = RESP_RECORD_UNKNOWN1_START + 1
         private const val RESP_RECORD_SERIAL_START = RESP_RECORD_UNKNOWN1_END
         private const val RESP_RECORD_SERIAL_END = RESP_RECORD_SERIAL_START + 4
-        private const val RESP_RECORD_PATCHID_START = RESP_RECORD_SERIAL_END
-        private const val RESP_RECORD_PATCHID_END = RESP_RECORD_PATCHID_START + 2
-        private const val RESP_RECORD_SEQUENCE_START = RESP_RECORD_PATCHID_END
+        private const val RESP_RECORD_PATCH_ID_START = RESP_RECORD_SERIAL_END
+        private const val RESP_RECORD_PATCH_ID_END = RESP_RECORD_PATCH_ID_START + 2
+        private const val RESP_RECORD_SEQUENCE_START = RESP_RECORD_PATCH_ID_END
         private const val RESP_RECORD_SEQUENCE_END = RESP_RECORD_SEQUENCE_START + 2
         private const val RESP_RECORD_DATA_START = RESP_RECORD_SEQUENCE_END
 
@@ -75,7 +74,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
             val recordUnknown = data.copyOfRange(RESP_RECORD_UNKNOWN_START, RESP_RECORD_UNKNOWN_END).toInt()
             val recordType = data.copyOfRange(RESP_RECORD_TYPE_START, RESP_RECORD_TYPE_END).toInt()
             val recordSerial = data.copyOfRange(RESP_RECORD_SERIAL_START, RESP_RECORD_SERIAL_END).toLong()
-            val recordPatchId = data.copyOfRange(RESP_RECORD_PATCHID_START, RESP_RECORD_PATCHID_END).toInt()
+            val recordPatchId = data.copyOfRange(RESP_RECORD_PATCH_ID_START, RESP_RECORD_PATCH_ID_END).toInt()
             val recordSequence = data.copyOfRange(RESP_RECORD_SEQUENCE_START, RESP_RECORD_SEQUENCE_END).toInt()
 
             aapsLogger.debug(
@@ -101,13 +100,15 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                         val bolusCarb = data.copyOfRange(RESP_RECORD_DATA_START + 18, RESP_RECORD_DATA_START + 20).toInt()
                         val bolusGlucose = data.copyOfRange(RESP_RECORD_DATA_START + 20, RESP_RECORD_DATA_START + 22).toInt()
                         val bolusIOB = data.copyOfRange(RESP_RECORD_DATA_START + 22, RESP_RECORD_DATA_START + 24).toInt()
-                        val unkown1 = data.copyOfRange(RESP_RECORD_DATA_START + 24, RESP_RECORD_DATA_START + 26).toInt()
-                        val unkown2 = data.copyOfRange(RESP_RECORD_DATA_START + 26, RESP_RECORD_DATA_START + 28).toInt()
+                        val unknown1 = data.copyOfRange(RESP_RECORD_DATA_START + 24, RESP_RECORD_DATA_START + 26).toInt()
+                        val unknown2 = data.copyOfRange(RESP_RECORD_DATA_START + 26, RESP_RECORD_DATA_START + 28).toInt()
                         val bolusType = enumValues<BolusType>()[typeAndWizard and 0x0F]
                         val bolusWizard = (typeAndWizard and 0xF0) != 0
                         aapsLogger.debug(
                             LTag.PUMPCOMM,
-                            "GetRecordPacket HandleResponse: BOLUS_RECORD: typeAndWizard: $typeAndWizard, bolusCause: $bolusCause, unknown: $unknown, bolusStartTime: $bolusStartTime, " + "bolusNormalAmount: $bolusNormalAmount, bolusNormalDelivered: $bolusNormalDelivered, bolusExtendedAmount: $bolusExtendedAmount, bolusExtendedDuration: $bolusExtendedDuration, " + "bolusExtendedDelivered: $bolusExtendedDelivered, bolusCarb: $bolusCarb, bolusGlucose: $bolusGlucose, bolusIOB: $bolusIOB, unkown1: $unkown1, unkown2: $unkown2, " + "bolusType: $bolusType, bolusWizard: $bolusWizard"
+                            "GetRecordPacket HandleResponse: BOLUS_RECORD: typeAndWizard: $typeAndWizard, bolusCause: $bolusCause, unknown: $unknown, bolusStartTime: $bolusStartTime, " +
+                                "bolusNormalAmount: $bolusNormalAmount, bolusNormalDelivered: $bolusNormalDelivered, bolusExtendedAmount: $bolusExtendedAmount, bolusExtendedDuration: " +
+                                "$bolusExtendedDuration, " + "bolusExtendedDelivered: $bolusExtendedDelivered, bolusCarb: $bolusCarb, bolusGlucose: $bolusGlucose, bolusIOB: $bolusIOB, unknown1: $unknown1, unknown2: $unknown2, " + "bolusType: $bolusType, bolusWizard: $bolusWizard"
                         )
 
                         if (bolusType == BolusType.NORMAL) {
@@ -123,7 +124,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                     pumpType = medtrumPump.pumpType(),
                                     pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
                                 )
-                                if (syncOk == false) {
+                                if (!syncOk) {
                                     aapsLogger.warn(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BOLUS_RECORD: Failed to sync bolus with tempId: ${detailedBolusInfo.timestamp}")
                                     // detailedInfo can be from another similar record. Reinsert
                                     detailedBolusInfoStorage.add(detailedBolusInfo)
@@ -298,7 +299,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                         aapsLogger.debug(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: TDD_RECORD")
                         val timestamp = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_RECORD_DATA_START, RESP_RECORD_DATA_START + 4).toLong())
                         val timeZoneOffset = data.copyOfRange(RESP_RECORD_DATA_START + 4, RESP_RECORD_DATA_START + 6).toInt()
-                        val tddMins = data.copyOfRange(RESP_RECORD_DATA_START + 6, RESP_RECORD_DATA_START + 8).toInt()
+                        val tddMinutes = data.copyOfRange(RESP_RECORD_DATA_START + 6, RESP_RECORD_DATA_START + 8).toInt()
                         val glucoseRecordTime = data.copyOfRange(RESP_RECORD_DATA_START + 8, RESP_RECORD_DATA_START + 12).toLong()
                         val tdd = data.copyOfRange(RESP_RECORD_DATA_START + 12, RESP_RECORD_DATA_START + 16).toFloat()
                         val basalTdd = data.copyOfRange(RESP_RECORD_DATA_START + 16, RESP_RECORD_DATA_START + 20).toFloat()
@@ -315,7 +316,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                         val newUMax = data.copyOfRange(RESP_RECORD_DATA_START + 60, RESP_RECORD_DATA_START + 64).toFloat()
 
                         aapsLogger.debug(
-                            LTag.PUMPCOMM, "TDD_RECORD: timestamp: $timestamp, timeZoneOffset: $timeZoneOffset, tddMins: $tddMins, glucoseRecordTime: $glucoseRecordTime, tdd: " +
+                            LTag.PUMPCOMM, "TDD_RECORD: timestamp: $timestamp, timeZoneOffset: $timeZoneOffset, tddMinutes: $tddMinutes, glucoseRecordTime: $glucoseRecordTime, tdd: " +
                                 "$tdd, basalTdd: $basalTdd, glucose: $glucose, unknown: $unknown, meanSomething: $meanSomething, usedTdd: $usedTdd, usedIBasal: $usedIBasal, usedSgBasal: " +
                                 "$usedSgBasal, usedUMax: $usedUMax, newTdd: $newTdd, newIBasal: $newIBasal, newSgBasal: $newSgBasal, newUMax: $newUMax"
                         )

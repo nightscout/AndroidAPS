@@ -97,6 +97,7 @@ Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
     <string name="combov2_set_emulated_100_tbr">Imposta TBR 100% (emulato)</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Lasciando finire il TBR 100% (emulato) in esecuzione</string>
     <string name="combov2_ignoring_redundant_100_tbr">TBR 100%: ignorando la richiesta ridondante</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Limite inatteso riscontrato durante la regolazione di TBR: la percentuale target era %1$d%%, raggiunto un limite a %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Impossibile impostare un TBR assoluto se la velocità basale di base è zero</string>
     <string name="combov2_pair_with_pump_summary">Associa AndroidAPS e Android con un micro Accu-Chek Combo attualmente non associato</string>
     <string name="combov2_unpair_pump_summary">Disassocia AndroidAPS e Android dal micro Accu-Chek Combo attualmente associato</string>

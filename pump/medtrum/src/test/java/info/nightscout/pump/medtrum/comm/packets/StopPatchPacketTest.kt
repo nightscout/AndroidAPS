@@ -8,7 +8,7 @@ import org.junit.Assert.*
 
 class StopPatchPacketTest : MedtrumTestBase() {
 
-    /** Test packet specific behavoir */
+    /** Test packet specific behavior */
 
     private val packetInjector = HasAndroidInjector {
         AndroidInjector {
@@ -43,6 +43,7 @@ class StopPatchPacketTest : MedtrumTestBase() {
         // Expected values
         val expectedPatchId = 146L
         val expectedStopSequence = 23
+        assertTrue(result)
         assertEquals(expectedPatchId, medtrumPump.lastStopPatchId)
         assertEquals(expectedStopSequence, medtrumPump.lastStopSequence)
     }

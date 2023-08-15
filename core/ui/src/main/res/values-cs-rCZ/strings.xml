@@ -376,6 +376,9 @@
     <string name="carbs_g">SACHARIDY %1$d g</string>
     <string name="extended_bolus_u_min">ROZLOŽENÝ BOLUS %1$.2f U %2$d min</string>
     <string name="load_events">NAČÍST UDÁLOSTI</string>
+    <string name="clear_alarms">SMAZAT ALARMY</string>
+    <string name="deactivate">DEAKTIVOVAT</string>
+    <string name="update_time">AKTUALIZOVAT ČAS</string>
     <string name="load_history">NAČÍST HISTORII %1$d</string>
     <string name="load_tdds">NAČÍST CDD</string>
     <string name="set_profile">NASTAVIT PROFIL</string>
@@ -453,6 +456,7 @@
     <string name="cobvsiob">COB vs. IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekována pomalá absorbce sacharidů: %2$d%% času. Překontrolujte kalkulaci. COB může být nadhodnocené, a proto může být započítáno více inzulínu !!!!!</font>]]></string>
     <string name="partialboluswizard">Podat tuto část z výsledku kalkulace [%]</string>
+    <string name="partialboluswizard_reset_time">Časový limit staré glykémie [min]</string>
     <string name="bolus_constraint_applied_warn">Použito omezení bolusu: %1$.2f U na %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus nebude pumpou vydán, pouze zaznamenán</string>
     <string name="advisoralarm">Spustit alarm, když je čas na jídlo</string>
