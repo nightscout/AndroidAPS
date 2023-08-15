@@ -41,6 +41,7 @@ import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
+import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
@@ -59,6 +60,7 @@ import info.nightscout.plugins.R
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileToWear
+import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.EventData
@@ -107,7 +109,8 @@ class DataHandlerMobile @Inject constructor(
     private val commandQueue: CommandQueue,
     private val fabricPrivacy: FabricPrivacy,
     private val uiInteraction: UiInteraction,
-    private val persistenceLayer: PersistenceLayer
+    private val persistenceLayer: PersistenceLayer,
+    private val importExportPrefs: ImportExportPrefs
 ) {
 
     private val disposable = CompositeDisposable()
@@ -314,6 +317,13 @@ class DataHandlerMobile @Inject constructor(
             .toObservable(EventData.ActionHeartRate::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ handleHeartRate(it) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventData.ActionGetCustomWatchface::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({
+                           aapsLogger.debug(LTag.WEAR, "Custom Watch face ${it.customWatchface} received from ${it.sourceNodeId}")
+                           handleGetCustomWatchface(it)
+                       }, fabricPrivacy::logException)
     }
 
     private fun handleTddStatus() {
@@ -1247,4 +1257,15 @@ class DataHandlerMobile @Inject constructor(
             device = actionHeartRate.device)
         repository.runTransaction(InsertOrUpdateHeartRateTransaction(hr)).blockingAwait()
     }
+
+
+    private fun handleGetCustomWatchface(command: EventData.ActionGetCustomWatchface) {
+        val customWatchface = command.customWatchface
+        aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${command.sourceNodeId}: ${customWatchface.customWatchfaceData.json}")
+        rxBus.send(EventWearUpdateGui(customWatchface.customWatchfaceData, command.exportFile))
+        if (command.exportFile)
+            importExportPrefs.exportCustomWatchface(customWatchface.customWatchfaceData)
+
+    }
+
 }

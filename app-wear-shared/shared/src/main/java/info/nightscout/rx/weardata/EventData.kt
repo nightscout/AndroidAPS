@@ -1,8 +1,10 @@
 package info.nightscout.rx.weardata
 
 import info.nightscout.rx.events.Event
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.protobuf.ProtoBuf
 import org.joda.time.DateTime
 import java.util.Objects
 
@@ -13,10 +15,17 @@ sealed class EventData : Event() {
 
     fun serialize() = Json.encodeToString(serializer(), this)
 
+    @ExperimentalSerializationApi
+    fun serializeByte() = ProtoBuf.encodeToByteArray(serializer(), this)
     companion object {
-
         fun deserialize(json: String) = try {
             Json.decodeFromString(serializer(), json)
+        } catch (ignored: Exception) {
+            Error(System.currentTimeMillis())
+        }
+        @ExperimentalSerializationApi
+        fun deserializeByte(byteArray: ByteArray) = try {
+            ProtoBuf.decodeFromByteArray(serializer(), byteArray)
         } catch (ignored: Exception) {
             Error(System.currentTimeMillis())
         }
@@ -143,6 +152,12 @@ sealed class EventData : Event() {
     data class CancelNotification(val timeStamp: Long) : EventData()
 
     @Serializable
+    data class ActionGetCustomWatchface(
+        val customWatchface: ActionSetCustomWatchface,
+        val exportFile: Boolean = false
+    ) : EventData()
+
+    @Serializable
     data class ActionPing(val timeStamp: Long) : EventData()
 
     @Serializable
@@ -267,6 +282,16 @@ sealed class EventData : Event() {
             val validTo: Int
         ) : EventData()
     }
+    @Serializable
+    data class ActionSetCustomWatchface(
+        val customWatchfaceData: CustomWatchfaceData
+    ) : EventData()
+
+    @Serializable
+    data class ActionrequestCustomWatchface(val exportFile: Boolean) : EventData()
+
+    @Serializable
+    data class ActionrequestSetDefaultWatchface(val timeStamp: Long) : EventData()
 
     @Serializable
     data class ActionProfileSwitchOpenActivity(val timeShift: Int, val percentage: Int) : EventData()

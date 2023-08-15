@@ -17,6 +17,8 @@ import info.nightscout.interfaces.maintenance.PrefsMetadataKey
 import info.nightscout.interfaces.maintenance.PrefsStatus
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
+import info.nightscout.rx.weardata.CustomWatchfaceData
+import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.joda.time.DateTime
 import org.joda.time.Days
@@ -88,6 +90,20 @@ class PrefFileListProviderImpl @Inject constructor(
         return prefFiles
     }
 
+    override fun listCustomWatchfaceFiles(): MutableList<CustomWatchfaceData> {
+        val customWatchfaceFiles = mutableListOf<CustomWatchfaceData>()
+
+        // searching dedicated dir, only for new CWF format
+        exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CUSTOM_WF_EXTENTION) }.forEach { file ->
+            // Here loadCustomWatchface will unzip, check and load CustomWatchface
+            ZipWatchfaceFormat.loadCustomWatchface(file)?.also { customWatchface ->
+                customWatchfaceFiles.add(customWatchface)
+            }
+        }
+
+        return customWatchfaceFiles
+    }
+
     private fun metadataFor(loadMetadata: Boolean, contents: String): PrefMetadataMap {
         if (!loadMetadata) {
             return mapOf()
@@ -127,6 +143,10 @@ class PrefFileListProviderImpl @Inject constructor(
     override fun newExportCsvFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         return File(exportsPath, timeLocal + "_UserEntry.csv")
+    }
+    override fun newCwfFile(filename: String): File {
+        val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
+        return File(exportsPath, "${filename}_$timeLocal${ZipWatchfaceFormat.CUSTOM_WF_EXTENTION}")
     }
 
     // check metadata for known issues, change their status and add info with explanations

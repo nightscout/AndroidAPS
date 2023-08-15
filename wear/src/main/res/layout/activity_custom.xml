@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".watchfaces.CustomWatchface">
+
+    <ImageView
+        android:id="@+id/background"
+        android:layout_width="400px"
+        android:layout_height="400px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:visibility="visible"
+        android:src="@drawable/background"
+        android:orientation="vertical" />
+
+    <lecho.lib.hellocharts.view.LineChartView
+        android:id="@+id/chart"
+        android:layout_width="400px"
+        android:layout_height="170px"
+        android:layout_marginTop="230px"
+        android:layout_marginBottom="0px" />
+
+
+    <ImageView
+        android:id="@+id/cover_chart"
+        android:layout_width="400px"
+        android:layout_height="400px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:visibility="gone"
+        android:orientation="vertical" />
+
+    <TextView
+        android:id="@+id/freetext1"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:textSize="21px"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/light_grey" />
+
+    <TextView
+        android:id="@+id/freetext2"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:textSize="21px"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/light_grey" />
+
+    <TextView
+        android:id="@+id/iob1"
+        android:layout_width="130px"
+        android:layout_height="33px"
+        android:layout_marginTop="168px"
+        android:layout_marginLeft="270px"
+        android:textSize="21px"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        tools:text="@string/activity_IOB" />
+
+    <TextView
+        android:id="@+id/iob2"
+        android:layout_width="130px"
+        android:layout_height="33px"
+        android:layout_marginTop="196px"
+        android:layout_marginLeft="270px"
+        android:textSize="21px"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:textColor="@color/light_grey"
+        tools:text="@string/no_iob_u" />
+
+    <TextView
+        android:id="@+id/cob1"
+        android:layout_width="120px"
+        android:layout_height="33px"
+        android:layout_marginTop="168px"
+        android:layout_marginLeft="0px"
+        android:gravity="center"
+        android:text="@string/activity_carb"
+        android:textColor="@color/light_grey"
+        android:textSize="21px" />
+
+    <TextView
+        android:id="@+id/cob2"
+        android:layout_width="120px"
+        android:layout_height="33px"
+        android:layout_marginTop="196px"
+        android:layout_marginLeft="0px"
+        android:gravity="center"
+        android:text="@string/no_cob_g"
+        android:textSize="21px"
+        android:textColor="@color/light_grey"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/delta"
+        android:layout_width="59px"
+        android:layout_height="32px"
+        android:layout_marginTop="133px"
+        android:layout_marginLeft="15px"
+        android:gravity="center"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:textColor="@color/light_grey"
+        tools:text="+/-" />
+
+    <TextView
+        android:id="@+id/avg_delta"
+        android:layout_width="59px"
+        android:layout_height="32px"
+        android:layout_marginTop="133px"
+        android:layout_marginLeft="74px"
+        android:gravity="center"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:textColor="@color/light_grey"
+        tools:text="@string/abbreviation_average" />
+
+
+    <TextView
+        android:id="@+id/uploader_battery"
+        android:layout_width="60px"
+        android:layout_height="32px"
+        android:gravity="center"
+        android:layout_marginTop="133px"
+        android:layout_marginLeft="129px"
+        android:textSize="23px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:textStyle="bold"
+        android:textColor="@color/light_grey"
+        tools:text="100%" />
+
+    <TextView
+        android:id="@+id/rig_battery"
+        android:layout_width="60px"
+        android:layout_height="32px"
+        android:gravity="center"
+        android:layout_marginTop="133px"
+        android:layout_marginLeft="189px"
+        android:textSize="23px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:textStyle="bold"
+        android:textColor="@color/light_grey"
+        android:visibility="visible"
+        tools:text="100%" />
+
+    <TextView
+        android:id="@+id/basalRate"
+        android:layout_width="91px"
+        android:layout_height="32px"
+        android:layout_marginTop="133px"
+        android:layout_marginLeft="249px"
+        android:gravity="center"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:textColor="@color/light_grey"
+        tools:text="@string/no_tmp_basal_u_h" />
+
+    <TextView
+        android:id="@+id/bgi"
+        android:layout_width="60px"
+        android:layout_height="32px"
+        android:layout_marginTop="133px"
+        android:layout_marginLeft="340px"
+        android:gravity="center"
+        android:textSize="23px"
+        android:textStyle="bold"
+        android:textColor="@color/light_grey"
+        android:visibility="visible"
+        tools:text="bgi" />
+
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="151px"
+        android:gravity="center"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:textSize="70px"
+        android:textStyle="bold"
+        android:textColor="@color/light_grey"
+        android:visibility="gone"
+        tools:text="22:00" />
+
+    <!-- hour -->
+    <TextView
+        android:id="@+id/hour"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="151px"
+        android:layout_marginLeft="119px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:textAllCaps="true"
+        android:textSize="70px"
+        android:textStyle="bold"
+        android:textColor="@color/light_grey"
+        android:visibility="gone"
+        tools:text="20" />
+    <!-- minute -->
+    <TextView
+        android:id="@+id/minute"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="158px"
+        android:layout_marginLeft="210px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:textColor="@color/light_grey"
+        android:textSize="46px"
+        android:visibility="gone"
+        tools:text="00" />
+    <!-- minute -->
+    <TextView
+        android:id="@+id/second"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="158px"
+        android:layout_marginLeft="210px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:textColor="@color/light_grey"
+        android:textSize="46px"
+        android:visibility="gone"
+        tools:text="00" />
+
+    <!-- 12h period AM / PM -->
+
+
+    <TextView
+        android:id="@+id/timePeriod"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginLeft="210px"
+        android:layout_marginTop="205px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:textSize="17px"
+        android:textStyle="bold"
+        android:textColor="@color/light_grey"
+        android:visibility="gone"
+        tools:text="AM" />
+
+    <TextView
+        android:id="@+id/day_name"
+        android:layout_width="56px"
+        android:layout_height="36px"
+        android:layout_marginTop="172px"
+        android:layout_marginLeft="120px"
+        android:textAllCaps="true"
+        android:gravity="center"
+        android:textSize="24px"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:visibility="visible"
+        tools:text="DDD." />
+
+    <TextView
+        android:id="@+id/day"
+        android:layout_width="56px"
+        android:layout_height="36px"
+        android:layout_marginTop="198px"
+        android:layout_marginLeft="120px"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="24px"
+        android:textColor="@color/white"
+        tools:text="day" />
+
+    <TextView
+        android:id="@+id/month"
+        android:layout_width="50px"
+        android:layout_height="36px"
+        android:layout_marginTop="180px"
+        android:layout_marginLeft="220px"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="24px"
+        android:textColor="@color/white"
+        tools:text="févr." />
+
+    <TextView
+        android:id="@+id/loop"
+        android:layout_width="50px"
+        android:layout_height="50px"
+        android:layout_marginTop="61px"
+        android:layout_marginLeft="68px"
+        android:background="@drawable/loop_grey_25"
+        android:gravity="center"
+        android:textSize="24px"
+        android:textStyle="bold"
+        android:textColor="@color/light_grey"
+        tools:text="--'" />
+
+    <TextView
+        android:id="@+id/direction"
+        android:layout_width="52px"
+        android:layout_height="52px"
+        android:layout_marginTop="26px"
+        android:layout_marginLeft="291px"
+        android:visibility="gone"
+        android:gravity="left"
+        android:textSize="39px"
+        android:textStyle="bold"
+        android:textColor="@color/light_grey"
+        tools:text="--" />
+
+    <ImageView
+        android:id="@+id/direction2"
+        android:layout_width="52px"
+        android:layout_height="52px"
+        android:layout_marginTop="26px"
+        android:layout_marginLeft="291px"
+        android:visibility="visible"
+        android:src="@drawable/ic_flat"
+        android:orientation="vertical" />
+
+    <TextView
+        android:id="@+id/timestamp"
+        android:layout_width="52px"
+        android:layout_height="34px"
+        android:gravity="left"
+        android:layout_marginTop="79px"
+        android:layout_marginLeft="291px"
+        android:textSize="25px"
+        android:textStyle="bold"
+        android:textColor="@color/light_grey"
+        tools:text="--'" />
+
+    <TextView
+        android:id="@+id/sgv"
+        android:layout_width="400px"
+        android:layout_height="100px"
+        android:gravity="center"
+        android:lines="1"
+        android:layout_marginTop="26px"
+        android:layout_marginLeft="0px"
+        android:fontFamily="@font/roboto_condensed_bold"
+        android:textSize="74px"
+        android:textColor="@color/light_grey"
+        tools:text="200" />
+
+    <ImageView
+        android:id="@+id/cover_plate"
+        android:layout_width="400px"
+        android:layout_height="400px"
+        android:orientation="vertical"
+        android:visibility="visible"
+        android:src="@drawable/simplified_dial" />
+
+    <ImageView
+        android:id="@+id/hour_hand"
+        android:layout_width="400px"
+        android:layout_height="400px"
+        android:orientation="vertical"
+        android:rotation="20"
+        android:src="@drawable/hour_hand" />
+
+    <ImageView
+        android:id="@+id/minute_hand"
+        android:layout_width="400px"
+        android:layout_height="400px"
+        android:orientation="vertical"
+        android:rotation="40"
+        android:src="@drawable/minute_hand" />
+
+    <ImageView
+        android:id="@+id/second_hand"
+        android:layout_width="400px"
+        android:layout_height="400px"
+        android:orientation="vertical"
+        android:rotation="60"
+        android:src="@drawable/second_hand"
+        tools:ignore="UseAppTint" />
+
+    <!--   FLAGs   -->
+    <View
+        android:id="@+id/AAPSv2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+</FrameLayout>

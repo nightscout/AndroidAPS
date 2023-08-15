@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+	 height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+<g id="Simplified_dial">
+	<line fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1417" stroke-miterlimit="10" x1="11.999" y1="0.008" x2="11.999" y2="2.708"/>
+	<line fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1417" stroke-miterlimit="10" x1="11.999" y1="21.307" x2="11.999" y2="24.008"/>
+	<line fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1417" stroke-miterlimit="10" x1="23.999" y1="12" x2="21.298" y2="12"/>
+	<line fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1417" stroke-miterlimit="10" x1="2.699" y1="12" x2="-0.001" y2="12"/>
+	<line fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1417" stroke-miterlimit="10" x1="5.999" y1="1.616" x2="7.349" y2="3.954"/>
+	<line fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1417" stroke-miterlimit="10" x1="16.648" y1="20.061" x2="17.999" y2="22.4"/>
+	<line fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1417" stroke-miterlimit="10" x1="22.387" y1="6.001" x2="20.048" y2="7.351"/>
+	<line fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1417" stroke-miterlimit="10" x1="3.941" y1="16.651" x2="1.602" y2="18.001"/>
+	<line fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1417" stroke-miterlimit="10" x1="1.606" y1="6.008" x2="3.945" y2="7.358"/>
+	<line fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1417" stroke-miterlimit="10" x1="20.052" y1="16.658" x2="22.391" y2="18.008"/>
+	<line fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1417" stroke-miterlimit="10" x1="17.992" y1="1.612" x2="16.642" y2="3.95"/>
+	<line fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0.1417" stroke-miterlimit="10" x1="7.342" y1="20.057" x2="5.992" y2="22.396"/>
+</g>
+</svg>

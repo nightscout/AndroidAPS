@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
     <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS(Custom)</string>
     <string name="label_actions_tile">AAPS(Actions)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
@@ -143,6 +144,7 @@
     <string name="pref_simplify_ui_sum">Only show time and BG</string>
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
     <string name="pref_show_weeknumber">Show Week number</string>
+    <string name="custom_pref_show_seconds">Show seconds</string>
     <string name="digitalstyle_pref_your_style">Your style:</string>
     <string name="digitalstyle_style_none">no style</string>
     <string name="digitalstyle_style_minimal">minimal style</string>
@@ -208,6 +210,14 @@
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
     <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
     <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
+    <string name="key_enable_custom_setting" translatable="false">enable_custom_setting</string>
+    <string name="key_digital_watchface" translatable="false">digital_watchface</string>
+    <string name="key_digital_timing" translatable="false">digital_timing</string>
+    <string name="key_analog_watchface" translatable="false">analog_watchface</string>
+    <string name="key_show_seconds" translatable="false">show_second</string>
+    <string name="key_high_color" translatable="false">highcolor</string>
+    <string name="key_mid_color" translatable="false">midcolor</string>
+    <string name="key_low_color" translatable="false">lowcolor</string>
     <string name="increment">increment</string>
     <string name="decrement">decrement</string>
     <string name="first_char_high">H</string>

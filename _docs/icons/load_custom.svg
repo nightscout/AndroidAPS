@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px"
+	 height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+<g id="LoadCustom">
+	<g>
+		<path fill="#AAAAAA" d="M17.653,7.286c-2.578,0-4.668,2.09-4.668,4.668c0,2.578,2.09,4.668,4.668,4.668s4.668-2.09,4.668-4.668
+			C22.321,9.375,20.231,7.286,17.653,7.286z M17.653,15.414c-1.911,0-3.46-1.549-3.46-3.46c0-1.911,1.549-3.46,3.46-3.46
+			s3.46,1.549,3.46,3.46C21.113,13.864,19.564,15.414,17.653,15.414z"/>
+		<polygon fill="#AAAAAA" points="19.932,4.976 15.373,4.976 14.776,8.314 20.53,8.314 			"/>
+		<polygon fill="#AAAAAA" points="19.932,19.024 15.373,19.024 14.776,15.686 20.53,15.686 			"/>
+	</g>
+	<g>
+		
+			<rect x="1.885" y="6.067" fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linejoin="round" stroke-miterlimit="10" width="9.405" height="11.865"/>
+		<g>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="3.034" y1="7.23" x2="10.142" y2="7.23"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="3.034" y1="8.592" x2="10.142" y2="8.592"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="3.034" y1="11.318" x2="10.142" y2="11.318"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="3.034" y1="9.955" x2="10.142" y2="9.955"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="3.034" y1="12.68" x2="10.142" y2="12.68"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="3.034" y1="14.043" x2="10.142" y2="14.043"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="3.034" y1="16.768" x2="10.142" y2="16.768"/>
+			
+				<line fill="none" stroke="#FFFFFF" stroke-width="0.4819" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" x1="3.034" y1="15.406" x2="10.142" y2="15.406"/>
+		</g>
+	</g>
+	<polygon fill="#6AE86D" points="17.726,11.953 12.751,9.823 12.751,11.078 4.855,11.078 4.855,12.828 12.751,12.828 
+		12.751,14.084 		"/>
+</g>
+</svg>

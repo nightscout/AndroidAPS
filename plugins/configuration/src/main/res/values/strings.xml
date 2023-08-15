@@ -164,6 +164,9 @@
     <string name="prefdecrypt_issue_wrong_format">Missing encryption configuration, settings format is invalid!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Unsupported or not specified encryption algorithm!</string>
 
+    <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Select Custom Watchface</string>
+
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Please reboot your phone or restart AAPS from the System Settings \notherwise Android APS will not have logging (important to track and verify that the algorithms are working correctly)!</string>
 

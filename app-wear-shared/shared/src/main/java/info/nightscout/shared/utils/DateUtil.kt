@@ -150,6 +150,10 @@ class DateUtil @Inject constructor(private val context: Context) {
         return DateTime(mills).toString(DateTimeFormat.forPattern(format))
     }
 
+    fun secondString(): String = secondString(now())
+    fun secondString(mills: Long): String =
+        DateTime(mills).toString(DateTimeFormat.forPattern("ss"))
+
     fun minuteString(): String = minuteString(now())
     fun minuteString(mills: Long): String =
         DateTime(mills).toString(DateTimeFormat.forPattern("mm"))

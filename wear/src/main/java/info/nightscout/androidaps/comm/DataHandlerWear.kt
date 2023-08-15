@@ -25,6 +25,7 @@ import info.nightscout.androidaps.tile.QuickWizardTileService
 import info.nightscout.androidaps.tile.TempTargetTileService
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventWearDataToMobile
 import info.nightscout.rx.events.EventWearToMobile
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -177,6 +178,35 @@ class DataHandlerWear @Inject constructor(
                     sp.putString(R.string.key_quick_wizard_data, serialized)
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                         TileService.getUpdater(context).requestUpdate(QuickWizardTileService::class.java)
+                }
+            }
+        disposable += rxBus
+            .toObservable(EventData.ActionSetCustomWatchface::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe {
+                aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${it.sourceNodeId}")
+                persistence.store(it)
+                persistence.readCustomWatchface()?.let {
+                    rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(it, false)))
+                }
+            }
+        disposable += rxBus
+            .toObservable(EventData.ActionrequestSetDefaultWatchface::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe {
+                aapsLogger.debug(LTag.WEAR, "Set Default Watchface received from ${it.sourceNodeId}")
+                persistence.setDefaultWatchface()
+                persistence.readCustomWatchface()?.let {
+                    rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(it, false)))
+                }
+            }
+        disposable += rxBus
+            .toObservable(EventData.ActionrequestCustomWatchface::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe { eventData ->
+                aapsLogger.debug(LTag.WEAR, "Custom Watchface requested from ${eventData.sourceNodeId}")
+                persistence.readCustomWatchface()?.let {
+                    rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(it, eventData.exportFile)))
                 }
             }
     }

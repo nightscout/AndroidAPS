@@ -1,42 +1,199 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:paddingTop="2dp"
     tools:context="info.nightscout.plugins.general.wear.WearFragment">
 
-    <TextView
-        android:id="@+id/connected_device"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/log"
+        style="@style/Widget.MaterialComponents.CardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="@string/no_watch_connected"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        tools:ignore="HardcodedText" />
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginTop="4dp"
+        app:cardCornerRadius="4dp"
+        app:contentPadding="2dp"
+        app:cardElevation="2dp"
+        app:cardUseCompatPadding="false"
+        android:layout_gravity="center">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/resend"
-        style="@style/GrayButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/ic_refresh"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp"
-        android:text="@string/resend_all_data"
-        android:textColor="?attr/treatmentButton" />
+        <TextView
+            android:id="@+id/connected_device"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|center_horizontal"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="@string/no_watch_connected"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            tools:ignore="HardcodedText" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/open_settings"
-        style="@style/GrayButton"
+        <androidx.gridlayout.widget.GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:padding="10dip"
+            app:columnCount="2">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/resend"
+                style="@style/GrayButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/ic_refresh"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/resend_all_data"
+                android:textColor="?attr/treatmentButton"
+                app:layout_gravity="fill"
+                app:layout_column="0"
+                app:layout_columnWeight="1"
+                app:layout_row="0" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/open_settings"
+                style="@style/GrayButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:drawableTop="@drawable/ic_settings"
+                android:paddingLeft="0dp"
+                android:paddingRight="0dp"
+                android:text="@string/open_settings_on_wear"
+                android:textColor="?attr/treatmentButton"
+                app:layout_gravity="fill"
+                app:layout_column="1"
+                app:layout_columnWeight="1"
+                app:layout_row="0" />
+
+        </androidx.gridlayout.widget.GridLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <LinearLayout
+        android:id="@+id/custom_watchface_Layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:drawableTop="@drawable/ic_settings"
-        android:paddingLeft="0dp"
-        android:paddingRight="0dp"
-        android:text="@string/open_settings_on_wear"
-        android:textColor="?attr/treatmentButton" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.MaterialComponents.CardView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="4dp"
+            app:cardCornerRadius="4dp"
+            app:contentPadding="2dp"
+            app:cardElevation="2dp"
+            app:cardUseCompatPadding="false"
+            android:layout_gravity="center">
+
+
+
+                <TextView
+                    android:id="@+id/custom_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:layout_marginBottom="0dp"
+                    android:text="@string/wear_custom_watchface" />
+
+                <androidx.gridlayout.widget.GridLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:padding="10dip"
+                    app:columnCount="2">
+
+                    <info.nightscout.core.ui.elements.SingleClickButton
+                        android:id="@+id/load_custom"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/load_custom"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/wear_load_watchface"
+                        android:textSize="11sp"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="0"
+                        app:layout_column="0" />
+    <!--
+                    <info.nightscout.core.ui.elements.SingleClickButton
+                        android:id="@+id/send_custom"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/send_custom"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/wear_send_watchface"
+                        android:textSize="11sp"
+                        app:layout_column="1"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="0" />
+    -->
+                    <info.nightscout.core.ui.elements.SingleClickButton
+                        android:id="@+id/export_custom"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/export_custom"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/wear_export_watchface"
+                        android:textSize="11sp"
+                        android:visibility="visible"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="0"
+                        app:layout_column="1" />
+
+                    <info.nightscout.core.ui.elements.SingleClickButton
+                        android:id="@+id/default_custom"
+                        style="@style/GrayButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:drawableTop="@drawable/set_default"
+                        android:paddingStart="0dp"
+                        android:paddingEnd="0dp"
+                        android:text="@string/wear_default_watchface"
+                        android:textSize="11sp"
+                        android:visibility="visible"
+                        app:layout_columnWeight="1"
+                        app:layout_gravity="fill"
+                        app:layout_row="1"
+                        app:layout_column="0" />
+
+                </androidx.gridlayout.widget.GridLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:id="@+id/custom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="20dp"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/cover_chart"
+                android:tag="cover_chart"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/watchface_custom"
+                android:visibility="visible"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+
+    </LinearLayout>
 
 </LinearLayout>

@@ -55,6 +55,9 @@ import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventDiaconnG8PumpLogReset
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.rx.weardata.CustomWatchfaceData
+import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey
+import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -295,6 +298,27 @@ class ImportExportPrefsImpl @Inject constructor(
             ToastUtils.errorToast(activity, rh.gs(R.string.goto_main_try_again))
             log.error(LTag.CORE, "Internal android framework exception", e)
         }
+    }
+
+    override fun importCustomWatchface(fragment: Fragment) {
+        fragment.activity?.let { importCustomWatchface(it) }
+    }
+    override fun importCustomWatchface(activity: FragmentActivity) {
+        try {
+            if (activity is DaggerAppCompatActivityWithResult)
+                activity.callForCustomWatchfaceFile.launch(null)
+        } catch (e: IllegalArgumentException) {
+            // this exception happens on some early implementations of ActivityResult contracts
+            // when registered and called for the second time
+            ToastUtils.errorToast(activity, rh.gs(R.string.goto_main_try_again))
+            log.error(LTag.CORE, "Internal android framework exception", e)
+        }
+    }
+
+    override fun exportCustomWatchface(customWatchface: CustomWatchfaceData) {
+        prefFileList.ensureExportDirExists()
+        val newFile = prefFileList.newCwfFile(customWatchface.metadata[CustomWatchfaceMetadataKey.CWF_FILENAME] ?:"")
+        ZipWatchfaceFormat.saveCustomWatchface(newFile, customWatchface)
     }
 
     override fun importSharedPreferences(activity: FragmentActivity, importFile: PrefsFile) {
