@@ -39,4 +39,12 @@
     <string name="disconnecting">Disconnecting</string>
     <string name="waiting_for_disconnection">Waiting for disconnection</string>
 
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Created at: %1$s</string>
+    <string name="metadata_label_watchface_author">Author: %1$s</string>
+    <string name="metadata_label_watchface_name">Name: %1$s</string>
+    <string name="metadata_wear_import_filename">File name: %1$s</string>
+    <string name="metadata_label_watchface_version">Watchface version: %1$s</string>
+    <string name="wear_default_watchface">Default Watchface</string>
+
 </resources>
