@@ -20,4 +20,5 @@
     <string name="handshaking">Δημιουργία σύνδεσης</string>
     <string name="connected">Συνδέθηκε</string>
     <string name="disconnecting">Αποσυνδέεται</string>
+    <!-- Custom Watchface -->
 </resources>
