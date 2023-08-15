@@ -33,4 +33,5 @@
     <string name="connected">Connesso</string>
     <string name="disconnecting">Disconnessione</string>
     <string name="waiting_for_disconnection">In attesa della disconnessione</string>
+    <!-- Custom Watchface -->
 </resources>
