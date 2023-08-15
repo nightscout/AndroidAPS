@@ -33,4 +33,5 @@
     <string name="connected">מחובר</string>
     <string name="disconnecting">מתנתק</string>
     <string name="waiting_for_disconnection">ממתין לניתוק</string>
+    <!-- Custom Watchface -->
 </resources>
