@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
     <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(Digitalstil)</string>
+    <string name="label_watchface_custom">AAPS(Tilpasset)</string>
     <string name="label_actions_tile">AAPS(Actions)</string>
     <string name="label_temp_target_tile">AAPS(Midl. Mål)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
@@ -143,6 +144,7 @@
     <string name="pref_simplify_ui_sum">Vis kun tid og BS</string>
     <string name="pref_vibrate_hourly">Vibrer hver time</string>
     <string name="pref_show_weeknumber">Vis ukenummer</string>
+    <string name="custom_pref_show_seconds">Vis sekunder</string>
     <string name="digitalstyle_pref_your_style">Din stil:</string>
     <string name="digitalstyle_style_none">ingen stil</string>
     <string name="digitalstyle_style_minimal">minimalistisk stil</string>
