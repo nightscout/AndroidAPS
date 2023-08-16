@@ -133,5 +133,6 @@
     <string name="prefdecrypt_issue_wrong_pass">解密错误，提供的密码无效或设置文件已修改! 导入的文件可能是使用其他主密码导出的。</string>
     <string name="prefdecrypt_issue_wrong_format">缺少加密配置，设置格式无效!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">不支持或未指定加密算法!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
 </resources>
