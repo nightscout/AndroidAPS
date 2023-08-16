@@ -38,6 +38,5 @@
     <string name="metadata_label_watchface_author">Auteur : %1$s</string>
     <string name="metadata_label_watchface_name">Nom : %1$s</string>
     <string name="metadata_wear_import_filename">Nom du fichier : %1$s</string>
-    <string name="metadata_label_watchface_version">Version du cadran : %1$s</string>
     <string name="wear_default_watchface">Cadran par défaut</string>
 </resources>
