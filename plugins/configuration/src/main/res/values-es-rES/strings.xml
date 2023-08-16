@@ -151,6 +151,8 @@
     <string name="prefdecrypt_issue_wrong_pass">Error de descifrado. La contraseña proporcionada no es válida o se ha modificado el archivo de ajustes. Puede suceder que el archivo importado se haya exportado con una contraseña maestra diferente.</string>
     <string name="prefdecrypt_issue_wrong_format">Falta la configuración de cifrado, ¡el formato configuración no es válido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">¡Algoritmo de cifrado no soportado o no especificado!</string>
+    <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Seleccionar esfera por defecto</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Por favor, reinicia el teléfono o AAPS desde los ajustes del sistema \nde lo contrario AAPS no guardará registros (importante para trazar y verificar que el algoritmo está funcionando correctamente)</string>
 </resources>
