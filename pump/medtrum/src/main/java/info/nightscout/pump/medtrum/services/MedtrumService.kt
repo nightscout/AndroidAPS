@@ -287,20 +287,22 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun setBolus(detailedBolusInfo: DetailedBolusInfo, t: EventOverviewBolusProgress.Treatment): Boolean {
-        if (!isConnected) return false
-        if (BolusProgressData.stopPressed) return false
+        if (!isConnected) {
+            aapsLogger.warn(LTag.PUMPCOMM, "Pump not connected, not setting bolus")
+            return false
+        }
+        if (BolusProgressData.stopPressed) {
+            aapsLogger.warn(LTag.PUMPCOMM, "Bolus stop pressed, not setting bolus")
+            return false
+        }
+        if (!medtrumPump.bolusDone) {
+            aapsLogger.warn(LTag.PUMPCOMM, "Bolus already in progress, not setting new one")
+            return false
+        }
+
         val insulin = detailedBolusInfo.insulin
-        val bolusStart = System.currentTimeMillis()
-
-        medtrumPump.bolusDone = false
-        medtrumPump.bolusingTreatment = t
-        medtrumPump.bolusAmountToBeDelivered = insulin
-        medtrumPump.bolusStopped = false
-        medtrumPump.bolusProgressLastTimeStamp = bolusStart
-
         if (insulin > 0) {
-            val result = sendPacketAndGetResponse(SetBolusPacket(injector, insulin))
-            if (!result) {
+            if (!sendPacketAndGetResponse(SetBolusPacket(injector, insulin))) {
                 aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
                 commandQueue.loadEvents(null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
                 t.insulin = 0.0
@@ -311,6 +313,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
             t.insulin = 0.0
             return false
         }
+
+        val bolusStart = System.currentTimeMillis()
+        medtrumPump.bolusDone = false
+        medtrumPump.bolusingTreatment = t
+        medtrumPump.bolusAmountToBeDelivered = insulin
+        medtrumPump.bolusStopped = false
+        medtrumPump.bolusProgressLastTimeStamp = bolusStart
 
         detailedBolusInfo.timestamp = bolusStart // Make sure the timestamp is set to the start of the bolus
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history

@@ -49,14 +49,12 @@ class SynchronizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) 
                 aapsLogger.debug(LTag.PUMPCOMM, "SynchronizePacket: fieldMask: $fieldMask")
             }
 
-            // Remove bolus fields from fieldMask if fields are present (we sync bolus trough other commands)
+            // Remove extended bolus field from fieldMask if field is present (extended bolus is not supported)
             if (fieldMask and MASK_SUSPEND != 0) {
                 offset += 4 // If field is present, skip 4 bytes
             }
             if (fieldMask and MASK_NORMAL_BOLUS != 0) {
-                aapsLogger.debug(LTag.PUMPCOMM, "SynchronizePacket: Normal bolus present removing from fieldMask")
-                fieldMask = fieldMask and MASK_NORMAL_BOLUS.inv()
-                syncData = syncData.copyOfRange(0, offset) + syncData.copyOfRange(offset + 3, syncData.size)
+                offset += 3 // If field is present, skip 3 bytes
             }
             if (fieldMask and MASK_EXTENDED_BOLUS != 0) {
                 aapsLogger.debug(LTag.PUMPCOMM, "SynchronizePacket: Extended bolus present removing from fieldMask")
