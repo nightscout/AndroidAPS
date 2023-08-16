@@ -5,6 +5,8 @@ import androidx.annotation.StringRes
 import info.nightscout.automation.ui.WeekdayPicker
 import info.nightscout.automation.R
 import java.util.Calendar
+import java.util.Date
+import kotlin.collections.ArrayList
 
 class InputWeekDay : Element() {
 
@@ -49,7 +51,7 @@ class InputWeekDay : Element() {
     }
 
     val weekdays = BooleanArray(DayOfWeek.values().size)
-
+    var view: WeekdayPicker? = null
     init {
         for (day in DayOfWeek.values()) set(day, false)
     }
@@ -65,6 +67,11 @@ class InputWeekDay : Element() {
 
     fun isSet(day: DayOfWeek): Boolean = weekdays[day.ordinal]
 
+    fun isSet(timestamp: Long): Boolean {
+        val scheduledDayOfWeek = Calendar.getInstance().also { it.time = Date(timestamp) }
+        return isSet(DayOfWeek.fromCalendarInt(scheduledDayOfWeek[Calendar.DAY_OF_WEEK]))
+    }
+
     fun getSelectedDays(): List<Int> {
         val selectedDays: MutableList<Int> = ArrayList()
         for (i in weekdays.indices) {
@@ -76,11 +83,12 @@ class InputWeekDay : Element() {
     }
 
     override fun addToLayout(root: LinearLayout) {
+        view = WeekdayPicker(root.context).apply {
+            setSelectedDays(getSelectedDays())
+            setOnWeekdaysChangeListener { i: Int, selected: Boolean -> set(DayOfWeek.fromCalendarInt(i), selected) }
+        }
         root.addView(
-            WeekdayPicker(root.context).apply {
-                setSelectedDays(getSelectedDays())
-                setOnWeekdaysChangeListener { i: Int, selected: Boolean -> set(DayOfWeek.fromCalendarInt(i), selected) }
-            }
+            view
         )
     }
 }

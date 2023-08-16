@@ -37,7 +37,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
-                        android:layout_weight="2"
+                        android:layout_weight="3.5"
                         android:gravity="end"
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
@@ -73,26 +73,65 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal|center_vertical"
-                        android:layout_weight="2"
+                        android:layout_weight="3.5"
                         android:gravity="end"
                         android:paddingStart="5dp"
                         android:paddingEnd="5dp"
                         android:text="@string/autotune_tune_days"
                         android:textSize="14sp" />
 
-
-                    <info.nightscout.core.ui.elements.NumberPicker
-                        android:id="@+id/tune_days"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginBottom="2dp"
                         android:layout_weight="1"
-                        android:paddingStart="5dp"
-                        android:paddingEnd="5dp"
-                        app:customContentDescription="@string/duration_label" />
+                        android:orientation="horizontal">
 
-                </LinearLayout>
+                        <info.nightscout.core.ui.elements.NumberPicker
+                            android:id="@+id/tune_days"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="2dp"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            app:customContentDescription="@string/duration_label" />
+
+                        <TextView
+                            android:id="@+id/calc_days"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="(5)"
+                            android:textSize="14sp"
+                            android:visibility="visible" />
+
+
+                        <CheckBox
+                            android:id="@+id/show_week_days_checkbox"
+                            android:layout_width="wrap_content"
+                            android:layout_height="fill_parent"
+                            android:layout_gravity="center_vertical"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:checked="false"
+                            android:drawableEnd="@drawable/ic_visibility" />
+
+                    </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/select_week_days"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone"
+                        android:orientation="vertical">
+
+                    </LinearLayout>
 
             </LinearLayout>
 

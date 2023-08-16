@@ -30,4 +30,5 @@ dependencies {
 
     // APS
     api 'org.mozilla:rhino:1.7.14'
+    implementation project(path: ':plugins:automation')
 }
