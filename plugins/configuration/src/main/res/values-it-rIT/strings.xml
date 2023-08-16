@@ -151,6 +151,8 @@
     <string name="prefdecrypt_issue_wrong_pass">Errore decrittazione, la password fornita è errata o il file delle impostazioni è stato modificato! È possibile che il file importato sia stato esportato con una diversa password master.</string>
     <string name="prefdecrypt_issue_wrong_format">Configurazione crittografia mancante, il formato delle impostazioni non è valido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo di crittografia non supportato o non specificato!</string>
+    <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Seleziona watchface personalizzata</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Riavvia il tuo telefono oppure fai ripartire AndroidAPS dalle impostazioni di sistema \naltrimenti Android APS non farà il log (è importante monitorare e verificare che gli algoritmi stiano funzionando correttamente)!</string>
 </resources>
