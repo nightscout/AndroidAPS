@@ -151,6 +151,8 @@
     <string name="prefdecrypt_issue_wrong_pass">Chyba dešifrování, zadané heslo je neplatné, nebo byl soubor nastavení změněn! Může se stát, že importovaný soubor byl exportován s jiným hlavním heslem.</string>
     <string name="prefdecrypt_issue_wrong_format">Chybí konfigurace šifrování, formát nastavení je neplatný!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný nebo neurčený šifrovací algoritmus!</string>
+    <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Vyberte vlastní ciferník</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Prosím restartujte Váš telefon nebo restartujte AAPS z nastavení systému\njinak nebudou zaznamenány ladící informace (důležité pro sledování a kontrolu, zda algoritmus pracuje správně)!</string>
 </resources>
