@@ -20,6 +20,7 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.DrawableRes
+import androidx.annotation.FontRes
 import androidx.annotation.IdRes
 import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
@@ -29,6 +30,7 @@ import androidx.viewbinding.ViewBinding
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityCustomBinding
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
+import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.CUSTOM_VERSION
 import info.nightscout.rx.weardata.CustomWatchfaceData
 import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
@@ -56,6 +58,10 @@ class CustomWatchface : BaseWatchFace() {
     private var lowBatColor = Color.RED
     private var bgColor = Color.WHITE
 
+    override fun onCreate() {
+        super.onCreate()
+        FontMap.init(context)
+    }
 
     @Suppress("DEPRECATION")
     override fun inflateLayout(inflater: LayoutInflater): ViewBinding {
@@ -77,13 +83,18 @@ class CustomWatchface : BaseWatchFace() {
 
     override fun setDataFields() {
         super.setDataFields()
-        binding.direction2.setImageDrawable(resources.getDrawable(TrendArrow.fromSymbol(singleBg.slopeArrow).icon))
+        binding.direction2.setImageDrawable(resources.getDrawable(TrendArrow.icon(singleBg.slopeArrow)))
+        // rotate the second hand.
+        binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
+        // rotate the minute hand.
+        binding.minuteHand.rotation = TimeOfDay().minuteOfHour * 6f
+        // rotate the hour hand.
+        binding.hourHand.rotation = TimeOfDay().hourOfDay * 30f + TimeOfDay().minuteOfHour * 0.5f
     }
+
     override fun setColorDark() {
         setWatchfaceStyle()
-        binding.mainLayout.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background))
         binding.sgv.setTextColor(bgColor)
-        binding.direction.setTextColor(bgColor)
         binding.direction2.colorFilter = changeDrawableColor(bgColor)
 
         if (ageLevel != 1)
@@ -95,16 +106,6 @@ class CustomWatchface : BaseWatchFace() {
             1    -> binding.loop.setBackgroundResource(R.drawable.loop_green_25)
             else -> binding.loop.setBackgroundResource(R.drawable.loop_red_25)
         }
-
-        basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark)
-        basalCenterColor = ContextCompat.getColor(this, R.color.basal_light)
-
-        // rotate the second hand.
-        binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
-        // rotate the minute hand.
-        binding.minuteHand.rotation = TimeOfDay().minuteOfHour * 6f
-        // rotate the hour hand.
-        binding.hourHand.rotation = TimeOfDay().hourOfDay * 30f + TimeOfDay().minuteOfHour * 0.5f
 
         setupCharts()
     }
@@ -143,7 +144,9 @@ class CustomWatchface : BaseWatchFace() {
                 lowColor = if (json.has("lowColor")) Color.parseColor(json.getString("lowColor")) else ContextCompat.getColor(this, R.color.low)
                 lowBatColor = if (json.has("lowBatColor")) Color.parseColor(json.getString("lowBatColor")) else ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty)
                 carbColor = if (json.has("carbColor")) Color.parseColor(json.getString("carbColor")) else ContextCompat.getColor(this, R.color.carbs)
-                gridColor = if (json.has("gridColor")) Color.parseColor(json.getString("gridColor")) else ContextCompat.getColor(this, R.color.carbs)
+                basalBackgroundColor = if (json.has("basalBackgroundColor")) Color.parseColor(json.getString("basalBackgroundColor")) else ContextCompat.getColor(this, R.color.basal_dark)
+                basalCenterColor = if (json.has("basalCenterColor")) Color.parseColor(json.getString("basalCenterColor")) else ContextCompat.getColor(this, R.color.basal_light)
+                gridColor = if (json.has("gridColor")) Color.parseColor(json.getString("gridColor")) else Color.WHITE
                 pointSize = if (json.has("pointSize")) json.getInt("pointSize") else 2
                 bgColor = when (singleBg.sgvLevel) {
                     1L   -> highColor
@@ -167,10 +170,10 @@ class CustomWatchface : BaseWatchFace() {
                             if (view is TextView) {
                                 view.rotation = if (viewjson.has("rotation")) viewjson.getInt("rotation").toFloat() else 0F
                                 view.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((if (viewjson.has("textsize")) viewjson.getInt("textsize") else 22) * zoomFactor).toFloat())
-                                view.gravity = setGravity(if (viewjson.has("gravity")) viewjson.getString("gravity") else "center")
+                                view.gravity = GravityMap.gravity(if (viewjson.has("gravity")) viewjson.getString("gravity") else GravityMap.CENTER.key)
                                 view.setTypeface(
-                                    setFont(if (viewjson.has("font")) viewjson.getString("font") else "sans-serif"),
-                                    setStyle(if (viewjson.has("fontStyle")) viewjson.getString("fontStyle") else "normal")
+                                    FontMap.font(if (viewjson.has("font")) viewjson.getString("font") else FontMap.DEFAULT.key),
+                                    StyleMap.style(if (viewjson.has("fontStyle")) viewjson.getString("fontStyle") else StyleMap.NORMAL.key)
                                 )
                                 if (viewjson.has("fontColor"))
                                     view.setTextColor(getColor(viewjson.getString("fontColor")))
@@ -203,8 +206,10 @@ class CustomWatchface : BaseWatchFace() {
                         }
                     }
                 }
+                binding.background.visibility = View.VISIBLE
                 updateSecondVisibility()
-            } catch (e:Exception) {
+            } catch (e: Exception) {
+                aapsLogger.debug(LTag.WEAR, "Crash during Custom watch load")
                 persistence.store(defaultWatchface(), false) // relaod correct values to avoid crash of watchface
             }
         }
@@ -216,7 +221,9 @@ class CustomWatchface : BaseWatchFace() {
             .put(CustomWatchfaceMetadataKey.CWF_FILENAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
             .put(CustomWatchfaceMetadataKey.CWF_AUTHOR.key, "Philoul")
             .put(CustomWatchfaceMetadataKey.CWF_CREATED_AT.key, dateUtil.dateString(dateUtil.now()))
+            .put(CustomWatchfaceMetadataKey.CWF_AUTHOR_VERSION.key, CUSTOM_VERSION)
             .put(CustomWatchfaceMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)
+            .put(CustomWatchfaceMetadataKey.CWF_COMMENT.key, getString(info.nightscout.shared.R.string.default_custom_watchface_comment))
         val json = JSONObject()
             .put("metadata", metadata)
             .put("highColor", String.format("#%06X", 0xFFFFFF and highColor))
@@ -224,8 +231,10 @@ class CustomWatchface : BaseWatchFace() {
             .put("lowColor", String.format("#%06X", 0xFFFFFF and lowColor))
             .put("lowBatColor", String.format("#%06X", 0xFFFFFF and lowBatColor))
             .put("carbColor", String.format("#%06X", 0xFFFFFF and carbColor))
+            .put("basalBackgroundColor", String.format("#%06X", 0xFFFFFF and basalBackgroundColor))
+            .put("basalCenterColor", String.format("#%06X", 0xFFFFFF and basalCenterColor))
             .put("gridColor", String.format("#%06X", 0xFFFFFF and Color.WHITE))
-            .put("pointSize",2)
+            .put("pointSize", 2)
             .put("enableSecond", true)
 
         binding.mainLayout.forEach { view ->
@@ -242,14 +251,13 @@ class CustomWatchface : BaseWatchFace() {
                             .put("rotation", view.rotation.toInt())
                             .put("visibility", getVisibility(view.visibility))
                             .put("textsize", view.textSize.toInt())
-                            .put("gravity", getGravity(view.gravity))
-                            .put("font", getFont(view.typeface))
-                            .put("fontStyle", getStyle(view.typeface.style))
+                            .put("gravity", GravityMap.key(view.gravity))
+                            .put("font", FontMap.key())
+                            .put("fontStyle", StyleMap.key(view.typeface.style))
                             .put("fontColor", String.format("#%06X", 0xFFFFFF and view.currentTextColor))
                     )
                 }
                 if (view is ImageView) {
-                    //view.backgroundTintList =
                     json.put(
                         it.key,
                         JSONObject()
@@ -276,7 +284,7 @@ class CustomWatchface : BaseWatchFace() {
         val metadataMap = ZipWatchfaceFormat.loadMetadata(json)
         val drawableDataMap: CustomWatchfaceDrawableDataMap = mutableMapOf()
         getResourceByteArray(info.nightscout.shared.R.drawable.watchface_custom)?.let {
-            val drawableData = DrawableData(it,DrawableFormat.PNG)
+            val drawableData = DrawableData(it, DrawableFormat.PNG)
             drawableDataMap[CustomWatchfaceDrawableDataKey.CUSTOM_WATCHFACE] = drawableData
         }
         return EventData.ActionSetCustomWatchface(CustomWatchfaceData(json.toString(4), metadataMap, drawableDataMap))
@@ -287,6 +295,8 @@ class CustomWatchface : BaseWatchFace() {
         midColor = Color.parseColor("#00FF00")
         lowColor = Color.parseColor("#FF0000")
         carbColor = ContextCompat.getColor(this, R.color.carbs)
+        basalBackgroundColor = ContextCompat.getColor(this, R.color.basal_dark)
+        basalCenterColor = ContextCompat.getColor(this, R.color.basal_light)
         lowBatColor = ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty)
         gridColor = Color.WHITE
     }
@@ -303,62 +313,6 @@ class CustomWatchface : BaseWatchFace() {
         View.INVISIBLE -> "invisible"
         View.GONE      -> "gone"
         else           -> "gone"
-    }
-
-    private fun setGravity(gravity: String): Int = when (gravity) {
-        "center" -> Gravity.CENTER
-        "left"   -> Gravity.LEFT
-        "right"  -> Gravity.RIGHT
-        else     -> Gravity.CENTER
-    }
-
-    private fun getGravity(gravity: Int): String = when (gravity) {
-        Gravity.CENTER -> "center"
-        Gravity.LEFT   -> "left"
-        Gravity.RIGHT  -> "right"
-        else           -> "center"
-    }
-
-    private fun setFont(font: String): Typeface = when (font) {
-        "sans-serif"               -> Typeface.SANS_SERIF
-        "default"                  -> Typeface.DEFAULT
-        "default-bold"             -> Typeface.DEFAULT_BOLD
-        "monospace"                -> Typeface.MONOSPACE
-        "serif"                    -> Typeface.SERIF
-        "roboto-condensed-bold"    -> ResourcesCompat.getFont(context, R.font.roboto_condensed_bold)!!
-        "roboto-condensed-light"   -> ResourcesCompat.getFont(context, R.font.roboto_condensed_light)!!
-        "roboto-condensed-regular" -> ResourcesCompat.getFont(context, R.font.roboto_condensed_regular)!!
-        "roboto-slab-light"        -> ResourcesCompat.getFont(context, R.font.roboto_slab_light)!!
-        else                       -> Typeface.DEFAULT
-    }
-
-    private fun getFont(font: Typeface): String = when (font) {
-        Typeface.SANS_SERIF                                                 -> "sans-serif"
-        Typeface.DEFAULT                                                    -> "default"
-        Typeface.DEFAULT_BOLD                                               -> "default-bold"
-        Typeface.MONOSPACE                                                  -> "monospace"
-        Typeface.SERIF                                                      -> "serif"
-        ResourcesCompat.getFont(context, R.font.roboto_condensed_bold)!!    -> "roboto-condensed-bold"
-        ResourcesCompat.getFont(context, R.font.roboto_condensed_light)!!   -> "roboto-condensed-light"
-        ResourcesCompat.getFont(context, R.font.roboto_condensed_regular)!! -> "roboto-condensed-regular"
-        ResourcesCompat.getFont(context, R.font.roboto_slab_light)!!        -> "roboto-slab-light"
-        else                                                                -> "default"
-    }
-
-    private fun setStyle(style: String): Int = when (style) {
-        "normal"      -> Typeface.NORMAL
-        "bold"        -> Typeface.BOLD
-        "bold-italic" -> Typeface.BOLD_ITALIC
-        "italic"      -> Typeface.ITALIC
-        else          -> Typeface.NORMAL
-    }
-
-    private fun getStyle(style: Int): String = when (style) {
-        Typeface.NORMAL      -> "normal"
-        Typeface.BOLD        -> "bold"
-        Typeface.BOLD_ITALIC -> "bold-italic"
-        Typeface.ITALIC      -> "italic"
-        else                 -> "normal"
     }
 
     fun getResourceByteArray(resourceId: Int): ByteArray? {
@@ -408,7 +362,7 @@ class CustomWatchface : BaseWatchFace() {
             }
     }
 
-    enum class CustomViews(val key: String, @IdRes val id: Int, @StringRes val pref: Int?) {
+    private enum class CustomViews(val key: String, @IdRes val id: Int, @StringRes val pref: Int?) {
 
         BACKGROUND(CustomWatchfaceDrawableDataKey.BACKGROUND.key, R.id.background, null),
         CHART("chart", R.id.chart, null),
@@ -434,8 +388,7 @@ class CustomWatchface : BaseWatchFace() {
         DAY("day", R.id.day, null),
         MONTH("month", R.id.month, null),
         LOOP("loop", R.id.loop, R.string.key_show_external_status),
-        DIRECTION("direction", R.id.direction, R.string.key_show_direction),
-        DIRECTION2("direction2", R.id.direction2, R.string.key_show_direction),
+        DIRECTION("direction", R.id.direction2, R.string.key_show_direction),
         TIMESTAMP("timestamp", R.id.timestamp, R.string.key_show_ago),
         SGV("sgv", R.id.sgv, R.string.key_show_bg),
         COVER_PLATE(CustomWatchfaceDrawableDataKey.COVERPLATE.key, R.id.cover_plate, null),
@@ -445,50 +398,74 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            private val keyToEnumMap = HashMap<String, CustomViews>()
-            private val idToEnumMap = HashMap<Int, CustomViews>()
-
-            init {
-                for (value in values()) keyToEnumMap[value.key] = value
-                for (value in values()) idToEnumMap[value.id] = value
-            }
-
-            fun fromKey(key: String): CustomViews? =
-                if (keyToEnumMap.containsKey(key)) {
-                    keyToEnumMap[key]
-                } else {
-                    null
-                }
-            fun fromId(id: Int): CustomViews? =
-                if (idToEnumMap.containsKey(id)) {
-                    idToEnumMap[id]
-                } else {
-                    null
-                }
+            fun fromKey(key: String): CustomViews? = values().firstOrNull { it.key == key }
+            fun fromId(id: Int): CustomViews? = values().firstOrNull { it.id == id }
         }
-
 
         fun visibility(sp: SP): Boolean = this.pref?.let { sp.getBoolean(it, true) }
             ?: true
     }
 
-
-    enum class TrendArrow(val text: String, val symbol: String,@DrawableRes val icon: Int) {
+    private enum class TrendArrow(val text: String, val symbol: String, @DrawableRes val icon: Int) {
         NONE("NONE", "??", R.drawable.ic_invalid),
-        TRIPLE_UP("TripleUp", "X", R.drawable.ic_invalid),
+        TRIPLE_UP("TripleUp", "X", R.drawable.ic_doubleup),
         DOUBLE_UP("DoubleUp", "\u21c8", R.drawable.ic_doubleup),
         SINGLE_UP("SingleUp", "\u2191", R.drawable.ic_singleup),
         FORTY_FIVE_UP("FortyFiveUp", "\u2197", R.drawable.ic_fortyfiveup),
         FLAT("Flat", "\u2192", R.drawable.ic_flat),
-        FORTY_FIVE_DOWN("FortyFiveDown", "\u2198",R.drawable.ic_fortyfivedown),
+        FORTY_FIVE_DOWN("FortyFiveDown", "\u2198", R.drawable.ic_fortyfivedown),
         SINGLE_DOWN("SingleDown", "\u2193", R.drawable.ic_singledown),
         DOUBLE_DOWN("DoubleDown", "\u21ca", R.drawable.ic_doubledown),
-        TRIPLE_DOWN("TripleDown", "X",R.drawable.ic_invalid)
+        TRIPLE_DOWN("TripleDown", "X", R.drawable.ic_doubledown)
         ;
 
         companion object {
-            fun fromSymbol(direction: String?) =
-                values().firstOrNull { it.symbol == direction } ?: NONE
+
+            fun icon(direction: String?) = values().firstOrNull { it.symbol == direction }?.icon ?: NONE.icon
+        }
+    }
+
+    private enum class GravityMap(val key: String, val gravity: Int) {
+        CENTER("center", Gravity.CENTER),
+        LEFT("left", Gravity.LEFT),
+        RIGHT("right", Gravity.RIGHT);
+
+        companion object {
+
+            fun gravity(key: String?) = values().firstOrNull { it.key == key }?.gravity ?: CENTER.gravity
+            fun key(gravity: Int) = values().firstOrNull { it.gravity == gravity }?.key ?: CENTER.key
+        }
+    }
+
+    private enum class FontMap(val key: String, var font: Typeface, @FontRes val fontRessources: Int?) {
+        SANS_SERIF("sans-serif", Typeface.SANS_SERIF, null),
+        DEFAULT("default", Typeface.DEFAULT, null),
+        DEFAULT_BOLD("default-bold", Typeface.DEFAULT_BOLD, null),
+        MONOSPACE("monospace", Typeface.MONOSPACE, null),
+        SERIF("serif", Typeface.SERIF, null),
+        ROBOTO_CONDENSED_BOLD("roboto-condensed-bold", Typeface.DEFAULT, R.font.roboto_condensed_bold),
+        ROBOTO_CONDENSED_LIGHT("roboto-condensed-light", Typeface.DEFAULT, R.font.roboto_condensed_light),
+        ROBOTO_CONDENSED_REGULAR("roboto-condensed-regular", Typeface.DEFAULT, R.font.roboto_condensed_regular),
+        ROBOTO_SLAB_LIGHT("roboto-slab-light", Typeface.DEFAULT, R.font.roboto_slab_light);
+
+        companion object {
+
+            fun init(context: Context) = values().forEach { it.font = it.fontRessources?.let { font -> ResourcesCompat.getFont(context, font) } ?: it.font }
+            fun font(key: String) = values().firstOrNull { it.key == key }?.font ?: DEFAULT.font
+            fun key() = DEFAULT.key
+        }
+    }
+
+    private enum class StyleMap(val key: String, val style: Int) {
+        NORMAL("normal", Typeface.NORMAL),
+        BOLD("bold", Typeface.BOLD),
+        BOLD_ITALIC("bold-italic", Typeface.BOLD_ITALIC),
+        ITALIC("italic", Typeface.ITALIC);
+
+        companion object {
+
+            fun style(key: String?) = values().firstOrNull { it.key == key }?.style ?: NORMAL.style
+            fun key(style: Int) = values().firstOrNull { it.style == style }?.key ?: NORMAL.key
         }
     }
 

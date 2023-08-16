@@ -17,7 +17,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-val CUSTOM_VERSION = "0.3"
+val CUSTOM_VERSION = "0.5"
 enum class CustomWatchfaceDrawableDataKey(val key: String, @DrawableRes val icon: Int?, val fileName: String) {
     UNKNOWN("unknown", null, "Unknown"),
     CUSTOM_WATCHFACE("customWatchface", R.drawable.watchface_custom, "CustomWatchface"),
@@ -29,54 +29,23 @@ enum class CustomWatchfaceDrawableDataKey(val key: String, @DrawableRes val icon
     SECONDHAND("second_hand", R.drawable.second_hand, "SecondHand");
 
     companion object {
-
-        private val keyToEnumMap = HashMap<String, CustomWatchfaceDrawableDataKey>()
-        private val fileNameToEnumMap = HashMap<String, CustomWatchfaceDrawableDataKey>()
-
-        init {
-            for (value in values()) keyToEnumMap[value.key] = value
-            for (value in values()) fileNameToEnumMap[value.fileName] = value
-        }
-
         fun fromKey(key: String): CustomWatchfaceDrawableDataKey =
-            if (keyToEnumMap.containsKey(key)) {
-                keyToEnumMap[key] ?: UNKNOWN
-            } else {
-                UNKNOWN
-            }
-
-        fun fromFileName(file: String): CustomWatchfaceDrawableDataKey =
-            if (fileNameToEnumMap.containsKey(file.substringBeforeLast("."))) {
-                fileNameToEnumMap[file.substringBeforeLast(".")] ?: UNKNOWN
-            } else {
-                UNKNOWN
-            }
+            values().firstOrNull { it.key == key } ?: UNKNOWN
+        fun fromFileName(file: String): CustomWatchfaceDrawableDataKey = values().firstOrNull { it.fileName == file.substringBeforeLast(".") } ?: UNKNOWN
     }
-
 }
 
 enum class DrawableFormat(val extension: String) {
     UNKNOWN(""),
-
     //XML("xml"),
     //SVG("svg"),
     JPG("jpg"),
     PNG("png");
 
     companion object {
-
-        private val extensionToEnumMap = HashMap<String, DrawableFormat>()
-
-        init {
-            for (value in values()) extensionToEnumMap[value.extension] = value
-        }
-
         fun fromFileName(fileName: String): DrawableFormat =
-            if (extensionToEnumMap.containsKey(fileName.substringAfterLast("."))) {
-                extensionToEnumMap[fileName.substringAfterLast(".")] ?: UNKNOWN
-            } else {
-                UNKNOWN
-            }
+            values().firstOrNull { it.extension == fileName.substringAfterLast(".") } ?: UNKNOWN
+
     }
 }
 
@@ -123,25 +92,14 @@ enum class CustomWatchfaceMetadataKey(val key: String, @StringRes val label: Int
     CWF_FILENAME("filename", R.string.metadata_wear_import_filename),
     CWF_AUTHOR("author", R.string.metadata_label_watchface_author),
     CWF_CREATED_AT("created_at", R.string.metadata_label_watchface_created_at),
-    CWF_VERSION("cwf_version", R.string.metadata_label_watchface_version);
+    CWF_VERSION("cwf_version", R.string.metadata_label_plugin_version),
+    CWF_AUTHOR_VERSION("author_version", R.string.metadata_label_watchface_name_version),
+    CWF_COMMENT("comment", R.string.metadata_label_watchface_comment); // label not planed to be used for CWF_COMMENT
 
     companion object {
-
-        private val keyToEnumMap = HashMap<String, CustomWatchfaceMetadataKey>()
-
-        init {
-            for (value in values()) keyToEnumMap[value.key] = value
-        }
-
         fun fromKey(key: String): CustomWatchfaceMetadataKey? =
-            if (keyToEnumMap.containsKey(key)) {
-                keyToEnumMap[key]
-            } else {
-                null
-            }
-
+            values().firstOrNull { it.key == key }
     }
-
 }
 
 class ZipWatchfaceFormat {

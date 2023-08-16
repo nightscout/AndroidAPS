@@ -300,27 +300,14 @@
         android:textColor="@color/light_grey"
         tools:text="--'" />
 
-    <TextView
-        android:id="@+id/direction"
-        android:layout_width="52px"
-        android:layout_height="52px"
-        android:layout_marginTop="26px"
-        android:layout_marginLeft="291px"
-        android:visibility="gone"
-        android:gravity="left"
-        android:textSize="39px"
-        android:textStyle="bold"
-        android:textColor="@color/light_grey"
-        tools:text="--" />
-
     <ImageView
         android:id="@+id/direction2"
-        android:layout_width="52px"
-        android:layout_height="52px"
-        android:layout_marginTop="26px"
+        android:layout_width="40px"
+        android:layout_height="40px"
+        android:layout_marginTop="36px"
         android:layout_marginLeft="291px"
         android:visibility="visible"
-        android:src="@drawable/ic_flat"
+        android:src="@drawable/ic_invalid"
         android:orientation="vertical" />
 
     <TextView

@@ -92,6 +92,10 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
                 filelistName.tag = customWatchfaceFile
                 customWatchface.setImageDrawable(drawable)
                 customName.text = rh.gs(CWF_NAME.label, metadata[CWF_NAME])
+                metadata[CWF_AUTHOR_VERSION]?.let { author_version ->
+                    customName.text = rh.gs(CWF_AUTHOR_VERSION.label, metadata[CWF_NAME], author_version)
+                }
+
                 author.text = rh.gs(CWF_AUTHOR.label, metadata[CWF_AUTHOR] ?:"")
                 createdAt.text = rh.gs(CWF_CREATED_AT.label, metadata[CWF_CREATED_AT] ?:"")
                 cwfVersion.text = rh.gs(CWF_VERSION.label, metadata[CWF_VERSION] ?:"")
