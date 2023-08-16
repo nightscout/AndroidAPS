@@ -38,5 +38,6 @@
     <string name="configbuilder_nightscoutversion_label">Nightscoutバージョン:</string>
     <string name="nav_resetdb">リセット データベース</string>
     <!-- Maintenance -->
+    <!-- Custom Watchface -->
     <!-- Permissions -->
 </resources>
