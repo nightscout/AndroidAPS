@@ -23,7 +23,7 @@
     <string name="overview_bolusprogress_stoped">Stoppato</string>
     <string name="unsupportedfirmware">Firmware del micro non supportato</string>
     <string name="pumperror">Errore micro</string>
-    <string name="lowbattery">Livello batteria basso</string>
+    <string name="lowbattery">Batteria quasi scarica</string>
     <string name="basalcompare">Erogazione inferiore rispetto alla velocità basale preimpostata</string>
     <string name="pumpshutdown">Arresto micro</string>
     <string name="batterydischarged">Batteria del micro scarica</string>
