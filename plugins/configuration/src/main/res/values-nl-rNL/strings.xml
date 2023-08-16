@@ -151,6 +151,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Decoderingsfout, het opgegeven wachtwoord is ongeldig of het instellingenbestand is gewijzigd / mee geknoeid. Wellicht was het geïmporteerde bestand geëxporteerd met een ander masterwachtwoord.</string>
     <string name="prefdecrypt_issue_wrong_format">Ontbrekende versleutelingsconfiguratie, instellingen indeling is ongeldig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Niet-ondersteund of niet opgegeven versleutelingsalgoritme!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Herstart je telefoon of herstart AndroidAPS vanuit de systeem instellingen a. u. b. \nanders zal AndroidAPS geen log mogelijkheid hebben (Dit is belangrijk om te controleren of de algoritmes correct werken)!</string>
 </resources>
