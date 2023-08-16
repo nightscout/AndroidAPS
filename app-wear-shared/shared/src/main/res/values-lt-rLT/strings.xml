@@ -33,4 +33,5 @@
     <string name="connected">Prisijungta</string>
     <string name="disconnecting">Atsijungiama</string>
     <string name="waiting_for_disconnection">Laukiama atsijungimo</string>
+    <!-- Custom Watchface -->
 </resources>

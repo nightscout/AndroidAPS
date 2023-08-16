@@ -34,4 +34,10 @@
     <string name="disconnecting">Desconectando</string>
     <string name="waiting_for_disconnection">Esperando la desconexión</string>
     <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Creada: %1$s</string>
+    <string name="metadata_label_watchface_author">Autor: %1$s</string>
+    <string name="metadata_label_watchface_name">Nombre: %1$s</string>
+    <string name="metadata_wear_import_filename">Nombre de archivo:%1$s</string>
+    <string name="metadata_label_watchface_version">Versión de esfera: %1$s</string>
+    <string name="wear_default_watchface">Esfera por defecto</string>
 </resources>

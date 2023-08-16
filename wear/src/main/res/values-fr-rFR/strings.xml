@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS (Cockpit)</string>
     <string name="label_watchface_steampunk">AAPS (Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (Digital)</string>
+    <string name="label_watchface_custom">AAPS(perso)</string>
     <string name="label_actions_tile">AAPS (Actions)</string>
     <string name="label_temp_target_tile">AAPS(Cible Temp)</string>
     <string name="label_quick_wizard_tile">AAPS(Assistant rapide)</string>
@@ -143,6 +144,7 @@
     <string name="pref_simplify_ui_sum">Afficher seulement l\'heure et la glycémie</string>
     <string name="pref_vibrate_hourly">Vibrer à l\'heure</string>
     <string name="pref_show_weeknumber">Afficher numéro semaine</string>
+    <string name="custom_pref_show_seconds">Afficher les secondes</string>
     <string name="digitalstyle_pref_your_style">Style :</string>
     <string name="digitalstyle_style_none">aucun</string>
     <string name="digitalstyle_style_minimal">minimal</string>

@@ -134,5 +134,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Erro de Desencriptação, a senha é inválida ou configurações de arquivo foram modificadas! Pode acontecer que o ficheiro importado foi exportado com uma Senha Mestra diferente.</string>
     <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de definições é inválido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
 </resources>

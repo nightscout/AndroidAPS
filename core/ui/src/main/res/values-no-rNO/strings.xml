@@ -376,6 +376,9 @@
     <string name="carbs_g">KARBO %1$d g</string>
     <string name="extended_bolus_u_min">UTVIDET BOLUS %1$.2f E %2$d min</string>
     <string name="load_events">LAST INN HENDELSER</string>
+    <string name="clear_alarms">NULLSTILLE ALARMER</string>
+    <string name="deactivate">DEAKTIVER</string>
+    <string name="update_time">OPPDATER TID</string>
     <string name="load_history">LAST INN HENDELSESLOGG %1$d</string>
     <string name="load_tdds">LAST INN TDDs</string>
     <string name="set_profile">SETT PROFIL</string>
@@ -453,6 +456,7 @@
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!! Advarsel: Oppdaget treg absorpsjon av karbohydrater: %2$d%% av tiden. Dobbeltsjekk din beregning. COB kan være misvisende og du risikerer å få for mye insulin !!</font>]]></string>
     <string name="partialboluswizard">Doser denne delen av resultatet fra bolusveiviseren [%]</string>
+    <string name="partialboluswizard_reset_time">Terskel for gammel BS-verdi [min]</string>
     <string name="bolus_constraint_applied_warn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>

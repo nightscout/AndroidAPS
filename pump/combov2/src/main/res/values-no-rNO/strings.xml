@@ -48,6 +48,7 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo tidsgrense for sammenkobling ble nådd</string>
     <string name="combov2_pairing_failed_due_to_error">Sammenkobling mislyktes på grunn av feil: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Sammenkobling avbrutt av ukjente årsaker</string>
+    <string name="combov2_pairing_invalid_pin_length">"Ugyldig lengde på PIN: trenger %1$d siffer, fikk %2$d"</string>
     <string name="combov2_scanning_for_pump">Søker etter pumpen</string>
     <string name="combov2_establishing_bt_connection">Oppretter Bluetooth-tilkobling (forsøk nr. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Utfører sammenkobling med pumpe</string>
@@ -125,4 +126,6 @@ knappene samtidig for å avbryte parringen)\n
     <string name="combov2_refresh_pump_status_after_error">Oppdaterer pumpestatus etter at pumpen tidligere har rapportert en feil</string>
     <string name="combov2_go_back">Gå tilbake</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Kan ikke sammenkoble fordi driveren ikke er initialisert. Dette skjer vanligvis fordi de nødvendige Bluetooth-tillatelser ikke er gitt. Gå tilbake, gi Bluetooth-tillatelser, og prøv igjen å parre.</string>
+    <string name="combov2_bluetooth_disabled">Kan ikke starte driver - Bluetooth er deaktivert</string>
+    <string name="combov2_bluetooth_not_supported">Driver kan ikke kjøre - denne enheten støtter ikke Bluetooth</string>
 </resources>

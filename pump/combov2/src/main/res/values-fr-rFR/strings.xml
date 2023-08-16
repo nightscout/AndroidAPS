@@ -38,6 +38,7 @@
     <string name="combov2_pairing_combo_scan_timeout_reached">Délai d\'attente de recherche de la combo atteint</string>
     <string name="combov2_pairing_failed_due_to_error">L\'appairage a échoué en raison de l\'erreur : %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">L\'appairage a échoué pour raisons inconnues</string>
+    <string name="combov2_pairing_invalid_pin_length">"Longueur du code PIN d'appairage invalide : %1$d chiffres nécessaires, %2$d reçu"</string>
     <string name="combov2_scanning_for_pump">Recherche de la pompe</string>
     <string name="combov2_establishing_bt_connection">Établissement de la connexion Bluetooth (tentative n° %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Initialisation de la communication avec la pompe</string>
@@ -115,4 +116,6 @@
     <string name="combov2_refresh_pump_status_after_error">Actualisation de l\'état de la pompe après que la pompe ait signalé une erreur</string>
     <string name="combov2_go_back">Retour</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Impossible d\'effectuer l\'appairage car le pilote n\'est pas initialisé. Cela se produit généralement parce que les autorisations Bluetooth nécessaires n\'ont pas été accordées. Revenez en arrière, accordez les autorisations Bluetooth, puis essayez à nouveau de vous associer.</string>
+    <string name="combov2_bluetooth_disabled">Impossible de démarrer le driver - Bluetooth est désactivé</string>
+    <string name="combov2_bluetooth_not_supported">Le driver ne peut pas fonctionner - cet appareil ne prend pas en charge le Bluetooth</string>
 </resources>

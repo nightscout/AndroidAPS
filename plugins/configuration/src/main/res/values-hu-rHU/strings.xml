@@ -23,5 +23,6 @@
     <!--    Maintenance-->
     <string name="configbuilder_nightscoutversion_label">Nightscout verzió:</string>
     <!-- Maintenance -->
+    <!-- Custom Watchface -->
     <!-- Permissions -->
 </resources>

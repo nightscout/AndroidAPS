@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string-array name="alarmSettings">
+        <item>Lett, vibrer og pip</item>
+        <item>Lett og vibrer</item>
+        <item>Lett og pip</item>
+        <item>Lett</item>
+        <item>Vibrer og pip</item>
+        <item>Vibrer</item>
+        <item>Pip</item>
+        <item>Stille</item>
+    </string-array>
+</resources>

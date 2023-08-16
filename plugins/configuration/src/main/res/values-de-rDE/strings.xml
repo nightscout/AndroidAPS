@@ -151,6 +151,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Entschlüsselungsfehler. Das angegebene Passwort ist ungültig oder die Einstellungsdatei wurde verändert! Evtl. wurde die importierte Datei mit einem anderen Master-Passwort exportiert.</string>
     <string name="prefdecrypt_issue_wrong_format">Fehlende Verschlüsselungskonfiguration, Einstellungsformat ist ungültig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nicht unterstützter oder nicht angegebener Verschlüsselungsalgorithmus!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu.\nAndernfalls wird AndroidAPS nichts protokollieren (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)!</string>
 </resources>

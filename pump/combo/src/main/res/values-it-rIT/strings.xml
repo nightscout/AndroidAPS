@@ -21,7 +21,7 @@
     <string name="combo_pump_connected_now">Adesso</string>
     <string name="combo_activity_setting_basal_profile">Impostazione profilo basale</string>
     <string name="combo_pump_cartridge_low_warrning">Livello cartuccia basso</string>
-    <string name="combo_pump_battery_low_warrning">Livello batteria basso</string>
+    <string name="combo_pump_battery_low_warrning">Batteria micro quasi scarica</string>
     <string name="combo_is_in_error_state">Il micro sta mostrando l\'errore E%1$d: %2$s</string>
     <string name="combo_reservoir_low">Basso</string>
     <string name="combo_reservoir_empty">Vuoto</string>

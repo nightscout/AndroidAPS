@@ -151,6 +151,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Грешка при декриптиране, грешна парола или файлът с настройки е модифициран! Възможно е импортираният файл да е експортиран с различна парола.</string>
     <string name="prefdecrypt_issue_wrong_format">Липсва конфигурация на шифроване, форматът на настройките е невалиден!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Неподдържан или непотвърден алгоритъм за криптиране!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Моля рестартирайте телефона си или AAPS от Системни настройки, иначе AAPS няма да има логове (това е важно за да се проследява и верифицира, че алгоритъма работи правилно)!</string>
 </resources>

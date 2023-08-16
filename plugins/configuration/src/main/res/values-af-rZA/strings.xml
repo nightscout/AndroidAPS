@@ -71,5 +71,6 @@
     <string name="nav_resetdb">Herstel databasis</string>
     <string name="resettodefaults">Herstel na verstek</string>
     <!-- Maintenance -->
+    <!-- Custom Watchface -->
     <!-- Permissions -->
 </resources>

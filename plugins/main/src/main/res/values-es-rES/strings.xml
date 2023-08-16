@@ -317,6 +317,11 @@
     <string name="wear_notifysmb_summary">Mostrar los SMB en el reloj como un bolo estándar</string>
     <string name="wear_predictions_summary">Mostrar las predicciones en la esfera</string>
     <string name="wear_predictions_title">Predicciones</string>
+    <string name="wear_custom_watchface">Esfera personalizada: %1$s</string>
+    <string name="wear_load_watchface">Cargar esfera</string>
+    <string name="wear_send_watchface">Enviar esfera</string>
+    <string name="wear_export_watchface">Exportar esfera</string>
+    <string name="wear_new_custom_watchface_exported">Esfera personalizada exportada</string>
     <string name="resend_all_data">Reenviar todos los datos</string>
     <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
     <!--    PersistentNotification-->

@@ -151,6 +151,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Ошибка расшифровки, указан недопустимый пароль или файл параметров изменен! Возможно, импортированный файл был экспортирован с использованием другого главного пароля.</string>
     <string name="prefdecrypt_issue_wrong_format">Отсутствует конфигурация шифрования, формат параметров недопустим!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Неподдерживаемый или не прописанный алгоритм шифрования!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Перезагрузите телефон или перезапустите AAPS из системных настроек \n иначе AAPS не будет вести лог (важно для отслеживания и проверки алгоритмов)!</string>
 </resources>

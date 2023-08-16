@@ -62,6 +62,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Pogreška dešifriranja, navedena lozinka je nevažeća ili je datoteka postavki izmijenjena! Može se dogoditi da je uvezena datoteka izvezena s drugom glavnom lozinkom.</string>
     <string name="prefdecrypt_issue_wrong_format">Nedostaje konfiguracija enkripcije, format postavki nije valjan!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritam šifriranja nije podržan ili nije naveden!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Ponovno pokrenite telefon ili ponovno pokrenite AAPS iz postavki sustava \n u suprotnom Android APS neće imati zapisivanje (važno je pratiti i provjeriti rade li algoritmi ispravno)!</string>
 </resources>

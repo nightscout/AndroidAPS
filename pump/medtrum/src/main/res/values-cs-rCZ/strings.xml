@@ -4,7 +4,7 @@
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Integrace pumpy Medtrum Nano</string>
-    <string name="medtrumpump_settings">Nastavení pumpy Medtrum</string>
+    <string name="medtrum_pump_setting">Nastavení pumpy Medtrum</string>
     <string name="pump_error">Chyba pumpy: %1$s!! </string>
     <string name="pump_unsupported">Nevyzkoušená pumpa: %1$d! Kontaktujte nás na Discordu nebo Githubu, kde získáte podporu.</string>
     <string name="pump_is_suspended">Pumpa je pozastavena</string>
@@ -36,11 +36,11 @@
     <string name="alarm_pump_low_battery">Téměř vybitá baterie pumpy</string>
     <string name="alarm_pump_low_reservoir">Téměř prázdný zásobník pumpy</string>
     <string name="alarm_pump_expires_soon">Pumpa brzy vyprší</string>
-    <string name="alarm_lowbg_suspended">Smyčka pozastavena nízká glykémie</string>
-    <string name="alarm_lowbg_suspended2">Smyčka pozastavena nízká glykémie 2</string>
+    <string name="alarm_low_bg_suspended">Smyčka pozastavena nízká glykémie</string>
+    <string name="alarm_low_bg_suspended2">Smyčka pozastavena nízká glykémie 2</string>
     <string name="alarm_auto_suspended">Automatické pozastavení</string>
-    <string name="alarm_hmax_suspended">Pozastavení z důvodu hodinového překročení</string>
-    <string name="alarm_dmax_suspended">Pozastavení z důvodu denního překročení</string>
+    <string name="alarm_hourly_max_suspended">pozastavení z důvodu hodinového překročení</string>
+    <string name="alarm_daily_max_suspended">pozastavení z důvodu denního překročení</string>
     <string name="alarm_suspended">Pozastaveno</string>
     <string name="alarm_paused">Pozastaveno</string>
     <string name="alarm_occlusion">Okluze</string>
@@ -81,7 +81,6 @@
     <string name="priming_error">Nepodařilo se provést plnění, zkuste to znovu stisknutím tlačítka <b>Opakovat</b>.</string>
     <string name="press_next">Stiskněte <b>Další</b> pro pokračování.</string>
     <string name="press_next_to_start_activation">Stiskněte <b>Další</b> pro spuštění aktivace.</string>
-    <string name="attach_patch_to_body">Odstraňte bezpečnostní zámek. Připojte pumpu k tělu. Stiskněte tlačítko jehly.</string>
     <string name="remove_safety_lock">Odstraňte bezpečnostní zámek. Připojte pumpu k tělu. Stiskněte tlačítko jehly.</string>
     <string name="activating_pump">Aktivace Pacthe a nastavení počátečního bazálu. Počkejte prosím.</string>
     <string name="activating_error">Chyba při aktivaci, stiskněte <b>Opakovat</b> pro nový pokus.</string>
@@ -111,9 +110,8 @@
     <string name="daily_max_insulin_title">Denní maximální inzulín</string>
     <string name="daily_max_insulin_summary">Zadejte maximální povolené množství inzulínu za den. Pokud je překročeno, pumpa bude pozastavena.</string>
     <!-- treatment state-->
-    <string name="waitingforestimatedbolusend">Čekání na konec bolusu. Zbývá %1$d sek.</string>
-    <string name="gettingpumpstatus">Nahrávám stav pumpy</string>
-    <string name="gettingbolusstatus">Nahrávám stav bolusu</string>
-    <string name="gettingtempbasalstatus">Nahrávám stav dočasného bazálu</string>
-    <string name="settingpumpsettings">Nastavení uživatelských voleb</string>
+    <string name="getting_pump_status">Nahrávám stav pumpy</string>
+    <string name="getting_bolus_status">Nahrávám stav bolusu</string>
+    <string name="getting_temp_basal_status">Nahrávám stav dočasného bazálu</string>
+    <string name="setting_pump_settings">Nastavení uživatelských voleb</string>
 </resources>

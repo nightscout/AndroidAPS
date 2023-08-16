@@ -151,6 +151,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Chyba dešifrovania, zadané heslo je neplatné, alebo bol súbor nastavení zmenený! Môže sa stať, že importovaný súbor bol exportovaný s iným hlavným heslom.</string>
     <string name="prefdecrypt_issue_wrong_format">Chýba konfigurácia šifrovania, formát nastavení je neplatný!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný alebo neurčený šifrovací algoritmus!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Prosím reštartujte Váš telefón, alebo reštartujte AndroidAPS z nastavení \nv opačnom prípade AndroidAPS nebude mocť zaznamenávať logy (dôležité kvôli sledovaniu a overovaniu, že algoritmus pracuje správne)!</string>
 </resources>
