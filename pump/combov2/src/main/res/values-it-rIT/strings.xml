@@ -47,6 +47,7 @@ Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Scansione Combo: timeout raggiunto</string>
     <string name="combov2_pairing_failed_due_to_error">Associazione fallita a causa di un errore: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Associazione interrotta per motivi sconosciuti</string>
+    <string name="combov2_pairing_invalid_pin_length">"PIN di associazione - lunghezza non valida: necessarie %1$d cifre, ricevute %2$d"</string>
     <string name="combov2_scanning_for_pump">Scansione micro</string>
     <string name="combov2_establishing_bt_connection">Connessione Bluetooth (tentativo n. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Esecuzione dell\'associazione con il micro</string>
@@ -90,7 +91,7 @@ Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
     <string name="combov2_current_tbr_less_than_1min">%1$d%% (meno di 1 minuto rimanente)</string>
     <string name="combov2_load_tdds_cancelled">Caricamento TDD annullato</string>
     <string name="combov2_retrieving_tdds_failed">Recupero TDD fallito</string>
-    <string name="combov2_battery_low_warning">Livello batteria basso</string>
+    <string name="combov2_battery_low_warning">Batteria micro quasi scarica</string>
     <string name="combov2_reservoir_low_warning">Il livello del serbatoio del micro è basso</string>
     <string name="combov2_setting_tbr_succeeded">Impostazione TBR riuscita</string>
     <string name="combov2_setting_tbr_failed">Impostazione TBR fallita</string>
@@ -124,4 +125,6 @@ Se non viene stabilita alcuna connessione dopo più di ~5 minuti:\n\n
     <string name="combov2_refresh_pump_status_after_error">Aggiornamento dello stato del micro dopo che il micro ha segnalato un errore</string>
     <string name="combov2_go_back">Torna indietro</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Impossibile eseguire l\'associazione perché il driver non è inizializzato. Questo accade tipicamente perché i permessi Bluetooth necessari non sono stati concessi. Torna indietro, concedi i permessi Bluetooth, quindi riprova ad associare.</string>
+    <string name="combov2_bluetooth_disabled">Impossibile avviare il driver - il bluetooth è disabilitato</string>
+    <string name="combov2_bluetooth_not_supported">Impossibile eseguire il driver - questo dispositivo non supporta il bluetooth</string>
 </resources>
