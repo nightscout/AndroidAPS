@@ -151,6 +151,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Iššifravimas klaida, slaptažodis yra neteisingas arba nustatymų failas buvo pakeistas! Taip nutinka, jei importuotas failas buvo eksportuotas su kitu slaptažodžiu.</string>
     <string name="prefdecrypt_issue_wrong_format">Trūksta šifravimo sąrankos parametrų, nustatymų formatas yra neteisingas!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepalaikomas arba nepatikslintas šifravimo algoritmas!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Prašome perkrauti telefoną arba sistemos nustatymuose iš naujo paleisti AAPS \nkitaip AndroidAPS negalės registruoti prisijungimų (svarbu stebėti ir tikrinti, ar algoritmai veikia tinkamai)!</string>
 </resources>
