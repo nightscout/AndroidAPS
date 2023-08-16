@@ -2,6 +2,7 @@ package info.nightscout.smoothing
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
@@ -118,7 +119,8 @@ class ExponentialSmoothingPlugin @Inject constructor(
         //ssD.clear() // MP reset doubly smoothed delta array
 
         if (!insufficientSmoothingData) { //MP Build doubly smoothed array only if there is enough valid readings
-            for (i in o2_sBG.indices) { //MP calculated doubly smoothed bg of all o1/o2 smoothed data available; o2 & o1 smoothbg array sizes are equal in size, so only one is used as a condition here
+            for (i in o2_sBG.indices) { //MP calculated doubly smoothed bg of all o1/o2 smoothed data available; o2 & o1 smooth bg array sizes are equal in size, so only one is used as a condition
+                // here
                 ssBG.add(o1_weight * o1_sBG[i] + (1 - o1_weight) * o2_sBG[i]) //MP build array of doubly smoothed bgs
             }
             /*
@@ -128,11 +130,13 @@ class ExponentialSmoothingPlugin @Inject constructor(
              */
             for (i in 0 until minOf(ssBG.size, data.size)) { // noise at the beginning of the smoothing window is the greatest, so only include the 10 most recent values in the output
                 data[i].smoothed = max(round(ssBG[i]), 39.0) //Make 39 the smallest value as smaller values trigger errors (xDrip error state = 38)
+                data[i].trendArrow = GlucoseValue.TrendArrow.NONE
             }
         } else {
             for (i in 0 until data.size) { // noise at the beginning of the smoothing window is the greatest, so only include the 10 most recent values in the output
                 data[i].smoothed = max(data[i].value, 39.0) // if insufficient smoothing data, copy 'value' into 'smoothed' data column so that it isn't empty; Make 39 the smallest value as smaller
                 // values trigger errors (xDrip error state = 38)
+                data[i].trendArrow = GlucoseValue.TrendArrow.NONE
             }
         }
 

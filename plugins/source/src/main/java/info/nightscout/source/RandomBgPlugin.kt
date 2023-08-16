@@ -111,7 +111,7 @@ class RandomBgPlugin @Inject constructor(
             value = bgMgdl,
             raw = 0.0,
             noise = null,
-            trendArrow = GlucoseValue.TrendArrow.NONE,
+            trendArrow = GlucoseValue.TrendArrow.values().toList().shuffled().first(),
             sourceSensor = GlucoseValue.SourceSensor.RANDOM
         )
         disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
