@@ -33,4 +33,5 @@
     <string name="connected">已连接</string>
     <string name="disconnecting">正在断开连接</string>
     <string name="waiting_for_disconnection">正在等待连接</string>
+    <!-- Custom Watchface -->
 </resources>
