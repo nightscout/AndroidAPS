@@ -91,5 +91,6 @@
     <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
     <string name="resettodefaults">Επαναφορά προεπιλογών</string>
     <!-- Maintenance -->
+    <!-- Custom Watchface -->
     <!-- Permissions -->
 </resources>
