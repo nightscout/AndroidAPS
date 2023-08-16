@@ -243,6 +243,7 @@
     <string name="short_tabtitles">Korte navn i menyfaner</string>
     <string name="overview_show_notes_field_in_dialogs_title">Vis merknadsfelt i dialogvindu for behandlinger</string>
     <string name="deliverpartofboluswizard">Bolusveiviser utfører beregninger, men bare denne del av beregnet insulin leveres. Nyttig ved bruk av SMB-algoritmen.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Gi full bolus (100 %) dersom blodsukker er eldre enn</string>
     <string name="enable_bolus_advisor">Aktiver boluskalkulator</string>
     <string name="enable_bolus_advisor_summary">Bruk en påminnelse om å spise senere isetdet for beregnet av kalkulator når blodsukker er høyt (\"pre-bolus\")</string>
     <string name="enablesuperbolus">Aktiver superbolus i veiviser</string>
@@ -315,6 +316,11 @@
     <string name="wear_notifysmb_summary">Vis SMB på klokken som en standard bolus.</string>
     <string name="wear_predictions_summary">Vis blodsukkerprognoser på klokken.</string>
     <string name="wear_predictions_title">Prognoser</string>
+    <string name="wear_custom_watchface">Tilpasset klokkebakgrunn: %1$s</string>
+    <string name="wear_load_watchface">Last inn klokkebakgrunn</string>
+    <string name="wear_send_watchface">Send klokkebakgrunn</string>
+    <string name="wear_export_watchface">Eksporter klokkebakgrunn</string>
+    <string name="wear_new_custom_watchface_exported">Tilpasset klokkebakgrunn eksportert</string>
     <string name="resend_all_data">Send alle data på nytt</string>
     <string name="open_settings_on_wear">Åpne Innstillinger på klokken</string>
     <!--    PersistentNotification-->
