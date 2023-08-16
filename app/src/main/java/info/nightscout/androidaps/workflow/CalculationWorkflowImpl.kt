@@ -198,23 +198,23 @@ class CalculationWorkflowImpl @Inject constructor(
                     .build()
             )
             .then(
-                job == MAIN_CALCULATION,
+                runIf = job == MAIN_CALCULATION,
                 OneTimeWorkRequest.Builder(UpdateGraphWorker::class.java)
                     .setInputData(Data.Builder().putString(JOB, job).putInt(PASS, CalculationWorkflow.ProgressData.DRAW_IOB.pass).build())
                     .build()
             )
             .then(
-                job == MAIN_CALCULATION,
+                runIf = job == MAIN_CALCULATION,
                 OneTimeWorkRequest.Builder(InvokeLoopWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(InvokeLoopWorker.InvokeLoopData(cause)))
                     .build()
             )
             .then(
-                job == MAIN_CALCULATION,
+                runIf = job == MAIN_CALCULATION,
                 OneTimeWorkRequest.Builder(UpdateWidgetWorker::class.java).build()
             )
             .then(
-                job == MAIN_CALCULATION,
+                runIf = job == MAIN_CALCULATION,
                 OneTimeWorkRequest.Builder(PreparePredictionsWorker::class.java)
                     .setInputData(dataWorkerStorage.storeInputData(PreparePredictionsWorker.PreparePredictionsData(overviewData)))
                     .build()

@@ -158,6 +158,7 @@ class PrepareIobAutosensGraphDataWorker(
         val adsData = data.iobCobCalculator.ads.clone()
 
         while (time <= endTime) {
+            if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_IOB_AUTOSENS_DATA, progress.toInt(), null))
             val profile = profileFunction.getProfile(time)

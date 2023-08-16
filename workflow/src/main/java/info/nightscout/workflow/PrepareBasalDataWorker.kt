@@ -57,6 +57,7 @@ class PrepareBasalDataWorker(
         val fromTime = data.overviewData.fromTime
         var time = fromTime
         while (time < endTime) {
+            if (isStopped) return Result.failure(workDataOf("Error" to "stopped"))
             val progress = (time - fromTime).toDouble() / (endTime - fromTime) * 100.0
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_BASAL_DATA, progress.toInt(), null))
             val profile = profileFunction.getProfile(time)
