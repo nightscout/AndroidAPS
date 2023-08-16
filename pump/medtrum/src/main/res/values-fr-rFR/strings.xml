@@ -4,7 +4,7 @@
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Intégration de pompe pour Medtrum Nano</string>
-    <string name="medtrumpump_settings">Paramètres de la pompe Medtrum</string>
+    <string name="medtrum_pump_setting">Paramètres de la pompe Medtrum</string>
     <string name="pump_error">Erreur pompe: %1$s!! </string>
     <string name="pump_unsupported">Pompe non testée : %1$d! Veuillez nous contacter sur discord ou github pour obtenir de l\'aide</string>
     <string name="pump_is_suspended">La pompe est suspendue</string>
@@ -36,11 +36,11 @@
     <string name="alarm_pump_low_battery">Batterie de la pompe faible</string>
     <string name="alarm_pump_low_reservoir">Réservoir bas</string>
     <string name="alarm_pump_expires_soon">La pompe expire bientôt</string>
-    <string name="alarm_lowbg_suspended">Arrêt Glycémie Basse</string>
-    <string name="alarm_lowbg_suspended2">Arrêt Glycémie Basse 2</string>
+    <string name="alarm_low_bg_suspended">Arrêt Glycémie Basse</string>
+    <string name="alarm_low_bg_suspended2">Arrêt Glycémie Basse 2</string>
     <string name="alarm_auto_suspended">Suspension auto</string>
-    <string name="alarm_hmax_suspended">suspension max horaire</string>
-    <string name="alarm_dmax_suspended">suspension max journalier</string>
+    <string name="alarm_hourly_max_suspended">suspension max horaire</string>
+    <string name="alarm_daily_max_suspended">suspension max journalier</string>
     <string name="alarm_suspended">Suspendu</string>
     <string name="alarm_paused">En pause</string>
     <string name="alarm_occlusion">Occlusion</string>
@@ -81,7 +81,6 @@
     <string name="priming_error">Échec d\'amorçage, appuyez sur <b>Réessayez</b> pour éssayer à nouveau.</string>
     <string name="press_next">Appuyez sur <b>Suivant</b> pour continuer.</string>
     <string name="press_next_to_start_activation">Appuyez sur <b>Suivant</b> pour démarrer l\'activation.</string>
-    <string name="attach_patch_to_body">Retirez le verrou de sécurité. Fixez la pompe au corps. Appuyez sur le bouton de l\'aiguille.</string>
     <string name="remove_safety_lock">Retirez le verrou de sécurité. Fixez la pompe au corps. Appuyez sur le bouton de l\'aiguille.</string>
     <string name="activating_pump">Activation de la pompe et du débit de base initial. Veuillez patienter.</string>
     <string name="activating_error">Échec de l\'activation, appuyez sur <b>Réessayez</b> pour éssayer à nouveau.</string>
@@ -111,9 +110,8 @@
     <string name="daily_max_insulin_title">Insuline maximale quotidienne</string>
     <string name="daily_max_insulin_summary">Spécifiez le nombre maximum d\'unités d\'insuline autorisées par jour. Si ce montant est dépassé, la pompe sera suspendue.</string>
     <!-- treatment state-->
-    <string name="waitingforestimatedbolusend">Bolus en cours. %1$d sec. restantes.</string>
-    <string name="gettingpumpstatus">Obtenir l\'état de la pompe</string>
-    <string name="gettingbolusstatus">Obtenir l\'état du bolus</string>
-    <string name="gettingtempbasalstatus">Obtenir l\'état du basal temporaire</string>
-    <string name="settingpumpsettings">Réglage des paramètres utilisateur</string>
+    <string name="getting_pump_status">Mise à jour de l\'état pompe</string>
+    <string name="getting_bolus_status">Obtenir l\'état du bolus</string>
+    <string name="getting_temp_basal_status">Obtenir le statut du basal temporaire</string>
+    <string name="setting_pump_settings">Définir les options utilisateur</string>
 </resources>
