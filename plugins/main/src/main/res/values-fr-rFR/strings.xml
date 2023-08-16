@@ -316,6 +316,11 @@
     <string name="wear_notifysmb_summary">Afficher SMB sur la montre comme un bolus standard.</string>
     <string name="wear_predictions_summary">Affichez les prédictions sur l\'écran de la montre.</string>
     <string name="wear_predictions_title">Prédictions</string>
+    <string name="wear_custom_watchface">Cadran personnalisé : %1$s</string>
+    <string name="wear_load_watchface">Charger le cadran</string>
+    <string name="wear_send_watchface">Envoyer le cadran</string>
+    <string name="wear_export_watchface">Exporter le cadran</string>
+    <string name="wear_new_custom_watchface_exported">Cadran personnalisé exporté</string>
     <string name="resend_all_data">Renvoyer toutes les données</string>
     <string name="open_settings_on_wear">Afficher les Paramètres sur la Montre</string>
     <!--    PersistentNotification-->
