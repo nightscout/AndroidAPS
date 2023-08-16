@@ -376,7 +376,9 @@
     <string name="carbs_g">CHO %1$d g</string>
     <string name="extended_bolus_u_min">BOLO ESTESO %1$.2f U %2$d min</string>
     <string name="load_events">CARICA EVENTI</string>
+    <string name="clear_alarms">CANCELLA ALLARMI</string>
     <string name="deactivate">DISATTIVA</string>
+    <string name="update_time">AGGIORNAMENTO TEMPO</string>
     <string name="load_history">CARICA STORICO %1$d</string>
     <string name="load_tdds">CARICA TDD</string>
     <string name="set_profile">IMPOSTA PROFILO</string>
