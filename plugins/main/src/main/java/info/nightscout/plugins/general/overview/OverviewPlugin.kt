@@ -122,7 +122,7 @@ class OverviewPlugin @Inject constructor(
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                           overviewData.calcProgressPct = it.pass.finalPercent(it.progressPct)
+                           overviewData.calcProgressPct = it.finalPercent
                            overviewBus.send(EventUpdateOverviewCalcProgress("EventIobCalculationProgress"))
                        }, fabricPrivacy::logException)
         disposable += rxBus

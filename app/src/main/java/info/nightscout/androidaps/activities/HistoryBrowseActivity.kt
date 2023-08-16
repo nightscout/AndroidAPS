@@ -167,7 +167,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         disposable += rxBus
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ updateCalcProgress(it.pass.finalPercent(it.progressPct)) }, fabricPrivacy::logException)
+            .subscribe({ updateCalcProgress(it.finalPercent) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventUpdateOverviewGraph::class.java)
             .observeOn(aapsSchedulers.main)
