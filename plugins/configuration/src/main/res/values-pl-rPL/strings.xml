@@ -151,6 +151,7 @@
     <string name="prefdecrypt_issue_wrong_pass">Błąd deszyfrowania, podane hasło jest niepoprawne lub plik ustawień został zmodyfikowany! Może się zdarzyć, że zaimportowany plik został wyeksportowany z innym hasłem głównym.</string>
     <string name="prefdecrypt_issue_wrong_format">Brak konfiguracji szyfrowania, format ustawień jest nieprawidłowy!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nieobsługiwany lub nieokreślony algorytm szyfrowania!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Proszę uruchomić ponownie telefon lub zrestartować AAPS (z poziomu ustawieniach systemu telefonu / menu aplikacje)\ninaczej AAPS nie będzie w stanie zapisywać dziennika (ważne ze względu na śledzenie błędów i sprawdzanie poprawności działania algorytmów)!</string>
 </resources>
