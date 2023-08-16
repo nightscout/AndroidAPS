@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
     <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS(Personalizzato)</string>
     <string name="label_actions_tile">AAPS(azioni)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
@@ -143,6 +144,7 @@
     <string name="pref_simplify_ui_sum">Mostra solo tempo e BG</string>
     <string name="pref_vibrate_hourly">Vibra a ogni ora</string>
     <string name="pref_show_weeknumber">Mostra numero settimana</string>
+    <string name="custom_pref_show_seconds">Mostra secondi</string>
     <string name="digitalstyle_pref_your_style">Il tuo stile:</string>
     <string name="digitalstyle_style_none">nessuno stile</string>
     <string name="digitalstyle_style_minimal">stile minimale</string>
