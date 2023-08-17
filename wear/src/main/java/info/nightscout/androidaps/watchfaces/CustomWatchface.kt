@@ -2,6 +2,7 @@
 
 package info.nightscout.androidaps.watchfaces
 
+import android.annotation.SuppressLint
 import android.app.ActionBar.LayoutParams
 import android.content.Context
 import android.graphics.Color
@@ -81,9 +82,10 @@ class CustomWatchface : BaseWatchFace() {
             .build()
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     override fun setDataFields() {
         super.setDataFields()
-        binding.direction2.setImageDrawable(resources.getDrawable(TrendArrow.icon(singleBg.slopeArrow)))
+        binding.direction2.setImageDrawable(this.resources.getDrawable(TrendArrow.icon(singleBg.slopeArrow)))
         // rotate the second hand.
         binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
         // rotate the minute hand.
@@ -119,11 +121,14 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     override fun setSecond() {
-        binding.time.text = "${dateUtil.hourString()}:${dateUtil.minuteString()}" + if (showSecond) ":${dateUtil.secondString()}" else ""
+        binding.time.text = if (showSecond)
+            getString(R.string.hour_minute_second, dateUtil.hourString(), dateUtil.minuteString(), dateUtil.secondString())
+        else
+            getString(R.string.hour_minute, dateUtil.hourString(), dateUtil.minuteString())
+        //binding.time.text = "${dateUtil.hourString()}:${dateUtil.minuteString()}" + if (showSecond) ":${dateUtil.secondString()}" else ""
         binding.second.text = dateUtil.secondString()
         // rotate the second hand.
         binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
-        //aapsLogger.debug("XXXXX SetSecond $watchModeString")
     }
 
     override fun updateSecondVisibility() {
@@ -131,6 +136,7 @@ class CustomWatchface : BaseWatchFace() {
         binding.secondHand.visibility = showSecond.toVisibility()
     }
 
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun setWatchfaceStyle() {
         val customWatchface = persistence.readCustomWatchface() ?: persistence.readCustomWatchface(true)
         customWatchface?.let {
@@ -315,23 +321,19 @@ class CustomWatchface : BaseWatchFace() {
         else           -> "gone"
     }
 
-    fun getResourceByteArray(resourceId: Int): ByteArray? {
+    private fun getResourceByteArray(resourceId: Int): ByteArray? {
         val inputStream = resources.openRawResource(resourceId)
         val byteArrayOutputStream = ByteArrayOutputStream()
 
-        try {
-            val buffer = ByteArray(1024)
-            var count: Int
-            while (inputStream.read(buffer).also { count = it } != -1) {
-                byteArrayOutputStream.write(buffer, 0, count)
-            }
-            byteArrayOutputStream.close()
-            inputStream.close()
-
-            return byteArrayOutputStream.toByteArray()
-        } catch (e: Exception) {
+        val buffer = ByteArray(1024)
+        var count: Int
+        while (inputStream.read(buffer).also { count = it } != -1) {
+            byteArrayOutputStream.write(buffer, 0, count)
         }
-        return null
+        byteArrayOutputStream.close()
+        inputStream.close()
+
+        return byteArrayOutputStream.toByteArray()
     }
 
     private fun changeDrawableColor(color: Int): ColorFilter {
@@ -351,16 +353,11 @@ class CustomWatchface : BaseWatchFace() {
         return ColorMatrixColorFilter(colorMatrix)
     }
 
-    private fun getColor(color: String): Int {
+    private fun getColor(color: String): Int =
         if (color == "bgColor")
-            return bgColor
+            bgColor
         else
-            return try {
-                Color.parseColor(color)
-            } catch (e: Exception) {
-                Color.GRAY
-            }
-    }
+            try { Color.parseColor(color) } catch (e: Exception) { Color.GRAY }
 
     private enum class CustomViews(val key: String, @IdRes val id: Int, @StringRes val pref: Int?) {
 
@@ -398,7 +395,6 @@ class CustomWatchface : BaseWatchFace() {
 
         companion object {
 
-            fun fromKey(key: String): CustomViews? = values().firstOrNull { it.key == key }
             fun fromId(id: Int): CustomViews? = values().firstOrNull { it.id == id }
         }
 
@@ -449,7 +445,6 @@ class CustomWatchface : BaseWatchFace() {
         ROBOTO_SLAB_LIGHT("roboto-slab-light", Typeface.DEFAULT, R.font.roboto_slab_light);
 
         companion object {
-
             fun init(context: Context) = values().forEach { it.font = it.fontRessources?.let { font -> ResourcesCompat.getFont(context, font) } ?: it.font }
             fun font(key: String) = values().firstOrNull { it.key == key }?.font ?: DEFAULT.font
             fun key() = DEFAULT.key
