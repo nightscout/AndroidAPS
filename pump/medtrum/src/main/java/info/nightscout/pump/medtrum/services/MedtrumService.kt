@@ -164,8 +164,19 @@ class MedtrumService : DaggerService(), BLECommCallback {
         if (currentState is IdleState) {
             medtrumPump.connectionState = ConnectionState.CONNECTING
             return bleComm.connect(from, medtrumPump.pumpSN)
+        } else if (currentState is ReadyState) {
+            aapsLogger.error(LTag.PUMPCOMM, "Connect attempt when in ReadyState from: $from")
+            if (isConnected) {
+                aapsLogger.debug(LTag.PUMP, "connect: already connected")
+                return true
+            } else {
+                aapsLogger.debug(LTag.PUMP, "connect: not connected, resetting state and trying to connect")
+                toState(IdleState())
+                medtrumPump.connectionState = ConnectionState.CONNECTING
+                return bleComm.connect(from, medtrumPump.pumpSN)
+            }
         } else {
-            aapsLogger.error(LTag.PUMPCOMM, "Connect attempt when in non Idle state from: $from")
+            aapsLogger.error(LTag.PUMPCOMM, "Connect attempt when in state: $currentState from: $from")
             return false
         }
     }
@@ -287,20 +298,22 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun setBolus(detailedBolusInfo: DetailedBolusInfo, t: EventOverviewBolusProgress.Treatment): Boolean {
-        if (!isConnected) return false
-        if (BolusProgressData.stopPressed) return false
+        if (!isConnected) {
+            aapsLogger.warn(LTag.PUMPCOMM, "Pump not connected, not setting bolus")
+            return false
+        }
+        if (BolusProgressData.stopPressed) {
+            aapsLogger.warn(LTag.PUMPCOMM, "Bolus stop pressed, not setting bolus")
+            return false
+        }
+        if (!medtrumPump.bolusDone) {
+            aapsLogger.warn(LTag.PUMPCOMM, "Bolus already in progress, not setting new one")
+            return false
+        }
+
         val insulin = detailedBolusInfo.insulin
-        val bolusStart = System.currentTimeMillis()
-
-        medtrumPump.bolusDone = false
-        medtrumPump.bolusingTreatment = t
-        medtrumPump.bolusAmountToBeDelivered = insulin
-        medtrumPump.bolusStopped = false
-        medtrumPump.bolusProgressLastTimeStamp = bolusStart
-
         if (insulin > 0) {
-            val result = sendPacketAndGetResponse(SetBolusPacket(injector, insulin))
-            if (!result) {
+            if (!sendPacketAndGetResponse(SetBolusPacket(injector, insulin))) {
                 aapsLogger.error(LTag.PUMPCOMM, "Failed to set bolus")
                 commandQueue.loadEvents(null) // make sure if anything is delivered (which is highly unlikely at this point) we get it
                 t.insulin = 0.0
@@ -311,6 +324,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
             t.insulin = 0.0
             return false
         }
+
+        val bolusStart = System.currentTimeMillis()
+        medtrumPump.bolusDone = false
+        medtrumPump.bolusingTreatment = t
+        medtrumPump.bolusAmountToBeDelivered = insulin
+        medtrumPump.bolusStopped = false
+        medtrumPump.bolusProgressLastTimeStamp = bolusStart
 
         detailedBolusInfo.timestamp = bolusStart // Make sure the timestamp is set to the start of the bolus
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history
@@ -641,7 +661,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             result = currentState.waitForResponse(timeout)
             SystemClock.sleep(100)
         } else {
-            aapsLogger.error(LTag.PUMPCOMM, "Send packet attempt when in non Ready state")
+            aapsLogger.error(LTag.PUMPCOMM, "Send packet attempt when in state: $currentState")
         }
         return result
     }
