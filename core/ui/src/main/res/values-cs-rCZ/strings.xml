@@ -424,6 +424,7 @@
     <string name="autotune_ic_warning">Vybraný profil má %1$d hodnot IC. Autotune bude používat %2$.2f g/U</string>
     <string name="autotune_isf_warning">Vybraný profil má %1$d hodnot ISF. Autotune bude používat %2$.1f %3$s/U</string>
     <string name="autotune_error">Chyba vstupních dat, zkuste autotune spustit znovu nebo snížit počet dní</string>
+    <string name="autotune_error_more_days">Chyba ve vstupních datech, zvýšit počet dní</string>
     <string name="autotune_warning_during_run">Autotune spuštěno, prosím buďte trpěliví</string>
     <string name="autotune_warning_after_run">Před použitím výsledky pečlivě zkontrolujte!</string>
     <string name="autotune_partial_result">Částečný výsledek - vyladěn den %1$d / %2$d</string>

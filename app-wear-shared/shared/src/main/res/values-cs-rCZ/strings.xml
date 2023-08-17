@@ -38,6 +38,8 @@
     <string name="metadata_label_watchface_author">Autor: %1$s</string>
     <string name="metadata_label_watchface_name">Jméno %1$s</string>
     <string name="metadata_wear_import_filename">Název souboru: %1$s</string>
-    <string name="metadata_label_watchface_version">Verze ciferníku: %1$s</string>
+    <string name="metadata_label_plugin_version">Verze pluginu: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Jméno: %1$s (%2$s)</string>
+    <string name="default_custom_watchface_comment">Výchozí ciferník. Můžete kliknout na tlačítko EXPORTOVAT CIFERNÍK pro vygenerování šablony</string>
     <string name="wear_default_watchface">Výchozí ciferník</string>
 </resources>

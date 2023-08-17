@@ -12,7 +12,7 @@
     <string name="eopatch_serial_number">Número de Serie</string>
     <string name="eopatch_lot_number">Número de Lote</string>
     <string name="eopatch_wakeup_time">Fecha de activación</string>
-    <string name="eopatch_expiration_time">Fecha y Hora de expiración</string>
+    <string name="eopatch_expiration_time">Fecha de expiración</string>
     <string name="eopatch_status">Estado</string>
     <string name="eopatch_base_basal_rate">Tasa basal predeterminada</string>
     <string name="eopatch_temp_basal_rate">Tasa basal temporal</string>
