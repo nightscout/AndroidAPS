@@ -164,8 +164,19 @@ class MedtrumService : DaggerService(), BLECommCallback {
         if (currentState is IdleState) {
             medtrumPump.connectionState = ConnectionState.CONNECTING
             return bleComm.connect(from, medtrumPump.pumpSN)
+        } else if (currentState is ReadyState) {
+            aapsLogger.error(LTag.PUMPCOMM, "Connect attempt when in ReadyState from: $from")
+            if (isConnected) {
+                aapsLogger.debug(LTag.PUMP, "connect: already connected")
+                return true
+            } else {
+                aapsLogger.debug(LTag.PUMP, "connect: not connected, resetting state and trying to connect")
+                toState(IdleState())
+                medtrumPump.connectionState = ConnectionState.CONNECTING
+                return bleComm.connect(from, medtrumPump.pumpSN)
+            }
         } else {
-            aapsLogger.error(LTag.PUMPCOMM, "Connect attempt when in non Idle state from: $from")
+            aapsLogger.error(LTag.PUMPCOMM, "Connect attempt when in state: $currentState from: $from")
             return false
         }
     }
@@ -650,7 +661,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
             result = currentState.waitForResponse(timeout)
             SystemClock.sleep(100)
         } else {
-            aapsLogger.error(LTag.PUMPCOMM, "Send packet attempt when in non Ready state")
+            aapsLogger.error(LTag.PUMPCOMM, "Send packet attempt when in state: $currentState")
         }
         return result
     }

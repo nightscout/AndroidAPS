@@ -103,7 +103,7 @@ class MedtrumOverviewViewModel @Inject constructor(
 
                     ConnectionState.DISCONNECTING -> {
                         _bleStatus.postValue("{fa-bluetooth-b spin}")
-                        _canDoRefresh.postValue(false)
+                        _canDoRefresh.postValue(true)
                     }
                 }
                 updateGUI()
