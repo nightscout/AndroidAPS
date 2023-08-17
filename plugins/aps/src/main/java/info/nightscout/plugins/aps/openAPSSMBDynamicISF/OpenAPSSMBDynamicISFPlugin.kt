@@ -4,7 +4,6 @@ import android.content.Context
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.DetermineBasalAdapter
 import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraints
@@ -13,8 +12,10 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profiling.Profiler
+import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.aps.R
+import info.nightscout.plugins.aps.openAPSSMB.DetermineBasalAdapterSMBJS
 import info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.plugins.aps.utils.ScriptReader
 import info.nightscout.rx.bus.RxBus
@@ -43,8 +44,8 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     dateUtil: DateUtil,
     repository: AppRepository,
     glucoseStatusProvider: GlucoseStatusProvider,
-    private val config: Config,
-    private val bgQualityCheck: BgQualityCheck
+    bgQualityCheck: BgQualityCheck,
+    tddCalculator: TddCalculator
 ) : OpenAPSSMBPlugin(
     injector,
     aapsLogger,
@@ -61,7 +62,8 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
     dateUtil,
     repository,
     glucoseStatusProvider,
-    bgQualityCheck
+    bgQualityCheck,
+    tddCalculator
 ) {
 
     init {
@@ -71,10 +73,11 @@ class OpenAPSSMBDynamicISFPlugin @Inject constructor(
             .shortName(R.string.dynisf_shortname)
             .preferencesId(R.xml.pref_openapssmbdynamicisf)
             .setDefault(false)
-            .showInList(config.isEngineeringMode() && config.isDev())
     }
 
-    override fun specialEnableCondition(): Boolean = config.isEngineeringMode() && config.isDev()
-
-    override fun provideDetermineBasalAdapter(): DetermineBasalAdapter = DetermineBasalAdapterSMBDynamicISFJS(ScriptReader(context), injector)
+    // If there is no TDD data fallback to SMB as ISF calculation may be really off
+    override fun provideDetermineBasalAdapter(): DetermineBasalAdapter =
+        if (tdd1D == null || tdd7D == null || tddLast4H == null || tddLast8to4H == null || tddLast24H == null || !dynIsfEnabled.value())
+            DetermineBasalAdapterSMBJS(ScriptReader(context), injector)
+        else DetermineBasalAdapterSMBDynamicISFJS(ScriptReader(context), injector)
 }

@@ -15,6 +15,7 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.pump.defs.PumpDescription
+import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -41,6 +42,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Mock lateinit var bgQualityCheck: BgQualityCheck
     @Mock lateinit var uiInteraction: UiInteraction
+    @Mock lateinit var tddCalculator: TddCalculator
 
     private lateinit var hardLimits: HardLimits
     private lateinit var safetyPlugin: SafetyPlugin
@@ -84,7 +86,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         )
         openAPSSMBPlugin = OpenAPSSMBPlugin(
             injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, sp,
-            dateUtil, repository, glucoseStatusProvider, bgQualityCheck
+            dateUtil, repository, glucoseStatusProvider, bgQualityCheck, tddCalculator
         )
     }
 

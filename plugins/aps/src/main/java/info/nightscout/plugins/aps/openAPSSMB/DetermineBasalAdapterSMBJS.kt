@@ -1,7 +1,6 @@
 package info.nightscout.plugins.aps.openAPSSMB
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.plugins.aps.APSResultObject
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.getPassedDurationToTimeInMinutes
 import info.nightscout.core.extensions.plannedRemainingMinutes
@@ -16,6 +15,7 @@ import info.nightscout.interfaces.iob.MealData
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.plugins.aps.APSResultObject
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.logger.LoggerCallback
 import info.nightscout.plugins.aps.utils.ScriptReader
@@ -174,7 +174,12 @@ class DetermineBasalAdapterSMBJS internal constructor(private val scriptReader: 
         microBolusAllowed: Boolean,
         uamAllowed: Boolean,
         advancedFiltering: Boolean,
-        flatBGsDetected: Boolean
+        flatBGsDetected: Boolean,
+        tdd1D: Double?,
+        tdd7D: Double?,
+        tddLast24H: Double?,
+        tddLast4H: Double?,
+        tddLast8to4H: Double?
     ) {
         val pump = activePlugin.activePump
         val pumpBolusStep = pump.pumpDescription.bolusStep

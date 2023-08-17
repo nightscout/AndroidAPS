@@ -7,6 +7,7 @@ import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.constraints.Objectives.Companion.AUTOSENS_OBJECTIVE
 import info.nightscout.interfaces.constraints.Objectives.Companion.AUTO_OBJECTIVE
+import info.nightscout.interfaces.constraints.Objectives.Companion.DYN_ISF_OBJECTIVE
 import info.nightscout.interfaces.constraints.Objectives.Companion.FIRST_OBJECTIVE
 import info.nightscout.interfaces.constraints.Objectives.Companion.MAXBASAL_OBJECTIVE
 import info.nightscout.interfaces.constraints.Objectives.Companion.MAXIOB_ZERO_CL_OBJECTIVE
@@ -20,6 +21,7 @@ import info.nightscout.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.plugins.constraints.objectives.objectives.Objective0
 import info.nightscout.plugins.constraints.objectives.objectives.Objective1
 import info.nightscout.plugins.constraints.objectives.objectives.Objective10
+import info.nightscout.plugins.constraints.objectives.objectives.Objective11
 import info.nightscout.plugins.constraints.objectives.objectives.Objective2
 import info.nightscout.plugins.constraints.objectives.objectives.Objective3
 import info.nightscout.plugins.constraints.objectives.objectives.Objective4
@@ -76,6 +78,7 @@ class ObjectivesPlugin @Inject constructor(
         objectives.add(Objective7(injector))
         objectives.add(Objective9(injector))
         objectives.add(Objective10(injector))
+        objectives.add(Objective11(injector))
         // edit companion object if you remove/add Objective
     }
 
@@ -134,6 +137,12 @@ class ObjectivesPlugin @Inject constructor(
     override fun isSMBModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         if (!objectives[SMB_OBJECTIVE].isStarted)
             value.set(aapsLogger, false, rh.gs(R.string.objectivenotstarted, SMB_OBJECTIVE + 1), this)
+        return value
+    }
+
+    override fun isDynIsfModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        if (!objectives[DYN_ISF_OBJECTIVE].isStarted)
+            value.set(aapsLogger, false, rh.gs(R.string.objectivenotstarted, DYN_ISF_OBJECTIVE + 1), this)
         return value
     }
 

@@ -60,6 +60,16 @@ class ConstraintsImpl @Inject constructor(private val activePlugin: ActivePlugin
         return value
     }
 
+    override fun isDynIsfModeEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
+        val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
+        for (p in constraintsPlugins) {
+            val constraint = p as Constraints
+            if (!p.isEnabled()) continue
+            constraint.isDynIsfModeEnabled(value)
+        }
+        return value
+    }
+
     override fun isUAMEnabled(value: Constraint<Boolean>): Constraint<Boolean> {
         val constraintsPlugins = activePlugin.getSpecificPluginsListByInterface(Constraints::class.java)
         for (p in constraintsPlugins) {
