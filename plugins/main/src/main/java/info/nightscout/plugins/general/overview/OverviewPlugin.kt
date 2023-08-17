@@ -30,6 +30,7 @@ import info.nightscout.plugins.general.overview.notifications.events.EventUpdate
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
+import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.events.EventUpdateOverviewCalcProgress
 import info.nightscout.rx.logging.AAPSLogger
@@ -187,6 +188,7 @@ class OverviewPlugin @Inject constructor(
             .putInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, sp, rh)
 
     override fun applyConfiguration(configuration: JSONObject) {
+        val previousUnits = sp.getString(info.nightscout.core.utils.R.string.key_units, "random")
         configuration
             .storeString(info.nightscout.core.utils.R.string.key_units, sp, rh)
             .storeString(info.nightscout.core.utils.R.string.key_quickwizard, sp, rh)
@@ -213,5 +215,10 @@ class OverviewPlugin @Inject constructor(
             .storeDouble(R.string.key_statuslights_bat_warning, sp, rh)
             .storeDouble(R.string.key_statuslights_bat_critical, sp, rh)
             .storeInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, sp, rh)
+        val newUnits = sp.getString(info.nightscout.core.utils.R.string.key_units, "new")
+        if (previousUnits != newUnits) {
+            overviewData.reset()
+            rxBus.send(EventNewHistoryData(0L, reloadBgData = true))
+        }
     }
 }

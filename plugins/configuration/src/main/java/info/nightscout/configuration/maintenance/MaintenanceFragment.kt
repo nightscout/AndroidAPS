@@ -103,7 +103,10 @@ class MaintenanceFragment : DaggerFragment() {
                             .subscribeOn(aapsSchedulers.io)
                             .subscribeBy(
                                 onError = { aapsLogger.error("Error clearing databases", it) },
-                                onComplete = { rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.utils.R.string.key_units))) }
+                                onComplete = {
+                                    rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.utils.R.string.key_units)))
+                                    activity.recreate()
+                                }
                             )
                     uel.log(Action.RESET_DATABASES, Sources.Maintenance)
                 })
