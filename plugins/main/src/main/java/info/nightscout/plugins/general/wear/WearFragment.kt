@@ -68,8 +68,7 @@ class WearFragment : DaggerFragment() {
             updateGui()
         }
         binding.exportCustom.setOnClickListener {
-            wearPlugin.savedCustomWatchface?.let { importExportPrefs.exportCustomWatchface(it) }
-                ?: apply { rxBus.send(EventMobileToWear(EventData.ActionrequestCustomWatchface(true)))}
+            rxBus.send(EventMobileToWear(EventData.ActionrequestCustomWatchface(true)))
         }
     }
 
@@ -79,10 +78,12 @@ class WearFragment : DaggerFragment() {
             .toObservable(EventWearUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                           it.customWatchfaceData?.let { loadCustom(it) }
                            if (it.exportFile)
                                ToastUtils.okToast(activity, rh.gs(R.string.wear_new_custom_watchface_exported))
-                           updateGui()
+                           else {
+                               it.customWatchfaceData?.let { loadCustom(it) }
+                               updateGui()
+                           }
                        }, fabricPrivacy::logException)
         if (wearPlugin.savedCustomWatchface == null)
             rxBus.send(EventMobileToWear(EventData.ActionrequestCustomWatchface(false)))
