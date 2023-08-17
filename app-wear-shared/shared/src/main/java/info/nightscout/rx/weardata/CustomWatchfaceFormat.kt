@@ -17,11 +17,13 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-val CUSTOM_VERSION = "0.5"
+val CUSTOM_VERSION = "0.6"
 enum class CustomWatchfaceDrawableDataKey(val key: String, @DrawableRes val icon: Int?, val fileName: String) {
     UNKNOWN("unknown", null, "Unknown"),
     CUSTOM_WATCHFACE("customWatchface", R.drawable.watchface_custom, "CustomWatchface"),
     BACKGROUND("background", R.drawable.background, "Background"),
+    BACKGROUND_HIGH("background", R.drawable.background, "BackgroundHigh"),
+    BACKGROUND_LOW("background", R.drawable.background, "BackgroundLow"),
     COVERCHART("cover_chart", null, "CoverChart"),
     COVERPLATE("cover_plate", R.drawable.simplified_dial, "CoverPlate"),
     HOURHAND("hour_hand", R.drawable.hour_hand, "HourHand"),
