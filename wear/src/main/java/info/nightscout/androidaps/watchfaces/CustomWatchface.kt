@@ -376,6 +376,8 @@ class CustomWatchface : BaseWatchFace() {
         COVER_CHART(CustomWatchfaceDrawableDataKey.COVERCHART.key, R.id.cover_chart, null),
         FREETEXT1("freetext1", R.id.freetext1, null),
         FREETEXT2("freetext2", R.id.freetext2, null),
+        FREETEXT3("freetext3", R.id.freetext3, null),
+        FREETEXT4("freetext4", R.id.freetext4, null),
         IOB1("iob1", R.id.iob1, R.string.key_show_iob),
         IOB2("iob2", R.id.iob2, R.string.key_show_iob),
         COB1("cob1", R.id.cob1, R.string.key_show_cob),

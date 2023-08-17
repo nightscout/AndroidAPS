@@ -57,6 +57,28 @@
         android:textColor="@color/light_grey" />
 
     <TextView
+        android:id="@+id/freetext3"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:textSize="21px"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/light_grey" />
+
+    <TextView
+        android:id="@+id/freetext4"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:textSize="21px"
+        android:gravity="center"
+        android:visibility="gone"
+        android:textColor="@color/light_grey" />
+
+    <TextView
         android:id="@+id/iob1"
         android:layout_width="130px"
         android:layout_height="33px"
