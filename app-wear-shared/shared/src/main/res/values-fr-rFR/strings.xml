@@ -38,5 +38,8 @@
     <string name="metadata_label_watchface_author">Auteur : %1$s</string>
     <string name="metadata_label_watchface_name">Nom : %1$s</string>
     <string name="metadata_wear_import_filename">Nom du fichier : %1$s</string>
+    <string name="metadata_label_plugin_version">Version du plugin : %1$s</string>
+    <string name="metadata_label_watchface_name_version">Nom : %1$s (%2$s)</string>
+    <string name="default_custom_watchface_comment">Cadran par défaut, vous pouvez cliquer sur le bouton EXPORTER WATCHFACE pour générer un modèle</string>
     <string name="wear_default_watchface">Cadran par défaut</string>
 </resources>
