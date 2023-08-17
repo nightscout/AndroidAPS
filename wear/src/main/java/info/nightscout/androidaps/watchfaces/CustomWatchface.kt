@@ -451,10 +451,10 @@ class CustomWatchface : BaseWatchFace() {
         DEFAULT_BOLD("default-bold", Typeface.DEFAULT_BOLD, null),
         MONOSPACE("monospace", Typeface.MONOSPACE, null),
         SERIF("serif", Typeface.SERIF, null),
-        ROBOTO_CONDENSED_BOLD("roboto-condensed-bold", Typeface.DEFAULT, R.font.roboto_condensed_bold),
-        ROBOTO_CONDENSED_LIGHT("roboto-condensed-light", Typeface.DEFAULT, R.font.roboto_condensed_light),
-        ROBOTO_CONDENSED_REGULAR("roboto-condensed-regular", Typeface.DEFAULT, R.font.roboto_condensed_regular),
-        ROBOTO_SLAB_LIGHT("roboto-slab-light", Typeface.DEFAULT, R.font.roboto_slab_light);
+        ROBOTO_CONDENSED_BOLD("roboto_condensed_bold", Typeface.DEFAULT, R.font.roboto_condensed_bold),
+        ROBOTO_CONDENSED_LIGHT("roboto_condensed_light", Typeface.DEFAULT, R.font.roboto_condensed_light),
+        ROBOTO_CONDENSED_REGULAR("roboto_condensed_regular", Typeface.DEFAULT, R.font.roboto_condensed_regular),
+        ROBOTO_SLAB_LIGHT("roboto_slab_light", Typeface.DEFAULT, R.font.roboto_slab_light);
 
         companion object {
             fun init(context: Context) = values().forEach { it.font = it.fontRessources?.let { font -> ResourcesCompat.getFont(context, font) } ?: it.font }
