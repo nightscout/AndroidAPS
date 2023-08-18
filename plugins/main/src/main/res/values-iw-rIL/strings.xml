@@ -315,6 +315,7 @@
     <string name="wear_notifysmb_summary">הצג SMB על השעון כמו בולוס סטנדרטי.</string>
     <string name="wear_predictions_summary">הראה את התחזיות על לוח השעון.</string>
     <string name="wear_predictions_title">חיזוי</string>
+    <string name="wear_new_custom_watchface_exported">תבנית פני השעון יוצאה</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
     <!--    PersistentNotification-->
