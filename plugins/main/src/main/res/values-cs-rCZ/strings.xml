@@ -319,8 +319,6 @@
     <string name="wear_custom_watchface">Vlastní ciferník: %1$s</string>
     <string name="wear_load_watchface">Nahrát ciferník</string>
     <string name="wear_send_watchface">Odeslat ciferník</string>
-    <string name="wear_export_watchface">Exportovat ciferník</string>
-    <string name="wear_new_custom_watchface_exported">Vlastní ciferník exportován</string>
     <string name="resend_all_data">Znovu poslat všechna data</string>
     <string name="open_settings_on_wear">Otevřít nastavení na hodinkách Wear</string>
     <!--    PersistentNotification-->
