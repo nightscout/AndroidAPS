@@ -95,7 +95,7 @@ class WearPlugin @Inject constructor(
         disposable += rxBus
             .toObservable(EventWearUpdateGui::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ it.customWatchfaceData?.let { cwf -> savedCustomWatchface = cwf } }, fabricPrivacy::logException)
+            .subscribe({ it.customWatchfaceData?.let { cwf -> if (!it.exportFile) savedCustomWatchface = cwf } }, fabricPrivacy::logException)
     }
 
     override fun onStop() {

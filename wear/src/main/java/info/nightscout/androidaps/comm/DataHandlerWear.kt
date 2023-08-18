@@ -204,8 +204,8 @@ class DataHandlerWear @Inject constructor(
             .toObservable(EventData.ActionrequestCustomWatchface::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe { eventData ->
-                aapsLogger.debug(LTag.WEAR, "Custom Watchface requested from ${eventData.sourceNodeId}")
-                persistence.readCustomWatchface()?.let {
+                aapsLogger.debug(LTag.WEAR, "Custom Watchface requested from ${eventData.sourceNodeId} export ${eventData.exportFile}")
+                persistence.readCustomWatchface(eventData.exportFile)?.let {
                     rxBus.send(EventWearDataToMobile(EventData.ActionGetCustomWatchface(it, eventData.exportFile)))
                 }
             }

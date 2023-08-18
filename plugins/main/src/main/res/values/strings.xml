@@ -364,8 +364,8 @@
     <string name="wear_custom_watchface">Custom Watchface: %1$s</string>
     <string name="wear_load_watchface">Load Watchface</string>
     <string name="wear_send_watchface">Send Watchface</string>
-    <string name="wear_export_watchface">Export Watchface</string>
-    <string name="wear_new_custom_watchface_exported">Custom watchface exported</string>
+    <string name="wear_export_watchface">Export template</string>
+    <string name="wear_new_custom_watchface_exported">Custom watchface template exported</string>
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
 
