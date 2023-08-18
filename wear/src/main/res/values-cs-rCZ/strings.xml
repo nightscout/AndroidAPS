@@ -192,6 +192,8 @@
     <string name="week_short">t</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">starý</string>
     <string name="old_warning">!starý!</string>
     <string name="error">!chyba!</string>
