@@ -21,16 +21,14 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.wear.WearPlugin
-import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileDataToWear
 import info.nightscout.rx.events.EventMobileToWear
+import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.EventData
@@ -59,9 +57,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     @Inject lateinit var wearPlugin: WearPlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var config: Config
-    @Inject lateinit var receiverStatusStore: ReceiverStatusStore
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
