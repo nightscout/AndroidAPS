@@ -319,8 +319,6 @@
     <string name="wear_custom_watchface">Watchface personalizzata: %1$s</string>
     <string name="wear_load_watchface">Carica watchface</string>
     <string name="wear_send_watchface">Invia watchface</string>
-    <string name="wear_export_watchface">Esporta watchface</string>
-    <string name="wear_new_custom_watchface_exported">Watchface personalizzata esportata</string>
     <string name="resend_all_data">Invia di nuovo tutti i dati</string>
     <string name="open_settings_on_wear">Apri impostazioni sullo smartwatch</string>
     <!--    PersistentNotification-->
