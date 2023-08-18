@@ -115,6 +115,7 @@
     <string name="key_wearwizard_trend" translatable="false">wearwizard_trend</string>
     <string name="key_wearwizard_cob" translatable="false">wearwizard_cob</string>
     <string name="key_wearwizard_iob" translatable="false">wearwizard_iob</string>
+    <string name="key_wear_custom_watchface_autorization" translatable="false">wear_custom_watchface_autorization</string>
     <string name="key_objectives_bg_is_available_in_ns" translatable="false">ObjectivesbgIsAvailableInNS</string>
     <string name="key_objectives_pump_status_is_available_in_ns" translatable="false">ObjectivespumpStatusIsAvailableInNS</string>
     <string name="key_statuslights_cage_warning" translatable="false">statuslights_cage_warning</string>

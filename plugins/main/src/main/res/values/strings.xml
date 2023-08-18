@@ -361,6 +361,9 @@
     <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>
     <string name="wear_predictions_summary">Show the predictions on the watchface.</string>
     <string name="wear_predictions_title">Predictions</string>
+    <string name="wear_custom_watchface_settings">Custom Watchface Settings</string>
+    <string name="wear_custom_watchface_authorization_title">Custom Watchface Authorization</string>
+    <string name="wear_custom_watchface_authorization_summary">Authorize loaded Custom Watchface to modify AAPS and Watch settings according to the watchface design</string>
     <string name="wear_custom_watchface">Custom Watchface: %1$s</string>
     <string name="wear_load_watchface">Load Watchface</string>
     <string name="wear_send_watchface">Send Watchface</string>
