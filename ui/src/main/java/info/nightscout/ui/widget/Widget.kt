@@ -112,15 +112,17 @@ class Widget : AppWidgetProvider() {
         views.setInt(R.id.widget_layout, "setBackgroundColor", Color.argb(alpha, 0, 0, 0))
 
         handler.post {
-            updateBg(views)
-            updateTemporaryBasal(views)
-            updateExtendedBolus(views)
-            updateIobCob(views)
-            updateTemporaryTarget(views)
-            updateProfile(views)
-            updateSensitivity(views)
-            // Instruct the widget manager to update the widget
-            appWidgetManager.updateAppWidget(appWidgetId, views)
+            if (config.appInitialized) {
+                updateBg(views)
+                updateTemporaryBasal(views)
+                updateExtendedBolus(views)
+                updateIobCob(views)
+                updateTemporaryTarget(views)
+                updateProfile(views)
+                updateSensitivity(views)
+                // Instruct the widget manager to update the widget
+                appWidgetManager.updateAppWidget(appWidgetId, views)
+            }
         }
     }
 
