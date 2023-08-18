@@ -63,6 +63,7 @@ import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventAppInitialized
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRebuildTabs
 import info.nightscout.rx.logging.LTag
@@ -134,10 +135,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             }
         })
 
-        //Check here if loop plugin is disabled. Else check via constraints
-        if (!(loop as PluginBase).isEnabled()) versionCheckerUtils.triggerCheckVersion()
-        setUserStats()
-        setupViews()
         disposable += rxBus
             .toObservable(EventRebuildTabs::class.java)
             .observeOn(aapsSchedulers.main)
@@ -150,6 +147,36 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventAppInitialized::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({
+                           // 1st run of app
+                           start()
+                       }, fabricPrivacy::logException)
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START))
+                    binding.mainDrawerLayout.closeDrawers()
+                else if (menuOpen)
+                    menu?.close()
+                else if (binding.mainPager.currentItem != 0)
+                    binding.mainPager.currentItem = 0
+                else finish()
+            }
+        })
+        // Setup views on 2nd and next activity start
+        // On 1st start app is still initializing, start() is delayed and run from EventAppInitialized
+        if (config.appInitialized) start()
+    }
+
+    private fun start() {
+        binding.splash.visibility = View.GONE
+        //Check here if loop plugin is disabled. Else check via constraints
+        if (!(loop as PluginBase).isEnabled()) versionCheckerUtils.triggerCheckVersion()
+        setUserStats()
+        setupViews()
+
         if (startWizard() && !isRunningRealPumpTest()) {
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
                 startActivity(Intent(this, SetupWizardActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
@@ -164,17 +191,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             androidPermission.notifyForBtConnectPermission(this)
         }
         passwordResetCheck(this)
-        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START))
-                    binding.mainDrawerLayout.closeDrawers()
-                else if (menuOpen)
-                    menu?.close()
-                else if (binding.mainPager.currentItem != 0)
-                    binding.mainPager.currentItem = 0
-                else finish()
-            }
-        })
     }
 
     private fun checkPluginPreferences(viewPager: ViewPager2) {
@@ -196,6 +212,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
     override fun onResume() {
         super.onResume()
+        if (config.appInitialized) binding.splash.visibility = View.GONE
         if (!isProtectionCheckActive) {
             isProtectionCheckActive = true
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, UIRunnable { isProtectionCheckActive = false },
@@ -321,9 +338,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         this.menu = menu
         menuInflater.inflate(R.menu.menu_main, menu)
         pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
-        setPluginPreferenceMenuName()
-        checkPluginPreferences(binding.mainPager)
-        setDisabledMenuItemColorPluginPreferences()
         return true
     }
 

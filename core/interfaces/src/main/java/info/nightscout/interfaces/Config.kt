@@ -20,6 +20,8 @@ interface Config {
     val currentDeviceModelString : String
     val appName: Int
 
+    var appInitialized: Boolean
+
     fun isEngineeringModeOrRelease(): Boolean
     fun isEngineeringMode(): Boolean
     fun isUnfinishedMode(): Boolean

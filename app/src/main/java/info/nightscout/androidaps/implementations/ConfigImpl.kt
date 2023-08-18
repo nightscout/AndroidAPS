@@ -35,6 +35,8 @@ class ConfigImpl @Inject constructor(
         Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ")"
     override val appName: Int = R.string.app_name
 
+    override var appInitialized: Boolean = false
+
     private var devBranch = false
     private var engineeringMode = false
     private var unfinishedMode = false

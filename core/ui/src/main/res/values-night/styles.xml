@@ -21,8 +21,6 @@
         <item name="colorOnBackground">@color/white</item>
         <item name="colorOnError">@color/black</item>
         <item name="scrimBackground">@color/mtrl_scrim_color</item>
-        <!---Splash Background  -->
-        <item name="splashBackgroundColor">@color/splashBackground</item>
         <!---Application Background Color  -->
         <item name="android:windowBackground">@color/black</item>
         <!---Text Colors -->
@@ -399,7 +397,6 @@
 
     <!-- The launcher theme. It sets the main window background to the launch_screen drawable -->
     <style name="AppTheme.Launcher"  parent="AppTheme.NoActionBar">
-        <item name="android:windowBackground">@drawable/launch_screen</item>
     </style>
 
     <style name="section_header_label">
