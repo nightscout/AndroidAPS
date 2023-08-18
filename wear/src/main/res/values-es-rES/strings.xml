@@ -73,7 +73,7 @@
     <string name="menu_treatment">Tratamiento</string>
     <string name="menu_treatment_short">Trata</string>
     <string name="menu_bolus">Bolo</string>
-    <string name="menu_carb">Carbos</string>
+    <string name="menu_carb">Carbohidratos</string>
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_status">Estado</string>
@@ -115,7 +115,7 @@
     <string name="status_loop">Bucle</string>
     <string name="status_profile_switch">Cambio de perfil</string>
     <string name="status_tdd">TDD</string>
-    <string name="activity_carb">Carbohidratos</string>
+    <string name="activity_carb">COB</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">Sin estado</string>
     <string name="color_name_red">Rojo</string>
