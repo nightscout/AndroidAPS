@@ -5,6 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import androidx.core.view.MenuProvider
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.dialog.RileyLinkStatusActivity
@@ -69,6 +73,10 @@ class ErosPodManagementActivity : TranslatedDaggerAppCompatActivity() {
 
         binding = OmnipodErosPodManagementBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        title = rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_management_title)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         binding.buttonActivatePod.setOnClickListener {
             val type: PodActivationWizardActivity.Type = if (podStateManager.isPodInitialized
@@ -145,6 +153,20 @@ class ErosPodManagementActivity : TranslatedDaggerAppCompatActivity() {
         binding.buttonPodHistory.setOnClickListener {
             startActivity(Intent(this, ErosPodHistoryActivity::class.java))
         }
+        // Add menu items without overriding methods in the Activity
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+
+                    else              -> false
+                }
+        })
     }
 
     override fun onResume() {
