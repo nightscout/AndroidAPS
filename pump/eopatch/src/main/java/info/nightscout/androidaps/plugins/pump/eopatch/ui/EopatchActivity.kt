@@ -5,9 +5,13 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.MotionEvent
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.MenuProvider
 import androidx.lifecycle.ViewModelProvider
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.code.EventType
@@ -37,6 +41,10 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
+
+        title = getString(R.string.string_activate_patch)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         binding.apply {
             viewModel = ViewModelProvider(this@EopatchActivity, viewModelFactory)[EopatchViewModel::class.java]
@@ -108,11 +116,26 @@ class EopatchActivity : EoBaseActivity<ActivityEopatchBinding>() {
             override fun handleOnBackPressed() {
                 binding.viewModel?.apply {
                     when (patchStep.value) {
+                        PatchStep.WAKE_UP,
                         PatchStep.SAFE_DEACTIVATION -> this@EopatchActivity.finish()
                         else                        -> Unit
                     }
                 }
             }
+        })
+        // Add menu items without overriding methods in the Activity
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+
+                    else              -> false
+                }
         })
     }
 

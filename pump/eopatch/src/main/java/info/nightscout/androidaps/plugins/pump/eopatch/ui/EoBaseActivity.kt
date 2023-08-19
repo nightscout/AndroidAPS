@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
 import info.nightscout.androidaps.plugins.pump.eopatch.dagger.EopatchPluginQualifier
-import info.nightscout.core.ui.R
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.rx.AapsSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -16,10 +15,8 @@ import javax.inject.Inject
 
 abstract class EoBaseActivity<B : ViewDataBinding> : TranslatedDaggerAppCompatActivity(), EoBaseNavigator {
 
-    @Inject
     @EopatchPluginQualifier
-    lateinit var viewModelFactory: ViewModelProvider.Factory
-
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var aapsSchedulers: AapsSchedulers
 
     protected lateinit var binding: B
@@ -28,16 +25,13 @@ abstract class EoBaseActivity<B : ViewDataBinding> : TranslatedDaggerAppCompatAc
 
     protected lateinit var getResult: ActivityResultLauncher<Intent>
 
-    @LayoutRes
-    abstract fun getLayoutId(): Int
+    @LayoutRes abstract fun getLayoutId(): Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.AppTheme_NoActionBar)
 
         binding = DataBindingUtil.setContentView(this, getLayoutId())
         binding.lifecycleOwner = this
-
     }
 
     override fun back() {

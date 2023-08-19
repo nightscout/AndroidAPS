@@ -508,34 +508,40 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:orientation="horizontal">
-            <Button
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/button1"
-                style="@style/ButtonMediumFontStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:drawableTop="@drawable/ic_pod_activate_pod"
+                android:textAllCaps="false"
                 android:text="@string/string_activate_patch"
                 android:enabled="@{!viewmodel.patchConfig.activated}"
                 app:onSafeClick="@{() -> viewmodel.onClickActivation()}"/>
 
-            <Button
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/button2"
-                style="@style/ButtonMediumFontStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:drawableTop="@drawable/ic_pod_deactivate_pod"
                 android:text="@string/string_change_patch"
+                android:textAllCaps="false"
                 android:enabled="@{viewmodel.patchConfig.activated}"
                 app:onSafeClick="@{() -> viewmodel.onClickDeactivation()}"/>
 
-            <Button
+            <info.nightscout.core.ui.elements.SingleClickButton
                 android:id="@+id/button3"
-                style="@style/ButtonMediumFontStyle"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                style="@style/ButtonSmallFontStyle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:drawableTop="@drawable/ic_pod_resume_delivery"
                 android:enabled="@{viewmodel.alarms.occurred.size() == 0}"
                 app:text="@{viewmodel.pauseBtnStr}"
+                android:textAllCaps="false"
                 app:visibleOrGone="@{viewmodel.patchConfig.activated}"
                 app:onSafeClick="@{() -> viewmodel.onClickSuspendOrResume()}"/>
         </LinearLayout>

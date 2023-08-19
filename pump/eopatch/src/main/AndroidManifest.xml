@@ -4,7 +4,8 @@
     <application>
         <activity
             android:name=".ui.EopatchActivity"
-            android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize"/>
+            android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize"
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.AlarmHelperActivity"
             android:configChanges="orientation|layoutDirection|screenLayout|density|screenSize|smallestScreenSize"/>
