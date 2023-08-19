@@ -47,11 +47,7 @@
     <string name="sms_loop_suspended_for">Opgeskort (%1$d m)</string>
     <string name="sms_read_status_failed">Lees status gefaal</string>
     <string name="sms_profile_switch_created">Profiel skakelaar geskep</string>
-    <string name="xdrip_status_detailed_iob_title">Wys gedetailleerde IAB</string>
-    <string name="xdrip_status_detailed_iob_summary">Breek af IAB in bolus en basale IAB op die watchface</string>
     <string name="disabled_loop">Loop Afgeskakel</string>
-    <string name="xdrip_status_show_bgi_title">Wys BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Voeg BGI by status lyn</string>
     <!-- Food-->
     <string name="food_short">Kos</string>
     <string name="description_food">Vertoon kos-voorafinstellings soos omskryf in Nightscout</string>
@@ -158,8 +154,6 @@
     <string name="wear_wizard_settings_summary">Berekeninge is ingesluit in die ghoeroe verslag:</string>
     <string name="wear_display_settings">Vertooninstellings</string>
     <string name="wear_general_settings">Algemene instellings</string>
-    <string name="wear_detailed_delta_title">Wys gedetailleerde delta</string>
-    <string name="wear_detailed_delta_summary">Wys delta met een meer desimale plek</string>
     <string name="wear_notifysmb_title">Vermeld op SMB</string>
     <string name="wear_notifysmb_summary">Wys SMB op horlosie soos \'n standaard bolus.</string>
     <string name="wear_predictions_summary">Wys die voorspellings op die horlosie.</string>
