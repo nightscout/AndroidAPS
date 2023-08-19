@@ -15,11 +15,15 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
+import androidx.core.view.MenuProvider
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.extensions.safeEnable
@@ -28,6 +32,7 @@ import info.nightscout.pump.danars.R
 import info.nightscout.pump.danars.databinding.DanarsBlescannerActivityBinding
 import info.nightscout.pump.danars.events.EventDanaRSDeviceChange
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -38,6 +43,7 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var context: Context
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
 
     private var listAdapter: ListAdapter? = null
     private val devices = ArrayList<BluetoothDeviceItem>()
@@ -53,12 +59,31 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
         setContentView(binding.root)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
+        title = rh.gs(info.nightscout.pump.dana.R.string.danars_pairing)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         blePreCheck.prerequisitesCheck(this)
 
         listAdapter = ListAdapter()
         binding.bleScannerListview.emptyView = binding.bleScannerNoDevice
         binding.bleScannerListview.adapter = listAdapter
         listAdapter?.notifyDataSetChanged()
+
+        // Add menu items without overriding methods in the Activity
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+
+                    else              -> false
+                }
+        })
     }
 
     override fun onResume() {
