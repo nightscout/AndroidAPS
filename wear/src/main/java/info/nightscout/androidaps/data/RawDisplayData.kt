@@ -32,14 +32,12 @@ class RawDisplayData {
         externalStatus = "no status",
         iobSum = "IOB",
         iobDetail = "-.--",
-        detailedIob = false,
         cob = "--g",
         currentBasal = "-.--U/h",
         battery = "--",
         rigBattery = "--",
         openApsStatus = -1,
         bgi = "--",
-        showBgi = false,
         batteryLevel = 1
     )
 

@@ -50,7 +50,7 @@ class CockpitWatchface : BaseWatchFace() {
     }
 
     private fun setTextSizes() {
-        if (status.detailedIob) {
+        if (detailedIob) {
             if (bIsRound) binding.iob2.textSize = 10f
             else binding.iob2.textSize = 9f
         } else {

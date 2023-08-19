@@ -243,14 +243,12 @@ sealed class EventData : Event() {
         val externalStatus: String,
         val iobSum: String,
         val iobDetail: String,
-        val detailedIob: Boolean,
         val cob: String,
         val currentBasal: String,
         val battery: String,
         val rigBattery: String,
         val openApsStatus: Long,
         val bgi: String,
-        val showBgi: Boolean,
         val batteryLevel: Int
     ) : EventData()
 

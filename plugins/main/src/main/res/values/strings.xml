@@ -112,11 +112,7 @@
     <string name="sms_wrong_tbr_duration">TBR duration must be a multiple of %1$d minutes and greater than 0.</string>
     <string name="a11y_otp_qr_code">QR Code for setup one time password</string>
 
-    <string name="xdrip_status_detailed_iob_title">Show detailed IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Break down IOB into bolus and basal IOB on the watchface</string>
     <string name="disabled_loop">Loop Disabled</string>
-    <string name="xdrip_status_show_bgi_title">Show BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Add BGI to status line</string>
 
     <!-- Food-->
     <string name="food_short">Food</string>

@@ -64,14 +64,12 @@ class RawDataMocker(wearUtil: WearUtil) {
             "",
             iob,
             "",
-            true,
             cob,
             br,
             "",
             "",
             0L,
             "",
-            true,
             0
         )
         return raw
@@ -83,14 +81,12 @@ class RawDataMocker(wearUtil: WearUtil) {
             "",
             iob,
             iob2,
-            true,
             "",
             "",
             "",
             "",
             0L,
             "",
-            true,
             0
         )
         return raw
@@ -102,14 +98,12 @@ class RawDataMocker(wearUtil: WearUtil) {
             "",
             "",
             "",
-            true,
             cob!!,
             "",
             "",
             "",
             0L,
             "",
-            true,
             0
         )
         return raw

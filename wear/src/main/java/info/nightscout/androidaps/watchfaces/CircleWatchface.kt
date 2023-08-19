@@ -154,10 +154,19 @@ class CircleWatchface : WatchFace() {
             //Also possible: View.INVISIBLE instead of View.GONE (no layout change)
             mSgv?.visibility = View.INVISIBLE
         }
+        val detailedIob = sp.getBoolean(R.string.key_show_detailed_iob, false)
+        val showBgi = sp.getBoolean(R.string.key_show_bgi, false)
+        val iobString =
+            if (detailedIob) "${status.iobSum} ${status.iobDetail}"
+            else status.iobSum + getString(R.string.units_short)
+        val externalStatus = if (showBgi)
+            "${status.externalStatus} ${iobString} ${status.bgi}"
+        else
+            "${status.externalStatus} ${iobString}"
         var textView = myLayout?.findViewById<TextView>(R.id.statusString)
         if (sp.getBoolean(R.string.key_show_external_status, true)) {
             textView?.visibility = View.VISIBLE
-            textView?.text = status.externalStatus
+            textView?.text = externalStatus
             textView?.setTextColor(textColor)
         } else {
             //Also possible: View.INVISIBLE instead of View.GONE (no layout change)
