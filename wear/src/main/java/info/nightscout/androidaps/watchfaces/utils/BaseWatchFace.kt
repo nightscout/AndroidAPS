@@ -298,15 +298,16 @@ abstract class BaseWatchFace : WatchFace() {
     open fun setDataFields() {
         detailedIob = sp.getBoolean(R.string.key_show_detailed_iob, false)
         val showBgi = sp.getBoolean(R.string.key_show_bgi, false)
+        val detailedDelta = sp.getBoolean(R.string.key_show_detailed_delta, false)
         setDateAndTime()
         binding.sgv?.text = singleBg.sgvString
         binding.sgv?.visibility = sp.getBoolean(R.string.key_show_bg, true).toVisibilityKeepSpace()
         strikeThroughSgvIfNeeded()
         binding.direction?.text = "${singleBg.slopeArrow}\uFE0E"
         binding.direction?.visibility = sp.getBoolean(R.string.key_show_direction, true).toVisibility()
-        binding.delta?.text = singleBg.delta
+        binding.delta?.text = if (detailedDelta) singleBg.deltaDetailed else singleBg.delta
         binding.delta?.visibility = sp.getBoolean(R.string.key_show_delta, true).toVisibility()
-        binding.avgDelta?.text = singleBg.avgDelta
+        binding.avgDelta?.text = if (detailedDelta) singleBg.avgDeltaDetailed else singleBg.avgDelta
         binding.avgDelta?.visibility = sp.getBoolean(R.string.key_show_avg_delta, true).toVisibility()
         binding.cob1?.visibility = sp.getBoolean(R.string.key_show_cob, true).toVisibility()
         binding.cob2?.text = status.cob

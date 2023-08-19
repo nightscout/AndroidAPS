@@ -173,7 +173,9 @@ sealed class EventData : Event() {
         val glucoseUnits: String = "-",
         val slopeArrow: String = "--",
         val delta: String = "--",
+        val deltaDetailed: String = "--",
         val avgDelta: String = "--",
+        val avgDeltaDetailed: String = "--",
         val sgvLevel: Long = 0,
         val sgv: Double,
         val high: Double, // highLine

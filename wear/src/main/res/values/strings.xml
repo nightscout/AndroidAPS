@@ -29,6 +29,7 @@
     <string name="pref_show_detailed_iob">Show detailed IOB</string>
     <string name="pref_show_cob">Show COB</string>
     <string name="pref_show_delta">Show Delta</string>
+    <string name="pref_show_detailed_delta">Show detailed Delta</string>
     <string name="pref_show_avgdelta">Show AvgDelta</string>
     <string name="pref_show_phone_battery">Show Phone Battery</string>
     <string name="pref_show_rig_battery">Show Rig Battery</string>
@@ -195,6 +196,7 @@
     <string name="key_show_ago" translatable="false">showAgo</string>
     <string name="key_show_big_numbers" translatable="false">showBigNumbers</string>
     <string name="key_show_delta" translatable="false">showDelta</string>
+    <string name="key_show_detailed_delta" translatable="false">showDetailedDelta</string>
     <string name="key_show_avg_delta" translatable="false">showAvgDelta</string>
     <string name="key_show_ring_history" translatable="false">showRingHistory</string>
     <string name="key_digital_style_frame_style" translatable="false">digital_style_frame_style</string>

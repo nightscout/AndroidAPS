@@ -943,14 +943,22 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun deltaString(deltaMGDL: Double, deltaMMOL: Double, units: GlucoseUnit): String {
-        val detailed = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_detailed_delta, false)
         var deltaString = if (deltaMGDL >= 0) "+" else "-"
         deltaString += if (units == GlucoseUnit.MGDL) {
-            if (detailed) DecimalFormatter.to1Decimal(abs(deltaMGDL)) else DecimalFormatter.to0Decimal(abs(deltaMGDL))
+            DecimalFormatter.to0Decimal(abs(deltaMGDL))
         } else {
-            if (detailed) DecimalFormatter.to2Decimal(abs(deltaMMOL)) else DecimalFormatter.to1Decimal(abs(deltaMMOL))
+            DecimalFormatter.to1Decimal(abs(deltaMMOL))
         }
         return deltaString
+    }
+    private fun deltaStringDetailed(deltaMGDL: Double, deltaMMOL: Double, units: GlucoseUnit): String {
+        var deltaStringDetailed = if (deltaMGDL >= 0) "+" else "-"
+        deltaStringDetailed += if (units == GlucoseUnit.MGDL) {
+            DecimalFormatter.to1Decimal(abs(deltaMGDL))
+        } else {
+            DecimalFormatter.to2Decimal(abs(deltaMMOL))
+        }
+        return deltaStringDetailed
     }
 
     private fun getSingleBG(glucoseValue: InMemoryGlucoseValue): EventData.SingleBg {
@@ -965,7 +973,9 @@ class DataHandlerMobile @Inject constructor(
             glucoseUnits = units.asText,
             slopeArrow = trendCalculator.getTrendArrow(glucoseValue).symbol,
             delta = glucoseStatus?.let { deltaString(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
+            deltaDetailed = glucoseStatus?.let { deltaStringDetailed(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             avgDelta = glucoseStatus?.let { deltaString(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
+            avgDeltaDetailed = glucoseStatus?.let { deltaStringDetailed(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             sgvLevel = if (glucoseValue.recalculated > highLine) 1L else if (glucoseValue.recalculated < lowLine) -1L else 0L,
             sgv = glucoseValue.recalculated,
             high = highLine,

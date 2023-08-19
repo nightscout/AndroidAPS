@@ -86,7 +86,7 @@ class BgGraphBuilder(
         lines.add(highValuesLine())
         var minChart = lowMark
         var maxChart = highMark
-        for ((_, _, _, _, _, _, _, sgv) in bgDataList) {
+        for ((_, _, _, _, _, _, _, _, _, sgv) in bgDataList) {
             if (sgv > maxChart) maxChart = sgv
             if (sgv < minChart) minChart = sgv
         }
@@ -197,7 +197,7 @@ class BgGraphBuilder(
     private fun addPredictionLines(lines: MutableList<Line>) {
         val values: MutableMap<Int, MutableList<PointValue>> = HashMap()
         val endTime = getPredictionEndTime()
-        for ((timeStamp, _, _, _, _, _, _, sgv, _, _, color) in predictionsList) {
+        for ((timeStamp, _, _, _, _, _, _, _, _, sgv, _, _, color) in predictionsList) {
             if (timeStamp <= endTime) {
                 val value = min(sgv, UPPER_CUTOFF_SGV)
                 if (!values.containsKey(color)) {
@@ -262,7 +262,7 @@ class BgGraphBuilder(
     }
 
     private fun addBgReadingValues() {
-        for ((timeStamp, _, _, _, _, _, _, sgv) in bgDataList) {
+        for ((timeStamp, _, _, _,_, _, _, _, _, sgv) in bgDataList) {
             if (timeStamp > startingTime) {
                 when {
                     sgv >= 450      -> highValues.add(PointValue(fuzz(timeStamp), 450.toFloat()))
