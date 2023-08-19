@@ -2,6 +2,10 @@ package info.nightscout.pump.dana.activities
 
 import android.content.Context
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import androidx.core.view.MenuProvider
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Constants
@@ -70,6 +74,10 @@ class DanaUserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         binding = DanarUserOptionsActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        title = rh.gs(R.string.danar_pump_settings)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         binding.saveUserOptions.setOnClickListener { onSaveClick() }
 
         minBacklight = if (danaPump.hwModel < 7) 1 else 0 // Dana-i allows zero
@@ -114,6 +122,21 @@ class DanaUserOptionsActivity : TranslatedDaggerAppCompatActivity() {
             aapsLogger.error(LTag.PUMP, "No settings loaded from pump!")
         else
             setData()
+
+        // Add menu items without overriding methods in the Activity
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+
+                    else              -> false
+                }
+        })
     }
 
     private fun setData() {

@@ -8,6 +8,6 @@
         <activity
             android:name="info.nightscout.pump.dana.activities.DanaUserOptionsActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
     </application>
 </manifest>
