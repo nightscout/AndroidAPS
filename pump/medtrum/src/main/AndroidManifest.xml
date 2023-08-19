@@ -7,7 +7,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     
     <application>
-        <activity android:name=".ui.MedtrumActivity" />
+        <activity
+            android:name=".ui.MedtrumActivity"
+            android:theme="@style/AppTheme" />
         <service
             android:name=".services.MedtrumService"
             android:enabled="true"

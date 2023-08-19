@@ -32,7 +32,6 @@ abstract class MedtrumBaseActivity<B : ViewDataBinding> : DaggerAppCompatActivit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.AppTheme_NoActionBar)
 
         binding = DataBindingUtil.setContentView(this, getLayoutId())
         binding.lifecycleOwner = this
