@@ -8,6 +8,6 @@
         <activity
             android:name=".activities.ComboV2PairingActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
     </application>
 </manifest>

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -8,38 +7,6 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         tools:context=".activities.ComboV2PairingActivity">
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:id="@+id/header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:background="?attr/activity_title_backgroundColor"
-            android:orientation="horizontal"
-            android:padding="5dp">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:importantForAccessibility="no"
-                android:scaleType="fitXY"
-                app:srcCompat="@drawable/ic_combo_128" />
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="@string/combov2_pair_with_pump_title"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <ScrollView
             android:id="@+id/combov2_pairing_section_cannot_pair_driver_not_initialized"

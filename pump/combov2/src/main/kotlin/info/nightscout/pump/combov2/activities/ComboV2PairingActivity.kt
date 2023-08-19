@@ -7,12 +7,16 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
+import androidx.core.view.MenuProvider
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -113,6 +117,10 @@ class ComboV2PairingActivity : TranslatedDaggerAppCompatActivity() {
         val binding: Combov2PairingActivityBinding = DataBindingUtil.setContentView(
             this, R.layout.combov2_pairing_activity)
 
+        title = rh.gs(R.string.combov2_pair_with_pump_title)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         val thisActivity = this
 
         // Set the pairing sections to initially show the "not initialized" one
@@ -193,6 +201,20 @@ class ComboV2PairingActivity : TranslatedDaggerAppCompatActivity() {
                 combov2Plugin.cancelPairing()
                 finish()
             }
+        })
+        // Add menu items without overriding methods in the Activity
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+
+                    else              -> false
+                }
         })
     }
 
@@ -342,8 +364,8 @@ class ComboV2PairingActivity : TranslatedDaggerAppCompatActivity() {
                 return@setOnClickListener
             }
             runBlocking {
-                val PIN = PairingPIN(pinString.map { it - '0' }.toIntArray())
-                combov2Plugin.providePairingPIN(PIN)
+                val pin = PairingPIN(pinString.map { it - '0' }.toIntArray())
+                combov2Plugin.providePairingPIN(pin)
             }
         }
 
@@ -383,14 +405,14 @@ class ComboV2PairingActivity : TranslatedDaggerAppCompatActivity() {
                     }
                 }
 
-                binding.combov2CurrentPairingStepDesc.text = when (val progStage = stage) {
+                binding.combov2CurrentPairingStepDesc.text = when (stage) {
                     BasicProgressStage.ScanningForPumpStage ->
                         rh.gs(R.string.combov2_scanning_for_pump)
 
                     is BasicProgressStage.EstablishingBtConnection -> {
                         rh.gs(
                             R.string.combov2_establishing_bt_connection,
-                            progStage.currentAttemptNr
+                            stage.currentAttemptNr
                         )
                     }
 
