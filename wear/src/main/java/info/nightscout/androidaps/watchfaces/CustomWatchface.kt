@@ -133,8 +133,8 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     override fun updateSecondVisibility() {
-        binding.second.visibility = showSecond.toVisibility()
-        binding.secondHand.visibility = showSecond.toVisibility()
+        binding.second.visibility = (binding.second.visibility == View.VISIBLE && showSecond).toVisibility()
+        binding.secondHand.visibility = (binding.secondHand.visibility == View.VISIBLE && showSecond).toVisibility()
     }
 
     @SuppressLint("UseCompatLoadingForDrawables")
