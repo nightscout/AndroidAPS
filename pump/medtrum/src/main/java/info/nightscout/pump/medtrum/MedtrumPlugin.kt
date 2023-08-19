@@ -10,6 +10,7 @@ import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import dagger.android.HasAndroidInjector
+import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint
@@ -39,6 +40,7 @@ import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
 import info.nightscout.pump.medtrum.services.MedtrumService
+import info.nightscout.pump.medtrum.util.MedtrumSnUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventAppExit
@@ -123,7 +125,33 @@ import kotlin.math.abs
 
     override fun preprocessPreferences(preferenceFragment: PreferenceFragmentCompat) {
         super.preprocessPreferences(preferenceFragment)
-        preferenceFragment.findPreference<EditTextPreference>(rh.gs(R.string.key_sn_input))?.isEnabled = !isInitialized()
+        val serialSetting = preferenceFragment.findPreference<EditTextPreference>(rh.gs(R.string.key_sn_input))
+        serialSetting?.isEnabled = !isInitialized()
+        serialSetting?.setOnPreferenceChangeListener { _, newValue ->
+            if (newValue is String) {
+                val newSN = newValue.toLongOrNull(radix = 16)
+                val newDeviceType = MedtrumSnUtil().getDeviceTypeFromSerial(newSN ?: 0)
+                when {
+                    newDeviceType == MedtrumSnUtil.INVALID                           -> {
+                        preferenceFragment.activity?.let { activity ->
+                            OKDialog.show(activity, rh.gs(R.string.sn_input_title), rh.gs(R.string.sn_input_invalid))
+                        }
+                        false
+                    }
+
+                    medtrumPump.pumpType(newDeviceType) == PumpType.MEDTRUM_UNTESTED -> {
+                        preferenceFragment.activity?.let { activity ->
+                            OKDialog.show(activity, rh.gs(R.string.sn_input_title), rh.gs(R.string.pump_unsupported, newDeviceType))
+                        }
+                        false
+                    }
+
+                    else                                                             -> true
+                }
+            } else {
+                false
+            }
+        }
 
         val alarmSetting = preferenceFragment.findPreference<ListPreference>(rh.gs(R.string.key_alarm_setting))
         val allAlarmEntries = preferenceFragment.resources.getStringArray(R.array.alarmSettings)

@@ -12,6 +12,7 @@ import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.extension.toInt
+import info.nightscout.pump.medtrum.util.MedtrumSnUtil
 import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -170,7 +171,7 @@ class MedtrumPump @Inject constructor(
             sp.putLong(R.string.key_last_connection, value)
         }
 
-    private var _deviceType: Int = 80 // As reported by pump
+    private var _deviceType: Int = 0 // As reported by pump
     var deviceType: Int
         get() = _deviceType
         set(value) {
@@ -280,14 +281,16 @@ class MedtrumPump @Inject constructor(
         try {
             _actualBasalProfile = Base64.decode(encodedString, Base64.DEFAULT)
         } catch (e: Exception) {
-            aapsLogger.error(LTag.PUMP, "Error decoding basal profile from SP: $encodedString")
+            aapsLogger.warn(LTag.PUMP, "Error decoding basal profile from SP: $encodedString")
         }
     }
 
-    fun pumpType(): PumpType =
-        when (deviceType) {
-            80, 88 -> PumpType.MEDTRUM_NANO
-            else   -> PumpType.MEDTRUM_UNTESTED
+    fun pumpType(): PumpType = pumpType(deviceType)
+
+    fun pumpType(type: Int): PumpType =
+        when (type) {
+            MedtrumSnUtil.MD_0201, MedtrumSnUtil.MD_8201 -> PumpType.MEDTRUM_NANO
+            else                                         -> PumpType.MEDTRUM_UNTESTED
         }
 
     fun loadUserSettingsFromSP() {
