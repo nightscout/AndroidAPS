@@ -1,4 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -103,7 +104,9 @@
             android:layout_marginEnd="10dp"
             android:layout_marginBottom="3dp"
             android:text="@string/smscommunicator_otp_reset_btn"
-            android:textColor="?attr/treatmentButton" />
+            android:textColor="?attr/treatmentButton"
+            app:icon="@drawable/ic_local_reset"
+            app:iconTint="@color/ic_local_reset"  />
 
     </LinearLayout>
 

@@ -8,8 +8,12 @@ import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.WindowManager
+import androidx.core.view.MenuProvider
 import com.google.common.primitives.Ints.min
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
@@ -44,6 +48,10 @@ class SmsCommunicatorOtpActivity : TranslatedDaggerAppCompatActivity() {
 
         binding = SmscommunicatorActivityOtpBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        title = rh.gs(R.string.smscommunicator_tab_otp_label)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         binding.otpVerifyEdit.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
@@ -99,6 +107,20 @@ class SmsCommunicatorOtpActivity : TranslatedDaggerAppCompatActivity() {
 
             true
         }
+        // Add menu items without overriding methods in the Activity
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+
+                    else              -> false
+                }
+        })
     }
 
     @Synchronized
