@@ -51,7 +51,7 @@
         <activity
             android:name=".activities.ProfileHelperActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name="info.nightscout.ui.activities.QuickWizardListActivity"
             android:exported="false"
