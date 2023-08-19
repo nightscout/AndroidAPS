@@ -3,6 +3,10 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import androidx.core.view.MenuProvider
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.omnipod.common.queue.command.CommandPlayTestBeep
 import info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.activation.PodActivationWizardActivity
@@ -47,6 +51,10 @@ class DashPodManagementActivity : TranslatedDaggerAppCompatActivity() {
 
         binding = OmnipodDashPodManagementBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        title = rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_management_heading_actions)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         binding.buttonActivatePod.setOnClickListener {
             val type: PodActivationWizardActivity.Type =
@@ -102,6 +110,20 @@ class DashPodManagementActivity : TranslatedDaggerAppCompatActivity() {
         binding.buttonPodHistory.setOnClickListener {
             startActivity(Intent(this, DashPodHistoryActivity::class.java))
         }
+        // Add menu items without overriding methods in the Activity
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+
+                    else              -> false
+                }
+        })
     }
 
     override fun onResume() {
