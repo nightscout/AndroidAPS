@@ -119,11 +119,4 @@ class WearFragment : DaggerFragment() {
     private fun loadCustom(cwf: CustomWatchfaceData) {
         wearPlugin.savedCustomWatchface = cwf
     }
-
-    // This class containt mapping between keys used within json of Custom Watchface and preferences
-    enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
-        DETAILED_IOB(CustomWatchfaceMetadataKey.CWF_PREF_AAPS_DETAILED_IOB.key, info.nightscout.core.utils.R.string.key_wear_detailediob),
-        CWF_PREF_AAPS_DETAILED_DELTA(CustomWatchfaceMetadataKey.CWF_PREF_AAPS_DETAILED_DELTA.key, info.nightscout.core.utils.R.string.key_wear_detailed_delta),
-        CWF_PREF_AAPS_BGI(CustomWatchfaceMetadataKey.CWF_PREF_AAPS_BGI.key, info.nightscout.core.utils.R.string.key_wear_showbgi)
-    }
 }

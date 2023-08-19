@@ -98,9 +98,9 @@ enum class CustomWatchfaceMetadataKey(val key: String, @StringRes val label: Int
     CWF_AUTHOR_VERSION("author_version", R.string.metadata_label_watchface_name_version),
     CWF_COMMENT("comment", R.string.metadata_label_watchface_comment), // label not planed to be used for CWF_COMMENT
     CWF_AUTHORIZATION("cwf_authorization", R.string.metadata_label_watchface_authorization),
-    CWF_PREF_AAPS_DETAILED_IOB("key_wear_detailediob", R.string.metadata_label_watchface_pref),
-    CWF_PREF_AAPS_DETAILED_DELTA("key_wear_detailed_delta", R.string.metadata_label_watchface_pref),
-    CWF_PREF_AAPS_BGI("key_wear_showbgi", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_DETAILED_IOB("key_show_detailed_iob", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_DETAILED_DELTA("key_show_detailed_delta", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_BGI("key_show_bgi", R.string.metadata_label_watchface_pref),
     CWF_PREF_WATCH_SHOW_IOB("key_show_iob", R.string.metadata_label_watchface_pref),
     CWF_PREF_WATCH_SHOW_COB("key_show_cob", R.string.metadata_label_watchface_pref),
     CWF_PREF_WATCH_SHOW_DELTA("key_show_delta", R.string.metadata_label_watchface_pref),
