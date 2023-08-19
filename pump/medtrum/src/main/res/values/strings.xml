@@ -50,7 +50,7 @@
     <string name="patch_expiry_label">Patch expires</string>
     <string name="refresh_label">Refresh</string>
     <string name="reset_alarms_label">Reset alarms</string>
-    <string name="change_patch_label">Change patch</string>
+    <string name="change_patch_label">Change Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
     <string name="expiry_not_enabled">Not enabled</string>
 
