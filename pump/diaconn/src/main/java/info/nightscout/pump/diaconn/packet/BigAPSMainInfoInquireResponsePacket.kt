@@ -173,7 +173,7 @@ class BigAPSMainInfoInquireResponsePacket(
 
         // 18. pump sound
         diaconnG8Pump.beepAndAlarm =  getByteToInt(bufferData) -1
-        diaconnG8Pump.alarmIntesity =  getByteToInt(bufferData) -1
+        diaconnG8Pump.alarmIntensity =  getByteToInt(bufferData) -1
 
         // 19. pump light time
         diaconnG8Pump.lcdOnTimeSec =  getByteToInt(bufferData) // kind (1=30 sec, 2=40 sec, 3=50 sec)
@@ -324,7 +324,7 @@ class BigAPSMainInfoInquireResponsePacket(
         aapsLogger.debug(LTag.PUMPCOMM, "maxBolusePerDay > " + diaconnG8Pump.maxBolusePerDay)
         aapsLogger.debug(LTag.PUMPCOMM, "mealLimitTime > " + diaconnG8Pump.mealLimitTime)
         aapsLogger.debug(LTag.PUMPCOMM, "beepAndAlarm > " + diaconnG8Pump.beepAndAlarm)
-        aapsLogger.debug(LTag.PUMPCOMM, "alarmIntesity > " + diaconnG8Pump.alarmIntesity)
+        aapsLogger.debug(LTag.PUMPCOMM, "alarmIntesity > " + diaconnG8Pump.alarmIntensity)
         aapsLogger.debug(LTag.PUMPCOMM, "lcdOnTimeSec > " + diaconnG8Pump.lcdOnTimeSec)
         aapsLogger.debug(LTag.PUMPCOMM, "selectedLanguage > " + diaconnG8Pump.selectedLanguage)
     }

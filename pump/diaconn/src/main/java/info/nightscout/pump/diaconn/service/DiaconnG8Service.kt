@@ -275,7 +275,7 @@ class DiaconnG8Service : DaggerService() {
         val result = PumpEnactResult(injector)
         var apsLastLogNum = 9999
         var apsWrappingCount = -1
-        // get saved last loginfo
+        // get saved last log info
         val diaconnHistoryRecord = diaconnHistoryRecordDao.getLastRecord(diaconnG8Pump.pumpUid)
         aapsLogger.debug(LTag.PUMPCOMM, "diaconnHistoryRecord :: $diaconnHistoryRecord")
 
@@ -421,7 +421,7 @@ class DiaconnG8Service : DaggerService() {
         val result = PumpEnactResult(injector)
 
         val msg: DiaconnG8Packet = when (diaconnG8Pump.setUserOptionType) {
-            DiaconnG8Pump.ALARM -> SoundSettingPacket(injector, diaconnG8Pump.beepAndAlarm, diaconnG8Pump.alarmIntesity)
+            DiaconnG8Pump.ALARM -> SoundSettingPacket(injector, diaconnG8Pump.beepAndAlarm, diaconnG8Pump.alarmIntensity)
             DiaconnG8Pump.LCD -> DisplayTimeoutSettingPacket(injector, diaconnG8Pump.lcdOnTimeSec)
             DiaconnG8Pump.LANG -> LanguageSettingPacket(injector, diaconnG8Pump.selectedLanguage)
             DiaconnG8Pump.BOLUS_SPEED -> BolusSpeedSettingPacket(injector, diaconnG8Pump.bolusSpeed)
