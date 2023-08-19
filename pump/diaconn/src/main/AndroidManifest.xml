@@ -10,7 +10,7 @@
         <activity
             android:name=".activities.DiaconnG8HistoryActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.DiaconnG8UserOptionsActivity"
             android:exported="false"

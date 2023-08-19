@@ -2,11 +2,15 @@ package info.nightscout.pump.diaconn.activities
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import androidx.core.view.MenuProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
@@ -74,6 +78,10 @@ class DiaconnG8HistoryActivity : TranslatedDaggerAppCompatActivity() {
         binding = DiaconnG8HistoryActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        title = rh.gs(info.nightscout.core.ui.R.string.pump_history)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
         binding.recyclerview.adapter = RecyclerViewAdapter(historyList)
@@ -112,6 +120,20 @@ class DiaconnG8HistoryActivity : TranslatedDaggerAppCompatActivity() {
             showingType = selected.type
             swapAdapter(selected.type)
         }
+        // Add menu items without overriding methods in the Activity
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+
+                    else              -> false
+                }
+        })
     }
 
     inner class RecyclerViewAdapter internal constructor(private var historyList: List<DiaconnHistoryRecord>) : RecyclerView.Adapter<RecyclerViewAdapter.HistoryViewHolder>() {

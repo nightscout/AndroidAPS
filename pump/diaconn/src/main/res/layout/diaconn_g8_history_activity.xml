@@ -4,51 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    tools:context="info.nightscout.androidaps.diaconn.activities.DiaconnG8HistoryActivity">
-
-    <RelativeLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_gravity="center"
-        android:background="?attr/activity_title_backgroundColor"
-        android:orientation="horizontal"
-        android:padding="5dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ic_pump_history" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/pump_history"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/spacer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/header"
-        android:orientation="horizontal"
-        android:padding="5dp" />
+    tools:context="info.nightscout.pump.diaconn.activities.DiaconnG8HistoryActivity">
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/typeListLayout"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/spacer"
+        android:layout_alignParentTop="true"
         android:layout_marginStart="5dp"
         android:layout_marginEnd="5dp"
         android:hint="@string/event_type">
