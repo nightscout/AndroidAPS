@@ -913,7 +913,7 @@ class DataHandlerMobile @Inject constructor(
             //bgi
             val bgi = -(bolusIob.activity + basalIob.activity) * 5 * Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits())
             bgiString = "" + (if (bgi >= 0) "+" else "") + DecimalFormatter.to1Decimal(bgi)
-            status = generateStatusString(profile, currentBasal, iobSum, iobDetail, bgiString)
+            status = generateStatusString(profile)
         }
 
         //batteries
@@ -930,14 +930,12 @@ class DataHandlerMobile @Inject constructor(
                     externalStatus = status,
                     iobSum = iobSum,
                     iobDetail = iobDetail,
-                    detailedIob = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_detailediob, false),
                     cob = cobString,
                     currentBasal = currentBasal,
                     battery = phoneBattery.toString(),
                     rigBattery = rigBattery,
                     openApsStatus = openApsStatus,
                     bgi = bgiString,
-                    showBgi = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_showbgi, false),
                     batteryLevel = if (phoneBattery >= 30) 1 else 0
                 )
             )
@@ -945,14 +943,22 @@ class DataHandlerMobile @Inject constructor(
     }
 
     private fun deltaString(deltaMGDL: Double, deltaMMOL: Double, units: GlucoseUnit): String {
-        val detailed = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_detailed_delta, false)
         var deltaString = if (deltaMGDL >= 0) "+" else "-"
         deltaString += if (units == GlucoseUnit.MGDL) {
-            if (detailed) DecimalFormatter.to1Decimal(abs(deltaMGDL)) else DecimalFormatter.to0Decimal(abs(deltaMGDL))
+            DecimalFormatter.to0Decimal(abs(deltaMGDL))
         } else {
-            if (detailed) DecimalFormatter.to2Decimal(abs(deltaMMOL)) else DecimalFormatter.to1Decimal(abs(deltaMMOL))
+            DecimalFormatter.to1Decimal(abs(deltaMMOL))
         }
         return deltaString
+    }
+    private fun deltaStringDetailed(deltaMGDL: Double, deltaMMOL: Double, units: GlucoseUnit): String {
+        var deltaStringDetailed = if (deltaMGDL >= 0) "+" else "-"
+        deltaStringDetailed += if (units == GlucoseUnit.MGDL) {
+            DecimalFormatter.to1Decimal(abs(deltaMGDL))
+        } else {
+            DecimalFormatter.to2Decimal(abs(deltaMMOL))
+        }
+        return deltaStringDetailed
     }
 
     private fun getSingleBG(glucoseValue: InMemoryGlucoseValue): EventData.SingleBg {
@@ -967,7 +973,9 @@ class DataHandlerMobile @Inject constructor(
             glucoseUnits = units.asText,
             slopeArrow = trendCalculator.getTrendArrow(glucoseValue).symbol,
             delta = glucoseStatus?.let { deltaString(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
+            deltaDetailed = glucoseStatus?.let { deltaStringDetailed(it.delta, it.delta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             avgDelta = glucoseStatus?.let { deltaString(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
+            avgDeltaDetailed = glucoseStatus?.let { deltaStringDetailed(it.shortAvgDelta, it.shortAvgDelta * Constants.MGDL_TO_MMOLL, units) } ?: "--",
             sgvLevel = if (glucoseValue.recalculated > highLine) 1L else if (glucoseValue.recalculated < lowLine) -1L else 0L,
             sgv = glucoseValue.recalculated,
             high = highLine,
@@ -1123,19 +1131,10 @@ class DataHandlerMobile @Inject constructor(
         return message
     }
 
-    private fun generateStatusString(profile: Profile?, currentBasal: String, iobSum: String, iobDetail: String, bgiString: String): String {
+    private fun generateStatusString(profile: Profile?): String {
         var status = ""
         profile ?: return rh.gs(info.nightscout.core.ui.R.string.noprofile)
         if (!(loop as PluginBase).isEnabled()) status += rh.gs(R.string.disabled_loop) + "\n"
-
-        val iobString =
-            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_detailediob, false)) "$iobSum $iobDetail"
-            else iobSum + rh.gs(R.string.units_short)
-
-        status += "$currentBasal $iobString"
-
-        // add BGI if shown, otherwise return
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_showbgi, false)) status += " $bgiString"
         return status
     }
 

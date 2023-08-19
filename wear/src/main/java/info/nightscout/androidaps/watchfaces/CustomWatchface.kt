@@ -492,15 +492,18 @@ class CustomWatchface : BaseWatchFace() {
     // This class containt mapping between keys used within json of Custom Watchface and preferences
     private enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
         SHOW_IOB(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob),
+        SHOW_DETAILED_IOB(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob),
         SHOW_COB(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob),
         SHOW_DELTA(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta),
         SHOW_AVG_DELTA(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_AVG_DELTA.key, R.string.key_show_avg_delta),
+        SHOW_DETAILED_DELTA(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_DELTA.key, R.string.key_show_detailed_delta),
         SHOW_UPLOADER_BATTERY(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY.key, R.string.key_show_uploader_battery),
         SHOW_RIG_BATTERY(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_RIG_BATTERY.key, R.string.key_show_rig_battery),
         SHOW_TEMP_BASAL(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_BASAL.key, R.string.key_show_temp_basal),
         SHOW_DIRECTION(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction),
         SHOW_AGO(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
-        SHOW_BG(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg)
+        SHOW_BG(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg),
+        SHOW_BGI(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi)
     }
 
 }

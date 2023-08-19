@@ -23,16 +23,20 @@
     <string name="msg_warning_old">AAPS data is %1$s old! Check your sensor, xDrip+, NS, AAPS config or other!</string>
     <string name="pref_vibrate_on_bolus">Vibrate on Bolus</string>
     <string name="pref_units_for_actions">Units for Actions</string>
+    <string name="units_short">U</string>
     <string name="pref_show_date">Show Date</string>
     <string name="pref_show_iob">Show IOB</string>
+    <string name="pref_show_detailed_iob">Show detailed IOB</string>
     <string name="pref_show_cob">Show COB</string>
     <string name="pref_show_delta">Show Delta</string>
+    <string name="pref_show_detailed_delta">Show detailed Delta</string>
     <string name="pref_show_avgdelta">Show AvgDelta</string>
     <string name="pref_show_phone_battery">Show Phone Battery</string>
     <string name="pref_show_rig_battery">Show Rig Battery</string>
     <string name="pref_show_basal_rate">Show Basal Rate</string>
     <string name="pref_show_loop_status">Show Loop Status</string>
     <string name="pref_show_bg">Show BG</string>
+    <string name="pref_show_bgi">Show BGI</string>
     <string name="pref_show_direction_arrow">Show Direction Arrow</string>
     <string name="pref_show_ago">Show Ago</string>
     <string name="pref_dark" comment="Enables dark visual theme">Dark</string>
@@ -187,10 +191,12 @@
     <string name="key_show_date" translatable="false">show_date</string>
     <string name="key_show_cob" translatable="false">show_cob</string>
     <string name="key_show_bg" translatable="false">showBG</string>
+    <string name="key_show_bgi" translatable="false">showBGI</string>
     <string name="key_show_external_status" translatable="false">showExternalStatus</string>
     <string name="key_show_ago" translatable="false">showAgo</string>
     <string name="key_show_big_numbers" translatable="false">showBigNumbers</string>
     <string name="key_show_delta" translatable="false">showDelta</string>
+    <string name="key_show_detailed_delta" translatable="false">showDetailedDelta</string>
     <string name="key_show_avg_delta" translatable="false">showAvgDelta</string>
     <string name="key_show_ring_history" translatable="false">showRingHistory</string>
     <string name="key_digital_style_frame_style" translatable="false">digital_style_frame_style</string>
@@ -199,6 +205,7 @@
     <string name="key_digital_style_frame_color_opacity" translatable="false">digital_style_frame_color_opacity</string>
     <string name="key_show_direction" translatable="false">show_direction</string>
     <string name="key_show_iob" translatable="false">show_iob</string>
+    <string name="key_show_detailed_iob" translatable="false">show_detailed_iob</string>
     <string name="key_show_uploader_battery" translatable="false">show_uploader_battery</string>
     <string name="key_show_rig_battery" translatable="false">show_rig_battery</string>
     <string name="key_show_temp_basal" translatable="false">show_temp_basal</string>

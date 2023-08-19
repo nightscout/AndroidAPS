@@ -119,11 +119,6 @@ class WearPlugin @Inject constructor(
                 newCwf.metadata[CustomWatchfaceMetadataKey.CWF_AUTHORIZATION] = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false).toString()
                 rxBus.send(EventMobileDataToWear(EventData.ActionSetCustomWatchface(newCwf)))
             }
-            if (cwf_authorization) {
-                WearFragment.PrefMap.values().forEach { pref ->
-                    cwf.metadata[CustomWatchfaceMetadataKey.fromKey(pref.key)]?.toBooleanStrictOrNull()?.let { sp.putBoolean(pref.prefKey, it) }
-                }
-            }
         }
     }
 
