@@ -130,7 +130,7 @@
     <!-- settings-->
     <string name="sn_input_title">Serial Number</string>
     <string name="sn_input_summary">Enter the serial number of your pump base.</string>
-    <string name="sn_input_invalid">Invalid serial number! Check serial number and try again.</string>
+    <string name="sn_input_invalid">Invalid serial number!</string>
     <string name="pump_unsupported">Pump untested: %1$d! Please contact us at discord or github for support</string>
     <string name="alarm_setting_title">Alarm Settings</string>
     <string name="alarm_setting_summary">Select your preferred pump alarm settings.</string>

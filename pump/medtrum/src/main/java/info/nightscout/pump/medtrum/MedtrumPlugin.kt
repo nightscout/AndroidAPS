@@ -5,6 +5,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
+import android.text.Editable
+import android.text.TextWatcher
 import android.text.format.DateFormat
 import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
@@ -127,6 +129,27 @@ import kotlin.math.abs
         super.preprocessPreferences(preferenceFragment)
         val serialSetting = preferenceFragment.findPreference<EditTextPreference>(rh.gs(R.string.key_sn_input))
         serialSetting?.isEnabled = !isInitialized()
+        serialSetting?.setOnBindEditTextListener { editText ->
+            editText.addTextChangedListener(object : TextWatcher {
+                override fun afterTextChanged(newValue: Editable?) {
+                    val newSN = newValue.toString().toLongOrNull(radix = 16)
+                    val newDeviceType = MedtrumSnUtil().getDeviceTypeFromSerial(newSN ?: 0)
+                    if (newDeviceType == MedtrumSnUtil.INVALID) {
+                        editText.error = rh.gs(R.string.sn_input_invalid)
+                    } else {
+                        editText.error = null
+                    }
+                }
+
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                    // Nothing to do here
+                }
+
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    // Nothing to do here
+                }
+            })
+        }
         serialSetting?.setOnPreferenceChangeListener { _, newValue ->
             if (newValue is String) {
                 val newSN = newValue.toLongOrNull(radix = 16)
