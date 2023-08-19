@@ -400,7 +400,7 @@ class CustomWatchface : BaseWatchFace() {
         UPLOADER_BATTERY("uploader_battery", R.id.uploader_battery, R.string.key_show_uploader_battery),
         RIG_BATTERY("rig_battery", R.id.rig_battery, R.string.key_show_rig_battery),
         BASALRATE("basalRate", R.id.basalRate, R.string.key_show_temp_basal),
-        BGI("bgi", R.id.bgi, null),
+        BGI("bgi", R.id.bgi, R.string.key_show_bgi),
         TIME("time", R.id.time, null),
         HOUR("hour", R.id.hour, null),
         MINUTE("minute", R.id.minute, null),
@@ -503,7 +503,8 @@ class CustomWatchface : BaseWatchFace() {
         SHOW_DIRECTION(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction),
         SHOW_AGO(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
         SHOW_BG(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg),
-        SHOW_BGI(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi)
+        SHOW_BGI(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi),
+        SHOW_LOOP_STATUS(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status)
     }
 
 }

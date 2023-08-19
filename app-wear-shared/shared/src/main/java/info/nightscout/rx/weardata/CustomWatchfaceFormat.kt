@@ -110,7 +110,8 @@ enum class CustomWatchfaceMetadataKey(val key: String, @StringRes val label: Int
     CWF_PREF_WATCH_SHOW_TEMP_BASAL("key_show_temp_basal", R.string.metadata_label_watchface_pref),
     CWF_PREF_WATCH_SHOW_DIRECTION("key_show_direction", R.string.metadata_label_watchface_pref),
     CWF_PREF_WATCH_SHOW_AGO("key_show_ago", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.metadata_label_watchface_pref);
+    CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.metadata_label_watchface_pref);
     companion object {
         fun fromKey(key: String): CustomWatchfaceMetadataKey? =
             values().firstOrNull { it.key == key }

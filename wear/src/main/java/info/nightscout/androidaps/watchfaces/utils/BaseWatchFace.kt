@@ -330,7 +330,7 @@ abstract class BaseWatchFace : WatchFace() {
         binding.basalRate?.text = status.currentBasal
         binding.basalRate?.visibility = sp.getBoolean(R.string.key_show_temp_basal, true).toVisibility()
         binding.bgi?.text = status.bgi
-        binding.bgi?.visibility = sp.getBoolean(R.string.key_show_bgi, true).toVisibility()
+        binding.bgi?.visibility = showBgi.toVisibility()
         val iobString =
             if (detailedIob) "${status.iobSum} ${status.iobDetail}"
             else status.iobSum + getString(R.string.units_short)
