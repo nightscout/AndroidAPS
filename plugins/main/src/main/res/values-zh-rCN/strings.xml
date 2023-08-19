@@ -98,11 +98,7 @@
     <string name="sms_profile_switch_created">配置文件切换已创建</string>
     <string name="sms_wrong_tbr_duration">TBR(临时基础率) 的持续时间必须是 %1$d 分钟的倍数，且大于0。</string>
     <string name="a11y_otp_qr_code">用于安装一次性随机验证码的二维码</string>
-    <string name="xdrip_status_detailed_iob_title">显示详细 IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">在手表的表盘上分别显示大剂量IOB和基础IOB</string>
     <string name="disabled_loop">闭环禁用</string>
-    <string name="xdrip_status_show_bgi_title">显示血糖线</string>
-    <string name="xdrip_status_show_bgi_summary">添加血糖线到状态线</string>
     <!-- Food-->
     <string name="food_short">食物</string>
     <string name="description_food">显示 Nightscout 中定义的食物预设</string>
@@ -295,8 +291,6 @@
     <string name="wear_wizard_settings_summary">包含在向导中的计算结果：</string>
     <string name="wear_display_settings">显示设置</string>
     <string name="wear_general_settings">常规设置</string>
-    <string name="wear_detailed_delta_title">显示详细的增量</string>
-    <string name="wear_detailed_delta_summary">增量再多显示一个小数位</string>
     <string name="wear_notifysmb_title">在 SMB 上通知</string>
     <string name="wear_notifysmb_summary">在手表上像显示常规大剂量一样显示SMB微型大剂量</string>
     <string name="wear_predictions_summary">在手表的表盘上显示预测</string>
