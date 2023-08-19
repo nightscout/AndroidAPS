@@ -37,6 +37,7 @@ import info.nightscout.rx.weardata.CustomWatchfaceData
 import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
 import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataMap
 import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey
+import info.nightscout.rx.weardata.CustomWatchfaceMetadataMap
 import info.nightscout.rx.weardata.DrawableData
 import info.nightscout.rx.weardata.DrawableFormat
 import info.nightscout.rx.weardata.EventData
@@ -140,6 +141,7 @@ class CustomWatchface : BaseWatchFace() {
     private fun setWatchfaceStyle() {
         val customWatchface = persistence.readCustomWatchface() ?: persistence.readCustomWatchface(true)
         customWatchface?.let {
+            updatePref(it.customWatchfaceData.metadata)
             try {
                 val json = JSONObject(it.customWatchfaceData.json)
                 val drawableDataMap = it.customWatchfaceData.drawableDatas
@@ -227,6 +229,17 @@ class CustomWatchface : BaseWatchFace() {
             } catch (e: Exception) {
                 aapsLogger.debug(LTag.WEAR, "Crash during Custom watch load")
                 persistence.store(defaultWatchface(), false) // relaod correct values to avoid crash of watchface
+            }
+        }
+    }
+
+    private fun updatePref(metadata: CustomWatchfaceMetadataMap) {
+        val cwf_authorization = metadata[CustomWatchfaceMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()
+        cwf_authorization?.let { authorization ->
+            if (authorization) {
+                PrefMap.values().forEach { pref ->
+                    metadata[CustomWatchfaceMetadataKey.fromKey(pref.key)]?.toBooleanStrictOrNull()?.let { sp.putBoolean(pref.prefKey, it) }
+                }
             }
         }
     }
@@ -474,6 +487,20 @@ class CustomWatchface : BaseWatchFace() {
             fun style(key: String?) = values().firstOrNull { it.key == key }?.style ?: NORMAL.style
             fun key(style: Int) = values().firstOrNull { it.style == style }?.key ?: NORMAL.key
         }
+    }
+
+    // This class containt mapping between keys used within json of Custom Watchface and preferences
+    private enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
+        SHOW_IOB(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob),
+        SHOW_COB(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob),
+        SHOW_DELTA(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta),
+        SHOW_AVG_DELTA(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_AVG_DELTA.key, R.string.key_show_avg_delta),
+        SHOW_UPLOADER_BATTERY(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY.key, R.string.key_show_uploader_battery),
+        SHOW_RIG_BATTERY(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_RIG_BATTERY.key, R.string.key_show_rig_battery),
+        SHOW_TEMP_BASAL(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_BASAL.key, R.string.key_show_temp_basal),
+        SHOW_DIRECTION(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction),
+        SHOW_AGO(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
+        SHOW_BG(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg)
     }
 
 }

@@ -20,6 +20,7 @@ import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.rx.weardata.CustomWatchfaceData
 import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.sharedPreferences.SP
 import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Hours
@@ -38,6 +39,7 @@ class PrefFileListProviderImpl @Inject constructor(
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,
     private val versionCheckerUtils: VersionCheckerUtils,
+    private val sp: SP,
     context: Context
 ) : PrefFileListProvider {
     private val path = File(Environment.getExternalStorageDirectory().toString())
@@ -92,11 +94,11 @@ class PrefFileListProviderImpl @Inject constructor(
 
     override fun listCustomWatchfaceFiles(): MutableList<CustomWatchfaceData> {
         val customWatchfaceFiles = mutableListOf<CustomWatchfaceData>()
-
+        val customAwtchfaceAuthorization = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false)
         // searching dedicated dir, only for new CWF format
         exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CUSTOM_WF_EXTENTION) }.forEach { file ->
             // Here loadCustomWatchface will unzip, check and load CustomWatchface
-            ZipWatchfaceFormat.loadCustomWatchface(file)?.also { customWatchface ->
+            ZipWatchfaceFormat.loadCustomWatchface(file, customAwtchfaceAuthorization)?.also { customWatchface ->
                 customWatchfaceFiles.add(customWatchface)
             }
         }

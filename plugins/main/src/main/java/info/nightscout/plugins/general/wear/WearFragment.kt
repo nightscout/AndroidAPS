@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.StringRes
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -12,7 +13,6 @@ import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.WearFragmentBinding
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventMobileDataToWear
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
@@ -105,6 +105,7 @@ class WearFragment : DaggerFragment() {
     private fun updateGui() {
         _binding ?: return
         wearPlugin.savedCustomWatchface?.let {
+            wearPlugin.checkCustomWatchfacePreferences()
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, it.metadata[CustomWatchfaceMetadataKey.CWF_NAME])
             binding.coverChart.setImageDrawable(it.drawableDatas[CustomWatchfaceDrawableDataKey.CUSTOM_WATCHFACE]?.toDrawable(resources))
         } ?:apply {
@@ -117,5 +118,12 @@ class WearFragment : DaggerFragment() {
 
     private fun loadCustom(cwf: CustomWatchfaceData) {
         wearPlugin.savedCustomWatchface = cwf
+    }
+
+    // This class containt mapping between keys used within json of Custom Watchface and preferences
+    enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
+        DETAILED_IOB(CustomWatchfaceMetadataKey.CWF_PREF_AAPS_DETAILED_IOB.key, info.nightscout.core.utils.R.string.key_wear_detailediob),
+        CWF_PREF_AAPS_DETAILED_DELTA(CustomWatchfaceMetadataKey.CWF_PREF_AAPS_DETAILED_DELTA.key, info.nightscout.core.utils.R.string.key_wear_detailed_delta),
+        CWF_PREF_AAPS_BGI(CustomWatchfaceMetadataKey.CWF_PREF_AAPS_BGI.key, info.nightscout.core.utils.R.string.key_wear_showbgi)
     }
 }

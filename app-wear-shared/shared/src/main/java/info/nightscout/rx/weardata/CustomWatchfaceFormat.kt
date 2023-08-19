@@ -17,7 +17,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-val CUSTOM_VERSION = "0.7"
+val CUSTOM_VERSION = "0.8"
 enum class CustomWatchfaceDrawableDataKey(val key: String, @DrawableRes val icon: Int?, val fileName: String) {
     UNKNOWN("unknown", null, "Unknown"),
     CUSTOM_WATCHFACE("customWatchface", R.drawable.watchface_custom, "CustomWatchface"),
@@ -96,8 +96,21 @@ enum class CustomWatchfaceMetadataKey(val key: String, @StringRes val label: Int
     CWF_CREATED_AT("created_at", R.string.metadata_label_watchface_created_at),
     CWF_VERSION("cwf_version", R.string.metadata_label_plugin_version),
     CWF_AUTHOR_VERSION("author_version", R.string.metadata_label_watchface_name_version),
-    CWF_COMMENT("comment", R.string.metadata_label_watchface_comment); // label not planed to be used for CWF_COMMENT
-
+    CWF_COMMENT("comment", R.string.metadata_label_watchface_comment), // label not planed to be used for CWF_COMMENT
+    CWF_AUTHORIZATION("cwf_authorization", R.string.metadata_label_watchface_authorization),
+    CWF_PREF_AAPS_DETAILED_IOB("key_wear_detailediob", R.string.metadata_label_watchface_pref),
+    CWF_PREF_AAPS_DETAILED_DELTA("key_wear_detailed_delta", R.string.metadata_label_watchface_pref),
+    CWF_PREF_AAPS_BGI("key_wear_showbgi", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_IOB("key_show_iob", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_COB("key_show_cob", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_DELTA("key_show_delta", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_AVG_DELTA("key_show_avg_delta", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY("key_show_uploader_battery", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_RIG_BATTERY("key_show_rig_battery", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_TEMP_BASAL("key_show_temp_basal", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_DIRECTION("key_show_direction", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_AGO("key_show_ago", R.string.metadata_label_watchface_pref),
+    CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.metadata_label_watchface_pref);
     companion object {
         fun fromKey(key: String): CustomWatchfaceMetadataKey? =
             values().firstOrNull { it.key == key }
@@ -110,7 +123,7 @@ class ZipWatchfaceFormat {
         const val CUSTOM_WF_EXTENTION = ".zip"
         const val CUSTOM_JSON_FILE = "CustomWatchface.json"
 
-        fun loadCustomWatchface(cwfFile: File): CustomWatchfaceData? {
+        fun loadCustomWatchface(cwfFile: File, authorization: Boolean): CustomWatchfaceData? {
             var json = JSONObject()
             var metadata: CustomWatchfaceMetadataMap = mutableMapOf()
             val drawableDatas: CustomWatchfaceDrawableDataMap = mutableMapOf()
@@ -135,6 +148,7 @@ class ZipWatchfaceFormat {
                         json = JSONObject(jsonString)
                         metadata = loadMetadata(json)
                         metadata[CustomWatchfaceMetadataKey.CWF_FILENAME] = cwfFile.name
+                        metadata[CustomWatchfaceMetadataKey.CWF_AUTHORIZATION] = authorization.toString()
                     } else {
                         val customWatchfaceDrawableDataKey = CustomWatchfaceDrawableDataKey.fromFileName(entryName)
                         val drawableFormat = DrawableFormat.fromFileName(entryName)
