@@ -47,6 +47,8 @@
     <string name="metadata_label_plugin_version">Plugin version: %1$s</string>
     <string name="metadata_label_watchface_name_version">Name: %1$s (%2$s)</string>
     <string name="metadata_label_watchface_comment" translatable="false">%1$s</string>
+    <string name="metadata_label_watchface_authorization" translatable="false">%1$s</string>
+    <string name="metadata_label_watchface_pref" translatable="false">%1$s</string>
     <string name="default_custom_watchface_comment">Default watchface, you can click on EXPORT WATCHFACE button to generate a template</string>
     <string name="wear_default_watchface">Default Watchface</string>
 
