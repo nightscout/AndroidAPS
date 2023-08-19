@@ -53,6 +53,7 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
     private var recyclerViewAdapter: RecyclerViewAdapter? = null
     private var manualChange = false
     private var typeListFull: List<TypeList>? = null
+    private var selectedGroup: PumpHistoryEntryGroup = PumpHistoryEntryGroup.All
 
     private fun prepareData() {
         val gc = GregorianCalendar()
@@ -356,7 +357,6 @@ class DashPodHistoryActivity : TranslatedDaggerAppCompatActivity() {
 
     companion object {
 
-        private var selectedGroup: PumpHistoryEntryGroup = PumpHistoryEntryGroup.All
         const val DAYS_TO_DISPLAY = 5
     }
 }

@@ -21,6 +21,6 @@
         <activity
             android:name=".ui.ErosPodHistoryActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
     </application>
 </manifest>
