@@ -89,7 +89,7 @@ class SWDefinition @Inject constructor(
     }
 
     private val screenSetupWizard
-        get() = SWScreen(injector, R.string.nav_setupwizard)
+        get() = SWScreen(injector, R.string.welcome)
             .add(SWInfoText(injector).label(R.string.welcometosetupwizard))
 
     private val screenEula

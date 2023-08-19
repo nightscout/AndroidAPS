@@ -2,9 +2,13 @@ package info.nightscout.configuration.setupwizard
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
+import androidx.core.view.MenuProvider
 import dagger.android.HasAndroidInjector
 import info.nightscout.configuration.R
 import info.nightscout.configuration.activities.DaggerAppCompatActivityWithResult
@@ -51,6 +55,10 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
         binding = ActivitySetupwizardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        title = rh.gs(R.string.nav_setupwizard)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         swDefinition.activity = this
         screens = swDefinition.getScreens()
         val intent = intent
@@ -70,6 +78,20 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
                 if (currentWizardPage == 0)
                     OKDialog.showConfirmation(this@SetupWizardActivity, rh.gs(R.string.exitwizard)) { finish() } else showPreviousPage(null)
             }
+        })
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        sp.putBoolean(R.string.key_setupwizard_processed, true)
+                        OKDialog.showConfirmation(this@SetupWizardActivity, rh.gs(R.string.exitwizard)) { finish() }
+                        true
+                    }
+
+                    else              -> false
+                }
         })
     }
 
@@ -139,12 +161,6 @@ class SetupWizardActivity : DaggerAppCompatActivityWithResult() {
             if (currentWizardPage == 0) findViewById<View>(R.id.previous_button).visibility = View.GONE else findViewById<View>(R.id.previous_button).visibility = View.VISIBLE
             currentScreen.processVisibility()
         }
-    }
-
-    @Suppress("UNUSED_PARAMETER")
-    fun exitPressed(view: View?) {
-        sp.putBoolean(R.string.key_setupwizard_processed, true)
-        OKDialog.showConfirmation(this, rh.gs(R.string.exitwizard)) { finish() }
     }
 
     @Suppress("UNUSED_PARAMETER")

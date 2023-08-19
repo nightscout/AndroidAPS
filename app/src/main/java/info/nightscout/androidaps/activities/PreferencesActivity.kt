@@ -22,7 +22,6 @@ class PreferencesActivity : DaggerAppCompatActivityWithResult(), PreferenceFragm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(info.nightscout.core.ui.R.style.AppTheme)
         binding = ActivityPreferencesBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
