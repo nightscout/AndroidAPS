@@ -43,7 +43,7 @@
         <activity
             android:name=".activities.StatsActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.TreatmentsActivity"
             android:exported="false"
