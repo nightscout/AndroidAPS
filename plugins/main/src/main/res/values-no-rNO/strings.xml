@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Profilbytte opprettet</string>
     <string name="sms_wrong_tbr_duration">Midl. basal varighet må oppgis i antall %1$d minutter og større enn 0.</string>
     <string name="a11y_otp_qr_code">QR-kode for oppsett av engangspassord</string>
-    <string name="xdrip_status_detailed_iob_title">Vis detaljert IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Splitt IOB til bolus- og basal-IOB på klokken</string>
     <string name="disabled_loop">Loop er deaktivert</string>
-    <string name="xdrip_status_show_bgi_title">Vis BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Legg til BGI i statuslinje</string>
     <!-- Food-->
     <string name="food_short">Mat</string>
     <string name="description_food">Viser forhåndsinnstillinger for mat fra Nightscout</string>
@@ -310,8 +306,6 @@
     <string name="wear_wizard_settings_summary">Beregninger inkludert i resultatet fra veiviseren:</string>
     <string name="wear_display_settings">Visningsinnstillinger</string>
     <string name="wear_general_settings">Generelle innstillinger</string>
-    <string name="wear_detailed_delta_title">Vis detaljert delta</string>
-    <string name="wear_detailed_delta_summary">Vis delta med én ekstra desimal</string>
     <string name="wear_notifysmb_title">Varsle ved SMB</string>
     <string name="wear_notifysmb_summary">Vis SMB på klokken som en standard bolus.</string>
     <string name="wear_predictions_summary">Vis blodsukkerprognoser på klokken.</string>
