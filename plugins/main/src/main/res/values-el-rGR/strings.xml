@@ -75,11 +75,7 @@
     <string name="sms_loop_suspended_for">Αναστολή (%1$d m)</string>
     <string name="sms_read_status_failed">Η ανάγνωση κατάστασης απέτυχε</string>
     <string name="sms_profile_switch_created">Δημιουργήθηκε αλλαγή προφίλ</string>
-    <string name="xdrip_status_detailed_iob_title">Δείξε αναλυτικά IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Χώρισε την IOB σε bolus και βασικό στο ρολόι</string>
     <string name="disabled_loop">Κύκλωμα απενεργοποιημένο</string>
-    <string name="xdrip_status_show_bgi_title">Δείξε BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Πρόσθεσε BGI στην γραμμή κατάστασης</string>
     <!-- Food-->
     <string name="food_short">Γεύμα</string>
     <string name="description_food">Εμφανίζει τις επιλογές τροφίμων που ορίζεται στο Nightscout</string>
@@ -198,8 +194,6 @@
     <string name="wear_wizard_settings_summary">Υπολογισμοί που περιλαμβάνονται στο αποτέλεσμα του γρήγορου οδηγού:</string>
     <string name="wear_display_settings">Ρυθμίσεις Εμφάνισης</string>
     <string name="wear_general_settings">Γενικές Ρυθμίσεις</string>
-    <string name="wear_detailed_delta_title">Εμφάνιση λεπτομερών στατιστικών</string>
-    <string name="wear_detailed_delta_summary">Δείξτε τη διαφορά με ένα επιπλέον δεκαδικό ψηφίο</string>
     <string name="wear_notifysmb_title">Ειδοποίηση στο SMB</string>
     <string name="wear_notifysmb_summary">Εμφάνιση SMB στο ρολόι όπως ένα τυπικό bolus.</string>
     <string name="wear_predictions_summary">Προβολή πρόβλεψης στο ρολόι.</string>
