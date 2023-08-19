@@ -901,7 +901,7 @@ class DataHandlerMobile @Inject constructor(
         var cobString = ""
         var currentBasal = ""
         var bgiString = ""
-        if (profile != null) {
+        if (config.appInitialized && profile != null) {
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             iobSum = DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob)
