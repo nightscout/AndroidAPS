@@ -17,7 +17,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-val CUSTOM_VERSION = "0.8"
+val CUSTOM_VERSION = "0.9"
 enum class CustomWatchfaceDrawableDataKey(val key: String, @DrawableRes val icon: Int?, val fileName: String) {
     UNKNOWN("unknown", null, "Unknown"),
     CUSTOM_WATCHFACE("customWatchface", R.drawable.watchface_custom, "CustomWatchface"),
