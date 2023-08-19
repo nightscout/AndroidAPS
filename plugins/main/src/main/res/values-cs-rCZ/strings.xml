@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Přepnutí profilu vytvořeno</string>
     <string name="sms_wrong_tbr_duration">Trvání dočasného bazálu musí být násobkem %1$d minut a musí být větší než 0.</string>
     <string name="a11y_otp_qr_code">QR kód pro nastavení jednorázového hesla</string>
-    <string name="xdrip_status_detailed_iob_title">Zobrazit detailní IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Rozepsat IOB do bolusového a bazálního na hodinkách</string>
     <string name="disabled_loop">Smyčka zakázána</string>
-    <string name="xdrip_status_show_bgi_title">Zobrazovat BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Přidat BGI do stavové řádky</string>
     <!-- Food-->
     <string name="food_short">Jídlo</string>
     <string name="description_food">Zobrazení jídel definovaných v NS</string>
@@ -310,8 +306,6 @@
     <string name="wear_wizard_settings_summary">Kalkulace použité ve výsledku wizardu:</string>
     <string name="wear_display_settings">Nastavení zobrazení</string>
     <string name="wear_general_settings">Základní nastavení</string>
-    <string name="wear_detailed_delta_title">Zobrazovat detailní změny</string>
-    <string name="wear_detailed_delta_summary">Zobrazovat rozdíl s jedním desetinným místem navíc</string>
     <string name="wear_notifysmb_title">Oznámení při SMB</string>
     <string name="wear_notifysmb_summary">Ukazovat SMB na hodinkách jako normální bolus.</string>
     <string name="wear_predictions_summary">Zobrazovat predikce na hodinkách.</string>
