@@ -11,11 +11,11 @@
         <activity
             android:name=".ui.wizard.activation.DashPodActivationWizardActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.wizard.deactivation.DashPodDeactivationWizardActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.DashPodManagementActivity"
             android:exported="false"

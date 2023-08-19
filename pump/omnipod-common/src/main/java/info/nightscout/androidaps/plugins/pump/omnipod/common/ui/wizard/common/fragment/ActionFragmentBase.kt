@@ -14,7 +14,7 @@ import info.nightscout.shared.extensions.toVisibility
 
 abstract class ActionFragmentBase : WizardFragmentBase() {
 
-    val actionViewModel: ActionViewModelBase
+    private val actionViewModel: ActionViewModelBase
         get() = viewModel as ActionViewModelBase
 
     @SuppressLint("CutPasteId")
@@ -27,7 +27,7 @@ abstract class ActionFragmentBase : WizardFragmentBase() {
         view.findViewById<Button>(R.id.omnipod_wizard_button_retry)
             .setOnClickListener { actionViewModel.executeAction() }
 
-        actionViewModel.isActionExecutingLiveData.observe(viewLifecycleOwner, { isExecuting ->
+        actionViewModel.isActionExecutingLiveData.observe(viewLifecycleOwner) { isExecuting ->
             if (isExecuting) {
                 view.findViewById<TextView>(R.id.omnipod_wizard_action_error).visibility = View.GONE
                 view.findViewById<Button>(R.id.omnipod_wizard_button_deactivate_pod).visibility = View.GONE
@@ -37,9 +37,9 @@ abstract class ActionFragmentBase : WizardFragmentBase() {
             view.findViewById<ProgressBar>(R.id.omnipod_wizard_action_progress_indication).visibility =
                 isExecuting.toVisibility()
             view.findViewById<Button>(R.id.button_cancel).isEnabled = !isExecuting
-        })
+        }
 
-        actionViewModel.actionResultLiveData.observe(viewLifecycleOwner, { result ->
+        actionViewModel.actionResultLiveData.observe(viewLifecycleOwner) { result ->
             result?.let {
                 val isExecuting = isActionExecuting()
 
@@ -56,7 +56,7 @@ abstract class ActionFragmentBase : WizardFragmentBase() {
                     onFailure()
                 }
             }
-        })
+        }
 
         if (savedInstanceState == null && !isActionExecuting()) {
             actionViewModel.executeAction()
@@ -64,7 +64,7 @@ abstract class ActionFragmentBase : WizardFragmentBase() {
 
     }
 
-    protected fun isActionExecuting() = actionViewModel.isActionExecutingLiveData.value!!
+    private fun isActionExecuting() = actionViewModel.isActionExecutingLiveData.value!!
 
     override fun onDestroyView() {
         super.onDestroyView()

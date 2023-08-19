@@ -1,9 +1,12 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.activity
 
 import android.os.Bundle
-import android.os.PersistableBundle
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
+import androidx.core.view.MenuProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import info.nightscout.androidaps.plugins.pump.omnipod.common.R
@@ -11,12 +14,26 @@ import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 
 abstract class OmnipodWizardActivityBase : TranslatedDaggerAppCompatActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
         onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 exitActivityAfterConfirmation()
             }
+        })
+        // Add menu items without overriding methods in the Activity
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    android.R.id.home -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
+
+                    else              -> false
+                }
         })
     }
 

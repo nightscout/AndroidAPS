@@ -9,11 +9,11 @@
         <activity
             android:name=".ui.wizard.activation.ErosPodActivationWizardActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.wizard.deactivation.ErosPodDeactivationWizardActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".ui.ErosPodManagementActivity"
             android:exported="false"
