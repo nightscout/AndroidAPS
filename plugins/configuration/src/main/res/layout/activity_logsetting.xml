@@ -12,34 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="?attr/activity_title_backgroundColor"
-        android:orientation="horizontal"
-        android:padding="5dp">
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:importantForAccessibility="no"
-            app:srcCompat="@drawable/ic_aaps" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_gravity="center"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:text="@string/nav_logsettings"
-            android:textAlignment="center"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    </RelativeLayout>
-
-    <LinearLayout
+        <LinearLayout
         android:id="@+id/spacer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -53,30 +26,22 @@
             android:orientation="vertical" />
 
         <LinearLayout
-            android:id="@+id/done_background"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:orientation="horizontal"
-            android:background="@android:color/transparent"
-            android:gravity="end"
-            android:layout_gravity="center_vertical"
-            android:paddingBottom="8dp">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/reset"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:layout_marginEnd="8dp"
-                style="@style/OkCancelButton.Text"
-                android:text="@string/resettodefaults" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/ok"
+                style="@style/GrayButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                style="@style/OkCancelButton.Text"
-                android:text="@string/ok" />
+                android:layout_gravity="center"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:text="@string/resettodefaults"
+                app:icon="@drawable/ic_local_reset"
+                app:iconTint="@color/ic_local_reset" />
 
         </LinearLayout>
 

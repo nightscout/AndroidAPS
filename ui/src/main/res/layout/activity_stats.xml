@@ -38,7 +38,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@android:color/transparent"
                     android:orientation="horizontal">
@@ -49,8 +49,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:paddingStart="1dp"
-                        android:paddingEnd="1dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
                         android:text="@string/reset"
                         app:icon="@drawable/ic_local_reset"
                         app:iconTint="@color/ic_local_reset" />
@@ -132,7 +132,7 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="50dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:orientation="horizontal">
 
@@ -142,8 +142,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:paddingStart="1dp"
-                        android:paddingEnd="1dp"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
                         android:text="@string/reset"
                         android:layout_marginEnd="8dp"
                         app:icon="@drawable/ic_local_reset"

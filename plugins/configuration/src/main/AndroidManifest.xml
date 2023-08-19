@@ -12,7 +12,7 @@
         <activity
             android:name=".maintenance.activities.LogSettingActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".maintenance.activities.PrefImportListActivity"
             android:exported="false"
