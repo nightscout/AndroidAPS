@@ -121,7 +121,7 @@
     <string name="loopsuspended">La Boucle est suspendue</string>
     <string name="trend_arrow">Flèche de tendance</string>
     <string name="a11y_autosens_label">Auto sens</string>
-    <string name="required">requis</string>
+    <string name="required">req</string>
     <string name="a11y_arrow_double_down">en baisse rapide</string>
     <string name="a11y_arrow_single_down">en baisse</string>
     <string name="a11y_arrow_forty_five_down">en baisse lente</string>
