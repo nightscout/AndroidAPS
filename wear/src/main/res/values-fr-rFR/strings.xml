@@ -23,10 +23,13 @@
     <string name="msg_warning_old">Données AAPS anciennes de %1$s ! Vérifiez votre capteur, les configurations xDrip+, NS, AAPS ou autre !</string>
     <string name="pref_vibrate_on_bolus">Vibrer sur Bolus</string>
     <string name="pref_units_for_actions">Unités pour les Actions</string>
+    <string name="units_short">U</string>
     <string name="pref_show_date">Afficher Date</string>
     <string name="pref_show_iob">Afficher IA</string>
+    <string name="pref_show_detailed_iob">Afficher IA détaillée</string>
     <string name="pref_show_cob">Afficher GA</string>
     <string name="pref_show_delta">Afficher Delta</string>
+    <string name="pref_show_detailed_delta">Afficher delta détaillé</string>
     <string name="pref_show_avgdelta">Afficher Delta Moyen</string>
     <string name="pref_show_phone_battery">Afficher Batterie Téléphone</string>
     <string name="pref_show_rig_battery">Afficher Batterie Système</string>
@@ -192,6 +195,7 @@
     <string name="week_short">s</string>
     <string name="day_short">j</string>
     <string name="hour_short">h</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">ancien</string>
     <string name="old_warning">!ancien!</string>
     <string name="error">!err!</string>
