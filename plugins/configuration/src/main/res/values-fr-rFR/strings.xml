@@ -6,6 +6,7 @@
     <string name="previous_button">Préc</string>
     <string name="nav_setupwizard">Assistant de configuration</string>
     <string name="setupwizard_finish">TERMINER</string>
+    <string name="welcome">Bienvenue</string>
     <string name="welcometosetupwizard">Bienvenue dans l\'assistant de configuration. Il vous guidera tout au long du processus de configuration\n</string>
     <string name="end_user_license_agreement">Accord de licence de l’utilisateur final</string>
     <string name="end_user_license_agreement_text">NE DOIT PAS ÊTRE UTILISÉ POUR PRENDRE DES DÉCISIONS MÉDICALES. IL N\'Y A AUCUNE GARANTIE POUR LE PROGRAMME, DANS LA LIMITE PERMISE PAR LA LOI APPLICABLE. SAUF S\'IL EST INDIQUÉ LE CONTRAIRE PAR ÉCRIT. LES TITULAIRES DU DROIT D\'AUTEUR ET / OU D\'AUTRES PARTIES FOURNISSENT LE PROGRAMME «EN L\'ÉTAT» SANS GARANTIE D\'AUCUNE SORTE, EXPLICITE OU IMPLICITE, Y COMPRIS MAIS NON SEULEMENT AUX GARANTIES IMPLICITES DE QUALITÉ MARCHANDE ET D\'ADÉQUATION À UN USAGE PARTICULIER
