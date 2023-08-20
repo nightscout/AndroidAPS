@@ -24,6 +24,7 @@ import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
 import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey.*
 import info.nightscout.rx.weardata.CustomWatchfaceMetadataMap
 import info.nightscout.rx.weardata.EventData
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
@@ -101,6 +102,7 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
                 cwfVersion.text = rh.gs(CWF_VERSION.label, metadata[CWF_VERSION] ?:"")
                 val colorAttr = if (checkCustomVersion(metadata)) info.nightscout.core.ui.R.attr.metadataTextOkColor else info.nightscout.core.ui.R.attr.metadataTextWarningColor
                 cwfVersion.setTextColor(rh.gac(cwfVersion.context, colorAttr))
+                prefWarning.visibility = metadata.keys.any { it.isPref }.toVisibility()
             }
         }
     }

@@ -88,30 +88,30 @@ typealias CustomWatchfaceMetadataMap = MutableMap<CustomWatchfaceMetadataKey, St
 @Serializable
 data class CustomWatchfaceData(val json: String, var metadata: CustomWatchfaceMetadataMap, val drawableDatas: CustomWatchfaceDrawableDataMap)
 
-enum class CustomWatchfaceMetadataKey(val key: String, @StringRes val label: Int) {
+enum class CustomWatchfaceMetadataKey(val key: String, @StringRes val label: Int, val isPref: Boolean) {
 
-    CWF_NAME("name", R.string.metadata_label_watchface_name),
-    CWF_FILENAME("filename", R.string.metadata_wear_import_filename),
-    CWF_AUTHOR("author", R.string.metadata_label_watchface_author),
-    CWF_CREATED_AT("created_at", R.string.metadata_label_watchface_created_at),
-    CWF_VERSION("cwf_version", R.string.metadata_label_plugin_version),
-    CWF_AUTHOR_VERSION("author_version", R.string.metadata_label_watchface_name_version),
-    CWF_COMMENT("comment", R.string.metadata_label_watchface_comment), // label not planed to be used for CWF_COMMENT
-    CWF_AUTHORIZATION("cwf_authorization", R.string.metadata_label_watchface_authorization),
-    CWF_PREF_WATCH_SHOW_DETAILED_IOB("key_show_detailed_iob", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_DETAILED_DELTA("key_show_detailed_delta", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_BGI("key_show_bgi", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_IOB("key_show_iob", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_COB("key_show_cob", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_DELTA("key_show_delta", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_AVG_DELTA("key_show_avg_delta", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY("key_show_uploader_battery", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_RIG_BATTERY("key_show_rig_battery", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_TEMP_BASAL("key_show_temp_basal", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_DIRECTION("key_show_direction", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_AGO("key_show_ago", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.metadata_label_watchface_pref),
-    CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.metadata_label_watchface_pref);
+    CWF_NAME("name", R.string.metadata_label_watchface_name, false),
+    CWF_FILENAME("filename", R.string.metadata_wear_import_filename, false),
+    CWF_AUTHOR("author", R.string.metadata_label_watchface_author, false),
+    CWF_CREATED_AT("created_at", R.string.metadata_label_watchface_created_at, false),
+    CWF_VERSION("cwf_version", R.string.metadata_label_plugin_version, false),
+    CWF_AUTHOR_VERSION("author_version", R.string.metadata_label_watchface_name_version, false),
+    CWF_COMMENT("comment", R.string.metadata_label_watchface_comment, false), // label not planed to be used for CWF_COMMENT
+    CWF_AUTHORIZATION("cwf_authorization", R.string.metadata_label_watchface_authorization, false),
+    CWF_PREF_WATCH_SHOW_DETAILED_IOB("key_show_detailed_iob", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_DETAILED_DELTA("key_show_detailed_delta", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_BGI("key_show_bgi", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_IOB("key_show_iob", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_COB("key_show_cob", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_DELTA("key_show_delta", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_AVG_DELTA("key_show_avg_delta", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY("key_show_uploader_battery", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_RIG_BATTERY("key_show_rig_battery", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_TEMP_BASAL("key_show_temp_basal", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_DIRECTION("key_show_direction", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_AGO("key_show_ago", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.metadata_label_watchface_pref, true),
+    CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.metadata_label_watchface_pref, true);
     companion object {
         fun fromKey(key: String): CustomWatchfaceMetadataKey? =
             values().firstOrNull { it.key == key }
