@@ -97,11 +97,7 @@
     <string name="sms_read_status_failed">상태를 읽지 못했습니다.</string>
     <string name="sms_profile_switch_created">프로파일 변경 생성됨</string>
     <string name="sms_wrong_tbr_duration">TBR 기간은 %1$d분의 배수가 되어야 하고 0보다 커야 함.</string>
-    <string name="xdrip_status_detailed_iob_title">IOB 자세하게 보여주기</string>
-    <string name="xdrip_status_detailed_iob_summary">워치페이스에 IOB를 Bolus IOB와 Basal IOB로 나누어서 보여줍니다.</string>
     <string name="disabled_loop">Loop 중지됨</string>
-    <string name="xdrip_status_show_bgi_title">BGI 보기</string>
-    <string name="xdrip_status_show_bgi_summary">BGI를 상태라인에 추가하기</string>
     <!-- Food-->
     <string name="food_short">음식</string>
     <string name="description_food">Nightscout에서 정의된 음식 설정을 표시합니다.</string>
@@ -252,8 +248,6 @@
     <string name="wear_wizard_settings_summary">마법사 결과에 사용 된 계산:</string>
     <string name="wear_display_settings">화면 설정</string>
     <string name="wear_general_settings">일반 설정</string>
-    <string name="wear_detailed_delta_title">델타(혈당증분값) 자세히 보여주기</string>
-    <string name="wear_detailed_delta_summary">소수점 자리 추가된 증분값 보여주기</string>
     <string name="wear_notifysmb_title">SMB 알림</string>
     <string name="wear_notifysmb_summary">일반 Bolus처럼 워치에 SMB 표시</string>
     <string name="wear_predictions_summary">워치페이스에서 예측치를 보여줍니다.</string>

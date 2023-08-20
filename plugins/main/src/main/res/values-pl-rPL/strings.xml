@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Zmiana profilu wykonana</string>
     <string name="sms_wrong_tbr_duration">Czas trwania TBR musi być wielokrotnością %1$d minut i większy niż 0.</string>
     <string name="a11y_otp_qr_code">Kod QR do konfiguracji haseł jednorazowych</string>
-    <string name="xdrip_status_detailed_iob_title">Pokaż szczegóły IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Rozłóż IOB na bolus i IOB bazy na zegarku</string>
     <string name="disabled_loop">Pętla wyłączona</string>
-    <string name="xdrip_status_show_bgi_title">Pokaż BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Dodaj BGI do Linii Statusu</string>
     <!-- Food-->
     <string name="food_short">Posiłek</string>
     <string name="description_food">Wyświetla dane posiłków zdefiniowanych w Nightscout</string>
@@ -307,8 +303,6 @@
     <string name="wear_wizard_settings_summary">Obliczenia uwzględnione w wynikach kreatora:</string>
     <string name="wear_display_settings">Ustawienia wyświetlania</string>
     <string name="wear_general_settings">Ustawienia ogólne</string>
-    <string name="wear_detailed_delta_title">Pokaż szczegółowe delta</string>
-    <string name="wear_detailed_delta_summary">Pokaż deltę z jednym więcej miejscem dziesiętnym</string>
     <string name="wear_notifysmb_title">Powiadom na SMB</string>
     <string name="wear_notifysmb_summary">Pokaż SMB na zegarku jak bolus standardowy.</string>
     <string name="wear_predictions_summary">Pokaż prognozę poziomu na zegarku.</string>

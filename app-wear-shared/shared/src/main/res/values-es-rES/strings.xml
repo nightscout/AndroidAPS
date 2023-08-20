@@ -37,7 +37,7 @@
     <string name="metadata_label_watchface_created_at">Creada: %1$s</string>
     <string name="metadata_label_watchface_author">Autor: %1$s</string>
     <string name="metadata_label_watchface_name">Nombre: %1$s</string>
-    <string name="metadata_wear_import_filename">Nombre de archivo:%1$s</string>
+    <string name="metadata_wear_import_filename">Nombre del archivo:%1$s</string>
     <string name="metadata_label_plugin_version">Versión del plugin: %1$s</string>
     <string name="metadata_label_watchface_name_version">Nombre: %1$s (%2$s)</string>
     <string name="default_custom_watchface_comment">Esfera predeterminada, puedes hacer clic en el botón EXPORTAR ESFERA para generar una plantilla</string>

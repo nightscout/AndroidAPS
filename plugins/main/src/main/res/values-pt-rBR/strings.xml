@@ -101,11 +101,7 @@
     <string name="sms_profile_switch_created">Troca de perfil criada</string>
     <string name="sms_wrong_tbr_duration">A duração da basal temporária deve ser um múltiplo de %1$d minutos e maior que 0.</string>
     <string name="a11y_otp_qr_code">Código QR para configuração de senha de uso único</string>
-    <string name="xdrip_status_detailed_iob_title">Mostrar detalhes da IA</string>
-    <string name="xdrip_status_detailed_iob_summary">Dividir IA entre IA de bolus e de basal na face do relógio</string>
     <string name="disabled_loop">Loop Desativado</string>
-    <string name="xdrip_status_show_bgi_title">Mostrar IG (Impacto na Glicemia)</string>
-    <string name="xdrip_status_show_bgi_summary">Adicionar BGI à linha de status</string>
     <!-- Food-->
     <string name="food_short">Alimentos</string>
     <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
@@ -300,8 +296,6 @@
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_display_settings">Mostrar Configurações</string>
     <string name="wear_general_settings">Configurações gerais</string>
-    <string name="wear_detailed_delta_title">Mostrar Delta detalho</string>
-    <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
     <string name="wear_notifysmb_title">Notificar no SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>
     <string name="wear_predictions_summary">Mostrar a predições na face do relogio.</string>

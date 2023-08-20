@@ -6,7 +6,6 @@
     <string name="medtrum_pump_description">Intégration de pompe pour Medtrum Nano</string>
     <string name="medtrum_pump_setting">Paramètres de la pompe Medtrum</string>
     <string name="pump_error">Erreur pompe: %1$s!! </string>
-    <string name="pump_unsupported">Pompe non testée : %1$d! Veuillez nous contacter sur discord ou github pour obtenir de l\'aide</string>
     <string name="pump_is_suspended">La pompe est suspendue</string>
     <string name="pump_is_suspended_hour_max">La pompe est suspendue, la quantité maximum d\'insuline par heure est dépassée</string>
     <string name="pump_is_suspended_day_max">La pompe est suspendue, la quantité maximum d\'insuline par jour est dépassée</string>
@@ -101,6 +100,8 @@
     <!-- settings-->
     <string name="sn_input_title">Numéro de série</string>
     <string name="sn_input_summary">Entrez le numéro de série de la base de votre pompe.</string>
+    <string name="sn_input_invalid">Numéro de série invalide !</string>
+    <string name="pump_unsupported">Pompe non testée : %1$d! Veuillez nous contacter sur discord ou github pour obtenir de l\'aide</string>
     <string name="alarm_setting_title">Paramètres d\'Alarme</string>
     <string name="alarm_setting_summary">Sélectionnez vos préférences d’alarme de votre pompe.</string>
     <string name="patch_expiration_title">Expiration du Patch</string>

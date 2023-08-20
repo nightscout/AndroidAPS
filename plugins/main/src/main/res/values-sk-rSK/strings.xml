@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Prepnutie profilu vytvorené</string>
     <string name="sms_wrong_tbr_duration">Trvanie dočasného bazálu musí byť násobkom %1$d minút a musí byť väčšie ako 0.</string>
     <string name="a11y_otp_qr_code">QR kód pre nastavenie jednorázového hesla</string>
-    <string name="xdrip_status_detailed_iob_title">Zobraziť detailný IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Rozpísať IOB na hodinkách do bolusového a bazálneho</string>
     <string name="disabled_loop">Uzavretý okruh deaktivovaný</string>
-    <string name="xdrip_status_show_bgi_title">Zobrazovať BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Pridať BGI do stavového riadku</string>
     <!-- Food-->
     <string name="food_short">Jedlo</string>
     <string name="description_food">Zobrazenie prednastavených jedál, definovaných v Nightscoute</string>
@@ -310,8 +306,6 @@
     <string name="wear_wizard_settings_summary">Kalkulácia použitá vo výsledku wizardu:</string>
     <string name="wear_display_settings">Nastavenie zobrazenia</string>
     <string name="wear_general_settings">Všeobecné nastavenia</string>
-    <string name="wear_detailed_delta_title">Zobrazovať detailné zmeny</string>
-    <string name="wear_detailed_delta_summary">Zobrazovať rozdiel s jedným desatinným miestom naviac</string>
     <string name="wear_notifysmb_title">Oznámenie pri SMB</string>
     <string name="wear_notifysmb_summary">Ukazovať SMB na hodinkách ako normálny bolus.</string>
     <string name="wear_predictions_summary">Zobrazovať predikcie na hodinkách.</string>

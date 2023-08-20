@@ -97,11 +97,7 @@
     <string name="sms_read_status_failed">Erro na leitura de estado</string>
     <string name="sms_profile_switch_created">Troca de perfil criada</string>
     <string name="sms_wrong_tbr_duration">A duração do DBT deve ser de um múltiplo de %1$d minutos e maior que 0.</string>
-    <string name="xdrip_status_detailed_iob_title">Mostrar IA detalhada</string>
-    <string name="xdrip_status_detailed_iob_summary">Dividir IA entre IA de bólus e de basal no ecrã do relógio</string>
     <string name="disabled_loop">Loop Desactivado</string>
-    <string name="xdrip_status_show_bgi_title">Mostrar BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Adicionar BGI à linha de status</string>
     <!-- Food-->
     <string name="food_short">Alimentos</string>
     <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
@@ -267,8 +263,6 @@
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_display_settings">Definições Ecrã</string>
     <string name="wear_general_settings">Definições Gerais</string>
-    <string name="wear_detailed_delta_title">Mostrar Delta detalho</string>
-    <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
     <string name="wear_notifysmb_title">Notificar no SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>
     <string name="wear_predictions_summary">Mostrar previsões no mostrador.</string>

@@ -23,16 +23,20 @@
     <string name="msg_warning_old">AAPS data jsou %1$s stará! Zkontrolujte svůj senzor, xDrip +, NS, AAPS konfigurace nebo ostatní!</string>
     <string name="pref_vibrate_on_bolus">Vibrovat při bolusu</string>
     <string name="pref_units_for_actions">Jednotky pro akce</string>
+    <string name="units_short">U</string>
     <string name="pref_show_date">Zobrazit datum</string>
     <string name="pref_show_iob">Zobrazit IOB</string>
+    <string name="pref_show_detailed_iob">Zobrazit detailní IOB</string>
     <string name="pref_show_cob">Zobrazit COB</string>
     <string name="pref_show_delta">Zobrazit deltu</string>
+    <string name="pref_show_detailed_delta">Zobrazovat detailní změny</string>
     <string name="pref_show_avgdelta">Zobrazit průměrnou deltu</string>
     <string name="pref_show_phone_battery">Zobrazit stav baterie telefonu</string>
     <string name="pref_show_rig_battery">Zobrazovat kruhový graf baterie</string>
     <string name="pref_show_basal_rate">Zobrazit bazál</string>
     <string name="pref_show_loop_status">Zobrazovat stav smyčky</string>
     <string name="pref_show_bg">Zobrazovat glykemii</string>
+    <string name="pref_show_bgi">Zobrazovat BGI</string>
     <string name="pref_show_direction_arrow">Zobrazovat trendovou šipku</string>
     <string name="pref_show_ago">Zobrazit aktualizováno před</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tmavý</string>
@@ -192,6 +196,8 @@
     <string name="week_short">t</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">starý</string>
     <string name="old_warning">!starý!</string>
     <string name="error">!chyba!</string>

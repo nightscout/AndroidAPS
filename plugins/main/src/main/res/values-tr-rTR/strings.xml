@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Profil değiştirme yapıldı</string>
     <string name="sms_wrong_tbr_duration">GBO süresi %1$d dakikanın katı ve 0\'dan büyük olmalıdır.</string>
     <string name="a11y_otp_qr_code">Tek kullanımlık şifre kurulumu için QR Kodu</string>
-    <string name="xdrip_status_detailed_iob_title">Ayrıntılı AİNS göster</string>
-    <string name="xdrip_status_detailed_iob_summary">Saat arayüzü üzerinde AİNS\'i bolus ve bazal AİNS olarak ayırın</string>
     <string name="disabled_loop">Döngü devre dışı</string>
-    <string name="xdrip_status_show_bgi_title">BGI (Kan Şekeri İndeksleri) göster</string>
-    <string name="xdrip_status_show_bgi_summary">BGI\'yı durum satırına ekle</string>
     <!-- Food-->
     <string name="food_short">Yiyecek</string>
     <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
@@ -310,8 +306,6 @@
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
     <string name="wear_display_settings">Görüntü Ayarları</string>
     <string name="wear_general_settings">Genel Ayarlar</string>
-    <string name="wear_detailed_delta_title">Ayrıntılı delta göster</string>
-    <string name="wear_detailed_delta_summary">Deltayı bir ondalık basamak daha göster</string>
     <string name="wear_notifysmb_title">SMB\'yi bildir</string>
     <string name="wear_notifysmb_summary">Saatte SMB\'yi standart bir bolus gibi göster.</string>
     <string name="wear_predictions_summary">Saat arayüzü üzerindeki tahminleri göster.</string>

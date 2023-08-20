@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">נוצרה החלפת פרופיל</string>
     <string name="sms_wrong_tbr_duration">משך הבזאלי הזמני חייב להיות כפולה של %1$d דקות ויותר מ-0.</string>
     <string name="a11y_otp_qr_code">ברקוד QR ליצירת סיסמה חד פעמית</string>
-    <string name="xdrip_status_detailed_iob_title">הצגת IOB מפורט</string>
-    <string name="xdrip_status_detailed_iob_summary">לחלק את ה IOB לבולוס ובזאלי במסך השעון</string>
     <string name="disabled_loop">לולאה כבויה</string>
-    <string name="xdrip_status_show_bgi_title">הצג השפעת רמת הסוכר</string>
-    <string name="xdrip_status_show_bgi_summary">הוסף השפעת הסוכר לשורת הסטטוס</string>
     <!-- Food-->
     <string name="food_short">מזון</string>
     <string name="description_food">מציג את ההגדרות הקבועות מראש עבור מזון המוגדר ב-Nightscout</string>
@@ -309,12 +305,11 @@
     <string name="wear_wizard_settings_summary">חישובים הכלולים בתוצאת האשף:</string>
     <string name="wear_display_settings">הגדרות תצוגה</string>
     <string name="wear_general_settings">הגדרות כלליות</string>
-    <string name="wear_detailed_delta_title">הצגת דלתא מפורטת</string>
-    <string name="wear_detailed_delta_summary">הצגת דלתא עם עוד נק\' עשרונית אחת</string>
     <string name="wear_notifysmb_title">דיווח על SMB</string>
     <string name="wear_notifysmb_summary">הצג SMB על השעון כמו בולוס סטנדרטי.</string>
     <string name="wear_predictions_summary">הראה את התחזיות על לוח השעון.</string>
     <string name="wear_predictions_title">חיזוי</string>
+    <string name="wear_new_custom_watchface_exported">תבנית פני השעון יוצאה</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
     <!--    PersistentNotification-->

@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Cambio de perfil creado</string>
     <string name="sms_wrong_tbr_duration">La duración de TBR debe ser un múltiplo de %1$d minutos y mayor a 0.</string>
     <string name="a11y_otp_qr_code">Código QR para la configuración de la contraseña de un sólo uso</string>
-    <string name="xdrip_status_detailed_iob_title">Mostrar detalles IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Separar la insulina activa en bolos y basales en el reloj</string>
     <string name="disabled_loop">Bucle desactivado</string>
-    <string name="xdrip_status_show_bgi_title">Mostrar BGI (Índice de glucosa en sangre)</string>
-    <string name="xdrip_status_show_bgi_summary">Agregar BGI a la línea de estado</string>
     <!-- Food-->
     <string name="food_short">Comida</string>
     <string name="description_food">Muestra los ajustes preestablecidos de alimentos definidos en Nightscout</string>
@@ -311,17 +307,18 @@
     <string name="wear_wizard_settings_summary">Cálculos incluidos en el resultado del asistente:</string>
     <string name="wear_display_settings">Ajustes de pantalla</string>
     <string name="wear_general_settings">Configuración general</string>
-    <string name="wear_detailed_delta_title">Mostrar deltas detallados</string>
-    <string name="wear_detailed_delta_summary">Mostrar el delta con un decimal más</string>
     <string name="wear_notifysmb_title">Notificar los SMB</string>
     <string name="wear_notifysmb_summary">Mostrar los SMB en el reloj como un bolo estándar</string>
     <string name="wear_predictions_summary">Mostrar las predicciones en la esfera</string>
     <string name="wear_predictions_title">Predicciones</string>
+    <string name="wear_custom_watchface_settings">Configuración personalizada de esferas</string>
+    <string name="wear_custom_watchface_authorization_title">Autorización de esferas personalizadas</string>
+    <string name="wear_custom_watchface_authorization_summary">Autorizar a la esfera personalizada cargada a modificar los ajustes de AAPS y del Reloj, de acuerdo al diseño de la esfera</string>
     <string name="wear_custom_watchface">Esfera personalizada: %1$s</string>
     <string name="wear_load_watchface">Cargar esfera</string>
     <string name="wear_send_watchface">Enviar esfera</string>
-    <string name="wear_export_watchface">Exportar esfera</string>
-    <string name="wear_new_custom_watchface_exported">Esfera personalizada exportada</string>
+    <string name="wear_export_watchface">Exportar plantilla</string>
+    <string name="wear_new_custom_watchface_exported">Plantilla de esfera personalizada exportada</string>
     <string name="resend_all_data">Reenviar todos los datos</string>
     <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
     <!--    PersistentNotification-->

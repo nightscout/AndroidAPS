@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Profilwechsel wurde erstellt</string>
     <string name="sms_wrong_tbr_duration">Die TBR-Dauer muss ein Vielfaches von %1$d Minuten und größer als 0 sein.</string>
     <string name="a11y_otp_qr_code">QR Code für einmaliges Passwort einrichten</string>
-    <string name="xdrip_status_detailed_iob_title">Zeige detailliertes IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Differenziere IOB in Bolus- und Basal-IOB auf dem Watchface</string>
     <string name="disabled_loop">Loop deaktiviert</string>
-    <string name="xdrip_status_show_bgi_title">Zeige BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Füge BGI zur Statuszeile hinzu.</string>
     <!-- Food-->
     <string name="food_short">Essen</string>
     <string name="description_food">Zeigt die Essensvorlagen aus Nightscout an</string>
@@ -308,8 +304,6 @@ Unerwartetes Verhalten.</string>
     <string name="wear_wizard_settings_summary">Berechnungen, die im Assistenten berücksichtigt werden:</string>
     <string name="wear_display_settings">Anzeigeeinstellungen</string>
     <string name="wear_general_settings">Allgemeine Einstellungen</string>
-    <string name="wear_detailed_delta_title">Zeige detailliertes Delta</string>
-    <string name="wear_detailed_delta_summary">Delta wird mit Dezimalstelle angezeigt.</string>
     <string name="wear_notifysmb_title">Bei SMB benachrichtigen</string>
     <string name="wear_notifysmb_summary">Zeige SMB auf der Uhr wie einen normalen Bolus an.</string>
     <string name="wear_predictions_summary">Zeige Vorhersagen auf dem Watchface.</string>

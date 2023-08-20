@@ -68,8 +68,6 @@
     <string name="wear_settings">ウェアの設定</string>
     <string name="wearcontrol_title">ウォッチからコントロール</string>
     <string name="wearcontrol_summary">ウォッチから一時ターゲットとトリートメントを入力。</string>
-    <string name="wear_detailed_delta_title">デルタの詳細を表示</string>
-    <string name="wear_detailed_delta_summary">デルタの小数点以下を表示する</string>
     <string name="wear_notifysmb_title">SMBを通知する</string>
     <string name="resend_all_data">すべてのデータを再送信</string>
     <string name="open_settings_on_wear">ウェアの設定を開く</string>

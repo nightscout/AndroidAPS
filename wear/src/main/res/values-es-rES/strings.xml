@@ -23,16 +23,20 @@
     <string name="msg_warning_old">Los datos de AAPS son %1$s antiguos. Comprueba el sensor, xDrip+, NS, configuración de AAPS y otros</string>
     <string name="pref_vibrate_on_bolus">Vibrar en bolos</string>
     <string name="pref_units_for_actions">Unidades para Acciones</string>
+    <string name="units_short">U</string>
     <string name="pref_show_date">Mostrar fecha</string>
     <string name="pref_show_iob">Mostrar Insulina activa (IOB)</string>
+    <string name="pref_show_detailed_iob">Mostrar IOB detallada</string>
     <string name="pref_show_cob">Mostrar COB</string>
     <string name="pref_show_delta">Mostrar delta</string>
+    <string name="pref_show_detailed_delta">Mostrar deltas detallados</string>
     <string name="pref_show_avgdelta">Mostrar delta promedio</string>
     <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
     <string name="pref_show_rig_battery">Mostrar batería de la plataforma</string>
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
     <string name="pref_show_loop_status">Mostrar estado de bucle</string>
     <string name="pref_show_bg">Mostrar glucosa</string>
+    <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
     <string name="pref_show_ago">Mostrar histórico</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tema oscuro</string>
@@ -73,7 +77,7 @@
     <string name="menu_treatment">Tratamiento</string>
     <string name="menu_treatment_short">Trata</string>
     <string name="menu_bolus">Bolo</string>
-    <string name="menu_carb">Carbos</string>
+    <string name="menu_carb">Carbohidratos</string>
     <string name="menu_ecarb">eCarbs</string>
     <string name="menu_settings">Configuración</string>
     <string name="menu_status">Estado</string>
@@ -115,7 +119,7 @@
     <string name="status_loop">Bucle</string>
     <string name="status_profile_switch">Cambio de perfil</string>
     <string name="status_tdd">TDD</string>
-    <string name="activity_carb">Carbohidratos</string>
+    <string name="activity_carb">COB</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">Sin estado</string>
     <string name="color_name_red">Rojo</string>
@@ -192,6 +196,8 @@
     <string name="week_short">s</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">antiguo</string>
     <string name="old_warning">¡antiguo!</string>
     <string name="error">!err!</string>

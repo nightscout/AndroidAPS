@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Cambio profilo creato</string>
     <string name="sms_wrong_tbr_duration">La durata del TBR deve essere un multiplo di %1$d minuti e maggiore di 0.</string>
     <string name="a11y_otp_qr_code">Codice QR per configurare OTP</string>
-    <string name="xdrip_status_detailed_iob_title">Mostra IOB dettagliato</string>
-    <string name="xdrip_status_detailed_iob_summary">Dividi IOB in bolo e basale sulla watchface</string>
     <string name="disabled_loop">Loop disabilitato</string>
-    <string name="xdrip_status_show_bgi_title">Mostra BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Aggiungi BGI alla statusline</string>
     <!-- Food-->
     <string name="food_short">Cibo</string>
     <string name="description_food">Visualizza i preset dei cibi definiti in Nightscout</string>
@@ -310,8 +306,6 @@
     <string name="wear_wizard_settings_summary">Calcoli inclusi nel risultato del Calcolatore:</string>
     <string name="wear_display_settings">Impostazioni di visualizzazione</string>
     <string name="wear_general_settings">Impostazioni generali</string>
-    <string name="wear_detailed_delta_title">Mostra delta dettagliato</string>
-    <string name="wear_detailed_delta_summary">Mostra delta con una cifra decimale in più</string>
     <string name="wear_notifysmb_title">Notifica SMB</string>
     <string name="wear_notifysmb_summary">Mostra SMB sullo smartwatch come un bolo standard.</string>
     <string name="wear_predictions_summary">Mostra le predizioni sulla watchface.</string>
@@ -319,8 +313,6 @@
     <string name="wear_custom_watchface">Watchface personalizzata: %1$s</string>
     <string name="wear_load_watchface">Carica watchface</string>
     <string name="wear_send_watchface">Invia watchface</string>
-    <string name="wear_export_watchface">Esporta watchface</string>
-    <string name="wear_new_custom_watchface_exported">Watchface personalizzata esportata</string>
     <string name="resend_all_data">Invia di nuovo tutti i dati</string>
     <string name="open_settings_on_wear">Apri impostazioni sullo smartwatch</string>
     <!--    PersistentNotification-->
