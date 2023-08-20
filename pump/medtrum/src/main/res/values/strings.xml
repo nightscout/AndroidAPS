@@ -28,7 +28,6 @@
     <string name="medtrum_pump_description">Pump integration for Medtrum Nano</string>
     <string name="medtrum_pump_setting">Medtrum pump settings</string>
     <string name="pump_error">Pump error: %1$s !! </string>
-    <string name="pump_unsupported">Pump untested: %1$d! Please contact us at discord or github for support</string>
     <string name="pump_is_suspended">Pump is suspended</string>
     <string name="pump_is_suspended_hour_max">Pump is suspended due to hourly max insulin exceeded</string>
     <string name="pump_is_suspended_day_max">Pump is suspended due to daily max insulin exceeded</string>
@@ -51,7 +50,7 @@
     <string name="patch_expiry_label">Patch expires</string>
     <string name="refresh_label">Refresh</string>
     <string name="reset_alarms_label">Reset alarms</string>
-    <string name="change_patch_label">Change patch</string>
+    <string name="change_patch_label">Change Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Requested by user</string>
     <string name="expiry_not_enabled">Not enabled</string>
 
@@ -131,6 +130,8 @@
     <!-- settings-->
     <string name="sn_input_title">Serial Number</string>
     <string name="sn_input_summary">Enter the serial number of your pump base.</string>
+    <string name="sn_input_invalid">Invalid serial number!</string>
+    <string name="pump_unsupported">Pump untested: %1$d! Please contact us at discord or github for support</string>
     <string name="alarm_setting_title">Alarm Settings</string>
     <string name="alarm_setting_summary">Select your preferred pump alarm settings.</string>
     <string name="patch_expiration_title">Patch Expiration</string>
