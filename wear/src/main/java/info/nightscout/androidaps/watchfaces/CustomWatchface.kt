@@ -459,9 +459,9 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private enum class FontMap(val key: String, var font: Typeface, @FontRes val fontRessources: Int?) {
-        SANS_SERIF("sans-serif", Typeface.SANS_SERIF, null),
+        SANS_SERIF("sans_serif", Typeface.SANS_SERIF, null),
         DEFAULT("default", Typeface.DEFAULT, null),
-        DEFAULT_BOLD("default-bold", Typeface.DEFAULT_BOLD, null),
+        DEFAULT_BOLD("default_bold", Typeface.DEFAULT_BOLD, null),
         MONOSPACE("monospace", Typeface.MONOSPACE, null),
         SERIF("serif", Typeface.SERIF, null),
         ROBOTO_CONDENSED_BOLD("roboto_condensed_bold", Typeface.DEFAULT, R.font.roboto_condensed_bold),
@@ -479,7 +479,7 @@ class CustomWatchface : BaseWatchFace() {
     private enum class StyleMap(val key: String, val style: Int) {
         NORMAL("normal", Typeface.NORMAL),
         BOLD("bold", Typeface.BOLD),
-        BOLD_ITALIC("bold-italic", Typeface.BOLD_ITALIC),
+        BOLD_ITALIC("bold_italic", Typeface.BOLD_ITALIC),
         ITALIC("italic", Typeface.ITALIC);
 
         companion object {
