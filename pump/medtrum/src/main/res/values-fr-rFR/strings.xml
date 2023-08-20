@@ -27,6 +27,7 @@
     <string name="patch_expiry_label">Expiration du Patch</string>
     <string name="refresh_label">Actualiser</string>
     <string name="reset_alarms_label">Réinitialiser les alarmes</string>
+    <string name="change_patch_label">Changer le Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Demandé par l\'utilisateur</string>
     <string name="expiry_not_enabled">Non activé</string>
     <!-- Alarm strings -->
@@ -99,6 +100,7 @@
     <!-- settings-->
     <string name="sn_input_title">Numéro de série</string>
     <string name="sn_input_summary">Entrez le numéro de série de la base de votre pompe.</string>
+    <string name="sn_input_invalid">Numéro de série invalide !</string>
     <string name="pump_unsupported">Pompe non testée : %1$d! Veuillez nous contacter sur discord ou github pour obtenir de l\'aide</string>
     <string name="alarm_setting_title">Paramètres d\'Alarme</string>
     <string name="alarm_setting_summary">Sélectionnez vos préférences d’alarme de votre pompe.</string>
