@@ -27,6 +27,7 @@
     <string name="patch_expiry_label">El parche expira</string>
     <string name="refresh_label">Actualizar</string>
     <string name="reset_alarms_label">Restablecer alarmas</string>
+    <string name="change_patch_label">Cambiar parche</string>
     <string name="requested_by_user" comment="26 characters max for translation">Solicitado por el usuario</string>
     <string name="expiry_not_enabled">No habilitado</string>
     <!-- Alarm strings -->
@@ -99,6 +100,7 @@
     <!-- settings-->
     <string name="sn_input_title">Número de serie</string>
     <string name="sn_input_summary">Introduce el número de serie de la base de la bomba.</string>
+    <string name="sn_input_invalid">¡Número de serie inválido!</string>
     <string name="pump_unsupported">Bomba no probada: %1$d! Por favor, contacta con nosotros en Discord o GitHub para obtener soporte</string>
     <string name="alarm_setting_title">Ajustes de las alarmas</string>
     <string name="alarm_setting_summary">Selecciona los ajustes de la alarma de la bomba que prefieras.</string>
