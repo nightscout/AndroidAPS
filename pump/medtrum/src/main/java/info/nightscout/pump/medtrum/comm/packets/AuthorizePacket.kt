@@ -45,6 +45,7 @@ class AuthorizePacket(injector: HasAndroidInjector) : MedtrumPacket(injector) {
             ).toInt()
 
             if (medtrumPump.deviceType != deviceType) {
+                aapsLogger.warn(LTag.PUMPCOMM, "GetDeviceTypeState: deviceType changed from ${medtrumPump.deviceType} to $deviceType")
                 medtrumPump.deviceType = deviceType
             }
             if (medtrumPump.swVersion != swVersion) {

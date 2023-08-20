@@ -29,7 +29,7 @@ class MedtrumActivity : MedtrumBaseActivity<ActivityMedtrumBinding>() {
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-        title = getString(R.string.step_prepare_patch)
+        title = getString(R.string.change_patch_label)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
 
