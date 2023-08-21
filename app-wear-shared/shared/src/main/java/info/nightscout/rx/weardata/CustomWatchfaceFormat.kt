@@ -19,7 +19,7 @@ import java.util.zip.ZipOutputStream
 
 val CUSTOM_VERSION = "0.10"
 
-enum class CustomWatchfaceDrawableDataKey(val key: String, @DrawableRes val icon: Int?, val fileName: String) {
+enum class CwfDrawableFileMap(val key: String, @DrawableRes val icon: Int?, val fileName: String) {
     UNKNOWN("unknown", null, "Unknown"),
     CUSTOM_WATCHFACE("customWatchface", R.drawable.watchface_custom, "CustomWatchface"),
     BACKGROUND(ViewKeys.BACKGROUND.key, R.drawable.background, "Background"),
@@ -33,10 +33,10 @@ enum class CustomWatchfaceDrawableDataKey(val key: String, @DrawableRes val icon
 
     companion object {
 
-        fun fromKey(key: String): CustomWatchfaceDrawableDataKey =
+        fun fromKey(key: String): CwfDrawableFileMap =
             values().firstOrNull { it.key == key } ?: UNKNOWN
 
-        fun fromFileName(file: String): CustomWatchfaceDrawableDataKey = values().firstOrNull { it.fileName == file.substringBeforeLast(".") } ?: UNKNOWN
+        fun fromFileName(file: String): CwfDrawableFileMap = values().firstOrNull { it.fileName == file.substringBeforeLast(".") } ?: UNKNOWN
     }
 }
 
@@ -87,13 +87,13 @@ data class DrawableData(val value: ByteArray, val format: DrawableFormat) {
     }
 }
 
-typealias CustomWatchfaceDrawableDataMap = MutableMap<CustomWatchfaceDrawableDataKey, DrawableData>
-typealias CustomWatchfaceMetadataMap = MutableMap<CustomWatchfaceMetadataKey, String>
+typealias CwfDrawableDataMap = MutableMap<CwfDrawableFileMap, DrawableData>
+typealias CwfMetadataMap = MutableMap<CwfMetadataKey, String>
 
 @Serializable
-data class CustomWatchfaceData(val json: String, var metadata: CustomWatchfaceMetadataMap, val drawableDatas: CustomWatchfaceDrawableDataMap)
+data class CwfData(val json: String, var metadata: CwfMetadataMap, val drawableDatas: CwfDrawableDataMap)
 
-enum class CustomWatchfaceMetadataKey(val key: String, @StringRes val label: Int, val isPref: Boolean) {
+enum class CwfMetadataKey(val key: String, @StringRes val label: Int, val isPref: Boolean) {
 
     CWF_NAME("name", R.string.metadata_label_watchface_name, false),
     CWF_FILENAME("filename", R.string.metadata_wear_import_filename, false),
@@ -120,7 +120,7 @@ enum class CustomWatchfaceMetadataKey(val key: String, @StringRes val label: Int
 
     companion object {
 
-        fun fromKey(key: String): CustomWatchfaceMetadataKey? =
+        fun fromKey(key: String): CwfMetadataKey? =
             values().firstOrNull { it.key == key }
     }
 }
@@ -223,13 +223,13 @@ enum class ViewType(@StringRes val comment: Int?) {
 class ZipWatchfaceFormat {
     companion object {
 
-        const val CUSTOM_WF_EXTENTION = ".zip"
-        const val CUSTOM_JSON_FILE = "CustomWatchface.json"
+        const val CWF_EXTENTION = ".zip"
+        const val CWF_JSON_FILE = "CustomWatchface.json"
 
-        fun loadCustomWatchface(cwfFile: File, authorization: Boolean): CustomWatchfaceData? {
+        fun loadCustomWatchface(cwfFile: File, authorization: Boolean): CwfData? {
             var json = JSONObject()
-            var metadata: CustomWatchfaceMetadataMap = mutableMapOf()
-            val drawableDatas: CustomWatchfaceDrawableDataMap = mutableMapOf()
+            var metadata: CwfMetadataMap = mutableMapOf()
+            val drawableDatas: CwfDrawableDataMap = mutableMapOf()
 
             try {
                 val zipInputStream = ZipInputStream(cwfFile.inputStream())
@@ -246,25 +246,25 @@ class ZipWatchfaceFormat {
                     }
                     zipInputStream.closeEntry()
 
-                    if (entryName == CUSTOM_JSON_FILE) {
+                    if (entryName == CWF_JSON_FILE) {
                         val jsonString = byteArrayOutputStream.toByteArray().toString(Charsets.UTF_8)
                         json = JSONObject(jsonString)
                         metadata = loadMetadata(json)
-                        metadata[CustomWatchfaceMetadataKey.CWF_FILENAME] = cwfFile.name
-                        metadata[CustomWatchfaceMetadataKey.CWF_AUTHORIZATION] = authorization.toString()
+                        metadata[CwfMetadataKey.CWF_FILENAME] = cwfFile.name
+                        metadata[CwfMetadataKey.CWF_AUTHORIZATION] = authorization.toString()
                     } else {
-                        val customWatchfaceDrawableData = CustomWatchfaceDrawableDataKey.fromFileName(entryName)
+                        val cwfDrawableFileMap = CwfDrawableFileMap.fromFileName(entryName)
                         val drawableFormat = DrawableFormat.fromFileName(entryName)
-                        if (customWatchfaceDrawableData != CustomWatchfaceDrawableDataKey.UNKNOWN && drawableFormat != DrawableFormat.UNKNOWN) {
-                            drawableDatas[customWatchfaceDrawableData] = DrawableData(byteArrayOutputStream.toByteArray(), drawableFormat)
+                        if (cwfDrawableFileMap != CwfDrawableFileMap.UNKNOWN && drawableFormat != DrawableFormat.UNKNOWN) {
+                            drawableDatas[cwfDrawableFileMap] = DrawableData(byteArrayOutputStream.toByteArray(), drawableFormat)
                         }
                     }
                     zipEntry = zipInputStream.nextEntry
                 }
 
                 // Valid CWF file must contains a valid json file with a name within metadata and a custom watchface image
-                if (metadata.containsKey(CustomWatchfaceMetadataKey.CWF_NAME) && drawableDatas.containsKey(CustomWatchfaceDrawableDataKey.CUSTOM_WATCHFACE))
-                    return CustomWatchfaceData(json.toString(4), metadata, drawableDatas)
+                if (metadata.containsKey(CwfMetadataKey.CWF_NAME) && drawableDatas.containsKey(CwfDrawableFileMap.CUSTOM_WATCHFACE))
+                    return CwfData(json.toString(4), metadata, drawableDatas)
                 else
                     return null
 
@@ -273,14 +273,14 @@ class ZipWatchfaceFormat {
             }
         }
 
-        fun saveCustomWatchface(file: File, customWatchface: CustomWatchfaceData) {
+        fun saveCustomWatchface(file: File, customWatchface: CwfData) {
 
             try {
                 val outputStream = FileOutputStream(file)
                 val zipOutputStream = ZipOutputStream(BufferedOutputStream(outputStream))
 
                 // Ajouter le fichier JSON au ZIP
-                val jsonEntry = ZipEntry(CUSTOM_JSON_FILE)
+                val jsonEntry = ZipEntry(CWF_JSON_FILE)
                 zipOutputStream.putNextEntry(jsonEntry)
                 zipOutputStream.write(customWatchface.json.toByteArray())
                 zipOutputStream.closeEntry()
@@ -299,13 +299,13 @@ class ZipWatchfaceFormat {
 
         }
 
-        fun loadMetadata(contents: JSONObject): CustomWatchfaceMetadataMap {
-            val metadata: CustomWatchfaceMetadataMap = mutableMapOf()
+        fun loadMetadata(contents: JSONObject): CwfMetadataMap {
+            val metadata: CwfMetadataMap = mutableMapOf()
 
             if (contents.has(JsonKeys.METADATA.key)) {
                 val meta = contents.getJSONObject(JsonKeys.METADATA.key)
                 for (key in meta.keys()) {
-                    val metaKey = CustomWatchfaceMetadataKey.fromKey(key)
+                    val metaKey = CwfMetadataKey.fromKey(key)
                     if (metaKey != null) {
                         metadata[metaKey] = meta.getString(key)
                     }

@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.StringRes
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -16,9 +15,9 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileToWear
 import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.weardata.CustomWatchfaceData
-import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
-import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey
+import info.nightscout.rx.weardata.CwfData
+import info.nightscout.rx.weardata.CwfDrawableFileMap
+import info.nightscout.rx.weardata.CwfMetadataKey
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -106,8 +105,8 @@ class WearFragment : DaggerFragment() {
         _binding ?: return
         wearPlugin.savedCustomWatchface?.let {
             wearPlugin.checkCustomWatchfacePreferences()
-            binding.customName.text = rh.gs(R.string.wear_custom_watchface, it.metadata[CustomWatchfaceMetadataKey.CWF_NAME])
-            binding.coverChart.setImageDrawable(it.drawableDatas[CustomWatchfaceDrawableDataKey.CUSTOM_WATCHFACE]?.toDrawable(resources))
+            binding.customName.text = rh.gs(R.string.wear_custom_watchface, it.metadata[CwfMetadataKey.CWF_NAME])
+            binding.coverChart.setImageDrawable(it.drawableDatas[CwfDrawableFileMap.CUSTOM_WATCHFACE]?.toDrawable(resources))
         } ?:apply {
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, rh.gs(info.nightscout.shared.R.string.wear_default_watchface))
             binding.coverChart.setImageDrawable(null)
@@ -116,7 +115,7 @@ class WearFragment : DaggerFragment() {
         binding.customWatchfaceLayout.visibility = (wearPlugin.connectedDevice != rh.gs(R.string.no_watch_connected)).toVisibility()
     }
 
-    private fun loadCustom(cwf: CustomWatchfaceData) {
+    private fun loadCustom(cwf: CwfData) {
         wearPlugin.savedCustomWatchface = cwf
     }
 }

@@ -284,7 +284,7 @@ sealed class EventData : Event() {
     }
     @Serializable
     data class ActionSetCustomWatchface(
-        val customWatchfaceData: CustomWatchfaceData
+        val customWatchfaceData: CwfData
     ) : EventData()
 
     @Serializable

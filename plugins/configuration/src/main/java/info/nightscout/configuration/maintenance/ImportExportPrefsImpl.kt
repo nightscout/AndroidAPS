@@ -55,8 +55,8 @@ import info.nightscout.rx.events.EventAppExit
 import info.nightscout.rx.events.EventDiaconnG8PumpLogReset
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-import info.nightscout.rx.weardata.CustomWatchfaceData
-import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey
+import info.nightscout.rx.weardata.CwfData
+import info.nightscout.rx.weardata.CwfMetadataKey
 import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -315,9 +315,9 @@ class ImportExportPrefsImpl @Inject constructor(
         }
     }
 
-    override fun exportCustomWatchface(customWatchface: CustomWatchfaceData) {
+    override fun exportCustomWatchface(customWatchface: CwfData) {
         prefFileList.ensureExportDirExists()
-        val newFile = prefFileList.newCwfFile(customWatchface.metadata[CustomWatchfaceMetadataKey.CWF_FILENAME] ?:"")
+        val newFile = prefFileList.newCwfFile(customWatchface.metadata[CwfMetadataKey.CWF_FILENAME] ?:"")
         ZipWatchfaceFormat.saveCustomWatchface(newFile, customWatchface)
     }
 

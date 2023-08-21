@@ -33,11 +33,11 @@ import info.nightscout.androidaps.databinding.ActivityCustomBinding
 import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.CUSTOM_VERSION
-import info.nightscout.rx.weardata.CustomWatchfaceData
-import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
-import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataMap
-import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey
-import info.nightscout.rx.weardata.CustomWatchfaceMetadataMap
+import info.nightscout.rx.weardata.CwfData
+import info.nightscout.rx.weardata.CwfDrawableFileMap
+import info.nightscout.rx.weardata.CwfDrawableDataMap
+import info.nightscout.rx.weardata.CwfMetadataKey
+import info.nightscout.rx.weardata.CwfMetadataMap
 import info.nightscout.rx.weardata.DrawableData
 import info.nightscout.rx.weardata.DrawableFormat
 import info.nightscout.rx.weardata.EventData
@@ -166,10 +166,10 @@ class CustomWatchface : BaseWatchFace() {
                     else -> midColor
                 }
                 val backGroundDrawable = when (singleBg.sgvLevel) {
-                    1L   -> drawableDataMap[CustomWatchfaceDrawableDataKey.BACKGROUND_HIGH]?.toDrawable(resources) ?: drawableDataMap[CustomWatchfaceDrawableDataKey.BACKGROUND]?.toDrawable(resources)
-                    0L   -> drawableDataMap[CustomWatchfaceDrawableDataKey.BACKGROUND]?.toDrawable(resources)
-                    -1L  -> drawableDataMap[CustomWatchfaceDrawableDataKey.BACKGROUND_LOW]?.toDrawable(resources) ?: drawableDataMap[CustomWatchfaceDrawableDataKey.BACKGROUND]?.toDrawable(resources)
-                    else -> drawableDataMap[CustomWatchfaceDrawableDataKey.BACKGROUND]?.toDrawable(resources)
+                    1L   -> drawableDataMap[CwfDrawableFileMap.BACKGROUND_HIGH]?.toDrawable(resources) ?: drawableDataMap[CwfDrawableFileMap.BACKGROUND]?.toDrawable(resources)
+                    0L   -> drawableDataMap[CwfDrawableFileMap.BACKGROUND]?.toDrawable(resources)
+                    -1L  -> drawableDataMap[CwfDrawableFileMap.BACKGROUND_LOW]?.toDrawable(resources) ?: drawableDataMap[CwfDrawableFileMap.BACKGROUND]?.toDrawable(resources)
+                    else -> drawableDataMap[CwfDrawableFileMap.BACKGROUND]?.toDrawable(resources)
                 }
 
                 binding.mainLayout.forEach { view ->
@@ -201,10 +201,10 @@ class CustomWatchface : BaseWatchFace() {
 
                             if (view is ImageView) {
                                 view.clearColorFilter()
-                                val drawable = if (id.key == CustomWatchfaceDrawableDataKey.BACKGROUND.key)
+                                val drawable = if (id.key == CwfDrawableFileMap.BACKGROUND.key)
                                     backGroundDrawable
                                 else
-                                    drawableDataMap[CustomWatchfaceDrawableDataKey.fromKey(id.key)]?.toDrawable(resources)
+                                    drawableDataMap[CwfDrawableFileMap.fromKey(id.key)]?.toDrawable(resources)
                                 drawable?.let {
                                     if (viewJson.has(COLOR.key))
                                         it.colorFilter = changeDrawableColor(getColor(viewJson.getString(COLOR.key)))
@@ -212,7 +212,7 @@ class CustomWatchface : BaseWatchFace() {
                                         it.clearColorFilter()
                                     view.setImageDrawable(it)
                                 } ?: apply {
-                                    view.setImageDrawable(CustomWatchfaceDrawableDataKey.fromKey(id.key).icon?.let { context.getDrawable(it) })
+                                    view.setImageDrawable(CwfDrawableFileMap.fromKey(id.key).icon?.let { context.getDrawable(it) })
                                     if (viewJson.has(COLOR.key))
                                         view.setColorFilter(getColor(viewJson.getString(COLOR.key)))
                                     else
@@ -237,12 +237,12 @@ class CustomWatchface : BaseWatchFace() {
         }
     }
 
-    private fun updatePref(metadata: CustomWatchfaceMetadataMap) {
-        val cwf_authorization = metadata[CustomWatchfaceMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()
+    private fun updatePref(metadata: CwfMetadataMap) {
+        val cwf_authorization = metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()
         cwf_authorization?.let { authorization ->
             if (authorization) {
                 PrefMap.values().forEach { pref ->
-                    metadata[CustomWatchfaceMetadataKey.fromKey(pref.key)]?.toBooleanStrictOrNull()?.let { sp.putBoolean(pref.prefKey, it) }
+                    metadata[CwfMetadataKey.fromKey(pref.key)]?.toBooleanStrictOrNull()?.let { sp.putBoolean(pref.prefKey, it) }
                 }
             }
         }
@@ -250,13 +250,13 @@ class CustomWatchface : BaseWatchFace() {
 
     private fun defaultWatchface(): EventData.ActionSetCustomWatchface {
         val metadata = JSONObject()
-            .put(CustomWatchfaceMetadataKey.CWF_NAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
-            .put(CustomWatchfaceMetadataKey.CWF_FILENAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
-            .put(CustomWatchfaceMetadataKey.CWF_AUTHOR.key, "Philoul")
-            .put(CustomWatchfaceMetadataKey.CWF_CREATED_AT.key, dateUtil.dateString(dateUtil.now()))
-            .put(CustomWatchfaceMetadataKey.CWF_AUTHOR_VERSION.key, CUSTOM_VERSION)
-            .put(CustomWatchfaceMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)
-            .put(CustomWatchfaceMetadataKey.CWF_COMMENT.key, getString(info.nightscout.shared.R.string.default_custom_watchface_comment))
+            .put(CwfMetadataKey.CWF_NAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
+            .put(CwfMetadataKey.CWF_FILENAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
+            .put(CwfMetadataKey.CWF_AUTHOR.key, "Philoul")
+            .put(CwfMetadataKey.CWF_CREATED_AT.key, dateUtil.dateString(dateUtil.now()))
+            .put(CwfMetadataKey.CWF_AUTHOR_VERSION.key, CUSTOM_VERSION)
+            .put(CwfMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)
+            .put(CwfMetadataKey.CWF_COMMENT.key, getString(info.nightscout.shared.R.string.default_custom_watchface_comment))
         val json = JSONObject()
             .put(METADATA.key, metadata)
             .put(HIGHCOLOR.key, String.format("#%06X", 0xFFFFFF and highColor))
@@ -304,12 +304,12 @@ class CustomWatchface : BaseWatchFace() {
             }
         }
         val metadataMap = ZipWatchfaceFormat.loadMetadata(json)
-        val drawableDataMap: CustomWatchfaceDrawableDataMap = mutableMapOf()
+        val drawableDataMap: CwfDrawableDataMap = mutableMapOf()
         getResourceByteArray(info.nightscout.shared.R.drawable.watchface_custom)?.let {
             val drawableData = DrawableData(it, DrawableFormat.PNG)
-            drawableDataMap[CustomWatchfaceDrawableDataKey.CUSTOM_WATCHFACE] = drawableData
+            drawableDataMap[CwfDrawableFileMap.CUSTOM_WATCHFACE] = drawableData
         }
-        return EventData.ActionSetCustomWatchface(CustomWatchfaceData(json.toString(4), metadataMap, drawableDataMap))
+        return EventData.ActionSetCustomWatchface(CwfData(json.toString(4), metadataMap, drawableDataMap))
     }
 
     private fun setDefaultColors() {
@@ -483,20 +483,20 @@ class CustomWatchface : BaseWatchFace() {
 
     // This class containt mapping between keys used within json of Custom Watchface and preferences
     private enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
-        SHOW_IOB(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob),
-        SHOW_DETAILED_IOB(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob),
-        SHOW_COB(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob),
-        SHOW_DELTA(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta),
-        SHOW_AVG_DELTA(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_AVG_DELTA.key, R.string.key_show_avg_delta),
-        SHOW_DETAILED_DELTA(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_DELTA.key, R.string.key_show_detailed_delta),
-        SHOW_UPLOADER_BATTERY(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY.key, R.string.key_show_uploader_battery),
-        SHOW_RIG_BATTERY(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_RIG_BATTERY.key, R.string.key_show_rig_battery),
-        SHOW_TEMP_BASAL(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_BASAL.key, R.string.key_show_temp_basal),
-        SHOW_DIRECTION(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction),
-        SHOW_AGO(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
-        SHOW_BG(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg),
-        SHOW_BGI(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi),
-        SHOW_LOOP_STATUS(CustomWatchfaceMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status)
+        SHOW_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob),
+        SHOW_DETAILED_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob),
+        SHOW_COB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob),
+        SHOW_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta),
+        SHOW_AVG_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AVG_DELTA.key, R.string.key_show_avg_delta),
+        SHOW_DETAILED_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_DELTA.key, R.string.key_show_detailed_delta),
+        SHOW_UPLOADER_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY.key, R.string.key_show_uploader_battery),
+        SHOW_RIG_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_RIG_BATTERY.key, R.string.key_show_rig_battery),
+        SHOW_TEMP_BASAL(CwfMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_BASAL.key, R.string.key_show_temp_basal),
+        SHOW_DIRECTION(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction),
+        SHOW_AGO(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
+        SHOW_BG(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg),
+        SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi),
+        SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status)
     }
 
 }
