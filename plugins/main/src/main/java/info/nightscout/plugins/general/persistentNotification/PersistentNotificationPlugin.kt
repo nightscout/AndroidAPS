@@ -12,6 +12,7 @@ import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.iob.generateCOBString
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
@@ -54,7 +55,8 @@ class PersistentNotificationPlugin @Inject constructor(
     private val notificationHolder: NotificationHolder,
     private val dummyServiceHelper: DummyServiceHelper,
     private val iconsProvider: IconsProvider,
-    private val glucoseStatusProvider: GlucoseStatusProvider
+    private val glucoseStatusProvider: GlucoseStatusProvider,
+    private val config: Config
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -111,6 +113,7 @@ class PersistentNotificationPlugin @Inject constructor(
     }
 
     private fun updateNotification() {
+        if (!config.appInitialized) return
         val pump = activePlugins.activePump
         var line1: String?
         var line2: String? = null
