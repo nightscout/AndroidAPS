@@ -36,10 +36,10 @@ class OverviewMenusImpl @Inject constructor(
     private val fabricPrivacy: FabricPrivacy
 ) : OverviewMenus {
 
-    enum class CharTypeData(@StringRes val nameId: Int, @AttrRes val attrId: Int, @AttrRes val attrTextId: Int, val primary: Boolean, val secondary: Boolean, @StringRes val shortnameId: Int) {
-        PRE(R.string.overview_show_predictions, info.nightscout.core.ui.R.attr.predictionColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.prediction_shortname),
-        TREAT(R.string.overview_show_treatments, info.nightscout.core.ui.R.attr.cobColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.treatments_shortname),
-        BAS(R.string.overview_show_basals, info.nightscout.core.ui.R.attr.basal, info.nightscout.core.ui.R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.basal_shortname),
+    enum class CharTypeData(@StringRes val nameId: Int, @AttrRes val attrId: Int, @AttrRes val attrTextId: Int, val primary: Boolean, val secondary: Boolean, @StringRes val shortnameId: Int, val enabledByDefault: Boolean = false) {
+        PRE(R.string.overview_show_predictions, info.nightscout.core.ui.R.attr.predictionColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.prediction_shortname, enabledByDefault = true),
+        TREAT(R.string.overview_show_treatments, info.nightscout.core.ui.R.attr.cobColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.treatments_shortname, enabledByDefault = true),
+        BAS(R.string.overview_show_basals, info.nightscout.core.ui.R.attr.basal, info.nightscout.core.ui.R.attr.menuTextColor, primary = true, secondary = false, shortnameId = R.string.basal_shortname, enabledByDefault = true),
         ABS(R.string.overview_show_abs_insulin, info.nightscout.core.ui.R.attr.iobColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = R.string.abs_insulin_shortname),
         IOB(R.string.overview_show_iob, info.nightscout.core.ui.R.attr.iobColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = info.nightscout.core.ui.R.string.iob),
         COB(R.string.overview_show_cob, info.nightscout.core.ui.R.attr.cobColor, info.nightscout.core.ui.R.attr.menuTextColor, primary = false, secondary = true, shortnameId = info.nightscout.core.ui.R.string.cob),
@@ -80,6 +80,7 @@ class OverviewMenusImpl @Inject constructor(
 
     @Synchronized
     override fun loadGraphConfig() {
+        assert(CharTypeData.values().size == OverviewMenus.CharType.values().size)
         val sts = sp.getString(R.string.key_graph_config, "")
         if (sts.isNotEmpty()) {
             _setting = Gson().fromJson(sts, Array<Array<Boolean>>::class.java).toMutableList()
@@ -87,11 +88,11 @@ class OverviewMenusImpl @Inject constructor(
             for (s in _setting)
                 if (s.size != OverviewMenus.CharType.values().size) {
                     _setting = ArrayList()
-                    _setting.add(Array(OverviewMenus.CharType.values().size) { true })
+                    _setting.add(Array(OverviewMenus.CharType.values().size) { CharTypeData.values()[it].enabledByDefault })
                 }
         } else {
             _setting = ArrayList()
-            _setting.add(Array(OverviewMenus.CharType.values().size) { true })
+            _setting.add(Array(OverviewMenus.CharType.values().size) { CharTypeData.values()[it].enabledByDefault })
         }
     }
 
