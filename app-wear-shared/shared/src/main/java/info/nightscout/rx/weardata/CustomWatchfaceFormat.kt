@@ -18,33 +18,38 @@ import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
 val CUSTOM_VERSION = "0.10"
+
 enum class CustomWatchfaceDrawableDataKey(val key: String, @DrawableRes val icon: Int?, val fileName: String) {
     UNKNOWN("unknown", null, "Unknown"),
     CUSTOM_WATCHFACE("customWatchface", R.drawable.watchface_custom, "CustomWatchface"),
-    BACKGROUND("background", R.drawable.background, "Background"),
-    BACKGROUND_HIGH("background", R.drawable.background, "BackgroundHigh"),
-    BACKGROUND_LOW("background", R.drawable.background, "BackgroundLow"),
-    COVERCHART("cover_chart", null, "CoverChart"),
-    COVERPLATE("cover_plate", R.drawable.simplified_dial, "CoverPlate"),
-    HOURHAND("hour_hand", R.drawable.hour_hand, "HourHand"),
-    MINUTEHAND("minute_hand", R.drawable.minute_hand, "MinuteHand"),
-    SECONDHAND("second_hand", R.drawable.second_hand, "SecondHand");
+    BACKGROUND(ViewKeys.BACKGROUND.key, R.drawable.background, "Background"),
+    BACKGROUND_HIGH(ViewKeys.BACKGROUND.key, R.drawable.background, "BackgroundHigh"),
+    BACKGROUND_LOW(ViewKeys.BACKGROUND.key, R.drawable.background, "BackgroundLow"),
+    COVER_CHART(ViewKeys.COVER_CHART.key, null, "CoverChart"),
+    COVER_PLATE(ViewKeys.COVER_PLATE.key, R.drawable.simplified_dial, "CoverPlate"),
+    HOUR_HAND(ViewKeys.HOUR_HAND.key, R.drawable.hour_hand, "HourHand"),
+    MINUTE_HAND(ViewKeys.MINUTE_HAND.key, R.drawable.minute_hand, "MinuteHand"),
+    SECOND_HAND(ViewKeys.SECOND_HAND.key, R.drawable.second_hand, "SecondHand");
 
     companion object {
+
         fun fromKey(key: String): CustomWatchfaceDrawableDataKey =
             values().firstOrNull { it.key == key } ?: UNKNOWN
+
         fun fromFileName(file: String): CustomWatchfaceDrawableDataKey = values().firstOrNull { it.fileName == file.substringBeforeLast(".") } ?: UNKNOWN
     }
 }
 
 enum class DrawableFormat(val extension: String) {
     UNKNOWN(""),
+
     //XML("xml"),
     //SVG("svg"),
     JPG("jpg"),
     PNG("png");
 
     companion object {
+
         fun fromFileName(fileName: String): DrawableFormat =
             values().firstOrNull { it.extension == fileName.substringAfterLast(".") } ?: UNKNOWN
 
@@ -112,10 +117,107 @@ enum class CustomWatchfaceMetadataKey(val key: String, @StringRes val label: Int
     CWF_PREF_WATCH_SHOW_AGO("key_show_ago", R.string.metadata_label_watchface_pref, true),
     CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.metadata_label_watchface_pref, true),
     CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.metadata_label_watchface_pref, true);
+
     companion object {
+
         fun fromKey(key: String): CustomWatchfaceMetadataKey? =
             values().firstOrNull { it.key == key }
     }
+}
+
+enum class ViewKeys(val key: String, @StringRes val comment: Int?) {
+
+    BACKGROUND("background", null),
+    CHART("chart", null),
+    COVER_CHART("cover_chart", null),
+    FREETEXT1("freetext1", null),
+    FREETEXT2("freetext2", null),
+    FREETEXT3("freetext3", null),
+    FREETEXT4("freetext4", null),
+    IOB1("iob1", null),
+    IOB2("iob2", null),
+    COB1("cob1", null),
+    COB2("cob2", null),
+    DELTA("delta", null),
+    AVG_DELTA("avg_delta", null),
+    UPLOADER_BATTERY("uploader_battery", null),
+    RIG_BATTERY("rig_battery", null),
+    BASALRATE("basalRate", null),
+    BGI("bgi", null),
+    TIME("time", null),
+    HOUR("hour", null),
+    MINUTE("minute", null),
+    SECOND("second", null),
+    TIMEPERIOD("timePeriod", null),
+    DAY_NAME("day_name", null),
+    DAY("day", null),
+    MONTH("month", null),
+    LOOP("loop", null),
+    DIRECTION("direction", null),
+    TIMESTAMP("timestamp", null),
+    SGV("sgv", null),
+    COVER_PLATE("cover_plate", null),
+    HOUR_HAND("hour_hand", null),
+    MINUTE_HAND("minute_hand", null),
+    SECOND_HAND("second_hand", null)
+}
+
+enum class JsonKeys(val key: String, val viewType: ViewType, @StringRes val comment: Int?) {
+    METADATA("metadata", ViewType.NONE, null),
+    ENABLESECOND("enableSecond", ViewType.NONE, null),
+    HIGHCOLOR("highColor", ViewType.NONE, null),
+    MIDCOLOR("midColor", ViewType.NONE, null),
+    LOWCOLOR("lowColor", ViewType.NONE, null),
+    LOWBATCOLOR("lowBatColor", ViewType.NONE, null),
+    CARBCOLOR("carbColor", ViewType.NONE, null),
+    BASALBACKGROUNDCOLOR("basalBackgroundColor", ViewType.NONE, null),
+    BASALCENTERCOLOR("basalCenterColor", ViewType.NONE, null),
+    GRIDCOLOR("gridColor", ViewType.NONE, null),
+    POINTSIZE("pointSize", ViewType.NONE, null),
+    WIDTH("width", ViewType.ALLVIEWS, null),
+    HEIGHT("height", ViewType.ALLVIEWS, null),
+    TOPMARGIN("topmargin", ViewType.ALLVIEWS, null),
+    LEFTMARGIN("leftmargin", ViewType.ALLVIEWS, null),
+    ROTATION("rotation", ViewType.TEXTVIEW, null),
+    VISIBILITY("visibility", ViewType.ALLVIEWS, null),
+    TEXTSIZE("textsize", ViewType.TEXTVIEW, null),
+    TEXTVALUE("textvalue", ViewType.TEXTVIEW, null),
+    GRAVITY("gravity", ViewType.TEXTVIEW, null),
+    FONT("font", ViewType.TEXTVIEW, null),
+    FONTSTYLE("fontStyle", ViewType.TEXTVIEW, null),
+    FONTCOLOR("fontColor", ViewType.TEXTVIEW, null),
+    COLOR("color", ViewType.IMAGEVIEW, null)
+}
+
+enum class JsonKeyValues(val key: String, val jsonKey: JsonKeys) {
+    GONE("gone", JsonKeys.VISIBILITY),
+    VISIBLE("visible", JsonKeys.VISIBILITY),
+    INVISIBLE("invisible", JsonKeys.VISIBILITY),
+    CENTER("center", JsonKeys.GRAVITY),
+    LEFT("left", JsonKeys.GRAVITY),
+    RIGHT("right", JsonKeys.GRAVITY),
+    SANS_SERIF("sans_serif", JsonKeys.FONT),
+    DEFAULT("default", JsonKeys.FONT),
+    DEFAULT_BOLD("default_bold", JsonKeys.FONT),
+    MONOSPACE("monospace", JsonKeys.FONT),
+    SERIF("serif", JsonKeys.FONT),
+    ROBOTO_CONDENSED_BOLD("roboto_condensed_bold", JsonKeys.FONT),
+    ROBOTO_CONDENSED_LIGHT("roboto_condensed_light", JsonKeys.FONT),
+    ROBOTO_CONDENSED_REGULAR("roboto_condensed_regular", JsonKeys.FONT),
+    ROBOTO_SLAB_LIGHT("roboto_slab_light", JsonKeys.FONT),
+    NORMAL("normal", JsonKeys.FONTSTYLE),
+    BOLD("bold", JsonKeys.FONTSTYLE),
+    BOLD_ITALIC("bold_italic", JsonKeys.FONTSTYLE),
+    ITALIC("italic", JsonKeys.FONTSTYLE),
+    BGCOLOR("bgColor", JsonKeys.COLOR),
+    BGCOLOR1("bgColor", JsonKeys.FONTCOLOR)
+}
+
+enum class ViewType(@StringRes val comment: Int?) {
+    NONE(null),
+    TEXTVIEW(null),
+    IMAGEVIEW(null),
+    ALLVIEWS(null)
 }
 
 class ZipWatchfaceFormat {
@@ -151,10 +253,10 @@ class ZipWatchfaceFormat {
                         metadata[CustomWatchfaceMetadataKey.CWF_FILENAME] = cwfFile.name
                         metadata[CustomWatchfaceMetadataKey.CWF_AUTHORIZATION] = authorization.toString()
                     } else {
-                        val customWatchfaceDrawableDataKey = CustomWatchfaceDrawableDataKey.fromFileName(entryName)
+                        val customWatchfaceDrawableData = CustomWatchfaceDrawableDataKey.fromFileName(entryName)
                         val drawableFormat = DrawableFormat.fromFileName(entryName)
-                        if (customWatchfaceDrawableDataKey != CustomWatchfaceDrawableDataKey.UNKNOWN && drawableFormat != DrawableFormat.UNKNOWN) {
-                            drawableDatas[customWatchfaceDrawableDataKey] = DrawableData(byteArrayOutputStream.toByteArray(), drawableFormat)
+                        if (customWatchfaceDrawableData != CustomWatchfaceDrawableDataKey.UNKNOWN && drawableFormat != DrawableFormat.UNKNOWN) {
+                            drawableDatas[customWatchfaceDrawableData] = DrawableData(byteArrayOutputStream.toByteArray(), drawableFormat)
                         }
                     }
                     zipEntry = zipInputStream.nextEntry
@@ -200,8 +302,8 @@ class ZipWatchfaceFormat {
         fun loadMetadata(contents: JSONObject): CustomWatchfaceMetadataMap {
             val metadata: CustomWatchfaceMetadataMap = mutableMapOf()
 
-            if (contents.has("metadata")) {
-                val meta = contents.getJSONObject("metadata")
+            if (contents.has(JsonKeys.METADATA.key)) {
+                val meta = contents.getJSONObject(JsonKeys.METADATA.key)
                 for (key in meta.keys()) {
                     val metaKey = CustomWatchfaceMetadataKey.fromKey(key)
                     if (metaKey != null) {
