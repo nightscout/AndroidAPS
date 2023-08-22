@@ -23,16 +23,20 @@
     <string name="msg_warning_old">AAPS-data er %1$s gamle! Sjekk din sensor, xDrip+, NS, AAPS konfigurasjon eller annet!</string>
     <string name="pref_vibrate_on_bolus">Vibrer ved bolus</string>
     <string name="pref_units_for_actions">Enheter for handlinger</string>
+    <string name="units_short">E</string>
     <string name="pref_show_date">Vis dato</string>
     <string name="pref_show_iob">Vis IOB</string>
+    <string name="pref_show_detailed_iob">Vis detaljert IOB</string>
     <string name="pref_show_cob">Vis COB</string>
     <string name="pref_show_delta">Vis Delta</string>
+    <string name="pref_show_detailed_delta">Vis detaljert Delta</string>
     <string name="pref_show_avgdelta">Vis Gj.snittDelta</string>
     <string name="pref_show_phone_battery">Vis telefonbatteri</string>
     <string name="pref_show_rig_battery">Vis riggens batteri</string>
     <string name="pref_show_basal_rate">Vis basalrate</string>
     <string name="pref_show_loop_status">Vis loop status</string>
     <string name="pref_show_bg">Vis BS</string>
+    <string name="pref_show_bgi">Vis BGI</string>
     <string name="pref_show_direction_arrow">Vis retningspil</string>
     <string name="pref_show_ago">Vis siden</string>
     <string name="pref_dark" comment="Enables dark visual theme">Mørkt</string>
@@ -192,6 +196,8 @@
     <string name="week_short">u</string>
     <string name="day_short">d</string>
     <string name="hour_short">t</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">gammel</string>
     <string name="old_warning">!gammel!</string>
     <string name="error">!feil!</string>

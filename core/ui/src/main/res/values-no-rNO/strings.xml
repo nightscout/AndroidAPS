@@ -424,6 +424,7 @@
     <string name="autotune_ic_warning">Valgt profil har %1$d IK verdier. Autotune vil bruke %2$.2f g/E</string>
     <string name="autotune_isf_warning">Valgte profil har %1$d ISF-verdier. Autotune vil bruke %2$.1f %3$s/E</string>
     <string name="autotune_error">Feil i innleste datasett, prøv å kjør Autotune en gang til eller reduser antall dager</string>
+    <string name="autotune_error_more_days">Feil i inntastet data, øk antall dager</string>
     <string name="autotune_warning_during_run">Har startet Autotune-beregning, vennligst vent</string>
     <string name="autotune_warning_after_run">Kontroller resultatene nøye før du bruker dem!</string>
     <string name="autotune_partial_result">Delvis resultat dag %1$d / %2$d justert</string>
