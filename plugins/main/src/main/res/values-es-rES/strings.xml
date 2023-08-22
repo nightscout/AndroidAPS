@@ -313,7 +313,6 @@
     <string name="wear_predictions_title">Predicciones</string>
     <string name="wear_custom_watchface_settings">Configuración personalizada de esferas</string>
     <string name="wear_custom_watchface_authorization_title">Autorización de esferas personalizadas</string>
-    <string name="wear_custom_watchface_authorization_summary">Autorizar a la esfera personalizada cargada a modificar los ajustes de AAPS y del Reloj, de acuerdo al diseño de la esfera</string>
     <string name="wear_custom_watchface">Esfera personalizada: %1$s</string>
     <string name="wear_load_watchface">Cargar esfera</string>
     <string name="wear_send_watchface">Enviar esfera</string>
