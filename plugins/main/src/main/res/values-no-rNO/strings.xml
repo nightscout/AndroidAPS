@@ -312,6 +312,7 @@
     <string name="wear_predictions_title">Prognoser</string>
     <string name="wear_custom_watchface_settings">Innstillinger for tilpasset klokkebakgrunn</string>
     <string name="wear_custom_watchface_authorization_title">Godkjenning for tilpasset klokkebakgrunn</string>
+    <string name="wear_custom_watchface_authorization_summary">Godkjenne at tilpasset klokkebakgrunn endrer AAPS- og klokkeinnstillinger i henhold til klokkebakgrunnens design</string>
     <string name="wear_custom_watchface">Tilpasset klokkebakgrunn: %1$s</string>
     <string name="wear_load_watchface">Last inn klokkebakgrunn</string>
     <string name="wear_send_watchface">Send klokkebakgrunn</string>
