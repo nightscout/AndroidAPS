@@ -103,6 +103,8 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
                 val colorAttr = if (checkCustomVersion(metadata)) info.nightscout.core.ui.R.attr.metadataTextOkColor else info.nightscout.core.ui.R.attr.metadataTextWarningColor
                 cwfVersion.setTextColor(rh.gac(cwfVersion.context, colorAttr))
                 prefWarning.visibility = metadata.keys.any { it.isPref }.toVisibility()
+                cwfPrefNumber.text = "${metadata.count { it.key.isPref }}"
+                cwfPrefNumber.visibility=prefWarning.visibility
             }
         }
     }
