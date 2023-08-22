@@ -312,7 +312,6 @@
     <string name="wear_predictions_title">Predikce</string>
     <string name="wear_custom_watchface_settings">Nastavení vlastního ciferníku</string>
     <string name="wear_custom_watchface_authorization_title">Autorizace vlastního ciferníku</string>
-    <string name="wear_custom_watchface_authorization_summary">Autorizovat načtený vlastní ciferník k úpravě AAPS a nastavení hodinek podle designu ciferníku</string>
     <string name="wear_custom_watchface">Vlastní ciferník: %1$s</string>
     <string name="wear_load_watchface">Nahrát ciferník</string>
     <string name="wear_send_watchface">Odeslat ciferník</string>
