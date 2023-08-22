@@ -20,8 +20,8 @@ import info.nightscout.rx.events.EventOverviewBolusProgress
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.rx.weardata.CustomWatchfaceData
-import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey
+import info.nightscout.rx.weardata.CwfData
+import info.nightscout.rx.weardata.CwfMetadataKey
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -58,7 +58,7 @@ class WearPlugin @Inject constructor(
     private val disposable = CompositeDisposable()
 
     var connectedDevice = "---"
-    var savedCustomWatchface: CustomWatchfaceData? = null
+    var savedCustomWatchface: CwfData? = null
 
     override fun onStart() {
         super.onStart()
@@ -113,10 +113,10 @@ class WearPlugin @Inject constructor(
     fun checkCustomWatchfacePreferences() {
         savedCustomWatchface?.let { cwf ->
             val cwf_authorization = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false)
-            if (cwf_authorization != cwf.metadata[CustomWatchfaceMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()) {
+            if (cwf_authorization != cwf.metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()) {
                 // resend new customWatchface to Watch with updated authorization for preferences update
                 val newCwf = cwf.copy()
-                newCwf.metadata[CustomWatchfaceMetadataKey.CWF_AUTHORIZATION] = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false).toString()
+                newCwf.metadata[CwfMetadataKey.CWF_AUTHORIZATION] = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false).toString()
                 rxBus.send(EventMobileDataToWear(EventData.ActionSetCustomWatchface(newCwf)))
             }
         }

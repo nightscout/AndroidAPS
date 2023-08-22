@@ -17,7 +17,7 @@ import info.nightscout.interfaces.maintenance.PrefsMetadataKey
 import info.nightscout.interfaces.maintenance.PrefsStatus
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
-import info.nightscout.rx.weardata.CustomWatchfaceData
+import info.nightscout.rx.weardata.CwfData
 import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -92,11 +92,11 @@ class PrefFileListProviderImpl @Inject constructor(
         return prefFiles
     }
 
-    override fun listCustomWatchfaceFiles(): MutableList<CustomWatchfaceData> {
-        val customWatchfaceFiles = mutableListOf<CustomWatchfaceData>()
+    override fun listCustomWatchfaceFiles(): MutableList<CwfData> {
+        val customWatchfaceFiles = mutableListOf<CwfData>()
         val customAwtchfaceAuthorization = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false)
         // searching dedicated dir, only for new CWF format
-        exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CUSTOM_WF_EXTENTION) }.forEach { file ->
+        exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CWF_EXTENTION) }.forEach { file ->
             // Here loadCustomWatchface will unzip, check and load CustomWatchface
             ZipWatchfaceFormat.loadCustomWatchface(file, customAwtchfaceAuthorization)?.also { customWatchface ->
                 customWatchfaceFiles.add(customWatchface)
@@ -148,7 +148,7 @@ class PrefFileListProviderImpl @Inject constructor(
     }
     override fun newCwfFile(filename: String): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
-        return File(exportsPath, "${filename}_$timeLocal${ZipWatchfaceFormat.CUSTOM_WF_EXTENTION}")
+        return File(exportsPath, "${filename}_$timeLocal${ZipWatchfaceFormat.CWF_EXTENTION}")
     }
 
     // check metadata for known issues, change their status and add info with explanations

@@ -19,11 +19,12 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileDataToWear
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.weardata.CUSTOM_VERSION
-import info.nightscout.rx.weardata.CustomWatchfaceData
-import info.nightscout.rx.weardata.CustomWatchfaceDrawableDataKey
-import info.nightscout.rx.weardata.CustomWatchfaceMetadataKey.*
-import info.nightscout.rx.weardata.CustomWatchfaceMetadataMap
+import info.nightscout.rx.weardata.CwfData
+import info.nightscout.rx.weardata.CwfDrawableFileMap
+import info.nightscout.rx.weardata.CwfMetadataKey.*
+import info.nightscout.rx.weardata.CwfMetadataMap
 import info.nightscout.rx.weardata.EventData
+import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
@@ -54,7 +55,7 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
         binding.recyclerview.adapter = RecyclerViewAdapter(prefFileListProvider.listCustomWatchfaceFiles())
     }
 
-    inner class RecyclerViewAdapter internal constructor(private var customWatchfaceFileList: List<CustomWatchfaceData>) : RecyclerView.Adapter<RecyclerViewAdapter.PrefFileViewHolder>() {
+    inner class RecyclerViewAdapter internal constructor(private var customWatchfaceFileList: List<CwfData>) : RecyclerView.Adapter<RecyclerViewAdapter.PrefFileViewHolder>() {
 
         inner class PrefFileViewHolder(val customWatchfaceImportListItemBinding: CustomWatchfaceImportListItemBinding) : RecyclerView.ViewHolder(customWatchfaceImportListItemBinding.root) {
 
@@ -62,7 +63,7 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
                 with(customWatchfaceImportListItemBinding) {
                     root.isClickable = true
                     customWatchfaceImportListItemBinding.root.setOnClickListener {
-                        val customWatchfaceFile = filelistName.tag as CustomWatchfaceData
+                        val customWatchfaceFile = filelistName.tag as CwfData
                         val customWF = EventData.ActionSetCustomWatchface(customWatchfaceFile)
                         val i = Intent()
                         setResult(FragmentActivity.RESULT_OK, i)
@@ -85,7 +86,7 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
         override fun onBindViewHolder(holder: PrefFileViewHolder, position: Int) {
             val customWatchfaceFile = customWatchfaceFileList[position]
             val metadata = customWatchfaceFile.metadata
-            val drawable = customWatchfaceFile.drawableDatas[CustomWatchfaceDrawableDataKey
+            val drawable = customWatchfaceFile.drawableDatas[CwfDrawableFileMap
                 .CUSTOM_WATCHFACE]?.toDrawable(resources)
             with(holder.customWatchfaceImportListItemBinding) {
                 filelistName.text = rh.gs(info.nightscout.shared.R.string.metadata_wear_import_filename, metadata[CWF_FILENAME])
@@ -101,6 +102,9 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
                 cwfVersion.text = rh.gs(CWF_VERSION.label, metadata[CWF_VERSION] ?:"")
                 val colorAttr = if (checkCustomVersion(metadata)) info.nightscout.core.ui.R.attr.metadataTextOkColor else info.nightscout.core.ui.R.attr.metadataTextWarningColor
                 cwfVersion.setTextColor(rh.gac(cwfVersion.context, colorAttr))
+                prefWarning.visibility = metadata.keys.any { it.isPref }.toVisibility()
+                cwfPrefNumber.text = "${metadata.count { it.key.isPref }}"
+                cwfPrefNumber.visibility=prefWarning.visibility
             }
         }
     }
@@ -113,7 +117,7 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun checkCustomVersion(metadata: CustomWatchfaceMetadataMap): Boolean {
+    private fun checkCustomVersion(metadata: CwfMetadataMap): Boolean {
         metadata[CWF_VERSION]?.let { version ->
             val currentAppVer = versionCheckerUtils.versionDigits(CUSTOM_VERSION)
             val metadataVer = versionCheckerUtils.versionDigits(version)
