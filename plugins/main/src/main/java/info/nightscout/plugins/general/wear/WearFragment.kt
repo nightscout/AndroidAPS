@@ -1,5 +1,6 @@
 package info.nightscout.plugins.general.wear
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.maintenance.ImportExportPrefs
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.WearFragmentBinding
+import info.nightscout.plugins.general.wear.activities.CwfInfosActivity
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileToWear
@@ -69,6 +71,9 @@ class WearFragment : DaggerFragment() {
         binding.exportCustom.setOnClickListener {
             rxBus.send(EventMobileToWear(EventData.ActionrequestCustomWatchface(true)))
         }
+        binding.infosCustom.setOnClickListener {
+            startActivity(Intent(activity, CwfInfosActivity::class.java))
+        }
     }
 
     override fun onResume() {
@@ -107,9 +112,11 @@ class WearFragment : DaggerFragment() {
             wearPlugin.checkCustomWatchfacePreferences()
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, it.metadata[CwfMetadataKey.CWF_NAME])
             binding.coverChart.setImageDrawable(it.drawableDatas[CwfDrawableFileMap.CUSTOM_WATCHFACE]?.toDrawable(resources))
+            binding.infosCustom.visibility = View.VISIBLE
         } ?:apply {
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, rh.gs(info.nightscout.shared.R.string.wear_default_watchface))
             binding.coverChart.setImageDrawable(null)
+            binding.infosCustom.visibility = View.GONE
         }
         binding.connectedDevice.text = wearPlugin.connectedDevice
         binding.customWatchfaceLayout.visibility = (wearPlugin.connectedDevice != rh.gs(R.string.no_watch_connected)).toVisibility()
