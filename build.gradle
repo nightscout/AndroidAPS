@@ -50,7 +50,7 @@ buildscript {
         play_services_location_version = '21.0.1'
 
         kotlinx_datetime_version = '0.4.0'
-        kotlinx_serialization_version = '1.5.1'
+        kotlinx_serialization_version = '1.6.0'
     }
     repositories {
         google()
