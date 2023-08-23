@@ -137,6 +137,7 @@
     <string name="error_in_basal_values">שגיאה בערכי המינון הבזאלי</string>
     <string name="error_in_target_values">שגיאה בערכי המטרה</string>
     <string name="error_in_isf_values">שגיאה בערכי יחס התיקון</string>
+    <string name="profile_name_contains_dot">ישנם שמות פרופיל המכילים נקודות.\nשמות כאלו אינם נתמכים ע\"י Nightscout \n הפרופילים לא הועלו ל-Nightscout.</string>
     <string name="invalid_profile_not_accepted">הפרופיל הבלתי חוקי %1$s מ-Nightscout לא מאושר</string>
     <string name="view">תצוגה</string>
     <string name="errors">שגיאות</string>
@@ -238,6 +239,7 @@
     <string name="short_tabtitles">קצר את כותרות הלשוניות</string>
     <string name="overview_show_notes_field_in_dialogs_title">הצגת שדות הערות בתיבות דו-שיח של טיפול</string>
     <string name="deliverpartofboluswizard">אשף הבולוס מבצע חישוב אך רק חלק זה של האינסולין המחושב מוזרק. שימושי בשימוש עם אלגוריתם SMB.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">הוזרק 100% מהבולוס, אם ערך הסוכר בדם ישן </string>
     <string name="enable_bolus_advisor">אפשר את יועץ הבולוסים</string>
     <string name="enable_bolus_advisor_summary">מציג תזכורת לאכול אחר כך במקום להזריק את המינון שהומלץ ע\"י האשף בעת היפרגליקמיה (\"בולוס מקדים\")</string>
     <string name="enablesuperbolus">אפשר סופר בולוס באשף</string>
@@ -309,6 +311,12 @@
     <string name="wear_notifysmb_summary">הצג SMB על השעון כמו בולוס סטנדרטי.</string>
     <string name="wear_predictions_summary">הראה את התחזיות על לוח השעון.</string>
     <string name="wear_predictions_title">חיזוי</string>
+    <string name="wear_custom_watchface_settings">הגדרות פני שעון מותאמים אישית</string>
+    <string name="wear_custom_watchface_authorization_title">אישור פני שעון מותאמים אישית</string>
+    <string name="wear_custom_watchface">פני שעון מותאמים אישית: %1$s</string>
+    <string name="wear_load_watchface">טעינת פני שעון</string>
+    <string name="wear_send_watchface">שליחת פני שעון</string>
+    <string name="wear_export_watchface">ייצוא תבנית</string>
     <string name="wear_new_custom_watchface_exported">תבנית פני השעון יוצאה</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
@@ -320,6 +328,7 @@
     <string name="grams_short">גר\'</string>
     <string name="hour_short">ש\'</string>
     <string name="no_active_profile">לא הופעלה החלפת פרופיל!</string>
+    <string name="profile_message">פרופיל:\n\nהיסט זמן: %1$\nאחוז: %2$d%\"</string>
     <string name="tdd_line">%1$.2fיח\' %1$.0f%</string>
     <string name="no_profile">לא נטען פרופיל</string>
     <string name="aps_only">חל רק במצב APS!</string>
@@ -339,4 +348,5 @@
     <string name="until">עד</string>
     <string name="default_range">טווח ברירת מחדל</string>
     <string name="target">מטרה</string>
+    <string name="rate_duration">מינון: %1$.2fיח\'\\ש\' (%2$.2f%) \nל-%3$d דק\'</string>
 </resources>
