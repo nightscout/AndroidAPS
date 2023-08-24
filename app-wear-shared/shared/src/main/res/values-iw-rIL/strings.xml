@@ -34,5 +34,12 @@
     <string name="disconnecting">מתנתק</string>
     <string name="waiting_for_disconnection">ממתין לניתוק</string>
     <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">נוצר ב: %1$s</string>
+    <string name="metadata_label_watchface_author">יוצר/ת: %1$s</string>
+    <string name="metadata_label_watchface_name">שם: %1$s</string>
+    <string name="metadata_wear_import_filename">שם קובץ: %1$s</string>
     <string name="metadata_label_plugin_version">גרסת פלאגין: %1$s</string>
+    <string name="metadata_label_watchface_name_version">שם: %1$s (%2$s)</string>
+    <string name="default_custom_watchface_comment">ברירת המחדל של פני השעון, ניתן ללחוץ על כפתור ייצוא פני שעון כדי ליצור תבנית</string>
+    <string name="wear_default_watchface">ברירת מחדל פני שעון</string>
 </resources>

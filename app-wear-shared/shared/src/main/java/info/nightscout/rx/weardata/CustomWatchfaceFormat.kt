@@ -103,20 +103,21 @@ enum class CwfMetadataKey(val key: String, @StringRes val label: Int, val isPref
     CWF_AUTHOR_VERSION("author_version", R.string.metadata_label_watchface_name_version, false),
     CWF_COMMENT("comment", R.string.metadata_label_watchface_comment, false), // label not planed to be used for CWF_COMMENT
     CWF_AUTHORIZATION("cwf_authorization", R.string.metadata_label_watchface_authorization, false),
-    CWF_PREF_WATCH_SHOW_DETAILED_IOB("key_show_detailed_iob", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_DETAILED_DELTA("key_show_detailed_delta", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_BGI("key_show_bgi", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_IOB("key_show_iob", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_COB("key_show_cob", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_DELTA("key_show_delta", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_AVG_DELTA("key_show_avg_delta", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY("key_show_uploader_battery", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_RIG_BATTERY("key_show_rig_battery", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_TEMP_BASAL("key_show_temp_basal", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_DIRECTION("key_show_direction", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_AGO("key_show_ago", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.metadata_label_watchface_pref, true),
-    CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.metadata_label_watchface_pref, true);
+    CWF_PREF_WATCH_SHOW_DETAILED_IOB("key_show_detailed_iob", R.string.pref_show_detailed_iob, true),
+    CWF_PREF_WATCH_SHOW_DETAILED_DELTA("key_show_detailed_delta", R.string.pref_show_detailed_delta, true),
+    CWF_PREF_WATCH_SHOW_BGI("key_show_bgi", R.string.pref_show_bgi, true),
+    CWF_PREF_WATCH_SHOW_IOB("key_show_iob", R.string.pref_show_iob, true),
+    CWF_PREF_WATCH_SHOW_COB("key_show_cob", R.string.pref_show_cob, true),
+    CWF_PREF_WATCH_SHOW_DELTA("key_show_delta", R.string.pref_show_delta, true),
+    CWF_PREF_WATCH_SHOW_AVG_DELTA("key_show_avg_delta", R.string.pref_show_avgdelta, true),
+    CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY("key_show_uploader_battery", R.string.pref_show_phone_battery, true),
+    CWF_PREF_WATCH_SHOW_RIG_BATTERY("key_show_rig_battery", R.string.pref_show_rig_battery, true),
+    CWF_PREF_WATCH_SHOW_TEMP_BASAL("key_show_temp_basal", R.string.pref_show_basal_rate, true),
+    CWF_PREF_WATCH_SHOW_DIRECTION("key_show_direction", R.string.pref_show_direction_arrow, true),
+    CWF_PREF_WATCH_SHOW_AGO("key_show_ago", R.string.pref_show_ago, true),
+    CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.pref_show_bg, true),
+    CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.pref_show_loop_status, true),
+    CWF_PREF_WATCH_SHOW_DATE("key_show_date", R.string.pref_show_date, true);
 
     companion object {
 
