@@ -27,7 +27,7 @@
     <string name="invalid">KLAIDA</string>
     <string name="gradually_increase_notification_volume">Palaipsniui didinkite įspėjimų ir pranešimų garso lygį</string>
     <string name="localalertsettings_title">Lokalūs perspėjimai</string>
-    <string name="enable_missed_bg_readings_alert">Perspėjimas apie negautus KG duomenis</string>
+    <string name="enable_missed_bg_readings_alert">Perspėjimas apie negautus glikemijos duomenis</string>
     <string name="enable_pump_unreachable_alert">Perspėjimas apie nepasiekiamą pompą</string>
     <string name="pump_unreachable_threshold">Perspėjimo apie nepasiekiamą pompą riba [min]</string>
     <string name="enable_carbs_req_alert">Perspėti, jei būtini angliavandeniai</string>
