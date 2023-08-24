@@ -73,7 +73,7 @@
     <string name="result_insulin_carbs">Resultado: %1$s %2$s</string>
     <string name="missing_carbs">Faltan %1$d g</string>
     <string name="a11y_current_bg">glucosa en sangre actual</string>
-    <string name="carb_time_label">Tiempo de Carbohidratos</string>
+    <string name="carb_time_label">Tiempo de absorción</string>
     <string name="a11y_set_carb_timer">establecer alarma de carbohidratos</string>
     <string name="show_calculation">Mostrar cálculo</string>
     <!-- Treatments -->
