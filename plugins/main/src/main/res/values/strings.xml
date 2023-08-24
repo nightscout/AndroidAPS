@@ -360,14 +360,11 @@
     <string name="wear_custom_watchface_authorization_summary">Authorize loaded custom watchface to change and lock some watch display settings to suit watchface design</string>
     <string name="wear_custom_watchface">Custom Watchface: %1$s</string>
     <string name="wear_load_watchface">Load Watchface</string>
-    <string name="wear_infos_watchface">Infos Watchface</string>
+    <string name="wear_send_watchface">Send Watchface</string>
     <string name="wear_export_watchface">Export template</string>
     <string name="wear_new_custom_watchface_exported">Custom watchface template exported</string>
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
-    <string name="cwf_infos_pref_locked">List of prefs locked by the Watchface</string>
-    <string name="cwf_infos_pref_requested">List of prefs requested by the Watchface</string>
-    <string name="cwf_infos_view_title">List of fields included into the Watchface</string>
 
     <!--    PersistentNotification-->
     <string name="ongoingnotificaction" translatable="false">Ongoing Notification</string>
