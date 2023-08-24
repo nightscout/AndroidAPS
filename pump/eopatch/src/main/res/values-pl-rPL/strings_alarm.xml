@@ -12,4 +12,21 @@
     <string name="string_a022">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
     <string name="string_a023">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
     <string name="string_a034">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a041">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a042">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a043">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a044">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a106">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a107">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a108">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a116">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a117">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a118">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_b000">Okres użytkowania Patcha minie %s. Bądź gotowy do zmiany Patcha.</string>
+    <string name="string_b001">Koniec zawieszenia podaży insuliny\nNaciśnij \'Wznów\', aby ponownie rozpocząć podawanie insuliny.</string>
+    <string name="string_b003">Niski poziom zbiornika \nZmień Patch wkrótce.</string>
+    <string name="string_b005">Okres użytkowania Patcha minął \nZmień Patch teraz.</string>
+    <string name="string_b006">Patch wkrótce wygaśnie \nZmień Patch teraz.</string>
+    <string name="string_b012">Niekompletna aktywacja Patcha \nUkończ proces \"Aktywuj Patch\".</string>
+    <string name="string_b018">Słaba bateria Patcha\nBądź gotowy do zmiany Patcha.</string>
 </resources>
