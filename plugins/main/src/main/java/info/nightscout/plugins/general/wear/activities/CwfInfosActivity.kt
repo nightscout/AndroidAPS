@@ -11,13 +11,16 @@ import androidx.core.view.MenuProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
+import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.CwfInfosActivityBinding
 import info.nightscout.plugins.databinding.CwfInfosActivityPrefItemBinding
 import info.nightscout.plugins.databinding.CwfInfosActivityViewItemBinding
 import info.nightscout.plugins.general.wear.WearPlugin
+import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.CUSTOM_VERSION
@@ -27,6 +30,8 @@ import info.nightscout.rx.weardata.CwfMetadataMap
 import info.nightscout.rx.weardata.ViewKeys
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.kotlin.plusAssign
 import org.json.JSONObject
 import javax.inject.Inject
 
@@ -35,10 +40,13 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var sp: SP
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var wearPlugin: WearPlugin
     @Inject lateinit var versionCheckerUtils: VersionCheckerUtils
 
+    private val disposable = CompositeDisposable()
     private lateinit var binding: CwfInfosActivityBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -67,6 +75,28 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
                     else              -> false
                 }
         })
+    }
+
+    override fun onPause() {
+        super.onPause()
+        disposable.clear()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        disposable += rxBus
+            .toObservable(EventWearUpdateGui::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({
+                           it.customWatchfaceData?.let { cwf ->
+                               if (!it.exportFile) {
+                                   wearPlugin.savedCustomWatchface = cwf
+                                   updateGui()
+                               }
+                           }
+                       }, fabricPrivacy::logException)
+
+        updateGui()
     }
 
     private fun updateGui() {

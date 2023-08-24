@@ -45,7 +45,7 @@
             android:id="@+id/view_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="3dp"
             android:layout_marginTop="0dp"
             android:layout_marginBottom="0dp"
             android:layout_weight="1"

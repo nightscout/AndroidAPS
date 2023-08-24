@@ -114,7 +114,7 @@ class WearFragment : DaggerFragment() {
             binding.coverChart.setImageDrawable(it.drawableDatas[CwfDrawableFileMap.CUSTOM_WATCHFACE]?.toDrawable(resources))
             binding.infosCustom.visibility = View.VISIBLE
         } ?:apply {
-            binding.customName.text = rh.gs(R.string.wear_custom_watchface, rh.gs(info.nightscout.shared.R.string.wear_default_watchface))
+            binding.customName.text = rh.gs(R.string.wear_custom_watchface, "")
             binding.coverChart.setImageDrawable(null)
             binding.infosCustom.visibility = View.GONE
         }
