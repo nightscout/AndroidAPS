@@ -239,6 +239,7 @@
     <string name="short_tabtitles">Naudoti sutrumpintus skirtukų pavadinimus</string>
     <string name="overview_show_notes_field_in_dialogs_title">Rodyti pastabų laukelį terapijos dialoguose</string>
     <string name="deliverpartofboluswizard">Boluso skaičiuoklė atlieka skaičiavimus, tačiau tik dalis apskaičiuoto insulino yra suleidžiama. Naudinga kartu su SMB algoritmu.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Suleisti 100% bolusą, jei glikemijos duomenys senesni nei</string>
     <string name="enable_bolus_advisor">Įgalinti boluso patarėją</string>
     <string name="enable_bolus_advisor_summary">Galimybė priminti jums valgyti vėliau (pvz., esant aukštai glikemijai) boliuso vedlyje („po susileidimo palaukti ir valgyti vėliau“)</string>
     <string name="enablesuperbolus">Įgalinti superbolusus skaičiuoklėje</string>
@@ -249,6 +250,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognozė</string>
     <string name="overview_show_treatments">Terapija</string>
+    <string name="overview_show_heartRate">Pulsas</string>
     <string name="overview_show_deviation_slope">Nuokrypiai</string>
     <string name="overview_show_activity">Aktyvumas</string>
     <string name="overview_show_bgi">KG įtaka</string>
@@ -266,6 +268,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">ĮRAŠ</string>
+    <string name="heartRate_shortname">ŠSD</string>
     <string name="sensitivity_shortname">JAUTR</string>
     <string name="graph_scale">Grafiko mastelis</string>
     <string name="graph_menu_divider_header">Grafikas</string>
