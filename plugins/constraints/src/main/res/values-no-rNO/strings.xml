@@ -10,7 +10,6 @@
     <string name="old_version">gammel versjon</string>
     <string name="very_old_version">veldig gammel versjon</string>
     <string name="application_expired">Applikasjon utløpt</string>
-    <string name="new_version_warning">Ny versjon tilgjengelig i minst %1$d dager! Systemet vil bytte til \"stopp ved lavt BS (LGS)\" etter %2$d dager og loop vil deaktiveres etter %3$d dager</string>
     <string name="running_invalid_version">Vi har oppdaget at du kjører en ugyldig versjon. Loop deaktivert!</string>
     <string name="versionavailable">Versjon %1$s er tilgjengelig</string>
     <string name="version_expire">Versjon %1$s utløper den %2$s</string>
