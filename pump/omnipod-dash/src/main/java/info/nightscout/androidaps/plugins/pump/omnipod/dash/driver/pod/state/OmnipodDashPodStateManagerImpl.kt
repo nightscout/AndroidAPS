@@ -415,19 +415,25 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override fun recoverActivationFromPodStatus(): String? {
         val newActivationProgress = when (podState.podStatus) {
-            PodStatus.FILLED ->
+            PodStatus.FILLED                                                       ->
                 ActivationProgress.NOT_STARTED
-            PodStatus.UID_SET ->
+
+            PodStatus.UID_SET                                                      ->
                 ActivationProgress.SET_UNIQUE_ID
-            PodStatus.ENGAGING_CLUTCH_DRIVE, PodStatus.PRIMING ->
+
+            PodStatus.ENGAGING_CLUTCH_DRIVE, PodStatus.PRIMING                     ->
                 return "Busy"
-            PodStatus.CLUTCH_DRIVE_ENGAGED ->
+
+            PodStatus.CLUTCH_DRIVE_ENGAGED                                         ->
                 ActivationProgress.PRIME_COMPLETED
-            PodStatus.BASAL_PROGRAM_SET ->
+
+            PodStatus.BASAL_PROGRAM_SET                                            ->
                 ActivationProgress.PROGRAMMED_BASAL
+
             PodStatus.RUNNING_ABOVE_MIN_VOLUME, PodStatus.RUNNING_BELOW_MIN_VOLUME ->
                 ActivationProgress.CANNULA_INSERTED
-            else ->
+
+            else                                                                   ->
                 null
         }
         newActivationProgress?.let {
@@ -447,7 +453,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         val cmdConfirmation = getCommandConfirmationFromState()
         logger.info(LTag.PUMPCOMM, "Update active command with confirmation: $cmdConfirmation")
         when (cmdConfirmation) {
-            CommandSendingFailure -> {
+            CommandSendingFailure      -> {
                 podState.activeCommand = null
                 source.onError(
                     activeCommand.sendError
@@ -463,7 +469,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 source.onComplete()
             }
 
-            CommandConfirmationDenied -> {
+            CommandConfirmationDenied  -> {
                 podState.activeCommand = null
                 source.onSuccess(CommandConfirmed(activeCommand, false))
             }
@@ -474,7 +480,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 source.onSuccess(CommandConfirmed(activeCommand, true))
             }
 
-            NoActiveCommand -> {
+            NoActiveCommand            -> {
                 source.onComplete()
             }
         }
@@ -482,20 +488,30 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
 
     override fun sameAlertSettings(
         expirationReminderEnabled: Boolean,
-        expirationHours: Int,
+        expirationReminderHours: Int,
+        expirationAlarmEnabled: Boolean,
+        expirationAlarmHours: Int,
         lowReservoirAlertEnabled: Boolean,
         lowReservoirAlertUnits: Int
     ): Boolean {
         return podState.expirationReminderEnabled == expirationReminderEnabled &&
-            podState.expirationHours == expirationHours &&
+            podState.expirationReminderHours == expirationReminderHours &&
+            podState.expirationAlarmEnabled == expirationAlarmEnabled &&
+            podState.expirationAlarmHours == expirationAlarmHours &&
             podState.lowReservoirAlertEnabled == lowReservoirAlertEnabled &&
             podState.lowReservoirAlertUnits == lowReservoirAlertUnits
     }
 
-    override fun updateExpirationAlertSettings(expirationReminderEnabled: Boolean, expirationHours: Int):
-        Completable = Completable.defer {
+    override fun updateExpirationAlertSettings(
+        expirationReminderEnabled: Boolean,
+        expirationReminderHours: Int,
+        expirationAlarmEnabled: Boolean,
+        expirationAlarmHours: Int
+    ): Completable = Completable.defer {
         podState.expirationReminderEnabled = expirationReminderEnabled
-        podState.expirationHours = expirationHours
+        podState.expirationReminderHours = expirationReminderHours
+        podState.expirationAlarmEnabled = expirationAlarmEnabled
+        podState.expirationAlarmHours = expirationAlarmHours
         Completable.complete()
     }
 
@@ -520,15 +536,18 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 createdRealtime <= podState.lastStatusResponseReceived &&
                     sequence == podState.sequenceNumberOfLastProgrammingCommand ->
                     CommandConfirmationSuccess
+
                 createdRealtime <= podState.lastStatusResponseReceived &&
                     sequence != podState.sequenceNumberOfLastProgrammingCommand ->
                     CommandConfirmationDenied
                 // no response received after this point
-                createdRealtime <= sentRealtime ->
+                createdRealtime <= sentRealtime                                 ->
                     CommandSendingNotConfirmed
-                createdRealtime > sentRealtime ->
+
+                createdRealtime > sentRealtime                                  ->
                     CommandSendingFailure
-                else -> // this can't happen, see the previous two conditions
+
+                else                                                            -> // this can't happen, see the previous two conditions
                     NoActiveCommand
             }
         } ?: NoActiveCommand
@@ -555,7 +574,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 podState.activeCommand = newCommand
             }
 
-            CommandSendingNotConfirmed -> {
+            CommandSendingNotConfirmed                            -> {
                 val now = SystemClock.elapsedRealtime()
                 val newCommand = podState.activeCommand?.copy(
                     createdRealtime = now,
@@ -565,7 +584,7 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
                 podState.lastStatusResponseReceived = 0
             }
 
-            CommandSendingFailure, NoActiveCommand -> {
+            CommandSendingFailure, NoActiveCommand                -> {
                 podState.activeCommand = null
                 podState.lastStatusResponseReceived = 0
             }
@@ -745,7 +764,9 @@ class OmnipodDashPodStateManagerImpl @Inject constructor(
         var secondPrimeBolusVolume: Short? = null,
 
         var expirationReminderEnabled: Boolean? = null,
-        var expirationHours: Int? = null,
+        var expirationReminderHours: Int? = null,
+        var expirationAlarmEnabled: Boolean? = null,
+        var expirationAlarmHours: Int? = null,
         var lowReservoirAlertEnabled: Boolean? = null,
         var lowReservoirAlertUnits: Int? = null,
 
