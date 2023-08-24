@@ -47,6 +47,7 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Osiągnięto limit czasu skanowania Combo</string>
     <string name="combov2_pairing_failed_due_to_error">Parowanie nie powiodło się z powodu błędu: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Parowanie przerwane z nieznanych powodów</string>
+    <string name="combov2_pairing_invalid_pin_length">"Nieprawidłowa długość PIN-u parowania: zamiast %1$d cyfr otrzymano %2$d"</string>
     <string name="combov2_scanning_for_pump">Skanowanie w poszukiwaniu pompy</string>
     <string name="combov2_establishing_bt_connection">Ustanawienie połączenia Bluetooth (próba #%1$d)</string>
     <string name="combov2_pairing_performing_handshake">Zestawianie połączenia z pompą</string>
@@ -97,6 +98,7 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
     <string name="combov2_set_emulated_100_tbr">Ustaw emulowane 100% TBR</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Oczekiwanie na zakończenie emulowanego 100% TBR w toku</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignorowanie zbędnego żądania o 100% TBR</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Napotkano nieoczekiwany limit podczas dostosowywania TBR: oczekiwany docelowy procent %1$d%%, osiągnął limit przy %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Nie można ustawić bezwzględnego TBR, jeśli wyjściowa dawka bazowa jest zerowa</string>
     <string name="combov2_pair_with_pump_summary">Sparuj AAPS i Androida z aktualnie niesparowaną pompą Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Usuń parowanie AAPS i Androida z aktualnie sparowanej pompy Accu-Chek Combo</string>
@@ -123,4 +125,6 @@ Jeśli po więcej niż ~5 minutach połączenie nie zostanie ustanowione:\n\n
     <string name="combov2_refresh_pump_status_after_error">Odświeżenie stanu pompy po wystąpieniu błędu</string>
     <string name="combov2_go_back">Wróć</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Nie można wykonać parowania, ponieważ sterownik nie jest zainicjalizowany. Zazwyczaj zdarza się to z powodu braku nadania niezbędnych uprawnień Bluetooth. Cofnij się i przyznaj uprawnienia Bluetooth, a następnie spróbuj ponownie sparować.</string>
+    <string name="combov2_bluetooth_disabled">Nie można uruchomić sterownika - Bluetooth jest wyłączony</string>
+    <string name="combov2_bluetooth_not_supported">Sterownik nie może działać - to urządzenie nie obsługuje Bluetooth</string>
 </resources>
