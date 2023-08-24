@@ -17,7 +17,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-val CUSTOM_VERSION = "0.10"
+val CUSTOM_VERSION = "1.0"
 
 enum class CwfDrawableFileMap(val key: String, @DrawableRes val icon: Int?, val fileName: String) {
     UNKNOWN("unknown", null, "Unknown"),
