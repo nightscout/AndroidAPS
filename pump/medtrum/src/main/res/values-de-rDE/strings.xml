@@ -2,7 +2,13 @@
 <resources>
     <!-- MedtrumPump -->
     <!-- overview fragment -->
+    <string name="requested_by_user" comment="26 characters max for translation">Vom Nutzer angefragt</string>
+    <string name="expiry_not_enabled">Nicht aktiviert</string>
     <!-- Alarm strings -->
+    <string name="alarm_none">Keine</string>
+    <string name="alarm_pump_low_battery">Pumpe niedriger Akku</string>
+    <string name="alarm_pump_low_reservoir">Pumpe niedriges Reservoir</string>
+    <string name="alarm_pump_expires_soon">Pumpe läuft bald ab</string>
     <!-- wizard-->
     <!-- settings-->
     <!-- treatment state-->
