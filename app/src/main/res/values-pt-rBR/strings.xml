@@ -35,7 +35,7 @@
     <string name="close_navigation">Fechar a navegação</string>
     <string name="remove_items">Remover itens</string>
     <string name="sort_items">Ordenar itens</string>
-    <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
+    <string name="error_adding_treatment_title">Dados de tratamento incompletos</string>
     <string name="error_adding_treatment_message">Um tratamento (insulina: %1$.2f, hidratos: %2$d, às: %3$s) não ficou gravado. Por favor verifique se foi realmente efectuado e se sim adicione manualmente aos tratamentos.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), atraso: %3$d m</string>
     <string name="profile_total">== ∑  %1$s U</string>
