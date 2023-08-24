@@ -312,6 +312,7 @@
     <string name="wear_predictions_title">Prédictions</string>
     <string name="wear_custom_watchface_settings">Paramètres du Cadran Personnalisé</string>
     <string name="wear_custom_watchface_authorization_title">Autorisation du Cadran Personnalisé</string>
+    <string name="wear_custom_watchface_authorization_summary">Autoriser le cadran perso chargé à modifier et bloquer certains paramètres d\'affichage de la montre pour un affichage correct du cadran</string>
     <string name="wear_custom_watchface">Cadran personnalisé : %1$s</string>
     <string name="wear_load_watchface">Charger le cadran</string>
     <string name="wear_send_watchface">Envoyer le cadran</string>
