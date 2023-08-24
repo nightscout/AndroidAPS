@@ -20,11 +20,11 @@
     <string name="old_version">old version</string>
     <string name="very_old_version">very old version</string>
     <string name="application_expired">Application expired</string>
-    <string name="new_version_warning">New version for at least %1$d days available! Fallback to LGS after %2$d days, loop will be disabled after %3$d days</string>
-    <string name="key_last_time_this_version_detected_as_ok" translatable="false">last_time_this_version_detected</string>
+    <string name="new_version_warning">New version has not been checked for at least %1$d days! Fallback to LGS after %2$d days, loop will be disabled after %3$d days. Restore internet connectivity!</string>
+    <string name="key_last_successful_version_check_timestamp" translatable="false">last_successful_version_check_timestamp</string>
     <string name="key_last_versionchecker_warning" translatable="false">last_versionchecker_warning</string>
     <string name="key_last_expired_versionchecker_warning" translatable="false">last_expired_version_checker_warning</string>
-    <string name="key_last_versionchecker_plugin_warning" translatable="false">last_versionchecker_plugin_waring</string>
+    <string name="key_last_versionchecker_plugin_warning_timestamp" translatable="false">last_versionchecker_plugin_warning_timestamp</string>
     <string name="key_last_revoked_certs_check" translatable="false">last_revoked_certs_check</string>
     <string name="running_invalid_version">We have detected that you are running an invalid version. Loop disabled!</string>
     <string name="versionavailable">Version %1$s available</string>
