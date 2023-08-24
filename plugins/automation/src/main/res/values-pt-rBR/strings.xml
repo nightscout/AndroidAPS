@@ -2,7 +2,7 @@
 <resources>
     <string name="automation_short">Auto</string>
     <string name="automation">Automatização</string>
-    <string name="automation_description">Tarefas de automação definidas pelo utilizador</string>
+    <string name="automation_description">Tarefas de automação definidas pelo usuário</string>
     <string name="automation_missing_task_name">Insira um nome da tarefa.</string>
     <string name="automation_missing_trigger">Especifique pelo menos um gatilho.</string>
     <string name="automation_missing_action">Especifique pelo menos uma acção.</string>
@@ -92,6 +92,8 @@
     <string name="lastboluscompared">Última vez do bolus %1$s %2$s atrás</string>
     <string name="triggercoblabel">CA</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Frequência cardíaca</string>
+    <string name="triggerHeartRateDesc">FC %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="recurringTime">Tempo recorrente</string>
