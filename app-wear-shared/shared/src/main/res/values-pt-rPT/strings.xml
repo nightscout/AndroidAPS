@@ -52,6 +52,7 @@
     <string name="pref_show_basal_rate">Mostrar Taxa Basal</string>
     <string name="pref_show_loop_status">Mostrar Estado Loop</string>
     <string name="pref_show_bg">Mostrar glicemia</string>
+    <string name="pref_show_bgi">Mostrar IG</string>
     <string name="pref_show_direction_arrow">Mostrar Seta Direcção</string>
     <string name="pref_show_ago">Mostrar Atrás</string>
     <string name="default_custom_watchface_comment">Watchface padrão, pode clicar no botão EXPORTAR WATCHFACE para gerar um modelo</string>
