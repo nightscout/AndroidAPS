@@ -89,6 +89,10 @@
     <string name="pump_time_updated">Hora da bomba actualizada</string>
     <string name="set_neutral_temps_title">Definir basais temporárias neutras</string>
     <string name="set_neutral_temps_summary">Se activado, cancela a basal temporária antes de perfazer uma hora. Este método evita que as bombas Medtronic emitam um sinal sonoro e/ou vibrem quando a basal temporária se estende por mais de uma hora.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d min restantes)</string>
+    <string name="invalid_history_data">Detetados dados de histórico de bomba inválidos. Abra um novo problema e forneça registos.</string>
     <string name="riley_statistics">Estatísticas RL</string>
     <string name="medtronic_history_type">Tipo:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Clicou em atualizar</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Atualização programada de estado</string>
 </resources>
