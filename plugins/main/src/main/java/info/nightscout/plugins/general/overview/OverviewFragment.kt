@@ -335,6 +335,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     }
 
     fun refreshAll() {
+        if (!config.appInitialized) return
         runOnUiThread {
             _binding ?: return@runOnUiThread
             updateTime()
