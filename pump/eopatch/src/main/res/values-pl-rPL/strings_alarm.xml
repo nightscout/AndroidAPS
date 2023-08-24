@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">Pusty zbiornik \nPatch został zdezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a003">Patch wygasł \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a004">Zatkanie \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a005">Błąd podczas auto-diagnostyki przy uruchamianiu \nPatch został dezaktywowany. Zmień Patch teraz.</string>
+    <string name="string_a007">Niewłaściwa temperatura \nPodawanie insuliny lub proces aktywowania Patcha został zatrzymany. Unikaj teraz ekstremalnej temperatury.</string>
+    <string name="string_a016">Błąd wkłucia igły \nSprawdź pozycję pokrętła i naciśnij \"Ponów\".</string>
+    <string name="string_a018">Błąd baterii Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a019">Błąd baterii Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a020">Błąd aktywacji Patcha \nProces \'Aktywuj Patch\' wygasł. Naciśnij \'Potwierdź\', aby dezaktywować bieżący Patch. Zmień Patch teraz.</string>
+    <string name="string_a022">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a023">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+    <string name="string_a034">Błąd Patcha \nPatch został dezaktywowany i wstrzymano podawanie insuliny. Zmień Patch teraz.</string>
+</resources>
