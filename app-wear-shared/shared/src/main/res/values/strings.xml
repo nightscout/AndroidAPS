@@ -46,9 +46,23 @@
     <string name="metadata_wear_import_filename">File name: %1$s</string>
     <string name="metadata_label_plugin_version">Plugin version: %1$s</string>
     <string name="metadata_label_watchface_name_version">Name: %1$s (%2$s)</string>
-    <string name="metadata_label_watchface_comment" translatable="false">%1$s</string>
+    <string name="metadata_label_watchface_comment" translatable="false">Comment: %1$s</string>
     <string name="metadata_label_watchface_authorization" translatable="false">%1$s</string>
-    <string name="metadata_label_watchface_pref" translatable="false">%1$s</string>
+    <string name="pref_show_date">Show Date</string>
+    <string name="pref_show_iob">Show IOB</string>
+    <string name="pref_show_detailed_iob">Show detailed IOB</string>
+    <string name="pref_show_cob">Show COB</string>
+    <string name="pref_show_delta">Show Delta</string>
+    <string name="pref_show_detailed_delta">Show detailed Delta</string>
+    <string name="pref_show_avgdelta">Show AvgDelta</string>
+    <string name="pref_show_phone_battery">Show Phone Battery</string>
+    <string name="pref_show_rig_battery">Show Rig Battery</string>
+    <string name="pref_show_basal_rate">Show Basal Rate</string>
+    <string name="pref_show_loop_status">Show Loop Status</string>
+    <string name="pref_show_bg">Show BG</string>
+    <string name="pref_show_bgi">Show BGI</string>
+    <string name="pref_show_direction_arrow">Show Direction Arrow</string>
+    <string name="pref_show_ago">Show Ago</string>
     <string name="default_custom_watchface_comment">Default watchface, you can click on EXPORT WATCHFACE button to generate a template</string>
     <string name="wear_default_watchface">Default Watchface</string>
 
