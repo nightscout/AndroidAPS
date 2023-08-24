@@ -137,6 +137,7 @@
     <string name="error_in_basal_values">Fehler in den Basalwerten</string>
     <string name="error_in_target_values">Fehler in den Zielwerten</string>
     <string name="error_in_isf_values">Fehler in ISF-Werten</string>
+    <string name="profile_name_contains_dot">Einige Profilnamen enthalten Punkte.\nDies wird von NS nicht unterstützt.\nProfile werden nicht zu NS hochgeladen.</string>
     <string name="invalid_profile_not_accepted">Ungültiges Profil %1$s wurde von NS nicht akzeptiert</string>
     <string name="view">Ansicht</string>
     <string name="errors">Fehler</string>
@@ -238,6 +239,7 @@
     <string name="short_tabtitles">Kurze Tab-Überschriften</string>
     <string name="overview_show_notes_field_in_dialogs_title">Zeige Feld für Notizen in den Behandlungsdialogen</string>
     <string name="deliverpartofboluswizard">Der Bolus-Rechner führt Berechnungen durch, aber nur dieser Teil der berechneten Insulin wird abgegeben. Nützlich mit SMB-Algorithmus.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Liefere vollen Bolus (100%) wenn die Glykämie älter ist als</string>
     <string name="enable_bolus_advisor">Bolus-Berater aktivieren</string>
     <string name="enable_bolus_advisor_summary">Option zur Erinnerung an späteres Essen (z.B. bei hohen BZ-Werten) im Bolus-Rechner (\"Spritz-Ess-Abstand\")</string>
     <string name="enablesuperbolus">Aktiviere Superbolus im Bolus-Rechner</string>
@@ -249,6 +251,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Predictions (Vorhersagen)</string>
     <string name="overview_show_treatments">Behandlungen</string>
+    <string name="overview_show_heartRate">Herzfrequenz</string>
     <string name="overview_show_deviation_slope">Steigung der Abweichung</string>
     <string name="overview_show_activity">Aktivität</string>
     <string name="overview_show_bgi">Blutzuckerwirkung</string>
@@ -266,6 +269,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEH</string>
+    <string name="heartRate_shortname">HF</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Diagrammskala</string>
     <string name="graph_menu_divider_header">Diagramm</string>
@@ -308,8 +312,19 @@ Unerwartetes Verhalten.</string>
     <string name="wear_notifysmb_summary">Zeige SMB auf der Uhr wie einen normalen Bolus an.</string>
     <string name="wear_predictions_summary">Zeige Vorhersagen auf dem Watchface.</string>
     <string name="wear_predictions_title">Vorhersagen</string>
+    <string name="wear_custom_watchface_settings">Benutzerdefinierte Watchface Einstellungen</string>
+    <string name="wear_custom_watchface_authorization_title">Benutzerdefinierte Watchface Autorisierung</string>
+    <string name="wear_custom_watchface_authorization_summary">Autorisiere geladene benutzerdefinierte Watchface zum Ändern und Sperren einiger Watchscreen-Einstellungen für das Design der Uhr</string>
+    <string name="wear_custom_watchface">Benutzerdefiniertes Watchface: %1$s</string>
+    <string name="wear_load_watchface">Watchface laden</string>
+    <string name="wear_infos_watchface">Infos Watchface</string>
+    <string name="wear_export_watchface">Vorlage exportieren</string>
+    <string name="wear_new_custom_watchface_exported">Benutzerdefinierte Watchface Vorlage exportiert</string>
     <string name="resend_all_data">Alle Daten erneut senden</string>
     <string name="open_settings_on_wear">Öffne Einstellungen auf der Uhr</string>
+    <string name="cwf_infos_pref_locked">Liste der von der Watchface gesperrten Prefs</string>
+    <string name="cwf_infos_pref_requested">Liste der von der Watchface angeforderten Prefs</string>
+    <string name="cwf_infos_view_title">Liste der Felder, die in der Watchface enthalten sind</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zeigt eine fortlaufende Benachrichtigung mit einer kurzen Übersicht darüber, was dein Loop derzeit tut</string>
     <string name="old_data">VERALTETE DATEN</string>
