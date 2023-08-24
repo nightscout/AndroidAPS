@@ -315,7 +315,6 @@
     <string name="wear_custom_watchface_authorization_summary">Godkjenne at tilpasset klokkebakgrunn endrer AAPS- og klokkeinnstillinger i henhold til klokkebakgrunnens design</string>
     <string name="wear_custom_watchface">Tilpasset klokkebakgrunn: %1$s</string>
     <string name="wear_load_watchface">Last inn klokkebakgrunn</string>
-    <string name="wear_send_watchface">Send klokkebakgrunn</string>
     <string name="wear_export_watchface">Eksporter mal</string>
     <string name="wear_new_custom_watchface_exported">Tilpasset klokkebakgrunn eksportert</string>
     <string name="resend_all_data">Send alle data på nytt</string>
