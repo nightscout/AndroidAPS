@@ -245,6 +245,11 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                         mPaint.setFakeBoldText(true);
                         canvas.drawText(value.getLabel(), endX, endY, mPaint);
                     }
+                } else if (value.getShape() == Shape.HEARTRATE) {
+                    mPaint.setStrokeWidth(0);
+                    Rect bounds = new Rect((int) endX, (int) endY - 8, (int) (xPlusLength), (int) endY + 8);
+                    mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+                    canvas.drawRect(bounds, mPaint);
                 } else if (value.getShape() == Shape.PROFILE) {
                     Drawable drawable = ContextCompat.getDrawable(graphView.getContext(), R.drawable.ic_ribbon_profile);
                     assert drawable != null;

@@ -17,7 +17,7 @@ class HeartRateDataPoint(
     override val label: String = ""
     override val duration = data.duration
     override val shape = PointsWithLabelGraphSeries.Shape.HEARTRATE
-    override val size = 1f
+    override val size = 10f
     override val paintStyle: Paint.Style = Paint.Style.FILL
 
     override fun color(context: Context?): Int = rh.gac(context, info.nightscout.core.ui.R.attr.heartRateColor)

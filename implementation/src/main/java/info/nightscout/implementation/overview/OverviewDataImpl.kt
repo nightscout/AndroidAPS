@@ -102,7 +102,7 @@ class OverviewDataImpl @Inject constructor(
         epsSeries = PointsWithLabelGraphSeries()
         maxTherapyEventValue = 0.0
         therapyEventSeries = PointsWithLabelGraphSeries()
-        heartRateGraphSeries = LineGraphSeries()
+        heartRateGraphSeries = PointsWithLabelGraphSeries()
     }
 
     override fun initRange() {
@@ -339,5 +339,5 @@ class OverviewDataImpl @Inject constructor(
     override var dsMaxSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
     override var dsMinSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
     override var heartRateScale = Scale()
-    override var heartRateGraphSeries: LineGraphSeries<DataPointWithLabelInterface> = LineGraphSeries()
+    override var heartRateGraphSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
 }
