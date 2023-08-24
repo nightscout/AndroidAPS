@@ -34,4 +34,9 @@
     <string name="disconnecting">Atsijungiama</string>
     <string name="waiting_for_disconnection">Laukiama atsijungimo</string>
     <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Sukurta: %1$s</string>
+    <string name="metadata_label_watchface_author">Autorius: %1$s</string>
+    <string name="metadata_label_watchface_name">Vardas: %1$s</string>
+    <string name="metadata_wear_import_filename">Failo pavadinimas: %1$s</string>
+    <string name="metadata_label_plugin_version">Įskiepio versija: %1$s</string>
 </resources>
