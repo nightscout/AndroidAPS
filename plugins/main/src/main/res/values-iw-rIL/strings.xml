@@ -315,10 +315,14 @@
     <string name="wear_custom_watchface_authorization_title">אישור פני שעון מותאמים אישית</string>
     <string name="wear_custom_watchface">פני שעון מותאמים אישית: %1$s</string>
     <string name="wear_load_watchface">טעינת פני שעון</string>
+    <string name="wear_infos_watchface">פני שעון מידע</string>
     <string name="wear_export_watchface">ייצוא תבנית</string>
     <string name="wear_new_custom_watchface_exported">תבנית פני השעון יוצאה</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
     <string name="open_settings_on_wear">פתיחת הגדרות Wear</string>
+    <string name="cwf_infos_pref_locked">רשימת העדפות ננעלה ע\"י פני השעון</string>
+    <string name="cwf_infos_pref_requested">רשימת העדפות התבקשה ע\"י פני השעון</string>
+    <string name="cwf_infos_view_title">רשימת שדות הכלולים בפני השעון</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">מציג הודעה קבועה עם סקירה קצרה של מה שהלולאה שלכם עושה</string>
     <string name="old_data">נתונים ישנים</string>
