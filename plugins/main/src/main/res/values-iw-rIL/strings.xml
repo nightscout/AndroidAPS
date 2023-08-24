@@ -315,7 +315,6 @@
     <string name="wear_custom_watchface_authorization_title">אישור פני שעון מותאמים אישית</string>
     <string name="wear_custom_watchface">פני שעון מותאמים אישית: %1$s</string>
     <string name="wear_load_watchface">טעינת פני שעון</string>
-    <string name="wear_send_watchface">שליחת פני שעון</string>
     <string name="wear_export_watchface">ייצוא תבנית</string>
     <string name="wear_new_custom_watchface_exported">תבנית פני השעון יוצאה</string>
     <string name="resend_all_data">שלח מחדש את כל הנתונים</string>
