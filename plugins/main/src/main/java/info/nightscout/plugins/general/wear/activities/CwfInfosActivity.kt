@@ -15,15 +15,19 @@ import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.CwfInfosActivityBinding
 import info.nightscout.plugins.databinding.CwfInfosActivityPrefItemBinding
+import info.nightscout.plugins.databinding.CwfInfosActivityViewItemBinding
 import info.nightscout.plugins.general.wear.WearPlugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.CUSTOM_VERSION
 import info.nightscout.rx.weardata.CwfDrawableFileMap
 import info.nightscout.rx.weardata.CwfMetadataKey
 import info.nightscout.rx.weardata.CwfMetadataMap
+import info.nightscout.rx.weardata.ViewKeys
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import org.json.JSONObject
 import javax.inject.Inject
 
 class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
@@ -48,9 +52,6 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
         updateGui()
-
-
-
 
         // Add menu items without overriding methods in the Activity
         addMenuProvider(object : MenuProvider {
@@ -87,20 +88,22 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
             binding.cwfComment.text = rh.gs(CwfMetadataKey.CWF_COMMENT.label, metadata[CwfMetadataKey.CWF_COMMENT] ?: "")
             if (metadata.count { it.key.isPref } > 0) {
                 binding.prefLayout.visibility = View.VISIBLE
-                binding.prefTitle.text = rh.gs(if (cwf_authorization) R.string.cwf_infos_pref_locked else R.string.cwf_infos_pref_requested)
+                binding.prefTitle.text = rh.gs(if (cwf_authorization) R.string.cwf_infos_pref_locked else R.string.cwf_infos_pref_required)
                 binding.prefRecyclerview.layoutManager = LinearLayoutManager(this)
                 binding.prefRecyclerview.adapter = PrefRecyclerViewAdapter(
                     metadata.filter { it.key.isPref && (it.value.lowercase() == "true" || it.value.lowercase() == "false") }.toList()
                 )
             } else
                 binding.prefLayout.visibility = View.GONE
+            binding.viewRecyclerview.layoutManager = LinearLayoutManager(this)
+            binding.viewRecyclerview.adapter = ViewRecyclerViewAdapter(listVisibleView(it.json))
         }
 
     }
 
-    inner class PrefRecyclerViewAdapter internal constructor(private var prefList: List<Pair<CwfMetadataKey, String>>) : RecyclerView.Adapter<PrefRecyclerViewAdapter.CwfFileViewHolder>() {
+    inner class PrefRecyclerViewAdapter internal constructor(private var prefList: List<Pair<CwfMetadataKey, String>>) : RecyclerView.Adapter<PrefRecyclerViewAdapter.CwfPrefViewHolder>() {
 
-        inner class CwfFileViewHolder(val cwfInfosActivityPrefItemBinding: CwfInfosActivityPrefItemBinding) : RecyclerView.ViewHolder(cwfInfosActivityPrefItemBinding.root) {
+        inner class CwfPrefViewHolder(val cwfInfosActivityPrefItemBinding: CwfInfosActivityPrefItemBinding) : RecyclerView.ViewHolder(cwfInfosActivityPrefItemBinding.root) {
             init {
                 with(cwfInfosActivityPrefItemBinding) {
                     root.isClickable = false
@@ -108,16 +111,16 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
             }
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CwfFileViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CwfPrefViewHolder {
             val binding = CwfInfosActivityPrefItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return CwfFileViewHolder(binding)
+            return CwfPrefViewHolder(binding)
         }
 
         override fun getItemCount(): Int {
             return prefList.size
         }
 
-        override fun onBindViewHolder(holder: CwfFileViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: CwfPrefViewHolder, position: Int) {
             val pref = prefList[position]
             val key = pref.first
             val value = pref.second.lowercase().toBooleanStrictOrNull()                                                     // should never be null here, just safety to avoid exception
@@ -128,6 +131,36 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
         }
     }
 
+    inner class ViewRecyclerViewAdapter internal constructor(private var viewList: List<Pair<ViewKeys, Boolean>>) : RecyclerView.Adapter<ViewRecyclerViewAdapter.CwfViewHolder>() {
+
+        inner class CwfViewHolder(val cwfInfosActivityViewItemBinding: CwfInfosActivityViewItemBinding) : RecyclerView.ViewHolder(cwfInfosActivityViewItemBinding.root) {
+            init {
+                with(cwfInfosActivityViewItemBinding) {
+                    root.isClickable = false
+                }
+            }
+        }
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CwfViewHolder {
+            val binding = CwfInfosActivityViewItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            return CwfViewHolder(binding)
+        }
+
+        override fun getItemCount(): Int {
+            return viewList.size
+        }
+
+        override fun onBindViewHolder(holder: CwfViewHolder, position: Int) {
+            val cwfView = viewList[position]
+            val key = cwfView.first.key
+            val value = cwfView.first.comment
+            val visible = cwfView.second        // will be used if all keys included into RecyclerView
+            with(holder.cwfInfosActivityViewItemBinding) {
+                viewKey.text = "\"$key\":"
+                viewComment.text = rh.gs(value)
+            }
+        }
+    }
 
     private fun checkCustomVersion(metadata: CwfMetadataMap): Boolean {
         metadata[CwfMetadataKey.CWF_VERSION]?.let { version ->
@@ -137,6 +170,26 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
             return ((currentAppVer.size >= 2) && (metadataVer.size >= 2) && (currentAppVer[0] >= metadataVer[0]))
         }
         return false
+    }
+
+    private fun listVisibleView(jsonString: String, allViews: Boolean = false): List<Pair<ViewKeys, Boolean>> {
+        val json = JSONObject(jsonString)
+
+        val visibleKeyPairs = mutableListOf<Pair<ViewKeys, Boolean>>()
+
+        for (viewKey in ViewKeys.values()) {
+            try {
+                val jsonValue = json.optJSONObject(viewKey.key)
+                if (jsonValue != null) {
+                    val visibility = jsonValue.optString("visibility") == "visible"
+                    if (visibility || allViews)
+                        visibleKeyPairs.add(Pair(viewKey, visibility))
+                }
+            } catch (e: Exception) {
+                aapsLogger.debug(LTag.WEAR, "Wrong key in json file: ${viewKey.key}")
+            }
+        }
+        return visibleKeyPairs
     }
 
 }
