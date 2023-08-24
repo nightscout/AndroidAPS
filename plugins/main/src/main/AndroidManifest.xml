@@ -23,6 +23,11 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".general.wear.activities.CwfInfosActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+
         <service android:name="info.nightscout.plugins.general.persistentNotification.DummyService" />
 
         <service

@@ -55,9 +55,9 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
         binding.recyclerview.adapter = RecyclerViewAdapter(prefFileListProvider.listCustomWatchfaceFiles())
     }
 
-    inner class RecyclerViewAdapter internal constructor(private var customWatchfaceFileList: List<CwfData>) : RecyclerView.Adapter<RecyclerViewAdapter.PrefFileViewHolder>() {
+    inner class RecyclerViewAdapter internal constructor(private var customWatchfaceFileList: List<CwfData>) : RecyclerView.Adapter<RecyclerViewAdapter.CwfFileViewHolder>() {
 
-        inner class PrefFileViewHolder(val customWatchfaceImportListItemBinding: CustomWatchfaceImportListItemBinding) : RecyclerView.ViewHolder(customWatchfaceImportListItemBinding.root) {
+        inner class CwfFileViewHolder(val customWatchfaceImportListItemBinding: CustomWatchfaceImportListItemBinding) : RecyclerView.ViewHolder(customWatchfaceImportListItemBinding.root) {
 
             init {
                 with(customWatchfaceImportListItemBinding) {
@@ -74,16 +74,16 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
             }
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PrefFileViewHolder {
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CwfFileViewHolder {
             val binding = CustomWatchfaceImportListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-            return PrefFileViewHolder(binding)
+            return CwfFileViewHolder(binding)
         }
 
         override fun getItemCount(): Int {
             return customWatchfaceFileList.size
         }
 
-        override fun onBindViewHolder(holder: PrefFileViewHolder, position: Int) {
+        override fun onBindViewHolder(holder: CwfFileViewHolder, position: Int) {
             val customWatchfaceFile = customWatchfaceFileList[position]
             val metadata = customWatchfaceFile.metadata
             val drawable = customWatchfaceFile.drawableDatas[CwfDrawableFileMap
