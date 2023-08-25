@@ -28,6 +28,4 @@
     <string name="objectives_shortname">OBI</string>
     <string name="description_objectives">Program de învăţare</string>
     <string name="doyouwantresetstart">Doriți să reîncepeți obiectivul? Vă puteți pierde progresul.</string>
-    <string name="objectives_button_unfinish">Șterge starea \"Terminat\"</string>
-    <string name="objectives_button_unstart">Șterge starea \"Început\"</string>
 </resources>
