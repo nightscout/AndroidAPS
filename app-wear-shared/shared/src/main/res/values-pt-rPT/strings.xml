@@ -56,4 +56,5 @@
     <string name="pref_show_ago">Mostrar Atrás</string>
     <string name="default_custom_watchface_comment">Watchface padrão, pode clicar no botão EXPORTAR WATCHFACE para gerar um modelo</string>
     <string name="wear_default_watchface">Watchface padrão</string>
+    <string name="cwf_comment_bgi">Valor de IG</string>
 </resources>
