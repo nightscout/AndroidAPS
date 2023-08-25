@@ -56,4 +56,12 @@
     <string name="pref_show_ago">Afficher Min Passées</string>
     <string name="default_custom_watchface_comment">Cadran par défaut, vous pouvez cliquer sur le bouton EXPORTER WATCHFACE pour générer un modèle</string>
     <string name="wear_default_watchface">Cadran par défaut</string>
+    <string name="cwf_comment_background">Image d\'arrière-plan</string>
+    <string name="cwf_comment_chart">Graphiques (Gly, basal, lignes de prédiction...)</string>
+    <string name="cwf_comment_cover_chart">Image devant le graphique et derrière les champs de texte</string>
+    <string name="cwf_comment_freetext1">Texte libre 1</string>
+    <string name="cwf_comment_freetext2">Texte libre 2</string>
+    <string name="cwf_comment_freetext3">Texte libre 3</string>
+    <string name="cwf_comment_freetext4">Texte libre 4</string>
+    <string name="cwf_comment_cob2">Valeur de GA</string>
 </resources>
