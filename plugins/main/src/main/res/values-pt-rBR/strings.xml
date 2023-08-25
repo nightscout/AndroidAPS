@@ -320,7 +320,6 @@
     <string name="resend_all_data">Reenviar Todos os Dados</string>
     <string name="open_settings_on_wear">Abrir Definições em Wear</string>
     <string name="cwf_infos_pref_locked">Lista de preferências bloqueadas pela Watchface</string>
-    <string name="cwf_infos_pref_requested">Lista de preferências solicitadas pela Watchface</string>
     <string name="cwf_infos_view_title">Lista de campos incluídos na Watchface</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
