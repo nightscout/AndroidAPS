@@ -115,4 +115,6 @@
     <string name="press_ok_on_the_pump">Pressione OK na bomba\ne digite os 2 números mostrados\nManter o visor da bomba ligado, pressionando o botão menos até que você termine a digitação do código.</string>
     <string name="num1pin">1: (12 dígitos)</string>
     <string name="num2pin">2: (8 dígitos)</string>
+    <string name="basal_bolus_step">Etapa basal/bolus</string>
+    <string name="carbs_store_error">Os hidratos de carbono provavelmente não foram registados corretamente. Verifique e registe manualmente se necessário.</string>
 </resources>
