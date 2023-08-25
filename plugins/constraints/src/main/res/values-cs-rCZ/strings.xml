@@ -48,6 +48,4 @@
     <string name="doyouwantresetstart">Chcete resetovat začátek cíle? Můžete přijít o svůj pokrok.</string>
     <string name="objectives_next_button">Další</string>
     <string name="objectives_previous_button">Zpět</string>
-    <string name="objectives_button_unfinish">Vymazat dokončeno</string>
-    <string name="objectives_button_unstart">Vymazat start</string>
 </resources>
