@@ -366,8 +366,9 @@
     <string name="resend_all_data">Resend All Data</string>
     <string name="open_settings_on_wear">Open Settings on Wear</string>
     <string name="cwf_infos_pref_locked">List of prefs locked by the Watchface</string>
-    <string name="cwf_infos_pref_requested">List of prefs requested by the Watchface</string>
+    <string name="cwf_infos_pref_required">List of prefs required for the Watchface</string>
     <string name="cwf_infos_view_title">List of fields included into the Watchface</string>
+
 
     <!--    PersistentNotification-->
     <string name="ongoingnotificaction" translatable="false">Ongoing Notification</string>
