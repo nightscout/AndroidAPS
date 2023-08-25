@@ -98,7 +98,7 @@
     <string name="exists">var</string>
     <string name="notexists">yok</string>
     <string name="glucose">Glikoz</string>
-    <string name="iob">IOB</string>
+    <string name="iob">AİNS</string>
     <string name="cob">AKRB</string>
     <string name="name_short">İsim:</string>
     <string name="time">Zaman</string>
@@ -376,6 +376,9 @@
     <string name="carbs_g">Karbonhidrat %1$d g</string>
     <string name="extended_bolus_u_min">YAYMA BOLUS %1$.2f Ü %2$d dak</string>
     <string name="load_events">ETKİNLİKLERİ YÜKLE</string>
+    <string name="clear_alarms">ALARMLARI SİL</string>
+    <string name="deactivate">DEVRE DIŞI BIRAK</string>
+    <string name="update_time">SAATİ GÜNCELLE</string>
     <string name="load_history">GEÇMİŞİ YÜKLE %1$d</string>
     <string name="load_tdds">GTD YÜKLE</string>
     <string name="set_profile">PROFİL AYARLA</string>
