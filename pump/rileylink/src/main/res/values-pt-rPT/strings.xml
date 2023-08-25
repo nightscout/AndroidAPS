@@ -36,6 +36,7 @@
     <string name="rileylink_last_device_contact">Último Contacto do Dispositivo:</string>
     <string name="rileylink_firmware_version">Versão do Firmware:</string>
     <string name="rileylink_firmware_version_value">BLE113: %1$s\nCC110: %2$s</string>
+    <string name="rileylink_firmware_version_value_orange">Fw: %1$s\nHw: %2$s</string>
     <string name="rileylink_pump_serial_number">Número de série da Bomba:</string>
     <string name="rileylink_pump_frequency">Frequência da Bomba:</string>
     <string name="rileylink_pump_frequency_value">%1$.2f MHz</string>
@@ -64,6 +65,7 @@
     <string name="riley_link_common_yes">Sim</string>
     <string name="riley_link_common_no">Não</string>
     <!-- RileyLink - Preferences -->
+    <string name="riley_link_show_battery_level">Mostrar o nível de bateria reportada pelo OrangeLink/EmaLink</string>
     <string name="riley_link_show_battery_level_summary">NÃO trabalha com o RileyLink original. Pode não funcionar com outras alternativas ao RileyLink.</string>
     <plurals name="duration_days">
         <item quantity="one">%1$d dia</item>
@@ -73,5 +75,7 @@
         <item quantity="one">%1$d hora</item>
         <item quantity="other">%1$d horas</item>
     </plurals>
+    <string name="orange_use_scanning_level">Usar Pesquisa</string>
+    <string name="orange_use_scanning_level_summary">Pesquise antes de se conectar ao OrangeLink, isso deve melhorar as ligações (também pode ser usado com outros RileyLink, se necessário)</string>
     <string name="rileylink_configuration">Configuração RileyLink</string>
 </resources>
