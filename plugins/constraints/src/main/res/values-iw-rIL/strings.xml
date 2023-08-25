@@ -47,6 +47,4 @@
     <string name="doyouwantresetstart">האם ברצונכם לאפס את התחלת המשימה? אתם עלולים לאבד את התקדמותכם במשימה.</string>
     <string name="objectives_next_button">הבא</string>
     <string name="objectives_previous_button">הקודם</string>
-    <string name="objectives_button_unfinish">ביטול השלמה</string>
-    <string name="objectives_button_unstart">ביטול התחלה</string>
 </resources>
