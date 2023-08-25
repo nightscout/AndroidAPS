@@ -319,7 +319,6 @@
     <string name="wear_new_custom_watchface_exported">Saat arayüzü şablonu dışa aktarıldı</string>
     <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
     <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
-    <string name="cwf_infos_pref_requested">Saat arayüzü tarafından talep edilen tercihlerin listesi</string>
     <string name="cwf_infos_view_title">Saat arayüzüne dahil edilen alanların listesi</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
