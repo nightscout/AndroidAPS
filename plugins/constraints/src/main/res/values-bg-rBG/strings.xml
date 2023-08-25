@@ -47,6 +47,4 @@
     <string name="doyouwantresetstart">Искате ли да нулирате прогреса си?</string>
     <string name="objectives_next_button">Следващ</string>
     <string name="objectives_previous_button">Предишен</string>
-    <string name="objectives_button_unfinish">Изчисти приключение</string>
-    <string name="objectives_button_unstart">Изчисти стартираните</string>
 </resources>
