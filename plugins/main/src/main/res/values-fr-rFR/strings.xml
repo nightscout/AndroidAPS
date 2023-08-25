@@ -321,6 +321,7 @@
     <string name="resend_all_data">Renvoyer toutes les données</string>
     <string name="open_settings_on_wear">Afficher les Paramètres sur la Montre</string>
     <string name="cwf_infos_pref_locked">Liste des préférences verrouillées par le cadran</string>
+    <string name="cwf_infos_pref_required">Liste des préférences requises pour le cadran</string>
     <string name="cwf_infos_view_title">Liste des champs inclus dans le cadran</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
