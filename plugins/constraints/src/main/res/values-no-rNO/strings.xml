@@ -48,6 +48,4 @@
     <string name="doyouwantresetstart">Ønsker du å starte læringsmåletpå nytt? Du vil miste fullførte trinn.</string>
     <string name="objectives_next_button">Neste</string>
     <string name="objectives_previous_button">Forrige</string>
-    <string name="objectives_button_unfinish">Sletting ferdig</string>
-    <string name="objectives_button_unstart">Sletting startet</string>
 </resources>
