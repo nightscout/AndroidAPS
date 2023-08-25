@@ -50,6 +50,7 @@ para cancelar o emparelhamento)\n
     <string name="combov2_pairing_invalid_pin_length">"Comprimento do PIN de emparelhamento inválido: precisa de %1$d dígitos, escreveu %2$d"</string>
     <string name="combov2_scanning_for_pump">A procurar a bomba</string>
     <string name="combov2_establishing_bt_connection">Estabelecendo conexão Bluetooth (tentativa no. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">A executar ligação com a bomba</string>
     <string name="combov2_pairing_pump_requests_pin">A bomba pede um PIN de 10 dígitos</string>
     <string name="combov2_pairing_finishing">A finalizar o emparelhamento</string>
     <string name="combov2_no_connection_for_n_mins">Sem conexão há %1$d min</string>
@@ -72,6 +73,7 @@ para cancelar o emparelhamento)\n
     <string name="combov2_updating_pump_status_cmddesc">A obter estado bomba</string>
     <string name="combov2_pairing_pin_failure">O PIN não funcionou. Verifique se havia um erro de digitação. Se continuar a acontecer, cancele e tente novamente.</string>
     <string name="combov2_discovery_duration">Duração da procura (em segundos)</string>
+    <string name="combov2_verbose_logging">Ativ. registo detal. Da Combo</string>
     <string name="combov2_getting_basal_profile">A obter perfil da basal; %1$d lidos</string>
     <string name="combov2_setting_basal_profile">A definir perfil da basal; %1$d escritos</string>
     <string name="combov2_delivering_bolus">A administrar bólus (%1$.1f de %2$.1f U administrado)</string>
@@ -93,6 +95,8 @@ para cancelar o emparelhamento)\n
     <string name="combov2_reservoir_low_warning">Nível do reservatório da bomba está baixo</string>
     <string name="combov2_setting_tbr_succeeded">Definição de DBT bem sucedida</string>
     <string name="combov2_setting_tbr_failed">Falha ao definir DBT</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">Deixar o processo de DBT a 100% em curso concluir</string>
+    <string name="combov2_ignoring_redundant_100_tbr">Ignorar a requisição redundante de 100% de DBT</string>
     <string name="combov2_hit_unexpected_tbr_limit">Limite inesperado encontrado ao definir a DBT: percentagem alvo era %1$d%%, e atingiu um limite em %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Não é possível definir DBT se a basal é zero</string>
     <string name="combov2_pair_with_pump_summary">Emparelhar a AndroidAPS e o Android com uma bomba Combo Accu-Chek não emparelhada</string>
