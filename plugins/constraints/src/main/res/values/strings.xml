@@ -71,8 +71,8 @@
     <string name="doyouwantresetstart">Do you want reset objective start? You may lose your progress.</string>
     <string name="objectives_next_button">Next</string>
     <string name="objectives_previous_button">Prev</string>
-    <string name="objectives_button_unfinish">Clear finished</string>
-    <string name="objectives_button_unstart">Clear started</string>
+    <string name="objectives_button_unfinish">Reset finished state</string>
+    <string name="objectives_button_unstart">Reset started state</string>
 
 
 </resources>
