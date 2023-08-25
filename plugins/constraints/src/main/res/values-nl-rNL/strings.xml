@@ -47,6 +47,4 @@
     <string name="doyouwantresetstart">Wil je dit leerdoel opnieuw starten? Je kunt je voortgang verliezen.</string>
     <string name="objectives_next_button">Volgende</string>
     <string name="objectives_previous_button">Vorige</string>
-    <string name="objectives_button_unfinish">Voltooiing wissen</string>
-    <string name="objectives_button_unstart">Start wissen</string>
 </resources>
