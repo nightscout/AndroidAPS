@@ -321,6 +321,7 @@
     <string name="resend_all_data">Send alle data på nytt</string>
     <string name="open_settings_on_wear">Åpne Innstillinger på klokken</string>
     <string name="cwf_infos_pref_locked">Liste over forhåndsvalg låst av urskive</string>
+    <string name="cwf_infos_pref_required">Liste over innstillinger som kreves av klokkebakgrunnen</string>
     <string name="cwf_infos_view_title">Liste over felt som er inkludert i urskive</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
