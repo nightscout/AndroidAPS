@@ -86,8 +86,8 @@
     <string name="smscommunicator_report_pump_unreachable_summary">Enviar SMS se evento de bomba inacessível for acionado</string>
     <string name="smscommunicator_pump_unreachable">Reportar bomba inacessível</string>
     <string name="wrong_format">Formato incorrecto</string>
-    <string name="sms_actual_bg">Glicose:</string>
-    <string name="sms_last_bg">Ultima Gli:</string>
+    <string name="sms_actual_bg">GLIC:</string>
+    <string name="sms_last_bg">Ultima GLIC:</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IA:</string>
     <string name="sms_bolus">Bólus:</string>
@@ -166,6 +166,7 @@
     <string name="a11y_graph">gráfico</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="chart_menu">Menu do Gráfico</string>
+    <string name="a11y_bg_quality">qualidade da glicose no sangue</string>
     <string name="a11y_blood_glucose">Glicose no Sangue</string>
     <string name="set_basal_question">Aceitar nova basal temporária:</string>
     <string name="overview_cgm">CGM</string>
@@ -183,7 +184,7 @@
     <string name="change_your_input">Altere o seu input!</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
-    <string name="data_status">Estado dos dados da Glicemia</string>
+    <string name="data_status">Estado dos dados da GLIC</string>
     <string name="quickwizard_settings">Definições do Assistente Rápido</string>
     <string name="keep_screen_on_title">Manter ecrã ligado</string>
     <string name="keep_screen_on_summary">Impedir Android de desligar o ecrã. Isto irá consumir muita bateria quando não ligado ao carregador.</string>
@@ -239,7 +240,7 @@
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DESV</string>
     <string name="activity_shortname">ACT</string>
-    <string name="bgi_shortname">-IG</string>
+    <string name="bgi_shortname">-IGLIC</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DESVINCLI</string>
     <string name="treatments_shortname">TRATA</string>
@@ -256,6 +257,8 @@
     <string name="send_logfiles">Enviar os ficheiros de registo do dia de hoje para os programadores. Situação inesperada.</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
+    <string name="wear_action_tempt_min_bg_error">Min-GLIC fora do alvo!</string>
+    <string name="wear_action_tempt_max_bg_error">Máx-GLIC fora do alvo!</string>
     <string name="no_success">sem efeito - por favor verifique no telemóvel</string>
     <string name="wear_settings">Definições do Relógio</string>
     <string name="wearcontrol_title">Controles do Relógio</string>
