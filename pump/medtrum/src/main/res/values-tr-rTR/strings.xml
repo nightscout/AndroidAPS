@@ -6,11 +6,38 @@
     <string name="pump_is_suspended">Pompa durduruldu</string>
     <string name="pump_is_suspended_hour_max">Saatlik maksimum insülinin aşılması nedeniyle pompa askıya alındı</string>
     <string name="pump_is_suspended_day_max">Günlük maksimum insülinin aşılması nedeniyle pompa askıya alındı</string>
+    <string name="patch_not_active">Patch etkinleştirilemedi</string>
+    <string name="pump_setting_failed">Kullanıcı ayarlarının pompada ayarlanması başarısız oldu!</string>
     <!-- overview fragment -->
+    <string name="ble_status_label">BLE Durumu</string>
+    <string name="last_connection_label">Son bağlantı</string>
+    <string name="pump_state_label">Pompa durumu</string>
+    <string name="active_alarms_label">Aktif alarmlar</string>
+    <string name="reservoir_level"> %.2f Ü</string>
+    <string name="battery_voltage"> %.2f V</string>
+    <string name="basal_type_label">Bazal tipi</string>
+    <string name="basal_rate_label">Bazal oranı</string>
+    <string name="current_basal_rate"> %.2f Ü/sa</string>
+    <string name="pump_type_label">Pompa tipi</string>
+    <string name="fw_version_label">Sürüm</string>
+    <string name="patch_no_label">Patch no</string>
+    <string name="patch_expiry_label">Patch süresi doluyor</string>
+    <string name="refresh_label">Yenile</string>
     <!-- Alarm strings -->
     <string name="alarm_low_bg_suspended">Düşük KŞ duraklatıldı</string>
     <string name="alarm_low_bg_suspended2">Düşük KŞ duraklatıldı 2</string>
     <string name="alarm_auto_suspended">Otomatik duraklatıldı</string>
+    <string name="alarm_hourly_max_suspended">max saatlik duraklatıldı</string>
+    <string name="alarm_daily_max_suspended">max günlük duraklatıldı</string>
+    <string name="alarm_suspended">Askıya Alındı</string>
+    <string name="alarm_paused">Duraklatıldı</string>
+    <string name="alarm_occlusion">Tıkanma</string>
+    <string name="alarm_expired">Süresi doldu</string>
+    <string name="alarm_reservoir_empty">Rezervuar boş</string>
+    <string name="alarm_patch_fault">Patch hatası</string>
+    <string name="alarm_patch_fault2">Patch hatası 2</string>
+    <string name="alarm_base_fault">Temel hata</string>
+    <string name="alarm_battery_out">Pil bitti</string>
     <!-- wizard-->
     <!-- settings-->
     <!-- treatment state-->
