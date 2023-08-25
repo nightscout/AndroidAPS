@@ -321,7 +321,6 @@
     <string name="resend_all_data">Znovu poslat všechna data</string>
     <string name="open_settings_on_wear">Otevřít nastavení na hodinkách Wear</string>
     <string name="cwf_infos_pref_locked">Seznam preferencí uzamčený hodinkami</string>
-    <string name="cwf_infos_pref_requested">Seznam preferencí požadovaných hodinkami</string>
     <string name="cwf_infos_view_title">Seznam polí zahrnutých do ciferníku</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
