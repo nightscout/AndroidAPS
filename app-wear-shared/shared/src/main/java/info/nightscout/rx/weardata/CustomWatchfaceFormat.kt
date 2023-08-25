@@ -17,7 +17,7 @@ import java.util.zip.ZipEntry
 import java.util.zip.ZipInputStream
 import java.util.zip.ZipOutputStream
 
-val CUSTOM_VERSION = "0.10"
+val CUSTOM_VERSION = "1.0"
 
 enum class CwfDrawableFileMap(val key: String, @DrawableRes val icon: Int?, val fileName: String) {
     UNKNOWN("unknown", null, "Unknown"),
@@ -116,8 +116,7 @@ enum class CwfMetadataKey(val key: String, @StringRes val label: Int, val isPref
     CWF_PREF_WATCH_SHOW_DIRECTION("key_show_direction", R.string.pref_show_direction_arrow, true),
     CWF_PREF_WATCH_SHOW_AGO("key_show_ago", R.string.pref_show_ago, true),
     CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.pref_show_bg, true),
-    CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.pref_show_loop_status, true),
-    CWF_PREF_WATCH_SHOW_DATE("key_show_date", R.string.pref_show_date, true);
+    CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.pref_show_loop_status, true);
 
     companion object {
 
@@ -126,41 +125,41 @@ enum class CwfMetadataKey(val key: String, @StringRes val label: Int, val isPref
     }
 }
 
-enum class ViewKeys(val key: String, @StringRes val comment: Int?) {
+enum class ViewKeys(val key: String, @StringRes val comment: Int) {
 
-    BACKGROUND("background", null),
-    CHART("chart", null),
-    COVER_CHART("cover_chart", null),
-    FREETEXT1("freetext1", null),
-    FREETEXT2("freetext2", null),
-    FREETEXT3("freetext3", null),
-    FREETEXT4("freetext4", null),
-    IOB1("iob1", null),
-    IOB2("iob2", null),
-    COB1("cob1", null),
-    COB2("cob2", null),
-    DELTA("delta", null),
-    AVG_DELTA("avg_delta", null),
-    UPLOADER_BATTERY("uploader_battery", null),
-    RIG_BATTERY("rig_battery", null),
-    BASALRATE("basalRate", null),
-    BGI("bgi", null),
-    TIME("time", null),
-    HOUR("hour", null),
-    MINUTE("minute", null),
-    SECOND("second", null),
-    TIMEPERIOD("timePeriod", null),
-    DAY_NAME("day_name", null),
-    DAY("day", null),
-    MONTH("month", null),
-    LOOP("loop", null),
-    DIRECTION("direction", null),
-    TIMESTAMP("timestamp", null),
-    SGV("sgv", null),
-    COVER_PLATE("cover_plate", null),
-    HOUR_HAND("hour_hand", null),
-    MINUTE_HAND("minute_hand", null),
-    SECOND_HAND("second_hand", null)
+    BACKGROUND("background", R.string.cwf_comment_background),
+    CHART("chart", R.string.cwf_comment_chart),
+    COVER_CHART("cover_chart", R.string.cwf_comment_cover_chart),
+    FREETEXT1("freetext1", R.string.cwf_comment_freetext1),
+    FREETEXT2("freetext2", R.string.cwf_comment_freetext2),
+    FREETEXT3("freetext3", R.string.cwf_comment_freetext3),
+    FREETEXT4("freetext4", R.string.cwf_comment_freetext4),
+    IOB1("iob1", R.string.cwf_comment_iob1),
+    IOB2("iob2", R.string.cwf_comment_iob2),
+    COB1("cob1", R.string.cwf_comment_cob1),
+    COB2("cob2", R.string.cwf_comment_cob2),
+    DELTA("delta", R.string.cwf_comment_delta),
+    AVG_DELTA("avg_delta", R.string.cwf_comment_avg_delta),
+    UPLOADER_BATTERY("uploader_battery", R.string.cwf_comment_uploader_battery),
+    RIG_BATTERY("rig_battery", R.string.cwf_comment_rig_battery),
+    BASALRATE("basalRate", R.string.cwf_comment_basalRate),
+    BGI("bgi", R.string.cwf_comment_bgi),
+    TIME("time", R.string.cwf_comment_time),
+    HOUR("hour", R.string.cwf_comment_hour),
+    MINUTE("minute", R.string.cwf_comment_minute),
+    SECOND("second", R.string.cwf_comment_second),
+    TIMEPERIOD("timePeriod", R.string.cwf_comment_timePeriod),
+    DAY_NAME("day_name", R.string.cwf_comment_day_name),
+    DAY("day", R.string.cwf_comment_day),
+    MONTH("month", R.string.cwf_comment_month),
+    LOOP("loop", R.string.cwf_comment_loop),
+    DIRECTION("direction", R.string.cwf_comment_direction),
+    TIMESTAMP("timestamp", R.string.cwf_comment_timestamp),
+    SGV("sgv", R.string.cwf_comment_sgv),
+    COVER_PLATE("cover_plate", R.string.cwf_comment_cover_plate),
+    HOUR_HAND("hour_hand", R.string.cwf_comment_hour_hand),
+    MINUTE_HAND("minute_hand", R.string.cwf_comment_minute_hand),
+    SECOND_HAND("second_hand", R.string.cwf_comment_second_hand);
 }
 
 enum class JsonKeys(val key: String, val viewType: ViewType, @StringRes val comment: Int?) {

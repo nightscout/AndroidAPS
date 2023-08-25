@@ -277,13 +277,12 @@
         android:layout_height="36px"
         android:layout_marginTop="172px"
         android:layout_marginLeft="120px"
-        android:textAllCaps="true"
         android:gravity="center"
         android:textSize="24px"
         android:textStyle="bold"
         android:textColor="@color/white"
         android:visibility="visible"
-        tools:text="DDD." />
+        tools:text="day." />
 
     <TextView
         android:id="@+id/day"
@@ -295,7 +294,7 @@
         android:textStyle="bold"
         android:textSize="24px"
         android:textColor="@color/white"
-        tools:text="day" />
+        tools:text="01" />
 
     <TextView
         android:id="@+id/month"

@@ -10,7 +10,7 @@
     tools:context="info.nightscout.plugins.general.wear.activities.CwfInfosActivity">
 
     <androidx.core.widget.NestedScrollView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
 
@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="0dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="10dp"
                 android:text="Custom plugin version:"
@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="0dp"
                 android:paddingStart="0dp"
                 android:paddingEnd="10dp"
                 android:text="Comment"
@@ -117,7 +117,7 @@
                     android:layout_marginTop="15dp"
                     android:paddingStart="0dp"
                     android:paddingEnd="10dp"
-                    android:text="@string/cwf_infos_pref_requested"
+                    android:text="@string/cwf_infos_pref_required"
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?attr/importListFileNameColor"
@@ -154,7 +154,7 @@
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceSmall"
                     android:textColor="?attr/importListFileNameColor"
-                    android:textSize="15sp" />
+                    android:textSize="18sp" />
 
 
                 <androidx.recyclerview.widget.RecyclerView
