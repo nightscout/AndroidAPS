@@ -34,4 +34,24 @@
     <string name="disconnecting">Bağlantı kesiliyor</string>
     <string name="waiting_for_disconnection">Bağlantının kesilmesi bekleniyor</string>
     <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_author">Yetki: %1$s</string>
+    <string name="metadata_label_watchface_name">İsim: %1$s</string>
+    <string name="metadata_wear_import_filename">Dosya adı: %1$s</string>
+    <string name="metadata_label_plugin_version">Eklenti sürümü: %1$s</string>
+    <string name="pref_show_iob">AİNS Göster</string>
+    <string name="pref_show_detailed_iob">Detalı AİNS göster</string>
+    <string name="pref_show_cob">AKRB göster</string>
+    <string name="pref_show_delta">Deltayı göster</string>
+    <string name="pref_show_detailed_delta">Detaylı Delta göster</string>
+    <string name="pref_show_avgdelta">OrtDelta\'yı Göster</string>
+    <string name="pref_show_phone_battery">Telefon Pilini Göster</string>
+    <string name="pref_show_rig_battery">Teçhizat Pilini Göster</string>
+    <string name="pref_show_basal_rate">Bazal Oranı Göster</string>
+    <string name="pref_show_loop_status">Döngü Durumunu Göster</string>
+    <string name="pref_show_bg">KŞ\'ni göster</string>
+    <string name="pref_show_bgi">KŞ Etkisi Göster</string>
+    <string name="pref_show_direction_arrow">Yön Oku Göster</string>
+    <string name="pref_show_ago">Önce Göster</string>
+    <string name="default_custom_watchface_comment">Varsayılan saat arayüzü; bir şablon oluşturmak için SAAT ARAYÜZÜNÜ DIŞA AKTAR butonuna tıklayabilirsiniz</string>
+    <string name="wear_default_watchface">Varsayılan saat arayüzü</string>
 </resources>

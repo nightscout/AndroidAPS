@@ -60,7 +60,7 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_checking_pump">Pompa kontrol ediliyor</string>
     <string name="combov2_ready">Hazır</string>
     <string name="combov2_suspended">Askıya Alındı</string>
-    <string name="combov2_pump_is_suspended">Pompa durduldu</string>
+    <string name="combov2_pump_is_suspended">Pompa durduruldu</string>
     <string name="combov2_executing_command">Komut çalıştırılıyor</string>
     <string name="combov2_getting_basal_profile_cmddesc">Bazal profil alınıyor</string>
     <string name="combov2_setting_basal_profile_cmddesc">Bazal profil ayarlanıyor</string>

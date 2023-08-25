@@ -14,8 +14,8 @@
     <string name="operating_mode">Modo de funcionamento</string>
     <string name="description_pump_insight_local">Integração de bomba para bombas Accu-Chek Insight</string>
     <string name="not_inserted">Não inserido</string>
-    <string name="tdd_bolus">TDI Bolus</string>
-    <string name="tdd_basal">TDI Basal</string>
+    <string name="tdd_bolus">TID Bólus</string>
+    <string name="tdd_basal">TID Basal</string>
     <string name="tbr_formatter">%1$d%% para %2$d / %3$d min</string>
     <string name="multiwave_bolus">Bólus Multi-Onda</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U por %3$d min</string>
@@ -40,7 +40,7 @@
     <string name="short_status_tbr">DBT: %1$d%% para %2$d / %3$d minutos</string>
     <string name="short_status_extended">Prolongado: %1$.2f / %2$.2f U por %3$d min</string>
     <string name="short_status_multiwave">Multionda: %1$.2f / %2$.2f U por %3$d min</string>
-    <string name="short_status_tdd">TDI: %1$.2f</string>
+    <string name="short_status_tdd">TID: %1$.2f</string>
     <string name="short_status_reservoir">Reser.: %1$.2f U</string>
     <string name="short_status_battery">Bat.: %1$d%%</string>
     <string name="release_software_version">Lançar versão de software</string>

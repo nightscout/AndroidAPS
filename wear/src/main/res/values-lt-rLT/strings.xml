@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
     <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS(suasmeninta)</string>
     <string name="label_actions_tile">AAPS(Veiksmai)</string>
     <string name="label_temp_target_tile">AAPS(laikinas tikslas)</string>
     <string name="label_quick_wizard_tile">AAPS(greitas vedlys)</string>
@@ -22,16 +23,20 @@
     <string name="msg_warning_old">AAPS duomenys yra %1$s senumo! Patikrinkite sensorių, xDrip+, NS, AAPS konfigūratorių ar kt.!</string>
     <string name="pref_vibrate_on_bolus">Vibruoti, kai leidžiamas bolusas</string>
     <string name="pref_units_for_actions">Veiksmų vienetai</string>
+    <string name="units_short">v</string>
     <string name="pref_show_date">Rodyti datą</string>
     <string name="pref_show_iob">Rodyti AIO</string>
+    <string name="pref_show_detailed_iob">Rodyti detalų AIO</string>
     <string name="pref_show_cob">Rodyti AAO</string>
     <string name="pref_show_delta">Rodyti pokytį</string>
+    <string name="pref_show_detailed_delta">Rodyti glikemijos pokyčius detaliai</string>
     <string name="pref_show_avgdelta">Rodyti vidutinį pokytį</string>
     <string name="pref_show_phone_battery">Rodyti telefono bateriją</string>
     <string name="pref_show_rig_battery">Rodyti įrenginio bateriją</string>
     <string name="pref_show_basal_rate">Rodyti valandinę bazę</string>
     <string name="pref_show_loop_status">Rodyti Ciklo statusą</string>
     <string name="pref_show_bg">Rodyti KG</string>
+    <string name="pref_show_bgi">Rodyti GĮ</string>
     <string name="pref_show_direction_arrow">Rodyti krypties rodyklę</string>
     <string name="pref_show_ago">Laikas nuo pask. vertės</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tamsus</string>
@@ -143,6 +148,7 @@
     <string name="pref_simplify_ui_sum">Rodyti tik laiką ir KG</string>
     <string name="pref_vibrate_hourly">Vibruoti kas valandą</string>
     <string name="pref_show_weeknumber">Rodyti savaitės numerį</string>
+    <string name="custom_pref_show_seconds">Rodyti sekundes</string>
     <string name="digitalstyle_pref_your_style">Jūsų stilius:</string>
     <string name="digitalstyle_style_none">jokio stiliaus</string>
     <string name="digitalstyle_style_minimal">minimalus stilius</string>
@@ -190,7 +196,10 @@
     <string name="week_short">sav</string>
     <string name="day_short">d</string>
     <string name="hour_short">val</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">senas</string>
     <string name="old_warning">!senas!</string>
     <string name="error">!klaida!</string>
+    <string name="pref_heartRateSampling">Pulsas</string>
 </resources>

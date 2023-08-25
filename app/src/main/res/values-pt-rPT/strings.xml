@@ -33,6 +33,8 @@
     <string name="enable_carbs_req_alert">Alertar se forem necessários Hidratos</string>
     <string name="open_navigation">Abrir a navegação</string>
     <string name="close_navigation">Fechar a navegação</string>
+    <string name="remove_items">Remover items</string>
+    <string name="sort_items">Ordenar itens</string>
     <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
     <string name="error_adding_treatment_message">Um tratamento (insulina: %1$.2f, hidratos: %2$d, às: %3$s) não ficou gravado. Por favor verifique se foi realmente efectuado e se sim adicione manualmente aos tratamentos.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), atraso: %3$d m</string>
@@ -46,6 +48,13 @@
     <string name="clear_filter">Limpar filtros</string>
     <string name="cannula">Cânula</string>
     <string name="email_address">Endereço de email</string>
+    <string name="remove_bg_readings">Remover leituras Glicemia</string>
     <string name="identification_not_set">Identificação não definida no modo desenvolvimento</string>
+    <string name="a11y_dialog">diálogo</string>
     <!-- WEAR OS-->
+    <string name="wear_unknown_action_string">Comando de ação desconhecido:</string>
+    <string name="remove_selected_items">Remover itens selecionados</string>
+    <string name="count_selected">%1$d selecionados</string>
+    <string name="sort_label">Ordenar</string>
+    <string name="search">Procurar</string>
 </resources>

@@ -11,7 +11,7 @@
     <string name="openaps_smb_dynamic_isf">Dinaminis JIF</string>
     <string name="smb_interval_summary">Kaip dažnai SMB bus leidžiami, min.</string>
     <string name="resistance_lowers_target_title">Rezistencija mažina tikslą</string>
-    <string name="resistance_lowers_target_summary">Kai nustatoma rezistencija, tikslinė glikemijos vertė sumažinama</string>
+    <string name="resistance_lowers_target_summary">Kai aptinkama rezistencija insulinui, tikslinė glikemija sumažinama</string>
     <string name="sensitivity_raises_target_title">Jautrumas didina tikslą</string>
     <string name="sensitivity_raises_target_summary">Kai aptinkamas padidėjęs jautrumas insulinui, tikslinė glikemija padidinama</string>
     <string name="openapsma_disabled">Įskiepis išjungtas</string>
@@ -45,7 +45,7 @@
     <string name="openapsma_max_iob_summary">Šis skaičius OpenAPS kontekste vadinamas maks. AIO\nTai maksimalus insulino vienetų [U] skaičius, kurį DKS gali suleisti vienu metu.</string>
     <string name="openapsama_autosens_adjust_targets_summary">Numatytoji reikšmė: true\nTai suteikia Autosens funkcijai leidimą keisti tikslinės glikemijos vertes, JIF ir valandinę bazę.</string>
     <string name="openapsama_autosens_adjust_targets">Autosens nustatomi tikslai, taip pat</string>
-    <string name="openapsama_min_5m_carb_impact_summary">Numatytoji reikšmė: 3.0 (AMA) arba 8.0 (SMB). Tai parametras, nurodantis angliavandenių poveikį glikemijai kas 5 minutes nuo jų suvartojimo. Numatytoji reikšmė yra 3 mg/dl per 5min. Šis skaičius turi įtakos apskaičiavimams, kaip greitai mažės AAO, kokia bus glikemijos kitimo prognozė, ypač kai ji krenta daugiau nei tikėtasi, arba nedidėja tiek, kiek tikėtasi.</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Numatytoji reikšmė: 3.0 (AMA) arba 8.0 (SMB). Tai parametras, nurodantis angliavandenių poveikį glikemijai per 5 min. Numatytoji reikšmė yra 3 mg/dl per 5min. Šis skaičius turi įtakos apskaičiuojant, kaip greitai mažės AAO, kokia bus glikemijos kitimo prognozė, ypač kai ji mažėja labiau nei tikėtasi, arba nedidėja tiek, kiek tikėtasi.</string>
     <string name="openapsama_max_daily_safety_multiplier_summary">Numatytoji reikšmė: 3 tai pagrindinis OpenAPS saugiklis. Jis apriboja Jūsų valandinę bazę iki trigubos maksimalios valandinės bazės (standartiniu atveju). Jums greičiausiai neprireiks šios reikšmės keisti, tačiau turėtumėte žinoti, kad ji naudojama kaip saugiklis apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\".</string>
     <string name="openapsama_current_basal_safety_multiplier_summary">Numatytoji reikšmė: 4 tai antras pagrindinis OpenAPS saugiklis, apskaičiuojant \"3x maksimali dienos bazė; 4x dabartinė valandinė bazė\". Jis reiškia, kad jūsų valandinė bazė, nepriklausomai nuo to, kokia maksimali valandinė bazė suprogramuota pompoje, negali būti didesnė, nei keturguba dabartinė valandinė bazė. Tai apsaugo Jus nuo pavojingų situacijų, kai nustatoma pernelyg didelė valandinė bazė, pilnai nesuprantant, kaip veikia algoritmas. Numatytoji reikšmė yra 4x; daugumai vartotojų niekada neprireikia šio skaičiaus keisti, o pajutus, kad \"atsitrenkiama\" į saugiklį, rekomenduojama peržiūrėti kitus nustatymus.</string>
     <string name="openapsama_bolus_snooze_dia_divisor_summary">Numatytoji reikšmė: 2\nAtidėjimas po boluso aktyvuojamas iškart po to, kai susileidžiate bolusą maistui. Ši funkcija neleidžia sistemai nustatyti mažų laikinų bazių iškart po valgio. Pvz.: jei IVT yra 3 val, tai atidėjimas po boluso pamažu deaktyvuojamas per 1,5 val (3 val. / 2).</string>
@@ -62,8 +62,8 @@
     <string name="enable_uam_summary">Nedeklaruoto maisto (NDM) aptikimas</string>
     <string name="enable_smb_always">Įjungti SMB visada</string>
     <string name="enable_smb_always_summary">Leisti SMB visada, nepriklausomai nuo bolusų. Įmanoma tik naudojant patikimų, filtruotų KG duomenų šaltinį, pvz.: Dexcom G5</string>
-    <string name="enable_smb_after_carbs">Įjungti SMB po angliavandenių įvedimo</string>
-    <string name="enable_smb_after_carbs_summary">Leisti SMB iki 6 val po angliavandenių įvedimo, net jei AK yra 0. Įmanoma tik naudojant patikimų, filtruotų KG duomenų šaltinį, pvz.: Dexcom G5</string>
+    <string name="enable_smb_after_carbs">Įjungti SMB su angliavandeniais</string>
+    <string name="enable_smb_after_carbs_summary">Leisti SMB iki 6 val po angliavandenių įvedimo, net jei AAO yra 0. Įmanoma tik naudojant patikimų, filtruotų glikemijos duomenų šaltinį, pvz.: Dexcom</string>
     <string name="enable_smb_with_cob">Įjungti SMB su AAO</string>
     <string name="enable_smb_with_cob_summary">Įjungti SMB, kai yra AAO.</string>
     <string name="enable_smb_with_temp_target">Įjungti SMB su laikinais tikslais</string>

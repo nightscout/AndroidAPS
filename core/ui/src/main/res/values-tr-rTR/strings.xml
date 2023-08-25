@@ -98,7 +98,7 @@
     <string name="exists">var</string>
     <string name="notexists">yok</string>
     <string name="glucose">Glikoz</string>
-    <string name="iob">IOB</string>
+    <string name="iob">AİNS</string>
     <string name="cob">AKRB</string>
     <string name="name_short">İsim:</string>
     <string name="time">Zaman</string>
@@ -116,7 +116,7 @@
     <string name="bolus_reminder">Bolus hatırlatıcısı</string>
     <string name="duration_label">Süre</string>
     <string name="shortgramm">gr</string>
-    <string name="pumpsuspended">Pompa durduldu</string>
+    <string name="pumpsuspended">Pompa Durduruldu</string>
     <string name="notconfigured">Yapılandırılmadı</string>
     <string name="loopsuspended">Döngü duraklatıldı</string>
     <string name="trend_arrow">Trend oku</string>
@@ -376,6 +376,9 @@
     <string name="carbs_g">Karbonhidrat %1$d g</string>
     <string name="extended_bolus_u_min">YAYMA BOLUS %1$.2f Ü %2$d dak</string>
     <string name="load_events">ETKİNLİKLERİ YÜKLE</string>
+    <string name="clear_alarms">ALARMLARI SİL</string>
+    <string name="deactivate">DEVRE DIŞI BIRAK</string>
+    <string name="update_time">SAATİ GÜNCELLE</string>
     <string name="load_history">GEÇMİŞİ YÜKLE %1$d</string>
     <string name="load_tdds">GTD YÜKLE</string>
     <string name="set_profile">PROFİL AYARLA</string>
@@ -421,6 +424,7 @@
     <string name="autotune_ic_warning">Seçilen profilde %1$d KİO değeri var. OtoAyar %2$.2f g/Ü kullanacak</string>
     <string name="autotune_isf_warning">Seçilen profilde %1$d İDF değeri var. OtoAyar %2$.1f %3$s/Ü kullanacak</string>
     <string name="autotune_error">Giriş verilerinde hata, otoayarı tekrar çalıştırmayı deneyin veya gün sayısını azaltın</string>
+    <string name="autotune_error_more_days">Veri girişinde hata, gün sayısını artırın</string>
     <string name="autotune_warning_during_run">OtoAyar hesaplaması başladı, lütfen sabırlı olun</string>
     <string name="autotune_warning_after_run">Kullanmadan önce sonuçları dikkatlice kontrol edin!</string>
     <string name="autotune_partial_result">Kısmi sonuç günü %1$d / %2$d ayarlandı</string>
@@ -453,6 +457,7 @@
     <string name="cobvsiob">AKRB vs AİNS</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Yavaş karbonhidrat emilimi tespit edildi: zamanın %2$d%% si. Hesaplamanızı iki kez kontrol edin. Aktif Karbonhidrat (AKRB) olduğundan fazla tahmin edilebilir, bu nedenle daha fazla insülin verilebilir !!!!!</font>]]></string>
     <string name="partialboluswizard">Bolus sihirbazı sonucunun bu kadarını ilet [%]</string>
+    <string name="partialboluswizard_reset_time">Eski KŞ süresi eşiği [min]</string>
     <string name="bolus_constraint_applied_warn">Bolus kısıtlaması uygulandı: %1$.2f Ü ile %2$.2f Ü</string>
     <string name="bolus_recorded_only">Bolus yalnızca kaydedilecektir (pompa ile iletilmez)</string>
     <string name="advisoralarm">Yemek zamanı alarmı çalıştır</string>

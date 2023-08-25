@@ -138,7 +138,7 @@
     <string name="metadata_warning_different_device">Las preferencias se han creado en un dispositivo distinto. Esto es correcto si vas a importar tu configuración desde otro teléfono más antiguo o diferente, pero asegúrate de que las preferencias importadas son correctas</string>
     <string name="metadata_warning_outdated_format">¡Estás usando el obsoleto formato heredado de versiones antiguas de AAPS, que no es seguro! Únicamente utilizarlo como último recurso, si no tiene una exportación en formato JSON actual.</string>
     <string name="metadata_warning_old_export">Las preferencias importadas tienen %1$s días! ¿Es posible que tengas preferencias más recientes o eligieras un archivo equivocado? ¡Recuerda exportar las preferencias regularmente!</string>
-    <string name="metadata_warning_date_format">¡Formato de fecha no válido!</string>
+    <string name="metadata_warning_date_format">¡Formato de fecha/hora inválido!</string>
     <string name="metadata_warning_different_version">Preferencias de una versión menor de la aplicación. Está bien si va a importar después de la actualización, pero ¡compruebe después de la importación si las preferencias siguen siendo correctas!</string>
     <string name="metadata_urgent_different_version">Preferencias de la versión principal distinta de la aplicación. ¡Las versiones principales difieren significativamente y pueden tener preferencias incompatibles! ¡Asegúrese de que, después de importar, las preferencias siguen siendo correctas!</string>
     <string name="prefdecrypt_settings_tampered">Archivo de configuración alterado</string>

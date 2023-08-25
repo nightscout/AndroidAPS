@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
     <string name="label_watchface_steampunk">AAPS (Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(DijitalStil)</string>
+    <string name="label_watchface_custom">AAPS(Özel)</string>
     <string name="label_actions_tile">AAPS(Eylemler)</string>
     <string name="label_temp_target_tile">AAPS(Geçici Hedef)</string>
     <string name="label_quick_wizard_tile">AAPS(Hızlı Asistan)</string>
@@ -22,8 +23,10 @@
     <string name="msg_warning_old">AAPS verileri %1$s eski! Sensörleri denetleyin, xDrip+, NS, AAPS yapılandırma ya da diğerleri!</string>
     <string name="pref_vibrate_on_bolus">Bolus\'ta Titreşim</string>
     <string name="pref_units_for_actions">Eylemler için Birimler</string>
+    <string name="units_short">Ü</string>
     <string name="pref_show_date">Tarihi Göster</string>
     <string name="pref_show_iob">IOB\'yi göster</string>
+    <string name="pref_show_detailed_iob">Ayrıntılı AİNS göster</string>
     <string name="pref_show_cob">AKRB göster</string>
     <string name="pref_show_delta">Deltayı göster</string>
     <string name="pref_show_avgdelta">OrtDelta\'yı Göster</string>
@@ -32,6 +35,7 @@
     <string name="pref_show_basal_rate">Bazal Oranı Göster</string>
     <string name="pref_show_loop_status">Döngü Durumunu Göster</string>
     <string name="pref_show_bg">KŞ\'ni göster</string>
+    <string name="pref_show_bgi">KŞ Etkisi Göster</string>
     <string name="pref_show_direction_arrow">Yön Oku Göster</string>
     <string name="pref_show_ago">Önce Göster</string>
     <string name="pref_dark" comment="Enables dark visual theme">Koyu</string>
@@ -115,7 +119,7 @@
     <string name="status_profile_switch">Profil değiştir</string>
     <string name="status_tdd">GTD</string>
     <string name="activity_carb">Karb</string>
-    <string name="activity_IOB">IOB</string>
+    <string name="activity_IOB">AİNS</string>
     <string name="activity_no_status">durum yok</string>
     <string name="color_name_red">kırmızı</string>
     <string name="color_name_pink">pembe</string>
@@ -143,6 +147,7 @@
     <string name="pref_simplify_ui_sum">Yalnızca zamanı ve KŞ\'ni göster</string>
     <string name="pref_vibrate_hourly">Saatlik titreşim</string>
     <string name="pref_show_weeknumber">Hafta numarasını göster</string>
+    <string name="custom_pref_show_seconds">Saniyeyi göster</string>
     <string name="digitalstyle_pref_your_style">Stilin:</string>
     <string name="digitalstyle_style_none">stil yok</string>
     <string name="digitalstyle_style_minimal">minimal stil</string>
@@ -190,6 +195,8 @@
     <string name="week_short">h</string>
     <string name="day_short">g</string>
     <string name="hour_short">sa</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">eski</string>
     <string name="old_warning">!eski!</string>
     <string name="error">!hata!</string>

@@ -72,7 +72,7 @@
     <string name="two_hours">2 val</string>
     <string name="result_insulin_carbs">Rezultatas: %1$s %2$s</string>
     <string name="missing_carbs">Trūksta %1$d g</string>
-    <string name="a11y_current_bg">dabartinis gliukozės kiekis kraujyje</string>
+    <string name="a11y_current_bg">dabartinė glikemija</string>
     <string name="carb_time_label">AV laikas</string>
     <string name="a11y_set_carb_timer">nustatyti AV laiko perspėjimą</string>
     <string name="show_calculation">Rodyti skaičiavimą</string>

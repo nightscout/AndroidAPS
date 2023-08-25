@@ -310,8 +310,17 @@
     <string name="wear_notifysmb_summary">Saatte SMB\'yi standart bir bolus gibi göster.</string>
     <string name="wear_predictions_summary">Saat arayüzü üzerindeki tahminleri göster.</string>
     <string name="wear_predictions_title">Tahminler</string>
+    <string name="wear_custom_watchface_settings">Özel Saat arayüzü Ayarları</string>
+    <string name="wear_custom_watchface_authorization_title">Özel Saat arayüzü Yetkilendirmesi</string>
+    <string name="wear_custom_watchface_authorization_summary">Bazı saat ekranı ayarlarını saatarayüzü tasarımına uyacak şekilde değiştirmek ve kilitlemek için, yüklenen özel saat arayüzüne yetki verin</string>
+    <string name="wear_custom_watchface">Özel Saat arayüzü: %1$s</string>
+    <string name="wear_load_watchface">Saat arayüzü yükle</string>
+    <string name="wear_export_watchface">Şablonu Dışarı Aktar</string>
+    <string name="wear_new_custom_watchface_exported">Saat arayüzü şablonu dışa aktarıldı</string>
     <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
     <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
+    <string name="cwf_infos_pref_requested">Saat arayüzü tarafından talep edilen tercihlerin listesi</string>
+    <string name="cwf_infos_view_title">Saat arayüzüne dahil edilen alanların listesi</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="old_data">ESKİ VERİ</string>

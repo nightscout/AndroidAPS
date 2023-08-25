@@ -239,6 +239,7 @@
     <string name="short_tabtitles">Skrócone tytuły kart</string>
     <string name="overview_show_notes_field_in_dialogs_title">Pokaż pole uwag w oknie leczenia</string>
     <string name="deliverpartofboluswizard">Kreator bolusa wykonuje obliczenia, ale tylko ta część obliczonej dawki insuliny jest dostarczana. Pomocne z algorytmem SMB.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Dostarcz pełen bolus (100%), jeśli glikemia jest starsza niż</string>
     <string name="enable_bolus_advisor">Włącz doradcę bolusa</string>
     <string name="enable_bolus_advisor_summary">Użyj przypomnienia, aby rozpocząć jedzenie później podczas wysokiej glikemii (\"pre-bolus\")</string>
     <string name="enablesuperbolus">Zezwalaj na superbolus w kalkulatorze</string>
@@ -249,6 +250,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognozy poziomu</string>
     <string name="overview_show_treatments">Zabiegi</string>
+    <string name="overview_show_heartRate">Tętno</string>
     <string name="overview_show_deviation_slope">Krzywa odchylenie</string>
     <string name="overview_show_activity">Aktywność</string>
     <string name="overview_show_bgi">Wpływ na glikemię (BGI)</string>
@@ -266,6 +268,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">KRZOD</string>
     <string name="treatments_shortname">TREAT</string>
+    <string name="heartRate_shortname">HR</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Skala wykresu</string>
     <string name="graph_menu_divider_header">Wykres</string>
@@ -307,8 +310,19 @@
     <string name="wear_notifysmb_summary">Pokaż SMB na zegarku jak bolus standardowy.</string>
     <string name="wear_predictions_summary">Pokaż prognozę poziomu na zegarku.</string>
     <string name="wear_predictions_title">Prognozy</string>
+    <string name="wear_custom_watchface_settings">Ustawienia niestandardowej tarczy</string>
+    <string name="wear_custom_watchface_authorization_title">Uprawnienia niestandardowej tarczy</string>
+    <string name="wear_custom_watchface_authorization_summary">Upoważnij załadowaną niestandardową tarczę zegarka, aby mogła zmieniać i zablokować niektóre ustawienia wyświetlacza zegarka w celu dopasowania ich do tarczy</string>
+    <string name="wear_custom_watchface">Niestandardowa tarcza: %1$s</string>
+    <string name="wear_load_watchface">Załaduj Tarczę</string>
+    <string name="wear_infos_watchface">O tarczy</string>
+    <string name="wear_export_watchface">Eksportuj szablon</string>
+    <string name="wear_new_custom_watchface_exported">Szablon tarczy niestandardowej wyeksportowany</string>
     <string name="resend_all_data">Prześlij ponownie wszystkie dane</string>
     <string name="open_settings_on_wear">Otwórz ustawienia dla Wear</string>
+    <string name="cwf_infos_pref_locked">Lista opcji zablokowanych przez tarczę</string>
+    <string name="cwf_infos_pref_requested">Lista opcji zażądanych przez tarczę</string>
+    <string name="cwf_infos_view_title">Lista pól dołączonych do tarczy</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
     <string name="old_data">NIEAKTUALNE DANE</string>
@@ -317,6 +331,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Nie ustawiono aktywnego profilu!</string>
+    <string name="profile_message">Profil:\n\nZmiana czasu: %1$d\nProcent: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">Nie załadowano profilu</string>
     <string name="aps_only">Stosuje się tylko w trybie APS!</string>

@@ -10,7 +10,6 @@
     <string name="old_version">eski sürüm</string>
     <string name="very_old_version">çok eski sürüm</string>
     <string name="application_expired">Uygulamanın süresi doldu</string>
-    <string name="new_version_warning">En az %1$d gündür yeni sürüm mevcut! %2$d gün sonra LGS\'ye (Düşük Glukoz gönderimine) dönülecek, %3$d gün sonra da döngü devre dışı bırakılacaktır</string>
     <string name="running_invalid_version">Geçersiz bir sürüm çalıştırdığınızı tespit ettik. Döngü devre dışı!</string>
     <string name="versionavailable">Sürüm %1$s mevcut</string>
     <string name="version_expire">%1$s sürümünün süresi %2$s tarihinde sona eriyor</string>

@@ -19,7 +19,7 @@
     <string name="limiting_iob">A limitar IOB para %1$.1f U porque %2$s</string>
     <string name="loop_disabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
     <string name="event_type">Tipo de evento</string>
-    <string name="reload">Recarregar</string>
+    <string name="reload">Atualizar</string>
     <string name="mgdl">mg/dL</string>
     <string name="mmol">mmol/L</string>
     <string name="save">Salvar</string>
@@ -43,7 +43,7 @@
     <string name="missed_bg_readings">Leituras Glic. perdidas</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="mute5min">Silenciar por 5 minutos</string>
-    <string name="mute">Silêncio</string>
+    <string name="mute">Silenciar</string>
     <string name="success">Sucesso</string>
     <string name="advanced_settings_title">Configurações Avançadas</string>
     <string name="extendedbolusdeliveryerror">Erro na entrega Bólus Estendido</string>
@@ -164,6 +164,7 @@
     <string name="isf_short">FSI</string>
     <string name="canceling_tbr_failed">Cancelamento do basal temporário falhou</string>
     <string name="canceling_eb_failed">Falhou o cancelamento do bolus extendido</string>
+    <string name="virtualpump_uploadstatus_title">Carregar status para NS ou Tidepool</string>
     <string name="suspendloop_label">Loop Desativado/Suspenso</string>
     <string name="iob_label">Insulina ativa (IA)</string>
     <!--    Protection-->
@@ -375,6 +376,9 @@
     <string name="carbs_g">Carboidratos %1$d g</string>
     <string name="extended_bolus_u_min">BOLUS ESTENDIDO %1$.2f U %2$d min</string>
     <string name="load_events">CARREGAR EVENTOS</string>
+    <string name="clear_alarms">LIMPAR ALARMES</string>
+    <string name="deactivate">DESATIVAR</string>
+    <string name="update_time">ATUALIZAÇÃO DO TEMPO</string>
     <string name="load_history">CARREGAR HISTÓRIA %1$d</string>
     <string name="load_tdds">CARREGAR TDDs</string>
     <string name="set_profile">DEFINIR PERFIL</string>
@@ -420,6 +424,7 @@
     <string name="autotune_ic_warning">O perfil selecionado tem %1$d valores de IC. Autotune vai usar %2$.2f g/U</string>
     <string name="autotune_isf_warning">O perfil selecionado tem %1$d valores de ISF. Autotune usará %2$.1f %3$s/U</string>
     <string name="autotune_error">Erro nos dados de entrada, tente executar novamente autotune ou reduza o número de dias</string>
+    <string name="autotune_error_more_days">Erro nos dados de entrada, tente reduzir o número de dias</string>
     <string name="autotune_warning_during_run">Cálculos do Autotune iniciados, por favor aguarde</string>
     <string name="autotune_warning_after_run">Verifique os resultados cuidadosamente antes de usá-los!</string>
     <string name="autotune_partial_result">Resultado parcial - dia %1$d / %2$d ajustado</string>
@@ -452,6 +457,7 @@
     <string name="cobvsiob">CA vs IA</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorção lenta de hidratos detectada: %2$d%% do tempo. Verifique o seu cálculo. COB pode estar sobreestimado, assim mais insulina pode ser dada !!!</font>]]></string>
     <string name="partialboluswizard">Entregue esta parte do resultado do assistente de bólus [%]</string>
+    <string name="partialboluswizard_reset_time">Limite de tempo de glicemia antiga [min]</string>
     <string name="bolus_constraint_applied_warn">Restrição de bólus aplicada: %1$.2f U para %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus será apenas registrado (não administrado pela bomba)</string>
     <string name="advisoralarm">Disparar alarme quando for a hora de comer</string>

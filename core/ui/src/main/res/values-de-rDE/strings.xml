@@ -164,6 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Abbruch der temporären Basalrate fehlgeschlagen</string>
     <string name="canceling_eb_failed">Der Abbruch des erweiterten Bolus ist fehlgeschlagen</string>
+    <string name="virtualpump_uploadstatus_title">Status zu NS oder Tidepool hochladen</string>
     <string name="suspendloop_label">Deaktiviere/Pausiere den Loop</string>
     <string name="iob_label">Aktives Insulin (IOB)</string>
     <!--    Protection-->
@@ -375,6 +376,9 @@
     <string name="carbs_g">KH %1$d g</string>
     <string name="extended_bolus_u_min">VERLÄNGERTER BOLUS %1$.2f IE %2$d min</string>
     <string name="load_events">Lade Ereignisse</string>
+    <string name="clear_alarms">ALARME LÖSCHEN</string>
+    <string name="deactivate">DEAKTIVIEREN</string>
+    <string name="update_time">ZEIT AKTUALIEREN</string>
     <string name="load_history">HISTORIE LADEN %1$d</string>
     <string name="load_tdds">Lade TDDs</string>
     <string name="set_profile">PROFIL SETZEN</string>
@@ -420,6 +424,7 @@
     <string name="autotune_ic_warning">Ausgewähltes Profil hat %1$d IC-Werte. Autotune wird %2$.2f g/U verwenden</string>
     <string name="autotune_isf_warning">Ausgewähltes Profil hat %1$d ISF-Werte. Autotune wird %2$.1f %3$s/U verwenden</string>
     <string name="autotune_error">Fehler in den Eingabedaten, versuche erneut Autotune auszuführen oder reduziere die Anzahl der Tage</string>
+    <string name="autotune_error_more_days">Fehler in den Eingabedaten, erhöhe die Anzahl der Tage</string>
     <string name="autotune_warning_during_run">Autotune Berechnung gestartet, bitte gedulde Dich einen Moment</string>
     <string name="autotune_warning_after_run">Überprüfe die Ergebnisse sorgfältig, bevor Du sie verwendest!</string>
     <string name="autotune_partial_result">Teilergebnistag %1$d / %2$d angepasst</string>
@@ -452,6 +457,7 @@
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Langsamer Kohlenhydrat-Abbau erkannt: %2$d%% der Zeit. Überprüfe Deine Berechnung. COB könnte zu hoch sein und deswegen zu viel Insulin abgegeben werden!!!!!</font>]]></string>
     <string name="partialboluswizard">Abgabe von [%] des Ergebnisses des Bolus-Rechners</string>
+    <string name="partialboluswizard_reset_time">Schwellenwert für alte Glykämie [min]</string>
     <string name="bolus_constraint_applied_warn">Bolus Einschränkung angewendet: %1$.2f U bis %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus wird nur aufgezeichnet (Die Pumpe gibt kein Insulin ab!)</string>
     <string name="advisoralarm">Alarmiere mich, wenn es Zeit zum Essen ist. </string>

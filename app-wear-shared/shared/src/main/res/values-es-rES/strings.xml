@@ -40,6 +40,21 @@
     <string name="metadata_wear_import_filename">Nombre del archivo:%1$s</string>
     <string name="metadata_label_plugin_version">Versión del plugin: %1$s</string>
     <string name="metadata_label_watchface_name_version">Nombre: %1$s (%2$s)</string>
+    <string name="pref_show_date">Mostrar fecha</string>
+    <string name="pref_show_iob">Mostrar IOB</string>
+    <string name="pref_show_detailed_iob">Mostrar IOB detallada</string>
+    <string name="pref_show_cob">Mostrar COB</string>
+    <string name="pref_show_delta">Mostrar delta</string>
+    <string name="pref_show_detailed_delta">Mostrar delta detallado</string>
+    <string name="pref_show_avgdelta">Mostrar delta promedio</string>
+    <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
+    <string name="pref_show_rig_battery">Mostrar batería de la plataforma</string>
+    <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
+    <string name="pref_show_loop_status">Mostrar estado del lazo</string>
+    <string name="pref_show_bg">Mostrar glucosa</string>
+    <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
+    <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
+    <string name="pref_show_ago">Mostrar \"hace\"</string>
     <string name="default_custom_watchface_comment">Esfera predeterminada, puedes hacer clic en el botón EXPORTAR ESFERA para generar una plantilla</string>
     <string name="wear_default_watchface">Esfera por defecto</string>
 </resources>

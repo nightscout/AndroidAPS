@@ -92,6 +92,8 @@
     <string name="lastboluscompared">Paskutinis Bolusas prieš %1$s %2$s min</string>
     <string name="triggercoblabel">AAO</string>
     <string name="cobcompared">AAO %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Pulsas</string>
+    <string name="triggerHeartRateDesc">Pulsas %1$s %2$.0f</string>
     <string name="iob_u">AIO [U]:</string>
     <string name="distance_short">Atstumas [m]:</string>
     <string name="recurringTime">Pasikartojantis laikas</string>

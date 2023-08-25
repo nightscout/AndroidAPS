@@ -315,11 +315,14 @@
     <string name="wear_custom_watchface_authorization_summary">Autoriser le cadran perso chargé à modifier et bloquer certains paramètres d\'affichage de la montre pour un affichage correct du cadran</string>
     <string name="wear_custom_watchface">Cadran personnalisé : %1$s</string>
     <string name="wear_load_watchface">Charger le cadran</string>
-    <string name="wear_send_watchface">Envoyer le cadran</string>
+    <string name="wear_infos_watchface">Infos Cadran</string>
     <string name="wear_export_watchface">Exporter le modèle</string>
     <string name="wear_new_custom_watchface_exported">Modèle du cadran personnalisé exporté</string>
     <string name="resend_all_data">Renvoyer toutes les données</string>
     <string name="open_settings_on_wear">Afficher les Paramètres sur la Montre</string>
+    <string name="cwf_infos_pref_locked">Liste des préférences verrouillées par le cadran</string>
+    <string name="cwf_infos_pref_requested">Liste des préférences requises pour le cadran</string>
+    <string name="cwf_infos_view_title">Liste des champs inclus dans le cadran</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="old_data">DONNÉES ANCIENNES</string>

@@ -315,11 +315,14 @@
     <string name="wear_custom_watchface_authorization_summary">Autorizujte načtený vlastní ciferník, aby se změnila a uzamkla některá nastavení hodinek tak, aby vyhovovala designu ciferníku</string>
     <string name="wear_custom_watchface">Vlastní ciferník: %1$s</string>
     <string name="wear_load_watchface">Nahrát ciferník</string>
-    <string name="wear_send_watchface">Odeslat ciferník</string>
+    <string name="wear_infos_watchface">Informace o ciferníku</string>
     <string name="wear_export_watchface">Exportovat šablonu</string>
     <string name="wear_new_custom_watchface_exported">Vlastní šablona ciferníku exportována</string>
     <string name="resend_all_data">Znovu poslat všechna data</string>
     <string name="open_settings_on_wear">Otevřít nastavení na hodinkách Wear</string>
+    <string name="cwf_infos_pref_locked">Seznam preferencí uzamčený hodinkami</string>
+    <string name="cwf_infos_pref_requested">Seznam preferencí požadovaných hodinkami</string>
+    <string name="cwf_infos_view_title">Seznam polí zahrnutých do ciferníku</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazení průběžného oznámení v Androidu s krátkým přehledem, co smyčka právě dělá</string>
     <string name="old_data">ZASTARALÉ</string>

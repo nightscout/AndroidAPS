@@ -273,4 +273,6 @@
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
     <string name="old_data">DADOS ANTIGOS</string>
+    <string name="pump_old_data">TID: Ainda dados antigos! Não é possível carregar a partir da bomba.</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
 </resources>

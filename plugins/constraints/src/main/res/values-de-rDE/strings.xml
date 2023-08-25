@@ -10,7 +10,7 @@
     <string name="old_version">Veraltete Version</string>
     <string name="very_old_version">sehr alte Version</string>
     <string name="application_expired">Anwendung abgelaufen</string>
-    <string name="new_version_warning">Neue Version seit mindestens %1$d Tagen verfügbar! Rückfall zur Unterzucker-vermeidenden Pumpentherapie nach %2$d Tagen, Loop wird nach %3$d Tagen deaktiviert.</string>
+    <string name="new_version_warning">Die neue Version wurde für mindestens %1$d Tage nicht überprüft! Fallback auf LGS nach %2$d Tagen wird die Schleife nach %3$d Tagen deaktiviert. Internetverbindung wiederherstellen!</string>
     <string name="running_invalid_version">Wir haben festgestellt, dass Du eine ungültige Version verwendest. Loop deaktiviert!</string>
     <string name="versionavailable">Version %1$s ist verfügbar.</string>
     <string name="version_expire">Version %1$s läuft am %2$s ab</string>

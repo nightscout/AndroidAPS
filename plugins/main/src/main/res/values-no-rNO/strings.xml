@@ -315,11 +315,14 @@
     <string name="wear_custom_watchface_authorization_summary">Godkjenne at tilpasset klokkebakgrunn endrer AAPS- og klokkeinnstillinger i henhold til klokkebakgrunnens design</string>
     <string name="wear_custom_watchface">Tilpasset klokkebakgrunn: %1$s</string>
     <string name="wear_load_watchface">Last inn klokkebakgrunn</string>
-    <string name="wear_send_watchface">Send klokkebakgrunn</string>
+    <string name="wear_infos_watchface">Info urskive</string>
     <string name="wear_export_watchface">Eksporter mal</string>
     <string name="wear_new_custom_watchface_exported">Tilpasset klokkebakgrunn eksportert</string>
     <string name="resend_all_data">Send alle data på nytt</string>
     <string name="open_settings_on_wear">Åpne Innstillinger på klokken</string>
+    <string name="cwf_infos_pref_locked">Liste over forhåndsvalg låst av urskive</string>
+    <string name="cwf_infos_pref_requested">Liste over forhåndsvalg forespurt av urskiven</string>
+    <string name="cwf_infos_view_title">Liste over felt som er inkludert i urskive</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="old_data">GAMLE DATA</string>
