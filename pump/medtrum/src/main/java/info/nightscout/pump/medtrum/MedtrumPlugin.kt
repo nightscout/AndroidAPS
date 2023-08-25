@@ -186,12 +186,12 @@ import kotlin.math.abs
         }
 
         when (medtrumPump.pumpType()) {
-            PumpType.MEDTRUM_NANO -> {
+            PumpType.MEDTRUM_NANO, PumpType.MEDTRUM_300U -> {
                 alarmSetting?.entries = arrayOf(allAlarmEntries[6], allAlarmEntries[7]) // "Beep", "Silent"
                 alarmSetting?.entryValues = arrayOf(allAlarmValues[6], allAlarmValues[7]) // "6", "7"
             }
 
-            else                  -> {
+            else                                         -> {
                 // Use Nano settings for unknown pumps
                 alarmSetting?.entries = arrayOf(allAlarmEntries[6], allAlarmEntries[7]) // "Beep", "Silent"
                 alarmSetting?.entryValues = arrayOf(allAlarmValues[6], allAlarmValues[7]) // "6", "7"

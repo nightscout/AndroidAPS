@@ -413,6 +413,7 @@ enum class PumpType {
         maxReservoirReading = 400,
         source = Source.Medtrum
     ),
+    MEDTRUM_300U(description = "Medtrum 300U", model = "300U", parent = MEDTRUM_NANO),
     MEDTRUM_UNTESTED(description = "Medtrum untested", model = "untested", parent = MEDTRUM_NANO);
 
     val description: String

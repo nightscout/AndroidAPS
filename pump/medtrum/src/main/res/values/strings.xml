@@ -25,7 +25,7 @@
 
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
-    <string name="medtrum_pump_description">Pump integration for Medtrum Nano</string>
+    <string name="medtrum_pump_description">Pump integration for Medtrum Nano and Medtrum 300U</string>
     <string name="medtrum_pump_setting">Medtrum pump settings</string>
     <string name="pump_error">Pump error: %1$s !! </string>
     <string name="pump_is_suspended">Pump is suspended</string>

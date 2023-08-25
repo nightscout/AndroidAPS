@@ -294,6 +294,7 @@ class MedtrumPump @Inject constructor(
     fun pumpType(type: Int): PumpType =
         when (type) {
             MedtrumSnUtil.MD_0201, MedtrumSnUtil.MD_8201 -> PumpType.MEDTRUM_NANO
+            MedtrumSnUtil.MD_8301                        -> PumpType.MEDTRUM_300U
             else                                         -> PumpType.MEDTRUM_UNTESTED
         }
 
