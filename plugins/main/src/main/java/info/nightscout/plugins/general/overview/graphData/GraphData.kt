@@ -262,7 +262,7 @@ class GraphData(
     fun addHeartRate(useForScale: Boolean, scale: Double) {
         val maxHR = overviewData.heartRateGraphSeries.highestValueY
         if (useForScale) {
-            minY = 40.0
+            minY = 30.0
             maxY = maxHR
         }
         addSeries(overviewData.heartRateGraphSeries)
