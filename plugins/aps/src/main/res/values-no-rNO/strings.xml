@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dynisf_adjust_sensitivity">Juster sensitivitet og BS</string>
-    <string name="DynISFAdjust_title" formatted="false">DynamiskISF justeringsfaktor %</string>
+    <string name="DynISFAdjust_title" formatted="false">Dynamisk ISF justeringsfaktor %</string>
     <string name="DynISFAdjust_summary" formatted="false">Justeringsfaktor for dynamisk ISF. Verdier over 100% vil gi mer aggressive korreksjonsdoser, mens verdier under 100% vil gi mildere korreksjonsdoser.</string>
     <string name="high_temptarget_raises_sensitivity_title">Høyt midl. mål øker sensitiviteten</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Øk sensitiviteten for midl. mål >= 100]]></string>
@@ -53,7 +53,7 @@
     <string name="always_use_short_avg">Bruk alltid kort gjennomsnittlig delta i stedet for enkel delta</string>
     <string name="always_use_short_avg_summary">Nyttig når data fra ufiltrerte kilder som xDrip+ registrerer mye støy.</string>
     <string name="openapsama_max_daily_safety_multiplier">Multiplikator for maks daglig basal</string>
-    <string name="openapsama_current_basal_safety_multiplier">Multiplikator får gjeldende basal</string>
+    <string name="openapsama_current_basal_safety_multiplier">Multiplikator for gjeldende basal</string>
     <string name="openapssmb_max_iob_title">Maks total IOB OpenAPS ikke kan overstige [U]</string>
     <string name="openapssmb_max_iob_summary">Denne verdien kalles Maks IOB av OpenAPS\nOpenAPS vil ikke gi mere insulin hvis mengden insulin ombord (IOB) overstiger denne verdien</string>
     <string name="enable_uam">Aktiver UAM</string>
