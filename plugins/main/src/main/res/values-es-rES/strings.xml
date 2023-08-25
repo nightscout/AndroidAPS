@@ -322,7 +322,6 @@
     <string name="resend_all_data">Reenviar todos los datos</string>
     <string name="open_settings_on_wear">Abrir ajustes en el reloj</string>
     <string name="cwf_infos_pref_locked">Lista de preferencias bloqueadas por la esfera</string>
-    <string name="cwf_infos_pref_requested">Lista de preferencias solicitadas por la esfera</string>
     <string name="cwf_infos_view_title">Lista de campos incluidos en la esfera</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Muestra una notificación en curso con un breve resumen de lo que está haciendo tu bucle</string>
