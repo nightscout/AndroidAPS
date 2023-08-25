@@ -57,4 +57,10 @@
     <string name="default_custom_watchface_comment">Watchface padrão, pode clicar no botão EXPORTAR WATCHFACE para gerar um modelo</string>
     <string name="wear_default_watchface">Watchface padrão</string>
     <string name="cwf_comment_bgi">Valor de IG</string>
+    <string name="cwf_comment_day">Dia (DD)</string>
+    <string name="cwf_comment_month">Nome do Mês (curto)</string>
+    <string name="cwf_comment_direction">Seta de direção</string>
+    <string name="cwf_comment_timestamp">Minutos desde a recepção do último valor de GLIC</string>
+    <string name="cwf_comment_sgv">Valor de GLIC</string>
+    <string name="cwf_comment_cover_plate">Imagem da capa na frente do texto</string>
 </resources>
