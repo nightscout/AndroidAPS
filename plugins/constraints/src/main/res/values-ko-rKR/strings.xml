@@ -28,6 +28,4 @@
     <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">프로그램 배우기</string>
     <string name="doyouwantresetstart">목표를 초기화하시겠습니까? 진행상황이 삭제됩니다.</string>
-    <string name="objectives_button_unfinish">완료 초기화</string>
-    <string name="objectives_button_unstart">시작 초기화</string>
 </resources>
