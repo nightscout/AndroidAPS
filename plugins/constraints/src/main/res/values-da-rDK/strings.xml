@@ -28,6 +28,4 @@
     <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Oplæringsprogram</string>
     <string name="doyouwantresetstart">Vil du nulstille objektiv start? Du kan miste dine fremskridt.</string>
-    <string name="objectives_button_unfinish">Ryd færdigt</string>
-    <string name="objectives_button_unstart">Ryd startet</string>
 </resources>
