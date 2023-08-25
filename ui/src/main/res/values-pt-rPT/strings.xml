@@ -108,6 +108,8 @@
     <string name="show_loop_records">Mostrar registros do loop</string>
     <string name="show_hide_records">Ocultar registos do loop</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Perfil 1</string>
+    <string name="profile2">Perfil 2</string>
     <string name="profile_type">Tipo de Perfil</string>
     <string name="basal_pct_from_tdd_label">% de basal</string>
     <string name="selected_profile">Seleccionado:</string>
@@ -126,4 +128,29 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOP PRESSIONADO</string>
     <!--QuickWizard-->
+    <string name="a11y_only_on_watch">apenas no relógio</string>
+    <string name="a11y_only_on_phone">apenas no telefone</string>
+    <string name="quickwizard_settings">Definições do Assistente Rápido</string>
+    <string name="overview_edit_quickwizard_button_text">Texto do botão:</string>
+    <string name="overview_edit_quickwizard_carbs">Hidratos de carbono:</string>
+    <string name="overview_edit_quickwizard_valid">Válido:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Adicionar</string>
+    <string name="overview_quickwizard_item_edit_button">Editar</string>
+    <string name="overview_edit_quickwizard_show_on_device">Mostrar entrada no dispositivo:</string>
+    <string name="overview_edit_quickwizard_use_bg">Cálculo de glicemia</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Cálculo de Bólus IA</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Cálculo de Basal IA</string>
+    <string name="overview_edit_quickwizard_use_trend">Cálculo tendência</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Cálculo do superbólus</string>
+    <string name="overview_edit_quickwizard_percentage">Percentagem</string>
+    <string name="device_all">Todos</string>
+    <string name="device_phone">Telefone</string>
+    <string name="device_watch">Relógio</string>
+    <string name="positive_only">Positivo apenas</string>
+    <string name="negative_only">Negativo apenas</string>
+    <string name="overview_editquickwizard_usecob">Cálculo HCA</string>
+    <string name="overview_editquickwizard_usetemptarget">Cálculo alvo temporário</string>
+    <string name="overview_editquickwizard_usepercentage">Cálculo de percentagem</string>
+    <string name="app_default">Padrão da aplicação</string>
+    <string name="a11y_drag_and_drop_handle">alça de arrastar e soltar</string>
 </resources>
