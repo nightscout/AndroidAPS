@@ -28,6 +28,4 @@
     <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">Programa d\'aprenentatge</string>
     <string name="doyouwantresetstart">Voleu reiniciar l\'objectiu? Podeu perdre el vostre progrés.</string>
-    <string name="objectives_button_unfinish">Cancel·lar finalització</string>
-    <string name="objectives_button_unstart">Cancel·lar inici</string>
 </resources>
