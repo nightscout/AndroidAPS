@@ -239,6 +239,7 @@
     <string name="short_tabtitles">Kısa sekme başlıkları</string>
     <string name="overview_show_notes_field_in_dialogs_title">Tedavi diyaloglarında not alanını göster</string>
     <string name="deliverpartofboluswizard">Bolus sihirbazı hesaplamayı gerçekleştirir ancak hesaplanan insülinin yalnızca bu kısmı iletilir. SMB algoritması ile kullanışlıdır.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">KŞ şu tarihten daha eskiyse tam bolus (%100) verin</string>
     <string name="enable_bolus_advisor">Bolus danışmanını etkinleştir</string>
     <string name="enable_bolus_advisor_summary">Yüksek glisemi sırasında sihirbaz sonucu yerine daha sonra yemeye başlamak için hatırlatıcı kullanın (\"pre-bolus\")</string>
     <string name="enablesuperbolus">Sihirbazda süperbolusu etkinleştir</string>
@@ -315,10 +316,13 @@
     <string name="wear_custom_watchface_authorization_summary">Bazı saat ekranı ayarlarını saatarayüzü tasarımına uyacak şekilde değiştirmek ve kilitlemek için, yüklenen özel saat arayüzüne yetki verin</string>
     <string name="wear_custom_watchface">Özel Saat arayüzü: %1$s</string>
     <string name="wear_load_watchface">Saat arayüzü yükle</string>
+    <string name="wear_infos_watchface">Saat arayüzü bilgisi</string>
     <string name="wear_export_watchface">Şablonu Dışarı Aktar</string>
     <string name="wear_new_custom_watchface_exported">Saat arayüzü şablonu dışa aktarıldı</string>
     <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
     <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
+    <string name="cwf_infos_pref_locked">Saat arayüzü tarafından kilitlenen tercihlerin listesi</string>
+    <string name="cwf_infos_pref_required">Saat arayüzü için gerekli tercihlerin listesi</string>
     <string name="cwf_infos_view_title">Saat arayüzüne dahil edilen alanların listesi</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
