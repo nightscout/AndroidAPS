@@ -26,10 +26,11 @@ import javax.inject.Singleton
  */
 @Singleton
 @OpenForTesting
-class MedtronicPumpStatus @Inject constructor(private val rh: ResourceHelper,
-                                              private val sp: SP,
-                                              private val rxBus: RxBus,
-                                              private val rileyLinkUtil: RileyLinkUtil
+class MedtronicPumpStatus @Inject constructor(
+    private val rh: ResourceHelper,
+    private val sp: SP,
+    private val rxBus: RxBus,
+    private val rileyLinkUtil: RileyLinkUtil
 ) : PumpStatus(PumpType.MEDTRONIC_522_722) {
 
     var errorDescription: String? = null
@@ -108,15 +109,13 @@ class MedtronicPumpStatus @Inject constructor(private val rh: ResourceHelper,
     // Battery type
     private var batteryTypeByDescMap: MutableMap<String, BatteryType?> = HashMap()
 
-    fun getBatteryTypeByDescription(batteryTypeStr: String?): BatteryType? {
+    fun getBatteryTypeByDescription(batteryTypeStr: String?): BatteryType {
         if (batteryTypeByDescMap.isEmpty()) {
             for (value in BatteryType.values()) {
                 batteryTypeByDescMap[rh.gs(value.description)] = value
             }
         }
-        return if (batteryTypeByDescMap.containsKey(batteryTypeStr)) {
-            batteryTypeByDescMap[batteryTypeStr]
-        } else BatteryType.None
+        return batteryTypeByDescMap[batteryTypeStr] ?: BatteryType.None
     }
 
     override val errorInfo: String

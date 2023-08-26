@@ -240,9 +240,9 @@ class MedtronicUtil @Inject constructor(
     var pageNumber = 0
     var frameNumber: Int? = null
 
-    fun setCurrentCommand(currentCommand: MedtronicCommandType, pageNumber_: Int, frameNumber_: Int?) {
-        pageNumber = pageNumber_
-        frameNumber = frameNumber_
+    fun setCurrentCommand(currentCommand: MedtronicCommandType, pageNumber: Int, frameNumber: Int?) {
+        this.pageNumber = pageNumber
+        this.frameNumber = frameNumber
         if (this.currentCommand !== currentCommand) {
             setCurrentCommand(currentCommand)
         }
@@ -306,7 +306,9 @@ class MedtronicUtil @Inject constructor(
             return strokes
         }
 
-        fun isSame(d1: Double, d2: Double): Boolean {
+        fun isSame(d1: Double?, d2: Double?): Boolean {
+            d1 ?: return false
+            d2 ?: return false
             val diff = d1 - d2
             return abs(diff) <= 0.000001
         }

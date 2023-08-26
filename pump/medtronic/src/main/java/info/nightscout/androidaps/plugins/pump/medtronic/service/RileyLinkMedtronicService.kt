@@ -158,8 +158,8 @@ class RileyLinkMedtronicService : RileyLinkService() {
                     medtronicPumpStatus.errorDescription = rh.gs(R.string.medtronic_error_pump_type_invalid)
                     return false
                 } else {
-                    val pumpType = medtronicPumpStatus.medtronicPumpMap[pumpTypePart]!!
-                    medtronicPumpStatus.medtronicDeviceType = medtronicPumpStatus.medtronicDeviceTypeMap[pumpTypePart]!!
+                    val pumpType = medtronicPumpStatus.medtronicPumpMap[pumpTypePart] ?: return false
+                    medtronicPumpStatus.medtronicDeviceType = medtronicPumpStatus.medtronicDeviceTypeMap[pumpTypePart] ?: return false
                     medtronicPumpStatus.pumpType = pumpType
                     medtronicPumpPlugin.pumpType = pumpType
                     if (pumpTypePart.startsWith("7")) medtronicPumpStatus.reservoirFullUnits = 300 else medtronicPumpStatus.reservoirFullUnits = 176
@@ -223,8 +223,8 @@ class RileyLinkMedtronicService : RileyLinkService() {
             val batteryTypeStr = sp.getStringOrNull(MedtronicConst.Prefs.BatteryType, null)
                 ?: return false
             val batteryType = medtronicPumpStatus.getBatteryTypeByDescription(batteryTypeStr)
-            if (medtronicPumpStatus.batteryType !== batteryType) {
-                medtronicPumpStatus.batteryType = batteryType!!
+            if (medtronicPumpStatus.batteryType != batteryType) {
+                medtronicPumpStatus.batteryType = batteryType
             }
 
             //String bolusDebugEnabled = sp.getStringOrNull(MedtronicConst.Prefs.BolusDebugEnabled, null);
