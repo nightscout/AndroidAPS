@@ -4,7 +4,7 @@
         <service
             android:name=".rileylink.service.RileyLinkOmnipodService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
 
         <activity
             android:name=".ui.wizard.activation.ErosPodActivationWizardActivity"
