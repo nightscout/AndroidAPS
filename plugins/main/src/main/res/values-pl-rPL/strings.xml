@@ -321,6 +321,7 @@
     <string name="resend_all_data">Prześlij ponownie wszystkie dane</string>
     <string name="open_settings_on_wear">Otwórz ustawienia dla Wear</string>
     <string name="cwf_infos_pref_locked">Lista opcji zablokowanych przez tarczę</string>
+    <string name="cwf_infos_pref_required">Lista opcji wymaganych przez tarczę</string>
     <string name="cwf_infos_view_title">Lista pól dołączonych do tarczy</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Wyświetla bieżące powiadomienia z krótkim omówieniem działania pętli</string>
