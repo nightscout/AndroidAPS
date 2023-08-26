@@ -101,7 +101,7 @@ class Connection(
         val discovered = discoverer.discoverServices(connectionWaitCond)
         val cmdBleIO = CmdBleIO(
             aapsLogger,
-            discovered[CharacteristicType.CMD]!!,
+            discovered.getValue(CharacteristicType.CMD),
             incomingPackets
                 .cmdQueue,
             gatt,
@@ -109,7 +109,7 @@ class Connection(
         )
         val dataBleIO = DataBleIO(
             aapsLogger,
-            discovered[CharacteristicType.DATA]!!,
+            discovered.getValue(CharacteristicType.DATA),
             incomingPackets
                 .dataQueue,
             gatt,

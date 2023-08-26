@@ -13,7 +13,7 @@ class TokenizationTest {
         // Trying to match it at those coordinates is expected to succeed,
         // while trying to match it slightly to the right should fail.
 
-        val largeBasalGlyphPattern = glyphPatterns[Glyph.LargeSymbol(LargeSymbol.BASAL)]!!
+        val largeBasalGlyphPattern = glyphPatterns.getValue(Glyph.LargeSymbol(LargeSymbol.BASAL))
 
         val result1 = checkIfPatternMatchesAt(
             testFrameMainScreenWithTimeSeparator,

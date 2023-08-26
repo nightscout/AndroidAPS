@@ -1,7 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.defs
 
-import java.util.*
-
 /**
  * Taken from GNU Gluco Control diabetes management software (ggc.sourceforge.net)
  *
@@ -37,6 +35,7 @@ enum class MedtronicDeviceType {
     All;
 
     companion object {
+
         var mapByDescription: MutableMap<String, MedtronicDeviceType> = mutableMapOf()
 
         fun isSameDevice(deviceWeCheck: MedtronicDeviceType, deviceSources: MedtronicDeviceType): Boolean {
@@ -50,17 +49,12 @@ enum class MedtronicDeviceType {
             return false
         }
 
-        fun getByDescription(desc: String): MedtronicDeviceType {
-            return if (mapByDescription.containsKey(desc)) {
-                mapByDescription[desc]!!
-            } else {
-                Unknown_Device
-            }
-        }
+        fun getByDescription(desc: String): MedtronicDeviceType =
+            mapByDescription[desc] ?: Unknown_Device
 
         init {
             for (minimedDeviceType in values()) {
-                if (!minimedDeviceType.isFamily && minimedDeviceType.pumpModel!=null) {
+                if (!minimedDeviceType.isFamily && minimedDeviceType.pumpModel != null) {
                     mapByDescription[minimedDeviceType.pumpModel!!] = minimedDeviceType
                 }
             }

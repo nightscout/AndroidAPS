@@ -93,13 +93,13 @@ open class TestBase {
         val tbrs: MutableList<PumpHistoryEntry> = mutableListOf()
         val map: MutableMap<String?, PumpHistoryEntry?> = HashMap()
         for (pumpHistoryEntry in TBRs_Input) {
-            if (map.containsKey(pumpHistoryEntry.DT)) {
-                decoder.decodeTempBasal(map[pumpHistoryEntry.DT]!!, pumpHistoryEntry)
+            if (map.containsKey(pumpHistoryEntry.dt)) {
+                decoder.decodeTempBasal(map[pumpHistoryEntry.dt]!!, pumpHistoryEntry)
                 pumpHistoryEntry.setEntryType(medtronicUtil.medtronicPumpModel, PumpHistoryEntryType.TempBasalCombined)
                 tbrs.add(pumpHistoryEntry)
-                map.remove(pumpHistoryEntry.DT)
+                map.remove(pumpHistoryEntry.dt)
             } else {
-                map[pumpHistoryEntry.DT] = pumpHistoryEntry
+                map[pumpHistoryEntry.dt] = pumpHistoryEntry
             }
         }
         return tbrs

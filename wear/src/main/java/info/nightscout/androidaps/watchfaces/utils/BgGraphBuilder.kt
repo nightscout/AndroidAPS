@@ -2,17 +2,18 @@ package info.nightscout.androidaps.watchfaces.utils
 
 import android.graphics.DashPathEffect
 import info.nightscout.androidaps.R
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.rx.weardata.EventData.SingleBg
 import info.nightscout.rx.weardata.EventData.TreatmentData.Basal
+import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import lecho.lib.hellocharts.model.Axis
 import lecho.lib.hellocharts.model.AxisValue
 import lecho.lib.hellocharts.model.Line
 import lecho.lib.hellocharts.model.LineChartData
 import lecho.lib.hellocharts.model.PointValue
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -203,7 +204,7 @@ class BgGraphBuilder(
                 if (!values.containsKey(color)) {
                     values[color] = ArrayList()
                 }
-                values[color]!!.add(PointValue(fuzz(timeStamp), value.toFloat()))
+                values.getValue(color).add(PointValue(fuzz(timeStamp), value.toFloat()))
             }
         }
         for ((key, value) in values) {

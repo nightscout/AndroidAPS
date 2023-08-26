@@ -178,7 +178,7 @@ class MedtronicHistoryData @Inject constructor(
         for (bolusEstimate in bolusEstimates) {
             for (bolus in boluses) {
                 if (bolusEstimate.atechDateTime == bolus.atechDateTime) {
-                    bolus.addDecodedData("Estimate", bolusEstimate.decodedData["Object"]!!)
+                    bolus.addDecodedData("Estimate", bolusEstimate.decodedData.getValue("Object"))
                 }
             }
         }
@@ -1292,15 +1292,15 @@ class MedtronicHistoryData @Inject constructor(
 
     private fun preProcessTBRs(tbrsInput: MutableList<PumpHistoryEntry>): MutableList<PumpHistoryEntry> {
         val tbrs: MutableList<PumpHistoryEntry> = mutableListOf()
-        val map: MutableMap<String?, PumpHistoryEntry?> = HashMap()
+        val map: MutableMap<String, PumpHistoryEntry> = HashMap()
         for (pumpHistoryEntry in tbrsInput) {
-            if (map.containsKey(pumpHistoryEntry.DT)) {
-                medtronicPumpHistoryDecoder.decodeTempBasal(map[pumpHistoryEntry.DT]!!, pumpHistoryEntry)
+            if (map.containsKey(pumpHistoryEntry.dt)) {
+                medtronicPumpHistoryDecoder.decodeTempBasal(map.getValue(pumpHistoryEntry.dateTimeString), pumpHistoryEntry)
                 pumpHistoryEntry.setEntryType(medtronicUtil.medtronicPumpModel, PumpHistoryEntryType.TempBasalCombined)
                 tbrs.add(pumpHistoryEntry)
-                map.remove(pumpHistoryEntry.DT)
+                map.remove(pumpHistoryEntry.dt)
             } else {
-                map[pumpHistoryEntry.DT] = pumpHistoryEntry
+                map[pumpHistoryEntry.dateTimeString] = pumpHistoryEntry
             }
         }
         return tbrs
