@@ -18,15 +18,11 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.ParcelUuid
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
 import androidx.core.app.ActivityCompat
-import androidx.core.view.MenuProvider
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.extensions.safeEnable
@@ -71,21 +67,6 @@ class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
         binding.bleScannerListview.emptyView = binding.bleScannerNoDevice
         binding.bleScannerListview.adapter = listAdapter
         listAdapter?.notifyDataSetChanged()
-
-        // Add menu items without overriding methods in the Activity
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                when (menuItem.itemId) {
-                    android.R.id.home -> {
-                        onBackPressedDispatcher.onBackPressed()
-                        true
-                    }
-
-                    else              -> false
-                }
-        })
     }
 
     override fun onResume() {

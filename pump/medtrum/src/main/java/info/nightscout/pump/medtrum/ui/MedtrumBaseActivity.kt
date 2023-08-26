@@ -7,14 +7,13 @@ import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModelProvider
-import dagger.android.support.DaggerAppCompatActivity
-import info.nightscout.core.ui.R
+import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.pump.medtrum.di.MedtrumPluginQualifier
 import info.nightscout.rx.AapsSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import javax.inject.Inject
 
-abstract class MedtrumBaseActivity<B : ViewDataBinding> : DaggerAppCompatActivity(), MedtrumBaseNavigator {
+abstract class MedtrumBaseActivity<B : ViewDataBinding> : TranslatedDaggerAppCompatActivity(), MedtrumBaseNavigator {
     @Inject
     @MedtrumPluginQualifier
     lateinit var viewModelFactory: ViewModelProvider.Factory

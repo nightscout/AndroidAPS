@@ -5,9 +5,6 @@ import android.graphics.Rect
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.KeyEvent
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
@@ -17,7 +14,6 @@ import android.widget.EditText
 import android.widget.TableLayout
 import android.widget.TableRow
 import android.widget.TextView
-import androidx.core.view.MenuProvider
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.TotalDailyDose
@@ -200,20 +196,6 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
             }
         }
         loadDataFromDB()
-        // Add menu items without overriding methods in the Activity
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                when (menuItem.itemId) {
-                    android.R.id.home -> {
-                        onBackPressedDispatcher.onBackPressed()
-                        true
-                    }
-
-                    else              -> false
-                }
-        })
     }
 
     override fun onResume() {

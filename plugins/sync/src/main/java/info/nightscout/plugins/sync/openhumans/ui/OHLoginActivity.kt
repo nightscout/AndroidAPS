@@ -3,15 +3,11 @@ package info.nightscout.plugins.sync.openhumans.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.CheckBox
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.browser.customtabs.CustomTabsIntent
-import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -98,20 +94,6 @@ class OHLoginActivity : TranslatedDaggerAppCompatActivity() {
         if (code != null) {
             viewModel.submitBearerToken(code)
         }
-        // Add menu items without overriding methods in the Activity
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                when (menuItem.itemId) {
-                    android.R.id.home -> {
-                        onBackPressedDispatcher.onBackPressed()
-                        true
-                    }
-
-                    else              -> false
-                }
-        })
         onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 if (!viewModel.goBack()) finish()

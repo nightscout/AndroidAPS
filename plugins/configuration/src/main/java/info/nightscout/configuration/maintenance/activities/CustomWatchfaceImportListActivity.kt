@@ -3,17 +3,15 @@ package info.nightscout.configuration.maintenance.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.ViewGroup
-
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import info.nightscout.configuration.R
+import info.nightscout.configuration.databinding.CustomWatchfaceImportListActivityBinding
+import info.nightscout.configuration.databinding.CustomWatchfaceImportListItemBinding
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.interfaces.maintenance.PrefFileListProvider
-import info.nightscout.configuration.databinding.CustomWatchfaceImportListActivityBinding
-import info.nightscout.configuration.R
-import info.nightscout.configuration.databinding.CustomWatchfaceImportListItemBinding
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventMobileDataToWear
@@ -21,7 +19,12 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.weardata.CUSTOM_VERSION
 import info.nightscout.rx.weardata.CwfData
 import info.nightscout.rx.weardata.CwfDrawableFileMap
-import info.nightscout.rx.weardata.CwfMetadataKey.*
+import info.nightscout.rx.weardata.CwfMetadataKey.CWF_AUTHOR
+import info.nightscout.rx.weardata.CwfMetadataKey.CWF_AUTHOR_VERSION
+import info.nightscout.rx.weardata.CwfMetadataKey.CWF_CREATED_AT
+import info.nightscout.rx.weardata.CwfMetadataKey.CWF_FILENAME
+import info.nightscout.rx.weardata.CwfMetadataKey.CWF_NAME
+import info.nightscout.rx.weardata.CwfMetadataKey.CWF_VERSION
 import info.nightscout.rx.weardata.CwfMetadataMap
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.extensions.toVisibility
@@ -107,14 +110,6 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
                 cwfPrefNumber.visibility=prefWarning.visibility
             }
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
-            return true
-        }
-        return super.onOptionsItemSelected(item)
     }
 
     private fun checkCustomVersion(metadata: CwfMetadataMap): Boolean {
