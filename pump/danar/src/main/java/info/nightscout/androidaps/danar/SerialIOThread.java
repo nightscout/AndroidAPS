@@ -81,7 +81,7 @@ public class SerialIOThread extends Thread {
                     message.setReceived(true);
                     message.handleMessage(extractedBuff);
                     synchronized (message) {
-                        message.notify();
+                        message.notifyAll();
                     }
                 }
             }

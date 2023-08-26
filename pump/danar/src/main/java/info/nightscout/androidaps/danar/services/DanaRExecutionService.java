@@ -343,7 +343,7 @@ public class DanaRExecutionService extends AbstractDanaRExecutionService {
                                 aapsLogger.debug(LTag.PUMP, "Bolus amount in history too old: " + dateUtil.dateAndTimeString(danaPump.getLastBolusTime()));
                             }
                             synchronized (o) {
-                                o.notify();
+                                o.notifyAll();
                             }
                         }
                     });

@@ -21,7 +21,7 @@ import androidx.core.app.ActivityCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.notify
+import info.nightscout.core.utils.notifyAll
 import info.nightscout.core.utils.waitMillis
 import info.nightscout.interfaces.notifications.Notification
 import info.nightscout.interfaces.pump.PumpSync
@@ -863,7 +863,7 @@ class BLEComm @Inject internal constructor(
             message.setReceived()
             synchronized(message) {
                 // notify to sendMessage
-                message.notify()
+                message.notifyAll()
             }
         } else aapsLogger.error("Unknown message received " + DanaRSPacket.toHexString(decryptedBuffer))
     }
