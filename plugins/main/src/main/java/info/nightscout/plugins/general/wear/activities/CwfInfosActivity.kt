@@ -165,7 +165,7 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
             val cwfView = viewList[position]
             val key = cwfView.first.key
             val value = cwfView.first.comment
-            val visible = cwfView.second        // will be used if all keys included into RecyclerView
+            //val visible = cwfView.second        // will be used if all keys included into RecyclerView
             with(holder.cwfInfosActivityViewItemBinding) {
                 viewKey.text = "\"$key\":"
                 viewComment.text = rh.gs(value)

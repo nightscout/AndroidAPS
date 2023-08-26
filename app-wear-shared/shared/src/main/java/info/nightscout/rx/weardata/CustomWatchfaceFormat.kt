@@ -4,12 +4,15 @@ import android.content.res.Resources
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.PictureDrawable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
+import com.caverock.androidsvg.SVG
 import info.nightscout.shared.R
 import kotlinx.serialization.Serializable
 import org.json.JSONObject
 import java.io.BufferedOutputStream
+import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -42,9 +45,7 @@ enum class CwfDrawableFileMap(val key: String, @DrawableRes val icon: Int?, val 
 
 enum class DrawableFormat(val extension: String) {
     UNKNOWN(""),
-
-    //XML("xml"),
-    //SVG("svg"),
+    SVG("svg"),
     JPG("jpg"),
     PNG("png");
 
@@ -66,19 +67,15 @@ data class DrawableData(val value: ByteArray, val format: DrawableFormat) {
                     val bitmap = BitmapFactory.decodeByteArray(value, 0, value.size)
                     BitmapDrawable(resources, bitmap)
                 }
-                /*
-                                DrawableFormat.SVG -> {
-                                    //TODO: include svg to Drawable convertor here
-                                    null
-                                }
-                                DrawableFormat.XML -> {
-                                    // Always return a null Drawable, even if xml file is a valid xml vector file
-                                    val xmlInputStream = ByteArrayInputStream(value)
-                                    val xmlPullParser = Xml.newPullParser()
-                                    xmlPullParser.setInput(xmlInputStream, null)
-                                    Drawable.createFromXml(resources, xmlPullParser)
-                                }
-                */
+
+                DrawableFormat.SVG                     -> {
+                    val svg = SVG.getFromInputStream(ByteArrayInputStream(value))
+                    val picture = svg.renderToPicture()
+                    PictureDrawable(picture).apply {
+                        setBounds(0, 0, svg.documentWidth.toInt(), svg.documentHeight.toInt())
+                    }
+                }
+
                 else                                   -> null
             }
         } catch (e: Exception) {
