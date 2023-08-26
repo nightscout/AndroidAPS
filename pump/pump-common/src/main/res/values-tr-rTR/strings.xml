@@ -22,7 +22,7 @@
     <string name="history_group_unknown">Bilinmeyenler</string>
     <string name="history_group_all">Tümü</string>
     <string name="history_group_bolus">Boluslar</string>
-    <string name="history_group_prime">Dolumlar</string>
+    <string name="history_group_prime">Doldur</string>
     <string name="history_group_alarm">Alarmlar</string>
     <string name="history_group_glucose">Glikoz</string>
     <string name="history_group_base">Temel</string>
