@@ -330,10 +330,6 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                         mPaint.setStrokeWidth(5);
                         canvas.drawRect(endX - 3, bounds.top + py - 3, xPlusLength + 3, bounds.bottom + py + 3, mPaint);
                     }
-                } else if (value.getShape() == Shape.HEARTRATE) {
-                    mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-                    mPaint.setStrokeWidth(0);
-                    canvas.drawCircle(endX, endY, 1F, mPaint);
                 }
                 // set values above point
             }
