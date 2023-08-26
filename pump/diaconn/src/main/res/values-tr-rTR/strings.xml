@@ -9,7 +9,7 @@
     <string name="diaconn_g8_history_bolus">Boluslar</string>
     <string name="diaconn_g8_history_dailyinsulin">Günlük İnsülin</string>
     <string name="diaconn_g8_history_errors">Hatalar</string>
-    <string name="diaconn_g8_history_prime">Doldurma</string>
+    <string name="diaconn_g8_history_prime">Doldur</string>
     <string name="diaconn_g8_history_refill">Yeniden doldurun</string>
     <string name="diaconn_g8_history_suspend">Askıya almak</string>
     <string name="diaconn_g8_pairingok">Eşleştirme tamam</string>
