@@ -48,4 +48,6 @@
     <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
     <string name="objectives_next_button">Sonraki</string>
     <string name="objectives_previous_button">Önceki</string>
+    <string name="objectives_button_unfinish">Bitmiş durumu sıfırla</string>
+    <string name="objectives_button_unstart">Başlatma durumunu sıfırla</string>
 </resources>
