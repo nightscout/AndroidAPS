@@ -35,6 +35,7 @@ dependencies {
 
     api "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version"
     api "org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinx_serialization_version"
+    api "com.caverock:androidsvg:$caverock_androidsvg_version"
     api "org.apache.commons:commons-lang3:$commonslang3_version"
 
     //RxBus
