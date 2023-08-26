@@ -7,7 +7,7 @@
         <service
             android:name=".nsclient.services.NSClientService"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
         <activity
             android:name=".openhumans.ui.OHLoginActivity"
             android:launchMode="singleTop"
