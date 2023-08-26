@@ -14,6 +14,7 @@
     <string name="pump_base_basal_rate">%1$.2f U/h</string>
     <string name="pump_not_initialized_profile_not_set">Bomba não inicializada, perfil não definido!</string>
     <string name="failed_update_basal_profile">Falha a actualizar perfil da basal</string>
+    <string name="bolus_delivered_successfully">Bólus %1$.2f U administrado com sucesso</string>
     <string name="no_valid_basal_rate">Nenhum valor de basal válido foi lido da bomba</string>
     <string name="limiting_iob">A limitar IA para %1$.1f U porque %2$s</string>
     <string name="loop_disabled">LOOP DESATIVADO POR RESTRIÇÕES</string>
@@ -44,12 +45,15 @@
     <string name="mute5min">Silenciar por 5 minutos</string>
     <string name="mute">Silêncio</string>
     <string name="success">Sucesso</string>
+    <string name="advanced_settings_title">Configurações Avançadas</string>
     <string name="extendedbolusdeliveryerror">Erro na administração Bólus Prolongado</string>
+    <string name="aps_mode_title">Modo APS</string>
     <string name="extended_bolus">Bólus Prolongado</string>
     <string name="paused">Em pausa</string>
-    <string name="tdd_total">TDI Total</string>
+    <string name="tdd_total">TID Total</string>
     <string name="goingtodeliver">A ser administrado %1$.2f U</string>
     <string name="waitingforpump">À espera da bomba</string>
+    <string name="androidaps_start">AAPS iniciada</string>
     <string name="formatsignedinsulinunits">%1$+.2f U</string>
     <string name="format_carbs">%1$d g</string>
     <string name="format_hours">%1$.2f h</string>
@@ -58,6 +62,8 @@
     <string name="please_wait">Por favor aguarde…</string>
     <string name="stop">Parar</string>
     <string name="carbs">Hidratos</string>
+    <string name="invalid_profile">Perfil inválido!</string>
+    <string name="no_profile_set">SEM PERFIL DEFINIDO</string>
     <string name="active"><![CDATA[<Activo>]]></string>
     <string name="date">Data</string>
     <string name="units_label">Unidades</string>
@@ -66,7 +72,11 @@
     <string name="isf_label">FSI</string>
     <string name="basal_label">Basal</string>
     <string name="target_label">Alvo</string>
+    <string name="dia_long_label">Duração da ação da Insulina</string>
+    <string name="ic_long_label">Rácio Insulina Hidratos de Carbono</string>
+    <string name="isf_long_label">Factor Sensibilidade à Insulina (FSI)</string>
     <string name="basal_long_label">Taxa da Basal</string>
+    <string name="target_long_label">Alvo da Glicemia</string>
     <string name="shortgram">g</string>
     <string name="shortpercent">%</string>
     <string name="bluetooth">Bluetooth</string>
@@ -96,6 +106,8 @@
     <string name="loading">A carregar …</string>
     <string name="notes_label">Notas</string>
     <string name="remove_button">Remover</string>
+    <string name="add_new">Adicionar novo</string>
+    <string name="addnew_above">Adicionar novo acima</string>
     <string name="wrong_pump_data">Os dados vêm de uma bomba diferente. Altera o driver da bomba para redefinir o seu estado.</string>
     <string name="bg_label">GLIC</string>
     <string name="calibration">Calibração</string>
@@ -108,19 +120,30 @@
     <string name="notconfigured">Não configurado</string>
     <string name="loopsuspended">Loop suspenso</string>
     <string name="trend_arrow">Seta de tendência</string>
+    <string name="a11y_autosens_label">Auto sensibilidade</string>
     <string name="required">req</string>
+    <string name="a11y_arrow_double_down">a descer rapidamente</string>
+    <string name="a11y_arrow_single_down">a descer</string>
+    <string name="a11y_arrow_forty_five_down">a descer lentamente</string>
+    <string name="a11y_arrow_flat">estável</string>
+    <string name="a11y_arrow_forty_five_up">a subir lentamente</string>
+    <string name="a11y_arrow_single_up">a subir</string>
+    <string name="a11y_arrow_double_up">a subir rapidamente</string>
     <string name="a11y_arrow_none">nenhuma</string>
     <string name="a11y_arrow_unknown">desconhecido</string>
     <string name="a11y_high">hiper</string>
+    <string name="a11y_inrange">no alvo</string>
     <string name="a11y_low">hipo</string>
     <string name="average">Média</string>
-    <string name="tir">TIR</string>
+    <string name="tir">TNA</string>
     <string name="none"><![CDATA[<nenhum>]]></string>
     <string name="remove_label">REMOVER</string>
     <string name="activate_profile">Activar perfil</string>
     <string name="reset">repor</string>
     <string name="profileswitch_ismissing">Troca de Perfil em falta. Por favor faça uma troca de perfil ou pressione \"Activar Perfil\" em Perfil Local.</string>
     <string name="profile">Perfil</string>
+    <string name="select_for_removal">Selecione para remover</string>
+    <string name="confirm_remove_multiple_items">Tem a certeza que deseja remover %1$d items</string>
     <string name="overview_treatment_label">Tratamento</string>
     <string name="copytolocalprofile">Criar novo perfil local a partir deste perfil?</string>
     <string name="wear_wizard_settings">Definições do Assistente Rápido</string>
@@ -130,6 +153,7 @@
     <string name="treatments_wizard_basaliob_label">Basal IA</string>
     <string name="invalid">INVÁLIDO</string>
     <string name="login">Login</string>
+    <string name="prime_fill">Purgar/Preencher</string>
     <string name="overview_insulin_label">Bólus</string>
     <string name="stoptemptarget">Parar Alvo Temp</string>
     <string name="closedloop">Loop Fechado</string>
@@ -138,13 +162,19 @@
     <string name="dia">DIA</string>
     <string name="ic_short">IHC</string>
     <string name="isf_short">FSI</string>
+    <string name="canceling_tbr_failed">Não foi possível cancelar a basal temporária</string>
+    <string name="canceling_eb_failed">Não foi possível cancelar o bólus prolongado</string>
+    <string name="virtualpump_uploadstatus_title">Enviar o estado da bomba para NS ou Tidepool</string>
     <string name="suspendloop_label">Loop Desactivado/Suspenso</string>
     <string name="iob_label">Insulina ativa (IA )</string>
     <!--    Protection-->
     <string name="wrongpassword">Palavra-passe incorreta</string>
+    <string name="wrongpin">PIN incorreto</string>
     <string name="passwords_dont_match">Palavras-passe não correspondem</string>
+    <string name="pin_dont_match">Os PINs não correspondem</string>
     <!--    Profile-->
     <string name="basalprofilenotaligned">Valores das basais não definidos por horas: %1$s</string>
+    <string name="minimalbasalvaluereplaced">Valor da basal alterado para o valor mínimo suportado: %1$s</string>
     <string name="maximumbasalvaluereplaced">Valor da basal alterado para o valor máximo suportado: %1$s</string>
     <string name="profile_per_unit">/U</string>
     <string name="profile_ins_units_per_hour">U/h</string>
@@ -152,6 +182,7 @@
     <!--    ProfileFunction-->
     <string name="startprofile">Iniciar perfil %1$d%% para %2$d min</string>
     <!--    APSResult-->
+    <string name="cancel_temp">Cancelar Basal Temporária</string>
     <string name="let_temp_basal_run">Permitir Basal Temp Correr</string>
     <string name="rate">Rácio</string>
     <string name="duration">Duração</string>
@@ -173,9 +204,12 @@
     <string name="careportal_note_message">Notas: %1$s</string>
     <string name="careportal_question_message">Questão : %1$s</string>
     <string name="careportal_exercise_message">Exercício : %1$s</string>
+    <string name="careportal_pump_site_change">Mudança de Cateter</string>
+    <string name="cgm_sensor_insert">Colocação Sensor CGM</string>
     <string name="careportal_cgmsensorstart">Início do Sensor CGM</string>
     <string name="careportal_cgm_sensor_stop">Parar Sensor CGM</string>
     <string name="careportal_dad_alert">Alertar D.A.D. (Alerta cão apoio a pesso)</string>
+    <string name="careportal_insulin_cartridge_change">Mudança de Cartucho de Insulina</string>
     <string name="careportal_profileswitch">Troca de Perfil</string>
     <string name="careportal_snackbolus">Bólus Lanche</string>
     <string name="careportal_mealbolus">Bólus Refeição</string>
@@ -185,6 +219,8 @@
     <string name="careportal_tempbasalend">Fim Basal Temp</string>
     <string name="careportal_carbscorrection">Correção Hidratos</string>
     <string name="careportal_openapsoffline">OpenAPS Offline</string>
+    <string name="pump_battery_change">Troca Bateria Bomba</string>
+    <string name="temporary_target">Alvo Temporário</string>
     <string name="careportal_temporarytargetvalue">Valor Alvo Temporário</string>
     <string name="careportal_temporarytargetcancel">Cancelar Alvo Temporário</string>
     <string name="boluswizard">Assistente de Bólus</string>
@@ -211,15 +247,18 @@
     <string name="waitingforpumpresult">À espera de resultado</string>
     <string name="smb_shortname">SMB</string>
     <!--    CarbsReq-->
+    <string name="carbsreq">%1$d g Hidratos Adicionais Necessários Dentro de %2$d Minutos</string>
     <!--    TDDStatsActivity-->
-    <string name="expweight">TDI exponencialmente ponderada</string>
+    <string name="cumulative_tdd">Total de Insulina Diária</string>
+    <string name="expweight">TID exponencialmente ponderada</string>
     <string name="basalrate">Basal</string>
     <string name="bolus">Bólus</string>
-    <string name="tdd">TDI</string>
+    <string name="tdd">TID</string>
     <string name="ratio">Rácio</string>
     <string name="amount_days"># Dias</string>
     <string name="weight">Peso</string>
     <string name="warning_Message">Possivelmente impreciso se foram usados bólus para purgar/preencher!</string>
+    <string name="olddata_Message">Dados antigos, pressione \"Recarregar\"</string>
     <string name="tbb">Basal Diária Total</string>
     <string name="tbb2">Basal diária * 2</string>
     <!--    Ntp-->
@@ -292,9 +331,11 @@
     <string name="uel_stat_reset">REINICIAR ESTADO</string>
     <string name="uel_delete_logs">APAGAR REGISTOS</string>
     <string name="uel_delete_future_treatments">APAGAR TRATAMENTOS FUTUROS</string>
+    <string name="delete_future_treatments">Apagar tratamentos futuros</string>
     <string name="uel_export_settings">EXPORTAR CONFIGURAÇÕES</string>
     <string name="uel_import_settings">IMPORTAR CONFIGURAÇÕES</string>
     <string name="uel_reset_databases">REINICIAR BASES DE DADOS</string>
+    <string name="uel_cleanup_databases">LIMPAR BASES DE DADOS</string>
     <string name="uel_export_databases">EXPORTAR BASES DE DADOS</string>
     <string name="uel_import_databases">IMPORTAR BASES DE DADOS</string>
     <string name="uel_otp_export">EXPORTAR OTP</string>
@@ -335,7 +376,17 @@
     <string name="carbs_g">Hidratos de Carbono %1$d g</string>
     <string name="extended_bolus_u_min">BOLUS EXTENDIDO %1$.2f U %2$d min</string>
     <string name="load_events">CARREGAR EVENTOS</string>
+    <string name="clear_alarms">LIMPAR ALARMES</string>
+    <string name="deactivate">DESATIVAR</string>
+    <string name="update_time">ATUALIZAR TEMPO</string>
     <string name="load_history">CARREGAR HISTÓRICO %1$d</string>
+    <string name="load_tdds">CARREGAR TIDs</string>
+    <string name="set_profile">DEFINIR PERFIL</string>
+    <string name="set_user_settings">DEFINIR CONFIGURAÇÕES DO UTILIZADOR</string>
+    <string name="smb_bolus_u">SMB BOLUS %1$.2f U</string>
+    <string name="start_pump">INICIAR BOMBA</string>
+    <string name="stop_pump">PARAR BOMBA</string>
+    <string name="temp_basal_absolute">TEMP BASAL %1$.2f U/h %2$d minuto</string>
     <string name="sms" comment="26 characters max for translation">SMS</string>
     <string name="formatPercent">%1$.0f%%</string>
     <string name="basal">Basal</string>

@@ -5,11 +5,13 @@ import android.os.Bundle
 import android.util.SparseArray
 import android.view.LayoutInflater
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.forEach
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -152,6 +154,14 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
             val editQuickWizardDialog = EditQuickWizardDialog()
             editQuickWizardDialog.show(manager, "EditQuickWizardDialog")
         }
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(info.nightscout.core.utils.R.menu.menu_actions, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                actionHelper.onOptionsItemSelected(menuItem)
+        })
     }
 
     override fun onResume() {
@@ -180,22 +190,6 @@ class QuickWizardListActivity : TranslatedDaggerAppCompatActivity(), OnStartDrag
             actionHelper.finish()
         })
     }
-
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(info.nightscout.core.utils.R.menu.menu_actions, menu)
-        return super.onCreateOptionsMenu(menu)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                true
-            }
-
-            else              -> actionHelper.onOptionsItemSelected(item)
-
-        }
 
     private fun getConfirmationText(selectedItems: SparseArray<QuickWizardEntry>): String {
         if (selectedItems.size() == 1) {

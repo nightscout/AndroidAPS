@@ -6,6 +6,7 @@
     <string name="previous_button">Zurück</string>
     <string name="nav_setupwizard">Einrichtungsassistent</string>
     <string name="setupwizard_finish">FERTIG</string>
+    <string name="welcome">Willkommen</string>
     <string name="welcometosetupwizard">Willkommen im Setup-Assistenten. Er führt Dich durch den Setup-Prozess\n</string>
     <string name="end_user_license_agreement">Endbenutzervereinbarung</string>
     <string name="end_user_license_agreement_text">DAS PROGRAMM DARF NICHT FÜR MEDIZINISCHE ENTSCHEIDUNGEN BENUTZT WERDEN. ES GIBT IN DIESEM PROJEKT KEINE GEWÄHRLEISTUNG ODER GARANTIERTE UNTERSTÜTZUNG IN IRGENDEINER ART. WENN DU DICH ENTSCHEIDEST, ES ZU NUTZEN, HÄNGT DIE QUALITÄT UND LEISTUNGSFÄHIGKEIT DIESES PROJEKTES VON DIR SELBST AB. ES WIRD \"WIE BESEHEN\" ZUR VERFÜGUNG GESTELLT. SOLLTE SICH DAS PROGRAMM ALS FEHLERHAFT ERWEISEN, ÜBERNIMMST DU ALLE NOTWENDIGEN KRANKHEITSKOSTEN, SERVICELEISTUNGEN, REPARATUREN ODER KORREKTUREN.</string>
@@ -152,6 +153,7 @@
     <string name="prefdecrypt_issue_wrong_format">Fehlende Verschlüsselungskonfiguration, Einstellungsformat ist ungültig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nicht unterstützter oder nicht angegebener Verschlüsselungsalgorithmus!</string>
     <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Eigene Watchface auswählen</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Bitte starte dein Telefon neu oder starte AndroidAPS in den System-Einstellungen neu.\nAndernfalls wird AndroidAPS nichts protokollieren (wichtig zum Nachverfolgen und Verifizieren, dass der Algorithmus korrekt funktioniert)!</string>
 </resources>

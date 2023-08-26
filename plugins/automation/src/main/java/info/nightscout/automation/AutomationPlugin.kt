@@ -222,6 +222,7 @@ class AutomationPlugin @Inject constructor(
     }
 
     internal fun processActions() {
+        if (!config.appInitialized) return
         var commonEventsEnabled = true
         if (loop.isSuspended || !(loop as PluginBase).isEnabled()) {
             aapsLogger.debug(LTag.AUTOMATION, "Loop deactivated")

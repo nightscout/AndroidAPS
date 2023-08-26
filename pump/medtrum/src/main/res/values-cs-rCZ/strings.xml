@@ -6,7 +6,6 @@
     <string name="medtrum_pump_description">Integrace pumpy Medtrum Nano</string>
     <string name="medtrum_pump_setting">Nastavení pumpy Medtrum</string>
     <string name="pump_error">Chyba pumpy: %1$s!! </string>
-    <string name="pump_unsupported">Nevyzkoušená pumpa: %1$d! Kontaktujte nás na Discordu nebo Githubu, kde získáte podporu.</string>
     <string name="pump_is_suspended">Pumpa je pozastavena</string>
     <string name="pump_is_suspended_hour_max">Pumpa je pozastavena kvůli překročení maximálního množství inzulínu za hodinu</string>
     <string name="pump_is_suspended_day_max">Pumpa je pozastavena kvůli překročení maximálního množství inzulínu za den</string>
@@ -101,6 +100,8 @@
     <!-- settings-->
     <string name="sn_input_title">Sériové číslo</string>
     <string name="sn_input_summary">Zadejte sériové číslo základny Patche.</string>
+    <string name="sn_input_invalid">Neplatné sériové číslo!</string>
+    <string name="pump_unsupported">Nevyzkoušená pumpa: %1$d! Kontaktujte nás na Discordu nebo Githubu, kde získáte podporu.</string>
     <string name="alarm_setting_title">Nastavení alarmů</string>
     <string name="alarm_setting_summary">Vyberte preferované nastavení alarmů.</string>
     <string name="patch_expiration_title">Vypršení platnosti Patche</string>

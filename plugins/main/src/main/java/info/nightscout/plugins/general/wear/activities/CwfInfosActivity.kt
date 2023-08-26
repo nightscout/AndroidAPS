@@ -2,12 +2,8 @@ package info.nightscout.plugins.general.wear.activities
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.MenuProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
@@ -60,21 +56,6 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
         supportActionBar?.setDisplayShowTitleEnabled(true)
 
         updateGui()
-
-        // Add menu items without overriding methods in the Activity
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                when (menuItem.itemId) {
-                    android.R.id.home -> {
-                        onBackPressedDispatcher.onBackPressed()
-                        true
-                    }
-
-                    else              -> false
-                }
-        })
     }
 
     override fun onPause() {

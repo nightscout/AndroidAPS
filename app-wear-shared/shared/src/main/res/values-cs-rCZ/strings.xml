@@ -40,6 +40,21 @@
     <string name="metadata_wear_import_filename">Název souboru: %1$s</string>
     <string name="metadata_label_plugin_version">Verze pluginu: %1$s</string>
     <string name="metadata_label_watchface_name_version">Jméno: %1$s (%2$s)</string>
+    <string name="pref_show_date">Zobrazit datum</string>
+    <string name="pref_show_iob">Zobrazit IOB</string>
+    <string name="pref_show_detailed_iob">Zobrazit detailní IOB</string>
+    <string name="pref_show_cob">Zobrazit COB</string>
+    <string name="pref_show_delta">Zobrazit deltu</string>
+    <string name="pref_show_detailed_delta">Zobrazit detailní deltu</string>
+    <string name="pref_show_avgdelta">Zobrazit průměrnou deltu</string>
+    <string name="pref_show_phone_battery">Zobrazit stav baterie telefonu</string>
+    <string name="pref_show_rig_battery">Zobrazit stav baterie dalších zařízení</string>
+    <string name="pref_show_basal_rate">Zobrazit bazál</string>
+    <string name="pref_show_loop_status">Zobrazit stav smyčky</string>
+    <string name="pref_show_bg">Zobrazit glykémii</string>
+    <string name="pref_show_bgi">Zobrazit BGI</string>
+    <string name="pref_show_direction_arrow">Zobrazit trendovou šipku</string>
+    <string name="pref_show_ago">Zobrazit aktualizováno před</string>
     <string name="default_custom_watchface_comment">Výchozí ciferník. Můžete kliknout na tlačítko EXPORTOVAT CIFERNÍK pro vygenerování šablony</string>
     <string name="wear_default_watchface">Výchozí ciferník</string>
 </resources>

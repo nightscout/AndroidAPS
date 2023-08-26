@@ -2,13 +2,9 @@ package info.nightscout.pump.diaconn.activities
 
 import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.core.view.MenuProvider
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -107,20 +103,6 @@ class DiaconnG8UserOptionsActivity : TranslatedDaggerAppCompatActivity() {
             2 -> binding.pumplangKorean.isChecked = true
             3 -> binding.pumplangEnglish.isChecked = true
         }
-        // Add menu items without overriding methods in the Activity
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                when (menuItem.itemId) {
-                    android.R.id.home -> {
-                        onBackPressedDispatcher.onBackPressed()
-                        true
-                    }
-
-                    else              -> false
-                }
-        })
     }
 
     private fun onSaveAlarmClick() {

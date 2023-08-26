@@ -36,13 +36,13 @@ class VersionCheckerUtilsImpl @Inject constructor(
 
     override fun triggerCheckVersion() {
 
-        if (!sp.contains(R.string.key_last_time_this_version_detected_as_ok)) {
+        if (!sp.contains(R.string.key_last_successful_version_check_timestamp)) {
             // On a new installation, set it as 30 days old in order to warn that there is a new version.
-            sp.putLong(R.string.key_last_time_this_version_detected_as_ok, dateUtil.now() - TimeUnit.DAYS.toMillis(30))
+            setLastCheckTimestamp(dateUtil.now() - TimeUnit.DAYS.toMillis(30))
         }
 
         // If we are good, only check once every day.
-        if (dateUtil.now() > sp.getLong(R.string.key_last_time_this_version_detected_as_ok, 0) + CHECK_EVERY) {
+        if (dateUtil.now() > sp.getLong(R.string.key_last_successful_version_check_timestamp, 0) + CHECK_EVERY) {
             checkVersion()
         }
     }
@@ -78,6 +78,7 @@ class VersionCheckerUtilsImpl @Inject constructor(
         val newVersionElements = newVersion.toNumberList()
         val currentVersionElements = currentVersion.toNumberList()
 
+        aapsLogger.debug(LTag.CORE, "Compare versions: $currentVersion $currentVersionElements, $newVersion $newVersionElements")
         if (newVersionElements.isNullOrEmpty()) {
             onVersionNotDetectable()
             return
@@ -106,15 +107,15 @@ class VersionCheckerUtilsImpl @Inject constructor(
 
     private fun onOlderVersionDetected() {
         aapsLogger.debug(LTag.CORE, "Version newer than master. Are you developer?")
-        sp.putLong(R.string.key_last_time_this_version_detected_as_ok, dateUtil.now())
+        setLastCheckTimestamp(dateUtil.now())
     }
 
     private fun onSameVersionDetected() {
-        sp.putLong(R.string.key_last_time_this_version_detected_as_ok, dateUtil.now())
+        setLastCheckTimestamp(dateUtil.now())
     }
 
     private fun onVersionNotDetectable() {
-        aapsLogger.debug(LTag.CORE, "fetch failed")
+        aapsLogger.debug(LTag.CORE, "Fetch failed")
     }
 
     private fun onNewVersionDetected(currentVersion: String, newVersion: String?) {
@@ -133,6 +134,11 @@ class VersionCheckerUtilsImpl @Inject constructor(
             uiInteraction.addNotification(Notification.VERSION_EXPIRE, rh.gs(R.string.version_expire, currentVersion, endDate), Notification.LOW)
             sp.putLong(R.string.key_last_expired_versionchecker_warning, now)
         }
+    }
+
+    private fun setLastCheckTimestamp(timestamp: Long) {
+        aapsLogger.debug(LTag.CORE, "Setting key_last_successful_version_check_timestamp ${dateUtil.dateAndTimeAndSecondsString(timestamp)}")
+        sp.putLong(R.string.key_last_successful_version_check_timestamp, timestamp)
     }
 
     private fun String?.toNumberList() =

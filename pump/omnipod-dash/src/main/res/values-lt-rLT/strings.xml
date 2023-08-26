@@ -6,6 +6,7 @@
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">POD istorija</string>
     <string name="omnipod_dash_history_item_description">Aprašymas</string>
+    <string name="omnipod_dash_history_item_amount">Kiekis</string>
     <string name="omnipod_dash_history_item_source">Šaltinis</string>
     <string name="omnipod_dash_history_item_date">Data</string>
     <string name="omnipod_dash_history_type">Tipas:</string>
@@ -30,8 +31,10 @@
     <string name="omnipod_dash_command_not_sent">Komanda nenusiųsta</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Pod negavo komandos</string>
     <string name="omnipod_dash_unknown">Nežinoma komandos būklė</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f v/val., %2$d min.</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f v</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulino tiekimas sustabdytas</string>
+    <string name="omnipod_common_history_total_delivered">Viso suleista: %1$.2f v</string>
     <string name="omnipod_dash_connection_lost">Ryšys su Pod prarastas</string>
     <string name="omnipod_dash_bolus_already_in_progress">Kitas bolusas jau leidžiamas</string>
     <string name="omnipod_dash_not_enough_insulin">Rezervuare nepakanka insulino</string>
@@ -44,6 +47,7 @@
     <string name="failed_to_set_the_new_basal_profile">Klaida nustatant naują bazės profilį. Insulinas netiekiamas</string>
     <string name="setting_basal_profile_might_have_failed">Gali būti, kad bazės profilis nebuvo nustatytas. Insulino tiekimas gali būti nutrauktas! Rankiniu būdu atnaujinkite Pod statusą Omnipod skirtuke ir, jei reikia, atnaujinkite insulino tiekimą.</string>
     <string name="bolus_delivery_status_uncertain">Boluso suleidimo statusas nežinomas. Atnaujinkite Pod statusą patvirtinimui ar atmetimui.</string>
+    <string name="temp_basal_out_of_sync">Nenumatytas laikinos bazės statusas! Jei iki šiol veikė laikina bazė, ji atšaukta. Patikrinkite suleisto insulino kiekį ir pod istoriją</string>
     <string name="checking_delivery_status">Tikrinamas insulino tiekimo statusas</string>
     <string name="setting_temp_basal_might_have_basal_failed">Gali būti, kad nepavyko nustatyti laikinos valandinės bazės. Jei laikina bazė buvo nustatyta anksčiau, ji yra atšaukta. Rankiniu būdu atnaujinkite Pod statusą Omnipod skirtuke.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Laikinos bazės atšaukimo rezultatas nežinomas</string>

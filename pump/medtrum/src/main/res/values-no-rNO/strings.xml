@@ -6,7 +6,6 @@
     <string name="medtrum_pump_description">Pumpeintegrasjon for Medtrum Nano</string>
     <string name="medtrum_pump_setting">Medtrum pumpeinnstillinger</string>
     <string name="pump_error">Pumpefeil: %1$s!! </string>
-    <string name="pump_unsupported">Pumpe ikke testet: %1$d! Kontakt oss på discord eller github for støtte</string>
     <string name="pump_is_suspended">Pumpen er pauset</string>
     <string name="pump_is_suspended_hour_max">Pumpe er pauset fordi maksimal insulinleveranse per time er overskredet</string>
     <string name="pump_is_suspended_day_max">Pumpe er pauset fordi maksimal insulinleveranse per dag er overskredet</string>
@@ -28,7 +27,7 @@
     <string name="patch_expiry_label">Patch utløper</string>
     <string name="refresh_label">Oppdater</string>
     <string name="reset_alarms_label">Nullstill alarmer</string>
-    <string name="change_patch_label">Bytte patch</string>
+    <string name="change_patch_label">Bytte Patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Forespurt av bruker</string>
     <string name="expiry_not_enabled">Ikke aktivert</string>
     <!-- Alarm strings -->
@@ -101,6 +100,8 @@
     <!-- settings-->
     <string name="sn_input_title">Serienummer</string>
     <string name="sn_input_summary">Skriv inn serienummeret til pumpens base.</string>
+    <string name="sn_input_invalid">Ugyldig serienummer!</string>
+    <string name="pump_unsupported">Pumpe ikke testet: %1$d! Kontakt oss på discord eller github for støtte</string>
     <string name="alarm_setting_title">Alarminnstillinger</string>
     <string name="alarm_setting_summary">Velg dine foretrukne alarminnstillinger.</string>
     <string name="patch_expiration_title">Patch utløpsdato</string>

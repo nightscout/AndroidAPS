@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Създаден запис - Промяна на профил</string>
     <string name="sms_wrong_tbr_duration">Продължителността на временния база; трябва да бъде кратна на %1$d минути и по-голяма от 0.</string>
     <string name="a11y_otp_qr_code">QR Code за еднократна парола</string>
-    <string name="xdrip_status_detailed_iob_title">Покажи подробен IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Раздели IOB от болус и от базал на часовника</string>
     <string name="disabled_loop">Loop изключен</string>
-    <string name="xdrip_status_show_bgi_title">Показвай BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Добави BGI към статуса</string>
     <!-- Food-->
     <string name="food_short">Храна</string>
     <string name="description_food">Показва въведените в Nightscout храни</string>
@@ -306,8 +302,6 @@
     <string name="wear_wizard_settings_summary">Изчисления, включени в резултата на съветника:</string>
     <string name="wear_display_settings">Настройки за визуализация</string>
     <string name="wear_general_settings">Основни настройки</string>
-    <string name="wear_detailed_delta_title">Показвай подробна делта</string>
-    <string name="wear_detailed_delta_summary">Показвай делта с още един десетичен знак</string>
     <string name="wear_notifysmb_title">Уведомяване при SMB</string>
     <string name="wear_notifysmb_summary">Покажи SMB на часовника като стандартен болус.</string>
     <string name="wear_predictions_summary">Показвай прогнозините КЗ на часовника.</string>

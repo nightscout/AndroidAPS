@@ -17,7 +17,7 @@
     <string name="openapsama_autosens_min_summary">Numatytoji reikšmė: 0.7\nTai antras daugiklis Autosens funkcijoje, kuris nustato, kad Autosens gali iki minimalios 70 % ribos sumažinti valandinę bazę bei padidinti JIF ir tikslinės glikemijos vertę.</string>
     <string name="openapsama_autosens_max">Maksimali Autosens reikšmė</string>
     <string name="openapsama_autosens_min">Minimali Autosens reikšmė</string>
-    <string name="openapsama_min_5m_carb_impact_summary">Numatytoji reikšmė: 3.0 (AMA) arba 8.0 (SMB). Tai parametras, nurodantis angliavandenių poveikį glikemijai kas 5 minutes nuo jų suvartojimo. Numatytoji reikšmė yra 3 mg/dl per 5min. Šis skaičius turi įtakos apskaičiavimams, kaip greitai mažės AAO, kokia bus glikemijos kitimo prognozė, ypač kai ji krenta daugiau nei tikėtasi, arba nedidėja tiek, kiek tikėtasi.</string>
+    <string name="openapsama_min_5m_carb_impact_summary">Numatytoji reikšmė: 3.0 (AMA) arba 8.0 (SMB). Tai parametras, nurodantis angliavandenių poveikį glikemijai per 5 min. Numatytoji reikšmė yra 3 mg/dl per 5min. Šis skaičius turi įtakos apskaičiuojant, kaip greitai mažės AAO, kokia bus glikemijos kitimo prognozė, ypač kai ji mažėja labiau nei tikėtasi, arba nedidėja tiek, kiek tikėtasi.</string>
     <string name="absorption_cutoff_title">Maksimalus maisto įsisavinimo laikas [h]</string>
     <string name="absorption_cutoff_summary">Laikas, per kurį bet koks maistas laikomas įsisavintu. Likę angliavandeniai bus atmesti.</string>
 </resources>

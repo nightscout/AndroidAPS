@@ -11,7 +11,7 @@
     <string name="save">Salvar</string>
     <string name="reloadprofile">Recarregar perfil</string>
     <string name="correctionbous">Correção</string>
-    <string name="ns_upload_only">(PERIGOSO PARA DESATIVAR) somente upload para NS</string>
+    <string name="ns_upload_only">(PERIGOSO DESATIVAR) somente upload para NS</string>
     <string name="ns_upload_only_summary">Somente upload para NS (sincronização desativada). Não é eficaz em SGV ao menos que você selecione uma fonte local como xDrip+. Não é eficaz em perfis enquanto NS-Profiles é usado.\n!!! AVISO!!! Desativar esta opção pode causar disfunções e overdose de insulina se qualquer um dos componentes (AAPS, NS, xDrip+) estiver configurado incorretamente. Observe cuidadosamente se os dados exibidos pelo AAPS correspondem ao estado da bomba!</string>
     <string name="wear">Wear</string>
     <string name="nav_about">Sobre</string>
@@ -35,7 +35,7 @@
     <string name="close_navigation">Fechar a navegação</string>
     <string name="remove_items">Remover itens</string>
     <string name="sort_items">Ordenar itens</string>
-    <string name="error_adding_treatment_title">Dados tratamento incompletos</string>
+    <string name="error_adding_treatment_title">Dados de tratamento incompletos</string>
     <string name="error_adding_treatment_message">Um tratamento (insulina: %1$.2f, hidratos: %2$d, às: %3$s) não ficou gravado. Por favor verifique se foi realmente efectuado e se sim adicione manualmente aos tratamentos.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), atraso: %3$d m</string>
     <string name="profile_total">== ∑  %1$s U</string>

@@ -4,9 +4,8 @@
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
     <string name="medtrum_pump_description">Integración de bombas de insulina Medtrum Nano</string>
-    <string name="medtrum_pump_setting">Ajustes de bomba Medtrum</string>
+    <string name="medtrum_pump_setting">Ajustes de la bomba Medtrum</string>
     <string name="pump_error">Error de bomba: %1$s !! </string>
-    <string name="pump_unsupported">Bomba no probada: %1$d! Por favor, contacta con nosotros en Discord o GitHub para obtener soporte</string>
     <string name="pump_is_suspended">Bomba suspendida</string>
     <string name="pump_is_suspended_hour_max">Bomba suspendida por superarse el máximo de insulina por hora</string>
     <string name="pump_is_suspended_day_max">Bomba suspendida por superar el máximo diario de insulina</string>
@@ -101,6 +100,8 @@
     <!-- settings-->
     <string name="sn_input_title">Número de serie</string>
     <string name="sn_input_summary">Introduce el número de serie de la base de la bomba.</string>
+    <string name="sn_input_invalid">¡Número de serie inválido!</string>
+    <string name="pump_unsupported">Bomba no probada: %1$d! Por favor, contacta con nosotros en Discord o GitHub para obtener soporte</string>
     <string name="alarm_setting_title">Ajustes de las alarmas</string>
     <string name="alarm_setting_summary">Selecciona los ajustes de la alarma de la bomba que prefieras.</string>
     <string name="patch_expiration_title">Caducidad del parche</string>

@@ -92,6 +92,8 @@
     <string name="lastboluscompared">Última vez do bolus %1$s %2$s atrás</string>
     <string name="triggercoblabel">HCA</string>
     <string name="cobcompared">HCA %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Frequência cardíaca</string>
+    <string name="triggerHeartRateDesc">Pulso %1$s %2$.0f</string>
     <string name="iob_u">IA [U]:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="recurringTime">Tempo recorrente</string>
@@ -109,6 +111,14 @@
     <string name="automation_event">Evento de automatização</string>
     <string name="reorder_label">Reordenar</string>
     <string name="user_action">Ação do utilizador</string>
+    <string name="remove_automation">Remover automação</string>
+    <string name="sort_automation">Ordenar automação</string>
+    <string name="remove_selected_items">Remover itens selecionados</string>
+    <string name="count_selected">%1$d selecionados</string>
+    <string name="system_automation">Automação do sistema</string>
+    <string name="run_automations">Executar automações</string>
+    <string name="add_automation">Adicionar regra</string>
+    <string name="stop_processing">Parar processamento</string>
     <!-- WeekdayPicker -->
     <string name="monday_short">S</string>
     <string name="tuesday_short">T</string>
@@ -118,5 +128,7 @@
     <string name="saturday_short">Sa</string>
     <string name="sunday_short">D</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Hora de comer!\nExecutar assistente de Bólus e fazer cálculo novamente.</string>
     <string name="time_to_bolus">Hora de fazer o bólus!\nExecute o assistente de bólus e faça o cálculo novamente.</string>
+    <string name="error_setting_reminder">Erro ao configurar alarme futuro</string>
 </resources>

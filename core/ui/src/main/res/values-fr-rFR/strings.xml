@@ -121,7 +121,7 @@
     <string name="loopsuspended">La Boucle est suspendue</string>
     <string name="trend_arrow">Flèche de tendance</string>
     <string name="a11y_autosens_label">Auto sens</string>
-    <string name="required">requis</string>
+    <string name="required">req</string>
     <string name="a11y_arrow_double_down">en baisse rapide</string>
     <string name="a11y_arrow_single_down">en baisse</string>
     <string name="a11y_arrow_forty_five_down">en baisse lente</string>
@@ -424,6 +424,7 @@
     <string name="autotune_ic_warning">Le profil sélectionné %1$d valeurs de G/I. Autotune va utiliser la moyenne %2$.2f g/U</string>
     <string name="autotune_isf_warning">Le profil sélectionné a %1$d valeurs de SI. Autotune va utiliser la moyenne %2$.1f %3$s/U</string>
     <string name="autotune_error">Erreur dans les données d\'entrée, essayez de relancer le calcul ou réduire le nombre de jours</string>
+    <string name="autotune_error_more_days">Erreur dans les données de saisie, augmenter le nombre de jours</string>
     <string name="autotune_warning_during_run">Le calcul Autotune a commencé, veuillez patienter</string>
     <string name="autotune_warning_after_run">Vérifiez attentivement les résultats avant de les utiliser!</string>
     <string name="autotune_partial_result">Résultat partiel jour %1$d / %2$d calculé</string>
@@ -456,7 +457,7 @@
     <string name="cobvsiob">GA vs IA</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Absorption lente des glucides détectée dans %2$d%% des cas. Vérifiez de nouveau votre calcul. Les GA (Glucides Actifs) peuvent être surestimés et alors trop d\'insuline pourrait être injectée !!!!!</font>]]></string>
     <string name="partialboluswizard">Injecter ce pourcentage du bolus calculé par l’assistant [%]</string>
-    <string name="partialboluswizard_reset_time">Durée limite après la dernière Gly reçue pour appliquer le % de bolus [min]</string>
+    <string name="partialboluswizard_reset_time">Durée limite après la dernière Gly reçue au. delà de laquelle le % de bolus n\'est plus appliqué [min]</string>
     <string name="bolus_constraint_applied_warn">Contrainte de Bolus appliquée : %1$.2f U vers %2$.2f U</string>
     <string name="bolus_recorded_only">Les bolus seront seulement enregistrés (pas délivrés par la pompe)</string>
     <string name="advisoralarm">Alerter quand il est temps de manger</string>

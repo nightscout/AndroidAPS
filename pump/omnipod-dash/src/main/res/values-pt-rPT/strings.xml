@@ -6,6 +6,7 @@
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Histórico do Pod</string>
     <string name="omnipod_dash_history_item_description">Descrição</string>
+    <string name="omnipod_dash_history_item_amount">Quantidade</string>
     <string name="omnipod_dash_history_item_source">Fonte</string>
     <string name="omnipod_dash_history_item_date">Data</string>
     <string name="omnipod_dash_history_type">Tipo:</string>
@@ -31,11 +32,16 @@
     <string name="omnipod_dash_command_not_sent">Comando não enviado</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Comando não recebido pelo pod</string>
     <string name="omnipod_dash_unknown">Estado desconhecido para o comando</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minutos</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">A entrega de insulina está suspensa</string>
+    <string name="omnipod_common_history_total_delivered">Total administrado: %1$.2f U</string>
     <string name="omnipod_dash_connection_lost">Perda de ligação ao pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">Outro bólus está a ser administrado</string>
     <string name="omnipod_dash_not_enough_insulin">Não há insulina suficiente no reservatório</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Comando não confirmado</string>
     <string name="requested_by_user" comment="26 characters max for translation">Solicitado pelo utilizador</string>
+    <string name="profile_set_ok">Definição de perfil OK</string>
+    <string name="suspend_delivery_is_unconfirmed">A suspensão da administração não está confirmada! Por favor, atualize manualmente o estado do Pod na guia Omnipod e retome a administração, se necessário.</string>
+    <string name="insulin_delivery_suspended">Entrega de insulina suspensa</string>
 </resources>

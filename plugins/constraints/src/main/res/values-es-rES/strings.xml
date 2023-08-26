@@ -10,7 +10,7 @@
     <string name="old_version">versión antigua</string>
     <string name="very_old_version">versión muy antigua</string>
     <string name="application_expired">Aplicación caducada</string>
-    <string name="new_version_warning">Nueva versión disponible de al menos %1$d día/s. Se vuelve a la función de suspensión por glucosa baja (LGS) después de %2$d días. Después se deshabilitará el bucle en %3$d días</string>
+    <string name="new_version_warning">¡La nueva versión no se ha comprobado desde hace al menos %1$d días! Volverás a LGS después de %2$d días, el lazo se deshabilitará después de %3$d días. ¡Restaura la conexión a Internet!</string>
     <string name="running_invalid_version">Hemos detectado que está ejecutando una versión no válida. ¡Bucle desactivado!</string>
     <string name="versionavailable">Versión %1$s disponible</string>
     <string name="version_expire">La versión %1$s caduca el %2$s</string>

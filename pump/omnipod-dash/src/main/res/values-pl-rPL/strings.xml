@@ -6,6 +6,7 @@
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Historia Poda</string>
     <string name="omnipod_dash_history_item_description">Opis</string>
+    <string name="omnipod_dash_history_item_amount">Ilość</string>
     <string name="omnipod_dash_history_item_source">Źródło</string>
     <string name="omnipod_dash_history_item_date">Data</string>
     <string name="omnipod_dash_history_type">Typ:</string>
@@ -30,8 +31,10 @@
     <string name="omnipod_dash_command_not_sent">Polecenie nie wysłane</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Polecenie nie odebrane przez poda</string>
     <string name="omnipod_dash_unknown">Nieznany stan polecenia</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minut</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Podawanie insuliny zawieszone</string>
+    <string name="omnipod_common_history_total_delivered">Razem dostarczono: %1$.2f U</string>
     <string name="omnipod_dash_connection_lost">Utracono połączenie z Podem</string>
     <string name="omnipod_dash_bolus_already_in_progress">Inny bolus jest dostarczany</string>
     <string name="omnipod_dash_not_enough_insulin">Pozostało za mało insuliny w zbiorniku</string>
@@ -44,6 +47,7 @@
     <string name="failed_to_set_the_new_basal_profile">Nie udało się ustawić nowego profilu bazowego. Podaż insuliny zawieszona</string>
     <string name="setting_basal_profile_might_have_failed">Ustawianie profilu bazowego mogło się nie powieść. Podawanie insuliny mogło zostać zawieszone! W razie potrzeby proszę ręcznie odświeżyć status Poda na karcie Omnipod i wznowić podawanie.</string>
     <string name="bolus_delivery_status_uncertain">Status podawania bolusa jest niepewny. Odśwież status Poda aby potwierdzić lub odrzucić.</string>
+    <string name="temp_basal_out_of_sync">Status tymczasowej bazy nie jest zgodny z oczekiwaniami! Jeśli baza tymczasowa była wcześniej uruchomiona, została anulowana. Sprawdź ilość dostarczonej insuliny i historię poda</string>
     <string name="checking_delivery_status">Sprawdź status podawania insuliny</string>
     <string name="setting_temp_basal_might_have_basal_failed">Ustawienie bazy tymczasowej mogło się nie powieść. Jeśli baza tymczasowa była wcześniej uruchomiona, mogła zostać anulowana. Odśwież ręcznie status Poda z zakładki Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Anulowanie tymczasowej dawki bazowej jest niepewne</string>

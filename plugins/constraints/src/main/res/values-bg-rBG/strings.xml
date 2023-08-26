@@ -10,7 +10,6 @@
     <string name="old_version">стара версия</string>
     <string name="very_old_version">много стара версия</string>
     <string name="application_expired">Приложението е твърде старо!</string>
-    <string name="new_version_warning">Има нова версия от най-малко %1$d дни! Ще спре подаването на инсулин след %2$d дни, цикълът ще бъде изключен след %3$d дни</string>
     <string name="running_invalid_version">Използвате грешна версия. APS е изключен!</string>
     <string name="versionavailable">Има налично обновяване до версия %1$s </string>
     <string name="version_expire">Версия %1$s изтича на %2$s</string>

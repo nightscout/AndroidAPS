@@ -4,12 +4,8 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.core.view.MenuProvider
 import com.google.android.material.tabs.TabLayout
 import com.google.common.collect.Lists
 import info.nightscout.core.profile.ProfileSealed
@@ -254,21 +250,6 @@ class ProfileHelperActivity : TranslatedDaggerAppCompatActivity() {
         binding.basalPctFromTddLabel.labelFor = binding.basalPctFromTdd.editTextId
 
         switchTab(0, typeSelected[0], false)
-
-        // Add menu items without overriding methods in the Activity
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                when (menuItem.itemId) {
-                    android.R.id.home -> {
-                        onBackPressedDispatcher.onBackPressed()
-                        true
-                    }
-
-                    else              -> false
-                }
-        })
     }
 
     private fun getProfile(age: Int, tdd: Double, weight: Double, basalPct: Double, tab: Int): PureProfile? =

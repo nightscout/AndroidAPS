@@ -10,7 +10,6 @@
     <string name="old_version">oude versie</string>
     <string name="very_old_version">zeer oude versie</string>
     <string name="application_expired">Applicatie is verlopen</string>
-    <string name="new_version_warning">Nieuwe versie al zeker %1$d dagen beschikbaar! Terugval LGS na %2$d dagen, loop zal worden uitgeschakeld na %3$d dagen</string>
     <string name="running_invalid_version">We hebben gedetecteerd dat je een ongeldige versie gebruikt. Loop is uitgeschakeld!</string>
     <string name="versionavailable">Versie %1$s is beschikbaar</string>
     <string name="version_expire">Versie %1$s verloopt op %2$s</string>

@@ -6,6 +6,7 @@
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Pod Historie</string>
     <string name="omnipod_dash_history_item_description">Beschreibung</string>
+    <string name="omnipod_dash_history_item_amount">Menge</string>
     <string name="omnipod_dash_history_item_source">Quelle</string>
     <string name="omnipod_dash_history_item_date">Datum</string>
     <string name="omnipod_dash_history_type">Typ:</string>
@@ -30,8 +31,10 @@
     <string name="omnipod_dash_command_not_sent">Befehl nicht gesendet</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Befehl nicht vom Pod empfangen</string>
     <string name="omnipod_dash_unknown">Unbekannter Status für den Befehl</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d Minuten</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f IE</string>
     <string name="omnipod_common_alert_delivery_suspended">Insulinabgabe ist unterbrochen</string>
+    <string name="omnipod_common_history_total_delivered">Gesamt geliefert: %1$.2f E</string>
     <string name="omnipod_dash_connection_lost">Verbindung zum Pod verloren</string>
     <string name="omnipod_dash_bolus_already_in_progress">Ein weiterer Bolus wird abgegeben</string>
     <string name="omnipod_dash_not_enough_insulin">Nicht genug Insulin im Reservoir übrig</string>
@@ -44,6 +47,7 @@
     <string name="failed_to_set_the_new_basal_profile">Fehler beim Festlegen des neuen Basal-Profils. Abgabe unterbrochen</string>
     <string name="setting_basal_profile_might_have_failed">Basalprofil konnte evtl. nicht gesetzt werden. Insulinabgabe wird evtl. unterbrochen. Bitte aktualisiere den Pod Status manuell im DASH Tab und starte die inabgabe falls notwendig neu.</string>
     <string name="bolus_delivery_status_uncertain">Bolus Lieferstatus unklar. Aktualisiere den Pod Status, um ihn zu kontrollieren.</string>
+    <string name="temp_basal_out_of_sync">Temporärer Basalstatus nicht wie erwartet! Wenn ein Temp Basal zuvor ausgeführt wurde, wurde er abgebrochen. Bitte überprüfe die Insulin- und Pod-Historie</string>
     <string name="checking_delivery_status">Abgabestatus wird überprüft</string>
     <string name="setting_temp_basal_might_have_basal_failed">TBR konnte evtl. nicht gesetzt werden. Falls zuvor eine andere TBR aktiv war, wurde diese abgebrochen. Aktualisiere bitte manuell den Pod Status im DASH Tab.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Ob das Abbrechen der TBR erfolgreich war, ist unklar</string>

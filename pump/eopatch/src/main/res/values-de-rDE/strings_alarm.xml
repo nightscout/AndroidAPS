@@ -1,2 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">Leerer Reservoir\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a003">Patch abgelaufenen\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a004">Verschluss\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a005">Fehler beim Power on Selbsttest\nPatch wurde deaktiviert. Wechsele den Patch jetzt.</string>
+    <string name="string_a007">Unangemessene Temperatur\nInsulinlieferung oder \'Patch aktivieren\' Prozess gestoppt. Vermeiden Sie jetzt extreme Temperatur.</string>
+    <string name="string_a016">Fehler beim Einfügen der Nadel\nPrüfe die Knopfposition und tippe auf \"Wiederholen\".</string>
+    <string name="string_a018">Patch abgelaufenen\nPatch wurde deaktiviert und \nInsulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a019">Patch Batteriefehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a020">Patch-Aktivierungsfehler\n\'Patch aktivieren\' ist abgelaufen. Tippe auf \'Bestätigen\', um den aktuellen Patch zu deaktivieren. Wechsele den Patch jetzt.</string>
+    <string name="string_a022">Patch Fehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a023">Patch Fehler\nPatch wurde deaktiviert und\nInsulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a034">Patch Fehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a041">Patch Fehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a042">Patch Fehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a043">Patch Fehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a044">Patch Fehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a106">Patch Fehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a107">Patch Fehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a108">Patch Fehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a116">Patch Fehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a117">Patch Fehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_a118">Patch Fehler\nPatch wurde deaktiviert und Insulinlieferung gestoppt. Wechsele den Patch jetzt.</string>
+    <string name="string_b000">Patch Betriebsdauer läuft ab %s. Sei bereit für Patchwechsel.</string>
+    <string name="string_b001">Ende der Unterbrechung der Insulinlieferung\nTippe auf \'Fortsetzen\' um die Insulinlieferung neu zu starten.</string>
+    <string name="string_b003">Niedriges Reservoir\nPatch bald ersetzen.</string>
+    <string name="string_b005">Patch Betriebsdauer abgelaufen\nPatch jetzt wechseln.</string>
+    <string name="string_b006">Patch läuft bald ab\nPatch jetzt wechseln.</string>
+    <string name="string_b012">Unvollständige Patch-Aktivierung\nSchließe \'Patch aktivieren\' Prozess ab.</string>
+    <string name="string_b018">Patch Akku niedrig\nSei bereit den Patch zu wechseln.</string>
+</resources>

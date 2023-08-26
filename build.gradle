@@ -4,7 +4,7 @@ buildscript {
     ext {
         kotlin_version = '1.8.22'
         core_version = '1.10.1'
-        rxjava_version = '3.1.6'
+        rxjava_version = '3.1.7'
         rxandroid_version = '3.0.2'
         rxkotlin_version = '3.0.1'
         room_version = '2.5.2'
@@ -50,7 +50,7 @@ buildscript {
         play_services_location_version = '21.0.1'
 
         kotlinx_datetime_version = '0.4.0'
-        kotlinx_serialization_version = '1.5.1'
+        kotlinx_serialization_version = '1.6.0'
 
         caverock_androidsvg_version = '1.4'
     }
@@ -59,9 +59,9 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.1.0'
+        classpath 'com.android.tools.build:gradle:8.1.1'
         classpath 'com.google.gms:google-services:4.3.15'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.8'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files

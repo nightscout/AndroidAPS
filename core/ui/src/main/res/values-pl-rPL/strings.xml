@@ -376,6 +376,9 @@
     <string name="carbs_g">WĘGLOW. %1$d g</string>
     <string name="extended_bolus_u_min">BOLUS PRZEDŁ. %1$.2f U %2$d min</string>
     <string name="load_events">WCZYTYWANIE ZDARZEŃ</string>
+    <string name="clear_alarms">WYCZYŚĆ ALARMY</string>
+    <string name="deactivate">DEAKTYWUJ</string>
+    <string name="update_time">AKTUALIZUJ CZAS</string>
     <string name="load_history">WCZYTYWANIE HISTORII %1$d</string>
     <string name="load_tdds">WCZYTYWANIE DDI</string>
     <string name="set_profile">USTAW PROFIL</string>
@@ -421,6 +424,7 @@
     <string name="autotune_ic_warning">Wybrany profil ma %1$d wartości IC. Autotune użyje %2$.2f g/U</string>
     <string name="autotune_isf_warning">Wybrany profil ma %1$d wartości ISF. Autotune użyje %2$.1f %3$s/U</string>
     <string name="autotune_error">Błąd w danych wejściowych, spróbuj uruchomić Autotune ponownie lub zmniejszyć liczbę dni</string>
+    <string name="autotune_error_more_days">Błąd w danych wejściowych, zwiększ liczbę dni</string>
     <string name="autotune_warning_during_run">Rozpoczęto obliczenia Autotune, prosimy o cierpliwość</string>
     <string name="autotune_warning_after_run">Uważnie sprawdź wyniki przed ich użyciem!</string>
     <string name="autotune_partial_result">Wynik częściowy - dostrojono dzień %1$d / %2$d</string>
@@ -453,6 +457,7 @@
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Wykryto powolne wchłanianie węglowodanów: %2$d%% czasu. Sprawdź ponownie swoje obliczenia. COB mogły być przeszacowane przez co mogło być podane zbyt dużo insuliny !!!!!</font>]]></string>
     <string name="partialboluswizard">Dostarcz tą część dawki insuliny z wyniku kalkulatora bolusa [%]</string>
+    <string name="partialboluswizard_reset_time">Próg czasu starej glikemii [min]</string>
     <string name="bolus_constraint_applied_warn">Zastosowano ograniczenie bolusa: %1$.2f U do %2$.2f U</string>
     <string name="bolus_recorded_only">Bolus zostanie jedynie odnotowany (nie będzie podany przez pompę)</string>
     <string name="advisoralarm">Uruchom alarm kiedy będzie czas na jedzenie</string>

@@ -4,14 +4,10 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.util.DisplayMetrics
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import android.widget.TextView
-import androidx.core.view.MenuProvider
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
@@ -148,20 +144,6 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
             historyBrowserData.overviewData.fromTime = bundle.getLong("start", 0)
             historyBrowserData.overviewData.toTime = bundle.getLong("end", 0)
         }
-        // Add menu items without overriding methods in the Activity
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                when (menuItem.itemId) {
-                    android.R.id.home -> {
-                        onBackPressedDispatcher.onBackPressed()
-                        true
-                    }
-
-                    else              -> false
-                }
-        })
     }
 
     override fun onPause() {

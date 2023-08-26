@@ -10,7 +10,7 @@
     <string name="hypott_label">Hipo laikinas tikslas</string>
     <string name="hypott_whenhypott">Kokia yra pagrindinė priežastis nustatyti Hipo laikiną tikslą?</string>
     <string name="hypott_wrongbasal">Hipoglikemijų dėl neteisingai nustatytos bazės korekcija.</string>
-    <string name="hypott_preventoversmb">Kad būtų išvengta per didelių AndroidAPS korekcijų, kai glikemija pradeda staigiai kilti suvalgius greitai veikiančių angliavandenių hipoglikemijos metu.</string>
+    <string name="hypott_preventoversmb">Kad būtų išvengta per didelių AAPS korekcijų, kai glikemija pradeda staigiai kilti suvalgius greitai veikiančių angliavandenių hipoglikemijos metu.</string>
     <string name="hypott_exercise">Tam, kad būtų koreguojama hipoglikemija, įvykusi dėl fizinio aktyvumo.</string>
     <string name="hypott_0basal">Tam, kad būtų išvengta glikemijos kritimo kai jau nustatyta 0% laikina bazė.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html</string>

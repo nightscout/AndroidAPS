@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
     <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS(Custom)</string>
     <string name="label_actions_tile">AAPS(Aktionen)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
@@ -22,16 +23,20 @@
     <string name="msg_warning_old">AAPS Daten sind %1$s alt! Prüfe Deinen Sensor, xDrip+, NS, AAPS Einstellungen etc!</string>
     <string name="pref_vibrate_on_bolus">Bei Bolus vibrieren</string>
     <string name="pref_units_for_actions">Einheit (mg/dl od. mmol/l)</string>
+    <string name="units_short">E</string>
     <string name="pref_show_date">Datum anzeigen</string>
     <string name="pref_show_iob">IOB anzeigen</string>
+    <string name="pref_show_detailed_iob">Zeige detailliertes IOB</string>
     <string name="pref_show_cob">COB anzeigen</string>
     <string name="pref_show_delta">Abweichung anzeigen</string>
+    <string name="pref_show_detailed_delta">Zeige detailliertes Delta</string>
     <string name="pref_show_avgdelta">Durchschnittl. Abweichung anzeigen</string>
     <string name="pref_show_phone_battery">Akkustand Smartphone</string>
     <string name="pref_show_rig_battery">Akkustand Rig</string>
     <string name="pref_show_basal_rate">Basalrate anzeigen</string>
     <string name="pref_show_loop_status">Loop Status anzeigen</string>
     <string name="pref_show_bg">BZ anzeigen</string>
+    <string name="pref_show_bgi">Zeige BGI</string>
     <string name="pref_show_direction_arrow">Trendpfeil anzeigen</string>
     <string name="pref_show_ago">Min. seit letztem Wert</string>
     <string name="pref_dark" comment="Enables dark visual theme">Dunkel</string>
@@ -143,6 +148,7 @@
     <string name="pref_simplify_ui_sum">Nur Uhrzeit und BZ anzeigen</string>
     <string name="pref_vibrate_hourly">stündlich vibrieren</string>
     <string name="pref_show_weeknumber">Kalenderwoche anzeigen</string>
+    <string name="custom_pref_show_seconds">Sekunden anzeigen</string>
     <string name="digitalstyle_pref_your_style">Ihr Stil:</string>
     <string name="digitalstyle_style_none">ohne Stil</string>
     <string name="digitalstyle_style_minimal">minimalistisches Stil</string>
@@ -190,7 +196,10 @@
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">alt</string>
     <string name="old_warning">!alt!</string>
     <string name="error">!err!</string>
+    <string name="pref_heartRateSampling">Herzfrequenz</string>
 </resources>

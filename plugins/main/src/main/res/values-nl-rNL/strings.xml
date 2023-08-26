@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Profiel wissel aangemaakt</string>
     <string name="sms_wrong_tbr_duration">Tijdelijk basaal duur moet een veelvoud van %1$d minuten en groter dan 0 zijn.</string>
     <string name="a11y_otp_qr_code">QR Code voor het instellen van een eenmalig wachtwoord</string>
-    <string name="xdrip_status_detailed_iob_title">Toon gedetailleerde IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Splits IOB in bolus en basaal op de watchface</string>
     <string name="disabled_loop">Loop is uitgeschakeld</string>
-    <string name="xdrip_status_show_bgi_title">Toon BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Voeg BGI toe aan status lijn</string>
     <!-- Food-->
     <string name="food_short">Voeding</string>
     <string name="description_food">Toon de instellingen voor Voeding in Nightscout</string>
@@ -306,8 +302,6 @@
     <string name="wear_wizard_settings_summary">Berekeningen inclusief in het resultaat van de wizard</string>
     <string name="wear_display_settings">Scherm instellingen</string>
     <string name="wear_general_settings">Algemene instellingen</string>
-    <string name="wear_detailed_delta_title">Toon gedetailleerde delta</string>
-    <string name="wear_detailed_delta_summary">Toon delta met een extra decimaal punt</string>
     <string name="wear_notifysmb_title">Waarschuw bij SMB</string>
     <string name="wear_notifysmb_summary">Toon SMB op horloge zoals gewone bolussen.</string>
     <string name="wear_predictions_summary">Toon de voorspellingen op het horloge.</string>

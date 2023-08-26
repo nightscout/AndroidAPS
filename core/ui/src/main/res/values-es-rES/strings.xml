@@ -139,7 +139,7 @@
     <string name="none"><![CDATA[<ninguno>]]></string>
     <string name="remove_label">ELIMINAR</string>
     <string name="activate_profile">ACTIVAR PERFIL</string>
-    <string name="reset">reestablecer</string>
+    <string name="reset">restablecer</string>
     <string name="profileswitch_ismissing">Falta el Cambio de Perfil. Haga un Cambio de Perfil o presione \"Activar perfil\" en el PerfilLocal.</string>
     <string name="profile">Perfil</string>
     <string name="select_for_removal">Selecciona para eliminar</string>

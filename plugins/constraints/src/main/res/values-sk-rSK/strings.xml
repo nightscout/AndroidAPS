@@ -10,7 +10,6 @@
     <string name="old_version">stará verzia</string>
     <string name="very_old_version">veľmi stará verzia</string>
     <string name="application_expired">Aplikácia expirovala</string>
-    <string name="new_version_warning">Nová verzia je dostupná minimálne %1$d dní! Prepnutie na ochranu pred nízkou glykémiou po %2$d dňoch, vypnutie uzavretého okruhu po %3$d dňoch</string>
     <string name="running_invalid_version">Zistili sme, že používate neplatnú verziu. Uzavretý okruh zakázaný!</string>
     <string name="versionavailable">Verzia %1$s je k dispozícii</string>
     <string name="version_expire">Verzia %1$s expiruje dňa %2$s</string>

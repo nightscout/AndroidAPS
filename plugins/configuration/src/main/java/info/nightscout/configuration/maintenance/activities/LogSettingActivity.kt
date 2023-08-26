@@ -1,14 +1,10 @@
 package info.nightscout.configuration.maintenance.activities
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
 import android.view.View
 import android.widget.CheckBox
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.core.view.MenuProvider
 import info.nightscout.configuration.R
 import info.nightscout.configuration.databinding.ActivityLogsettingBinding
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
@@ -39,20 +35,6 @@ class LogSettingActivity : TranslatedDaggerAppCompatActivity() {
             l.resetToDefaults()
             createViewsForSettings()
         }
-        // Add menu items without overriding methods in the Activity
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {}
-
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
-                when (menuItem.itemId) {
-                    android.R.id.home -> {
-                        onBackPressedDispatcher.onBackPressed()
-                        true
-                    }
-
-                    else              -> false
-                }
-        })
     }
 
     private fun createViewsForSettings() {
