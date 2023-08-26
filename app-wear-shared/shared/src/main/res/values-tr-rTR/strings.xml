@@ -73,5 +73,20 @@
     <string name="cwf_comment_rig_battery">Global döngü pili (%)</string>
     <string name="cwf_comment_basalRate">Bazal Oranı</string>
     <string name="cwf_comment_bgi">KŞ etkisi değeri</string>
+    <string name="cwf_comment_time">Saat (SS:DD veya SS:DD:SS)</string>
+    <string name="cwf_comment_hour">Saat (SS)</string>
+    <string name="cwf_comment_minute">Dakika (DD)</string>
+    <string name="cwf_comment_second">Saniye (SS)</string>
+    <string name="cwf_comment_timePeriod">AM veya PM</string>
+    <string name="cwf_comment_day_name">Haftanın gününün adı</string>
+    <string name="cwf_comment_day">Gün (GG)</string>
+    <string name="cwf_comment_month">Ay adı (kısa)</string>
+    <string name="cwf_comment_loop">Döngü durumu ve öncesi</string>
     <string name="cwf_comment_direction">Yön Okları</string>
+    <string name="cwf_comment_timestamp">Birkaç dakika önce son alınan KŞ</string>
+    <string name="cwf_comment_sgv">KŞ değeri</string>
+    <string name="cwf_comment_cover_plate">Metnin önündeki kapak resmi (kadranlar...)</string>
+    <string name="cwf_comment_hour_hand">Akrep şekli (Analog Saat)</string>
+    <string name="cwf_comment_minute_hand">Yelkovan şekli (Analog Saat)</string>
+    <string name="cwf_comment_second_hand">Saniye şekli (Analog Saat)</string>
 </resources>
