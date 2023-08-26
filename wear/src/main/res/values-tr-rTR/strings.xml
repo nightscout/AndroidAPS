@@ -29,6 +29,7 @@
     <string name="pref_show_detailed_iob">Ayrıntılı AİNS göster</string>
     <string name="pref_show_cob">AKRB göster</string>
     <string name="pref_show_delta">Deltayı göster</string>
+    <string name="pref_show_detailed_delta">Detaylı Delta göster</string>
     <string name="pref_show_avgdelta">OrtDelta\'yı Göster</string>
     <string name="pref_show_phone_battery">Telefon Pilini Göster</string>
     <string name="pref_show_rig_battery">Teçhizat Pilini Göster</string>

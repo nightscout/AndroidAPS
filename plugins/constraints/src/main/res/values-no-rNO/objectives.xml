@@ -74,7 +74,7 @@
     <string name="objectives_exam_learned_nsclient">Fjernovervåking og kontroll er mulig, men ikke alle funksjoner må være tilgjengelig eksternt.</string>
     <string name="answerdisabledto">Besvarelser deaktivert til: %1$s</string>
     <string name="wronganswer">Feil svar!</string>
-    <string name="unfinshed_button">Neste uferdig</string>
+    <string name="unfinshed_button">Neste ubesvarte</string>
     <string name="requestcode">Be om kode: %1$s</string>
     <string name="objectives_hint">(kontroller alle riktige svar)</string>
     <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>

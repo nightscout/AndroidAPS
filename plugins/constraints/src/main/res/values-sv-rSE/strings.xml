@@ -28,6 +28,4 @@
     <string name="objectives_shortname">Mål</string>
     <string name="description_objectives">Inlärningsprogram</string>
     <string name="doyouwantresetstart">Vill du starta om målet? Du kan förlora de steg du gjort hittills.</string>
-    <string name="objectives_button_unfinish">Rensa avslutade</string>
-    <string name="objectives_button_unstart">Rensa påbörjade</string>
 </resources>

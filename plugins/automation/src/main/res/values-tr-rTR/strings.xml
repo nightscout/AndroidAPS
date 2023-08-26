@@ -92,6 +92,8 @@
     <string name="lastboluscompared">Son bolus zamanı %1$s %2$s dakika önce</string>
     <string name="triggercoblabel">AKRB</string>
     <string name="cobcompared">AKRB %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Nabız</string>
+    <string name="triggerHeartRateDesc">KA %1$s %2$.0f</string>
     <string name="iob_u">AİNS [U]:</string>
     <string name="distance_short">Mesafe [m]:</string>
     <string name="recurringTime">Yinelenen zaman</string>

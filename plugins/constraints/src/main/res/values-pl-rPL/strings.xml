@@ -48,6 +48,6 @@
     <string name="doyouwantresetstart">Czy chcesz zresetować czas rozpoczęcia zadania? Możesz utracić postępy.</string>
     <string name="objectives_next_button">Dalej</string>
     <string name="objectives_previous_button">Wstecz</string>
-    <string name="objectives_button_unfinish">Wyczyść skończone</string>
-    <string name="objectives_button_unstart">Wyczyść rozpoczęte</string>
+    <string name="objectives_button_unfinish">Resetuj stan zakończenia</string>
+    <string name="objectives_button_unstart">Resetuj stan rozpoczęcia</string>
 </resources>

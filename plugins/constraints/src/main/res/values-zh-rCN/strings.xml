@@ -28,6 +28,4 @@
     <string name="objectives_shortname">目标</string>
     <string name="description_objectives">学习计划</string>
     <string name="doyouwantresetstart">你想要重置已启动的目标? 你会失去已有的进度。</string>
-    <string name="objectives_button_unfinish">清除已完成</string>
-    <string name="objectives_button_unstart">清除已启动</string>
 </resources>

@@ -48,6 +48,6 @@
     <string name="doyouwantresetstart">¿Desea reiniciar el objetivo? Puedes perder tu progreso.</string>
     <string name="objectives_next_button">Siguiente</string>
     <string name="objectives_previous_button">Anterior</string>
-    <string name="objectives_button_unfinish">Limpieza finalizada</string>
-    <string name="objectives_button_unstart">Limpieza iniciada</string>
+    <string name="objectives_button_unfinish">Restablecer estado finalizado</string>
+    <string name="objectives_button_unstart">Restablecer estado iniciado</string>
 </resources>

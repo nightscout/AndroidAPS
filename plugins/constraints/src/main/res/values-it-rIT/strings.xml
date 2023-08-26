@@ -47,6 +47,4 @@
     <string name="doyouwantresetstart">Vuoi resettare l\'avvio dell\'obiettivo? Potresti perdere i tuoi progressi.</string>
     <string name="objectives_next_button">Avanti</string>
     <string name="objectives_previous_button">Indietro</string>
-    <string name="objectives_button_unfinish">Cancella completamento</string>
-    <string name="objectives_button_unstart">Cancella avvio</string>
 </resources>

@@ -153,6 +153,7 @@
     <string name="prefdecrypt_issue_wrong_format">Şifreleme yapılandırması eksik, ayar formatı geçersiz!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Desteklenmeyen veya belirtilmeyen şifreleme algoritması!</string>
     <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Özel Saat arayüzünü Seçin</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Lütfen telefonunu yeniden başlat, yada AAPS sistem ayarları üzerinden yeniden başlat.\nAksi taktirde Android APS hiç bir günlük tutmayacak (takip ve doğrulama, algoritmanın düzenli çalışmasi için önemli)!</string>
 </resources>

@@ -48,6 +48,6 @@
     <string name="doyouwantresetstart">Voulez-vous réinitialiser le début de l\'objectif ? Vous risquez de perdre vos progrès.</string>
     <string name="objectives_next_button">Suivant</string>
     <string name="objectives_previous_button">Préc</string>
-    <string name="objectives_button_unfinish">Refaire l\'objectif</string>
-    <string name="objectives_button_unstart">Suppression démarrée</string>
+    <string name="objectives_button_unfinish">Réinitialiser l\'état terminé</string>
+    <string name="objectives_button_unstart">Réinitialiser l\'état de départ</string>
 </resources>

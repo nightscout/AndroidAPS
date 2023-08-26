@@ -47,6 +47,4 @@
     <string name="doyouwantresetstart">Chcete resetovať začiatok cieľa? Môžete prísť o svoj pokrok.</string>
     <string name="objectives_next_button">Ďalej</string>
     <string name="objectives_previous_button">Späť</string>
-    <string name="objectives_button_unfinish">Vymazanie dokončené</string>
-    <string name="objectives_button_unstart">Vymazanie začaté</string>
 </resources>

@@ -6,6 +6,7 @@
     <string name="previous_button">Anterior</string>
     <string name="nav_setupwizard">Assistente de Configuração</string>
     <string name="setupwizard_finish">TERMINAR</string>
+    <string name="welcome">Bem-vindo</string>
     <string name="welcometosetupwizard">Bem-vindo ao assistente de configuração. Vai guiá-lo(a) através do processo de instalação\n</string>
     <string name="end_user_license_agreement">Condições de Utilização</string>
     <string name="end_user_license_agreement_text">NÃO DEVE SER USADO PARA FAZER DECISÕES MÉDICAS. NÃO HÁ NENHUMA GARANTIA PARA O PROGRAMA, NA EXTENSÃO PERMITIDA PELA LEGISLAÇÃO APLICÁVEL. EXCEPTO QUANDO DE OUTRA FORMA, POR ESCRITO, OS TITULARES DOS DIREITOS DE AUTOR E / OU OUTRAS PARTES FORNECEM O PROGRAMA “TAL COMO ESTÁ”, SEM GARANTIA DE QUALQUER TIPO, EXPRESSA OU IMPLÍCITA, INCLUINDO, MAS NÃO SE LIMITANDO, ÀS GARANTIAS IMPLÍCITAS DE COMERCIALIZAÇÃO E ADEQUAÇÃO A UMA FINALIDADE ESPECÍFICA. TODO O RISCO QUANTO À QUALIDADE E DESEMPENHO DO PROGRAMA É CONSIGO. CASO O PROGRAMA SEJA DEFEITUOSO, ASSUME O CUSTO DE TODOS OS SERVIÇOS, REPAROS OU CORREÇÕES NECESSÁRIOS.</string>
@@ -20,10 +21,12 @@
     <string name="need_location_permission">Aplicação necessita de permissão de localização para pesquisa Bluetooth e identificação Wi-Fi</string>
     <string name="need_storage_permission">A aplicação precisa da permissão de armazenamento para poder armazenar ficheiros de registo e exportar definições</string>
     <string name="askforpermission">Pedir permissão</string>
+    <string name="need_whitelisting">%1$s prexisa de autorizar a não optimização da bateria para assegurar a performance necessária</string>
     <string name="storedsettingsfound">Definições armazenadas encontradas</string>
     <string name="master_password_summary">Senha Mestre é usada para encriptação da cópia de segurança e substituir segurança na aplicação. Lembre-se dela ou guarde-a em um lugar seguro.</string>
     <string name="current_master_password">Senha Mestra actual</string>
     <string name="common_values">Utilize valores da sua maior refeição que normalmente come\n</string>
+    <string name="syncinfotext">Sincronize dados com a nuvem. Pode saltar este passo agora, mas não será capaz de passar os objetivos até que configure o Nightscout ou o Tidepool.</string>
     <string name="status">Estado:</string>
     <string name="patient_name">Nome do Paciente</string>
     <string name="patient_name_summary">Por favor, forneça o nome do paciente ou alcunha para diferenciar entre várias configurações</string>
@@ -33,7 +36,9 @@
     <string name="profile">Perfil</string>
     <string name="doprofileswitch">Fazer Mudança De Perfil</string>
     <string name="exitwizard">Saltar assistente de configuração</string>
+    <string name="setupwizard_loop_description">Pressione o botão abaixo para permitir que a AndroidAPS sugira/faça alterações nas basais</string>
     <string name="setupwizard_sensitivity_description">Plugin de Sensibilidade é usado para deteção de sensibilidade e cálculos HCA. Para mais info visite:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Seleccione um dos algoritmos disponíveis. Eles são classificados do mais antigo para o mais recente. Algoritmo mais recente é geralmente mais forte e mais agressivo. Assim, se é novo looper, poderá provavelmente começar com AMA e não com a versão mais recente. Não se esqueça de ler a documentação de OpenAPS e configurá-lo antes de utilizar.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Por favor, configure o seu RileyLink abaixo. Depois de seleccionar um RileyLink, será possível continuar a configuração quando o estado do RileyLink estiver \"Conectado\". Isso pode levar um minuto.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Nota:</b> Pode continuar a configuração assim que a bomba for configurada.\n</string>
@@ -48,24 +53,35 @@
     <string name="request">Pedido</string>
     <string name="apsmode_title">Modo APS</string>
     <string name="setupwizard_preferred_aps_mode">Modo APS preferido</string>
+    <string name="error_asking_for_permissions">Erro ao pedir permissões</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Este dispositivo parece não suportar a otimização de bateria na lista de permissões - pode ter problemas de desempenho.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Configurador</string>
     <string name="configbuilder_pump">Bomba</string>
+    <string name="configbuilder_pump_description">Qual a bomba que gostaria de utilizar com a AndroidAPS?</string>
     <string name="configbuilder_profile">Perfil</string>
+    <string name="configbuilder_profile_description">Que perfil deverá ser usado pela AndroidAPS?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Qual é o algoritmo do APS que deve fazer ajustes na terapia?</string>
     <string name="configbuilder_general">Geral</string>
     <string name="configbuilder_general_description">Estes são alguns plugins gerais que pode achar úteis.</string>
     <string name="configbuilder_sync">Sincronização</string>
+    <string name="configbuilder_sync_description">Plugins de envio de dados e sincronização.</string>
     <string name="configbuilder_constraints_description">Que restrições são aplicadas?</string>
     <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_loop_description">Utilize isto para activar a integração loop da AndroidAPS.</string>
     <string name="configbuilder_insulin_description">Qual o tipo de insulina que está a utilizar?</string>
     <string name="configbuilder_bgsource">Fonte da Glicose</string>
+    <string name="configbuilder_bgsource_description">De onde deve a AndroidAPS obter os dados?</string>
+    <string name="configbuilder_smoothing">Suavização</string>
+    <string name="configbuilder_smoothing_description">Escolha algoritmo suavizador</string>
     <string name="configbuilder_sensitivity">Detecção sensibilidade</string>
     <string name="configbuilder_sensitivity_description">Que algoritmo de sensibilidade deve ser usado?</string>
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Usado para configurar os plugins ativos</string>
+    <string name="allow_hardware_pump_text">Atenção: Se conectar e ativar a ligação à sua bomba física, a AndroidAPS irá copiar as definições do perfil para as definições da bomba, apagando o perfil memorizado na bomba. Por favor verifique se o que preencheu no perfil da AAPS tem os mesmos valores que estão na bomba. Caso contrário pressione imediatamente cancelar e corrija antes de voltar a ligar à bomba.</string>
+    <string name="a11y_open_settings">abrir definições</string>
+    <string name="nsclient_version_does_not_match">A versão AAPSClient não coincide com a versão AAPS. Por favor, atualize.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Preferências</string>
     <string name="password_preferences_encrypt_prompt">Ser-lhe-á pedida a senha mestra, que será usada para encriptar preferências exportadas.</string>
@@ -98,6 +114,7 @@
     <string name="maintenance">Manutenção</string>
     <string name="maintenance_shortname">MANU</string>
     <string name="description_maintenance">Fornece várias funções para manutenção (ex. envio de relatórios, eliminação de relatórios).</string>
+    <string name="database_cleanup">Limpar base de dados</string>
     <string name="reset_db_confirm">Quer realmente reiniciar a base de dados?</string>
     <string name="maintenance_settings">Definições de manutenção</string>
     <string name="maintenance_email">Email destinatário</string>
@@ -108,6 +125,7 @@
     <string name="engineering_mode_enabled">Modo engenheiro activado</string>
     <string name="log_files">Ficheiros de registo</string>
     <string name="nav_logsettings">Definições de registo</string>
+    <string name="miscellaneous">Diversos</string>
     <string name="nav_resetdb">Reinicializar base de dados</string>
     <string name="resettodefaults">Repor definições por defeito</string>
     <!-- Maintenance -->
@@ -135,5 +153,7 @@
     <string name="prefdecrypt_issue_wrong_format">Configuração de encriptação ausente, formato de definições é inválido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritmo de encriptação não suportado ou não especificado!</string>
     <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Selecionar Watchface Personalizada</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Por favor, reinicie o telefone ou reinicie a AAPS nas Configurações do Sistema \ncaso contrário a android APS não terá registo (isto é importante para analisar e verificar se os algoritmos estão funcionando corretamente)!</string>
 </resources>
