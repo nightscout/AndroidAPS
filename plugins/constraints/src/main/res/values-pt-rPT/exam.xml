@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dia_whatmeansdia">O que é verdade sobre DIA?</string>
+    <string name="dia_whatmeansdia">O que é verdade sobre a DAI?</string>
     <string name="dia_label_exam">Duração da Acção da Insulina (DAI)</string>
     <string name="dia_profile">Deve definir o valor da DAI no seu perfil.</string>
     <string name="dia_minimumis5h">O valor mínimo permitido são 5 horas.</string>
@@ -8,7 +8,9 @@
     <string name="dia_meaningisequaltodiapump">Se estiver satisfeito com o valor da DAI que utilizava na bomba antes da AndroidAPS e que funcionava bem, não há necessidade de o alterar quando iniciar o loop.</string>
     <string name="dia_valuemustbedetermined">Deve determinar para o seu valor adequado para a DAI.</string>
     <string name="hypott_label">Hipo Alvo-Temp</string>
+    <string name="hypott_whenhypott">Qual é a principal razão para definir um alvo temporário de hipoglicemia?</string>
     <string name="hypott_wrongbasal">Para corrigir hipos causadas por configurações de taxa de basal incorretas.</string>
+    <string name="hypott_preventoversmb">Para evitar que a AndroidAPS corrija um aumento de glicose no sangue causado pelos hidratos rápidos utilizados para tratar uma hipo.</string>
     <string name="hypott_exercise">Para corrigir uma hipo induzida como resultado de exercício.</string>
     <string name="hypott_0basal">Para evitar que a glicose no sangue baixe se verificar já uma taxa de basal temporária de 0%.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html</string>
@@ -16,6 +18,8 @@
     <string name="offlineprofile_label">Tópico: Perfil Offline</string>
     <string name="offlineprofile_nsprofile">Perfil NS pode ser usado, mas não configurado.</string>
     <string name="offlineprofile_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#profile</string>
+    <string name="pumpdisconnect_label">Razões para aplicar \"Desconectar bomba\" na AndroidAPS</string>
+    <string name="pumpdisconnect_whattodo">O que fazer quando desconectar a bomba do seu corpo?</string>
     <string name="pumpdisconnect_unnecessary">Isto é desnecessário, uma vez que a insulina não será administrada se a bomba estiver fisicamente desconectada.</string>
     <string name="pumpdisconnect_openloop">Enviará a AndroidAPS para o modo open loop.</string>
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#other-settings</string>
@@ -64,7 +68,7 @@
     <string name="basaltest_fixed">Uma vez definido e validado, estes valores não devem mudar ao longo do tempo.</string>
     <string name="basaltest_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#androidaps-settings</string>
     <string name="prerequisites_label">Pré-requisitos</string>
-    <string name="prerequisites_determinedcorrectprofile">Informações do perfil validadas (Basal, IC, FSI, DAI).</string>
+    <string name="prerequisites_determinedcorrectprofile">Informações do perfil validadas (Basal, I: HC, FSI, DAI).</string>
     <string name="prerequisites_computer">Um computador com Android Studio instalado e configurado.</string>
     <string name="prerequisites_phone">Um telefone compatível.</string>
     <string name="prerequisites_pump">Uma bomba de insulina compatível se planeia correr um closed loop.</string>
@@ -78,7 +82,7 @@
     <string name="prerequisites_smartwatch">Um Smartwatch.</string>
     <string name="prerequisites_supportedcgm">Um CGM Suportado.</string>
     <string name="prerequisites2_label">Pré-requisitos</string>
-    <string name="prerequisites2_profile">Informações validadas para configurar um perfil (FSI, rácio I:HC, taxas de basal, DIA etc.).</string>
+    <string name="prerequisites2_profile">Informações validadas para configurar um perfil (FSI, rácio I:HC, taxas de basal, DAI, etc.).</string>
     <string name="prerequisites2_device">Um dispositivo Android compatível (por exemplo, smartphone, relógio Full Android ou tablet).</string>
     <string name="prerequisites2_supportedcgm">Um CGM suportado e app apropriada para receber valores da glicose no sangue no telemóvel/dispositivo.</string>
     <string name="prerequisites2_hint1">https://wiki.aaps.app/en/latest/Module/module.html</string>
@@ -162,4 +166,6 @@
     <string name="basalhelp_google">Google</string>
     <string name="basalhelp_facebook">Facebook</string>
     <string name="other_medication_label">Outra Medicação. Por favor, leia a declaração abaixo e marque a caixa para aceitá-la.</string>
+    <string name="other_medication_text">A androidAPS reduz as taxas de basal ou suspende a administração de insulina para aumentar a quantidade de açúcar no sangue. Os medicamentos da classe inibidores SGLT2 (gliflozins) podem evitar aumentos da glicose no sangue e, por conseguinte, podem produzir uma perigosa deficiência de insulina que leva à cetoacidose diabética.
+\nOs nomes comuns são: Invokana®, Forxiga®, Jardiance®, Steglatro®, Suglat®, Apleway®, Deberza®, Synjardy®, Vokanamet®, Xigduo®,\n\nPrometo pelo presente que não tomarei tal medicação ao utilizar a AndroidAPS ou que desactivarei o loop antes de usar tais medicamentos.</string>
 </resources>
