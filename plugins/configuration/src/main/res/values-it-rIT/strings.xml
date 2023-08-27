@@ -6,6 +6,7 @@
     <string name="previous_button">Indietro</string>
     <string name="nav_setupwizard">Configurazione guidata</string>
     <string name="setupwizard_finish">FINE</string>
+    <string name="welcome">Benvenuto</string>
     <string name="welcometosetupwizard">Benvenuto nella configurazione guidata. Ti seguirò durante tutto il processo.\n</string>
     <string name="end_user_license_agreement">Contratto di licenza per l\'utente</string>
     <string name="end_user_license_agreement_text">NON DEVE ESSERE USATO PER PRENDERE DECISIONI MEDICHE. NON ESISTE ALCUNA GARANZIA PER IL PROGRAMMA, NELLA MISURA CONSENTITA DALLA LEGGE APPLICABILE. TRANNE QUANDO DIVERSAMENTE INDICATO PER ISCRITTO, I DETENTORI DEL COPYRIGHT E/O ALTRE PARTI FORNISCONO IL PROGRAMMA \"COSÌ COM\'È\" SENZA GARANZIA DI ALCUN TIPO, ESPLICITA O IMPLICITA, INCLUSE, MA NON LIMITATAMENTE A, GARANZIE IMPLICITE DI COMMERCIABILITÀ E IDONEITÀ PER UN SCOPO PARTICOLARE. L\'INTERO RISCHIO RIGUARDO LA QUALITÀ E LE PRESTAZIONI DEL PROGRAMMA È TUO. SE IL PROGRAMMA DOVESSE RISULTARE DIFETTOSO, TI ASSUMI IL COSTO DI TUTTE LE NECESSARIE MANUTENZIONI, RIPARAZIONI O CORREZIONI.</string>
