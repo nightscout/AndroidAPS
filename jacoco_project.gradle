@@ -18,13 +18,14 @@ project.afterEvaluate {
         }
 
         def excludes = [
+                '**/di/*Module.class',
+                '**/di/*Component.class',
+                '**/com/jjoe64/**/*.*',
                 '**/R.class',
                 '**/R$*.class',
                 '**/BuildConfig.*',
                 '**/Manifest*.*',
                 '**/*Test*.*',
-                '**/di/*Module.class',
-                '**/di/*Component.class',
                 'android/**/*.*',
                 'androidx/**/*.*',
                 '**/*$ViewInjector*.*',
