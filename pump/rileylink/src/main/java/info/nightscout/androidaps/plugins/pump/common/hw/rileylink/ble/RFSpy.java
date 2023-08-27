@@ -46,8 +46,8 @@ import info.nightscout.shared.sharedPreferences.SP;
  */
 @Singleton
 public class RFSpy {
-    private static final long DEFAULT_BATTERY_CHECK_INTERVAL_MILLIS = 30 * 60 * 1_000; // 30 minutes;
-    private static final long LOW_BATTERY_BATTERY_CHECK_INTERVAL_MILLIS = 10 * 60 * 1_000; // 10 minutes;
+    private static final long DEFAULT_BATTERY_CHECK_INTERVAL_MILLIS = 30 * 60 * 1_000L; // 30 minutes;
+    private static final long LOW_BATTERY_BATTERY_CHECK_INTERVAL_MILLIS = 10 * 60 * 1_000L; // 10 minutes;
     private static final int LOW_BATTERY_PERCENTAGE_THRESHOLD = 20;
 
     @Inject AAPSLogger aapsLogger;
