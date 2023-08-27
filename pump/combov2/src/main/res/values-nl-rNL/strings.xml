@@ -48,6 +48,7 @@ Probeer opnieuw te koppelen</string>
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo scan timeout bereikt</string>
     <string name="combov2_pairing_failed_due_to_error">Koppelen mislukt door de fout: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Koppelen afgebroken om onbekende redenen</string>
+    <string name="combov2_pairing_invalid_pin_length">"Ongeldige lengte van koppel-PIN: %1$d cijfers nodig, kreeg %2$d"</string>
     <string name="combov2_scanning_for_pump">Zoeken naar pomp</string>
     <string name="combov2_establishing_bt_connection">Bluetooth verbinding tot stand brengen (poging nr. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Handdruk met pomp uitvoeren</string>
@@ -125,4 +126,6 @@ Probeer opnieuw te koppelen</string>
     <string name="combov2_refresh_pump_status_after_error">Vernieuwen van pomp status nadat de pomp een fout rapporteerde</string>
     <string name="combov2_go_back">Ga terug</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Kan geen koppeling uitvoeren omdat het stuurprogramma niet is geïnitialiseerd. Dit gebeurt meestal omdat de benodigde Bluetooth-machtigingen niet zijn verleend. Ga terug, verleen Bluetooth-machtigingen, en probeer opnieuw om te koppelen.</string>
+    <string name="combov2_bluetooth_disabled">Kan stuurprogramma niet starten - Bluetooth is uitgeschakeld</string>
+    <string name="combov2_bluetooth_not_supported">Stuurprogramma kan niet worden uitgevoerd - dit apparaat ondersteunt geen Bluetooth</string>
 </resources>
