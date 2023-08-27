@@ -1,9 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MedtrumPump -->
+    <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_description">Pomp integratie voor Medtrum Nano</string>
+    <string name="medtrum_pump_setting">Medtrum pomp instellingen</string>
+    <string name="pump_error">Pomp fout: %1$s!! </string>
+    <string name="pump_is_suspended">Pomp is onderbroken</string>
+    <string name="pump_is_suspended_hour_max">Pomp is onderbroken als gevolg van overschrijding max insuline per uur</string>
+    <string name="pump_is_suspended_day_max">Pomp is onderbroken als gevolg van overschrijding max insuline per dag</string>
+    <string name="patch_not_active">Patch niet geactiveerd</string>
+    <string name="pump_setting_failed">Gebruikersinstellingen instellen op de pomp mislukt!</string>
     <!-- overview fragment -->
+    <string name="ble_status_label">BLE Status</string>
+    <string name="last_connection_label">Laatste verbinding</string>
+    <string name="pump_state_label">Pomp status</string>
+    <string name="active_alarms_label">Actieve alarmen</string>
+    <string name="reservoir_level"> %.2f E</string>
+    <string name="battery_voltage"> %.2f V</string>
+    <string name="basal_type_label">Basaal type</string>
+    <string name="basal_rate_label">Basaal snelheid</string>
+    <string name="current_basal_rate"> %.2f E/u</string>
+    <string name="pump_type_label">Type pomp</string>
+    <string name="fw_version_label">FW versie</string>
+    <string name="patch_no_label">Patch nr</string>
+    <string name="patch_expiry_label">Patch verloopt</string>
+    <string name="refresh_label">Vernieuwen</string>
+    <string name="reset_alarms_label">Reset alarmen</string>
+    <string name="change_patch_label">Patch verwisselen</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Aangevraagd door gebruiker</string>
+    <string name="expiry_not_enabled">Niet ingeschakeld</string>
     <!-- Alarm strings -->
+    <string name="alarm_none">Geen</string>
+    <string name="alarm_pump_low_battery">Pomp batterij bijna leeg</string>
+    <string name="alarm_pump_low_reservoir">Pomp reservoir bijna leeg</string>
+    <string name="alarm_pump_expires_soon">Pomp verloopt binnenkort</string>
+    <string name="alarm_auto_suspended">Automatisch onderbroken</string>
+    <string name="alarm_suspended">Onderbroken</string>
+    <string name="alarm_paused">Gepauzeerd</string>
+    <string name="alarm_occlusion">Verstopping</string>
+    <string name="alarm_expired">Verlopen</string>
+    <string name="alarm_reservoir_empty">Reservoir leeg</string>
+    <string name="alarm_patch_fault">Patch fout</string>
+    <string name="alarm_patch_fault2">Patch fout 2</string>
+    <string name="alarm_battery_out">Batterij leeg</string>
     <!-- wizard-->
+    <string name="reading_activation_status">Een ogenblik geduld, activeringsstatus van de pomp wordt gelezen.</string>
     <!-- settings-->
+    <string name="sn_input_title">Serienummer</string>
+    <string name="sn_input_invalid">Ongeldig serienummer!</string>
+    <string name="pump_unsupported">Pomp niet getest, %1$d! Neem contact met ons op via discord of github voor ondersteuning</string>
+    <string name="alarm_setting_title">Alarminstellingen</string>
+    <string name="alarm_setting_summary">Selecteer uw gewenste alarminstellingen voor de pomp.</string>
+    <string name="patch_expiration_title">Patch vervalt</string>
+    <string name="hourly_max_insulin_title">Maximale insuline per uur</string>
+    <string name="daily_max_insulin_title">Maximale insuline per dag</string>
     <!-- treatment state-->
 </resources>
