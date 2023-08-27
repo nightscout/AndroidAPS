@@ -320,6 +320,9 @@
     <string name="wear_new_custom_watchface_exported">Esportato template personalizzato di Watchface</string>
     <string name="resend_all_data">Invia di nuovo tutti i dati</string>
     <string name="open_settings_on_wear">Apri impostazioni sullo smartwatch</string>
+    <string name="cwf_infos_pref_locked">Elenco impostazioni bloccate dalla watchface</string>
+    <string name="cwf_infos_pref_required">Elenco impostazioni richieste per la watchface</string>
+    <string name="cwf_infos_view_title">Elenco dei campi inclusi nella watchface</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
     <string name="old_data">DATI VECCHI</string>
