@@ -92,6 +92,8 @@
     <string name="lastboluscompared">Laatste bolus %1$s %2$s min geleden</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Hartslag</string>
+    <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
     <string name="iob_u">IOB [E]:</string>
     <string name="distance_short">Afst [m]:</string>
     <string name="recurringTime">Herhaal tijd</string>
