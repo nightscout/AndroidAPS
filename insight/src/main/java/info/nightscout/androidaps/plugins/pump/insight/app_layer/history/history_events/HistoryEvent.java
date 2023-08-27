@@ -25,6 +25,7 @@ public class HistoryEvent implements Comparable<HistoryEvent> {
                 event = eventClass.newInstance();
             } catch (IllegalAccessException | InstantiationException e) {
                 //log.error("Unhandled exception", e);
+                event = new HistoryEvent();
             }
         }
         event.parseHeader(byteBuf);

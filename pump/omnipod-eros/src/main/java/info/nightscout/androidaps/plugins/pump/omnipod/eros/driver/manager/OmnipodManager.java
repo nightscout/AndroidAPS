@@ -527,7 +527,7 @@ public class OmnipodManager {
         return communicationService;
     }
 
-    public DateTime getTime() {
+    public synchronized DateTime getTime() {
         return podStateManager.getTime();
     }
 

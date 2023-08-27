@@ -20,7 +20,7 @@ public class PodInfoFaultAndInitializationTime extends PodInfo {
         }
 
         faultEventCode = FaultEventCode.fromByte(encodedData[1]);
-        timeFaultEvent = Duration.standardMinutes(((encodedData[2] & 0b1) << 8) + encodedData[3]);
+        timeFaultEvent = Duration.standardMinutes(((encodedData[2] & 0b1) << 8) + (encodedData[3] & 0xff));
         // We ignore time zones here because we don't keep the time zone in which the pod was initially set up
         // Which is fine because we don't use the initialization time for anything important anyway
         initializationTime = new DateTime(2000 + encodedData[14], encodedData[12], encodedData[13], encodedData[15], encodedData[16]);
