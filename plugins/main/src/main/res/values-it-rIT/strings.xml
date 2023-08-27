@@ -310,8 +310,14 @@
     <string name="wear_notifysmb_summary">Mostra SMB sullo smartwatch come un bolo standard.</string>
     <string name="wear_predictions_summary">Mostra le predizioni sulla watchface.</string>
     <string name="wear_predictions_title">Predizioni</string>
+    <string name="wear_custom_watchface_settings">Impostazioni watchface personalizzata</string>
+    <string name="wear_custom_watchface_authorization_title">Autorizzazione watchface personalizzata</string>
+    <string name="wear_custom_watchface_authorization_summary">Autorizza la watchface personalizzata caricata a cambiare e bloccare alcune delle impostazioni di visualizzazione dell\'orologio per adattarsi al design della watchface</string>
     <string name="wear_custom_watchface">Watchface personalizzata: %1$s</string>
     <string name="wear_load_watchface">Carica watchface</string>
+    <string name="wear_infos_watchface">Informazioni watchface</string>
+    <string name="wear_export_watchface">Esporta template</string>
+    <string name="wear_new_custom_watchface_exported">Esportato template personalizzato di Watchface</string>
     <string name="resend_all_data">Invia di nuovo tutti i dati</string>
     <string name="open_settings_on_wear">Apri impostazioni sullo smartwatch</string>
     <!--    PersistentNotification-->
