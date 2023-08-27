@@ -23,6 +23,8 @@ project.afterEvaluate {
                 '**/BuildConfig.*',
                 '**/Manifest*.*',
                 '**/*Test*.*',
+                '**/di/*Module.class',
+                '**/di/*Component.class',
                 'android/**/*.*',
                 'androidx/**/*.*',
                 '**/*$ViewInjector*.*',
