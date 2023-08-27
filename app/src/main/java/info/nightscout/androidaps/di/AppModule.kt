@@ -11,13 +11,11 @@ import info.nightscout.androidaps.implementations.ConfigImpl
 import info.nightscout.androidaps.implementations.InstantiatorImpl
 import info.nightscout.androidaps.implementations.UiInteractionImpl
 import info.nightscout.androidaps.workflow.CalculationWorkflowImpl
-import info.nightscout.androidaps.workflow.WorkerClassesImpl
 import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.interfaces.workflow.WorkerClasses
 
 @Suppress("unused")
 @Module(
@@ -53,7 +51,6 @@ open class AppModule {
         @Binds fun bindConfigInterface(config: ConfigImpl): Config
 
         @Binds fun bindActivityNames(activityNames: UiInteractionImpl): UiInteraction
-        @Binds fun bindWorkerClasses(workerClassesImpl: WorkerClassesImpl): WorkerClasses
         @Binds fun bindCalculationWorkflow(calculationWorkflow: CalculationWorkflowImpl): CalculationWorkflow
         @Binds fun bindInstantiator(instantiatorImpl: InstantiatorImpl): Instantiator
 
