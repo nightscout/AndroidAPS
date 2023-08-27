@@ -702,10 +702,10 @@ public class ComboPlugin extends PumpPluginBase implements Pump, Constraints {
     @NonNull @Override
     public PumpEnactResult setTempBasalAbsolute(double absoluteRate, int durationInMinutes, @NonNull Profile profile, boolean force, @NonNull PumpSync.TemporaryBasalType tbrType) {
         getAapsLogger().debug(LTag.PUMP, "setTempBasalAbsolute called with a rate of " + absoluteRate + " for " + durationInMinutes + " min.");
-        int unroundedPercentage = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
+        int unRoundedPercentage = (int) (absoluteRate / getBaseBasalRate() * 100);
         int roundedPercentage = (int) (Math.round(absoluteRate / getBaseBasalRate() * 10) * 10);
-        if (unroundedPercentage != roundedPercentage) {
-            getAapsLogger().debug(LTag.PUMP, "Rounded requested rate " + unroundedPercentage + "% -> " + roundedPercentage + "%");
+        if (unRoundedPercentage != roundedPercentage) {
+            getAapsLogger().debug(LTag.PUMP, "Rounded requested rate " + unRoundedPercentage + "% -> " + roundedPercentage + "%");
         }
 
         return setTempBasalPercent(roundedPercentage, durationInMinutes, tbrType);

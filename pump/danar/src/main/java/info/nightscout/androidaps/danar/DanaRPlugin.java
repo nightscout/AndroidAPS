@@ -38,13 +38,10 @@ import info.nightscout.rx.logging.LTag;
 import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
 import info.nightscout.shared.utils.DateUtil;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 @Singleton
 @OpenForTesting
 public class DanaRPlugin extends AbstractDanaRPlugin {
-    private final CompositeDisposable disposable = new CompositeDisposable();
-
     private final AAPSLogger aapsLogger;
     private final Context context;
     private final ResourceHelper rh;
@@ -218,7 +215,7 @@ public class DanaRPlugin extends AbstractDanaRPlugin {
         final boolean doHighTemp = absoluteRate > getBaseBasalRate() && !useExtendedBoluses;
         final boolean doExtendedTemp = absoluteRate > getBaseBasalRate() && useExtendedBoluses;
 
-        int percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
+        int percentRate = (int) (absoluteRate / getBaseBasalRate() * 100);
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRate < 0.10d) percentRate = 0;
         if (percentRate < 100) percentRate = (int) Round.INSTANCE.ceilTo(percentRate, 10d);
