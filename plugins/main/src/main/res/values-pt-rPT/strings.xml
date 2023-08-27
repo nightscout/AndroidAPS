@@ -85,6 +85,7 @@
     <string name="smscommunicator_message_body">Corpo da mensagem inválido</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Enviar SMS se evento de bomba inacessível for acionado</string>
     <string name="smscommunicator_pump_unreachable">Reportar bomba inacessível</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Para mudar o tipo de Loop para SGB (Baixa Suspensão por Glicose Baixa) responda com o código %1$s</string>
     <string name="wrong_format">Formato incorrecto</string>
     <string name="sms_actual_bg">GLIC:</string>
     <string name="sms_last_bg">Ultima GLIC:</string>
