@@ -6,6 +6,7 @@
     <string name="previous_button">Vorige</string>
     <string name="nav_setupwizard">Setup Wizard</string>
     <string name="setupwizard_finish">FINISH</string>
+    <string name="welcome">Welkom</string>
     <string name="welcometosetupwizard">Welkom bij de wizard setup. Het zal je begeleiden door het setup-process\n</string>
     <string name="end_user_license_agreement">Eind gebruiker overeenkomst</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
@@ -152,6 +153,7 @@
     <string name="prefdecrypt_issue_wrong_format">Ontbrekende versleutelingsconfiguratie, instellingen indeling is ongeldig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Niet-ondersteund of niet opgegeven versleutelingsalgoritme!</string>
     <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Selecteer aangepaste watchface</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Herstart je telefoon of herstart AndroidAPS vanuit de systeem instellingen a. u. b. \nanders zal AndroidAPS geen log mogelijkheid hebben (Dit is belangrijk om te controleren of de algoritmes correct werken)!</string>
 </resources>
