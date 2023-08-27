@@ -53,7 +53,7 @@ class LImpl @Inject constructor(
 
         internal constructor(defaultValue: Boolean, sp: SP) {
             this.sp = sp
-            name = "NONEXISTING"
+            name = "NONEXISTENT"
             this.defaultValue = defaultValue
             enabled = defaultValue
         }
