@@ -1,2 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">Leeg reservoir\nPatch is gedeactiveerd en insulinetoediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a003">Patch verlopen\nPatch is gedeactiveerd en insuline toediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a004">Verstopping\nPatch is gedeactiveerd en insulinetoediening gestopt. Patch nu vervangen.</string>
+    <string name="string_a007">Ongeschikte temperatuur\nInsuline toediening of \'Activeer Patch\' proces gestopt. Vermijd extreme temperatuur.</string>
+    <string name="string_a016">Naald inbreng fout\nControleer de knop positie en tik op \'Opnieuw proberen\'.</string>
+    <string name="string_b000">De gebruiksduur van de patch verloopt %s. Wees voorbereid om de patch te vervangen.</string>
+    <string name="string_b001">Einde van insuline onderbreking\nTik op \'Hervatten\' om de insuline toediening te herstarten.</string>
+    <string name="string_b012">Onvolledige Patch activatie\nVoltooi \'Activeer Patch\' proces.</string>
+    <string name="string_b018">Patch batterij bijna leeg\nWees voorbereid om de patch te vervangen.</string>
+</resources>
