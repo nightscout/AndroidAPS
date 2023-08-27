@@ -85,6 +85,7 @@
     <string name="cwf_comment_direction">Richtingspijl</string>
     <string name="cwf_comment_timestamp">Minuten geleden voor laatst ontvangen BG</string>
     <string name="cwf_comment_sgv">BG waarde</string>
+    <string name="cwf_comment_cover_plate">Masker afbeelding over tekst (bijv. uren indicators)</string>
     <string name="cwf_comment_hour_hand">Afbeelding van uren wijzer (analoog horloge)</string>
     <string name="cwf_comment_minute_hand">Afbeelding van minuut wijzer (analoog horloge)</string>
     <string name="cwf_comment_second_hand">Afbeelding van seconde wijzer (analoog horloge)</string>
