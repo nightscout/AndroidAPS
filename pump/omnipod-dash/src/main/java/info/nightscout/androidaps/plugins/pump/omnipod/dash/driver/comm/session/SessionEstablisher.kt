@@ -146,7 +146,7 @@ class SessionEstablisher(
     }
 
     private fun isResynchronization(eapMsg: EapMessage): EapSqn? {
-        if (eapMsg.subType != EapMessage.SUBTYPE_SYNCRONIZATION_FAILURE ||
+        if (eapMsg.subType != EapMessage.SUBTYPE_SYNCHRONIZATION_FAILURE ||
             eapMsg.attributes.size != 1 ||
             eapMsg.attributes[0] !is EapAkaAttributeAuts
         )
