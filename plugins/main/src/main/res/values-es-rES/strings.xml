@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Restablecer autentificadores</string>
     <string name="smscommunicator_otp_install_info">En cada teléfono seguidor, instale la aplicación Authenticator que admita tokens RFC 6238 TOTP. Las aplicaciones gratuitas populares son:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Al reiniciar el autenticador, haces que todos los autenticadores previos no sean válidos. ¡Necesitarás configurarlos de nuevo!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">¡TAMAÑO INVÁLIDO!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">PIN INCORRECTO</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">OTP ERRÓNEO</string>
     <string name="sms_wrong_code">Código incorrecto. Comando cancelado.</string>
     <string name="sms_timeout_while_waiting">Tiempo de espera agotado mientras finalizaba la comunicación anterior con la bomba</string>
     <string name="smscommunicator_allowednumbers">Números de teléfono permitidos</string>
