@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MedtrumPump -->
+    <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_description">Medtrum Nano integracija</string>
+    <string name="medtrum_pump_setting">Medtrum pompos nustatymai</string>
+    <string name="pump_error">Pompos klaida: %1$s !! </string>
+    <string name="pump_is_suspended">Pompa sustabdyta</string>
+    <string name="pump_is_suspended_hour_max">Pompa sustabdyta dėl viršyto valandos insulino limito</string>
+    <string name="pump_is_suspended_day_max">Pompa sustabdyta dėl viršyto paros insulino limito</string>
+    <string name="pump_setting_failed">Vartotojo nustatymai neįrašyti!</string>
     <!-- overview fragment -->
+    <string name="ble_status_label">BLE statusas</string>
+    <string name="last_connection_label">Pask. prijungimas</string>
+    <string name="pump_state_label">Pompos būsena</string>
+    <string name="active_alarms_label">Aktyvūs aliarmai</string>
+    <string name="reservoir_level"> %.2f v</string>
+    <string name="battery_voltage"> %.2f V</string>
+    <string name="basal_type_label">Bazės tipas</string>
+    <string name="basal_rate_label">Bazės dydis</string>
     <!-- Alarm strings -->
     <!-- wizard-->
     <!-- settings-->
