@@ -23,6 +23,8 @@ import info.nightscout.rx.weardata.CUSTOM_VERSION
 import info.nightscout.rx.weardata.CwfDrawableFileMap
 import info.nightscout.rx.weardata.CwfMetadataKey
 import info.nightscout.rx.weardata.CwfMetadataMap
+import info.nightscout.rx.weardata.JsonKeyValues
+import info.nightscout.rx.weardata.JsonKeys
 import info.nightscout.rx.weardata.ViewKeys
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -82,13 +84,13 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
 
     private fun updateGui() {
         wearPlugin.savedCustomWatchface?.let {
-            val cwf_authorization = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+            val cwfAuthorization = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false)
             val metadata = it.metadata
             val drawable = it.drawableDatas[CwfDrawableFileMap.CUSTOM_WATCHFACE]?.toDrawable(resources)
             binding.customWatchface.setImageDrawable(drawable)
             title = rh.gs(CwfMetadataKey.CWF_NAME.label, metadata[CwfMetadataKey.CWF_NAME])
-            metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]?.let { author_version ->
-                title = "${metadata[CwfMetadataKey.CWF_NAME]} ($author_version)"
+            metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]?.let { authorVersion ->
+                title = "${metadata[CwfMetadataKey.CWF_NAME]} ($authorVersion)"
             }
             binding.filelistName.text = rh.gs(CwfMetadataKey.CWF_FILENAME.label, metadata[CwfMetadataKey.CWF_FILENAME] ?: "")
             binding.author.text = rh.gs(CwfMetadataKey.CWF_AUTHOR.label, metadata[CwfMetadataKey.CWF_AUTHOR] ?: "")
@@ -99,7 +101,7 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
             binding.cwfComment.text = rh.gs(CwfMetadataKey.CWF_COMMENT.label, metadata[CwfMetadataKey.CWF_COMMENT] ?: "")
             if (metadata.count { it.key.isPref } > 0) {
                 binding.prefLayout.visibility = View.VISIBLE
-                binding.prefTitle.text = rh.gs(if (cwf_authorization) R.string.cwf_infos_pref_locked else R.string.cwf_infos_pref_required)
+                binding.prefTitle.text = rh.gs(if (cwfAuthorization) R.string.cwf_infos_pref_locked else R.string.cwf_infos_pref_required)
                 binding.prefRecyclerview.layoutManager = LinearLayoutManager(this)
                 binding.prefRecyclerview.adapter = PrefRecyclerViewAdapter(
                     metadata.filter { it.key.isPref && (it.value.lowercase() == "true" || it.value.lowercase() == "false") }.toList()
@@ -192,7 +194,7 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
             try {
                 val jsonValue = json.optJSONObject(viewKey.key)
                 if (jsonValue != null) {
-                    val visibility = jsonValue.optString("visibility") == "visible"
+                    val visibility = jsonValue.optString(JsonKeys.VISIBILITY.key) == JsonKeyValues.VISIBLE.key
                     if (visibility || allViews)
                         visibleKeyPairs.add(Pair(viewKey, visibility))
                 }
