@@ -56,4 +56,6 @@
     <string name="pref_show_ago">Laikas nuo pask. vertės</string>
     <string name="default_custom_watchface_comment">Numatytasis ekranas. Paspaudus EKSPORTUOTI, bus sukurtas ruošinys</string>
     <string name="wear_default_watchface">Numatytasis ekranas</string>
+    <string name="cwf_comment_background">Fono paveiksliukas</string>
+    <string name="cwf_comment_chart">Grafikai (glikemija, bazė, prognozės...)</string>
 </resources>
