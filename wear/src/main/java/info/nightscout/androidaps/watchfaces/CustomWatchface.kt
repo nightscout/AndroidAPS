@@ -3,7 +3,6 @@
 package info.nightscout.androidaps.watchfaces
 
 import android.annotation.SuppressLint
-import android.app.ActionBar.LayoutParams
 import android.content.Context
 import android.graphics.Color
 import android.graphics.ColorFilter
@@ -148,17 +147,16 @@ class CustomWatchface : BaseWatchFace() {
             try {
                 val json = JSONObject(it.customWatchfaceData.json)
                 val drawableDataMap = it.customWatchfaceData.drawableDatas
-                enableSecond = (if (json.has(ENABLESECOND.key)) json.getBoolean(ENABLESECOND.key) else false) && sp.getBoolean(R.string.key_show_seconds, true)
-
-                highColor = if (json.has(HIGHCOLOR.key)) Color.parseColor(json.getString(HIGHCOLOR.key)) else ContextCompat.getColor(this, R.color.dark_highColor)
-                midColor = if (json.has(MIDCOLOR.key)) Color.parseColor(json.getString(MIDCOLOR.key)) else ContextCompat.getColor(this, R.color.inrange)
-                lowColor = if (json.has(LOWCOLOR.key)) Color.parseColor(json.getString(LOWCOLOR.key)) else ContextCompat.getColor(this, R.color.low)
-                lowBatColor = if (json.has(LOWBATCOLOR.key)) Color.parseColor(json.getString(LOWBATCOLOR.key)) else ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty)
-                carbColor = if (json.has(CARBCOLOR.key)) Color.parseColor(json.getString(CARBCOLOR.key)) else ContextCompat.getColor(this, R.color.carbs)
-                basalBackgroundColor = if (json.has(BASALBACKGROUNDCOLOR.key)) Color.parseColor(json.getString(BASALBACKGROUNDCOLOR.key)) else ContextCompat.getColor(this, R.color.basal_dark)
-                basalCenterColor = if (json.has(BASALCENTERCOLOR.key)) Color.parseColor(json.getString(BASALCENTERCOLOR.key)) else ContextCompat.getColor(this, R.color.basal_light)
-                gridColor = if (json.has(GRIDCOLOR.key)) Color.parseColor(json.getString(GRIDCOLOR.key)) else Color.WHITE
-                pointSize = if (json.has(POINTSIZE.key)) json.getInt(POINTSIZE.key) else 2
+                enableSecond = json.optBoolean(ENABLESECOND.key) && sp.getBoolean(R.string.key_show_seconds, true)
+                highColor = getColor(json.optString(HIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_highColor))
+                midColor = getColor(json.optString(MIDCOLOR.key), ContextCompat.getColor(this, R.color.inrange))
+                lowColor = getColor(json.optString(LOWCOLOR.key), ContextCompat.getColor(this, R.color.low))
+                lowBatColor = getColor(json.optString(LOWBATCOLOR.key), ContextCompat.getColor(this, R.color.dark_uploaderBatteryEmpty))
+                carbColor = getColor(json.optString(CARBCOLOR.key), ContextCompat.getColor(this, R.color.carbs))
+                basalBackgroundColor = getColor(json.optString(BASALBACKGROUNDCOLOR.key), ContextCompat.getColor(this, R.color.basal_dark))
+                basalCenterColor = getColor(json.optString(BASALCENTERCOLOR.key), ContextCompat.getColor(this, R.color.basal_light))
+                gridColor = getColor(json.optString(GRIDCOLOR.key), Color.WHITE)
+                pointSize = json.optInt(POINTSIZE.key, 2)
                 bgColor = when (singleBg.sgvLevel) {
                     1L   -> highColor
                     0L   -> midColor
@@ -176,48 +174,49 @@ class CustomWatchface : BaseWatchFace() {
                     ViewMap.fromId(view.id)?.let { id ->
                         if (json.has(id.key)) {
                             val viewJson = json.getJSONObject(id.key)
-                            val wrapContent = LayoutParams.WRAP_CONTENT
-                            val width = if (viewJson.has(WIDTH.key)) (viewJson.getInt(WIDTH.key) * zoomFactor).toInt() else wrapContent
-                            val height = if (viewJson.has(HEIGHT.key)) (viewJson.getInt(HEIGHT.key) * zoomFactor).toInt() else wrapContent
+                            val width = (viewJson.optInt(WIDTH.key) * zoomFactor).toInt()
+                            val height = (viewJson.optInt(HEIGHT.key) * zoomFactor).toInt()
                             val params = FrameLayout.LayoutParams(width, height)
-                            params.topMargin = if (viewJson.has(TOPMARGIN.key)) (viewJson.getInt(TOPMARGIN.key) * zoomFactor).toInt() else 0
-                            params.leftMargin = if (viewJson.has(LEFTMARGIN.key)) (viewJson.getInt(LEFTMARGIN.key) * zoomFactor).toInt() else 0
+                            params.topMargin = (viewJson.optInt(TOPMARGIN.key) * zoomFactor).toInt()
+                            params.leftMargin = (viewJson.optInt(LEFTMARGIN.key) * zoomFactor).toInt()
                             view.layoutParams = params
-                            view.visibility = if (viewJson.has(VISIBILITY.key)) setVisibility(viewJson.getString(VISIBILITY.key), id.visibility(sp)) else View.GONE
-                            if (view is TextView) {
-                                view.rotation = if (viewJson.has(ROTATION.key)) viewJson.getInt(ROTATION.key).toFloat() else 0F
-                                view.setTextSize(TypedValue.COMPLEX_UNIT_PX, ((if (viewJson.has(TEXTSIZE.key)) viewJson.getInt(TEXTSIZE.key) else 22) * zoomFactor).toFloat())
-                                view.gravity = GravityMap.gravity(if (viewJson.has(GRAVITY.key)) viewJson.getString(GRAVITY.key) else GravityMap.CENTER.key)
-                                view.setTypeface(
-                                    FontMap.font(if (viewJson.has(FONT.key)) viewJson.getString(FONT.key) else FontMap.DEFAULT.key),
-                                    StyleMap.style(if (viewJson.has(FONTSTYLE.key)) viewJson.getString(FONTSTYLE.key) else StyleMap.NORMAL.key)
-                                )
-                                if (viewJson.has(FONTCOLOR.key))
-                                    view.setTextColor(getColor(viewJson.getString(FONTCOLOR.key)))
+                            view.visibility = setVisibility(viewJson.optString(VISIBILITY.key, JsonKeyValues.GONE.key), id.visibility(sp))
+                            when (view) {
+                                is TextView  -> {
+                                    view.rotation = viewJson.optInt(ROTATION.key).toFloat()
+                                    view.setTextSize(TypedValue.COMPLEX_UNIT_PX, (viewJson.optInt(TEXTSIZE.key, 22) * zoomFactor).toFloat())
+                                    view.gravity = GravityMap.gravity(viewJson.optString(GRAVITY.key, GravityMap.CENTER.key))
+                                    view.setTypeface(
+                                        FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)),
+                                        StyleMap.style(viewJson.optString(FONTSTYLE.key, StyleMap.NORMAL.key))
+                                    )
+                                    view.setTextColor(getColor(viewJson.optString(FONTCOLOR.key)))
 
-                                if (viewJson.has(TEXTVALUE.key))
-                                    view.text = viewJson.getString(TEXTVALUE.key)
-                            }
-
-                            if (view is ImageView) {
-                                view.clearColorFilter()
-                                val drawable = if (id.key == CwfDrawableFileMap.BACKGROUND.key)
-                                    backGroundDrawable
-                                else
-                                    drawableDataMap[CwfDrawableFileMap.fromKey(id.key)]?.toDrawable(resources)
-                                drawable?.let {
-                                    if (viewJson.has(COLOR.key))
-                                        it.colorFilter = changeDrawableColor(getColor(viewJson.getString(COLOR.key)))
-                                    else
-                                        it.clearColorFilter()
-                                    view.setImageDrawable(it)
-                                } ?: apply {
-                                    view.setImageDrawable(CwfDrawableFileMap.fromKey(id.key).icon?.let { context.getDrawable(it) })
-                                    if (viewJson.has(COLOR.key))
-                                        view.setColorFilter(getColor(viewJson.getString(COLOR.key)))
-                                    else
-                                        view.clearColorFilter()
+                                    if (viewJson.has(TEXTVALUE.key))
+                                        view.text = viewJson.getString(TEXTVALUE.key)
                                 }
+
+                                is ImageView -> {
+                                    view.clearColorFilter()
+                                    val drawable = if (id.key == CwfDrawableFileMap.BACKGROUND.key)
+                                        backGroundDrawable
+                                    else
+                                        drawableDataMap[CwfDrawableFileMap.fromKey(id.key)]?.toDrawable(resources)
+                                    drawable?.let {
+                                        if (viewJson.has(COLOR.key))
+                                            it.colorFilter = changeDrawableColor(getColor(viewJson.getString(COLOR.key)))
+                                        else
+                                            it.clearColorFilter()
+                                        view.setImageDrawable(it)
+                                    } ?: apply {
+                                        view.setImageDrawable(CwfDrawableFileMap.fromKey(id.key).icon?.let { context.getDrawable(it) })
+                                        if (viewJson.has(COLOR.key))
+                                            view.setColorFilter(getColor(viewJson.getString(COLOR.key)))
+                                        else
+                                            view.clearColorFilter()
+                                    }
+                                }
+
                             }
                         } else {
                             view.visibility = View.GONE
@@ -227,9 +226,7 @@ class CustomWatchface : BaseWatchFace() {
                         }
                     }
                 }
-                binding.background.visibility = View.VISIBLE
-                updateSecondVisibility()
-                setSecond() // Update second visibility for time view
+                manageSpecificViews()
             } catch (e: Exception) {
                 aapsLogger.debug(LTag.WEAR, "Crash during Custom watch load")
                 persistence.store(defaultWatchface(), false) // relaod correct values to avoid crash of watchface
@@ -238,8 +235,8 @@ class CustomWatchface : BaseWatchFace() {
     }
 
     private fun updatePref(metadata: CwfMetadataMap) {
-        val cwf_authorization = metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()
-        cwf_authorization?.let { authorization ->
+        val cwfAuthorization = metadata[CwfMetadataKey.CWF_AUTHORIZATION]?.toBooleanStrictOrNull()
+        cwfAuthorization?.let { authorization ->
             if (authorization) {
                 PrefMap.values().forEach { pref ->
                     metadata[CwfMetadataKey.fromKey(pref.key)]?.toBooleanStrictOrNull()?.let { sp.putBoolean(pref.prefKey, it) }
@@ -306,8 +303,7 @@ class CustomWatchface : BaseWatchFace() {
         val metadataMap = ZipWatchfaceFormat.loadMetadata(json)
         val drawableDataMap: CwfDrawableDataMap = mutableMapOf()
         getResourceByteArray(info.nightscout.shared.R.drawable.watchface_custom)?.let {
-            val drawableData = DrawableData(it, DrawableFormat.PNG)
-            drawableDataMap[CwfDrawableFileMap.CUSTOM_WATCHFACE] = drawableData
+            drawableDataMap[CwfDrawableFileMap.CUSTOM_WATCHFACE] = DrawableData(it, DrawableFormat.PNG)
         }
         return EventData.ActionSetCustomWatchface(CwfData(json.toString(4), metadataMap, drawableDataMap))
     }
@@ -369,12 +365,25 @@ class CustomWatchface : BaseWatchFace() {
         return ColorMatrixColorFilter(colorMatrix)
     }
 
-    private fun getColor(color: String): Int =
+    private fun getColor(color: String, defaultColor: Int = Color.GRAY): Int =
         if (color == JsonKeyValues.BGCOLOR.key)
             bgColor
         else
-            try { Color.parseColor(color) } catch (e: Exception) { Color.GRAY }
+            try { Color.parseColor(color) } catch (e: Exception) { defaultColor }
 
+    private fun manageSpecificViews() {
+        //Background should fill all the watchface and must be visible
+        val params = FrameLayout.LayoutParams((TEMPLATE_RESOLUTION * zoomFactor).toInt(), (TEMPLATE_RESOLUTION * zoomFactor).toInt())
+        params.topMargin = 0
+        params.leftMargin = 0
+        binding.background.layoutParams = params
+        binding.background.visibility = View.VISIBLE
+        // Update second visibility
+        updateSecondVisibility()
+        setSecond() // Update second visibility for time view
+        // Update timePeriod visibility
+        binding.timePeriod.visibility = (binding.timePeriod.visibility == View.VISIBLE && android.text.format.DateFormat.is24HourFormat(this).not()).toVisibility()
+    }
     private enum class ViewMap(val key: String, @IdRes val id: Int, @StringRes val pref: Int?) {
 
         BACKGROUND(ViewKeys.BACKGROUND.key, R.id.background, null),
