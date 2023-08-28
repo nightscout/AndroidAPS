@@ -24,6 +24,9 @@
     <string name="smscommunicator_otp_reset_header">Atstatyti tapatybės nustatymą</string>
     <string name="smscommunicator_otp_install_info">Kiekviename telefone, palaikančiame RFC 6238 TOTP prieigos raktus, įdiekite autentifikavimo programą. Populiariausios nemokamos programos yra:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Jei iš naujo nustatysite autentifikavimo priemonę, visi esami autentifikatoriai taps negaliojantys. Turėsite juos vėl nustatyti!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">NETEISINGAS PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">NETEISINGAS OTP</string>
     <string name="sms_wrong_code">Neteisingas kodas. Komanda atšaukta.</string>
     <string name="sms_timeout_while_waiting">Baigėsi laikas kol buvo laukiama, kada baigsis ankstesnis susijungimas su pompa</string>
     <string name="smscommunicator_allowednumbers">Leidžiami telefono numeriai</string>
@@ -310,6 +313,7 @@
     <string name="wear_notifysmb_summary">Rodyti SMB laikrodyje kaip standartinį bolusą.</string>
     <string name="wear_predictions_summary">Rodyti prognozes laikrodyje.</string>
     <string name="wear_predictions_title">Prognozė</string>
+    <string name="wear_export_watchface">Eksportuoti ruošinį</string>
     <string name="resend_all_data">Pakartotinai siųsti visus duomenis</string>
     <string name="open_settings_on_wear">Atidaryti išmaniojo laikrodžio nustatymus</string>
     <!--    PersistentNotification-->
