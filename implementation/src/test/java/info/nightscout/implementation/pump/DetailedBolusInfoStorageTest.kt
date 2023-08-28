@@ -1,14 +1,22 @@
 package info.nightscout.implementation.pump
 
 import info.nightscout.androidaps.TestBase
+import info.nightscout.implementation.R
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.sharedPreferences.SP
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.Mockito
 
 class DetailedBolusInfoStorageTest : TestBase() {
 
+    @Mock lateinit var sp: SP
+    @Mock lateinit var rh: ResourceHelper
+    
     private val info1 = DetailedBolusInfo()
     private val info2 = DetailedBolusInfo()
     private val info3 = DetailedBolusInfo()
@@ -26,7 +34,8 @@ class DetailedBolusInfoStorageTest : TestBase() {
 
     @BeforeEach
     fun prepare() {
-        detailedBolusInfoStorage = DetailedBolusInfoStorageImpl(aapsLogger)
+        Mockito.`when`(sp.getString(rh.gs(R.string.key_bolus_storage), "")).thenReturn("")
+        detailedBolusInfoStorage = DetailedBolusInfoStorageImpl(aapsLogger, sp, rh)
     }
 
     private fun setUp() {

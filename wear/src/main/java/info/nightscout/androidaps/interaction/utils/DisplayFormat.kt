@@ -61,24 +61,26 @@ class DisplayFormat @Inject internal constructor() {
 
     fun shortTrend(raw: RawDisplayData): String {
         var minutes = "--"
+        val rawDelta = if (sp.getBoolean(R.string.key_show_detailed_delta, false)) raw.singleBg.deltaDetailed else raw.singleBg.delta
         if (raw.singleBg.timeStamp > 0) {
             minutes = shortTimeSince(raw.singleBg.timeStamp)
         }
-        if (minutes.length + raw.singleBg.delta.length + deltaSymbol().length + 1 <= MAX_FIELD_LEN_SHORT) {
-            return minutes + " " + deltaSymbol() + raw.singleBg.delta
+        if (minutes.length + rawDelta.length + deltaSymbol().length + 1 <= MAX_FIELD_LEN_SHORT) {
+            return minutes + " " + deltaSymbol() + rawDelta
         }
 
         // that only optimizes obvious things like 0 before . or at end, + at beginning
-        val delta = SmallestDoubleString(raw.singleBg.delta).minimise(MAX_FIELD_LEN_SHORT - 1)
+        val delta = SmallestDoubleString(rawDelta).minimise(MAX_FIELD_LEN_SHORT - 1)
         if (minutes.length + delta.length + deltaSymbol().length + 1 <= MAX_FIELD_LEN_SHORT) {
             return minutes + " " + deltaSymbol() + delta
         }
-        val shortDelta = SmallestDoubleString(raw.singleBg.delta).minimise(MAX_FIELD_LEN_SHORT - (1 + minutes.length))
+        val shortDelta = SmallestDoubleString(rawDelta).minimise(MAX_FIELD_LEN_SHORT - (1 + minutes.length))
         return "$minutes $shortDelta"
     }
 
     fun longGlucoseLine(raw: RawDisplayData): String {
-        return raw.singleBg.sgvString + raw.singleBg.slopeArrow + " " + deltaSymbol() + SmallestDoubleString(raw.singleBg.delta).minimise(8) + " (" + shortTimeSince(raw.singleBg.timeStamp) + ")"
+        val rawDelta = if (sp.getBoolean(R.string.key_show_detailed_delta, false)) raw.singleBg.deltaDetailed else raw.singleBg.delta
+        return raw.singleBg.sgvString + raw.singleBg.slopeArrow + " " + deltaSymbol() + SmallestDoubleString(rawDelta).minimise(8) + " (" + shortTimeSince(raw.singleBg.timeStamp) + ")"
     }
 
     fun longDetailsLine(raw: RawDisplayData): String {

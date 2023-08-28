@@ -41,7 +41,7 @@ class Inevitable @Inject internal constructor() {
             if (debug) {
                 aapsLogger.debug(
                     LTag.WEAR,
-                    "Creating task: " + id + " due: " + dateUtil.dateAndTimeAndSecondsString(tasks[id]!!.`when`)
+                    "Creating task: " + id + " due: " + dateUtil.dateAndTimeAndSecondsString(tasks.getValue(id).`when`)
                 )
             }
 

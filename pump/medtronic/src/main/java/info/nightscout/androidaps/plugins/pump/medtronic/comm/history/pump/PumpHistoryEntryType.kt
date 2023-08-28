@@ -10,13 +10,14 @@ import info.nightscout.pump.common.defs.PumpHistoryEntryGroup
  *
  * Author: Andy {andy.rozman@gmail.com}
  */
-enum class PumpHistoryEntryType // implements CodeEnum
-constructor(var code: Byte,
-            var description: String,
-            var group: PumpHistoryEntryGroup,
-            var headLength: Int = 2,
-            var dateLength: Int = 5,
-            var bodyLength: Int = 0) {
+enum class PumpHistoryEntryType(
+    var code: Byte,
+    var description: String,
+    var group: PumpHistoryEntryGroup,
+    private var headLength: Int = 2,
+    var dateLength: Int = 5,
+    private var bodyLength: Int = 0
+) {
 
     // all commented out are probably not the real items
     None(0, "None", PumpHistoryEntryGroup.Unknown, 1, 0, 0),
@@ -25,7 +26,9 @@ constructor(var code: Byte,
 
     //    /**/EventUnknown_MM522_0x05((byte) 0x05, "Unknown Event 0x05", PumpHistoryEntryGroup.Unknown, 2, 5, 28), //
     NoDeliveryAlarm(0x06, "No Delivery", PumpHistoryEntryGroup.Alarm, 4, 5, 0),  //
-    EndResultTotals(0x07, "End Result Totals", PumpHistoryEntryGroup.Statistic, 5, 2, 0), ChangeBasalProfile_OldProfile(0x08, "Change Basal Profile (Old)", PumpHistoryEntryGroup.Basal, 2, 5, 145), ChangeBasalProfile_NewProfile(0x09, "Change Basal Profile (New)", PumpHistoryEntryGroup.Basal, 2, 5, 145),  //
+    EndResultTotals(0x07, "End Result Totals", PumpHistoryEntryGroup.Statistic, 5, 2, 0),
+    ChangeBasalProfile_OldProfile(0x08, "Change Basal Profile (Old)", PumpHistoryEntryGroup.Basal, 2, 5, 145),
+    ChangeBasalProfile_NewProfile(0x09, "Change Basal Profile (New)", PumpHistoryEntryGroup.Basal, 2, 5, 145),  //
 
     //    /**/EventUnknown_MM512_0x10(0x10, "Unknown Event 0x10", PumpHistoryEntryGroup.Unknown), // 29, 5, 0
     CalBGForPH(0x0a, "BG Capture", PumpHistoryEntryGroup.Glucose),  //
@@ -144,7 +147,7 @@ constructor(var code: Byte,
     companion object {
 
         private val opCodeMap: MutableMap<Byte, PumpHistoryEntryType?> = HashMap()
-        fun setSpecialRulesForEntryTypes() {
+        private fun setSpecialRulesForEntryTypes() {
             EndResultTotals.addSpecialRuleBody(SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 3))
             Bolus.addSpecialRuleHead(SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 8))
             BolusWizardSetup.addSpecialRuleBody(SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 137))
@@ -153,41 +156,8 @@ constructor(var code: Byte,
             ChangeSensorSetup2.addSpecialRuleBody(SpecialRule(MedtronicDeviceType.Medtronic_523andHigher, 34))
         }
 
-        fun getByCode(opCode: Byte): PumpHistoryEntryType {
-            return if (opCodeMap.containsKey(opCode)) {
-                opCodeMap[opCode]!!
-            } else {
-                UnknownBasePacket
-            }
-        }
-
-        fun isAAPSRelevantEntry(entryType: PumpHistoryEntryType): Boolean {
-            return entryType == Bolus || // Treatments
-                entryType == TempBasalRate || //
-                entryType == TempBasalDuration || //
-                entryType == Prime || // Pump Status Change
-                entryType == SuspendPump || //
-                entryType == ResumePump || //
-                entryType == Rewind || //
-                entryType == NoDeliveryAlarm || // no delivery
-                entryType == BasalProfileStart || //
-                entryType == ChangeTime || // Time Change
-                entryType == NewTimeSet || //
-                entryType == ChangeBasalPattern || // Configuration
-                entryType == ClearSettings || //
-                entryType == SaveSettings || //
-                entryType == ChangeMaxBolus || //
-                entryType == ChangeMaxBasal || //
-                entryType == ChangeTempBasalType || //
-                entryType == ChangeBasalProfile_NewProfile || // Basal profile
-                entryType == DailyTotals515 || // Daily Totals
-                entryType == DailyTotals522 || //
-                entryType == DailyTotals523 || //
-                entryType == EndResultTotals
-        }
-
-        val isRelevantEntry: Boolean
-            get() = true
+        fun getByCode(opCode: Byte): PumpHistoryEntryType =
+            opCodeMap[opCode] ?: UnknownBasePacket
 
         init {
             for (type in values()) {
@@ -197,7 +167,7 @@ constructor(var code: Byte,
         }
     }
 
-    private val totalLength: Int
+    private val totalLength: Int = headLength + dateLength + bodyLength
 
     // special rules need to be put in list from highest to lowest (e.g.:
     // 523andHigher=12, 515andHigher=10 and default (set in cnstr) would be 8)
@@ -259,7 +229,4 @@ constructor(var code: Byte,
 
     class SpecialRule internal constructor(var deviceType: MedtronicDeviceType, var size: Int)
 
-    init {
-        totalLength = headLength + dateLength + bodyLength
-    }
 }

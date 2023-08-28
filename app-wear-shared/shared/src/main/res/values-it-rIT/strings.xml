@@ -33,4 +33,10 @@
     <string name="connected">Connesso</string>
     <string name="disconnecting">Disconnessione</string>
     <string name="waiting_for_disconnection">In attesa della disconnessione</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Creato: %1$s</string>
+    <string name="metadata_label_watchface_author">Autore: %1$s</string>
+    <string name="metadata_label_watchface_name">Nome: %1$s</string>
+    <string name="metadata_wear_import_filename">Nome file: %1$s</string>
+    <string name="wear_default_watchface">Watchface predefinita</string>
 </resources>

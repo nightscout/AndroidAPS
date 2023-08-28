@@ -376,6 +376,9 @@
     <string name="carbs_g">KARBO %1$d g</string>
     <string name="extended_bolus_u_min">UTVIDET BOLUS %1$.2f E %2$d min</string>
     <string name="load_events">LAST INN HENDELSER</string>
+    <string name="clear_alarms">NULLSTILLE ALARMER</string>
+    <string name="deactivate">DEAKTIVER</string>
+    <string name="update_time">OPPDATER TID</string>
     <string name="load_history">LAST INN HENDELSESLOGG %1$d</string>
     <string name="load_tdds">LAST INN TDDs</string>
     <string name="set_profile">SETT PROFIL</string>
@@ -421,6 +424,7 @@
     <string name="autotune_ic_warning">Valgt profil har %1$d IK verdier. Autotune vil bruke %2$.2f g/E</string>
     <string name="autotune_isf_warning">Valgte profil har %1$d ISF-verdier. Autotune vil bruke %2$.1f %3$s/E</string>
     <string name="autotune_error">Feil i innleste datasett, prøv å kjør Autotune en gang til eller reduser antall dager</string>
+    <string name="autotune_error_more_days">Feil i inntastet data, øk antall dager</string>
     <string name="autotune_warning_during_run">Har startet Autotune-beregning, vennligst vent</string>
     <string name="autotune_warning_after_run">Kontroller resultatene nøye før du bruker dem!</string>
     <string name="autotune_partial_result">Delvis resultat dag %1$d / %2$d justert</string>
@@ -453,6 +457,7 @@
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!! Advarsel: Oppdaget treg absorpsjon av karbohydrater: %2$d%% av tiden. Dobbeltsjekk din beregning. COB kan være misvisende og du risikerer å få for mye insulin !!</font>]]></string>
     <string name="partialboluswizard">Doser denne delen av resultatet fra bolusveiviseren [%]</string>
+    <string name="partialboluswizard_reset_time">Terskel for gammel BS-verdi [min]</string>
     <string name="bolus_constraint_applied_warn">Bolus begrensning brukt: %1$.2f E til %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus vil bare bli loggført (ikke levert av pumpe)</string>
     <string name="advisoralarm">Aktiver alarm når det er på tide å spise</string>
@@ -552,7 +557,7 @@
     <string name="location_not_found_title">Stedstjeneste er ikke aktivert</string>
     <string name="location_not_found_message">Bluetooth søk på nye mobiler virker bare når posisjonstjeneste er aktivert. AAPS lagrer ikke dine posisjonsdata og den kan derfor slås av etter vellykket sammenkobling.</string>
     <!--    Preferences -->
-    <string name="nav_plugin_preferences">Plugin innstillinger</string>
+    <string name="nav_plugin_preferences">Innstillinger for plugin</string>
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Mangler SMS-tillatelse</string>
     <!-- About -->

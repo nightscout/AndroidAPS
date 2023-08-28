@@ -10,13 +10,13 @@
     <string name="old_version">gammel versjon</string>
     <string name="very_old_version">veldig gammel versjon</string>
     <string name="application_expired">Applikasjon utløpt</string>
-    <string name="new_version_warning">Ny versjon tilgjengelig i minst %1$d dager! Systemet vil bytte til \"stopp ved lavt BS (LGS)\" etter %2$d dager og loop vil deaktiveres etter %3$d dager</string>
+    <string name="new_version_warning">AAPS har ikke kunnet se etter ny versjon på %1$d dager! AAPS vil gå tilbake til LGS-modus om %2$d dager, deretter vil loop bli slått av om %3$d dager. Slå på internett-tilgang slik at AAPS kan se etter ny versjon!</string>
     <string name="running_invalid_version">Vi har oppdaget at du kjører en ugyldig versjon. Loop deaktivert!</string>
     <string name="versionavailable">Versjon %1$s er tilgjengelig</string>
     <string name="version_expire">Versjon %1$s utløper den %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
-    <string name="recalculated_data_used">Rekalkulerte data er brukt</string>
+    <string name="recalculated_data_used">Bruker rekalkulerte data</string>
     <string name="bg_too_close">BS for nær:\n%1$s\n%2$s</string>
     <string name="a11y_bg_quality_recalculated">beregnet på nytt</string>
     <string name="a11y_bg_quality_doubles">doble registreringer</string>
@@ -48,6 +48,6 @@
     <string name="doyouwantresetstart">Ønsker du å starte læringsmåletpå nytt? Du vil miste fullførte trinn.</string>
     <string name="objectives_next_button">Neste</string>
     <string name="objectives_previous_button">Forrige</string>
-    <string name="objectives_button_unfinish">Sletting ferdig</string>
-    <string name="objectives_button_unstart">Sletting startet</string>
+    <string name="objectives_button_unfinish">Nullstille ferdig-status</string>
+    <string name="objectives_button_unstart">Nullstille start-status</string>
 </resources>

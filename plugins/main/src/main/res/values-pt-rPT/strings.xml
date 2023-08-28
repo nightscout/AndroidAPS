@@ -86,8 +86,8 @@
     <string name="smscommunicator_report_pump_unreachable_summary">Enviar SMS se evento de bomba inacessível for acionado</string>
     <string name="smscommunicator_pump_unreachable">Reportar bomba inacessível</string>
     <string name="wrong_format">Formato incorrecto</string>
-    <string name="sms_actual_bg">Glicose:</string>
-    <string name="sms_last_bg">Ultima Gli:</string>
+    <string name="sms_actual_bg">GLIC:</string>
+    <string name="sms_last_bg">Ultima GLIC:</string>
     <string name="sms_delta">Delta:</string>
     <string name="sms_iob">IA:</string>
     <string name="sms_bolus">Bólus:</string>
@@ -97,11 +97,7 @@
     <string name="sms_read_status_failed">Erro na leitura de estado</string>
     <string name="sms_profile_switch_created">Troca de perfil criada</string>
     <string name="sms_wrong_tbr_duration">A duração do DBT deve ser de um múltiplo de %1$d minutos e maior que 0.</string>
-    <string name="xdrip_status_detailed_iob_title">Mostrar IA detalhada</string>
-    <string name="xdrip_status_detailed_iob_summary">Dividir IA entre IA de bólus e de basal no ecrã do relógio</string>
     <string name="disabled_loop">Loop Desactivado</string>
-    <string name="xdrip_status_show_bgi_title">Mostrar BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Adicionar BGI à linha de status</string>
     <!-- Food-->
     <string name="food_short">Alimentos</string>
     <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
@@ -170,6 +166,7 @@
     <string name="a11y_graph">gráfico</string>
     <string name="a11y_insulin_label">insulina</string>
     <string name="chart_menu">Menu do Gráfico</string>
+    <string name="a11y_bg_quality">qualidade da glicose no sangue</string>
     <string name="a11y_blood_glucose">Glicose no Sangue</string>
     <string name="set_basal_question">Aceitar nova basal temporária:</string>
     <string name="overview_cgm">CGM</string>
@@ -187,7 +184,7 @@
     <string name="change_your_input">Altere o seu input!</string>
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uploader</string>
-    <string name="data_status">Estado dos dados da Glicemia</string>
+    <string name="data_status">Estado dos dados da GLIC</string>
     <string name="quickwizard_settings">Definições do Assistente Rápido</string>
     <string name="keep_screen_on_title">Manter ecrã ligado</string>
     <string name="keep_screen_on_summary">Impedir Android de desligar o ecrã. Isto irá consumir muita bateria quando não ligado ao carregador.</string>
@@ -243,7 +240,7 @@
     <string name="basal_shortname">BAS</string>
     <string name="deviation_shortname">DESV</string>
     <string name="activity_shortname">ACT</string>
-    <string name="bgi_shortname">-IG</string>
+    <string name="bgi_shortname">-IGLIC</string>
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DESVINCLI</string>
     <string name="treatments_shortname">TRATA</string>
@@ -260,6 +257,8 @@
     <string name="send_logfiles">Enviar os ficheiros de registo do dia de hoje para os programadores. Situação inesperada.</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
+    <string name="wear_action_tempt_min_bg_error">Min-GLIC fora do alvo!</string>
+    <string name="wear_action_tempt_max_bg_error">Máx-GLIC fora do alvo!</string>
     <string name="no_success">sem efeito - por favor verifique no telemóvel</string>
     <string name="wear_settings">Definições do Relógio</string>
     <string name="wearcontrol_title">Controles do Relógio</string>
@@ -267,15 +266,16 @@
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_display_settings">Definições Ecrã</string>
     <string name="wear_general_settings">Definições Gerais</string>
-    <string name="wear_detailed_delta_title">Mostrar Delta detalho</string>
-    <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
     <string name="wear_notifysmb_title">Notificar no SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>
     <string name="wear_predictions_summary">Mostrar previsões no mostrador.</string>
     <string name="wear_predictions_title">Previsões</string>
+    <string name="wear_custom_watchface_authorization_summary">Autorizar watchface por definição para alterar e bloquear algumas configurações de exibição do relógio para se adequarem ao design do watchface</string>
     <string name="resend_all_data">Reenviar Todos os Dados</string>
     <string name="open_settings_on_wear">Abrir Definições no Relógio</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
     <string name="old_data">DADOS ANTIGOS</string>
+    <string name="pump_old_data">TID: Ainda dados antigos! Não é possível carregar a partir da bomba.</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
 </resources>

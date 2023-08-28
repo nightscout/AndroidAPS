@@ -27,9 +27,9 @@
     <string name="time_1hr_30min">1 час 30 мин</string>
     <string name="time_2hr">2 часа</string>
     <string name="all_blank">\u0020</string>
-    <string name="patch_safe_deactivation_desc">Для перехода на новый Patch, Завершите пользование Patch\'ем. Подача инсулина этим Patch\'ем будет отменена.</string>
+    <string name="patch_safe_deactivation_desc">Для перехода на новый Patch, авершите пользование Патч-помпой. Подача инсулина этой Патч-помпой будет отменена.</string>
     <string name="patch_discard_complete_title">Пользование Patch\'ем завершено.</string>
-    <string name="patch_discard_complete_desc">Patch был отключен.\nЗавершить пользование Patch\'ем\nУдалите Patch с тела.</string>
+    <string name="patch_discard_complete_desc">Patch деактивирован.\nЗавершите пользование Patch\'ем\nУдалите Patch с тела.</string>
     <string name="patch_change_confirm_bolus_is_active_desc">Подается болюс. Отменить подачу инсулина и завершить пользование Patch\'ем?</string>
     <string name="patch_change_confirm_temp_basal_is_active_desc">Подается временный базал. Отменить подачу инсулина и завершить пользование Patch\'ем?</string>
     <string name="patch_change_confirm_bolus_and_temp_basal_are_active_desc">Подается болюс и временный базал. Отменить подачу инсулина и завершить пользование Patch\'ем?</string>

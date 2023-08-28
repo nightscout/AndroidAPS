@@ -33,4 +33,27 @@
     <string name="connected">Conectado</string>
     <string name="disconnecting">A desligar</string>
     <string name="waiting_for_disconnection">Aguardando a desconexão</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Criado por %1$s</string>
+    <string name="metadata_label_watchface_author">Autor: %1$s</string>
+    <string name="metadata_label_watchface_name">Nome: %1$s</string>
+    <string name="metadata_wear_import_filename">Nome do arquivo: %1$s</string>
+    <string name="metadata_label_plugin_version">Versão do plugin: %1$s</string>
+    <string name="metadata_label_watchface_name_version">Nome: %1$s (%2$s)</string>
+    <string name="pref_show_iob">Mostrar IA</string>
+    <string name="pref_show_detailed_iob">Mostrar detalhes da IA</string>
+    <string name="pref_show_cob">Mostrar CA</string>
+    <string name="pref_show_delta">Mostrar Delta</string>
+    <string name="pref_show_detailed_delta">Mostrar Delta detalho</string>
+    <string name="pref_show_avgdelta">Mostrar média de delta</string>
+    <string name="pref_show_phone_battery">Mostrar bateria do telefone</string>
+    <string name="pref_show_rig_battery">Mostrar bateria de rig</string>
+    <string name="pref_show_basal_rate">Mostrar Taxa Basal</string>
+    <string name="pref_show_loop_status">Mostrar Status do Loop</string>
+    <string name="pref_show_bg">Mostrar glicemia</string>
+    <string name="pref_show_bgi">Mostrar BGI</string>
+    <string name="pref_show_direction_arrow">Mostrar seta de tendência</string>
+    <string name="pref_show_ago">Exibir atrás</string>
+    <string name="default_custom_watchface_comment">Watchface padrão, você pode clicar no botão EXPORTAR WATCHFACE para gerar um modelo</string>
+    <string name="wear_default_watchface">Watchface padrão</string>
 </resources>

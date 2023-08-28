@@ -2,17 +2,18 @@ package info.nightscout.androidaps.watchfaces.utils
 
 import android.graphics.DashPathEffect
 import info.nightscout.androidaps.R
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.rx.weardata.EventData.SingleBg
 import info.nightscout.rx.weardata.EventData.TreatmentData.Basal
+import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.shared.utils.DateUtil
 import lecho.lib.hellocharts.model.Axis
 import lecho.lib.hellocharts.model.AxisValue
 import lecho.lib.hellocharts.model.Line
 import lecho.lib.hellocharts.model.LineChartData
 import lecho.lib.hellocharts.model.PointValue
-import java.util.*
+import java.util.Calendar
+import java.util.GregorianCalendar
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
@@ -86,7 +87,7 @@ class BgGraphBuilder(
         lines.add(highValuesLine())
         var minChart = lowMark
         var maxChart = highMark
-        for ((_, _, _, _, _, _, _, sgv) in bgDataList) {
+        for ((_, _, _, _, _, _, _, _, _, sgv) in bgDataList) {
             if (sgv > maxChart) maxChart = sgv
             if (sgv < minChart) minChart = sgv
         }
@@ -197,13 +198,13 @@ class BgGraphBuilder(
     private fun addPredictionLines(lines: MutableList<Line>) {
         val values: MutableMap<Int, MutableList<PointValue>> = HashMap()
         val endTime = getPredictionEndTime()
-        for ((timeStamp, _, _, _, _, _, _, sgv, _, _, color) in predictionsList) {
+        for ((timeStamp, _, _, _, _, _, _, _, _, sgv, _, _, color) in predictionsList) {
             if (timeStamp <= endTime) {
                 val value = min(sgv, UPPER_CUTOFF_SGV)
                 if (!values.containsKey(color)) {
                     values[color] = ArrayList()
                 }
-                values[color]!!.add(PointValue(fuzz(timeStamp), value.toFloat()))
+                values.getValue(color).add(PointValue(fuzz(timeStamp), value.toFloat()))
             }
         }
         for ((key, value) in values) {
@@ -262,7 +263,7 @@ class BgGraphBuilder(
     }
 
     private fun addBgReadingValues() {
-        for ((timeStamp, _, _, _, _, _, _, sgv) in bgDataList) {
+        for ((timeStamp, _, _, _,_, _, _, _, _, sgv) in bgDataList) {
             if (timeStamp > startingTime) {
                 when {
                     sgv >= 450      -> highValues.add(PointValue(fuzz(timeStamp), 450.toFloat()))

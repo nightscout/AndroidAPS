@@ -5,7 +5,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.MessageType
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message.StringLengthPrefixEncoding
 
-data class PairMessage(
+class PairMessage(
     val sequenceNumber: Byte,
     val source: Id,
     val destination: Id,

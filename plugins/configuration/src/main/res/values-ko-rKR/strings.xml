@@ -131,5 +131,6 @@
     <string name="prefdecrypt_issue_wrong_pass">해독 에러, 입력한 비밀번호가 유효하지 않거나 설정 파일이 수정되었습니다. 가져온 파일이 다른 마스터 비밀번호로 내보내기 되었을 가능성이 있습니다.</string>
     <string name="prefdecrypt_issue_wrong_format">암호화 설정이 누락되었음, 설정 형식이 유효하지 않습니다!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">지원되지 않는 또는 명시되지 않은 암호화 알고리즘!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
 </resources>

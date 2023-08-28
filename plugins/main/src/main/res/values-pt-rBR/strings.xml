@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
-    <string name="smscommunicator">Comunicador SMS</string>
-    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Controle remotamente o AndroidAPS usando comandos SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">do aplicativo Autenticador para: %1$s seguido por PIN</string>
     <string name="smscommunicator_otp_pin">PIN adicional obrigatório no fim do token</string>
@@ -88,6 +86,9 @@
     <string name="smscommunicator_message_body">Corpo da mensagem inválido</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Enviar SMS se um evento de bomba inacessível for identificado</string>
     <string name="smscommunicator_pump_unreachable">Reportar bomba inacessível</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Para mudar o modo do Loop para LGS (Suspensão de Baixa Glicemia), responda com o código %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">Para mudar o modo do Loop para Loop Fechado, responda com o código %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Modo de loop atual: %1$s</string>
     <string name="wrong_format">Formato incorrecto</string>
     <string name="sms_actual_bg">GLIC:</string>
     <string name="sms_last_bg">Último BG:</string>
@@ -101,11 +102,7 @@
     <string name="sms_profile_switch_created">Troca de perfil criada</string>
     <string name="sms_wrong_tbr_duration">A duração da basal temporária deve ser um múltiplo de %1$d minutos e maior que 0.</string>
     <string name="a11y_otp_qr_code">Código QR para configuração de senha de uso único</string>
-    <string name="xdrip_status_detailed_iob_title">Mostrar detalhes da IA</string>
-    <string name="xdrip_status_detailed_iob_summary">Dividir IA entre IA de bolus e de basal na face do relógio</string>
     <string name="disabled_loop">Loop Desativado</string>
-    <string name="xdrip_status_show_bgi_title">Mostrar IG (Impacto na Glicemia)</string>
-    <string name="xdrip_status_show_bgi_summary">Adicionar BGI à linha de status</string>
     <!-- Food-->
     <string name="food_short">Alimentos</string>
     <string name="description_food">Exibe as predefinições de comida definidas no Nightscout</string>
@@ -138,6 +135,7 @@
     <string name="error_in_basal_values">Erro nos valores da basal</string>
     <string name="error_in_target_values">Erro nos valores de alvo</string>
     <string name="error_in_isf_values">Erro nos valores de FSI</string>
+    <string name="profile_name_contains_dot">Nome do perfil contém pontos.\nIsso não é suportado pelo NS.\nPerfil não foi enviado para o NS.</string>
     <string name="invalid_profile_not_accepted">Perfil inválido %1$s não aceito do NS</string>
     <string name="view">Visualização</string>
     <string name="errors">Erros</string>
@@ -170,6 +168,8 @@
     <string name="patch_pump">Bomba patch</string>
     <!-- Overview -->
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
+    <string name="statuslights_cage_warning">Aviso de limite da vida útil da cânula [h]</string>
+    <string name="statuslights_cage_critical">Aviso de limite crítico da vida útil da cânula [h]</string>
     <string name="statuslights_iage_warning">Aviso de limite da vida útil da insulina [h]</string>
     <string name="statuslights_iage_critical">Aviso de limite crítico da vida útil da insulina [h]</string>
     <string name="statuslights_sage_warning">Aviso de limite da vida útil do sensor [h]</string>
@@ -237,6 +237,7 @@
     <string name="short_tabtitles">Abreviar títulos dos separadores</string>
     <string name="overview_show_notes_field_in_dialogs_title">Mostrar campo de notas na janela de tratamentos</string>
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é entregue. Útil com o algoritmo SMB.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Entregar bólus completo (100%) se o glicemia for mais velha do que</string>
     <string name="enable_bolus_advisor">Ativar o assistente de bolus</string>
     <string name="enable_bolus_advisor_summary">Quando sua glicemia estiver alta, usar um lembrete para começar a comer mais tarde em vez de considerar o resultado do assistente (\"pré-bolus\")</string>
     <string name="enablesuperbolus">Ativar superbolus no assistente</string>
@@ -248,6 +249,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Previsões</string>
     <string name="overview_show_treatments">Tratamentos</string>
+    <string name="overview_show_heartRate">Frequência cardíaca</string>
     <string name="overview_show_deviation_slope">Desvio de inclinação</string>
     <string name="overview_show_activity">Atividade</string>
     <string name="overview_show_bgi">Impacto na glicose</string>
@@ -265,6 +267,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">TRATA</string>
+    <string name="heartRate_shortname">FC</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Escala do gráfico</string>
     <string name="graph_menu_divider_header">Gráfico</string>
@@ -274,12 +277,14 @@
     <string name="buttonson_description">Botões são sempre exibidos na parte inferior da tela</string>
     <string name="largedisplay_description">Mostrador Grande</string>
     <string name="skin">Tema</string>
+    <string name="cannula_usage">Uso:</string>
     <!--    Iob-->
     <string name="send_logfiles">Enviar os ficheiros de registo do dia de hoje para os programadores. Situação inesperada.</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
     <string name="description_wear">Monitore e controle AndroidAPS usando seu relógio WearOS.</string>
     <string name="no_watch_connected">(Nenhum relógio conectado)</string>
+    <string name="pump_status">Estado da Bomba</string>
     <string name="loop_status">Status do loop</string>
     <string name="wizard_result">Calculadora:\nInsulin: %1$.2fU\nCarbs: %2$dg</string>
     <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize seu atalho</string>
@@ -300,15 +305,49 @@
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
     <string name="wear_display_settings">Mostrar Configurações</string>
     <string name="wear_general_settings">Configurações gerais</string>
-    <string name="wear_detailed_delta_title">Mostrar Delta detalho</string>
-    <string name="wear_detailed_delta_summary">Mostrar delta com mais um ponto decimal</string>
     <string name="wear_notifysmb_title">Notificar no SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>
     <string name="wear_predictions_summary">Mostrar a predições na face do relogio.</string>
     <string name="wear_predictions_title">Previsão</string>
+    <string name="wear_custom_watchface_settings">Configurações personalizadas de Watchface</string>
+    <string name="wear_custom_watchface_authorization_title">Autorização de Watchface Personalizada</string>
+    <string name="wear_custom_watchface_authorization_summary">Autorizar watchface carregado e carregado para alterar e bloquear algumas configurações de relógio para o design do watchface</string>
+    <string name="wear_custom_watchface">Watchface Personalizado: %1$s</string>
+    <string name="wear_load_watchface">Carregar Watchface</string>
+    <string name="wear_infos_watchface">Infos Watchface</string>
+    <string name="wear_export_watchface">Exportar modelo</string>
+    <string name="wear_new_custom_watchface_exported">Modelo de watchface personalizado exportado</string>
     <string name="resend_all_data">Reenviar Todos os Dados</string>
     <string name="open_settings_on_wear">Abrir Definições em Wear</string>
+    <string name="cwf_infos_pref_locked">Lista de preferências bloqueadas pela Watchface</string>
+    <string name="cwf_infos_view_title">Lista de campos incluídos na Watchface</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
     <string name="old_data">DADOS ANTIGOS</string>
+    <string name="pump_fetching_data">tentando buscar dados da Bomba.</string>
+    <string name="pump_old_data">TDD: Dados ainda antigos! Não é possível carregar da bomba.</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">h</string>
+    <string name="no_active_profile">Nenhum perfil ativo definido!</string>
+    <string name="profile_message">Perfil:\n\nFuso: %1$d\nPorcentagem: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2f / %1$.0f U%%</string>
+    <string name="no_profile">Nenhum perfil selecionado</string>
+    <string name="aps_only">Aplique somente no modo APS!</string>
+    <string name="last_aps_result_na">Último resultado indisponível!</string>
+    <string name="loop_status_closed">LOOP FECHADO</string>
+    <string name="loop_status_open">LOOP ABERTO</string>
+    <string name="loop_status_disabled">LOOP DESATIVADO</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Última execução</string>
+    <string name="last_enact">Ultima execução</string>
+    <string name="today">Hoje</string>
+    <string name="weighted">ponderado</string>
+    <string name="target_only_aps_mode">Alvos só se aplicam no modo APS!</string>
+    <string name="no_history">Nenhum dado no histórico!</string>
+    <string name="units_short">U</string>
+    <string name="temp_target">Alvos Temporários</string>
+    <string name="until">até</string>
+    <string name="default_range">DEFAULT RANGE</string>
+    <string name="target">alvo</string>
+    <string name="rate_duration">Taxa: %1$.2fU/h (%2$.2f%%) \nDuração %3$d min</string>
 </resources>

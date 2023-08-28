@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.common.ui.wizard.common.activity
 
+import android.os.Bundle
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AlertDialog
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
@@ -8,7 +10,14 @@ import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 
 abstract class OmnipodWizardActivityBase : TranslatedDaggerAppCompatActivity() {
 
-    override fun onBackPressed() = exitActivityAfterConfirmation()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                exitActivityAfterConfirmation()
+            }
+        })
+    }
 
     fun exitActivityAfterConfirmation() {
         if (getNavController().previousBackStackEntry == null) {

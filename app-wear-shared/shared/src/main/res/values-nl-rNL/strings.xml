@@ -33,4 +33,9 @@
     <string name="connected">Verbonden</string>
     <string name="disconnecting">Verbinding aan het verbreken</string>
     <string name="waiting_for_disconnection">Wachten op het loskoppelen</string>
+    <!-- Custom Watchface -->
+    <string name="metadata_label_watchface_created_at">Gemaakt op: %1$s</string>
+    <string name="metadata_label_watchface_author">Auteur: %1$s</string>
+    <string name="metadata_label_watchface_name">Naam: %1$s</string>
+    <string name="metadata_wear_import_filename">Bestandsnaam: %1$s</string>
 </resources>

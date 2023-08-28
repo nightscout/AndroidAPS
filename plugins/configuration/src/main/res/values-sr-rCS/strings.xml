@@ -53,5 +53,6 @@
     <string name="configbuilder_nightscoutversion_label">Nightscout verzija:</string>
     <string name="nav_resetdb">Poništite baze podataka</string>
     <!-- Maintenance -->
+    <!-- Custom Watchface -->
     <!-- Permissions -->
 </resources>

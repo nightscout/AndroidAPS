@@ -245,6 +245,11 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                         mPaint.setFakeBoldText(true);
                         canvas.drawText(value.getLabel(), endX, endY, mPaint);
                     }
+                } else if (value.getShape() == Shape.HEARTRATE) {
+                    mPaint.setStrokeWidth(0);
+                    Rect bounds = new Rect((int) endX, (int) endY - 8, (int) (xPlusLength), (int) endY + 8);
+                    mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+                    canvas.drawRect(bounds, mPaint);
                 } else if (value.getShape() == Shape.PROFILE) {
                     Drawable drawable = ContextCompat.getDrawable(graphView.getContext(), R.drawable.ic_ribbon_profile);
                     assert drawable != null;
@@ -325,10 +330,6 @@ public class PointsWithLabelGraphSeries<E extends DataPointWithLabelInterface> e
                         mPaint.setStrokeWidth(5);
                         canvas.drawRect(endX - 3, bounds.top + py - 3, xPlusLength + 3, bounds.bottom + py + 3, mPaint);
                     }
-                } else if (value.getShape() == Shape.HEARTRATE) {
-                    mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-                    mPaint.setStrokeWidth(0);
-                    canvas.drawCircle(endX, endY, 1F, mPaint);
                 }
                 // set values above point
             }

@@ -6,6 +6,7 @@
     <string name="previous_button">הקודם</string>
     <string name="nav_setupwizard">אשף ההתקנה</string>
     <string name="setupwizard_finish">סיום</string>
+    <string name="welcome">ברוכים הבאים</string>
     <string name="welcometosetupwizard">ברוכים הבאים לאשף ההתקנה. האשף ידריך אתכם בתהליך ההתקנה\n</string>
     <string name="end_user_license_agreement">הסכם רישיון למשתמש</string>
     <string name="end_user_license_agreement_text">לא מיועד לשימוש למטרת קבלת החלטות רפואיות. בעלי הזכויות מספקים את התוכנית כפי שהיא - \"AS IS\", ללא אחריות מכל סוג שהוא. כל סיכון הנובע מאיכות ו\\או ביצועי התוכנה הוא באחריותך בלבד. במידה ותימצא תקלה בתוכנית, אתם תשאו בכל עלויות שיגרמו לך בשל התקלה.</string>
@@ -151,6 +152,8 @@
     <string name="prefdecrypt_issue_wrong_pass">שגיאת פענוח, הסיסמה שסופקה אינה חוקית או שקובץ ההגדרות שונה! יתכן שהקובץ המיובא יוצא עם סיסמה ראשית אחרת.</string>
     <string name="prefdecrypt_issue_wrong_format">תצורת הצפנה חסרה, פורמט ההגדרות אינו חוקי!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">אלגוריתם ההצפנה לא צוין או שלא נתמך!</string>
+    <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">בחירת פני שעון מותאמים אישית</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">נא לאתחל את הסמרטפון שלכם או הפעילו מחדש את אפלקציית AndroidAPS בהגדרות המערכת \nאחרת AndroidAPS לא יוכל לבצע רישום (חשוב לעקוב ולוודא כי האלגוריתמים פועלים כראוי)!</string>
 </resources>

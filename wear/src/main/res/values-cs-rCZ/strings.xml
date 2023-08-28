@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS(Kokpit)</string>
     <string name="label_watchface_steampunk">AAPS (Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS (vlastní)</string>
     <string name="label_actions_tile">AAPS(Akce)</string>
     <string name="label_temp_target_tile">AAPS(Doč. cíl)</string>
     <string name="label_quick_wizard_tile">AAPS(Rychlý bolus)</string>
@@ -22,16 +23,20 @@
     <string name="msg_warning_old">AAPS data jsou %1$s stará! Zkontrolujte svůj senzor, xDrip +, NS, AAPS konfigurace nebo ostatní!</string>
     <string name="pref_vibrate_on_bolus">Vibrovat při bolusu</string>
     <string name="pref_units_for_actions">Jednotky pro akce</string>
+    <string name="units_short">U</string>
     <string name="pref_show_date">Zobrazit datum</string>
     <string name="pref_show_iob">Zobrazit IOB</string>
+    <string name="pref_show_detailed_iob">Zobrazit detailní IOB</string>
     <string name="pref_show_cob">Zobrazit COB</string>
     <string name="pref_show_delta">Zobrazit deltu</string>
+    <string name="pref_show_detailed_delta">Zobrazovat detailní změny</string>
     <string name="pref_show_avgdelta">Zobrazit průměrnou deltu</string>
     <string name="pref_show_phone_battery">Zobrazit stav baterie telefonu</string>
     <string name="pref_show_rig_battery">Zobrazovat kruhový graf baterie</string>
     <string name="pref_show_basal_rate">Zobrazit bazál</string>
     <string name="pref_show_loop_status">Zobrazovat stav smyčky</string>
     <string name="pref_show_bg">Zobrazovat glykemii</string>
+    <string name="pref_show_bgi">Zobrazovat BGI</string>
     <string name="pref_show_direction_arrow">Zobrazovat trendovou šipku</string>
     <string name="pref_show_ago">Zobrazit aktualizováno před</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tmavý</string>
@@ -143,6 +148,7 @@
     <string name="pref_simplify_ui_sum">Zobrazit pouze čas a glykémii</string>
     <string name="pref_vibrate_hourly">Vibrovat každou hodinu</string>
     <string name="pref_show_weeknumber">Zobrazit číslo týdne</string>
+    <string name="custom_pref_show_seconds">Zobrazovat sekundy</string>
     <string name="digitalstyle_pref_your_style">Váš styl:</string>
     <string name="digitalstyle_style_none">bez stylu</string>
     <string name="digitalstyle_style_minimal">minimalistický styl</string>
@@ -190,7 +196,10 @@
     <string name="week_short">t</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">starý</string>
     <string name="old_warning">!starý!</string>
     <string name="error">!chyba!</string>
+    <string name="pref_heartRateSampling">Tepová frekvence</string>
 </resources>

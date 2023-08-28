@@ -90,7 +90,7 @@ class PumpHistoryEntry : MedtronicHistoryEntry() {
         //     Log.e("", "DT is null. RawData=" + ByteUtil.getHex(rawData))
         // }
         sb.append("PumpHistoryEntry [type=" + StringUtil.getStringInLength(entryType.name, 20))
-        sb.append(" " + if (DT == null) "null" else StringUtil.getStringInLength(DT, 19))
+        sb.append(" " + if (dt == null) "null" else StringUtil.getStringInLength(dt, 19))
 
         val hasData = (decodedData.size > 0)
         if (hasData) {

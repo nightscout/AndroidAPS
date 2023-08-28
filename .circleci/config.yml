@@ -4,7 +4,7 @@ version: 2.1
 
 # Orbs are reusable packages of CircleCI configuration that you may share across projects, enabling you to create encapsulated, parameterized commands, jobs, and executors that can be used across multiple projects.
 orbs:
-  android: circleci/android@1.0.3
+  android: circleci/android@2.3.0
   codecov: codecov/codecov@3.2.4
 
 jobs:
@@ -13,11 +13,14 @@ jobs:
     # These next lines define the Android machine image executor: https://circleci.com/docs/2.0/executor-types/
     executor:
       name: android/android-machine
+      resource-class: large
+      tag: 2023.07.1
 
     steps:
       # Checkout the code as the first step.
       - checkout
-
+      - android/change-java-version:
+          java-version: 17
       # The next step will run the unit tests
       - android/run-tests:
           test-command: ./gradlew testFullDebugUnitTest

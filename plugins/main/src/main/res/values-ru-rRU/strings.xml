@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Переключатель профиля создан</string>
     <string name="sms_wrong_tbr_duration">Длительность временного базала TBR должна быть кратной %1$d минутам и больше 0.</string>
     <string name="a11y_otp_qr_code">QR код для создания одноразового пароля</string>
-    <string name="xdrip_status_detailed_iob_title">Показать IOB подробно</string>
-    <string name="xdrip_status_detailed_iob_summary">Показать разбивку IOB на болюсный и базальный IOB на часах</string>
     <string name="disabled_loop">Зцикл не работает</string>
-    <string name="xdrip_status_show_bgi_title">Показать BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Добавить BGI в строку состояния</string>
     <!-- Food-->
     <string name="food_short">Еда</string>
     <string name="description_food">Показывает заданные в Nightscout настройки для приема пищи</string>
@@ -253,6 +249,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Прогнозирование</string>
     <string name="overview_show_treatments">Терапия</string>
+    <string name="overview_show_heartRate">Частота сердечных сокращений</string>
     <string name="overview_show_deviation_slope">Линия отклонения</string>
     <string name="overview_show_activity">Активность</string>
     <string name="overview_show_bgi">Влияние ГК</string>
@@ -270,6 +267,7 @@
     <string name="abs_insulin_shortname">НАДО</string>
     <string name="devslope_shortname">ЛИНОТКЛН</string>
     <string name="treatments_shortname">НАЗНАЧ</string>
+    <string name="heartRate_shortname">ЧСС</string>
     <string name="sensitivity_shortname">ЧУВСТВ</string>
     <string name="graph_scale">Масштаб графика</string>
     <string name="graph_menu_divider_header">График</string>
@@ -307,8 +305,6 @@
     <string name="wear_wizard_settings_summary">Расчеты включены в результат калькулятора: </string>
     <string name="wear_display_settings">Параметры экрана</string>
     <string name="wear_general_settings">Общие настройки</string>
-    <string name="wear_detailed_delta_title">Показать подробно дельту</string>
-    <string name="wear_detailed_delta_summary">Показать дельту еще с одним десятичным знаком</string>
     <string name="wear_notifysmb_title">Сообщить о супер микро болюсе SMB</string>
     <string name="wear_notifysmb_summary">Показывать супер микро болюс SMB на часах как стандартный болюс.</string>
     <string name="wear_predictions_summary">Показывать линию тренда на смарт-часах.</string>
@@ -323,7 +319,7 @@
     <string name="grams_short">г</string>
     <string name="hour_short">ч</string>
     <string name="no_active_profile">Активный профиль не установлен!</string>
-    <string name="profile_message">Профиль:\n\nСдвиг по времени: %1$\nПроцент: %2$d%%\"</string>
+    <string name="profile_message">Профиль:\n\nСдвиг по времени: %1$d$\nПроцент: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fед%1$.0f%%</string>
     <string name="no_profile">Профиль не загружен</string>
     <string name="aps_only">Применять только в режиме APS!</string>

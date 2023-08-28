@@ -92,6 +92,8 @@
     <string name="lastboluscompared">Heure du dernier bolus %1$s il y a %2$s min</string>
     <string name="triggercoblabel">GA</string>
     <string name="cobcompared">GA %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Fréquence Cardiaque</string>
+    <string name="triggerHeartRateDesc">FC %1$s %2$.0f</string>
     <string name="iob_u">IA [U]:</string>
     <string name="distance_short">Dist [m]:</string>
     <string name="recurringTime">Période répétitive</string>

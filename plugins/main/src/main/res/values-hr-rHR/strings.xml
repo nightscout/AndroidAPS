@@ -57,11 +57,7 @@
     <string name="sms_bolus">Bolus:</string>
     <string name="sms_basal">Bazal:</string>
     <string name="a11y_otp_qr_code">QR kod za postavljanje jednokratne lozinke</string>
-    <string name="xdrip_status_detailed_iob_title">Prikaži detaljan IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Podijelite IOB na bolus i bazalni IOB na brojčaniku</string>
     <string name="disabled_loop">Petlja onemogućena</string>
-    <string name="xdrip_status_show_bgi_title">Prikaži BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Dodajte BGI u redak statusa</string>
     <!-- Food-->
     <string name="food_short">Hrana</string>
     <string name="description_food">Prikaži postavke prehrane definirane u Nightscout</string>

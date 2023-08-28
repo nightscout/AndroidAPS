@@ -33,4 +33,5 @@
     <string name="connected">Tilsuttet</string>
     <string name="disconnecting">Afbryder</string>
     <string name="waiting_for_disconnection">Venter på afbrydelse</string>
+    <!-- Custom Watchface -->
 </resources>

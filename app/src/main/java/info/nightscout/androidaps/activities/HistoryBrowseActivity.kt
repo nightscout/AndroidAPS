@@ -76,6 +76,10 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         binding = ActivityHistorybrowseBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        title = rh.gs(info.nightscout.plugins.R.string.nav_history_browser)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         binding.left.setOnClickListener {
             adjustTimeRange(historyBrowserData.overviewData.fromTime - T.hours(rangeToDisplay.toLong()).msecs())
             loadAll("onClickLeft")
@@ -167,7 +171,7 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
         disposable += rxBus
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(aapsSchedulers.main)
-            .subscribe({ updateCalcProgress(it.pass.finalPercent(it.progressPct)) }, fabricPrivacy::logException)
+            .subscribe({ updateCalcProgress(it.finalPercent) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventUpdateOverviewGraph::class.java)
             .observeOn(aapsSchedulers.main)
@@ -363,7 +367,8 @@ class HistoryBrowseActivity : TranslatedDaggerAppCompatActivity() {
                     menuChartSettings[g + 1][OverviewMenus.CharType.DEV.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.BGI.ordinal] ||
                     menuChartSettings[g + 1][OverviewMenus.CharType.SEN.ordinal] ||
-                    menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal]
+                    menuChartSettings[g + 1][OverviewMenus.CharType.DEVSLOPE.ordinal] ||
+                    menuChartSettings[g + 1][OverviewMenus.CharType.HR.ordinal]
                 ).toVisibility()
             secondaryGraphsData[g].performUpdate()
         }

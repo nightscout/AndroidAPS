@@ -3,7 +3,9 @@ package info.nightscout.configuration.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
+import androidx.core.view.MenuProvider
 import info.nightscout.configuration.R
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
@@ -33,29 +35,32 @@ class SingleFragmentActivity : DaggerAppCompatActivityWithResult() {
                 supportFragmentManager.fragmentFactory.instantiate(ClassLoader.getSystemClassLoader(), plugin?.pluginDescription?.fragmentClass!!)
             ).commit()
         }
-    }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            android.R.id.home           -> {
-                finish()
-                true
+        // Add menu items without overriding methods in the Activity
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                if (plugin?.preferencesId != -1) menuInflater.inflate(R.menu.menu_single_fragment, menu)
             }
 
-            R.id.nav_plugin_preferences -> {
-                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
-                    val i = Intent(this, uiInteraction.preferencesActivity)
-                    i.putExtra("id", plugin?.preferencesId)
-                    startActivity(i)
-                }, null)
-                true
-            }
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    android.R.id.home           -> {
+                        onBackPressedDispatcher.onBackPressed()
+                        true
+                    }
 
-            else                        -> super.onOptionsItemSelected(item)
-        }
+                    R.id.nav_plugin_preferences -> {
+                        protectionCheck.queryProtection(this@SingleFragmentActivity, ProtectionCheck.Protection.PREFERENCES, {
+                            val i = Intent(this@SingleFragmentActivity, uiInteraction.preferencesActivity)
+                                .setAction("info.nightscout.configuration.activities.SingleFragmentActivity")
+                                .putExtra("id", plugin?.preferencesId)
+                            startActivity(i)
+                        }, null)
+                        true
+                    }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        if (plugin?.preferencesId != -1) menuInflater.inflate(R.menu.menu_single_fragment, menu)
-        return super.onCreateOptionsMenu(menu)
+                    else                        -> false
+                }
+        })
     }
 }

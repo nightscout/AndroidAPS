@@ -17,7 +17,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.HandlerThread
 import android.os.ParcelUuid
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
@@ -147,16 +146,6 @@ class RileyLinkBLEConfigActivity : TranslatedDaggerAppCompatActivity() {
             rileyLinkUtil.sendBroadcastMessage(RileyLinkConst.Intents.RileyLinkNewAddressSet, this) // Reconnect current RL
         }
     }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                true
-            }
-
-            else              -> super.onOptionsItemSelected(item)
-        }
 
     private fun prepareForScanning() {
         val checkOK = blePreCheck.prerequisitesCheck(this)

@@ -132,7 +132,7 @@ class PrepareTreatmentsDataWorker(
         data.overviewData.therapyEventSeries = PointsWithLabelGraphSeries(filteredTherapyEvents.toTypedArray())
         data.overviewData.epsSeries = PointsWithLabelGraphSeries(filteredEps.toTypedArray())
 
-        data.overviewData.heartRateGraphSeries = LineGraphSeries<DataPointWithLabelInterface>(
+        data.overviewData.heartRateGraphSeries = PointsWithLabelGraphSeries<DataPointWithLabelInterface>(
             repository.getHeartRatesFromTimeToTime(fromTime, endTime)
                 .map { hr -> HeartRateDataPoint(hr, rh) }
                 .toTypedArray()).apply { color = rh.gac(null, info.nightscout.core.ui.R.attr.heartRateColor) }

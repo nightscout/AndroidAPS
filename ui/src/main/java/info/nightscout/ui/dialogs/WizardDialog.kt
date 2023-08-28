@@ -175,11 +175,13 @@ class WizardDialog : DaggerDialogFragment() {
         // If there is no BG using % lower that 100% leads to high BGs
         // because loop doesn't add missing insulin
         var percentage = sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100).toDouble()
+        val time = sp.getLong(info.nightscout.core.utils.R.string.key_reset_boluswizard_percentage_time, 16)
         repository.getLastGlucoseValueWrapped().blockingGet().let {
-            // if last value is older than 6 min or there is no bg
-            if (it is ValueWrapper.Existing)
-                if (it.value.timestamp < dateUtil.now() - T.mins(6).msecs())
+            // if last value is older or there is no bg
+            if (it is ValueWrapper.Existing) {
+                if (it.value.timestamp < dateUtil.now() - T.mins(time).msecs())
                     percentage = 100.0
+            } else percentage = 100.0
         }
 
         if (usePercentage) {

@@ -10,7 +10,6 @@
     <string name="old_version">старая версия</string>
     <string name="very_old_version">очень старая версия</string>
     <string name="application_expired">Истек срок действия приложения</string>
-    <string name="new_version_warning">Новая версия доступна уже %1$d дней! По истечении %2$d дн алгоритм переходит в режим работы только с остановкой при низкой гликемии LGS, замкнутый цикл будет отключен через %3$d дн</string>
     <string name="running_invalid_version">Мы обнаружили, что вы используете недопустимую версию. Цикл отключен!</string>
     <string name="versionavailable">Доступна версия %1$s</string>
     <string name="version_expire">Версия: %1$s истекает %2$s</string>
@@ -48,6 +47,4 @@
     <string name="doyouwantresetstart">Хотите сбросить начатую цель? Можете потерять достигнутое.</string>
     <string name="objectives_next_button">Далее</string>
     <string name="objectives_previous_button">Назад</string>
-    <string name="objectives_button_unfinish">Очистить завершенные</string>
-    <string name="objectives_button_unstart">Очистить начатые</string>
 </resources>

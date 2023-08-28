@@ -4,9 +4,25 @@
 
     <CheckBoxPreference
         android:defaultValue="true"
+        android:key="@string/key_show_bg"
+        android:summary="Show BG."
+        android:title="@string/pref_show_bg"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
         android:key="@string/key_show_iob"
         android:summary="Show insulin on board."
         android:title="@string/pref_show_iob"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_show_detailed_iob"
+        android:summary="Break down IOB into bolus and basal IOB on the watchface"
+        android:title="@string/pref_show_detailed_iob"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
@@ -19,10 +35,10 @@
         app:wear_iconOn="@drawable/settings_on" />
 
     <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/key_show_bg"
-        android:summary="Show BG."
-        android:title="@string/pref_show_bg"
+        android:defaultValue="false"
+        android:key="@string/key_show_bgi"
+        android:summary="Show BGI"
+        android:title="@string/pref_show_bgi"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
@@ -41,6 +57,15 @@
         android:title="@string/pref_show_avgdelta"
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_show_detailed_delta"
+        android:summary="Show delta with one more decimal place"
+        android:title="@string/pref_show_detailed_delta"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
     <CheckBoxPreference
         android:defaultValue="true"
         android:key="@string/key_show_direction"

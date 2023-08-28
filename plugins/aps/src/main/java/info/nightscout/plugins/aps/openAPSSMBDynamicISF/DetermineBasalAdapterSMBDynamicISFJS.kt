@@ -14,7 +14,6 @@ import info.nightscout.interfaces.iob.MealData
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.logger.LoggerCallback
@@ -38,6 +37,7 @@ import org.mozilla.javascript.Undefined
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
+import java.security.InvalidParameterException
 import javax.inject.Inject
 import kotlin.math.ln
 
@@ -48,7 +48,6 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var activePlugin: ActivePlugin
-    @Inject lateinit var tddCalculator: TddCalculator
 
     private var profile = JSONObject()
     private var mGlucoseStatus = JSONObject()
@@ -176,8 +175,19 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         microBolusAllowed: Boolean,
         uamAllowed: Boolean,
         advancedFiltering: Boolean,
-        flatBGsDetected: Boolean
+        flatBGsDetected: Boolean,
+        tdd1D: Double?,
+        tdd7D: Double?,
+        tddLast24H: Double?,
+        tddLast4H: Double?,
+        tddLast8to4H: Double?
     ) {
+        tdd1D ?: throw InvalidParameterException()
+        tdd7D ?: throw InvalidParameterException()
+        tddLast24H ?: throw InvalidParameterException()
+        tddLast4H ?: throw InvalidParameterException()
+        tddLast8to4H ?: throw InvalidParameterException()
+
         val pump = activePlugin.activePump
         val pumpBolusStep = pump.pumpDescription.bolusStep
         this.profile.put("max_iob", maxIob)
@@ -262,12 +272,6 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         this.mealData.put("lastBolusTime", mealData.lastBolusTime)
         this.mealData.put("lastCarbTime", mealData.lastCarbTime)
 
-        val tdd1D = tddCalculator.averageTDD(tddCalculator.calculate(1, allowMissingDays = false))?.totalAmount
-        val tdd7D = tddCalculator.averageTDD(tddCalculator.calculate(7, allowMissingDays = false))?.totalAmount
-        val tddLast24H = tddCalculator.calculateDaily(-24, 0)?.totalAmount
-        val tddLast4H = tddCalculator.calculateDaily(-4, 0)?.totalAmount
-        val tddLast8to4H = tddCalculator.calculateDaily(-8, -4)?.totalAmount
-
         val insulin = activePlugin.activeInsulin
         val insulinDivisor = when {
             insulin.peak > 65 -> 55 // lyumjev peak: 45
@@ -275,34 +279,19 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
             else              -> 75 // rapid peak: 75
         }
 
-        var tdd: Double? = null
-        var variableSensitivity: Double
-        if (tddLast24H != null && tddLast4H != null && tddLast8to4H != null) {
-            val tddWeightedFromLast8H = ((1.4 * tddLast4H) + (0.6 * tddLast8to4H)) * 3
-//        console.error("Rolling 8 hours weight average: " + tdd_last8_wt + "; ");
-//        console.error("1-day average TDD is: " + tdd1 + "; ");
-//        console.error("7-day average TDD is: " + tdd7 + "; ");
+        val tddWeightedFromLast8H = ((1.4 * tddLast4H) + (0.6 * tddLast8to4H)) * 3
+        var tdd = (tddWeightedFromLast8H * 0.33) + (tdd7D * 0.34) + (tdd1D * 0.33)
+        val dynISFadjust = SafeParse.stringToDouble(sp.getString(R.string.key_DynISFAdjust, "100")) / 100.0
+        tdd *= dynISFadjust
 
-            tdd =
-                if (tdd1D != null && tdd7D != null) (tddWeightedFromLast8H * 0.33) + (tdd7D * 0.34) + (tdd1D * 0.33)
-                else tddWeightedFromLast8H
-//        console.log("TDD = " + TDD + " using average of 7-day, 1-day and weighted 8hr average");
-
-            val dynISFadjust = SafeParse.stringToDouble(sp.getString(R.string.key_DynISFAdjust, "100")) / 100.0
-            tdd *= dynISFadjust
-
-            variableSensitivity = 1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1)))
-            variableSensitivity = Round.roundTo(variableSensitivity, 0.1)
-        } else {
-            variableSensitivity = profile.getIsfMgdl()
-        }
+        val variableSensitivity = Round.roundTo(1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1))), 0.1)
 
         this.profile.put("variable_sens", variableSensitivity)
         this.profile.put("insulinDivisor", insulinDivisor)
-        tdd?.let { this.profile.put("TDD", tdd) }
+        this.profile.put("TDD", tdd)
 
 
-        if (sp.getBoolean(R.string.key_adjust_sensitivity, false) && tdd7D != null && tddLast24H != null)
+        if (sp.getBoolean(R.string.key_adjust_sensitivity, false))
             autosensData.put("ratio", tddLast24H / tdd7D)
         else
             autosensData.put("ratio", 1.0)

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="biometric_title">Требуется авторизация</string>
-    <string name="biometric_description">Поместите палец на устройство считывания отпечатков, чтобы подтвердить свою идентичность</string>
+    <string name="biometric_description">Поместите палец на устройство считывания отпечатков, чтобы подтвердить свою личность</string>
     <string name="settings_protection">Защита настроек</string>
     <string name="application_protection">Защита приложения</string>
     <string name="bolus_protection">Защита болюсов</string>
-    <string name="settings_password">Пароль параметров</string>
-    <string name="settings_pin">ПИН-код настроек</string>
-    <string name="application_password">Пароль приложения</string>
-    <string name="application_pin">PIN-код приложения</string>
-    <string name="bolus_password">Пароль болюсов</string>
-    <string name="bolus_pin">Пин-код болюса</string>
-    <string name="protection_timeout_title">Тайм-аут удержания пароля и пин-кода [s]</string>
+    <string name="settings_password">Пароль для настроек</string>
+    <string name="settings_pin">ПИН для настроек</string>
+    <string name="application_password">Пароль для приложения</string>
+    <string name="application_pin">ПИН для приложения</string>
+    <string name="bolus_password">Пароль для болюсов</string>
+    <string name="bolus_pin">ПИН для болюсов</string>
+    <string name="protection_timeout_title">Тайм-аут удержания пароля и ПИН-кода [s]</string>
     <string name="protection_timeout_summary">Время до ввода пароля или PIN-кода</string>
     <string name="biometric">Биометрия</string>
     <string name="custom_password">Настраиваемый пароль</string>
@@ -20,12 +20,12 @@
     <string name="unsecure_fallback_biometric">Небезопасный резервный вход</string>
     <string name="unsecure_fallback_descriotion_biometric">Биометрической защите требуется главный пароль для безопасности.\n\n Установите главный пароль!</string>
     <string name="password_set">Пароль задан!</string>
-    <string name="pin_set">PIN-код установлен!</string>
+    <string name="pin_set">ПИН установлен!</string>
     <string name="password_not_set">Пароль не задан</string>
-    <string name="pin_not_set">PIN-код не задан</string>
+    <string name="pin_not_set">ПИН не задан</string>
     <string name="password_not_changed">Пароль не был изменён</string>
-    <string name="pin_not_changed">PIN-код не изменён</string>
-    <string name="pin_cleared">PIN-код очищен!</string>
+    <string name="pin_not_changed">ПИН не изменён</string>
+    <string name="pin_cleared">ПИН очищен!</string>
     <string name="password_hint">Введите пароль здесь</string>
-    <string name="pin_hint">Введите PIN-код здесь</string>
+    <string name="pin_hint">Введите ПИН здесь</string>
 </resources>

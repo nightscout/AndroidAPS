@@ -8,14 +8,17 @@
             android:name=".setupwizard.SetupWizardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"
-            android:label="@string/title_activity_setup_wizard"
             android:theme="@style/AppTheme" />
         <activity
             android:name=".maintenance.activities.LogSettingActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".maintenance.activities.PrefImportListActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
+        <activity
+            android:name=".maintenance.activities.CustomWatchfaceImportListActivity"
             android:exported="false"
             android:theme="@style/AppTheme" />
         <activity

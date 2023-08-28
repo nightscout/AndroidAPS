@@ -92,6 +92,8 @@
     <string name="lastboluscompared">Czas ostatniego bolusa %1$s %2$s min temu</string>
     <string name="triggercoblabel">Węgle</string>
     <string name="cobcompared">Węgle %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Tętno</string>
+    <string name="triggerHeartRateDesc">HR %1$s %2$.0f</string>
     <string name="iob_u">IOB [U]:</string>
     <string name="distance_short">Odległość [m]:</string>
     <string name="recurringTime">Powtarzający się czas</string>

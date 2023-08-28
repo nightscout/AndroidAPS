@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="info.nightscout.pump.medtrum.code.PatchStep" />
+
+        <variable
+            name="viewModel"
+            type="info.nightscout.pump.medtrum.ui.viewmodel.MedtrumViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginEnd="30dp"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".ui.MedtrumActivity">
+
+
+            <TextView
+                android:id="@+id/text_remove_safety"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:text="@string/remove_safety_lock"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_press_next_to_start_activation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:text="@string/press_next_to_start_activation"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/text_remove_safety" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <Button
+                    android:id="@+id/btn_negative"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/cancel"
+                    android:text="@string/cancel"
+                    app:layout_constraintEnd_toStartOf="@id/btn_positive"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/btn_positive"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="6dp"
+                    android:contentDescription="@string/next"
+                    android:text="@string/next"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btn_negative"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:onSafeClick="@{() -> viewModel.moveStep(PatchStep.ACTIVATE)}"
+                    tools:visibility="visible" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</layout>

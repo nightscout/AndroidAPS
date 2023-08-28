@@ -6,12 +6,12 @@
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Pod Geçmişi</string>
     <string name="omnipod_dash_history_item_description">Açıklama</string>
+    <string name="omnipod_dash_history_item_amount">Miktar</string>
     <string name="omnipod_dash_history_item_source">Kaynak</string>
     <string name="omnipod_dash_history_item_date">Tarih</string>
     <string name="omnipod_dash_history_type">Tip:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f Ü</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f Ü, CH=%2$.1f g</string>
-    <string name="omnipod_dash_history_tbr_value">Oran: %1$.2f Ü, süre: %2$d dakika</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooth Durumu</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth Adresi</string>
@@ -31,9 +31,10 @@
     <string name="omnipod_dash_command_not_sent">Komut gönderilmedi</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Pod\'dan komut alınmadı</string>
     <string name="omnipod_dash_unknown">Bilinmeyen komut durumu</string>
-    <string name="omnipod_common_history_tbr_value">Oran: %1$.2f Ü, süre: %2$d dakika</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f Ü/s, %2$d dakika</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f Ü</string>
     <string name="omnipod_common_alert_delivery_suspended">İnsülin iletimi askıya alındı</string>
+    <string name="omnipod_common_history_total_delivered">Toplam gönderilen: %1$.2f Ü</string>
     <string name="omnipod_dash_connection_lost">Pod ile bağlantı koptu</string>
     <string name="omnipod_dash_bolus_already_in_progress">Diğer bolus iletiliyor</string>
     <string name="omnipod_dash_not_enough_insulin">Rezervuarda yeterli insülin kalmamış</string>
@@ -46,6 +47,7 @@
     <string name="failed_to_set_the_new_basal_profile">Yeni bazal profil ayarlanamadı. İletim askıya alındı</string>
     <string name="setting_basal_profile_might_have_failed">Bazal profili ayarlama başarısız olmuş olabilir. İletim askıya alınabilir! Lütfen Pod durumunu Omnipod sekmesinden manuel olarak yenileyin ve gerekirse iletime devam edin.</string>
     <string name="bolus_delivery_status_uncertain">Bolus iletim durumu belirsiz. Onaylamak veya reddetmek için pod durumunu yenileyin.</string>
+    <string name="temp_basal_out_of_sync">Geçici bazal durumu beklendiği gibi değil! Daha önce geçici bazal çalışmışsa, iptal edilmiş. Lütfen iletilen insülini ve pod geçmişini kontrol edin</string>
     <string name="checking_delivery_status">İletim durumu kontrol ediliyor</string>
     <string name="setting_temp_basal_might_have_basal_failed">Geçici bazal ayarı hatalı olabilir. Geçici bir bazal daha önce çalışıyorsa, iptal edilmiştir. Lütfen Omnipod sekmesinden Pod durumunu manuel olarak yenileyin.</string>
     <string name="cancel_temp_basal_result_is_uncertain">Geçici bazal iptal etme belirsizliği</string>

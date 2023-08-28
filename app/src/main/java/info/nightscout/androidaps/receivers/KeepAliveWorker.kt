@@ -191,7 +191,10 @@ class KeepAliveWorker(
         }
         if (loop.isDisconnected) {
             // do nothing if pump is disconnected
-        } else if (runningProfile == null || ((!pump.isThisProfileSet(requestedProfile) || !requestedProfile.isEqual(runningProfile) || (runningProfile is ProfileSealed.EPS && runningProfile.value.originalEnd < dateUtil.now())) && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE))) {
+        } else if (runningProfile == null || ((!pump.isThisProfileSet(requestedProfile) || !requestedProfile.isEqual(runningProfile)
+                || (runningProfile is ProfileSealed.EPS && runningProfile.value.originalEnd < dateUtil.now() && runningProfile.value.originalDuration != 0L))
+                && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)))
+        {
             rxBus.send(EventProfileSwitchChanged())
         } else if (isStatusOutdated && !pump.isBusy()) {
             lastReadStatus = now

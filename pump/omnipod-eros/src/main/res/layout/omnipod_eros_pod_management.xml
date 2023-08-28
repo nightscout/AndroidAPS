@@ -13,18 +13,6 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginEnd="10dp"
-            android:gravity="center"
-            android:text="@string/omnipod_common_pod_management_title"
-            android:textAlignment="center"
-            android:textSize="12pt"
-            android:textStyle="bold" />
-
         <LinearLayout
             android:id="@+id/waiting_for_rl_layout"
             android:layout_width="match_parent"
@@ -78,7 +66,7 @@
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_pod_management_activate_pod"
+                android:drawableTop="@drawable/ic_pod_activate_pod"
                 android:text="@string/omnipod_common_pod_management_button_activate_pod"
                 android:textAllCaps="false"
                 android:visibility="visible"
@@ -99,7 +87,7 @@
                 style="@style/ButtonSmallFontStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:drawableTop="@drawable/ic_pod_management_deactivate_pod"
+                android:drawableTop="@drawable/ic_pod_deactivate_pod"
                 android:text="@string/omnipod_common_pod_management_button_deactivate_pod"
                 android:textAllCaps="false"
                 android:visibility="visible"

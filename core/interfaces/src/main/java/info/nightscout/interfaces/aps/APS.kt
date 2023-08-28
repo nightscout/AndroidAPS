@@ -7,5 +7,6 @@ interface APS {
     var lastDetermineBasalAdapter: DetermineBasalAdapter?
     var lastAutosensResult: AutosensResult
 
-    operator fun invoke(initiator: String, tempBasalFallback: Boolean)
+    fun isEnabled(): Boolean
+    fun invoke(initiator: String, tempBasalFallback: Boolean)
 }

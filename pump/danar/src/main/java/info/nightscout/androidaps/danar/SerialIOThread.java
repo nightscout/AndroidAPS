@@ -3,6 +3,8 @@ package info.nightscout.androidaps.danar;
 import android.bluetooth.BluetoothSocket;
 import android.os.SystemClock;
 
+import androidx.annotation.Nullable;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -30,6 +32,8 @@ public class SerialIOThread extends Thread {
     private MessageBase processedMessage;
     private final MessageHashTableBase hashTable;
     private final DanaPump danaPump;
+
+    private final Object lock = new Object();
 
     public SerialIOThread(AAPSLogger aapsLogger, BluetoothSocket rfcommSocket, MessageHashTableBase hashTable, DanaPump danaPump) {
         super();
@@ -80,8 +84,8 @@ public class SerialIOThread extends Thread {
                     // process the message content
                     message.setReceived(true);
                     message.handleMessage(extractedBuff);
-                    synchronized (message) {
-                        message.notify();
+                    synchronized (lock) {
+                        message.notifyAll();
                     }
                 }
             }
@@ -101,6 +105,7 @@ public class SerialIOThread extends Thread {
         mReadBuff = newReadBuff;
     }
 
+    @Nullable
     private byte[] cutMessageFromBuffer() {
         if (mReadBuff[0] == (byte) 0x7E && mReadBuff[1] == (byte) 0x7E) {
             int length = (mReadBuff[2] & 0xFF) + 7;
@@ -109,7 +114,7 @@ public class SerialIOThread extends Thread {
                 return null;
             }
             if (mReadBuff[length - 2] != (byte) 0x2E || mReadBuff[length - 1] != (byte) 0x2E) {
-                aapsLogger.error("wrong packet lenght=" + length + " data " + MessageBase.Companion.toHexString(mReadBuff));
+                aapsLogger.error("wrong packet length=" + length + " data " + MessageBase.Companion.toHexString(mReadBuff));
                 disconnect("wrong packet");
                 return null;
             }
@@ -157,12 +162,10 @@ public class SerialIOThread extends Thread {
             aapsLogger.error("sendMessage write exception: ", e);
         }
 
-        synchronized (message) {
-            try {
-                message.wait(5000);
-            } catch (InterruptedException e) {
-                aapsLogger.error("sendMessage InterruptedException", e);
-            }
+        try {
+            message.wait(5000);
+        } catch (InterruptedException e) {
+            aapsLogger.error("sendMessage InterruptedException", e);
         }
 
         SystemClock.sleep(200);
@@ -171,6 +174,7 @@ public class SerialIOThread extends Thread {
             aapsLogger.error(LTag.PUMPBTCOMM, "Reply not received " + message.getMessageName());
             if (message.getCommand() == 0xF0F1) {
                 danaPump.setNewPump(false);
+                danaPump.reset();
                 aapsLogger.debug(LTag.PUMPBTCOMM, "Old firmware detected");
             }
         }
@@ -190,11 +194,6 @@ public class SerialIOThread extends Thread {
         }
         try {
             mRfCommSocket.close();
-        } catch (Exception e) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, e.getMessage());
-        }
-        try {
-            System.runFinalization();
         } catch (Exception e) {
             aapsLogger.debug(LTag.PUMPBTCOMM, e.getMessage());
         }

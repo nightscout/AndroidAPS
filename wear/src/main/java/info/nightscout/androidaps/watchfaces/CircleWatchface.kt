@@ -154,10 +154,19 @@ class CircleWatchface : WatchFace() {
             //Also possible: View.INVISIBLE instead of View.GONE (no layout change)
             mSgv?.visibility = View.INVISIBLE
         }
+        val detailedIob = sp.getBoolean(R.string.key_show_detailed_iob, false)
+        val showBgi = sp.getBoolean(R.string.key_show_bgi, false)
+        val iobString =
+            if (detailedIob) "${status.iobSum} ${status.iobDetail}"
+            else status.iobSum + getString(R.string.units_short)
+        val externalStatus = if (showBgi)
+            "${status.externalStatus} ${iobString} ${status.bgi}"
+        else
+            "${status.externalStatus} ${iobString}"
         var textView = myLayout?.findViewById<TextView>(R.id.statusString)
         if (sp.getBoolean(R.string.key_show_external_status, true)) {
             textView?.visibility = View.VISIBLE
-            textView?.text = status.externalStatus
+            textView?.text = externalStatus
             textView?.setTextColor(textColor)
         } else {
             //Also possible: View.INVISIBLE instead of View.GONE (no layout change)
@@ -178,9 +187,10 @@ class CircleWatchface : WatchFace() {
             textView?.visibility = View.INVISIBLE
         }
         textView = myLayout?.findViewById(R.id.deltaString)
+        val detailedDelta = sp.getBoolean(R.string.key_show_detailed_delta, false)
         if (sp.getBoolean(R.string.key_show_delta, true)) {
             textView?.visibility = View.VISIBLE
-            textView?.text = singleBg.delta
+            textView?.text = if (detailedDelta) singleBg.deltaDetailed else singleBg.delta
             textView?.setTextColor(textColor)
             if (sp.getBoolean(R.string.key_show_big_numbers, false)) {
                 textView?.setTextSize(TypedValue.COMPLEX_UNIT_SP, 25f)
@@ -188,7 +198,7 @@ class CircleWatchface : WatchFace() {
                 textView?.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
             }
             if (sp.getBoolean(R.string.key_show_avg_delta, true)) {
-                textView?.append("  " + singleBg.avgDelta)
+                textView?.append("  " + if (detailedDelta) singleBg.avgDeltaDetailed else singleBg.avgDelta)
             }
         } else {
             //Also possible: View.INVISIBLE instead of View.GONE (no layout change)

@@ -80,5 +80,7 @@
     <string name="upload_now">Fazer o upload agora</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="xdrip_status_show_bgi_title">Mostrar IG</string>
+    <string name="xdrip_status_show_bgi_summary">Adicionar IG à linha de estado</string>
     <!--    DataBroadcast-->
 </resources>

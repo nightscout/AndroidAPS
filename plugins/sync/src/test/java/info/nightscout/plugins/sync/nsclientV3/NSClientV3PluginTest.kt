@@ -38,16 +38,14 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito.anyLong
-import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
-import org.mockito.internal.verification.Times
 
 @Suppress("SpellCheckingInspection")
 internal class NSClientV3PluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var receiverDelegate: ReceiverDelegate
     @Mock lateinit var uiInteraction: UiInteraction
-    @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3Impl
+    @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3
     @Mock lateinit var nsAndroidClient: NSAndroidClient
     @Mock lateinit var uel: UserEntryLogger
     @Mock lateinit var nsClientSource: NSClientSource
@@ -70,7 +68,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         sut =
             NSClientV3Plugin(
                 injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-                sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, mockedProfileFunction, repository,
+                sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, repository,
                 nsDeviceStatusHandler, nsClientSource, nsIncomingDataProcessor, storeDataForDb
             )
         sut.nsAndroidClient = nsAndroidClient
@@ -361,11 +359,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         val dataPair = DataSyncSelector.PairExtendedBolus(extendedBolus, 1000)
         // create
         `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
-        sut.nsAdd("treatments", dataPair, "1/3")
+        sut.nsAdd("treatments", dataPair, "1/3", validProfile)
         Assertions.assertEquals(1, storeDataForDb.nsIdExtendedBoluses.size)
         // update
         `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
-        sut.nsUpdate("treatments", dataPair, "1/3")
+        sut.nsUpdate("treatments", dataPair, "1/3", validProfile)
         Assertions.assertEquals(2, storeDataForDb.nsIdExtendedBoluses.size)
     }
 
@@ -415,11 +413,11 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
         val dataPair = DataSyncSelector.PairTemporaryBasal(temporaryBasal, 1000)
         // create
         `when`(nsAndroidClient.createTreatment(anyObject())).thenReturn(CreateUpdateResponse(201, "aaa"))
-        sut.nsAdd("treatments", dataPair, "1/3")
+        sut.nsAdd("treatments", dataPair, "1/3", validProfile)
         Assertions.assertEquals(1, storeDataForDb.nsIdTemporaryBasals.size)
         // update
         `when`(nsAndroidClient.updateTreatment(anyObject())).thenReturn(CreateUpdateResponse(200, "aaa"))
-        sut.nsUpdate("treatments", dataPair, "1/3")
+        sut.nsUpdate("treatments", dataPair, "1/3", validProfile)
         Assertions.assertEquals(2, storeDataForDb.nsIdTemporaryBasals.size)
     }
 

@@ -47,6 +47,7 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo taraması zaman aşımına uğradı</string>
     <string name="combov2_pairing_failed_due_to_error">Eşleştirme hata nedeniyle başarısız oldu: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Eşleştirme bilinmeyen nedenlerle iptal edildi</string>
+    <string name="combov2_pairing_invalid_pin_length">"Geçersiz eşleştirme PIN uzunluğu: %1$d haneye ihtiyaç var, %2$d alındı"</string>
     <string name="combov2_scanning_for_pump">Pompa taranıyor</string>
     <string name="combov2_establishing_bt_connection">Bluetooth bağlantısı kuruluyor (deneme no. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Pompa ile el sıkışma</string>
@@ -60,7 +61,7 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_checking_pump">Pompa kontrol ediliyor</string>
     <string name="combov2_ready">Hazır</string>
     <string name="combov2_suspended">Askıya Alındı</string>
-    <string name="combov2_pump_is_suspended">Pompa durduldu</string>
+    <string name="combov2_pump_is_suspended">Pompa durduruldu</string>
     <string name="combov2_executing_command">Komut çalıştırılıyor</string>
     <string name="combov2_getting_basal_profile_cmddesc">Bazal profil alınıyor</string>
     <string name="combov2_setting_basal_profile_cmddesc">Bazal profil ayarlanıyor</string>
@@ -98,7 +99,7 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_set_emulated_100_tbr">Emülasyonlu %100 GBO\'ına ayarla</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Devam eden emülasyonlu %100 GBO\'nın bitmesine izin ver</string>
     <string name="combov2_ignoring_redundant_100_tbr">Gereksiz %100 GBO isteği yoksayılıyor</string>
-    <string name="combov2_hit_unexpected_tbr_limit">GBO ayarlanırken beklenmeyen bir sınırla karşılaşıldı: hedef yüzde %1$d%% idi, fakat %1$d%%\'de bir sınıra ulaştı</string>
+    <string name="combov2_hit_unexpected_tbr_limit">GBO ayarlanırken beklenmeyen bir sınırla karşılaşıldı: hedef yüzde %1$d%% idi, fakat %2$d%%\'de bir sınıra ulaştı</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Temel bazal oran sıfırsa mutlak GBO ayarlanamaz</string>
     <string name="combov2_pair_with_pump_summary">AndroidAPS ile şu anda eşleştirilmemiş bir Accu-Chek Combo pompasını eşleştirin</string>
     <string name="combov2_unpair_pump_summary">Şu anda eşleştirilmiş olan Accu-Chek Combo pompasından AndroidAPS ve Android\'in eşlemesini kaldırın</string>
@@ -125,4 +126,6 @@ Eşleştirme başarıyla tamamlandığında pompanızda tamamlanan eşleştirmey
     <string name="combov2_refresh_pump_status_after_error">Pompa bir hata bildirdikten sonra pompa durumunu yenileme</string>
     <string name="combov2_go_back">Geri dön</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Sürücü başlatılmadığı için eşleştirme gerçekleştirilemiyor. Bunun nedeni genellikle gerekli Bluetooth izinlerinin verilmemiş olmasıdır. Geri dönün, Bluetooth izinlerini verin ve eşleştirmeyi tekrar deneyin.</string>
+    <string name="combov2_bluetooth_disabled">Sürücü başlatılamıyor - Bluetooth devre dışı</string>
+    <string name="combov2_bluetooth_not_supported">Sürücü çalıştırılamıyor - bu cihaz Bluetooth\'u desteklemiyor</string>
 </resources>

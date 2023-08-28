@@ -92,6 +92,8 @@
     <string name="lastboluscompared">Время болюса %1$s %2$s мин назад</string>
     <string name="triggercoblabel">Активн углеводы</string>
     <string name="cobcompared">Активн углеводы %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Частота сердечных сокращений</string>
+    <string name="triggerHeartRateDesc">ЧСС%1$s%2$.0f</string>
     <string name="iob_u">Акт инс IOB [U]:</string>
     <string name="distance_short">Расст [м]:</string>
     <string name="recurringTime">Время повторения</string>

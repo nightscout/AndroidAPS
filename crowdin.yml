@@ -53,6 +53,8 @@ files:
     translation: /pump/pump-core/src/main/res/values-%android_code%/strings.xml
   - source: /pump/eopatch/src/main/res/values/strings.xml
     translation: /pump/eopatch/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/eopatch/src/main/res/values/strings_alarm.xml
+    translation: /pump/eopatch/src/main/res/values-%android_code%/strings_alarm.xml
   - source: /pump/diaconn/src/main/res/values/strings.xml
     translation: /pump/diaconn/src/main/res/values-%android_code%/strings.xml
   - source: /pump/pump-common/src/main/res/values/strings.xml
@@ -69,6 +71,10 @@ files:
     translation: /pump/danars/src/main/res/values-%android_code%/strings.xml
   - source: /pump/medtronic/src/main/res/values/strings.xml
     translation: /pump/medtronic/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/medtrum/src/main/res/values/strings.xml
+    translation: /pump/medtrum/src/main/res/values-%android_code%/strings.xml
+  - source: /pump/medtrum/src/main/res/values/arrays.xml
+    translation: /pump/medtrum/src/main/res/values-%android_code%/arrays.xml
   - source: /pump/omnipod-common/src/main/res/values/strings.xml
     translation: /pump/omnipod-common/src/main/res/values-%android_code%/strings.xml
   - source: /pump/omnipod-dash/src/main/res/values/strings.xml

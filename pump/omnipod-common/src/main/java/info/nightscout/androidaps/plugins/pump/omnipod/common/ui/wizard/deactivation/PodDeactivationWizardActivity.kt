@@ -10,6 +10,11 @@ abstract class PodDeactivationWizardActivity : OmnipodWizardActivityBase() {
         super.onCreate(savedInstanceState)
 
         setContentView(R.layout.omnipod_common_pod_deactivation_wizard_activity)
+
+        title = getString(R.string.omnipod_common_pod_management_button_deactivate_pod)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
     }
 
     override fun getTotalDefinedNumberOfSteps(): Int = 3

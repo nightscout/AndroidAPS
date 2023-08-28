@@ -1,7 +1,6 @@
 package info.nightscout.ui.activities
 
 import android.os.Bundle
-import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.tabs.TabLayout
@@ -63,21 +62,10 @@ class TreatmentsActivity : TranslatedDaggerAppCompatActivity() {
         })
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean =
-        when (item.itemId) {
-            android.R.id.home -> {
-                finish()
-                true
-            }
-
-            else              -> super.onOptionsItemSelected(item)
-        }
-
     private fun setFragment(selectedFragment: Fragment) {
         supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, selectedFragment)
             .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
             .commit()
     }
-
 }

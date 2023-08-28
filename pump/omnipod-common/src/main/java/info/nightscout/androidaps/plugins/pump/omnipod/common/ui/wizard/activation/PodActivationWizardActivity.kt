@@ -26,6 +26,10 @@ abstract class PodActivationWizardActivity : OmnipodWizardActivityBase() {
 
         setContentView(R.layout.omnipod_common_pod_activation_wizard_activity)
 
+        title = getString(R.string.omnipod_common_pod_management_button_activate_pod)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         startDestination = savedInstanceState?.getInt(KEY_START_DESTINATION, R.id.startPodActivationFragment)
             ?: if (intent.safeGetSerializableExtra(KEY_TYPE, Type::class.java) == Type.LONG) {
                 R.id.startPodActivationFragment

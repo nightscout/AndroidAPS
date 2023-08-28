@@ -11,7 +11,6 @@
     <string name="omnipod_dash_history_type">Тип:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2fЕ</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, CH=%2$.1f g</string>
-    <string name="omnipod_dash_history_tbr_value">Количество: %1$.2f U, Продължителност: %2$d мин</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">Bluetooh статус</string>
     <string name="omnipod_dash_overview_bluetooth_address">Bluetooth адрес</string>
@@ -32,7 +31,6 @@
     <string name="omnipod_dash_command_not_sent">Командата не е изпратена</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Командата не е получена от pod</string>
     <string name="omnipod_dash_unknown">Неизвестно състояние за командата</string>
-    <string name="omnipod_common_history_tbr_value">Количество: %1$.2f U, Продължителност: %2$d мин</string>
     <string name="omnipod_common_history_bolus_value">%1$.2fЕ</string>
     <string name="omnipod_common_alert_delivery_suspended">Доставянето на инсулин е спряно</string>
     <string name="omnipod_dash_connection_lost">Загубена връзка с pod</string>

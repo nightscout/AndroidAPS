@@ -4,13 +4,13 @@
     <string name="eopatch_status">상태</string>
     <string name="eopatch_base_basal_rate">기본 basal 양</string>
     <string name="eopatch_temp_basal_rate">임시 basal 양</string>
-    <string name="eopatch_total_delivered">총 주입량</string>
+    <string name="eopatch_total_delivered">모두 주입됨</string>
     <string name="symbol_day">일</string>
     <string name="patch_finish">종료</string>
     <string name="patch_step_desc_1">1.</string>
     <string name="patch_step_desc_2">2.</string>
     <string name="symbol_days">일</string>
-    <string name="string_resume">주입 재개</string>
+    <string name="string_resume">재실행</string>
     <string name="string_suspend">중지</string>
     <string name="string_suspended">중지됨</string>
     <string name="string_running">실행중</string>

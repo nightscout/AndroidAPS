@@ -21,15 +21,14 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.plugins.R
 import info.nightscout.plugins.general.wear.WearPlugin
-import info.nightscout.plugins.general.wear.events.EventWearUpdateGui
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.rx.events.EventMobileDataToWear
 import info.nightscout.rx.events.EventMobileToWear
+import info.nightscout.rx.events.EventWearUpdateGui
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.EventData
@@ -44,6 +43,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
+import kotlinx.serialization.ExperimentalSerializationApi
 import javax.inject.Inject
 
 class DataLayerListenerServiceMobile : WearableListenerService() {
@@ -57,9 +57,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     @Inject lateinit var wearPlugin: WearPlugin
     @Inject lateinit var sp: SP
     @Inject lateinit var config: Config
-    @Inject lateinit var receiverStatusStore: ReceiverStatusStore
     @Inject lateinit var repository: AppRepository
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var aapsSchedulers: AapsSchedulers
@@ -80,7 +78,8 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     private val disposable = CompositeDisposable()
 
     private val rxPath get() = getString(info.nightscout.shared.R.string.path_rx_bridge)
-
+    private val rxDataPath get() = getString(info.nightscout.shared.R.string.path_rx_data_bridge)
+    @ExperimentalSerializationApi
     override fun onCreate() {
         AndroidInjection.inject(this)
         super.onCreate()
@@ -90,6 +89,10 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
             .toObservable(EventMobileToWear::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe { sendMessage(rxPath, it.payload.serialize()) }
+        disposable += rxBus
+            .toObservable(EventMobileDataToWear::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe { sendMessage(rxDataPath, it.payload.serializeByte()) }
     }
 
     override fun onCapabilityChanged(p0: CapabilityInfo) {
@@ -125,7 +128,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
         }
         super.onDataChanged(dataEvents)
     }
-
+    @ExperimentalSerializationApi
     override fun onMessageReceived(messageEvent: MessageEvent) {
         super.onMessageReceived(messageEvent)
 
@@ -134,6 +137,11 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
                 rxPath -> {
                     aapsLogger.debug(LTag.WEAR, "onMessageReceived rxPath: ${String(messageEvent.data)}")
                     val command = EventData.deserialize(String(messageEvent.data))
+                    rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
+                }
+                rxDataPath -> {
+                    aapsLogger.debug(LTag.WEAR, "onMessageReceived rxDataPath: ${String(messageEvent.data)}")
+                    val command = EventData.deserializeByte(messageEvent.data)
                     rxBus.send(command.also { it.sourceNodeId = messageEvent.sourceNodeId })
                 }
             }
@@ -164,7 +172,7 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
     private fun pickBestNodeId(nodes: Set<Node>): Node? =
         nodes.firstOrNull { it.isNearby } ?: nodes.firstOrNull()
 
-    @Suppress("unused")
+    //@Suppress("unused")
     private fun sendData(path: String, vararg params: DataMap) {
         if (wearPlugin.isEnabled()) {
             scope.launch {
@@ -201,7 +209,6 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
         }
     }
 
-    @Suppress("unused")
     private fun sendMessage(path: String, data: ByteArray) {
         aapsLogger.debug(LTag.WEAR, "sendMessage: $path")
         transcriptionNodeId?.also { nodeId ->

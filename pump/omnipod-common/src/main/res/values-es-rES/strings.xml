@@ -9,8 +9,8 @@
     <string name="omnipod_common_pod_management_button_deactivate_pod">Desactivar Pod</string>
     <string name="omnipod_common_pod_management_button_discard_pod">Descartar Pod</string>
     <string name="omnipod_common_pod_management_discard_pod_confirmation">Si descartas el Pod, ya no podrás comunicarte con él. Sólo deberías hacer esto cuando toda la comunicación con el Pod falla continuamente. Si todavía puede comunicarse con el Pod, utilice la opción <b>Desactivar Pod</b>.\n\nSi desea continuar, por favor asegúrese de quitar el Pod de su cuerpo!</string>
-    <string name="omnipod_common_pod_management_button_play_test_beep">Reproducir pitido de prueba</string>
-    <string name="omnipod_common_pod_management_button_playing_test_beep">Reproduciendo pitido de prueba…</string>
+    <string name="omnipod_common_pod_management_button_play_test_beep">Reproducir sonido de prueba</string>
+    <string name="omnipod_common_pod_management_button_playing_test_beep">Reproduciendo sonido de prueba!</string>
     <string name="omnipod_common_pod_management_button_pod_history">Historial de Pod</string>
     <!-- Omnipod - Error -->
     <string name="omnipod_common_error_pod_not_attached">Ningún pod activo</string>
@@ -30,7 +30,7 @@
     <string name="omnipod_common_error_pod_fault_activation_time_exceeded">Se ha excedido el tiempo de activación del Pod. Este Pod ya no se puede activar.</string>
     <string name="omnipod_common_error_failed_to_verify_activation_progress">Error al verificar el progreso de activación. Vuelva a intentarlo.</string>
     <string name="omnipod_common_error_pod_suspended">Pod suspendido</string>
-    <string name="omnipod_common_error_failed_to_play_test_beep">Error al reproducir el pitido de prueba</string>
+    <string name="omnipod_common_error_failed_to_play_test_beep">Error al reproducir el sonido de prueba</string>
     <string name="omnipod_common_error_time_out_of_sync">La hora en el Pod está desincronizada. Actualice la hora en la pestaña Omnipod.</string>
     <string name="omnipod_common_error_unexpected_exception">Error inesperado. Por favor, informe! (tipo: %1$s:%2$s).</string>
     <!-- Omnipod - Confirmation -->
@@ -97,10 +97,10 @@
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Si descartas el Pod, ya no podrás comunicarte con él. Sólo deberías hacer esto cuando toda la comunicación con el Pod falla de forma persistente. ¿Estás seguro de que quieres descartar el Pod?</string>
     <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Descartar Pod</string>
     <!-- Omnipod - Preferences -->
-    <string name="omnipod_common_preferences_bolus_beeps_enabled">Pitidos de bolo habilitados</string>
-    <string name="omnipod_common_preferences_basal_beeps_enabled">Pitidos de basales habilitados</string>
-    <string name="omnipod_common_preferences_smb_beeps_enabled">Pitidos SMB habilitados</string>
-    <string name="omnipod_common_preferences_tbr_beeps_enabled">Pitidos de TBR activados</string>
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">Sonidos de bolo habilitados</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">Sonidos de basales habilitados</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">Sonidos de SMB habilitados</string>
+    <string name="omnipod_common_preferences_tbr_beeps_enabled">Sonidos de TBR activados</string>
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar el botón Suspender Entrega en la pestaña Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detección de zona horaria activada</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Recordatorio de expiración activado</string>
@@ -110,7 +110,7 @@
     <string name="omnipod_common_preferences_automatically_silence_alerts">Silenciar automáticamente las alertas de POD</string>
     <string name="omnipod_common_preferences_category_other">Otros</string>
     <string name="omnipod_common_preferences_category_alerts">Alertas</string>
-    <string name="omnipod_common_preferences_category_confirmation_beeps">Pitidos de Confirmación</string>
+    <string name="omnipod_common_preferences_category_confirmation_beeps">Sonido de Confirmación</string>
     <string name="omnipod_common_preferences_category_notifications">Notificaciones</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Sonido para notificaciones TBR inciertas habilitadas</string>
     <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Sonido para
@@ -149,8 +149,8 @@
     <string name="omnipod_common_cmd_set_fake_suspended_tbr">Establece una base temporal falsa porque el Pod está suspendido</string>
     <string name="omnipod_common_cmd_cancel_fake_suspended_tbr">Cancelar la basal temporal falsa que se ha creado porque el Pod se ha suspendido</string>
     <string name="omnipod_common_cmd_split_tbr">Dividir basal temporal debido a un fallo incierto en la cancelación</string>
-    <string name="omnipod_common_cmd_beep_config">Configuración de Pitidos</string>
-    <string name="omnipod_common_cmd_play_test_beep">Reproducir Pitido de Prueba</string>
+    <string name="omnipod_common_cmd_beep_config">Configuración de Sonidos</string>
+    <string name="omnipod_common_cmd_play_test_beep">Reproducir Sonido de Prueba</string>
     <!-- Omnipod - Alerts -->
     <string name="omnipod_common_alert_finish_pairing_reminder">Finalizar recordatorio de emparejamiento</string>
     <string name="omnipod_common_alert_finish_setup_reminder_reminder">Recordatorio de configuración finalizado</string>

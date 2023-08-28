@@ -4,7 +4,6 @@ plugins {
     id 'kotlin-kapt'
     id 'kotlinx-serialization'
     id 'kotlin-allopen'
-    id 'com.hiya.jacoco-android'
 }
 
 apply from: "${project.rootDir}/core/main/android_dependencies.gradle"
@@ -17,7 +16,7 @@ android {
 
     namespace 'info.nightscout.shared'
     defaultConfig {
-        minSdkVersion 23  // for wear
+        minSdkVersion 25  // for wear
     }
 }
 
@@ -35,6 +34,8 @@ dependencies {
     api 'com.github.tony19:logback-android:2.0.0'
 
     api "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlinx_serialization_version"
+    api "org.jetbrains.kotlinx:kotlinx-serialization-protobuf:$kotlinx_serialization_version"
+    api "com.caverock:androidsvg:$caverock_androidsvg_version"
     api "org.apache.commons:commons-lang3:$commonslang3_version"
 
     //RxBus

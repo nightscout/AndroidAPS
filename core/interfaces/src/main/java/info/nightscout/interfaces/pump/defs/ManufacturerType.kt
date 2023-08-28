@@ -2,6 +2,7 @@ package info.nightscout.interfaces.pump.defs
 
 enum class ManufacturerType(val description: String) {
     AAPS("AAPS"),
+    Medtrum("Medtrum"),
     Medtronic("Medtronic"),
     Sooil("SOOIL"),
     Tandem("Tandem"),

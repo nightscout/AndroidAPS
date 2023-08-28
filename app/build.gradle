@@ -3,7 +3,6 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-allopen'
-    id 'com.hiya.jacoco-android'
     id 'kotlinx-serialization'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
@@ -111,7 +110,7 @@ android {
     defaultConfig {
         multiDexEnabled true
         versionCode 1500
-        version "3.2.0-dev-j"
+        version "3.2.0-dev-l"
         buildConfigField "String", "VERSION", '"' + version + '"'
         buildConfigField "String", "BUILDVERSION", '"' + generateGitBuild() + '-' + generateDate() + '"'
         buildConfigField "String", "REMOTE", '"' + generateGitRemote() + '"'
@@ -120,7 +119,7 @@ android {
 
     }
 
-    flavorDimensions "standard"
+    flavorDimensions = ["standard"]
     productFlavors {
         full {
             applicationId "info.nightscout.androidaps"
@@ -149,7 +148,7 @@ android {
             versionName version + "-aapsclient"
             manifestPlaceholders = [
                     appIcon     : "@mipmap/ic_yellowowl",
-                    appIconRound: "@null"
+                    appIconRound: "@mipmap/ic_yellowowl"
             ]
         }
         aapsclient2 {
@@ -158,8 +157,8 @@ android {
             resValue "string", "app_name", "AAPSClient2"
             versionName version + "-aapsclient"
             manifestPlaceholders = [
-                    appIcon     : "@mipmap/ic_yellowowl",
-                    appIconRound: "@null"
+                    appIcon     : "@mipmap/ic_blueowl",
+                    appIconRound: "@mipmap/ic_blueowl"
             ]
         }
     }
@@ -214,6 +213,7 @@ dependencies {
     implementation project(':pump:danar')
     implementation project(':pump:diaconn')
     implementation project(':pump:eopatch')
+    implementation project(':pump:medtrum')
     implementation project(':insight')
     implementation project(':pump:medtronic')
     implementation project(':pump:pump-common')

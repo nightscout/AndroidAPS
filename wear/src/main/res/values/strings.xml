@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
     <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS(Custom)</string>
     <string name="label_actions_tile">AAPS(Actions)</string>
     <string name="label_temp_target_tile">AAPS(Temp Target)</string>
     <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
@@ -22,16 +23,20 @@
     <string name="msg_warning_old">AAPS data is %1$s old! Check your sensor, xDrip+, NS, AAPS config or other!</string>
     <string name="pref_vibrate_on_bolus">Vibrate on Bolus</string>
     <string name="pref_units_for_actions">Units for Actions</string>
+    <string name="units_short">U</string>
     <string name="pref_show_date">Show Date</string>
     <string name="pref_show_iob">Show IOB</string>
+    <string name="pref_show_detailed_iob">Show detailed IOB</string>
     <string name="pref_show_cob">Show COB</string>
     <string name="pref_show_delta">Show Delta</string>
+    <string name="pref_show_detailed_delta">Show detailed Delta</string>
     <string name="pref_show_avgdelta">Show AvgDelta</string>
     <string name="pref_show_phone_battery">Show Phone Battery</string>
     <string name="pref_show_rig_battery">Show Rig Battery</string>
     <string name="pref_show_basal_rate">Show Basal Rate</string>
     <string name="pref_show_loop_status">Show Loop Status</string>
     <string name="pref_show_bg">Show BG</string>
+    <string name="pref_show_bgi">Show BGI</string>
     <string name="pref_show_direction_arrow">Show Direction Arrow</string>
     <string name="pref_show_ago">Show Ago</string>
     <string name="pref_dark" comment="Enables dark visual theme">Dark</string>
@@ -143,6 +148,7 @@
     <string name="pref_simplify_ui_sum">Only show time and BG</string>
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
     <string name="pref_show_weeknumber">Show Week number</string>
+    <string name="custom_pref_show_seconds">Show seconds</string>
     <string name="digitalstyle_pref_your_style">Your style:</string>
     <string name="digitalstyle_style_none">no style</string>
     <string name="digitalstyle_style_minimal">minimal style</string>
@@ -185,10 +191,12 @@
     <string name="key_show_date" translatable="false">show_date</string>
     <string name="key_show_cob" translatable="false">show_cob</string>
     <string name="key_show_bg" translatable="false">showBG</string>
+    <string name="key_show_bgi" translatable="false">showBGI</string>
     <string name="key_show_external_status" translatable="false">showExternalStatus</string>
     <string name="key_show_ago" translatable="false">showAgo</string>
     <string name="key_show_big_numbers" translatable="false">showBigNumbers</string>
     <string name="key_show_delta" translatable="false">showDelta</string>
+    <string name="key_show_detailed_delta" translatable="false">showDetailedDelta</string>
     <string name="key_show_avg_delta" translatable="false">showAvgDelta</string>
     <string name="key_show_ring_history" translatable="false">showRingHistory</string>
     <string name="key_digital_style_frame_style" translatable="false">digital_style_frame_style</string>
@@ -197,6 +205,7 @@
     <string name="key_digital_style_frame_color_opacity" translatable="false">digital_style_frame_color_opacity</string>
     <string name="key_show_direction" translatable="false">show_direction</string>
     <string name="key_show_iob" translatable="false">show_iob</string>
+    <string name="key_show_detailed_iob" translatable="false">show_detailed_iob</string>
     <string name="key_show_uploader_battery" translatable="false">show_uploader_battery</string>
     <string name="key_show_rig_battery" translatable="false">show_rig_battery</string>
     <string name="key_show_temp_basal" translatable="false">show_temp_basal</string>
@@ -208,6 +217,14 @@
     <string name="key_complication_tap_action" translatable="false">complication_tap_action</string>
     <string name="key_carbs_button_increment_1" translatable="false">carbs_button_increment_1</string>
     <string name="key_carbs_button_increment_2" translatable="false">carbs_button_increment_2</string>
+    <string name="key_enable_custom_setting" translatable="false">enable_custom_setting</string>
+    <string name="key_digital_watchface" translatable="false">digital_watchface</string>
+    <string name="key_digital_timing" translatable="false">digital_timing</string>
+    <string name="key_analog_watchface" translatable="false">analog_watchface</string>
+    <string name="key_show_seconds" translatable="false">show_second</string>
+    <string name="key_high_color" translatable="false">highcolor</string>
+    <string name="key_mid_color" translatable="false">midcolor</string>
+    <string name="key_low_color" translatable="false">lowcolor</string>
     <string name="increment">increment</string>
     <string name="decrement">decrement</string>
     <string name="first_char_high">H</string>
@@ -230,6 +247,8 @@
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">old</string>
     <string name="old_warning">!old!</string>
     <string name="error">!err!</string>

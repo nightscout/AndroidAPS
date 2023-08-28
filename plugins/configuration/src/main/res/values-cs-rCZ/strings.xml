@@ -6,6 +6,7 @@
     <string name="previous_button">Zpět</string>
     <string name="nav_setupwizard">Průvodce nastavením</string>
     <string name="setupwizard_finish">Dokončit</string>
+    <string name="welcome">Vítejte</string>
     <string name="welcometosetupwizard">Vítejte v průvodci nastavením. Provede Vás procesem nastavení programu\n</string>
     <string name="end_user_license_agreement">Licenční ujednání</string>
     <string name="end_user_license_agreement_text">MUST NOT BE USED TO MAKE MEDICAL DECISIONS. THERE IS NO WARRANTY FOR THE PROGRAM, TO THE EXTENT PERMITTED BY APPLICABLE LAW. EXCEPT WHEN OTHERWISE STATED IN WRITING THE COPYRIGHT HOLDERS AND/OR OTHER PARTIES PROVIDE THE PROGRAM “AS IS” WITHOUT WARRANTY OF ANY KIND, EITHER EXPRESSED OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE, YOU ASSUME THE COST OF ALL NECESSARY SERVICING, REPAIR OR CORRECTION.</string>
@@ -151,6 +152,8 @@
     <string name="prefdecrypt_issue_wrong_pass">Chyba dešifrování, zadané heslo je neplatné, nebo byl soubor nastavení změněn! Může se stát, že importovaný soubor byl exportován s jiným hlavním heslem.</string>
     <string name="prefdecrypt_issue_wrong_format">Chybí konfigurace šifrování, formát nastavení je neplatný!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný nebo neurčený šifrovací algoritmus!</string>
+    <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Vyberte vlastní ciferník</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Prosím restartujte Váš telefon nebo restartujte AAPS z nastavení systému\njinak nebudou zaznamenány ladící informace (důležité pro sledování a kontrolu, zda algoritmus pracuje správně)!</string>
 </resources>

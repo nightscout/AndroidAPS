@@ -30,7 +30,12 @@ interface DetermineBasalAdapter {
         microBolusAllowed: Boolean = false,
         uamAllowed: Boolean = false,
         advancedFiltering: Boolean = false,
-        flatBGsDetected: Boolean = false
+        flatBGsDetected: Boolean = false,
+        tdd1D: Double?,
+        tdd7D: Double?,
+        tddLast24H: Double?,
+        tddLast4H: Double?,
+        tddLast8to4H: Double?
     )
 
     operator fun invoke(): APSResult?

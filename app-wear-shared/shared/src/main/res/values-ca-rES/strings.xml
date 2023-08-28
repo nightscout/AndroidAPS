@@ -24,4 +24,5 @@
     <string name="connected">Connectat</string>
     <string name="disconnecting">Desconnectant</string>
     <string name="waiting_for_disconnection">S\'està esperant la desconnexió</string>
+    <!-- Custom Watchface -->
 </resources>

@@ -133,5 +133,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfel. Det angivna lösenordet är ogiltigt eller så har inställningsfilen ändrats. Filen verkar ha exporterats med ett annat lösenord.</string>
     <string name="prefdecrypt_issue_wrong_format">Krypteringskonfigurationen saknas. Inställningsformatet är ogiltigt!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ej stödd eller ej angiven krypteringsalgoritm!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
 </resources>

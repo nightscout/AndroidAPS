@@ -3,7 +3,6 @@ package info.nightscout.configuration.maintenance.activities
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
@@ -105,13 +104,5 @@ class PrefImportListActivity : TranslatedDaggerAppCompatActivity() {
 
             }
         }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
-            return true
-        }
-        return super.onOptionsItemSelected(item)
     }
 }

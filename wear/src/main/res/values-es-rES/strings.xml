@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
     <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS (Digital)</string>
+    <string name="label_watchface_custom">AAPS(personalizado)</string>
     <string name="label_actions_tile">AAPS(Acciones)</string>
     <string name="label_temp_target_tile">AAPS(Objetivo Temporal)</string>
     <string name="label_quick_wizard_tile">AAPS(Asistente Rápido)</string>
@@ -22,16 +23,20 @@
     <string name="msg_warning_old">Los datos de AAPS son %1$s antiguos. Comprueba el sensor, xDrip+, NS, configuración de AAPS y otros</string>
     <string name="pref_vibrate_on_bolus">Vibrar en bolos</string>
     <string name="pref_units_for_actions">Unidades para Acciones</string>
+    <string name="units_short">U</string>
     <string name="pref_show_date">Mostrar fecha</string>
     <string name="pref_show_iob">Mostrar Insulina activa (IOB)</string>
+    <string name="pref_show_detailed_iob">Mostrar IOB detallada</string>
     <string name="pref_show_cob">Mostrar COB</string>
     <string name="pref_show_delta">Mostrar delta</string>
+    <string name="pref_show_detailed_delta">Mostrar deltas detallados</string>
     <string name="pref_show_avgdelta">Mostrar delta promedio</string>
     <string name="pref_show_phone_battery">Mostrar batería del teléfono</string>
     <string name="pref_show_rig_battery">Mostrar batería de la plataforma</string>
     <string name="pref_show_basal_rate">Mostrar la tasa basal</string>
     <string name="pref_show_loop_status">Mostrar estado de bucle</string>
     <string name="pref_show_bg">Mostrar glucosa</string>
+    <string name="pref_show_bgi">Mostrar BGI (Índice de glucosa en sangre)</string>
     <string name="pref_show_direction_arrow">Mostrar flecha de dirección</string>
     <string name="pref_show_ago">Mostrar histórico</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tema oscuro</string>
@@ -114,7 +119,7 @@
     <string name="status_loop">Bucle</string>
     <string name="status_profile_switch">Cambio de perfil</string>
     <string name="status_tdd">TDD</string>
-    <string name="activity_carb">Carbohidratos</string>
+    <string name="activity_carb">COB</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">Sin estado</string>
     <string name="color_name_red">Rojo</string>
@@ -143,6 +148,7 @@
     <string name="pref_simplify_ui_sum">Mostrar sólo la hora y la glucosa</string>
     <string name="pref_vibrate_hourly">Vibrar cada hora</string>
     <string name="pref_show_weeknumber">Mostrar número de semana</string>
+    <string name="custom_pref_show_seconds">Mostrar segundos</string>
     <string name="digitalstyle_pref_your_style">Tu estilo:</string>
     <string name="digitalstyle_style_none">Sin estilo</string>
     <string name="digitalstyle_style_minimal">Estilo mínimo</string>
@@ -190,7 +196,10 @@
     <string name="week_short">s</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">antiguo</string>
     <string name="old_warning">¡antiguo!</string>
     <string name="error">!err!</string>
+    <string name="pref_heartRateSampling">Ritmo cardíaco</string>
 </resources>

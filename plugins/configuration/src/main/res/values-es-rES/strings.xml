@@ -6,6 +6,7 @@
     <string name="previous_button">Anterior</string>
     <string name="nav_setupwizard">Asistente de configuración</string>
     <string name="setupwizard_finish">FINALIZAR</string>
+    <string name="welcome">Bienvenido</string>
     <string name="welcometosetupwizard">Bienvenido al asistente de configuración. Te guiará a través del proceso de configuración\n</string>
     <string name="end_user_license_agreement">Acuerdo de licencia de usuario final</string>
     <string name="end_user_license_agreement_text">NO DEBE UTILIZARSE PARA TOMAR DECISIONES MÉDICAS. NO HAY NINGUNA GARANTÍA EN EL PROGRAMA, EN LA MEDIDA PERMITIDA POR LA LEY APLICABLE. EXCEPTO CUANDO SE INDIQUE LO CONTRARIO POR ESCRITO, LOS TITULARES DE LOS DERECHOS DE AUTOR Y/O OTRAS PARTES, PROPORCIONAN EL PROGRAMA \"TAL CUAL\", SIN GARANTÍA DE NINGÚN TIPO, YA SEA EXPRESA O IMPLÍCITA, INCLUIDAS, ENTRE OTRAS, LAS GARANTÍAS IMPLÍCITAS DE COMERCIABILIDAD Y ADECUACIÓN PARA UN PROPÓSITO EN PARTICULAR. TODO EL RIESGO EN CUANTO A LA CALIDAD Y EL RENDIMIENTO DEL PROGRAMA ES SUYA. SI EL PROGRAMA TUVIERA UN ERROR, USTED ASUME EL COSTE DE TODOS LOS SERVICIOS, REPARACIONES O CORRECCIONES NECESARIAS.</string>
@@ -67,8 +68,8 @@
     <string name="configbuilder_sync">Sincronización</string>
     <string name="configbuilder_sync_description">Subida de datos y sincronización de plugins</string>
     <string name="configbuilder_constraints_description">¿Qué restricciones se aplican?</string>
-    <string name="configbuilder_loop">Bucle</string>
-    <string name="configbuilder_loop_description">Usa esto para habilitar la integración de bucle de AAPS.</string>
+    <string name="configbuilder_loop">Lazo</string>
+    <string name="configbuilder_loop_description">Usa esto para habilitar la integración de lazo de AAPS</string>
     <string name="configbuilder_insulin_description">¿Qué tipo de insulina estás utilizando?</string>
     <string name="configbuilder_bgsource">Origen de Glucosa</string>
     <string name="configbuilder_bgsource_description">¿Desde dónde debería obtener AAPS los datos?</string>
@@ -137,7 +138,7 @@
     <string name="metadata_warning_different_device">Las preferencias se han creado en un dispositivo distinto. Esto es correcto si vas a importar tu configuración desde otro teléfono más antiguo o diferente, pero asegúrate de que las preferencias importadas son correctas</string>
     <string name="metadata_warning_outdated_format">¡Estás usando el obsoleto formato heredado de versiones antiguas de AAPS, que no es seguro! Únicamente utilizarlo como último recurso, si no tiene una exportación en formato JSON actual.</string>
     <string name="metadata_warning_old_export">Las preferencias importadas tienen %1$s días! ¿Es posible que tengas preferencias más recientes o eligieras un archivo equivocado? ¡Recuerda exportar las preferencias regularmente!</string>
-    <string name="metadata_warning_date_format">¡Formato de fecha no válido!</string>
+    <string name="metadata_warning_date_format">¡Formato de fecha/hora inválido!</string>
     <string name="metadata_warning_different_version">Preferencias de una versión menor de la aplicación. Está bien si va a importar después de la actualización, pero ¡compruebe después de la importación si las preferencias siguen siendo correctas!</string>
     <string name="metadata_urgent_different_version">Preferencias de la versión principal distinta de la aplicación. ¡Las versiones principales difieren significativamente y pueden tener preferencias incompatibles! ¡Asegúrese de que, después de importar, las preferencias siguen siendo correctas!</string>
     <string name="prefdecrypt_settings_tampered">Archivo de configuración alterado</string>
@@ -151,6 +152,8 @@
     <string name="prefdecrypt_issue_wrong_pass">Error de descifrado. La contraseña proporcionada no es válida o se ha modificado el archivo de ajustes. Puede suceder que el archivo importado se haya exportado con una contraseña maestra diferente.</string>
     <string name="prefdecrypt_issue_wrong_format">Falta la configuración de cifrado, ¡el formato configuración no es válido!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">¡Algoritmo de cifrado no soportado o no especificado!</string>
+    <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Seleccionar esfera por defecto</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Por favor, reinicia el teléfono o AAPS desde los ajustes del sistema \nde lo contrario AAPS no guardará registros (importante para trazar y verificar que el algoritmo está funcionando correctamente)</string>
 </resources>

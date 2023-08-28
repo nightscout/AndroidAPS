@@ -482,6 +482,19 @@
             validate:minNumber="10"
             validate:testType="numericRange" />
 
+        <info.nightscout.core.validators.ValidatingEditTextPreference
+            android:defaultValue="16"
+            android:dialogMessage="@string/deliver_part_of_boluswizard_reset_time"
+            android:inputType="number"
+            android:key="@string/key_reset_boluswizard_percentage_time"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/partialboluswizard_reset_time"
+            validate:maxNumber="120"
+            validate:minNumber="6"
+            validate:testType="numericRange" />
+
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/key_usebolusadvisor"

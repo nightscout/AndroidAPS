@@ -10,7 +10,7 @@
     <string name="old_version">ancienne version</string>
     <string name="very_old_version">très ancienne version</string>
     <string name="application_expired">Application expirée</string>
-    <string name="new_version_warning">Nouvelle version disponible depuis %1$d jours ! Retour à Arrêt Glycémie Basse (AGB) dans %2$d jours, la boucle sera désactivée dans %3$d jours</string>
+    <string name="new_version_warning">La nouvelle version n\'a pas été vérifiée depuis au moins %1$d jours ! Revenir à AGB après %2$d jours, la boucle sera désactivée après %3$d jours. Restaurer la connectivité internet !</string>
     <string name="running_invalid_version">Nous avons détecté que vous utilisez une version invalide. Boucle désactivée !</string>
     <string name="versionavailable">Version %1$s disponible</string>
     <string name="version_expire">La version %1$s expire le %2$s</string>
@@ -48,6 +48,6 @@
     <string name="doyouwantresetstart">Voulez-vous réinitialiser le début de l\'objectif ? Vous risquez de perdre vos progrès.</string>
     <string name="objectives_next_button">Suivant</string>
     <string name="objectives_previous_button">Préc</string>
-    <string name="objectives_button_unfinish">Refaire l\'objectif</string>
-    <string name="objectives_button_unstart">Suppression démarrée</string>
+    <string name="objectives_button_unfinish">Réinitialiser l\'état terminé</string>
+    <string name="objectives_button_unstart">Réinitialiser l\'état de départ</string>
 </resources>

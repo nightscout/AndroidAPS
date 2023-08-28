@@ -41,7 +41,7 @@
     <string name="temptargetcomparedmgdl">Geçici Hedef %1$s %2$.0f %3$s</string>
     <string name="temptargetcomparedmmol">Geçici Hedef %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Profil yüzdesi %1$s %2$d</string>
-    <string name="iobcompared">Aktif insülin %1$s %2$.1f</string>
+    <string name="iobcompared">AİNS %1$s %2$.1f</string>
     <string name="or">Veya</string>
     <string name="xor">Özel veya</string>
     <string name="atspecifiedtime">%1$s\'de</string>
@@ -92,7 +92,9 @@
     <string name="lastboluscompared">Son bolus zamanı %1$s %2$s dakika önce</string>
     <string name="triggercoblabel">AKRB</string>
     <string name="cobcompared">AKRB %1$s %2$.0f</string>
-    <string name="iob_u">IOB [U]:</string>
+    <string name="triggerHeartRate">Nabız</string>
+    <string name="triggerHeartRateDesc">KA %1$s %2$.0f</string>
+    <string name="iob_u">AİNS [U]:</string>
     <string name="distance_short">Mesafe [m]:</string>
     <string name="recurringTime">Yinelenen zaman</string>
     <string name="every">Her</string>

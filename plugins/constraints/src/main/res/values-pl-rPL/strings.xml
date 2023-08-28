@@ -10,7 +10,7 @@
     <string name="old_version">stara wersja</string>
     <string name="very_old_version">bardzo stara wersja</string>
     <string name="application_expired">Aplikacja wygasła</string>
-    <string name="new_version_warning">Nowa wersja dostępna co najmniej %1$d dni! Powrót do LGS (zawieszania podawania bazy przy niskiej glikemii) po %2$d dniach, pętla zostanie wyłączona po %3$d dniach</string>
+    <string name="new_version_warning">Od co najmniej %1$d dni nie sprawdzono, czy dostępna jest nowa wersja! Nastąpi powrót do trybu LGS (tylko wstrzymanie bazy przy niskiej glikemii) po %2$d dniach, a po %3$d dniach pętla zostanie wyłączona. Przywróć połączenie z Internetem!</string>
     <string name="running_invalid_version">Wykryliśmy, że używasz nieprawidlowej wersji. Pętla wyłączona!</string>
     <string name="versionavailable">Wersja %1$s dostępna</string>
     <string name="version_expire">Wersja %1$s wygasa %2$s</string>
@@ -48,6 +48,6 @@
     <string name="doyouwantresetstart">Czy chcesz zresetować czas rozpoczęcia zadania? Możesz utracić postępy.</string>
     <string name="objectives_next_button">Dalej</string>
     <string name="objectives_previous_button">Wstecz</string>
-    <string name="objectives_button_unfinish">Wyczyść skończone</string>
-    <string name="objectives_button_unstart">Wyczyść rozpoczęte</string>
+    <string name="objectives_button_unfinish">Resetuj stan zakończenia</string>
+    <string name="objectives_button_unstart">Resetuj stan rozpoczęcia</string>
 </resources>

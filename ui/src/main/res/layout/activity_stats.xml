@@ -12,43 +12,7 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="?attr/activity_title_backgroundColor"
-            android:orientation="horizontal"
-            android:padding="5dp">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:importantForAccessibility="no"
-                app:srcCompat="@mipmap/ic_launcher" />
-
-            <TextView
-                android:id="@+id/header"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:text="@string/statistics"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        </RelativeLayout>
-
-        <LinearLayout
-            android:id="@+id/spacer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp" />
-
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardview_tdds"
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -73,20 +37,23 @@
                     android:orientation="vertical" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:background="@android:color/transparent"
-                    android:gravity="end"
                     android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/reset_tdd"
-                        style="@style/OkCancelButton.Text"
+                        style="@style/GrayButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
-                        android:text="@string/reset" />
+                        android:layout_gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/reset"
+                        app:icon="@drawable/ic_local_reset"
+                        app:iconTint="@color/ic_local_reset" />
 
                 </LinearLayout>
 
@@ -95,7 +62,6 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardview_tir"
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -118,7 +84,6 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardview_dexcom_tir"
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -141,7 +106,6 @@
         </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardview_activity"
             style="@style/Widget.MaterialComponents.CardView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -167,44 +131,29 @@
                     android:orientation="vertical" />
 
                 <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center_vertical"
-                    android:background="@android:color/transparent"
-                    android:gravity="end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:orientation="horizontal">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/reset_activity"
-                        style="@style/OkCancelButton.Text"
+                        style="@style/GrayButton"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:text="@string/reset"
                         android:layout_marginEnd="8dp"
-                        android:text="@string/reset" />
+                        app:icon="@drawable/ic_local_reset"
+                        app:iconTint="@color/ic_local_reset" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_gravity="center_vertical"
-            android:background="@android:color/transparent"
-            android:gravity="end"
-            android:orientation="horizontal">
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/close"
-                style="@style/OkCancelButton.Text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:text="@string/close" />
-
-        </LinearLayout>
 
     </LinearLayout>
 

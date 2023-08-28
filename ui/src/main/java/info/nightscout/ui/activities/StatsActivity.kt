@@ -47,6 +47,10 @@ class StatsActivity : TranslatedDaggerAppCompatActivity() {
         binding = ActivityStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        title = rh.gs(R.string.statistics)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         binding.tdds.addView(TextView(this).apply { text = getString(info.nightscout.core.ui.R.string.tdd) + ": " + rh.gs(R.string.calculation_in_progress) })
         binding.tir.addView(TextView(this).apply { text = getString(info.nightscout.core.ui.R.string.tir) + ": " + rh.gs(R.string.calculation_in_progress) })
         binding.activity.addView(TextView(this).apply { text = getString(R.string.activity_monitor) + ": " + rh.gs(R.string.calculation_in_progress) })
@@ -80,7 +84,6 @@ class StatsActivity : TranslatedDaggerAppCompatActivity() {
                            binding.activity.addView(it)
                        }, fabricPrivacy::logException)
 
-        binding.close.setOnClickListener { finish() }
         binding.resetActivity.setOnClickListener {
             OKDialog.showConfirmation(this, rh.gs(R.string.do_you_want_reset_stats)) {
                 uel.log(Action.STAT_RESET, Sources.Stats)

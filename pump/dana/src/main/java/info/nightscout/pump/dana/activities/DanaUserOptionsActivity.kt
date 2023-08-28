@@ -70,6 +70,10 @@ class DanaUserOptionsActivity : TranslatedDaggerAppCompatActivity() {
         binding = DanarUserOptionsActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        title = rh.gs(R.string.danar_pump_settings)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         binding.saveUserOptions.setOnClickListener { onSaveClick() }
 
         minBacklight = if (danaPump.hwModel < 7) 1 else 0 // Dana-i allows zero

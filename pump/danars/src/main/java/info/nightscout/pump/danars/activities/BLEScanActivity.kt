@@ -28,6 +28,7 @@ import info.nightscout.pump.danars.R
 import info.nightscout.pump.danars.databinding.DanarsBlescannerActivityBinding
 import info.nightscout.pump.danars.events.EventDanaRSDeviceChange
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import java.util.regex.Pattern
 import javax.inject.Inject
@@ -38,6 +39,7 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var blePreCheck: BlePreCheck
     @Inject lateinit var context: Context
     @Inject lateinit var rxBus: RxBus
+    @Inject lateinit var rh: ResourceHelper
 
     private var listAdapter: ListAdapter? = null
     private val devices = ArrayList<BluetoothDeviceItem>()
@@ -52,6 +54,10 @@ class BLEScanActivity : TranslatedDaggerAppCompatActivity() {
         binding = DanarsBlescannerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
+        title = rh.gs(info.nightscout.pump.dana.R.string.danars_pairing)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
 
         blePreCheck.prerequisitesCheck(this)
 

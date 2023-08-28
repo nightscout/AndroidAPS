@@ -70,6 +70,10 @@ class TDDStatsActivity : TranslatedDaggerAppCompatActivity() {
         binding = ActivityTddStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        title = rh.gs(info.nightscout.core.ui.R.string.tdd)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
         binding.connectionStatus.visibility = View.GONE
         binding.message.visibility = View.GONE

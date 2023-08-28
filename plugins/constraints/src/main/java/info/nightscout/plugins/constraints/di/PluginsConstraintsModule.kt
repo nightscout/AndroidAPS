@@ -21,7 +21,7 @@ abstract class PluginsConstraintsModule {
     @Module
     interface Bindings {
 
-        @Binds fun bindProcessedDeviceStatusData(versionCheckerUtils: VersionCheckerUtilsImpl): VersionCheckerUtils
+        @Binds fun bindVersionCheckerUtils(versionCheckerUtils: VersionCheckerUtilsImpl): VersionCheckerUtils
         @Binds fun bindBgQualityCheck(bgQualityCheck: BgQualityCheckPlugin): BgQualityCheck
         @Binds fun bindsConstraints(constraintsImpl: info.nightscout.plugins.constraints.ConstraintsImpl): Constraints
     }

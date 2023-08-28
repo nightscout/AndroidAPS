@@ -24,5 +24,6 @@
     <!--    Maintenance-->
     <string name="reset_db_confirm">An bhfuil tú cinnte gur mian leat an bhunachair sonraí a athshocrú?</string>
     <!-- Maintenance -->
+    <!-- Custom Watchface -->
     <!-- Permissions -->
 </resources>

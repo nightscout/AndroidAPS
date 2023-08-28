@@ -97,7 +97,7 @@ Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
     <string name="combov2_set_emulated_100_tbr">Nastaviť emulovaný 100% dočasný bazál</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Nechávam emulovaný 100% dočasný bazál dokončiť</string>
     <string name="combov2_ignoring_redundant_100_tbr">Ignorovanie požiadavky 100% dočasného bazálu</string>
-    <string name="combov2_hit_unexpected_tbr_limit">Pri úprave dočasného bazálu došlo k neočekávanému limitu: vyžadované %1$d%%, dosiahnutý limit %1$d%%</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Pri úprave dočasného bazálu došlo k neočekávanému limitu: vyžadované %1$d%%, dosiahnutý limit %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Nie je možné nastaviť absolútny dočasný bazál, pokiaľ je bazálna dávka nulová</string>
     <string name="combov2_pair_with_pump_summary">Párovať AndroidAPS a Android s momentálně nespárovanou pumpou Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Zrušiť párovanie AndroidAPS a Androidu v súčasnej dobe spárovanej Accu-Chek Combo</string>

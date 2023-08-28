@@ -6,6 +6,7 @@
     <string name="previous_button">Préc</string>
     <string name="nav_setupwizard">Assistant de configuration</string>
     <string name="setupwizard_finish">TERMINER</string>
+    <string name="welcome">Bienvenue</string>
     <string name="welcometosetupwizard">Bienvenue dans l\'assistant de configuration. Il vous guidera tout au long du processus de configuration\n</string>
     <string name="end_user_license_agreement">Accord de licence de l’utilisateur final</string>
     <string name="end_user_license_agreement_text">NE DOIT PAS ÊTRE UTILISÉ POUR PRENDRE DES DÉCISIONS MÉDICALES. IL N\'Y A AUCUNE GARANTIE POUR LE PROGRAMME, DANS LA LIMITE PERMISE PAR LA LOI APPLICABLE. SAUF S\'IL EST INDIQUÉ LE CONTRAIRE PAR ÉCRIT. LES TITULAIRES DU DROIT D\'AUTEUR ET / OU D\'AUTRES PARTIES FOURNISSENT LE PROGRAMME «EN L\'ÉTAT» SANS GARANTIE D\'AUCUNE SORTE, EXPLICITE OU IMPLICITE, Y COMPRIS MAIS NON SEULEMENT AUX GARANTIES IMPLICITES DE QUALITÉ MARCHANDE ET D\'ADÉQUATION À UN USAGE PARTICULIER
@@ -152,6 +153,8 @@ L\'ENSEMBLE DES RISQUES LIÉS À LA QUALITÉ ET À LA PERFORMANCE DU PROGRAMME S
     <string name="prefdecrypt_issue_wrong_pass">Erreur de décryptage, le mot de passe fourni est invalide ou le fichier de paramètres à été modifié ! Cela peut arriver si le fichier a été exporté avec un mot de passe principal différent.</string>
     <string name="prefdecrypt_issue_wrong_format">Configuration du cryptage manquant, format des paramètres invalide !</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algorithme de cryptage non pris en charge ou non spécifié !</string>
+    <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Sélectionner un cadran personnalisé</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Veuillez redémarrer votre téléphone ou redémarrer AAPS à partir des Paramètres du système\nsinon AAPS ne sera pas connecté aux journaux (important pour suivre et vérifier que les algorithmes fonctionnent correctement)!</string>
 </resources>

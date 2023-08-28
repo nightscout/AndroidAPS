@@ -23,4 +23,5 @@
     <string name="handshaking">통신 확인</string>
     <string name="connected">연결됨</string>
     <string name="disconnecting">연결끊기중</string>
+    <!-- Custom Watchface -->
 </resources>

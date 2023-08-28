@@ -48,10 +48,14 @@ class ThemeSwitcherPlugin @Inject constructor(
     }
 
     fun setThemeMode() {
-        val mode = when (sp.getString(info.nightscout.core.utils.R.string.key_use_dark_mode, "dark")) {
-            sp.getString(R.string.value_dark_theme, "dark")   -> MODE_NIGHT_YES
-            sp.getString(R.string.value_light_theme, "light") -> MODE_NIGHT_NO
-            else                                              -> MODE_NIGHT_FOLLOW_SYSTEM
+        val mode = try {
+            when (sp.getString(info.nightscout.core.utils.R.string.key_use_dark_mode, "dark")) {
+                sp.getString(R.string.value_dark_theme, "dark")   -> MODE_NIGHT_YES
+                sp.getString(R.string.value_light_theme, "light") -> MODE_NIGHT_NO
+                else                                              -> MODE_NIGHT_FOLLOW_SYSTEM
+            }
+        } catch (ignored: Exception) {
+            MODE_NIGHT_FOLLOW_SYSTEM
         }
         AppCompatDelegate.setDefaultNightMode(mode)
     }

@@ -25,7 +25,7 @@ class BigChartWatchface : BaseWatchFace() {
     @SuppressLint("SetTextI18n")
     override fun setDataFields() {
         super.setDataFields()
-        binding.status?.text = status.externalStatus + if (sp.getBoolean(R.string.key_show_cob, true)) (" " + this.status.cob) else ""
+        binding.status?.text = externalStatus + if (sp.getBoolean(R.string.key_show_cob, true)) (" " + this.status.cob) else ""
     }
 
     override fun setColorLowRes() {

@@ -27,7 +27,7 @@
         <activity
             android:name=".activities.TDDStatsActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name="info.nightscout.ui.activities.BolusProgressHelperActivity"
             android:exported="false"
@@ -43,7 +43,7 @@
         <activity
             android:name=".activities.StatsActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.TreatmentsActivity"
             android:exported="false"
@@ -51,7 +51,7 @@
         <activity
             android:name=".activities.ProfileHelperActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name="info.nightscout.ui.activities.QuickWizardListActivity"
             android:exported="false"

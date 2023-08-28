@@ -20,9 +20,9 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(var aapsLogge
 ) : MedtronicHistoryDecoderInterface<T> {
 
     // STATISTICS (remove at later time or not)
-    protected var statisticsEnabled = true
+    private var statisticsEnabled = true
     protected var unknownOpCodes: MutableMap<Int, Int?> = mutableMapOf()
-    protected var mapStatistics: MutableMap<RecordDecodeStatus, MutableMap<String, String>> = mutableMapOf()
+    private var mapStatistics: MutableMap<RecordDecodeStatus, MutableMap<String, String>> = mutableMapOf()
 
     abstract fun postProcess()
     protected abstract fun runPostDecodeTasks()
@@ -63,7 +63,7 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(var aapsLogge
         }
     }
 
-    protected fun addToStatistics(pumpHistoryEntry: MedtronicHistoryEntryInterface, status: RecordDecodeStatus, opCode: Int?) {
+    protected fun addToStatistics(pumpHistoryEntry: MedtronicHistoryEntryInterface, status: RecordDecodeStatus, @Suppress("SameParameterValue") opCode: Int?) {
         if (!statisticsEnabled) return
         if (opCode != null) {
             if (!unknownOpCodes.containsKey(opCode)) {
@@ -71,8 +71,8 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(var aapsLogge
             }
             return
         }
-        if (!mapStatistics[status]!!.containsKey(pumpHistoryEntry.entryTypeName)) {
-            mapStatistics[status]!!.put(pumpHistoryEntry.entryTypeName, "")
+        if (mapStatistics[status]?.containsKey(pumpHistoryEntry.entryTypeName) == false) {
+            mapStatistics[status]?.put(pumpHistoryEntry.entryTypeName, "")
         }
     }
 
@@ -82,13 +82,13 @@ abstract class MedtronicHistoryDecoder<T : MedtronicHistoryEntry?>(var aapsLogge
             StringUtil.appendToStringBuilder(sb, "" + key, ", ")
         }
         aapsLogger.info(LTag.PUMPCOMM, "STATISTICS OF PUMP DECODE")
-        if (unknownOpCodes.size > 0) {
+        if (unknownOpCodes.isNotEmpty()) {
             aapsLogger.warn(LTag.PUMPCOMM, "Unknown Op Codes: $sb")
         }
         for ((key, value) in mapStatistics) {
             sb = StringBuilder()
             if (key !== RecordDecodeStatus.OK) {
-                if (value.size == 0) continue
+                if (value.isEmpty()) continue
                 for ((key1) in value) {
                     StringUtil.appendToStringBuilder(sb, key1, ", ")
                 }

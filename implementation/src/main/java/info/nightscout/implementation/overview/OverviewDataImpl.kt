@@ -64,6 +64,7 @@ class OverviewDataImpl @Inject constructor(
         pumpStatus = ""
         calcProgressPct = 100
         bgReadingsArray = ArrayList()
+        maxBgValue = Double.MIN_VALUE
         bucketedGraphSeries = PointsWithLabelGraphSeries()
         bgReadingGraphSeries = PointsWithLabelGraphSeries()
         predictionsGraphSeries = PointsWithLabelGraphSeries()
@@ -71,23 +72,37 @@ class OverviewDataImpl @Inject constructor(
         tempBasalGraphSeries = LineGraphSeries()
         basalLineGraphSeries = LineGraphSeries()
         absoluteBasalGraphSeries = LineGraphSeries()
+        temporaryTargetSeries = LineGraphSeries()
+        maxIAValue = 0.0
         activitySeries = FixedLineGraphSeries()
         activityPredictionSeries = FixedLineGraphSeries()
+        maxIobValueFound = Double.MIN_VALUE
         iobSeries = FixedLineGraphSeries()
         absIobSeries = FixedLineGraphSeries()
         iobPredictions1Series = PointsWithLabelGraphSeries()
         //iobPredictions2Series = PointsWithLabelGraphSeries()
+        maxBGIValue = Double.MIN_VALUE
         minusBgiSeries = FixedLineGraphSeries()
         minusBgiHistSeries = FixedLineGraphSeries()
+        maxCobValueFound = Double.MIN_VALUE
         cobSeries = FixedLineGraphSeries()
         cobMinFailOverSeries = PointsWithLabelGraphSeries()
+        maxDevValueFound = Double.MIN_VALUE
         deviationsSeries = BarGraphSeries()
+        maxRatioValueFound = 5.0                    //even if sens data equals 0 for all the period, minimum scale is between 95% and 105%
+        minRatioValueFound = -maxRatioValueFound
         ratioSeries = LineGraphSeries()
+        maxFromMaxValueFound = Double.MIN_VALUE
+        maxFromMinValueFound = Double.MIN_VALUE
         dsMaxSeries = LineGraphSeries()
         dsMinSeries = LineGraphSeries()
+        maxTreatmentsValue = 0.0
         treatmentsSeries = PointsWithLabelGraphSeries()
+        maxEpsValue = 0.0
         epsSeries = PointsWithLabelGraphSeries()
-        heartRateGraphSeries = LineGraphSeries()
+        maxTherapyEventValue = 0.0
+        therapyEventSeries = PointsWithLabelGraphSeries()
+        heartRateGraphSeries = PointsWithLabelGraphSeries()
     }
 
     override fun initRange() {
@@ -324,5 +339,5 @@ class OverviewDataImpl @Inject constructor(
     override var dsMaxSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
     override var dsMinSeries: LineGraphSeries<ScaledDataPoint> = LineGraphSeries()
     override var heartRateScale = Scale()
-    override var heartRateGraphSeries: LineGraphSeries<DataPointWithLabelInterface> = LineGraphSeries()
+    override var heartRateGraphSeries: PointsWithLabelGraphSeries<DataPointWithLabelInterface> = PointsWithLabelGraphSeries()
 }

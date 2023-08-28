@@ -10,11 +10,13 @@ import info.nightscout.configuration.databinding.ActivityLogsettingBinding
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.rx.interfaces.L
 import info.nightscout.rx.interfaces.LogElement
+import info.nightscout.shared.interfaces.ResourceHelper
 import javax.inject.Inject
 
 class LogSettingActivity : TranslatedDaggerAppCompatActivity() {
 
     @Inject lateinit var l: L
+    @Inject lateinit var rh: ResourceHelper
 
     private lateinit var binding: ActivityLogsettingBinding
 
@@ -23,13 +25,16 @@ class LogSettingActivity : TranslatedDaggerAppCompatActivity() {
         binding = ActivityLogsettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        title = rh.gs(R.string.nav_logsettings)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         createViewsForSettings()
 
         binding.reset.setOnClickListener {
             l.resetToDefaults()
             createViewsForSettings()
         }
-        binding.ok.setOnClickListener { finish() }
     }
 
     private fun createViewsForSettings() {

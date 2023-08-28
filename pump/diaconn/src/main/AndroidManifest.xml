@@ -10,15 +10,15 @@
         <activity
             android:name=".activities.DiaconnG8HistoryActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.DiaconnG8UserOptionsActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".activities.DiaconnG8BLEScanActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.PumpDiaconnG8.activities.DiaconnG8BLEScanActivity" />
                 <category android:name="android.intent.category.DEFAULT" />

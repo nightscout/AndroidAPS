@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Profilbytte opprettet</string>
     <string name="sms_wrong_tbr_duration">Midl. basal varighet må oppgis i antall %1$d minutter og større enn 0.</string>
     <string name="a11y_otp_qr_code">QR-kode for oppsett av engangspassord</string>
-    <string name="xdrip_status_detailed_iob_title">Vis detaljert IOB</string>
-    <string name="xdrip_status_detailed_iob_summary">Splitt IOB til bolus- og basal-IOB på klokken</string>
     <string name="disabled_loop">Loop er deaktivert</string>
-    <string name="xdrip_status_show_bgi_title">Vis BGI</string>
-    <string name="xdrip_status_show_bgi_summary">Legg til BGI i statuslinje</string>
     <!-- Food-->
     <string name="food_short">Mat</string>
     <string name="description_food">Viser forhåndsinnstillinger for mat fra Nightscout</string>
@@ -243,6 +239,7 @@
     <string name="short_tabtitles">Korte navn i menyfaner</string>
     <string name="overview_show_notes_field_in_dialogs_title">Vis merknadsfelt i dialogvindu for behandlinger</string>
     <string name="deliverpartofboluswizard">Bolusveiviser utfører beregninger, men bare denne del av beregnet insulin leveres. Nyttig ved bruk av SMB-algoritmen.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Gi full bolus (100 %) dersom blodsukker er eldre enn</string>
     <string name="enable_bolus_advisor">Aktiver boluskalkulator</string>
     <string name="enable_bolus_advisor_summary">Bruk en påminnelse om å spise senere isetdet for beregnet av kalkulator når blodsukker er høyt (\"pre-bolus\")</string>
     <string name="enablesuperbolus">Aktiver superbolus i veiviser</string>
@@ -253,6 +250,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prognoser</string>
     <string name="overview_show_treatments">Behandlinger</string>
+    <string name="overview_show_heartRate">Puls</string>
     <string name="overview_show_deviation_slope">Avvikskurve</string>
     <string name="overview_show_activity">Aktivitet</string>
     <string name="overview_show_bgi">Blodsukkerpåvirkning</string>
@@ -270,6 +268,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEH</string>
+    <string name="heartRate_shortname">HR</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Graf skala</string>
     <string name="graph_menu_divider_header">Graf</string>
@@ -307,14 +306,23 @@
     <string name="wear_wizard_settings_summary">Beregninger inkludert i resultatet fra veiviseren:</string>
     <string name="wear_display_settings">Visningsinnstillinger</string>
     <string name="wear_general_settings">Generelle innstillinger</string>
-    <string name="wear_detailed_delta_title">Vis detaljert delta</string>
-    <string name="wear_detailed_delta_summary">Vis delta med én ekstra desimal</string>
     <string name="wear_notifysmb_title">Varsle ved SMB</string>
     <string name="wear_notifysmb_summary">Vis SMB på klokken som en standard bolus.</string>
     <string name="wear_predictions_summary">Vis blodsukkerprognoser på klokken.</string>
     <string name="wear_predictions_title">Prognoser</string>
+    <string name="wear_custom_watchface_settings">Innstillinger for tilpasset klokkebakgrunn</string>
+    <string name="wear_custom_watchface_authorization_title">Godkjenning for tilpasset klokkebakgrunn</string>
+    <string name="wear_custom_watchface_authorization_summary">Godkjenne at tilpasset klokkebakgrunn endrer AAPS- og klokkeinnstillinger i henhold til klokkebakgrunnens design</string>
+    <string name="wear_custom_watchface">Tilpasset klokkebakgrunn: %1$s</string>
+    <string name="wear_load_watchface">Last inn klokkebakgrunn</string>
+    <string name="wear_infos_watchface">Info urskive</string>
+    <string name="wear_export_watchface">Eksporter mal</string>
+    <string name="wear_new_custom_watchface_exported">Tilpasset klokkebakgrunn eksportert</string>
     <string name="resend_all_data">Send alle data på nytt</string>
     <string name="open_settings_on_wear">Åpne Innstillinger på klokken</string>
+    <string name="cwf_infos_pref_locked">Liste over forhåndsvalg låst av urskive</string>
+    <string name="cwf_infos_pref_required">Liste over innstillinger som kreves av klokkebakgrunnen</string>
+    <string name="cwf_infos_view_title">Liste over felt som er inkludert i urskive</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Viser en konstant melding med en kort oppsummering av hva loop gjør</string>
     <string name="old_data">GAMLE DATA</string>
@@ -323,7 +331,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">t</string>
     <string name="no_active_profile">Det er ikke angitt noen aktiv profil!</string>
-    <string name="profile_message">Profil:\n\nTidsforskyving: %1$\nProsent: %2$d%%\"</string>
+    <string name="profile_message">Profil:\n\nTidsforskyving: %1$d$\nProsent: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="no_profile">Ingen profil valgt</string>
     <string name="aps_only">Bare bruk i APS-modus!</string>

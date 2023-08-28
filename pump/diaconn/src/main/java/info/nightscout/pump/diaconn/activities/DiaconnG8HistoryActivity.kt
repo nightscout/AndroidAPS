@@ -74,6 +74,10 @@ class DiaconnG8HistoryActivity : TranslatedDaggerAppCompatActivity() {
         binding = DiaconnG8HistoryActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        title = rh.gs(info.nightscout.core.ui.R.string.pump_history)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
         binding.recyclerview.adapter = RecyclerViewAdapter(historyList)

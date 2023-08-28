@@ -25,13 +25,13 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
     var id: Long = 0
 
     @Expose
-    var DT: String? = null
+    var dt: String? = null
 
     @Expose
     var atechDateTime: Long = 0L
         set(value) {
             field = value
-            DT = DateTimeUtil.toString(value)
+            dt = DateTimeUtil.toString(value)
             if (isEntryTypeSet() && value != 0L) pumpId = generatePumpId()
         }
 
@@ -47,22 +47,6 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
                 field = generatePumpId()
             }
             return field
-        }
-
-    /**
-     * if history object is already linked to AAPS object (either Treatment, TempBasal or TDD (tdd's
-     * are not actually
-     * linked))
-     */
-    var linked = false
-
-    /**
-     * Linked object, see linked
-     */
-    var linkedObject: Any? = null
-        set(value) {
-            linked = true
-            field = value
         }
 
     abstract fun generatePumpId(): Long
@@ -107,16 +91,16 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
     }
 
     val dateTimeString: String
-        get() = if (DT == null) "Unknown" else DT!!
+        get() = dt ?: "Unknown"
 
     val decodedDataAsString: String
-        get() = if (decodedData.size == 0) if (isNoDataEntry) "No data" else "" else decodedData.toString()
+        get() = if (decodedData.isEmpty()) if (isNoDataEntry) "No data" else "" else decodedData.toString()
 
-    fun hasData(): Boolean {
-        return decodedData.size == 0 || isNoDataEntry || entryTypeName == "UnabsorbedInsulin"
+    private fun hasData(): Boolean {
+        return decodedData.isEmpty() || isNoDataEntry || entryTypeName == "UnabsorbedInsulin"
     }
 
-    val isNoDataEntry: Boolean
+    private val isNoDataEntry: Boolean
         get() = sizes[0] == 2 && sizes[1] == 5 && sizes[2] == 0
 
     fun getDecodedDataEntry(key: String?): Any? {
@@ -127,17 +111,16 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
         return decodedData.containsKey(key)
     }
 
-    fun showRaw(): Boolean {
-        return entryTypeName == "EndResultTotals"
-    }
+    private fun showRaw(): Boolean =
+        entryTypeName == "EndResultTotals"
 
-    val headLength: Int
+    private val headLength: Int
         get() = sizes[0]
 
     val dateTimeLength: Int
         get() = sizes[1]
 
-    val bodyLength: Int
+    private val bodyLength: Int
         get() = sizes[2]
 
     abstract fun toEntryString(): String
@@ -148,7 +131,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
         //     Log.e("", "DT is null. RawData=" + ByteUtil.getHex(rawData))
         // }
         sb.append(toStringStart)
-        sb.append(", DT: " + if (DT == null) "null" else StringUtil.getStringInLength(DT, 19))
+        sb.append(", DT: " + if (dt == null) "null" else StringUtil.getStringInLength(dt, 19))
         sb.append(", length=")
         sb.append(headLength)
         sb.append(",")
@@ -171,11 +154,11 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
             sb.append(", head=")
             sb.append(ByteUtil.shortHexString(head))
         }
-        if (datetime.size != 0) {
+        if (datetime.isNotEmpty()) {
             sb.append(", datetime=")
             sb.append(ByteUtil.shortHexString(datetime))
         }
-        if (body.size != 0) {
+        if (body.isNotEmpty()) {
             sb.append(", body=")
             sb.append(ByteUtil.shortHexString(body))
         }
@@ -206,15 +189,7 @@ abstract class MedtronicHistoryEntry : MedtronicHistoryEntryInterface {
     }
 
     fun addDecodedData(key: String, value: Any) {
-        decodedData.put(key, value)
-    }
-
-    fun toShortString(): String {
-        return if (head.size != 0) {
-            "Unidentified record. "
-        } else {
-            "HistoryRecord: head=[" + ByteUtil.shortHexString(head) + "]"
-        }
+        decodedData[key] = value
     }
 
     fun containsDecodedData(key: String?): Boolean {

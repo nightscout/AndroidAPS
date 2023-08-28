@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="alarmSettings">
+        <item>Işık, titreşim ve bip sesi</item>
+        <item>Işık ve titreşim</item>
+        <item>Işık ve bip sesi</item>
+        <item>Işık</item>
+        <item>Titreşim ve bip sesi</item>
+        <item>Titreşim</item>
+        <item>Bip sesi</item>
+        <item>Sessiz</item>
+    </string-array>
+</resources>

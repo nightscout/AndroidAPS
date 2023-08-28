@@ -13,6 +13,7 @@ import android.text.style.ForegroundColorSpan
 import android.text.util.Linkify
 import android.util.TypedValue
 import android.view.Menu
+import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.view.View
@@ -21,10 +22,12 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.widget.Toolbar
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuCompat
+import androidx.core.view.MenuProvider
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.tabs.TabLayoutMediator
@@ -62,6 +65,7 @@ import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
 import info.nightscout.plugins.constraints.signatureVerifier.SignatureVerifierPlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.EventAppExit
+import info.nightscout.rx.events.EventAppInitialized
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRebuildTabs
 import info.nightscout.rx.logging.LTag
@@ -133,10 +137,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             }
         })
 
-        //Check here if loop plugin is disabled. Else check via constraints
-        if (!(loop as PluginBase).isEnabled()) versionCheckerUtils.triggerCheckVersion()
-        setUserStats()
-        setupViews()
         disposable += rxBus
             .toObservable(EventRebuildTabs::class.java)
             .observeOn(aapsSchedulers.main)
@@ -149,9 +149,147 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({ processPreferenceChange(it) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventAppInitialized::class.java)
+            .observeOn(aapsSchedulers.main)
+            .subscribe({
+                           // 1st run of app
+                           start()
+                       }, fabricPrivacy::logException)
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START))
+                    binding.mainDrawerLayout.closeDrawers()
+                else if (menuOpen)
+                    menu?.close()
+                else if (binding.mainPager.currentItem != 0)
+                    binding.mainPager.currentItem = 0
+                else finish()
+            }
+        })
+        addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                MenuCompat.setGroupDividerEnabled(menu, true)
+                this@MainActivity.menu = menu
+                menuInflater.inflate(R.menu.menu_main, menu)
+                pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean =
+                when (menuItem.itemId) {
+                    R.id.nav_preferences        -> {
+                        protectionCheck.queryProtection(this@MainActivity, ProtectionCheck.Protection.PREFERENCES, {
+                            startActivity(
+                                Intent(this@MainActivity, PreferencesActivity::class.java)
+                                    .setAction("info.nightscout.androidaps.MainActivity")
+                                    .putExtra("id", -1)
+                            )
+                        })
+                        true
+                    }
+
+                    R.id.nav_historybrowser     -> {
+                        startActivity(Intent(this@MainActivity, HistoryBrowseActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
+                        true
+                    }
+
+                    R.id.nav_treatments         -> {
+                        startActivity(Intent(this@MainActivity, TreatmentsActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
+                        true
+                    }
+
+                    R.id.nav_setupwizard        -> {
+                        protectionCheck.queryProtection(this@MainActivity, ProtectionCheck.Protection.PREFERENCES, {
+                            startActivity(Intent(this@MainActivity, SetupWizardActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
+                        })
+                        true
+                    }
+
+                    R.id.nav_about              -> {
+                        var message = "Build: ${BuildConfig.BUILDVERSION}\n"
+                        message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
+                        message += "${rh.gs(info.nightscout.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(info.nightscout.plugins.R.string.not_available_full)}"
+                        if (config.isEngineeringMode()) message += "\n${rh.gs(info.nightscout.configuration.R.string.engineering_mode_enabled)}"
+                        if (config.isUnfinishedMode()) message += "\nUnfinished mode enabled"
+                        if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(info.nightscout.core.ui.R.string.fabric_upload_disabled)}"
+                        message += rh.gs(info.nightscout.core.ui.R.string.about_link_urls)
+                        val messageSpanned = SpannableString(message)
+                        Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
+                        MaterialAlertDialogBuilder(this@MainActivity, info.nightscout.core.ui.R.style.DialogTheme)
+                            .setTitle(rh.gs(R.string.app_name) + " " + BuildConfig.VERSION)
+                            .setIcon(iconsProvider.getIcon())
+                            .setMessage(messageSpanned)
+                            .setPositiveButton(rh.gs(info.nightscout.core.ui.R.string.ok), null)
+                            .setNeutralButton(rh.gs(info.nightscout.core.ui.R.string.cta_dont_kill_my_app_info)) { _, _ ->
+                                startActivity(
+                                    Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-"))
+                                    )
+                                )
+                            }
+                            .create().apply {
+                                show()
+                                findViewById<TextView>(android.R.id.message)?.movementMethod = LinkMovementMethod.getInstance()
+                            }
+                        true
+                    }
+
+                    R.id.nav_exit               -> {
+                        aapsLogger.debug(LTag.CORE, "Exiting")
+                        uel.log(Action.EXIT_AAPS, Sources.Aaps)
+                        rxBus.send(EventAppExit())
+                        finish()
+                        System.runFinalization()
+                        exitProcess(0)
+                    }
+
+                    R.id.nav_plugin_preferences -> {
+                        val plugin = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem)
+                        protectionCheck.queryProtection(this@MainActivity, ProtectionCheck.Protection.PREFERENCES, {
+                            startActivity(
+                                Intent(this@MainActivity, PreferencesActivity::class.java)
+                                    .setAction("info.nightscout.androidaps.MainActivity")
+                                    .putExtra("id", plugin.preferencesId)
+                            )
+                        })
+                        true
+                    }
+                    /*
+                                R.id.nav_survey             -> {
+                                    startActivity(Intent(this, SurveyActivity::class.java))
+                                    return true
+                                }
+                    */
+                    R.id.nav_defaultprofile     -> {
+                        startActivity(Intent(this@MainActivity, ProfileHelperActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
+                        true
+                    }
+
+                    R.id.nav_stats              -> {
+                        startActivity(Intent(this@MainActivity, StatsActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
+                        true
+                    }
+
+                    else                        ->
+                        actionBarDrawerToggle.onOptionsItemSelected(menuItem)
+                }
+        })
+        // Setup views on 2nd and next activity start
+        // On 1st start app is still initializing, start() is delayed and run from EventAppInitialized
+        if (config.appInitialized) start()
+    }
+
+    private fun start() {
+        binding.splash.visibility = View.GONE
+        //Check here if loop plugin is disabled. Else check via constraints
+        if (!(loop as PluginBase).isEnabled()) versionCheckerUtils.triggerCheckVersion()
+        setUserStats()
+        setupViews()
+
         if (startWizard() && !isRunningRealPumpTest()) {
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
-                startActivity(Intent(this, SetupWizardActivity::class.java))
+                startActivity(Intent(this, SetupWizardActivity::class.java).setAction("info.nightscout.androidaps.MainActivity"))
             })
         }
         androidPermission.notifyForStoragePermission(this)
@@ -184,6 +322,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
 
     override fun onResume() {
         super.onResume()
+        if (config.appInitialized) binding.splash.visibility = View.GONE
         if (!isProtectionCheckActive) {
             isProtectionCheckActive = true
             protectionCheck.queryProtection(this, ProtectionCheck.Protection.APPLICATION, UIRunnable { isProtectionCheckActive = false },
@@ -219,9 +358,11 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
                     menuItem.setIcon(info.nightscout.core.ui.R.drawable.ic_settings)
                 }
                 menuItem.setOnMenuItemClickListener {
-                    val intent = Intent(this, SingleFragmentActivity::class.java)
-                    intent.putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
-                    startActivity(intent)
+                    startActivity(
+                        Intent(this, SingleFragmentActivity::class.java)
+                            .setAction("info.nightscout.androidaps.MainActivity")
+                            .putExtra("plugin", activePlugin.getPluginsList().indexOf(p))
+                    )
                     binding.mainDrawerLayout.closeDrawers()
                     true
                 }
@@ -301,131 +442,6 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
         super.onPanelClosed(featureId, menu)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        super.onCreateOptionsMenu(menu)
-        MenuCompat.setGroupDividerEnabled(menu, true)
-        this.menu = menu
-        menuInflater.inflate(R.menu.menu_main, menu)
-        pluginPreferencesMenuItem = menu.findItem(R.id.nav_plugin_preferences)
-        setPluginPreferenceMenuName()
-        checkPluginPreferences(binding.mainPager)
-        setDisabledMenuItemColorPluginPreferences()
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        super.onOptionsItemSelected(item)
-        when (item.itemId) {
-            R.id.nav_preferences        -> {
-                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
-                    val i = Intent(this, PreferencesActivity::class.java)
-                    i.putExtra("id", -1)
-                    startActivity(i)
-                })
-                return true
-            }
-
-            R.id.nav_historybrowser     -> {
-                startActivity(Intent(this, HistoryBrowseActivity::class.java))
-                return true
-            }
-
-            R.id.nav_treatments         -> {
-                startActivity(Intent(this, TreatmentsActivity::class.java))
-                return true
-            }
-
-            R.id.nav_setupwizard        -> {
-                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
-                    startActivity(Intent(this, SetupWizardActivity::class.java))
-                })
-                return true
-            }
-
-            R.id.nav_about              -> {
-                var message = "Build: ${BuildConfig.BUILDVERSION}\n"
-                message += "Flavor: ${BuildConfig.FLAVOR}${BuildConfig.BUILD_TYPE}\n"
-                message += "${rh.gs(info.nightscout.configuration.R.string.configbuilder_nightscoutversion_label)} ${activePlugin.activeNsClient?.detectedNsVersion() ?: rh.gs(info.nightscout.plugins.R.string.not_available_full)}"
-                if (config.isEngineeringMode()) message += "\n${rh.gs(info.nightscout.configuration.R.string.engineering_mode_enabled)}"
-                if (config.isUnfinishedMode()) message += "\nUnfinished mode enabled"
-                if (!fabricPrivacy.fabricEnabled()) message += "\n${rh.gs(info.nightscout.core.ui.R.string.fabric_upload_disabled)}"
-                message += rh.gs(info.nightscout.core.ui.R.string.about_link_urls)
-                val messageSpanned = SpannableString(message)
-                Linkify.addLinks(messageSpanned, Linkify.WEB_URLS)
-                MaterialAlertDialogBuilder(this, info.nightscout.core.ui.R.style.DialogTheme)
-                    .setTitle(rh.gs(R.string.app_name) + " " + BuildConfig.VERSION)
-                    .setIcon(iconsProvider.getIcon())
-                    .setMessage(messageSpanned)
-                    .setPositiveButton(rh.gs(info.nightscout.core.ui.R.string.ok), null)
-                    .setNeutralButton(rh.gs(info.nightscout.core.ui.R.string.cta_dont_kill_my_app_info)) { _, _ ->
-                        startActivity(
-                            Intent(
-                                Intent.ACTION_VIEW,
-                                Uri.parse("https://dontkillmyapp.com/" + Build.MANUFACTURER.lowercase().replace(" ", "-"))
-                            )
-                        )
-                    }
-                    .create().apply {
-                        show()
-                        findViewById<TextView>(android.R.id.message)?.movementMethod = LinkMovementMethod.getInstance()
-                    }
-                return true
-            }
-
-            R.id.nav_exit               -> {
-                aapsLogger.debug(LTag.CORE, "Exiting")
-                uel.log(Action.EXIT_AAPS, Sources.Aaps)
-                rxBus.send(EventAppExit())
-                finish()
-                System.runFinalization()
-                exitProcess(0)
-            }
-
-            R.id.nav_plugin_preferences -> {
-                val plugin = (binding.mainPager.adapter as TabPageAdapter).getPluginAt(binding.mainPager.currentItem)
-                protectionCheck.queryProtection(this, ProtectionCheck.Protection.PREFERENCES, {
-                    val i = Intent(this, PreferencesActivity::class.java)
-                    i.putExtra("id", plugin.preferencesId)
-                    startActivity(i)
-                })
-                return true
-            }
-            /*
-                        R.id.nav_survey             -> {
-                            startActivity(Intent(this, SurveyActivity::class.java))
-                            return true
-                        }
-            */
-            R.id.nav_defaultprofile     -> {
-                startActivity(Intent(this, ProfileHelperActivity::class.java))
-                return true
-            }
-
-            R.id.nav_stats              -> {
-                startActivity(Intent(this, StatsActivity::class.java))
-                return true
-            }
-        }
-        return actionBarDrawerToggle.onOptionsItemSelected(item)
-    }
-
-    override fun onBackPressed() {
-        if (binding.mainDrawerLayout.isDrawerOpen(GravityCompat.START)) {
-            binding.mainDrawerLayout.closeDrawers()
-            return
-        }
-        if (menuOpen) {
-            this.menu?.close()
-            return
-        }
-        if (binding.mainPager.currentItem != 0) {
-            binding.mainPager.currentItem = 0
-            return
-        }
-        @Suppress("DEPRECATION")
-        super.onBackPressed()
-    }
-
     // Correct place for calling setUserStats() would be probably MainApp
     // but we need to have it called at least once a day. Thus this location
 
@@ -469,7 +485,7 @@ class MainActivity : DaggerAppCompatActivityWithResult() {
      * Check for existing PasswordReset file and
      * reset password to SN of active pump if file exists
      */
-    fun passwordResetCheck(context: Context) {
+    private fun passwordResetCheck(context: Context) {
         val passwordReset = File(fileListProvider.ensureExtraDirExists(), "PasswordReset")
         if (passwordReset.exists()) {
             val sn = activePlugin.activePump.serialNumber()

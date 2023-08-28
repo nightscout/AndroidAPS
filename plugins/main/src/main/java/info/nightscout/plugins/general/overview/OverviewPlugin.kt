@@ -16,6 +16,7 @@ import info.nightscout.core.utils.extensions.storeDouble
 import info.nightscout.core.utils.extensions.storeInt
 import info.nightscout.core.utils.extensions.storeString
 import info.nightscout.core.utils.fabric.FabricPrivacy
+import info.nightscout.core.validators.ValidatingEditTextPreference
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Overview
 import info.nightscout.interfaces.overview.OverviewMenus
@@ -29,6 +30,7 @@ import info.nightscout.plugins.general.overview.notifications.events.EventUpdate
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDismissNotification
+import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.events.EventUpdateOverviewCalcProgress
 import info.nightscout.rx.logging.AAPSLogger
@@ -121,7 +123,7 @@ class OverviewPlugin @Inject constructor(
             .toObservable(EventIobCalculationProgress::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                           overviewData.calcProgressPct = it.pass.finalPercent(it.progressPct)
+                           overviewData.calcProgressPct = it.finalPercent
                            overviewBus.send(EventUpdateOverviewCalcProgress("EventIobCalculationProgress"))
                        }, fabricPrivacy::logException)
         disposable += rxBus
@@ -150,6 +152,11 @@ class OverviewPlugin @Inject constructor(
                 it.isEnabled = false
             }
         }
+        if (!config.isEngineeringMode())
+            (preferenceFragment.findPreference(rh.gs(info.nightscout.core.utils.R.string.key_reset_boluswizard_percentage_time)) as ValidatingEditTextPreference?)?.let {
+                it.isVisible = false
+                it.isEnabled = false
+            }
     }
 
     override fun configuration(): JSONObject =
@@ -181,6 +188,7 @@ class OverviewPlugin @Inject constructor(
             .putInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, sp, rh)
 
     override fun applyConfiguration(configuration: JSONObject) {
+        val previousUnits = sp.getString(info.nightscout.core.utils.R.string.key_units, "random")
         configuration
             .storeString(info.nightscout.core.utils.R.string.key_units, sp, rh)
             .storeString(info.nightscout.core.utils.R.string.key_quickwizard, sp, rh)
@@ -207,5 +215,10 @@ class OverviewPlugin @Inject constructor(
             .storeDouble(R.string.key_statuslights_bat_warning, sp, rh)
             .storeDouble(R.string.key_statuslights_bat_critical, sp, rh)
             .storeInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, sp, rh)
+        val newUnits = sp.getString(info.nightscout.core.utils.R.string.key_units, "new")
+        if (previousUnits != newUnits) {
+            overviewData.reset()
+            rxBus.send(EventNewHistoryData(0L, reloadBgData = true))
+        }
     }
 }

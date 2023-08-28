@@ -75,8 +75,6 @@
     <attr name="notificationLow" format="reference|color" />
     <attr name="notificationInfo" format="reference|color" />
     <attr name="notificationAnnouncement" format="reference|color" />
-    <!---Splash Background  -->
-    <attr name="splashBackgroundColor" format="reference|color" />
     <!---Disabled Text Color  -->
     <attr name="disabledTextColor" format="reference|color" />
     <!---Overview and History browser  -->

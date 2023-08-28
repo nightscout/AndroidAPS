@@ -8,7 +8,7 @@ import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import org.apache.commons.lang3.builder.EqualsBuilder
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
@@ -18,14 +18,14 @@ class DetailedBolusInfoTest : TestBase() {
 
     @Test fun toStringShouldBeOverloaded() {
         val detailedBolusInfo = DetailedBolusInfo()
-        Assert.assertEquals(true, detailedBolusInfo.toJsonString().contains("insulin"))
+        Assertions.assertEquals(true, detailedBolusInfo.toJsonString().contains("insulin"))
     }
 
     @Test fun copyShouldCopyAllProperties() {
         val d1 = DetailedBolusInfo()
         d1.deliverAtTheLatest = 123
         val d2 = d1.copy()
-        Assert.assertEquals(true, EqualsBuilder.reflectionEquals(d2, d1))
+        Assertions.assertTrue(EqualsBuilder.reflectionEquals(d2, d1, arrayListOf("id")))
     }
 
     private fun fromJsonString(json: String): DetailedBolusInfo =
@@ -41,10 +41,10 @@ class DetailedBolusInfoTest : TestBase() {
         detailedBolusInfo.eventType = DetailedBolusInfo.EventType.BOLUS_WIZARD
         val serialized = detailedBolusInfo.toJsonString()
         val deserialized = fromJsonString(serialized)
-        Assert.assertEquals(1L, deserialized.bolusCalculatorResult?.timestamp)
-        Assert.assertEquals(DetailedBolusInfo.EventType.BOLUS_WIZARD, deserialized.eventType)
+        Assertions.assertEquals(1L, deserialized.bolusCalculatorResult?.timestamp)
+        Assertions.assertEquals(DetailedBolusInfo.EventType.BOLUS_WIZARD, deserialized.eventType)
         // Context should be excluded
-        Assert.assertNull(deserialized.context)
+        Assertions.assertNull(deserialized.context)
     }
 
     @Test
@@ -56,12 +56,12 @@ class DetailedBolusInfoTest : TestBase() {
         detailedBolusInfo.glucoseType = DetailedBolusInfo.MeterType.FINGER
 
         val therapyEvent = detailedBolusInfo.createTherapyEvent()
-        Assert.assertEquals(1000L, therapyEvent.timestamp)
-        Assert.assertEquals(TherapyEvent.Type.MEAL_BOLUS, therapyEvent.type)
-        Assert.assertEquals(TherapyEvent.GlucoseUnit.MGDL, therapyEvent.glucoseUnit)
-        Assert.assertEquals("note", therapyEvent.note)
-        Assert.assertEquals(180.0, therapyEvent.glucose)
-        Assert.assertEquals(TherapyEvent.MeterType.FINGER, therapyEvent.glucoseType)
+        Assertions.assertEquals(1000L, therapyEvent.timestamp)
+        Assertions.assertEquals(TherapyEvent.Type.MEAL_BOLUS, therapyEvent.type)
+        Assertions.assertEquals(TherapyEvent.GlucoseUnit.MGDL, therapyEvent.glucoseUnit)
+        Assertions.assertEquals("note", therapyEvent.note)
+        Assertions.assertEquals(180.0, therapyEvent.glucose)
+        Assertions.assertEquals(TherapyEvent.MeterType.FINGER, therapyEvent.glucoseType)
     }
 
     @Test
@@ -72,9 +72,9 @@ class DetailedBolusInfoTest : TestBase() {
         detailedBolusInfo.insulin = 7.0
 
         val bolus = detailedBolusInfo.createBolus()
-        Assert.assertEquals(1000L, bolus.timestamp)
-        Assert.assertEquals(Bolus.Type.SMB, bolus.type)
-        Assert.assertEquals(7.0, bolus.amount, 0.01)
+        Assertions.assertEquals(1000L, bolus.timestamp)
+        Assertions.assertEquals(Bolus.Type.SMB, bolus.type)
+        Assertions.assertEquals(7.0, bolus.amount, 0.01)
     }
 
     @Test
@@ -84,8 +84,8 @@ class DetailedBolusInfoTest : TestBase() {
         detailedBolusInfo.carbs = 6.0
 
         val carbs = detailedBolusInfo.createCarbs()
-        Assert.assertEquals(1000L, carbs.timestamp)
-        Assert.assertEquals(6.0, carbs.amount, 0.01)
+        Assertions.assertEquals(1000L, carbs.timestamp)
+        Assertions.assertEquals(6.0, carbs.amount, 0.01)
     }
 
     private fun createBolusCalculatorResult(): BolusCalculatorResult =

@@ -2,7 +2,6 @@ package info.nightscout.shared
 
 object SafeParse {
 
-    //    private static Logger log = StacktraceLoggerWrapper.getLogger(SafeParse.class);
     fun stringToDouble(inputString: String?, defaultValue: Double = 0.0): Double {
         var input = inputString ?: return defaultValue
         var result = defaultValue
@@ -11,50 +10,50 @@ object SafeParse {
         if (input == "") return defaultValue
         try {
             result = input.toDouble()
-        } catch (e: Exception) {
-//            log.error("Error parsing " + input + " to double");
+        } catch (ignored: Exception) {
+            // fail over to default
         }
         return result
     }
 
-    fun stringToFloat(inputString: String?): Float {
-        var input = inputString ?: return 0f
-        var result = 0f
+    fun stringToFloat(inputString: String?, defaultValue: Float = 0f): Float {
+        var input = inputString ?: return defaultValue
+        var result = defaultValue
         input = input.replace(",", ".")
         input = input.replace("−", "-")
-        if (input == "") return 0f
+        if (input == "") return defaultValue
         try {
             result = input.toFloat()
-        } catch (e: Exception) {
-//            log.error("Error parsing " + input + " to float");
+        } catch (ignored: Exception) {
+            // fail over to default
         }
         return result
     }
 
-    fun stringToInt(inputString: String?): Int {
-        var input = inputString ?: return 0
-        var result = 0
+    fun stringToInt(inputString: String?, defaultValue: Int = 0): Int {
+        var input = inputString ?: return defaultValue
+        var result = defaultValue
         input = input.replace(",", ".")
         input = input.replace("−", "-")
-        if (input == "") return 0
+        if (input == "") return defaultValue
         try {
             result = input.toInt()
-        } catch (e: Exception) {
-//            log.error("Error parsing " + input + " to int");
+        } catch (ignored: Exception) {
+            // fail over to default
         }
         return result
     }
 
-    fun stringToLong(inputString: String?): Long {
-        var input = inputString ?: return 0L
-        var result = 0L
+    fun stringToLong(inputString: String?, defaultValue: Long = 0L): Long {
+        var input = inputString ?: return defaultValue
+        var result = defaultValue
         input = input.replace(",", ".")
         input = input.replace("−", "-")
-        if (input == "") return 0L
+        if (input == "") return defaultValue
         try {
             result = input.toLong()
-        } catch (e: Exception) {
-//            log.error("Error parsing " + input + " to long");
+        } catch (ignored: Exception) {
+            // fail over to default
         }
         return result
     }

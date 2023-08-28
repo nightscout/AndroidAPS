@@ -87,6 +87,10 @@ class DanaHistoryActivity : TranslatedDaggerAppCompatActivity() {
         binding = DanarHistoryActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        title = rh.gs(info.nightscout.core.ui.R.string.pump_history)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         binding.recyclerview.setHasFixedSize(true)
         binding.recyclerview.layoutManager = LinearLayoutManager(this)
         binding.status.visibility = View.GONE

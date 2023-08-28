@@ -19,10 +19,10 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
+import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.source.DoingOwnUploadSource
 import info.nightscout.interfaces.sync.DataSyncSelector
-import info.nightscout.interfaces.sync.DataSyncSelectorV1
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
 import info.nightscout.plugins.sync.R
@@ -200,7 +200,7 @@ class NSClientPlugin @Inject constructor(
         dataSyncSelector.resetToNextFullSync()
     }
 
-    override suspend fun nsAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String): Boolean {
+    override suspend fun nsAdd(collection: String, dataPair: DataSyncSelector.DataPair, progress: String, profile: Profile?): Boolean {
         when (dataPair) {
             is DataSyncSelector.PairBolus                  -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairCarbs                  -> dataPair.value.toJson(true, dateUtil)
@@ -210,8 +210,8 @@ class NSClientPlugin @Inject constructor(
             is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairDeviceStatus           -> dataPair.value.toJson(dateUtil)
-            is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(true, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
-            is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(true, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+            is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(true, profile, dateUtil)
+            is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(true, profile, dateUtil)
             is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(true, dateUtil)
             is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(true, dateUtil)
@@ -223,7 +223,7 @@ class NSClientPlugin @Inject constructor(
         return true
     }
 
-    override suspend fun nsUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String): Boolean {
+    override suspend fun nsUpdate(collection: String, dataPair: DataSyncSelector.DataPair, progress: String, profile: Profile?): Boolean {
         val id = when (dataPair) {
             is DataSyncSelector.PairBolus                  -> dataPair.value.interfaceIDs.nightscoutId
             is DataSyncSelector.PairCarbs                  -> dataPair.value.interfaceIDs.nightscoutId
@@ -247,8 +247,8 @@ class NSClientPlugin @Inject constructor(
             is DataSyncSelector.PairFood                   -> dataPair.value.toJson(false)
             is DataSyncSelector.PairGlucoseValue           -> dataPair.value.toJson(false, dateUtil)
             is DataSyncSelector.PairTherapyEvent           -> dataPair.value.toJson(false, dateUtil)
-            is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
-            is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profileFunction.getProfile(dataPair.value.timestamp), dateUtil)
+            is DataSyncSelector.PairTemporaryBasal         -> dataPair.value.toJson(false, profile, dateUtil)
+            is DataSyncSelector.PairExtendedBolus          -> dataPair.value.toJson(false, profile, dateUtil)
             is DataSyncSelector.PairProfileSwitch          -> dataPair.value.toJson(false, dateUtil)
             is DataSyncSelector.PairEffectiveProfileSwitch -> dataPair.value.toJson(false, dateUtil)
             is DataSyncSelector.PairOfflineEvent           -> dataPair.value.toJson(false, dateUtil)

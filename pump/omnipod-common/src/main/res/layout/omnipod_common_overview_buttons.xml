@@ -52,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:drawableTop="@drawable/ic_omnipod_overview_resume_delivery"
+        android:drawableTop="@drawable/ic_pod_resume_delivery"
         android:drawablePadding="@dimen/omnipod_icon_button_drawable_padding"
         android:text="@string/omnipod_common_overview_button_resume_delivery"
         android:visibility="gone" />

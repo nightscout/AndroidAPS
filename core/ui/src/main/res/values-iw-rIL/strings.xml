@@ -376,6 +376,9 @@
     <string name="carbs_g">פחמימות %1$d גרם</string>
     <string name="extended_bolus_u_min">בולוס מושהה %1$.2f יח\' %2$d דק\'</string>
     <string name="load_events">טען אירועים</string>
+    <string name="clear_alarms">מחק התראות</string>
+    <string name="deactivate">השבתה</string>
+    <string name="update_time">עדכון שעה</string>
     <string name="load_history">טען היסטוריה %1$d</string>
     <string name="load_tdds">טען מינונים יומיים כוללים</string>
     <string name="set_profile">הגדר פרופיל</string>
@@ -421,6 +424,7 @@
     <string name="autotune_ic_warning">בפרופיל הנבחר יש %1$d ערכי יחס פחמימות. הכיוונון האוטומטי ישתמש ב-%2$.2f גר\'\\יח\'</string>
     <string name="autotune_isf_warning">בפרופיל הנבחר יש %1$d ערכי יחס תיקון. הכיוונון האוטומטי ישתמש ב-%2$.1f %3$s\\יח\'</string>
     <string name="autotune_error">שגיאה בנתוני הקלט, נסו להפעיל בשנית או שנסו לצמצם את מספר הימים</string>
+    <string name="autotune_error_more_days">שגיאה בנתוני הקלט, נסו לצמצם את מספר הימים</string>
     <string name="autotune_warning_during_run">חישוב הכוונון האוטומטי התחיל, אנא התאזרו בסבלנות</string>
     <string name="autotune_warning_after_run">בדקו היטב את התוצאות לפני השימוש בהן!</string>
     <string name="autotune_partial_result">יום תוצאה חלקי %1$d / %2$d מכוון</string>

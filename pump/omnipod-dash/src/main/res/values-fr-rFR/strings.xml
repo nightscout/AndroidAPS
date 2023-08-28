@@ -6,12 +6,12 @@
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">Historique du Pod</string>
     <string name="omnipod_dash_history_item_description">Description</string>
+    <string name="omnipod_dash_history_item_amount">Quantité</string>
     <string name="omnipod_dash_history_item_source">Source</string>
     <string name="omnipod_dash_history_item_date">Date</string>
     <string name="omnipod_dash_history_type">Type :</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, Gluc=%2$.1f g</string>
-    <string name="omnipod_dash_history_tbr_value">Débit : %1$.2f U, durée : %2$d minutes</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">État Bluetooth</string>
     <string name="omnipod_dash_overview_bluetooth_address">Adresse Bluetooth</string>
@@ -31,9 +31,10 @@
     <string name="omnipod_dash_command_not_sent">Commande non envoyée</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Commande non reçue par le pod</string>
     <string name="omnipod_dash_unknown">État inconnu pour la commande</string>
-    <string name="omnipod_common_history_tbr_value">Débit : %1$.2f U, durée : %2$d minutes</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f U/h, %2$d minutes</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">Injection d\'insuline suspendue</string>
+    <string name="omnipod_common_history_total_delivered">Total injecté : %1$.2f U</string>
     <string name="omnipod_dash_connection_lost">Connexion perdue avec le pod</string>
     <string name="omnipod_dash_bolus_already_in_progress">Un autre bolus est en cours d\'injection</string>
     <string name="omnipod_dash_not_enough_insulin">Pas assez d\'insuline restante dans le réservoir</string>
@@ -46,6 +47,7 @@
     <string name="failed_to_set_the_new_basal_profile">Échec de définition du nouveau profil de basal. Livraison suspendue</string>
     <string name="setting_basal_profile_might_have_failed">Le paramétrage du profil de basal a peut-être échoué. L\'injection peut être suspendue ! Actualisez manuellement l\'état du Pod à partir de l\'onglet Omnipod et reprenez l\'injection si nécessaire.</string>
     <string name="bolus_delivery_status_uncertain">Statut de l\'injection du bolus incertain. Rafraîchir le statut du pod pour confirmer ou refuser.</string>
+    <string name="temp_basal_out_of_sync">Le statut de basal temporaire n\'est pas comme attendu ! Si un basal temporaire était déjà en cours d\'exécution, il a été annulé. Veuillez vérifier l\'historique de l\'insuline et du pod</string>
     <string name="checking_delivery_status">Vérification du statut de l\'injection</string>
     <string name="setting_temp_basal_might_have_basal_failed">Le paramétrage du basal temporaire a peut-être échoué. Si un basal temporaire était en cours d\'exécution, il a été annulé. Veuillez actualiser manuellement l\'état du Pod à partir de l\'onglet Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">L\'annulation du basal temporaire est incertaine</string>

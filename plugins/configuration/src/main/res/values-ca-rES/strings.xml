@@ -131,5 +131,6 @@
     <string name="prefdecrypt_issue_wrong_pass">Error de desencriptació, la clau proporcionada no és vàlida o l\'arxiu de configuració ha estat alterat! Pot donar-se si l\'arxiu importat va ser exportat amb una clau mestra diferent.</string>
     <string name="prefdecrypt_issue_wrong_format">Falta la configuració per encriptar, el format de la configuració és incorrecte!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritme d\'encriptació no compatible o no especificat!</string>
+    <!-- Custom Watchface -->
     <!-- Permissions -->
 </resources>

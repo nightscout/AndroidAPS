@@ -83,6 +83,10 @@ class ProfileHelperActivity : TranslatedDaggerAppCompatActivity() {
         binding = ActivityProfilehelperBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        title = rh.gs(R.string.nav_profile_helper)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 switchTab(tab.position, typeSelected[tab.position])

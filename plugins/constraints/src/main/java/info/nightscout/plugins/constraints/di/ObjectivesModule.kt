@@ -9,6 +9,7 @@ import info.nightscout.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.plugins.constraints.objectives.objectives.Objective0
 import info.nightscout.plugins.constraints.objectives.objectives.Objective1
 import info.nightscout.plugins.constraints.objectives.objectives.Objective10
+import info.nightscout.plugins.constraints.objectives.objectives.Objective11
 import info.nightscout.plugins.constraints.objectives.objectives.Objective2
 import info.nightscout.plugins.constraints.objectives.objectives.Objective3
 import info.nightscout.plugins.constraints.objectives.objectives.Objective4
@@ -36,4 +37,5 @@ abstract class ObjectivesModule {
     @ContributesAndroidInjector abstract fun objective7Injector(): Objective7
     @ContributesAndroidInjector abstract fun objective9Injector(): Objective9
     @ContributesAndroidInjector abstract fun objective10Injector(): Objective10
+    @ContributesAndroidInjector abstract fun objective11Injector(): Objective11
 }

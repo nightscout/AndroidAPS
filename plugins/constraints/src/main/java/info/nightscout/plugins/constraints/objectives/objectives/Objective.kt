@@ -46,6 +46,7 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
         }
 
     init {
+        @Suppress("LeakingThis")
         injector.androidInjector().inject(this)
         this.spName = spName
         this.objective = objective
@@ -70,10 +71,10 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
     val isStarted: Boolean
         get() = startedOn != 0L
 
-    open fun specialActionEnabled(): Boolean {
-        return true
-    }
+    @Suppress("unused")
+    open fun specialActionEnabled(): Boolean = true
 
+    @Suppress("unused")
     open fun specialAction(activity: FragmentActivity, input: String) {}
 
     abstract inner class Task(var objective: Objective, @StringRes val task: Int) {
@@ -157,7 +158,7 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
 
     inner class Option internal constructor(@StringRes var option: Int, var isCorrect: Boolean) {
 
-        var cb: CheckBox? = null // TODO: change it, this will block releasing memory
+        private var cb: CheckBox? = null // TODO: change it, this will block releasing memory
 
         fun generate(context: Context): CheckBox {
             cb = CheckBox(context)
@@ -184,13 +185,5 @@ abstract class Objective(injector: HasAndroidInjector, spName: String, @StringRe
         }
     }
 
-   inner class Learned internal constructor(@StringRes var learned: Int) {
-
-        fun generate(context: Context): TextView {
-            val textView = TextView(context)
-            textView.setText(learned)
-            textView.setLinkTextColor(rh.gac(context, com.google.android.material.R.attr.colorSecondary))
-            return textView
-        }
-    }
+   inner class Learned internal constructor(@StringRes var learned: Int)
 }

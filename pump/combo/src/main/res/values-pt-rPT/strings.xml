@@ -49,6 +49,11 @@
     <string name="combo_tbr_count">Contagem DBT</string>
     <string name="bolusstopped">O bolus parou</string>
     <string name="bolusstopping">A parar o bolus</string>
+    <string name="pump_commerror_label">Comm. Contagem de erros</string>
+    <string name="show_comm_error_count_title">Mostrar contagem de erros</string>
+    <string name="show_comm_error_count_summary">Mostra a contagem de erros, ao comunicar com o Ruffy. Na maioria dos casos, número superior a 0 significa problemas de comunicação com a Ruffy (pode ser necessário reiniciar).</string>
     <string name="combo_error_display_never">Nunca</string>
+    <string name="combo_error_display_error">Erro de Quando</string>
+    <string name="combo_error_display_always">Sempre</string>
     <string name="unsafeusage">uso não seguro</string>
 </resources>

@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Changement de profil effectué</string>
     <string name="sms_wrong_tbr_duration">La durée du DBT doit être un multiple de %1$d minutes et supérieure à 0.</string>
     <string name="a11y_otp_qr_code">QR Code pour configurer un mot de passe à usage unique</string>
-    <string name="xdrip_status_detailed_iob_title">Afficher l\'IA détaillée</string>
-    <string name="xdrip_status_detailed_iob_summary">Sur la montre, décomposer l’IA en IA bolus et IA basal</string>
     <string name="disabled_loop">Boucle désactivée</string>
-    <string name="xdrip_status_show_bgi_title">Afficher l’Impact Glycémie</string>
-    <string name="xdrip_status_show_bgi_summary">Ajouter l’IGly sur la vue générale</string>
     <!-- Food-->
     <string name="food_short">Aliments</string>
     <string name="description_food">Affiche les aliments définis par défaut dans Nightscout</string>
@@ -243,6 +239,7 @@
     <string name="short_tabtitles">Raccourcir les titres des onglets</string>
     <string name="overview_show_notes_field_in_dialogs_title">Affiche les notes dans les dialogues</string>
     <string name="deliverpartofboluswizard">L\'assistant bolus effectue le calcul mais seulement ce pourcentage de l\'insuline calculée est délivré. Utile avec l\'algorithme SMB.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Faire un bolus complet (100%) si la glycémie est plus ancienne que</string>
     <string name="enable_bolus_advisor">Activer l\'assistant bolus</string>
     <string name="enable_bolus_advisor_summary">Utiliser un rappel pour commencer le repas à la place du résultat de l\'assistant quand la glycémie est élevée (\"pré-bolus\")</string>
     <string name="enablesuperbolus">Activer les Superbolus dans l’Assistant</string>
@@ -253,6 +250,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Prédictions</string>
     <string name="overview_show_treatments">Traitements</string>
+    <string name="overview_show_heartRate">Fréquence Cardiaque</string>
     <string name="overview_show_deviation_slope">Pente de déviations</string>
     <string name="overview_show_activity">Activité</string>
     <string name="overview_show_bgi">Impact glycémique</string>
@@ -270,6 +268,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">PENTEDEV</string>
     <string name="treatments_shortname">TRAIT</string>
+    <string name="heartRate_shortname">FC</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Échelle du graph.</string>
     <string name="graph_menu_divider_header">Graph</string>
@@ -307,14 +306,23 @@
     <string name="wear_wizard_settings_summary">Calculs inclus dans le résultat de l’Assistant :</string>
     <string name="wear_display_settings">Parametres d\'affichage</string>
     <string name="wear_general_settings">Paramètres généraux</string>
-    <string name="wear_detailed_delta_title">Afficher le delta détaillé</string>
-    <string name="wear_detailed_delta_summary">Afficher delta avec une décimale supplémentaire</string>
     <string name="wear_notifysmb_title">Notifier en cas de SMB</string>
     <string name="wear_notifysmb_summary">Afficher SMB sur la montre comme un bolus standard.</string>
     <string name="wear_predictions_summary">Affichez les prédictions sur l\'écran de la montre.</string>
     <string name="wear_predictions_title">Prédictions</string>
+    <string name="wear_custom_watchface_settings">Paramètres du Cadran Personnalisé</string>
+    <string name="wear_custom_watchface_authorization_title">Autorisation du Cadran Personnalisé</string>
+    <string name="wear_custom_watchface_authorization_summary">Autoriser le cadran perso chargé à modifier et bloquer certains paramètres d\'affichage de la montre pour un affichage correct du cadran</string>
+    <string name="wear_custom_watchface">Cadran personnalisé : %1$s</string>
+    <string name="wear_load_watchface">Charger le cadran</string>
+    <string name="wear_infos_watchface">Infos Cadran</string>
+    <string name="wear_export_watchface">Exporter le modèle</string>
+    <string name="wear_new_custom_watchface_exported">Modèle du cadran personnalisé exporté</string>
     <string name="resend_all_data">Renvoyer toutes les données</string>
     <string name="open_settings_on_wear">Afficher les Paramètres sur la Montre</string>
+    <string name="cwf_infos_pref_locked">Liste des préférences verrouillées par le cadran</string>
+    <string name="cwf_infos_pref_required">Liste des préférences requises pour le cadran</string>
+    <string name="cwf_infos_view_title">Liste des champs inclus dans le cadran</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Affiche une notification en cours avec un bref aperçu de ce que fait votre Boucle</string>
     <string name="old_data">DONNÉES ANCIENNES</string>
@@ -323,7 +331,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">h</string>
     <string name="no_active_profile">Aucun profil actif!</string>
-    <string name="profile_message">Profil :\n\nDécalage: %1$\nPourcentage: %2$d%%\"</string>
+    <string name="profile_message">Profil :\n\nDécalage: %1$d\nPourcentage: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">Aucun profil séléctionné</string>
     <string name="aps_only">S\'applique uniquement en mode APS!</string>

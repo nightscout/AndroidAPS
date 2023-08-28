@@ -15,13 +15,18 @@
         <activity
             android:name=".general.smsCommunicator.activities.SmsCommunicatorOtpActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="info.nightscout.androidaps.plugins.general.smsCommunicator.activities.SmsCommunicatorOtpActivity" />
 
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".general.wear.activities.CwfInfosActivity"
+            android:exported="false"
+            android:theme="@style/AppTheme" />
 
         <service android:name="info.nightscout.plugins.general.persistentNotification.DummyService" />
 
@@ -49,6 +54,15 @@
                 <data
                     android:host="*"
                     android:pathPrefix="@string/path_rx_bridge"
+                    android:scheme="wear" />
+            </intent-filter>
+            <intent-filter>
+                <!-- listeners receive events that match the action and data filters -->
+                <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
+
+                <data
+                    android:host="*"
+                    android:pathPrefix="@string/path_rx_data_bridge"
                     android:scheme="wear" />
             </intent-filter>
         </service>

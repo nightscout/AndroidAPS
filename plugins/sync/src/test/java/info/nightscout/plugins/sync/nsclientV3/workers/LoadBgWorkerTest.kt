@@ -15,14 +15,13 @@ import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.nsclient.StoreDataForDb
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.source.NSClientSource
-import info.nightscout.interfaces.sync.DataSyncSelectorV3
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
+import info.nightscout.plugins.sync.nsclientV3.DataSyncSelectorV3
 import info.nightscout.plugins.sync.nsclientV3.NSClientV3Plugin
 import info.nightscout.plugins.sync.nsclientV3.extensions.toNSSvgV3
 import info.nightscout.rx.bus.RxBus
@@ -31,7 +30,6 @@ import info.nightscout.sdk.remotemodel.LastModified
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -43,7 +41,6 @@ import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mock
 import org.mockito.Mockito
 
-@OptIn(ExperimentalCoroutinesApi::class)
 internal class LoadBgWorkerTest : TestBase() {
 
     @Mock lateinit var sp: SP
@@ -51,7 +48,6 @@ internal class LoadBgWorkerTest : TestBase() {
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var nsAndroidClient: NSAndroidClient
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var config: Config
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var dataSyncSelectorV3: DataSyncSelectorV3
@@ -98,7 +94,7 @@ internal class LoadBgWorkerTest : TestBase() {
         receiverDelegate = ReceiverDelegate(rxBus, rh, sp, receiverStatusStore, aapsSchedulers, fabricPrivacy)
         nsClientV3Plugin = NSClientV3Plugin(
             injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
-            sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, profileFunction, repository,
+            sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, repository,
             nsDeviceStatusHandler, nsClientSource, nsIncomingDataProcessor, storeDataForDb
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())

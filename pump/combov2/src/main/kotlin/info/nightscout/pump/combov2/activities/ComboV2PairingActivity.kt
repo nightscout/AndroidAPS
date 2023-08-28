@@ -9,6 +9,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -17,9 +18,11 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import info.nightscout.comboctl.base.BasicProgressStage
+import info.nightscout.comboctl.base.PAIRING_PIN_SIZE
 import info.nightscout.comboctl.base.PairingPIN
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.ui.dialogs.OKDialog
+import info.nightscout.core.ui.toast.ToastUtils
 import info.nightscout.pump.combov2.ComboV2Plugin
 import info.nightscout.pump.combov2.R
 import info.nightscout.pump.combov2.databinding.Combov2PairingActivityBinding
@@ -110,6 +113,10 @@ class ComboV2PairingActivity : TranslatedDaggerAppCompatActivity() {
         val binding: Combov2PairingActivityBinding = DataBindingUtil.setContentView(
             this, R.layout.combov2_pairing_activity)
 
+        title = rh.gs(R.string.combov2_pair_with_pump_title)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         val thisActivity = this
 
         // Set the pairing sections to initially show the "not initialized" one
@@ -184,13 +191,13 @@ class ComboV2PairingActivity : TranslatedDaggerAppCompatActivity() {
                     .launchIn(this)
             }
         }
-    }
-
-    override fun onBackPressed() {
-        aapsLogger.info(LTag.PUMP, "User pressed the back button; cancelling any ongoing pairing")
-        combov2Plugin.cancelPairing()
-        @Suppress("DEPRECATION")
-        super.onBackPressed()
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                aapsLogger.info(LTag.PUMP, "User pressed the back button; cancelling any ongoing pairing")
+                combov2Plugin.cancelPairing()
+                finish()
+            }
+        })
     }
 
     override fun onDestroy() {
@@ -334,9 +341,13 @@ class ComboV2PairingActivity : TranslatedDaggerAppCompatActivity() {
             // We need to skip whitespaces since the
             // TextWatcher above inserts some.
             val pinString = binding.combov2PinEntryEdit.text.replace(whitespaceRemovalRegex, "")
+            if (pinString.length != PAIRING_PIN_SIZE) {
+                ToastUtils.showToastInUiThread(this, rh.gs(R.string.combov2_pairing_invalid_pin_length, PAIRING_PIN_SIZE, pinString.length))
+                return@setOnClickListener
+            }
             runBlocking {
-                val PIN = PairingPIN(pinString.map { it - '0' }.toIntArray())
-                combov2Plugin.providePairingPIN(PIN)
+                val pin = PairingPIN(pinString.map { it - '0' }.toIntArray())
+                combov2Plugin.providePairingPIN(pin)
             }
         }
 
@@ -376,14 +387,14 @@ class ComboV2PairingActivity : TranslatedDaggerAppCompatActivity() {
                     }
                 }
 
-                binding.combov2CurrentPairingStepDesc.text = when (val progStage = stage) {
+                binding.combov2CurrentPairingStepDesc.text = when (stage) {
                     BasicProgressStage.ScanningForPumpStage ->
                         rh.gs(R.string.combov2_scanning_for_pump)
 
                     is BasicProgressStage.EstablishingBtConnection -> {
                         rh.gs(
                             R.string.combov2_establishing_bt_connection,
-                            progStage.currentAttemptNr
+                            stage.currentAttemptNr
                         )
                     }
 

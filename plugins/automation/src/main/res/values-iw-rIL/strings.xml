@@ -92,6 +92,8 @@
     <string name="lastboluscompared">הבולוס האחרון היה לפני %1$s %2$s דק\'</string>
     <string name="triggercoblabel">פחמ\' פעילות</string>
     <string name="cobcompared">פחמ\' פעילות %1$s %2$.0f</string>
+    <string name="triggerHeartRate">קצב לב</string>
+    <string name="triggerHeartRateDesc">קצב לב %1$s %2$.0f</string>
     <string name="iob_u">אינסולין פעיל [U]:</string>
     <string name="distance_short">מרחק [m]:</string>
     <string name="recurringTime">זמן חוזרני</string>

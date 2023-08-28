@@ -7,9 +7,14 @@
     <string name="label_watchface_big_chart">AAPS(GrafGrande)</string>
     <string name="label_watchface_no_chart">AAPS(SemGraf)</string>
     <string name="label_watchface_circle">AAPS(Círculo)</string>
+    <string name="label_watchface_v2">AAPS(v2)</string>
     <string name="label_watchface_cockpit">AAPS(Cockpit)</string>
     <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(DigitalStyle)</string>
+    <string name="label_watchface_custom">AAPS(personalizado)</string>
+    <string name="label_actions_tile">AAPS(Ações)</string>
+    <string name="label_temp_target_tile">AAPS(Alvo Temporário)</string>
+    <string name="label_quick_wizard_tile">AAPS(Configuração Rápida)</string>
     <string name="label_warning_sync">Sem dados!</string>
     <string name="label_warning_old">Dados antigos!</string>
     <string name="label_warning_since">Desde %1$s</string>
@@ -18,16 +23,20 @@
     <string name="msg_warning_old">Dados AAPS são %1$s antigos! Verifique sensor, xDrip+, NS, configuração AAPS ou outra!</string>
     <string name="pref_vibrate_on_bolus">Vibrar no Bólus</string>
     <string name="pref_units_for_actions">Unidades para Acções</string>
+    <string name="units_short">U</string>
     <string name="pref_show_date">Mostrar Data</string>
     <string name="pref_show_iob">Mostrar IA </string>
+    <string name="pref_show_detailed_iob">Mostrar IA detalhada</string>
     <string name="pref_show_cob">Mostrar HCA</string>
     <string name="pref_show_delta">Mostrar Delta</string>
+    <string name="pref_show_detailed_delta">Mostrar Delta detalhado</string>
     <string name="pref_show_avgdelta">Mostrar MedDelta</string>
     <string name="pref_show_phone_battery">Mostrar Bateria Telefone</string>
     <string name="pref_show_rig_battery">Mostrar Bateria Equipamento</string>
     <string name="pref_show_basal_rate">Mostrar Taxa Basal</string>
     <string name="pref_show_loop_status">Mostrar Estado Loop</string>
     <string name="pref_show_bg">Mostrar Glicose</string>
+    <string name="pref_show_bgi">Mostrar IGLIC</string>
     <string name="pref_show_direction_arrow">Mostrar Seta Direcção</string>
     <string name="pref_show_ago">Mostrar Atrás</string>
     <string name="pref_dark" comment="Enables dark visual theme">Escuro</string>
@@ -53,8 +62,10 @@
     <string name="pref_ring_history">Anel Histórico</string>
     <string name="pref_light_ring_history">Anel Suave Histórico</string>
     <string name="pref_animations">Animações</string>
+    <string name="pref_wizard_in_menu">Calculadora no Menu</string>
     <string name="pref_prime_in_menu">Purgar no Menu</string>
     <string name="pref_single_target">Alvo Único</string>
+    <string name="pref_wizard_percentage">Percentagem da Calculadora</string>
     <string name="pref_complication_tap_action">Complicação de Toque</string>
     <string name="pref_unicode_in_complications">Unicode em Complicações</string>
     <string name="pref_version">Versão:</string>
@@ -64,6 +75,7 @@
     <string name="menu_wizard">Calculadora</string>
     <string name="menu_wizard_short">Calc</string>
     <string name="menu_treatment">Tratamento</string>
+    <string name="menu_treatment_short">Tratar</string>
     <string name="menu_bolus">Bólus</string>
     <string name="menu_carb">Hidratos</string>
     <string name="menu_ecarb">eCarbs</string>
@@ -74,7 +86,16 @@
     <string name="menu_none">Nenhum</string>
     <string name="menu_default">Padrão</string>
     <string name="menu_menu">Menu</string>
+    <string name="quick_wizard_short">XL</string>
     <string name="action_duration">Duração</string>
+    <string name="action_tempt_confirmation">Alvo Temporário solicitado</string>
+    <string name="action_quick_wizard_confirmation">Pedido de Assistente Rápido</string>
+    <string name="action_treatment_confirmation">Pedido de Tratamento</string>
+    <string name="action_bolus_confirmation">Bólus solicitado</string>
+    <string name="action_wizard_confirmation">Cálculo Solicitado</string>
+    <string name="action_fill_confirmation">Preenchimento solicitado</string>
+    <string name="action_ecarb_confirmation">Hidratos solicitados</string>
+    <string name="action_profile_switch_confirmation">Troca de perfil solicitada</string>
     <string name="action_target" comment="In temp target menu, single target value">Alvo</string>
     <string name="action_low" comment="In temp target menu, lower value from range">Baixo</string>
     <string name="action_high" comment="In temp target menu, higher value from range">Alto</string>
@@ -97,7 +118,7 @@
     <string name="status_pump">Bomba</string>
     <string name="status_loop">Loop</string>
     <string name="status_profile_switch">Troca de Perfil</string>
-    <string name="status_tdd">TDI</string>
+    <string name="status_tdd">TID</string>
     <string name="activity_carb">Hidratos</string>
     <string name="activity_IOB">IA </string>
     <string name="activity_no_status">sem estado</string>
@@ -127,6 +148,7 @@
     <string name="pref_simplify_ui_sum">Mostrar apenas tempo e glicemia</string>
     <string name="pref_vibrate_hourly">Vibrar por hora</string>
     <string name="pref_show_weeknumber">Mostrar número da Semana</string>
+    <string name="custom_pref_show_seconds">Mostrar segundos</string>
     <string name="digitalstyle_pref_your_style">Seu estilo:</string>
     <string name="digitalstyle_style_none">sem estilo</string>
     <string name="digitalstyle_style_minimal">estilo minimalista</string>
@@ -143,10 +165,41 @@
     <string name="simple_ui_charging">Durante o carregamento</string>
     <string name="simple_ui_always_on">Modo Permanentemente Ligado</string>
     <string name="simple_ui_always_on_charging">Permanentemente ligado e carregando</string>
+    <string name="temp_target_eating_soon">Comer</string>
     <string name="temp_target_hypo">Hipo</string>
     <string name="temp_target_activity">Atividade</string>
     <string name="temp_target_manual">Manual</string>
     <string name="temp_target_cancel">Cancelar</string>
     <string name="tile_none">Nenhum</string>
+    <string name="tile_no_config">Nenhuma configuração disponível</string>
+    <string name="wear_control_not_enabled">Controlos do Wear desativados</string>
+    <string name="wear_control_no_data">Dados indisponíveis</string>
+    <string name="increment">aumentar</string>
+    <string name="decrement">diminuir</string>
+    <string name="first_char_high">H</string>
+    <string name="first_char_low">L</string>
+    <string name="abbreviation_average">média</string>
     <string name="no_iob_u">--U</string>
+    <string name="no_cob_g">--g</string>
+    <string name="no_tmp_basal_u_h">-.--U/h</string>
+    <string name="uploader_na">U: --%</string>
+    <string name="no_status">S: --</string>
+    <string name="time_stamp_na_min_ago">-- Min. atrás</string>
+    <string name="delta_na">--- mg/dl</string>
+    <string name="no_loop_status">Sem Estado de Loop</string>
+    <string name="cob_000g">000g</string>
+    <string name="svg_00_0" comment="use , or . only">00,0</string>
+    <string name="iob_0_00u">0,00U</string>
+    <string name="snooze_alert">Adiar Alerta AAPS</string>
+    <string name="sending_snooze">A enviar Snooze para AAPS</string>
+    <string name="short_hour">h</string>
+    <string name="week_short">s</string>
+    <string name="day_short">d</string>
+    <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
+    <string name="old">antigo</string>
+    <string name="old_warning">!antigo!</string>
+    <string name="error">!err!</string>
+    <string name="pref_heartRateSampling">Frequência cardíaca</string>
 </resources>

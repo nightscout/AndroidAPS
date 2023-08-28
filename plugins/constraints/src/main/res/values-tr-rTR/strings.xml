@@ -10,7 +10,7 @@
     <string name="old_version">eski sürüm</string>
     <string name="very_old_version">çok eski sürüm</string>
     <string name="application_expired">Uygulamanın süresi doldu</string>
-    <string name="new_version_warning">En az %1$d gündür yeni sürüm mevcut! %2$d gün sonra LGS\'ye (Düşük Glukoz gönderimine) dönülecek, %3$d gün sonra da döngü devre dışı bırakılacaktır</string>
+    <string name="new_version_warning">Yeni sürüm en az %1$d gündür kontrol edilmedi! %2$d gün sonra LGS\'ye geri dönüş, %3$d gün sonra döngü devre dışı bırakılacak. İnternet bağlantısını yeniden sağlayın!</string>
     <string name="running_invalid_version">Geçersiz bir sürüm çalıştırdığınızı tespit ettik. Döngü devre dışı!</string>
     <string name="versionavailable">Sürüm %1$s mevcut</string>
     <string name="version_expire">%1$s sürümünün süresi %2$s tarihinde sona eriyor</string>
@@ -48,6 +48,6 @@
     <string name="doyouwantresetstart">Görevleri sıfırlamak istiyor musunuz? Tüm yaptıklarınızı kaybedeceksiniz.</string>
     <string name="objectives_next_button">Sonraki</string>
     <string name="objectives_previous_button">Önceki</string>
-    <string name="objectives_button_unfinish">Temizleme tamamlandı</string>
-    <string name="objectives_button_unstart">Temizleme başladı</string>
+    <string name="objectives_button_unfinish">Bitmiş durumu sıfırla</string>
+    <string name="objectives_button_unstart">Başlatma durumunu sıfırla</string>
 </resources>

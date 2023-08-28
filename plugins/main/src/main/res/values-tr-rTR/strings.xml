@@ -104,11 +104,7 @@
     <string name="sms_profile_switch_created">Profil değiştirme yapıldı</string>
     <string name="sms_wrong_tbr_duration">GBO süresi %1$d dakikanın katı ve 0\'dan büyük olmalıdır.</string>
     <string name="a11y_otp_qr_code">Tek kullanımlık şifre kurulumu için QR Kodu</string>
-    <string name="xdrip_status_detailed_iob_title">Ayrıntılı AİNS göster</string>
-    <string name="xdrip_status_detailed_iob_summary">Saat arayüzü üzerinde AİNS\'i bolus ve bazal AİNS olarak ayırın</string>
     <string name="disabled_loop">Döngü devre dışı</string>
-    <string name="xdrip_status_show_bgi_title">BGI (Kan Şekeri İndeksleri) göster</string>
-    <string name="xdrip_status_show_bgi_summary">BGI\'yı durum satırına ekle</string>
     <!-- Food-->
     <string name="food_short">Yiyecek</string>
     <string name="description_food">Nightscout\'ta tanımlanan gıda ön ayarlarını gösterir</string>
@@ -243,6 +239,7 @@
     <string name="short_tabtitles">Kısa sekme başlıkları</string>
     <string name="overview_show_notes_field_in_dialogs_title">Tedavi diyaloglarında not alanını göster</string>
     <string name="deliverpartofboluswizard">Bolus sihirbazı hesaplamayı gerçekleştirir ancak hesaplanan insülinin yalnızca bu kısmı iletilir. SMB algoritması ile kullanışlıdır.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">KŞ şu tarihten daha eskiyse tam bolus (%100) verin</string>
     <string name="enable_bolus_advisor">Bolus danışmanını etkinleştir</string>
     <string name="enable_bolus_advisor_summary">Yüksek glisemi sırasında sihirbaz sonucu yerine daha sonra yemeye başlamak için hatırlatıcı kullanın (\"pre-bolus\")</string>
     <string name="enablesuperbolus">Sihirbazda süperbolusu etkinleştir</string>
@@ -254,6 +251,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Tahminler</string>
     <string name="overview_show_treatments">Tedaviler</string>
+    <string name="overview_show_heartRate">Nabız</string>
     <string name="overview_show_deviation_slope">Sapma eğimi</string>
     <string name="overview_show_activity">Aktivite</string>
     <string name="overview_show_bgi">Kan Şekeri Etkisi</string>
@@ -271,6 +269,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">EĞİMSAPMA</string>
     <string name="treatments_shortname">TEDAVİ</string>
+    <string name="heartRate_shortname">Nabız</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Grafik ölçeği</string>
     <string name="graph_menu_divider_header">Grafik</string>
@@ -308,14 +307,23 @@
     <string name="wear_wizard_settings_summary">Sihirbaz sonucuna dahil edilen hesaplamalar:</string>
     <string name="wear_display_settings">Görüntü Ayarları</string>
     <string name="wear_general_settings">Genel Ayarlar</string>
-    <string name="wear_detailed_delta_title">Ayrıntılı delta göster</string>
-    <string name="wear_detailed_delta_summary">Deltayı bir ondalık basamak daha göster</string>
     <string name="wear_notifysmb_title">SMB\'yi bildir</string>
     <string name="wear_notifysmb_summary">Saatte SMB\'yi standart bir bolus gibi göster.</string>
     <string name="wear_predictions_summary">Saat arayüzü üzerindeki tahminleri göster.</string>
     <string name="wear_predictions_title">Tahminler</string>
+    <string name="wear_custom_watchface_settings">Özel Saat arayüzü Ayarları</string>
+    <string name="wear_custom_watchface_authorization_title">Özel Saat arayüzü Yetkilendirmesi</string>
+    <string name="wear_custom_watchface_authorization_summary">Bazı saat ekranı ayarlarını saatarayüzü tasarımına uyacak şekilde değiştirmek ve kilitlemek için, yüklenen özel saat arayüzüne yetki verin</string>
+    <string name="wear_custom_watchface">Özel Saat arayüzü: %1$s</string>
+    <string name="wear_load_watchface">Saat arayüzü yükle</string>
+    <string name="wear_infos_watchface">Saat arayüzü bilgisi</string>
+    <string name="wear_export_watchface">Şablonu Dışarı Aktar</string>
+    <string name="wear_new_custom_watchface_exported">Saat arayüzü şablonu dışa aktarıldı</string>
     <string name="resend_all_data">Tüm verileri yeniden gönderin</string>
     <string name="open_settings_on_wear">Wear\'de ayarları aç</string>
+    <string name="cwf_infos_pref_locked">Saat arayüzü tarafından kilitlenen tercihlerin listesi</string>
+    <string name="cwf_infos_pref_required">Saat arayüzü için gerekli tercihlerin listesi</string>
+    <string name="cwf_infos_view_title">Saat arayüzüne dahil edilen alanların listesi</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Döngü\'ün ne yaptığını kısa bir genel bakışla devam eden bir bildirimi gösterir</string>
     <string name="old_data">ESKİ VERİ</string>
@@ -324,7 +332,7 @@
     <string name="grams_short">gr</string>
     <string name="hour_short">sa</string>
     <string name="no_active_profile">Etkin profil ayarlanmadı!</string>
-    <string name="profile_message">Profil:\n\nZaman Kayması: %1$\nYüzde: %2$d%%\"</string>
+    <string name="profile_message">Profil:\n\nZaman Kayması: %1$d\nYüzde: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fÜ %1$.0f%%</string>
     <string name="no_profile">Profil yüklenmedi</string>
     <string name="aps_only">Sadece APS modunda uygulayın!</string>

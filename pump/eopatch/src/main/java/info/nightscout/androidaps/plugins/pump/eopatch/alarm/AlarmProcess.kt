@@ -63,16 +63,16 @@ interface IAlarmProcess {
 class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmProcess {
     override fun doAction(context: Context, code: AlarmCode): Single<Int> {
         return when (code) {
-            B001 -> resumeBasalAction(context)
+            B001                   -> resumeBasalAction(context)
             A002, A003, A004, A005, A018, A019,
             A020, A022, A023, A034, A041, A042,
             A043, A044, A106, A107, A108, A116,
-            A117, A118 -> patchDeactivationAction(context)
-            A007 -> inappropriateTemperatureAction(context)
-            A016 -> needleInsertionErrorAction(context)
-            B000 -> Single.just(IAlarmProcess.ALARM_HANDLED)
-            B003, B005, B006, B018 ->  stopAeBeepAction(context, code)
-            B012 -> Single.just(IAlarmProcess.ALARM_HANDLED)
+            A117, A118             -> patchDeactivationAction(context)
+            A007                   -> inappropriateTemperatureAction(context)
+            A016                   -> needleInsertionErrorAction(context)
+            B000                   -> Single.just(IAlarmProcess.ALARM_HANDLED)
+            B003, B005, B006, B018 -> stopAeBeepAction(code)
+            B012                   -> Single.just(IAlarmProcess.ALARM_HANDLED)
         }
     }
 
@@ -146,20 +146,20 @@ class AlarmProcess(val patchManager: IPatchManager, val rxBus: RxBus) : IAlarmPr
             patchManager.temperature
                 .map(TemperatureResponse::getTemperature)
                 .map { temp -> (temp >= EopatchActivity.NORMAL_TEMPERATURE_MIN && temp <= EopatchActivity.NORMAL_TEMPERATURE_MAX) }
-                .filter{ok -> ok}
+                .filter { ok -> ok }
                 .flatMap { patchManager.resumeBasal().map { it.isSuccess.takeOne(IAlarmProcess.ALARM_HANDLED, IAlarmProcess.ALARM_UNHANDLED) }.toMaybe() }
                 .defaultIfEmpty(IAlarmProcess.ALARM_UNHANDLED)
         }
     }
 
-    private fun stopAeBeepAction(context: Context, alarm: AlarmCode): Single<Int> {
-        if (patchManager.patchConnectionState.isConnected) {
-            return patchManager.stopAeBeep(alarm.aeCode)
+    private fun stopAeBeepAction(alarm: AlarmCode): Single<Int> {
+        return if (patchManager.patchConnectionState.isConnected) {
+            patchManager.stopAeBeep(alarm.aeCode)
                 .map { obj: PatchBooleanResponse -> obj.isSuccess }
                 .onErrorReturn { false }
                 .flatMap { Single.just(it.takeOne(IAlarmProcess.ALARM_HANDLED, IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP)) }
-        }else{
-            return Single.just(IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP)
+        } else {
+            Single.just(IAlarmProcess.ALARM_HANDLED_BUT_NEED_STOP_BEEP)
         }
     }
 }

@@ -92,6 +92,8 @@
     <string name="lastboluscompared">Hora del último bolo: hace %1$s %2$s min</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Ritmo cardíaco</string>
+    <string name="triggerHeartRateDesc">RC %1$s %2$.0f</string>
     <string name="iob_u">IOB (Insulina a Bordo) [U]:</string>
     <string name="distance_short">Dist. [m]:</string>
     <string name="recurringTime">Hora de Repetición</string>

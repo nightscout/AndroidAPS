@@ -42,17 +42,13 @@ import info.nightscout.shared.interfaces.ResourceHelper;
 import info.nightscout.shared.sharedPreferences.SP;
 import info.nightscout.shared.utils.DateUtil;
 import info.nightscout.shared.utils.T;
-import io.reactivex.rxjava3.disposables.CompositeDisposable;
 
 @Singleton
 @OpenForTesting
 public class DanaRv2Plugin extends AbstractDanaRPlugin {
-    private final CompositeDisposable disposable = new CompositeDisposable();
-
     private final AAPSLogger aapsLogger;
     private final Context context;
     private final ResourceHelper rh;
-    private final Constraints constraintChecker;
     private final DetailedBolusInfoStorage detailedBolusInfoStorage;
     private final TemporaryBasalStorage temporaryBasalStorage;
     private final FabricPrivacy fabricPrivacy;
@@ -233,7 +229,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         final boolean doLowTemp = absoluteRate < getBaseBasalRate() || absoluteRate < 0.10d;
         final boolean doHighTemp = absoluteRate > getBaseBasalRate();
 
-        int percentRate = Double.valueOf(absoluteRate / getBaseBasalRate() * 100).intValue();
+        int percentRate = (int) (absoluteRate / getBaseBasalRate() * 100);
         // Any basal less than 0.10u/h will be dumped once per hour, not every 4 minutes. So if it's less than .10u/h, set a zero temp.
         if (absoluteRate < 0.10d) percentRate = 0;
         if (percentRate < 100) percentRate = (int) Round.INSTANCE.ceilTo((double) percentRate, 10d);
@@ -396,7 +392,7 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
         if (danaPump.isExtendedInProgress()) {
             sExecutionService.extendedBolusStop();
             result.enacted(true).success(!danaPump.isExtendedInProgress()).isTempCancel(true);
-        } else  {
+        } else {
             result.success(true).enacted(false).comment(info.nightscout.core.ui.R.string.ok);
             getAapsLogger().debug(LTag.PUMP, "cancelExtendedBolus: OK");
         }

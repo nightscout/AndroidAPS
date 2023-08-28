@@ -614,21 +614,21 @@ class BigLogInquireResponsePacket(
                         var recordMap: MutableMap<String, Double> = mutableMapOf("dummy" to 0.0)
 
                         if (dailyMaxValInfo.containsKey(recordDateStr)) {
-                            recordMap = dailyMaxValInfo[recordDateStr]!!
+                            recordMap = dailyMaxValInfo.getValue(recordDateStr)
                         } else {
                             recordMap["bolus"] = 0.0
                             recordMap["basal"] = 0.0
                             dailyMaxValInfo[recordDateStr] = recordMap
                         }
 
-                        if (diaconnG8HistoryRecord.dailyBolus > recordMap["bolus"]!!) {
+                        if (diaconnG8HistoryRecord.dailyBolus > recordMap.getValue("bolus")) {
                             recordMap["bolus"] = diaconnG8HistoryRecord.dailyBolus
                         } else {
-                            diaconnG8HistoryRecord.dailyBolus = recordMap["bolus"]!!
+                            diaconnG8HistoryRecord.dailyBolus = recordMap.getValue("bolus")
                         }
 
-                        if (recordMap["basal"]!! > 0.0) {
-                            diaconnG8HistoryRecord.dailyBasal = recordMap["basal"]!!
+                        if (recordMap.getValue("basal") > 0.0) {
+                            diaconnG8HistoryRecord.dailyBasal = recordMap.getValue("basal")
                         }
                         diaconnG8HistoryRecord.lognum = logNum
                         diaconnG8HistoryRecord.wrappingCount = wrappingCount
@@ -663,21 +663,21 @@ class BigLogInquireResponsePacket(
                         var recordMap: MutableMap<String, Double> = mutableMapOf("dummy" to 0.0)
 
                         if (dailyMaxValInfo.containsKey(recordDateStr)) {
-                            recordMap = dailyMaxValInfo[recordDateStr]!!
+                            recordMap = dailyMaxValInfo.getValue(recordDateStr)
                         } else {
                             recordMap["bolus"] = 0.0
                             recordMap["basal"] = 0.0
                             dailyMaxValInfo[recordDateStr] = recordMap
                         }
 
-                        if (diaconnG8HistoryRecord.dailyBasal > recordMap["basal"]!!) {
+                        if (diaconnG8HistoryRecord.dailyBasal > recordMap.getValue("basal")) {
                             recordMap["basal"] = diaconnG8HistoryRecord.dailyBasal
                         } else {
-                            diaconnG8HistoryRecord.dailyBasal = recordMap["basal"]!!
+                            diaconnG8HistoryRecord.dailyBasal = recordMap.getValue("basal")
                         }
 
-                        if (recordMap["bolus"]!! > 0.0) {
-                            diaconnG8HistoryRecord.dailyBolus = recordMap["bolus"]!!
+                        if (recordMap.getValue("bolus") > 0.0) {
+                            diaconnG8HistoryRecord.dailyBolus = recordMap.getValue("bolus")
                         }
                         diaconnG8HistoryRecord.lognum = logNum
                         diaconnG8HistoryRecord.wrappingCount = wrappingCount

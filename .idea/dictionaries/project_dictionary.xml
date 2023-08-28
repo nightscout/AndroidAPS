@@ -2,6 +2,7 @@
   <dictionary name="project-dictionary">
     <words>
       <w>aaps</w>
+      <w>aapsclient</w>
       <w>abcdef</w>
       <w>accu</w>
       <w>acked</w>
@@ -18,11 +19,13 @@
       <w>bage</w>
       <w>basaliob</w>
       <w>basals</w>
+      <w>batt</w>
       <w>bgcheck</w>
       <w>bgsource</w>
       <w>boluscalc</w>
       <w>bolusing</w>
       <w>boluswizard</w>
+      <w>boyda</w>
       <w>carb</w>
       <w>carbratio</w>
       <w>carbs</w>
@@ -67,6 +70,7 @@
       <w>humalog</w>
       <w>iage</w>
       <w>infinivocgm</w>
+      <w>instantiator</w>
       <w>insulet</w>
       <w>intelligo</w>
       <w>iobtotal</w>
@@ -78,6 +82,7 @@
       <w>lyumjev</w>
       <w>mdtp</w>
       <w>medtronic</w>
+      <w>medtrum</w>
       <w>mgdl</w>
       <w>miao</w>
       <w>misformatted</w>
@@ -99,6 +104,7 @@
       <w>oref</w>
       <w>otpauth</w>
       <w>passcode</w>
+      <w>pbage</w>
       <w>pdus</w>
       <w>philoul</w>
       <w>poctech</w>
@@ -108,6 +114,7 @@
       <w>pumpcontrol</w>
       <w>pumpdrivers</w>
       <w>quickwizard</w>
+      <w>rawbg</w>
       <w>readstatus</w>
       <w>realduration</w>
       <w>refresheventsfromnightscout</w>

@@ -21,22 +21,23 @@ interface DataSyncSelector {
 
         val value: Any
         val id: Long
+        var confirmed: Boolean
     }
 
-    data class PairTemporaryTarget(override val value: TemporaryTarget, override val id: Long) : DataPair
-    data class PairGlucoseValue(override val value: GlucoseValue, override val id: Long) : DataPair
-    data class PairTherapyEvent(override val value: TherapyEvent, override val id: Long) : DataPair
-    data class PairFood(override val value: Food, override val id: Long) : DataPair
-    data class PairBolus(override val value: Bolus, override val id: Long) : DataPair
-    data class PairCarbs(override val value: Carbs, override val id: Long) : DataPair
-    data class PairBolusCalculatorResult(override val value: BolusCalculatorResult, override val id: Long) : DataPair
-    data class PairTemporaryBasal(override val value: TemporaryBasal, override val id: Long) : DataPair
-    data class PairExtendedBolus(override val value: ExtendedBolus, override val id: Long) : DataPair
-    data class PairProfileSwitch(override val value: ProfileSwitch, override val id: Long) : DataPair
-    data class PairEffectiveProfileSwitch(override val value: EffectiveProfileSwitch, override val id: Long) : DataPair
-    data class PairOfflineEvent(override val value: OfflineEvent, override val id: Long) : DataPair
-    data class PairProfileStore(override val value: JSONObject, override val id: Long) : DataPair
-    data class PairDeviceStatus(override val value: DeviceStatus, override val id: Long) : DataPair
+    data class PairTemporaryTarget(override val value: TemporaryTarget, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairGlucoseValue(override val value: GlucoseValue, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairTherapyEvent(override val value: TherapyEvent, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairFood(override val value: Food, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairBolus(override val value: Bolus, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairCarbs(override val value: Carbs, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairBolusCalculatorResult(override val value: BolusCalculatorResult, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairTemporaryBasal(override val value: TemporaryBasal, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairExtendedBolus(override val value: ExtendedBolus, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairProfileSwitch(override val value: ProfileSwitch, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairEffectiveProfileSwitch(override val value: EffectiveProfileSwitch, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairOfflineEvent(override val value: OfflineEvent, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairProfileStore(override val value: JSONObject, override val id: Long, override var confirmed: Boolean = false) : DataPair
+    data class PairDeviceStatus(override val value: DeviceStatus, override val id: Long, override var confirmed: Boolean = false) : DataPair
 
     fun queueSize(): Long
 

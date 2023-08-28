@@ -11,7 +11,6 @@
     <string name="omnipod_dash_history_type">类型：</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f U, 碳水=%2$.1f 克</string>
-    <string name="omnipod_dash_history_tbr_value">速率： %1$.2f U，持续时间： %2$d 分钟</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">蓝牙状态</string>
     <string name="omnipod_dash_overview_bluetooth_address">蓝牙地址</string>
@@ -31,7 +30,6 @@
     <string name="omnipod_dash_command_not_sent">命令没有发送</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Pod 没有接收命令</string>
     <string name="omnipod_dash_unknown">命令的未知状态</string>
-    <string name="omnipod_common_history_tbr_value">速率： %1$.2f U，持续时间： %2$d 分钟</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
     <string name="omnipod_common_alert_delivery_suspended">胰岛素输注已暂停</string>
     <string name="omnipod_dash_connection_lost">最后一次连接pod</string>

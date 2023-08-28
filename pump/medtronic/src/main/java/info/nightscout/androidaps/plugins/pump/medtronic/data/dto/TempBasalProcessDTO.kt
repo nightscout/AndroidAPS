@@ -73,11 +73,11 @@ class TempBasalProcessDTO constructor(var itemOne: PumpHistoryEntry,
     fun toTreatmentString(): String {
         val stringBuilder = StringBuilder()
 
-        stringBuilder.append(itemOne.DT)
+        stringBuilder.append(itemOne.dt)
 
         if (itemTwo!=null) {
             stringBuilder.append(" - ")
-            stringBuilder.append(itemTwo?.DT)
+            stringBuilder.append(itemTwo?.dt)
         }
 
         stringBuilder.append("  " + durationAsSeconds + " s (" + durationAsSeconds/60 + ")")

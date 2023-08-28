@@ -6,6 +6,7 @@ import info.nightscout.shared.utils.DateUtil
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
+import java.security.SecureRandom
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -195,6 +196,6 @@ class SntpClient @Inject constructor(
        buffer[offset++] = (fraction shr 16).toByte()
        buffer[offset++] = (fraction shr 8).toByte()
        // low order bits should be random data
-       buffer[offset] = (Math.random() * 255.0).toInt().toByte()
+       buffer[offset] = SecureRandom().nextInt(256).toByte()
    }
 }

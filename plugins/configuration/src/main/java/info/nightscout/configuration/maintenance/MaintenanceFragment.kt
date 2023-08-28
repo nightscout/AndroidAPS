@@ -32,6 +32,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.extensions.runOnUiThread
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.core.Completable
@@ -103,7 +104,10 @@ class MaintenanceFragment : DaggerFragment() {
                             .subscribeOn(aapsSchedulers.io)
                             .subscribeBy(
                                 onError = { aapsLogger.error("Error clearing databases", it) },
-                                onComplete = { rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.utils.R.string.key_units))) }
+                                onComplete = {
+                                    rxBus.send(EventPreferenceChange(rh.gs(info.nightscout.core.utils.R.string.key_units)))
+                                    runOnUiThread { activity.recreate() }
+                                }
                             )
                     uel.log(Action.RESET_DATABASES, Sources.Maintenance)
                 })

@@ -150,6 +150,8 @@ class BolusProgressDialog : DaggerDialogFragment() {
             BolusProgressData.bolusEnded = true
             aapsLogger.error("Unhandled exception", e)
         }
+        // Reset stop button
+        BolusProgressData.stopPressed = false
         helpActivity?.finish()
     }
 

@@ -17,7 +17,10 @@ import info.nightscout.interfaces.maintenance.PrefsMetadataKey
 import info.nightscout.interfaces.maintenance.PrefsStatus
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.versionChecker.VersionCheckerUtils
+import info.nightscout.rx.weardata.CwfData
+import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.sharedPreferences.SP
 import org.joda.time.DateTime
 import org.joda.time.Days
 import org.joda.time.Hours
@@ -36,6 +39,7 @@ class PrefFileListProviderImpl @Inject constructor(
     private val encryptedPrefsFormat: EncryptedPrefsFormat,
     private val storage: Storage,
     private val versionCheckerUtils: VersionCheckerUtils,
+    private val sp: SP,
     context: Context
 ) : PrefFileListProvider {
     private val path = File(Environment.getExternalStorageDirectory().toString())
@@ -88,6 +92,20 @@ class PrefFileListProviderImpl @Inject constructor(
         return prefFiles
     }
 
+    override fun listCustomWatchfaceFiles(): MutableList<CwfData> {
+        val customWatchfaceFiles = mutableListOf<CwfData>()
+        val customAwtchfaceAuthorization = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+        // searching dedicated dir, only for new CWF format
+        exportsPath.walk().filter { it.isFile && it.name.endsWith(ZipWatchfaceFormat.CWF_EXTENTION) }.forEach { file ->
+            // Here loadCustomWatchface will unzip, check and load CustomWatchface
+            ZipWatchfaceFormat.loadCustomWatchface(file, customAwtchfaceAuthorization)?.also { customWatchface ->
+                customWatchfaceFiles.add(customWatchface)
+            }
+        }
+
+        return customWatchfaceFiles
+    }
+
     private fun metadataFor(loadMetadata: Boolean, contents: String): PrefMetadataMap {
         if (!loadMetadata) {
             return mapOf()
@@ -127,6 +145,10 @@ class PrefFileListProviderImpl @Inject constructor(
     override fun newExportCsvFile(): File {
         val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
         return File(exportsPath, timeLocal + "_UserEntry.csv")
+    }
+    override fun newCwfFile(filename: String): File {
+        val timeLocal = LocalDateTime.now().toString(DateTimeFormat.forPattern("yyyy-MM-dd'_'HHmmss"))
+        return File(exportsPath, "${filename}_$timeLocal${ZipWatchfaceFormat.CWF_EXTENTION}")
     }
 
     // check metadata for known issues, change their status and add info with explanations

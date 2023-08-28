@@ -6,12 +6,12 @@
     <!-- Omnipod Dash - History -->
     <string name="omnipod_dash_history_title">היסטוריית הפוד</string>
     <string name="omnipod_dash_history_item_description">תיאור</string>
+    <string name="omnipod_dash_history_item_amount">כמות</string>
     <string name="omnipod_dash_history_item_source">מקור</string>
     <string name="omnipod_dash_history_item_date">תאריך</string>
     <string name="omnipod_dash_history_type">סוג:</string>
     <string name="omnipod_dash_history_bolus_value">%1$.2f יח\'</string>
     <string name="omnipod_dash_history_bolus_value_with_carbs">%1$.2f יח\', פחמ\'= %2$.1f גר\'</string>
-    <string name="omnipod_dash_history_tbr_value">מינון: %1$.2f יח\', משך: %2$d דק\'</string>
     <!-- Omnipod Dash - Overview -->
     <string name="omnipod_dash_overview_bluetooth_status">מצב בלוטות\'</string>
     <string name="omnipod_dash_overview_bluetooth_address">כתובת בלוטות\'</string>
@@ -31,9 +31,10 @@
     <string name="omnipod_dash_command_not_sent">הפקודה לא נשלחה</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">הפקודה לא התקבלה ע\"י הפוד</string>
     <string name="omnipod_dash_unknown">מצב הפקודה לא ידוע</string>
-    <string name="omnipod_common_history_tbr_value">מינון: %1$.2f יח\', משך: %2$d דק\'</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f יח\'\\ש\', %2$d דק\'</string>
     <string name="omnipod_common_history_bolus_value">%1$.2f יח\'</string>
     <string name="omnipod_common_alert_delivery_suspended">הזרקת האינסולין מופסקת</string>
+    <string name="omnipod_common_history_total_delivered">סה\"כ הוזרקו: %1$.2f יח\'</string>
     <string name="omnipod_dash_connection_lost">אבד החיבור לפוד</string>
     <string name="omnipod_dash_bolus_already_in_progress">בולוס אחר מוזרק כרגע</string>
     <string name="omnipod_dash_not_enough_insulin">אין מספיק אינסולין במכל</string>
@@ -46,6 +47,7 @@
     <string name="failed_to_set_the_new_basal_profile">הגדרת הבאזלי החדש נכשלה. ההזרקה הופסקה</string>
     <string name="setting_basal_profile_might_have_failed">ייתכן שהגדרת הפרופיל הבזאלי נכשלה. הזרקת האינסולין עלולה להעצר! נא לרענן ידנית את סטטוס הפוד בלשונית Omnipod ולחדש את ההזרקה במידת הצורך.</string>
     <string name="bolus_delivery_status_uncertain">מצב הזרקת בולוס אינו וודאי. רענן את סטטוס הפוד כדי לוודא זאת.</string>
+    <string name="temp_basal_out_of_sync">סטטוס הבזאלי הזמני אינו כצפוי! אם בזאלי זמני פעל עד עכשיו, הוא בופסק. נא לבדוק את הכמות שהוזרקה ואת היסטוריית הפוד</string>
     <string name="checking_delivery_status">בודק סטטוס הזרקה</string>
     <string name="setting_temp_basal_might_have_basal_failed">הגדרת בזאלי זמני כנראה נכשלה. אם בזאלי זמני הוחל קודם לכן, הוא בוטל. נא לרענן באופן ידני את סטטוס הפוד מהלשונית Omnipod.</string>
     <string name="cancel_temp_basal_result_is_uncertain">ביטול הבאזלי הזמני אינו וודאי</string>

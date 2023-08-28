@@ -36,6 +36,8 @@ open class Persistence @Inject constructor(
         const val KEY_STALE_REPORTED = "staleReported"
         const val KEY_DATA_UPDATED = "data_updated_at"
 
+        const val CUSTOM_WATCHFACE = "custom_watchface"
+        const val CUSTOM_DEFAULT_WATCHFACE = "custom_default_watchface"
     }
 
     fun getString(key: String, defaultValue: String): String {
@@ -130,6 +132,23 @@ open class Persistence @Inject constructor(
         return null
     }
 
+    fun readCustomWatchface(isDefault: Boolean = false): EventData.ActionSetCustomWatchface? {
+        try {
+            var s = sp.getStringOrNull(if (isDefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, null)
+            if (s != null) {
+                return deserialize(s) as EventData.ActionSetCustomWatchface
+            } else {
+                s = sp.getStringOrNull(CUSTOM_DEFAULT_WATCHFACE, null)
+                if (s != null) {
+                    return deserialize(s) as EventData.ActionSetCustomWatchface
+                }
+            }
+        } catch (exception: Exception) {
+            aapsLogger.error(LTag.WEAR, exception.toString())
+        }
+        return null
+    }
+
     fun store(singleBg: SingleBg) {
         putString(BG_DATA_PERSISTENCE_KEY, singleBg.serialize())
         aapsLogger.debug(LTag.WEAR, "Stored BG data: $singleBg")
@@ -149,6 +168,16 @@ open class Persistence @Inject constructor(
     fun store(status: EventData.Status) {
         putString(STATUS_PERSISTENCE_KEY, status.serialize())
         aapsLogger.debug(LTag.WEAR, "Stored Status data: $status")
+    }
+
+    fun store(customWatchface: EventData.ActionSetCustomWatchface, isdefault: Boolean = false) {
+        putString(if (isdefault) CUSTOM_DEFAULT_WATCHFACE else CUSTOM_WATCHFACE, customWatchface.serialize())
+        aapsLogger.debug(LTag.WEAR, "Stored Custom Watchface ${customWatchface.customWatchfaceData} ${isdefault}: $customWatchface")
+    }
+
+    fun setDefaultWatchface() {
+        readCustomWatchface(true)?.let {store(it)}
+        aapsLogger.debug(LTag.WEAR, "Custom Watchface reset to default")
     }
 
     fun joinSet(set: Set<String>, separator: String?): String {

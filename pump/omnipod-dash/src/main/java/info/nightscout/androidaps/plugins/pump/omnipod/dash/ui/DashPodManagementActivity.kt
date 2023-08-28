@@ -48,6 +48,10 @@ class DashPodManagementActivity : TranslatedDaggerAppCompatActivity() {
         binding = OmnipodDashPodManagementBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        title = rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.omnipod_common_pod_management_title)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         binding.buttonActivatePod.setOnClickListener {
             val type: PodActivationWizardActivity.Type =
                 if (podStateManager.activationProgress.isAtLeast(ActivationProgress.PRIME_COMPLETED)) {

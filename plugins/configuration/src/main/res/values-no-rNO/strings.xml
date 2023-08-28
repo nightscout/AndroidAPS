@@ -6,6 +6,7 @@
     <string name="previous_button">Forrige</string>
     <string name="nav_setupwizard">Installasjonsguide</string>
     <string name="setupwizard_finish">Avslutt</string>
+    <string name="welcome">Velkommen</string>
     <string name="welcometosetupwizard">Velkommen til oppsettveiviseren. Den vil lede deg gjennom installasjonsprosessen\n</string>
     <string name="end_user_license_agreement">Sluttbrukeravtale</string>
     <string name="end_user_license_agreement_text">MÅ IKKE BENYTTES TIL Å TA MEDISINSKE BESLUTNINGER. DET FINNES INGEN GARANTI FOR PROGRAMMET I DEN UTSTREKNING SOM TILLATES AV GJELDENDE LOV. SÅFREMT IKKE ANNET ER ANGITT SKRIFTLIG LEVERES PROGRAMMET HELT UTEN GARANTIER I NOEN SOM HELST FORM, VERKEN UTTRYKT ELLER INNEFORSTÅTT, INKLUSIV MEN IKKE BEGRENSET TIL SALGBARHET ELLER EGNETHET TIL VISSE FORMÅL. ALL RISIKO KNYTTET TIL KVALITET AV PROGRAMMETS FUNKSJONALITET ER HOS DEG SOM BRUKER. OM PROGRAMMET VISER SEG Å VÆRE DEFEKT, ER DET BRUKEREN SOM MÅ TA ALT ANSVAR FOR KOSTNADER KNYTTET TIL ALL SERVICE, REPERASJON ELLER RETTELSE.</string>
@@ -151,6 +152,8 @@
     <string name="prefdecrypt_issue_wrong_pass">Dekrypteringsfeil, det oppgitte passordet er ugyldig eller filen har blitt endret! Det kan hende filen ble eksportert med et annet passord.</string>
     <string name="prefdecrypt_issue_wrong_format">Mangler krypteringsinformasjon, formatet på innstillinger er ugyldig!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ugyldig eller ikke spesifisert krypteringsalgoritme!</string>
+    <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Velg tilpasset klokkebakgrunn</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Vennligst start mobilen på nytt eller restart AAPS fra Innstillinger \nellers vil ikke AAPS ha aktivert loggføring (viktig for å spore og kontrollere at algoritmene fungerer riktig)!</string>
 </resources>

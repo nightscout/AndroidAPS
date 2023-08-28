@@ -21,4 +21,5 @@
     <string name="handshaking">Handskudding</string>
     <string name="connected">Gekoppel</string>
     <string name="disconnecting">Ontkoppel</string>
+    <!-- Custom Watchface -->
 </resources>

@@ -57,6 +57,10 @@ class DiaconnG8BLEScanActivity : TranslatedDaggerAppCompatActivity() {
         setContentView(binding.root)
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
 
+        title = getString(R.string.diaconn_pairing)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setDisplayShowHomeEnabled(true)
+
         blePreCheck.prerequisitesCheck(this)
 
         listAdapter = ListAdapter()

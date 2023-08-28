@@ -123,7 +123,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
                 nsClientPlugin?.listLog?.let {
                     synchronized(it) {
                         it.clear()
-                        _binding?.recyclerview?.swapAdapter(RecyclerViewAdapter(it), true)
+                        updateLog()
                     }
                 }
                 true
@@ -211,6 +211,7 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
             .subscribe({ updateStatus() }, fabricPrivacy::logException)
         updateStatus()
         updateQueue()
+        updateLog()
     }
 
     @Synchronized
@@ -231,6 +232,9 @@ class NSClientFragment : DaggerFragment(), MenuProvider, PluginFragment {
         binding.status.text = nsClientPlugin?.status
     }
 
+    private fun updateLog() {
+        _binding?.recyclerview?.swapAdapter(RecyclerViewAdapter(nsClientPlugin?.listLog ?: arrayListOf()), true)
+    }
     private inner class RecyclerViewAdapter(private var logList: List<EventNSClientNewLog>) : RecyclerView.Adapter<RecyclerViewAdapter.NsClientLogViewHolder>() {
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): NsClientLogViewHolder =

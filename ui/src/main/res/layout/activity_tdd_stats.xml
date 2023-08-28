@@ -18,14 +18,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:background="@drawable/pillborder"
-                android:gravity="center_horizontal"
-                android:text="@string/tdd" />
-
             <TableLayout
                 android:id="@+id/main_table"
                 android:layout_width="match_parent"

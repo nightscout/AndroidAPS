@@ -18,7 +18,7 @@ import android.os.SystemClock
 import androidx.core.app.ActivityCompat
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.ui.toast.ToastUtils
-import info.nightscout.core.utils.notify
+import info.nightscout.core.utils.notifyAll
 import info.nightscout.core.utils.waitMillis
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.diaconn.DiaconnG8Pump
@@ -406,7 +406,7 @@ class BLECommonService @Inject internal constructor(
             message!!.setReceived()
             synchronized(message!!) {
                 // notify to sendMessage
-                message!!.notify()
+                message!!.notifyAll()
             }
         } else aapsLogger.error("Unknown message received " + DiaconnG8Packet.toHex(data))
     }

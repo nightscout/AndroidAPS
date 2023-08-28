@@ -10,7 +10,6 @@
     <string name="old_version">versão antiga</string>
     <string name="very_old_version">versão muito antiga</string>
     <string name="application_expired">Aplicativo expirado</string>
-    <string name="new_version_warning">Nova versão para pelo menos %1$d dias disponíveis! Retorno a LGS após %2$d dias, o loop será desativado após %3$d dias</string>
     <string name="running_invalid_version">Detectamos que você está executando uma versão inválida. \"Loop\" desativado!</string>
     <string name="versionavailable">Versão %1$s disponível</string>
     <string name="version_expire">A versão %1$s expira em %2$s</string>
@@ -48,6 +47,4 @@
     <string name="doyouwantresetstart">Deseja reiniciar o objetivo? Pode perder seu progresso.</string>
     <string name="objectives_next_button">Próxima</string>
     <string name="objectives_previous_button">Anterior</string>
-    <string name="objectives_button_unfinish">Limpeza terminado</string>
-    <string name="objectives_button_unstart">Limpeza iniciado</string>
 </resources>

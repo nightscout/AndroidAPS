@@ -12,7 +12,6 @@ import info.nightscout.interfaces.Config
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import java.security.SecureRandom
-import java.util.Random
 
 class SessionEstablisher(
     private val aapsLogger: AAPSLogger,
@@ -26,7 +25,7 @@ class SessionEstablisher(
 
     private val controllerIV = ByteArray(IV_SIZE)
     private var nodeIV = ByteArray(IV_SIZE)
-    private val identifier = Random().nextInt().toByte()
+    private val identifier = SecureRandom().nextInt().toByte()
     private val milenage = Milenage(aapsLogger, config, ltk, eapSqn)
 
     init {
@@ -147,7 +146,7 @@ class SessionEstablisher(
     }
 
     private fun isResynchronization(eapMsg: EapMessage): EapSqn? {
-        if (eapMsg.subType != EapMessage.SUBTYPE_SYNCRONIZATION_FAILURE ||
+        if (eapMsg.subType != EapMessage.SUBTYPE_SYNCHRONIZATION_FAILURE ||
             eapMsg.attributes.size != 1 ||
             eapMsg.attributes[0] !is EapAkaAttributeAuts
         )

@@ -161,7 +161,7 @@ class AapsV2Watchface : BaseWatchFace() {
     }
 
     private fun setTextSizes() {
-        if (status.detailedIob) {
+        if (detailedIob) {
             binding.iob1.textSize = 14f
             binding.iob2.textSize = 10f
         } else {

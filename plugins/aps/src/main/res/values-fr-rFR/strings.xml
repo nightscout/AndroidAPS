@@ -70,9 +70,9 @@
     <string name="enable_smb_with_temp_target_summary">Activer les SMB lorsqu\'il y a une cible temporaire active (repas imminent, exercise)</string>
     <string name="enable_smb_with_high_temp_target">Activer les SMB avec cibles temp hautes</string>
     <string name="enable_smb_with_high_temp_target_summary">Activer les SMB quand il y a une cible temp haute active (exercise, au dessus de 100 mg/dl ou 5.5 mmol/l)</string>
-    <string name="smb_max_minutes_summary">Max minutes de basal pour limiter le SMB</string>
+    <string name="smb_max_minutes_summary">Max minutes de basal comme limite des SMB</string>
     <string name="uam_smb_max_minutes">SMB RNS minutes max</string>
-    <string name="uam_smb_max_minutes_summary">Minutes de basal max pour limiter les SMB des RNS</string>
+    <string name="uam_smb_max_minutes_summary">Minutes de basal max comme limite des SMB pendant les RNS</string>
     <string name="carbs_req_threshold">Glucides minimum requis pour suggestion</string>
     <string name="carbs_req_threshold_summary">Quantité de glucides minimum en g pour afficher une alerte de suggestion de glucides. Les suggestions inférieures ne déclencheront pas de notification.</string>
     <string name="lgs_threshold_summary">Valeur glycémique au-dessous de laquelle l\'injection de l\'insuline est suspendu. La valeur par défaut utilise le modèle standard de la cible. L\'utilisateur peut choisir entre 60mg/dl (3.3mmol/l) et 100mg/dl (5.5mmol/l). Les valeurs au-dessous de 65/3.6 déclenchent l\'utilisation du modèle standard</string>

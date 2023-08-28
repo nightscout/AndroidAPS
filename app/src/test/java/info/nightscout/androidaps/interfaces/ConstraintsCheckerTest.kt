@@ -11,8 +11,8 @@ import info.nightscout.androidaps.insight.database.InsightDatabaseDao
 import info.nightscout.androidaps.insight.database.InsightDbHelper
 import info.nightscout.androidaps.plugins.pump.insight.LocalInsightPlugin
 import info.nightscout.database.impl.AppRepository
-import info.nightscout.interfaces.ApsMode
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
+import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -29,6 +29,7 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
@@ -75,6 +76,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     @Mock lateinit var danaHistoryDatabase: DanaHistoryDatabase
     @Mock lateinit var insightDatabase: InsightDatabase
     @Mock lateinit var bgQualityCheck: BgQualityCheck
+    @Mock lateinit var tddCalculator: TddCalculator
 
     private lateinit var hardLimits: HardLimits
     private lateinit var danaPump: DanaPump
@@ -190,7 +192,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 dateUtil,
                 repository,
                 glucoseStatusProvider,
-                bgQualityCheck
+                bgQualityCheck,
+                tddCalculator
             )
         openAPSSMBDynamicISFPlugin =
             OpenAPSSMBDynamicISFPlugin(
@@ -209,8 +212,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
                 dateUtil,
                 repository,
                 glucoseStatusProvider,
-                config,
-                bgQualityCheck
+                bgQualityCheck,
+                tddCalculator
             )
         openAPSAMAPlugin =
             OpenAPSAMAPlugin(

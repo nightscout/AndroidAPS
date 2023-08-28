@@ -6,6 +6,7 @@
     <string name="previous_button">Önceki</string>
     <string name="nav_setupwizard">Kurulum Sihirbazı</string>
     <string name="setupwizard_finish">BİTTİ</string>
+    <string name="welcome">Hoş geldiniz</string>
     <string name="welcometosetupwizard">Kurulum sihirbazına hoş geldiniz. Kurulum işleminde size rehberlik edecektir\n</string>
     <string name="end_user_license_agreement">Son Kullanıcı Lisans Sözleşmesi</string>
     <string name="end_user_license_agreement_text">TIBBİ KARAR VERMEK İÇİN KULLANILMAMALIDIR. UYGULANABİLİR YASANIN İZİN VERDİĞİ ÖLÇÜDE, PROGRAM İÇİN GARANTİ YOKTUR. TELİF HAKKI SAHİPLERİNİN VE / VEYA DİĞER TARAFLARIN YAZILI OLMASINA YÖNELİK BAŞKA HİÇBİR ŞEKİLDE BELİRTİLEN VEYA BELİRLİ BİR AMACA UYGUNLUK İLE İLGİLİ ZIMNİ GARANTİLER DE DAHİL OLMAK ÜZERE ANCAK BUNLARLA SINIRLI OLMAMAK ÜZERE AÇIK VEYA ZIMNİ HİÇBİR GARANTİ OLMAKSIZIN “OLDUĞU GİBİ” SAĞLAMAKTADIR. PROGRAMIN KALİTESİ VE PERFORMANSI İLE İLGİLİ TÜM RİSK SİZE AİTTİR. PROGRAMIN HASARLI OLMASI DURUMUNDA, TÜM GEREKLİ SERVİS, ONARIM VEYA DÜZELTME MALİYETİNİ KABUL ETMİŞ OLURSUNUZ.</string>
@@ -151,6 +152,8 @@
     <string name="prefdecrypt_issue_wrong_pass">Şifre çözme hatası, sağlanan şifre geçersiz veya ayar dosyası değiştirildi! İçe aktarılan dosya farklı bir Ana parola ile dışa aktarılmış olabilir.</string>
     <string name="prefdecrypt_issue_wrong_format">Şifreleme yapılandırması eksik, ayar formatı geçersiz!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Desteklenmeyen veya belirtilmeyen şifreleme algoritması!</string>
+    <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Özel Saat arayüzünü Seçin</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Lütfen telefonunu yeniden başlat, yada AAPS sistem ayarları üzerinden yeniden başlat.\nAksi taktirde Android APS hiç bir günlük tutmayacak (takip ve doğrulama, algoritmanın düzenli çalışmasi için önemli)!</string>
 </resources>

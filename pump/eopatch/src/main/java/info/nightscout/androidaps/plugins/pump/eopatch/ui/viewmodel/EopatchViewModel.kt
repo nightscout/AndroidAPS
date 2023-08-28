@@ -4,8 +4,7 @@ import android.content.res.Resources
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import info.nightscout.shared.interfaces.ResourceHelper
+import androidx.lifecycle.map
 import info.nightscout.androidaps.plugins.pump.eopatch.CommonUtils
 import info.nightscout.androidaps.plugins.pump.eopatch.R
 import info.nightscout.androidaps.plugins.pump.eopatch.RxAction
@@ -49,6 +48,7 @@ import info.nightscout.androidaps.plugins.pump.eopatch.vo.PatchState
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
@@ -77,7 +77,7 @@ class EopatchViewModel @Inject constructor(
     var isInAlarmHandling = false
     var connectionTryCnt = 0
 
-    val patchConfig: PatchConfig = patchManager.patchConfig
+    private val patchConfig: PatchConfig = patchManager.patchConfig
     val patchState: PatchState = patchManager.patchState
 
     private val _isActivated = MutableLiveData(patchConfig.isActivated)
@@ -93,7 +93,7 @@ class EopatchViewModel @Inject constructor(
     val isConnected = patchManager.patchConnectionState.isConnected
 
     val patchRemainedInsulin: LiveData<Int>
-        get() = Transformations.map(_isActivated) {
+        get() = _isActivated.map {
             it.takeOne(patchManager.patchState.remainedInsulin.let { insulin ->
                 when {
                     insulin > 50f -> 51
@@ -106,12 +106,12 @@ class EopatchViewModel @Inject constructor(
     private val _patchExpirationTimestamp = MutableLiveData(patchManager.patchExpiredTime)
 
     val patchRemainedDays: LiveData<Int>
-        get() = Transformations.map(_patchExpirationTimestamp) {
+        get() = _patchExpirationTimestamp.map {
             it.getDiffDays().toInt()
         }
 
     val patchRemainedTime: LiveData<String>
-        get() = Transformations.map(_patchExpirationTimestamp) {
+        get() = _patchExpirationTimestamp.map {
             it.diffTime(MAX_ELAPSED_MILLIS_AFTER_EXPIRATION)
         }
 
@@ -131,7 +131,7 @@ class EopatchViewModel @Inject constructor(
         get() = !patchConfig.lifecycleEvent.isShutdown
 
     val commCheckCancelLabel: LiveData<String>
-        get() = Transformations.map(patchStep) {
+        get() = patchStep.map {
             rh.gs(when (it) {
                 PatchStep.CONNECT_NEW -> {
                     isBonded.takeOne(R.string.cancel, R.string.patch_cancel_pairing)
@@ -512,12 +512,12 @@ class EopatchViewModel @Inject constructor(
                     PatchStep.COMPLETE, PatchStep.BASAL_SCHEDULE -> {
                         val now = System.currentTimeMillis()
                         val expireTimeStamp = patchConfig.expireTimestamp
-                        val milllisBeforeExpiration = TimeUnit.HOURS.toMillis(sp.getInt(EXPIRATION_REMINDERS, 0).toLong())
+                        val millisBeforeExpiration = TimeUnit.HOURS.toMillis(sp.getInt(EXPIRATION_REMINDERS, 0).toLong())
 
                         Maybe.just(AlarmCode.B012)
                             .flatMap { alarmRegistry.remove(it) }
                             .flatMap { alarmRegistry.remove(AlarmCode.A020) }
-                            .flatMap { alarmRegistry.add(AlarmCode.B000, expireTimeStamp - now - milllisBeforeExpiration) }
+                            .flatMap { alarmRegistry.add(AlarmCode.B000, expireTimeStamp - now - millisBeforeExpiration) }
                             .flatMap { alarmRegistry.add(AlarmCode.B005, expireTimeStamp - now) }
                             .flatMap { alarmRegistry.add(AlarmCode.B006, expireTimeStamp - now + IPatchConstant.SERVICE_TIME_MILLI - TimeUnit.HOURS.toMillis(1)) }
                             .flatMap { alarmRegistry.add(AlarmCode.A003, expireTimeStamp - now + IPatchConstant.SERVICE_TIME_MILLI) }
@@ -622,13 +622,6 @@ class EopatchViewModel @Inject constructor(
                 .addTo()
     }
 
-    fun deactivateInDisconnected() {
-        mOnCommCheckSuccessListener = {
-            deactivate(false) { moveStep((PatchStep.DISCARDED_FOR_CHANGE)) }
-        }
-        showPatchCommCheckDialog(true, R.string.string_discard_patch)
-    }
-
     @Synchronized
     fun retryScan() {
         if (mRetryCount <= mMaxRetryCount) {
@@ -660,7 +653,7 @@ class EopatchViewModel @Inject constructor(
                 .onErrorReturnItem("")
                 .doOnSubscribe { updateSetupStep(SCAN_STARTED) }
                 .subscribeDefault(aapsLogger) {
-                    if (!it.isNullOrEmpty()) {
+                    if (it.isNotEmpty()) {
                         startBond(it)
                     } else {
                         updateSetupStep(SCAN_FAILED)

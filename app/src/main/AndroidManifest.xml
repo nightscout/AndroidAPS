@@ -58,7 +58,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <action android:name="android.intent.action.MAIN" />
@@ -73,7 +73,7 @@
         <activity
             android:name=".activities.HistoryBrowseActivity"
             android:exported="false"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme" />
         <!-- Receive new BG readings from other local apps -->
         <receiver
             android:name=".receivers.DataReceiver"

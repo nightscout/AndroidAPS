@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dynisf_adjust_sensitivity">Ajustar sensibilidade e glicemia</string>
+    <string name="DynISFAdjust_title" formatted="false">% do fator de Ajuste DynamicISF</string>
+    <string name="DynISFAdjust_summary" formatted="false">Fator de ajuste para DynamicISF. Defina mais de 100% para doses de correção mais agressivas e menos de 100% para correções menos agressivas.</string>
     <string name="high_temptarget_raises_sensitivity_title">Alto alvotempo aumenta sensibilidade</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Aumentar sensibilidade para alvostemp >= 100]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Baixo alvotemp baixa sensibilidade</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Baixar sensibilidade para alvostemp < 100]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">ISF Dinâmico</string>
     <string name="smb_interval_summary">Com que frequência em min os SMBs serão dados</string>
     <string name="resistance_lowers_target_title">Resistência reduz alvo</string>
     <string name="resistance_lowers_target_summary">Quando a resistência for detectada, diminui o alvo de glicose</string>
@@ -13,12 +17,14 @@
     <string name="openapsma_disabled">Plugin está desativado</string>
     <string name="openapsma_no_glucose_data">Sem dados de glucose disponíveis</string>
     <string name="openaps_no_as_data">Sem dados Autosens disponíveis</string>
+    <string name="dynisf_shortname">DYNISF</string>
     <string name="executing">A Executar</string>
     <string name="openapsama">OpenAPS AMA</string>
     <string name="array_of_elements">Array de %1$d elementos.\nValor actual:</string>
     <string name="oaps_shortname">OAPS</string>
     <string name="description_ama">Estado do algoritmo em 2017</string>
     <string name="description_smb">Algoritmo mais recente para usuários avançados</string>
+    <string name="description_smb_dynamic_isf">O algoritmo mais recente para utilizadores avançados com FSI dinâmico/automático</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Pausa bólus divisor DIA</string>
     <string name="openapsma_run">Executar agora</string>
     <string name="openapsma_last_run_label">Última execução</string>
@@ -69,6 +75,8 @@
     <string name="uam_smb_max_minutes_summary">Máx minutos de basal para limitar SMB para RNA</string>
     <string name="carbs_req_threshold">Mínimo De Hidratos Necessários Para Sugestão</string>
     <string name="carbs_req_threshold_summary">Mínimo de gramas de hidratos de carbono para exibir um alerta de sugestão de hidratos. As sugestões de hidratos abaixo deste número não ativarão uma notificação.</string>
+    <string name="lgs_threshold_summary">Valor de glicemia abaixo do qual a insulina é suspensa. O valor padrão usa o modelo do alvo padrão. O utilizador pode definir o valor entre 60mg/dl (3. mmol/l) e 100mg/dl(5.5mmol/l). Valores abaixo de 65/3.6 resultam no uso do modelo padrão</string>
+    <string name="lgs_threshold_title">Nível de Glicemia abaixo do qual ocorre suspensão de glicémia baixa</string>
     <string name="increasing_max_basal">Aumentar o valor máximo de basal porque a configuração é inferior à sua basal máxima no perfil</string>
     <string name="max_basal_multiplier">multiplicador de basal máx</string>
     <string name="max_daily_basal_multiplier">multiplicador de basal máx diária</string>
@@ -80,13 +88,30 @@
     <string name="maxvalueinpreferences">valor máx nas preferências</string>
     <string name="hardlimit">limite rígido</string>
     <!--    Autotune   -->
+    <string name="insulin_peak">Pico</string>
     <!--    Loop -->
+    <string name="run_now">Executar agora</string>
     <string name="smb_frequency_exceeded">Um bólus foi administrado nos últimos 3 minutos, a ignorar SMB</string>
+    <string name="pump_not_initialized">Bomba não inicializada!</string>
     <string name="loop_shortname">LOOP</string>
     <string name="description_loop">Ativar ou desativar a aplicação que desencadeia o loop.</string>
+    <string name="no_aps_selected">NENHUM APS SELECIONADO OU RESULTADO FORNECIDO</string>
     <string name="ignore5m">Ignorar 5m</string>
     <string name="ignore15m">Ignorar 15m</string>
     <string name="ignore30m">Ignorar 30m</string>
+    <string name="carbs_suggestion">Sugestão de Hidratos</string>
+    <string name="open_loop_new_suggestion">Disponível nova sugestão</string>
     <string name="basal_set_correctly">Basal correctamente definida</string>
+    <string name="last_run_label">Última execução</string>
     <string name="loop_aps_label">APS</string>
+    <string name="request_label">Pedido</string>
+    <string name="loop_constraints_processed_label">Depois das restrições processadas</string>
+    <string name="loop_tbr_request_time_label">Hora de solicitação da DBT</string>
+    <string name="loop_tbr_execution_time_label">Hora de execução da DBT</string>
+    <string name="loop_tbr_set_by_pump_label">Basal temporária definida pela bomba</string>
+    <string name="loop_smb_request_time_label">Hora de solicitação SMB</string>
+    <string name="loop_smb_execution_time_label">Hora de execução do SMB</string>
+    <string name="loop_smb_set_by_pump_label">SMB definido pela bomba</string>
+    <string name="loop_open_mode_min_change">Pedido de alteração Mínima [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">O Loop aberto irá solicitar uma alteração apenas se a mudança for maior do que este valor em %. O valor padrão é 20%</string>
 </resources>

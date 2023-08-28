@@ -6,15 +6,26 @@
     <string name="application_protection">Protecção Aplicação</string>
     <string name="bolus_protection">Protecção Bólus</string>
     <string name="settings_password">Senha Definições</string>
+    <string name="settings_pin">PIN das configurações</string>
     <string name="application_password">Senha Aplicação</string>
+    <string name="application_pin">PIN da aplicação</string>
     <string name="bolus_password">Senha Bólus</string>
+    <string name="bolus_pin">PIN do bólus</string>
+    <string name="protection_timeout_title">Retenção de senha e PIN</string>
+    <string name="protection_timeout_summary">Tempo até que a senha ou PIN sejam inseridos</string>
     <string name="biometric">Biométrico</string>
     <string name="custom_password">Senha Personalizada</string>
+    <string name="custom_pin">PIN personalizado</string>
     <string name="noprotection">Sem Protecção</string>
     <string name="unsecure_fallback_biometric">Reverter Inseguro</string>
     <string name="unsecure_fallback_descriotion_biometric">Para ser eficaz, a protecção biométrica precisa de uma senha mestre definida para reverter.\n\nPor favor, defina uma senha mestre!</string>
     <string name="password_set">Senha foi definida!</string>
+    <string name="pin_set">PIN definido!</string>
     <string name="password_not_set">Senha não foi definida</string>
+    <string name="pin_not_set">PIN não definido</string>
     <string name="password_not_changed">Senha não foi alterada</string>
+    <string name="pin_not_changed">PIN não alterado</string>
+    <string name="pin_cleared">PIN apagado!</string>
     <string name="password_hint">Insira aqui a senha</string>
+    <string name="pin_hint">Insira o PIN aqui</string>
 </resources>

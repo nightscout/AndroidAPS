@@ -10,7 +10,7 @@
     <string name="old_version">stará verze</string>
     <string name="very_old_version">velmi stará verze</string>
     <string name="application_expired">Platnost aplikace vypršela</string>
-    <string name="new_version_warning">Nová verze je dostupná minimálně %1$d dní! Přepnutí na ochranu před nízkou glykémií po %2$d dnech, vypnutí smyčky po %3$d dnech</string>
+    <string name="new_version_warning">Nová verze nebyla zkontrolována nejméně %1$d dní! V případě, že uplyne %2$d dní, přepne se režim na LGS a po %3$d dnech bude smyčka vypnuta. Obnovte připojení k internetu!</string>
     <string name="running_invalid_version">Zjistili jsme, že používáte neplatnou verzi, smyčka zakázána!</string>
     <string name="versionavailable">Verze %1$s je k dispozici</string>
     <string name="version_expire">Platnost verze %1$s vyprší dne %2$s</string>
@@ -48,6 +48,6 @@
     <string name="doyouwantresetstart">Chcete resetovat začátek cíle? Můžete přijít o svůj pokrok.</string>
     <string name="objectives_next_button">Další</string>
     <string name="objectives_previous_button">Zpět</string>
-    <string name="objectives_button_unfinish">Vymazat dokončeno</string>
-    <string name="objectives_button_unstart">Vymazat start</string>
+    <string name="objectives_button_unfinish">Resetovat dokončený stav</string>
+    <string name="objectives_button_unstart">Resetovat zahájený stav</string>
 </resources>

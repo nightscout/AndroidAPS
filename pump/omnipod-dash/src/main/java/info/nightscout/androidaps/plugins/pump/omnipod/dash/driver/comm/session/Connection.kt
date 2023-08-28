@@ -101,7 +101,7 @@ class Connection(
         val discovered = discoverer.discoverServices(connectionWaitCond)
         val cmdBleIO = CmdBleIO(
             aapsLogger,
-            discovered[CharacteristicType.CMD]!!,
+            discovered.getValue(CharacteristicType.CMD),
             incomingPackets
                 .cmdQueue,
             gatt,
@@ -109,7 +109,7 @@ class Connection(
         )
         val dataBleIO = DataBleIO(
             aapsLogger,
-            discovered[CharacteristicType.DATA]!!,
+            discovered.getValue(CharacteristicType.DATA),
             incomingPackets
                 .dataQueue,
             gatt,
@@ -127,7 +127,7 @@ class Connection(
     @Synchronized
     fun disconnect(closeGatt: Boolean) {
         aapsLogger.debug(LTag.PUMPBTCOMM, "Disconnecting closeGatt=$closeGatt")
-        if (closeGatt == false && gattConnection != null) {
+        if (!closeGatt && gattConnection != null) {
             // Disconnect first, then close gatt
             gattConnection?.disconnect()
         } else {

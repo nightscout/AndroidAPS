@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="alarmSettings">
+        <item>Lumière, vibreur et bip</item>
+        <item>Lumière et vibreur</item>
+        <item>Lumière et bip</item>
+        <item>Lumière</item>
+        <item>Vibreur et bip</item>
+        <item>Vibreur</item>
+        <item>Bip</item>
+        <item>Muet</item>
+    </string-array>
+</resources>

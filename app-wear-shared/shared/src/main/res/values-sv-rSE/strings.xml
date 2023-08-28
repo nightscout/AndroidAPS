@@ -25,4 +25,5 @@
     <string name="connected">Ansluten</string>
     <string name="disconnecting">Kopplar från</string>
     <string name="waiting_for_disconnection">Väntar på frånkoppling</string>
+    <!-- Custom Watchface -->
 </resources>
