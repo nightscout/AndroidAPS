@@ -15,7 +15,7 @@ class InsertBolusWithTempIdTransaction(
         val result = TransactionResult()
         val current = database.bolusDao.findByPumpTempIds(bolus.interfaceIDs.temporaryId!!, bolus.interfaceIDs.pumpType!!, bolus.interfaceIDs.pumpSerial!!)
         if (current == null) {
-            database.bolusDao.insert(bolus)
+            bolus.id = database.bolusDao.insert(bolus)
             result.inserted.add(bolus)
         }
         return result
