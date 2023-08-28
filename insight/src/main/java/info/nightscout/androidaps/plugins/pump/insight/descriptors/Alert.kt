@@ -1,5 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.insight.descriptors
 
+import java.util.Objects
+
 class Alert {
 
     var alertId = 0
@@ -23,6 +25,10 @@ class Alert {
         if (java.lang.Double.compare(alert.deliveredBolusAmount, deliveredBolusAmount) != 0) return false
         if (java.lang.Double.compare(alert.cartridgeAmount, cartridgeAmount) != 0) return false
         if (alertCategory !== alert.alertCategory) return false
-        return if (alertType !== alert.alertType) false else alertStatus === alert.alertStatus
+        return alertType === alert.alertType && alertStatus === alert.alertStatus
+    }
+
+    override fun hashCode(): Int {
+        return Objects.hash(alertId, alertCategory, alertType, alertStatus, tBRAmount, tBRDuration, programmedBolusAmount, deliveredBolusAmount, cartridgeAmount)
     }
 }
