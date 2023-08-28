@@ -54,10 +54,10 @@ class SmsCommunicatorOtpActivity : TranslatedDaggerAppCompatActivity() {
                 val checkResult = otp.checkOTP(s.toString())
 
                 binding.otpVerifyLabel.text = when (checkResult) {
-                    OneTimePasswordValidationResult.OK                 -> "OK"
-                    OneTimePasswordValidationResult.ERROR_WRONG_LENGTH -> "INVALID SIZE!"
-                    OneTimePasswordValidationResult.ERROR_WRONG_PIN    -> "WRONG PIN"
-                    OneTimePasswordValidationResult.ERROR_WRONG_OTP    -> "WRONG OTP"
+                    OneTimePasswordValidationResult.OK                 -> rh.gs(R.string.smscommunicator_otp_verification_ok)
+                    OneTimePasswordValidationResult.ERROR_WRONG_LENGTH -> rh.gs(R.string.smscommunicator_otp_verification_ivalid_size)
+                    OneTimePasswordValidationResult.ERROR_WRONG_PIN    -> rh.gs(R.string.smscommunicator_otp_verification_wrong_pin)
+                    OneTimePasswordValidationResult.ERROR_WRONG_OTP    -> rh.gs(R.string.smscommunicator_otp_verification_wrong_otp)
                 }
 
                 binding.otpVerifyLabel.setTextColor(
