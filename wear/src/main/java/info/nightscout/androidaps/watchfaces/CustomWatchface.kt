@@ -175,10 +175,10 @@ class CustomWatchface : BaseWatchFace() {
                         if (json.has(id.key)) {
                             val viewJson = json.getJSONObject(id.key)
                             val width = (viewJson.optInt(WIDTH.key) * zoomFactor).toInt()
-                            val height = (viewJson.optInt(HEIGHT.key, 0) * zoomFactor).toInt()
+                            val height = (viewJson.optInt(HEIGHT.key) * zoomFactor).toInt()
                             val params = FrameLayout.LayoutParams(width, height)
-                            params.topMargin = (viewJson.optInt(TOPMARGIN.key, 0) * zoomFactor).toInt()
-                            params.leftMargin = (viewJson.optInt(LEFTMARGIN.key, 0) * zoomFactor).toInt()
+                            params.topMargin = (viewJson.optInt(TOPMARGIN.key) * zoomFactor).toInt()
+                            params.leftMargin = (viewJson.optInt(LEFTMARGIN.key) * zoomFactor).toInt()
                             view.layoutParams = params
                             view.visibility = setVisibility(viewJson.optString(VISIBILITY.key, JsonKeyValues.GONE.key), id.visibility(sp))
                             when (view) {
