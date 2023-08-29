@@ -47,6 +47,7 @@
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo Времето за сканиране е изтекло</string>
     <string name="combov2_pairing_failed_due_to_error">Сдвояването неуспешно, поради грешка: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Сдвояването е прекъснато по неизвестни причини</string>
+    <string name="combov2_pairing_invalid_pin_length">"Невалидна дължина на ПИН за сдвояване: нужни %1$d цифри, въведени %2$d"</string>
     <string name="combov2_scanning_for_pump">Сканиране за помпа</string>
     <string name="combov2_establishing_bt_connection">Установява се Bluetooth връзка (опит № %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Извършване на синхронизация с помпа</string>
@@ -97,6 +98,7 @@
     <string name="combov2_set_emulated_100_tbr">Задайте емулиран 100% Временен базал</string>
     <string name="combov2_letting_emulated_100_tbr_finish">Оставяне на текущия емулиран 100% Временен базал Завършено</string>
     <string name="combov2_ignoring_redundant_100_tbr">Игнориране на излишна заявка за 100% Временен базал</string>
+    <string name="combov2_hit_unexpected_tbr_limit">Възникна неочакван лимит при коригиране на Временния базал: целевият процент беше %1$d%%, достигна лимит от %2$d%%</string>
     <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">Не може да се зададе абсолютен Временен базал, ако той е нула</string>
     <string name="combov2_pair_with_pump_summary">Сдвоете AndroidAPS и Android с несвързана в момента помпа Accu-Chek Combo</string>
     <string name="combov2_unpair_pump_summary">Раздвоете AndroidAPS и Android със свързаната в момента помпа Accu-Chek Combo</string>
@@ -123,4 +125,6 @@
     <string name="combov2_refresh_pump_status_after_error">Обновяване състоянието на помпата, след съобщение за грешка</string>
     <string name="combov2_go_back">Връщане</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Не може да се извърши сдвояване, защото драйверът не е инициализиран. Това обикновено се случва, защото не са предоставени необходимите разрешения за Bluetooth. Върнете се, дайте разрешения на Bluetooth, след което опитайте отново да сдвоите.</string>
+    <string name="combov2_bluetooth_disabled">Неуспешно стартиране на драйвър - Bluetooth изключен</string>
+    <string name="combov2_bluetooth_not_supported">Драъвър не може да бъде стартиран - това устройство не поддържа Bluetooth</string>
 </resources>
