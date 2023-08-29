@@ -3,7 +3,7 @@
     <string name="resetpairing">Нулиране на сдвояването</string>
     <string name="diaconn_no_device_available">Няма налично устройство</string>
     <string name="diaconn_pairing">Сдвояване на помпа Diaconn</string>
-    <string name="pumperror">Грешка в промпата</string>
+    <string name="pumperror">Грешка в помпата</string>
     <string name="diaconn_g8_history_alarm">Аларми</string>
     <string name="diaconn_g8_history_basalhours">Базален по часове</string>
     <string name="diaconn_g8_history_bolus">Болуси</string>
