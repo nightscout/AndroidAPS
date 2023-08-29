@@ -24,7 +24,8 @@ class TestBluetoothDevice(private val testComboIO: ComboIO) : BluetoothDevice(Di
     }
 
     override fun disconnect() {
-        frameParser.reset()
+        // Synchronized rest so we don't interfere with pushing/parsing data into the frameParser.
+        synchronized(frameParser) { frameParser.reset() }
         runBlocking {
             innerJob.cancelAndJoin()
         }
@@ -38,8 +39,10 @@ class TestBluetoothDevice(private val testComboIO: ComboIO) : BluetoothDevice(Di
     }
 
     override fun blockingSend(dataToSend: List<Byte>) {
-        frameParser.pushData(dataToSend)
-        frameParser.parseFrame()?.let {
+        synchronized(frameParser) {
+            frameParser.pushData(dataToSend)
+            frameParser.parseFrame()
+        }?.let {
             runBlocking {
                 innerScope.async {
                     testComboIO.send(it)
