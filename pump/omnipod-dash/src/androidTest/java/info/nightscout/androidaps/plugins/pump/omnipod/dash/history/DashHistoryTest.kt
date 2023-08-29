@@ -9,9 +9,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.Das
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.database.HistoryRecordDao
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.history.mapper.HistoryMapper
 import info.nightscout.rx.logging.AAPSLoggerTest
+import org.junit.After
 import org.junit.Before
-import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Test
+import org.junit.Test
 import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
@@ -38,9 +38,9 @@ class DashHistoryTest {
             assertValue { it.isEmpty() }
         }
 
-        // dashHistory.createRecord(commandType = OmnipodCommandType.CANCEL_BOLUS, 0L).test().apply {
-        //     assertValue { ULID.isValid(it) }
-        // }
+        dashHistory.createRecord(commandType = OmnipodCommandType.CANCEL_BOLUS, 0L).test().apply {
+            assertValue { it > 0 }
+        }
 
         dashHistory.getRecords().test().apply {
             assertValue { it.size == 1 }
@@ -62,7 +62,7 @@ class DashHistoryTest {
         }
     }
 
-    @org.junit.jupiter.api.AfterEach
+    @After
     fun tearDown() {
         database.close()
     }
