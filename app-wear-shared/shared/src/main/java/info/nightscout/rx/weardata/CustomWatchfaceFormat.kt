@@ -183,7 +183,10 @@ enum class JsonKeys(val key: String, val viewType: ViewType, @StringRes val comm
     FONT("font", ViewType.TEXTVIEW, null),
     FONTSTYLE("fontStyle", ViewType.TEXTVIEW, null),
     FONTCOLOR("fontColor", ViewType.TEXTVIEW, null),
-    COLOR("color", ViewType.IMAGEVIEW, null)
+    COLOR("color", ViewType.IMAGEVIEW, null),
+    ALLCAPS("allCaps", ViewType.TEXTVIEW, null),
+    DAYNAMEFORMAT("dayNameFormat", ViewType.NONE, null),
+    MONTHFORMAT("monthFormat", ViewType.NONE, null)
 }
 
 enum class JsonKeyValues(val key: String, val jsonKey: JsonKeys) {

@@ -171,17 +171,17 @@ class DateUtil @Inject constructor(private val context: Context) {
     fun amPm(mills: Long): String =
         DateTime(mills).toString(DateTimeFormat.forPattern("a"))
 
-    fun dayNameString(): String = dayNameString(now())
-    fun dayNameString(mills: Long): String =
-        DateTime(mills).toString(DateTimeFormat.forPattern("E"))
+    fun dayNameString(format: String = "E"): String = dayNameString(now(), format)
+    fun dayNameString(mills: Long, format: String = "E"): String =
+        DateTime(mills).toString(DateTimeFormat.forPattern(format))
 
     fun dayString(): String = dayString(now())
     fun dayString(mills: Long): String =
         DateTime(mills).toString(DateTimeFormat.forPattern("dd"))
 
-    fun monthString(): String = monthString(now())
-    fun monthString(mills: Long): String =
-        DateTime(mills).toString(DateTimeFormat.forPattern("MMM"))
+    fun monthString(format: String = "MMM"): String = monthString(now(), format)
+    fun monthString(mills: Long, format: String = "MMM"): String =
+        DateTime(mills).toString(DateTimeFormat.forPattern(format))
 
     fun weekString(): String = weekString(now())
     fun weekString(mills: Long): String =

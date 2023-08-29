@@ -88,6 +88,8 @@ abstract class BaseWatchFace : WatchFace() {
     var enableSecond = false
     var detailedIob = false
     var externalStatus = ""
+    var dayNameFormat = "E"
+    var monthFormat = "MMM"
     val showSecond: Boolean
         get() = enableSecond && currentWatchMode == WatchMode.INTERACTIVE
 
@@ -317,7 +319,7 @@ abstract class BaseWatchFace : WatchFace() {
         binding.iob1?.text = if (detailedIob) status.iobSum else getString(R.string.activity_IOB)
         binding.iob2?.text = if (detailedIob) status.iobDetail else status.iobSum
         binding.timestamp.visibility = sp.getBoolean(R.string.key_show_ago, true).toVisibility()
-        binding.timestamp.text = readingAge(if (binding.AAPSv2 != null) true else sp.getBoolean(R.string.key_show_external_status, true))
+        binding.timestamp.text = readingAge(binding.AAPSv2 != null || sp.getBoolean(R.string.key_show_external_status, true))
         binding.uploaderBattery?.visibility = sp.getBoolean(R.string.key_show_uploader_battery, true).toVisibility()
         binding.uploaderBattery?.text =
             when {
@@ -371,9 +373,9 @@ abstract class BaseWatchFace : WatchFace() {
         binding.hour?.text = dateUtil.hourString()
         binding.minute?.text = dateUtil.minuteString()
         binding.dateTime?.visibility = sp.getBoolean(R.string.key_show_date, false).toVisibility()
-        binding.dayName?.text = dateUtil.dayNameString()
+        binding.dayName?.text = dateUtil.dayNameString(dayNameFormat)
         binding.day?.text = dateUtil.dayString()
-        binding.month?.text = dateUtil.monthString()
+        binding.month?.text = dateUtil.monthString(monthFormat)
         binding.timePeriod?.visibility = android.text.format.DateFormat.is24HourFormat(this).not().toVisibility()
         binding.timePeriod?.text = dateUtil.amPm()
         if (showSecond)
