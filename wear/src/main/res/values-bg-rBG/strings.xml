@@ -5,7 +5,7 @@
     <string name="label_watchface">AAPS</string>
     <string name="label_watchface_large">AAPS(голям)</string>
     <string name="label_watchface_big_chart">AAPS(Графика)</string>
-    <string name="label_watchface_no_chart">AAPS(без рафика)</string>
+    <string name="label_watchface_no_chart">AAPS(без Графика)</string>
     <string name="label_watchface_circle">AAPS(Кръгъл)</string>
     <string name="label_watchface_v2">AAPS(v2)</string>
     <string name="label_watchface_cockpit">AAPS(Самолет)</string>
@@ -19,12 +19,12 @@
     <string name="label_warning_since">От %1$s</string>
     <string name="label_warning_sync_aaps">Свържи с AAPS!</string>
     <string name="msg_warning_sync">Няма данни от %1$s! Проверете дали AAPS на телефона изпраща данни до часовника</string>
-    <string name="msg_warning_old">Данните са %1$s стари! Проверете сензора, xDrip+, HС, AAPS конфигурацията и други!</string>
+    <string name="msg_warning_old">Данните са %1$s стари! Проверете сензора, xDrip+, NS, AAPS конфигурацията и други!</string>
     <string name="pref_vibrate_on_bolus">Вибрация при болус</string>
     <string name="pref_units_for_actions">Единици за Действие</string>
     <string name="pref_show_date">Покажи дата</string>
-    <string name="pref_show_iob">Покажи инсулин</string>
-    <string name="pref_show_cob">Покажи въгл</string>
+    <string name="pref_show_iob">Покажи IOB</string>
+    <string name="pref_show_cob">Покажи COB</string>
     <string name="pref_show_delta">Покажи Делта</string>
     <string name="pref_show_avgdelta">Покажи средна делта</string>
     <string name="pref_show_phone_battery">Батерия на телефон</string>
@@ -49,8 +49,8 @@
     <string name="pref_quick_lefty">Левичар</string>
     <string name="pref_modern_sparse">Модерен</string>
     <string name="pref_delta_granularity">Делта грануларност (Steampunk)</string>
-    <string name="pref_low">Ниско</string>
-    <string name="pref_medium">Среден</string>
+    <string name="pref_low">Ниска</string>
+    <string name="pref_medium">Средна</string>
     <string name="pref_high">Висока</string>
     <string name="pref_auto">Автом</string>
     <string name="pref_big_numbers">Големи Цифри</string>
@@ -69,7 +69,7 @@
     <string name="menu_tempt">Врем цел</string>
     <string name="menu_wizard">Калкулатор</string>
     <string name="menu_wizard_short">Калк</string>
-    <string name="menu_treatment">Болус</string>
+    <string name="menu_treatment">Лечение</string>
     <string name="menu_treatment_short">Лечение</string>
     <string name="menu_bolus">Болус</string>
     <string name="menu_carb">въглехидрати</string>
@@ -117,7 +117,7 @@
     <string name="activity_carb">ВХ</string>
     <string name="activity_IOB">IOB</string>
     <string name="activity_no_status">няма Статус</string>
-    <string name="color_name_red">червен</string>
+    <string name="color_name_red">червено</string>
     <string name="color_name_pink">розово</string>
     <string name="color_name_purple">лилаво</string>
     <string name="color_name_deeppurple">тъмно лилаво</string>
@@ -126,7 +126,7 @@
     <string name="color_name_lightblue">светло синьо</string>
     <string name="color_name_cyan">синьозелено</string>
     <string name="color_name_teal">металик</string>
-    <string name="color_name_green">зелен</string>
+    <string name="color_name_green">зелено</string>
     <string name="color_name_lightgreen">светло зелено</string>
     <string name="color_name_lime">лимоненозелено</string>
     <string name="color_name_yellow">жълто</string>
@@ -193,4 +193,5 @@
     <string name="old">стар</string>
     <string name="old_warning">!старо!</string>
     <string name="error">!err!</string>
+    <string name="pref_heartRateSampling">Сърдечен ритъм</string>
 </resources>
