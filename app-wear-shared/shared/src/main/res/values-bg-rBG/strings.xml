@@ -3,7 +3,7 @@
     <!--    DateUtil-->
     <string name="minago">преди %1$d мин</string>
     <string name="minago_long">Преди %1$d минути</string>
-    <string name="hoursago">преди %1$.1fч</string>
+    <string name="hoursago">преди %1$.1f ч</string>
     <string name="days_ago">преди %1$.1f дни</string>
     <string name="days_ago_round">преди %1$.0f дни</string>
     <string name="in_days">за %1$.0f дни</string>
