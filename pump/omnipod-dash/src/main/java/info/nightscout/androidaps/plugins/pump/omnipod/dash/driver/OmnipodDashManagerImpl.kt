@@ -424,18 +424,19 @@ class OmnipodDashManagerImpl @Inject constructor(
             val expirationAlarmEnabled = userConfiguredExpirationAlarmHours != null && userConfiguredExpirationAlarmHours > 0
             val expirationAlarmDelay = podLifeLeft.minus(
                 Duration.ofHours(userConfiguredExpirationAlarmHours ?: POD_EXPIRATION_ALERT_HOURS_REMAINING_DEFAULT)
-            )
-            val expirationImminnentDelay = podLifeLeft.minus(
+            ).plus(Duration.ofHours(8)) // Add 8 hours for grace period
+
+            val expirationImminentDelay = podLifeLeft.minus(
                 Duration.ofHours(POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING)
-            )
+            ).plus(Duration.ofHours(8)) // Add 8 hours for grace period
 
             val alerts = mutableListOf(
                 AlertConfiguration(
                     AlertType.EXPIRATION,
                     enabled = expirationAlarmEnabled,
-                    durationInMinutes = TimeUnit.HOURS.toMinutes(
+                    durationInMinutes = (TimeUnit.HOURS.toMinutes(
                         userConfiguredExpirationAlarmHours ?: POD_EXPIRATION_ALERT_HOURS_REMAINING_DEFAULT
-                    ).toShort(),
+                    ) - 60).toShort(),
                     autoOff = false,
                     AlertTrigger.TimerTrigger(
                         expirationAlarmDelay.toMinutes().toShort()
@@ -449,30 +450,31 @@ class OmnipodDashManagerImpl @Inject constructor(
                     durationInMinutes = 0,
                     autoOff = false,
                     AlertTrigger.TimerTrigger(
-                        expirationImminnentDelay.toMinutes().toShort()
+                        expirationImminentDelay.toMinutes().toShort()
                     ),
                     BeepType.FOUR_TIMES_BIP_BEEP,
                     BeepRepetitionType.XXX4
                 )
             )
-            val userExpiryAlertDelay = podLifeLeft.minus(
+            val userExpiryReminderEnabled = userConfiguredExpirationReminderHours != null && userConfiguredExpirationReminderHours > 0
+            val userExpiryReminderDelay = podLifeLeft.minus(
                 Duration.ofHours(userConfiguredExpirationReminderHours ?: MAX_POD_LIFETIME.toHours() + 1)
             )
-            if (userExpiryAlertDelay.isNegative) {
+            if (userExpiryReminderDelay.isNegative) {
                 logger.warn(
                     LTag.PUMPBTCOMM,
                     "createActivationPart2Observables negative " +
-                        "expiryAlertDuration=$userExpiryAlertDelay"
+                        "expiryAlertDuration=$userExpiryReminderDelay"
                 )
             } else {
                 alerts.add(
                     AlertConfiguration(
                         AlertType.USER_SET_EXPIRATION,
-                        enabled = true,
+                        enabled = userExpiryReminderEnabled,
                         durationInMinutes = 0,
                         autoOff = false,
                         AlertTrigger.TimerTrigger(
-                            userExpiryAlertDelay.toMinutes().toShort()
+                            userExpiryReminderDelay.toMinutes().toShort()
                         ),
                         BeepType.FOUR_TIMES_BIP_BEEP,
                         BeepRepetitionType.EVERY_MINUTE_AND_EVERY_15_MIN

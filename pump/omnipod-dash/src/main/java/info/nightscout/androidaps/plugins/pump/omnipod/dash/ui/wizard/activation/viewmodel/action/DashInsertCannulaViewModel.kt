@@ -67,7 +67,7 @@ class DashInsertCannulaViewModel @Inject constructor(
                 basalProgram
             )
             val expirationReminderEnabled = sp.getBoolean(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_enabled, true)
-            val expirationReminderHours = sp.getInt(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown, 9)
+            val expirationReminderHours = sp.getInt(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_hours_before_expiry, 9)
 
             val expirationReminderHoursBeforeShutdown = if (expirationReminderEnabled)
                 expirationReminderHours.toLong()

@@ -482,7 +482,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             .subscribe(
                 {
                     if (it.isChanged(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_enabled)) ||
-                        it.isChanged(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown)) ||
+                        it.isChanged(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_hours_before_expiry)) ||
                         it.isChanged(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_alarm_enabled)) ||
                         it.isChanged(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_alarm_hours_before_shutdown)) ||
                         it.isChanged(rh.gs(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_low_reservoir_alert_enabled)) ||
@@ -1224,7 +1224,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
     private fun updateAlertConfiguration(): PumpEnactResult {
 
         val expirationReminderEnabled = sp.getBoolean(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_enabled, true)
-        val expirationReminderHours = sp.getInt(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown, 7)
+        val expirationReminderHours = sp.getInt(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_hours_before_expiry, 9)
         val expirationAlarmEnabled = sp.getBoolean(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_alarm_enabled, true)
         val expirationAlarmHours = sp.getInt(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_alarm_hours_before_shutdown, 8)
         val lowReservoirAlertEnabled = sp.getBoolean(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_low_reservoir_alert_enabled, true)
@@ -1250,16 +1250,17 @@ class OmnipodDashPumpPlugin @Inject constructor(
         }
 
         val podLifeLeft = Duration.between(ZonedDateTime.now(), podStateManager.expiry)
-        val expiryAlertDelay = podLifeLeft.minus(Duration.ofHours(expirationReminderHours.toLong()))
-        if (expiryAlertDelay.isNegative) {
+        val expiryReminderDelay = podLifeLeft.minus(Duration.ofHours(expirationReminderHours.toLong()))
+        if (expiryReminderDelay.isNegative) {
             aapsLogger.warn(
                 LTag.PUMPBTCOMM,
                 "updateAlertConfiguration negative " +
-                    "expiryAlertDuration=$expiryAlertDelay"
+                    "expiryAlertDuration=$expiryReminderDelay"
             )
             PumpEnactResult(injector).success(false).enacted(false)
         }
-        val expiryAlarmDelay = podLifeLeft.minus(Duration.ofHours(expirationAlarmHours.toLong()))
+        // expiry Alarm Delay, add 8 hours (grace period)
+        val expiryAlarmDelay = podLifeLeft.minus(Duration.ofHours(expirationAlarmHours.toLong())).plus(Duration.ofHours(8))
         if (expiryAlarmDelay.isNegative) {
             aapsLogger.warn(
                 LTag.PUMPBTCOMM,
@@ -1268,7 +1269,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             )
             PumpEnactResult(injector).success(false).enacted(false)
         }
-        val expiryImminentDelay = podLifeLeft.minus(Duration.ofHours(POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING))
+        val expiryImminentDelay = podLifeLeft.minus(Duration.ofHours(POD_EXPIRATION_IMMINENT_ALERT_HOURS_REMAINING)).plus(Duration.ofHours(8))
         if (expiryImminentDelay.isNegative) {
             aapsLogger.warn(
                 LTag.PUMPBTCOMM,
@@ -1293,7 +1294,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
                 durationInMinutes = 0,
                 autoOff = false,
                 AlertTrigger.TimerTrigger(
-                    expiryAlertDelay.toMinutes().toShort()
+                    expiryReminderDelay.toMinutes().toShort()
                 ),
                 BeepType.FOUR_TIMES_BIP_BEEP,
                 BeepRepetitionType.EVERY_MINUTE_AND_EVERY_15_MIN
@@ -1301,7 +1302,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
             AlertConfiguration(
                 AlertType.EXPIRATION,
                 enabled = expirationAlarmEnabled,
-                durationInMinutes = TimeUnit.HOURS.toMinutes(expirationAlarmHours.toLong()).toShort(),
+                durationInMinutes = TimeUnit.HOURS.toMinutes((expirationAlarmHours - 1).toLong()).toShort(),
                 autoOff = false,
                 AlertTrigger.TimerTrigger(
                     expiryAlarmDelay.toMinutes().toShort()
