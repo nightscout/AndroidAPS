@@ -85,7 +85,7 @@
     <string name="danarpump_shortname">DANA</string>
     <string name="nobtadapter">Не е открит Bluetooth адаптер</string>
     <string name="devicenotfound">Избраното устройство не е открито</string>
-    <string name="danar_switchtouhmode">Променете режима от U/d на U/h в помпата</string>
+    <string name="danar_switchtouhmode">Променете режима от Е/д на Е/ч в помпата</string>
     <string name="danarkoreanpump">DanaR Корейска</string>
     <string name="danarpump">DanaR</string>
     <string name="pumpdrivercorrected">Драйверът за помпата е коригиран</string>
