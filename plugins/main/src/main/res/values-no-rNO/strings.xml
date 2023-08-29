@@ -355,5 +355,5 @@
     <string name="until">inntil</string>
     <string name="default_range">STANDARD OMRÅDE</string>
     <string name="target">målverdi</string>
-    <string name="rate_duration">Tilførsel: %1$.2fE/t (%2$.2f%) \nVarighet %3$d% min</string>
+    <string name="rate_duration">Tilførsel: %1$.2fE/t (%2$.2f%%) \nVarighet %3$d min</string>
 </resources>
