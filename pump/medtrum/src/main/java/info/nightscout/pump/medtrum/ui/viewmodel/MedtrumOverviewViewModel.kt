@@ -77,6 +77,10 @@ class MedtrumOverviewViewModel @Inject constructor(
     val patchExpiry: LiveData<String>
         get() = _patchExpiry
 
+    private val _activeBolusStatus = SingleLiveEvent<String>()
+    val activeBolusStatus: LiveData<String>
+        get() = _activeBolusStatus
+
     init {
         scope.launch {
             medtrumPump.connectionStateFlow.collect { state ->
@@ -119,6 +123,19 @@ class MedtrumOverviewViewModel @Inject constructor(
                 )
 
                 updateGUI()
+            }
+        }
+        scope.launch {
+            medtrumPump.bolusAmountDeliveredFlow.collect { bolusAmount ->
+                aapsLogger.debug(LTag.PUMP, "MedtrumViewModel bolusAmountDeliveredFlow: $bolusAmount")
+                if (!medtrumPump.bolusDone) {
+                    _activeBolusStatus.postValue(
+                        dateUtil.timeString(medtrumPump.bolusStartTime) + " " + dateUtil.sinceString(medtrumPump.bolusStartTime, rh)
+                            + " " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, bolusAmount) + " / " + rh.gs(
+                            info.nightscout.interfaces.R.string.format_insulin_units, medtrumPump.bolusAmountToBeDelivered
+                        )
+                    )
+                }
             }
         }
         // Periodically update gui
@@ -171,6 +188,9 @@ class MedtrumOverviewViewModel @Inject constructor(
                     )
                 )
             else _lastBolus.postValue("")
+        }
+        if (medtrumPump.bolusDone) {
+            _activeBolusStatus.postValue("")
         }
 
         val activeAlarmStrings = medtrumPump.activeAlarms.map { medtrumPump.alarmStateToString(it) }
