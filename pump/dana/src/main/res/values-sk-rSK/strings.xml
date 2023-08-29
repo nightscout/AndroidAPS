@@ -37,11 +37,11 @@
     <string name="missedbolus">Chýbajúci bolus</string>
     <string name="invalidpairing">Neplatné informácie o párovaní. Požiadavka na nové párovanie</string>
     <string name="gettingpumpstatus">Načítavam stav pumpy</string>
-    <string name="gettingextendedbolusstatus">Získavam stav predĺžených bolusov</string>
-    <string name="gettingbolusstatus">Získavam stav bolusov</string>
-    <string name="gettingtempbasalstatus">Získavam stav dočasných bazálov</string>
-    <string name="gettingpumpsettings">Získavam nastavenia pumpy</string>
-    <string name="gettingpumptime">Získavam čas z pumpy</string>
+    <string name="gettingextendedbolusstatus">Načítavam stav predĺžených bolusov</string>
+    <string name="gettingbolusstatus">Načítavam stav bolusov</string>
+    <string name="gettingtempbasalstatus">Načítavam stav dočasných bazálov</string>
+    <string name="gettingpumpsettings">Načítavam nastavenia pumpy</string>
+    <string name="gettingpumptime">Načítavam čas z pumpy</string>
     <string name="largetimedifftitle">Veľký rozdiel v čase</string>
     <string name="largetimediff">Veľký rozdiel v čase:\nČas v pumpe sa líši minimálne o 1,5 h.\nProsím upravte čas v pumpe manuálne a vymažte históriu pumpy.\nPokiaľ je to potrebné, prípadne pozastavte uzavretý okruh aspoň na \"DIA\" hodín.</string>
     <string name="pairfirst">Prosím spárujte pumpu s telefónom!</string>
