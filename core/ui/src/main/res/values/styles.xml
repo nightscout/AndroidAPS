@@ -82,8 +82,8 @@
         <!---Import List -->
         <item name="importListFileNameColor">@color/importListFileName</item>
         <item name="importListAdditionalInfoColor">@color/importListAdditionalInfo</item>
-        <item name="metadataTextWarningColor">@color/metadataTextWarning</item>
-        <item name="metadataTextOkColor">@color/metadataOk</item>
+        <item name="metadataTextWarningColor">@color/warning</item>
+        <item name="metadataTextOkColor">@color/okButtonText</item>
         <!---Delete selection -->
         <item name="trashBinTintColor">@color/black</item>
         <!---Dialog  -->
@@ -97,7 +97,7 @@
         <!---Background  -->
         <item name="defaultBackground">@color/white</item>
         <!---Toast  -->
-        <item name="toastBaseTextColor">@color/toastBase</item>
+        <item name="toastBaseTextColor">@color/defaultText</item>
         <item name="toastBackgroundColor">@color/colorLightGray</item>
         <!---Dialog Helper  -->
         <item name="materialAlertDialogTheme">@style/DialogTheme</item>
