@@ -100,4 +100,7 @@
     <string name="diaconn_g8_reasonemergencystop">Paragem de emergência</string>
     <string name="diacon_g8_blockbasal">BASAL</string>
     <string name="diaconn_g8_logsuccess">Sucesso</string>
+    <string name="diaconn_g8_errorcode_32">Durante o funcionamento de SGB, a administração está restrita</string>
+    <string name="diaconn_g8_errorcode_33">O estado da SGB é ON, é recusado o comando ON.</string>
+    <string name="diaconn_g8_errorcode_34">O estado da SGB é OFF, é recusado o comando OFF.</string>
 </resources>

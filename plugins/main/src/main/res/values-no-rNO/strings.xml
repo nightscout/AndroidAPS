@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Tilbakestill Authenticators</string>
     <string name="smscommunicator_otp_install_info">I hver følgertelefon installerer du en Authenticator-app som støtter RFC 6238 TOTP token. Populære gratis apper er:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Ved å tilbakestille autentiseringen vil du gjøre alle lagrede autentiseringer ugyldige. Du må sette alle opp på nytt igjen!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">UGYLDIG STØRRELSE!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">FEIL PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">FEIL OTP</string>
     <string name="sms_wrong_code">Feil kode. Kommandoen avbrutt.</string>
     <string name="sms_timeout_while_waiting">Tidsavbrudd fordi vi ventet på avslutning av forrige pumpekommunikasjon</string>
     <string name="smscommunicator_allowednumbers">Godkjente mobilnumre</string>
@@ -351,5 +355,5 @@
     <string name="until">inntil</string>
     <string name="default_range">STANDARD OMRÅDE</string>
     <string name="target">målverdi</string>
-    <string name="rate_duration">Tilførsel: %1$.2fE/t (%2$.2f%) \nVarighet %3$d% min</string>
+    <string name="rate_duration">Tilførsel: %1$.2fE/t (%2$.2f%%) \nVarighet %3$d min</string>
 </resources>

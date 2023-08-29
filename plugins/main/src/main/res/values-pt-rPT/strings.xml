@@ -21,6 +21,10 @@
     <string name="smscommunicator_otp_step3_test_header">3. Testar Uma-Senha-Única (OTP)</string>
     <string name="smscommunicator_otp_reset_header">Repor Autenticadores</string>
     <string name="smscommunicator_otp_install_info">Instalar uma app Autenticador que suporte Tokens RFC 6238 TOTP em cada telefone seguidor. Populares aplicativos gratuitos são:\n • Authy\n • o Google Authenticator\n • LastPass Autenticador\n • FreeOTP Autenticador</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">TAMANHO INVÁLIDO!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">PIN ERRADO</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">OTP ERRADO</string>
     <string name="sms_wrong_code">Código errado. Comando cancelado.</string>
     <string name="sms_timeout_while_waiting">Tempo limite de espera para conclusão da comunicação com a bomba</string>
     <string name="smscommunicator_allowednumbers">Número de telefones permitidos</string>
@@ -85,6 +89,7 @@
     <string name="smscommunicator_message_body">Corpo da mensagem inválido</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Enviar SMS se evento de bomba inacessível for acionado</string>
     <string name="smscommunicator_pump_unreachable">Reportar bomba inacessível</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">Para mudar o tipo de Loop para SGB (Baixa Suspensão por Glicose Baixa) responda com o código %1$s</string>
     <string name="wrong_format">Formato incorrecto</string>
     <string name="sms_actual_bg">GLIC:</string>
     <string name="sms_last_bg">Ultima GLIC:</string>

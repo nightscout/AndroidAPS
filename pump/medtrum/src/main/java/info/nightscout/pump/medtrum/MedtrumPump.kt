@@ -222,11 +222,15 @@ class MedtrumPump @Inject constructor(
     var patchAge = 0L // Time in seconds?! // As reported by pump, not used (yet)
 
     // bolus status
+    var bolusStartTime = 0L // Time in ms!
     var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
     var bolusAmountToBeDelivered = 0.0 // amount to be delivered
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
     var bolusStopped = false // bolus stopped by user
     var bolusDone = false // Bolus completed or stopped on pump
+
+    private val _bolusAmountDelivered = MutableStateFlow(0.0)
+    val bolusAmountDeliveredFlow: StateFlow<Double> = _bolusAmountDelivered
 
     // Last basal status update (from pump)
     private var _lastBasalSequence = 0
@@ -358,6 +362,7 @@ class MedtrumPump @Inject constructor(
     fun handleBolusStatusUpdate(bolusType: Int, bolusCompleted: Boolean, amountDelivered: Double) {
         aapsLogger.debug(LTag.PUMP, "handleBolusStatusUpdate: bolusType: $bolusType bolusCompleted: $bolusCompleted amountDelivered: $amountDelivered")
         bolusProgressLastTimeStamp = dateUtil.now()
+        _bolusAmountDelivered.value = amountDelivered
         bolusingTreatment?.insulin = amountDelivered
         bolusDone = bolusCompleted
     }

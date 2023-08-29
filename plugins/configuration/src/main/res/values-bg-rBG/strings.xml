@@ -6,6 +6,7 @@
     <string name="previous_button">Предишен</string>
     <string name="nav_setupwizard">Съветник за настройване</string>
     <string name="setupwizard_finish">КРАЙ</string>
+    <string name="welcome">Добре дошли</string>
     <string name="welcometosetupwizard">Добре дошли в съветника за настройки. Той ще ви преведе през етапите на настройка.</string>
     <string name="end_user_license_agreement">Лицензионно споразумение с краен потребител</string>
     <string name="end_user_license_agreement_text">НЕ ТРЯБВА ДА СЕ ИЗПОЛЗВА ЗА ВЗЕМАНЕ НА МЕДИЦИНСКИ РЕШЕНИЯ. НЯМА ГАРАНЦИЯ ЗА ПРОГРАМАТА, ДО СТЕПЕНТА, ПОЗВОЛЕНА ОТ ПРИЛОЖИМОТО ПРАВО. ОСВЕН КОГАТО Е ПОСОЧЕНО ДРУГО В ПИСМЕН ВИД, ПРИТЕЖАТЕЛИТЕ НА АВТОРСКОТО ПРАВО И/ИЛИ ДРУГИ СТРАНИ ПРЕДОСТАВЯТ ПРОГРАМАТА \"КАКТО Е\", БЕЗ ГАРАНЦИИ ОТ ВСЯКАКЪВ ВИД,  ИЗРАЗЕНИ ИЛИ ПОДРАЗБИРАЩИ СЕ, ВКЛЮЧИТЕЛНО, НО НЕ САМО, ПОДРАЗБИРАЩИ СЕ ГАРАНЦИИ ЗА ПРОДАВАЕМОСТ И ПРИГОДНОСТ ЗА  КОНКРЕТНА ЦЕЛ. ЦЕЛИЯ РИСК ПО ОТНОШЕНИЕ НА КАЧЕСТВОТО И ЕФЕКТИВНОСТТА НА ПРОГРАМАТА Е САМО ВАШ. АКО ПРОГРАМАТА НЕ СРАБОТИ, ВИЕ ПОЕМАТЕ  ВСИЧКИ НЕОБХОДИМИ РАЗХОДИ ЗА ОБСЛУЖВАНЕ, РЕМОНТ ИЛИ КОРЕКЦИЯ.</string>
@@ -16,15 +17,15 @@
     <string name="low_mark_comment">Ниската граница на диапазона (графика)</string>
     <string name="high_mark_comment">Високата граница на диапазона (графика)</string>
     <string name="permission">Разрешение</string>
-    <string name="need_system_window_permission">ААПС изисква разрешение за да може да Ви уведомява</string>
-    <string name="need_location_permission">Приложение се нуждае от достъп до местоположението Ви за сканиране и WiFi идентификация</string>
-    <string name="need_storage_permission">Приложението се нуждае от разрешение да съхранява данни за да може съхранява лог файлове и експортира настройки</string>
+    <string name="need_system_window_permission">ААПС изисква разрешение, за да може да Ви уведомява</string>
+    <string name="need_location_permission">Приложението се нуждае от достъп до местоположението Ви, за BT сканиране и WiFi идентификация</string>
+    <string name="need_storage_permission">Приложението се нуждае от разрешение да съхранява данни, за да може да съхранява лог файлове и експортира настройки</string>
     <string name="askforpermission">Питане за разрешение</string>
     <string name="need_whitelisting">%1$s се нуждае от одобрение на оптимизацията на батерията за правилна работа</string>
     <string name="storedsettingsfound">Открити са предишни настройки</string>
     <string name="master_password_summary">Главната парола се използва за архивиране на настройки и за подмяна на защитата в приложението. Запомни я или я пази на сигурно място.</string>
-    <string name="current_master_password">Сегашна главна парола</string>
-    <string name="common_values">Използвай стойностите от вашето най-голямо хранен, с което обикновено се храните</string>
+    <string name="current_master_password">Настояща главна парола</string>
+    <string name="common_values">Използвай стойностите от вашето най-голямо хранене, което обикновено консумирате</string>
     <string name="syncinfotext">Синхронизирайте данни в облака. Можете да пропуснете тази част сега, но няма да можете да преминавате цели, докато не настроите Nightscout или Tidepool клиент.</string>
     <string name="status">Статус:</string>
     <string name="patient_name">Име на пациента</string>
@@ -47,7 +48,7 @@
     <string name="data_choices">Избор на данни</string>
     <string name="fabric_upload">Качване на статистики във Fabric</string>
     <string name="allow_automated_crash_reporting">Позволява автоматично изпращане на данни за грешки и статистически данни до разработчиците чрез услугата fabric.io .</string>
-    <string name="summary_email_for_crash_report">Тази идентификация ще бъде приложена към справките за грешки за да можем да се свържем с вас при спешни случаи. Пе желание е.</string>
+    <string name="summary_email_for_crash_report">Тази идентификация ще бъде приложена към справките за грешки, за да можем да се свържем с вас при спешни случаи. По желание е.</string>
     <string name="identification">Идентификация (имейл, Фейсбук или Дискорд и др.)</string>
     <string name="request">Искане</string>
     <string name="apsmode_title">APS режим</string>
@@ -152,6 +153,7 @@
     <string name="prefdecrypt_issue_wrong_format">Липсва конфигурация на шифроване, форматът на настройките е невалиден!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Неподдържан или непотвърден алгоритъм за криптиране!</string>
     <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Избор на персонализиран Watchface</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Моля рестартирайте телефона си или AAPS от Системни настройки, иначе AAPS няма да има логове (това е важно за да се проследява и верифицира, че алгоритъма работи правилно)!</string>
 </resources>

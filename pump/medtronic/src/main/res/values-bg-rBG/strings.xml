@@ -35,7 +35,7 @@
     <string name="medtronic_error_pump_frequency_not_set">Честота на помпата не е зададена.</string>
     <string name="medtronic_error_pump_frequency_invalid">Честотата не се поддържа.</string>
     <string name="medtronic_error_rileylink_address_invalid">Грешен RileyLink адрес.</string>
-    <string name="medtronic_error_pump_type_set_differs_from_detected">Откритата помпа не е идентична с кокнфигурираната.</string>
+    <string name="medtronic_error_pump_type_set_differs_from_detected">Откритата помпа не е идентична с конфигурираната.</string>
     <string name="medtronic_error_pump_basal_profiles_not_enabled">Базалните профили/настройки не са позволен в помпата. Включванете го от настройките на помпата.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Базалния профил в помпата е грешен (трябва да е STD).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Грешен тип TBR в помпата ( трябва да е Absolute).</string>

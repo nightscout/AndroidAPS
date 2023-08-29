@@ -7,7 +7,7 @@
     <string name="pump_serial_number">Сериен номер на помпа</string>
     <string name="bolus_delivered_so_far">%1$.2f Е / %2$.2f Е доставено</string>
     <!-- PumpCommon - Pump Status -->
-    <string name="pump_status_not_initialized">Под не е инициализиран</string>
+    <string name="pump_status_not_initialized">Помпата не е инициализирана</string>
     <string name="pump_status_initialized">Разпозната</string>
     <string name="pump_status_encrypt">Шифроване на връзката</string>
     <string name="pump_status_ready">Готова</string>

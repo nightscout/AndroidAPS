@@ -376,6 +376,8 @@
     <string name="carbs_g">AV %1$d g</string>
     <string name="extended_bolus_u_min">IŠTĘSTAS BOLUSAS %1$.2f vv %2$d min</string>
     <string name="load_events">GAUTI ĮVYKIUS</string>
+    <string name="deactivate">DEAKTYVUOTI</string>
+    <string name="update_time">ATNAUJINTI LAIKĄ</string>
     <string name="load_history">GAUTI ISTORIJĄ %1$d</string>
     <string name="load_tdds">GAUTI BPD</string>
     <string name="set_profile">NUSTATYTI PROFILĮ</string>

@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Resetovat autentikátory</string>
     <string name="smscommunicator_otp_install_info">Na každém sledovacím telefonu nainstalujte Authentikátor, který podporuje tokeny TOTP RFC 6238. Nejoblíbenější bezplatné aplikace jsou:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Obnovením autentikátoru uděláte všechny již poskytnuté autentikátory neplatné. Budete je muset znovu nastavit!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">NEPLATNÁ DÉLKA!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">CHYBNÝ PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">CHYBNÉ OTP</string>
     <string name="sms_wrong_code">Nesprávný kód. Příkaz zrušen.</string>
     <string name="sms_timeout_while_waiting">Vypršel časový limit při čekání na dokončení předchozí komunikace s pumpou</string>
     <string name="smscommunicator_allowednumbers">Povolená tel. čísla</string>

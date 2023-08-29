@@ -333,6 +333,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
         medtrumPump.bolusAmountToBeDelivered = insulin
         medtrumPump.bolusStopped = false
         medtrumPump.bolusProgressLastTimeStamp = bolusStart
+        medtrumPump.bolusStartTime = bolusStart
 
         detailedBolusInfo.timestamp = bolusStart // Make sure the timestamp is set to the start of the bolus
         detailedBolusInfoStorage.add(detailedBolusInfo) // will be picked up on reading history

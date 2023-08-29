@@ -27,7 +27,7 @@
     <string name="invalid">INVÁLIDO</string>
     <string name="gradually_increase_notification_volume">Aumentar gradualmente o volume de alertas e notificações</string>
     <string name="localalertsettings_title">Alertas locais</string>
-    <string name="enable_missed_bg_readings_alert">Alertar caso nenhuma Glicose seja recebida</string>
+    <string name="enable_missed_bg_readings_alert">Alerta caso nenhuma Glicose seja recebida</string>
     <string name="enable_pump_unreachable_alert">Alertar caso não seja possível alcançar a bomba</string>
     <string name="pump_unreachable_threshold">Limite para bomba inacessível [min]</string>
     <string name="enable_carbs_req_alert">Alertar se forem necessários Hidratos</string>

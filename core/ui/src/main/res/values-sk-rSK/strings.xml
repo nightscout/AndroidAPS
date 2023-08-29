@@ -376,6 +376,9 @@
     <string name="carbs_g">SACHARIDY %1$d g</string>
     <string name="extended_bolus_u_min">PREDĹŽENÝ BOLUS %1$.2f U %2$d min</string>
     <string name="load_events">Načítavanie udalostí</string>
+    <string name="clear_alarms">ZMAZAŤ ALARMY</string>
+    <string name="deactivate">DEAKTIVOVAŤ</string>
+    <string name="update_time">AKTUALIZOVAŤ ČAS</string>
     <string name="load_history">NAČÍTAŤ HISTÓRIU %1$d</string>
     <string name="load_tdds">NAČÍTAŤ CDD</string>
     <string name="set_profile">NASTAVIŤ PROFIL</string>
@@ -421,6 +424,7 @@
     <string name="autotune_ic_warning">Vybraný profil má %1$d hodnôt IC. Autotune bude používať %2$.2f g/JI</string>
     <string name="autotune_isf_warning">Vybraný profil má %1$d hodnôt ISF. Autotune bude používať %2$.1f %3$s/JI</string>
     <string name="autotune_error">Chyba vstupných dát, skúste znova spustiť Autotune, alebo znížte počet dní</string>
+    <string name="autotune_error_more_days">Chyba vo vstupných dátach, zvýšte počet dní</string>
     <string name="autotune_warning_during_run">Autotune spustený, prosím buďte trpezliví</string>
     <string name="autotune_warning_after_run">Pred použitím výsledky starostlivo skontrolujte!</string>
     <string name="autotune_partial_result">Čiastočný výsledok - vyladený deň %1$d / %2$d</string>
@@ -453,6 +457,7 @@
     <string name="cobvsiob">COB vs. IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Detekovaná pomalá absorbcia sacharidov: %2$d%% času. Prekontrolujte kalkuláciu. COB môže byť úplne iné, môže byť podaného viac inzulínu!!!!!</font>]]></string>
     <string name="partialboluswizard">Podaj túto časť z výsledku kalkulácie [%]</string>
+    <string name="partialboluswizard_reset_time">Časový limit starej glykémie [min]</string>
     <string name="bolus_constraint_applied_warn">Použité obmedzenie bolusu: %1$.2f JI na %2$.2f JI</string>
     <string name="bolus_recorded_only">Bolus bude iba zaznamenaný (nie pumpou vydaný)</string>
     <string name="advisoralarm">Spustiť výstrahu, keď je čas na jedlo</string>

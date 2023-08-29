@@ -67,6 +67,7 @@
     <string name="duration3h">3 часа</string>
     <string name="duration10h">10 часа</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">коригирайте резултат с %</string>
     <string name="a11_correction_units">коригирайте резултат с единици</string>
     <string name="two_hours">2ч</string>
     <string name="result_insulin_carbs">Резултат: %1$s %2$s</string>
