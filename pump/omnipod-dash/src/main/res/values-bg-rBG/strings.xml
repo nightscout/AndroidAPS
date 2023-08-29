@@ -31,6 +31,7 @@
     <string name="omnipod_dash_command_not_sent">Командата не е изпратена</string>
     <string name="omnipod_dash_command_not_received_by_the_pod">Командата не е получена от pod</string>
     <string name="omnipod_dash_unknown">Неизвестно състояние за командата</string>
+    <string name="omnipod_common_history_tbr_value">%1$.2f Е/ч, %2$d минути</string>
     <string name="omnipod_common_history_bolus_value">%1$.2fЕ</string>
     <string name="omnipod_common_alert_delivery_suspended">Доставянето на инсулин е спряно</string>
     <string name="omnipod_dash_connection_lost">Загубена връзка с pod</string>
