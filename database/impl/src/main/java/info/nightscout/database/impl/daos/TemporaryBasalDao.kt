@@ -72,11 +72,11 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     fun getLastHistoryRecord(id: Long): TemporaryBasal?
 
     // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE id > :id AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_TEMPORARY_BASALS WHERE id > :id) ORDER BY id ASC")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE id > :id AND pumpId IS NOT NULL AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_TEMPORARY_BASALS WHERE id > :id) ORDER BY id ASC")
     fun getModifiedFrom(id: Long): Single<List<TemporaryBasal>>
 
     // for WS we need 1 record only
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE id > :id ORDER BY id ASC limit 1")
+    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE id > :id AND pumpId IS NOT NULL ORDER BY id ASC limit 1")
     fun getNextModifiedOrNewAfter(id: Long): Maybe<TemporaryBasal>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE id = :referenceId")
