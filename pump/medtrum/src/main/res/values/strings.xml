@@ -37,6 +37,7 @@
     <!-- overview fragment -->
     <string name="ble_status_label">BLE Status</string>
     <string name="last_connection_label">Last connected</string>
+    <string name="active_bolus_label">Active bolus</string>
     <string name="pump_state_label">Pump state</string>
     <string name="active_alarms_label">Active alarms</string>
     <string name="reservoir_level"> %.2f U</string>
