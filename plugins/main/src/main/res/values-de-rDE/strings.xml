@@ -357,5 +357,5 @@ Unerwartetes Verhalten.</string>
     <string name="until">bis</string>
     <string name="default_range">STANDARD-BEREICH</string>
     <string name="target">Ziel</string>
-    <string name="rate_duration">Rate: %1$.2fIE/h (%2$.2f%) \nDauer %3$d% min</string>
+    <string name="rate_duration">Rate: %1$.2fIE/h (%2$.2f%%) \nDauer %3$d min</string>
 </resources>
