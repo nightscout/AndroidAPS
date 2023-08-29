@@ -355,5 +355,5 @@
     <string name="until">jusqu\'à</string>
     <string name="default_range">PLAGE PAR DEFAUT</string>
     <string name="target">cible</string>
-    <string name="rate_duration">Taux: %1$.2fU/h (%2$.2f%%) \nDurée: %3$d% min</string>
+    <string name="rate_duration">Taux: %1$.2fU/h (%2$.2f%%) \nDurée: %3$d min</string>
 </resources>
