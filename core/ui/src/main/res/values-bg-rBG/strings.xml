@@ -376,6 +376,9 @@
     <string name="carbs_g">ВЪГЛЕХИДРАТИ %1$d гр</string>
     <string name="extended_bolus_u_min">УДЪЛЖЕН БОЛУС %1$.2f Е %2$d мин</string>
     <string name="load_events">ВЪВЕДИ СЪБИТИЯ</string>
+    <string name="clear_alarms">ИЗТРИВАНЕ НА АЛАРМИ</string>
+    <string name="deactivate">ДЕАКТИВИРАНЕ</string>
+    <string name="update_time">АКТУАЛИЗИРАНЕ НА ЧАСА</string>
     <string name="load_history">ЗАРЕДИ ИСТОРИЯ %1$d</string>
     <string name="load_tdds">ЗАРЕДИ TDDs</string>
     <string name="set_profile">ЗАДАЙ ПРОФИЛ</string>
@@ -421,6 +424,7 @@
     <string name="autotune_ic_warning">Избраният профил е с въглехидратно число %1$d. Аутотюн ще използва въглехидратно число %2$.2f гр/Е</string>
     <string name="autotune_isf_warning">Избраният профил е с инсулинова чувствителност %1$d. Autotune ще използва инсулинова чувствителност %2$.1f %3$s/U</string>
     <string name="autotune_error">Грешка във въведените данни, опитайте се отново да стартирате Autotune или да намалите броя на дните</string>
+    <string name="autotune_error_more_days">Грешка във въведените данни, увеличете броя дни</string>
     <string name="autotune_warning_during_run">Autotune започна изчисления, моля изчакайте</string>
     <string name="autotune_warning_after_run">Проверете резултатите внимателно, преди да ги използвате!</string>
     <string name="autotune_partial_result">Частичен резултат ден %1$d / %2$d настроен</string>
