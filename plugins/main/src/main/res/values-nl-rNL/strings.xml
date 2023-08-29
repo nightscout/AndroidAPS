@@ -351,5 +351,5 @@
     <string name="until">tot</string>
     <string name="default_range">Standaard streefbereik</string>
     <string name="target">streefwaarde</string>
-    <string name="rate_duration">Basaal: %1$.2fE/uur (%2$.2f%) \nDuur %3$d% min</string>
+    <string name="rate_duration">Basaal: %1$.2fE/uur (%2$.2f%%) \nDuur %3$d min</string>
 </resources>
