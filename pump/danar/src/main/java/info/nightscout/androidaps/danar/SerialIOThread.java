@@ -33,8 +33,6 @@ public class SerialIOThread extends Thread {
     private final MessageHashTableBase hashTable;
     private final DanaPump danaPump;
 
-    private final Object lock = new Object();
-
     public SerialIOThread(AAPSLogger aapsLogger, BluetoothSocket rfcommSocket, MessageHashTableBase hashTable, DanaPump danaPump) {
         super();
         this.hashTable = hashTable;
@@ -84,7 +82,7 @@ public class SerialIOThread extends Thread {
                     // process the message content
                     message.setReceived(true);
                     message.handleMessage(extractedBuff);
-                    synchronized (lock) {
+                    synchronized (message) {
                         message.notifyAll();
                     }
                 }
