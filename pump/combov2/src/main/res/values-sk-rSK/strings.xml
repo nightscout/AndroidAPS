@@ -47,6 +47,7 @@ Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
     <string name="combov2_pairing_combo_scan_timeout_reached">Časový limit pre vyhľadávanie Combo dosiahnutý</string>
     <string name="combov2_pairing_failed_due_to_error">Párovanie se nepodarilo z dôvodu chyby: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Párovanie prerušené z neznámych dôvodov</string>
+    <string name="combov2_pairing_invalid_pin_length">"Neplatná dĺžka PINu párovania: potrebných %1$d číslic, zadaných %2$d"</string>
     <string name="combov2_scanning_for_pump">Vyhľadávanie pumpy</string>
     <string name="combov2_establishing_bt_connection">Nadväzovanie Bluetooth pripojenia (pokus č. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Nadväzovanie pripojenia s pumpou</string>
@@ -124,4 +125,6 @@ Pokiaľ po viac ako ~5 minútach nie je nadviazané žiadne spojenie:\n\n
     <string name="combov2_refresh_pump_status_after_error">Obnovovanie stavu pumpy po zaznamenaní chyby</string>
     <string name="combov2_go_back">Späť</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Nie je možné spárovať, pretože ovládač nie je inicializovaný. To sa obvykle stáva, ak neboli udelené potrebné oprávnenia Bluetooth. Choďte späť, udeľte oprávnenia Bluetooth, potom skúste znova spárovať.</string>
+    <string name="combov2_bluetooth_disabled">Nie je možné spustiť ovládač - Bluetooth je vypnuté</string>
+    <string name="combov2_bluetooth_not_supported">Ovládač nie je možné spustiť - toto zariadenie nepodporuje Bluetooth</string>
 </resources>

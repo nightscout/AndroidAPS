@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">איפוס מאמתים</string>
     <string name="smscommunicator_otp_install_info">בכל אחד מהטלפונים העוקבים, התקינו יישום מאמת התומך באסימוני RFC 6238 TOTP. יישומים פופולריים בחינם הם:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">אתחול המאמת הופך את כל המאמתים הקיימים לבלתי חוקיים. יש להגדיר אותם מחדש!</string>
+    <string name="smscommunicator_otp_verification_ok">אישור</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">אורך לא תקין!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">קוד שגוי</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">קוד חד פעמי שגוי</string>
     <string name="sms_wrong_code">קוד שגוי. הפקודה בוטלה.</string>
     <string name="sms_timeout_while_waiting">בהמתנה עד לסיום תקשורת קודמת עם המשאבה</string>
     <string name="smscommunicator_allowednumbers">מספרי טלפון מורשים</string>

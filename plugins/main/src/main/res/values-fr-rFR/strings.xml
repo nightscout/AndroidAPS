@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Réinitialiser les authentificateurs</string>
     <string name="smscommunicator_otp_install_info">Sur chaque téléphone suiveur, installez une appli. Authentificateur qui prend en charge les jetons RFC 6238 TOTP. Les applications libres populaires sont:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">En réinitialisant l\'Authentificateur, vous invalidez tous les authentificateurs déjà initialisés. Vous devrez les reconfigurer !</string>
+    <string name="smscommunicator_otp_verification_ok">Ok</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">TAILLE INVALIDE !</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">MAUVAIS CODE PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">MAUVAIS OTP</string>
     <string name="sms_wrong_code">Code incorrect. Commande annulée.</string>
     <string name="sms_timeout_while_waiting">Délai d\'attente pour finir la communication précédente avec la pompe</string>
     <string name="smscommunicator_allowednumbers">Numéros de tél autorisés</string>
@@ -351,5 +355,5 @@
     <string name="until">jusqu\'à</string>
     <string name="default_range">PLAGE PAR DEFAUT</string>
     <string name="target">cible</string>
-    <string name="rate_duration">Taux: %1$.2fU/h (%2$.2f%%) \nDurée: %3$d% min</string>
+    <string name="rate_duration">Taux: %1$.2fU/h (%2$.2f%%) \nDurée: %3$d min</string>
 </resources>

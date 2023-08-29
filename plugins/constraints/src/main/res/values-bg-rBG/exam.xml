@@ -200,6 +200,7 @@
     <string name="profileswitch2_pctwillchange">При превключване на 120% профил, кои отговори са верни?</string>
     <string name="profileswitch2_bghigher">Целевата кръвна захар ще бъде с 20% по-висока.</string>
     <string name="profileswitch2_basalhigher">Базалните нива ще бъдат с 20% по-високи.</string>
+    <string name="profileswitch2_bgunchanged">Целевата КЗ ще остане непроменена.</string>
     <string name="profileswitch2_isfhigher">ISF ще бъде с 20% по-висок.</string>
     <string name="profileswitchtime_label">Смяна на профил</string>
     <string name="profileswitchtime_iwant">Ако станете 2 часа по-рано от обикновено, как трябва да уведомите AAPS за промяната в графика си?</string>

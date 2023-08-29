@@ -23,16 +23,20 @@
     <string name="msg_warning_old">I dati di AAPS sono vecchi di %1$s ! Controlla il tuo sensore, xDrip+, NS, la configurazione di AAPS o altro!</string>
     <string name="pref_vibrate_on_bolus">Vibra durante bolo</string>
     <string name="pref_units_for_actions">Unità per azioni</string>
+    <string name="units_short">U</string>
     <string name="pref_show_date">Mostra data</string>
     <string name="pref_show_iob">Mostra IOB</string>
+    <string name="pref_show_detailed_iob">Mostra IOB dettagliato</string>
     <string name="pref_show_cob">Mostra COB</string>
     <string name="pref_show_delta">Mostra delta</string>
+    <string name="pref_show_detailed_delta">Mostra delta dettagliato</string>
     <string name="pref_show_avgdelta">Mostra AvgDelta</string>
     <string name="pref_show_phone_battery">Mostra batteria telefono</string>
     <string name="pref_show_rig_battery">Mostra batteria rig</string>
     <string name="pref_show_basal_rate">Mostra velocità basale</string>
     <string name="pref_show_loop_status">Mostra stato loop</string>
     <string name="pref_show_bg">Mostra BG</string>
+    <string name="pref_show_bgi">Mostra BGI</string>
     <string name="pref_show_direction_arrow">Mostra frecce direzionali</string>
     <string name="pref_show_ago">Mostra Indietro</string>
     <string name="pref_dark" comment="Enables dark visual theme">Scuro</string>
@@ -192,6 +196,8 @@
     <string name="week_short">w</string>
     <string name="day_short">d</string>
     <string name="hour_short">h</string>
+    <string name="hour_minute">%1$s:%2$s</string>
+    <string name="hour_minute_second">%1$s:%2$s:%3$s</string>
     <string name="old">vecchio</string>
     <string name="old_warning">!vecchio!</string>
     <string name="error">!err!</string>

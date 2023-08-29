@@ -6,6 +6,7 @@
     <string name="previous_button">Späť</string>
     <string name="nav_setupwizard">Sprievodca nastavením</string>
     <string name="setupwizard_finish">Dokončiť</string>
+    <string name="welcome">Vitajte</string>
     <string name="welcometosetupwizard">Vitajte v sprievodcovi nastavení. Prevedie Vás procesom nastavenia programu\n</string>
     <string name="end_user_license_agreement">Licenčná zmluva s koncovým používateľom</string>
     <string name="end_user_license_agreement_text">Tento program nemôže byť použitý na medicínske rozhodnutia. Na program neexistuje žiadna záruka, alebo garantovaná podpora v akejkoľvek podobe. Keď už sa rozhodneš pre používanie, tak jeho kvalita a celkové schopnosti tohto projektu závisia len na Tebe samotnom. Ak by sa ukázalo, že je program chybný, preberáš všetky potrebné náklady na liečbu, prípadne náklady na iné servisné služby, opravy, alebo korekcie.</string>
@@ -152,6 +153,7 @@
     <string name="prefdecrypt_issue_wrong_format">Chýba konfigurácia šifrovania, formát nastavení je neplatný!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Nepodporovaný alebo neurčený šifrovací algoritmus!</string>
     <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Vyberte vlastný ciferník</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Prosím reštartujte Váš telefón, alebo reštartujte AndroidAPS z nastavení \nv opačnom prípade AndroidAPS nebude mocť zaznamenávať logy (dôležité kvôli sledovaniu a overovaniu, že algoritmus pracuje správne)!</string>
 </resources>

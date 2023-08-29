@@ -137,6 +137,7 @@
     <string name="error_in_basal_values">Fout in basaal waarden</string>
     <string name="error_in_target_values">Fout in streefdoel</string>
     <string name="error_in_isf_values">Fout in ISF waarden</string>
+    <string name="profile_name_contains_dot">Sommige profielnamen bevatten punten.\nDit wordt niet ondersteund door NS.\nProfielen worden niet geüpload naar NS.</string>
     <string name="invalid_profile_not_accepted">Ongeldig profiel %1$s niet geaccepteerd door NS</string>
     <string name="view">Weergeven</string>
     <string name="errors">Foutmeldingen</string>
@@ -238,6 +239,7 @@
     <string name="short_tabtitles">Afgekorte tab titels</string>
     <string name="overview_show_notes_field_in_dialogs_title">Toon notities veld in behandeling dialoogvensters</string>
     <string name="deliverpartofboluswizard">Bolus wizard voert de berekening uit maar alleen dit deel van berekende insuline wordt geleverd. Handig in combinatie met het SMB algoritme.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Volledige bolus (100%) leveren als glycemie ouder is dan</string>
     <string name="enable_bolus_advisor">Bolusadviseur inschakelen</string>
     <string name="enable_bolus_advisor_summary">Gebruik bij een hoge bloedglucose niet het resultaat van de wizard, maar een herinnering om later met eten te beginnen (\"pre-bolus\")</string>
     <string name="enablesuperbolus">Activeer superbolus in de wizard</string>
@@ -248,6 +250,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Voorspellingen</string>
     <string name="overview_show_treatments">Behandelingen</string>
+    <string name="overview_show_heartRate">Hartslag</string>
     <string name="overview_show_deviation_slope">Richtingscoëfficiënt afwijking</string>
     <string name="overview_show_activity">Activiteit</string>
     <string name="overview_show_bgi">Bloedglucose impact</string>
@@ -265,6 +268,7 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DEVSLOPE</string>
     <string name="treatments_shortname">BEHAND</string>
+    <string name="heartRate_shortname">HR</string>
     <string name="sensitivity_shortname">SENS</string>
     <string name="graph_scale">Grafiek schaal</string>
     <string name="graph_menu_divider_header">Grafiek</string>
@@ -306,8 +310,19 @@
     <string name="wear_notifysmb_summary">Toon SMB op horloge zoals gewone bolussen.</string>
     <string name="wear_predictions_summary">Toon de voorspellingen op het horloge.</string>
     <string name="wear_predictions_title">Voorspellingen</string>
+    <string name="wear_custom_watchface_settings">Aanpasbare Wijzerplaat Instellingen</string>
+    <string name="wear_custom_watchface_authorization_title">Aanpasbare Wijzerplaat Autorisatie</string>
+    <string name="wear_custom_watchface_authorization_summary">Sta geladen aanpasbare wijzerplaat toe om sommige weergave-instellingen van horloge te wijzigen en te vergrendelen voor het ontwerp van de wijzerplaat</string>
+    <string name="wear_custom_watchface">Aanpasbare Watchface: %1$s</string>
+    <string name="wear_load_watchface">Laad Watchface</string>
+    <string name="wear_infos_watchface">Watchface informatie</string>
+    <string name="wear_export_watchface">Exporteer template</string>
+    <string name="wear_new_custom_watchface_exported">Aanpasbare watchface template geëxporteerd</string>
     <string name="resend_all_data">Update Wear gegevens</string>
     <string name="open_settings_on_wear">Open instellingen op Wear</string>
+    <string name="cwf_infos_pref_locked">Lijst met instellingen die zijn vergrendeld door watchface</string>
+    <string name="cwf_infos_pref_required">Lijst met instellingen vereist voor watchface</string>
+    <string name="cwf_infos_view_title">Lijst van velden opgenomen in de watchface</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Toont een permanente melding met een beknopt overzicht van hetgeen de Loop momenteel doet</string>
     <string name="old_data">Oude gegevens</string>
@@ -316,6 +331,7 @@
     <string name="grams_short">g</string>
     <string name="hour_short">u</string>
     <string name="no_active_profile">Geen actieve profielwissel!</string>
+    <string name="profile_message">Profiel:\n\nTijdverschuiving: %1$d\nPercentage: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fE %1$.0f%%</string>
     <string name="no_profile">Geen profiel geladen</string>
     <string name="aps_only">Alleen gebruiken in de APS modus!</string>
@@ -335,5 +351,5 @@
     <string name="until">tot</string>
     <string name="default_range">Standaard streefbereik</string>
     <string name="target">streefwaarde</string>
-    <string name="rate_duration">Basaal: %1$.2fE/uur (%2$.2f%) \nDuur %3$d% min</string>
+    <string name="rate_duration">Basaal: %1$.2fE/uur (%2$.2f%%) \nDuur %3$d min</string>
 </resources>

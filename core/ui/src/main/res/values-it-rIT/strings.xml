@@ -424,6 +424,7 @@
     <string name="autotune_ic_warning">Il profilo selezionato ha %1$d valori IC. Autotune userà %2$.2f g/U</string>
     <string name="autotune_isf_warning">Il profilo selezionato ha %1$d valori ISF. Autotune userà %2$.1f %3$s/U</string>
     <string name="autotune_error">Errore nei dati di input, prova a eseguire di nuovo Autotune o ridurre il numero di giorni</string>
+    <string name="autotune_error_more_days">Errore nei dati di input, aumenta il numero di giorni</string>
     <string name="autotune_warning_during_run">Il calcolo di Autotune è iniziato, attendi</string>
     <string name="autotune_warning_after_run">Controlla attentamente i risultati prima di utilizzarli!</string>
     <string name="autotune_partial_result">Risultato parziale giorno %1$d / %2$d regolato</string>

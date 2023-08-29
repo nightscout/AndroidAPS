@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string-array name="alarmSettings">
+        <item>Licht, trillen en pieptoon</item>
+        <item>Licht en trillen</item>
+        <item>Licht en pieptoon</item>
+        <item>Licht</item>
+        <item>Trillen en pieptoon</item>
+        <item>Trillen</item>
+        <item>Pieptoon</item>
+        <item>Stil</item>
+    </string-array>
+</resources>

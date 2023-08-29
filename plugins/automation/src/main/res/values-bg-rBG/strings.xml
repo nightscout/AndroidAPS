@@ -92,6 +92,8 @@
     <string name="lastboluscompared">Последен болус преди %1$s %2$s минути</string>
     <string name="triggercoblabel">Активни въглехидрати</string>
     <string name="cobcompared">Въгл %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Сърдечен ритъм</string>
+    <string name="triggerHeartRateDesc">СР %1$s %2$.0f</string>
     <string name="iob_u">IOB [Ед]:</string>
     <string name="distance_short">Разсt [м]:</string>
     <string name="recurringTime">Повтарящо се време</string>
