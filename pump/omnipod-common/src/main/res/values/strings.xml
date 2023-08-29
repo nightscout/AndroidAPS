@@ -134,7 +134,7 @@
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">When enabled the pod will beep when the specified time is reached</string>
     <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Reminder at hours before expiry (72 Hours)</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled">Expiration alert enabled</string>
-    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">When enabled the pod will beep when the specified time is reached and every hour after that</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">When enabled the pod will beep when the specified time is reached and 1 hour before shutdown</string>
     <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Alert at hours before shutdown (80 Hours)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Low reservoir alert enabled</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Number of units</string>
