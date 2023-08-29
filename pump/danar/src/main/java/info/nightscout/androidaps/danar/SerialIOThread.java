@@ -160,10 +160,12 @@ public class SerialIOThread extends Thread {
             aapsLogger.error("sendMessage write exception: ", e);
         }
 
-        try {
-            message.wait(5000);
-        } catch (InterruptedException e) {
-            aapsLogger.error("sendMessage InterruptedException", e);
+        synchronized (message) {
+            try {
+                message.wait(5000);
+            } catch (InterruptedException e) {
+                aapsLogger.error("sendMessage InterruptedException", e);
+            }
         }
 
         SystemClock.sleep(200);
