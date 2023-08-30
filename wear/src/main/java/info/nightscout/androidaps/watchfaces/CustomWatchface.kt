@@ -157,6 +157,10 @@ class CustomWatchface : BaseWatchFace() {
                 basalCenterColor = getColor(json.optString(BASALCENTERCOLOR.key), ContextCompat.getColor(this, R.color.basal_light))
                 gridColor = getColor(json.optString(GRIDCOLOR.key), Color.WHITE)
                 pointSize = json.optInt(POINTSIZE.key, 2)
+                dayNameFormat = json.optString(DAYNAMEFORMAT.key, "E")
+                    .takeIf { it.matches(Regex("E{1,4}")) } ?: "E"
+                monthFormat = json.optString(MONTHFORMAT.key, "MMM")
+                    .takeIf { it.matches(Regex("M{1,4}")) } ?: "MMM"
                 bgColor = when (singleBg.sgvLevel) {
                     1L   -> highColor
                     0L   -> midColor
@@ -191,9 +195,9 @@ class CustomWatchface : BaseWatchFace() {
                                         StyleMap.style(viewJson.optString(FONTSTYLE.key, StyleMap.NORMAL.key))
                                     )
                                     view.setTextColor(getColor(viewJson.optString(FONTCOLOR.key)))
-
+                                    view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
                                     if (viewJson.has(TEXTVALUE.key))
-                                        view.text = viewJson.getString(TEXTVALUE.key)
+                                        view.text = viewJson.optString(TEXTVALUE.key)
                                 }
 
                                 is ImageView -> {
@@ -204,14 +208,14 @@ class CustomWatchface : BaseWatchFace() {
                                         drawableDataMap[CwfDrawableFileMap.fromKey(id.key)]?.toDrawable(resources)
                                     drawable?.let {
                                         if (viewJson.has(COLOR.key))
-                                            it.colorFilter = changeDrawableColor(getColor(viewJson.getString(COLOR.key)))
+                                            it.colorFilter = changeDrawableColor(getColor(viewJson.optString(COLOR.key)))
                                         else
                                             it.clearColorFilter()
                                         view.setImageDrawable(it)
                                     } ?: apply {
                                         view.setImageDrawable(CwfDrawableFileMap.fromKey(id.key).icon?.let { context.getDrawable(it) })
                                         if (viewJson.has(COLOR.key))
-                                            view.setColorFilter(getColor(viewJson.getString(COLOR.key)))
+                                            view.setColorFilter(getColor(viewJson.optString(COLOR.key)))
                                         else
                                             view.clearColorFilter()
                                     }
