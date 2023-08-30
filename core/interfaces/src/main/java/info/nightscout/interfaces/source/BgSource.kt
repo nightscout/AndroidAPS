@@ -1,7 +1,5 @@
 package info.nightscout.interfaces.source
 
-import info.nightscout.database.entities.GlucoseValue
-
 interface BgSource {
 
     /**
@@ -18,12 +16,4 @@ interface BgSource {
      */
     val sensorBatteryLevel: Int
         get() = -1
-
-    /**
-     * Decide if GlucoseValue should be uploaded to NS
-     *
-     * @param glucoseValue glucose value
-     * @return true if GlucoseValue should be uploaded to NS (supported by plugin and enabled in preferences)
-     */
-    fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean
 }
