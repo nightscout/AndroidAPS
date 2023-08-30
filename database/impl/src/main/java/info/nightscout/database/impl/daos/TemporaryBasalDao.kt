@@ -62,12 +62,6 @@ internal interface TemporaryBasalDao : TraceableDao<TemporaryBasal> {
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY timestamp ASC")
     fun getTemporaryBasalDataIncludingInvalidFromTime(timestamp: Long): Single<List<TemporaryBasal>>
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE timestamp >= :from AND timestamp <= :to AND referenceId IS NULL ORDER BY timestamp ASC")
-    fun getTemporaryBasalDataIncludingInvalidFromTimeToTime(from: Long, to: Long): Single<List<TemporaryBasal>>
-
-    @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
-    fun getTemporaryBasalData(): Single<List<TemporaryBasal>>
-
     @Query("SELECT * FROM $TABLE_TEMPORARY_BASALS WHERE referenceId = :id ORDER BY id DESC LIMIT 1")
     fun getLastHistoryRecord(id: Long): TemporaryBasal?
 

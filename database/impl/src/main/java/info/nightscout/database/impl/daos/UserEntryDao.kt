@@ -17,9 +17,6 @@ interface UserEntryDao {
     @Query("DELETE FROM $TABLE_USER_ENTRY WHERE timestamp < :than")
     fun deleteOlderThan(than: Long): Int
 
-    @Query("SELECT * FROM $TABLE_USER_ENTRY ORDER BY id DESC")
-    fun getAll(): Single<List<UserEntry>>
-
     @Query("SELECT * FROM $TABLE_USER_ENTRY WHERE timestamp >= :timestamp ORDER BY id DESC")
     fun getUserEntryDataFromTime(timestamp: Long): Single<List<UserEntry>>
 
