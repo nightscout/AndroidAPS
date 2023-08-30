@@ -45,7 +45,6 @@ class DexcomPlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val sp: SP,
     private val context: Context,
     config: Config
 ) : PluginBase(
@@ -53,9 +52,9 @@ class DexcomPlugin @Inject constructor(
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon(info.nightscout.core.main.R.drawable.ic_dexcom_g6)
+        .preferencesId(R.xml.pref_dexcom)
         .pluginName(R.string.dexcom_app_patched)
         .shortName(R.string.dexcom_short)
-        .preferencesId(R.xml.pref_dexcom)
         .description(R.string.description_source_dexcom),
     aapsLogger, rh, injector
 ), BgSource, DexcomBoyda {
@@ -67,12 +66,6 @@ class DexcomPlugin @Inject constructor(
     }
 
     override fun advancedFilteringSupported(): Boolean = true
-
-    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        (glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G6_NATIVE ||
-            glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_G5_NATIVE ||
-            glucoseValue.sourceSensor == GlucoseValue.SourceSensor.DEXCOM_NATIVE_UNKNOWN)
-            && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
     override fun onStart() {
         super.onStart()

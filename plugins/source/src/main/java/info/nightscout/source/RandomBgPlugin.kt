@@ -18,7 +18,6 @@ import info.nightscout.interfaces.source.BgSource
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.T
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -35,7 +34,6 @@ class RandomBgPlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
     aapsLogger: AAPSLogger,
-    private val sp: SP,
     private val repository: AppRepository,
     private val virtualPump: VirtualPump,
     private val config: Config
@@ -44,9 +42,9 @@ class RandomBgPlugin @Inject constructor(
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon(R.drawable.ic_dice)
+        .preferencesId(R.xml.pref_bgsource)
         .pluginName(R.string.random_bg)
         .shortName(R.string.random_bg_short)
-        .preferencesId(R.xml.pref_bgsource)
         .description(R.string.description_source_random_bg),
     aapsLogger, rh, injector
 ), BgSource {
@@ -72,9 +70,6 @@ class RandomBgPlugin @Inject constructor(
     private val disposable = CompositeDisposable()
 
     override fun advancedFilteringSupported(): Boolean = true
-
-    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.RANDOM && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
     override fun onStart() {
         super.onStart()
@@ -116,9 +111,7 @@ class RandomBgPlugin @Inject constructor(
         )
         disposable += repository.runTransactionForResult(CgmSourceTransaction(glucoseValues, emptyList(), null))
             .subscribe({ savedValues ->
-                           savedValues.inserted.forEach {
-                               aapsLogger.debug(LTag.DATABASE, "Inserted bg $it")
-                           }
+                           savedValues.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted bg $it") }
                        }, { aapsLogger.error(LTag.DATABASE, "Error while saving values from Random plugin", it) }
             )
     }

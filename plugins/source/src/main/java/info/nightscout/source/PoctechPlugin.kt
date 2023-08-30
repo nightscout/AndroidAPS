@@ -18,7 +18,6 @@ import info.nightscout.interfaces.utils.JsonHelper.safeGetString
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
 import org.json.JSONException
@@ -29,16 +28,15 @@ import javax.inject.Singleton
 class PoctechPlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
-    aapsLogger: AAPSLogger,
-    private val sp: SP
+    aapsLogger: AAPSLogger
 ) : PluginBase(
     PluginDescription()
-    .mainType(PluginType.BGSOURCE)
-    .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(info.nightscout.core.main.R.drawable.ic_poctech)
-    .pluginName(R.string.poctech)
-    .preferencesId(R.xml.pref_bgsource)
-    .description(R.string.description_source_poctech),
+        .mainType(PluginType.BGSOURCE)
+        .fragmentClass(BGSourceFragment::class.java.name)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_poctech)
+        .preferencesId(R.xml.pref_bgsource)
+        .pluginName(R.string.poctech)
+        .description(R.string.description_source_poctech),
     aapsLogger, rh, injector
 ), BgSource {
 
@@ -91,8 +89,4 @@ class PoctechPlugin @Inject constructor(
             return ret
         }
     }
-
-    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.POCTECH_NATIVE && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
-
 }

@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.android.ContributesAndroidInjector
 import info.nightscout.interfaces.source.DexcomBoyda
 import info.nightscout.interfaces.source.NSClientSource
-import info.nightscout.interfaces.source.XDrip
+import info.nightscout.interfaces.source.XDripSource
 import info.nightscout.source.AidexPlugin
 import info.nightscout.source.BGSourceFragment
 import info.nightscout.source.DexcomPlugin
@@ -45,6 +45,6 @@ abstract class SourceModule {
 
         @Binds fun bindNSClientSource(nsClientSourcePlugin: NSClientSourcePlugin): NSClientSource
         @Binds fun bindDexcomBoyda(dexcomPlugin: DexcomPlugin): DexcomBoyda
-        @Binds fun bindXDrip(xdripSourcePlugin: XdripSourcePlugin): XDrip
+        @Binds fun bindXDrip(xdripSourcePlugin: XdripSourcePlugin): XDripSource
     }
 }
