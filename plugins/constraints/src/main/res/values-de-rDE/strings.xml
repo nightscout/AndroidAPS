@@ -48,4 +48,6 @@
     <string name="doyouwantresetstart">Möchtest Du den Start der Ziele zurücksetzen? Du verlierst Deine Fortschritte.</string>
     <string name="objectives_next_button">Weiter</string>
     <string name="objectives_previous_button">Zurück</string>
+    <string name="objectives_button_unfinish">Ziel erneut öffnen</string>
+    <string name="objectives_button_unstart">Ziel neu starten</string>
 </resources>

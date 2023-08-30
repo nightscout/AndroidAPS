@@ -164,6 +164,7 @@
     <string name="isf_short">ISF</string>
     <string name="canceling_tbr_failed">Annuleren van tijdelijke basaal mislukt</string>
     <string name="canceling_eb_failed">Annuleren van vertraagde bolus is mislukt</string>
+    <string name="virtualpump_uploadstatus_title">Upload pomp status naar NS of Tidepool</string>
     <string name="suspendloop_label">Uitgeschakelde/onderbroken loop</string>
     <string name="iob_label">Insuline aan boord (IOB)</string>
     <!--    Protection-->
@@ -375,6 +376,9 @@
     <string name="carbs_g">KOOLHYDRATEN %1$d gr</string>
     <string name="extended_bolus_u_min">VERLENDE BOLUS %1$.2f E %2$d min</string>
     <string name="load_events">Laden van gebeurtenissen</string>
+    <string name="clear_alarms">ALARMEN WISSEN</string>
+    <string name="deactivate">DEACTIVEREN</string>
+    <string name="update_time">TIJD UPDATEN</string>
     <string name="load_history">LAAD GESCHIEDENIS %1$d</string>
     <string name="load_tdds">LAAD TDD\'s</string>
     <string name="set_profile">PROFIEL INSTELLEN</string>
@@ -420,6 +424,7 @@
     <string name="autotune_ic_warning">Het geselecteerde profiel heeft %1$d IC waarden. Autotune gebruikt %2$.2f g/E</string>
     <string name="autotune_isf_warning">Het geselecteerde profiel heeft %1$d ISF waarden. Autotune gebruikt %2$.1f %3$s/E</string>
     <string name="autotune_error">Fout in invoergegevens, probeer autotune opnieuw te starten of het aantal dagen te verminderen</string>
+    <string name="autotune_error_more_days">Fout in invoergegevens, verhoog het aantal dagen</string>
     <string name="autotune_warning_during_run">Autotune berekening gestart, even geduld a.u.b.</string>
     <string name="autotune_warning_after_run">Controleer de resultaten zorgvuldig voordat u het gebruikt!</string>
     <string name="autotune_partial_result">Gedeeltelijk resultaat dag %1$d / %2$d afgestemd</string>
@@ -452,6 +457,7 @@
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!! Trage koolhydraat absorptie gedetecteerd: %2$d%% van de tijd. Controleer je berekening nogmaals. COB kan zijn overschat waardoor er misschien meer insuline wordt afgegeven!!!</font> zijn]]></string>
     <string name="partialboluswizard">Voer dit deel van het bolus wizard resultaat uit [%]</string>
+    <string name="partialboluswizard_reset_time">Oude glycemie tijdsdrempel [min]</string>
     <string name="bolus_constraint_applied_warn">Bolusbeperking toegepast: %1$.2f E naar %2$.2f E</string>
     <string name="bolus_recorded_only">Bolus wordt alleen geregistreerd (niet toegediend door pomp)</string>
     <string name="advisoralarm">Start alarm wanneer het tijd is om te eten</string>

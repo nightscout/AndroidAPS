@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Resetta autenticatori</string>
     <string name="smscommunicator_otp_install_info">Su ogni telefono follower installa una app autenticatore che supporta i token RFC 6238 TOTP. App gratuite popolari sono:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Resettando l\'autenticatore rendi non validi tutti gli autenticatori già forniti. Dovrai configurarli di nuovo!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">DIMENSIONE NON VALIDA!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">PIN ERRATO</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">OTP ERRATO</string>
     <string name="sms_wrong_code">Codice errato. Comando cancellato.</string>
     <string name="sms_timeout_while_waiting">Timeout nell\'attesa della fine della precedente comunicazione col micro.</string>
     <string name="smscommunicator_allowednumbers">Numeri di telefono consentiti</string>
@@ -310,10 +314,19 @@
     <string name="wear_notifysmb_summary">Mostra SMB sullo smartwatch come un bolo standard.</string>
     <string name="wear_predictions_summary">Mostra le predizioni sulla watchface.</string>
     <string name="wear_predictions_title">Predizioni</string>
+    <string name="wear_custom_watchface_settings">Impostazioni watchface personalizzata</string>
+    <string name="wear_custom_watchface_authorization_title">Autorizzazione watchface personalizzata</string>
+    <string name="wear_custom_watchface_authorization_summary">Autorizza la watchface personalizzata caricata a cambiare e bloccare alcune delle impostazioni di visualizzazione dell\'orologio per adattarsi al design della watchface</string>
     <string name="wear_custom_watchface">Watchface personalizzata: %1$s</string>
     <string name="wear_load_watchface">Carica watchface</string>
+    <string name="wear_infos_watchface">Informazioni watchface</string>
+    <string name="wear_export_watchface">Esporta template</string>
+    <string name="wear_new_custom_watchface_exported">Esportato template personalizzato di Watchface</string>
     <string name="resend_all_data">Invia di nuovo tutti i dati</string>
     <string name="open_settings_on_wear">Apri impostazioni sullo smartwatch</string>
+    <string name="cwf_infos_pref_locked">Elenco impostazioni bloccate dalla watchface</string>
+    <string name="cwf_infos_pref_required">Elenco impostazioni richieste per la watchface</string>
+    <string name="cwf_infos_view_title">Elenco dei campi inclusi nella watchface</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra una notifica persistente con una breve panoramica di ciò che sta facendo il tuo loop</string>
     <string name="old_data">DATI VECCHI</string>

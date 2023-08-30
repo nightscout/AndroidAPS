@@ -40,6 +40,7 @@ import java.util.concurrent.ScheduledFuture
 import javax.inject.Inject
 import javax.inject.Singleton
 
+@Suppress("SpellCheckingInspection")
 @Singleton
 class BLECommonService @Inject internal constructor(
     private val injector: HasAndroidInjector,
@@ -399,15 +400,15 @@ class BLECommonService @Inject internal constructor(
             }
         }
 
-        if (message != null) {
-            aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + message!!.friendlyName + " " + DiaconnG8Packet.toHex(data))
+        message?.let {
+            aapsLogger.debug(LTag.PUMPBTCOMM, "<<<<< " + it.friendlyName + " " + DiaconnG8Packet.toHex(data))
             // process received data
-            message!!.handleMessage(data)
-            message!!.setReceived()
-            synchronized(message!!) {
+            it.handleMessage(data)
+            it.setReceived()
+            synchronized(it) {
                 // notify to sendMessage
-                message!!.notifyAll()
+                it.notifyAll()
             }
-        } else aapsLogger.error("Unknown message received " + DiaconnG8Packet.toHex(data))
+        } ?: aapsLogger.error("Unknown message received " + DiaconnG8Packet.toHex(data))
     }
 }

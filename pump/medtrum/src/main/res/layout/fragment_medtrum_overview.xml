@@ -290,6 +290,46 @@
                             android:textSize="14sp" />
                     </LinearLayout>
 
+                    <!-- Active Bolus -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginVertical="3dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.5"
+                            android:gravity="end"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text="@string/active_bolus_label"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="5dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="0"
+                            android:gravity="center_horizontal"
+                            android:paddingStart="2dp"
+                            android:paddingEnd="2dp"
+                            android:text=":"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/active_bolus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="start"
+                            android:paddingStart="5dp"
+                            android:paddingEnd="5dp"
+                            android:text='@{viewmodel.activeBolusStatus}'
+                            android:textColor="@android:color/white"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
                     <View
                         android:layout_width="fill_parent"
                         android:layout_height="2dip"

@@ -53,9 +53,6 @@ internal interface ExtendedBolusDao : TraceableDao<ExtendedBolus> {
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY timestamp ASC")
     fun getExtendedBolusDataIncludingInvalidFromTime(timestamp: Long): Single<List<ExtendedBolus>>
 
-    @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE timestamp >= :from AND timestamp <= :to AND referenceId IS NULL ORDER BY timestamp ASC")
-    fun getExtendedBolusDataIncludingInvalidFromTimeToTime(from: Long, to: Long): Single<List<ExtendedBolus>>
-
     // This query will be used with v3 to get all changed records
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE id > :id AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_EXTENDED_BOLUSES WHERE id > :id) ORDER BY id ASC")
     fun getModifiedFrom(id: Long): Single<List<ExtendedBolus>>

@@ -59,15 +59,12 @@ internal interface BolusDao : TraceableDao<Bolus> {
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY id DESC")
     fun getBolusesIncludingInvalidFromTime(timestamp: Long): Single<List<Bolus>>
 
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE timestamp >= :from AND timestamp <= :to AND referenceId IS NULL ORDER BY id DESC")
-    fun getBolusesIncludingInvalidFromTimeToTime(from: Long, to: Long): Single<List<Bolus>>
-
     // This query will be used with v3 to get all changed records
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE id > :id AND type <> :exclude AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_BOLUSES WHERE id > :id) ORDER BY id ASC")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE id > :id AND pumpId IS NOT NULL AND type <> :exclude AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_BOLUSES WHERE id > :id) ORDER BY id ASC")
     fun getModifiedFrom(id: Long, exclude: Bolus.Type = Bolus.Type.PRIMING): Single<List<Bolus>>
 
     // for WS we need 1 record only
-    @Query("SELECT * FROM $TABLE_BOLUSES WHERE id > :id AND type <> :exclude ORDER BY id ASC limit 1")
+    @Query("SELECT * FROM $TABLE_BOLUSES WHERE id > :id AND pumpId IS NOT NULL AND type <> :exclude ORDER BY id ASC limit 1")
     fun getNextModifiedOrNewAfterExclude(id: Long, exclude: Bolus.Type = Bolus.Type.PRIMING): Maybe<Bolus>
 
     @Query("SELECT * FROM $TABLE_BOLUSES WHERE id = :referenceId")

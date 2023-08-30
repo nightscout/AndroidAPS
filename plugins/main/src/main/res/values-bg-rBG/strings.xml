@@ -24,17 +24,21 @@
     <string name="smscommunicator_otp_reset_header">Нулиране на удостоверители</string>
     <string name="smscommunicator_otp_install_info">На всеки следящ телефона инсталирайте приложение Аутентификатор, който поддържа RFC 6238 ТОТР токени. Популярни безплатни приложения:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">При нулиране на на удостоверителя, правите невалидни всички вече използвани удостоверения. Ще трябва да ги настроите отново!</string>
+    <string name="smscommunicator_otp_verification_ok">ОК</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">НЕВАЛИДЕН РАЗМЕР!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">ГРЕШЕН ПИН</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">ГРЕШНА OTP (ЕДНОКРАТНА ПАРОЛА)</string>
     <string name="sms_wrong_code">Грешен код. Командата не е изпълнена.</string>
     <string name="sms_timeout_while_waiting">Изтичане на времето на предишна комуникация с помпата</string>
     <string name="smscommunicator_allowednumbers">Разрешени телефонни номера</string>
     <string name="smscommunicator_allowednumbers_summary">+XXXXXXXXXX;+YYYYYYYYYY</string>
-    <string name="smscommunicator_bolus_reply_with_code">За да доставите болус от %1$.2fЕ отговорете с код %2$s</string>
-    <string name="smscommunicator_meal_bolus_reply_with_code">За да стартирате болус от %1$.2fЕ отговорете с код %2$s</string>
-    <string name="smscommunicator_temptarget_with_code">Зa zадаване на временна цел %1$s отговорете с код %2$s</string>
-    <string name="smscommunicator_temptarget_cancel">За да спрете временната цел отговорете с код %1$s</string>
-    <string name="smscommunicator_stops_ns_with_code">За да изключите услугата за отдалечен SMS контрол отговорете с код %1$s.\n\nИмайте предвид, че можете да го активирате само от AAPS смартфона.</string>
+    <string name="smscommunicator_bolus_reply_with_code">За да доставите болус от %1$.2fЕ, отговорете с код %2$s</string>
+    <string name="smscommunicator_meal_bolus_reply_with_code">За да стартирате болус от %1$.2fЕ, отговорете с код %2$s</string>
+    <string name="smscommunicator_temptarget_with_code">Зa задаване на временна цел %1$s, отговорете с код %2$s</string>
+    <string name="smscommunicator_temptarget_cancel">За да спрете временната цел, отговорете с код %1$s</string>
+    <string name="smscommunicator_stops_ns_with_code">За да изключите услугата за отдалечен SMS контрол, отговорете с код %1$s.\n\nИмайте предвид, че можете да го активирате само от AAPS смартфона.</string>
     <string name="smscommunicator_stopped_sms">Отдалечен SMS контрол е изключен. Можете да го включите от AndroidAPS телефона.</string>
-    <string name="smscommunicator_calibration_reply_with_code">За да изпратите калибрация %1$.2f отговорете с код %2$s</string>
+    <string name="smscommunicator_calibration_reply_with_code">За да изпратите калибрация %1$.2f, отговорете с код %2$s</string>
     <string name="smscommunicator_bolus_failed">Болус отказан</string>
     <string name="smscommunicator_remote_bolus_min_distance_summary">Минимално време в минути, което трябва да е изминало след отдалечен болус, преди да може да бъде доставен следващият</string>
     <string name="smscommunicator_remote_bolus_min_distance">Колко най-малко минути трябва да минат между доставката на два болуса</string>
@@ -72,7 +76,7 @@
     <string name="smscommunicator_tempbasal_failed">Неуспешно стартиране на временен базал</string>
     <string name="smscommunicator_extended_failed">Неуспешно стартиране на удължен болус</string>
     <string name="smscommunicator_basal_stop_reply_with_code">За да спрете времен базал отговорете с код %1$s</string>
-    <string name="smscommunicator_extended_stop_reply_with_code">За да спрете удължения болус отговорете с код %1$s</string>
+    <string name="smscommunicator_extended_stop_reply_with_code">За да спрете удължения болус, отговорете с код %1$s</string>
     <string name="smscommunicator_tempbasal_canceled">Временният базал е отменен</string>
     <string name="smscommunicator_extended_canceled">Удължен болус спрян</string>
     <string name="smscommunicator_tempbasal_cancel_failed">Спирането на временния базал е неуспешно</string>
@@ -137,6 +141,7 @@
     <string name="error_in_basal_values">Грешка в базалните стойности</string>
     <string name="error_in_target_values">Грешка в стойностите за цел</string>
     <string name="error_in_isf_values">Грешка в стойностите за чувствителност (ISF)</string>
+    <string name="profile_name_contains_dot">Някои от профилните имена съдържат точки.\nТова не се поддържа от NS.\n Профилите няма да бъдат качени в NS.</string>
     <string name="invalid_profile_not_accepted">Невалиден профил %1$s не приет от NS</string>
     <string name="view">Изглед</string>
     <string name="errors">Грешки</string>
@@ -238,6 +243,7 @@
     <string name="short_tabtitles">Използвай къси имена</string>
     <string name="overview_show_notes_field_in_dialogs_title">Показване на поле \"бележки\" в диалоговите прозорци за лечение</string>
     <string name="deliverpartofboluswizard">Калкулатора изчислява нужния инсулин, но само тази част ще бъде доставена. Полезно със SMB алгоритъма.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Достави целия болус (100%), ако гликемията е била преди повече от</string>
     <string name="enable_bolus_advisor">Активиране на болус съветник</string>
     <string name="enable_bolus_advisor_summary">Използвай напомняне за старт на хранене вместо съветника по време на висока гликемия (\"пре-болус\")</string>
     <string name="enablesuperbolus">Разреши използването на Суперболус</string>
@@ -248,6 +254,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Прогнозни КЗ</string>
     <string name="overview_show_treatments">Лечения</string>
+    <string name="overview_show_heartRate">Сърдечен ритъм</string>
     <string name="overview_show_deviation_slope">Наклон на отклонението</string>
     <string name="overview_show_activity">Активност</string>
     <string name="overview_show_bgi">Въздействие на Кръвна Захар</string>
@@ -265,6 +272,7 @@
     <string name="abs_insulin_shortname">АБС</string>
     <string name="devslope_shortname">ОТК.НАКЛ</string>
     <string name="treatments_shortname">Леч</string>
+    <string name="heartRate_shortname">СР</string>
     <string name="sensitivity_shortname">ЧУВСТВ</string>
     <string name="graph_scale">Мащаб на графиката</string>
     <string name="graph_menu_divider_header">Графика</string>
@@ -283,9 +291,9 @@
     <string name="no_watch_connected">(Няма активна връзка)</string>
     <string name="pump_status">Статус на помпата</string>
     <string name="loop_status">Статус на цикъл</string>
-    <string name="wizard_result">Съветник:\nИнсулин: %1$.2fЕ\nВъгл: %2$dг</string>
+    <string name="wizard_result">Съветник:\nИнсулин: %1$.2fЕ\nВъгл: %2$dгр</string>
     <string name="quick_wizard_not_available">Избраният съветник вече не е наличен, моля, опреснете</string>
-    <string name="quick_wizard_message">Съветник:%1$s\nИнсулин: %1$.2fЕ\nВъгл: %2$dг</string>
+    <string name="quick_wizard_message">Съветник:%1$s\nИнсулин: %2$.2fЕ\nВъгл:%3$dгр</string>
     <string name="wear_action_tempt_preset_error">Временна цел непознат шаблон %1$s</string>
     <string name="wear_action_tempt_cancel_message">Изключи текуща Временна цел?</string>
     <string name="wear_action_tempt_unit_error">Различни мерни единици се ползват на телефона и часовника!</string>
@@ -306,8 +314,19 @@
     <string name="wear_notifysmb_summary">Покажи SMB на часовника като стандартен болус.</string>
     <string name="wear_predictions_summary">Показвай прогнозините КЗ на часовника.</string>
     <string name="wear_predictions_title">Прогнозни КЗ</string>
+    <string name="wear_custom_watchface_settings">Настройки на Watchface</string>
+    <string name="wear_custom_watchface_authorization_title">Разрешаване на персонализиран Watchface</string>
+    <string name="wear_custom_watchface_authorization_summary">Разрешете заредения Watchface да променя и заключва определени настройки за екрана на часовника, за да съответстват на дизайна</string>
+    <string name="wear_custom_watchface">Персонализиран Watchface: %1$s</string>
+    <string name="wear_load_watchface">Зареди Watchface</string>
+    <string name="wear_infos_watchface">Информация за Watchface</string>
+    <string name="wear_export_watchface">Експорт на шаблона</string>
+    <string name="wear_new_custom_watchface_exported">Шаблон за watchface експортиран</string>
     <string name="resend_all_data">Изпрати отново всички дани</string>
     <string name="open_settings_on_wear">Отвори настройките на часовника</string>
+    <string name="cwf_infos_pref_locked">Списък с опции заключен от Watchface</string>
+    <string name="cwf_infos_pref_required">Списък с необходими настройки за Watchface</string>
+    <string name="cwf_infos_view_title">Списък с полета включени в Watchface</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Показва известие с резюме на това, което прави вашия APS</string>
     <string name="old_data">СТАРИ ДАННИ</string>
@@ -316,6 +335,7 @@
     <string name="grams_short">гр.</string>
     <string name="hour_short">ч</string>
     <string name="no_active_profile">Не е настроен активен профил!</string>
+    <string name="profile_message">Профил:\n\nОтместване във времето: %1$d\nПроцент: %2$d%%\"</string>
     <string name="tdd_line">%1$.2fЕ %1$.0f%%</string>
     <string name="no_profile">Не е зареден профил</string>
     <string name="aps_only">Прилагане само в режим АПС!</string>

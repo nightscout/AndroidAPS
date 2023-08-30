@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Resetovať autentifikátory</string>
     <string name="smscommunicator_otp_install_info">Na každom sledovacom telefóne nainštalujte Autentifikátor, ktorý podporuje tokeny TOTP RFC 6238. Najobľúbenejšie bezplatné aplikácie sú:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Resetovaním autentifikátora budú všetky už poskytnuté autentifikátory neplatné. Budete ich musieť znovu nastaviť!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">NEPLATNÁ DĹŽKA!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">NESPRÁVNY PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">NESPRÁVNE OTP</string>
     <string name="sms_wrong_code">Nesprávný kód. Príkaz zrušený.</string>
     <string name="sms_timeout_while_waiting">Vypršal časový limit pri čakaní na dokončenie predchádzajúcej komunikácie s pumpou</string>
     <string name="smscommunicator_allowednumbers">Povolené telefónne čísla</string>
@@ -239,6 +243,7 @@
     <string name="short_tabtitles">Krátke názvy modulov</string>
     <string name="overview_show_notes_field_in_dialogs_title">Zobrazovať kolónku poznámky v dialógoch ošetrení</string>
     <string name="deliverpartofboluswizard">Bolusová kalkulačka urobí výpočet, ale iba táto časť vypočítaného inzulínu je podaná. Pomáha pri SMB algoritme.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Podať celý bolus (100%), pokiaľ je glykémia staršia ako</string>
     <string name="enable_bolus_advisor">Povoliť bolusového poradcu</string>
     <string name="enable_bolus_advisor_summary">Pri vysokej glykémii spustiť pripomienku namiesto výsledku z kalkulačky, aby ste začali jesť neskôr (tzv. \"prebolus\")</string>
     <string name="enablesuperbolus">Povoliť superbolus</string>
@@ -310,8 +315,19 @@
     <string name="wear_notifysmb_summary">Ukazovať SMB na hodinkách ako normálny bolus.</string>
     <string name="wear_predictions_summary">Zobrazovať predikcie na hodinkách.</string>
     <string name="wear_predictions_title">Predikcia</string>
+    <string name="wear_custom_watchface_settings">Nastavenie vlastného ciferníka</string>
+    <string name="wear_custom_watchface_authorization_title">Autorizácia vlastného ciferníka</string>
+    <string name="wear_custom_watchface_authorization_summary">Autorizujte načítaný vlastný ciferník, aby se zmenili a uzamkli niektoré nastavenia hodiniek tak, aby vyhovovali designu ciferníka</string>
+    <string name="wear_custom_watchface">Vlastný ciferník: %1$s</string>
+    <string name="wear_load_watchface">Nahrať ciferník</string>
+    <string name="wear_infos_watchface">Informácie o ciferníku</string>
+    <string name="wear_export_watchface">Exportovať šablónu</string>
+    <string name="wear_new_custom_watchface_exported">Vlastná šablóna ciferníka exportovaná</string>
     <string name="resend_all_data">Všetky dáta poslať znova</string>
     <string name="open_settings_on_wear">Otvoriť nastavenia na hodinkách</string>
+    <string name="cwf_infos_pref_locked">Zoznam preferencií uzamknutý hodinkami</string>
+    <string name="cwf_infos_pref_required">Zoznam preferencií potrebných pre ciferník</string>
+    <string name="cwf_infos_view_title">Zoznam polí zahrnutých do ciferníka</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Zobrazuje priebežné oznámenia v Androide s krátkym prehľadom, čo práve uzavretý okruh robí</string>
     <string name="old_data">ZASTARALÉ DÁTA</string>

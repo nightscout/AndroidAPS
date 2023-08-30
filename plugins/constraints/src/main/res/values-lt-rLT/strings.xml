@@ -48,4 +48,6 @@
     <string name="doyouwantresetstart">Ar norite iš naujo nustatyti tikslų pradžią? Jūs galite prarasti jau pasiektus.</string>
     <string name="objectives_next_button">Kitas</string>
     <string name="objectives_previous_button">Ankstesnis</string>
+    <string name="objectives_button_unfinish">Išvalyti užbaigtus</string>
+    <string name="objectives_button_unstart">Išvalyti pradėtus</string>
 </resources>

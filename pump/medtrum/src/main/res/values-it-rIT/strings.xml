@@ -27,6 +27,7 @@
     <string name="patch_expiry_label">Patch scaduta</string>
     <string name="refresh_label">Aggiorna</string>
     <string name="reset_alarms_label">Reset allarmi</string>
+    <string name="change_patch_label">Cambia patch</string>
     <string name="requested_by_user" comment="26 characters max for translation">Richiesto da utente</string>
     <string name="expiry_not_enabled">Non abilitato</string>
     <!-- Alarm strings -->
@@ -99,6 +100,7 @@
     <!-- settings-->
     <string name="sn_input_title">Numero seriale</string>
     <string name="sn_input_summary">Inserisci il numero di serie della base del micro.</string>
+    <string name="sn_input_invalid">Numero di serie non valido!</string>
     <string name="pump_unsupported">Micro non testato: %1$d! Contattaci su discord o github per supporto</string>
     <string name="alarm_setting_title">Impostazioni allarmi</string>
     <string name="alarm_setting_summary">Seleziona le tue impostazioni di allarme del micro preferite.</string>

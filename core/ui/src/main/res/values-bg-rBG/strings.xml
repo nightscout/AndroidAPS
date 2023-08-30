@@ -108,10 +108,10 @@
     <string name="remove_button">Изтрий</string>
     <string name="add_new">Добави нов</string>
     <string name="addnew_above">Добави нов над</string>
-    <string name="wrong_pump_data">Данните идват от различна помпа. Сменете драйвера на помпата и за да възстановите състоянието на помпата.</string>
+    <string name="wrong_pump_data">Данните идват от различна помпа. Сменете драйвера на помпата, за да възстановите състоянието на помпата.</string>
     <string name="bg_label">КЗ</string>
     <string name="calibration">Калибрация</string>
-    <string name="alarminxmin">Сларма след %1$d мин</string>
+    <string name="alarminxmin">Аларма след %1$d мин</string>
     <string name="treatmentdeliveryerror">Грешка в болуса. Сам провери истинската стойност на доставения инсулин</string>
     <string name="bolus_reminder">Болус подсещане</string>
     <string name="duration_label">Продължителност</string>
@@ -162,8 +162,9 @@
     <string name="dia">DIA</string>
     <string name="ic_short">И / Въгл</string>
     <string name="isf_short">Чувств</string>
-    <string name="canceling_tbr_failed">Отмяната на временния базал е неуспешно</string>
+    <string name="canceling_tbr_failed">Отмяната на временния базал е неуспешна</string>
     <string name="canceling_eb_failed">Неуспешно спиране на удължен болус</string>
+    <string name="virtualpump_uploadstatus_title">Качване на статуса на помпата в NS или Tidepool</string>
     <string name="suspendloop_label">Изключен/забранен цикъл</string>
     <string name="iob_label">Активен Инсулин (IOB)</string>
     <!--    Protection-->
@@ -297,6 +298,7 @@
     <string name="uel_site_change">СМЯНА КАНЮЛА</string>
     <string name="uel_reservoir_change">СМЯНА НА РЕЗЕРВОАР</string>
     <string name="uel_calibration">КАЛИБРАЦИЯ</string>
+    <string name="uel_prime_bolus">БОЛУС ПЪЛНЕНЕ</string>
     <string name="uel_treatment">ЛЕЧЕНИЕ</string>
     <string name="uel_careportal_ns_refresh">ОБНОВИ ПОРТАЛА ЗА ЛЕЧЕНИЯ NS</string>
     <string name="uel_profile_switch_ns_refresh">ОБНОВИ СМЯНАТА НА ПРОФИЛ NS</string>
@@ -374,6 +376,9 @@
     <string name="carbs_g">ВЪГЛЕХИДРАТИ %1$d гр</string>
     <string name="extended_bolus_u_min">УДЪЛЖЕН БОЛУС %1$.2f Е %2$d мин</string>
     <string name="load_events">ВЪВЕДИ СЪБИТИЯ</string>
+    <string name="clear_alarms">ИЗТРИВАНЕ НА АЛАРМИ</string>
+    <string name="deactivate">ДЕАКТИВИРАНЕ</string>
+    <string name="update_time">АКТУАЛИЗИРАНЕ НА ЧАСА</string>
     <string name="load_history">ЗАРЕДИ ИСТОРИЯ %1$d</string>
     <string name="load_tdds">ЗАРЕДИ TDDs</string>
     <string name="set_profile">ЗАДАЙ ПРОФИЛ</string>
@@ -419,6 +424,7 @@
     <string name="autotune_ic_warning">Избраният профил е с въглехидратно число %1$d. Аутотюн ще използва въглехидратно число %2$.2f гр/Е</string>
     <string name="autotune_isf_warning">Избраният профил е с инсулинова чувствителност %1$d. Autotune ще използва инсулинова чувствителност %2$.1f %3$s/U</string>
     <string name="autotune_error">Грешка във въведените данни, опитайте се отново да стартирате Autotune или да намалите броя на дните</string>
+    <string name="autotune_error_more_days">Грешка във въведените данни, увеличете броя дни</string>
     <string name="autotune_warning_during_run">Autotune започна изчисления, моля изчакайте</string>
     <string name="autotune_warning_after_run">Проверете резултатите внимателно, преди да ги използвате!</string>
     <string name="autotune_partial_result">Частичен резултат ден %1$d / %2$d настроен</string>
@@ -449,11 +455,12 @@
     <string name="bolus_advisor">Съветник на болус</string>
     <string name="bolus_advisor_message">Имаш висока захар. Вместо да се яде сега, се препоръчва да се изчака за по-добра захар. Искате ли да направите корекция сега и да ви напомня кога е време за ядене? В този случай няма да бъдат записвани въглехидрати и трябва да използвате съветника отново, когато ви напомня.</string>
     <string name="cobvsiob">COB срещу IOB</string>
-    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Бавна абсорбция на въглехидрати: %2$d%% от времето. Проверете въведените данни. Може да има голяма грешка !!!!!</font>]]></string>
+    <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Бавна абсорбция на въглехидрати: %2$d%% от времето. Проверете пресметнатите данни. Активните въглехидрати могат да доведат до превишаване на дозите на инсулин !!!!!</font>]]></string>
     <string name="partialboluswizard">Стартирай част от резултата в калкулатора [%]</string>
+    <string name="partialboluswizard_reset_time">Времеви праг на гликемията [min]</string>
     <string name="bolus_constraint_applied_warn">Приложено болус ограничение: %1$.2f Е към %2$.2f Е</string>
     <string name="bolus_recorded_only">Болусът ще бъде само записан (без да е доставен чрез помпата)</string>
-    <string name="advisoralarm">Алармата, когато е време за хранене.</string>
+    <string name="advisoralarm">Аларма, когато е време за хранене</string>
     <string name="no_action_selected">Няма избрано действие, нищо няма да се изпълни</string>
     <string name="wizard_no_actual_bg">Не е налична кръвна захар, върху която да се изчисли!</string>
     <string name="wizard_no_active_profile">Не е настроен активен профил!</string>
@@ -467,7 +474,7 @@
     <string name="wizard_explain_superbolus">Суперболус: %1$.2fЕ</string>
     <string name="wizard_explain_trend">15\' тенденция: %1$.2fЕ</string>
     <string name="wizard_explain_percent">Проценти: %1$.2fЕ x %2$d%% ≈ %3$.2fЕ</string>
-    <string name="wizard_constraint_bolus_size">Нарушение в ограниичението на инсулин!\nНе може да бъде доставен %1$.2fЕ</string>
+    <string name="wizard_constraint_bolus_size">Нарушение в ограничението на инсулин!\nНе може да бъде доставен %1$.2fЕ</string>
     <string name="wizard_explain_tt">Временна цел: %1$s</string>
     <string name="wizard_explain_tt_to">%1$s към %2$s</string>
     <string name="wizard_pump_not_available">Помпата не е налична!</string>
@@ -535,7 +542,7 @@
     <string name="a11y_min_button_description">понижение %1$s с %2$s</string>
     <string name="a11y_plus_button_description">увеличение %1$s с %2$s</string>
     <string name="you_are_on_allowed_limit">Достигнат лимит</string>
-    <string name="format_hour_minute">%1$dч:%2$dм</string>
+    <string name="format_hour_minute">%1$dч %2$dм</string>
     <!-- datetime layout -->
     <string name="event_time_label">Време на събитие</string>
     <!-- BluetoothDevicePreference -->
@@ -556,7 +563,7 @@
     <!-- About -->
     <string name="cta_dont_kill_my_app_info">Don\'t kill my app?</string>
     <string name="fabric_upload_disabled">Качването на логове е изключено!</string>
-    <string name="about_link_urls">\n\nДокументация:\nhttps://androidaps.readthedocs.io\n\nfacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
+    <string name="about_link_urls">\n\nДокументация:\nhttps://androidaps.readthedocs.io\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d дeн</item>
         <item quantity="other">%1$d дни</item>

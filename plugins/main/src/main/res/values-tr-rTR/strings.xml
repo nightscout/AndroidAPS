@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Doğrulayıcıları (Authenticators) Sıfırla</string>
     <string name="smscommunicator_otp_install_info">Her takipçi telefonunda, RFC 6238 TOTP belirteçlerini destekleyen Kimlik Doğrulayıcı uygulamasını yükleyin. Popüler ücretsiz uygulamalar şunlardır:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Kimlik doğrulayıcıyı sıfırlayarak, önceden sağlanmış tüm doğrulayıcıları geçersiz kılarsınız. Onları tekrar kurmanız gerekecek!</string>
+    <string name="smscommunicator_otp_verification_ok">Tamam</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">GEÇERSİZ BOYUT!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">HATALI PİN KODU</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">HATALI OTP</string>
     <string name="sms_wrong_code">Hatalı kod. Komut iptal edildi.</string>
     <string name="sms_timeout_while_waiting">Önceki pompa iletişiminin bitmesini beklerken zaman aşımı</string>
     <string name="smscommunicator_allowednumbers">İzinli telefon numaraları</string>

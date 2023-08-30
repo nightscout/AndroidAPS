@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Resetuj uwierzytelnianie</string>
     <string name="smscommunicator_otp_install_info">Na każdym telefonie śledzącym zainstalować aplikację uwierzytelniania obsługującą tokeny TOTP RFC 6238 Popularne darmowe aplikacje:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Resetowanie uwierzytelniania powoduje, że wszystkie już ustawione uwierzytelnienia stają się niepoprawne (przestają działać). Trzeba będzie je jeszcze raz skonfigurować!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">ZŁY ROZMIAR!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">ZŁY PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">ZŁY OTP</string>
     <string name="sms_wrong_code">Zły kod. Polecenie anulowano.</string>
     <string name="sms_timeout_while_waiting">Przekroczono limit czasu oczekiwania na zakończenie poprzedniej komunikacji z pompą</string>
     <string name="smscommunicator_allowednumbers">Dozwolone numery telefonów</string>
