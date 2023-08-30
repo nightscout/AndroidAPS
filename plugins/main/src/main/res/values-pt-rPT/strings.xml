@@ -297,8 +297,12 @@
     <string name="wear_action_tempt_preset_error">Predefinição de alvo temporário desconhecido: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Cancelando Alvos Temporários em execução?</string>
     <string name="wear_action_tempt_unit_error">Diferentes unidades usadas no relógio e telefone!</string>
+    <string name="wear_action_tempt_zero_message">Alvo-temporário-Zero - cancelar Alvos -Temporários em progresso?</string>
     <string name="wear_action_tempt_min_bg_error">Min-GLIC fora do alvo!</string>
     <string name="wear_action_tempt_max_bg_error">Máx-GLIC fora do alvo!</string>
+    <string name="wear_action_tempt_manual_range_message">AlvoTemporário:\nMin: %1$s\nMax: %2$s\nDuração: %3$s</string>
+    <string name="wear_action_tempt_manual_message">AlvoTemporário:\nAlvo: %1$s\nDuração: %2$s</string>
+    <string name="wear_action_tempt_preset_message">AlvoTemporário:\nMotivo %1$s\nAlvo: %2$s\nDuração: %3$s</string>
     <string name="no_success">sem efeito - por favor verifique no telemóvel</string>
     <string name="wear_settings">Definições do Relógio</string>
     <string name="wearcontrol_title">Controles do Relógio</string>
@@ -310,9 +314,19 @@
     <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>
     <string name="wear_predictions_summary">Mostrar previsões no mostrador.</string>
     <string name="wear_predictions_title">Previsões</string>
+    <string name="wear_custom_watchface_settings">Definições da watchface predefinida</string>
+    <string name="wear_custom_watchface_authorization_title">Autorização da watchface predefinida</string>
     <string name="wear_custom_watchface_authorization_summary">Autorizar watchface por definição para alterar e bloquear algumas configurações de exibição do relógio para se adequarem ao design do watchface</string>
+    <string name="wear_custom_watchface">Watchface Predefinida: %1$s</string>
+    <string name="wear_load_watchface">Carregar Watchface</string>
+    <string name="wear_infos_watchface">Infos Watchface</string>
+    <string name="wear_export_watchface">Exportar modelo</string>
+    <string name="wear_new_custom_watchface_exported">Modelo de Watchface Predefinida exportado</string>
     <string name="resend_all_data">Reenviar Todos os Dados</string>
     <string name="open_settings_on_wear">Abrir Definições no Relógio</string>
+    <string name="cwf_infos_pref_locked">Lista de preferências bloqueadas pela Watchface</string>
+    <string name="cwf_infos_pref_required">Lista de preferências necessárias para a Watchface</string>
+    <string name="cwf_infos_view_title">Lista de campos incluídos na Watchface</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
     <string name="old_data">DADOS ANTIGOS</string>
