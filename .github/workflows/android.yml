@@ -2,14 +2,16 @@ name: Android CI
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "dev_at" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "dev_at" ]
+  workflow_dispatch:
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+    timeout-minutes: 120
 
     steps:
     - uses: actions/checkout@v3
