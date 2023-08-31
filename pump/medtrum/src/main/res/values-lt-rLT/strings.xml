@@ -46,6 +46,23 @@
     <string name="alarm_patch_fault">Rezerv. klaida</string>
     <string name="alarm_patch_fault2">Rezerv. klaida 2</string>
     <!-- wizard-->
+    <string name="step_prime">Pildyti</string>
+    <string name="step_priming">Pildoma</string>
+    <string name="step_priming_complete">Užpildyta</string>
+    <string name="step_attach">Prijungti rezervuarą</string>
+    <string name="step_activate">Aktyvuojama...</string>
+    <string name="step_activate_complete">Aktyvuota</string>
+    <string name="step_deactivate">Deaktyvuoti rezervuarą</string>
+    <string name="step_deactivating">Deaktyvuojama...</string>
+    <string name="step_deactivate_complete">Deaktyvuotas</string>
+    <string name="step_retry_activation">Aktyvuojama</string>
+    <string name="unexpected_state">Netikėta būsena: %1$s</string>
+    <string name="no_profile_selected">Nepasirinktas profilis. Pasirinkite profilį ir bandykite dar kartą.</string>
+    <string name="base_serial">Pompos pagrindo SN: %1$X</string>
+    <string name="note_min_70_units">Svarbu: būtina užpildyti bent 70 v.</string>
+    <string name="do_not_attach_to_body">Kol kas neprijunkite pompos prie kūno.</string>
+    <string name="deactivating_pump">Deaktyvuojama. Palaukite.</string>
+    <string name="retract_needle">Ištraukite adatą. Nuimkite pompą nuo kūno.</string>
     <!-- settings-->
     <string name="sn_input_title">Serijos numeris</string>
     <string name="sn_input_summary">Įveskite pompos pagrindo serijos numerį.</string>
