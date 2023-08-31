@@ -1,12 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="combov2_plugin_name">Accu-Chek Combo</string>
+    <string name="combov2_plugin_description">Inbyggd pumpintegration för Accu-Check Combo-pumpar</string>
+    <string name="combov2_could_not_connect">Kunde inte ansluta till pumpen</string>
+    <string name="combov2_not_paired">Inte parkopplad till en pump</string>
+    <string name="combov2_pump_terminated_connection">Pumpen avslutade anslutningen</string>
+    <string name="combov2_warning">Combo varning</string>
+    <string name="combov2_error">Combo fel</string>
+    <string name="combov2_warning_4">Ring hotline för uppdatering</string>
     <string name="combov2_error_2">Batteri tomt</string>
     <string name="combov2_error_4">Ocklusion</string>
     <string name="combov2_error_6">Mekaniskt fel</string>
+    <string name="combov2_error_7">Elektroniskt fel</string>
+    <string name="combov2_error_8">Strömavbrott</string>
+    <string name="combov2_error_9">Lånepump stannar</string>
+    <string name="combov2_error_10">Reservoarfel</string>
+    <string name="combov2_error_11">Infusionsset är inte förfyllt</string>
+    <string name="combov2_extended_bolus_not_supported">Förlängd bolus stöds inte</string>
+    <string name="combov2_title">Accu-Chek Combo v2</string>
+    <string name="combov2_pair_with_pump_title">Parkoppla med pump</string>
+    <string name="combov2_unpair_pump_title">Koppla från pump</string>
+    <string name="combov2_driver_state_label">Drivrutinsstatus</string>
+    <string name="combov2_current_activity_label">Nuvarande aktivitet</string>
     <string name="bluetooth_address">Bluetooth-adress</string>
+    <string name="combov2_start_pairing">Påbörja parkoppling</string>
+    <string name="combov2_pairing_in_progress">Parkoppling pågår</string>
+    <string name="combov2_pairing_start_steps">Steg för att parkoppla med din Combo:\n\n
+1. Navigera till pumpens Bluetooth-inställningar\n
+2. Kontrollera om en enhet redan visas som parkopplad; Om så är fallet, gå till \"Ta bort enhet\" skärmen på pumpen för att ta bort/koppla ifrån den enheten\n
+3. Gå till pumpskärmen \"Lägg till enhet\" och starta parkoppling på pumpen\n
+4. Klicka på knappen \"Påbörja parkoppling\" nedan för att initiera parkoppling i AAPS\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">Efter ett tag visas telefonens namn på pumpens skärm; tryck på CHECK för att bekräfta.\n\n
+När parkopplingen är slutförd, bekräfta den färdiga parningen på pumpen och återgå till pumpens startskärm genom att trycka på CHECK-knappen två gånger.\n\n
+Om ingen anslutning är etablerad efter mer än ~5 minuter:\n\n
+1. Tryck tillbaka eller \"Avbryt parkoppling\"\n
+2. Avbryt parkopplingen på Combo (tryck på både UP- och MENU-knapparna
+samtidigt för att avbryta parkoppling)\n
+3. Försök para ihop igen</string>
+    <string name="combov2_enter_pin">Ange PIN-kod</string>
+    <string name="combov2_cancel_pairing">Avbryt parkoppling</string>
+    <string name="combov2_pin_hint">10-siffrig PIN-kod</string>
+    <string name="combov2_pairing_finished_successfully">Parkoppingen lyckades</string>
+    <string name="combov2_pairing_cancelled">Parkopplingen avbruten av användaren</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Sökningen tog för lång tid</string>
+    <string name="combov2_pairing_failed_due_to_error">Parkoppling misslyckades på grund av fel: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">Parkoppling avbröts av okänd anledning</string>
+    <string name="combov2_pairing_invalid_pin_length">"Ogiltig längd på PIN-kod. Behöver %1$d siffror men fick %2$d"</string>
+    <string name="combov2_scanning_for_pump">Söker efter pump</string>
+    <string name="combov2_establishing_bt_connection">Upprättar Bluetooth-anslutning (försök nr. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">Utför handskakning med pump</string>
+    <string name="combov2_pairing_pump_requests_pin">Pumpen efterfrågar 10-siffrig PIN-kod</string>
+    <string name="combov2_pairing_finishing">Avslutar parkoppling</string>
+    <string name="combov2_no_connection_for_n_mins">Ingen anslutning på %1$d minuter</string>
+    <string name="combov2_less_than_one_minute_ago">Mindre än en minut sedan</string>
+    <string name="combov2_setting_current_pump_time">Ställer in aktuell tid i pumpen</string>
+    <string name="combov2_setting_current_pump_date">Ställer in aktuellt datum i pumpen</string>
     <string name="combov2_not_initialized">Inte initierad</string>
+    <string name="combov2_checking_pump">Kontrollerar pump</string>
+    <string name="combov2_ready">Klar</string>
     <string name="combov2_suspended">Pausad</string>
+    <string name="combov2_pump_is_suspended">Pumpen är pausad</string>
+    <string name="combov2_executing_command">Kör kommando</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Hämtar basalprofil</string>
     <string name="combov2_setting_basal_profile_cmddesc">Sätter basalprofil</string>
+    <string name="combov2_setting_tbr_cmddesc">Sätter temp basal %1$d%% i %2$d minuter</string>
+    <string name="combov2_cancelling_tbr">Avbryter pågående temp basal</string>
+    <string name="combov2_delivering_bolus_cmddesc">Levererar %1$.1f U som bolus</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">Hämtar TDD-historik</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">Uppdaterar pumpens datumtid</string>
+    <string name="combov2_updating_pump_status_cmddesc">Uppdaterar pumpens status</string>
+    <string name="combov2_pairing_pin_failure">PIN-koden fungerade inte. Kontrollera om det fanns ett stavfel. Om detta fortsätter att ske, avbryt och försök igen.</string>
+    <string name="combov2_discovery_duration">Varaktighet för sökning (i sekunder)</string>
+    <string name="combov2_verbose_logging">Aktivera detaljerad loggning</string>
+    <string name="combov2_getting_basal_profile">Hämtar basalprofil; %1$d faktor(er) inlästa</string>
+    <string name="combov2_setting_basal_profile">Sätter basalprofil; %1$d faktor(er) skrivna</string>
+    <string name="combov2_delivering_bolus">Levererar bolus (%1$.1f av %2$.1f U levererade)</string>
     <string name="combov2_bolus_cancelled">Bolus avbruten</string>
     <string name="combov2_bolus_delivery_failed">Bolus avbruten. Det verkar som om ingen bolus levererades. För att vara säker, vänligen kontrollera pumpen för att undvika dubbel bolus och prova sedan vid behov igen. För att förhindra fel orsakade av mjukvaran, försöker inte mjukvaran igen automatiskt.</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d min återstår)</string>
