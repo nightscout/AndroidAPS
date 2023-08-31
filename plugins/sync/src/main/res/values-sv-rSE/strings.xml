@@ -26,6 +26,9 @@
     <string name="ns_client_secret_title">Nightscout API secret</string>
     <string name="ns_client_secret_dialog_title">Nightscout API secret</string>
     <string name="ns_client_secret_dialog_message">Ange Nightscout API secret (min 12 tecken)</string>
+    <string name="nsclient_token_title">NS åtkomstnyckel</string>
+    <string name="nsclient_token_dialog_title">NS åtkomstnyckel</string>
+    <string name="nsclient_token_dialog_message">Åtkomstnyckel genererad på Nighscouts admin-sida (minst 17 tecken)</string>
     <string name="deliver_now">Synkronisera nu</string>
     <string name="clear_queue">Töm kö</string>
     <string name="show_queue">Visa kö</string>
@@ -45,6 +48,7 @@
     <string name="ns_receive_profile_switch_summary">Acceptera profilbyten som matats in via NS eller NSClient</string>
     <string name="ns_receive_offline_event">Ladda ner APS offline händelser</string>
     <string name="ns_receive_offline_event_summary">Acceptera APS Offline-händelser som matas in via NS eller NSClient</string>
+    <string name="ns_receive_tbr_eb">Ladda ner temp basal och förlängd bolus</string>
     <string name="ns_receive_insulin">Ladda ner loggade insulindoser</string>
     <string name="ns_receive_insulin_summary">Acceptera loggat insulin som matats in via NS eller NSClient (den levereras inte, endast beräknad mot IOB)</string>
     <string name="ns_receive_carbs">Ladda ner loggade kolhydrater</string>
