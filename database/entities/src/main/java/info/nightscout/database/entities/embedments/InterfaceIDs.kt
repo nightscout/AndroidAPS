@@ -43,7 +43,7 @@ data class InterfaceIDs(
         MDI,
         DIACONN_G8,
         EOPATCH2,
-        MEDTRUM_NANO,
+        MEDTRUM,
         MEDTRUM_300U,
         MEDTRUM_UNTESTED,
         USER,
