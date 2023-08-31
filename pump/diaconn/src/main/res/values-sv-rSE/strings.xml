@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">LGS status är redan AV.</string>
     <string name="diaconn_g8_errorcode_35">\"Temp basal start\" ignoreras när temp basal redan är aktiv</string>
     <string name="diaconn_g8_errorcode_36">\"Temp basal stopp\" ignoreras när ingen temp basal är aktiv</string>
+    <string name="diaconn_g8_cloudsend_summary">Skicka pumploggar till Diaconns moln.</string>
+    <string name="diaconn_g8_cloudsend_title">Diaconn Molnsynkronisering</string>
 </resources>
