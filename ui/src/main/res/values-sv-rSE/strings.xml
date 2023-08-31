@@ -130,13 +130,13 @@
     <!--QuickWizard-->
     <string name="a11y_only_on_watch">endast på klockan</string>
     <string name="a11y_only_on_phone">endast på telefonen</string>
-    <string name="quickwizard_settings">Kalkylatorinställningar</string>
+    <string name="quickwizard_settings">Inställningar för snabbknappar</string>
     <string name="overview_edit_quickwizard_button_text">Knapptext:</string>
     <string name="overview_edit_quickwizard_carbs">Kolhydrater:</string>
     <string name="overview_edit_quickwizard_valid">Giltig:</string>
     <string name="overview_edit_quickwizard_list_activity_add">Lägg till</string>
     <string name="overview_quickwizard_item_edit_button">Ändra</string>
-    <string name="overview_edit_quickwizard_show_on_device">Visa kalkylatorn på:</string>
+    <string name="overview_edit_quickwizard_show_on_device">Visa snabbknappar på:</string>
     <string name="overview_edit_quickwizard_use_bg">BG-beräkning</string>
     <string name="overview_edit_quickwizard_use_bolus_iob">Bolus IOB-beräkning</string>
     <string name="overview_edit_quickwizard_use_basal_iob">Basal IOB-beräkning</string>
