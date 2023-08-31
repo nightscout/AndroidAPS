@@ -6,15 +6,26 @@
     <string name="application_protection">Skydd för app</string>
     <string name="bolus_protection">Bolusskydd</string>
     <string name="settings_password">Lösenord för inställningar</string>
+    <string name="settings_pin">Inställningar PIN-kod</string>
     <string name="application_password">Lösenord för app</string>
+    <string name="application_pin">PIN-kod för appen</string>
     <string name="bolus_password">Lösenord för bolus</string>
+    <string name="bolus_pin">PIN-kod för bolus</string>
+    <string name="protection_timeout_title">Lösenord och PIN-lagring [s]</string>
+    <string name="protection_timeout_summary">Tid innan lösenord eller PIN-kod måste anges</string>
     <string name="biometric">Biometri</string>
     <string name="custom_password">Eget lösenord</string>
+    <string name="custom_pin">Egen PIN-kod</string>
     <string name="noprotection">Inget skydd</string>
     <string name="unsecure_fallback_biometric">Osäker alternativ autentisering</string>
     <string name="unsecure_fallback_descriotion_biometric">Biometrisk verifiering kräver att huvudlösenordet är inställt (som reservlösning).\n\nVänligen sätt ett huvudlösenord!</string>
     <string name="password_set">Lösenord sparat!</string>
+    <string name="pin_set">PIN-kod angiven</string>
     <string name="password_not_set">Lösenord inte inställt</string>
+    <string name="pin_not_set">PIN-kod inte angiven</string>
     <string name="password_not_changed">Lösenordet har inte ändrats</string>
+    <string name="pin_not_changed">PIN-koden inte ändrad</string>
+    <string name="pin_cleared">PIN-kod borttagen</string>
     <string name="password_hint">Ange lösenord här</string>
+    <string name="pin_hint">Ange PIN-kod här</string>
 </resources>
