@@ -2,6 +2,7 @@
 <resources>
     <!-- MedtrumPump -->
     <!-- overview fragment -->
+    <string name="active_bolus_label">Aktiv bolus</string>
     <!-- Alarm strings -->
     <!-- wizard-->
     <!-- settings-->
