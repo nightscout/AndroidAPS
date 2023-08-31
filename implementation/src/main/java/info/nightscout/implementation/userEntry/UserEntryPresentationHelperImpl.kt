@@ -97,6 +97,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.OmnipodEros         -> R.drawable.ic_patch_pump_outline
         Sources.OmnipodDash         -> R.drawable.ic_patch_pump_outline
         Sources.EOPatch2            -> info.nightscout.core.ui.R.drawable.ic_eopatch2_128
+        Sources.Medtrum             -> info.nightscout.core.ui.R.drawable.ic_medtrum_128
         Sources.MDI                 -> R.drawable.ic_ict
         Sources.VirtualPump         -> R.drawable.ic_virtual_pump
         Sources.SMS                 -> R.drawable.ic_sms

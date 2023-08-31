@@ -192,9 +192,7 @@ import kotlin.math.abs
             }
 
             else                                         -> {
-                // Use Nano settings for unknown pumps
-                alarmSetting?.entries = arrayOf(allAlarmEntries[6], allAlarmEntries[7]) // "Beep", "Silent"
-                alarmSetting?.entryValues = arrayOf(allAlarmValues[6], allAlarmValues[7]) // "6", "7"
+                // Use default
             }
         }
     }
@@ -220,6 +218,7 @@ import kotlin.math.abs
     override fun isHandshakeInProgress(): Boolean = false
 
     override fun finishHandshaking() {
+        // Unused
     }
 
     override fun connect(reason: String) {
@@ -417,6 +416,7 @@ import kotlin.math.abs
             try {
                 extended.put("ActiveProfile", profileName)
             } catch (ignored: Exception) {
+                // Ignore
             }
             pumpJson.put("status", status)
             pumpJson.put("extended", extended)
@@ -472,6 +472,7 @@ import kotlin.math.abs
     }
 
     override fun executeCustomAction(customActionType: CustomActionType) {
+        // Unused
     }
 
     override fun executeCustomCommand(customCommand: CustomCommand): PumpEnactResult? {

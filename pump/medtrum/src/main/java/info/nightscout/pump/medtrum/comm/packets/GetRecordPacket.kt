@@ -111,91 +111,99 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                 "$bolusExtendedDuration, " + "bolusExtendedDelivered: $bolusExtendedDelivered, bolusCarb: $bolusCarb, bolusGlucose: $bolusGlucose, bolusIOB: $bolusIOB, unknown1: $unknown1, unknown2: $unknown2, " + "bolusType: $bolusType, bolusWizard: $bolusWizard"
                         )
 
-                        if (bolusType == BolusType.NORMAL) {
-                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStartTime, bolusNormalDelivered)
-                            var newRecord = false
-                            if (detailedBolusInfo != null) {
-                                val syncOk = pumpSync.syncBolusWithTempId(
+                        when (bolusType) {
+                            BolusType.NORMAL   -> {
+                                val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStartTime, bolusNormalDelivered)
+                                var newRecord = false
+                                if (detailedBolusInfo != null) {
+                                    val syncOk = pumpSync.syncBolusWithTempId(
+                                        timestamp = bolusStartTime,
+                                        amount = bolusNormalDelivered,
+                                        temporaryId = detailedBolusInfo.timestamp,
+                                        type = detailedBolusInfo.bolusType,
+                                        pumpId = bolusStartTime,
+                                        pumpType = medtrumPump.pumpType(),
+                                        pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                                    )
+                                    if (!syncOk) {
+                                        aapsLogger.warn(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BOLUS_RECORD: Failed to sync bolus with tempId: ${detailedBolusInfo.timestamp}")
+                                        // detailedInfo can be from another similar record. Reinsert
+                                        detailedBolusInfoStorage.add(detailedBolusInfo)
+                                    }
+                                } else {
+                                    newRecord = pumpSync.syncBolusWithPumpId(
+                                        timestamp = bolusStartTime,
+                                        amount = bolusNormalDelivered,
+                                        type = null,
+                                        pumpId = bolusStartTime,
+                                        pumpType = medtrumPump.pumpType(),
+                                        pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                                    )
+                                }
+
+                                aapsLogger.debug(
+                                    LTag.PUMPCOMM,
+                                    "from record: ${if (newRecord) "**NEW** " else ""}EVENT BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U "
+                                )
+                                if (bolusStartTime > medtrumPump.lastBolusTime) {
+                                    medtrumPump.lastBolusTime = bolusStartTime
+                                    medtrumPump.lastBolusAmount = bolusNormalDelivered
+                                }
+                            }
+
+                            BolusType.EXTENDED -> {
+                                val newRecord = pumpSync.syncExtendedBolusWithPumpId(
                                     timestamp = bolusStartTime,
-                                    amount = bolusNormalDelivered,
-                                    temporaryId = detailedBolusInfo.timestamp,
-                                    type = detailedBolusInfo.bolusType,
+                                    amount = bolusExtendedDelivered,
+                                    duration = bolusExtendedDuration,
+                                    isEmulatingTB = false,
                                     pumpId = bolusStartTime,
                                     pumpType = medtrumPump.pumpType(),
                                     pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
                                 )
-                                if (!syncOk) {
-                                    aapsLogger.warn(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BOLUS_RECORD: Failed to sync bolus with tempId: ${detailedBolusInfo.timestamp}")
-                                    // detailedInfo can be from another similar record. Reinsert
-                                    detailedBolusInfoStorage.add(detailedBolusInfo)
-                                }
-                            } else {
-                                newRecord = pumpSync.syncBolusWithPumpId(
-                                    timestamp = bolusStartTime,
-                                    amount = bolusNormalDelivered,
-                                    type = null,
-                                    pumpId = bolusStartTime,
-                                    pumpType = medtrumPump.pumpType(),
-                                    pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                                aapsLogger.debug(
+                                    LTag.PUMPCOMM,
+                                    "from record: ${if (newRecord) "**NEW** " else ""}EVENT EXTENDED BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U "
                                 )
                             }
 
-                            aapsLogger.debug(
-                                LTag.PUMPCOMM,
-                                "from record: ${if (newRecord) "**NEW** " else ""}EVENT BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U "
-                            )
-                            if (bolusStartTime > medtrumPump.lastBolusTime) {
-                                medtrumPump.lastBolusTime = bolusStartTime
-                                medtrumPump.lastBolusAmount = bolusNormalDelivered
+                            BolusType.COMBI    -> {
+                                // Note, this should never happen, as we don't use combo bolus
+                                val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStartTime, bolusNormalDelivered)
+                                val newRecord = pumpSync.syncBolusWithPumpId(
+                                    timestamp = bolusStartTime,
+                                    amount = bolusNormalDelivered,
+                                    type = detailedBolusInfo?.bolusType,
+                                    pumpId = bolusStartTime,
+                                    pumpType = medtrumPump.pumpType(),
+                                    pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                                )
+                                pumpSync.syncExtendedBolusWithPumpId(
+                                    timestamp = bolusStartTime,
+                                    amount = bolusExtendedDelivered,
+                                    duration = bolusExtendedDuration,
+                                    isEmulatingTB = false,
+                                    pumpId = bolusStartTime,
+                                    pumpType = medtrumPump.pumpType(),
+                                    pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
+                                )
+                                aapsLogger.error(
+                                    LTag.PUMPCOMM,
+                                    "from record: ${if (newRecord) "**NEW** " else ""}EVENT COMBI BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U Extended: ${bolusExtendedDelivered} THIS SHOULD NOT HAPPEN!!!"
+                                )
+                                if (!newRecord && detailedBolusInfo != null) {
+                                    // detailedInfo can be from another similar record. Reinsert
+                                    detailedBolusInfoStorage.add(detailedBolusInfo)
+                                }
+                                if (bolusStartTime > medtrumPump.lastBolusTime) {
+                                    medtrumPump.lastBolusTime = bolusStartTime
+                                    medtrumPump.lastBolusAmount = bolusNormalDelivered
+                                }
                             }
-                        } else if (bolusType == BolusType.EXTENDED) {
-                            val newRecord = pumpSync.syncExtendedBolusWithPumpId(
-                                timestamp = bolusStartTime,
-                                amount = bolusExtendedDelivered,
-                                duration = bolusExtendedDuration,
-                                isEmulatingTB = false,
-                                pumpId = bolusStartTime,
-                                pumpType = medtrumPump.pumpType(),
-                                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-                            )
-                            aapsLogger.debug(
-                                LTag.PUMPCOMM,
-                                "from record: ${if (newRecord) "**NEW** " else ""}EVENT EXTENDED BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U "
-                            )
-                        } else if (bolusType == BolusType.COMBI) {
-                            // Note, this should never happen, as we don't use combo bolus
-                            val detailedBolusInfo = detailedBolusInfoStorage.findDetailedBolusInfo(bolusStartTime, bolusNormalDelivered)
-                            val newRecord = pumpSync.syncBolusWithPumpId(
-                                timestamp = bolusStartTime,
-                                amount = bolusNormalDelivered,
-                                type = detailedBolusInfo?.bolusType,
-                                pumpId = bolusStartTime,
-                                pumpType = medtrumPump.pumpType(),
-                                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-                            )
-                            pumpSync.syncExtendedBolusWithPumpId(
-                                timestamp = bolusStartTime,
-                                amount = bolusExtendedDelivered,
-                                duration = bolusExtendedDuration,
-                                isEmulatingTB = false,
-                                pumpId = bolusStartTime,
-                                pumpType = medtrumPump.pumpType(),
-                                pumpSerial = medtrumPump.pumpSN.toString(radix = 16)
-                            )
-                            aapsLogger.error(
-                                LTag.PUMPCOMM,
-                                "from record: ${if (newRecord) "**NEW** " else ""}EVENT COMBI BOLUS ${dateUtil.dateAndTimeString(bolusStartTime)} ($bolusStartTime) Bolus: ${bolusNormalDelivered}U Extended: ${bolusExtendedDelivered} THIS SHOULD NOT HAPPEN!!!"
-                            )
-                            if (!newRecord && detailedBolusInfo != null) {
-                                // detailedInfo can be from another similar record. Reinsert
-                                detailedBolusInfoStorage.add(detailedBolusInfo)
+
+                            else               -> {
+                                aapsLogger.error(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BOLUS_RECORD: Unknown bolus type: $bolusType")
                             }
-                            if (bolusStartTime > medtrumPump.lastBolusTime) {
-                                medtrumPump.lastBolusTime = bolusStartTime
-                                medtrumPump.lastBolusAmount = bolusNormalDelivered
-                            }
-                        } else {
-                            aapsLogger.error(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BOLUS_RECORD: Unknown bolus type: $bolusType")
                         }
 
                     }
