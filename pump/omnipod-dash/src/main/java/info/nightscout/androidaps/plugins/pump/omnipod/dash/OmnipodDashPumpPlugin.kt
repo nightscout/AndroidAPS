@@ -1254,8 +1254,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         if (expiryReminderDelay.isNegative) {
             aapsLogger.warn(
                 LTag.PUMPBTCOMM,
-                "updateAlertConfiguration negative " +
-                    "expiryAlertDuration=$expiryReminderDelay"
+                "updateAlertConfiguration negative expiryAlertDuration=$expiryReminderDelay"
             )
             PumpEnactResult(injector).success(false).enacted(false)
         }
@@ -1264,8 +1263,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         if (expiryAlarmDelay.isNegative) {
             aapsLogger.warn(
                 LTag.PUMPBTCOMM,
-                "updateAlertConfiguration negative " +
-                    "expiryAlarmDuration=$expiryAlarmDelay"
+                "updateAlertConfiguration negative expiryAlarmDuration=$expiryAlarmDelay"
             )
             PumpEnactResult(injector).success(false).enacted(false)
         }
@@ -1273,8 +1271,7 @@ class OmnipodDashPumpPlugin @Inject constructor(
         if (expiryImminentDelay.isNegative) {
             aapsLogger.warn(
                 LTag.PUMPBTCOMM,
-                "updateAlertConfiguration negative " +
-                    "expiryImminentDuration=$expiryImminentDelay"
+                "updateAlertConfiguration negative expiryImminentDuration=$expiryImminentDelay"
             )
             PumpEnactResult(injector).success(false).enacted(false)
         }
