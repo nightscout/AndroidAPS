@@ -54,6 +54,7 @@
     <string name="patch_step_desc_2">2.</string>
     <string name="patch_wake_up_desc_2">Vänta på 1 pip.</string>
     <string name="patch_start_pairing">Påbörja parkoppling</string>
+    <string name="patch_connect_new">Parkoppling</string>
     <string name="patch_connect_new_step">2/6</string>
     <string name="patch_connect_new_desc">Den nya podden håller på att parkopplas.\nHåll din smarta enhet så nära podden som möjligt</string>
     <string name="patch_remove_needle_cap">Förbered för att sätta fast podden</string>
@@ -116,11 +117,15 @@
     <string name="string_unconfirmed_bolus_info_discard_confirm_message">På grund av obekräftad bolusinformation kan boluskalkylatorn inte användas förrän %s.\n\nÄr du säker på att du vill kassera den nuvarande Patchen?</string>
     <string name="needle_insertion_error_1">Fel vid insättning av nål.</string>
     <string name="needle_insertion_error_3">Tryck på \'Kassera\' för att avaktivera pod.</string>
+    <string name="string_suspend_time_insulin_delivery_title">Basalavstängning</string>
     <string name="string_resume_insulin_delivery_title">Återuppta insulinleverans</string>
+    <string name="string_resume_insulin_delivery_message">Slutet av insulinavstängning.\nTryck på \"Bekräfta\" för att återuppta leveransen av insulin.\n\n[Caution]\nInsulinleverans kommer inte att återupptas förrän du trycker på \"Bekräfta\".\nOm du inte trycker på \'Bekräfta\', kan du utveckla högt blodsocker.</string>
     <string name="string_suspended_insulin_delivery_message">Insulinleverans är pausad.</string>
     <string name="string_resumed_insulin_delivery_message">Insulinleveransen har återupptagits.</string>
     <string name="finish">Slutför</string>
     <string name="string_temp_basal_remained_hhmm">återstående tid: %1$s:%2$s</string>
     <string name="next">Nästa</string>
     <string name="patch_connection_fail">Försök igen efter kommunikationskontroll.</string>
+    <string name="string_pause_failed">Avstängning misslyckades.</string>
+    <string name="string_resume_failed">Återupptagande misslyckades.</string>
 </resources>
