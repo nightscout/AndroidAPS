@@ -76,7 +76,7 @@ open class DanaRSPacketAPSHistoryEvents(
             aapsLogger.debug(LTag.PUMPCOMM, "Last record received")
 
             val array: Array<ByteArray> = messageBuffer.toTypedArray()
-            val sorted = array.sortedArrayWith { s1: ByteArray, s2: ByteArray -> (dateTime(s1) - dateTime(s2)).toInt() }
+            val sorted = array.sortedArrayWith { s1: ByteArray, s2: ByteArray -> dateTime(s1).compareTo(dateTime(s2)) }
             for (index in sorted.indices) {
                 val message = sorted[index]
                 // workaround for RS history bug
@@ -102,7 +102,7 @@ open class DanaRSPacketAPSHistoryEvents(
         } else messageBuffer.add(data)
     }
 
-    fun dateTime(data: ByteArray): Long =
+    private fun dateTime(data: ByteArray): Long =
         if (!danaPump.usingUTC) dateTimeSecFromBuff(data, 1) // 6 bytes
         else intFromBuffMsbLsb(data, 3, 4) * 1000L
 
