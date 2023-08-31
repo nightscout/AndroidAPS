@@ -40,6 +40,7 @@
     <string name="metadata_wear_import_filename">Failo pavadinimas: %1$s</string>
     <string name="metadata_label_plugin_version">Įskiepio versija: %1$s</string>
     <string name="metadata_label_watchface_name_version">Pavadinimas: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_comment">Komentaras: %1$s</string>
     <string name="pref_show_iob">Rodyti AIO</string>
     <string name="pref_show_detailed_iob">Rodyti detalų AIO</string>
     <string name="pref_show_cob">Rodyti AAO</string>
@@ -58,12 +59,18 @@
     <string name="wear_default_watchface">Numatytasis ekranas</string>
     <string name="cwf_comment_background">Fono paveiksliukas</string>
     <string name="cwf_comment_chart">Grafikai (glikemija, bazė, prognozės...)</string>
+    <string name="cwf_comment_cover_chart">Paveiksliukas už teksto ir prieš grafiką</string>
     <string name="cwf_comment_freetext1">Laisvas tekstas 1</string>
     <string name="cwf_comment_freetext2">Laisvas tekstas 2</string>
     <string name="cwf_comment_freetext3">Laisvas tekstas 3</string>
     <string name="cwf_comment_freetext4">Laisvas tekstas 4</string>
+    <string name="cwf_comment_iob1">Sudėtinis arba detalus AIO</string>
+    <string name="cwf_comment_iob2">Sudėtinis arba detalus (Boluso_AIO|Bazės_AIO) AIO</string>
     <string name="cwf_comment_cob2">AAO vertė</string>
+    <string name="cwf_comment_delta">Trumpo laikotarpio pokytis</string>
+    <string name="cwf_comment_avg_delta">Vidutinis pokytis (15 min)</string>
     <string name="cwf_comment_uploader_battery">Telefono baterija (%)</string>
+    <string name="cwf_comment_rig_battery">Baterija (%)</string>
     <string name="cwf_comment_basalRate">Bazė</string>
     <string name="cwf_comment_bgi">KGI vertė</string>
     <string name="cwf_comment_time">Laikas (val:min arba val:min:sek)</string>
@@ -78,4 +85,8 @@
     <string name="cwf_comment_direction">Tendencijos rodyklė</string>
     <string name="cwf_comment_timestamp">Prieš kiek minučių nuskaityta glikemija</string>
     <string name="cwf_comment_sgv">Glikemija</string>
+    <string name="cwf_comment_cover_plate">Paveiksliukas prieš tekstą (skambučius...)</string>
+    <string name="cwf_comment_hour_hand">Analoginio laikrodžio valandinė rodyklė</string>
+    <string name="cwf_comment_minute_hand">Analoginio laikrodžio minutinė rodyklė</string>
+    <string name="cwf_comment_second_hand">Analoginio laikrodžio sekundinė rodyklė</string>
 </resources>
