@@ -21,6 +21,8 @@
     <string name="smscommunicator_otp_step3_test_header">3. Testa engångslösenord</string>
     <string name="smscommunicator_otp_reset_header">Återställ autentiserare</string>
     <string name="smscommunicator_otp_install_info">På varje följartelefon behöver man installera en autentiseringsapp som stöder RFC 6238 TOTP tokens. Populära gratisappar är:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">FEL PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">FEL OTP</string>
     <string name="sms_wrong_code">Fel kod. Kommandot avbrutet.</string>
     <string name="sms_timeout_while_waiting">Föregående pumpkommunikation har inte bekräftats/avslutats i tid</string>
     <string name="smscommunicator_allowednumbers">Godkända telefonnummer</string>
@@ -85,6 +87,7 @@
     <string name="smscommunicator_message_body">Ogiltigt innehåll i meddelande</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Skicka SMS om pumpen inte kan nås</string>
     <string name="smscommunicator_pump_unreachable">Rapportera om pump inte kan nås</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">För att växla Loop-läge till LGS (Low Glucose Suspend) svara med kod %1$s</string>
     <string name="wrong_format">Felaktigt format</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">Senaste BG:</string>
