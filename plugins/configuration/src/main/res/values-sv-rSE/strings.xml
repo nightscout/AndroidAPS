@@ -6,6 +6,7 @@
     <string name="previous_button">Föregående</string>
     <string name="nav_setupwizard">Installationsguide</string>
     <string name="setupwizard_finish">Avsluta</string>
+    <string name="welcome">Välkommen</string>
     <string name="welcometosetupwizard">Välkommen till installationsguiden! Den kommer att hjälpa dig genom installationsprocessen\n</string>
     <string name="end_user_license_agreement">Licensavtal för slutanvändare</string>
     <string name="end_user_license_agreement_text">FÅR INTE ANVÄNDAS FÖR ATT FATTA MEDICINSKA BESLUT. DET FINNS INGEN GARANTI FÖR PROGRAMMET I DEN UTSTRÄCKNING SOM TILLÅTS AV GÄLLANDE LAG. FÖRUTOM NÄR ANNAT ANGES SKRIFTLIGEN LEVERERAS APPLIKATIONEN SOM DEN ÄR HELT UTAN GARANTIER I NÅGON SOM HELST FORM, VARKEN UTTRYCKTA ELLER UNDERFÖRSTÅDDA, INKLUSIVE MEN INTE BEGRÄNSAT TILL SÄLJBARHET OCH LÄMPLIGHET FÖR ETT VISST ÄNDAMÅL. HELA RISKEN VAD GÄLLER KVALITET OCH PRESTANDA AV PROGRAMMET ÅLIGGER ANVÄNDAREN. OM PROGRAMMET VISAR SIG VARA DEFEKT ANTAR ANVÄNDAREN DEN FULLA FÖR KOSTNADEN FÖR ALL NÖDVÄNDIG SERVICE, REPARATION ELLER KORRIGERING.</string>
@@ -20,10 +21,12 @@
     <string name="need_location_permission">Appen behöver platsåtkomst för bluetooth- och WiFi-identifiering</string>
     <string name="need_storage_permission">Applikationen behöver lagringsbehörighet för att kunna lagra loggfiler och exportinställningar</string>
     <string name="askforpermission">Be om behörighet</string>
+    <string name="need_whitelisting">%1$s behöver kunna kringgå batterisparfunktionerna för att fungera korrekt</string>
     <string name="storedsettingsfound">Tidigare sparade inställningar hittade</string>
     <string name="master_password_summary">Huvudlösenordet används för att kryptera backuper och för att åsidosätta vissa säkerhetsfunktioner i applikationen. Kom ihåg det eller förvara det på ett säkert ställe.</string>
     <string name="current_master_password">Nuvarande huvudlösenord</string>
     <string name="common_values">Använd värden för den största måltiden som du vanligen äter\n</string>
+    <string name="syncinfotext">Synkronisera data till molnet. Du kan hoppa över detta steg nu, men du kommer inte att kunna klara inlärningsmålen förrän du ansluter Nightscout eller Tidepool.</string>
     <string name="status">Status:</string>
     <string name="patient_name">Patientens namn</string>
     <string name="patient_name_summary">Vänligen ange patientens namn eller smeknamn för att kunna skilja mellan flera uppsättningar av inställningar</string>
@@ -33,7 +36,9 @@
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Genomför profilbyte</string>
     <string name="exitwizard">Hoppa över installationsguiden</string>
+    <string name="setupwizard_loop_description">Tryck på knappen nedan för att låta AAPS föreslå/göra basalförändringar</string>
     <string name="setupwizard_sensitivity_description">Insticksprogrammet för känslighet används för att detektera insulinkänslighet och för att beräkning av aktiva kolhydrater, COB. För mer information, besök:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Välj en av dessa algoritmer. De sorteras från den äldsta till nyaste. Nyare algoritm är oftast mer kraftfull och mer aggressiv. Om du är ny som loopanvändare vill du förmodligen börja med AMA och inte med senaste. Glöm inte att läsa dokumentationen om OpenAPS och konfigurera algoritmen innan användning.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Konfigurera din Riley Link nedan. När du har valt en Riley Link kan du fortsätta installationen när status är \"Ansluten\". Det här kan ta en minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized">Du kan fortsätta installationen först när pumpen har konfigurerats.\n</string>
@@ -48,24 +53,35 @@
     <string name="request">Begäran</string>
     <string name="apsmode_title">APS-läge</string>
     <string name="setupwizard_preferred_aps_mode">Föredraget APS-läge</string>
+    <string name="error_asking_for_permissions">Fel vid begäran om behörigheter</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Denna enhet verkar inte ha stöd för vitlistning från batterioptimering. Du eventuellt råka ut för problem pga detta.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Konfigurationsverktyg</string>
     <string name="configbuilder_pump">Pump</string>
+    <string name="configbuilder_pump_description">Vilken pump vill du använda med AAPS?</string>
     <string name="configbuilder_profile">Profil</string>
+    <string name="configbuilder_profile_description">Vilken profil ska AAPS använda?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Vilken algoritm ska användas för behandlingar?</string>
     <string name="configbuilder_general">Generella inställningar</string>
     <string name="configbuilder_general_description">Dessa är några allmänna insticksprogram som kan vara användbara.</string>
     <string name="configbuilder_sync">Synkronisering</string>
+    <string name="configbuilder_sync_description">Plugin för uppladdning och synkronisering av data.</string>
     <string name="configbuilder_constraints_description">Vilka begränsningar ska tillämpas?</string>
     <string name="configbuilder_loop">Loop</string>
+    <string name="configbuilder_loop_description">Använd detta för att aktivera AAPS loop-möjligheter.</string>
     <string name="configbuilder_insulin_description">Vilken typ av insulin använder du?</string>
     <string name="configbuilder_bgsource">BG-källa</string>
+    <string name="configbuilder_bgsource_description">Var ska AAPS få sitt data ifrån?</string>
+    <string name="configbuilder_smoothing">Utjämning</string>
+    <string name="configbuilder_smoothing_description">Välj utjämningsalgoritm</string>
     <string name="configbuilder_sensitivity">Känslighetsavkänning</string>
     <string name="configbuilder_sensitivity_description">Vilken algoritm vill du använda för känslighetsavkänning?</string>
     <string name="config_builder_shortname">Konf</string>
     <string name="description_config_builder">Används för att konfigurera de aktiva insticksprogrammen</string>
+    <string name="allow_hardware_pump_text">Varning: Om du aktiverar och ansluter en pump kommer AAPS skriva över pumpens basalprofil med den aktiva profilen i AAPS. Se till att ha rätt inställningar i appen innan du ansluter. Om du är osäker, tryck på Avbryt och anslut pumpen på nytt vid ett senare tillfälle.</string>
+    <string name="a11y_open_settings">öppna inställningar</string>
+    <string name="nsclient_version_does_not_match">Följarversionen matchar inte AAPS-versionen. Vänligen uppdatera.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Inställningar</string>
     <string name="password_preferences_encrypt_prompt">Du kommer att bli tillfrågad om huvudlösenordet som sedan kommer att användas för att kryptera exporterade inställningar.</string>
@@ -98,6 +114,7 @@
     <string name="maintenance">Underhåll</string>
     <string name="maintenance_shortname">UH</string>
     <string name="description_maintenance">Tillhandahåller funktioner för underhåll (t ex skicka eller ta bort loggar).</string>
+    <string name="database_cleanup">Rensning av databas</string>
     <string name="reset_db_confirm">Vill du verkligen återställa databaserna?</string>
     <string name="maintenance_settings">Underhållsinställningar</string>
     <string name="maintenance_email">e-postmottagare</string>
@@ -106,7 +123,9 @@
     <string name="delete_logs">Radera loggar</string>
     <string name="configbuilder_nightscoutversion_label">Nightscoutversion:</string>
     <string name="engineering_mode_enabled">Engineering Mode aktiverat</string>
+    <string name="log_files">Loggfiler</string>
     <string name="nav_logsettings">Loggningsinställningar</string>
+    <string name="miscellaneous">Diverse</string>
     <string name="nav_resetdb">Återställ databaserna</string>
     <string name="resettodefaults">Återställ standardinställningar</string>
     <!-- Maintenance -->
@@ -134,5 +153,7 @@
     <string name="prefdecrypt_issue_wrong_format">Krypteringskonfigurationen saknas. Inställningsformatet är ogiltigt!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Ej stödd eller ej angiven krypteringsalgoritm!</string>
     <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Välj anpassad urtavla</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Vänligen starta om telefonen eller starta om AAPS från systeminställningar \nannars kommer Android APS inte att ha loggning aktiverat (viktigt för att spåra och kontrollera att algoritmerna fungerar korrekt)!</string>
 </resources>
