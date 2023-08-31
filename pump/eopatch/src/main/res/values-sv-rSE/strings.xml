@@ -116,6 +116,7 @@
     <string name="string_are_you_sure_to_discard_current_patch">Är du säker på att du vill kassera den nuvarande podden?</string>
     <string name="string_unconfirmed_bolus_info_discard_confirm_message">På grund av obekräftad bolusinformation kan boluskalkylatorn inte användas förrän %s.\n\nÄr du säker på att du vill kassera den nuvarande Patchen?</string>
     <string name="needle_insertion_error_1">Fel vid insättning av nål.</string>
+    <string name="needle_insertion_error_2">Kontrollera att riktningen på hålet som är kvar efter att ha vridit spaken är rak och tryck sedan på \'Försök igen\'.</string>
     <string name="needle_insertion_error_3">Tryck på \'Kassera\' för att avaktivera pod.</string>
     <string name="string_suspend_time_insulin_delivery_title">Basalavstängning</string>
     <string name="string_resume_insulin_delivery_title">Återuppta insulinleverans</string>
@@ -128,4 +129,5 @@
     <string name="patch_connection_fail">Försök igen efter kommunikationskontroll.</string>
     <string name="string_pause_failed">Avstängning misslyckades.</string>
     <string name="string_resume_failed">Återupptagande misslyckades.</string>
+    <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE d MMM yyyy hh:mm</string>
 </resources>
