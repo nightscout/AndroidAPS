@@ -106,4 +106,10 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">Stopp nedtryckt</string>
     <!--QuickWizard-->
+    <string name="negative_only">Endast negativa</string>
+    <string name="overview_editquickwizard_usecob">COB-beräkning</string>
+    <string name="overview_editquickwizard_usetemptarget">Beräkning av temporärt målvärde</string>
+    <string name="overview_editquickwizard_usepercentage">Procentuell beräkning</string>
+    <string name="app_default">Appens standardinställning</string>
+    <string name="a11y_drag_and_drop_handle">dra och släpp-handtag</string>
 </resources>
