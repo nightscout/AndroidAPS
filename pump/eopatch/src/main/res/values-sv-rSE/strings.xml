@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="eopatch">EOPatch2</string>
+    <string name="eopatch_shortname">EOP2</string>
+    <string name="eopatch_pump_description">Pumpintegration för EOPatch2 / GlucoMen Day</string>
     <string name="category_alerts">Varningar</string>
+    <string name="low_reservoir">Varningar för låg reservoar</string>
+    <string name="patch_expiration_reminders">Påminnelse om att byta patch</string>
+    <string name="patch_buzzer_reminders">Påminnelse om att byta patchvibrator</string>
+    <string name="time_format_a_h_mm">hh:mm</string>
+    <string name="eopatch_ble_status">BLE Status</string>
+    <string name="eopatch_serial_number">Serienummer</string>
+    <string name="eopatch_lot_number">Lot-nummer</string>
+    <string name="eopatch_wakeup_time">Start datum &amp; tid</string>
+    <string name="eopatch_expiration_time">Utgångstid</string>
     <string name="eopatch_status">Status</string>
     <string name="eopatch_base_basal_rate">Profilens basaldos</string>
     <string name="eopatch_temp_basal_rate">Temp basaldos</string>
     <string name="eopatch_total_delivered">Totalt levererat</string>
+    <string name="invalid_basal_rate">Profilens basaldos är mindre än 0,05 U/h. EOPatch har en lägsta basaldos på 0.05U. Försök igen efter att profilen har ställts in till mer än så.</string>
+    <string name="no_profile_selected">Ingen profil vald. Välj en profil och försök igen.</string>
     <string name="symbol_day">dag</string>
+    <string name="symbol_plus">+</string>
+    <string name="symbol_minus">-</string>
+    <string name="time_30min">30 min</string>
+    <string name="time_1hr">1 tim</string>
+    <string name="time_1hr_30min">1 tim 30 min</string>
+    <string name="time_2hr">2 tim</string>
+    <string name="all_blank">\u0020</string>
     <string name="patch_finish">Slutför</string>
     <string name="patch_step_desc_1">1.</string>
     <string name="patch_connect_new_step">2/6</string>
