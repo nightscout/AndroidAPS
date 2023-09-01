@@ -16,6 +16,7 @@
     <string name="combov2_error_6">기계적인 오류</string>
     <string name="combov2_error_7">전자공학적 오류</string>
     <string name="combov2_error_8">전원 차단</string>
+    <string name="combov2_error_9">백업 펌프 작업 종료</string>
     <string name="combov2_error_10">레저버 오류</string>
     <string name="combov2_error_11">주입 세트가 프라이밍 되지 않음</string>
     <string name="combov2_extended_bolus_not_supported">확장 bolus 지원되지 않음</string>
@@ -49,6 +50,7 @@
     <string name="combov2_pairing_invalid_pin_length">"유효하지 않은 페어링 PIN 길이: %1$d자리 숫자 필요함, %2$d자리임"</string>
     <string name="combov2_scanning_for_pump">펌프 스캔 중</string>
     <string name="combov2_establishing_bt_connection">블루투스 연결 설정 중 (시도 횟수. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">펌프와 동기화하기</string>
     <string name="combov2_pairing_pump_requests_pin">펌프가 10자리 숫자 PIN을 요청함</string>
     <string name="combov2_pairing_finishing">페어링 완료</string>
     <string name="combov2_no_connection_for_n_mins">%1$d분 동안 연결되지 않음</string>
@@ -93,8 +95,11 @@
     <string name="combov2_reservoir_low_warning">펌프 레저버 양 적음</string>
     <string name="combov2_setting_tbr_succeeded">TBR 설정 성공함</string>
     <string name="combov2_setting_tbr_failed">TBR 설정 실패함</string>
+    <string name="combov2_set_emulated_100_tbr">에뮬레이트된 100% TBR 설정</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">현재 에뮬레이션된 100% TBR 완료를 하게합니다.</string>
     <string name="combov2_ignoring_redundant_100_tbr">중복된 100% TBR 요청 무시</string>
     <string name="combov2_hit_unexpected_tbr_limit">TBR을 조정하는 동안 예상치 못한 한도에 도달했습니다: 목표 퍼센트 %1$d%%이었고, %2$d%% 한도에 도달했습니다.</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">기본 Basal양이 0인 경우 절대 TBR을 설정할 수 없습니다.</string>
     <string name="combov2_pair_with_pump_summary">AndroidAPS와 Android를 현재 페어링되지 않은 Accu-Chek Combo 펌프와 페어링하세요.</string>
     <string name="combov2_unpair_pump_summary">AndroidAPS와 Android를 현재 페어링된 Accu-Chek Combo 펌프와 페어링 해제하세요.</string>
     <string name="combov2_unknown_tbr_detected">알 수 없는 TBR이 감지되어 중단됨; 퍼센트: %1$d%%; 남은 시간: %2$s</string>
@@ -106,6 +111,7 @@
     <string name="combov2_short_status_reservoir">잔여 인슐린 양: %d U</string>
     <string name="combov2_short_status_battery_state_empty">비어 있음</string>
     <string name="combov2_short_status_battery_state_low">소</string>
+    <string name="combov2_short_status_battery_state_full">전체</string>
     <string name="combov2_short_status_battery_state">배터리: %s</string>
     <string name="combov2_automatic_reservoir_entry">인슐린 레저버 교체를 자동으로 감지하고, 자동으로 입력함</string>
     <string name="combov2_automatic_battery_entry">배터리 교체를 자동으로 감지하고, 자동으로 입력함</string>
