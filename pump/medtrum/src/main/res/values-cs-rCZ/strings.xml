@@ -14,6 +14,7 @@
     <!-- overview fragment -->
     <string name="ble_status_label">Stav BLE</string>
     <string name="last_connection_label">Naposledy připojeno</string>
+    <string name="active_bolus_label">Aktivní bolus</string>
     <string name="pump_state_label">Stav pumpy</string>
     <string name="active_alarms_label">Aktivní alarmy</string>
     <string name="reservoir_level"> %.2f U</string>

@@ -33,6 +33,8 @@
     <string name="enable_carbs_req_alert">Varna om kolhydrater behövs</string>
     <string name="open_navigation">Öppna menyn</string>
     <string name="close_navigation">Stäng menyn</string>
+    <string name="remove_items">Ta bort objekt</string>
+    <string name="sort_items">Sortera objekt</string>
     <string name="error_adding_treatment_title">Behandlingsdata ofullständigt</string>
     <string name="error_adding_treatment_message">En behandling (insulin: %1$.2f, kolhydrater: %2$d, tid: %3$s) kunde inte läggas till listan i Behandlingar. Vänligen kontrollera och lägg till en post manuellt vid behov.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), fördröjd i %3$d m</string>
@@ -46,8 +48,13 @@
     <string name="clear_filter">Rensa filter</string>
     <string name="cannula">Kanyl</string>
     <string name="email_address">E-postadress</string>
+    <string name="remove_bg_readings">Ta bort BG-värden</string>
     <string name="identification_not_set">Identifiering inte angiven i dev-läge</string>
     <string name="a11y_dialog">dialog</string>
     <!-- WEAR OS-->
     <string name="wear_unknown_action_string">Okänt kommando:</string>
+    <string name="remove_selected_items">Ta bort valda objekt</string>
+    <string name="count_selected">%1$d valda</string>
+    <string name="sort_label">Sortera</string>
+    <string name="search">Sök</string>
 </resources>

@@ -3,6 +3,7 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">Comunicador SMS</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Controle remotamente a AndroidAPS usando comandos SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">da app Authenticator para: %1$s seguido pelo PIN</string>
     <string name="smscommunicator_otp_pin">PIN obrigatório adicional no token final</string>
     <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Senha-Única que seja gerada</string>
@@ -18,9 +19,11 @@
     <string name="smscommunicator_otp_export_prompt">Tem a certeza de que deseja copiar o segredo da OTP para a área de transferêencia?\n\nSó pode precisar se a app do seu autenticador tiver problemas para digitalizar QRCode, deseja digitá-lo manualmente ou deseja configurar o token OTP de hardware usando app dedicada.</string>
     <string name="smscommunicator_otp_export_successful">Segredo da OTP (em formato Base32) exportado e copiado na áreas de transferênca. Cole-o no autenticador ou no hardware OTP burner!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Instalar Autenticador</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Digitalize o código para configurar os códigos OTP AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testar Uma-Senha-Única (OTP)</string>
     <string name="smscommunicator_otp_reset_header">Repor Autenticadores</string>
     <string name="smscommunicator_otp_install_info">Instalar uma app Autenticador que suporte Tokens RFC 6238 TOTP em cada telefone seguidor. Populares aplicativos gratuitos são:\n • Authy\n • o Google Authenticator\n • LastPass Autenticador\n • FreeOTP Autenticador</string>
+    <string name="smscommunicator_otp_reset_warning">Ao repor o autenticador, torna inválidos todos os autenticadores já inseridos. Precisará de os configurar novamente!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
     <string name="smscommunicator_otp_verification_ivalid_size">TAMANHO INVÁLIDO!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">PIN ERRADO</string>
@@ -90,6 +93,8 @@
     <string name="smscommunicator_report_pump_unreachable_summary">Enviar SMS se evento de bomba inacessível for acionado</string>
     <string name="smscommunicator_pump_unreachable">Reportar bomba inacessível</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Para mudar o tipo de Loop para SGB (Baixa Suspensão por Glicose Baixa) responda com o código %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">De forma a mudar o Loop para Loop Fechado responda com o código %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Modo de loop atual: %1$s</string>
     <string name="wrong_format">Formato incorrecto</string>
     <string name="sms_actual_bg">GLIC:</string>
     <string name="sms_last_bg">Ultima GLIC:</string>
@@ -102,6 +107,7 @@
     <string name="sms_read_status_failed">Erro na leitura de estado</string>
     <string name="sms_profile_switch_created">Troca de perfil criada</string>
     <string name="sms_wrong_tbr_duration">A duração do DBT deve ser de um múltiplo de %1$d minutos e maior que 0.</string>
+    <string name="a11y_otp_qr_code">Código QR para configuração da senha única</string>
     <string name="disabled_loop">Loop Desactivado</string>
     <!-- Food-->
     <string name="food_short">Alimentos</string>
@@ -116,10 +122,16 @@
     <string name="subcategory">Subcategoria</string>
     <string name="calculator_label">Calculadora</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Escolha escuro, claro ou deixe para usar o tema do sistema</string>
+    <string name="app_color_scheme">Esquema de Cores da App</string>
+    <string name="dark_theme">Tema Escuro</string>
+    <string name="light_theme">Tema Claro</string>
+    <string name="follow_system_theme">Usar tema do dispositivo</string>
     <!-- Profile -->
     <string name="localprofile">Perfil</string>
     <string name="localprofile_shortname">PL</string>
     <string name="description_profile_local">Defina um perfil que está disponível offline.</string>
+    <string name="a11y_add_new_to_list">adicionar novo à lista</string>
     <string name="do_you_want_switch_profile">Deseja mudar de perfil e descartar as alterações feitas no perfil actual?</string>
     <string name="save_or_reset_changes_first">Guardar ou repor as alterações actuais primeiro</string>
     <string name="delete_current_profile">Eliminar perfil actual?</string>
@@ -129,10 +141,14 @@
     <string name="error_in_basal_values">Erro nos valores da basal</string>
     <string name="error_in_target_values">Erros no valor alvo</string>
     <string name="error_in_isf_values">Erro nos valores do FSI</string>
+    <string name="profile_name_contains_dot">Alguns dos nomes dos perfis contêm pontos.\nTal não é suportado pelo NS.\nOs perfis não serão enviados para o NS.</string>
     <string name="invalid_profile_not_accepted">Perfil inválido %1$s não aceite do NS</string>
     <string name="view">Ver</string>
     <string name="errors">Erros</string>
+    <string name="select_profile">Selecione o perfil para editar</string>
     <string name="profile_name">Nome do Perfil:</string>
+    <string name="a11y_add_new_profile">adicionar novo perfil</string>
+    <string name="a11y_clone_profile">clonar perfil atual</string>
     <string name="a11y_delete_current_profile">eliminar perfil actual</string>
     <string name="dia_short">DIA</string>
     <string name="target_short">ALV</string>
@@ -153,8 +169,12 @@
     <string name="pb_label">Bateria da Bomba</string>
     <string name="cannula">Cânula</string>
     <string name="ebstopsloop">O uso do Bólus Prolongado irá parar o modo Loop Fechado durante o tempo do bólus prolongado. Quer realmente isso?</string>
+    <string name="statuslights_cannula_age">idade do cateter</string>
+    <string name="statuslights_patch_pump_age">idade do adesivo da bomba</string>
     <!-- Overview -->
     <string name="show_statuslights">Mostrar luzes de estado no ecrã principal</string>
+    <string name="statuslights_cage_warning">Limite do aviso da idade do cateter [h]</string>
+    <string name="statuslights_cage_critical">Limite crítico da idade do cateter [h]</string>
     <string name="statuslights_iage_warning">Limite aviso idade insulina [h]</string>
     <string name="statuslights_iage_critical">Limite crítico da idade da insulina [h]</string>
     <string name="statuslights_sage_warning">Limite aviso idade sensor [h]</string>
@@ -173,6 +193,7 @@
     <string name="chart_menu">Menu do Gráfico</string>
     <string name="a11y_bg_quality">qualidade da glicose no sangue</string>
     <string name="a11y_blood_glucose">Glicose no Sangue</string>
+    <string name="a11y_bg_outdated">desatualizado</string>
     <string name="set_basal_question">Aceitar nova basal temporária:</string>
     <string name="overview_cgm">CGM</string>
     <string name="overview">Visão Geral</string>
@@ -221,6 +242,7 @@
     <string name="short_tabtitles">Abreviar títulos dos separadores</string>
     <string name="overview_show_notes_field_in_dialogs_title">Mostrar campo de notas na janela de tratamentos</string>
     <string name="deliverpartofboluswizard">Assistente de bólus executa o cálculo, mas apenas esta parte da insulina calculada é administada. Útil com o algoritmo SMB.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Entregar bólus completo (100%) se a glicemia for mais velha que</string>
     <string name="enable_bolus_advisor">Activar Guia de Bólus</string>
     <string name="enable_bolus_advisor_summary">Use lembrete para começar a comer mais tarde em vez di resultado do assistente durante a glicemia alta (\"pré-bolus\")</string>
     <string name="enablesuperbolus">Activar superbólus no assistente</string>
@@ -232,6 +254,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">Previsões</string>
     <string name="overview_show_treatments">Tratamentos</string>
+    <string name="overview_show_heartRate">Frequência cardíaca</string>
     <string name="overview_show_deviation_slope">Desvio de inclinação</string>
     <string name="overview_show_activity">Actividade</string>
     <string name="overview_show_bgi">Impacto Glicose</string>
@@ -249,7 +272,9 @@
     <string name="abs_insulin_shortname">ABS</string>
     <string name="devslope_shortname">DESVINCLI</string>
     <string name="treatments_shortname">TRATA</string>
+    <string name="heartRate_shortname">FC</string>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="graph_scale">Escala do Gráfico</string>
     <string name="graph_menu_divider_header">Gráfico</string>
     <!-- Skins -->
     <string name="classic_description">Tema Gráfico Original</string>
@@ -262,8 +287,22 @@
     <string name="send_logfiles">Enviar os ficheiros de registo do dia de hoje para os programadores. Situação inesperada.</string>
     <!--    Wear-->
     <string name="wear_shortname">WEAR</string>
+    <string name="description_wear">Monitorizar e controlar a AndroidAPS utilizando o seu relógio WearOS.</string>
+    <string name="no_watch_connected">(Nenhum relógio Conectado)</string>
+    <string name="pump_status">Estado da Bomba</string>
+    <string name="loop_status">Estado do loop</string>
+    <string name="wizard_result">Calc. Assistente:\nInsulina: %1$.2fU\nHidratos: %2$dg</string>
+    <string name="quick_wizard_not_available">O assistente rápido selecionado não está mais disponível, atualize o ecrã</string>
+    <string name="quick_wizard_message">Assistente rápido: %1$s\nInsulina: %2$.2fU\nHidratos: %3$dg</string>
+    <string name="wear_action_tempt_preset_error">Predefinição de alvo temporário desconhecido: %1$s</string>
+    <string name="wear_action_tempt_cancel_message">Cancelando Alvos Temporários em execução?</string>
+    <string name="wear_action_tempt_unit_error">Diferentes unidades usadas no relógio e telefone!</string>
+    <string name="wear_action_tempt_zero_message">Alvo-temporário-Zero - cancelar Alvos -Temporários em progresso?</string>
     <string name="wear_action_tempt_min_bg_error">Min-GLIC fora do alvo!</string>
     <string name="wear_action_tempt_max_bg_error">Máx-GLIC fora do alvo!</string>
+    <string name="wear_action_tempt_manual_range_message">AlvoTemporário:\nMin: %1$s\nMax: %2$s\nDuração: %3$s</string>
+    <string name="wear_action_tempt_manual_message">AlvoTemporário:\nAlvo: %1$s\nDuração: %2$s</string>
+    <string name="wear_action_tempt_preset_message">AlvoTemporário:\nMotivo %1$s\nAlvo: %2$s\nDuração: %3$s</string>
     <string name="no_success">sem efeito - por favor verifique no telemóvel</string>
     <string name="wear_settings">Definições do Relógio</string>
     <string name="wearcontrol_title">Controles do Relógio</string>
@@ -275,9 +314,19 @@
     <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>
     <string name="wear_predictions_summary">Mostrar previsões no mostrador.</string>
     <string name="wear_predictions_title">Previsões</string>
+    <string name="wear_custom_watchface_settings">Definições da watchface predefinida</string>
+    <string name="wear_custom_watchface_authorization_title">Autorização da watchface predefinida</string>
     <string name="wear_custom_watchface_authorization_summary">Autorizar watchface por definição para alterar e bloquear algumas configurações de exibição do relógio para se adequarem ao design do watchface</string>
+    <string name="wear_custom_watchface">Watchface Predefinida: %1$s</string>
+    <string name="wear_load_watchface">Carregar Watchface</string>
+    <string name="wear_infos_watchface">Infos Watchface</string>
+    <string name="wear_export_watchface">Exportar modelo</string>
+    <string name="wear_new_custom_watchface_exported">Modelo de Watchface Predefinida exportado</string>
     <string name="resend_all_data">Reenviar Todos os Dados</string>
     <string name="open_settings_on_wear">Abrir Definições no Relógio</string>
+    <string name="cwf_infos_pref_locked">Lista de preferências bloqueadas pela Watchface</string>
+    <string name="cwf_infos_pref_required">Lista de preferências necessárias para a Watchface</string>
+    <string name="cwf_infos_view_title">Lista de campos incluídos na Watchface</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
     <string name="old_data">DADOS ANTIGOS</string>

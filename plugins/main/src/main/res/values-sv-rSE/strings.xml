@@ -3,6 +3,7 @@
     <!-- SMS Communicator & OTP Authenticator -->
     <string name="smscommunicator">SMS-tjänst</string>
     <string name="smscommunicator_shortname">SMS</string>
+    <string name="description_sms_communicator">Fjärrstyr AAPS med SMS-kommandon.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">från autentiseringsapp för: %1$s följt av PIN-kod</string>
     <string name="smscommunicator_otp_pin">PIN-kod som läggs till på slutet</string>
     <string name="smscommunicator_otp_pin_summary">Ytterligare siffror som ska memoreras och läggas till i slutet av varje genererat engångslösenord</string>
@@ -18,9 +19,15 @@
     <string name="smscommunicator_otp_export_prompt">Är du säker på att du vill kopiera OTP-hemligheten till Urklipp?\n\nDu behöver bara göra detta om din autentiseringsapp har problem QR-koder så du vill ange den manuellt eller om du vill konfigurera OTP-token med hjälp av en dedikerad app.</string>
     <string name="smscommunicator_otp_export_successful">OTP-hemligheten exporteras och kopieras till klippbordet i Base32-format. Klistra in den i autentiseringsfunktionen eller OTP-brännaren!</string>
     <string name="smscommunicator_otp_step1_install_header">1. Installera autentiseringsapp</string>
+    <string name="smscommunicator_otp_step2_provisioning_header">2. Scanna koden för att ställa in OTP-koder för AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Testa engångslösenord</string>
     <string name="smscommunicator_otp_reset_header">Återställ autentiserare</string>
     <string name="smscommunicator_otp_install_info">På varje följartelefon behöver man installera en autentiseringsapp som stöder RFC 6238 TOTP tokens. Populära gratisappar är:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
+    <string name="smscommunicator_otp_reset_warning">Genom att återställa autentiseringsfunktionen kommer alla redan driftsatta autentiserare bli ogiltiga. Du kommer behöva sätta upp dem igen!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">OGILTIG STORLEK!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">FEL PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">FEL OTP</string>
     <string name="sms_wrong_code">Fel kod. Kommandot avbrutet.</string>
     <string name="sms_timeout_while_waiting">Föregående pumpkommunikation har inte bekräftats/avslutats i tid</string>
     <string name="smscommunicator_allowednumbers">Godkända telefonnummer</string>
@@ -85,6 +92,9 @@
     <string name="smscommunicator_message_body">Ogiltigt innehåll i meddelande</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Skicka SMS om pumpen inte kan nås</string>
     <string name="smscommunicator_pump_unreachable">Rapportera om pump inte kan nås</string>
+    <string name="smscommunicator_set_lgs_reply_with_code">För att växla Loop-läge till LGS (Low Glucose Suspend) svara med kod %1$s</string>
+    <string name="smscommunicator_set_closed_loop_reply_with_code">För att växla Loop-läge till Closed Loop svara med kod %1$s</string>
+    <string name="smscommunicator_current_loop_mode">Nuvarande loop-läge: %1$s</string>
     <string name="wrong_format">Felaktigt format</string>
     <string name="sms_actual_bg">BG:</string>
     <string name="sms_last_bg">Senaste BG:</string>
@@ -97,6 +107,7 @@
     <string name="sms_read_status_failed">Statuskontroll misslyckad</string>
     <string name="sms_profile_switch_created">Skapade ett profilbyte</string>
     <string name="sms_wrong_tbr_duration">Durationen måste vara större än 0 och en multipel av %1$d minuter.</string>
+    <string name="a11y_otp_qr_code">QR-kod för att konfigurera engångslösenord</string>
     <string name="disabled_loop">Loop inaktiverad</string>
     <!-- Food-->
     <string name="food_short">Matdatabas</string>
@@ -111,6 +122,11 @@
     <string name="subcategory">Underkategori</string>
     <string name="calculator_label">Kalkylator</string>
     <!-- Theme switcher dark and light mode-->
+    <string name="theme_switcher_summary">Välj mörkt, ljust eller att följa systemets tema</string>
+    <string name="app_color_scheme">Appens färgschema</string>
+    <string name="dark_theme">Mörkt tema</string>
+    <string name="light_theme">Ljust tema</string>
+    <string name="follow_system_theme">Använd systemets tema</string>
     <!-- Profile -->
     <string name="localprofile">Profil</string>
     <string name="localprofile_shortname">LP</string>
@@ -125,9 +141,11 @@
     <string name="error_in_basal_values">Fel i basaldoser</string>
     <string name="error_in_target_values">Fel i målvärden</string>
     <string name="error_in_isf_values">Fel i korrektionskvoter</string>
+    <string name="profile_name_contains_dot">Vissa profilnamn innehåller punkter.\nDetta stöds inte av Nightscout.\nProfilen kommer inte överföras till NS.</string>
     <string name="invalid_profile_not_accepted">Ogiltig profil %1$s från NS accepteras inte</string>
     <string name="view">Visa</string>
     <string name="errors">Fel</string>
+    <string name="select_profile">Välj profil att ändra</string>
     <string name="profile_name">Profilnamn:</string>
     <string name="a11y_add_new_profile">lägg till ny profil</string>
     <string name="a11y_clone_profile">klona nuvarande profil</string>
@@ -156,6 +174,8 @@
     <string name="patch_pump">Slanglös pump</string>
     <!-- Overview -->
     <string name="show_statuslights">Visa \"statuslampor\" på hemskärmen</string>
+    <string name="statuslights_cage_warning">Tröskelvärde varning för kanylålder: [h]</string>
+    <string name="statuslights_cage_critical">Tröskelvärde akut varning för kanylålder: [h]</string>
     <string name="statuslights_iage_warning">Insulinålder - varning: [h]</string>
     <string name="statuslights_iage_critical">Insulinålder - akut varning: [h]</string>
     <string name="statuslights_sage_warning">Sensorålder - varning: [h]</string>
@@ -192,7 +212,7 @@
     <string name="openaps">OpenAPS</string>
     <string name="uploader">Uppladdare</string>
     <string name="data_status">BG datastatus</string>
-    <string name="quickwizard_settings">Inställningar för snabbsteg</string>
+    <string name="quickwizard_settings">Inställningar för snabbknappar</string>
     <string name="keep_screen_on_title">Håll skärmen igång</string>
     <string name="keep_screen_on_summary">Förhindrar att skärmen stängs av. Förbrukar mer batteri.</string>
     <string name="treatments">Behandlingar</string>
@@ -223,6 +243,7 @@
     <string name="short_tabtitles">Förkorta namnen på flikarna</string>
     <string name="overview_show_notes_field_in_dialogs_title">Anteckning i behandlingsdialoger</string>
     <string name="deliverpartofboluswizard">Bolusguiden utför beräkningar, men endast denna del av beräknat insulin levereras. Användbar med SMB-algoritm.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Leverera full bolus (100%) om BG-värde är äldre än</string>
     <string name="enable_bolus_advisor">Aktivera bolusguiden</string>
     <string name="enable_bolus_advisor_summary">Få en påminnelse om att börja äta senare (istället för kalkylatorns resultat) om du ligger högt i BG</string>
     <string name="enablesuperbolus">Aktivera superbolus i kalkylatorn</string>
@@ -234,6 +255,7 @@
     <!--    OverviewMenu-->
     <string name="overview_show_predictions">BG-prognos</string>
     <string name="overview_show_treatments">Behandlingar</string>
+    <string name="overview_show_heartRate">Hjärtfrekvens</string>
     <string name="overview_show_deviation_slope">Avvikelsekurva</string>
     <string name="overview_show_activity">Insulinaktivitet (5m)</string>
     <string name="overview_show_bgi">Blodglukospåverkan</string>
@@ -251,7 +273,9 @@
     <string name="abs_insulin_shortname">Abs</string>
     <string name="devslope_shortname">Devslope</string>
     <string name="treatments_shortname">Beh</string>
+    <string name="heartRate_shortname">HF</string>
     <string name="sensitivity_shortname">SENS</string>
+    <string name="graph_scale">Graf-skala</string>
     <string name="graph_menu_divider_header">Graf</string>
     <!-- Skins -->
     <string name="classic_description">Ursprungligt tema</string>
@@ -259,12 +283,17 @@
     <string name="buttonson_description">Knappar visas alltid längst ned på skärmen</string>
     <string name="largedisplay_description">Stor skärm</string>
     <string name="skin">Tema</string>
+    <string name="cannula_usage">användning:</string>
     <!--    Iob-->
     <string name="send_logfiles">Skicka dagens loggfiler till utvecklarna tillsammans med denna datumstämpel. Oväntad situation.</string>
     <!--    Wear-->
     <string name="wear_shortname">Wear</string>
+    <string name="description_wear">Följ och kontrollera AAPS med din Wear OS-klocka.</string>
+    <string name="no_watch_connected">(Ingen klocka ansluten)</string>
+    <string name="pump_status">Pumpstatus</string>
+    <string name="loop_status">Loop-status</string>
     <string name="wizard_result">Kalkylator:\nInsulin: %1$.2fU\nKolhydrater: %2$dg</string>
-    <string name="quick_wizard_not_available">Vald kalkylator inte längre tillgänglig. Vänligen uppdatera din bricka</string>
+    <string name="quick_wizard_not_available">Vald snabbknapp inte längre tillgänglig. Vänligen uppdatera vyn</string>
     <string name="quick_wizard_message">Snabbsteg: %1$s\nInsulin: %2$.2fU\nKolhydrater: %3$dg</string>
     <string name="wear_action_tempt_preset_error">Tempmål okänd förinställning: %1$s</string>
     <string name="wear_action_tempt_cancel_message">Avbryt temp-mål?</string>
@@ -274,6 +303,7 @@
     <string name="wear_action_tempt_max_bg_error">Ogiltigt maximum BG!</string>
     <string name="wear_action_tempt_manual_range_message">Temp-mål:\nMin: %1$s\nMax: %2$s\nVaraktighet: %3$s</string>
     <string name="wear_action_tempt_manual_message">Temp-mål:\nMål: %1$s\nDuration: %2$s</string>
+    <string name="wear_action_tempt_preset_message">Tillfälligt mål:\nOrsak: %1$s\nMål: %2$s\nVaraktighet: %3$s</string>
     <string name="no_success">misslyckat - kontrollera telefonen</string>
     <string name="wear_settings">Inställningar för klocka (Wear)</string>
     <string name="wearcontrol_title">Kontrollera från klockan</string>
@@ -285,9 +315,46 @@
     <string name="wear_notifysmb_summary">Visa SMB på klockan som en standardbolus.</string>
     <string name="wear_predictions_summary">Visa BG-prognos på klockan.</string>
     <string name="wear_predictions_title">BG-prognos</string>
+    <string name="wear_custom_watchface_settings">Anpassade inställningar för urtavla</string>
+    <string name="wear_custom_watchface_authorization_title">Anpassad auktorisering för urtavla</string>
+    <string name="wear_custom_watchface_authorization_summary">Auktorisera inlästa anpassade urtavlor för att ändra och låsa vissa visningsinställningar för att passa design av urtavlan</string>
+    <string name="wear_custom_watchface">Anpassad urtavla: %1$s</string>
+    <string name="wear_load_watchface">Ladda urtavla</string>
+    <string name="wear_infos_watchface">Info urtavla</string>
+    <string name="wear_export_watchface">Exportera mall</string>
+    <string name="wear_new_custom_watchface_exported">Anpassad mall exporterad</string>
     <string name="resend_all_data">Uppdatera klockans data</string>
     <string name="open_settings_on_wear">Öppna inställningar på klockan</string>
+    <string name="cwf_infos_pref_locked">Inställningar som är låsta av urtavlan</string>
+    <string name="cwf_infos_pref_required">Inställningar som krävs av urtavlan</string>
+    <string name="cwf_infos_view_title">Fält som ingår i urtavlan</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Visar en konstant avisering med en kort sammanfattning av vad din loop gör</string>
     <string name="old_data">Aktuellt BG saknas!</string>
+    <string name="pump_fetching_data">försöker hämta data från pump.</string>
+    <string name="pump_old_data">TDD: Fortfarande gamla data! Kan inte hämta från pump.</string>
+    <string name="grams_short">g</string>
+    <string name="hour_short">h</string>
+    <string name="no_active_profile">Ingen aktiv profil!</string>
+    <string name="profile_message">Profil:\n\nTidsförskjutning: %1$d\nProcent: %2$d%%\"</string>
+    <string name="tdd_line">%1$.2fU %1$.0f%%</string>
+    <string name="no_profile">Ingen profil inläst</string>
+    <string name="aps_only">Använd endast i APS-läge!</string>
+    <string name="last_aps_result_na">Senaste resultat ej tillgängligt!</string>
+    <string name="loop_status_closed">CLOSED LOOP</string>
+    <string name="loop_status_open">OPEN LOOP</string>
+    <string name="loop_status_disabled">LOOP INAKTIVERAD</string>
+    <string name="aps">APS</string>
+    <string name="last_run">Kördes senast</string>
+    <string name="last_enact">Senaste handling</string>
+    <string name="today">Idag</string>
+    <string name="weighted">viktad</string>
+    <string name="target_only_aps_mode">Målen gäller endast i APS-läge!</string>
+    <string name="no_history">Inget historiskt data!</string>
+    <string name="units_short">U</string>
+    <string name="temp_target">Tillfälligt målvärde</string>
+    <string name="until">tills</string>
+    <string name="default_range">STANDARDINTERVALL</string>
+    <string name="target">målvärde</string>
+    <string name="rate_duration">Dos: %1$.2fU/h (%2$.2f%%) \nVaraktighet %3$d min</string>
 </resources>

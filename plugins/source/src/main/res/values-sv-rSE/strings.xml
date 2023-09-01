@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Ladda ner BG-data från Nightscout</string>
+    <string name="source_xdrip">xDrip+ BG</string>
     <string name="description_source_xdrip">Ta emot BG-data från xDrip+.</string>
     <string name="dexcom_app_patched">Patchad Dexcom-app</string>
     <string name="dexcom_short">Dex</string>
@@ -9,14 +12,29 @@
     <string name="eversense">Eversense App (modifierad)</string>
     <string name="description_source_eversense">Ta emot BG-data från den modifierade
 Eversense-appen.</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Ta emot BG-data från Glimp</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Ta emot BG-data från 600SeriesAndroidUploader</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Ta emot BG-data från Poctechappen</string>
     <string name="glunovo">Glunovo</string>
     <string name="description_source_glunovo">Ta emot värden från Glunovo-appen</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Ta emot värden från Intelligo-appen</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Ta emot BG-data från tomato app (MiaoMiao-enhet)</string>
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Ta emot BG-värden från GlucoRx Aidex CGMS.</string>
+    <string name="random_bg">Slumpmässig BG</string>
+    <string name="description_source_random_bg">Generera slumpmässiga BG-data (endast demo-läge)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="do_xdrip_upload_title">Skicka BG-data till xDrip+</string>
+    <string name="do_xdrip_upload_summary">Välj \"640G/Eversense\" som datakälla i xDrip+</string>
     <string name="bgsource_upload">Uppladdningsinställningar för BG</string>
+    <string name="dexcom_log_ns_sensor_change_title">Logga sensorbyte till Nightscout</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Logga automatiskt ett sensorbyte i NS när en sensor startas</string>
+    <string name="direction">riktning</string>
 </resources>

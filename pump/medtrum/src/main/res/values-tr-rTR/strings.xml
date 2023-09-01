@@ -14,6 +14,7 @@
     <!-- overview fragment -->
     <string name="ble_status_label">BLE Durumu</string>
     <string name="last_connection_label">Son bağlantı</string>
+    <string name="active_bolus_label">Aktif bolus</string>
     <string name="pump_state_label">Pompa durumu</string>
     <string name="active_alarms_label">Aktif alarmlar</string>
     <string name="reservoir_level"> %.2f Ü</string>

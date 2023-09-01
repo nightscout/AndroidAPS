@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="dynisf_adjust_sensitivity">Justera känslighet och BG</string>
+    <string name="DynISFAdjust_title" formatted="false">DynamicISF justeringsfaktor %</string>
+    <string name="DynISFAdjust_summary" formatted="false">Justeringsfaktor för DynamicISF. Ställ in mer än 100% för mer aggressiva korrigeringsdoser, och mindre än 100% för mindre aggressiva korrigeringar.</string>
     <string name="high_temptarget_raises_sensitivity_title">Högt målvärde höjer känsligheten</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Höj känsligheten om temp målvärde är 100 mg/dl (5.5 mmol/l) eller högre]]></string>
     <string name="low_temptarget_lowers_sensitivity_title">Lågt målvärde sänker känsligheten</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Sänk känsligheten om temp målvärde är mindre än 100 mg/dl (5.5 mmol/l)]]></string>
     <string name="openapssmb">OpenAPS SMB</string>
+    <string name="openaps_smb_dynamic_isf">Dynamisk ISF</string>
     <string name="smb_interval_summary">Minsta antal minuter mellan SMB</string>
     <string name="resistance_lowers_target_title">Insulinresistens sänker mål-BG</string>
     <string name="resistance_lowers_target_summary">Om systemet upptäcker tillfällig insulinresistens, sänk mål-BG för att på så sätt tillåta mer insulin</string>
@@ -71,6 +75,8 @@
     <string name="uam_smb_max_minutes_summary">Max antal minuter basal som kan bli SMB vid UAM</string>
     <string name="carbs_req_threshold">Minimigräns för KH-förslag</string>
     <string name="carbs_req_threshold_summary">Gränsvärde för om systemet ska föreslå en KH-korrektion. Förslag som är mindre än detta värde kommer inte att visas som notis.</string>
+    <string name="lgs_threshold_summary">BG-värde under vilket insulintillförsel stängs av. Standardvärdet använder standard-målmodell. Användaren kan justera mellan 60 mg/dl (3.3 mmol/l) och 100mg/dl (5.5mmol/l)</string>
+    <string name="lgs_threshold_title">BG-nivå under vilken insulintillförseln stängs av</string>
     <string name="increasing_max_basal">Ökar maximalt basaldos eftersom inställningen är lägre än din maximala basal i profilen</string>
     <string name="max_basal_multiplier">multiplikator för max basal</string>
     <string name="max_daily_basal_multiplier">multiplikator för daglig max basal</string>
@@ -82,13 +88,30 @@
     <string name="maxvalueinpreferences">maxvärde i Inställningar</string>
     <string name="hardlimit">hård begränsning</string>
     <!--    Autotune   -->
+    <string name="insulin_peak">Topp</string>
     <!--    Loop -->
+    <string name="run_now">Kör nu</string>
     <string name="smb_frequency_exceeded">En bolus gavs för mindre än 3 min sedan. Hoppar över SMB</string>
+    <string name="pump_not_initialized">Pump ej initierad!</string>
     <string name="loop_shortname">Loop</string>
     <string name="description_loop">Aktivera eller inaktivera implementationen som kör loopen.</string>
+    <string name="no_aps_selected">INGEN APS VALD ELLER HAR LEVERERAT RESULTAT</string>
     <string name="ignore5m">Ignorera 5 min</string>
     <string name="ignore15m">Ignorera 15 min</string>
     <string name="ignore30m">Ignorera 30 min</string>
+    <string name="carbs_suggestion">KH-förslag</string>
+    <string name="open_loop_new_suggestion">Ny rekommendation tillgänglig</string>
     <string name="basal_set_correctly">Basal justerad korrekt</string>
+    <string name="last_run_label">Kördes senast</string>
     <string name="loop_aps_label">APS</string>
+    <string name="request_label">Begäran</string>
+    <string name="loop_constraints_processed_label">Efter begränsningar</string>
+    <string name="loop_tbr_request_time_label">Begärd tid för temp-basal</string>
+    <string name="loop_tbr_execution_time_label">Tid för temp-basal</string>
+    <string name="loop_tbr_set_by_pump_label">Temp-basal satt i pump</string>
+    <string name="loop_smb_request_time_label">Tid för SMB-begäran</string>
+    <string name="loop_smb_execution_time_label">SMB körtid</string>
+    <string name="loop_smb_set_by_pump_label">SMB påbörjad av pump</string>
+    <string name="loop_open_mode_min_change">Minsta ändring som ska utföras [%]</string>
+    <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop kommer bara att be om justering om ändringen är större än detta värde. Standardvärdet är 20%</string>
 </resources>
