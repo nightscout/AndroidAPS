@@ -5,6 +5,9 @@ import org.json.JSONArray
 
 interface ProfileSource {
 
+    /**
+     * SingleProfile stores a name of a profile in addition to PureProfile
+     */
     class SingleProfile(
         var name: String,
         var mgdl: Boolean,
@@ -31,11 +34,41 @@ interface ProfileSource {
     val profile: ProfileStore?
     val profileName: String?
     fun addProfile(p: SingleProfile)
+
+    /**
+     * Convert [PureProfile] to [SingleProfile]
+     *
+     * @param pureProfile PureProfile
+     * @param newName Name
+     * @return SingleProfile
+     */
     fun copyFrom(pureProfile: PureProfile, newName: String): SingleProfile
 
+    /**
+     * Currently edited profile in store as index
+     */
     var currentProfileIndex: Int
+
+    /**
+     * Get currently edited profile from store as [SingleProfile]
+     *
+     * @return currently selected profile
+     */
     fun currentProfile(): SingleProfile?
-    fun storeSettings(activity: FragmentActivity? = null, emptyCreated: Boolean = false)
+
+    /**
+     * Store active [ProfileStore] to SharedPreferences
+     *
+     * @param activity context for error dialog
+     * @param timestamp timestamp of latest change
+     */
+    fun storeSettings(activity: FragmentActivity? = null, timestamp: Long)
+
+    /**
+     * Import [ProfileStore] to memory and and save to SharedPreferences
+     *
+     * @param store ProfileStore to import
+     */
     fun loadFromStore(store: ProfileStore)
 
 }

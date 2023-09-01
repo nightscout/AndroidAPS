@@ -668,6 +668,10 @@ class DataSyncSelectorV3 @Inject constructor(
         sp.putLong(R.string.key_ns_profile_store_last_synced_timestamp, lastSynced)
     }
 
+    override fun profileReceived(timestamp: Long) {
+        sp.putLong(R.string.key_ns_profile_store_last_synced_timestamp, timestamp)
+    }
+
     private suspend fun processChangedProfileStore() {
         if (isPaused) return
         val lastSync = sp.getLong(R.string.key_ns_profile_store_last_synced_timestamp, 0)

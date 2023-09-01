@@ -370,7 +370,7 @@ class AutotunePlugin @Inject constructor(
         profilePlugin.currentProfile()?.basal = newProfile.basal()
         profilePlugin.currentProfile()?.ic = newProfile.ic(circadian)
         profilePlugin.currentProfile()?.isf = newProfile.isf(circadian)
-        profilePlugin.storeSettings()
+        profilePlugin.storeSettings(timestamp = dateUtil.now())
     }
 
     fun saveLastRun() {
