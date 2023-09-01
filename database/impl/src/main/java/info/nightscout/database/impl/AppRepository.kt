@@ -10,6 +10,7 @@ import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.Food
 import info.nightscout.database.entities.GlucoseValue
+import info.nightscout.database.entities.HeartRate
 import info.nightscout.database.entities.OfflineEvent
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.TemporaryBasal
@@ -859,7 +860,9 @@ import kotlin.math.roundToInt
     fun getLastOfflineEventId(): Long? =
         database.offlineEventDao.getLastId()
 
-    fun getHeartRatesFromTime(timeMillis: Long) = database.heartRateDao.getFromTime(timeMillis)
+    fun getHeartRatesFromTime(timeMillis: Long): Single<List<HeartRate>> =
+        database.heartRateDao.getFromTime(timeMillis)
+            .subscribeOn(Schedulers.io())
 
     fun getHeartRatesFromTimeToTime(startMillis: Long, endMillis: Long) =
         database.heartRateDao.getFromTimeToTime(startMillis, endMillis)
