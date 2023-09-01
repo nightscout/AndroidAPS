@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Reset Authentificatie</string>
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Door de authenticator opnieuw in te stellen maakt u alle reeds aangemaakte authenticatoren ongeldig. U moet ze opnieuw instellen!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">ONGELDIGE LENGTE!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">FOUTIEVE PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">FOUTIEVE OTP</string>
     <string name="sms_wrong_code">Verkeerde code. Opdracht geannuleerd.</string>
     <string name="sms_timeout_while_waiting">Time-out tijdens het wachten op het voltooien van de vorige pomp communicatie</string>
     <string name="smscommunicator_allowednumbers">Geautoriseerde telefoon nummers</string>
