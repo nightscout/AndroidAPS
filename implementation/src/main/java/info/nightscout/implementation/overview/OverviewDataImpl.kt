@@ -138,11 +138,11 @@ class OverviewDataImpl @Inject constructor(
      */
 
     override fun lastBg(autosensDataStore: AutosensDataStore): InMemoryGlucoseValue? =
-        autosensDataStore.bucketedData?.let { if (it.size > 0) it[0] else null }
-    // repository.getLastGlucoseValueWrapped().blockingGet().let { gvWrapped ->
-    //     if (gvWrapped is ValueWrapper.Existing) gvWrapped.value
-    //     else null
-    // }
+        autosensDataStore.bucketedData?.firstOrNull()
+            ?: repository.getLastGlucoseValueWrapped().blockingGet().let { gvWrapped ->
+                if (gvWrapped is ValueWrapper.Existing) InMemoryGlucoseValue(gvWrapped.value)
+                else null
+            }
 
     override fun isLow(autosensDataStore: AutosensDataStore): Boolean =
         lastBg(autosensDataStore)?.let { lastBg ->
