@@ -7,10 +7,10 @@
     <string name="nav_refreshtreatments">Синхронизировать назначения с NS</string>
     <string name="nav_exit">Выход</string>
     <string name="delta">изменение</string>
-    <string name="profile_label">профиль</string>
+    <string name="profile_label">Профиль</string>
     <string name="save">Сохранить</string>
     <string name="reloadprofile">обновить профиль</string>
-    <string name="correctionbous">коррекция</string>
+    <string name="correctionbous">Коррекция</string>
     <string name="ns_upload_only">(ОТКЛЮЧЕНИЕ ОПАСНО) Только загрузка в NS</string>
     <string name="ns_upload_only_summary">Только загрузка в NS (синхронизация отключена). Не влияет на данные мониторинга если не выбран локальный источник, такой как xDrip. Профили, иные чем профиль NS не действуют.\n!!! ПРЕДУПРЕЖДЕНИЕ !!! Отключение этой опции может привести к сбою и передозировке инсулина, если какой-либо из компонентов (AAPS, NS, xDrip) настроен неправильно. Внимательно следите за тем, чтобы данные соответствовали состоянию помпы!</string>
     <string name="wear">Смарт-часы Wear</string>
