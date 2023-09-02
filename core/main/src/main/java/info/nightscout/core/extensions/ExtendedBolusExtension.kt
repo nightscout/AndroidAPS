@@ -6,6 +6,7 @@ import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.insulin.Insulin
+import info.nightscout.interfaces.iob.Iob
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.DecimalFormatter
@@ -45,6 +46,7 @@ fun ExtendedBolus.toTemporaryBasal(profile: Profile): TemporaryBasal =
     )
 
 fun ExtendedBolus.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
+    if (!isValid) return IobTotal(time)
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
     if (realDuration > 0) {

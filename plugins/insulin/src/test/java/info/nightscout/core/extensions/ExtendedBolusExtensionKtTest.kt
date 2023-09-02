@@ -1,7 +1,7 @@
 package info.nightscout.core.extensions
 
 import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.insulin.InsulinLyumjevPlugin
 import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 
-class BolusExtensionKtTest : TestBaseWithProfile() {
+class ExtendedBolusExtensionKtTest : TestBaseWithProfile() {
 
     @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var profileFunctions: ProfileFunction
@@ -33,18 +33,17 @@ class BolusExtensionKtTest : TestBaseWithProfile() {
 
     @Test
     fun iobCalc() {
-        val bolus = Bolus(timestamp = now - 1, amount = 1.0, type = Bolus.Type.NORMAL)
-        // there should be almost full IOB after now
-        Assertions.assertEquals(1.0, bolus.iobCalc(activePlugin, now, dia).iobContrib, 0.01)
-        // there should be less than 5% after DIA -1
-        Assertions.assertTrue(0.05 > bolus.iobCalc(activePlugin, now + T.hours(dia.toLong() - 1).msecs(), dia).iobContrib)
+        val bolus = ExtendedBolus(timestamp = now - 1, amount = 1.0, duration = T.hours(1).msecs())
+        // there should zero IOB after now
+        Assertions.assertEquals(0.0, bolus.iobCalc(now, validProfile, insulin).iob, 0.01)
+        // there should be significant IOB at EB finish
+        Assertions.assertTrue(0.8 < bolus.iobCalc(now + T.hours(1).msecs(), validProfile, insulin).iob)
+        // there should be less that 5% after DIA -1
+        Assertions.assertTrue(0.05 > bolus.iobCalc(now + T.hours(dia.toLong() - 1).msecs(), validProfile, insulin).iob)
         // there should be zero after DIA
-        Assertions.assertEquals(0.0, bolus.iobCalc(activePlugin, now + T.hours(dia.toLong() + 1).msecs(), dia).iobContrib)
+        Assertions.assertEquals(0.0, bolus.iobCalc(now + T.hours(dia.toLong() + 1).msecs(), validProfile, insulin).iob)
         // no IOB for invalid record
         bolus.isValid = false
-        Assertions.assertEquals(0.0, bolus.iobCalc(activePlugin, now + T.hours(1).msecs(), dia).iobContrib)
-        bolus.isValid = true
-        bolus.type = Bolus.Type.PRIMING
-        Assertions.assertEquals(0.0, bolus.iobCalc(activePlugin, now + T.hours(1).msecs(), dia).iobContrib)
+        Assertions.assertEquals(0.0, bolus.iobCalc(now + T.hours(1).msecs(), validProfile, insulin).iob)
     }
 }
