@@ -24,4 +24,6 @@ dependencies {
     implementation project(':core:utils')
     implementation project(':core:validators')
     implementation project(':database:entities')
+
+    testImplementation project(':core:main')
 }
