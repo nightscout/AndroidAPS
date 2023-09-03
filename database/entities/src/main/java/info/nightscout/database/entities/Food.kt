@@ -83,4 +83,5 @@ data class Food(
         interfaceIDs.nightscoutId = other.interfaceIDs.nightscoutId
     }
 
+    companion object
 }

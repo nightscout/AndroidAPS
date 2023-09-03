@@ -1,7 +1,6 @@
 package info.nightscout.plugins.sync.nsShared
 
 import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.core.extensions.foodFromJson
 import info.nightscout.database.entities.Food
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.transactions.TransactionGlucoseValue
@@ -16,6 +15,7 @@ import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
+import info.nightscout.plugins.sync.nsclient.extensions.fromJson
 import info.nightscout.plugins.sync.nsclientV3.extensions.toBolus
 import info.nightscout.plugins.sync.nsclientV3.extensions.toBolusCalculatorResult
 import info.nightscout.plugins.sync.nsclientV3.extensions.toCarbs
@@ -220,7 +220,7 @@ class NsIncomingDataProcessor @Inject constructor(
                         }
 
                         else     -> {
-                            val food = foodFromJson(jsonFood)
+                            val food = Food.fromJson(jsonFood)
                             if (food != null) foods += food
                             else aapsLogger.error(LTag.DATABASE, "Error parsing food", jsonFood.toString())
                         }
@@ -243,7 +243,6 @@ class NsIncomingDataProcessor @Inject constructor(
             val createdAt = store.getStartDate()
             val lastLocalChange = sp.getLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, 0)
             aapsLogger.debug(LTag.PROFILE, "Received profileStore: createdAt: $createdAt Local last modification: $lastLocalChange")
-            @Suppress("LiftReturnOrAssignment")
             if (createdAt > lastLocalChange || createdAt % 1000 == 0L) { // whole second means edited in NS
                 profileSource.loadFromStore(store)
                 activePlugin.activeNsClient?.dataSyncSelector?.profileReceived(store.getStartDate())

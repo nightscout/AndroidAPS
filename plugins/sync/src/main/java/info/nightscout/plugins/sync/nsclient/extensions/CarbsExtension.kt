@@ -22,7 +22,7 @@ fun Carbs.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
             if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
-fun carbsFromJson(jsonObject: JSONObject): Carbs? {
+fun Carbs.Companion.fromJson(jsonObject: JSONObject): Carbs? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
     val amount = JsonHelper.safeGetDoubleAllowNull(jsonObject, "carbs") ?: return null

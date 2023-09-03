@@ -18,7 +18,6 @@ fun ExtendedBolus.toJson(isAdd: Boolean, profile: Profile?, dateUtil: DateUtil):
         else toRealJson(isAdd, dateUtil)
     }
 
-
 fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     JSONObject()
         .put("created_at", dateUtil.toISOString(timestamp))
@@ -40,7 +39,7 @@ fun ExtendedBolus.toRealJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
             if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
-fun extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
+fun ExtendedBolus.Companion.extendedBolusFromJson(jsonObject: JSONObject): ExtendedBolus? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     if (JsonHelper.safeGetIntAllowNull(jsonObject, "splitNow") != 0) return null
     if (JsonHelper.safeGetIntAllowNull(jsonObject, "splitExt") != 100) return null

@@ -30,7 +30,7 @@ fun EffectiveProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObjec
             if (isAdd && interfaceIDs.nightscoutId != null) it.put("_id", interfaceIDs.nightscoutId)
         }
 
-fun effectiveProfileSwitchFromJson(jsonObject: JSONObject, dateUtil: DateUtil): EffectiveProfileSwitch? {
+fun EffectiveProfileSwitch.Companion.fromJson(jsonObject: JSONObject, dateUtil: DateUtil): EffectiveProfileSwitch? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val originalTimeshift = JsonHelper.safeGetLong(jsonObject, "originalTimeshift")
     val originalDuration = JsonHelper.safeGetLong(jsonObject, "originalDuration")

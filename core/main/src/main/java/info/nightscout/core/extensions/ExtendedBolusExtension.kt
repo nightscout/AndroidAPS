@@ -6,7 +6,6 @@ import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.database.entities.interfaces.end
 import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.insulin.Insulin
-import info.nightscout.interfaces.iob.Iob
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.DecimalFormatter
@@ -78,8 +77,8 @@ fun ExtendedBolus.iobCalc(
     time: Long,
     profile: Profile,
     lastAutosensResult: AutosensResult,
-    exercise_mode: Boolean,
-    half_basal_exercise_target: Int,
+    exerciseMode: Boolean,
+    halfBasalExerciseTarget: Int,
     isTempTarget: Boolean,
     insulinInterface: Insulin
 ): IobTotal {
@@ -87,10 +86,10 @@ fun ExtendedBolus.iobCalc(
     val realDuration = getPassedDurationToTimeInMinutes(time)
     var sensitivityRatio = lastAutosensResult.ratio
     val normalTarget = 100.0
-    if (exercise_mode && isTempTarget && profile.getTargetMgdl() >= normalTarget + 5) {
+    if (exerciseMode && isTempTarget && profile.getTargetMgdl() >= normalTarget + 5) {
         // w/ target 100, temp target 110 = .89, 120 = 0.8, 140 = 0.67, 160 = .57, and 200 = .44
         // e.g.: Sensitivity ratio set to 0.8 based on temp target of 120; Adjusting basal from 1.65 to 1.35; ISF from 58.9 to 73.6
-        val c = half_basal_exercise_target - normalTarget
+        val c = halfBasalExerciseTarget - normalTarget
         sensitivityRatio = c / (c + profile.getTargetMgdl() - normalTarget)
     }
     if (realDuration > 0) {

@@ -74,4 +74,6 @@ data class Bolus(
             fun fromString(name: String?) = values().firstOrNull { it.name == name } ?: NORMAL
         }
     }
+
+    companion object
 }

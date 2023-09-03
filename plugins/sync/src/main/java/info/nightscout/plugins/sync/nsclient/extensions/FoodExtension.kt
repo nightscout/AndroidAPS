@@ -1,10 +1,10 @@
-package info.nightscout.core.extensions
+package info.nightscout.plugins.sync.nsclient.extensions
 
 import info.nightscout.database.entities.Food
 import info.nightscout.interfaces.utils.JsonHelper
 import org.json.JSONObject
 
-fun foodFromJson(jsonObject: JSONObject): Food? {
+fun Food.Companion.fromJson(jsonObject: JSONObject): Food? {
     if ("food" == JsonHelper.safeGetString(jsonObject, "type")) {
         val name = JsonHelper.safeGetStringAllowNull(jsonObject, "name", null) ?: return null
         val category = JsonHelper.safeGetStringAllowNull(jsonObject, "category", null)

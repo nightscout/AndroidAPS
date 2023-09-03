@@ -8,7 +8,6 @@ import androidx.room.PrimaryKey
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.entities.interfaces.DBEntryWithTimeAndDuration
 import info.nightscout.database.entities.interfaces.TraceableDBEntry
-import info.nightscout.database.entities.interfaces.end
 import java.util.TimeZone
 
 @Entity(
@@ -67,4 +66,6 @@ data class OfflineEvent(
             fun fromString(reason: String?) = values().firstOrNull { it.name == reason } ?: OTHER
         }
     }
+
+    companion object
 }

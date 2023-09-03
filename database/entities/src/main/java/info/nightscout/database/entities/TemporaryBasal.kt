@@ -10,12 +10,14 @@ import info.nightscout.database.entities.interfaces.DBEntryWithTimeAndDuration
 import info.nightscout.database.entities.interfaces.TraceableDBEntry
 import java.util.TimeZone
 
-@Entity(tableName = TABLE_TEMPORARY_BASALS,
-        foreignKeys = [ForeignKey(
+@Entity(
+    tableName = TABLE_TEMPORARY_BASALS,
+    foreignKeys = [ForeignKey(
         entity = TemporaryBasal::class,
         parentColumns = ["id"],
-        childColumns = ["referenceId"])],
-        indices = [
+        childColumns = ["referenceId"]
+    )],
+    indices = [
         Index("id"),
         Index("isValid"),
         Index("nightscoutId"),
@@ -25,7 +27,8 @@ import java.util.TimeZone
         Index("temporaryId"),
         Index("referenceId"),
         Index("timestamp")
-    ])
+    ]
+)
 data class TemporaryBasal(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
@@ -78,4 +81,6 @@ data class TemporaryBasal(
 
     val isInProgress: Boolean
         get() = System.currentTimeMillis() in timestamp..timestamp + duration
+
+    companion object
 }

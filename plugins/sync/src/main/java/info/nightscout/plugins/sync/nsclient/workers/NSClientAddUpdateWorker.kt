@@ -5,26 +5,27 @@ import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.core.utils.worker.LoggingWorker
+import info.nightscout.database.entities.Bolus
+import info.nightscout.database.entities.BolusCalculatorResult
+import info.nightscout.database.entities.Carbs
+import info.nightscout.database.entities.EffectiveProfileSwitch
+import info.nightscout.database.entities.ExtendedBolus
+import info.nightscout.database.entities.OfflineEvent
+import info.nightscout.database.entities.ProfileSwitch
+import info.nightscout.database.entities.TemporaryBasal
+import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.VirtualPump
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
-import info.nightscout.plugins.sync.nsclient.extensions.bolusCalculatorResultFromJson
-import info.nightscout.plugins.sync.nsclient.extensions.bolusFromJson
-import info.nightscout.plugins.sync.nsclient.extensions.carbsFromJson
-import info.nightscout.plugins.sync.nsclient.extensions.effectiveProfileSwitchFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.extendedBolusFromJson
+import info.nightscout.plugins.sync.nsclient.extensions.fromJson
 import info.nightscout.plugins.sync.nsclient.extensions.isEffectiveProfileSwitch
-import info.nightscout.plugins.sync.nsclient.extensions.offlineEventFromJson
-import info.nightscout.plugins.sync.nsclient.extensions.profileSwitchFromJson
 import info.nightscout.plugins.sync.nsclient.extensions.temporaryBasalFromJson
-import info.nightscout.plugins.sync.nsclient.extensions.temporaryTargetFromJson
-import info.nightscout.plugins.sync.nsclient.extensions.therapyEventFromJson
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.sharedPreferences.SP
@@ -72,14 +73,14 @@ class NSClientAddUpdateWorker(
 
             if (insulin > 0) {
                 if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_insulin, false) || config.NSCLIENT) {
-                    bolusFromJson(json)?.let { bolus ->
+                    Bolus.fromJson(json)?.let { bolus ->
                         storeDataForDb.boluses.add(bolus)
                     } ?: aapsLogger.error("Error parsing bolus json $json")
                 }
             }
             if (carbs > 0) {
                 if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_carbs, false) || config.NSCLIENT) {
-                    carbsFromJson(json)?.let { carb ->
+                    Carbs.fromJson(json)?.let { carb ->
                         storeDataForDb.carbs.add(carb)
                     } ?: aapsLogger.error("Error parsing bolus json $json")
                 }
@@ -99,20 +100,20 @@ class NSClientAddUpdateWorker(
                 insulin > 0 || carbs > 0                                                    -> Any()
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text                        ->
                     if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
-                        temporaryTargetFromJson(json)?.let { temporaryTarget ->
+                        TemporaryTarget.fromJson(json)?.let { temporaryTarget ->
                             storeDataForDb.temporaryTargets.add(temporaryTarget)
                         } ?: aapsLogger.error("Error parsing TT json $json")
                     }
 
                 eventType == TherapyEvent.Type.NOTE.text && json.isEffectiveProfileSwitch() -> // replace this by new Type when available in NS
                     if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
-                        effectiveProfileSwitchFromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
+                        EffectiveProfileSwitch.fromJson(json, dateUtil)?.let { effectiveProfileSwitch ->
                             storeDataForDb.effectiveProfileSwitches.add(effectiveProfileSwitch)
                         } ?: aapsLogger.error("Error parsing EffectiveProfileSwitch json $json")
                     }
 
                 eventType == TherapyEvent.Type.BOLUS_WIZARD.text                            ->
-                    bolusCalculatorResultFromJson(json)?.let { bolusCalculatorResult ->
+                    BolusCalculatorResult.fromJson(json)?.let { bolusCalculatorResult ->
                         storeDataForDb.bolusCalculatorResults.add(bolusCalculatorResult)
                     } ?: aapsLogger.error("Error parsing BolusCalculatorResult json $json")
 
@@ -127,35 +128,35 @@ class NSClientAddUpdateWorker(
                     eventType == TherapyEvent.Type.NOTE.text ||
                     eventType == TherapyEvent.Type.PUMP_BATTERY_CHANGE.text                 ->
                     if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_therapy_events, false) || config.NSCLIENT) {
-                        therapyEventFromJson(json)?.let { therapyEvent ->
+                        TherapyEvent.fromJson(json)?.let { therapyEvent ->
                             storeDataForDb.therapyEvents.add(therapyEvent)
                         } ?: aapsLogger.error("Error parsing TherapyEvent json $json")
                     }
 
                 eventType == TherapyEvent.Type.COMBO_BOLUS.text                             ->
                     if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
-                        extendedBolusFromJson(json)?.let { extendedBolus ->
+                        ExtendedBolus.extendedBolusFromJson(json)?.let { extendedBolus ->
                             storeDataForDb.extendedBoluses.add(extendedBolus)
                         } ?: aapsLogger.error("Error parsing ExtendedBolus json $json")
                     }
 
                 eventType == TherapyEvent.Type.TEMPORARY_BASAL.text                         ->
                     if (config.isEngineeringMode() && sp.getBoolean(R.string.key_ns_receive_tbr_eb, false) || config.NSCLIENT) {
-                        temporaryBasalFromJson(json)?.let { temporaryBasal ->
+                        TemporaryBasal.temporaryBasalFromJson(json)?.let { temporaryBasal ->
                             storeDataForDb.temporaryBasals.add(temporaryBasal)
                         } ?: aapsLogger.error("Error parsing TemporaryBasal json $json")
                     }
 
                 eventType == TherapyEvent.Type.PROFILE_SWITCH.text                          ->
                     if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_profile_switch, false) || config.NSCLIENT) {
-                        profileSwitchFromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
+                        ProfileSwitch.fromJson(json, dateUtil, activePlugin)?.let { profileSwitch ->
                             storeDataForDb.profileSwitches.add(profileSwitch)
                         } ?: aapsLogger.error("Error parsing ProfileSwitch json $json")
                     }
 
                 eventType == TherapyEvent.Type.APS_OFFLINE.text                             ->
                     if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_offline_event, false) && config.isEngineeringMode() || config.NSCLIENT) {
-                        offlineEventFromJson(json)?.let { offlineEvent ->
+                        OfflineEvent.fromJson(json)?.let { offlineEvent ->
                             storeDataForDb.offlineEvents.add(offlineEvent)
                         } ?: aapsLogger.error("Error parsing OfflineEvent json $json")
                     }

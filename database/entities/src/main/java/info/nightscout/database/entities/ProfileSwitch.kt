@@ -96,4 +96,6 @@ data class ProfileSwitch(
 
         companion object
     }
+
+    companion object
 }

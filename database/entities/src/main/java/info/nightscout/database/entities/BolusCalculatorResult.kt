@@ -105,4 +105,6 @@ data class BolusCalculatorResult(
             contentEqualsTo(previous) &&
             previous.interfaceIDs.nightscoutId == null &&
             interfaceIDs.nightscoutId != null
+
+    companion object
 }

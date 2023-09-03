@@ -32,7 +32,7 @@ fun TemporaryBasal.toJson(isAdd: Boolean, profile: Profile?, dateUtil: DateUtil)
             }
     }
 
-fun temporaryBasalFromJson(jsonObject: JSONObject): TemporaryBasal? {
+fun TemporaryBasal.Companion.temporaryBasalFromJson(jsonObject: JSONObject): TemporaryBasal? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val percent = JsonHelper.safeGetDoubleAllowNull(jsonObject, "percent")
     val absolute = JsonHelper.safeGetDoubleAllowNull(jsonObject, "absolute")

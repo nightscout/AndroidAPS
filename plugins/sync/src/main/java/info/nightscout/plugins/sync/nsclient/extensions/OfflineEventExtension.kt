@@ -36,7 +36,7 @@ fun OfflineEvent.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
     "insulin": null
 }
  */
-fun offlineEventFromJson(jsonObject: JSONObject): OfflineEvent? {
+fun OfflineEvent.Companion.fromJson(jsonObject: JSONObject): OfflineEvent? {
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val duration = JsonHelper.safeGetLong(jsonObject, "duration")
     val durationInMilliseconds = JsonHelper.safeGetLongAllowNull(jsonObject, "durationInMilliseconds")

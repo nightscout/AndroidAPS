@@ -9,7 +9,7 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.json.JSONObject
 
-fun temporaryTargetFromJson(jsonObject: JSONObject): TemporaryTarget? {
+fun TemporaryTarget.Companion.fromJson(jsonObject: JSONObject): TemporaryTarget? {
     val units = GlucoseUnit.fromText(JsonHelper.safeGetString(jsonObject, "units", Constants.MGDL))
     val timestamp = JsonHelper.safeGetLongAllowNull(jsonObject, "mills", null) ?: return null
     val duration = JsonHelper.safeGetLongAllowNull(jsonObject, "duration", null) ?: return null

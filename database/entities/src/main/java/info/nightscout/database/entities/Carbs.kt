@@ -10,18 +10,21 @@ import info.nightscout.database.entities.interfaces.DBEntryWithTimeAndDuration
 import info.nightscout.database.entities.interfaces.TraceableDBEntry
 import java.util.TimeZone
 
-@Entity(tableName = TABLE_CARBS,
-        foreignKeys = [ForeignKey(
+@Entity(
+    tableName = TABLE_CARBS,
+    foreignKeys = [ForeignKey(
         entity = Carbs::class,
         parentColumns = ["id"],
-        childColumns = ["referenceId"])],
-        indices = [
+        childColumns = ["referenceId"]
+    )],
+    indices = [
         Index("id"),
         Index("isValid"),
         Index("nightscoutId"),
         Index("referenceId"),
         Index("timestamp")
-    ])
+    ]
+)
 data class Carbs(
     @PrimaryKey(autoGenerate = true)
     override var id: Long = 0,
@@ -51,4 +54,6 @@ data class Carbs(
             contentEqualsTo(previous) &&
             previous.interfaceIDs.nightscoutId == null &&
             interfaceIDs.nightscoutId != null
+
+    companion object
 }
