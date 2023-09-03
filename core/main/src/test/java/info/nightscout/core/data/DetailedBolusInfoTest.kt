@@ -1,12 +1,12 @@
-package info.nightscout.androidaps.data
+package info.nightscout.core.data
 
 import android.content.Context
 import com.google.gson.Gson
-import info.nightscout.androidaps.TestBase
 import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.pump.DetailedBolusInfo
+import info.nightscout.sharedtests.TestBase
 import org.apache.commons.lang3.builder.EqualsBuilder
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

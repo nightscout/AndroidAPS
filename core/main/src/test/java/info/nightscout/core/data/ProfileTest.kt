@@ -1,10 +1,7 @@
-package info.nightscout.androidaps.data
+package info.nightscout.core.data
 
 import android.content.Context
 import dagger.android.AndroidInjector
-import info.nightscout.androidaps.HardLimitsMock
-import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.interfaces.Config
@@ -17,8 +14,11 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.sharedtests.HardLimitsMock
+import info.nightscout.sharedtests.TestBase
+import info.nightscout.sharedtests.TestPumpPlugin
 import org.json.JSONObject
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -76,84 +76,84 @@ class ProfileTest : TestBase() {
 
         // Test valid profile
         var p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!)
-        Assert.assertEquals(true, p.isValid("Test", testPumpPlugin, config, rh, rxBus, hardLimits, false).isValid)
-//        Assert.assertEquals(true, p.log().contains("NS units: mmol"))
-//        JSONAssert.assertEquals(JSONObject(okProfile), p.toPureNsJson(dateUtil), false)
-        Assert.assertEquals(5.0, p.dia, 0.01)
-//        Assert.assertEquals(TimeZone.getTimeZone("UTC"), p.timeZone)
-        Assert.assertEquals("00:30", dateUtil.formatHHMM(30 * 60))
+        Assertions.assertEquals(true, p.isValid("Test", testPumpPlugin, config, rh, rxBus, hardLimits, false).isValid)
+//        Assertions.assertEquals(true, p.log().contains("NS units: mmol"))
+//        JSONAssertions.assertEquals(JSONObject(okProfile), p.toPureNsJson(dateUtil), false)
+        Assertions.assertEquals(5.0, p.dia, 0.01)
+//        Assertions.assertEquals(TimeZone.getTimeZone("UTC"), p.timeZone)
+        Assertions.assertEquals("00:30", dateUtil.formatHHMM(30 * 60))
         val c = Calendar.getInstance()
         c[Calendar.HOUR_OF_DAY] = 1
         c[Calendar.MINUTE] = 0
         c[Calendar.SECOND] = 0
         c[Calendar.MILLISECOND] = 0
-        Assert.assertEquals(108.0, p.getIsfMgdl(c.timeInMillis), 0.01)
+        Assertions.assertEquals(108.0, p.getIsfMgdl(c.timeInMillis), 0.01)
         c[Calendar.HOUR_OF_DAY] = 2
-        Assert.assertEquals(111.6, p.getIsfMgdl(c.timeInMillis), 0.01)
-//        Assert.assertEquals(110.0, p.getIsfTimeFromMidnight(2 * 60 * 60), 0.01)
-        Assert.assertEquals(
+        Assertions.assertEquals(111.6, p.getIsfMgdl(c.timeInMillis), 0.01)
+//        Assertions.assertEquals(110.0, p.getIsfTimeFromMidnight(2 * 60 * 60), 0.01)
+        Assertions.assertEquals(
             """
     00:00    6,0 mmol/U
     02:00    6,2 mmol/U
     """.trimIndent(), p.getIsfList(rh, dateUtil).replace(".", ",")
         )
-        Assert.assertEquals(30.0, p.getIc(c.timeInMillis), 0.01)
-        Assert.assertEquals(30.0, p.getIcTimeFromMidnight(2 * 60 * 60), 0.01)
-        Assert.assertEquals("00:00    30,0 g/U", p.getIcList(rh, dateUtil).replace(".", ","))
-        Assert.assertEquals(0.1, p.getBasal(c.timeInMillis), 0.01)
-        Assert.assertEquals(0.1, p.getBasalTimeFromMidnight(2 * 60 * 60), 0.01)
-        Assert.assertEquals("00:00    0,10 U/h", p.getBasalList(rh, dateUtil).replace(".", ","))
-        Assert.assertEquals(0.1, p.getBasalValues()[0].value, 0.01)
-        Assert.assertEquals(0.1, p.getMaxDailyBasal(), 0.01)
-        Assert.assertEquals(2.4, p.percentageBasalSum(), 0.01)
-        Assert.assertEquals(2.4, p.baseBasalSum(), 0.01)
-//        Assert.assertEquals(81.0, p.getTargetMgdl(2 * 60 * 60), 0.01)
-        Assert.assertEquals(90.0, p.getTargetLowMgdl(c.timeInMillis), 0.01)
-//        Assert.assertEquals(4.0, p.getTargetLowTimeFromMidnight(2 * 60 * 60), 0.01)
-        Assert.assertEquals(90.0, p.getTargetHighMgdl(c.timeInMillis), 0.01)
-//        Assert.assertEquals(5.0, p.getTargetHighTimeFromMidnight(2 * 60 * 60), 0.01)
-        Assert.assertEquals("00:00    5,0 - 5,0 mmol", p.getTargetList(rh, dateUtil).replace(".", ","))
-        Assert.assertEquals(100, p.percentage)
-        Assert.assertEquals(0, p.timeshift)
-        Assert.assertEquals(0.1, Profile.toMgdl(0.1, GlucoseUnit.MGDL), 0.01)
-        Assert.assertEquals(18.0, Profile.toMgdl(1.0, GlucoseUnit.MMOL), 0.01)
-        Assert.assertEquals(1.0, Profile.toMmol(18.0, GlucoseUnit.MGDL), 0.01)
-        Assert.assertEquals(18.0, Profile.toMmol(18.0, GlucoseUnit.MMOL), 0.01)
-        Assert.assertEquals(18.0, Profile.fromMgdlToUnits(18.0, GlucoseUnit.MGDL), 0.01)
-        Assert.assertEquals(1.0, Profile.fromMgdlToUnits(18.0, GlucoseUnit.MMOL), 0.01)
-        Assert.assertEquals(18.0, Profile.toUnits(18.0, 1.0, GlucoseUnit.MGDL), 0.01)
-        Assert.assertEquals(1.0, Profile.toUnits(18.0, 1.0, GlucoseUnit.MMOL), 0.01)
-        Assert.assertEquals("18", Profile.toUnitsString(18.0, 1.0, GlucoseUnit.MGDL))
-        Assert.assertEquals("1,0", Profile.toUnitsString(18.0, 1.0, GlucoseUnit.MMOL).replace(".", ","))
-        Assert.assertEquals("5 - 6", Profile.toTargetRangeString(5.0, 6.0, GlucoseUnit.MGDL, GlucoseUnit.MGDL))
-        Assert.assertEquals("4", Profile.toTargetRangeString(4.0, 4.0, GlucoseUnit.MGDL, GlucoseUnit.MGDL))
+        Assertions.assertEquals(30.0, p.getIc(c.timeInMillis), 0.01)
+        Assertions.assertEquals(30.0, p.getIcTimeFromMidnight(2 * 60 * 60), 0.01)
+        Assertions.assertEquals("00:00    30,0 g/U", p.getIcList(rh, dateUtil).replace(".", ","))
+        Assertions.assertEquals(0.1, p.getBasal(c.timeInMillis), 0.01)
+        Assertions.assertEquals(0.1, p.getBasalTimeFromMidnight(2 * 60 * 60), 0.01)
+        Assertions.assertEquals("00:00    0,10 U/h", p.getBasalList(rh, dateUtil).replace(".", ","))
+        Assertions.assertEquals(0.1, p.getBasalValues()[0].value, 0.01)
+        Assertions.assertEquals(0.1, p.getMaxDailyBasal(), 0.01)
+        Assertions.assertEquals(2.4, p.percentageBasalSum(), 0.01)
+        Assertions.assertEquals(2.4, p.baseBasalSum(), 0.01)
+//        Assertions.assertEquals(81.0, p.getTargetMgdl(2 * 60 * 60), 0.01)
+        Assertions.assertEquals(90.0, p.getTargetLowMgdl(c.timeInMillis), 0.01)
+//        Assertions.assertEquals(4.0, p.getTargetLowTimeFromMidnight(2 * 60 * 60), 0.01)
+        Assertions.assertEquals(90.0, p.getTargetHighMgdl(c.timeInMillis), 0.01)
+//        Assertions.assertEquals(5.0, p.getTargetHighTimeFromMidnight(2 * 60 * 60), 0.01)
+        Assertions.assertEquals("00:00    5,0 - 5,0 mmol", p.getTargetList(rh, dateUtil).replace(".", ","))
+        Assertions.assertEquals(100, p.percentage)
+        Assertions.assertEquals(0, p.timeshift)
+        Assertions.assertEquals(0.1, Profile.toMgdl(0.1, GlucoseUnit.MGDL), 0.01)
+        Assertions.assertEquals(18.0, Profile.toMgdl(1.0, GlucoseUnit.MMOL), 0.01)
+        Assertions.assertEquals(1.0, Profile.toMmol(18.0, GlucoseUnit.MGDL), 0.01)
+        Assertions.assertEquals(18.0, Profile.toMmol(18.0, GlucoseUnit.MMOL), 0.01)
+        Assertions.assertEquals(18.0, Profile.fromMgdlToUnits(18.0, GlucoseUnit.MGDL), 0.01)
+        Assertions.assertEquals(1.0, Profile.fromMgdlToUnits(18.0, GlucoseUnit.MMOL), 0.01)
+        Assertions.assertEquals(18.0, Profile.toUnits(18.0, 1.0, GlucoseUnit.MGDL), 0.01)
+        Assertions.assertEquals(1.0, Profile.toUnits(18.0, 1.0, GlucoseUnit.MMOL), 0.01)
+        Assertions.assertEquals("18", Profile.toUnitsString(18.0, 1.0, GlucoseUnit.MGDL))
+        Assertions.assertEquals("1,0", Profile.toUnitsString(18.0, 1.0, GlucoseUnit.MMOL).replace(".", ","))
+        Assertions.assertEquals("5 - 6", Profile.toTargetRangeString(5.0, 6.0, GlucoseUnit.MGDL, GlucoseUnit.MGDL))
+        Assertions.assertEquals("4", Profile.toTargetRangeString(4.0, 4.0, GlucoseUnit.MGDL, GlucoseUnit.MGDL))
 
         //Test basal profile below limit
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(belowLimitValidProfile), dateUtil)!!)
         p.isValid("Test", testPumpPlugin, config, rh, rxBus, hardLimits, false)
 
         // Test profile w/o units
-        Assert.assertNull(pureProfileFromJson(JSONObject(noUnitsValidProfile), dateUtil))
+        Assertions.assertNull(pureProfileFromJson(JSONObject(noUnitsValidProfile), dateUtil))
 
         //Test profile not starting at midnight
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(notStartingAtZeroValidProfile), dateUtil)!!)
-        Assert.assertEquals(30.0, p.getIc(0), 0.01)
+        Assertions.assertEquals(30.0, p.getIc(0), 0.01)
 
         // Test wrong profile
-        Assert.assertNull(pureProfileFromJson(JSONObject(wrongProfile), dateUtil))
+        Assertions.assertNull(pureProfileFromJson(JSONObject(wrongProfile), dateUtil))
 
         // Test percentage functionality
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!)
         p.pct = 50
-        Assert.assertEquals(0.05, p.getBasal(c.timeInMillis), 0.01)
-        Assert.assertEquals(1.2, p.percentageBasalSum(), 0.01)
-        Assert.assertEquals(60.0, p.getIc(c.timeInMillis), 0.01)
-        Assert.assertEquals(223.2, p.getIsfMgdl(c.timeInMillis), 0.01)
+        Assertions.assertEquals(0.05, p.getBasal(c.timeInMillis), 0.01)
+        Assertions.assertEquals(1.2, p.percentageBasalSum(), 0.01)
+        Assertions.assertEquals(60.0, p.getIc(c.timeInMillis), 0.01)
+        Assertions.assertEquals(223.2, p.getIsfMgdl(c.timeInMillis), 0.01)
 
         // Test timeshift functionality
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(okProfile), dateUtil)!!)
         p.ts = 1
-        Assert.assertEquals(
+        Assertions.assertEquals(
             """
                 00:00    6.2 mmol/U
                 01:00    6.0 mmol/U

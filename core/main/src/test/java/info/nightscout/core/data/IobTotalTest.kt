@@ -1,7 +1,6 @@
-package info.nightscout.androidaps.data
+package info.nightscout.core.data
 
 import android.content.Context
-import info.nightscout.androidaps.TestBase
 import info.nightscout.core.iob.combine
 import info.nightscout.core.iob.copy
 import info.nightscout.core.iob.determineBasalJson
@@ -10,7 +9,8 @@ import info.nightscout.core.iob.plus
 import info.nightscout.core.iob.round
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.shared.utils.DateUtil
-import org.junit.Assert
+import info.nightscout.sharedtests.TestBase
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -33,7 +33,7 @@ class IobTotalTest : TestBase() {
         val a = IobTotal(now)
         a.iob = 10.0
         val b = a.copy()
-        Assert.assertEquals(a.iob, b.iob, 0.01)
+        Assertions.assertEquals(a.iob, b.iob, 0.01)
     }
 
     @Test fun plusTest() {
@@ -47,14 +47,14 @@ class IobTotalTest : TestBase() {
         a.netInsulin = 10.0
         a.extendedBolusInsulin = 10.0
         a.plus(a.copy())
-        Assert.assertEquals(20.0, a.iob, 0.01)
-        Assert.assertEquals(20.0, a.activity, 0.01)
-        Assert.assertEquals(20.0, a.bolussnooze, 0.01)
-        Assert.assertEquals(20.0, a.basaliob, 0.01)
-        Assert.assertEquals(20.0, a.netbasalinsulin, 0.01)
-        Assert.assertEquals(20.0, a.hightempinsulin, 0.01)
-        Assert.assertEquals(20.0, a.netInsulin, 0.01)
-        Assert.assertEquals(20.0, a.extendedBolusInsulin, 0.01)
+        Assertions.assertEquals(20.0, a.iob, 0.01)
+        Assertions.assertEquals(20.0, a.activity, 0.01)
+        Assertions.assertEquals(20.0, a.bolussnooze, 0.01)
+        Assertions.assertEquals(20.0, a.basaliob, 0.01)
+        Assertions.assertEquals(20.0, a.netbasalinsulin, 0.01)
+        Assertions.assertEquals(20.0, a.hightempinsulin, 0.01)
+        Assertions.assertEquals(20.0, a.netInsulin, 0.01)
+        Assertions.assertEquals(20.0, a.extendedBolusInsulin, 0.01)
     }
 
     @Test fun combineTest() {
@@ -69,15 +69,15 @@ class IobTotalTest : TestBase() {
         a.extendedBolusInsulin = 17.0
         val b = a.copy()
         val c = IobTotal.combine(a, b)
-        Assert.assertEquals(a.time.toDouble(), c.time.toDouble(), 0.01)
-        Assert.assertEquals(23.0, c.iob, 0.01)
-        Assert.assertEquals(22.0, c.activity, 0.01)
-        Assert.assertEquals(12.0, c.bolussnooze, 0.01)
-        Assert.assertEquals(26.0, c.basaliob, 0.01)
-        Assert.assertEquals(28.0, c.netbasalinsulin, 0.01)
-        Assert.assertEquals(30.0, c.hightempinsulin, 0.01)
-        Assert.assertEquals(32.0, c.netInsulin, 0.01)
-        Assert.assertEquals(34.0, c.extendedBolusInsulin, 0.01)
+        Assertions.assertEquals(a.time.toDouble(), c.time.toDouble(), 0.01)
+        Assertions.assertEquals(23.0, c.iob, 0.01)
+        Assertions.assertEquals(22.0, c.activity, 0.01)
+        Assertions.assertEquals(12.0, c.bolussnooze, 0.01)
+        Assertions.assertEquals(26.0, c.basaliob, 0.01)
+        Assertions.assertEquals(28.0, c.netbasalinsulin, 0.01)
+        Assertions.assertEquals(30.0, c.hightempinsulin, 0.01)
+        Assertions.assertEquals(32.0, c.netInsulin, 0.01)
+        Assertions.assertEquals(34.0, c.extendedBolusInsulin, 0.01)
     }
 
     @Test fun roundTest() {
@@ -91,14 +91,14 @@ class IobTotalTest : TestBase() {
         a.netInsulin = 1.1111111111111
         a.extendedBolusInsulin = 1.1111111111111
         a.round()
-        Assert.assertEquals(1.111, a.iob, 0.00001)
-        Assert.assertEquals(1.1111, a.activity, 0.00001)
-        Assert.assertEquals(1.1111, a.bolussnooze, 0.00001)
-        Assert.assertEquals(1.111, a.basaliob, 0.00001)
-        Assert.assertEquals(1.111, a.netbasalinsulin, 0.00001)
-        Assert.assertEquals(1.111, a.hightempinsulin, 0.00001)
-        Assert.assertEquals(1.111, a.netInsulin, 0.00001)
-        Assert.assertEquals(1.111, a.extendedBolusInsulin, 0.00001)
+        Assertions.assertEquals(1.111, a.iob, 0.00001)
+        Assertions.assertEquals(1.1111, a.activity, 0.00001)
+        Assertions.assertEquals(1.1111, a.bolussnooze, 0.00001)
+        Assertions.assertEquals(1.111, a.basaliob, 0.00001)
+        Assertions.assertEquals(1.111, a.netbasalinsulin, 0.00001)
+        Assertions.assertEquals(1.111, a.hightempinsulin, 0.00001)
+        Assertions.assertEquals(1.111, a.netInsulin, 0.00001)
+        Assertions.assertEquals(1.111, a.extendedBolusInsulin, 0.00001)
     }
 
     @Test fun jsonTest() {
@@ -113,12 +113,12 @@ class IobTotalTest : TestBase() {
         a.extendedBolusInsulin = 17.0
         try {
             val j = a.json(dateUtil)
-            Assert.assertEquals(a.iob, j.getDouble("iob"), 0.0000001)
-            Assert.assertEquals(a.basaliob, j.getDouble("basaliob"), 0.0000001)
-            Assert.assertEquals(a.activity, j.getDouble("activity"), 0.0000001)
-            Assert.assertEquals(now, dateUtil.fromISODateString(j.getString("time")))
+            Assertions.assertEquals(a.iob, j.getDouble("iob"), 0.0000001)
+            Assertions.assertEquals(a.basaliob, j.getDouble("basaliob"), 0.0000001)
+            Assertions.assertEquals(a.activity, j.getDouble("activity"), 0.0000001)
+            Assertions.assertEquals(now, dateUtil.fromISODateString(j.getString("time")))
         } catch (e: Exception) {
-            Assert.fail("Exception: " + e.message)
+            Assertions.fail("Exception: " + e.message)
         }
     }
 
@@ -135,15 +135,15 @@ class IobTotalTest : TestBase() {
         a.iobWithZeroTemp = IobTotal(now)
         try {
             val j = a.determineBasalJson(dateUtil)
-            Assert.assertEquals(a.iob, j.getDouble("iob"), 0.0000001)
-            Assert.assertEquals(a.basaliob, j.getDouble("basaliob"), 0.0000001)
-            Assert.assertEquals(a.bolussnooze, j.getDouble("bolussnooze"), 0.0000001)
-            Assert.assertEquals(a.activity, j.getDouble("activity"), 0.0000001)
-            Assert.assertEquals(0, j.getLong("lastBolusTime"))
-            Assert.assertEquals(now, dateUtil.fromISODateString(j.getString("time")))
-            Assert.assertNotNull(j.getJSONObject("iobWithZeroTemp"))
+            Assertions.assertEquals(a.iob, j.getDouble("iob"), 0.0000001)
+            Assertions.assertEquals(a.basaliob, j.getDouble("basaliob"), 0.0000001)
+            Assertions.assertEquals(a.bolussnooze, j.getDouble("bolussnooze"), 0.0000001)
+            Assertions.assertEquals(a.activity, j.getDouble("activity"), 0.0000001)
+            Assertions.assertEquals(0, j.getLong("lastBolusTime"))
+            Assertions.assertEquals(now, dateUtil.fromISODateString(j.getString("time")))
+            Assertions.assertNotNull(j.getJSONObject("iobWithZeroTemp"))
         } catch (e: Exception) {
-            Assert.fail("Exception: " + e.message)
+            Assertions.fail("Exception: " + e.message)
         }
     }
 }

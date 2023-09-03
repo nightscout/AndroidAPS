@@ -1,15 +1,20 @@
 package info.nightscout.shared.impl.sharedPreferences
 
 import android.content.Context
-import info.nightscout.androidaps.TestBase
-import info.nightscout.androidaps.mocks.SharedPreferencesMock
+import info.nightscout.shared.impl.SharedPreferencesMock
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.quality.Strictness
 
-class SPImplementationTest : TestBase() {
+@ExtendWith(MockitoExtension::class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class SPImplementationTest {
 
     private val sharedPreferences: SharedPreferencesMock = SharedPreferencesMock()
     @Mock lateinit var context: Context

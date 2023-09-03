@@ -1,11 +1,10 @@
-package info.nightscout.androidaps.utils
+package info.nightscout.core.utils
 
-import info.nightscout.androidaps.TestBase
-import info.nightscout.core.utils.CryptoUtil
+import info.nightscout.sharedtests.TestBase
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.CoreMatchers.not
-import org.junit.Assert
 import org.junit.Assume.assumeThat
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 // https://stackoverflow.com/questions/52344522/joseexception-couldnt-create-aes-gcm-nopadding-cipher-illegal-key-size
@@ -34,11 +33,11 @@ class CryptoUtilTest : TestBase() {
 
         val encrypted = cryptoUtil.encrypt(password, salt, payload)
         assumeAES256isSupported(cryptoUtil)
-        Assert.assertNotNull(encrypted)
+        Assertions.assertNotNull(encrypted)
 
         val decrypted = cryptoUtil.decrypt(password, salt, encrypted!!)
         assumeAES256isSupported(cryptoUtil)
-        Assert.assertEquals(decrypted, payload)
+        Assertions.assertEquals(decrypted, payload)
     }
 
     @Test
@@ -50,18 +49,18 @@ class CryptoUtilTest : TestBase() {
 
         val encrypted = cryptoUtil.encrypt(password, salt, payload)
         assumeAES256isSupported(cryptoUtil)
-        Assert.assertNotNull(encrypted)
+        Assertions.assertNotNull(encrypted)
 
         val decrypted = cryptoUtil.decrypt(password, salt, encrypted!!)
         assumeAES256isSupported(cryptoUtil)
-        Assert.assertEquals(decrypted, payload)
+        Assertions.assertEquals(decrypted, payload)
     }
 
     @Test
     fun testHashVector() {
         val payload = "{what:payloadYouWantToProtect}"
         val hash = cryptoUtil.sha256(payload)
-        Assert.assertEquals(hash, "a1aafe3ed6cc127e6d102ddbc40a205147230e9cfd178daf108c83543bbdcd13")
+        Assertions.assertEquals(hash, "a1aafe3ed6cc127e6d102ddbc40a205147230e9cfd178daf108c83543bbdcd13")
     }
 
     @Test
@@ -70,24 +69,24 @@ class CryptoUtilTest : TestBase() {
         val password = "topSikret"
         val expectedHmac = "ea2213953d0f2e55047cae2d23fb4f0de1b805d55e6271efa70d6b85fb692bea" // generated using other HMAC tool
         val hash = cryptoUtil.hmac256(payload, password)
-        Assert.assertEquals(hash, expectedHmac)
+        Assertions.assertEquals(hash, expectedHmac)
     }
 
     @Test
     fun testPlainPasswordCheck() {
-        Assert.assertTrue(cryptoUtil.checkPassword("same", "same"))
-        Assert.assertFalse(cryptoUtil.checkPassword("same", "other"))
+        Assertions.assertTrue(cryptoUtil.checkPassword("same", "same"))
+        Assertions.assertFalse(cryptoUtil.checkPassword("same", "other"))
     }
 
     @Test
     fun testHashedPasswordCheck() {
-        Assert.assertTrue(cryptoUtil.checkPassword("givenSecret", cryptoUtil.hashPassword("givenSecret")))
-        Assert.assertFalse(cryptoUtil.checkPassword("givenSecret", cryptoUtil.hashPassword("otherSecret")))
+        Assertions.assertTrue(cryptoUtil.checkPassword("givenSecret", cryptoUtil.hashPassword("givenSecret")))
+        Assertions.assertFalse(cryptoUtil.checkPassword("givenSecret", cryptoUtil.hashPassword("otherSecret")))
 
-        Assert.assertTrue(cryptoUtil.checkPassword("givenHashToCheck", "hmac:7fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:a0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"))
-        Assert.assertFalse(cryptoUtil.checkPassword("givenMashToCheck", "hmac:7fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:a0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"))
-        Assert.assertFalse(cryptoUtil.checkPassword("givenHashToCheck", "hmac:0fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:a0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"))
-        Assert.assertFalse(cryptoUtil.checkPassword("givenHashToCheck", "hmac:7fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:b0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"))
+        Assertions.assertTrue(cryptoUtil.checkPassword("givenHashToCheck", "hmac:7fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:a0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"))
+        Assertions.assertFalse(cryptoUtil.checkPassword("givenMashToCheck", "hmac:7fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:a0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"))
+        Assertions.assertFalse(cryptoUtil.checkPassword("givenHashToCheck", "hmac:0fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:a0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"))
+        Assertions.assertFalse(cryptoUtil.checkPassword("givenHashToCheck", "hmac:7fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:b0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"))
     }
 
 }

@@ -2,10 +2,10 @@ package info.nightscout.core.wizard
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.sharedtests.TestBase
 import org.json.JSONArray
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

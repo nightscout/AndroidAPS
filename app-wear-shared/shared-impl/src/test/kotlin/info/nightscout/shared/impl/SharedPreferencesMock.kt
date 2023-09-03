@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.mocks
+package info.nightscout.shared.impl
 
 import android.content.SharedPreferences
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener
