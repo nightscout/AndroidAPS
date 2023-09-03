@@ -1,5 +1,6 @@
 package info.nightscout.core.extensions
 
+import info.nightscout.core.main.R
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
@@ -31,3 +32,16 @@ fun InMemoryGlucoseValue.valueToUnitsString(units: GlucoseUnit): String =
     if (units == GlucoseUnit.MGDL) DecimalFormatter.to0Decimal(recalculated)
     else DecimalFormatter.to1Decimal(recalculated * Constants.MGDL_TO_MMOLL)
 
+fun GlucoseValue.TrendArrow.directionToIcon(): Int =
+    when (this) {
+        GlucoseValue.TrendArrow.TRIPLE_DOWN     -> R.drawable.ic_invalid
+        GlucoseValue.TrendArrow.DOUBLE_DOWN     -> R.drawable.ic_doubledown
+        GlucoseValue.TrendArrow.SINGLE_DOWN     -> R.drawable.ic_singledown
+        GlucoseValue.TrendArrow.FORTY_FIVE_DOWN -> R.drawable.ic_fortyfivedown
+        GlucoseValue.TrendArrow.FLAT            -> R.drawable.ic_flat
+        GlucoseValue.TrendArrow.FORTY_FIVE_UP   -> R.drawable.ic_fortyfiveup
+        GlucoseValue.TrendArrow.SINGLE_UP       -> R.drawable.ic_singleup
+        GlucoseValue.TrendArrow.DOUBLE_UP       -> R.drawable.ic_doubleup
+        GlucoseValue.TrendArrow.TRIPLE_UP       -> R.drawable.ic_invalid
+        GlucoseValue.TrendArrow.NONE            -> R.drawable.ic_invalid
+    }
