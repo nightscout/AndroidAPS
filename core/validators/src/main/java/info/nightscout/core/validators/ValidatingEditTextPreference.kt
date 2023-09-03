@@ -35,6 +35,14 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAt
         holder.isDividerAllowedBelow = false
     }
 
+    fun setMinNumber(min: Int) {
+        this.validatorParameters.minNumber = min
+    }
+
+    fun setMaxNumber(max: Int) {
+        this.validatorParameters.maxNumber = max
+    }
+
     private fun obtainValidatorParameters(attrs: AttributeSet): DefaultEditTextValidator.Parameters {
         val typedArray = context.obtainStyledAttributes(attrs, R.styleable.FormEditText, 0, 0)
         return DefaultEditTextValidator.Parameters(
