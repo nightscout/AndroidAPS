@@ -15,6 +15,7 @@ android {
 }
 
 dependencies {
+    implementation 'androidx.media3:media3-common:1.1.1'
     implementation project(':app-wear-shared:shared')
     implementation project(':core:interfaces')
     implementation project(':core:utils')
@@ -22,5 +23,6 @@ dependencies {
     implementation project(':core:validators')
     implementation project(':pump:dana')
 
+    testImplementation project(':app-wear-shared:shared-tests')
     testImplementation project(':core:main')
 }

@@ -36,5 +36,6 @@ dependencies {
     api "androidx.room:room-rxjava3:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
+    testImplementation project(':app-wear-shared:shared-tests')
     testImplementation project(':core:main') // create profile from json
 }
