@@ -28,6 +28,7 @@ dependencies {
     implementation project(':core:validators')
 
     testImplementation project(':implementation')
+    testImplementation project(':plugins:insulin')
 
     api "androidx.appcompat:appcompat:$appcompat_version"
     api "com.google.android.material:material:$material_version"

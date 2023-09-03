@@ -13,8 +13,10 @@ import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileStore
+import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
@@ -36,8 +38,10 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var config: Config
     @Mock lateinit var context: Context
+    @Mock lateinit var sp: SP
 
     lateinit var dateUtil: DateUtil
+    lateinit var hardLimits: HardLimits
     val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
     val profileInjector = HasAndroidInjector { AndroidInjector { } }
@@ -55,6 +59,7 @@ open class TestBaseWithProfile : TestBase() {
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
         dateUtil = Mockito.spy(DateUtil(context))
         `when`(dateUtil.now()).thenReturn(1656358822000)
+        hardLimits = HardLimitsMock(sp, rh)
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!)
         effectiveProfileSwitch = EffectiveProfileSwitch(
             timestamp = dateUtil.now(),
