@@ -225,6 +225,8 @@ dependencies {
     implementation project(':pump:virtual')
     implementation project(':workflow')
 
+    testImplementation project(':app-wear-shared:shared-tests')
+
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     /* Dagger2 - We are going to use dagger.android which includes

@@ -1,8 +1,7 @@
-package info.nightscout.androidaps.plugins.configBuilder
+package info.nightscout.plugins.configBuilder
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.configuration.configBuilder.ConfigBuilderPlugin
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
@@ -12,6 +11,7 @@ import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -28,7 +28,7 @@ class ConfigBuilderPluginTest : TestBase() {
 
     private lateinit var configBuilderPlugin: ConfigBuilderPlugin
 
-    val injector = HasAndroidInjector { AndroidInjector { } }
+    private val injector = HasAndroidInjector { AndroidInjector { } }
 
     @Test
     fun dummy() {

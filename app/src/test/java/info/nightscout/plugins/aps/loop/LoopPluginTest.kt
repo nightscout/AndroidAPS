@@ -1,10 +1,9 @@
-package info.nightscout.androidaps.plugins.aps.loop
+package info.nightscout.plugins.aps.loop
 
 import android.app.NotificationManager
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.ApsMode
@@ -20,14 +19,13 @@ import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.ui.UiInteraction
-import info.nightscout.plugins.aps.loop.LoopFragment
-import info.nightscout.plugins.aps.loop.LoopPlugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import org.junit.Assert
+import info.nightscout.sharedtests.TestBase
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -57,12 +55,14 @@ class LoopPluginTest : TestBase() {
 
     private lateinit var loopPlugin: LoopPlugin
 
-    val injector = HasAndroidInjector { AndroidInjector { } }
+    private val injector = HasAndroidInjector { AndroidInjector { } }
     @BeforeEach fun prepareMock() {
 
-        loopPlugin = LoopPlugin(injector, aapsLogger, aapsSchedulers, rxBus, sp, config,
-                                constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel,
-                                repository, runningConfiguration, uiInteraction)
+        loopPlugin = LoopPlugin(
+            injector, aapsLogger, aapsSchedulers, rxBus, sp, config,
+            constraintChecker, rh, profileFunction, context, commandQueue, activePlugin, virtualPumpPlugin, iobCobCalculator, receiverStatusStore, fabricPrivacy, dateUtil, uel,
+            repository, runningConfiguration, uiInteraction
+        )
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(context.getSystemService(Context.NOTIFICATION_SERVICE)).thenReturn(notificationManager)
     }
@@ -74,28 +74,28 @@ class LoopPluginTest : TestBase() {
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.CLOSED.name)
         val pumpDescription = PumpDescription()
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
-        Assert.assertEquals(LoopFragment::class.java.name, loopPlugin.pluginDescription.fragmentClass)
-        Assert.assertEquals(PluginType.LOOP, loopPlugin.getType())
-        Assert.assertEquals("Loop", loopPlugin.name)
-        Assert.assertEquals("LOOP", loopPlugin.nameShort)
-        Assert.assertEquals(true, loopPlugin.hasFragment())
-        Assert.assertEquals(true, loopPlugin.showInList(PluginType.LOOP))
-        Assert.assertEquals(info.nightscout.plugins.aps.R.xml.pref_loop.toLong(), loopPlugin.preferencesId.toLong())
+        Assertions.assertEquals(LoopFragment::class.java.name, loopPlugin.pluginDescription.fragmentClass)
+        Assertions.assertEquals(PluginType.LOOP, loopPlugin.getType())
+        Assertions.assertEquals("Loop", loopPlugin.name)
+        Assertions.assertEquals("LOOP", loopPlugin.nameShort)
+        Assertions.assertEquals(true, loopPlugin.hasFragment())
+        Assertions.assertEquals(true, loopPlugin.showInList(PluginType.LOOP))
+        Assertions.assertEquals(info.nightscout.plugins.aps.R.xml.pref_loop.toLong(), loopPlugin.preferencesId.toLong())
 
         // Plugin is disabled by default
-        Assert.assertEquals(false, loopPlugin.isEnabled())
+        Assertions.assertEquals(false, loopPlugin.isEnabled())
         loopPlugin.setPluginEnabled(PluginType.LOOP, true)
-        Assert.assertEquals(true, loopPlugin.isEnabled())
+        Assertions.assertEquals(true, loopPlugin.isEnabled())
 
         // No temp basal capable pump should disable plugin
         virtualPumpPlugin.pumpDescription.isTempBasalCapable = false
-        Assert.assertEquals(false, loopPlugin.isEnabled())
+        Assertions.assertEquals(false, loopPlugin.isEnabled())
         virtualPumpPlugin.pumpDescription.isTempBasalCapable = true
 
         // Fragment is hidden by default
-        Assert.assertEquals(false, loopPlugin.isFragmentVisible())
+        Assertions.assertEquals(false, loopPlugin.isFragmentVisible())
         loopPlugin.setFragmentVisible(PluginType.LOOP, true)
-        Assert.assertEquals(true, loopPlugin.isFragmentVisible())
+        Assertions.assertEquals(true, loopPlugin.isFragmentVisible())
     }
 
     /* ***********  not working
@@ -118,7 +118,7 @@ class LoopPluginTest : TestBase() {
         MockedLoopPlugin mockedLoopPlugin = new MockedLoopPlugin();
         Treatment t = new Treatment();
         bus.post(new EventTreatmentChange(t));
-        Assert.assertEquals(true, mockedLoopPlugin.invokeCalled);
+        Assertions.assertEquals(true, mockedLoopPlugin.invokeCalled);
     }
 */
 }

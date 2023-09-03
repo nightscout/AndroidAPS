@@ -1,15 +1,13 @@
-package info.nightscout.androidaps.data
+package info.nightscout.core.wizard
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.TestBase
-import info.nightscout.core.wizard.QuickWizard
-import info.nightscout.core.wizard.QuickWizardEntry
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.sharedPreferences.SP
 import org.json.JSONArray
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -28,8 +26,10 @@ class QuickWizardTest : TestBase() {
     private var array: JSONArray = JSONArray("[$data1,$data2]")
 
     class MockedTime : QuickWizardEntry.Time() {
+
         override fun secondsFromMidnight() = 0
     }
+
     private val mockedTime = MockedTime()
 
     private val injector = HasAndroidInjector {
@@ -47,49 +47,54 @@ class QuickWizardTest : TestBase() {
     private lateinit var quickWizard: QuickWizard
 
     @BeforeEach
-    fun mock() {
-
+    fun setup() {
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_quickwizard, "[]")).thenReturn("[]")
         quickWizard = QuickWizard(sp, injector)
     }
 
-    @Test fun setDataTest() {
+    @Test
+    fun setDataTest() {
         quickWizard.setData(array)
-        Assert.assertEquals(2, quickWizard.size())
+        Assertions.assertEquals(2, quickWizard.size())
     }
 
-    @Test fun test() {
+    @Test
+    fun test() {
         quickWizard.setData(array)
-        Assert.assertEquals("Lunch", quickWizard[1].buttonText())
+        Assertions.assertEquals("Lunch", quickWizard[1].buttonText())
     }
 
-    @Test fun active() {
+    @Test
+    fun active() {
         quickWizard.setData(array)
         val e: QuickWizardEntry = quickWizard.getActive()!!
-        Assert.assertEquals(36.0, e.carbs().toDouble(), 0.01)
+        Assertions.assertEquals(36.0, e.carbs().toDouble(), 0.01)
         quickWizard.remove(0)
         quickWizard.remove(0)
-        Assert.assertNull(quickWizard.getActive())
+        Assertions.assertNull(quickWizard.getActive())
     }
 
-    @Test fun newEmptyItemTest() {
-        Assert.assertNotNull(quickWizard.newEmptyItem())
+    @Test
+    fun newEmptyItemTest() {
+        Assertions.assertNotNull(quickWizard.newEmptyItem())
     }
 
-    @Test fun addOrUpdate() {
+    @Test
+    fun addOrUpdate() {
         quickWizard.setData(array)
-        Assert.assertEquals(2, quickWizard.size())
+        Assertions.assertEquals(2, quickWizard.size())
         quickWizard.addOrUpdate(quickWizard.newEmptyItem())
-        Assert.assertEquals(3, quickWizard.size())
+        Assertions.assertEquals(3, quickWizard.size())
         val q: QuickWizardEntry = quickWizard.newEmptyItem()
         q.position = 0
         quickWizard.addOrUpdate(q)
-        Assert.assertEquals(3, quickWizard.size())
+        Assertions.assertEquals(3, quickWizard.size())
     }
 
-    @Test fun remove() {
+    @Test
+    fun remove() {
         quickWizard.setData(array)
         quickWizard.remove(0)
-        Assert.assertEquals(1, quickWizard.size())
+        Assertions.assertEquals(1, quickWizard.size())
     }
 }

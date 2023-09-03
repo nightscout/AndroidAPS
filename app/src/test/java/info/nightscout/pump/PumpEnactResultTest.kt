@@ -1,12 +1,12 @@
-package info.nightscout.androidaps.pump
+package info.nightscout.pump
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.core.pump.toHtml
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.plugins.aps.loop.extensions.json
 import info.nightscout.pump.virtual.extensions.toText
+import info.nightscout.sharedtests.TestBaseWithProfile
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

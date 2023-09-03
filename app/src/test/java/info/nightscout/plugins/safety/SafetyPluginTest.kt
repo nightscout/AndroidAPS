@@ -1,9 +1,7 @@
-package info.nightscout.androidaps.plugins.safety
+package info.nightscout.plugins.safety
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.HardLimitsMock
-import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.Constants
@@ -11,7 +9,6 @@ import info.nightscout.interfaces.bgQualityCheck.BgQualityCheck
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profiling.Profiler
 import info.nightscout.interfaces.pump.defs.PumpDescription
@@ -22,7 +19,7 @@ import info.nightscout.plugins.aps.openAPSAMA.OpenAPSAMAPlugin
 import info.nightscout.plugins.aps.openAPSSMB.OpenAPSSMBPlugin
 import info.nightscout.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
-import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.sharedtests.TestBaseWithProfile
 import info.nightscout.source.GlimpPlugin
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -32,9 +29,7 @@ import org.mockito.Mockito.`when`
 
 class SafetyPluginTest : TestBaseWithProfile() {
 
-    @Mock lateinit var sp: SP
     @Mock lateinit var constraintChecker: Constraints
-    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var virtualPumpPlugin: VirtualPumpPlugin
     @Mock lateinit var glimpPlugin: GlimpPlugin
     @Mock lateinit var profiler: Profiler
@@ -44,7 +39,6 @@ class SafetyPluginTest : TestBaseWithProfile() {
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var tddCalculator: TddCalculator
 
-    private lateinit var hardLimits: HardLimits
     private lateinit var safetyPlugin: SafetyPlugin
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
     private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
@@ -78,7 +72,6 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         `when`(config.APS).thenReturn(true)
-        hardLimits = HardLimitsMock(sp, rh)
         safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, activePlugin, hardLimits, config, iobCobCalculator, dateUtil, uiInteraction)
         openAPSAMAPlugin = OpenAPSAMAPlugin(
             injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, fabricPrivacy,
