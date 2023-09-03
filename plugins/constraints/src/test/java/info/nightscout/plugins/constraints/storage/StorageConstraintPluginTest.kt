@@ -2,12 +2,12 @@ package info.nightscout.plugins.constraints.storage
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
-import org.junit.Assert
+import info.nightscout.sharedtests.TestBase
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -42,9 +42,9 @@ class StorageConstraintPluginTest : TestBase() {
         val mocked = MockedStorageConstraintPlugin({ AndroidInjector { } }, aapsLogger, rh, uiInteraction)
         // Set free space under 200(Mb) to disable loop
         mocked.memSize = 150L
-        Assert.assertEquals(false, mocked.isClosedLoopAllowed(Constraint(true)).value())
+        Assertions.assertEquals(false, mocked.isClosedLoopAllowed(Constraint(true)).value())
         // Set free space over 200(Mb) to enable loop
         mocked.memSize = 300L
-        Assert.assertEquals(true, mocked.isClosedLoopAllowed(Constraint(true)).value())
+        Assertions.assertEquals(true, mocked.isClosedLoopAllowed(Constraint(true)).value())
     }
 }

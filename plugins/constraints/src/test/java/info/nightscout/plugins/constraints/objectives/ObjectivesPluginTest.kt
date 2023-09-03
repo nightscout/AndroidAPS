@@ -2,15 +2,16 @@ package info.nightscout.plugins.constraints.objectives
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Objectives
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.constraints.R
+import info.nightscout.plugins.constraints.objectives.objectives.Objective
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,9 +28,9 @@ class ObjectivesPluginTest : TestBase() {
 
     private lateinit var objectivesPlugin: ObjectivesPlugin
 
-    val injector = HasAndroidInjector {
+    private val injector = HasAndroidInjector {
         AndroidInjector {
-            if (it is info.nightscout.plugins.constraints.objectives.objectives.Objective) {
+            if (it is Objective) {
                 it.sp = sp
                 it.rh = rh
                 it.dateUtil = dateUtil

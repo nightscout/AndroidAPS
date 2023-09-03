@@ -1,7 +1,6 @@
 package info.nightscout.plugins.constraints.signatureVerifier
 
 import dagger.Lazy
-import info.nightscout.androidaps.TestBase
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.ui.UiInteraction
@@ -11,8 +10,8 @@ import info.nightscout.plugins.constraints.versionChecker.numericVersionPart
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
-import org.junit.Assert.assertArrayEquals
-import org.junit.Assert.assertEquals
+import info.nightscout.sharedtests.TestBase
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.anyInt
@@ -22,7 +21,8 @@ import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.`when`
 
-@Suppress("SpellCheckingInspection") class VersionCheckerUtilsKtTest : TestBase() {
+@Suppress("SpellCheckingInspection")
+class VersionCheckerUtilsKtTest : TestBase() {
 
     private lateinit var versionCheckerUtils: VersionCheckerUtils
 
@@ -39,97 +39,97 @@ import org.mockito.Mockito.`when`
 
     @Test
     fun `should handle invalid version`() {
-        assertArrayEquals(intArrayOf(), versionCheckerUtils.versionDigits("definitely not version string"))
+        Assertions.assertArrayEquals(intArrayOf(), versionCheckerUtils.versionDigits("definitely not version string"))
     }
 
     @Test
     fun `should handle empty version`() {
-        assertArrayEquals(intArrayOf(), versionCheckerUtils.versionDigits(""))
+        Assertions.assertArrayEquals(intArrayOf(), versionCheckerUtils.versionDigits(""))
     }
 
     @Test
     fun `should parse 2 digit version`() {
-        assertArrayEquals(intArrayOf(0, 999), versionCheckerUtils.versionDigits("0.999-beta"))
+        Assertions.assertArrayEquals(intArrayOf(0, 999), versionCheckerUtils.versionDigits("0.999-beta"))
     }
 
     @Test
     fun `should parse 3 digit version`() {
-        assertArrayEquals(intArrayOf(6, 83, 93), versionCheckerUtils.versionDigits("6.83.93"))
+        Assertions.assertArrayEquals(intArrayOf(6, 83, 93), versionCheckerUtils.versionDigits("6.83.93"))
     }
 
     @Test
     fun `should parse 4 digit version`() {
-        assertArrayEquals(intArrayOf(42, 7, 13, 101), versionCheckerUtils.versionDigits("42.7.13.101"))
+        Assertions.assertArrayEquals(intArrayOf(42, 7, 13, 101), versionCheckerUtils.versionDigits("42.7.13.101"))
     }
 
     @Test
     fun `should parse 4 digit version with extra`() {
-        assertArrayEquals(intArrayOf(1, 2, 3, 4), versionCheckerUtils.versionDigits("1.2.3.4-RC5"))
+        Assertions.assertArrayEquals(intArrayOf(1, 2, 3, 4), versionCheckerUtils.versionDigits("1.2.3.4-RC5"))
     }
 
     @Test
     fun `should parse version but only 4 digits are taken`() {
-        assertArrayEquals(intArrayOf(67, 8, 31, 5), versionCheckerUtils.versionDigits("67.8.31.5.153.4.2"))
+        Assertions.assertArrayEquals(intArrayOf(67, 8, 31, 5), versionCheckerUtils.versionDigits("67.8.31.5.153.4.2"))
     }
 
     @Test
     fun `should keep 2 digit version`() {
-        assertEquals("1.2", "1.2".numericVersionPart())
+        Assertions.assertEquals("1.2", "1.2".numericVersionPart())
     }
 
     @Test
     fun `should keep 3 digit version`() {
-        assertEquals("1.2.3", "1.2.3".numericVersionPart())
+        Assertions.assertEquals("1.2.3", "1.2.3".numericVersionPart())
     }
 
     @Test
     fun `should keep 4 digit version`() {
-        assertEquals("1.2.3.4", "1.2.3.4".numericVersionPart())
+        Assertions.assertEquals("1.2.3.4", "1.2.3.4".numericVersionPart())
     }
 
     @Test
     fun `should strip 2 digit version RC`() {
-        assertEquals("1.2", "1.2-RC1".numericVersionPart())
+        Assertions.assertEquals("1.2", "1.2-RC1".numericVersionPart())
     }
 
     @Test
     fun `should strip 2 digit version RC old format`() {
-        assertEquals("1.2", "1.2RC1".numericVersionPart())
+        Assertions.assertEquals("1.2", "1.2RC1".numericVersionPart())
     }
 
     @Test
     fun `should strip 2 digit version RC without digit`() {
-        assertEquals("1.2", "1.2-RC".numericVersionPart())
+        Assertions.assertEquals("1.2", "1.2-RC".numericVersionPart())
     }
 
     @Test
     fun `should strip 2 digit version dev`() {
-        assertEquals("1.2", "1.2-dev".numericVersionPart())
+        Assertions.assertEquals("1.2", "1.2-dev".numericVersionPart())
     }
 
     @Test
     fun `should strip 2 digit version dev old format 1`() {
-        assertEquals("1.2", "1.2dev".numericVersionPart())
+        Assertions.assertEquals("1.2", "1.2dev".numericVersionPart())
     }
 
     @Test
     fun `should strip 2 digit version dev old format 2`() {
-        assertEquals("1.2", "1.2dev-a3".numericVersionPart())
+        Assertions.assertEquals("1.2", "1.2dev-a3".numericVersionPart())
     }
 
     @Test
     fun `should strip 3 digit version RC`() {
-        assertEquals("1.2.3", "1.2.3-RC1".numericVersionPart())
+        Assertions.assertEquals("1.2.3", "1.2.3-RC1".numericVersionPart())
     }
 
     @Test
     fun `should strip 4 digit version RC`() {
-        assertEquals("1.2.3.4", "1.2.3.4-RC5".numericVersionPart())
+        Assertions.assertEquals("1.2.3.4", "1.2.3.4-RC5".numericVersionPart())
     }
 
     @Test
     fun `should strip even with dot`() {
-        assertEquals("1.2", "1.2.RC5".numericVersionPart())
+        Assertions.assertEquals("1.2", "1.2.RC5".numericVersionPart())
     }
 
     @Suppress("SpellCheckingInspection")
@@ -143,7 +143,7 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         val detectedVersion: String? = versionCheckerUtils.findVersion(buildGradle)
-        assertEquals("2.2.2", detectedVersion)
+        Assertions.assertEquals("2.2.2", detectedVersion)
     }
 
     // In case we merge a "x.x.x-dev" into master, don't see it as update.
@@ -157,14 +157,14 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         val detectedVersion: String? = versionCheckerUtils.findVersion(buildGradle)
-        assertEquals(null, detectedVersion)
+        Assertions.assertEquals(null, detectedVersion)
     }
 
     @Test
     fun findVersionMatchesDoesNotMatchErrorResponse() {
         val buildGradle = """<html><body>Balls! No build.gradle here. Move along</body><html>"""
         val detectedVersion: String? = versionCheckerUtils.findVersion(buildGradle)
-        assertEquals(null, detectedVersion)
+        Assertions.assertEquals(null, detectedVersion)
     }
 
     @Test
@@ -228,6 +228,7 @@ import org.mockito.Mockito.`when`
 
         verify(uiInteraction, times(0)).addNotification(anyInt(), anyString(), anyInt())
     }
+
     @Test
     fun `find higher version`() {
         val buildGradle = """blabla
@@ -345,7 +346,7 @@ import org.mockito.Mockito.`when`
         verify(uiInteraction, times(0)).addNotification(anyInt(), anyString(), anyInt())
     }
 
-   @Test
+    @Test
     fun `warn on beta`() {
         val buildGradle = """blabla
             |   android {
@@ -355,10 +356,10 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.2-beta1")
-       verify(uiInteraction, times(1)).addNotification(anyInt(), anyString(), anyInt())
+        verify(uiInteraction, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
-   @Test
+    @Test
     fun `warn on rc`() {
         val buildGradle = """blabla
             |   android {
@@ -368,13 +369,13 @@ import org.mockito.Mockito.`when`
             |   appName = "Aaoeu"
         """.trimMargin()
         versionCheckerUtils.compareWithCurrentVersion(versionCheckerUtils.findVersion(buildGradle), currentVersion = "2.2-rc1")
-       verify(uiInteraction, times(1)).addNotification(anyInt(), anyString(), anyInt())
+        verify(uiInteraction, times(1)).addNotification(anyInt(), anyString(), anyInt())
     }
 
     @BeforeEach
     fun `set time`() {
         `when`(dateUtil.now()).thenReturn(10000000000L)
-        assertEquals(10000000000L, dateUtil.now())
+        Assertions.assertEquals(10000000000L, dateUtil.now())
 
         `when`(rh.gs(anyInt(), anyString())).thenReturn("")
     }
