@@ -531,6 +531,10 @@ class DataSyncSelectorXdripImpl @Inject constructor(
         sp.putLong(R.string.key_xdrip_profile_store_last_synced_timestamp, lastSynced)
     }
 
+    override fun profileReceived(timestamp: Long) {
+        sp.putLong(R.string.key_xdrip_profile_store_last_synced_timestamp, timestamp)
+    }
+
     private fun processChangedProfileStore() {
         if (!isEnabled) return
         val lastSync = sp.getLong(R.string.key_xdrip_profile_store_last_synced_timestamp, 0)

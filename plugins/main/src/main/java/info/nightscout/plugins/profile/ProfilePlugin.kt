@@ -168,7 +168,7 @@ class ProfilePlugin @Inject constructor(
     }
 
     @Synchronized
-    override fun storeSettings(activity: FragmentActivity?, emptyCreated: Boolean) {
+    override fun storeSettings(activity: FragmentActivity?, timestamp: Long) {
         for (i in 0 until numOfProfiles) {
             profiles[i].run {
                     val localProfileNumbered = Constants.LOCAL_PROFILE + "_" + i + "_"
@@ -184,7 +184,7 @@ class ProfilePlugin @Inject constructor(
         }
         sp.putInt(Constants.LOCAL_PROFILE + "_profiles", numOfProfiles)
 
-        sp.putLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, if (emptyCreated) 0 else dateUtil.now())
+        sp.putLong(info.nightscout.core.utils.R.string.key_local_profile_last_change, timestamp)
         createAndStoreConvertedProfile()
         isEdited = false
         aapsLogger.debug(LTag.PROFILE, "Storing settings: " + rawProfile?.data.toString())
@@ -249,13 +249,12 @@ class ProfilePlugin @Inject constructor(
                     )
                 }
             }
-            if (newProfiles.size > 0) {
+            if (newProfiles.isNotEmpty()) {
                 profiles = newProfiles
                 currentProfileIndex = 0
                 isEdited = false
-                createAndStoreConvertedProfile()
                 aapsLogger.debug(LTag.PROFILE, "Accepted ${profiles.size} profiles")
-                storeSettings()
+                storeSettings(timestamp = store.getStartDate())
                 rxBus.send(EventLocalProfileChanged())
             } else
                 aapsLogger.debug(LTag.PROFILE, "ProfileStore not accepted")
@@ -354,7 +353,7 @@ class ProfilePlugin @Inject constructor(
         )
         currentProfileIndex = profiles.size - 1
         createAndStoreConvertedProfile()
-        storeSettings(emptyCreated = true)
+        storeSettings(timestamp = 0)
     }
 
     fun cloneProfile() {
@@ -363,7 +362,7 @@ class ProfilePlugin @Inject constructor(
         profiles.add(p)
         currentProfileIndex = profiles.size - 1
         createAndStoreConvertedProfile()
-        storeSettings()
+        storeSettings(timestamp = dateUtil.now())
         isEdited = false
     }
 
@@ -371,16 +370,16 @@ class ProfilePlugin @Inject constructor(
         profiles.add(p)
         currentProfileIndex = profiles.size - 1
         createAndStoreConvertedProfile()
-        storeSettings()
+        storeSettings(timestamp = dateUtil.now())
         isEdited = false
     }
 
     fun removeCurrentProfile() {
         profiles.removeAt(currentProfileIndex)
-        if (profiles.size == 0) addNewProfile()
+        if (profiles.isEmpty()) addNewProfile()
         currentProfileIndex = 0
         createAndStoreConvertedProfile()
-        storeSettings()
+        storeSettings(timestamp = dateUtil.now())
         isEdited = false
     }
 

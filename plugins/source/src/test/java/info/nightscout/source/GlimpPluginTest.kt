@@ -18,7 +18,7 @@ class GlimpPluginTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        glimpPlugin = GlimpPlugin({ AndroidInjector { } }, rh, aapsLogger, sp)
+        glimpPlugin = GlimpPlugin({ AndroidInjector { } }, rh, aapsLogger)
     }
 
     @Test fun advancedFilteringSupported() {

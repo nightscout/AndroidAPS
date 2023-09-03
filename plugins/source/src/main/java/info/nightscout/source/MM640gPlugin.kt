@@ -16,7 +16,6 @@ import info.nightscout.interfaces.source.BgSource
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import kotlinx.coroutines.Dispatchers
 import org.json.JSONArray
@@ -28,15 +27,15 @@ import javax.inject.Singleton
 class MM640gPlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
-    aapsLogger: AAPSLogger,
-    private val sp: SP
+    aapsLogger: AAPSLogger
 ) : PluginBase(
     PluginDescription()
-    .mainType(PluginType.BGSOURCE)
-    .fragmentClass(BGSourceFragment::class.java.name)
-    .pluginIcon(info.nightscout.core.main.R.drawable.ic_generic_cgm)
-    .pluginName(R.string.mm640g)
-    .description(R.string.description_source_mm640g),
+        .mainType(PluginType.BGSOURCE)
+        .fragmentClass(BGSourceFragment::class.java.name)
+        .preferencesId(R.xml.pref_bgsource)
+        .pluginIcon(info.nightscout.core.main.R.drawable.ic_generic_cgm)
+        .pluginName(R.string.mm640g)
+        .description(R.string.description_source_mm640g),
     aapsLogger, rh, injector
 ), BgSource {
 
@@ -75,6 +74,7 @@ class MM640gPlugin @Inject constructor(
                                         trendArrow = GlucoseValue.TrendArrow.fromString(jsonObject.getString("direction")),
                                         sourceSensor = GlucoseValue.SourceSensor.MM_600_SERIES
                                     )
+
                                 else  -> aapsLogger.debug(LTag.BGSOURCE, "Unknown entries type: $type")
                             }
                         }
@@ -98,8 +98,4 @@ class MM640gPlugin @Inject constructor(
             return ret
         }
     }
-
-    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.MM_600_SERIES && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
-
 }

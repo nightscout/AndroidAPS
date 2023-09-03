@@ -44,4 +44,13 @@ interface DataSyncSelector {
     fun resetToNextFullSync()
 
     suspend fun doUpload()
+
+    /**
+     * This function called when new profile is received from NS
+     * Plugin should update internal timestamp to not send Profile back as a new/updated
+     *
+     * @param timestamp received timestamp of profile
+     *
+     */
+    fun profileReceived(timestamp: Long)
 }

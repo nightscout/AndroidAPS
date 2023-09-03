@@ -47,6 +47,15 @@ interface OverviewData {
      * BG
      */
 
+    /**
+     * Get newest glucose value from bucketed data.
+     * If there are less than 3 glucose values, bucketed data is not created.
+     * In this case take newest [GlucoseValue] from db and convert it to [InMemoryGlucoseValue]
+     *
+     * Intended for display on screen only
+     *
+     * @return newest glucose value
+     */
     fun lastBg(autosensDataStore: AutosensDataStore): InMemoryGlucoseValue?
     fun isLow(autosensDataStore: AutosensDataStore): Boolean
     fun isHigh(autosensDataStore: AutosensDataStore): Boolean

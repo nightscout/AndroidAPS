@@ -335,7 +335,7 @@ class ProfileFragment : DaggerFragment() {
                         ?: ""
                 )
             )
-            profilePlugin.storeSettings(activity)
+            profilePlugin.storeSettings(activity, dateUtil.now())
             build()
         }
         updateGUI()

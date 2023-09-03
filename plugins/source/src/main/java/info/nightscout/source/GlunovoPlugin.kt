@@ -45,8 +45,8 @@ class GlunovoPlugin @Inject constructor(
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon(info.nightscout.core.main.R.drawable.ic_glunovo)
-        .pluginName(R.string.glunovo)
         .preferencesId(R.xml.pref_bgsource)
+        .pluginName(R.string.glunovo)
         .shortName(R.string.glunovo)
         .description(R.string.description_source_glunovo),
     aapsLogger, resourceHelper, injector
@@ -166,9 +166,6 @@ class GlunovoPlugin @Inject constructor(
             aapsLogger.error(LTag.CORE, "Exception", e)
         }
     }
-
-    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.GLUNOVO_NATIVE && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
 
     companion object {
 

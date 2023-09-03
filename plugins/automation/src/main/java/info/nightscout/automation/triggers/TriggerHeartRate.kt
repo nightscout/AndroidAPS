@@ -31,7 +31,7 @@ class TriggerHeartRate(injector: HasAndroidInjector) : Trigger(injector) {
             return true
         }
         val start = dateUtil.now() - averageHeartRateDurationMillis
-        val hrs = repository.getHeartRatesFromTime(start)
+        val hrs = repository.getHeartRatesFromTime(start).blockingGet()
         val duration = hrs.takeUnless { it.isEmpty() }?.sumOf { hr -> hr.duration } ?: 0L
         if (duration == 0L) {
             aapsLogger.info(LTag.AUTOMATION, "HR not ready, no heart rate measured for ${friendlyDescription()}")

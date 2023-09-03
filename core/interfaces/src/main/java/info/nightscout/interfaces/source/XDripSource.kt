@@ -1,5 +1,5 @@
 package info.nightscout.interfaces.source
 
-interface XDrip {
+interface XDripSource {
     fun isEnabled(): Boolean
 }

@@ -14,6 +14,7 @@
     <!-- overview fragment -->
     <string name="ble_status_label">État BT</string>
     <string name="last_connection_label">Dernière connexion</string>
+    <string name="active_bolus_label">Bolus actif</string>
     <string name="pump_state_label">État de la pompe</string>
     <string name="active_alarms_label">Alarmes actives</string>
     <string name="reservoir_level"> %.2f U</string>

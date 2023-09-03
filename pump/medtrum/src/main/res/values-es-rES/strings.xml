@@ -14,6 +14,7 @@
     <!-- overview fragment -->
     <string name="ble_status_label">Estado BLE</string>
     <string name="last_connection_label">Última conexión</string>
+    <string name="active_bolus_label">Bolo activo</string>
     <string name="pump_state_label">Estado de la bomba</string>
     <string name="active_alarms_label">Alarmas activas</string>
     <string name="reservoir_level"> %.2f U</string>

@@ -11,5 +11,8 @@
     <string name="insulin_peak_time">Peaktid [min]</string>
     <string name="free_peak_oref">Free-Peak Oref</string>
     <string name="rapid_acting_oref">Rapid-Acting Oref</string>
+    <string name="ultra_rapid_oref">Ultra-Rapid Oref</string>
     <string name="dia_too_short">%1$f tim DIA är för kort. Använder %2$f istället!</string>
+    <string name="fast_acting_insulin_comment">Novorapid, Novolog, Humalog</string>
+    <string name="ultra_fast_acting_insulin_comment">Fiasp</string>
 </resources>

@@ -21,7 +21,6 @@ import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.source.DoingOwnUploadSource
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.sync.NsClient
 import info.nightscout.interfaces.sync.Sync
@@ -129,9 +128,6 @@ class NSClientPlugin @Inject constructor(
             preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_carbs_req))?.isVisible = false
         }
         preferenceFragment.findPreference<SwitchPreference>(rh.gs(R.string.key_ns_receive_tbr_eb))?.isVisible = config.isEngineeringMode()
-        if (activePlugin.activeBgSource is DoingOwnUploadSource) {
-            preferenceFragment.findPreference<SwitchPreference>(rh.gs(info.nightscout.core.utils.R.string.key_do_ns_upload))?.isVisible = false
-        }
     }
 
     override val hasWritePermission: Boolean get() = nsClientService?.hasWriteAuth ?: false

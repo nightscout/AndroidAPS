@@ -4,7 +4,7 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.danars.encryption.BleEncryption
 import info.nightscout.rx.logging.LTag
 
-class DanaRSPacketHistoryBolus constructor(
+class DanaRSPacketHistoryBolus(
     injector: HasAndroidInjector,
     from: Long = 0
 ) : DanaRSPacketHistory(injector, from) {

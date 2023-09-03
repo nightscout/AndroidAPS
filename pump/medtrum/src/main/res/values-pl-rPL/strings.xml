@@ -14,6 +14,7 @@
     <!-- overview fragment -->
     <string name="ble_status_label">Status Bluetooth Low Energy</string>
     <string name="last_connection_label">Ostatnie połączenie</string>
+    <string name="active_bolus_label">Aktywny bolus</string>
     <string name="pump_state_label">Status pompy</string>
     <string name="active_alarms_label">Aktywne alarmy</string>
     <string name="reservoir_level"> %.2f U</string>

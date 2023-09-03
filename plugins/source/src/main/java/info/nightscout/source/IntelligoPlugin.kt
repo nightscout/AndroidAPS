@@ -48,8 +48,8 @@ class IntelligoPlugin @Inject constructor(
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon(info.nightscout.core.ui.R.drawable.ic_intelligo)
-        .pluginName(R.string.intelligo)
         .preferencesId(R.xml.pref_bgsource)
+        .pluginName(R.string.intelligo)
         .shortName(R.string.intelligo)
         .description(R.string.description_source_intelligo),
     aapsLogger, resourceHelper, injector
@@ -175,14 +175,9 @@ class IntelligoPlugin @Inject constructor(
         }
     }
 
-    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.INTELLIGO_NATIVE && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
-
     companion object {
 
         const val AUTHORITY = "alexpr.co.uk.infinivocgm.intelligo.cgm_db.CgmExternalProvider"
-
-        //const val AUTHORITY = "alexpr.co.uk.infinivocgm.cgm_db.CgmExternalProvider/"
         const val TABLE_NAME = "CgmReading"
         const val INTERVAL = 180000L // 3 min
     }

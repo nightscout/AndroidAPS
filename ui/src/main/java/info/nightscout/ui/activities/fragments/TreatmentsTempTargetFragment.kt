@@ -105,8 +105,7 @@ class TreatmentsTempTargetFragment : DaggerFragment(), MenuProvider {
                 uel.log(Action.TREATMENTS_NS_REFRESH, Sources.Treatments)
                 disposable +=
                     Completable.fromAction {
-                        repository.deleteAllEffectiveProfileSwitches()
-                        repository.deleteAllProfileSwitches()
+                        repository.deleteAllTempTargetEntries()
                     }
                         .subscribeOn(aapsSchedulers.io)
                         .observeOn(aapsSchedulers.main)

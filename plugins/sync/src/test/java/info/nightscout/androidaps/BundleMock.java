@@ -24,7 +24,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-@SuppressWarnings({"unused", "rawtypes", "SuspiciousMethodCalls", "unchecked"})
+@SuppressWarnings({"unused", "rawtypes", "SuspiciousMethodCalls", "unchecked", "deprecation"})
 public final class BundleMock {
 
     public static Bundle mock() {

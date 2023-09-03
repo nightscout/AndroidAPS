@@ -37,9 +37,6 @@ internal interface TemporaryTargetDao : TraceableDao<TemporaryTarget> {
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE timestamp >= :timestamp AND referenceId IS NULL ORDER BY timestamp ASC")
     fun getTemporaryTargetDataIncludingInvalidFromTime(timestamp: Long): Single<List<TemporaryTarget>>
 
-    @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE isValid = 1 AND referenceId IS NULL ORDER BY timestamp ASC")
-    fun getTemporaryTargetData(): Single<List<TemporaryTarget>>
-
     // This query will be used with v3 to get all changed records
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE id > :id AND referenceId IS NULL OR id IN (SELECT DISTINCT referenceId FROM $TABLE_TEMPORARY_TARGETS WHERE id > :id) ORDER BY id ASC")
     fun getModifiedFrom(id: Long): Single<List<TemporaryTarget>>

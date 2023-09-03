@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Query
 import info.nightscout.database.entities.HeartRate
 import info.nightscout.database.entities.TABLE_HEART_RATE
+import io.reactivex.rxjava3.core.Single
 
 @Dao
 internal interface HeartRateDao : TraceableDao<HeartRate> {
@@ -21,7 +22,7 @@ internal interface HeartRateDao : TraceableDao<HeartRate> {
     override fun deleteTrackedChanges(): Int
 
     @Query("SELECT * FROM $TABLE_HEART_RATE WHERE timestamp >= :timestamp ORDER BY timestamp")
-    fun getFromTime(timestamp: Long): List<HeartRate>
+    fun getFromTime(timestamp: Long): Single<List<HeartRate>>
 
     @Query("SELECT * FROM $TABLE_HEART_RATE WHERE timestamp BETWEEN :startMillis AND :endMillis ORDER BY timestamp")
     fun getFromTimeToTime(startMillis: Long, endMillis: Long): List<HeartRate>

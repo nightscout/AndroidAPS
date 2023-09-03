@@ -4,6 +4,7 @@ import info.nightscout.core.utils.waitMillis
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.interfaces.sync.DataSyncSelector
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.sync.R
@@ -74,6 +75,9 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private var running = false
     private val sync = Any()
+
+    private val bgUploadEnabled get() = sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false) && activePlugin.activeBgSource !is NSClientSource
+
     override suspend fun doUpload() {
         synchronized(sync) {
             if (running) {
@@ -154,7 +158,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastBolusIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_bolus_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting Bolus data sync from $lastSynced")
             sp.putLong(R.string.key_ns_bolus_last_synced_id, lastSynced)
         }
     }
@@ -203,7 +206,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastCarbsIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_carbs_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting Carbs data sync from $lastSynced")
             sp.putLong(R.string.key_ns_carbs_last_synced_id, lastSynced)
         }
     }
@@ -252,7 +254,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastBolusCalculatorResultsIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_bolus_calculator_result_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting BolusCalculatorResult data sync from $lastSynced")
             sp.putLong(R.string.key_ns_bolus_calculator_result_last_synced_id, lastSynced)
         }
     }
@@ -301,7 +302,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastTempTargetsIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_temporary_target_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting TemporaryTarget data sync from $lastSynced")
             sp.putLong(R.string.key_ns_temporary_target_last_synced_id, lastSynced)
         }
     }
@@ -350,7 +350,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastFoodIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_food_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting Food data sync from $lastSynced")
             sp.putLong(R.string.key_ns_food_last_synced_id, lastSynced)
         }
     }
@@ -399,7 +398,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastGlucoseValueIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_glucose_value_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting GlucoseValue data sync from $lastSynced")
             sp.putLong(R.string.key_ns_glucose_value_last_synced_id, lastSynced)
         }
     }
@@ -419,7 +417,7 @@ class DataSyncSelectorV1 @Inject constructor(
             appRepository.getNextSyncElementGlucoseValue(startId).blockingGet()?.let { gv ->
                 aapsLogger.info(LTag.NSCLIENT, "Loading GlucoseValue data Start: $startId ${gv.first} forID: ${gv.second.id} ")
                 val dataPair = DataSyncSelector.PairGlucoseValue(gv.first, gv.second.id)
-                if (activePlugin.activeBgSource.shouldUploadToNs(gv.first)) {
+                if (bgUploadEnabled) {
                     when {
                         // new record with existing NS id => must be coming from NS => ignore
                         gv.first.id == gv.second.id && gv.first.interfaceIDs.nightscoutId != null ->
@@ -450,7 +448,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastTherapyEventIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_therapy_event_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting TherapyEvents data sync from $lastSynced")
             sp.putLong(R.string.key_ns_therapy_event_last_synced_id, lastSynced)
         }
     }
@@ -499,7 +496,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastDeviceStatusIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_device_status_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting DeviceStatus data sync from $lastSynced")
             sp.putLong(R.string.key_ns_device_status_last_synced_id, lastSynced)
         }
     }
@@ -531,7 +527,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastTemporaryBasalIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_temporary_basal_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting TemporaryBasal data sync from $lastSynced")
             sp.putLong(R.string.key_ns_temporary_basal_last_synced_id, lastSynced)
         }
     }
@@ -583,7 +578,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastExtendedBolusIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_extended_bolus_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting ExtendedBolus data sync from $lastSynced")
             sp.putLong(R.string.key_ns_extended_bolus_last_synced_id, lastSynced)
         }
     }
@@ -635,7 +629,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastProfileSwitchIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_profile_switch_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting ProfileSwitch data sync from $lastSynced")
             sp.putLong(R.string.key_ns_profile_switch_last_synced_id, lastSynced)
         }
     }
@@ -684,7 +677,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastEffectiveProfileSwitchIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_effective_profile_switch_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting EffectiveProfileSwitch data sync from $lastSynced")
             sp.putLong(R.string.key_ns_effective_profile_switch_last_synced_id, lastSynced)
         }
     }
@@ -733,7 +725,6 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastOfflineEventIdIfGreater(lastSynced: Long) {
         if (lastSynced > sp.getLong(R.string.key_ns_offline_event_last_synced_id, 0)) {
-            //aapsLogger.debug(LTag.NSCLIENT, "Setting OfflineEvent data sync from $lastSynced")
             sp.putLong(R.string.key_ns_offline_event_last_synced_id, lastSynced)
         }
     }
@@ -782,6 +773,10 @@ class DataSyncSelectorV1 @Inject constructor(
 
     private fun confirmLastProfileStore(lastSynced: Long) {
         sp.putLong(R.string.key_ns_profile_store_last_synced_timestamp, lastSynced)
+    }
+
+    override fun profileReceived(timestamp: Long) {
+        sp.putLong(R.string.key_ns_profile_store_last_synced_timestamp, timestamp)
     }
 
     private suspend fun processChangedProfileStore() {

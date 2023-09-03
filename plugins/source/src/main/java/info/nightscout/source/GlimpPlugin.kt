@@ -17,7 +17,6 @@ import info.nightscout.interfaces.source.BgSource
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -27,15 +26,14 @@ import javax.inject.Singleton
 class GlimpPlugin @Inject constructor(
     injector: HasAndroidInjector,
     rh: ResourceHelper,
-    aapsLogger: AAPSLogger,
-    private val sp: SP
+    aapsLogger: AAPSLogger
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.BGSOURCE)
         .fragmentClass(BGSourceFragment::class.java.name)
         .pluginIcon(info.nightscout.core.main.R.drawable.ic_glimp)
-        .pluginName(R.string.glimp)
         .preferencesId(R.xml.pref_bgsource)
+        .pluginName(R.string.glimp)
         .description(R.string.description_source_glimp),
     aapsLogger, rh, injector
 ), BgSource {
@@ -78,8 +76,4 @@ class GlimpPlugin @Inject constructor(
             return ret
         }
     }
-
-    override fun shouldUploadToNs(glucoseValue: GlucoseValue): Boolean =
-        glucoseValue.sourceSensor == GlucoseValue.SourceSensor.LIBRE_1_GLIMP && sp.getBoolean(info.nightscout.core.utils.R.string.key_do_ns_upload, false)
-
 }

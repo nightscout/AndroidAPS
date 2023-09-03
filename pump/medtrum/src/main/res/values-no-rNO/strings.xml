@@ -14,6 +14,7 @@
     <!-- overview fragment -->
     <string name="ble_status_label">Bluetooth Status</string>
     <string name="last_connection_label">Siste tilkobling</string>
+    <string name="active_bolus_label">Aktiv bolus</string>
     <string name="pump_state_label">Pumpestatus</string>
     <string name="active_alarms_label">Aktive alarmer</string>
     <string name="reservoir_level"> %.2f E</string>
