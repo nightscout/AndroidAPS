@@ -4,12 +4,14 @@ package info.nightscout.androidaps.watchfaces
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Point
 import android.graphics.Typeface
+import android.graphics.drawable.Drawable
 import android.support.wearable.watchface.WatchFaceStyle
 import android.util.TypedValue
 import android.view.Gravity
@@ -61,6 +63,7 @@ class CustomWatchface : BaseWatchFace() {
     private val TEMPLATE_RESOLUTION = 400
     private var lowBatColor = Color.RED
     private var bgColor = Color.WHITE
+    private var drawableDataMap: CwfDrawableDataMap = mutableMapOf()
 
     override fun onCreate() {
         super.onCreate()
@@ -88,7 +91,7 @@ class CustomWatchface : BaseWatchFace() {
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun setDataFields() {
         super.setDataFields()
-        binding.direction2.setImageDrawable(this.resources.getDrawable(TrendArrowMap.icon(singleBg.slopeArrow)))
+        binding.direction2.setImageDrawable(TrendArrowMap.drawable(singleBg.slopeArrow, resources, drawableDataMap))
         // rotate the second hand.
         binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
         // rotate the minute hand.
@@ -100,7 +103,7 @@ class CustomWatchface : BaseWatchFace() {
     override fun setColorDark() {
         setWatchfaceStyle()
         binding.sgv.setTextColor(bgColor)
-        binding.direction2.colorFilter = changeDrawableColor(bgColor)
+        binding.direction2.setColorFilter(changeDrawableColor(bgColor))
 
         if (ageLevel != 1)
             binding.timestamp.setTextColor(ContextCompat.getColor(this, R.color.dark_TimestampOld))
@@ -128,7 +131,6 @@ class CustomWatchface : BaseWatchFace() {
             getString(R.string.hour_minute_second, dateUtil.hourString(), dateUtil.minuteString(), dateUtil.secondString())
         else
             getString(R.string.hour_minute, dateUtil.hourString(), dateUtil.minuteString())
-        //binding.time.text = "${dateUtil.hourString()}:${dateUtil.minuteString()}" + if (showSecond) ":${dateUtil.secondString()}" else ""
         binding.second.text = dateUtil.secondString()
         // rotate the second hand.
         binding.secondHand.rotation = TimeOfDay().secondOfMinute * 6f
@@ -146,7 +148,7 @@ class CustomWatchface : BaseWatchFace() {
             updatePref(it.customWatchfaceData.metadata)
             try {
                 val json = JSONObject(it.customWatchfaceData.json)
-                val drawableDataMap = it.customWatchfaceData.drawableDatas
+                drawableDataMap = it.customWatchfaceData.drawableDatas
                 enableSecond = json.optBoolean(ENABLESECOND.key) && sp.getBoolean(R.string.key_show_seconds, true)
                 highColor = getColor(json.optString(HIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_highColor))
                 midColor = getColor(json.optString(MIDCOLOR.key), ContextCompat.getColor(this, R.color.inrange))
@@ -167,17 +169,10 @@ class CustomWatchface : BaseWatchFace() {
                     -1L  -> lowColor
                     else -> midColor
                 }
-                val backGroundDrawable = when (singleBg.sgvLevel) {
-                    1L   -> drawableDataMap[CwfDrawableFileMap.BACKGROUND_HIGH]?.toDrawable(resources) ?: drawableDataMap[CwfDrawableFileMap.BACKGROUND]?.toDrawable(resources)
-                    0L   -> drawableDataMap[CwfDrawableFileMap.BACKGROUND]?.toDrawable(resources)
-                    -1L  -> drawableDataMap[CwfDrawableFileMap.BACKGROUND_LOW]?.toDrawable(resources) ?: drawableDataMap[CwfDrawableFileMap.BACKGROUND]?.toDrawable(resources)
-                    else -> drawableDataMap[CwfDrawableFileMap.BACKGROUND]?.toDrawable(resources)
-                }
 
                 binding.mainLayout.forEach { view ->
                     ViewMap.fromId(view.id)?.let { id ->
-                        if (json.has(id.key)) {
-                            val viewJson = json.getJSONObject(id.key)
+                        json.optJSONObject(id.key)?.also { viewJson ->
                             val width = (viewJson.optInt(WIDTH.key) * zoomFactor).toInt()
                             val height = (viewJson.optInt(HEIGHT.key) * zoomFactor).toInt()
                             val params = FrameLayout.LayoutParams(width, height)
@@ -202,18 +197,14 @@ class CustomWatchface : BaseWatchFace() {
 
                                 is ImageView -> {
                                     view.clearColorFilter()
-                                    val drawable = if (id.key == CwfDrawableFileMap.BACKGROUND.key)
-                                        backGroundDrawable
-                                    else
-                                        drawableDataMap[CwfDrawableFileMap.fromKey(id.key)]?.toDrawable(resources)
-                                    drawable?.let {
-                                        if (viewJson.has(COLOR.key))
+                                    id.drawable(resources, drawableDataMap, singleBg.sgvLevel)?.let {
+                                        if (viewJson.has(COLOR.key))        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
                                             it.colorFilter = changeDrawableColor(getColor(viewJson.optString(COLOR.key)))
                                         else
                                             it.clearColorFilter()
                                         view.setImageDrawable(it)
                                     } ?: apply {
-                                        view.setImageDrawable(CwfDrawableFileMap.fromKey(id.key).icon?.let { context.getDrawable(it) })
+                                        view.setImageDrawable(id.defaultDrawable?.let {resources.getDrawable(it)})
                                         if (viewJson.has(COLOR.key))
                                             view.setColorFilter(getColor(viewJson.optString(COLOR.key)))
                                         else
@@ -222,7 +213,7 @@ class CustomWatchface : BaseWatchFace() {
                                 }
 
                             }
-                        } else {
+                        } ?:apply {
                             view.visibility = View.GONE
                             if (view is TextView) {
                                 view.text = ""
@@ -327,7 +318,7 @@ class CustomWatchface : BaseWatchFace() {
         JsonKeyValues.VISIBLE.key   -> pref.toVisibility()
         JsonKeyValues.INVISIBLE.key -> pref.toVisibilityKeepSpace()
         JsonKeyValues.GONE.key      -> View.GONE
-        else        -> View.GONE
+        else                        -> View.GONE
     }
 
     private fun getVisibility(visibility: Int): String = when (visibility) {
@@ -373,7 +364,11 @@ class CustomWatchface : BaseWatchFace() {
         if (color == JsonKeyValues.BGCOLOR.key)
             bgColor
         else
-            try { Color.parseColor(color) } catch (e: Exception) { defaultColor }
+            try {
+                Color.parseColor(color)
+            } catch (e: Exception) {
+                defaultColor
+            }
 
     private fun manageSpecificViews() {
         //Background should fill all the watchface and must be visible
@@ -388,41 +383,98 @@ class CustomWatchface : BaseWatchFace() {
         // Update timePeriod visibility
         binding.timePeriod.visibility = (binding.timePeriod.visibility == View.VISIBLE && android.text.format.DateFormat.is24HourFormat(this).not()).toVisibility()
     }
-    private enum class ViewMap(val key: String, @IdRes val id: Int, @StringRes val pref: Int?) {
 
-        BACKGROUND(ViewKeys.BACKGROUND.key, R.id.background, null),
-        CHART(ViewKeys.CHART.key, R.id.chart, null),
-        COVER_CHART(ViewKeys.COVER_CHART.key, R.id.cover_chart, null),
-        FREETEXT1(ViewKeys.FREETEXT1.key, R.id.freetext1, null),
-        FREETEXT2(ViewKeys.FREETEXT2.key, R.id.freetext2, null),
-        FREETEXT3(ViewKeys.FREETEXT3.key, R.id.freetext3, null),
-        FREETEXT4(ViewKeys.FREETEXT4.key, R.id.freetext4, null),
-        IOB1(ViewKeys.IOB1.key, R.id.iob1, R.string.key_show_iob),
-        IOB2(ViewKeys.IOB2.key, R.id.iob2, R.string.key_show_iob),
-        COB1(ViewKeys.COB1.key, R.id.cob1, R.string.key_show_cob),
-        COB2(ViewKeys.COB2.key, R.id.cob2, R.string.key_show_cob),
-        DELTA(ViewKeys.DELTA.key, R.id.delta, R.string.key_show_delta),
-        AVG_DELTA(ViewKeys.AVG_DELTA.key, R.id.avg_delta, R.string.key_show_avg_delta),
-        UPLOADER_BATTERY(ViewKeys.UPLOADER_BATTERY.key, R.id.uploader_battery, R.string.key_show_uploader_battery),
-        RIG_BATTERY(ViewKeys.RIG_BATTERY.key, R.id.rig_battery, R.string.key_show_rig_battery),
-        BASALRATE(ViewKeys.BASALRATE.key, R.id.basalRate, R.string.key_show_temp_basal),
-        BGI(ViewKeys.BGI.key, R.id.bgi, R.string.key_show_bgi),
-        TIME(ViewKeys.TIME.key, R.id.time, null),
-        HOUR(ViewKeys.HOUR.key, R.id.hour, null),
-        MINUTE(ViewKeys.MINUTE.key, R.id.minute, null),
-        SECOND(ViewKeys.SECOND.key, R.id.second, R.string.key_show_seconds),
-        TIMEPERIOD(ViewKeys.TIMEPERIOD.key, R.id.timePeriod, null),
-        DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name, null),
-        DAY(ViewKeys.DAY.key, R.id.day, null),
-        MONTH(ViewKeys.MONTH.key, R.id.month, null),
-        LOOP(ViewKeys.LOOP.key, R.id.loop, R.string.key_show_external_status),
-        DIRECTION(ViewKeys.DIRECTION.key, R.id.direction2, R.string.key_show_direction),
-        TIMESTAMP(ViewKeys.TIMESTAMP.key, R.id.timestamp, R.string.key_show_ago),
-        SGV(ViewKeys.SGV.key, R.id.sgv, R.string.key_show_bg),
-        COVER_PLATE(ViewKeys.COVER_PLATE.key, R.id.cover_plate, null),
-        HOUR_HAND(ViewKeys.HOUR_HAND.key, R.id.hour_hand, null),
-        MINUTE_HAND(ViewKeys.MINUTE_HAND.key, R.id.minute_hand, null),
-        SECOND_HAND(ViewKeys.SECOND_HAND.key, R.id.second_hand, R.string.key_show_seconds);
+    private enum class ViewMap(
+        val key: String,
+        @IdRes val id: Int,
+        @StringRes val pref: Int?,
+        @IdRes val defaultDrawable: Int?,
+        val customDrawable: CwfDrawableFileMap?,
+        val customHigh:CwfDrawableFileMap?,
+        val customLow: CwfDrawableFileMap?
+    ) {
+
+        BACKGROUND(
+            ViewKeys.BACKGROUND.key,
+            R.id.background,
+            null,
+            info.nightscout.shared.R.drawable.background,
+            CwfDrawableFileMap.BACKGROUND,
+            CwfDrawableFileMap.BACKGROUND_HIGH,
+            CwfDrawableFileMap.BACKGROUND_LOW
+        ),
+        CHART(ViewKeys.CHART.key, R.id.chart, null, null, null, null, null),
+        COVER_CHART(
+            ViewKeys.COVER_CHART.key,
+            R.id.cover_chart,
+            null,
+            null,
+            CwfDrawableFileMap.COVER_CHART,
+            CwfDrawableFileMap.COVER_CHART_HIGH,
+            CwfDrawableFileMap.COVER_CHART_LOW
+        ),
+        FREETEXT1(ViewKeys.FREETEXT1.key, R.id.freetext1, null, null, null, null, null),
+        FREETEXT2(ViewKeys.FREETEXT2.key, R.id.freetext2, null, null, null, null, null),
+        FREETEXT3(ViewKeys.FREETEXT3.key, R.id.freetext3, null, null, null, null, null),
+        FREETEXT4(ViewKeys.FREETEXT4.key, R.id.freetext4, null, null, null, null, null),
+        IOB1(ViewKeys.IOB1.key, R.id.iob1, R.string.key_show_iob, null, null, null, null),
+        IOB2(ViewKeys.IOB2.key, R.id.iob2, R.string.key_show_iob, null, null, null, null),
+        COB1(ViewKeys.COB1.key, R.id.cob1, R.string.key_show_cob, null, null, null, null),
+        COB2(ViewKeys.COB2.key, R.id.cob2, R.string.key_show_cob, null, null, null, null),
+        DELTA(ViewKeys.DELTA.key, R.id.delta, R.string.key_show_delta, null, null, null, null),
+        AVG_DELTA(ViewKeys.AVG_DELTA.key, R.id.avg_delta, R.string.key_show_avg_delta, null, null, null, null),
+        UPLOADER_BATTERY(ViewKeys.UPLOADER_BATTERY.key, R.id.uploader_battery, R.string.key_show_uploader_battery, null, null, null, null),
+        RIG_BATTERY(ViewKeys.RIG_BATTERY.key, R.id.rig_battery, R.string.key_show_rig_battery, null, null, null, null),
+        BASALRATE(ViewKeys.BASALRATE.key, R.id.basalRate, R.string.key_show_temp_basal, null, null, null, null),
+        BGI(ViewKeys.BGI.key, R.id.bgi, R.string.key_show_bgi, null, null, null, null),
+        TIME(ViewKeys.TIME.key, R.id.time, null, null, null, null, null),
+        HOUR(ViewKeys.HOUR.key, R.id.hour, null, null, null, null, null),
+        MINUTE(ViewKeys.MINUTE.key, R.id.minute, null, null, null, null, null),
+        SECOND(ViewKeys.SECOND.key, R.id.second, R.string.key_show_seconds, null, null, null, null),
+        TIMEPERIOD(ViewKeys.TIMEPERIOD.key, R.id.timePeriod, null, null, null, null, null),
+        DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name, null, null, null, null, null),
+        DAY(ViewKeys.DAY.key, R.id.day, null, null, null, null, null),
+        MONTH(ViewKeys.MONTH.key, R.id.month, null, null, null, null, null),
+        LOOP(ViewKeys.LOOP.key, R.id.loop, R.string.key_show_external_status, null, null, null, null),
+        DIRECTION(ViewKeys.DIRECTION.key, R.id.direction2, R.string.key_show_direction, null, null, null, null),
+        TIMESTAMP(ViewKeys.TIMESTAMP.key, R.id.timestamp, R.string.key_show_ago, null, null, null, null),
+        SGV(ViewKeys.SGV.key, R.id.sgv, R.string.key_show_bg, null, null, null, null),
+        COVER_PLATE(
+            ViewKeys.COVER_PLATE.key,
+            R.id.cover_plate,
+            null,
+            null,
+            CwfDrawableFileMap.COVER_PLATE,
+            CwfDrawableFileMap.COVER_PLATE_HIGH,
+            CwfDrawableFileMap.COVER_PLATE_LOW
+        ),
+        HOUR_HAND(
+            ViewKeys.HOUR_HAND.key,
+            R.id.hour_hand,
+            null,
+            info.nightscout.shared.R.drawable.hour_hand,
+            CwfDrawableFileMap.HOUR_HAND,
+            CwfDrawableFileMap.HOUR_HAND_HIGH,
+            CwfDrawableFileMap.HOUR_HAND_LOW
+        ),
+        MINUTE_HAND(
+            ViewKeys.MINUTE_HAND.key,
+            R.id.minute_hand,
+            null,
+            info.nightscout.shared.R.drawable.minute_hand,
+            CwfDrawableFileMap.MINUTE_HAND,
+            CwfDrawableFileMap.MINUTE_HAND_HIGH,
+            CwfDrawableFileMap.MINUTE_HAND_LOW
+        ),
+        SECOND_HAND(
+            ViewKeys.SECOND_HAND.key,
+            R.id.second_hand,
+            R.string.key_show_seconds,
+            info.nightscout.shared.R.drawable.second_hand,
+            CwfDrawableFileMap.SECOND_HAND,
+            CwfDrawableFileMap.SECOND_HAND_HIGH,
+            CwfDrawableFileMap.SECOND_HAND_LOW
+        );
 
         companion object {
 
@@ -431,85 +483,101 @@ class CustomWatchface : BaseWatchFace() {
 
         fun visibility(sp: SP): Boolean = this.pref?.let { sp.getBoolean(it, true) }
             ?: true
-    }
 
-    private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int) {
-        NONE("??", R.drawable.ic_invalid),
-        TRIPLE_UP("X", R.drawable.ic_doubleup),
-        DOUBLE_UP("\u21c8", R.drawable.ic_doubleup),
-        SINGLE_UP("\u2191", R.drawable.ic_singleup),
-        FORTY_FIVE_UP("\u2197", R.drawable.ic_fortyfiveup),
-        FLAT("\u2192", R.drawable.ic_flat),
-        FORTY_FIVE_DOWN("\u2198", R.drawable.ic_fortyfivedown),
-        SINGLE_DOWN("\u2193", R.drawable.ic_singledown),
-        DOUBLE_DOWN("\u21ca", R.drawable.ic_doubledown),
-        TRIPLE_DOWN("X", R.drawable.ic_doubledown);
-
-        companion object {
-
-            fun icon(direction: String?) = values().firstOrNull { it.symbol == direction }?.icon ?: NONE.icon
+        fun drawable(resources: Resources, drawableDataMap: CwfDrawableDataMap, sgvLevel: Long): Drawable? = customDrawable?.let { cd ->
+            when (sgvLevel) {
+                1L   -> { drawableDataMap[customHigh]?.toDrawable(resources) ?: drawableDataMap[cd]?.toDrawable(resources) }
+                0L   -> { drawableDataMap[cd]?.toDrawable(resources) }
+                -1L  -> { drawableDataMap[customLow]?.toDrawable(resources) ?: drawableDataMap[cd]?.toDrawable(resources) }
+                else -> drawableDataMap[cd]?.toDrawable(resources)
+            }
         }
     }
-
-    private enum class GravityMap(val key: String, val gravity: Int) {
-        CENTER(JsonKeyValues.CENTER.key, Gravity.CENTER),
-        LEFT(JsonKeyValues.LEFT.key, Gravity.LEFT),
-        RIGHT(JsonKeyValues.RIGHT.key, Gravity.RIGHT);
-
-        companion object {
-
-            fun gravity(key: String?) = values().firstOrNull { it.key == key }?.gravity ?: CENTER.gravity
-            fun key(gravity: Int) = values().firstOrNull { it.gravity == gravity }?.key ?: CENTER.key
-        }
-    }
-
-    private enum class FontMap(val key: String, var font: Typeface, @FontRes val fontRessources: Int?) {
-        SANS_SERIF(JsonKeyValues.SANS_SERIF.key, Typeface.SANS_SERIF, null),
-        DEFAULT(JsonKeyValues.DEFAULT.key, Typeface.DEFAULT, null),
-        DEFAULT_BOLD(JsonKeyValues.DEFAULT_BOLD.key, Typeface.DEFAULT_BOLD, null),
-        MONOSPACE(JsonKeyValues.MONOSPACE.key, Typeface.MONOSPACE, null),
-        SERIF(JsonKeyValues.SERIF.key, Typeface.SERIF, null),
-        ROBOTO_CONDENSED_BOLD(JsonKeyValues.ROBOTO_CONDENSED_BOLD.key, Typeface.DEFAULT, R.font.roboto_condensed_bold),
-        ROBOTO_CONDENSED_LIGHT(JsonKeyValues.ROBOTO_CONDENSED_LIGHT.key, Typeface.DEFAULT, R.font.roboto_condensed_light),
-        ROBOTO_CONDENSED_REGULAR(JsonKeyValues.ROBOTO_CONDENSED_REGULAR.key, Typeface.DEFAULT, R.font.roboto_condensed_regular),
-        ROBOTO_SLAB_LIGHT(JsonKeyValues.ROBOTO_SLAB_LIGHT.key, Typeface.DEFAULT, R.font.roboto_slab_light);
-
-        companion object {
-            fun init(context: Context) = values().forEach { it.font = it.fontRessources?.let { font -> ResourcesCompat.getFont(context, font) } ?: it.font }
-            fun font(key: String) = values().firstOrNull { it.key == key }?.font ?: DEFAULT.font
-            fun key() = DEFAULT.key
-        }
-    }
-
-    private enum class StyleMap(val key: String, val style: Int) {
-        NORMAL(JsonKeyValues.NORMAL.key, Typeface.NORMAL),
-        BOLD(JsonKeyValues.BOLD.key, Typeface.BOLD),
-        BOLD_ITALIC(JsonKeyValues.BOLD_ITALIC.key, Typeface.BOLD_ITALIC),
-        ITALIC(JsonKeyValues.ITALIC.key, Typeface.ITALIC);
-
-        companion object {
-
-            fun style(key: String?) = values().firstOrNull { it.key == key }?.style ?: NORMAL.style
-            fun key(style: Int) = values().firstOrNull { it.style == style }?.key ?: NORMAL.key
-        }
-    }
-
-    // This class containt mapping between keys used within json of Custom Watchface and preferences
-    private enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
-        SHOW_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob),
-        SHOW_DETAILED_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob),
-        SHOW_COB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob),
-        SHOW_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta),
-        SHOW_AVG_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AVG_DELTA.key, R.string.key_show_avg_delta),
-        SHOW_DETAILED_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_DELTA.key, R.string.key_show_detailed_delta),
-        SHOW_UPLOADER_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY.key, R.string.key_show_uploader_battery),
-        SHOW_RIG_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_RIG_BATTERY.key, R.string.key_show_rig_battery),
-        SHOW_TEMP_BASAL(CwfMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_BASAL.key, R.string.key_show_temp_basal),
-        SHOW_DIRECTION(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction),
-        SHOW_AGO(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
-        SHOW_BG(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg),
-        SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi),
-        SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status)
-    }
-
 }
+
+private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int,val customDrawable: CwfDrawableFileMap?) {
+    NONE("??", R.drawable.ic_invalid, CwfDrawableFileMap.ARROW_NONE),
+    TRIPLE_UP("X", R.drawable.ic_doubleup, CwfDrawableFileMap.ARROW_DOUBLE_UP),
+    DOUBLE_UP("\u21c8", R.drawable.ic_doubleup, CwfDrawableFileMap.ARROW_DOUBLE_UP),
+    SINGLE_UP("\u2191", R.drawable.ic_singleup, CwfDrawableFileMap.ARROW_SINGLE_UP),
+    FORTY_FIVE_UP("\u2197", R.drawable.ic_fortyfiveup, CwfDrawableFileMap.ARROW_FORTY_FIVE_UP),
+    FLAT("\u2192", R.drawable.ic_flat, CwfDrawableFileMap.ARROW_FLAT),
+    FORTY_FIVE_DOWN("\u2198", R.drawable.ic_fortyfivedown, CwfDrawableFileMap.ARROW_FORTY_FIVE_DOWN),
+    SINGLE_DOWN("\u2193", R.drawable.ic_singledown, CwfDrawableFileMap.ARROW_SINGLE_DOWN),
+    DOUBLE_DOWN("\u21ca", R.drawable.ic_doubledown, CwfDrawableFileMap.ARROW_DOUBLE_DOWN),
+    TRIPLE_DOWN("X", R.drawable.ic_doubledown, CwfDrawableFileMap.ARROW_DOUBLE_DOWN);
+
+    companion object {
+
+        fun drawable(direction: String?, resources: Resources, drawableDataMap: CwfDrawableDataMap): Drawable {
+            val arrow = values().firstOrNull { it.symbol == direction } ?:NONE
+            return drawableDataMap[arrow.customDrawable]?.toDrawable(resources)  ?:resources.getDrawable(arrow.icon)
+        }
+
+    }
+}
+
+private enum class GravityMap(val key: String, val gravity: Int) {
+    CENTER(JsonKeyValues.CENTER.key, Gravity.CENTER),
+    LEFT(JsonKeyValues.LEFT.key, Gravity.LEFT),
+    RIGHT(JsonKeyValues.RIGHT.key, Gravity.RIGHT);
+
+    companion object {
+
+        fun gravity(key: String?) = values().firstOrNull { it.key == key }?.gravity ?: CENTER.gravity
+        fun key(gravity: Int) = values().firstOrNull { it.gravity == gravity }?.key ?: CENTER.key
+    }
+}
+
+private enum class FontMap(val key: String, var font: Typeface, @FontRes val fontRessources: Int?) {
+    SANS_SERIF(JsonKeyValues.SANS_SERIF.key, Typeface.SANS_SERIF, null),
+    DEFAULT(JsonKeyValues.DEFAULT.key, Typeface.DEFAULT, null),
+    DEFAULT_BOLD(JsonKeyValues.DEFAULT_BOLD.key, Typeface.DEFAULT_BOLD, null),
+    MONOSPACE(JsonKeyValues.MONOSPACE.key, Typeface.MONOSPACE, null),
+    SERIF(JsonKeyValues.SERIF.key, Typeface.SERIF, null),
+    ROBOTO_CONDENSED_BOLD(JsonKeyValues.ROBOTO_CONDENSED_BOLD.key, Typeface.DEFAULT, R.font.roboto_condensed_bold),
+    ROBOTO_CONDENSED_LIGHT(JsonKeyValues.ROBOTO_CONDENSED_LIGHT.key, Typeface.DEFAULT, R.font.roboto_condensed_light),
+    ROBOTO_CONDENSED_REGULAR(JsonKeyValues.ROBOTO_CONDENSED_REGULAR.key, Typeface.DEFAULT, R.font.roboto_condensed_regular),
+    ROBOTO_SLAB_LIGHT(JsonKeyValues.ROBOTO_SLAB_LIGHT.key, Typeface.DEFAULT, R.font.roboto_slab_light);
+
+    companion object {
+
+        fun init(context: Context) = values().forEach { it.font = it.fontRessources?.let { font -> ResourcesCompat.getFont(context, font) } ?: it.font }
+        fun font(key: String) = values().firstOrNull { it.key == key }?.font ?: DEFAULT.font
+        fun key() = DEFAULT.key
+    }
+}
+
+private enum class StyleMap(val key: String, val style: Int) {
+    NORMAL(JsonKeyValues.NORMAL.key, Typeface.NORMAL),
+    BOLD(JsonKeyValues.BOLD.key, Typeface.BOLD),
+    BOLD_ITALIC(JsonKeyValues.BOLD_ITALIC.key, Typeface.BOLD_ITALIC),
+    ITALIC(JsonKeyValues.ITALIC.key, Typeface.ITALIC);
+
+    companion object {
+
+        fun style(key: String?) = values().firstOrNull { it.key == key }?.style ?: NORMAL.style
+        fun key(style: Int) = values().firstOrNull { it.style == style }?.key ?: NORMAL.key
+    }
+}
+
+// This class containt mapping between keys used within json of Custom Watchface and preferences
+private enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
+
+    SHOW_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_IOB.key, R.string.key_show_iob),
+    SHOW_DETAILED_IOB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_IOB.key, R.string.key_show_detailed_iob),
+    SHOW_COB(CwfMetadataKey.CWF_PREF_WATCH_SHOW_COB.key, R.string.key_show_cob),
+    SHOW_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DELTA.key, R.string.key_show_delta),
+    SHOW_AVG_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AVG_DELTA.key, R.string.key_show_avg_delta),
+    SHOW_DETAILED_DELTA(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DETAILED_DELTA.key, R.string.key_show_detailed_delta),
+    SHOW_UPLOADER_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_UPLOADER_BATTERY.key, R.string.key_show_uploader_battery),
+    SHOW_RIG_BATTERY(CwfMetadataKey.CWF_PREF_WATCH_SHOW_RIG_BATTERY.key, R.string.key_show_rig_battery),
+    SHOW_TEMP_BASAL(CwfMetadataKey.CWF_PREF_WATCH_SHOW_TEMP_BASAL.key, R.string.key_show_temp_basal),
+    SHOW_DIRECTION(CwfMetadataKey.CWF_PREF_WATCH_SHOW_DIRECTION.key, R.string.key_show_direction),
+    SHOW_AGO(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
+    SHOW_BG(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg),
+    SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi),
+    SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status)
+}
+
+

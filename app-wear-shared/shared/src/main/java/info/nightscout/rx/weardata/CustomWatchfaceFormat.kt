@@ -5,7 +5,6 @@ import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
-import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.caverock.androidsvg.SVG
 import info.nightscout.shared.R
@@ -22,22 +21,37 @@ import java.util.zip.ZipOutputStream
 
 val CUSTOM_VERSION = "1.0"
 
-enum class CwfDrawableFileMap(val key: String, @DrawableRes val icon: Int?, val fileName: String) {
-    UNKNOWN("unknown", null, "Unknown"),
-    CUSTOM_WATCHFACE("customWatchface", R.drawable.watchface_custom, "CustomWatchface"),
-    BACKGROUND(ViewKeys.BACKGROUND.key, R.drawable.background, "Background"),
-    BACKGROUND_HIGH(ViewKeys.BACKGROUND.key, R.drawable.background, "BackgroundHigh"),
-    BACKGROUND_LOW(ViewKeys.BACKGROUND.key, R.drawable.background, "BackgroundLow"),
-    COVER_CHART(ViewKeys.COVER_CHART.key, null, "CoverChart"),
-    COVER_PLATE(ViewKeys.COVER_PLATE.key, R.drawable.simplified_dial, "CoverPlate"),
-    HOUR_HAND(ViewKeys.HOUR_HAND.key, R.drawable.hour_hand, "HourHand"),
-    MINUTE_HAND(ViewKeys.MINUTE_HAND.key, R.drawable.minute_hand, "MinuteHand"),
-    SECOND_HAND(ViewKeys.SECOND_HAND.key, R.drawable.second_hand, "SecondHand");
+enum class CwfDrawableFileMap(val fileName: String) {
+    UNKNOWN("Unknown"),
+    CUSTOM_WATCHFACE("CustomWatchface"),
+    BACKGROUND("Background"),
+    BACKGROUND_HIGH("BackgroundHigh"),
+    BACKGROUND_LOW("BackgroundLow"),
+    COVER_CHART("CoverChart"),
+    COVER_CHART_HIGH("CoverChartHigh"),
+    COVER_CHART_LOW("CoverChartLow"),
+    COVER_PLATE("CoverPlate"),
+    COVER_PLATE_HIGH("CoverPlateHigh"),
+    COVER_PLATE_LOW("CoverPlateLow"),
+    HOUR_HAND("HourHand"),
+    HOUR_HAND_HIGH("HourHandHigh"),
+    HOUR_HAND_LOW("HourHandLow"),
+    MINUTE_HAND("MinuteHand"),
+    MINUTE_HAND_HIGH("MinuteHandHigh"),
+    MINUTE_HAND_LOW("MinuteHandLow"),
+    SECOND_HAND("SecondHand"),
+    SECOND_HAND_HIGH("SecondHandHigh"),
+    SECOND_HAND_LOW("SecondHandLow"),
+    ARROW_NONE("ArrowNone"),
+    ARROW_DOUBLE_UP("ArrowDoubleUp"),
+    ARROW_SINGLE_UP("ArrowSingleUp"),
+    ARROW_FORTY_FIVE_UP("Arrow45Up"),
+    ARROW_FLAT("ArrowFlat"),
+    ARROW_FORTY_FIVE_DOWN("Arrow45Down"),
+    ARROW_SINGLE_DOWN("ArrowSingleDown"),
+    ARROW_DOUBLE_DOWN("ArrowDoubleDown");
 
     companion object {
-
-        fun fromKey(key: String): CwfDrawableFileMap =
-            values().firstOrNull { it.key == key } ?: UNKNOWN
 
         fun fromFileName(file: String): CwfDrawableFileMap = values().firstOrNull { it.fileName == file.substringBeforeLast(".") } ?: UNKNOWN
     }
