@@ -27,6 +27,8 @@ dependencies {
 
     testImplementation "org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutines_version"
     testImplementation "androidx.work:work-testing:$work_version"
+
+    testImplementation project(':app-wear-shared:shared-tests')
     testImplementation project(':implementation')
     testImplementation project(':plugins:aps')
 

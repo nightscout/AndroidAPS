@@ -1,6 +1,5 @@
 package info.nightscout.plugins.sync.nsclient
 
-import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.plugins.sync.R
@@ -9,6 +8,7 @@ import info.nightscout.rx.events.EventChargingState
 import info.nightscout.rx.events.EventNetworkChange
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

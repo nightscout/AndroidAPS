@@ -1,11 +1,11 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
-import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.database.entities.ExtendedBolus
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.sdk.localmodel.treatment.NSExtendedBolus
 import info.nightscout.sdk.localmodel.treatment.NSTemporaryBasal
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
+import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

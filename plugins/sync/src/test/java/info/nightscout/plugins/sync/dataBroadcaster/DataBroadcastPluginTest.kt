@@ -2,9 +2,6 @@ package info.nightscout.plugins.sync.dataBroadcaster
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.BundleMock
-import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.interfaces.GlucoseUnit
@@ -17,10 +14,10 @@ import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.rx.events.EventOverviewBolusProgress
+import info.nightscout.sharedtests.TestBaseWithProfile
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -35,13 +32,12 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
     @Mock lateinit var loop: Loop
     @Mock lateinit var receiverStatusStore: ReceiverStatusStore
     @Mock lateinit var glucoseStatusProvider: GlucoseStatusProvider
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var autosensDataStore: AutosensDataStore
+    @Mock lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
 
     private lateinit var sut: DataBroadcastPlugin
 
     private val injector = HasAndroidInjector { AndroidInjector { } }
-    private val testPumpPlugin = TestPumpPlugin(injector)
 
     @BeforeEach
     fun setUp() {
@@ -81,7 +77,7 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
             it.status = "Some status"
             it.percent = 100
         }
-        val bundle = BundleMock.mock()
+        val bundle = info.nightscout.sharedtests.BundleMock.mock()
         sut.prepareData(event, bundle)
         Assertions.assertTrue(bundle.containsKey("progressPercent"))
         Assertions.assertTrue(bundle.containsKey("progressStatus"))
@@ -123,7 +119,7 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
             it.status = "Some status"
             it.percent = 100
         }
-        val bundle = BundleMock.mock()
+        val bundle = info.nightscout.sharedtests.BundleMock.mock()
         sut.prepareData(event, bundle)
         Assertions.assertTrue(bundle.containsKey("progressPercent"))
         Assertions.assertTrue(bundle.containsKey("progressStatus"))

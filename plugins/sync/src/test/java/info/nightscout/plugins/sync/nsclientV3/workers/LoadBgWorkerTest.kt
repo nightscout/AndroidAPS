@@ -1,5 +1,6 @@
 package info.nightscout.plugins.sync.nsclientV3.workers
 
+import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkContinuation
@@ -7,7 +8,6 @@ import androidx.work.WorkManager
 import androidx.work.testing.TestListenableWorkerBuilder
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.GlucoseValue
@@ -30,6 +30,7 @@ import info.nightscout.sdk.remotemodel.LastModified
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.sharedtests.TestBase
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -42,6 +43,8 @@ import org.mockito.Mock
 import org.mockito.Mockito
 
 internal class LoadBgWorkerTest : TestBase() {
+
+    abstract class ContextWithInjector : Context(), HasAndroidInjector
 
     @Mock lateinit var sp: SP
     @Mock lateinit var fabricPrivacy: FabricPrivacy
@@ -59,6 +62,7 @@ internal class LoadBgWorkerTest : TestBase() {
     @Mock lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
     @Mock lateinit var storeDataForDb: StoreDataForDb
     @Mock lateinit var nsIncomingDataProcessor: NsIncomingDataProcessor
+    @Mock lateinit var context: ContextWithInjector
 
     private val rxBus: RxBus = RxBus(aapsSchedulers, aapsLogger)
     private lateinit var nsClientV3Plugin: NSClientV3Plugin
@@ -161,7 +165,6 @@ internal class LoadBgWorkerTest : TestBase() {
         val result = sut.doWorkAndLog()
         Assertions.assertTrue(result is ListenableWorker.Result.Success)
     }
-
 
     @Test
     fun testNoLoadNeeded() = runTest {

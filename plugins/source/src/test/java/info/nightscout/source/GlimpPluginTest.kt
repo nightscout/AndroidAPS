@@ -1,9 +1,8 @@
 package info.nightscout.source
 
 import dagger.android.AndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -14,7 +13,6 @@ class GlimpPluginTest : TestBase() {
     private lateinit var glimpPlugin: GlimpPlugin
 
     @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var sp: SP
 
     @BeforeEach
     fun setup() {

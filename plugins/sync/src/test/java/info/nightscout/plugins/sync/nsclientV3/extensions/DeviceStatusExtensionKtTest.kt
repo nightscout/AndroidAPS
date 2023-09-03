@@ -1,24 +1,17 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
-import dagger.android.AndroidInjector
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.configBuilder.RunningConfiguration
-import info.nightscout.interfaces.constraints.Constraints
-import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Instantiator
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.plugins.aps.APSResultObject
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
 import info.nightscout.plugins.sync.nsclient.data.ProcessedDeviceStatusDataImpl
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -27,11 +20,7 @@ import org.mockito.Mock
 @Suppress("SpellCheckingInspection")
 internal class DeviceStatusExtensionKtTest : TestBase() {
 
-    @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var sp: SP
-    @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var iobCobCalculator: IobCobCalculator
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var config: Config
@@ -40,21 +29,6 @@ internal class DeviceStatusExtensionKtTest : TestBase() {
 
     private lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
     private lateinit var nsDeviceStatusHandler: NSDeviceStatusHandler
-
-    val injector = HasAndroidInjector {
-        AndroidInjector {
-            if (it is APSResultObject) {
-                it.aapsLogger = aapsLogger
-                it.constraintChecker = constraintChecker
-                it.sp = sp
-                it.activePlugin = activePlugin
-                it.iobCobCalculator = iobCobCalculator
-                it.profileFunction = profileFunction
-                it.rh = rh
-                it.dateUtil = dateUtil
-            }
-        }
-    }
 
     @BeforeEach
     fun setup() {

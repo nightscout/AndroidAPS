@@ -1,4 +1,4 @@
-package info.nightscout.androidaps;
+package info.nightscout.sharedtests;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;

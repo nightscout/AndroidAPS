@@ -1,17 +1,31 @@
 package info.nightscout.plugins.sync.nsclientV3.extensions
 
-import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.core.extensions.fromConstant
 import info.nightscout.database.entities.ProfileSwitch
+import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.database.entities.embedments.InterfaceIDs
+import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.sdk.mapper.convertToRemoteAndBack
+import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mock
+import org.mockito.Mockito
 
 @Suppress("SpellCheckingInspection")
 internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
 
+    @Mock lateinit var insulin: Insulin
+
+    private var insulinConfiguration: InsulinConfiguration = InsulinConfiguration("Insulin", 360 * 60 * 1000, 60 * 60 * 1000)
+
+    @BeforeEach
+    fun mock() {
+        Mockito.`when`(insulin.insulinConfiguration).thenReturn(insulinConfiguration)
+        Mockito.`when`(activePlugin.activeInsulin).thenReturn(insulin)
+    }
     @Test
     fun toProfileSwitch() {
         var profileSwitch = ProfileSwitch(
