@@ -2,6 +2,7 @@ package info.nightscout.core.extensions
 
 import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.database.entities.ExtendedBolus
+import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.insulin.InsulinLyumjevPlugin
 import info.nightscout.interfaces.aps.AutosensResult
 import info.nightscout.interfaces.aps.SMBDefaults
@@ -71,5 +72,15 @@ class ExtendedBolusExtensionKtTest : TestBaseWithProfile() {
         Assertions.assertTrue(bolus.isInProgress(dateUtil))
         Mockito.`when`(dateUtil.now()).thenReturn(now + T.hours(2).msecs())
         Assertions.assertFalse(bolus.isInProgress(dateUtil))
+    }
+
+    @Test
+    fun toTemporaryBasal() {
+        val bolus = ExtendedBolus(timestamp = now - 1, amount = 1.0, duration = T.hours(1).msecs())
+        val tbr = bolus.toTemporaryBasal(validProfile)
+        Assertions.assertEquals(bolus.timestamp, tbr.timestamp)
+        Assertions.assertEquals(bolus.duration, tbr.duration)
+        Assertions.assertEquals(bolus.rate + validProfile.getBasal(now), tbr.rate)
+        Assertions.assertEquals(TemporaryBasal.Type.FAKE_EXTENDED, tbr.type)
     }
 }
