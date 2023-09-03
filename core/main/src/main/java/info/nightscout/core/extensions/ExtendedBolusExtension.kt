@@ -82,6 +82,7 @@ fun ExtendedBolus.iobCalc(
     isTempTarget: Boolean,
     insulinInterface: Insulin
 ): IobTotal {
+    if (!isValid) return IobTotal(time)
     val result = IobTotal(time)
     val realDuration = getPassedDurationToTimeInMinutes(time)
     var sensitivityRatio = lastAutosensResult.ratio
