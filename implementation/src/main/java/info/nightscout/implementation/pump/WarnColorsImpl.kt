@@ -5,11 +5,13 @@ import info.nightscout.core.extensions.isOlderThan
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.utils.DateUtil
 import javax.inject.Inject
 import javax.inject.Singleton
 
-@Singleton
-class WarnColorsImpl @Inject constructor(val rh: ResourceHelper): WarnColors {
+@Singleton class WarnColorsImpl @Inject constructor(
+    private val rh: ResourceHelper, private val dateUtil: DateUtil
+) : WarnColors {
 
     override fun setColor(view: TextView?, value: Double, warnLevel: Double, urgentLevel: Double) {
         view?.setTextColor(
@@ -39,9 +41,9 @@ class WarnColorsImpl @Inject constructor(val rh: ResourceHelper): WarnColors {
         view?.setTextColor(
             rh.gac(
                 view.context, when {
-                    therapyEvent.isOlderThan(urgentThreshold) -> info.nightscout.core.ui.R.attr.lowColor
-                    therapyEvent.isOlderThan(warnThreshold)   -> info.nightscout.core.ui.R.attr.highColor
-                    else                                      -> info.nightscout.core.ui.R.attr.defaultTextColor
+                    therapyEvent.isOlderThan(urgentThreshold, dateUtil) -> info.nightscout.core.ui.R.attr.lowColor
+                    therapyEvent.isOlderThan(warnThreshold, dateUtil)   -> info.nightscout.core.ui.R.attr.highColor
+                    else                                                -> info.nightscout.core.ui.R.attr.defaultTextColor
                 }
             )
         )
