@@ -1,6 +1,5 @@
 package info.nightscout.implementation.overview
 
-import info.nightscout.androidaps.TestBase
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
@@ -14,6 +13,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import info.nightscout.sharedtests.TestBase
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

@@ -4,20 +4,19 @@ import android.content.Context
 import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.implementation.queue.commands.CommandTempBasalAbsolute
 import info.nightscout.interfaces.AndroidPermission
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.db.PersistenceLayer
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.ui.UiInteraction
-import org.junit.Assert
+import info.nightscout.sharedtests.TestBaseWithProfile
+import info.nightscout.sharedtests.TestPumpPlugin
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
@@ -27,14 +26,13 @@ import org.mockito.Mockito
 class QueueThreadTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: Constraints
-    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var androidPermission: AndroidPermission
     @Mock lateinit var uiInteraction: UiInteraction
     @Mock lateinit var persistenceLayer: PersistenceLayer
 
-    val injector = HasAndroidInjector {
+    private val injector = HasAndroidInjector {
         AndroidInjector {
             if (it is Command) {
                 it.aapsLogger = aapsLogger
@@ -64,7 +62,6 @@ class QueueThreadTest : TestBaseWithProfile() {
         pumpDescription.basalMinimumRate = 0.1
 
         Mockito.`when`(context.getSystemService(Context.POWER_SERVICE)).thenReturn(powerManager)
-        Mockito.`when`(activePlugin.activePump).thenReturn(pumpPlugin)
         Mockito.`when`(profileFunction.getProfile()).thenReturn(validProfile)
 
         val bolusConstraint = Constraint(0.0)
@@ -85,7 +82,8 @@ class QueueThreadTest : TestBaseWithProfile() {
     @Test
     fun commandIsPickedUp() {
         commandQueue.tempBasalAbsolute(2.0, 60, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
+        @Suppress("CallToThreadRun")
         sut.run()
-        Assert.assertEquals(0, commandQueue.size())
+        Assertions.assertEquals(0, commandQueue.size())
     }
 }

@@ -1,4 +1,4 @@
-package info.nightscout.androidaps
+package info.nightscout.sharedtests
 
 import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.annotations.OpenForTesting
@@ -19,6 +19,7 @@ class TestPumpPlugin(val injector: HasAndroidInjector) : Pump {
 
     var connected = false
     var isProfileSet = true
+    var pumpSuspended = false
 
     override fun isConnected() = connected
     override fun isConnecting() = false
@@ -29,7 +30,7 @@ class TestPumpPlugin(val injector: HasAndroidInjector) : Pump {
     override var pumpDescription = PumpDescription()
 
     override fun isInitialized(): Boolean = true
-    override fun isSuspended(): Boolean = false
+    override fun isSuspended(): Boolean = pumpSuspended
     override fun isBusy(): Boolean = false
     override fun connect(reason: String) {
         connected = true
@@ -44,15 +45,19 @@ class TestPumpPlugin(val injector: HasAndroidInjector) : Pump {
     }
 
     override fun waitForDisconnectionInSeconds(): Int = 0
-    override fun getPumpStatus(reason: String) {}
+    override fun getPumpStatus(reason: String) { /* not needed */
+    }
+
     override fun setNewBasalProfile(profile: Profile): PumpEnactResult = PumpEnactResult(injector)
     override fun isThisProfileSet(profile: Profile): Boolean = isProfileSet
     override fun lastDataTime(): Long = lastData
-    override val baseBasalRate: Double = baseBasal
+    override val baseBasalRate: Double get() = baseBasal
     override val reservoirLevel: Double = 0.0
     override val batteryLevel: Int = 0
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult = PumpEnactResult(injector).success(true)
-    override fun stopBolusDelivering() {}
+    override fun stopBolusDelivering() { /* not needed */
+    }
+
     override fun setTempBasalAbsolute(absoluteRate: Double, durationInMinutes: Int, profile: Profile, enforceNew: Boolean, tbrType: PumpSync.TemporaryBasalType): PumpEnactResult =
         PumpEnactResult(injector).success(true)
 
@@ -66,9 +71,10 @@ class TestPumpPlugin(val injector: HasAndroidInjector) : Pump {
     override fun manufacturer(): ManufacturerType = ManufacturerType.AAPS
     override fun model(): PumpType = PumpType.GENERIC_AAPS
     override fun serialNumber(): String = "1"
-    override fun shortStatus(veryShort: Boolean): String = ""
+    override fun shortStatus(veryShort: Boolean): String = "Virtual Pump"
     override val isFakingTempsByExtendedBoluses: Boolean = false
     override fun loadTDDs(): PumpEnactResult = PumpEnactResult(injector).success(true)
     override fun canHandleDST(): Boolean = true
-    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) {}
+    override fun timezoneOrDSTChanged(timeChangeType: TimeChangeType) { /* not needed */
+    }
 }

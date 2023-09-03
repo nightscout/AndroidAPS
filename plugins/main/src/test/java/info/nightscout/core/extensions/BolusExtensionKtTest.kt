@@ -1,13 +1,12 @@
 package info.nightscout.core.extensions
 
-import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.database.entities.Bolus
 import info.nightscout.insulin.InsulinLyumjevPlugin
 import info.nightscout.interfaces.insulin.Insulin
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.shared.utils.T
+import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -16,13 +15,11 @@ import org.mockito.Mockito
 
 class BolusExtensionKtTest : TestBaseWithProfile() {
 
-    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var profileFunctions: ProfileFunction
     @Mock lateinit var uiInteraction: UiInteraction
 
     private lateinit var insulin: Insulin
 
-    private val now = 1000000L
     private val dia = 7.0
 
     @BeforeEach

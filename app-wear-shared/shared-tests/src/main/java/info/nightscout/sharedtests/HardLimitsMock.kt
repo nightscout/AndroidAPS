@@ -1,4 +1,4 @@
-package info.nightscout.androidaps
+package info.nightscout.sharedtests
 
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.shared.interfaces.ResourceHelper
@@ -7,7 +7,7 @@ import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
-class HardLimitsMock @Inject constructor(
+@Suppress("unused") class HardLimitsMock @Inject constructor(
     private val sp: SP,
     private val rh: ResourceHelper
 ) : HardLimits {

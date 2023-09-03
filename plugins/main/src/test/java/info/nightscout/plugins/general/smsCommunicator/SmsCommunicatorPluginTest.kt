@@ -3,8 +3,6 @@ package info.nightscout.plugins.general.smsCommunicator
 import android.telephony.SmsManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAnyTransaction
@@ -24,12 +22,9 @@ import info.nightscout.interfaces.iob.CobInfo
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.ProfileSource
 import info.nightscout.interfaces.pump.PumpEnactResult
-import info.nightscout.interfaces.pump.defs.PumpDescription
-import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.smsCommunicator.Sms
@@ -38,6 +33,7 @@ import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePassword
 import info.nightscout.plugins.general.smsCommunicator.otp.OneTimePasswordValidationResult
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import info.nightscout.sharedtests.TestBaseWithProfile
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -54,10 +50,8 @@ import org.mockito.invocation.InvocationOnMock
 class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: Constraints
-    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var loop: Loop
-    @Mock lateinit var testPumpPlugin: TestPumpPlugin
     @Mock lateinit var profileSource: ProfileSource
     @Mock lateinit var otp: OneTimePassword
     @Mock lateinit var xDripBroadcast: XDripBroadcast
@@ -158,13 +152,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             callback.run()
             null
         }.`when`(commandQueue).extendedBolus(ArgumentMatchers.anyDouble(), ArgumentMatchers.anyInt(), ArgumentMatchers.any(Callback::class.java))
-
-        `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
-
-        `when`(testPumpPlugin.shortStatus(ArgumentMatchers.anyBoolean())).thenReturn("Virtual Pump")
-        `when`(testPumpPlugin.isSuspended()).thenReturn(false)
-        `when`(testPumpPlugin.pumpDescription).thenReturn(PumpDescription())
-        `when`(testPumpPlugin.model()).thenReturn(PumpType.GENERIC_AAPS)
 
         `when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(0))
         `when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(0))
@@ -1011,13 +998,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         //BOLUS 1 (Suspended pump)
         smsCommunicatorPlugin.lastRemoteBolusTime = 0
-        `when`(testPumpPlugin.isSuspended()).thenReturn(true)
+        testPumpPlugin.pumpSuspended = true
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1")
         smsCommunicatorPlugin.processSms(sms)
         Assertions.assertEquals("BOLUS 1", smsCommunicatorPlugin.messages[0].text)
         Assertions.assertEquals("Pump suspended", smsCommunicatorPlugin.messages[1].text)
-        `when`(testPumpPlugin.isSuspended()).thenReturn(false)
+        testPumpPlugin.pumpSuspended = false
 
         //BOLUS 1 a
         smsCommunicatorPlugin.messages = ArrayList()

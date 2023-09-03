@@ -25,6 +25,8 @@ dependencies {
     implementation project(':core:ui')
     implementation project(':core:utils')
 
+    testImplementation project(':app-wear-shared:shared-tests')
+
     // Protection
     api 'androidx.biometric:biometric:1.1.0'
 }

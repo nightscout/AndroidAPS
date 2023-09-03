@@ -1,8 +1,8 @@
 package info.nightscout.core.extensions
 
-import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.database.entities.TemporaryTarget
 import info.nightscout.interfaces.GlucoseUnit
+import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

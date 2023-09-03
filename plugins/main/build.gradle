@@ -29,6 +29,7 @@ dependencies {
 
     testImplementation project(':implementation')
     testImplementation project(':plugins:insulin')
+    testImplementation project(':app-wear-shared:shared-tests')
 
     api "androidx.appcompat:appcompat:$appcompat_version"
     api "com.google.android.material:material:$material_version"

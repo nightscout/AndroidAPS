@@ -1,6 +1,6 @@
 package info.nightscout.plugins.general.smsCommunicator
 
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class SmsActionTest {
@@ -13,49 +13,49 @@ class SmsActionTest {
             }
         }
         smsAction.run()
-        Assert.assertEquals(result, "A")
+        Assertions.assertEquals(result, "A")
         smsAction = object : SmsAction(false, 1.0) {
             override fun run() {
                 result = "B"
             }
         }
         smsAction.run()
-        Assert.assertEquals(result, "B")
-        Assert.assertEquals(smsAction.aDouble(), 1.0, 0.000001)
+        Assertions.assertEquals(result, "B")
+        Assertions.assertEquals(smsAction.aDouble(), 1.0, 0.000001)
         smsAction = object : SmsAction(false, 1.0, 2) {
             override fun run() {
                 result = "C"
             }
         }
         smsAction.run()
-        Assert.assertEquals(result, "C")
-        Assert.assertEquals(smsAction.aDouble(), 1.0, 0.000001)
-        Assert.assertEquals(smsAction.secondInteger().toLong(), 2)
+        Assertions.assertEquals(result, "C")
+        Assertions.assertEquals(smsAction.aDouble(), 1.0, 0.000001)
+        Assertions.assertEquals(smsAction.secondInteger().toLong(), 2)
         smsAction = object : SmsAction(false, "aString", 3) {
             override fun run() {
                 result = "D"
             }
         }
         smsAction.run()
-        Assert.assertEquals(result, "D")
-        Assert.assertEquals(smsAction.aString(), "aString")
-        Assert.assertEquals(smsAction.secondInteger().toLong(), 3)
+        Assertions.assertEquals(result, "D")
+        Assertions.assertEquals(smsAction.aString(), "aString")
+        Assertions.assertEquals(smsAction.secondInteger().toLong(), 3)
         smsAction = object : SmsAction(false, 4) {
             override fun run() {
                 result = "E"
             }
         }
         smsAction.run()
-        Assert.assertEquals(result, "E")
-        Assert.assertEquals(smsAction.anInteger().toLong(), 4)
+        Assertions.assertEquals(result, "E")
+        Assertions.assertEquals(smsAction.anInteger().toLong(), 4)
         smsAction = object : SmsAction(false, 5, 6) {
             override fun run() {
                 result = "F"
             }
         }
         smsAction.run()
-        Assert.assertEquals(result, "F")
-        Assert.assertEquals(smsAction.anInteger().toLong(), 5)
-        Assert.assertEquals(smsAction.secondInteger().toLong(), 6)
+        Assertions.assertEquals(result, "F")
+        Assertions.assertEquals(smsAction.anInteger().toLong(), 5)
+        Assertions.assertEquals(smsAction.secondInteger().toLong(), 6)
     }
 }

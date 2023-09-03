@@ -5,8 +5,6 @@ import android.os.Handler
 import android.os.PowerManager
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBaseWithProfile
-import info.nightscout.androidaps.TestPumpPlugin
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.entities.Bolus
@@ -36,6 +34,8 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.sharedtests.TestBaseWithProfile
+import info.nightscout.sharedtests.TestPumpPlugin
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -50,7 +50,6 @@ import java.util.Calendar
 class CommandQueueImplementationTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraintChecker: Constraints
-    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var powerManager: PowerManager
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var uiInteraction: UiInteraction
@@ -81,7 +80,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         androidPermission, uiInteraction, persistenceLayer
     ) {
 
-        override fun notifyAboutNewCommand() : Boolean = true
+        override fun notifyAboutNewCommand(): Boolean = true
 
     }
 
@@ -250,7 +249,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         // add updateTime
         commandQueue.updateTime(null)
         Assertions.assertEquals(7, commandQueue.size())
-        
+
         commandQueue.clear()
         commandQueue.tempBasalAbsolute(0.0, 30, true, validProfile, PumpSync.TemporaryBasalType.NORMAL, null)
         commandQueue.pickup()

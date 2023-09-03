@@ -1,10 +1,10 @@
 package info.nightscout.core.extensions
 
-import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.core.main.R
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
+import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

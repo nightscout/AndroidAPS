@@ -1,6 +1,5 @@
 package info.nightscout.implementation.iob
 
-import info.nightscout.androidaps.TestBase
 import info.nightscout.core.iob.asRounded
 import info.nightscout.core.iob.log
 import info.nightscout.database.entities.GlucoseValue
@@ -10,6 +9,7 @@ import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
