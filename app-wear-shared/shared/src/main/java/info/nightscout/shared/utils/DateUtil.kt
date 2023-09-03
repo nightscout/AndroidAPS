@@ -4,10 +4,10 @@ import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.collection.LongSparseArray
-import info.nightscout.androidaps.annotations.OpenForTesting
-import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.shared.R
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.interfaces.ResourceHelper
 import org.apache.commons.lang3.time.DateUtils.isSameDay
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
@@ -119,10 +119,10 @@ class DateUtil @Inject constructor(private val context: Context) {
         val beginOfToday = beginOfDay(now())
         return if (mills < now()) // Past
             when {
-                mills > beginOfToday                     -> rh.gs(R.string.today)
+                mills > beginOfToday -> rh.gs(R.string.today)
                 mills > beginOfToday - T.days(1).msecs() -> rh.gs(R.string.yesterday)
                 mills > beginOfToday - T.days(7).msecs() -> dayAgo(mills, rh, true)
-                else                                     -> day
+                else -> day
             }
         else // Future
             when {

@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsShared
 
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.database.entities.Food
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.transactions.TransactionGlucoseValue

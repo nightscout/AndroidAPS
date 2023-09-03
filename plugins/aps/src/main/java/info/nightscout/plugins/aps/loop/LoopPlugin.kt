@@ -13,7 +13,7 @@ import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.convertedToPercent
@@ -29,9 +29,9 @@ import info.nightscout.database.entities.ValueWithUnit
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.database.impl.transactions.InsertAndCancelCurrentOfflineEventTransaction
 import info.nightscout.database.impl.transactions.InsertTherapyEventAnnouncementTransaction
+import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.aps.Loop.LastRun
@@ -327,14 +327,22 @@ class LoopPlugin @Inject constructor(
                                 0
                             ) && carbsSuggestionsSuspendedUntil < System.currentTimeMillis() && !treatmentTimeThreshold(-15)
                         ) {
-                            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_enable_carbs_required_alert_local, true) && !sp.getBoolean(info.nightscout.core.ui.R.string.key_raise_notifications_as_android_notifications, true)) {
+                            if (sp.getBoolean(
+                                    info.nightscout.core.utils.R.string.key_enable_carbs_required_alert_local,
+                                    true
+                                ) && !sp.getBoolean(info.nightscout.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
+                            ) {
                                 val carbReqLocal = Notification(Notification.CARBS_REQUIRED, resultAfterConstraints.carbsRequiredText, Notification.NORMAL)
                                 rxBus.send(EventNewNotification(carbReqLocal))
                             }
                             if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_create_announcements_from_carbs_req, false)) {
                                 disposable += repository.runTransaction(InsertTherapyEventAnnouncementTransaction(resultAfterConstraints.carbsRequiredText)).subscribe()
                             }
-                            if (sp.getBoolean(info.nightscout.core.utils.R.string.key_enable_carbs_required_alert_local, true) && sp.getBoolean(info.nightscout.core.ui.R.string.key_raise_notifications_as_android_notifications, true)) {
+                            if (sp.getBoolean(
+                                    info.nightscout.core.utils.R.string.key_enable_carbs_required_alert_local,
+                                    true
+                                ) && sp.getBoolean(info.nightscout.core.ui.R.string.key_raise_notifications_as_android_notifications, true)
+                            ) {
                                 val intentAction5m = Intent(context, CarbSuggestionReceiver::class.java)
                                 intentAction5m.putExtra("ignoreDuration", 5)
                                 val pendingIntent5m = PendingIntent.getBroadcast(context, 1, intentAction5m, PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)

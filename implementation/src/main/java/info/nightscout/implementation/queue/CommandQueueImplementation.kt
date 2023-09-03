@@ -8,7 +8,7 @@ import android.os.SystemClock
 import android.text.Spanned
 import androidx.appcompat.app.AppCompatActivity
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.extensions.getCustomizedName
 import info.nightscout.core.profile.ProfileSealed
@@ -319,7 +319,14 @@ class CommandQueueImplementation @Inject constructor(
                 // not when the Bolus command is starting. The command closes the dialog upon completion).
                 showBolusProgressDialog(detailedBolusInfo)
                 // Notify Wear about upcoming bolus
-                rxBus.send(EventMobileToWear(info.nightscout.rx.weardata.EventData.BolusProgress(percent = 0, status = rh.gs(info.nightscout.core.ui.R.string.goingtodeliver, detailedBolusInfo.insulin))))
+                rxBus.send(
+                    EventMobileToWear(
+                        info.nightscout.rx.weardata.EventData.BolusProgress(
+                            percent = 0,
+                            status = rh.gs(info.nightscout.core.ui.R.string.goingtodeliver, detailedBolusInfo.insulin)
+                        )
+                    )
+                )
             }
         }
         notifyAboutNewCommand()
@@ -609,10 +616,7 @@ class CommandQueueImplementation @Inject constructor(
 
     override fun isCustomCommandRunning(customCommandType: Class<out CustomCommand>): Boolean {
         val performing = this.performing
-        if (performing is CommandCustomCommand && customCommandType.isInstance(performing.customCommand)) {
-            return true
-        }
-        return false
+        return performing is CommandCustomCommand && customCommandType.isInstance(performing.customCommand)
     }
 
     @Synchronized

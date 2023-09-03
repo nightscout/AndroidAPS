@@ -5,7 +5,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.actions.ActionAlarm
 import info.nightscout.automation.actions.ActionCarePortalEvent

@@ -1,6 +1,6 @@
 package info.nightscout.rx.bus
 
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.events.Event
 import info.nightscout.rx.logging.AAPSLogger

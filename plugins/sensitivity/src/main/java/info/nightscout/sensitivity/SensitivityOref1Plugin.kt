@@ -1,7 +1,7 @@
 package info.nightscout.sensitivity
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.core.utils.Percentile
 import info.nightscout.database.entities.TherapyEvent
@@ -211,7 +211,10 @@ class SensitivityOref1Plugin @Inject constructor(
     override fun configuration(): JSONObject {
         val c = JSONObject()
         try {
-            c.put(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact), sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact))
+            c.put(
+                rh.gs(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact),
+                sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact, SMBDefaults.min_5m_carbimpact)
+            )
             c.put(rh.gs(info.nightscout.core.utils.R.string.key_absorption_cutoff), sp.getDouble(info.nightscout.core.utils.R.string.key_absorption_cutoff, Constants.DEFAULT_MAX_ABSORPTION_TIME))
             c.put(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_max), sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_max, 1.2))
             c.put(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_min), sp.getDouble(info.nightscout.core.utils.R.string.key_openapsama_autosens_min, 0.7))
@@ -228,14 +231,26 @@ class SensitivityOref1Plugin @Inject constructor(
                 configuration.getDouble(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_min_5m_carbimpact))
             )
             if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_absorption_cutoff))) sp.putDouble(
-                info.nightscout.core.utils.R.string.key_absorption_cutoff, configuration.getDouble(rh.gs(
-                    info.nightscout.core.utils.R.string.key_absorption_cutoff)))
+                info.nightscout.core.utils.R.string.key_absorption_cutoff, configuration.getDouble(
+                    rh.gs(
+                        info.nightscout.core.utils.R.string.key_absorption_cutoff
+                    )
+                )
+            )
             if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_max))) sp.getDouble(
-                info.nightscout.core.utils.R.string.key_openapsama_autosens_max, configuration.getDouble(rh.gs(
-                    info.nightscout.core.utils.R.string.key_openapsama_autosens_max)))
+                info.nightscout.core.utils.R.string.key_openapsama_autosens_max, configuration.getDouble(
+                    rh.gs(
+                        info.nightscout.core.utils.R.string.key_openapsama_autosens_max
+                    )
+                )
+            )
             if (configuration.has(rh.gs(info.nightscout.core.utils.R.string.key_openapsama_autosens_min))) sp.getDouble(
-                info.nightscout.core.utils.R.string.key_openapsama_autosens_min, configuration.getDouble(rh.gs(
-                    info.nightscout.core.utils.R.string.key_openapsama_autosens_min)))
+                info.nightscout.core.utils.R.string.key_openapsama_autosens_min, configuration.getDouble(
+                    rh.gs(
+                        info.nightscout.core.utils.R.string.key_openapsama_autosens_min
+                    )
+                )
+            )
         } catch (e: JSONException) {
             e.printStackTrace()
         }

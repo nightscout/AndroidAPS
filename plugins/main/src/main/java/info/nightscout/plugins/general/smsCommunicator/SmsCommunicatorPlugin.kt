@@ -10,7 +10,7 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.events.EventNewNotification
 import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.iob.generateCOBString
@@ -418,7 +418,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 receivedSms.processed = true
             }
 
-            "STATUS"  -> {
+            "STATUS"          -> {
                 val reply = if (loop.enabled) {
                     if (loop.isSuspended) rh.gs(R.string.sms_loop_suspended_for, loop.minutesToEndOfSuspend())
                     else rh.gs(R.string.smscommunicator_loop_is_enabled) + " - " + getApsModeText()
@@ -456,7 +456,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 })
             }
 
-            "SUSPEND" -> {
+            "SUSPEND"         -> {
                 var duration = 0
                 if (divided.size == 3) duration = SafeParse.stringToInt(divided[2])
                 duration = max(0, duration)
@@ -504,7 +504,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 }
             }
 
-            "LGS"     -> {
+            "LGS"             -> {
                 val passCode = generatePassCode()
                 val reply = rh.gs(R.string.smscommunicator_set_lgs_reply_with_code, passCode)
                 receivedSms.processed = true
@@ -519,7 +519,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 })
             }
 
-            "CLOSED"  -> {
+            "CLOSED"          -> {
                 val passCode = generatePassCode()
                 val reply = rh.gs(R.string.smscommunicator_set_closed_loop_reply_with_code, passCode)
                 receivedSms.processed = true
@@ -534,7 +534,7 @@ class SmsCommunicatorPlugin @Inject constructor(
                 })
             }
 
-            else      -> sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
+            else              -> sendSMS(Sms(receivedSms.phoneNumber, rh.gs(R.string.wrong_format)))
         }
     }
 
@@ -882,7 +882,11 @@ class SmsCommunicatorPlugin @Inject constructor(
                                         uel.log(
                                             Action.EXTENDED_BOLUS,
                                             Sources.SMS,
-                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(R.string.smscommunicator_extended_set, aDouble, duration) + " / " + rh.gs(info.nightscout.core.ui.R.string.loopsuspended),
+                                            activePlugin.activePump.shortStatus(true) + "\n" + rh.gs(
+                                                R.string.smscommunicator_extended_set,
+                                                aDouble,
+                                                duration
+                                            ) + " / " + rh.gs(info.nightscout.core.ui.R.string.loopsuspended),
                                             ValueWithUnit.Insulin(aDouble ?: 0.0),
                                             ValueWithUnit.Minute(duration),
                                             ValueWithUnit.SimpleString(rh.gsNotLocalised(info.nightscout.core.ui.R.string.loopsuspended))

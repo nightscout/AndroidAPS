@@ -2,7 +2,7 @@ package info.nightscout.plugins.sync.xdrip.workers
 
 import android.content.Context
 import androidx.work.WorkerParameters
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.utils.worker.LoggingWorker
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.plugins.sync.xdrip.DataSyncSelectorXdripImpl

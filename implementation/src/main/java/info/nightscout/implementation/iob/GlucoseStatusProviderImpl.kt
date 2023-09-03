@@ -1,7 +1,7 @@
 package info.nightscout.implementation.iob
 
 import dagger.Reusable
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.iob.asRounded
 import info.nightscout.core.iob.log
 import info.nightscout.interfaces.iob.GlucoseStatus
@@ -73,7 +73,6 @@ class GlucoseStatusProviderImpl @Inject constructor(
                 //     // short_deltas are calculated from everything ~5-15 minutes ago
                 // } else
                 if (2.5 < minutesAgo && minutesAgo < 17.5) {
-                    //console.error(minutesAgo, avgDelta);
                     shortDeltas.add(avgDel)
                     // last_deltas are calculated from everything ~5 minutes ago
                     if (2.5 < minutesAgo && minutesAgo < 7.5) {
@@ -191,7 +190,7 @@ class GlucoseStatusProviderImpl @Inject constructor(
 
         fun average(array: ArrayList<Double>): Double {
             var sum = 0.0
-            if (array.size == 0) return 0.0
+            if (array.isEmpty()) return 0.0
             for (value in array) {
                 sum += value
             }

@@ -1,14 +1,18 @@
 package info.nightscout.rx.weardata
 
-import info.nightscout.androidaps.TestBase
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.junit.jupiter.api.Assertions
-
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.junit.jupiter.MockitoExtension
+import org.mockito.junit.jupiter.MockitoSettings
+import org.mockito.quality.Strictness
 
 @ExperimentalSerializationApi
-class EventDataTest : TestBase() {
+@ExtendWith(MockitoExtension::class)
+@MockitoSettings(strictness = Strictness.LENIENT)
+class EventDataTest {
 
     @BeforeEach
     fun setUp() {
@@ -147,13 +151,13 @@ class EventDataTest : TestBase() {
         EventData.TreatmentData(
             arrayListOf(EventData.TreatmentData.TempBasal(1, 2.0, 3, 4.0, 5.0)),
             arrayListOf(EventData.TreatmentData.Basal(1, 2, 3.0)),
-            arrayListOf(EventData.TreatmentData.Treatment(1, 2.0, 3.0, true, true)),
+            arrayListOf(EventData.TreatmentData.Treatment(1, 2.0, 3.0, true, isValid = true)),
             arrayListOf(EventData.SingleBg(1, sgv = 2.0, high = 3.0, low = 4.0))
         ).let {
             Assertions.assertEquals(it, EventData.deserializeByte(it.serializeByte()))
             Assertions.assertEquals(it, EventData.deserialize(it.serialize()))
         }
-        EventData.Preferences(1, true, true, 2, 3, 4.0, 5.0, 6.0, 7, 8).let {
+        EventData.Preferences(1, wearControl = true, true, 2, 3, 4.0, 5.0, 6.0, 7, 8).let {
             Assertions.assertEquals(it, EventData.deserializeByte(it.serializeByte()))
             Assertions.assertEquals(it, EventData.deserialize(it.serialize()))
         }

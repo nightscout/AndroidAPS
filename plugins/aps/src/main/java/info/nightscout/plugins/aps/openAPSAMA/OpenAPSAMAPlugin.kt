@@ -2,7 +2,7 @@ package info.nightscout.plugins.aps.openAPSAMA
 
 import android.content.Context
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.extensions.target
 import info.nightscout.core.utils.MidnightUtils
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -128,10 +128,22 @@ class OpenAPSAMAPlugin @Inject constructor(
         val maxIob = constraintChecker.getMaxIOBAllowed().also { maxIOBAllowedConstraint ->
             inputConstraints.copyReasons(maxIOBAllowedConstraint)
         }.value()
-        var minBg = hardLimits.verifyHardLimits(Round.roundTo(profile.getTargetLowMgdl(), 0.1), info.nightscout.core.ui.R.string.profile_low_target, HardLimits.VERY_HARD_LIMIT_MIN_BG[0], HardLimits.VERY_HARD_LIMIT_MIN_BG[1])
+        var minBg =
+            hardLimits.verifyHardLimits(
+                Round.roundTo(profile.getTargetLowMgdl(), 0.1),
+                info.nightscout.core.ui.R.string.profile_low_target,
+                HardLimits.VERY_HARD_LIMIT_MIN_BG[0],
+                HardLimits.VERY_HARD_LIMIT_MIN_BG[1]
+            )
         var maxBg =
-            hardLimits.verifyHardLimits(Round.roundTo(profile.getTargetHighMgdl(), 0.1), info.nightscout.core.ui.R.string.profile_high_target, HardLimits.VERY_HARD_LIMIT_MAX_BG[0], HardLimits.VERY_HARD_LIMIT_MAX_BG[1])
-        var targetBg = hardLimits.verifyHardLimits(profile.getTargetMgdl(), info.nightscout.core.ui.R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1])
+            hardLimits.verifyHardLimits(
+                Round.roundTo(profile.getTargetHighMgdl(), 0.1),
+                info.nightscout.core.ui.R.string.profile_high_target,
+                HardLimits.VERY_HARD_LIMIT_MAX_BG[0],
+                HardLimits.VERY_HARD_LIMIT_MAX_BG[1]
+            )
+        var targetBg =
+            hardLimits.verifyHardLimits(profile.getTargetMgdl(), info.nightscout.core.ui.R.string.temp_target_value, HardLimits.VERY_HARD_LIMIT_TARGET_BG[0], HardLimits.VERY_HARD_LIMIT_TARGET_BG[1])
         var isTempTarget = false
         val tempTarget = repository.getTemporaryTargetActiveAt(dateUtil.now()).blockingGet()
         if (tempTarget is ValueWrapper.Existing) {
@@ -159,7 +171,13 @@ class OpenAPSAMAPlugin @Inject constructor(
                 )
         }
         if (!hardLimits.checkHardLimits(profile.dia, info.nightscout.core.ui.R.string.profile_dia, hardLimits.minDia(), hardLimits.maxDia())) return
-        if (!hardLimits.checkHardLimits(profile.getIcTimeFromMidnight(MidnightUtils.secondsFromMidnight()), info.nightscout.core.ui.R.string.profile_carbs_ratio_value, hardLimits.minIC(), hardLimits.maxIC())) return
+        if (!hardLimits.checkHardLimits(
+                profile.getIcTimeFromMidnight(MidnightUtils.secondsFromMidnight()),
+                info.nightscout.core.ui.R.string.profile_carbs_ratio_value,
+                hardLimits.minIC(),
+                hardLimits.maxIC()
+            )
+        ) return
         if (!hardLimits.checkHardLimits(profile.getIsfMgdl(), info.nightscout.core.ui.R.string.profile_sensitivity_value, HardLimits.MIN_ISF, HardLimits.MAX_ISF)) return
         if (!hardLimits.checkHardLimits(profile.getMaxDailyBasal(), info.nightscout.core.ui.R.string.profile_max_daily_basal_value, 0.02, hardLimits.maxBasal())) return
         if (!hardLimits.checkHardLimits(pump.baseBasalRate, info.nightscout.core.ui.R.string.current_basal_value, 0.01, hardLimits.maxBasal())) return
@@ -237,7 +255,12 @@ class OpenAPSAMAPlugin @Inject constructor(
             // Check percentRate but absolute rate too, because we know real current basal in pump
             val maxBasalMultiplier = sp.getDouble(R.string.key_openapsama_current_basal_safety_multiplier, 4.0)
             val maxFromBasalMultiplier = floor(maxBasalMultiplier * profile.getBasal() * 100) / 100
-            absoluteRate.setIfSmaller(aapsLogger, maxFromBasalMultiplier, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, maxFromBasalMultiplier, rh.gs(R.string.max_basal_multiplier)), this)
+            absoluteRate.setIfSmaller(
+                aapsLogger,
+                maxFromBasalMultiplier,
+                rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, maxFromBasalMultiplier, rh.gs(R.string.max_basal_multiplier)),
+                this
+            )
             val maxBasalFromDaily = sp.getDouble(R.string.key_openapsama_max_daily_safety_multiplier, 3.0)
             val maxFromDaily = floor(profile.getMaxDailyBasal() * maxBasalFromDaily * 100) / 100
             absoluteRate.setIfSmaller(aapsLogger, maxFromDaily, rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio, maxFromDaily, rh.gs(R.string.max_daily_basal_multiplier)), this)

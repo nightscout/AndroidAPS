@@ -1,6 +1,6 @@
 package info.nightscout.plugins.sync.nsclient.data
 
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData

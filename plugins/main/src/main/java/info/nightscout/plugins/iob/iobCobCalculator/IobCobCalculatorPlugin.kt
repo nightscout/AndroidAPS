@@ -2,7 +2,7 @@ package info.nightscout.plugins.iob.iobCobCalculator
 
 import androidx.collection.LongSparseArray
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.extensions.convertedToAbsolute
 import info.nightscout.core.extensions.iobCalc
 import info.nightscout.core.extensions.toTemporaryBasal

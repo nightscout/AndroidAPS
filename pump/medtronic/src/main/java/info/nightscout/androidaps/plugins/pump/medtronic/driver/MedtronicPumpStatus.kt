@@ -1,6 +1,5 @@
 package info.nightscout.androidaps.plugins.pump.medtronic.driver
 
-import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.plugins.pump.common.events.EventRileyLinkDeviceStatusChange
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.data.RLHistoryItem
@@ -9,6 +8,7 @@ import info.nightscout.androidaps.plugins.pump.medtronic.defs.BasalProfileStatus
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.BatteryType
 import info.nightscout.androidaps.plugins.pump.medtronic.defs.MedtronicDeviceType
 import info.nightscout.androidaps.plugins.pump.medtronic.util.MedtronicConst
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.pump.common.data.PumpStatus
 import info.nightscout.pump.common.sync.PumpDbEntryTBR

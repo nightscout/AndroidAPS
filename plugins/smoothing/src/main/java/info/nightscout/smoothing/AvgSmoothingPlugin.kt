@@ -1,7 +1,7 @@
 package info.nightscout.smoothing
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.plugin.PluginBase
@@ -33,13 +33,12 @@ class AvgSmoothingPlugin @Inject constructor(
 ), Smoothing {
 
     override fun smooth(data: MutableList<InMemoryGlucoseValue>): MutableList<InMemoryGlucoseValue> {
-        if (data.lastIndex < 4)
-        {
+        if (data.lastIndex < 4) {
             aapsLogger.debug(LTag.GLUCOSE, "Not enough value's to smooth!")
             return data
         }
 
-        for (i in data.lastIndex -1 downTo 1) {            
+        for (i in data.lastIndex - 1 downTo 1) {
             // Check if value's are in a valid range
             // Bucketed is always calculated to 5 min, we still check if our data is evenly spaced with an allowance of 30 seconds
             if (isValid(data[i].value) && isValid(data[i - 1].value) && isValid(data[i + 1].value)
@@ -60,6 +59,7 @@ class AvgSmoothingPlugin @Inject constructor(
         // data[0].smoothed = data[0].value
         return data
     }
+
     private fun isValid(n: Double): Boolean {
         // For Dexcom: Below 39 is LOW, above 401 Dexcom just says HI
         return n > 39 && n < 401

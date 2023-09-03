@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.testing.mockers
 
-import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.interaction.utils.Constants
 import info.nightscout.androidaps.interaction.utils.WearUtil
+import info.nightscout.annotations.OpenForTesting
 import org.mockito.ArgumentMatchers
 import org.mockito.Mockito
 

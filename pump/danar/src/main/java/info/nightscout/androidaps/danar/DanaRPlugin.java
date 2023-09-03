@@ -12,8 +12,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 
 import dagger.android.HasAndroidInjector;
-import info.nightscout.androidaps.annotations.OpenForTesting;
 import info.nightscout.androidaps.danar.services.DanaRExecutionService;
+import info.nightscout.annotations.OpenForTesting;
 import info.nightscout.core.utils.fabric.FabricPrivacy;
 import info.nightscout.interfaces.constraints.Constraint;
 import info.nightscout.interfaces.constraints.Constraints;

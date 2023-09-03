@@ -2,14 +2,14 @@ package info.nightscout.implementation.pump
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.implementation.R
 import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.rx.logging.AAPSLogger
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.T
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -39,7 +39,6 @@ class DetailedBolusInfoStorageImpl @Inject constructor(
         // Look for info with bolus
         for (i in store.indices) {
             val d = store[i]
-            //aapsLogger.debug(LTag.PUMP, "Existing bolus info: " + store[i])
             if (bolusTime > d.timestamp - T.mins(1).msecs() && bolusTime < d.timestamp + T.mins(1).msecs() && abs(store[i].insulin - bolus) < 0.01) {
                 aapsLogger.debug(LTag.PUMP, "Using & removing bolus info for time $bolusTime: ${store[i]}")
                 store.removeAt(i)

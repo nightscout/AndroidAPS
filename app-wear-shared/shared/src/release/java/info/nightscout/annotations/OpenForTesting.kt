@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.annotations
+package info.nightscout.annotations
 
 /**
  * Annotate a class with [OpenForTesting] if it should be extendable for testing.

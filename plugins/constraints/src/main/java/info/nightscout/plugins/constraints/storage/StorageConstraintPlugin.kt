@@ -3,7 +3,7 @@ package info.nightscout.plugins.constraints.storage
 import android.os.Environment
 import android.os.StatFs
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints

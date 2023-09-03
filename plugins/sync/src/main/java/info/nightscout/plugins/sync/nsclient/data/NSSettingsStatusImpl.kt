@@ -3,7 +3,7 @@
 package info.nightscout.plugins.sync.nsclient.data
 
 import android.content.Context
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.database.entities.UserEntry
 import info.nightscout.database.entities.UserEntry.Action

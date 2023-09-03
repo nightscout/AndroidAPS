@@ -1,4 +1,4 @@
-package info.nightscout.androidaps.utils.rx
+package info.nightscout.rx
 
 import io.reactivex.rxjava3.android.plugins.RxAndroidPlugins
 import io.reactivex.rxjava3.core.Scheduler

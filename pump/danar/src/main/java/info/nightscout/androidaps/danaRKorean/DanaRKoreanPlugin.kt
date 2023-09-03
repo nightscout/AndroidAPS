@@ -6,10 +6,10 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
 import info.nightscout.androidaps.danaRKorean.services.DanaRKoreanExecutionService
 import info.nightscout.androidaps.danar.AbstractDanaRPlugin
 import info.nightscout.androidaps.danar.R
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
@@ -74,14 +74,14 @@ class DanaRKoreanPlugin @Inject constructor(
             .toObservable(EventPreferenceChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({
-                if (isEnabled()) {
-                    val previousValue = useExtendedBoluses
-                    useExtendedBoluses = sp.getBoolean(info.nightscout.core.utils.R.string.key_danar_useextended, false)
-                    if (useExtendedBoluses != previousValue && pumpSync.expectedPumpState().extendedBolus != null) {
-                        sExecutionService.extendedBolusStop()
-                    }
-                }
-            }, fabricPrivacy::logException)
+                           if (isEnabled()) {
+                               val previousValue = useExtendedBoluses
+                               useExtendedBoluses = sp.getBoolean(info.nightscout.core.utils.R.string.key_danar_useextended, false)
+                               if (useExtendedBoluses != previousValue && pumpSync.expectedPumpState().extendedBolus != null) {
+                                   sExecutionService.extendedBolusStop()
+                               }
+                           }
+                       }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventAppExit::class.java)
             .observeOn(aapsSchedulers.io)
@@ -130,7 +130,7 @@ class DanaRKoreanPlugin @Inject constructor(
 
     override fun deliverTreatment(detailedBolusInfo: DetailedBolusInfo): PumpEnactResult {
         detailedBolusInfo.insulin = constraintChecker.applyBolusConstraints(Constraint(detailedBolusInfo.insulin)).value()
-        if (detailedBolusInfo.carbs > 0) throw IllegalArgumentException()
+        require(detailedBolusInfo.carbs > 0)
         return if (detailedBolusInfo.insulin > 0) {
             val t = EventOverviewBolusProgress.Treatment(0.0, 0, detailedBolusInfo.bolusType == DetailedBolusInfo.BolusType.SMB, detailedBolusInfo.id)
             var connectionOK = false
@@ -142,7 +142,14 @@ class DanaRKoreanPlugin @Inject constructor(
             val result = PumpEnactResult(injector)
             result.success(connectionOK && abs(detailedBolusInfo.insulin - t.insulin) < pumpDescription.bolusStep)
                 .bolusDelivered(t.insulin)
-            if (!result.success) result.comment(rh.gs(info.nightscout.pump.dana.R.string.boluserrorcode, detailedBolusInfo.insulin, t.insulin, danaPump.bolusStartErrorCode)) else result.comment(info.nightscout.core.ui.R.string.ok)
+            if (!result.success) result.comment(
+                rh.gs(
+                    info.nightscout.pump.dana.R.string.boluserrorcode,
+                    detailedBolusInfo.insulin,
+                    t.insulin,
+                    danaPump.bolusStartErrorCode
+                )
+            ) else result.comment(info.nightscout.core.ui.R.string.ok)
             aapsLogger.debug(LTag.PUMP, "deliverTreatment: OK. Asked: " + detailedBolusInfo.insulin + " Delivered: " + result.bolusDelivered)
             detailedBolusInfo.insulin = t.insulin
             detailedBolusInfo.timestamp = dateUtil.now()

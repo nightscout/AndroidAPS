@@ -1,7 +1,7 @@
 package info.nightscout.core.wizard
 
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.annotations.OpenForTesting
+import info.nightscout.annotations.OpenForTesting
 import info.nightscout.core.extensions.valueToUnits
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.MidnightUtils
@@ -38,9 +38,11 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
     // for mock
     @OpenForTesting
     class Time {
+
         fun secondsFromMidnight(): Int = MidnightUtils.secondsFromMidnight()
 
     }
+
     var time = Time()
 
     lateinit var storage: JSONObject
@@ -151,7 +153,26 @@ class QuickWizardEntry @Inject constructor(private val injector: HasAndroidInjec
             trend = true
         }
         val percentage = if (usePercentage() == DEFAULT) sp.getInt(info.nightscout.core.utils.R.string.key_boluswizard_percentage, 100) else percentage()
-        return BolusWizard(injector).doCalc(profile, profileName, tempTarget, carbs(), cob, bg, 0.0, percentage, true, useCOB() == YES, bolusIOB, basalIOB, superBolus, useTempTarget() == YES, trend, false, buttonText(), quickWizard = true) //tbc, ok if only quickwizard, but if other sources elsewhere use Sources.QuickWizard
+        return BolusWizard(injector).doCalc(
+            profile,
+            profileName,
+            tempTarget,
+            carbs(),
+            cob,
+            bg,
+            0.0,
+            percentage,
+            true,
+            useCOB() == YES,
+            bolusIOB,
+            basalIOB,
+            superBolus,
+            useTempTarget() == YES,
+            trend,
+            false,
+            buttonText(),
+            quickWizard = true
+        ) //tbc, ok if only quickwizard, but if other sources elsewhere use Sources.QuickWizard
     }
 
     fun guid(): String = safeGetString(storage, "guid", "")
