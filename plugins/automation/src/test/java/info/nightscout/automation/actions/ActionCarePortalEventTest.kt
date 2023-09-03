@@ -8,7 +8,7 @@ import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.queue.Callback
 import io.reactivex.rxjava3.core.Single
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
@@ -21,12 +21,7 @@ class ActionCarePortalEventTest : ActionsTestBase() {
     @BeforeEach
     fun setup() {
         `when`(sp.getString(ArgumentMatchers.anyString(), ArgumentMatchers.anyString())).thenReturn("AAPS")
-        `when`(
-            rh.gs(
-                ArgumentMatchers.eq(info.nightscout.core.ui.R.string.careportal_note_message),
-                ArgumentMatchers.anyString()
-            )
-        ).thenReturn("Note : %s")
+        `when`(rh.gs(info.nightscout.core.ui.R.string.careportal_note_message)).thenReturn("Note : %s")
         `when`(dateUtil.now()).thenReturn(0)
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         `when`(repository.runTransactionForResult(anyObject<Transaction<InsertIfNewByTimestampTherapyEventTransaction.TransactionResult>>()))
@@ -40,31 +35,31 @@ class ActionCarePortalEventTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.core.ui.R.string.careportal, sut.friendlyName())
+        Assertions.assertEquals(info.nightscout.core.ui.R.string.careportal, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {
-        Assert.assertEquals("Note : %s", sut.shortDescription())
+        Assertions.assertEquals("Note : Asd", sut.shortDescription())
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(info.nightscout.core.main.R.drawable.ic_cp_note, sut.icon())
+        Assertions.assertEquals(info.nightscout.core.main.R.drawable.ic_cp_note, sut.icon())
     }
 
     @Test fun doActionTest() {
         sut.doAction(object : Callback() {
             override fun run() {
-                Assert.assertTrue(result.success)
+                Assertions.assertTrue(result.success)
             }
         })
     }
 
     @Test fun hasDialogTest() {
-        Assert.assertTrue(sut.hasDialog())
+        Assertions.assertTrue(sut.hasDialog())
     }
 
     @Test fun toJSONTest() {
-        Assert.assertEquals(
+        Assertions.assertEquals(
             "{\"data\":{\"note\":\"Asd\",\"cpEvent\":\"NOTE\",\"durationInMinutes\":5},\"type\":\"ActionCarePortalEvent\"}",
             sut.toJSON()
         )
@@ -73,8 +68,8 @@ class ActionCarePortalEventTest : ActionsTestBase() {
     @Test fun fromJSONTest() {
         sut.note = InputString("Asd")
         sut.fromJSON("{\"note\":\"Asd\",\"cpEvent\":\"NOTE\",\"durationInMinutes\":5}")
-        Assert.assertEquals("Asd", sut.note.value)
-        Assert.assertEquals(5, sut.duration.value)
-        Assert.assertEquals(InputCarePortalMenu.EventType.NOTE, sut.cpEvent.value)
+        Assertions.assertEquals("Asd", sut.note.value)
+        Assertions.assertEquals(5, sut.duration.value)
+        Assertions.assertEquals(InputCarePortalMenu.EventType.NOTE, sut.cpEvent.value)
     }
 }

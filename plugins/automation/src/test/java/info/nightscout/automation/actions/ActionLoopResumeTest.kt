@@ -6,7 +6,7 @@ import info.nightscout.database.impl.transactions.CancelCurrentOfflineEventIfAny
 import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.interfaces.queue.Callback
 import io.reactivex.rxjava3.core.Single
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.`when`
@@ -25,15 +25,15 @@ class ActionLoopResumeTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.core.ui.R.string.resumeloop, sut.friendlyName())
+        Assertions.assertEquals(info.nightscout.core.ui.R.string.resumeloop, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {
-        Assert.assertEquals("Resume loop", sut.shortDescription())
+        Assertions.assertEquals("Resume loop", sut.shortDescription())
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(R.drawable.ic_replay_24dp, sut.icon())
+        Assertions.assertEquals(R.drawable.ic_replay_24dp, sut.icon())
     }
 
     @Test fun doActionTest() {

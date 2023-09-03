@@ -2,7 +2,6 @@ package info.nightscout.automation
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.automation.actions.Action
 import info.nightscout.automation.actions.ActionLoopEnable
 import info.nightscout.automation.actions.ActionStopProcessing
@@ -13,8 +12,9 @@ import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
+import info.nightscout.sharedtests.TestBase
 import org.json.JSONObject
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 
@@ -46,39 +46,39 @@ class AutomationEventTest : TestBase() {
         // create test object
         val event = AutomationEventObject(injector)
         event.title = "Test"
-        event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest.oneItem)) as TriggerConnector
+        event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest().oneItem)) as TriggerConnector
         event.addAction(ActionLoopEnable(injector))
 
         // export to json
         val eventJsonExpected =
             "{\"userAction\":false,\"autoRemove\":false,\"readOnly\":false,\"trigger\":\"{\\\"data\\\":{\\\"connectorType\\\":\\\"AND\\\",\\\"triggerList\\\":[\\\"{\\\\\\\"data\\\\\\\":{\\\\\\\"connectorType\\\\\\\":\\\\\\\"AND\\\\\\\",\\\\\\\"triggerList\\\\\\\":[]},\\\\\\\"type\\\\\\\":\\\\\\\"TriggerConnector\\\\\\\"}\\\"]},\\\"type\\\":\\\"TriggerConnector\\\"}\",\"title\":\"Test\",\"systemAction\":false,\"actions\":[\"{\\\"type\\\":\\\"ActionLoopEnable\\\"}\"],\"enabled\":true}"
-        Assert.assertEquals(eventJsonExpected, event.toJSON())
+        Assertions.assertEquals(eventJsonExpected, event.toJSON())
 
         // clone
         val clone = AutomationEventObject(injector).fromJSON(eventJsonExpected, 1)
 
         // check title
-        Assert.assertEquals(event.title, clone.title)
+        Assertions.assertEquals(event.title, clone.title)
 
         // check trigger
-        Assert.assertNotNull(clone.trigger)
-        Assert.assertFalse(event.trigger === clone.trigger) // not the same object reference
-        Assert.assertEquals(event.trigger.javaClass, clone.trigger.javaClass)
-        Assert.assertEquals(event.trigger.toJSON(), clone.trigger.toJSON())
+        Assertions.assertNotNull(clone.trigger)
+        Assertions.assertFalse(event.trigger === clone.trigger) // not the same object reference
+        Assertions.assertEquals(event.trigger.javaClass, clone.trigger.javaClass)
+        Assertions.assertEquals(event.trigger.toJSON(), clone.trigger.toJSON())
 
         // check action
-        Assert.assertEquals(1, clone.actions.size)
-        Assert.assertFalse(event.actions === clone.actions) // not the same object reference
-        Assert.assertEquals(clone.toJSON(), clone.toJSON())
+        Assertions.assertEquals(1, clone.actions.size)
+        Assertions.assertFalse(event.actions === clone.actions) // not the same object reference
+        Assertions.assertEquals(clone.toJSON(), clone.toJSON())
     }
 
     @Test
     fun hasStopProcessing() {
         val event = AutomationEventObject(injector)
         event.title = "Test"
-        event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest.oneItem)) as TriggerConnector
-        Assert.assertFalse(event.hasStopProcessing())
+        event.trigger = TriggerDummy(injector).instantiate(JSONObject(TriggerConnectorTest().oneItem)) as TriggerConnector
+        Assertions.assertFalse(event.hasStopProcessing())
         event.addAction(ActionStopProcessing(injector))
-        Assert.assertTrue(event.hasStopProcessing())
+        Assertions.assertTrue(event.hasStopProcessing())
     }
 }

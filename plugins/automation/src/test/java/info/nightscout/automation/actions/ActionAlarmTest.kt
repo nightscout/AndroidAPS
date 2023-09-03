@@ -3,17 +3,17 @@ package info.nightscout.automation.actions
 import android.content.Context
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBase
 import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputString
+import info.nightscout.automation.ui.TimerUtil
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.queue.Callback
-import info.nightscout.automation.ui.TimerUtil
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
-import org.junit.Assert
+import info.nightscout.sharedtests.TestBase
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
@@ -56,39 +56,39 @@ class ActionAlarmTest : TestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(info.nightscout.core.ui.R.string.alarm, sut.friendlyName())
+        Assertions.assertEquals(info.nightscout.core.ui.R.string.alarm, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {
         sut.text = InputString("Asd")
-        Assert.assertEquals("Alarm: %s", sut.shortDescription())
+        Assertions.assertEquals("Alarm: %s", sut.shortDescription())
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(info.nightscout.core.main.R.drawable.ic_access_alarm_24dp, sut.icon())
+        Assertions.assertEquals(info.nightscout.core.main.R.drawable.ic_access_alarm_24dp, sut.icon())
     }
 
     @Test fun doActionTest() {
         sut.text = InputString("Asd")
         sut.doAction(object : Callback() {
             override fun run() {
-                Assert.assertTrue(result.success)
+                Assertions.assertTrue(result.success)
             }
         })
     }
 
     @Test fun hasDialogTest() {
-        Assert.assertTrue(sut.hasDialog())
+        Assertions.assertTrue(sut.hasDialog())
     }
 
     @Test fun toJSONTest() {
         sut.text = InputString("Asd")
-        Assert.assertEquals("{\"data\":{\"text\":\"Asd\"},\"type\":\"ActionAlarm\"}", sut.toJSON())
+        Assertions.assertEquals("{\"data\":{\"text\":\"Asd\"},\"type\":\"ActionAlarm\"}", sut.toJSON())
     }
 
     @Test fun fromJSONTest() {
         sut.text = InputString("Asd")
         sut.fromJSON("{\"text\":\"Asd\"}")
-        Assert.assertEquals("Asd", sut.text.value)
+        Assertions.assertEquals("Asd", sut.text.value)
     }
 }

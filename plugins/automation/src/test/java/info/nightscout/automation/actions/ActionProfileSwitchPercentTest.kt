@@ -4,7 +4,7 @@ import info.nightscout.automation.R
 import info.nightscout.automation.elements.InputDuration
 import info.nightscout.automation.elements.InputPercent
 import info.nightscout.interfaces.queue.Callback
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -24,17 +24,17 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(R.string.profilepercentage, sut.friendlyName())
+        Assertions.assertEquals(R.string.profilepercentage, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {
         sut.pct = InputPercent(100.0)
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
-        Assert.assertNull(sut.shortDescription()) // not mocked
+        Assertions.assertEquals("Start profile 100% for 30 min", sut.shortDescription())
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(info.nightscout.interfaces.R.drawable.ic_actions_profileswitch, sut.icon())
+        Assertions.assertEquals(info.nightscout.interfaces.R.drawable.ic_actions_profileswitch, sut.icon())
     }
 
     @Test fun doActionTest() {
@@ -43,25 +43,25 @@ class ActionProfileSwitchPercentTest : ActionsTestBase() {
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
         sut.doAction(object : Callback() {
             override fun run() {
-                Assert.assertTrue(result.success)
+                Assertions.assertTrue(result.success)
             }
         })
         Mockito.verify(profileFunction, Mockito.times(1)).createProfileSwitch(30, 110, 0)
     }
 
     @Test fun hasDialogTest() {
-        Assert.assertTrue(sut.hasDialog())
+        Assertions.assertTrue(sut.hasDialog())
     }
 
     @Test fun toJSONTest() {
         sut.pct = InputPercent(100.0)
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
-        Assert.assertEquals("{\"data\":{\"percentage\":100,\"durationInMinutes\":30},\"type\":\"ActionProfileSwitchPercent\"}", sut.toJSON())
+        Assertions.assertEquals("{\"data\":{\"percentage\":100,\"durationInMinutes\":30},\"type\":\"ActionProfileSwitchPercent\"}", sut.toJSON())
     }
 
     @Test fun fromJSONTest() {
         sut.fromJSON("{\"percentage\":100,\"durationInMinutes\":30}")
-        Assert.assertEquals(100.0, sut.pct.value, 0.001)
-        Assert.assertEquals(30.0, sut.duration.getMinutes().toDouble(), 0.001)
+        Assertions.assertEquals(100.0, sut.pct.value, 0.001)
+        Assertions.assertEquals(30.0, sut.duration.getMinutes().toDouble(), 0.001)
     }
 }

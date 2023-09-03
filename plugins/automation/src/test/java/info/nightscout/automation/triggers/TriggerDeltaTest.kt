@@ -15,10 +15,9 @@ import org.mockito.Mockito.`when`
 
 class TriggerDeltaTest : TriggerTestBase() {
 
-    var now = 1514766900000L
-
     @BeforeEach
     fun mock() {
+        now = 1514766900000L
         `when`(dateUtil.now()).thenReturn(now)
         `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
     }

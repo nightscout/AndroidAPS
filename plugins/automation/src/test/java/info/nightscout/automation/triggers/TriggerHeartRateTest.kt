@@ -6,20 +6,12 @@ import info.nightscout.database.entities.HeartRate
 import io.reactivex.rxjava3.core.Single
 import org.json.JSONObject
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito.verify
 import org.mockito.Mockito.verifyNoMoreInteractions
 import org.mockito.Mockito.`when`
 
 class TriggerHeartRateTest : TriggerTestBase() {
-
-    private var now = 1000L
-
-    @BeforeEach
-    fun mock() {
-        `when`(dateUtil.now()).thenReturn(now)
-    }
 
     @Test
     fun friendlyName() {

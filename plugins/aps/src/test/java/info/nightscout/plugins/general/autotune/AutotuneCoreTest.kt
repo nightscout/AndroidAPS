@@ -1,7 +1,5 @@
 package info.nightscout.plugins.general.autotune
 
-import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.data.Block
 import info.nightscout.database.entities.data.TargetBlock
@@ -9,12 +7,12 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
-import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
+import info.nightscout.sharedtests.TestBaseWithProfile
 import org.json.JSONArray
 import org.json.JSONObject
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -24,9 +22,7 @@ import java.util.TimeZone
 
 class AutotuneCoreTest : TestBaseWithProfile() {
 
-    @Mock lateinit var sp: SP
     @Mock lateinit var autotuneFS: AutotuneFS
-    @Mock lateinit var injector: HasAndroidInjector
     private lateinit var autotuneCore: AutotuneCore
     private var min5mCarbImpact = 0.0
     private var autotuneMin = 0.0
@@ -53,12 +49,12 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)
         val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, inputProfile)
         oapsOutputProfile?.let {
-            Assert.assertEquals(oapsOutputProfile.isf, outProfile.isf, 0.0)
-            Assert.assertEquals(oapsOutputProfile.ic, outProfile.ic, 0.0)
+            Assertions.assertEquals(oapsOutputProfile.isf, outProfile.isf, 0.0)
+            Assertions.assertEquals(oapsOutputProfile.ic, outProfile.ic, 0.0)
             for (i in 0..23)
-                Assert.assertEquals(oapsOutputProfile.basal[i], outProfile.basal[i], 0.0)
+                Assertions.assertEquals(oapsOutputProfile.basal[i], outProfile.basal[i], 0.0)
         }
-            ?: Assert.fail()
+            ?: Assertions.fail()
     }
 
     @Suppress("SpellCheckingInspection")
@@ -77,12 +73,12 @@ class AutotuneCoreTest : TestBaseWithProfile() {
         val oapsOutputProfile = atProfileFromOapsJson(JSONObject(oapsOutputProfileJson), dateUtil)
         val outProfile = autotuneCore.tuneAllTheThings(prep, inputProfile, pumpProfile)
         oapsOutputProfile?.let {
-            Assert.assertEquals(oapsOutputProfile.isf, outProfile.isf, 0.0)
-            Assert.assertEquals(oapsOutputProfile.ic, outProfile.ic, 0.0)
+            Assertions.assertEquals(oapsOutputProfile.isf, outProfile.isf, 0.0)
+            Assertions.assertEquals(oapsOutputProfile.ic, outProfile.ic, 0.0)
             for (i in 0..23)
-                Assert.assertEquals(oapsOutputProfile.basal[i], outProfile.basal[i], 0.0)
+                Assertions.assertEquals(oapsOutputProfile.basal[i], outProfile.basal[i], 0.0)
         }
-            ?: Assert.fail()
+            ?: Assertions.fail()
     }
 
     /**

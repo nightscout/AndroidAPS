@@ -63,7 +63,7 @@ open class TestBaseWithProfile : TestBase() {
     lateinit var effectiveProfileSwitch: EffectiveProfileSwitch
     lateinit var testPumpPlugin: TestPumpPlugin
 
-    val now = 1656358822000L
+    var now = 1656358822000L
 
     @Suppress("PropertyName") val TESTPROFILENAME = "someProfile"
 

@@ -6,6 +6,7 @@ import info.nightscout.rx.TestAapsSchedulers
 import info.nightscout.rx.logging.AAPSLoggerTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
+import org.mockito.ArgumentMatcher
 import org.mockito.Mockito
 import org.mockito.junit.jupiter.MockitoExtension
 import org.mockito.junit.jupiter.MockitoSettings
@@ -24,6 +25,18 @@ open class TestBase {
     fun setupLocale() {
         Locale.setDefault(Locale.ENGLISH)
         System.setProperty("disableFirebase", "true")
+    }
+
+    @SuppressLint("CheckResult")
+    fun <T> argThatKotlin(matcher: ArgumentMatcher<T>): T {
+        Mockito.argThat(matcher)
+        return uninitialized()
+    }
+
+    @SuppressLint("CheckResult")
+    fun <T> eqObject(expected: T): T {
+        Mockito.eq<T>(expected)
+        return uninitialized()
     }
 
     // Workaround for Kotlin nullability.

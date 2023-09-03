@@ -2,14 +2,13 @@ package info.nightscout.plugins.aps.loop
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
-import info.nightscout.androidaps.TestBaseWithProfile
 import info.nightscout.database.entities.TemporaryBasal
 import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.utils.JsonHelper.safeGetDouble
-import info.nightscout.shared.sharedPreferences.SP
+import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -20,7 +19,6 @@ import org.mockito.Mockito.`when`
 class APSResultTest : TestBaseWithProfile() {
 
     @Mock lateinit var constraints: Constraints
-    @Mock lateinit var sp: SP
 
     private val injector = HasAndroidInjector { AndroidInjector { } }
 
@@ -59,7 +57,7 @@ class APSResultTest : TestBaseWithProfile() {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraints
                 it.sp = sp
-                it.activePlugin = activePluginProvider
+                it.activePlugin = activePlugin
                 it.iobCobCalculator = iobCobCalculator
                 it.profileFunction = profileFunction
                 it.rh = rh
@@ -300,7 +298,7 @@ class APSResultTest : TestBaseWithProfile() {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraints
                 it.sp = sp
-                it.activePlugin = activePluginProvider
+                it.activePlugin = activePlugin
                 it.iobCobCalculator = iobCobCalculator
                 it.profileFunction = profileFunction
                 it.rh = rh
@@ -317,7 +315,7 @@ class APSResultTest : TestBaseWithProfile() {
                 it.aapsLogger = aapsLogger
                 it.constraintChecker = constraints
                 it.sp = sp
-                it.activePlugin = activePluginProvider
+                it.activePlugin = activePlugin
                 it.iobCobCalculator = iobCobCalculator
                 it.profileFunction = profileFunction
                 it.rh = rh
@@ -331,7 +329,6 @@ class APSResultTest : TestBaseWithProfile() {
     @BeforeEach
     fun prepare() {
         `when`(constraints.isClosedLoopAllowed(anyObject())).thenReturn(closedLoopEnabled)
-        `when`(activePluginProvider.activePump).thenReturn(testPumpPlugin)
         `when`(sp.getDouble(ArgumentMatchers.anyInt(), ArgumentMatchers.anyDouble())).thenReturn(30.0)
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
     }

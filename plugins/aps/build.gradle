@@ -25,6 +25,8 @@ dependencies {
     implementation project(':core:validators')
     implementation project(':plugins:automation')
 
+    testImplementation project(':app-wear-shared:shared-tests')
+
     api "androidx.appcompat:appcompat:$appcompat_version"
     api "androidx.swiperefreshlayout:swiperefreshlayout:$swipe_version"
     api "androidx.gridlayout:gridlayout:$gridlayout_version"

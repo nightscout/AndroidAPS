@@ -9,7 +9,7 @@ import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.queue.Callback
 import io.reactivex.rxjava3.core.Single
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
@@ -27,18 +27,18 @@ class ActionStartTempTargetTest : ActionsTestBase() {
     }
 
     @Test fun friendlyNameTest() {
-        Assert.assertEquals(R.string.starttemptarget, sut.friendlyName())
+        Assertions.assertEquals(R.string.starttemptarget, sut.friendlyName())
     }
 
     @Test fun shortDescriptionTest() {
         sut.value = InputTempTarget(profileFunction)
         sut.value.value = 100.0
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
-        Assert.assertEquals("Start temp target: 100mg/dl@null(Automation)", sut.shortDescription())
+        Assertions.assertEquals("Start temp target: 100mg/dl@null(Automation)", sut.shortDescription())
     }
 
     @Test fun iconTest() {
-        Assert.assertEquals(info.nightscout.core.main.R.drawable.ic_temptarget_high, sut.icon())
+        Assertions.assertEquals(info.nightscout.core.main.R.drawable.ic_temptarget_high, sut.icon())
     }
 
     @Test fun doActionTest() {
@@ -78,27 +78,27 @@ class ActionStartTempTargetTest : ActionsTestBase() {
 
         sut.doAction(object : Callback() {
             override fun run() {
-                Assert.assertTrue(result.success)
+                Assertions.assertTrue(result.success)
             }
         })
         Mockito.verify(repository, Mockito.times(1)).runTransactionForResult(anyObject<Transaction<InsertAndCancelCurrentTemporaryTargetTransaction.TransactionResult>>())
     }
 
     @Test fun hasDialogTest() {
-        Assert.assertTrue(sut.hasDialog())
+        Assertions.assertTrue(sut.hasDialog())
     }
 
     @Test fun toJSONTest() {
         sut.value = InputTempTarget(profileFunction)
         sut.value.value = 100.0
         sut.duration = InputDuration(30, InputDuration.TimeUnit.MINUTES)
-        Assert.assertEquals("{\"data\":{\"durationInMinutes\":30,\"units\":\"mg/dl\",\"value\":100},\"type\":\"ActionStartTempTarget\"}", sut.toJSON())
+        Assertions.assertEquals("{\"data\":{\"durationInMinutes\":30,\"units\":\"mg/dl\",\"value\":100},\"type\":\"ActionStartTempTarget\"}", sut.toJSON())
     }
 
     @Test fun fromJSONTest() {
         sut.fromJSON("{\"value\":100,\"durationInMinutes\":30,\"units\":\"mg/dl\"}")
-        Assert.assertEquals(GlucoseUnit.MGDL, sut.value.units)
-        Assert.assertEquals(100.0, sut.value.value, 0.001)
-        Assert.assertEquals(30.0, sut.duration.getMinutes().toDouble(), 0.001)
+        Assertions.assertEquals(GlucoseUnit.MGDL, sut.value.units)
+        Assertions.assertEquals(100.0, sut.value.value, 0.001)
+        Assertions.assertEquals(30.0, sut.duration.getMinutes().toDouble(), 0.001)
     }
 }
