@@ -2,6 +2,7 @@ package info.nightscout.rx.weardata
 
 import android.content.res.Resources
 import android.graphics.BitmapFactory
+import android.graphics.Typeface
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
@@ -49,7 +50,11 @@ enum class ResFileMap(val fileName: String) {
     ARROW_FLAT("ArrowFlat"),
     ARROW_FORTY_FIVE_DOWN("Arrow45Down"),
     ARROW_SINGLE_DOWN("ArrowSingleDown"),
-    ARROW_DOUBLE_DOWN("ArrowDoubleDown");
+    ARROW_DOUBLE_DOWN("ArrowDoubleDown"),
+    FONT1("Font1"),
+    FONT2("Font2"),
+    FONT3("Font3"),
+    FONT4("Font4");
 
     companion object {
 
@@ -61,7 +66,8 @@ enum class ResFormat(val extension: String) {
     UNKNOWN(""),
     SVG("svg"),
     JPG("jpg"),
-    PNG("png");
+    PNG("png"),
+    TTF("ttf");
 
     companion object {
 
@@ -90,7 +96,32 @@ data class ResData(val value: ByteArray, val format: ResFormat) {
                     }
                 }
 
-                else                                   -> null
+                else                         -> null
+            }
+        } catch (e: Exception) {
+            return null
+        }
+    }
+
+    fun toTypeface(): Typeface? {
+        try {
+            return when (format) {
+                ResFormat.TTF -> {
+                    // Workaround with temporary File, Typeface.createFromFileDescriptor(null, value, 0, value.size) more simple not available
+                    val tempFile = File.createTempFile("temp", ".ttf")
+                    val fileOutputStream = FileOutputStream(tempFile)
+                    fileOutputStream.write(value)
+                    fileOutputStream.close()
+
+                    val typeface = Typeface.createFromFile(tempFile)
+                    tempFile.delete() // delete tempfile after usage
+                    typeface
+                }
+
+                else          -> {
+                    null
+
+                }
             }
         } catch (e: Exception) {
             return null
@@ -224,7 +255,10 @@ enum class JsonKeyValues(val key: String, val jsonKey: JsonKeys) {
     BOLD_ITALIC("bold_italic", JsonKeys.FONTSTYLE),
     ITALIC("italic", JsonKeys.FONTSTYLE),
     BGCOLOR("bgColor", JsonKeys.COLOR),
-    BGCOLOR1("bgColor", JsonKeys.FONTCOLOR)
+    FONT1("font1", JsonKeys.FONTCOLOR),
+    FONT2("font2", JsonKeys.FONTCOLOR),
+    FONT3("font3", JsonKeys.FONTCOLOR),
+    FONT4("font4", JsonKeys.FONTCOLOR)
 }
 
 enum class ViewType(@StringRes val comment: Int?) {

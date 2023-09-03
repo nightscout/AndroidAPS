@@ -67,7 +67,7 @@ class CustomWatchface : BaseWatchFace() {
 
     override fun onCreate() {
         super.onCreate()
-        FontMap.init(context)
+        FontMap.init(context, resDataMap)
     }
 
     @Suppress("DEPRECATION")
@@ -149,6 +149,7 @@ class CustomWatchface : BaseWatchFace() {
             try {
                 val json = JSONObject(it.customWatchfaceData.json)
                 resDataMap = it.customWatchfaceData.resDatas
+                FontMap.init(context, resDataMap)
                 enableSecond = json.optBoolean(ENABLESECOND.key) && sp.getBoolean(R.string.key_show_seconds, true)
                 highColor = getColor(json.optString(HIGHCOLOR.key), ContextCompat.getColor(this, R.color.dark_highColor))
                 midColor = getColor(json.optString(MIDCOLOR.key), ContextCompat.getColor(this, R.color.inrange))
@@ -529,20 +530,35 @@ private enum class GravityMap(val key: String, val gravity: Int) {
     }
 }
 
-private enum class FontMap(val key: String, var font: Typeface, @FontRes val fontRessources: Int?) {
-    SANS_SERIF(JsonKeyValues.SANS_SERIF.key, Typeface.SANS_SERIF, null),
-    DEFAULT(JsonKeyValues.DEFAULT.key, Typeface.DEFAULT, null),
-    DEFAULT_BOLD(JsonKeyValues.DEFAULT_BOLD.key, Typeface.DEFAULT_BOLD, null),
-    MONOSPACE(JsonKeyValues.MONOSPACE.key, Typeface.MONOSPACE, null),
-    SERIF(JsonKeyValues.SERIF.key, Typeface.SERIF, null),
-    ROBOTO_CONDENSED_BOLD(JsonKeyValues.ROBOTO_CONDENSED_BOLD.key, Typeface.DEFAULT, R.font.roboto_condensed_bold),
-    ROBOTO_CONDENSED_LIGHT(JsonKeyValues.ROBOTO_CONDENSED_LIGHT.key, Typeface.DEFAULT, R.font.roboto_condensed_light),
-    ROBOTO_CONDENSED_REGULAR(JsonKeyValues.ROBOTO_CONDENSED_REGULAR.key, Typeface.DEFAULT, R.font.roboto_condensed_regular),
-    ROBOTO_SLAB_LIGHT(JsonKeyValues.ROBOTO_SLAB_LIGHT.key, Typeface.DEFAULT, R.font.roboto_slab_light);
+private enum class FontMap(val key: String, var font: Typeface, @FontRes val fontRessources: Int?, val customFont: ResFileMap?) {
+    SANS_SERIF(JsonKeyValues.SANS_SERIF.key, Typeface.SANS_SERIF, null, null),
+    DEFAULT(JsonKeyValues.DEFAULT.key, Typeface.DEFAULT, null, null),
+    DEFAULT_BOLD(JsonKeyValues.DEFAULT_BOLD.key, Typeface.DEFAULT_BOLD, null, null),
+    MONOSPACE(JsonKeyValues.MONOSPACE.key, Typeface.MONOSPACE, null, null),
+    SERIF(JsonKeyValues.SERIF.key, Typeface.SERIF, null, null),
+    ROBOTO_CONDENSED_BOLD(JsonKeyValues.ROBOTO_CONDENSED_BOLD.key, Typeface.DEFAULT, R.font.roboto_condensed_bold, null),
+    ROBOTO_CONDENSED_LIGHT(JsonKeyValues.ROBOTO_CONDENSED_LIGHT.key, Typeface.DEFAULT, R.font.roboto_condensed_light, null),
+    ROBOTO_CONDENSED_REGULAR(JsonKeyValues.ROBOTO_CONDENSED_REGULAR.key, Typeface.DEFAULT, R.font.roboto_condensed_regular, null),
+    ROBOTO_SLAB_LIGHT(JsonKeyValues.ROBOTO_SLAB_LIGHT.key, Typeface.DEFAULT, R.font.roboto_slab_light, null),
+    FONT1(JsonKeyValues.FONT1.key, Typeface.DEFAULT, null, ResFileMap.FONT1),
+    FONT2(JsonKeyValues.FONT2.key, Typeface.DEFAULT, null, ResFileMap.FONT2),
+    FONT3(JsonKeyValues.FONT3.key, Typeface.DEFAULT, null, ResFileMap.FONT3),
+    FONT4(JsonKeyValues.FONT4.key, Typeface.DEFAULT, null, ResFileMap.FONT4);
 
     companion object {
 
-        fun init(context: Context) = values().forEach { it.font = it.fontRessources?.let { font -> ResourcesCompat.getFont(context, font) } ?: it.font }
+        fun init(context: Context, resDataMap: CwfResDataMap) = values().forEach { fontMap ->
+            fontMap.customFont?.let { customFont ->
+                fontMap.font = Typeface.DEFAULT
+                resDataMap[customFont]?.toTypeface()?.let { resData ->
+                    fontMap.font = resData
+                }
+            } ?: run {
+                fontMap.font = fontMap.fontRessources?.let { fontResource ->
+                    ResourcesCompat.getFont(context, fontResource)
+                } ?: fontMap.font
+            }
+        }
         fun font(key: String) = values().firstOrNull { it.key == key }?.font ?: DEFAULT.font
         fun key() = DEFAULT.key
     }
