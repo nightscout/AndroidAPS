@@ -4,7 +4,21 @@
     <string name="executing_right_now">Η εντολή εκτελείται τώρα</string>
     <string name="basal_value_below_minimum">Τιμή βασικού κάτω από το ελάχιστο. Δεν έχει ρυθμιστεί το προφίλ!</string>
     <string name="permission">Άδεια</string>
+    <string name="need_whitelisting">Το %1$s πρέπει να απενεργοποιήσει τη βελτιστοποίηση της μπαταρίας για βέλτιστη απόδοση</string>
+    <string name="need_location_permission">Η εφαρμογή χρειάζεται άδεια τοποθεσίας για τη σάρωση Bluetooth και τον σύνδεση σε δίκτυο WiFi</string>
+    <string name="need_storage_permission">Η εφαρμογή απαιτεί πρόσβαση στη μνήμη για την αποθήκευση αρχείων καταγραφής και εξαγωγή των ρυθμίσεων</string>
     <!--       Stats -->
+    <string name="veryLow" comment="below 3.1">Πολύ χαμηλό</string>
     <string name="low" comment="3.1-3.9">Χαμηλό</string>
     <string name="high" comment="10.0-13.9">Υψηλό</string>
+    <string name="veryHigh" comment="above 13.9">Πολύ υψηλό</string>
+    <string name="below" comment="below &quot;in range&quot;">Κάτω του στόχου</string>
+    <string name="in_range">Εντός στόχου</string>
+    <string name="above" comment="above &quot;in range&quot;">Άνω του στόχου</string>
+    <string name="hba1c">Γλυκοζυλιωμένη αιμοσφαιρίνη (HbA1c): </string>
+    <string name="std_deviation">SD: %1$s</string>
+    <string name="detailed_14_days">Λεπτομερή στοιχεία 14 ημερών</string>
+    <string name="day_tir">Στόχος μέρας</string>
+    <string name="night_tir">Στόχος νύχτας</string>
+    <string name="carbs_short" comment="max 6 characters">Υδατάνθρακες</string>
 </resources>
