@@ -139,7 +139,7 @@ class BgGraphBuilder(
         val pointValues: MutableList<PointValue> = ArrayList()
         for ((date, bolus, _, isSMB, isValid) in bolusWatchDataList) {
             if (date in (startingTime + 1)..endingTime && !isSMB && isValid && bolus > 0) {
-                pointValues.add(PointValue(fuzz(date), offset - 2))
+                pointValues.add(PointValue(fuzz(date), offset - pointSize * 3))
             }
         }
         return Line(pointValues).also { line ->
@@ -154,7 +154,7 @@ class BgGraphBuilder(
         val pointValues: MutableList<PointValue> = ArrayList()
         for ((date, bolus, _, isSMB, isValid) in bolusWatchDataList) {
             if (date in (startingTime + 1)..endingTime && isSMB && isValid && bolus > 0) {
-                pointValues.add(PointValue(fuzz(date), offset - 2))
+                pointValues.add(PointValue(fuzz(date), offset - pointSize * 3))
             }
         }
         return Line(pointValues).also { line ->
@@ -169,7 +169,7 @@ class BgGraphBuilder(
         val pointValues: MutableList<PointValue> = ArrayList()
         for ((date, bolus, carbs, _, isValid) in bolusWatchDataList) {
             if (date in (startingTime + 1)..endingTime && !(isValid && (bolus > 0 || carbs > 0))) {
-                pointValues.add(PointValue(fuzz(date), offset - 2))
+                pointValues.add(PointValue(fuzz(date), offset - pointSize * 3))
             }
         }
         return Line(pointValues).also { line ->
@@ -184,7 +184,7 @@ class BgGraphBuilder(
         val pointValues: MutableList<PointValue> = ArrayList()
         for ((date, _, carbs, isSMB, isValid) in bolusWatchDataList) {
             if (date in (startingTime + 1)..endingTime && !isSMB && isValid && carbs > 0) {
-                pointValues.add(PointValue(fuzz(date), offset + 2))
+                pointValues.add(PointValue(fuzz(date), offset + pointSize * 3))
             }
         }
         return Line(pointValues).also { line ->
