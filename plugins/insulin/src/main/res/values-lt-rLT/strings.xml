@@ -5,7 +5,7 @@
     <string name="description_insulin_rapid">Nustatymai Humalog ir NovoRapid / NovoLog insulinams</string>
     <string name="description_insulin_ultra_rapid">Nustatymai Fiasp insulinui</string>
     <string name="description_insulin_lyumjev">Nustatymai Lyumjev insulinui</string>
-    <string name="description_insulin_free_peak">Leidžia pasirinkti insulino veikimo piką ir turėtų būti naudojama tik patyrusių vartotojų</string>
+    <string name="description_insulin_free_peak">Leidžia pasirinkti insulino veikimo piką ir turėtų būti naudojama tik patyrusių naudotojų</string>
     <string name="insulin_shortname">INS</string>
     <string name="insulin_oref_peak">AIO kreivės pikas</string>
     <string name="insulin_peak_time">Piko laikas [min]</string>
