@@ -41,6 +41,8 @@ dependencies {
     api "androidx.room:room-rxjava3:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
+    testImplementation project(':app-wear-shared:shared-tests')
     testImplementation "commons-codec:commons-codec:$commonscodec_version"
+
     api 'com.github.guepardoapps:kulid:2.0.0.0'
 }

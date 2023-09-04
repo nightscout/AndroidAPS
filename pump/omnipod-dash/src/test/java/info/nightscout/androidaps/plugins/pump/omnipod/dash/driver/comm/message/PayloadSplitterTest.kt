@@ -3,8 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 import com.google.crypto.tink.subtle.Hex
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.packet.PayloadSplitter
 import info.nightscout.core.utils.toHex
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class PayloadSplitterTest {
@@ -17,10 +16,10 @@ class PayloadSplitterTest {
         val splitter = PayloadSplitter(payload)
         val packets = splitter.splitInPackets()
 
-        assertEquals(packets.size, 2)
-        assertEquals(f1, packets.get(0).toByteArray().toHex())
-        val p2 = packets.get(1).toByteArray()
-        assertTrue(p2.size >= 10)
-        assertEquals(f2.subSequence(0, 20), p2.copyOfRange(0, 10).toHex())
+        Assertions.assertEquals(packets.size, 2)
+        Assertions.assertEquals(f1, packets[0].toByteArray().toHex())
+        val p2 = packets[1].toByteArray()
+        Assertions.assertTrue(p2.size >= 10)
+        Assertions.assertEquals(f2.subSequence(0, 20), p2.copyOfRange(0, 10).toHex())
     }
 }

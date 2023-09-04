@@ -4,7 +4,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ProgramReminder
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class ProgramBeepsCommandTest {
@@ -20,6 +20,6 @@ class ProgramBeepsCommandTest {
             .build()
             .encoded
 
-        Assert.assertArrayEquals(Hex.decodeHex("024200022C061E0402000000800F"), encoded)
+        Assertions.assertArrayEquals(Hex.decodeHex("024200022C061E0402000000800F"), encoded)
     }
 }

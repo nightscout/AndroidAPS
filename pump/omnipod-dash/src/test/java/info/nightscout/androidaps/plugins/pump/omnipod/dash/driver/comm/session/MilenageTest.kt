@@ -1,10 +1,10 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.session
 
-import info.nightscout.androidaps.TestBase
 import info.nightscout.core.utils.toHex
 import info.nightscout.interfaces.Config
 import info.nightscout.rx.logging.AAPSLoggerTest
-import org.junit.Assert
+import info.nightscout.sharedtests.TestBase
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.spongycastle.util.encoders.Hex
@@ -22,9 +22,9 @@ class MilenageTest : TestBase() {
             sqn = byteArrayOf(0, 0, 0, 0, 0, 2),
             randParam = Hex.decode("c2cd1248451103bd77a6c7ef88c441ba")
         )
-        Assert.assertEquals(m.res.toHex(), "a40bc6d13861447e")
-        Assert.assertEquals(m.ck.toHex(), "55799fd26664cbf6e476525e2dee52c6")
-        Assert.assertEquals(m.autn.toHex(), "00c55c78e8d3b9b9e935860a7259f6c0")
+        Assertions.assertEquals(m.res.toHex(), "a40bc6d13861447e")
+        Assertions.assertEquals(m.ck.toHex(), "55799fd26664cbf6e476525e2dee52c6")
+        Assertions.assertEquals(m.autn.toHex(), "00c55c78e8d3b9b9e935860a7259f6c0")
     }
 
     @Test fun testMilenage2() {
@@ -36,9 +36,9 @@ class MilenageTest : TestBase() {
             sqn = byteArrayOf(0, 0, 0, 0, 0, 2), // 1 + 1
             randParam = Hex.decode("4fc01ac1a94376ae3e052339c07d9e1f")
         )
-        Assert.assertEquals(m.res.toHex(), "ec549e00fa668a19")
-        Assert.assertEquals(m.ck.toHex(), "ee3dac761fe358a9f476cc5ee81aa3e9")
-        Assert.assertEquals(m.autn.toHex(), "a3e7a71430c8b9b95245b33b3bd679c4")
+        Assertions.assertEquals(m.res.toHex(), "ec549e00fa668a19")
+        Assertions.assertEquals(m.ck.toHex(), "ee3dac761fe358a9f476cc5ee81aa3e9")
+        Assertions.assertEquals(m.autn.toHex(), "a3e7a71430c8b9b95245b33b3bd679c4")
     }
 
     @Test fun testMilenageIncrementedSQN() {
@@ -51,9 +51,9 @@ class MilenageTest : TestBase() {
             sqn = byteArrayOf(0, 0, 0, 0, 0x01, 0x5e),
             randParam = Hex.decode("d71cc44820e5419f42c62ae97c035988")
         )
-        Assert.assertEquals(m.res.toHex(), "5f807a379a5c5d30")
-        Assert.assertEquals(m.ck.toHex(), "8dd4b3ceb849a01766e37f9d86045c39")
-        Assert.assertEquals(m.autn.toHex(), "0e0264d056fcb9b9752227365a090955")
+        Assertions.assertEquals(m.res.toHex(), "5f807a379a5c5d30")
+        Assertions.assertEquals(m.ck.toHex(), "8dd4b3ceb849a01766e37f9d86045c39")
+        Assertions.assertEquals(m.autn.toHex(), "0e0264d056fcb9b9752227365a090955")
     }
 
     @Test fun testMileageSynchronization() {
@@ -67,7 +67,7 @@ class MilenageTest : TestBase() {
             randParam = Hex.decode("396707041ca3a5931fc0e52d2d7b9ecf"),
             amf = byteArrayOf(0, 0),
         )
-        Assert.assertEquals(m.receivedMacS.toHex(), m.macS.toHex())
-        Assert.assertEquals(m.sqn.toHex(), m.synchronizationSqn.toHex())
+        Assertions.assertEquals(m.receivedMacS.toHex(), m.macS.toHex())
+        Assertions.assertEquals(m.sqn.toHex(), m.synchronizationSqn.toHex())
     }
 }

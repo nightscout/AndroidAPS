@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.util.Date
 
@@ -18,6 +18,6 @@ class SetUniqueIdCommandTest {
             .build()
             .encoded
 
-        Assert.assertArrayEquals(Hex.decodeHex("FFFFFFFF18150313024200031404020A150E2908146CC1000A67278344"), encoded)
+        Assertions.assertArrayEquals(Hex.decodeHex("FFFFFFFF18150313024200031404020A150E2908146CC1000A67278344"), encoded)
     }
 }

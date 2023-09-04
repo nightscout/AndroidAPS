@@ -3,7 +3,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.command
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.ProgramReminder
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class ProgramBolusCommandTest {
@@ -19,7 +19,7 @@ class ProgramBolusCommandTest {
             .build()
             .encoded
 
-        Assert.assertArrayEquals(
+        Assertions.assertArrayEquals(
             Hex.decodeHex("02420001381F1A0E494E532E02010F01064000640064170D4003E800030D4000000000000080F6"),
             encoded
         )

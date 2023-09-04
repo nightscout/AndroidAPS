@@ -2,7 +2,7 @@ package info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.comm.message
 
 import com.google.crypto.tink.subtle.Hex
 import info.nightscout.core.utils.toHex
-import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class StringLengthPrefixEncodingTest {
@@ -12,12 +12,12 @@ class StringLengthPrefixEncodingTest {
 
     @Test fun testFormatKeysP0() {
         val payload = StringLengthPrefixEncoding.formatKeys(arrayOf("P0="), arrayOf(p0Content))
-        assertEquals(p0Payload.toHex(), payload.toHex())
+        Assertions.assertEquals(p0Payload.toHex(), payload.toHex())
     }
 
     @Test fun testParseKeysP0() {
         val parsed = StringLengthPrefixEncoding.parseKeys(arrayOf("P0="), p0Payload)
-        assertEquals(parsed.size, 1)
-        assertEquals(parsed[0].toHex(), p0Content.toHex())
+        Assertions.assertEquals(parsed.size, 1)
+        Assertions.assertEquals(parsed[0].toHex(), p0Content.toHex())
     }
 }

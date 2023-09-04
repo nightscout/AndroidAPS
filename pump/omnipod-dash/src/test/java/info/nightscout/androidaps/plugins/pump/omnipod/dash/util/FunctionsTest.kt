@@ -4,7 +4,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.Profile.ProfileValue
 import org.junit.Assert
-import org.junit.Assert.assertEquals
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
@@ -24,19 +24,19 @@ class FunctionsTest {
 
         val basalProgram: BasalProgram = mapProfileToBasalProgram(profile)
         val entries: List<BasalProgram.Segment> = basalProgram.segments
-        assertEquals(3, entries.size)
+        Assertions.assertEquals(3, entries.size)
         val entry1: BasalProgram.Segment = entries[0]
-        assertEquals(0.toShort(), entry1.startSlotIndex)
-        assertEquals(50, entry1.basalRateInHundredthUnitsPerHour)
-        assertEquals(10.toShort(), entry1.endSlotIndex)
+        Assertions.assertEquals(0.toShort(), entry1.startSlotIndex)
+        Assertions.assertEquals(50, entry1.basalRateInHundredthUnitsPerHour)
+        Assertions.assertEquals(10.toShort(), entry1.endSlotIndex)
         val entry2: BasalProgram.Segment = entries[1]
-        assertEquals(10.toShort(), entry2.startSlotIndex)
-        assertEquals(100, entry2.basalRateInHundredthUnitsPerHour)
-        assertEquals(28.toShort(), entry2.endSlotIndex)
+        Assertions.assertEquals(10.toShort(), entry2.startSlotIndex)
+        Assertions.assertEquals(100, entry2.basalRateInHundredthUnitsPerHour)
+        Assertions.assertEquals(28.toShort(), entry2.endSlotIndex)
         val entry3: BasalProgram.Segment = entries[2]
-        assertEquals(28.toShort(), entry3.startSlotIndex)
-        assertEquals(305, entry3.basalRateInHundredthUnitsPerHour)
-        assertEquals(48.toShort(), entry3.endSlotIndex)
+        Assertions.assertEquals(28.toShort(), entry3.startSlotIndex)
+        Assertions.assertEquals(305, entry3.basalRateInHundredthUnitsPerHour)
+        Assertions.assertEquals(48.toShort(), entry3.endSlotIndex)
     }
 
     @Test fun invalidProfileZeroEntries() {
@@ -108,6 +108,6 @@ class FunctionsTest {
 
         val basalProgram: BasalProgram = mapProfileToBasalProgram(profile)
         val basalProgramElement: BasalProgram.Segment = basalProgram.segments[0]
-        assertEquals(5, basalProgramElement.basalRateInHundredthUnitsPerHour)
+        Assertions.assertEquals(5, basalProgramElement.basalRateInHundredthUnitsPerHour)
     }
 }

@@ -7,7 +7,7 @@ import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definitio
 import info.nightscout.androidaps.plugins.pump.omnipod.dash.driver.pod.definition.BeepType
 import org.apache.commons.codec.DecoderException
 import org.apache.commons.codec.binary.Hex
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class ProgramAlertsCommandTest {
@@ -46,7 +46,7 @@ class ProgramAlertsCommandTest {
             .build()
             .encoded
 
-        Assert.assertArrayEquals(Hex.decodeHex("024200038C121910494E532E79A410D1050228001275060280F5"), encoded)
+        Assertions.assertArrayEquals(Hex.decodeHex("024200038C121910494E532E79A410D1050228001275060280F5"), encoded)
     }
 
     @Test @Throws(DecoderException::class) fun testLowReservoirAlert() {
@@ -71,7 +71,7 @@ class ProgramAlertsCommandTest {
             .build()
             .encoded
 
-        Assert.assertArrayEquals(Hex.decodeHex("02420003200C190A494E532E4C0000C801020149"), encoded)
+        Assertions.assertArrayEquals(Hex.decodeHex("02420003200C190A494E532E4C0000C801020149"), encoded)
     }
 
     @Test @Throws(DecoderException::class) fun testUserExpirationAlert() {
@@ -96,7 +96,7 @@ class ProgramAlertsCommandTest {
             .build()
             .encoded
 
-        Assert.assertArrayEquals(Hex.decodeHex("024200033C0C190A494E532E38000FEF030203E2"), encoded)
+        Assertions.assertArrayEquals(Hex.decodeHex("024200033C0C190A494E532E38000FEF030203E2"), encoded)
     }
 
     @Test @Throws(DecoderException::class) fun testLumpOfCoalAlert() {
@@ -122,6 +122,6 @@ class ProgramAlertsCommandTest {
             .build()
             .encoded
 
-        Assert.assertArrayEquals(Hex.decodeHex("02420003280C190A494E532E7837000508020356"), encoded)
+        Assertions.assertArrayEquals(Hex.decodeHex("02420003280C190A494E532E7837000508020356"), encoded)
     }
 }
