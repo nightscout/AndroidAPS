@@ -104,7 +104,6 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Knop voor het onderbreken van insuline toediening weergeven op het Omnipod-tabblad</string>
     <string name="omnipod_common_preferences_time_change_enabled">Zomertijd-/tijdzonedetectie ingeschakeld</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Herinnering vervaldatum ingeschakeld</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Aantal uur voordat de Pod stopt</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Pieptonen voor \"Reservoir bijna leeg\" ingeschakeld</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Aantal eenheden</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Podwaarschuwingen automatisch bevestigen</string>
