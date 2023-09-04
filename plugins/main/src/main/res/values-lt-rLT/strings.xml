@@ -25,6 +25,7 @@
     <string name="smscommunicator_otp_install_info">Kiekviename telefone, palaikančiame RFC 6238 TOTP prieigos raktus, įdiekite autentifikavimo programą. Populiariausios nemokamos programos yra:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Jei iš naujo nustatysite autentifikavimo priemonę, visi esami autentifikatoriai taps negaliojantys. Turėsite juos vėl nustatyti!</string>
     <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">NETEISINGAS DYDIS!</string>
     <string name="smscommunicator_otp_verification_wrong_pin">NETEISINGAS PIN</string>
     <string name="smscommunicator_otp_verification_wrong_otp">NETEISINGAS OTP</string>
     <string name="sms_wrong_code">Neteisingas kodas. Komanda atšaukta.</string>
@@ -169,7 +170,7 @@
     <string name="cannula">Kaniulė</string>
     <string name="ebstopsloop">Ištęsto boluso funkcija sustabdys uždaro ciklo režimą ištęsto boluso veikimo metu. Ar tikrai norite patvirtinti savo pasirinkimą?</string>
     <string name="statuslights_cannula_age">kateteris</string>
-    <string name="statuslights_patch_pump_age">Patch pompos laikas</string>
+    <string name="statuslights_patch_pump_age">rezervuaro laikas</string>
     <string name="patch_pump">Patch pompa</string>
     <!-- Overview -->
     <string name="show_statuslights">Pradžios ekrane rodyti spalvotus indikatorius</string>
@@ -313,9 +314,19 @@
     <string name="wear_notifysmb_summary">Rodyti SMB laikrodyje kaip standartinį bolusą.</string>
     <string name="wear_predictions_summary">Rodyti prognozes laikrodyje.</string>
     <string name="wear_predictions_title">Prognozė</string>
-    <string name="wear_export_watchface">Eksportuoti ruošinį</string>
+    <string name="wear_custom_watchface_settings">Pasirinktiniai laikrodžio ekrano nustatymai</string>
+    <string name="wear_custom_watchface_authorization_title">Pasirinktinė laikrodžio ekrano autorizacija</string>
+    <string name="wear_custom_watchface_authorization_summary">Leisti įkeltam pasirinktiniam ekranui keisti ir užrakinti kai kuriuos laikrodžio nustatymus, kad jie atitiktų ekrano dizainą</string>
+    <string name="wear_custom_watchface">Pasirinktinis ekranas: %1$s</string>
+    <string name="wear_load_watchface">Įkelti laikrodžio ekraną</string>
+    <string name="wear_infos_watchface">Ekrano info</string>
+    <string name="wear_export_watchface">Eksportuoti šabloną</string>
+    <string name="wear_new_custom_watchface_exported">Pasirinktinio ekrano šablonas eksportuotas</string>
     <string name="resend_all_data">Pakartotinai siųsti visus duomenis</string>
     <string name="open_settings_on_wear">Atidaryti išmaniojo laikrodžio nustatymus</string>
+    <string name="cwf_infos_pref_locked">Užrakintų nustatymų sąrašas</string>
+    <string name="cwf_infos_pref_required">Ekranui reikalingų nustatymų sąrašas</string>
+    <string name="cwf_infos_view_title">Į ekraną įtrauktų laukų sąrašas</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="old_data">SENI DUOMENYS</string>

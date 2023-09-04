@@ -23,7 +23,7 @@
     <string name="array_of_elements">%1$d elementų masyvas. \naktuali vertė:</string>
     <string name="oaps_shortname">AtvCiklas</string>
     <string name="description_ama">2017 m. algoritmas</string>
-    <string name="description_smb">Naujausias algoritmas patyrusiems vartotojams</string>
+    <string name="description_smb">Naujausias algoritmas patyrusiems naudotojams</string>
     <string name="description_smb_dynamic_isf">Naujausias algoritmas patyrusiems naudotojams su dinaminiu/automatiniu JIF</string>
     <string name="openapsama_bolus_snooze_dia_divisor">Atidėjimo po boluso IVT daliklis</string>
     <string name="openapsma_run">Paleisti dabar</string>
@@ -75,7 +75,7 @@
     <string name="uam_smb_max_minutes_summary">NDM SMB atitinka valandinės bazės insulino kiekį, kuris gaunamas ne daugiau, kaip per</string>
     <string name="carbs_req_threshold">Minimali būtinų angliavandenių priminimo riba</string>
     <string name="carbs_req_threshold_summary">Minimalus angliavandenių kiekis gramais, apie kurį reikia įspėti. Angliavandenių pasiūlymai, mažesni už šį kiekį, nėra pranešami.</string>
-    <string name="lgs_threshold_summary">Glikemijos vertė, žemiau kurios insulino tiekimas stabdomas. Numatytoji vertė naudoja standartinį tikslinį modelį. Vartotojas gali nustatyti vertę nuo 3,3mmol/l (60mg/dl) iki 5,5mmol/l (100mg/dl). Jei reikšmė yra mažesnė nei 3,6/65, naudojamas numatytasis modelis</string>
+    <string name="lgs_threshold_summary">Glikemijos vertė, žemiau kurios insulino tiekimas stabdomas. Numatytoji vertė naudoja standartinį tikslinį modelį. Naudotojas gali nustatyti vertę nuo 3,3mmol/l (60mg/dl) iki 5,5mmol/l (100mg/dl). Jei reikšmė yra mažesnė nei 3,6/65, naudojamas numatytasis modelis</string>
     <string name="lgs_threshold_title">Glikemijos vertė, žemiau kurios insulino tiekimas stabdomas</string>
     <string name="increasing_max_basal">Didinama maksimali valandinės bazės reikšmė, nes nustatytoji reikšmė yra mažesnė nei profilio maksimali val. bazės reikšmė</string>
     <string name="max_basal_multiplier">maksimalus bazės daugiklis</string>

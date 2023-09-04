@@ -10,7 +10,7 @@
     <string name="pump_is_suspended_hour_max">Pompa sustabdyta dėl viršyto valandos insulino limito</string>
     <string name="pump_is_suspended_day_max">Pompa sustabdyta dėl viršyto paros insulino limito</string>
     <string name="patch_not_active">Rezervuaras neaktyvus</string>
-    <string name="pump_setting_failed">Vartotojo nustatymai neįrašyti!</string>
+    <string name="pump_setting_failed">Naudotojo nustatymai neįrašyti!</string>
     <!-- overview fragment -->
     <string name="ble_status_label">BLE statusas</string>
     <string name="last_connection_label">Pask. prijungimas</string>
@@ -25,27 +25,39 @@
     <string name="pump_type_label">Pompos tipas</string>
     <string name="fw_version_label">FW versija</string>
     <string name="patch_no_label">Rezerv. nr.</string>
-    <string name="patch_expiry_label">Rezerv. nebeveiks</string>
+    <string name="patch_expiry_label">Rezerv. gal. baigsis</string>
     <string name="refresh_label">Atnaujinti</string>
     <string name="reset_alarms_label">Atstatyti aliarmus</string>
     <string name="change_patch_label">Keisti rezerv.</string>
     <string name="requested_by_user" comment="26 characters max for translation">Inicijuota naudotojo</string>
     <string name="expiry_not_enabled">Neįjungta</string>
     <!-- Alarm strings -->
+    <string name="alarm_none">Nėra</string>
     <string name="alarm_pump_low_battery">Senka pompos baterija</string>
     <string name="alarm_pump_low_reservoir">Senka rezervuaras</string>
     <string name="alarm_pump_expires_soon">Pompa baigia darbą</string>
-    <string name="alarm_low_bg_suspended">Sustabdyta dėl žemos glikemijos</string>
-    <string name="alarm_low_bg_suspended2">Sustabdyta dėl žemos glikemijos 2</string>
+    <string name="alarm_low_bg_suspended">Sustabdyta dėl hipo</string>
+    <string name="alarm_low_bg_suspended2">Sustabdyta dėl hipo 2</string>
     <string name="alarm_auto_suspended">Autom. sustabdyta</string>
+    <string name="alarm_hourly_max_suspended">sustabdyta dėl val. limito</string>
+    <string name="alarm_daily_max_suspended">sustabdyta dėl paros limito</string>
     <string name="alarm_suspended">Sustabdyta</string>
     <string name="alarm_paused">Pristabdyta</string>
     <string name="alarm_occlusion">Užsikimšimas</string>
-    <string name="alarm_expired">Baigė galioti</string>
+    <string name="alarm_expired">Baigėsi gal. laikas</string>
     <string name="alarm_reservoir_empty">Rezervuaras tuščias</string>
     <string name="alarm_patch_fault">Rezerv. klaida</string>
     <string name="alarm_patch_fault2">Rezerv. klaida 2</string>
+    <string name="alarm_base_fault">Pagrindo klaida</string>
+    <string name="alarm_battery_out">Tuščia baterija</string>
+    <string name="alarm_no_calibration">Nėra kalibracijos</string>
+    <string name="pump_time_update_failed">Laiko juosta pompoje neatnaujinta, nutildykite ir atnaujinkite rankiniu būdu.</string>
     <!-- wizard-->
+    <string name="retry">Kartoti</string>
+    <string name="next">Kitas</string>
+    <string name="discard">Baigti naudoti</string>
+    <string name="step_prepare_patch">Aktyvuoti rezervuarą</string>
+    <string name="step_prepare_patch_connect">Prijungti ir užpildyti</string>
     <string name="step_prime">Pildyti</string>
     <string name="step_priming">Pildoma</string>
     <string name="step_priming_complete">Užpildyta</string>
@@ -54,15 +66,38 @@
     <string name="step_activate_complete">Aktyvuota</string>
     <string name="step_deactivate">Deaktyvuoti rezervuarą</string>
     <string name="step_deactivating">Deaktyvuojama...</string>
-    <string name="step_deactivate_complete">Deaktyvuotas</string>
+    <string name="step_deactivate_complete">Deaktyvuota</string>
     <string name="step_retry_activation">Aktyvuojama</string>
     <string name="unexpected_state">Netikėta būsena: %1$s</string>
     <string name="no_profile_selected">Nepasirinktas profilis. Pasirinkite profilį ir bandykite dar kartą.</string>
     <string name="base_serial">Pompos pagrindo SN: %1$X</string>
+    <string name="patch_begin_activation">Nėra aktyvaus rezervuaro. Spauskite <b>Kitas</b> ir pradėkite aktyvavimą.</string>
+    <string name="patch_not_active_note">Neprijunkite pagrindo prie rezervuaro iki kito žingsnio!</string>
+    <string name="connect_pump_base">Prijunkite pompos pagrindą prie naujo rezervuaro, pašalinkite orą ir užpildykite insulinu, tada spauskite <b>Kitas</b>.</string>
     <string name="note_min_70_units">Svarbu: būtina užpildyti bent 70 v.</string>
     <string name="do_not_attach_to_body">Kol kas neprijunkite pompos prie kūno.</string>
+    <string name="half_press_needle">Pusiau spustelėkite adatos mygtuką. Spauskite <b>Kitas</b> pildymui pradėti.</string>
+    <string name="wait_for_priming">Palaukite, kol baigsis pildymas.</string>
+    <string name="priming_error">Pildymas nepavyko, spauskite <b>Kartoti</b>.</string>
+    <string name="press_next">Norėdami tęsti, spauskite <b>Kitas</b>.</string>
+    <string name="press_next_to_start_activation">Aktyvavimui pradėti spauskite <b>Kitas</b>.</string>
+    <string name="remove_safety_lock">Pašalinkite apsaugą. Priklijuokite pompą prie kūno. Paspauskite adatos mygtuką.</string>
+    <string name="activating_pump">Palaukite, kol bus aktyvuota pompa ir nustatyta pradinė bazė.</string>
+    <string name="activating_error">Aktyvavimas nepavyko, spauskite <b>Kartoti</b>.</string>
+    <string name="activating_complete">Naujas rezervuaras aktyvus. Yra %.2f v insulino.</string>
+    <string name="press_OK_to_return">Norėdanu grįžti į pradžios ekraną, spauskite <b>OK</b>.</string>
+    <string name="deactivate_sure">Ar tikrai norite deaktyvuoti rezervuarą?</string>
+    <string name="cancel_sure">Ar tikrai norite nutraukti aktyvavimą?</string>
+    <string name="medtrum_deactivate_pump_confirm">Ar tikrai norite tęsti? Veiksmo nebus galima atšaukti!</string>
+    <string name="press_next_or_cancel">Jei norite deaktyvuoti, spauskite <b>Kitas</b>, jei norite grįžti į pradžios ekaraną, spauskite <b>Atšaukti</b>.</string>
     <string name="deactivating_pump">Deaktyvuojama. Palaukite.</string>
+    <string name="deactivating_error">Deaktyvuoti nepavyko, spauskite <b>Baigti naudoti</b>.</string>
     <string name="retract_needle">Ištraukite adatą. Nuimkite pompą nuo kūno.</string>
+    <string name="remove_base_discard_patch">Nuimkite pompos pagrindą ir tinkamai pašalinkite naudotą rezervuarą.</string>
+    <string name="press_next_or_OK">Norėdami grįžti į pradžios ekraną, spauskite <b>OK</b>. Norėdami aktyvuoti naują rezervuarą, spauskite <b>Kitas</b>.</string>
+    <string name="activation_in_progress">Ups! Panašu, kad aktyvavimo procesas jau vyksta.</string>
+    <string name="press_retry_or_discard">Norėdami atnaujinti aktyvavimą, spauskite <b>Kitas</b>, norėdami atšaukti, spauskite <b>Baigti naudoti</b>.</string>
+    <string name="reading_activation_status">Palaukite, nuskaitomas pompos aktyvavimo statusas.</string>
     <!-- settings-->
     <string name="sn_input_title">Serijos numeris</string>
     <string name="sn_input_summary">Įveskite pompos pagrindo serijos numerį.</string>
@@ -70,6 +105,8 @@
     <string name="pump_unsupported">Pompa netestuota: %1$d! Susisiekite su mumis Discord arba Github kanalais</string>
     <string name="alarm_setting_title">Aliarmų nustatymai</string>
     <string name="alarm_setting_summary">Pasirinkite pompos aliarmų nustatymus</string>
+    <string name="patch_expiration_title">Rezervuaro galiojimo pabaiga</string>
+    <string name="patch_expiration_summary">Įgalinus rezervuaras baigs galioti po 3 parų ir 8 val.</string>
     <string name="hourly_max_insulin_title">Valandos insulino limitas</string>
     <string name="hourly_max_insulin_summary">Nustatykite maksimalų insulino kiekį valandai. Jį viršijus pompa bus sustabdyta.</string>
     <string name="daily_max_insulin_title">Paros insulino limitas</string>
@@ -78,4 +115,5 @@
     <string name="getting_pump_status">Gaunamas pompos statusas</string>
     <string name="getting_bolus_status">Gaunamas boluso statusas</string>
     <string name="getting_temp_basal_status">Gaunamas laikinos bazės statusas</string>
+    <string name="setting_pump_settings">Naudotojo nustatymai</string>
 </resources>

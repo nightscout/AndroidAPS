@@ -104,7 +104,6 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">在Omnipod 选项卡中显示暂停输注按钮</string>
     <string name="omnipod_common_preferences_time_change_enabled">夏令时或时区检测已启用</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">已启用过期提醒</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">关闭前小时数</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">低药量警报已启用</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">警报的单位数值</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Pod 警报自动静音</string>

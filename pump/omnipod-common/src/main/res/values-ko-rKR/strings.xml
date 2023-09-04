@@ -104,7 +104,6 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Omnipod 탭에서 주입 중지 버튼을 나타내기</string>
     <string name="omnipod_common_preferences_time_change_enabled">섬머타임제/시간대 감지 활성화됨</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">만료일 알림 활성화됨</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">종료 한 시간 전</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">인슐린 부족 알람 활성화됨</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">몇 단위</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">자동으로 Pod 경고 음소거</string>
@@ -113,6 +112,7 @@
     <string name="omnipod_common_preferences_category_confirmation_beeps">확인 신호음</string>
     <string name="omnipod_common_preferences_category_notifications">알림</string>
     <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">불확실한 TBR 알림 소리 활성화</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">불확실한 SMB 알림 소리 활성화</string>
     <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">불확실한 볼루스 알림 소리 활성화</string>
     <!-- Omnipod - Pod Status -->
     <string name="omnipod_common_pod_status_no_active_pod">활성화된 Pod 없음</string>

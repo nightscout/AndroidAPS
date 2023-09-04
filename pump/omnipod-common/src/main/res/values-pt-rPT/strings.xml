@@ -104,7 +104,6 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar Botão Suspender Administração no separador Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detecção de DST/Fuso Horário Activado</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Lembrete de expiração activado</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Horas antes de desligar</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Alerta de reservatório baixo activado</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">No. Unidades</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Silenciar automaticamente alertas do Pod</string>

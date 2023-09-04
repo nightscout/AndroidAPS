@@ -40,6 +40,7 @@
     <string name="metadata_wear_import_filename">Nazwa pliku: %1$s</string>
     <string name="metadata_label_plugin_version">Wersja wtyczki: %1$s</string>
     <string name="metadata_label_watchface_name_version">Nazwa: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Info: %1$s</string>
     <string name="pref_show_iob">Pokaż IOB</string>
     <string name="pref_show_detailed_iob">Pokaż szczegółowe IOB</string>
     <string name="pref_show_cob">Pokaż COB</string>

@@ -21,7 +21,7 @@
     <string name="consent">Sutikimas</string>
     <string name="terms_of_use">Naudojimosi sąlygos</string>
     <string name="please_read__information">Norėdami tęsti, atidžiai perskaitykite toliau pateiktą informaciją ir sutikite su naudojimo sąlygomis.</string>
-    <string name="info_openhumans">Tai yra atviro kodo įrankis, kuris nukopijuoja Jūsų duomenis į Open Humans. Mes neturime teisės perduoti Jūsų duomenų trečiosioms šalims be aiškaus jūsų sutikimo. Duomenys, kuriuos gauna projektas ir programa, identifikuojami pagal atsitiktinį vartotojo ID ir tik tada saugiai perkeliami į Open Humans paskyrą, jei sutinkate su šiuo procesu. Galite bet kada sustabdyti įkėlimą ir ištrinti savo įkeltus duomenis apsilankę www.openhumans.org.</string>
+    <string name="info_openhumans">Tai yra atviro kodo įrankis, kuris nukopijuoja Jūsų duomenis į Open Humans. Mes neturime teisės perduoti Jūsų duomenų trečiosioms šalims be aiškaus jūsų sutikimo. Duomenys, kuriuos gauna projektas ir programa, identifikuojami pagal atsitiktinį naudotojo ID ir tik tada saugiai perkeliami į Open Humans paskyrą, jei gautas Jūsų sutikimas. Galite bet kada sustabdyti įkėlimą ir ištrinti savo įkeltus duomenis apsilankę www.openhumans.org.</string>
     <string name="data_uploaded">Duomenys įkelti</string>
     <string name="glucose_values">Glikemijos duomenys</string>
     <string name="boluses">Bolusai</string>

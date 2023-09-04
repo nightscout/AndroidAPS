@@ -40,6 +40,7 @@
     <string name="metadata_wear_import_filename">Názov súboru: %1$s</string>
     <string name="metadata_label_plugin_version">Verzia pluginu: %1$s</string>
     <string name="metadata_label_watchface_name_version">Meno: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Informácie: %1$s</string>
     <string name="pref_show_iob">Zobraziť IOB</string>
     <string name="pref_show_detailed_iob">Zobraziť detailný IOB</string>
     <string name="pref_show_cob">Zobraziť COB</string>

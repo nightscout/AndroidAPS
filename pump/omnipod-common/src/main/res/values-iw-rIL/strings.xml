@@ -104,7 +104,6 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">הצג לחצן \"השהיית מתן אינסולין\" בלשונית אומניפוד</string>
     <string name="omnipod_common_preferences_time_change_enabled">זיהוי אזור זמן ושעון קיץ מופעל</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">תזכורת לתפוגה מופעלת</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">שעות לפני כיבוי</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">התראת מכל נמוך מופעלת</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">מספר יחידות</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">השתק התראות פוד אוטומטית</string>

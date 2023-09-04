@@ -104,7 +104,6 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Button \'Insulinabgabe unterbrechen\' im Omnipod Tab anzeigen</string>
     <string name="omnipod_common_preferences_time_change_enabled">Sommerzeit/Zeitzonen-Erkennung aktiviert</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Ablauferinnerung aktiviert</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Stunden bis zum Podende</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Warnung niedriger Reservoirstand aktiviert</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Anzahl der Einheiten</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Pod-Alarme automatisch stummschalten</string>

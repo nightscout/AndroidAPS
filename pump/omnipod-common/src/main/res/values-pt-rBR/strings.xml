@@ -104,7 +104,6 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar botão de suspensão de entrega na aba Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detecção de fuso horário/zona de horário de verão ativada</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Lembrete de expiração ativado</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Horas antes do desligamento</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Alerta de reservatório baixo habilitado</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Número de unidades</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Silenciar alertas do Pod automaticamente</string>

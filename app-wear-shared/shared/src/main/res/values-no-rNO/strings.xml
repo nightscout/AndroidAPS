@@ -40,6 +40,7 @@
     <string name="metadata_wear_import_filename">Filnavn: %1$s</string>
     <string name="metadata_label_plugin_version">Plugin-versjon: %1$s</string>
     <string name="metadata_label_watchface_name_version">Navn: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Info: %1$s</string>
     <string name="pref_show_iob">Vis IOB</string>
     <string name="pref_show_detailed_iob">Vis detaljert IOB</string>
     <string name="pref_show_cob">Vis COB</string>

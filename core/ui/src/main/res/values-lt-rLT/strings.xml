@@ -29,7 +29,7 @@
     <string name="superbolus">Superbolus</string>
     <string name="pump_paused">Pompa pristabdyta</string>
     <string name="and">Ir</string>
-    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Vartotojas</string>
+    <string name="patient_name_default" comment="This is default patient display name, when user does not provide real one">Naudotojas</string>
     <string name="result">Rezultatas</string>
     <string name="settings">Parametrai</string>
     <string name="statuslights">Būklės indikatoriai</string>
@@ -37,7 +37,7 @@
     <string name="configbuilder_insulin">Insulinas</string>
     <string name="value_unavailable_short">n/a</string>
     <string name="master_password">Pagrindinis slaptažodis</string>
-    <string name="ue_export_to_csv">Eksportuoti vartotojo įrašus į Excel (csv)</string>
+    <string name="ue_export_to_csv">Eksportuoti naudotojo įrašus į Excel (csv)</string>
     <string name="confirm">Patvirtinti</string>
     <string name="pump">Pompa</string>
     <string name="missed_bg_readings">Negauti KG duomenys</string>
@@ -341,7 +341,7 @@
     <string name="uel_otp_export">EKSPORTUOTI OTP</string>
     <string name="uel_otp_reset">IŠVALYTI OTP</string>
     <string name="uel_stop_sms">STABDYTI SMS</string>
-    <string name="uel_export_csv">EKSPORTUOTI VARTOTOJO ĮRAŠUS</string>
+    <string name="uel_export_csv">EKSPORTUOTI NAUDOTOJO ĮRAŠUS</string>
     <string name="uel_start_aaps">PALEISTI AAPS</string>
     <string name="uel_exit_aaps">IŠEITI IŠ AAPS</string>
     <string name="uel_plugin_enabled">ĮSKIEPIS ĮGALINTAS</string>
@@ -376,12 +376,13 @@
     <string name="carbs_g">AV %1$d g</string>
     <string name="extended_bolus_u_min">IŠTĘSTAS BOLUSAS %1$.2f vv %2$d min</string>
     <string name="load_events">GAUTI ĮVYKIUS</string>
+    <string name="clear_alarms">IŠVALYTI ALIARMUS</string>
     <string name="deactivate">DEAKTYVUOTI</string>
     <string name="update_time">ATNAUJINTI LAIKĄ</string>
     <string name="load_history">GAUTI ISTORIJĄ %1$d</string>
     <string name="load_tdds">GAUTI BPD</string>
     <string name="set_profile">NUSTATYTI PROFILĮ</string>
-    <string name="set_user_settings">PASIRINKTI VARTOTOJO NUSTATYMUS</string>
+    <string name="set_user_settings">PASIRINKTI NAUDOTOJO NUSTATYMUS</string>
     <string name="smb_bolus_u">SMB BOLUSAS %1$.2f vv</string>
     <string name="start_pump">PALEISTI POMPĄ</string>
     <string name="stop_pump">SUSTABDYTI POMPĄ</string>
@@ -396,7 +397,7 @@
     <string name="basal">Valandinė bazė</string>
     <string name="basalpct">Valandinė bazė %</string>
     <string name="a11y_file">failas</string>
-    <string name="a11y_user">vartotojas</string>
+    <string name="a11y_user">naudotojas</string>
     <!-- Autotune -->
     <string name="autotune">Autotune</string>
     <string name="autotune_description">Padeda patikslinti profilio nustatymus (JIF, IA ir bazę)</string>
@@ -423,6 +424,7 @@
     <string name="autotune_ic_warning">Pasirinktas profilis turi %1$d IA reikšmes(ių). Autotune naudos %2$.2f g/v</string>
     <string name="autotune_isf_warning">Pasirinktas profilis turi %1$d JIF reikšmes(ių). Autotune naudos %2$.1f %3$s/v</string>
     <string name="autotune_error">Klaida įkeliant duomenis. Paleiskite Autotune iš naujo arba sumažinkite dienų skaičių</string>
+    <string name="autotune_error_more_days">Klaida įvedimo duomenyse, padidinkite dienų skaičių</string>
     <string name="autotune_warning_during_run">Autotune skaičiuoja, turėkite kantrybės</string>
     <string name="autotune_warning_after_run">Atidžiai patikrinkite rezultatus prieš juos naudodami!</string>
     <string name="autotune_partial_result">Patikslinta %1$d / %2$d dienų</string>
@@ -455,6 +457,7 @@
     <string name="cobvsiob">AAO prieš AIO</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Nustatytas lėtas angliavandenių įsisavinimas: %2$d%% laiko. Dar karą patikrinkite savo skaičiavimus. AAO gali būti pervertinti, todėl gali būti suleista per daug insulino!!!!!</font>]]></string>
     <string name="partialboluswizard">Suleisti šią boluso skaičiuoklės rezultato dalį [%]</string>
+    <string name="partialboluswizard_reset_time">Senų glikemijos duomenų riba [min]</string>
     <string name="bolus_constraint_applied_warn">Pritaikytas boluso apribojimas: %1$.2f v iki %2$.2f v</string>
     <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
@@ -545,7 +548,7 @@
     <!-- BluetoothDevicePreference -->
     <string name="need_connect_permission">Programai reikalinga Bluetooth prieigos teisė</string>
     <!--    Combo-->
-    <string name="user_request" comment="26 characters max for translation">Vartotojo užklausa</string>
+    <string name="user_request" comment="26 characters max for translation">Naudotojo užklausa</string>
     <string name="pump_paired" comment="26 characters max for translation">Pompa susieta</string>
     <!--    BlePreCheck-->
     <string name="ble_not_supported">Bluetooth Low Energy nepalaikoma.</string>

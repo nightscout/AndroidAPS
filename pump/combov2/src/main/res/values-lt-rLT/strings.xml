@@ -43,10 +43,11 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_cancel_pairing">Atšaukti susiejimą</string>
     <string name="combov2_pin_hint">10 skaitmenų PIN</string>
     <string name="combov2_pairing_finished_successfully">Combo sėkmingai susieta</string>
-    <string name="combov2_pairing_cancelled">Combo susiejimą nutraukė vartotojas</string>
+    <string name="combov2_pairing_cancelled">Combo susiejimą nutraukė naudotojas</string>
     <string name="combov2_pairing_combo_scan_timeout_reached">Combo skanavimo laikas baigėsi</string>
     <string name="combov2_pairing_failed_due_to_error">Susiejimas nepavyko dėl klaidos: %1$s</string>
     <string name="combov2_pairing_aborted_unknown_reasons">Susiejimas nutrūko dėl nežinomos priežasties</string>
+    <string name="combov2_pairing_invalid_pin_length">"Neteisingas PIN ilgis: reikia %1$d skaitmenų, yra %2$d"</string>
     <string name="combov2_scanning_for_pump">Ieškoma ryšio su pompa</string>
     <string name="combov2_establishing_bt_connection">Nustatomas Bluetooth ryšys (bandymo nr. %1$d)</string>
     <string name="combov2_pairing_performing_handshake">Užmezgamas ryšys su pompa</string>
@@ -124,4 +125,6 @@ Jei po daugiau nei ~5 minučių ryšys neužmegztas:\n\n
     <string name="combov2_refresh_pump_status_after_error">Atnaujinamas pompos statusas po klaidos pranešimo</string>
     <string name="combov2_go_back">Grįžti atgal</string>
     <string name="combov2_cannot_pair_driver_not_initialized_explanation">Neįmanoma susieti pompos, nes nenustatytas valdiklis. Dažniausiai taip nutinka, kai nesuteiktas Bluetooth leidimas. Grįžkite atgal, įgalinkite Bluetooth ir bandykite vėl.</string>
+    <string name="combov2_bluetooth_disabled">Įskiepis nepaleistas - Bluetooth išjungtas</string>
+    <string name="combov2_bluetooth_not_supported">Įskiepis neveikia - šis prietaisas nepalaiko Bluetooth</string>
 </resources>
