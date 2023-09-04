@@ -78,8 +78,8 @@
     <string name="ns_use_ws_title">Prisijungti per WebSocket</string>
     <string name="ns_use_ws_summary">Įgalinimas reiškia: greitesni atnaujinimai, įspėjimų ir pranešimų gavimas ir didesnis baterijos eikvojimas, panašus į v1. Visi kiti įkėlėjai į NS turi naudoti v3 protokolą.</string>
     <!-- Tidepool -->
-    <string name="summary_tidepool_username">Jūsų Tidepool vartotojo vardas, įprastai tai Jūsų el. pašto adresas</string>
-    <string name="title_tidepool_username">Vartotojo vardas</string>
+    <string name="summary_tidepool_username">Jūsų Tidepool naudotojo vardas, įprastai tai Jūsų el. pašto adresas</string>
+    <string name="title_tidepool_username">Naudotojo vardas</string>
     <string name="summary_tidepool_password">Jūsų Tidepool prisijungimo slaptažodis</string>
     <string name="title_tidepool_password">Prisijungimo slaptažodis</string>
     <string name="title_tidepool_test_login">Patikrinti Tidepool prisijungimą</string>
