@@ -1,18 +1,16 @@
 package info.nightscout.androidaps.plugins.pump.common.hw.rileylink.ble;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 /**
  * Created by andy on 11/21/18.
  */
 
-public class RFToolsUTest {
+@Disabled
+class RFToolsUTest {
 
-    private static final String TAG = "RFToolsUTest";
-
-
-    @Test
-    public void testEncodeGeoff() {
+    //@Test
+    void testEncodeGeoff() {
         // /*
         // * {0xa7} -> {0xa9, 0x60}
         // * {0xa7, 0x12} -> {0xa9, 0x6c, 0x72}
@@ -66,8 +64,8 @@ public class RFToolsUTest {
     }
 
 
-    @Test
-    public void testEncodeGo() {
+    //@Test
+    void testEncodeGo() {
         // /*
         // * {0xa7} -> {0xa9, 0x60}
         // * {0xa7, 0x12} -> {0xa9, 0x6c, 0x72}
@@ -126,8 +124,8 @@ public class RFToolsUTest {
     }
 
 
-    @Test
-    public void testDecodeGo() {
+    //@Test
+    void testDecodeGo() {
 
         // // testCompose(new byte[] {(byte)0xa7, (byte)0xa7});
         // byte[] bs = RFTools.encode4b6b(new byte[] { (byte)0xa7 });
@@ -187,12 +185,11 @@ public class RFToolsUTest {
         // Assert.fail();
         // }
 
-        return;
     }
 
 
-    @Test
-    public void ttt_decodeGo() {
+    //@Test
+    void ttt_decodeGo() {
 
         // RFTools.DecodeResponseDto decodeResponseDto = RFTools
         // .decode4b6b_go(new byte[] {
@@ -208,11 +205,4 @@ public class RFToolsUTest {
         // }
 
     }
-
-
-    @Test
-    public void goTest() {
-        // System.out.println(RFTools.hi(4, (short)0xa7));
-    }
-
 }
