@@ -104,7 +104,6 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Visa knapp för Pausa Leverans i Omnipod-fliken</string>
     <string name="omnipod_common_preferences_time_change_enabled">Automatisk avkänning av tidszon aktiverad</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Påminnelse för utgångstid aktiverad</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Timmar före avstängning</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Varning för låg reservoar aktiverad</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Antal Enheter</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Kvittera Podlarm automatiskt</string>
