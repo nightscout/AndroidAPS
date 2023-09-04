@@ -148,7 +148,7 @@ enum class CwfMetadataKey(val key: String, @StringRes val label: Int, val isPref
     CWF_CREATED_AT("created_at", R.string.metadata_label_watchface_created_at, false),
     CWF_VERSION("cwf_version", R.string.metadata_label_plugin_version, false),
     CWF_AUTHOR_VERSION("author_version", R.string.metadata_label_watchface_name_version, false),
-    CWF_COMMENT("comment", R.string.metadata_label_watchface_infos, false), // label not planed to be used for CWF_COMMENT
+    CWF_COMMENT("comment", R.string.metadata_label_watchface_infos, false),
     CWF_AUTHORIZATION("cwf_authorization", R.string.metadata_label_watchface_authorization, false),
     CWF_PREF_WATCH_SHOW_DETAILED_IOB("key_show_detailed_iob", R.string.pref_show_detailed_iob, true),
     CWF_PREF_WATCH_SHOW_DETAILED_DELTA("key_show_detailed_delta", R.string.pref_show_detailed_delta, true),
@@ -331,14 +331,12 @@ class ZipWatchfaceFormat {
             try {
                 val outputStream = FileOutputStream(file)
                 val zipOutputStream = ZipOutputStream(BufferedOutputStream(outputStream))
-
-                // Ajouter le fichier JSON au ZIP
+                
                 val jsonEntry = ZipEntry(CWF_JSON_FILE)
                 zipOutputStream.putNextEntry(jsonEntry)
                 zipOutputStream.write(customWatchface.json.toByteArray())
                 zipOutputStream.closeEntry()
 
-                // Ajouter les fichiers divers au ZIP
                 for (resData in customWatchface.resDatas) {
                     val fileEntry = ZipEntry("${resData.key.fileName}.${resData.value.format.extension}")
                     zipOutputStream.putNextEntry(fileEntry)

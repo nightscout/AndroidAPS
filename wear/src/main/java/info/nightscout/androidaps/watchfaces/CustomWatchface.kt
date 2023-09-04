@@ -444,7 +444,7 @@ class CustomWatchface : BaseWatchFace() {
             ViewKeys.COVER_PLATE.key,
             R.id.cover_plate,
             null,
-            null,
+            info.nightscout.shared.R.drawable.simplified_dial,
             ResFileMap.COVER_PLATE,
             ResFileMap.COVER_PLATE_HIGH,
             ResFileMap.COVER_PLATE_LOW
