@@ -104,7 +104,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Zobraziť tlačítko \"Pozastaviť podávanie\" na záložke Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Letný čas / Detekcia časového pásma povolená</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Pripomenutie vypršania platnosti povolené</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Hodiny pred vypnutím</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Pokiaľ je povolené, Pod bude pípať, keď bude dosiahnutý zadaný čas</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Pripomenutie v hodinách pred vypršaním platnosti (72 hodín)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Upozornenie na vypršanie platnosti povolené</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Pokiaľ je povolené, Pod bude pípať, keď bude dosiahnutý zadaný čas a 1 hodinu pred vypnutím</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Upozornenie v hodinách pred vypnutím (80 hodín)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Upozornenie na nízký stav zásobníka povolené</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Počet jednotiek</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Automaticky potvrdzovať výstrahy Podu</string>
