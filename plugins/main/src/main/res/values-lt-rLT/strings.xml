@@ -316,9 +316,17 @@
     <string name="wear_predictions_title">Prognozė</string>
     <string name="wear_custom_watchface_settings">Pasirinktiniai laikrodžio ekrano nustatymai</string>
     <string name="wear_custom_watchface_authorization_title">Pasirinktinė laikrodžio ekrano autorizacija</string>
-    <string name="wear_export_watchface">Eksportuoti ruošinį</string>
+    <string name="wear_custom_watchface_authorization_summary">Leisti įkeltam pasirinktiniam ekranui keisti ir užrakinti kai kuriuos laikrodžio nustatymus, kad jie atitiktų ekrano dizainą</string>
+    <string name="wear_custom_watchface">Pasirinktinis ekranas: %1$s</string>
+    <string name="wear_load_watchface">Įkelti laikrodžio ekraną</string>
+    <string name="wear_infos_watchface">Ekrano info</string>
+    <string name="wear_export_watchface">Eksportuoti šabloną</string>
+    <string name="wear_new_custom_watchface_exported">Pasirinktinio ekrano šablonas eksportuotas</string>
     <string name="resend_all_data">Pakartotinai siųsti visus duomenis</string>
     <string name="open_settings_on_wear">Atidaryti išmaniojo laikrodžio nustatymus</string>
+    <string name="cwf_infos_pref_locked">Užrakintų nustatymų sąrašas</string>
+    <string name="cwf_infos_pref_required">Ekranui reikalingų nustatymų sąrašas</string>
+    <string name="cwf_infos_view_title">Į ekraną įtrauktų laukų sąrašas</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Rodo atsinaujinančius pranešimus su trumpa Ciklo veiklos apžvalga</string>
     <string name="old_data">SENI DUOMENYS</string>
