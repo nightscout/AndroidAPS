@@ -104,7 +104,6 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Показвай спряна доставката в раздела Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Разрешено е Лятно часово време</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Напомняне за срок</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Часове преди изключване</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Малко инсулин в резервоар</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Брой единици</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Автоматично заглушаване на алармите на Pod</string>
