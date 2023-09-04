@@ -170,7 +170,7 @@
     <string name="cannula">Kaniulė</string>
     <string name="ebstopsloop">Ištęsto boluso funkcija sustabdys uždaro ciklo režimą ištęsto boluso veikimo metu. Ar tikrai norite patvirtinti savo pasirinkimą?</string>
     <string name="statuslights_cannula_age">kateteris</string>
-    <string name="statuslights_patch_pump_age">Patch pompos laikas</string>
+    <string name="statuslights_patch_pump_age">rezervuaro laikas</string>
     <string name="patch_pump">Patch pompa</string>
     <!-- Overview -->
     <string name="show_statuslights">Pradžios ekrane rodyti spalvotus indikatorius</string>
