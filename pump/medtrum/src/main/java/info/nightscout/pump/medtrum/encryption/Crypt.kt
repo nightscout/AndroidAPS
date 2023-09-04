@@ -39,11 +39,11 @@ class Crypt {
     }
 
     private fun randomGen(input: Long): Long {
-        val A = 16807
-        val Q = 127773
-        val R = 2836
-        val tmp1 = input / Q
-        var ret = (input - (tmp1 * Q)) * A - (tmp1 * R)
+        val a = 16807
+        val q = 127773
+        val r = 2836
+        val tmp1 = input / q
+        var ret = (input - (tmp1 * q)) * a - (tmp1 * r)
         if (ret < 0) {
             ret += 2147483647L
         }

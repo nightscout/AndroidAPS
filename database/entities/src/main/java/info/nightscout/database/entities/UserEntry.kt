@@ -172,6 +172,7 @@ data class UserEntry(
         OmnipodEros,
         OmnipodDash,        //No entry currently
         EOPatch2,
+        Medtrum,
         MDI,
         VirtualPump,
         SMS,                //From SMS plugin

@@ -44,6 +44,7 @@ data class InterfaceIDs(
         DIACONN_G8,
         EOPATCH2,
         MEDTRUM,
+        MEDTRUM_300U,
         MEDTRUM_UNTESTED,
         USER,
         CACHE;

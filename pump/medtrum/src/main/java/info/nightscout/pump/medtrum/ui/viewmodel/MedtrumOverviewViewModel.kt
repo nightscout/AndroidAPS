@@ -7,6 +7,7 @@ import info.nightscout.pump.medtrum.ui.event.SingleLiveEvent
 import info.nightscout.pump.medtrum.ui.event.UIEvent
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.queue.CommandQueue
+import info.nightscout.pump.medtrum.MedtrumPlugin
 import info.nightscout.pump.medtrum.MedtrumPump
 import info.nightscout.pump.medtrum.R
 import info.nightscout.pump.medtrum.code.ConnectionState
@@ -28,6 +29,7 @@ class MedtrumOverviewViewModel @Inject constructor(
     private val profileFunction: ProfileFunction,
     private val commandQueue: CommandQueue,
     private val dateUtil: DateUtil,
+    private val medtrumPlugin: MedtrumPlugin,
     val medtrumPump: MedtrumPump
 ) : BaseViewModel<MedtrumBaseNavigator>() {
 
@@ -128,7 +130,7 @@ class MedtrumOverviewViewModel @Inject constructor(
         scope.launch {
             medtrumPump.bolusAmountDeliveredFlow.collect { bolusAmount ->
                 aapsLogger.debug(LTag.PUMP, "MedtrumViewModel bolusAmountDeliveredFlow: $bolusAmount")
-                if (!medtrumPump.bolusDone) {
+                if (!medtrumPump.bolusDone && medtrumPlugin.isInitialized()) {
                     _activeBolusStatus.postValue(
                         dateUtil.timeString(medtrumPump.bolusStartTime) + " " + dateUtil.sinceString(medtrumPump.bolusStartTime, rh)
                             + " " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, bolusAmount) + " / " + rh.gs(
@@ -145,6 +147,8 @@ class MedtrumOverviewViewModel @Inject constructor(
                 kotlinx.coroutines.delay(T.mins(1).msecs())
             }
         }
+        // Update gui on init
+        updateGUI()
     }
 
     override fun onCleared() {
@@ -189,7 +193,7 @@ class MedtrumOverviewViewModel @Inject constructor(
                 )
             else _lastBolus.postValue("")
         }
-        if (medtrumPump.bolusDone) {
+        if (medtrumPump.bolusDone || !medtrumPlugin.isInitialized()) {
             _activeBolusStatus.postValue("")
         }
 

@@ -80,6 +80,7 @@ class MedtrumViewModel @Inject constructor(
                         }
 
                         ConnectionState.CONNECTING, ConnectionState.DISCONNECTING -> {
+                            // Do nothing
                         }
                     }
                 }

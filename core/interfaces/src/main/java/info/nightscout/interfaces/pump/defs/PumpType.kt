@@ -410,10 +410,33 @@ enum class PumpType {
         baseBasalSpecialSteps = null,
         pumpCapability = PumpCapability.MedtrumCapabilities,
         isPatchPump = true,
-        maxReservoirReading = 400,
+        maxReservoirReading = 200,
         source = Source.Medtrum
     ),
-    MEDTRUM_UNTESTED(description = "Medtrum untested", model = "untested", parent = MEDTRUM_NANO);
+    MEDTRUM_300U(
+        description = "Medtrum 300U",
+        manufacturer = ManufacturerType.Medtrum,
+        model = "300U",
+        bolusSize = 0.05,
+        specialBolusSize = null,
+        extendedBolusSettings = DoseSettings(0.05, 30, 8 * 60, 0.05, 30.0),
+        pumpTempBasalType = PumpTempBasalType.Absolute,
+        tbrSettings = DoseSettings(0.05, 30, 12 * 60, 0.0, 30.0),
+        specialBasalDurations = PumpCapability.BasalRate_Duration30minAllowed,
+        baseBasalMinValue = 0.05,
+        baseBasalMaxValue = 30.0,
+        baseBasalStep = 0.05,
+        baseBasalSpecialSteps = null,
+        pumpCapability = PumpCapability.MedtrumCapabilities,
+        isPatchPump = true,
+        maxReservoirReading = 300,
+        source = Source.Medtrum
+    ),
+    MEDTRUM_UNTESTED(
+        description = "Medtrum untested",
+        model = "untested",
+        parent = MEDTRUM_NANO
+    );
 
     val description: String
     var manufacturer: ManufacturerType? = null
@@ -455,8 +478,10 @@ enum class PumpType {
     var hasCustomUnreachableAlertCheck = false
         private set
     var isPatchPump = false
+        get() = parent?.isPatchPump ?: field
         private set
     var maxReservoirReading = 50
+        get() = parent?.maxReservoirReading ?: field
         private set
     var supportBatteryLevel = true
         private set

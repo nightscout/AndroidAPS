@@ -60,6 +60,7 @@ fun PumpType.Companion.fromDbPumpType(pt: InterfaceIDs.PumpType): PumpType =
         InterfaceIDs.PumpType.DIACONN_G8                  -> PumpType.DIACONN_G8
         InterfaceIDs.PumpType.EOPATCH2                    -> PumpType.EOFLOW_EOPATCH2
         InterfaceIDs.PumpType.MEDTRUM                     -> PumpType.MEDTRUM_NANO
+        InterfaceIDs.PumpType.MEDTRUM_300U                -> PumpType.MEDTRUM_300U
         InterfaceIDs.PumpType.MEDTRUM_UNTESTED            -> PumpType.MEDTRUM_UNTESTED
         InterfaceIDs.PumpType.CACHE                       -> PumpType.CACHE
     }
@@ -80,6 +81,7 @@ fun PumpType.Source.toDbSource(): UserEntry.Sources =
         PumpType.Source.OmnipodEros -> UserEntry.Sources.OmnipodEros
         PumpType.Source.OmnipodDash -> UserEntry.Sources.OmnipodDash
         PumpType.Source.EOPatch2    -> UserEntry.Sources.EOPatch2
+        PumpType.Source.Medtrum     -> UserEntry.Sources.Medtrum
         PumpType.Source.MDI         -> UserEntry.Sources.MDI
         PumpType.Source.VirtualPump -> UserEntry.Sources.VirtualPump
         else                        -> UserEntry.Sources.Unknown
@@ -120,6 +122,7 @@ fun PumpType.toDbPumpType(): InterfaceIDs.PumpType =
         PumpType.DIACONN_G8                -> InterfaceIDs.PumpType.DIACONN_G8
         PumpType.EOFLOW_EOPATCH2           -> InterfaceIDs.PumpType.EOPATCH2
         PumpType.MEDTRUM_NANO              -> InterfaceIDs.PumpType.MEDTRUM
+        PumpType.MEDTRUM_300U              -> InterfaceIDs.PumpType.MEDTRUM_300U
         PumpType.MEDTRUM_UNTESTED          -> InterfaceIDs.PumpType.MEDTRUM_UNTESTED
         PumpType.CACHE                     -> InterfaceIDs.PumpType.CACHE
     }

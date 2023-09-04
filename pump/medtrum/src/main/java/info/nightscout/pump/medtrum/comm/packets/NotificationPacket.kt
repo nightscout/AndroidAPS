@@ -85,6 +85,7 @@ class NotificationPacket(val injector: HasAndroidInjector) {
     fun handleMaskedMessage(data: ByteArray) {
         val fieldMask = data.copyOfRange(0, 2).toInt()
         var offset = 2
+        var newPatchStartTime: Long? = null
 
         aapsLogger.debug(LTag.PUMPCOMM, "Message field mask: $fieldMask")
 
@@ -148,12 +149,12 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         if (fieldMask and MASK_START_TIME != 0) {
             aapsLogger.debug(LTag.PUMPCOMM, "Start time notification received")
-            val patchStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
-            if (medtrumPump.patchStartTime != patchStartTime) {
-                aapsLogger.debug(LTag.PUMPCOMM, "Patch start time changed from ${medtrumPump.patchStartTime} to $patchStartTime")
-                medtrumPump.patchStartTime = patchStartTime
+            newPatchStartTime = MedtrumTimeUtil().convertPumpTimeToSystemTimeMillis(data.copyOfRange(offset, offset + 4).toLong())
+            if (medtrumPump.patchStartTime != newPatchStartTime) {
+                aapsLogger.debug(LTag.PUMPCOMM, "Patch start time changed from ${medtrumPump.patchStartTime} to $newPatchStartTime")
+                medtrumPump.patchStartTime = newPatchStartTime
             }
-            aapsLogger.debug(LTag.PUMPCOMM, "Patch start time: ${patchStartTime}")
+            aapsLogger.debug(LTag.PUMPCOMM, "Patch start time: $newPatchStartTime")
             offset += 4
         }
 
@@ -176,6 +177,11 @@ class NotificationPacket(val injector: HasAndroidInjector) {
             val patchId = data.copyOfRange(offset + 2, offset + 4).toLong()
             if (patchId != medtrumPump.patchId) {
                 aapsLogger.warn(LTag.PUMPCOMM, "handleMaskedMessage: We got wrong patch id!")
+                if (newPatchStartTime != null) {
+                    // This is a fallback for when the activate packet did not receive the ack but the patch activated anyway
+                    aapsLogger.error(LTag.PUMPCOMM, "handleMaskedMessage: Also Received start time in this packet, registering new patch id: $patchId")
+                    medtrumPump.handleNewPatch(patchId, sequence, newPatchStartTime)
+                }
             }
             aapsLogger.debug(LTag.PUMPCOMM, "Last known sequence number: ${medtrumPump.currentSequenceNumber}, patch id: ${patchId}")
             offset += 4
