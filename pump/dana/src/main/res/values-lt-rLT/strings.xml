@@ -65,7 +65,7 @@
     <string name="danar_history_refill">Užpildymas</string>
     <string name="danar_history_syspend">Sustabdyta</string>
     <string name="danar_history_prime">Užpildyti sistemą</string>
-    <string name="danar_user_options">Vartotojo parinktys</string>
+    <string name="danar_user_options">Naudotojo parinktys</string>
     <string name="danar_time_display">Rodyti laiko formatą</string>
     <string name="danar_button_scroll">Mygtukų slinkties funkcija</string>
     <string name="danar_beep">Pypsėjimas spaudžiant mygtukus</string>
