@@ -24,5 +24,7 @@ dependencies {
     implementation project(':pump:pump-common')
     implementation project(':pump:pump-core')
     implementation project(':pump:rileylink')
+
+    testImplementation project(':app-wear-shared:shared-tests')
     testImplementation project(':database:impl')
 }

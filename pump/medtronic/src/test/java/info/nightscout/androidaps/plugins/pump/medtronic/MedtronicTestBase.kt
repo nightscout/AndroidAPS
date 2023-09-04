@@ -1,4 +1,4 @@
-package info.nightscout.androidaps
+package info.nightscout.androidaps.plugins.pump.medtronic
 
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
@@ -11,28 +11,16 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.pump.common.sync.PumpSyncStorage
 import info.nightscout.pump.core.utils.ByteUtil
-import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.TestAapsSchedulers
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.logging.AAPSLoggerTest
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.extension.ExtendWith
+import info.nightscout.sharedtests.TestBase
 import org.mockito.Answers
 import org.mockito.Mock
-import org.mockito.Mockito
-import org.mockito.junit.jupiter.MockitoExtension
-import org.mockito.junit.jupiter.MockitoSettings
-import org.mockito.quality.Strictness
-import java.util.Locale
 
-@ExtendWith(MockitoExtension::class)
-@MockitoSettings(strictness = Strictness.LENIENT)
-open class TestBase {
+open class MedtronicTestBase : TestBase() {
 
-    val aapsLogger = AAPSLoggerTest()
-    val aapsSchedulers: AapsSchedulers = TestAapsSchedulers()
     var rxBus: RxBus = RxBus(TestAapsSchedulers(), aapsLogger)
     var byteUtil = ByteUtil()
     var rileyLinkUtil = RileyLinkUtil()
@@ -43,37 +31,19 @@ open class TestBase {
     @Mock lateinit var sp: SP
     @Mock lateinit var rh: ResourceHelper
 
-    lateinit var medtronicUtil : MedtronicUtil
-    lateinit var decoder : MedtronicPumpHistoryDecoder
+    lateinit var medtronicUtil: MedtronicUtil
+    lateinit var decoder: MedtronicPumpHistoryDecoder
 
-
-    val packetInjector = HasAndroidInjector {
-        AndroidInjector {
-
-        }
-    }
-
-    @BeforeEach
-    fun setupLocale() {
-        Locale.setDefault(Locale.ENGLISH)
-        System.setProperty("disableFirebase", "true")
-    }
-
-    // Workaround for Kotlin nullability.
-    // https://medium.com/@elye.project/befriending-kotlin-and-mockito-1c2e7b0ef791
-    // https://stackoverflow.com/questions/30305217/is-it-possible-to-use-mockito-in-kotlin
-    fun <T> anyObject(): T {
-        Mockito.any<T>()
-        return uninitialized()
-    }
+    val packetInjector = HasAndroidInjector { AndroidInjector { } }
 
     fun preProcessListTBR(inputList: MutableList<PumpHistoryEntry>) {
 
-        var tbrs: MutableList<PumpHistoryEntry> = mutableListOf()
+        val tbrs: MutableList<PumpHistoryEntry> = mutableListOf()
 
         for (pumpHistoryEntry in inputList) {
             if (pumpHistoryEntry.entryType === PumpHistoryEntryType.TempBasalRate ||
-                pumpHistoryEntry.entryType === PumpHistoryEntryType.TempBasalDuration) {
+                pumpHistoryEntry.entryType === PumpHistoryEntryType.TempBasalDuration
+            ) {
                 tbrs.add(pumpHistoryEntry)
             }
         }
@@ -88,11 +58,10 @@ open class TestBase {
 
     }
 
-
-    private fun preProcessTBRs(TBRs_Input: MutableList<PumpHistoryEntry>): MutableList<PumpHistoryEntry> {
+    private fun preProcessTBRs(tbrsInput: MutableList<PumpHistoryEntry>): MutableList<PumpHistoryEntry> {
         val tbrs: MutableList<PumpHistoryEntry> = mutableListOf()
         val map: MutableMap<String?, PumpHistoryEntry?> = HashMap()
-        for (pumpHistoryEntry in TBRs_Input) {
+        for (pumpHistoryEntry in tbrsInput) {
             if (map.containsKey(pumpHistoryEntry.dt)) {
                 decoder.decodeTempBasal(map[pumpHistoryEntry.dt]!!, pumpHistoryEntry)
                 pumpHistoryEntry.setEntryType(medtronicUtil.medtronicPumpModel, PumpHistoryEntryType.TempBasalCombined)
@@ -111,8 +80,4 @@ open class TestBase {
         // }
         list.sortWith(PumpHistoryEntry.Comparator())
     }
-
-
-    @Suppress("Unchecked_Cast")
-    fun <T> uninitialized(): T = null as T
 }
