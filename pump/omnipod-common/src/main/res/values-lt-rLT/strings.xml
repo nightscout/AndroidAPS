@@ -104,7 +104,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Omnipod skirtuke rodyti mygtuką Sustabdyti insulino tiekimą</string>
     <string name="omnipod_common_preferences_time_change_enabled">Vasaros laiko/Laiko juostos aptikimas įgalintas</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Galiojimo pabaigos priminimas</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Val. iki išsijungimo</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Įjungus, pod pypsės, atėjus nustatytam laikui</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Priminimas apie galiojimo pabaigą (iki 72 val.)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Galiojimo priminimas įjungtas</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Įjungus pod pypsės, atėjus nustatytam laikui bei 1 val. prieš išsijungimą</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Priminimas apie išsijungimą (iki 80 val.)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Įjungtas perspėjimas apie senkantį rezervuarą</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Vienetų skaičius</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Automatiškai nutildyti Pod perspėjimus</string>
