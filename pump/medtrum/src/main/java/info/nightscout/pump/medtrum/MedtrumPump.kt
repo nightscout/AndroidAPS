@@ -2,6 +2,7 @@ package info.nightscout.pump.medtrum
 
 import android.util.Base64
 import info.nightscout.interfaces.profile.Profile
+import info.nightscout.interfaces.pump.DetailedBolusInfo
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.pump.defs.PumpType
@@ -535,6 +536,26 @@ class MedtrumPump @Inject constructor(
             AlarmState.NO_CALIBRATION       -> R.string.alarm_no_calibration
         }
         return rh.gs(stringId)
+    }
+
+    fun handleNewPatch(newPatchId: Long, sequenceNumber: Int, newStartTime: Long) {
+        patchId = newPatchId
+        patchStartTime = newStartTime
+        currentSequenceNumber = sequenceNumber // We are activated, set the new seq nr
+        syncedSequenceNumber = 1 // Always start with 1
+        // Sync cannula change
+        pumpSync.insertTherapyEventIfNewWithTimestamp(
+            timestamp = newStartTime,
+            type = DetailedBolusInfo.EventType.CANNULA_CHANGE,
+            pumpType = pumpType(),
+            pumpSerial = pumpSN.toString(radix = 16)
+        )
+        pumpSync.insertTherapyEventIfNewWithTimestamp(
+            timestamp = newStartTime,
+            type = DetailedBolusInfo.EventType.INSULIN_CHANGE,
+            pumpType = pumpType(),
+            pumpSerial = pumpSN.toString(radix = 16)
+        )
     }
 
     private fun saveActiveAlarms() {
