@@ -8,9 +8,12 @@
     <string name="pref_3_hours">3 ώρες</string>
     <string name="pref_4_hours">4 ώρες</string>
     <string name="pref_5_hours">5 ώρες</string>
+    <string name="pref_default">Προεπιλογή</string>
     <string name="pref_low">Χαμηλή</string>
     <string name="pref_high">Υψηλό</string>
     <string name="pref_auto">Αυτόματο</string>
+    <string name="pref_big_numbers">Μεγάλοι Αριθμοί</string>
+    <string name="pref_animations">Εφέ Κίνησης</string>
     <string name="pref_version">Έκδοση:</string>
     <string name="menu_wizard">Υπολογιστής</string>
     <string name="menu_wizard_short">Υπολογ</string>
