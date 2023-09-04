@@ -376,6 +376,7 @@
     <string name="carbs_g">AV %1$d g</string>
     <string name="extended_bolus_u_min">IŠTĘSTAS BOLUSAS %1$.2f vv %2$d min</string>
     <string name="load_events">GAUTI ĮVYKIUS</string>
+    <string name="clear_alarms">IŠVALYTI ALIARMUS</string>
     <string name="deactivate">DEAKTYVUOTI</string>
     <string name="update_time">ATNAUJINTI LAIKĄ</string>
     <string name="load_history">GAUTI ISTORIJĄ %1$d</string>
@@ -423,6 +424,7 @@
     <string name="autotune_ic_warning">Pasirinktas profilis turi %1$d IA reikšmes(ių). Autotune naudos %2$.2f g/v</string>
     <string name="autotune_isf_warning">Pasirinktas profilis turi %1$d JIF reikšmes(ių). Autotune naudos %2$.1f %3$s/v</string>
     <string name="autotune_error">Klaida įkeliant duomenis. Paleiskite Autotune iš naujo arba sumažinkite dienų skaičių</string>
+    <string name="autotune_error_more_days">Klaida įvedimo duomenyse, padidinkite dienų skaičių</string>
     <string name="autotune_warning_during_run">Autotune skaičiuoja, turėkite kantrybės</string>
     <string name="autotune_warning_after_run">Atidžiai patikrinkite rezultatus prieš juos naudodami!</string>
     <string name="autotune_partial_result">Patikslinta %1$d / %2$d dienų</string>
@@ -455,6 +457,7 @@
     <string name="cobvsiob">AAO prieš AIO</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Nustatytas lėtas angliavandenių įsisavinimas: %2$d%% laiko. Dar karą patikrinkite savo skaičiavimus. AAO gali būti pervertinti, todėl gali būti suleista per daug insulino!!!!!</font>]]></string>
     <string name="partialboluswizard">Suleisti šią boluso skaičiuoklės rezultato dalį [%]</string>
+    <string name="partialboluswizard_reset_time">Senų glikemijos duomenų riba [min]</string>
     <string name="bolus_constraint_applied_warn">Pritaikytas boluso apribojimas: %1$.2f v iki %2$.2f v</string>
     <string name="bolus_recorded_only">Bolusas bus tik įrašytas (nebus suleistas)</string>
     <string name="advisoralarm">Pranešti apie laiką valgyti</string>
