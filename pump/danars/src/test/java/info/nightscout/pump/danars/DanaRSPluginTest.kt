@@ -1,6 +1,5 @@
 package info.nightscout.pump.danars
 
-import android.content.Context
 import dagger.android.AndroidInjector
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.constraints.Constraint
@@ -11,7 +10,7 @@ import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers.eq
@@ -21,7 +20,6 @@ import org.mockito.Mockito
 @Suppress("SpellCheckingInspection")
 class DanaRSPluginTest : DanaRSTestBase() {
 
-    @Mock lateinit var context: Context
     @Mock lateinit var constraintChecker: Constraints
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
@@ -38,9 +36,9 @@ class DanaRSPluginTest : DanaRSTestBase() {
         danaPump.maxBasal = 0.8
         val c = Constraint(Constants.REALLYHIGHBASALRATE)
         danaRSPlugin.applyBasalConstraints(c, validProfile)
-        Assert.assertEquals(java.lang.Double.valueOf(0.8), c.value(), 0.0001)
-        Assert.assertEquals("DanaRS: limitingbasalratio", c.getReasons(aapsLogger))
-        Assert.assertEquals("DanaRS: limitingbasalratio", c.getMostLimitedReasons(aapsLogger))
+        Assertions.assertEquals(java.lang.Double.valueOf(0.8), c.value(), 0.0001)
+        Assertions.assertEquals("DanaRS: limitingbasalratio", c.getReasons(aapsLogger))
+        Assertions.assertEquals("DanaRS: limitingbasalratio", c.getMostLimitedReasons(aapsLogger))
     }
 
     @Test
@@ -50,9 +48,9 @@ class DanaRSPluginTest : DanaRSTestBase() {
         danaPump.maxBasal = 0.8
         val c = Constraint(Constants.REALLYHIGHPERCENTBASALRATE)
         danaRSPlugin.applyBasalPercentConstraints(c, validProfile)
-        Assert.assertEquals(200, c.value())
-        Assert.assertEquals("DanaRS: limitingpercentrate", c.getReasons(aapsLogger))
-        Assert.assertEquals("DanaRS: limitingpercentrate", c.getMostLimitedReasons(aapsLogger))
+        Assertions.assertEquals(200, c.value())
+        Assertions.assertEquals("DanaRS: limitingpercentrate", c.getReasons(aapsLogger))
+        Assertions.assertEquals("DanaRS: limitingpercentrate", c.getMostLimitedReasons(aapsLogger))
     }
 
     @BeforeEach

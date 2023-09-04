@@ -3,7 +3,7 @@ package info.nightscout.pump.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketHistoryBolusTest : DanaRSTestBase() {
@@ -22,6 +22,6 @@ class DanaRsPacketHistoryBolusTest : DanaRSTestBase() {
 
     @Test fun runTest() {
         val packet = DanaRSPacketHistoryBolus(packetInjector, System.currentTimeMillis())
-        Assert.assertEquals("REVIEW__BOLUS", packet.friendlyName)
+        Assertions.assertEquals("REVIEW__BOLUS", packet.friendlyName)
     }
 }

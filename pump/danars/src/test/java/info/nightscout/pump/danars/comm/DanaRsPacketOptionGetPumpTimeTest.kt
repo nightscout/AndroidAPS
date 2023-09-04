@@ -4,7 +4,7 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase
 import org.joda.time.DateTime
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketOptionGetPumpTimeTest : DanaRSTestBase() {
@@ -32,7 +32,7 @@ class DanaRsPacketOptionGetPumpTimeTest : DanaRSTestBase() {
         putByteToArray(array, 5, 35) // second 35
 
         packet.handleMessage(array)
-        Assert.assertEquals(DateTime(2019, 2, 4, 20, 11, 35).millis, danaPump.getPumpTime())
-        Assert.assertEquals("OPTION__GET_PUMP_TIME", packet.friendlyName)
+        Assertions.assertEquals(DateTime(2019, 2, 4, 20, 11, 35).millis, danaPump.getPumpTime())
+        Assertions.assertEquals("OPTION__GET_PUMP_TIME", packet.friendlyName)
     }
 }

@@ -3,7 +3,7 @@ package info.nightscout.pump.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketBolusGetBolusOptionTest : DanaRSTestBase() {
@@ -25,15 +25,15 @@ class DanaRsPacketBolusGetBolusOptionTest : DanaRSTestBase() {
         // test message decoding
         //if dataArray is 1 pump.isExtendedBolusEnabled should be true
         packet.handleMessage(createArray(21, 1.toByte()))
-        Assert.assertEquals(false, packet.failed)
+        Assertions.assertEquals(false, packet.failed)
         //Are options saved to pump
-        Assert.assertEquals(false, !danaPump.isExtendedBolusEnabled)
-        Assert.assertEquals(1, danaPump.bolusCalculationOption)
-        Assert.assertEquals(1, danaPump.missedBolusConfig)
+        Assertions.assertEquals(false, !danaPump.isExtendedBolusEnabled)
+        Assertions.assertEquals(1, danaPump.bolusCalculationOption)
+        Assertions.assertEquals(1, danaPump.missedBolusConfig)
         packet.handleMessage(createArray(21, 0.toByte()))
-        Assert.assertEquals(true, packet.failed)
+        Assertions.assertEquals(true, packet.failed)
         //Are options saved to pump
-        Assert.assertEquals(true, !danaPump.isExtendedBolusEnabled)
-        Assert.assertEquals("BOLUS__GET_BOLUS_OPTION", packet.friendlyName)
+        Assertions.assertEquals(true, !danaPump.isExtendedBolusEnabled)
+        Assertions.assertEquals("BOLUS__GET_BOLUS_OPTION", packet.friendlyName)
     }
 }

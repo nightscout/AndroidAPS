@@ -3,7 +3,7 @@ package info.nightscout.pump.danars.comm
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.danars.DanaRSTestBase
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class DanaRsPacketBasalGetBasalRateTest : DanaRSTestBase() {
@@ -28,9 +28,9 @@ class DanaRsPacketBasalGetBasalRateTest : DanaRSTestBase() {
         putIntToArray(array, 0, (1.0 * 100).toInt())
         putByteToArray(array, 2, (0.05 * 100).toInt().toByte())
         packet.handleMessage(array)
-        Assert.assertEquals(1.0, danaPump.maxBasal, 0.0)
-        Assert.assertEquals(0.05, danaPump.basalStep, 0.0)
-        Assert.assertTrue(packet.failed)
-        Assert.assertEquals("BASAL__GET_BASAL_RATE", packet.friendlyName)
+        Assertions.assertEquals(1.0, danaPump.maxBasal, 0.0)
+        Assertions.assertEquals(0.05, danaPump.basalStep, 0.0)
+        Assertions.assertTrue(packet.failed)
+        Assertions.assertEquals("BASAL__GET_BASAL_RATE", packet.friendlyName)
     }
 }
