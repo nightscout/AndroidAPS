@@ -4,8 +4,8 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.extension.toByteArray
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.Assert.*
 
 class ReadBolusStatePacketTest : MedtrumTestBase() {
 
@@ -31,9 +31,9 @@ class ReadBolusStatePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        assertTrue(result)
-        assertFalse(packet.failed)
-        assertEquals(bolusData.contentToString(), packet.bolusData.contentToString())
+        Assertions.assertTrue(result)
+        Assertions.assertFalse(packet.failed)
+        Assertions.assertEquals(bolusData.contentToString(), packet.bolusData.contentToString())
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
@@ -47,8 +47,8 @@ class ReadBolusStatePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        assertEquals(false, result)
-        assertEquals(true, packet.failed)
-        assertEquals(byteArrayOf().contentToString(), packet.bolusData.contentToString())
+        Assertions.assertEquals(false, result)
+        Assertions.assertEquals(true, packet.failed)
+        Assertions.assertEquals(byteArrayOf().contentToString(), packet.bolusData.contentToString())
     }
 }

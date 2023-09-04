@@ -5,8 +5,8 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.extension.toByteArray
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.Assert.*
 
 class SetTimeZonePacketTest : MedtrumTestBase() {
 
@@ -36,8 +36,8 @@ class SetTimeZonePacketTest : MedtrumTestBase() {
 
         // Expected values
         val expectedByteArray = byteArrayOf(opCode.toByte()) + offsetMinutes.toByteArray(2) + time.toByteArray(4)
-        assertEquals(7, result.size)
-        assertEquals(expectedByteArray.contentToString(), result.contentToString())
+        Assertions.assertEquals(7, result.size)
+        Assertions.assertEquals(expectedByteArray.contentToString(), result.contentToString())
     }
 
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
@@ -51,7 +51,7 @@ class SetTimeZonePacketTest : MedtrumTestBase() {
         // Expected values
         val expectedOffsetMinutes = 0
 
-        assertTrue(result)
-        assertEquals(expectedOffsetMinutes, medtrumPump.pumpTimeZoneOffset)
+        Assertions.assertTrue(result)
+        Assertions.assertEquals(expectedOffsetMinutes, medtrumPump.pumpTimeZoneOffset)
     }
 }

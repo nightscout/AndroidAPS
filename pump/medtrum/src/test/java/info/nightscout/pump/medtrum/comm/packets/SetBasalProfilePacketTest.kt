@@ -4,8 +4,8 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.comm.enums.BasalType
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.Assert.*
 
 class SetBasalProfilePacketTest : MedtrumTestBase() {
 
@@ -31,7 +31,7 @@ class SetBasalProfilePacketTest : MedtrumTestBase() {
 
         // Expected values
         val expected = byteArrayOf(opCode.toByte()) + 1.toByte() + basalProfile
-        assertEquals(expected.contentToString(), result.contentToString())
+        Assertions.assertEquals(expected.contentToString(), result.contentToString())
     }
 
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
@@ -50,13 +50,13 @@ class SetBasalProfilePacketTest : MedtrumTestBase() {
         val expectedStartTime = 1679575392000L
         val expectedPatchId = 146L
 
-        assertTrue(result)
-        assertEquals(expectedBasalType, medtrumPump.lastBasalType)
-        assertEquals(expectedBasalRate, medtrumPump.lastBasalRate, 0.01)
-        assertEquals(expectedBasalSequence, medtrumPump.lastBasalSequence)
-        assertEquals(expectedStartTime, medtrumPump.lastBasalStartTime)
-        assertEquals(expectedPatchId, medtrumPump.lastBasalPatchId)
-        assertEquals(basalProfile, medtrumPump.actualBasalProfile)
+        Assertions.assertTrue(result)
+        Assertions.assertEquals(expectedBasalType, medtrumPump.lastBasalType)
+        Assertions.assertEquals(expectedBasalRate, medtrumPump.lastBasalRate, 0.01)
+        Assertions.assertEquals(expectedBasalSequence, medtrumPump.lastBasalSequence)
+        Assertions.assertEquals(expectedStartTime, medtrumPump.lastBasalStartTime)
+        Assertions.assertEquals(expectedPatchId, medtrumPump.lastBasalPatchId)
+        Assertions.assertEquals(basalProfile, medtrumPump.actualBasalProfile)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
@@ -69,7 +69,7 @@ class SetBasalProfilePacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(response)
 
         // Expected values
-        assertFalse(result)
-        assertTrue(packet.failed)
+        Assertions.assertFalse(result)
+        Assertions.assertTrue(packet.failed)
     }
 }

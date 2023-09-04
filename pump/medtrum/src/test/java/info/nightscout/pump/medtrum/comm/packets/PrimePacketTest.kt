@@ -3,8 +3,8 @@ package info.nightscout.pump.medtrum.comm.packets
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.Assert.*
 
 class PrimePacketTest : MedtrumTestBase() {
 
@@ -27,7 +27,7 @@ class PrimePacketTest : MedtrumTestBase() {
         val result = packet.getRequest()
 
         // Expected values
-        assertEquals(1, result.size)
-        assertEquals(opCode.toByte(), result[0])
+        Assertions.assertEquals(1, result.size)
+        Assertions.assertEquals(opCode.toByte(), result[0])
     }
 }

@@ -6,8 +6,8 @@ import info.nightscout.pump.medtrum.MedtrumTestBase
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
 import info.nightscout.rx.events.EventOverviewBolusProgress
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.Assert.*
 
 class NotificationPacketTest : MedtrumTestBase() {
 
@@ -30,7 +30,7 @@ class NotificationPacketTest : MedtrumTestBase() {
         NotificationPacket(packetInjector).handleNotification(byteArrayOf(state))
 
         // Expected values
-        assertEquals(medtrumPump.pumpState, MedtrumPumpState.fromByte(state))
+        Assertions.assertEquals(medtrumPump.pumpState, MedtrumPumpState.fromByte(state))
     }
 
     @Test fun handleNotificationGivenBasalDataThenDataSaved() {
@@ -41,12 +41,12 @@ class NotificationPacketTest : MedtrumTestBase() {
         NotificationPacket(packetInjector).handleNotification(data)
 
         // Expected values
-        assertEquals(BasalType.ABSOLUTE_TEMP, medtrumPump.lastBasalType)
-        assertEquals(0.85, medtrumPump.lastBasalRate, 0.01)
-        assertEquals(25, medtrumPump.lastBasalSequence)
-        assertEquals(14, medtrumPump.lastBasalPatchId)
-        assertEquals(1685126612000, medtrumPump.lastBasalStartTime)
-        assertEquals(186.80, medtrumPump.reservoir, 0.01)
+        Assertions.assertEquals(BasalType.ABSOLUTE_TEMP, medtrumPump.lastBasalType)
+        Assertions.assertEquals(0.85, medtrumPump.lastBasalRate, 0.01)
+        Assertions.assertEquals(25, medtrumPump.lastBasalSequence)
+        Assertions.assertEquals(14, medtrumPump.lastBasalPatchId)
+        Assertions.assertEquals(1685126612000, medtrumPump.lastBasalStartTime)
+        Assertions.assertEquals(186.80, medtrumPump.reservoir, 0.01)
     }
 
     @Test fun handleNotificationGivenSequenceAndOtherDataThenDataSaved() {
@@ -57,7 +57,7 @@ class NotificationPacketTest : MedtrumTestBase() {
         NotificationPacket(packetInjector).handleNotification(data)
 
         // Expected values
-        assertEquals(167, medtrumPump.currentSequenceNumber)
+        Assertions.assertEquals(167, medtrumPump.currentSequenceNumber)
     }
 
     @Test fun handleNotificationGivenBolusInProgressThenDataSaved() {
@@ -69,9 +69,9 @@ class NotificationPacketTest : MedtrumTestBase() {
         NotificationPacket(packetInjector).handleNotification(data)
 
         // Expected values
-        assertEquals(false, medtrumPump.bolusDone)
-        assertEquals(0.15, medtrumPump.bolusingTreatment!!.insulin, 0.01)
-        assertEquals(163.5, medtrumPump.reservoir, 0.01)
+        Assertions.assertEquals(false, medtrumPump.bolusDone)
+        Assertions.assertEquals(0.15, medtrumPump.bolusingTreatment!!.insulin, 0.01)
+        Assertions.assertEquals(163.5, medtrumPump.reservoir, 0.01)
     }
 
     @Test fun handleNotificationGivenBolusFinishedThenDataSaved() {
@@ -83,8 +83,8 @@ class NotificationPacketTest : MedtrumTestBase() {
         NotificationPacket(packetInjector).handleNotification(data)
 
         // Expected values
-        assertEquals(true, medtrumPump.bolusDone)
-        assertEquals(1.65, medtrumPump.bolusingTreatment!!.insulin, 0.01)
-        assertEquals(161.95, medtrumPump.reservoir, 0.01)
+        Assertions.assertEquals(true, medtrumPump.bolusDone)
+        Assertions.assertEquals(1.65, medtrumPump.bolusingTreatment!!.insulin, 0.01)
+        Assertions.assertEquals(161.95, medtrumPump.reservoir, 0.01)
     }
 }

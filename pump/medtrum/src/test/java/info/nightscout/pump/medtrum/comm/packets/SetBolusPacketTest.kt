@@ -3,8 +3,8 @@ package info.nightscout.pump.medtrum.comm.packets
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.Assert.*
 
 class SetBolusPacketTest : MedtrumTestBase() {
 
@@ -28,6 +28,6 @@ class SetBolusPacketTest : MedtrumTestBase() {
 
         // Expected values
         val expected = byteArrayOf(19, 1, 47, 0, 0)
-        assertEquals(expected.contentToString(), result.contentToString())
+        Assertions.assertEquals(expected.contentToString(), result.contentToString())
     }
 }

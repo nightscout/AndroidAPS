@@ -3,8 +3,8 @@ package info.nightscout.pump.medtrum.comm.packets
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.pump.medtrum.MedtrumTestBase
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.Assert.*
 
 class GetRecordPacketTest : MedtrumTestBase() {
 
@@ -30,7 +30,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
 
         // Expected values
         val expected = byteArrayOf(99, 4, 0, -110, 0)
-        assertEquals(expected.contentToString(), result.contentToString())
+        Assertions.assertEquals(expected.contentToString(), result.contentToString())
     }
 
     @Test fun handleResponseGivenPacketWhenValuesSetThenReturnCorrectValues() {
@@ -42,8 +42,8 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        assertEquals(true, result)
-        assertEquals(false, packet.failed)
+        Assertions.assertEquals(true, result)
+        Assertions.assertEquals(false, packet.failed)
     }
 
     @Test fun handleResponseGivenResponseWhenMessageTooShortThenResultFalse() {
@@ -55,7 +55,7 @@ class GetRecordPacketTest : MedtrumTestBase() {
         val result = packet.handleResponse(data)
 
         // Expected values
-        assertEquals(false, result)
-        assertEquals(true, packet.failed)
+        Assertions.assertEquals(false, result)
+        Assertions.assertEquals(true, packet.failed)
     }
 }
