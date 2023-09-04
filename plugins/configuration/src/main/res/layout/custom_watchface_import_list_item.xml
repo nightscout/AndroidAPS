@@ -134,7 +134,7 @@
                     android:paddingEnd="5dp"
                     android:textAlignment="viewStart"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="?attr/warningColor"
+                    android:textColor="?attr/metadataTextWarningColor"
                     android:textSize="11sp" />
 
                 <ImageView
@@ -146,7 +146,19 @@
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="1dp"
                     android:foreground="@drawable/ic_meta_format"
-                    android:foregroundTint="?attr/warningColor" />
+                    android:foregroundTint="?attr/metadataTextWarningColor" />
+
+                <ImageView
+                    android:id="@+id/pref_info"
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="1dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="1dp"
+                    android:visibility="gone"
+                    android:foreground="@drawable/ic_meta_format"
+                    android:foregroundTint="?attr/importListFileNameColor" />
 
             </LinearLayout>
 

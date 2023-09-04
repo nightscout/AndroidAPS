@@ -96,18 +96,23 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
                 filelistName.tag = customWatchfaceFile
                 customWatchface.setImageDrawable(drawable)
                 customName.text = rh.gs(CWF_NAME.label, metadata[CWF_NAME])
-                metadata[CWF_AUTHOR_VERSION]?.let { author_version ->
-                    customName.text = rh.gs(CWF_AUTHOR_VERSION.label, metadata[CWF_NAME], author_version)
+                metadata[CWF_AUTHOR_VERSION]?.let { authorVersion ->
+                    customName.text = rh.gs(CWF_AUTHOR_VERSION.label, metadata[CWF_NAME], authorVersion)
                 }
 
-                author.text = rh.gs(CWF_AUTHOR.label, metadata[CWF_AUTHOR] ?:"")
-                createdAt.text = rh.gs(CWF_CREATED_AT.label, metadata[CWF_CREATED_AT] ?:"")
-                cwfVersion.text = rh.gs(CWF_VERSION.label, metadata[CWF_VERSION] ?:"")
+                author.text = rh.gs(CWF_AUTHOR.label, metadata[CWF_AUTHOR] ?: "")
+                createdAt.text = rh.gs(CWF_CREATED_AT.label, metadata[CWF_CREATED_AT] ?: "")
+                cwfVersion.text = rh.gs(CWF_VERSION.label, metadata[CWF_VERSION] ?: "")
                 val colorAttr = if (checkCustomVersion(metadata)) info.nightscout.core.ui.R.attr.metadataTextOkColor else info.nightscout.core.ui.R.attr.metadataTextWarningColor
                 cwfVersion.setTextColor(rh.gac(cwfVersion.context, colorAttr))
-                prefWarning.visibility = metadata.keys.any { it.isPref }.toVisibility()
+                val prefExisting = metadata.keys.any { it.isPref }
+                val prefSetting = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false)
+                val prefColor = if (prefSetting) info.nightscout.core.ui.R.attr.metadataTextWarningColor else info.nightscout.core.ui.R.attr.importListFileNameColor
+                prefWarning.visibility = (prefExisting && prefSetting).toVisibility()
+                prefInfo.visibility = (prefExisting && !prefSetting).toVisibility()
                 cwfPrefNumber.text = "${metadata.count { it.key.isPref }}"
-                cwfPrefNumber.visibility=prefWarning.visibility
+                cwfPrefNumber.visibility = prefExisting.toVisibility()
+                cwfPrefNumber.setTextColor(rh.gac(cwfPrefNumber.context, prefColor))
             }
         }
     }
