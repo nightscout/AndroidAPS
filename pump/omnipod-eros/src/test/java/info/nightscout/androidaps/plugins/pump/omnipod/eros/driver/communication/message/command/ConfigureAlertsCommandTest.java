@@ -1,8 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
-import static org.junit.Assert.assertArrayEquals;
-
 import org.joda.time.Duration;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -17,9 +16,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.Ti
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.UnitsRemainingAlertTrigger;
 import info.nightscout.pump.core.utils.ByteUtil;
 
-public class ConfigureAlertsCommandTest {
+class ConfigureAlertsCommandTest {
     @Test
-    public void testEncoding() {
+    void testEncoding() {
         Duration softExpirationTime = Duration.standardHours(72).minus(Duration.standardMinutes(1));
         AlertConfiguration alertConfiguration1 = new AlertConfiguration( //
                 AlertType.EXPIRATION_ADVISORY_ALERT,
@@ -31,7 +30,7 @@ public class ConfigureAlertsCommandTest {
                 BeepType.BEEP_BEEP_BEEP, //
                 BeepRepeat.EVERY_MINUTE_FOR_15_MINUTES);
 
-        assertArrayEquals( //
+        Assertions.assertArrayEquals( //
                 ByteUtil.fromHexString("79a410df0205"), //
                 alertConfiguration1.getRawData());
 
@@ -46,7 +45,7 @@ public class ConfigureAlertsCommandTest {
                 BeepType.BEEEEEEP, //
                 BeepRepeat.EVERY_MINUTE_FOR_15_MINUTES);
 
-        assertArrayEquals( //
+        Assertions.assertArrayEquals( //
                 ByteUtil.fromHexString("280012830206"), //
                 alertConfiguration2.getRawData());
 
@@ -60,7 +59,7 @@ public class ConfigureAlertsCommandTest {
                 BeepType.BIP_BEEP_BIP_BEEP_BIP_BEEP_BIP_BEEP, //
                 BeepRepeat.EVERY_MINUTE_FOR_15_MINUTES);
 
-        assertArrayEquals( //
+        Assertions.assertArrayEquals( //
                 ByteUtil.fromHexString("020f00000202"), //
                 alertConfiguration3.getRawData());
 
@@ -68,13 +67,13 @@ public class ConfigureAlertsCommandTest {
                 0xfeb6268b, //
                 Arrays.asList(alertConfiguration1, alertConfiguration2, alertConfiguration3));
 
-        assertArrayEquals( //
+        Assertions.assertArrayEquals( //
                 ByteUtil.fromHexString("1916feb6268b79a410df0205280012830206020f00000202"), //
                 configureAlertsCommand.getRawData());
     }
 
     @Test
-    public void testLowReservoirAlert() {
+    void testLowReservoirAlert() {
         AlertConfiguration alertConfiguration = new AlertConfiguration(//
                 AlertType.LOW_RESERVOIR_ALERT, //
                 AlertSlot.SLOT4, //
@@ -89,7 +88,7 @@ public class ConfigureAlertsCommandTest {
                 0xae01a66c, //
                 Collections.singletonList(alertConfiguration));
 
-        assertArrayEquals(
+        Assertions.assertArrayEquals(
                 ByteUtil.fromHexString("190aae01a66c4c0000640102"), //
                 configureAlertsCommand.getRawData());
     }

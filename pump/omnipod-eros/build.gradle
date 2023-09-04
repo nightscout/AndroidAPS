@@ -43,6 +43,7 @@ dependencies {
     api "androidx.room:room-rxjava3:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 
+    testImplementation project(':app-wear-shared:shared-tests')
     // optional - Test helpers
     testImplementation("androidx.room:room-testing:$room_version")
 }

@@ -1,11 +1,7 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.command;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.joda.time.Duration;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -17,9 +13,9 @@ import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.sc
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.definition.schedule.RateEntry;
 import info.nightscout.pump.core.utils.ByteUtil;
 
-public class BasalScheduleExtraCommandTest {
+class BasalScheduleExtraCommandTest {
     @Test
-    public void testEncodingFromRateEntries() {
+     void testEncodingFromRateEntries() {
         List<RateEntry> rateEntries = RateEntry.createEntries(3.0, Duration.standardHours(24));
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand( //
                 false, //
@@ -30,13 +26,13 @@ public class BasalScheduleExtraCommandTest {
                 20D, //
                 rateEntries);
 
-        assertArrayEquals( //
+        Assertions.assertArrayEquals( //
                 ByteUtil.createByteArrayFromHexString("130e40001aea01312d003840005b8d80"), // From https://github.com/openaps/openomni/wiki/Bolus
                 basalScheduleExtraCommand.getRawData());
     }
 
     @Test
-    public void testParametersCorrectFromBasalSchedule() {
+     void testParametersCorrectFromBasalSchedule() {
         BasalSchedule basalSchedule = new BasalSchedule(Collections.singletonList(new BasalScheduleEntry(0.05, Duration.ZERO)));
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand( //
                 basalSchedule, //
@@ -45,25 +41,25 @@ public class BasalScheduleExtraCommandTest {
                 true, //
                 Duration.standardMinutes(1));
 
-        assertFalse(basalScheduleExtraCommand.isAcknowledgementBeep());
-        assertTrue(basalScheduleExtraCommand.isCompletionBeep());
-        assertEquals(0, basalScheduleExtraCommand.getCurrentEntryIndex());
-        assertEquals(180D, basalScheduleExtraCommand.getDelayUntilNextTenthOfPulseInSeconds(), 0.00001);
-        assertEquals(60, basalScheduleExtraCommand.getProgramReminderInterval().getStandardSeconds());
-        assertEquals(15.8, basalScheduleExtraCommand.getRemainingPulses(), 0.01);
+        Assertions.assertFalse(basalScheduleExtraCommand.isAcknowledgementBeep());
+        Assertions.assertTrue(basalScheduleExtraCommand.isCompletionBeep());
+        Assertions.assertEquals(0, basalScheduleExtraCommand.getCurrentEntryIndex());
+        Assertions.assertEquals(180D, basalScheduleExtraCommand.getDelayUntilNextTenthOfPulseInSeconds(), 0.00001);
+        Assertions.assertEquals(60, basalScheduleExtraCommand.getProgramReminderInterval().getStandardSeconds());
+        Assertions.assertEquals(15.8, basalScheduleExtraCommand.getRemainingPulses(), 0.01);
 
         List<RateEntry> rateEntries = basalScheduleExtraCommand.getRateEntries();
 
-        assertEquals(1, rateEntries.size());
+        Assertions.assertEquals(1, rateEntries.size());
 
         RateEntry rateEntry = rateEntries.get(0);
 
-        assertEquals(3600.0, rateEntry.getDelayBetweenPulsesInSeconds(), 0.00000001);
-        assertEquals(24, rateEntry.getTotalPulses(), 0.001);
+        Assertions.assertEquals(3600.0, rateEntry.getDelayBetweenPulsesInSeconds(), 0.00000001);
+        Assertions.assertEquals(24, rateEntry.getTotalPulses(), 0.001);
     }
 
     @Test
-    public void testEncodingFromBasalScheduleWithThreeEntries() {
+     void testEncodingFromBasalScheduleWithThreeEntries() {
         BasalSchedule schedule = new BasalSchedule(Arrays.asList( //
                 new BasalScheduleEntry(1.05, Duration.ZERO), //
                 new BasalScheduleEntry(0.9, Duration.standardHours(10).plus(Duration.standardMinutes(30))), //
@@ -72,12 +68,12 @@ public class BasalScheduleExtraCommandTest {
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand(schedule, Duration.standardMinutes((0x2e + 1) * 30).minus(Duration.standardSeconds(0x1be8 / 8)),
                 false, true, Duration.ZERO);
 
-        assertArrayEquals(ByteUtil.fromHexString("131a4002009600a7d8c0089d0105944905a001312d00044c0112a880"),
+        Assertions.assertArrayEquals(ByteUtil.fromHexString("131a4002009600a7d8c0089d0105944905a001312d00044c0112a880"),
                 basalScheduleExtraCommand.getRawData());
     }
 
     @Test
-    public void testEncodingFromBasalScheduleWithSingleEntry() {
+     void testEncodingFromBasalScheduleWithSingleEntry() {
         BasalSchedule basalSchedule = new BasalSchedule(Arrays.asList(new BasalScheduleEntry(1.05, Duration.ZERO)));
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand(basalSchedule,
                 Duration.standardMinutes((0x20 + 1) * 30).minus(Duration.standardSeconds(0x33c0 / 8)),
@@ -87,7 +83,7 @@ public class BasalScheduleExtraCommandTest {
     }
 
     @Test
-    public void testSegmentMerging() {
+     void testSegmentMerging() {
         List<BasalScheduleEntry> entries = Arrays.asList(
                 new BasalScheduleEntry(0.8, Duration.ZERO),
                 new BasalScheduleEntry(0.9, Duration.standardMinutes(180)), //
@@ -113,7 +109,7 @@ public class BasalScheduleExtraCommandTest {
     }
 
     @Test
-    public void testEncodingFromBasalScheduleWithThirteenEntries() {
+     void testEncodingFromBasalScheduleWithThirteenEntries() {
         List<BasalScheduleEntry> entries = Arrays.asList(
                 new BasalScheduleEntry(1.30, Duration.ZERO), //
                 new BasalScheduleEntry(0.05, Duration.standardMinutes(30)), //
@@ -140,7 +136,7 @@ public class BasalScheduleExtraCommandTest {
     }
 
     @Test
-    public void testBasalScheduleExtraCommandRoundsToNearestSecond() {
+     void testBasalScheduleExtraCommandRoundsToNearestSecond() {
         BasalSchedule basalSchedule = new BasalSchedule(Arrays.asList(new BasalScheduleEntry(1.00, Duration.ZERO)));
 
         BasalScheduleExtraCommand basalScheduleExtraCommand = new BasalScheduleExtraCommand(basalSchedule,
@@ -158,13 +154,13 @@ public class BasalScheduleExtraCommandTest {
 
         byte[] expected = ByteUtil.fromHexString(expectedHexString);
 
-        assertEquals(extractDelayUntilNextPulseInSeconds(expected), extractDelayUntilNextPulseInSeconds(actual), 0.0001);
+        Assertions.assertEquals(extractDelayUntilNextPulseInSeconds(expected), extractDelayUntilNextPulseInSeconds(actual), 0.0001);
 
         // Discard the last byte of the integer so that we can compare the other bytes of the message
         expected[9] = 0;
         actual[9] = 0;
 
-        assertArrayEquals(expected, actual);
+        Assertions.assertArrayEquals(expected, actual);
     }
 
     private double extractDelayUntilNextPulseInSeconds(byte[] message) {
