@@ -67,16 +67,24 @@ class DashInsertCannulaViewModel @Inject constructor(
                 basalProgram
             )
             val expirationReminderEnabled = sp.getBoolean(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_enabled, true)
-            val expirationHours = sp.getInt(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_hours_before_shutdown, 9)
+            val expirationReminderHours = sp.getInt(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_reminder_hours_before_expiry, 9)
 
-            val expirationHoursBeforeShutdown = if (expirationReminderEnabled)
-                expirationHours.toLong()
+            val expirationReminderHoursBeforeShutdown = if (expirationReminderEnabled)
+                expirationReminderHours.toLong()
             else
                 null
 
-            super.disposable += omnipodManager.activatePodPart2(basalProgram, expirationHoursBeforeShutdown)
+            val expirationAlarmEnabled = sp.getBoolean(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_alarm_enabled, true)
+            val expirationAlarmHours = sp.getInt(info.nightscout.androidaps.plugins.pump.omnipod.common.R.string.key_omnipod_common_expiration_alarm_hours_before_shutdown, 8)
+
+            val expirationAlarmHoursBeforeShutdown = if (expirationAlarmEnabled)
+                expirationAlarmHours.toLong()
+            else
+                null
+
+            super.disposable += omnipodManager.activatePodPart2(basalProgram, expirationReminderHoursBeforeShutdown, expirationAlarmHoursBeforeShutdown)
                 .ignoreElements()
-                .andThen(podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationHours))
+                .andThen(podStateManager.updateExpirationAlertSettings(expirationReminderEnabled, expirationReminderHours, expirationAlarmEnabled, expirationAlarmHours))
                 .andThen(
                     history.createRecord(
                         OmnipodCommandType.INSERT_CANNULA,

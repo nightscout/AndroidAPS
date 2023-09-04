@@ -8,7 +8,9 @@
     <string name="key_omnipod_common_suspend_delivery_button_enabled" translatable="false">AAPS.Omnipod.suspend_delivery_button_enabled</string>
     <string name="key_omnipod_common_time_change_event_enabled" translatable="false">AAPS.Omnipod.time_change_enabled</string>
     <string name="key_omnipod_common_expiration_reminder_enabled" translatable="false">AAPS.Omnipod.expiration_reminder_enabled</string>
-    <string name="key_omnipod_common_expiration_reminder_hours_before_shutdown" translatable="false">AAPS.Omnipod.expiration_reminder_hours_before_shutdown</string>
+    <string name="key_omnipod_common_expiration_reminder_hours_before_expiry" translatable="false">AAPS.Omnipod.expiration_reminder_hours_before_expiry</string>
+    <string name="key_omnipod_common_expiration_alarm_enabled" translatable="false">AAPS.Omnipod.expiration_alarm_enabled</string>
+    <string name="key_omnipod_common_expiration_alarm_hours_before_shutdown" translatable="false">AAPS.Omnipod.expiration_alarm_hours_before_shutdown</string>
     <string name="key_omnipod_common_low_reservoir_alert_enabled" translatable="false">AAPS.Omnipod.low_reservoir_alert_enabled</string>
     <string name="key_omnipod_common_low_reservoir_alert_units" translatable="false">AAPS.Omnipod.low_reservoir_alert_units</string>
     <string name="key_omnipod_common_automatically_silence_alerts_enabled" translatable="false">AAPS.Omnipod.automatically_acknowledge_alerts_enabled</string>
@@ -129,7 +131,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Show Suspend Delivery button in Omnipod tab</string>
     <string name="omnipod_common_preferences_time_change_enabled">DST/Time zone detection enabled</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Expiration reminder enabled</string>
-    <string name="omnipod_common_preferences_expiration_reminder_hours_before_shutdown">Hours before shutdown</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">When enabled the pod will beep when the specified time is reached</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Reminder at hours before expiry (72 Hours)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Expiration alert enabled</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">When enabled the pod will beep when the specified time is reached and 1 hour before shutdown</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Alert at hours before shutdown (80 Hours)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Low reservoir alert enabled</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Number of units</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Automatically silence Pod alerts</string>
