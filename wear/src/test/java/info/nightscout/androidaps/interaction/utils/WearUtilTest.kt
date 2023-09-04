@@ -1,26 +1,26 @@
 package info.nightscout.androidaps.interaction.utils
 
-import info.nightscout.androidaps.TestBase
+import info.nightscout.androidaps.WearTestBase
 import info.nightscout.androidaps.testing.mockers.WearUtilMocker
-import org.junit.Assert
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 /**
  * Created by dlvoy on 22.11.2019.
  */
 @Suppress("SpellCheckingInspection")
-class WearUtilTest : TestBase() {
+class WearUtilTest : WearTestBase() {
 
     @Test fun timestampAndTimeDiffsTest() {
 
         // smoke for mocks - since we freeze "now" to get stable tests
-        Assert.assertEquals(WearUtilMocker.REF_NOW, wearUtil.timestamp())
-        Assert.assertEquals(0L, wearUtil.msTill(WearUtilMocker.REF_NOW))
-        Assert.assertEquals(3456L, wearUtil.msTill(WearUtilMocker.REF_NOW + 3456L))
-        Assert.assertEquals(-6294L, wearUtil.msTill(WearUtilMocker.REF_NOW - 6294L))
-        Assert.assertEquals(0L, wearUtil.msTill(WearUtilMocker.REF_NOW))
-        Assert.assertEquals(-3456L, wearUtil.msSince(WearUtilMocker.REF_NOW + 3456L))
-        Assert.assertEquals(6294L, wearUtil.msSince(WearUtilMocker.REF_NOW - 6294L))
+        Assertions.assertEquals(WearUtilMocker.REF_NOW, wearUtil.timestamp())
+        Assertions.assertEquals(0L, wearUtil.msTill(WearUtilMocker.REF_NOW))
+        Assertions.assertEquals(3456L, wearUtil.msTill(WearUtilMocker.REF_NOW + 3456L))
+        Assertions.assertEquals(-6294L, wearUtil.msTill(WearUtilMocker.REF_NOW - 6294L))
+        Assertions.assertEquals(0L, wearUtil.msTill(WearUtilMocker.REF_NOW))
+        Assertions.assertEquals(-3456L, wearUtil.msSince(WearUtilMocker.REF_NOW + 3456L))
+        Assertions.assertEquals(6294L, wearUtil.msSince(WearUtilMocker.REF_NOW - 6294L))
     }
 
     @Test fun joinSetTest() {
@@ -36,10 +36,10 @@ class WearUtilTest : TestBase() {
         // THEN
         // we cannot guarantee order of items in joined string
         // but all items have to be there
-        Assert.assertEquals(joined.length, "element1".length + "second-elem".length + "3rd".length + "|".length * 2)
-        Assert.assertTrue("|$joined|".contains("|" + "element1" + "|"))
-        Assert.assertTrue("|$joined|".contains("|" + "second-elem" + "|"))
-        Assert.assertTrue("|$joined|".contains("|" + "3rd" + "|"))
+        Assertions.assertEquals(joined.length, "element1".length + "second-elem".length + "3rd".length + "|".length * 2)
+        Assertions.assertTrue("|$joined|".contains("|" + "element1" + "|"))
+        Assertions.assertTrue("|$joined|".contains("|" + "second-elem" + "|"))
+        Assertions.assertTrue("|$joined|".contains("|" + "3rd" + "|"))
     }
 
     @Test fun explodeSetTest() {
@@ -50,10 +50,10 @@ class WearUtilTest : TestBase() {
         val set = persistence.explodeSet(serializedSet, ":")
 
         // THEN
-        Assert.assertEquals(set.size, 3)
-        Assert.assertTrue(set.contains("element1"))
-        Assert.assertTrue(set.contains("second-elem"))
-        Assert.assertTrue(set.contains("3rd"))
+        Assertions.assertEquals(set.size, 3)
+        Assertions.assertTrue(set.contains("element1"))
+        Assertions.assertTrue(set.contains("second-elem"))
+        Assertions.assertTrue(set.contains("3rd"))
     }
 
     @Test fun explodeSetEmptyElemsTest() {
@@ -64,9 +64,9 @@ class WearUtilTest : TestBase() {
         val set = persistence.explodeSet(serializedSet, ",")
 
         // THEN
-        Assert.assertEquals(set.size, 2)
-        Assert.assertEquals(true, set.contains("real"))
-        Assert.assertEquals(true, set.contains("another"))
+        Assertions.assertEquals(set.size, 2)
+        Assertions.assertEquals(true, set.contains("real"))
+        Assertions.assertEquals(true, set.contains("another"))
     }
 
     @Test fun joinExplodeStabilityTest() {
@@ -84,7 +84,7 @@ class WearUtilTest : TestBase() {
         val explodedSet = persistence.explodeSet(joinedSet, "#")
 
         // THEN
-        Assert.assertEquals(explodedSet, refSet)
+        Assertions.assertEquals(explodedSet, refSet)
     }
 
     /* Mike: failing with new mockito
@@ -100,8 +100,8 @@ class WearUtilTest : TestBase() {
 
             // THEN
             // we cannot guarantee to be exact to the millisecond - we add some margin of error
-            Assert.assertTrue(60L > measuredSleepDuration)
-            Assert.assertTrue(requestedSleepDuration + measuringMargin < measuredSleepDuration)
+            Assertions.assertTrue(60L > measuredSleepDuration)
+            Assertions.assertTrue(requestedSleepDuration + measuringMargin < measuredSleepDuration)
         }
     */
     @Test fun rateLimitTest() {
@@ -115,9 +115,9 @@ class WearUtilTest : TestBase() {
         val callAfterRateLimit = wearUtil.isBelowRateLimit("test-limit", 3)
 
         // THEN
-        Assert.assertTrue(firstCall)
-        Assert.assertFalse(callAfterward)
-        Assert.assertFalse(callTooSoon)
-        Assert.assertTrue(callAfterRateLimit)
+        Assertions.assertTrue(firstCall)
+        Assertions.assertFalse(callAfterward)
+        Assertions.assertFalse(callTooSoon)
+        Assertions.assertTrue(callAfterRateLimit)
     }
 }
