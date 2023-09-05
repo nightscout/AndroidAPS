@@ -105,6 +105,8 @@
     <string name="omnipod_common_preferences_time_change_enabled">Zomertijd-/tijdzonedetectie ingeschakeld</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Herinnering vervaldatum ingeschakeld</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Wanneer ingeschakeld zal de pod piepen wanneer de opgegeven tijd is bereikt</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Herinnering uren voor vervaldatum (72 uur)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Alert vervaldatum ingeschakeld</string>
     <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Wanneer ingeschakeld zal de pod piepen als de opgegeven tijd is bereikt en 1 uur voor uitschakelen</string>
     <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Waarschuwing op uren voor uitschakelen (80 uur)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Pieptonen voor \"Reservoir bijna leeg\" ingeschakeld</string>
