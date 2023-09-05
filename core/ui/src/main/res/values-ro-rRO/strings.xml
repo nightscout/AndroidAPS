@@ -423,23 +423,72 @@
     <string name="autotune_select_profile">Selectați profilul pentru reglare</string>
     <string name="autotune_ic_warning">Profilul selectat are %1$d valori IC. Autotune va utiliza %2$.2f g/U</string>
     <string name="autotune_isf_warning">Profilul selectat are %1$d valori ISF. Autotune va folosi %2$.1f %3$s/U</string>
+    <string name="autotune_error">Eroare în datele introduse, încercați să rulați din nou automat sau să reduceți numărul de zile</string>
+    <string name="autotune_error_more_days">Eroare în datele de introducere, mărește numărul de zile</string>
+    <string name="autotune_warning_during_run">Calcularea automată a început, vă rugăm să aveți răbdare</string>
+    <string name="autotune_warning_after_run">Verificați cu atenție rezultatele înainte de a le utiliza!</string>
+    <string name="autotune_partial_result">Rezultatul parțial din ziua %1$d / %2$d ajustat</string>
     <string name="autotune_result">Rezultat: %1$s</string>
+    <string name="autotune_param">Param</string>
+    <string name="autotune_percent">%</string>
     <string name="autotune_missing">Lipsă</string>
+    <string name="autotune_profile_name">Autotune profilul %1$s</string>
+    <string name="autotune_run">Rulează Autotune</string>
+    <string name="autotune_check_input_profile_button">Verificați profilul de intrare</string>
     <string name="autotune_compare_profile">Compară profilurile</string>
+    <string name="autotune_copy_localprofile_button">Copiați în profilul local</string>
+    <string name="autotune_update_input_profile_button">Actualizați profilul de intrare</string>
+    <string name="autotune_revert_input_profile_button">Reveniţi la profilul de intrare</string>
+    <string name="autotune_copy_local_profile_message">Creați un profil local nou din acest profil Autotune?</string>
+    <string name="autotune_update_local_profile_message">Actualizați profilul %1$s cu Profil Autotune?</string>
+    <string name="autotune_revert_local_profile_message">Reveniți la profilul %1$s cu profilul de intrare?</string>
+    <string name="autotune_profile_invalid">Profil invalid</string>
+    <string name="autotune_run_without_autoswitch">Autotune a rulat fără schimbarea profilului</string>
+    <string name="autotune_run_with_autoswitch">Autotune a rulat și profilul a fost automat schimbat</string>
+    <string name="autotune_run_with_error">Eroare în timpul ultimei rulări Autotune</string>
+    <string name="autotune_run_cancelled">O altă rulare Autotune este detectată, rularea este anulată</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Se folosesc notificările sistemului pentru alerte și notificări</string>
     <string name="urgent_alarm">Alarmă urgentă</string>
     <string name="info">INFO</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Consilier bolus</string>
+    <string name="bolus_advisor_message">Ai glicemia crescută. În loc să mănânci acum, este recomandat să aştepţi o glicemie mai bună. Vrei să faci un bolus de corecție acum și să îți reamintesc când este timpul să mănânci? În acest caz, niciun carbohidrat nu va fi înregistrat și trebuie să utilizezi din nou calculatorul de vbolus când îți voi reaminti.</string>
     <string name="cobvsiob">COB vs IOB</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! A fost detectată o absorbție lentă a carbohidraților: %2$d%% din timp. Reverificați calculele. COB poate fi supraestimat, astfel că este posibilă administrarea de mai multă insulină !!!!!</font>]]></string>
     <string name="partialboluswizard">Livrați doar partea aceasta din rezultatul sugerat de wizard [%]</string>
+    <string name="partialboluswizard_reset_time">Prag de timp pentru vechimea glicemiei [min]</string>
+    <string name="bolus_constraint_applied_warn">Este aplicatâ limitarea bolusului %1$.2f U la %2$.2f U</string>
+    <string name="bolus_recorded_only">Bolusul va fi doar consemnat (nu va fi livrat de pompă)</string>
     <string name="advisoralarm">Rulează alarma când este timpul să mănânci</string>
     <string name="no_action_selected">Nicio acțiune selectată, nu se va întâmpla nimic</string>
+    <string name="wizard_no_actual_bg">Nicio glicemie recentă pe care să se bazeze calculul!</string>
+    <string name="wizard_no_active_profile">Niciun profil activ stabilit!</string>
+    <string name="wizard_no_cob">COB necunoscut! Lipsesc datele de glicemie sau aplicația a fost repornită de curând?</string>
+    <string name="wizard_carbs_constraint">Limite carbohidrați încălcate!</string>
+    <string name="wizard_explain_calc">Calc (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Carbohidrați: %1$.2fU</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">Glicemie: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
+    <string name="wizard_explain_trend">Tendința la 15\': %1$.2fU</string>
+    <string name="wizard_explain_percent">Procentaj: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Încălcare constrângere insulină!\nNu se pot livra %1$.2fU</string>
+    <string name="wizard_explain_tt">BazalaT.: %1$s</string>
+    <string name="wizard_explain_tt_to">Între %1$s și %2$s</string>
+    <string name="wizard_pump_not_available">Nicio pompă disponibilă!</string>
+    <string name="quickwizard">Asistent Rapid</string>
     <!--    Preferences-->
+    <string name="child">Copil</string>
     <string name="teenage">Adolescent</string>
     <string name="adult">Adult</string>
+    <string name="resistant_adult">Adult cu rezistență la insulină</string>
     <string name="pregnant">Sarcină</string>
+    <string name="patient_age_summary">Te rog confirmă tipul de pacient pentru a stabili limitele de siguranță</string>
+    <string name="max_bolus_title">Bolus maxim admis [U]</string>
+    <string name="max_carbs_title">Carbohidrați admiși maxim [g]</string>
+    <string name="patient_type">Tip de pacient</string>
     <!--    Protection-->
     <string name="unlock_settings">Deblochează setările</string>
     <!--    Pumps -->
@@ -490,6 +539,9 @@
     <!-- TwoMessagesDialog -->
     <string name="password_preferences_decrypt_prompt">Vi se va solicita parola principală, care este necesară pentru a decripta setările importate.</string>
     <!-- NumberPicker -->
+    <string name="a11y_min_button_description">scădere %1$s cu %2$s</string>
+    <string name="a11y_plus_button_description">creștere %1$s cu %2$s</string>
+    <string name="you_are_on_allowed_limit">S-a atins limita permisă</string>
     <string name="format_hour_minute">%1$dh %2$dm</string>
     <!-- datetime layout -->
     <string name="event_time_label">Ora evenimentului</string>
@@ -509,6 +561,9 @@
     <!-- SmsCommunicator -->
     <string name="smscommunicator_missingsmspermission">Lipsesc permisiunile de SMS</string>
     <!-- About -->
+    <string name="cta_dont_kill_my_app_info">Nu-mi opri aplicația?</string>
+    <string name="fabric_upload_disabled">Încărcarea jurnalelor de erori este dezactivata!</string>
+    <string name="about_link_urls">\n\nDocumentation:\nhttps://wiki.aaps.app\n\nFacebook:\nhttps://www.facebook.com/groups/AndroidAPSUsers</string>
     <plurals name="days">
         <item quantity="one">%1$d zi</item>
         <item quantity="few">%1$d zile</item>
@@ -525,4 +580,7 @@
         <item quantity="other">%1$d minute</item>
     </plurals>
     <!--    Maintenance-->
+    <string name="cleanup_db_confirm">Doriți să curățați baza de date?\nAceasta va elimina schimbările înregistrate și datele istorice mai vechi de 3 luni.</string>
+    <string name="cleanup_db_confirm_sync">Doriți să curățați baza de date?\nAceasta va elimina schimbările înregistrate și datele istorice mai vechi de 3 luni.\nFăcând acest lucru, veți accelera foarte mult sincronizarea completă.</string>
+    <string name="cleared_entries">Înregistrări șterse</string>
 </resources>
