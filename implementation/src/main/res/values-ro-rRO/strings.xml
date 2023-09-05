@@ -18,4 +18,7 @@
     <string name="hba1c">HbA1c: </string>
     <string name="std_deviation">DST: %1$s</string>
     <string name="detailed_14_days">Detaliere 14 zile</string>
+    <string name="day_tir">TIR ziua</string>
+    <string name="night_tir">TIR noapte</string>
+    <string name="carbs_short" comment="max 6 characters">Carbohidrați</string>
 </resources>
