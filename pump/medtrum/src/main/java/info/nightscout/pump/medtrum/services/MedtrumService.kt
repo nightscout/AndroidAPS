@@ -373,10 +373,13 @@ class MedtrumService : DaggerService(), BLECommCallback {
 
         bolusingEvent.percent = 99
         val bolusDurationInMSec = (insulin * 60 * 1000)
-        val expectedEnd = bolusStart + bolusDurationInMSec + 2000
+        val expectedEnd = bolusStart + bolusDurationInMSec + 1000
         while (System.currentTimeMillis() < expectedEnd && !medtrumPump.bolusDone) {
             SystemClock.sleep(1000)
         }
+
+        // Allow time for notification packet with new sequnce number to arrive
+        SystemClock.sleep(2000)
 
         bolusingEvent.t = medtrumPump.bolusingTreatment
         medtrumPump.bolusingTreatment = null
