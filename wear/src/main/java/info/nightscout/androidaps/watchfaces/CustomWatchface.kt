@@ -164,6 +164,8 @@ class CustomWatchface : BaseWatchFace() {
                     .takeIf { it.matches(Regex("E{1,4}")) } ?: "E"
                 monthFormat = json.optString(MONTHFORMAT.key, "MMM")
                     .takeIf { it.matches(Regex("M{1,4}")) } ?: "MMM"
+                binding.dayName.text = dateUtil.dayNameString(dayNameFormat) // Update daynName and month according to format on cwf loading
+                binding.month.text = dateUtil.monthString(monthFormat)
                 bgColor = when (singleBg.sgvLevel) {
                     1L   -> highColor
                     0L   -> midColor
