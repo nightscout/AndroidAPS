@@ -873,7 +873,7 @@ class DataHandlerMobile @Inject constructor(
         repository.getCarbsDataFromTimeExpanded(startTimeWindow, true).blockingGet()
             .forEach { (_, _, _, isValid, _, _, timestamp, _, _, amount) -> boluses.add(EventData.TreatmentData.Treatment(timestamp, 0.0, amount, false, isValid)) }
         val finalLastRun = loop.lastRun
-        if (sp.getBoolean(rh.gs(R.string.key_wear_predictions), true) && finalLastRun?.request?.hasPredictions == true && finalLastRun.constraintsProcessed != null) {
+        if (finalLastRun?.request?.hasPredictions == true && finalLastRun.constraintsProcessed != null) {
             val predArray = finalLastRun.constraintsProcessed!!.predictions
                 .stream().map { bg: GlucoseValue -> GlucoseValueDataPoint(bg, profileFunction, rh) }
                 .collect(Collectors.toList())
