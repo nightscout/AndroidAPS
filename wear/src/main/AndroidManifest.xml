@@ -603,6 +603,10 @@
             android:exported="true"
             android:label="@string/menu_status" />
         <activity
+            android:name=".interaction.menus.PreferenceMenuActivity"
+            android:exported="true"
+            android:label="@string/menu_settings" />
+        <activity
             android:name=".interaction.actions.TreatmentActivity"
             android:exported="true"
             android:label="@string/menu_treatment" />
