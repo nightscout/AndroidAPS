@@ -39,7 +39,6 @@ class BgGraphBuilder(
     private val timeSpan: Int
 ) {
 
-    private val predictionEndTime: Long
     private var endingTime: Long = System.currentTimeMillis() + 1000L * 60 * 6 * timeSpan
     private var startingTime: Long = System.currentTimeMillis() - 1000L * 60 * 60 * timeSpan
     private var fuzzyTimeDiv = (1000 * 60 * 1).toDouble()
@@ -49,9 +48,20 @@ class BgGraphBuilder(
     private val highValues: MutableList<PointValue> = ArrayList()
     private val lowValues: MutableList<PointValue> = ArrayList()
 
+    private val predictionEndTime: Long
+        get() {
+            var maxPredictionDate = System.currentTimeMillis()
+            for ((timeStamp) in predictionsList) {
+                if (maxPredictionDate < timeStamp) {
+                    maxPredictionDate = timeStamp
+                }
+            }
+            return min(maxPredictionDate.toDouble(), System.currentTimeMillis() + MAX_PREDICTION__TIME_RATIO * timeSpan * 1000 * 60 * 60).toLong()
+        }
+
     init {
-        predictionEndTime = getPredictionEndTime()
-        endingTime = max(predictionEndTime, endingTime)
+        if (sp.getBoolean(R.string.key_prediction_lines, true))
+            endingTime = max(predictionEndTime, endingTime)
     }
 
     //used for low resolution screen.
@@ -109,7 +119,8 @@ class BgGraphBuilder(
                 if (highlight) lines.add(tempValuesLine(twd, minChart.toFloat(), factor, true, 1))
             }
         }
-        addPredictionLines(lines)
+        if (sp.getBoolean(R.string.key_prediction_lines, true))
+            addPredictionLines(lines)
         lines.add(basalLine(minChart.toFloat(), factor, highlight))
         lines.add(bolusLine(minChart.toFloat()))
         lines.add(bolusInvalidLine(minChart.toFloat()))
@@ -197,9 +208,8 @@ class BgGraphBuilder(
 
     private fun addPredictionLines(lines: MutableList<Line>) {
         val values: MutableMap<Int, MutableList<PointValue>> = HashMap()
-        val endTime = getPredictionEndTime()
         for ((timeStamp, _, _, _, _, _, _, _, _, sgv, _, _, color) in predictionsList) {
-            if (timeStamp <= endTime) {
+            if (timeStamp <= predictionEndTime) {
                 val value = min(sgv, UPPER_CUTOFF_SGV)
                 if (!values.containsKey(color)) {
                     values[color] = ArrayList()
@@ -344,16 +354,6 @@ class BgGraphBuilder(
         xAxis.lineColor = gridColour
         xAxis.textColor = gridColour
         return xAxis
-    }
-
-    private fun getPredictionEndTime(): Long {
-        var maxPredictionDate = System.currentTimeMillis()
-        for ((timeStamp) in predictionsList) {
-            if (maxPredictionDate < timeStamp) {
-                maxPredictionDate = timeStamp
-            }
-        }
-        return min(maxPredictionDate.toDouble(), System.currentTimeMillis() + MAX_PREDICTION__TIME_RATIO * timeSpan * 1000 * 60 * 60).toLong()
     }
 
     private fun fuzz(value: Long): Float {
