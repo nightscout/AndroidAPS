@@ -36,6 +36,7 @@
     <string name="pref_show_ago">הצג עבר</string>
     <string name="pref_dark" comment="Enables dark visual theme">כהה</string>
     <string name="pref_highlight_basals">הדגש בזאלים</string>
+    <string name="pref_prediction_lines">הצג תחזיות</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">מחיצות מותאמות</string>
     <string name="pref_chart_timeframe">מסגרת זמן התרשים</string>
     <string name="pref_1_hour">שעה</string>
