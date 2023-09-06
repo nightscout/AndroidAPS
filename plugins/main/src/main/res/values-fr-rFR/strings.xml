@@ -308,12 +308,9 @@
     <string name="wearcontrol_title">Commandes depuis la montre</string>
     <string name="wearcontrol_summary">Définir les Cibles Temp et entrer les Traitements depuis la montre.</string>
     <string name="wear_wizard_settings_summary">Calculs inclus dans le résultat de l’Assistant :</string>
-    <string name="wear_display_settings">Parametres d\'affichage</string>
     <string name="wear_general_settings">Paramètres généraux</string>
     <string name="wear_notifysmb_title">Notifier en cas de SMB</string>
     <string name="wear_notifysmb_summary">Afficher SMB sur la montre comme un bolus standard.</string>
-    <string name="wear_predictions_summary">Affichez les prédictions sur l\'écran de la montre.</string>
-    <string name="wear_predictions_title">Prédictions</string>
     <string name="wear_custom_watchface_settings">Paramètres du Cadran Personnalisé</string>
     <string name="wear_custom_watchface_authorization_title">Autorisation du Cadran Personnalisé</string>
     <string name="wear_custom_watchface_authorization_summary">Autoriser le cadran perso chargé à modifier et bloquer certains paramètres d\'affichage de la montre pour un affichage correct du cadran</string>
