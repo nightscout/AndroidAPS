@@ -303,12 +303,9 @@
     <string name="wearcontrol_title">Controles do Relógio</string>
     <string name="wearcontrol_summary">Definir Alvo-Temp and inserir Tratamentos do relógio.</string>
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
-    <string name="wear_display_settings">Mostrar Configurações</string>
     <string name="wear_general_settings">Configurações gerais</string>
     <string name="wear_notifysmb_title">Notificar no SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>
-    <string name="wear_predictions_summary">Mostrar a predições na face do relogio.</string>
-    <string name="wear_predictions_title">Previsão</string>
     <string name="wear_custom_watchface_settings">Configurações personalizadas de Watchface</string>
     <string name="wear_custom_watchface_authorization_title">Autorização de Watchface Personalizada</string>
     <string name="wear_custom_watchface_authorization_summary">Autorizar watchface carregado e carregado para alterar e bloquear algumas configurações de relógio para o design do watchface</string>
