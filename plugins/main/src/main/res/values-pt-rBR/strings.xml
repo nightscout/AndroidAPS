@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">Comunicador SMS</string>
+    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Controle remotamente o AndroidAPS usando comandos SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">do aplicativo Autenticador para: %1$s seguido por PIN</string>
     <string name="smscommunicator_otp_pin">PIN adicional obrigatório no fim do token</string>
     <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Password-Única que seja gerada</string>
     <string name="smscommunicator_tab_otp_label">Configuração do Autenticador</string>
     <string name="smscommunicator_code_verify_label">Código para verificar:</string>
-    <string name="smscommunicator_code_verify_hint">CÓDIGO + PIN</string>
+    <string name="smscommunicator_code_verify_hint">CÓDIGO OPT + PIN</string>
     <string name="smscommunicator_code_verify_info">O código de verificação consiste em 6 dígitos exibidos pelo app Autenticador (conhecido como OTP) seguido por 3 ou mais dígitos do PIN obrigatório.</string>
     <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>
     <string name="smscommunicator_otp_reset_title">Repor Chave Autenticador</string>
@@ -22,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Repor Autenticadores</string>
     <string name="smscommunicator_otp_install_info">Instalar uma app Autenticador que suporte Tokens RFC 6238 TOTP em cada telefone seguidor. Populares aplicativos gratuitos são:\n • Authy\n • o Google Authenticator\n • LastPass Autenticador\n • FreeOTP Autenticador</string>
     <string name="smscommunicator_otp_reset_warning">Ao redefinir o autenticador, você torna todos os autenticadores já provisionados inválidos. Você precisará configurá-los novamente!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">Tamanho inválido!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">PIN incorreto</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">OTP incorreto</string>
     <string name="sms_wrong_code">Código errado. Comando cancelado.</string>
     <string name="sms_timeout_while_waiting">Excedido o tempo limite de espera ao aguardar o término da última comunicação com a bomba</string>
     <string name="smscommunicator_allowednumbers">Números de telefone permitidos</string>
@@ -317,6 +323,7 @@
     <string name="resend_all_data">Reenviar Todos os Dados</string>
     <string name="open_settings_on_wear">Abrir Definições em Wear</string>
     <string name="cwf_infos_pref_locked">Lista de preferências bloqueadas pela Watchface</string>
+    <string name="cwf_infos_pref_required">Lista de preferências solicitadas pela Watchface</string>
     <string name="cwf_infos_view_title">Lista de campos incluídos na Watchface</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>
