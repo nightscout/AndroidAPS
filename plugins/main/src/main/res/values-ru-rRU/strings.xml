@@ -303,12 +303,9 @@
     <string name="wearcontrol_title">Контроль с часов</string>
     <string name="wearcontrol_summary">Ставить временные цели и вводить терапию с часов.</string>
     <string name="wear_wizard_settings_summary">Расчеты включены в результат калькулятора: </string>
-    <string name="wear_display_settings">Параметры экрана</string>
     <string name="wear_general_settings">Общие настройки</string>
     <string name="wear_notifysmb_title">Сообщить о супер микро болюсе SMB</string>
     <string name="wear_notifysmb_summary">Показывать супер микро болюс SMB на часах как стандартный болюс.</string>
-    <string name="wear_predictions_summary">Показывать линию тренда на смарт-часах.</string>
-    <string name="wear_predictions_title">Прогнозирование</string>
     <string name="resend_all_data">повторить отправку всех данных</string>
     <string name="open_settings_on_wear">Открыть настройки на Wear</string>
     <!--    PersistentNotification-->
