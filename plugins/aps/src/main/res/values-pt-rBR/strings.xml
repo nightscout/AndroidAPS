@@ -39,7 +39,7 @@
     <string name="openapsma_autosensdata_label">Dados Autosens</string>
     <string name="openapsma_script_debug_data_label">Script debug</string>
     <string name="openapsama_use_autosens">Usar função Autosens</string>
-    <string name="openapsma_max_basal_title">Max U/h em que uma Basal temporária pode ser definida</string>
+    <string name="openapsma_max_basal_title">Máximo em U/h em que uma basal temporária pode ser definida</string>
     <string name="openapsma_max_basal_summary">O valor definido será o máximo de unidades de basal por hora que o aaps poderá chegar</string>
     <string name="openapsma_max_iob_title">Basal Máxima IOB que OpenAPS pode dar [U]</string>
     <string name="openapsma_max_iob_summary">Este valor é chamado Max IOB em contexto OpenAPS \nEste é o valor máximo de insulina em [U] que aaps pode deixar ativo de uma vez.</string>
@@ -58,7 +58,7 @@
     <string name="openapssmb_max_iob_summary">Este valor é chamado de Max IOB em contexto de OpenAPS\nOpenAPS não adicionará mais insulina se o IOB atual for maior que este valor</string>
     <string name="enable_uam">Ativar refeição não anunciada</string>
     <string name="enable_smb">Ativar SMB</string>
-    <string name="enable_smb_summary">Use Super Micro Boluses em vez de basal temp para uma ação mais rápida</string>
+    <string name="enable_smb_summary">Usar Super Micro Bolus (SMB) em vez de basal temporária para resposta mais rápida</string>
     <string name="enable_uam_summary">Detecção de refeições não anunciadas</string>
     <string name="enable_smb_always">SMB sempre ativo</string>
     <string name="enable_smb_always_summary">SMB sempre activo independentemente dos bolus. Possível apenas quando o medidor tive um bom filtro de dados como o G5</string>
