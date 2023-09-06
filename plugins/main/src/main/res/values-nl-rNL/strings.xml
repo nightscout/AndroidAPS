@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Reset Authentificatie</string>
     <string name="smscommunicator_otp_install_info">Installeer de Authenticator-app op elke volger telefoon die RFC 6238 TOTP tokens ondersteunt. Populaire gratis apps zijn:\n • Authy\n • Google Authenticator\n • LastPass Authenticator\n • FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">Door de authenticator opnieuw in te stellen maakt u alle reeds aangemaakte authenticatoren ongeldig. U moet ze opnieuw instellen!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">ONGELDIGE LENGTE!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">FOUTIEVE PIN</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">FOUTIEVE OTP</string>
     <string name="sms_wrong_code">Verkeerde code. Opdracht geannuleerd.</string>
     <string name="sms_timeout_while_waiting">Time-out tijdens het wachten op het voltooien van de vorige pomp communicatie</string>
     <string name="smscommunicator_allowednumbers">Geautoriseerde telefoon nummers</string>
@@ -304,12 +308,9 @@
     <string name="wearcontrol_title">Bedieningen via horloge</string>
     <string name="wearcontrol_summary">Stel tijdelijke doelen en bolussen in vanop je horloge.</string>
     <string name="wear_wizard_settings_summary">Berekeningen inclusief in het resultaat van de wizard</string>
-    <string name="wear_display_settings">Scherm instellingen</string>
     <string name="wear_general_settings">Algemene instellingen</string>
     <string name="wear_notifysmb_title">Waarschuw bij SMB</string>
     <string name="wear_notifysmb_summary">Toon SMB op horloge zoals gewone bolussen.</string>
-    <string name="wear_predictions_summary">Toon de voorspellingen op het horloge.</string>
-    <string name="wear_predictions_title">Voorspellingen</string>
     <string name="wear_custom_watchface_settings">Aanpasbare Wijzerplaat Instellingen</string>
     <string name="wear_custom_watchface_authorization_title">Aanpasbare Wijzerplaat Autorisatie</string>
     <string name="wear_custom_watchface_authorization_summary">Sta geladen aanpasbare wijzerplaat toe om sommige weergave-instellingen van horloge te wijzigen en te vergrendelen voor het ontwerp van de wijzerplaat</string>
