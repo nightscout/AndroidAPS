@@ -353,12 +353,9 @@
     <string name="wearcontrol_title">Controls from Watch</string>
     <string name="wearcontrol_summary">Set Temp-Targets and enter Treatments from the watch.</string>
     <string name="wear_wizard_settings_summary">Calculations included in the Wizard result:</string>
-    <string name="wear_display_settings">Display Settings</string>
     <string name="wear_general_settings">General Settings</string>
     <string name="wear_notifysmb_title">Notify on SMB</string>
     <string name="wear_notifysmb_summary">Show SMB on the watch like a standard bolus.</string>
-    <string name="wear_predictions_summary">Show the predictions on the watchface.</string>
-    <string name="wear_predictions_title">Predictions</string>
     <string name="wear_custom_watchface_settings">Custom Watchface Settings</string>
     <string name="wear_custom_watchface_authorization_title">Custom Watchface Authorization</string>
     <string name="wear_custom_watchface_authorization_summary">Authorize loaded custom watchface to change and lock some watch display settings to suit watchface design</string>
@@ -384,7 +381,6 @@
     <string name="hour_short">h</string>
     <string name="no_active_profile">No active profile switch!</string>
     <string name="profile_message">Profile:\n\nTimeshift: %1$d\nPercentage: %2$d%%\"</string>
-    <string name="key_wear_predictions" translatable="false">wear_predictions</string>
     <string name="tdd_line">%1$.2fU %1$.0f%%</string>
     <string name="no_profile">No profile loaded</string>
     <string name="aps_only">Only apply in APS mode!</string>
