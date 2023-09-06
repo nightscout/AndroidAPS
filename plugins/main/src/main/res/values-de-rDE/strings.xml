@@ -310,12 +310,9 @@ Unerwartetes Verhalten.</string>
     <string name="wearcontrol_title">Steuerung durch die Uhr</string>
     <string name="wearcontrol_summary">Setze temporäre Ziele und Behandlungen mit der Uhr</string>
     <string name="wear_wizard_settings_summary">Berechnungen, die im Assistenten berücksichtigt werden:</string>
-    <string name="wear_display_settings">Anzeigeeinstellungen</string>
     <string name="wear_general_settings">Allgemeine Einstellungen</string>
     <string name="wear_notifysmb_title">Bei SMB benachrichtigen</string>
     <string name="wear_notifysmb_summary">Zeige SMB auf der Uhr wie einen normalen Bolus an.</string>
-    <string name="wear_predictions_summary">Zeige Vorhersagen auf dem Watchface.</string>
-    <string name="wear_predictions_title">Vorhersagen</string>
     <string name="wear_custom_watchface_settings">Benutzerdefinierte Watchface Einstellungen</string>
     <string name="wear_custom_watchface_authorization_title">Benutzerdefinierte Watchface Autorisierung</string>
     <string name="wear_custom_watchface_authorization_summary">Autorisiere geladene benutzerdefinierte Watchface zum Ändern und Sperren einiger Watchscreen-Einstellungen für das Design der Uhr</string>
