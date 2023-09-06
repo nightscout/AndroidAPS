@@ -152,12 +152,9 @@
     <string name="wearcontrol_title">Kontroles van horlosie</string>
     <string name="wearcontrol_summary">Stel tydeleike doelwitte en behandelings vanaf horlosie.</string>
     <string name="wear_wizard_settings_summary">Berekeninge is ingesluit in die ghoeroe verslag:</string>
-    <string name="wear_display_settings">Vertooninstellings</string>
     <string name="wear_general_settings">Algemene instellings</string>
     <string name="wear_notifysmb_title">Vermeld op SMB</string>
     <string name="wear_notifysmb_summary">Wys SMB op horlosie soos \'n standaard bolus.</string>
-    <string name="wear_predictions_summary">Wys die voorspellings op die horlosie.</string>
-    <string name="wear_predictions_title">Projeksies</string>
     <string name="resend_all_data">Stuur alle Data weer</string>
     <string name="open_settings_on_wear">Oop instellings op Wear</string>
     <!--    PersistentNotification-->
