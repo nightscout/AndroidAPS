@@ -257,12 +257,9 @@
     <string name="wearcontrol_title">Control des de rellotge</string>
     <string name="wearcontrol_summary">Marcar objectius temporals i introduir tractaments des del rellotge.</string>
     <string name="wear_wizard_settings_summary">Càlculs inclosos al resultat de l\'assistent:</string>
-    <string name="wear_display_settings">Configuració pantalla</string>
     <string name="wear_general_settings">Configuració general</string>
     <string name="wear_notifysmb_title">Avís d\'SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB al rellotge com un bolus estàndard.</string>
-    <string name="wear_predictions_summary">Mostrar prediccions al rellotge.</string>
-    <string name="wear_predictions_title">Prediccions</string>
     <string name="resend_all_data">Reenviar totes les dades</string>
     <string name="open_settings_on_wear">Obrir Configuració a Wear</string>
     <!--    PersistentNotification-->
