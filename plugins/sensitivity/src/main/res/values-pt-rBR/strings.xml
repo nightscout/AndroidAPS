@@ -14,9 +14,9 @@
     <string name="openapsama_autosens_period">Intervalo para autosens [h]</string>
     <string name="openapsama_autosens_period_summary">Quantidade de horas observadas para a deteção de sensibilidade (o tempo de absorção dos hidratos de carbono é excluído)</string>
     <string name="openapsama_autosens_max_summary">Valor predefinido: 1.2\n Este é um multiplicador para autosens (e em breve autotune) que coloca um limite máximo de 20%% aos rácios superiores e inferiores de autosens, o que por sua vez calcula o quão alto autosens pode ajustar a basal, quão pode baixar o Factor de Sensibilidade (FSI) e baixar o valor alvo de glicose no sangue.</string>
-    <string name="openapsama_autosens_min_summary">Valor padrão: 0.7\nO outro lado dos limites de segurança do autosens. Coloca um tecto no quão baixo autosens pode ajustar as basais, e quão alto pode ajustar os valores de ISF e valor alvo de glucose no sangue (BG).</string>
-    <string name="openapsama_autosens_max">Rácio máx. autosens</string>
-    <string name="openapsama_autosens_min">Rácio min. autosens</string>
+    <string name="openapsama_autosens_min_summary">Valor padrão: 0,7\nO outro lado dos limites de segurança do Autosens, colocando um limite no quanto o Autosens pode ajustar os basais e no quanto pode ajustar os alvos FSI e alvos de Glicose.</string>
+    <string name="openapsama_autosens_max">Razão máx. autosens</string>
+    <string name="openapsama_autosens_min">Razão min. autosens</string>
     <string name="openapsama_min_5m_carb_impact_summary">Valor padrão: 3.0 para assitência avançada de refeições (AAR) ou 8.0 para super micro bolus (SMB). Esta é a configuração padrão para o calculo de quanto varia a cada 5 min a glicemia (BG) devido à absorção de carboidratos. O padrão é 3mg/dl/5min. Isso afeta a rapidez com que decaem os carboidratos ativos (CA) e quanta absorção de carboidrato será considerada no cálculo da previsão de glicemia futura, tornando possível notar que glicemia está baixando mais do que o esperado ou não subindo como esperado.</string>
     <string name="absorption_cutoff_title">Tempo máx. absorção refeição [h]</string>
     <string name="absorption_cutoff_summary">Hora em que qualquer refeição é considerada absorvida. Restantes hidratos de carbono serão cortados.</string>
