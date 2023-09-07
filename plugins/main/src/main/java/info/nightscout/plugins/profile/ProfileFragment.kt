@@ -19,7 +19,6 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.ui.UiInteraction
@@ -35,6 +34,7 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -52,12 +52,14 @@ class ProfileFragment : DaggerFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var profilePlugin: ProfilePlugin
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var hardLimits: HardLimits
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private var disposable: CompositeDisposable = CompositeDisposable()
     private var inMenu = false
@@ -89,7 +91,7 @@ class ProfileFragment : DaggerFragment() {
     private fun sumLabel(): String {
         val profile = profilePlugin.getEditedProfile()
         val sum = profile?.let { ProfileSealed.Pure(profile).baseBasalSum() } ?: 0.0
-        return " ∑" + DecimalFormatter.to2Decimal(sum) + rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
+        return " ∑" + decimalFormatter.to2Decimal(sum) + rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
     }
 
     private var _binding: ProfileFragmentBinding? = null
@@ -207,19 +209,19 @@ class ProfileFragment : DaggerFragment() {
             )
         } else {
             val isfRange = doubleArrayOf(
-                roundUp(Profile.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL)),
-                roundDown(Profile.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL))
+                roundUp(profileUtil.fromMgdlToUnits(HardLimits.MIN_ISF, GlucoseUnit.MMOL)),
+                roundDown(profileUtil.fromMgdlToUnits(HardLimits.MAX_ISF, GlucoseUnit.MMOL))
             )
             TimeListEdit(requireContext(), aapsLogger, dateUtil, requireView(), R.id.isf_holder, "ISF", rh.gs(info.nightscout.core.ui.R.string.isf_long_label), currentProfile.isf, null, isfRange, null, 0.1,
                          DecimalFormat
                 ("0.0"), save)
             val range1 = doubleArrayOf(
-                roundUp(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
-                roundDown(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[1], GlucoseUnit.MMOL))
+                roundUp(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[0], GlucoseUnit.MMOL)),
+                roundDown(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MIN_BG[1], GlucoseUnit.MMOL))
             )
             val range2 = doubleArrayOf(
-                roundUp(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[0], GlucoseUnit.MMOL)),
-                roundDown(Profile.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[1], GlucoseUnit.MMOL))
+                roundUp(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[0], GlucoseUnit.MMOL)),
+                roundDown(profileUtil.fromMgdlToUnits(HardLimits.VERY_HARD_LIMIT_MAX_BG[1], GlucoseUnit.MMOL))
             )
             aapsLogger.info(LTag.CORE, "TimeListEdit", "build: range1" + range1[0] + " " + range1[1] + " range2" + range2[0] + " " + range2[1])
             TimeListEdit(

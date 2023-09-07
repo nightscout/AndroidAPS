@@ -12,7 +12,8 @@ class BolusDataPoint(
     val data: Bolus,
     private val rh: ResourceHelper,
     private val activePlugin: ActivePlugin,
-    private val defaultValueHelper: DefaultValueHelper
+    private val defaultValueHelper: DefaultValueHelper,
+    private val decimalFormatter: DecimalFormatter
 ) : DataPointWithLabelInterface {
 
     private var yValue = 0.0
@@ -20,7 +21,7 @@ class BolusDataPoint(
     override fun getX(): Double = data.timestamp.toDouble()
     override fun getY(): Double = if (data.type == Bolus.Type.SMB) defaultValueHelper.determineLowLine() else yValue
     override val label
-        get() = DecimalFormatter.toPumpSupportedBolus(data.amount, activePlugin.activePump, rh)
+        get() = decimalFormatter.toPumpSupportedBolus(data.amount, activePlugin.activePump.pumpDescription.bolusStep)
     override val duration = 0L
     override val size = 2f
     override val paintStyle: Paint.Style = Paint.Style.FILL // not used

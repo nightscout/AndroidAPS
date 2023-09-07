@@ -4,11 +4,11 @@ import info.nightscout.interfaces.iob.GlucoseStatus
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.Round
 
-fun GlucoseStatus.log(): String = "Glucose: " + DecimalFormatter.to0Decimal(glucose) + " mg/dl " +
-    "Noise: " + DecimalFormatter.to0Decimal(noise) + " " +
-    "Delta: " + DecimalFormatter.to0Decimal(delta) + " mg/dl" +
-    "Short avg. delta: " + " " + DecimalFormatter.to2Decimal(shortAvgDelta) + " mg/dl " +
-    "Long avg. delta: " + DecimalFormatter.to2Decimal(longAvgDelta) + " mg/dl"
+fun GlucoseStatus.log(decimalFormatter: DecimalFormatter): String = "Glucose: " + decimalFormatter.to0Decimal(glucose) + " mg/dl " +
+    "Noise: " + decimalFormatter.to0Decimal(noise) + " " +
+    "Delta: " + decimalFormatter.to0Decimal(delta) + " mg/dl" +
+    "Short avg. delta: " + " " + decimalFormatter.to2Decimal(shortAvgDelta) + " mg/dl " +
+    "Long avg. delta: " + decimalFormatter.to2Decimal(longAvgDelta) + " mg/dl"
 
 fun GlucoseStatus.asRounded() = copy(
     glucose = Round.roundTo(glucose, 0.1),

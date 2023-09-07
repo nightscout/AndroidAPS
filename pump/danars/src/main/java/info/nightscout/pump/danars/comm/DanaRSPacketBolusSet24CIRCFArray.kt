@@ -6,6 +6,7 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ProfileUtil
 import javax.inject.Inject
 import kotlin.math.round
 
@@ -15,6 +16,7 @@ class DanaRSPacketBolusSet24CIRCFArray(
 ) : DanaRSPacket(injector) {
 
     @Inject lateinit var danaPump: DanaPump
+    @Inject lateinit var profileUtil: ProfileUtil
 
     init {
         opCode = BleEncryption.DANAR_PACKET__OPCODE_BOLUS__SET_24_CIR_CF_ARRAY
@@ -28,7 +30,7 @@ class DanaRSPacketBolusSet24CIRCFArray(
         for (i in 0..23) {
             var isf = profile.getIsfMgdlTimeFromMidnight(i * 3600)
             if (danaPump.units == DanaPump.UNITS_MMOL) {
-                isf = Profile.fromMgdlToUnits(isf, GlucoseUnit.MMOL)
+                isf = profileUtil.fromMgdlToUnits(isf, GlucoseUnit.MMOL)
                 isf *= 100
             }
             val ic = profile.getIcTimeFromMidnight(i * 3600)

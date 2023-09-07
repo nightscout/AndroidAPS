@@ -11,6 +11,7 @@ import info.nightscout.core.extensions.toStringFull
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.pump.virtual.databinding.VirtualPumpFragmentBinding
 import info.nightscout.pump.virtual.events.EventVirtualPumpUpdateGui
 import info.nightscout.rx.AapsSchedulers
@@ -34,6 +35,7 @@ class VirtualPumpFragment : DaggerFragment() {
     @Inject lateinit var profileFunction: ProfileFunction
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private val disposable = CompositeDisposable()
 
@@ -90,9 +92,9 @@ class VirtualPumpFragment : DaggerFragment() {
         if (_binding == null) return
         val profile = profileFunction.getProfile() ?: return
         binding.baseBasalRate.text = rh.gs(info.nightscout.core.ui.R.string.pump_base_basal_rate, virtualPumpPlugin.baseBasalRate)
-        binding.tempbasal.text = iobCobCalculator.getTempBasal(dateUtil.now())?.toStringFull(profile, dateUtil)
+        binding.tempbasal.text = iobCobCalculator.getTempBasal(dateUtil.now())?.toStringFull(profile, dateUtil, decimalFormatter)
             ?: ""
-        binding.extendedbolus.text = iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil)
+        binding.extendedbolus.text = iobCobCalculator.getExtendedBolus(dateUtil.now())?.toStringFull(dateUtil, decimalFormatter)
             ?: ""
         binding.battery.text = rh.gs(info.nightscout.core.ui.R.string.format_percent, virtualPumpPlugin.batteryPercent)
         binding.reservoir.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, virtualPumpPlugin.reservoirInUnits.toDouble())

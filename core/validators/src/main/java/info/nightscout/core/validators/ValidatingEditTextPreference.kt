@@ -5,9 +5,8 @@ import android.util.AttributeSet
 import androidx.preference.EditTextPreference
 import androidx.preference.PreferenceViewHolder
 import dagger.android.HasAndroidInjector
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.interfaces.ProfileUtil
 import javax.inject.Inject
 
 class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : EditTextPreference(ctx, attrs, defStyleAttr, defStyleRes) {
@@ -15,7 +14,7 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAt
     private val validatorParameters: DefaultEditTextValidator.Parameters = obtainValidatorParameters(attrs)
     private var validator: DefaultEditTextValidator? = null
 
-    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
 
     init {
         (ctx.applicationContext as HasAndroidInjector).androidInjector().inject(this)
@@ -75,14 +74,14 @@ class ValidatingEditTextPreference(ctx: Context, attrs: AttributeSet, defStyleAt
     override fun onSetInitialValue(defaultValue: Any?) {
         text =
             if (validatorParameters.testType == EditTextValidator.TEST_BG_RANGE)
-                Profile.fromMgdlToUnits(SafeParse.stringToDouble(getPersistedString(defaultValue as String?)), profileFunction.getUnits()).toString()
+                profileUtil.fromMgdlToUnits(SafeParse.stringToDouble(getPersistedString(defaultValue as String?)), profileUtil.units).toString()
             else
                 getPersistedString(defaultValue as String?)
     }
 
     override fun persistString(value: String?): Boolean =
         when (validatorParameters.testType) {
-            EditTextValidator.TEST_BG_RANGE            -> super.persistString(Profile.toMgdl(SafeParse.stringToDouble(value, 0.0), profileFunction.getUnits()).toString())
+            EditTextValidator.TEST_BG_RANGE            -> super.persistString(profileUtil.convertToMgdl(SafeParse.stringToDouble(value, 0.0), profileUtil.units).toString())
             EditTextValidator.TEST_FLOAT_NUMERIC_RANGE -> super.persistString(SafeParse.stringToDouble(value, 0.0).toString())
             else                                       -> super.persistString(value)
         }

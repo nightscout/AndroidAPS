@@ -159,15 +159,15 @@ class PumpEnactResultTest : TestBaseWithProfile() {
     @Test fun toHtmlTest() {
 
         var per: PumpEnactResult = PumpEnactResult(injector).enacted(true).bolusDelivered(10.0).comment("AAA")
-        Assertions.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>SMB</b>: 10.0 U", per.toHtml(rh))
+        Assertions.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>SMB</b>: 10.0 U", per.toHtml(rh, decimalFormatter))
         per = PumpEnactResult(injector).enacted(true).isTempCancel(true).comment("AAA")
-        Assertions.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br>Cancel temp basal", per.toHtml(rh))
+        Assertions.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br>Cancel temp basal", per.toHtml(rh, decimalFormatter))
         per = PumpEnactResult(injector).enacted(true).isPercent(true).percent(90).duration(20).comment("AAA")
-        Assertions.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 20 min<br><b>Percent</b>: 90%", per.toHtml(rh))
+        Assertions.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 20 min<br><b>Percent</b>: 90%", per.toHtml(rh, decimalFormatter))
         per = PumpEnactResult(injector).enacted(true).isPercent(false).absolute(1.0).duration(30).comment("AAA")
-        Assertions.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 30 min<br><b>Absolute</b>: 1.00 U/h", per.toHtml(rh))
+        Assertions.assertEquals("<b>Success</b>: false<br><b>Enacted</b>: true<br><b>Comment</b>: AAA<br><b>Duration</b>: 30 min<br><b>Absolute</b>: 1.00 U/h", per.toHtml(rh, decimalFormatter))
         per = PumpEnactResult(injector).enacted(false).comment("AAA")
-        Assertions.assertEquals("<b>Success</b>: false<br><b>Comment</b>: AAA", per.toHtml(rh))
+        Assertions.assertEquals("<b>Success</b>: false<br><b>Comment</b>: AAA", per.toHtml(rh, decimalFormatter))
     }
 
     @Test fun jsonTest() {

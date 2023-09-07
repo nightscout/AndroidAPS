@@ -31,6 +31,7 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
@@ -69,6 +70,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private var _binding: TreatmentsProfileswitchFragmentBinding? = null
 
@@ -201,7 +203,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
             holder.binding.time.text = dateUtil.timeString(profileSwitch.timestamp)
             holder.binding.duration.text = rh.gs(info.nightscout.core.ui.R.string.format_mins, T.msecs(profileSwitch.duration ?: 0L).mins())
             holder.binding.name.text =
-                if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName() else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
+                if (profileSwitch is ProfileSealed.PS) profileSwitch.value.getCustomizedName(decimalFormatter) else if (profileSwitch is ProfileSealed.EPS) profileSwitch.value.originalCustomizedName else ""
             if (profileSwitch.isInProgress(dateUtil)) holder.binding.date.setTextColor(rh.gac(context, info.nightscout.core.ui.R.attr.activeColor))
             else holder.binding.date.setTextColor(holder.binding.duration.currentTextColor)
             holder.binding.clone.tag = profileSwitch
@@ -238,11 +240,11 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                         OKDialog.showConfirmation(
                             activity,
                             rh.gs(info.nightscout.core.ui.R.string.careportal_profileswitch),
-                            rh.gs(info.nightscout.core.ui.R.string.copytolocalprofile) + "\n" + profileSwitch.getCustomizedName() + "\n" + dateUtil.dateAndTimeString(profileSwitch.timestamp),
+                            rh.gs(info.nightscout.core.ui.R.string.copytolocalprofile) + "\n" + profileSwitch.getCustomizedName(decimalFormatter) + "\n" + dateUtil.dateAndTimeString(profileSwitch.timestamp),
                             Runnable {
                                 uel.log(
                                     Action.PROFILE_SWITCH_CLONED, Sources.Treatments,
-                                    profileSwitch.getCustomizedName() + " " + dateUtil.dateAndTimeString(profileSwitch.timestamp).replace(".", "_"),
+                                    profileSwitch.getCustomizedName(decimalFormatter) + " " + dateUtil.dateAndTimeString(profileSwitch.timestamp).replace(".", "_"),
                                     ValueWithUnit.Timestamp(profileSwitch.timestamp),
                                     ValueWithUnit.SimpleString(profileSwitch.profileName)
                                 )
@@ -250,7 +252,7 @@ class TreatmentsProfileSwitchFragment : DaggerFragment(), MenuProvider {
                                 activePlugin.activeProfileSource.addProfile(
                                     activePlugin.activeProfileSource.copyFrom(
                                         nonCustomized,
-                                        profileSwitch.getCustomizedName() + " " + dateUtil.dateAndTimeString(profileSwitch.timestamp).replace(".", "_")
+                                        profileSwitch.getCustomizedName(decimalFormatter) + " " + dateUtil.dateAndTimeString(profileSwitch.timestamp).replace(".", "_")
                                     )
                                 )
                                 rxBus.send(EventLocalProfileChanged())

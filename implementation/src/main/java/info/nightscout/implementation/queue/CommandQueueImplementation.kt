@@ -57,6 +57,7 @@ import info.nightscout.interfaces.queue.Command.CommandType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -95,7 +96,8 @@ class CommandQueueImplementation @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val androidPermission: AndroidPermission,
     private val uiInteraction: UiInteraction,
-    private val persistenceLayer: PersistenceLayer
+    private val persistenceLayer: PersistenceLayer,
+    private val decimalFormatter: DecimalFormatter
 ) : CommandQueue {
 
     private val disposable = CompositeDisposable()
@@ -132,7 +134,7 @@ class CommandQueueImplementation @Inject constructor(
                                                targetBlocks = nonCustomized.targetBlocks,
                                                glucoseUnit = if (it.glucoseUnit == ProfileSwitch.GlucoseUnit.MGDL) EffectiveProfileSwitch.GlucoseUnit.MGDL else EffectiveProfileSwitch.GlucoseUnit.MMOL,
                                                originalProfileName = it.profileName,
-                                               originalCustomizedName = it.getCustomizedName(),
+                                               originalCustomizedName = it.getCustomizedName(decimalFormatter),
                                                originalTimeshift = it.timeshift,
                                                originalPercentage = it.percentage,
                                                originalDuration = it.duration,
@@ -234,7 +236,7 @@ class CommandQueueImplementation @Inject constructor(
         val tempCommandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer
+            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
         )
         tempCommandQueue.readStatus(reason, callback)
         tempCommandQueue.disposable.clear()

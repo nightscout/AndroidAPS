@@ -79,7 +79,8 @@ class DanaRSPluginTest : DanaRSTestBase() {
                 fabricPrivacy,
                 dateUtil,
                 uiInteraction,
-                danaHistoryDatabase
+                danaHistoryDatabase,
+                decimalFormatter
             )
     }
 }

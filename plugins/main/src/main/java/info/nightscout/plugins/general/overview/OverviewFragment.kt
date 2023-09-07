@@ -28,7 +28,6 @@ import com.jjoe64.graphview.GraphView
 import dagger.android.HasAndroidInjector
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.extensions.directionToIcon
-import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.graph.OverviewData
 import info.nightscout.core.iob.displayText
 import info.nightscout.core.profile.ProfileSealed
@@ -60,13 +59,13 @@ import info.nightscout.interfaces.overview.OverviewMenus
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.source.DexcomBoyda
 import info.nightscout.interfaces.source.XDripSource
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.interfaces.utils.TrendCalculator
 import info.nightscout.plugins.R
@@ -99,6 +98,7 @@ import info.nightscout.rx.weardata.EventData
 import info.nightscout.shared.extensions.runOnUiThread
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.extensions.toVisibilityKeepSpace
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -120,6 +120,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var processedDeviceStatusData: ProcessedDeviceStatusData
@@ -145,6 +146,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     @Inject lateinit var automation: Automation
     @Inject lateinit var bgQualityCheck: BgQualityCheck
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private val disposable = CompositeDisposable()
 
@@ -777,7 +779,6 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
 
     @SuppressLint("SetTextI18n")
     fun updateBg() {
-        val units = profileFunction.getUnits()
         val lastBg = overviewData.lastBg(iobCobCalculator.ads)
         val lastBgColor = overviewData.lastBgColor(context, iobCobCalculator.ads)
         val isActualBg = overviewData.isActualBg(iobCobCalculator.ads)
@@ -787,7 +788,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
         val lastBgDescription = overviewData.lastBgDescription(iobCobCalculator.ads)
         runOnUiThread {
             _binding ?: return@runOnUiThread
-            binding.infoLayout.bg.text = lastBg?.valueToUnitsString(units) ?: ""
+            binding.infoLayout.bg.text = profileUtil.fromMgdlToStringInUnits(lastBg?.value)
             binding.infoLayout.bg.setTextColor(lastBgColor)
             trendArrow?.let { binding.infoLayout.arrow.setImageResource(it.directionToIcon()) }
             binding.infoLayout.arrow.visibility = (trendArrow != null).toVisibilityKeepSpace()
@@ -795,11 +796,11 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.infoLayout.arrow.contentDescription = lastBgDescription + " " + rh.gs(info.nightscout.core.ui.R.string.and) + " " + trendDescription
 
             if (glucoseStatus != null) {
-                binding.infoLayout.deltaLarge.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
+                binding.infoLayout.deltaLarge.text = profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
                 binding.infoLayout.deltaLarge.setTextColor(lastBgColor)
-                binding.infoLayout.delta.text = Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                binding.infoLayout.avgDelta.text = Profile.toSignedUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units)
-                binding.infoLayout.longAvgDelta.text = Profile.toSignedUnitsString(glucoseStatus.longAvgDelta, glucoseStatus.longAvgDelta * Constants.MGDL_TO_MMOLL, units)
+                binding.infoLayout.delta.text = profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
+                binding.infoLayout.avgDelta.text = profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.shortAvgDelta)
+                binding.infoLayout.longAvgDelta.text = profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.longAvgDelta)
             } else {
                 binding.infoLayout.deltaLarge.text = ""
                 binding.infoLayout.delta.text = "Δ " + rh.gs(info.nightscout.core.ui.R.string.value_unavailable_short)
@@ -915,7 +916,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
     private fun updateIobCob() {
         val iobText = overviewData.iobText(iobCobCalculator)
         val iobDialogText = overviewData.iobDialogText(iobCobCalculator)
-        val displayText = overviewData.cobInfo(iobCobCalculator).displayText(rh)
+        val displayText = overviewData.cobInfo(iobCobCalculator).displayText(rh, decimalFormatter)
         val lastCarbsTime = overviewData.lastCarbsTime
         runOnUiThread {
             _binding ?: return@runOnUiThread
@@ -954,7 +955,7 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                     binding.tempTarget,
                     info.nightscout.core.ui.R.attr.ribbonTextWarningColor,
                     info.nightscout.core.ui.R.attr.ribbonWarningColor,
-                    Profile.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
+                    profileUtil.toTargetRangeString(tempTarget.lowTarget, tempTarget.highTarget, GlucoseUnit.MGDL, units) + " " + dateUtil.untilString(tempTarget.end, rh)
                 )
             } else {
                 // If the target is not the same as set in the profile then oref has overridden it
@@ -967,14 +968,14 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
                             binding.tempTarget,
                             info.nightscout.core.ui.R.attr.ribbonTextWarningColor,
                             info.nightscout.core.ui.R.attr.tempTargetBackgroundColor,
-                            Profile.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
+                            profileUtil.toTargetRangeString(targetUsed, targetUsed, GlucoseUnit.MGDL, units)
                         )
                     } else {
                         setRibbon(
                             binding.tempTarget,
                             info.nightscout.core.ui.R.attr.ribbonTextDefaultColor,
                             info.nightscout.core.ui.R.attr.ribbonDefaultColor,
-                            Profile.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
+                            profileUtil.toTargetRangeString(profile.getTargetLowMgdl(), profile.getTargetHighMgdl(), GlucoseUnit.MGDL, units)
                         )
                     }
                 }
@@ -1110,8 +1111,8 @@ class OverviewFragment : DaggerFragment(), View.OnClickListener, OnLongClickList
             binding.infoLayout.variableSensitivity.text =
                 String.format(
                     Locale.getDefault(), "%1$.1f→%2$.1f",
-                    Profile.toUnits(isfMgdl, isfMgdl * Constants.MGDL_TO_MMOLL, profileFunction.getUnits()),
-                    Profile.toUnits(variableSens, variableSens * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
+                    profileUtil.fromMgdlToUnits(isfMgdl, profileFunction.getUnits()),
+                    profileUtil.fromMgdlToUnits(variableSens, profileFunction.getUnits())
                 )
             binding.infoLayout.variableSensitivity.visibility = View.VISIBLE
         } else binding.infoLayout.variableSensitivity.visibility = View.GONE

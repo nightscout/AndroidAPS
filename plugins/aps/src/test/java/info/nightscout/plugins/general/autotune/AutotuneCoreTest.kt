@@ -6,6 +6,7 @@ import info.nightscout.database.entities.data.TargetBlock
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.JsonHelper
+import info.nightscout.plugins.general.autotune.data.ATProfile
 import info.nightscout.plugins.general.autotune.data.PreppedGlucose
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
@@ -85,7 +86,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
      * OpenAPS profile for Autotune only have one ISF value and one IC value
      */
     @Suppress("SpellCheckingInspection")
-    private fun atProfileFromOapsJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits: String? = null): info.nightscout.plugins.general.autotune.data.ATProfile? {
+    private fun atProfileFromOapsJson(jsonObject: JSONObject, dateUtil: DateUtil, defaultUnits: String? = null): ATProfile? {
         try {
             min5mCarbImpact = JsonHelper.safeGetDoubleAllowNull(jsonObject, "min_5m_carbimpact") ?: return null
             autotuneMin = JsonHelper.safeGetDoubleAllowNull(jsonObject, "autosens_min") ?: return null
@@ -122,7 +123,7 @@ class AutotuneCoreTest : TestBaseWithProfile() {
                 timeZone = timezone,
                 dia = dia
             )
-            return info.nightscout.plugins.general.autotune.data.ATProfile(ProfileSealed.Pure(pure), localInsulin, profileInjector).also { it.dateUtil = dateUtil }
+            return ATProfile(ProfileSealed.Pure(pure), localInsulin, profileInjector).also { it.dateUtil = dateUtil; it.profileUtil = profileUtil }
         } catch (ignored: Exception) {
             return null
         }

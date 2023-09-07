@@ -9,9 +9,8 @@ import android.view.WindowManager
 import com.google.gson.Gson
 import dagger.android.support.DaggerDialogFragment
 import info.nightscout.database.entities.BolusCalculatorResult
-import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.R
@@ -22,6 +21,7 @@ class WizardInfoDialog : DaggerDialogFragment() {
 
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var dateUtil: DateUtil
 
     private lateinit var data: BolusCalculatorResult
@@ -55,10 +55,9 @@ class WizardInfoDialog : DaggerDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding.close.setOnClickListener { dismiss() }
-        val units = profileFunction.getUnits()
-        val bgString = Profile.toUnitsString(data.glucoseValue, data.glucoseValue * Constants.MGDL_TO_MMOLL, units)
-        val isf = Profile.toUnits(data.isf, data.isf * Constants.MGDL_TO_MMOLL, units)
-        val trend = Profile.toUnitsString(data.glucoseTrend * 3, data.glucoseTrend * 3 * Constants.MGDL_TO_MMOLL, units)
+        val bgString = profileUtil.fromMgdlToStringInUnits(data.glucoseValue)
+        val isf = profileUtil.fromMgdlToUnits(data.isf)
+        val trend = profileUtil.fromMgdlToStringInUnits(data.glucoseTrend * 3)
         // BG
         binding.bg.text = rh.gs(R.string.format_bg_isf, bgString, isf)
         binding.bgInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, data.glucoseInsulin)

@@ -14,9 +14,9 @@ import info.nightscout.core.workflow.CalculationWorkflow
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -29,6 +29,7 @@ class PrepareTemporaryTargetDataWorker(
 
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var loop: Loop
@@ -50,7 +51,6 @@ class PrepareTemporaryTargetDataWorker(
 
         rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, 0, null))
         val profile = profileFunction.getProfile() ?: return Result.success(workDataOf("Error" to "missing profile"))
-        val units = profileFunction.getUnits()
         var endTime = data.overviewData.endTime
         val fromTime = data.overviewData.fromTime
         val targetsSeriesArray: MutableList<DataPoint> = ArrayList()
@@ -63,9 +63,9 @@ class PrepareTemporaryTargetDataWorker(
             rxBus.send(EventIobCalculationProgress(CalculationWorkflow.ProgressData.PREPARE_TEMPORARY_TARGET_DATA, progress.toInt(), null))
             val tt = repository.getTemporaryTargetActiveAt(time).blockingGet()
             val value: Double = if (tt is ValueWrapper.Existing) {
-                Profile.fromMgdlToUnits(tt.value.target(), units)
+                profileUtil.fromMgdlToUnits(tt.value.target())
             } else {
-                Profile.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2, units)
+                profileUtil.fromMgdlToUnits((profile.getTargetLowMgdl(time) + profile.getTargetHighMgdl(time)) / 2)
             }
             if (lastTarget != value) {
                 if (lastTarget != -1.0) targetsSeriesArray.add(DataPoint(time.toDouble(), lastTarget))

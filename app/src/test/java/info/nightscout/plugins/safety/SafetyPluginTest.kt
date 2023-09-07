@@ -72,7 +72,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         `when`(config.APS).thenReturn(true)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, activePlugin, hardLimits, config, iobCobCalculator, dateUtil, uiInteraction)
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, constraintChecker, activePlugin, hardLimits, config, iobCobCalculator, dateUtil, uiInteraction, decimalFormatter)
         openAPSAMAPlugin = OpenAPSAMAPlugin(
             injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, fabricPrivacy,
             dateUtil, repository, glucoseStatusProvider, sp

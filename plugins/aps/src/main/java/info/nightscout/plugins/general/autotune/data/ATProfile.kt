@@ -12,7 +12,6 @@ import info.nightscout.interfaces.insulin.Insulin
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.Round
@@ -20,6 +19,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -36,7 +36,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
 
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var sp: SP
-    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var config: Config
     @Inject lateinit var rxBus: RxBus
@@ -81,7 +81,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
     fun isf(circadian: Boolean = false): JSONArray {
         if (circadian)
             return jsonArray(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF)
-        return jsonArray(Profile.fromMgdlToUnits(isf, profile.units))
+        return jsonArray(profileUtil.fromMgdlToUnits(isf, profile.units))
     }
 
     fun getProfile(circadian: Boolean = false): PureProfile {
@@ -162,7 +162,7 @@ class ATProfile(profile: Profile, var localInsulin: LocalInsulin, val injector: 
                 json.put("sens", jsonArray(pumpProfile.isfBlocks, avgISF / pumpProfileAvgISF))
                 json.put("carbratio", jsonArray(pumpProfile.icBlocks, avgIC / pumpProfileAvgIC))
             } else {
-                json.put("sens", jsonArray(Profile.fromMgdlToUnits(isf, profile.units)))
+                json.put("sens", jsonArray(profileUtil.fromMgdlToUnits(isf, profile.units)))
                 json.put("carbratio", jsonArray(ic))
             }
             json.put("basal", jsonArray(basal))

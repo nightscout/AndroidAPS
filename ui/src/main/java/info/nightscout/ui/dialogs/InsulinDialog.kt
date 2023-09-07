@@ -28,7 +28,6 @@ import info.nightscout.interfaces.db.PersistenceLayer
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.pump.DetailedBolusInfo
@@ -40,6 +39,7 @@ import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
@@ -60,6 +60,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var defaultValueHelper: DefaultValueHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var ctx: Context
@@ -70,6 +71,7 @@ class InsulinDialog : DialogFragmentWithDate() {
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var persistenceLayer: PersistenceLayer
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -131,10 +133,11 @@ class InsulinDialog : DialogFragmentWithDate() {
         )
         binding.amount.setParams(
             savedInstanceState?.getDouble("amount")
-                ?: 0.0, 0.0, maxInsulin, activePlugin.activePump.pumpDescription.bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher
+                ?: 0.0, 0.0, maxInsulin, activePlugin.activePump.pumpDescription.bolusStep, decimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump.pumpDescription.bolusStep), false, binding
+                .okcancel.ok, textWatcher
         )
 
-        val plus05Text = sp.getDouble(rh.gs(info.nightscout.shared.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT).toSignedString(activePlugin.activePump)
+        val plus05Text = sp.getDouble(rh.gs(info.nightscout.shared.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus05.text = plus05Text
         binding.plus05.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus05Text
         binding.plus05.setOnClickListener {
@@ -145,7 +148,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus10Text = sp.getDouble(rh.gs(info.nightscout.shared.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT).toSignedString(activePlugin.activePump)
+        val plus10Text = sp.getDouble(rh.gs(info.nightscout.shared.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus10.text = plus10Text
         binding.plus10.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus10Text
         binding.plus10.setOnClickListener {
@@ -156,7 +159,7 @@ class InsulinDialog : DialogFragmentWithDate() {
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus20Text = sp.getDouble(rh.gs(info.nightscout.shared.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT).toSignedString(activePlugin.activePump)
+        val plus20Text = sp.getDouble(rh.gs(info.nightscout.shared.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus20.text = plus20Text
         binding.plus20.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus20Text
         binding.plus20.setOnClickListener {
@@ -194,7 +197,10 @@ class InsulinDialog : DialogFragmentWithDate() {
         val eatingSoonChecked = binding.startEatingSoonTt.isChecked
 
         if (insulinAfterConstraints > 0) {
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor))
+            actions.add(
+                rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + decimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump.pumpDescription.bolusStep)
+                    .formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor)
+            )
             if (recordOnlyChecked)
                 actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
             if (abs(insulinAfterConstraints - insulin) > pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
@@ -204,7 +210,10 @@ class InsulinDialog : DialogFragmentWithDate() {
         val eatingSoonTT = defaultValueHelper.determineEatingSoonTT()
         if (eatingSoonChecked)
             actions.add(
-                rh.gs(R.string.temp_target_short) + ": " + (DecimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(info.nightscout.core.ui.R.string.format_mins, eatingSoonTTDuration) + ")")
+                rh.gs(R.string.temp_target_short) + ": " + (decimalFormatter.to1Decimal(eatingSoonTT) + " " + unitLabel + " (" + rh.gs(
+                    info.nightscout.core.ui.R.string.format_mins,
+                    eatingSoonTTDuration
+                ) + ")")
                     .formatColor(context, rh, info.nightscout.core.ui.R.attr.tempTargetConfirmation)
             )
 
@@ -233,8 +242,8 @@ class InsulinDialog : DialogFragmentWithDate() {
                                 timestamp = System.currentTimeMillis(),
                                 duration = TimeUnit.MINUTES.toMillis(eatingSoonTTDuration.toLong()),
                                 reason = TemporaryTarget.Reason.EATING_SOON,
-                                lowTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits()),
-                                highTarget = Profile.toMgdl(eatingSoonTT, profileFunction.getUnits())
+                                lowTarget = profileUtil.convertToMgdl(eatingSoonTT, profileFunction.getUnits()),
+                                highTarget = profileUtil.convertToMgdl(eatingSoonTT, profileFunction.getUnits())
                             )
                         ).subscribe({ result ->
                                         result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }

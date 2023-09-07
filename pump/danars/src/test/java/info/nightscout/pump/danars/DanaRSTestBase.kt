@@ -52,6 +52,6 @@ open class DanaRSTestBase : TestBaseWithProfile() {
 
     @BeforeEach
     fun setup() {
-        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator)
+        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
     }
 }

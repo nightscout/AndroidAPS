@@ -3,8 +3,8 @@ package info.nightscout.ui.defaultProfile
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.PureProfile
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONArray
 import org.json.JSONObject
@@ -14,7 +14,11 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class DefaultProfileDPV @Inject constructor(val injector: HasAndroidInjector, val dateUtil: DateUtil) {
+class DefaultProfileDPV @Inject constructor(
+    private val injector: HasAndroidInjector,
+    private val dateUtil: DateUtil,
+    private val profileUtil: ProfileUtil
+) {
 
     private var oneToFive = arrayOf(3.97, 3.61, 3.46, 3.70, 3.76, 3.87, 4.18, 4.01, 3.76, 3.54, 3.15, 2.80, 2.86, 3.21, 3.61, 3.97, 4.43, 4.96, 5.10, 5.50, 5.81, 6.14, 5.52, 5.10)
     private var sixToEleven = arrayOf(4.20, 4.27, 4.41, 4.62, 4.92, 5.09, 5.01, 4.47, 3.89, 3.33, 3.10, 2.91, 2.97, 3.08, 3.36, 3.93, 4.52, 4.76, 4.69, 4.63, 4.63, 4.47, 4.47, 4.31)
@@ -42,8 +46,8 @@ class DefaultProfileDPV @Inject constructor(val injector: HasAndroidInjector, va
         profile.put("carbs_hr", 20) // not used
         profile.put("delay", 5.0) // not used
         profile.put("timezone", TimeZone.getDefault().id)
-        profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
-        profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
+        profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMgdlToUnits(108.0, units))))
+        profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMgdlToUnits(108.0, units))))
         profile.put("units", units.asText)
         return pureProfileFromJson(profile, dateUtil)
     }
@@ -67,7 +71,7 @@ class DefaultProfileDPV @Inject constructor(val injector: HasAndroidInjector, va
     @Suppress("SameParameterValue")
     private fun singleValueArrayFromMmolToUnits(value: Double, units: GlucoseUnit): JSONArray {
         val array = JSONArray()
-        array.put(JSONObject().put("time", "00:00").put("value", Profile.fromMmolToUnits(value, units)).put("timeAsSeconds", 0 * 3600))
+        array.put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMmolToUnits(value, units)).put("timeAsSeconds", 0 * 3600))
         return array
     }
 }

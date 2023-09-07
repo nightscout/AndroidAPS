@@ -5,14 +5,13 @@ import android.graphics.Paint
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.Translator
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 
 class TherapyEventDataPoint(
     val data: TherapyEvent,
     private val rh: ResourceHelper,
-    private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
     private val translator: Translator
 ) : DataPointWithLabelInterface {
 
@@ -21,20 +20,13 @@ class TherapyEventDataPoint(
     override fun getX(): Double = data.timestamp.toDouble()
 
     override fun getY(): Double {
-        val units = profileFunction.getUnits()
-        if (data.type == TherapyEvent.Type.NS_MBG) return Profile.fromMgdlToUnits(data.glucose!!, units)
+        if (data.type == TherapyEvent.Type.NS_MBG) return profileUtil.fromMgdlToUnits(data.glucose!!)
         if (data.glucose != null && data.glucose != 0.0) {
-            var mmol = 0.0
-            var mgdl = 0.0
-            if (data.glucoseUnit == TherapyEvent.GlucoseUnit.MGDL) {
-                mgdl = data.glucose!!
-                mmol = data.glucose!! * Constants.MGDL_TO_MMOLL
+            val mgdl: Double = when (data.glucoseUnit) {
+                TherapyEvent.GlucoseUnit.MGDL -> data.glucose!!
+                TherapyEvent.GlucoseUnit.MMOL -> data.glucose!! * Constants.MMOLL_TO_MGDL
             }
-            if (data.glucoseUnit == TherapyEvent.GlucoseUnit.MMOL) {
-                mmol = data.glucose!!
-                mgdl = data.glucose!! * Constants.MMOLL_TO_MGDL
-            }
-            return Profile.toUnits(mgdl, mmol, units)
+            return profileUtil.fromMgdlToUnits(mgdl)
         }
         return yValue
     }

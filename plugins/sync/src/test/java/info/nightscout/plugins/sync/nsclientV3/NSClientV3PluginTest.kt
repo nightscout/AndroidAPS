@@ -82,7 +82,7 @@ internal class NSClientV3PluginTest : TestBaseWithProfile() {
             NSClientV3Plugin(
                 injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
                 sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, repository,
-                nsDeviceStatusHandler, nsClientSource, nsIncomingDataProcessor, storeDataForDb
+                nsDeviceStatusHandler, nsClientSource, nsIncomingDataProcessor, storeDataForDb, decimalFormatter
             )
         sut.nsAndroidClient = nsAndroidClient
         Mockito.`when`(mockedProfileFunction.getProfile(anyLong())).thenReturn(validProfile)

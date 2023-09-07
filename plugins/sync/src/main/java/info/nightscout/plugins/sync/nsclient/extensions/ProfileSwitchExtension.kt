@@ -8,17 +8,18 @@ import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import org.json.JSONObject
 
-fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil): JSONObject =
+fun ProfileSwitch.toJson(isAdd: Boolean, dateUtil: DateUtil, decimalFormatter: DecimalFormatter): JSONObject =
     JSONObject()
         .put("timeshift", timeshift)
         .put("percentage", percentage)
         .put("duration", T.msecs(duration).mins())
-        .put("profile", getCustomizedName())
+        .put("profile", getCustomizedName(decimalFormatter))
         .put("originalProfileName", profileName)
         .put("originalDuration", duration)
         .put("created_at", dateUtil.toISOString(timestamp))

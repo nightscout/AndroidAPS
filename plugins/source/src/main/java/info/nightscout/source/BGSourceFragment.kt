@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import info.nightscout.core.extensions.directionToIcon
-import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.ui.dialogs.OKDialog
 import info.nightscout.core.utils.ActionModeHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
@@ -36,6 +35,7 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.extensions.toVisibilityKeepSpace
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
@@ -58,6 +58,7 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var aapsLogger: AAPSLogger
+    @Inject lateinit var profileUtil: ProfileUtil
 
     private val disposable = CompositeDisposable()
     private val millsToThePast = T.hours(36).msecs()
@@ -142,7 +143,7 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
             holder.binding.date.visibility = newDay.toVisibility()
             holder.binding.date.text = if (newDay) dateUtil.dateStringRelative(glucoseValue.timestamp, rh) else ""
             holder.binding.time.text = dateUtil.timeStringWithSeconds(glucoseValue.timestamp)
-            holder.binding.value.text = glucoseValue.valueToUnitsString(profileFunction.getUnits())
+            holder.binding.value.text = profileUtil.fromMgdlToStringInUnits(glucoseValue.value)
             holder.binding.direction.setImageResource(glucoseValue.trendArrow.directionToIcon())
             if (position > 0) {
                 val previous = glucoseValues[position - 1]
@@ -183,7 +184,7 @@ class BGSourceFragment : DaggerFragment(), MenuProvider {
     private fun getConfirmationText(selectedItems: SparseArray<GlucoseValue>): String {
         if (selectedItems.size() == 1) {
             val glucoseValue = selectedItems.valueAt(0)
-            return dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + glucoseValue.valueToUnitsString(profileFunction.getUnits())
+            return dateUtil.dateAndTimeString(glucoseValue.timestamp) + "\n" + profileUtil.fromMgdlToUnits(glucoseValue.value)
         }
         return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())
     }

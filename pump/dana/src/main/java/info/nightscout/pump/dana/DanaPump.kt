@@ -33,7 +33,8 @@ class DanaPump @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val sp: SP,
     private val dateUtil: DateUtil,
-    private val instantiator: Instantiator
+    private val instantiator: Instantiator,
+    private val decimalFormatter: DecimalFormatter
 ) {
 
     @Suppress("unused")
@@ -196,7 +197,7 @@ class DanaPump @Inject constructor(
     fun extendedBolusToString(): String {
         if (!isExtendedInProgress) return ""
 
-        return "E " + DecimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
+        return "E " + decimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
             dateUtil.timeString(extendedBolusStart) +
             " " + extendedBolusPassedMinutes + "/" + extendedBolusDurationInMinutes + "'"
     }
@@ -238,7 +239,6 @@ class DanaPump @Inject constructor(
     var cf24 = Array(24) { 0.0 }
     var cir24 = Array(24) { 0.0 }
 
-    //var pumpProfiles = arrayOf<Array<Double>>()
     var pumpProfiles: Array<Array<Double>>? = null
 
     //Limits

@@ -4,7 +4,7 @@ import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.shared.interfaces.ResourceHelper
 
-fun PumpEnactResult.toHtml(rh: ResourceHelper): String {
+fun PumpEnactResult.toHtml(rh: ResourceHelper, decimalFormatter: DecimalFormatter): String {
     var ret = "<b>" + rh.gs(info.nightscout.core.ui.R.string.success) + "</b>: " + success
     if (queued) {
         ret = rh.gs(info.nightscout.core.ui.R.string.waitingforpumpresult)
@@ -33,7 +33,7 @@ fun PumpEnactResult.toHtml(rh: ResourceHelper): String {
                 ret += "<br><b>" + rh.gs(info.nightscout.core.ui.R.string.enacted) + "</b>: " + enacted
                 if (comment.isNotEmpty()) ret += "<br><b>" + rh.gs(info.nightscout.core.ui.R.string.comment) + "</b>: " + comment
                 ret += "<br><b>" + rh.gs(info.nightscout.core.ui.R.string.duration) + "</b>: " + duration + " min"
-                ret += "<br><b>" + rh.gs(info.nightscout.core.ui.R.string.absolute) + "</b>: " + DecimalFormatter.to2Decimal(absolute) + " U/h"
+                ret += "<br><b>" + rh.gs(info.nightscout.core.ui.R.string.absolute) + "</b>: " + decimalFormatter.to2Decimal(absolute) + " U/h"
             }
         }
     } else {

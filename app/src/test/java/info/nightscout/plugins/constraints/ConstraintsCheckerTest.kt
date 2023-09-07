@@ -39,6 +39,7 @@ import info.nightscout.pump.combo.ruffyscripter.RuffyScripter
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.R
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
+import info.nightscout.pump.danars.DanaRSPlugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.sharedtests.TestBaseWithProfile
 import info.nightscout.source.GlimpPlugin
@@ -78,7 +79,7 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
     private lateinit var objectivesPlugin: ObjectivesPlugin
     private lateinit var comboPlugin: ComboPlugin
     private lateinit var danaRPlugin: DanaRPlugin
-    private lateinit var danaRSPlugin: info.nightscout.pump.danars.DanaRSPlugin
+    private lateinit var danaRSPlugin: DanaRSPlugin
     private lateinit var insightPlugin: LocalInsightPlugin
     private lateinit var openAPSSMBPlugin: OpenAPSSMBPlugin
     private lateinit var openAPSAMAPlugin: OpenAPSAMAPlugin
@@ -135,36 +136,21 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
         //SafetyPlugin
         constraintChecker = ConstraintsImpl(activePlugin)
 
-        val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
+        val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter)
 
         insightDbHelper = InsightDbHelper(insightDatabaseDao)
-        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator)
+        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
         objectivesPlugin = ObjectivesPlugin(injector, aapsLogger, rh, activePlugin, sp, config)
         comboPlugin = ComboPlugin(injector, aapsLogger, rxBus, rh, profileFunction, sp, commandQueue, pumpSync, dateUtil, ruffyScripter, uiInteraction)
         danaRPlugin = DanaRPlugin(
             injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy, pumpSync,
-            uiInteraction, danaHistoryDatabase
+            uiInteraction, danaHistoryDatabase, decimalFormatter
         )
         danaRSPlugin =
-            info.nightscout.pump.danars.DanaRSPlugin(
-                injector,
-                aapsLogger,
-                aapsSchedulers,
-                rxBus,
-                context,
-                rh,
-                constraintChecker,
-                profileFunction,
-                sp,
-                commandQueue,
-                danaPump,
-                pumpSync,
-                detailedBolusInfoStorage,
-                temporaryBasalStorage,
-                fabricPrivacy,
-                dateUtil,
-                uiInteraction,
-                danaHistoryDatabase
+            DanaRSPlugin(
+                injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, profileFunction,
+                sp, commandQueue, danaPump, pumpSync, detailedBolusInfoStorage, temporaryBasalStorage,
+                fabricPrivacy, dateUtil, uiInteraction, danaHistoryDatabase, decimalFormatter
             )
         insightPlugin = LocalInsightPlugin(injector, aapsLogger, rxBus, rh, sp, commandQueue, profileFunction, context, config, dateUtil, insightDbHelper, pumpSync, insightDatabase)
         openAPSSMBPlugin =
@@ -228,18 +214,8 @@ class ConstraintsCheckerTest : TestBaseWithProfile() {
             )
         safetyPlugin =
             SafetyPlugin(
-                injector,
-                aapsLogger,
-                rh,
-                sp,
-                rxBus,
-                constraintChecker,
-                activePlugin,
-                hardLimits,
-                ConfigImpl(fileListProvider),
-                iobCobCalculator,
-                dateUtil,
-                uiInteraction
+                injector, aapsLogger, rh, sp, constraintChecker, activePlugin, hardLimits,
+                ConfigImpl(fileListProvider), iobCobCalculator, dateUtil, uiInteraction, decimalFormatter
             )
         val constraintsPluginsList = ArrayList<PluginBase>()
         constraintsPluginsList.add(safetyPlugin)

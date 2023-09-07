@@ -4,8 +4,7 @@ import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.sharedPreferences.SP
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -14,7 +13,7 @@ import javax.inject.Singleton
 @Singleton
 class DefaultValueHelperImpl @Inject constructor(
     private val sp: SP,
-    private val profileFunction: ProfileFunction
+    private val profileUtil: ProfileUtil
 ) : DefaultValueHelper {
 
     /**
@@ -53,9 +52,9 @@ class DefaultValueHelperImpl @Inject constructor(
      * @return
      */
     override fun determineEatingSoonTT(): Double {
-        val units = profileFunction.getUnits()
+        val units = profileUtil.units
         var value = sp.getDouble(info.nightscout.core.utils.R.string.key_eatingsoon_target, getDefaultEatingSoonTT(units))
-        value = Profile.toCurrentUnits(profileFunction, value)
+        value = profileUtil.valueInCurrentUnitsDetect(value)
         return if (value > 0) value else getDefaultEatingSoonTT(units)
     }
 
@@ -70,9 +69,9 @@ class DefaultValueHelperImpl @Inject constructor(
      * @return
      */
     override fun determineActivityTT(): Double {
-        val units = profileFunction.getUnits()
+        val units = profileUtil.units
         var value = sp.getDouble(info.nightscout.core.utils.R.string.key_activity_target, getDefaultActivityTT(units))
-        value = Profile.toCurrentUnits(profileFunction, value)
+        value = profileUtil.valueInCurrentUnitsDetect(value)
         return if (value > 0) value else getDefaultActivityTT(units)
     }
 
@@ -87,9 +86,9 @@ class DefaultValueHelperImpl @Inject constructor(
      * @return
      */
     override fun determineHypoTT(): Double {
-        val units = profileFunction.getUnits()
+        val units = profileUtil.units
         var value = sp.getDouble(info.nightscout.core.utils.R.string.key_hypo_target, getDefaultHypoTT(units))
-        value = Profile.toCurrentUnits(profileFunction, value)
+        value = profileUtil.valueInCurrentUnitsDetect(value)
         return if (value > 0) value else getDefaultHypoTT(units)
     }
 
@@ -104,14 +103,14 @@ class DefaultValueHelperImpl @Inject constructor(
     override fun determineHighLine(): Double {
         var highLineSetting = sp.getDouble(info.nightscout.core.utils.R.string.key_high_mark, bgTargetHigh)
         if (highLineSetting < 1) highLineSetting = Constants.HIGH_MARK
-        highLineSetting = Profile.toCurrentUnits(profileFunction, highLineSetting)
+        highLineSetting = profileUtil.valueInCurrentUnitsDetect(highLineSetting)
         return highLineSetting
     }
 
     override fun determineLowLine(): Double {
         var lowLineSetting = sp.getDouble(info.nightscout.core.utils.R.string.key_low_mark, bgTargetLow)
         if (lowLineSetting < 1) lowLineSetting = Constants.LOW_MARK
-        lowLineSetting = Profile.toCurrentUnits(profileFunction, lowLineSetting)
+        lowLineSetting = profileUtil.valueInCurrentUnitsDetect(lowLineSetting)
         return lowLineSetting
     }
 }

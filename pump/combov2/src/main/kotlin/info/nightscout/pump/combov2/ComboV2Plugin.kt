@@ -114,7 +114,8 @@ class ComboV2Plugin @Inject constructor (
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
     private val androidPermission: AndroidPermission,
-    private val config: Config
+    private val config: Config,
+    private val decimalFormatter: DecimalFormatter
 ) :
     PumpPluginBase(
         PluginDescription()
@@ -1456,7 +1457,7 @@ class ComboV2Plugin @Inject constructor (
         lastBolusUIFlow.value?.let {
             val localBolusTimestamp = it.timestamp.toLocalDateTime(TimeZone.currentSystemDefault())
             lines += rh.gs(
-                R.string.combov2_short_status_last_bolus, DecimalFormatter.to2Decimal(it.bolusAmount.cctlBolusToIU()),
+                R.string.combov2_short_status_last_bolus, decimalFormatter.to2Decimal(it.bolusAmount.cctlBolusToIU()),
                 String.format("%02d:%02d", localBolusTimestamp.hour, localBolusTimestamp.minute)
             )
         }
@@ -1465,7 +1466,7 @@ class ComboV2Plugin @Inject constructor (
         temporaryBasal?.let {
             lines += rh.gs(
                 R.string.combov2_short_status_temp_basal,
-                it.toStringFull(dateUtil)
+                it.toStringFull(dateUtil, decimalFormatter)
             )
         }
 

@@ -24,12 +24,12 @@ import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.source.BgSource
 import info.nightscout.interfaces.source.DexcomBoyda
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.safeGetInstalledPackages
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -85,6 +85,7 @@ class DexcomPlugin @Inject constructor(
         @Inject lateinit var dataWorkerStorage: DataWorkerStorage
         @Inject lateinit var repository: AppRepository
         @Inject lateinit var uel: UserEntryLogger
+        @Inject lateinit var profileUtil: ProfileUtil
 
         override suspend fun doWorkAndLog(): Result {
             var ret = Result.success()
@@ -110,7 +111,7 @@ class DexcomPlugin @Inject constructor(
                                     CgmSourceTransaction.Calibration(
                                         timestamp = it.getLong("timestamp") * 1000,
                                         value = value,
-                                        glucoseUnit = TherapyEvent.GlucoseUnit.fromConstant(Profile.unit(value))
+                                        glucoseUnit = TherapyEvent.GlucoseUnit.fromConstant(profileUtil.unitsDetect(value))
                                     )
                                 )
                             }

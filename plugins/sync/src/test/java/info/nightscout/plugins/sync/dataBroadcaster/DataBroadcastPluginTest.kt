@@ -43,7 +43,7 @@ internal class DataBroadcastPluginTest : TestBaseWithProfile() {
     fun setUp() {
         sut = DataBroadcastPlugin(
             injector, aapsLogger, rh, aapsSchedulers, context, dateUtil, fabricPrivacy, rxBus, iobCobCalculator, profileFunction, defaultValueHelper, processedDeviceStatusData,
-            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider
+            loop, activePlugin, receiverStatusStore, config, glucoseStatusProvider, decimalFormatter
         )
         Mockito.`when`(iobCobCalculator.ads).thenReturn(autosensDataStore)
         Mockito.`when`(autosensDataStore.lastBg()).thenReturn(InMemoryGlucoseValue(1000, 100.0, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN))

@@ -46,4 +46,5 @@ dependencies {
     testImplementation project(':app-wear-shared:shared-tests')
     // optional - Test helpers
     testImplementation("androidx.room:room-testing:$room_version")
+    testImplementation project(':implementation')
 }

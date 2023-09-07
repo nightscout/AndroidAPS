@@ -22,7 +22,6 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.protection.ProtectionCheck
 import info.nightscout.interfaces.utils.HardLimits
@@ -30,6 +29,7 @@ import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.T
 import info.nightscout.ui.R
@@ -45,6 +45,7 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var uel: UserEntryLogger
@@ -220,8 +221,8 @@ class ProfileSwitchDialog : DialogFragmentWithDate() {
                                     timestamp = eventTime,
                                     duration = TimeUnit.MINUTES.toMillis(duration.toLong()),
                                     reason = TemporaryTarget.Reason.ACTIVITY,
-                                    lowTarget = Profile.toMgdl(target, profileFunction.getUnits()),
-                                    highTarget = Profile.toMgdl(target, profileFunction.getUnits())
+                                    lowTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits()),
+                                    highTarget = profileUtil.convertToMgdl(target, profileFunction.getUnits())
                                 )
                             ).subscribe({ result ->
                                             result.inserted.forEach { aapsLogger.debug(LTag.DATABASE, "Inserted temp target $it") }

@@ -4,7 +4,6 @@ import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
-import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
@@ -43,7 +42,8 @@ class BolusWizardTest : TestBaseWithProfile() {
                 it.loop = loop
                 it.dateUtil = dateUtil
                 it.iobCobCalculator = iobCobCalculator
-                it.glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
+                it.glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter)
+                it.profileUtil = profileUtil
             }
         }
     }
@@ -56,7 +56,6 @@ class BolusWizardTest : TestBaseWithProfile() {
         Mockito.`when`(profile.getIsfMgdl()).thenReturn(insulinSensitivityFactor)
         Mockito.`when`(profile.getIc()).thenReturn(insulinToCarbRatio)
 
-        Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         Mockito.`when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
         Mockito.`when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
         testPumpPlugin.pumpDescription = PumpDescription().also {

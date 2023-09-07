@@ -101,6 +101,7 @@ ActionsTestBase : TestBaseWithProfile() {
                 it.profileFunction = profileFunction
                 it.uel = uel
                 it.dateUtil = dateUtil
+                it.profileUtil = profileUtil
             }
             if (it is ActionSendSMS) {
                 it.aapsLogger = aapsLogger

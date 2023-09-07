@@ -29,6 +29,7 @@ import info.nightscout.interfaces.pump.TemporaryBasalStorage;
 import info.nightscout.interfaces.pump.defs.PumpType;
 import info.nightscout.interfaces.queue.CommandQueue;
 import info.nightscout.interfaces.ui.UiInteraction;
+import info.nightscout.interfaces.utils.DecimalFormatter;
 import info.nightscout.interfaces.utils.Round;
 import info.nightscout.pump.dana.DanaPump;
 import info.nightscout.pump.dana.database.DanaHistoryDatabase;
@@ -72,9 +73,10 @@ public class DanaRv2Plugin extends AbstractDanaRPlugin {
             FabricPrivacy fabricPrivacy,
             PumpSync pumpSync,
             UiInteraction uiInteraction,
-            DanaHistoryDatabase danaHistoryDatabase
+            DanaHistoryDatabase danaHistoryDatabase,
+            DecimalFormatter decimalFormatter
     ) {
-        super(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase);
+        super(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase, decimalFormatter);
         this.aapsLogger = aapsLogger;
         this.context = context;
         this.rh = rh;

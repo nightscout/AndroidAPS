@@ -55,7 +55,7 @@ class QueueThreadTest : TestBaseWithProfile() {
         commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker,
             profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer
+            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
         )
 
         val pumpDescription = PumpDescription()

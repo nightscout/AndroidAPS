@@ -7,6 +7,7 @@ import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.entities.ProfileSwitch
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.plugin.ActivePlugin
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.sdk.localmodel.treatment.EventType
 import info.nightscout.sdk.localmodel.treatment.NSProfileSwitch
 import info.nightscout.shared.utils.DateUtil
@@ -38,8 +39,8 @@ fun NSProfileSwitch.toProfileSwitch(activePlugin: ActivePlugin, dateUtil: DateUt
     )
 }
 
-fun ProfileSwitch.toNSProfileSwitch(dateUtil: DateUtil): NSProfileSwitch {
-    val unmodifiedCustomizedName = getCustomizedName()
+fun ProfileSwitch.toNSProfileSwitch(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): NSProfileSwitch {
+    val unmodifiedCustomizedName = getCustomizedName(decimalFormatter)
     // ProfileSealed.PS doesn't provide unmodified json -> reset it
     val notCustomized = this.copy()
     notCustomized.timeshift = 0

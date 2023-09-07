@@ -12,7 +12,6 @@ import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.aps.Loop
@@ -99,13 +98,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             repository.runTransactionForResult(anyObject<InsertAndCancelCurrentTemporaryTargetTransaction>())
         ).thenReturn(Single.just(InsertAndCancelCurrentTemporaryTargetTransaction.TransactionResult().apply {
         }))
-        val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtilMocked)
+        val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtilMocked, decimalFormatter)
 
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
-            injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue,
+            injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, profileUtil, fabricPrivacy, activePlugin, commandQueue,
             loop, iobCobCalculator, xDripBroadcast,
             otp, config, dateUtilMocked, uel,
-            glucoseStatusProvider, repository
+            glucoseStatusProvider, repository, decimalFormatter
         )
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
@@ -158,7 +157,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         `when`(activePlugin.activeProfileSource).thenReturn(profileSource)
 
-        `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
 
         `when`(otp.name()).thenReturn("User")
         `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.OK)

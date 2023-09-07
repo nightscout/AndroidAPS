@@ -45,10 +45,10 @@ class DanaRKoreanPluginTest : TestBaseWithProfile() {
         `when`(rh.gs(info.nightscout.core.ui.R.string.itmustbepositivevalue)).thenReturn("it must be positive value")
         `when`(rh.gs(info.nightscout.core.ui.R.string.limitingbasalratio)).thenReturn("Limiting max basal rate to %1\$.2f U/h because of %2\$s")
         `when`(rh.gs(info.nightscout.core.ui.R.string.limitingpercentrate)).thenReturn("Limiting max percent rate to %1\$d%% because of %2\$s")
-        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator)
+        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
         danaRPlugin = DanaRKoreanPlugin(
             injector, aapsLogger, aapsSchedulers, rxBus, context, rh, constraintChecker, activePlugin, sp, commandQueue, danaPump, dateUtil, fabricPrivacy,
-            pumpSync, uiInteraction, danaHistoryDatabase
+            pumpSync, uiInteraction, danaHistoryDatabase, decimalFormatter
         )
     }
 

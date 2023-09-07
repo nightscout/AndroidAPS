@@ -39,8 +39,9 @@ open class TriggerTestBase : TestBaseWithProfile() {
                 it.repository = repository
                 it.activePlugin = activePlugin
                 it.iobCobCalculator = iobCobCalculator
-                it.glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtil)
+                it.glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter)
                 it.dateUtil = dateUtil
+                it.profileUtil = profileUtil
             }
             if (it is TriggerBg) {
                 it.profileFunction = profileFunction

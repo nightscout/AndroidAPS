@@ -6,14 +6,9 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.sharedtests.TestBase
+import info.nightscout.sharedtests.TestBaseWithProfile
 import io.reactivex.rxjava3.core.Single
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -21,14 +16,9 @@ import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 
-class OverviewDataImplTest : TestBase() {
+class OverviewDataImplTest : TestBaseWithProfile() {
 
-    @Mock lateinit var rh: ResourceHelper
-    @Mock lateinit var dateUtil: DateUtil
-    @Mock lateinit var sp: SP
-    @Mock lateinit var activePlugin: ActivePlugin
     @Mock lateinit var defaultValueHelper: DefaultValueHelper
-    @Mock lateinit var profileFunction: ProfileFunction
     @Mock lateinit var repository: AppRepository
     @Mock lateinit var autosensDataStore: AutosensDataStore
 
@@ -40,7 +30,7 @@ class OverviewDataImplTest : TestBase() {
 
     @BeforeEach
     fun setup() {
-        sut = OverviewDataImpl(aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, repository)
+        sut = OverviewDataImpl(aapsLogger, rh, dateUtil, sp, activePlugin, defaultValueHelper, profileFunction, repository, decimalFormatter)
         Mockito.`when`(defaultValueHelper.determineLowLine()).thenReturn(80.0)
         Mockito.`when`(defaultValueHelper.determineHighLine()).thenReturn(180.0)
         Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)

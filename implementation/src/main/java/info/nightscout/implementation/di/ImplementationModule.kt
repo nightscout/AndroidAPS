@@ -18,6 +18,7 @@ import info.nightscout.implementation.overview.OverviewDataImpl
 import info.nightscout.implementation.plugin.PluginStore
 import info.nightscout.implementation.profile.ProfileFunctionImpl
 import info.nightscout.implementation.profile.ProfileStoreObject
+import info.nightscout.implementation.profile.ProfileUtilImpl
 import info.nightscout.implementation.profiling.ProfilerImpl
 import info.nightscout.implementation.protection.PasswordCheckImpl
 import info.nightscout.implementation.protection.ProtectionCheckImpl
@@ -36,6 +37,7 @@ import info.nightscout.implementation.stats.TddCalculatorImpl
 import info.nightscout.implementation.stats.TirCalculatorImpl
 import info.nightscout.implementation.storage.FileStorage
 import info.nightscout.implementation.userEntry.UserEntryPresentationHelperImpl
+import info.nightscout.implementation.utils.DecimalFormatterImpl
 import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.interfaces.Translator
@@ -62,8 +64,10 @@ import info.nightscout.interfaces.stats.TirCalculator
 import info.nightscout.interfaces.storage.Storage
 import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.interfaces.userEntry.UserEntryPresentationHelper
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.TrendCalculator
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 
 @Module(
@@ -81,6 +85,7 @@ abstract class ImplementationModule {
 
     @Module
     interface Bindings {
+
         @Binds fun bindPersistenceLayer(persistenceLayerImpl: PersistenceLayerImpl): PersistenceLayer
         @Binds fun bindActivePlugin(pluginStore: PluginStore): ActivePlugin
         @Binds fun bindOverviewData(overviewData: OverviewDataImpl): OverviewData
@@ -108,9 +113,11 @@ abstract class ImplementationModule {
         @Binds fun bindNotificationHolderInterface(notificationHolder: NotificationHolderImpl): NotificationHolder
         @Binds fun bindCommandQueue(commandQueue: CommandQueueImplementation): CommandQueue
         @Binds fun bindsProfileFunction(profileFunctionImpl: ProfileFunctionImpl): ProfileFunction
+        @Binds fun bindsProfileUtil(profileUtilImpl: ProfileUtilImpl): ProfileUtil
         @Binds fun bindsStorage(fileStorage: FileStorage): Storage
         @Binds fun bindsReceiverStatusStore(receiverStatusStoreImpl: ReceiverStatusStoreImpl): ReceiverStatusStore
         @Binds fun bindsUserEntryPresentationHelper(userEntryPresentationHelperImpl: UserEntryPresentationHelperImpl): UserEntryPresentationHelper
         @Binds fun bindsGlucoseStatusProvider(glucoseStatusProviderImpl: GlucoseStatusProviderImpl): GlucoseStatusProvider
+        @Binds fun bindsDecimalFormatter(decimalFormatterImpl: DecimalFormatterImpl): DecimalFormatter
     }
 }

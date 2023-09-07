@@ -8,7 +8,8 @@ import info.nightscout.shared.interfaces.ResourceHelper
 
 class ExtendedBolusDataPoint(
     val data: ExtendedBolus,
-    private val rh: ResourceHelper
+    private val rh: ResourceHelper,
+    private val decimalFormatter: DecimalFormatter
 ) : DataPointWithLabelInterface {
 
     private var yValue = 0.0
@@ -28,5 +29,5 @@ class ExtendedBolusDataPoint(
         yValue = y
     }
 
-    private fun ExtendedBolus.toStringTotal(): String = "${DecimalFormatter.to2Decimal(amount)}U ( ${DecimalFormatter.to2Decimal(rate)} U/h )"
+    private fun ExtendedBolus.toStringTotal(): String = "${decimalFormatter.to2Decimal(amount)}U ( ${decimalFormatter.to2Decimal(rate)} U/h )"
 }

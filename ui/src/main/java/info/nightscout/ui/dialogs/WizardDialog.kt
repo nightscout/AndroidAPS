@@ -47,6 +47,7 @@ import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.extensions.runOnUiThread
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -71,11 +72,13 @@ class WizardDialog : DaggerDialogFragment() {
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var protectionCheck: ProtectionCheck
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private val handler = Handler(HandlerThread(this::class.simpleName + "Handler").also { it.start() }.looper)
 
@@ -192,7 +195,14 @@ class WizardDialog : DaggerDialogFragment() {
         } else {
             binding.correctionInput.setParams(
                 savedInstanceState?.getDouble("correction_input")
-                    ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher
+                    ?: 0.0,
+                -maxCorrection,
+                maxCorrection,
+                bolusStep,
+                decimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump.pumpDescription.bolusStep),
+                false,
+                binding.okcancel.ok,
+                textWatcher
             )
             binding.correctionUnit.text = rh.gs(info.nightscout.core.ui.R.string.insulin_unit_shortname)
         }
@@ -262,7 +272,8 @@ class WizardDialog : DaggerDialogFragment() {
                 } else {
                     binding.correctionInput.setParams(
                         savedInstanceState?.getDouble("correction_input")
-                            ?: 0.0, -maxCorrection, maxCorrection, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), false, binding.okcancel.ok, textWatcher
+                            ?: 0.0, -maxCorrection, maxCorrection, bolusStep, decimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump.pumpDescription.bolusStep), false, binding.okcancel.ok,
+                        textWatcher
                     )
                     binding.correctionInput.customContentDescription = rh.gs(R.string.a11_correction_units)
                 }
@@ -353,8 +364,8 @@ class WizardDialog : DaggerDialogFragment() {
     }
 
     private fun valueToUnitsToString(value: Double, units: String): String =
-        if (units == Constants.MGDL) DecimalFormatter.to0Decimal(value)
-        else DecimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
+        if (units == Constants.MGDL) decimalFormatter.to0Decimal(value)
+        else decimalFormatter.to1Decimal(value * Constants.MGDL_TO_MMOLL)
 
     private fun initDialog() {
         val profile = profileFunction.getProfile()
@@ -470,7 +481,7 @@ class WizardDialog : DaggerDialogFragment() {
         )
 
         wizard?.let { wizard ->
-            binding.bg.text = rh.gs(R.string.format_bg_isf, valueToUnitsToString(Profile.toMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
+            binding.bg.text = rh.gs(R.string.format_bg_isf, valueToUnitsToString(profileUtil.convertToMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
             binding.bgInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromBG)
 
             binding.carbs.text = rh.gs(R.string.format_carbs_ic, carbs.toDouble(), wizard.ic)
@@ -487,7 +498,7 @@ class WizardDialog : DaggerDialogFragment() {
             // Trend
             if (binding.bgTrendCheckbox.isChecked && wizard.glucoseStatus != null) {
                 binding.bgTrend.text = ((if (wizard.trend > 0) "+" else "")
-                    + Profile.toUnitsString(wizard.trend * 3, wizard.trend * 3 / Constants.MMOLL_TO_MGDL, profileFunction.getUnits())
+                    + profileUtil.fromMgdlToStringInUnits(wizard.trend * 3)
                     + " " + profileFunction.getUnits())
             } else {
                 binding.bgTrend.text = ""

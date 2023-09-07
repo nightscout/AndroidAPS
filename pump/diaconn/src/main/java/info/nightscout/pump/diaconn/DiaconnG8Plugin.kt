@@ -78,7 +78,8 @@ class DiaconnG8Plugin @Inject constructor(
     private val dateUtil: DateUtil,
     private val aapsSchedulers: AapsSchedulers,
     private val uiInteraction: UiInteraction,
-    private val diaconnHistoryDatabase: DiaconnHistoryDatabase
+    private val diaconnHistoryDatabase: DiaconnHistoryDatabase,
+    private val decimalFormatter: DecimalFormatter
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -535,7 +536,7 @@ class DiaconnG8Plugin @Inject constructor(
             ret += "LastConn: $agoMin minago\n"
         }
         if (diaconnG8Pump.lastBolusTime != 0L)
-            ret += "LastBolus: ${DecimalFormatter.to2Decimal(diaconnG8Pump.lastBolusAmount)}U @${DateFormat.format("HH:mm", diaconnG8Pump.lastBolusTime)}"
+            ret += "LastBolus: ${decimalFormatter.to2Decimal(diaconnG8Pump.lastBolusAmount)}U @${DateFormat.format("HH:mm", diaconnG8Pump.lastBolusTime)}"
 
         if (diaconnG8Pump.isTempBasalInProgress)
             ret += "Temp: ${diaconnG8Pump.temporaryBasalToString()}"
@@ -544,9 +545,9 @@ class DiaconnG8Plugin @Inject constructor(
             ret += "Extended: ${diaconnG8Pump.extendedBolusToString()}\n"
 
         if (!veryShort) {
-            ret += "TDD: ${DecimalFormatter.to0Decimal(diaconnG8Pump.dailyTotalUnits)} / ${diaconnG8Pump.maxDailyTotalUnits} U"
+            ret += "TDD: ${decimalFormatter.to0Decimal(diaconnG8Pump.dailyTotalUnits)} / ${diaconnG8Pump.maxDailyTotalUnits} U"
         }
-        ret += "Reserv: ${DecimalFormatter.to0Decimal(diaconnG8Pump.systemRemainInsulin)} U"
+        ret += "Reserv: ${decimalFormatter.to0Decimal(diaconnG8Pump.systemRemainInsulin)} U"
         ret += "Batt: ${diaconnG8Pump.systemRemainBattery}"
         return ret
     }

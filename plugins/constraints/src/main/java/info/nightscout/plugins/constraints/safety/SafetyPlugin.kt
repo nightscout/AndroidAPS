@@ -7,8 +7,8 @@ import info.nightscout.core.utils.extensions.putString
 import info.nightscout.core.utils.extensions.storeDouble
 import info.nightscout.core.utils.extensions.storeInt
 import info.nightscout.core.utils.extensions.storeString
-import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.ApsMode
+import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.constraints.Safety
@@ -25,7 +25,6 @@ import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.plugins.constraints.R
-import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -40,22 +39,22 @@ class SafetyPlugin @Inject constructor(
     aapsLogger: AAPSLogger,
     rh: ResourceHelper,
     private val sp: SP,
-    private val rxBus: RxBus,
     private val constraintChecker: Constraints,
     private val activePlugin: ActivePlugin,
     private val hardLimits: HardLimits,
     private val config: Config,
     private val iobCobCalculator: IobCobCalculator,
     private val dateUtil: DateUtil,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
+    private val decimalFormatter: DecimalFormatter
 ) : PluginBase(
     PluginDescription()
-    .mainType(PluginType.CONSTRAINTS)
-    .neverVisible(true)
-    .alwaysEnabled(true)
-    .showInList(false)
-    .pluginName(R.string.safety)
-    .preferencesId(R.xml.pref_safety),
+        .mainType(PluginType.CONSTRAINTS)
+        .neverVisible(true)
+        .alwaysEnabled(true)
+        .showInList(false)
+        .pluginName(R.string.safety)
+        .preferencesId(R.xml.pref_safety),
     aapsLogger, rh, injector
 ), Constraints, Safety {
 
@@ -115,7 +114,11 @@ class SafetyPlugin @Inject constructor(
     override fun applyBasalPercentConstraints(percentRate: Constraint<Int>, profile: Profile): Constraint<Int> {
         val currentBasal = profile.getBasal()
         val absoluteRate = currentBasal * (percentRate.originalValue().toDouble() / 100)
-        percentRate.addReason("Percent rate " + percentRate.originalValue() + "% recalculated to " + DecimalFormatter.to2Decimal(absoluteRate) + " U/h with current basal " + DecimalFormatter.to2Decimal(currentBasal) + " U/h", this)
+        percentRate.addReason(
+            "Percent rate " + percentRate.originalValue() + "% recalculated to " + decimalFormatter.to2Decimal(absoluteRate) + " U/h with current basal " + decimalFormatter.to2Decimal(
+                currentBasal
+            ) + " U/h", this
+        )
         val absoluteConstraint = Constraint(absoluteRate)
         applyBasalConstraints(absoluteConstraint, profile)
         percentRate.copyReasons(absoluteConstraint)

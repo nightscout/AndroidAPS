@@ -156,14 +156,20 @@ sealed class ProfileSealed(
                 break
             }
         for (isf in isfBlocks)
-            if (!hardLimits.isInRange(Profile.toMgdl(isf.amount * 100.0 / percentage, units), HardLimits.MIN_ISF, HardLimits.MAX_ISF)) {
+            if (!hardLimits.isInRange(toMgdl(isf.amount * 100.0 / percentage, units), HardLimits.MIN_ISF, HardLimits.MAX_ISF)) {
                 validityCheck.isValid = false
-                validityCheck.reasons.add(rh.gs(info.nightscout.core.ui.R.string.value_out_of_hard_limits, rh.gs(info.nightscout.core.ui.R.string.profile_sensitivity_value), isf.amount * 100.0 / percentage))
+                validityCheck.reasons.add(
+                    rh.gs(
+                        info.nightscout.core.ui.R.string.value_out_of_hard_limits,
+                        rh.gs(info.nightscout.core.ui.R.string.profile_sensitivity_value),
+                        isf.amount * 100.0 / percentage
+                    )
+                )
                 break
             }
         for (target in targetBlocks) {
             if (!hardLimits.isInRange(
-                    Profile.toMgdl(target.lowTarget, units),
+                    toMgdl(target.lowTarget, units),
                     HardLimits.VERY_HARD_LIMIT_MIN_BG[0],
                     HardLimits.VERY_HARD_LIMIT_MIN_BG[1]
                 )
@@ -173,7 +179,7 @@ sealed class ProfileSealed(
                 break
             }
             if (!hardLimits.isInRange(
-                    Profile.toMgdl(target.highTarget, units),
+                    toMgdl(target.highTarget, units),
                     HardLimits.VERY_HARD_LIMIT_MAX_BG[0],
                     HardLimits.VERY_HARD_LIMIT_MAX_BG[1]
                 )
@@ -227,23 +233,25 @@ sealed class ProfileSealed(
     override fun getBasal(timestamp: Long): Double = basalBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), percentage / 100.0, timeshift)
     override fun getIc(): Double = icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift)
     override fun getIc(timestamp: Long): Double = icBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift)
-    override fun getIsfMgdl(): Double = Profile.toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
-    override fun getIsfMgdl(timestamp: Long): Double = Profile.toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
-    override fun getTargetMgdl(): Double = Profile.toMgdl(targetBlocks.targetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
-    override fun getTargetLowMgdl(): Double = Profile.toMgdl(targetBlocks.lowTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
-    override fun getTargetLowMgdl(timestamp: Long): Double = Profile.toMgdl(targetBlocks.lowTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), timeshift), units)
-    override fun getTargetHighMgdl(): Double = Profile.toMgdl(targetBlocks.highTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
-    override fun getTargetHighMgdl(timestamp: Long): Double = Profile.toMgdl(targetBlocks.highTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), timeshift), units)
+    override fun getIsfMgdl(): Double = toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(), 100.0 / percentage, timeshift), units)
+    override fun getIsfMgdl(timestamp: Long): Double = toMgdl(isfBlocks.blockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), 100.0 / percentage, timeshift), units)
+    override fun getTargetMgdl(): Double = toMgdl(targetBlocks.targetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
+    override fun getTargetLowMgdl(): Double = toMgdl(targetBlocks.lowTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
+    override fun getTargetLowMgdl(timestamp: Long): Double = toMgdl(targetBlocks.lowTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), timeshift), units)
+    override fun getTargetHighMgdl(): Double = toMgdl(targetBlocks.highTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(), timeshift), units)
+    override fun getTargetHighMgdl(timestamp: Long): Double = toMgdl(targetBlocks.highTargetBlockValueBySeconds(MidnightUtils.secondsFromMidnight(timestamp), timeshift), units)
     override fun getBasalTimeFromMidnight(timeAsSeconds: Int): Double = basalBlocks.blockValueBySeconds(timeAsSeconds, percentage / 100.0, timeshift)
     override fun getIcTimeFromMidnight(timeAsSeconds: Int): Double = icBlocks.blockValueBySeconds(timeAsSeconds, 100.0 / percentage, timeshift)
     fun getIsfTimeFromMidnight(timeAsSeconds: Int): Double = isfBlocks.blockValueBySeconds(timeAsSeconds, 100.0 / percentage, timeshift)
-    override fun getIsfMgdlTimeFromMidnight(timeAsSeconds: Int): Double = Profile.toMgdl(isfBlocks.blockValueBySeconds(timeAsSeconds, 100.0 / percentage, timeshift), units)
-    override fun getTargetLowMgdlTimeFromMidnight(timeAsSeconds: Int): Double = Profile.toMgdl(targetBlocks.lowTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
+    override fun getIsfMgdlTimeFromMidnight(timeAsSeconds: Int): Double = toMgdl(isfBlocks.blockValueBySeconds(timeAsSeconds, 100.0 / percentage, timeshift), units)
+    override fun getTargetLowMgdlTimeFromMidnight(timeAsSeconds: Int): Double = toMgdl(targetBlocks.lowTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
     private fun getTargetLowTimeFromMidnight(timeAsSeconds: Int): Double = targetBlocks.lowTargetBlockValueBySeconds(timeAsSeconds, timeshift)
     private fun getTargetHighTimeFromMidnight(timeAsSeconds: Int): Double = targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift)
-    override fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double = Profile.toMgdl(targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
+    override fun getTargetHighMgdlTimeFromMidnight(timeAsSeconds: Int): Double = toMgdl(targetBlocks.highTargetBlockValueBySeconds(timeAsSeconds, timeshift), units)
 
-    override fun getIcList(rh: ResourceHelper, dateUtil: DateUtil): String = getValuesList(icBlocks, 100.0 / percentage, DecimalFormat("0.0"), rh.gs(info.nightscout.core.ui.R.string.profile_carbs_per_unit), dateUtil)
+    override fun getIcList(rh: ResourceHelper, dateUtil: DateUtil): String =
+        getValuesList(icBlocks, 100.0 / percentage, DecimalFormat("0.0"), rh.gs(info.nightscout.core.ui.R.string.profile_carbs_per_unit), dateUtil)
+
     override fun getIsfList(rh: ResourceHelper, dateUtil: DateUtil): String =
         getValuesList(isfBlocks, 100.0 / percentage, DecimalFormat("0.0"), units.asText + rh.gs(info.nightscout.core.ui.R.string.profile_per_unit), dateUtil)
 
@@ -355,7 +363,7 @@ sealed class ProfileSealed(
         val ret = Array(shifted.size) { ProfileValue(0, 0.0) }
         var elapsed = 0
         for (index in shifted.indices) {
-            ret[index] = ProfileValue(elapsed, Profile.toMgdl(shifted[index].amount, units))
+            ret[index] = ProfileValue(elapsed, toMgdl(shifted[index].amount, units))
             elapsed += T.msecs(shifted[index].duration).secs().toInt()
         }
         return ret
@@ -377,7 +385,7 @@ sealed class ProfileSealed(
         val ret = Array(shifted.size) { ProfileValue(0, 0.0) }
         var elapsed = 0
         for (index in shifted.indices) {
-            ret[index] = ProfileValue(elapsed, Profile.toMgdl((shifted[index].lowTarget + shifted[index].highTarget) / 2.0, units))
+            ret[index] = ProfileValue(elapsed, toMgdl((shifted[index].lowTarget + shifted[index].highTarget) / 2.0, units))
             elapsed += T.msecs(shifted[index].duration).secs().toInt()
         }
         return ret
@@ -414,4 +422,6 @@ sealed class ProfileSealed(
     fun isInProgress(dateUtil: DateUtil): Boolean =
         dateUtil.now() in timestamp..timestamp + (duration ?: 0L)
 
+    private fun toMgdl(value: Double, units: GlucoseUnit): Double =
+        if (units == GlucoseUnit.MGDL) value else value * GlucoseUnit.MMOLL_TO_MGDL
 }

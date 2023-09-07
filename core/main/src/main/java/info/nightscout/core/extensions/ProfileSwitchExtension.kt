@@ -12,10 +12,10 @@ import info.nightscout.shared.utils.T
 import org.json.JSONObject
 import java.util.TimeZone
 
-fun ProfileSwitch.getCustomizedName(): String {
+fun ProfileSwitch.getCustomizedName(decimalFormatter: DecimalFormatter): String {
     var name: String = profileName
     if (Constants.LOCAL_PROFILE == name) {
-        name = DecimalFormatter.to2Decimal(ProfileSealed.PS(this).percentageBasalSum()) + "U "
+        name = decimalFormatter.to2Decimal(ProfileSealed.PS(this).percentageBasalSum()) + "U "
     }
     if (timeshift != 0L || percentage != 100) {
         name += "($percentage%"

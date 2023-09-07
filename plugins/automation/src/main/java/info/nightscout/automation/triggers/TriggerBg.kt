@@ -11,7 +11,6 @@ import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
@@ -56,7 +55,7 @@ class TriggerBg(injector: HasAndroidInjector) : Trigger(injector) {
             aapsLogger.debug(LTag.AUTOMATION, "NOT ready for execution: " + friendlyDescription())
             return false
         }
-        if (comparator.value.check(glucoseStatus.glucose, Profile.toMgdl(bg.value, bg.units))) {
+        if (comparator.value.check(glucoseStatus.glucose, profileUtil.convertToMgdl(bg.value, bg.units))) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }

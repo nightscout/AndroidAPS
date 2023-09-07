@@ -51,7 +51,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        var profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(activePlugin, dateUtil)!!
+        var profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(activePlugin, dateUtil)!!
         Assertions.assertTrue(profileSwitch.contentEqualsTo(profileSwitch2))
         Assertions.assertTrue(profileSwitch.interfaceIdsEqualsTo(profileSwitch2))
 
@@ -78,7 +78,7 @@ internal class ProfileSwitchExtensionKtTest : TestBaseWithProfile() {
             )
         )
 
-        profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(activePlugin, dateUtil)!!
+        profileSwitch2 = (profileSwitch.toNSProfileSwitch(dateUtil, decimalFormatter).convertToRemoteAndBack() as NSProfileSwitch).toProfileSwitch(activePlugin, dateUtil)!!
         Assertions.assertTrue(profileSwitch.contentEqualsTo(profileSwitch2))
         Assertions.assertTrue(profileSwitch.interfaceIdsEqualsTo(profileSwitch2))
     }

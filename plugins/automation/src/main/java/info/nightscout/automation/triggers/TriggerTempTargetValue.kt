@@ -12,7 +12,6 @@ import info.nightscout.automation.elements.StaticLabel
 import info.nightscout.database.ValueWrapper
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
@@ -53,7 +52,7 @@ class TriggerTempTargetValue(injector: HasAndroidInjector) : Trigger(injector) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }
-        if (tt is ValueWrapper.Existing && comparator.value.check(tt.value.lowTarget, Profile.toMgdl(ttValue.value, ttValue.units))) {
+        if (tt is ValueWrapper.Existing && comparator.value.check(tt.value.lowTarget, profileUtil.convertToMgdl(ttValue.value, ttValue.units))) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: " + friendlyDescription())
             return true
         }

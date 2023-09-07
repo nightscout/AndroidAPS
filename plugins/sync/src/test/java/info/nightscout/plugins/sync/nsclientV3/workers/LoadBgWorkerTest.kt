@@ -13,11 +13,13 @@ import info.nightscout.core.utils.receivers.DataWorkerStorage
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.database.impl.AppRepository
+import info.nightscout.implementation.utils.DecimalFormatterImpl
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.nsclient.StoreDataForDb
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.source.NSClientSource
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.plugins.sync.nsShared.NsIncomingDataProcessor
 import info.nightscout.plugins.sync.nsclient.ReceiverDelegate
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler
@@ -68,6 +70,7 @@ internal class LoadBgWorkerTest : TestBase() {
     private lateinit var nsClientV3Plugin: NSClientV3Plugin
     private lateinit var receiverDelegate: ReceiverDelegate
     private lateinit var dataWorkerStorage: DataWorkerStorage
+    private lateinit var decimalFormatter: DecimalFormatter
     private lateinit var sut: LoadBgWorker
 
     private val now = 1000000000L
@@ -90,6 +93,7 @@ internal class LoadBgWorkerTest : TestBase() {
 
     @BeforeEach
     fun setUp() {
+        decimalFormatter = DecimalFormatterImpl(rh)
         Mockito.`when`(context.applicationContext).thenReturn(context)
         Mockito.`when`(context.androidInjector()).thenReturn(injector.androidInjector())
         Mockito.`when`(dateUtil.now()).thenReturn(now)
@@ -99,7 +103,7 @@ internal class LoadBgWorkerTest : TestBase() {
         nsClientV3Plugin = NSClientV3Plugin(
             injector, aapsLogger, aapsSchedulers, rxBus, rh, context, fabricPrivacy,
             sp, receiverDelegate, config, dateUtil, uiInteraction, dataSyncSelectorV3, repository,
-            nsDeviceStatusHandler, nsClientSource, nsIncomingDataProcessor, storeDataForDb
+            nsDeviceStatusHandler, nsClientSource, nsIncomingDataProcessor, storeDataForDb, decimalFormatter
         )
         nsClientV3Plugin.newestDataOnServer = LastModified(LastModified.Collections())
     }

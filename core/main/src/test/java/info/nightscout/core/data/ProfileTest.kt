@@ -5,9 +5,7 @@ import dagger.android.AndroidInjector
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.TestAapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -115,18 +113,6 @@ class ProfileTest : TestBase() {
         Assertions.assertEquals("00:00    5,0 - 5,0 mmol", p.getTargetList(rh, dateUtil).replace(".", ","))
         Assertions.assertEquals(100, p.percentage)
         Assertions.assertEquals(0, p.timeshift)
-        Assertions.assertEquals(0.1, Profile.toMgdl(0.1, GlucoseUnit.MGDL), 0.01)
-        Assertions.assertEquals(18.0, Profile.toMgdl(1.0, GlucoseUnit.MMOL), 0.01)
-        Assertions.assertEquals(1.0, Profile.toMmol(18.0, GlucoseUnit.MGDL), 0.01)
-        Assertions.assertEquals(18.0, Profile.toMmol(18.0, GlucoseUnit.MMOL), 0.01)
-        Assertions.assertEquals(18.0, Profile.fromMgdlToUnits(18.0, GlucoseUnit.MGDL), 0.01)
-        Assertions.assertEquals(1.0, Profile.fromMgdlToUnits(18.0, GlucoseUnit.MMOL), 0.01)
-        Assertions.assertEquals(18.0, Profile.toUnits(18.0, 1.0, GlucoseUnit.MGDL), 0.01)
-        Assertions.assertEquals(1.0, Profile.toUnits(18.0, 1.0, GlucoseUnit.MMOL), 0.01)
-        Assertions.assertEquals("18", Profile.toUnitsString(18.0, 1.0, GlucoseUnit.MGDL))
-        Assertions.assertEquals("1,0", Profile.toUnitsString(18.0, 1.0, GlucoseUnit.MMOL).replace(".", ","))
-        Assertions.assertEquals("5 - 6", Profile.toTargetRangeString(5.0, 6.0, GlucoseUnit.MGDL, GlucoseUnit.MGDL))
-        Assertions.assertEquals("4", Profile.toTargetRangeString(4.0, 4.0, GlucoseUnit.MGDL, GlucoseUnit.MGDL))
 
         //Test basal profile below limit
         p = ProfileSealed.Pure(pureProfileFromJson(JSONObject(belowLimitValidProfile), dateUtil)!!)
