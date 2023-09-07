@@ -41,6 +41,7 @@
     <string name="pref_show_ago">Önce Göster</string>
     <string name="pref_dark" comment="Enables dark visual theme">Koyu</string>
     <string name="pref_highlight_basals">Bazalları Vurgula</string>
+    <string name="pref_prediction_lines">Tahminleri göster</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Eşleşen bölücü</string>
     <string name="pref_chart_timeframe">Grafik Zaman Çerçevesi</string>
     <string name="pref_1_hour">1 saat</string>
