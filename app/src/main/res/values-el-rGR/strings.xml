@@ -23,16 +23,26 @@
     <string name="notloadedplugins">Δεν έχουν φορτωθεί όλα τα προφίλ!</string>
     <string name="valuesnotstored">Οι τιμές δεν αποθηκεύτηκαν!</string>
     <string name="invalid">ΜΗ ΕΓΚΥΡΟ</string>
+    <string name="gradually_increase_notification_volume">Σταδιακή αύξηση της έντασης για συναγερμούς και ειδοποιήσεις</string>
     <string name="localalertsettings_title">Τοπικές Ειδοποιήσεις</string>
     <string name="enable_missed_bg_readings_alert">Προειδοποίηση αν δεν ληφθούν δεδομένα μετρήσεων BG</string>
     <string name="enable_pump_unreachable_alert">Προειδοποίηση αν η αντλία δεν είναι διαθέσιμη</string>
     <string name="pump_unreachable_threshold">Όριο για μη διαθεσιμότητα της αντλίας [λεπτά]</string>
+    <string name="enable_carbs_req_alert">Ειδοποίηση εάν απαιτούνται υδατάνθρακες</string>
     <string name="open_navigation">Άνοιγμα μενού πλοήγησης</string>
     <string name="close_navigation">Κλείσιμο μενού πλοήγησης</string>
+    <string name="remove_items">Αφαίρεση αντικειμένου</string>
     <string name="error_adding_treatment_title">Ελλιπή δεδομένα θεραπείας</string>
     <string name="error_adding_treatment_message">Μια θεραπεία (ινσουλίνη: %1$.2f, υδατάνθρακες: %2$d, στο: %3$s) δεν μπορεί να προστεθεί στις θεραπείες. Παρακαλούμε ελέγξτε και προσθέστε χειροκίνητα μια εγγραφή ανάλογα με την περίπτωση.</string>
     <string name="generated_ecarbs_note">eCarbs: %1$d g (%2$d h), καθυστέρηση: %3$d m</string>
     <string name="profile_total">== ∑  %1$s U</string>
     <string name="unitsnosemicolon">Μονάδες</string>
+    <string name="clearqueueconfirm">Εκκαθάριση ουράς? Όλα τα δεδομένα στην ουρά θα χαθούν!</string>
+    <string name="chartmenu">Μενού διαγράμματος</string>
+    <string name="authorizationfailed">Η εξουσιοδότηση απέτυχε</string>
+    <string name="copytolocalprofile_invalid">Αδυναμία δημιουργίας προφίλ. Το προφίλ δεν είναι έγκυρο.</string>
+    <string name="clear_filter">Κατάργηση φίλτρου</string>
+    <string name="cannula">Υποδόριος καθετήρας</string>
+    <string name="email_address">Διεύθυνση E-mail</string>
     <!-- WEAR OS-->
 </resources>
