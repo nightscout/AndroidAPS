@@ -118,6 +118,14 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_prediction_lines"
+        android:summary="show prediction lines"
+        android:title="@string/pref_prediction_lines"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
     <ListPreference
         android:defaultValue="3"
         android:entries="@array/chart_timeframe"

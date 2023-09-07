@@ -10,7 +10,7 @@ buildscript {
         rxandroid_version = '3.0.2'
         rxkotlin_version = '3.0.1'
         room_version = '2.5.2'
-        lifecycle_version = '2.6.1'
+        lifecycle_version = '2.6.2'
         dagger_version = '2.48'
         coroutines_version = '1.7.3'
         activity_version = '1.7.2'
