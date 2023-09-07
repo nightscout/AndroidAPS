@@ -8,14 +8,36 @@ import info.nightscout.shared.utils.T
 import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.AfterAll
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import java.util.Date
+import java.util.SimpleTimeZone
+import java.util.TimeZone
 
 class DateUtilTest : TestBase() {
 
     @Mock lateinit var context: Context
     @Mock lateinit var rh: ResourceHelper
+
+    companion object {
+
+        private lateinit var savedTimeZone: TimeZone
+
+        @BeforeAll
+        @JvmStatic
+        fun setDefaultTimezoneUtc() {
+            savedTimeZone = TimeZone.getDefault()
+            TimeZone.setDefault(SimpleTimeZone(0, "UTC"))
+        }
+
+        @AfterAll
+        @JvmStatic
+        fun restoreDefaultTimezone() {
+            TimeZone.setDefault(savedTimeZone)
+        }
+    }
 
     @Test
     fun fromISODateStringTest() {
