@@ -15,11 +15,11 @@ class PreferenceMenuActivity : MenuListActivity() {
 
     override fun provideElements(): List<MenuItem> =
         ArrayList<MenuItem>().apply {
-            add(MenuItem(R.drawable.ic_settings, getString(R.string.pref_display_settings)))
-            add(MenuItem(R.drawable.ic_settings, getString(R.string.pref_graph_settings)))
-            add(MenuItem(R.drawable.ic_settings, getString(R.string.pref_interface_settings)))
-            add(MenuItem(R.drawable.ic_settings, getString(R.string.pref_complication_settings)))
-            add(MenuItem(R.drawable.ic_settings, getString(R.string.pref_others_settings)))
+            add(MenuItem(R.drawable.ic_display, getString(R.string.pref_display_settings)))
+            add(MenuItem(R.drawable.ic_graph, getString(R.string.pref_graph_settings)))
+            add(MenuItem(R.drawable.ic_interface, getString(R.string.pref_interface_settings)))
+            add(MenuItem(R.drawable.ic_complication, getString(R.string.pref_complication_settings)))
+            add(MenuItem(R.drawable.ic_others, getString(R.string.pref_others_settings)))
         }
 
     override fun doAction(position: String) {

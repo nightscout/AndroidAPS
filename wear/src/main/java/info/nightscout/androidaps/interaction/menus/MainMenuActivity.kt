@@ -32,7 +32,7 @@ class MainMenuActivity : MenuListActivity() {
                 add(MenuItem(R.drawable.ic_e_carbs, getString(R.string.menu_ecarb)))
                 add(MenuItem(R.drawable.ic_treatment, getString(R.string.menu_treatment)))
                 add(MenuItem(R.drawable.ic_temptarget, getString(R.string.menu_tempt)))
-                add(MenuItem(R.drawable.ic_status, getString(R.string.status_profile_switch)))
+                add(MenuItem(R.drawable.ic_profile, getString(R.string.status_profile_switch)))
                 add(MenuItem(R.drawable.ic_settings, getString(R.string.menu_settings)))
                 add(MenuItem(R.drawable.ic_status, getString(R.string.menu_status)))
                 if (sp.getBoolean(R.string.key_prime_fill, false))
