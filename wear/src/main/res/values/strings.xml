@@ -24,6 +24,11 @@
     <string name="pref_vibrate_on_bolus">Vibrate on Bolus</string>
     <string name="pref_units_for_actions">Units for Actions</string>
     <string name="units_short">U</string>
+    <string name="pref_display_settings">Display</string>
+    <string name="pref_graph_settings">Graph</string>
+    <string name="pref_interface_settings">Interface</string>
+    <string name="pref_others_settings">Others</string>
+    <string name="pref_complication_settings">Complication</string>
     <string name="pref_show_date">Show Date</string>
     <string name="pref_show_iob">Show IOB</string>
     <string name="pref_show_detailed_iob">Show detailed IOB</string>
@@ -175,6 +180,7 @@
     <string name="tile_no_config">No config available</string>
     <string name="wear_control_not_enabled">Wear controls disabled</string>
     <string name="wear_control_no_data">No data available</string>
+    <string name="key_preference_id" translatable="false">preference_id</string>
     <string name="key_quickwizard" translatable="false">QuickWizard</string>
     <string name="key_wear_control" translatable="false">wearcontrol</string>
     <string name="key_units_mgdl" translatable="false">units_mgdl</string>
