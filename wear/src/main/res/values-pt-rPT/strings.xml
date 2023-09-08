@@ -24,6 +24,11 @@
     <string name="pref_vibrate_on_bolus">Vibrar no Bólus</string>
     <string name="pref_units_for_actions">Unidades para Acções</string>
     <string name="units_short">U</string>
+    <string name="pref_display_settings">Ecrã</string>
+    <string name="pref_graph_settings">Gráfico</string>
+    <string name="pref_interface_settings">Interface</string>
+    <string name="pref_others_settings">Outros</string>
+    <string name="pref_complication_settings">Complicação</string>
     <string name="pref_show_date">Mostrar Data</string>
     <string name="pref_show_iob">Mostrar IA </string>
     <string name="pref_show_detailed_iob">Mostrar IA detalhada</string>
