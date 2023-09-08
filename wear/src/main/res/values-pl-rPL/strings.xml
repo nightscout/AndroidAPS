@@ -24,6 +24,11 @@
     <string name="pref_vibrate_on_bolus">Wibruj przy Bolusie</string>
     <string name="pref_units_for_actions">Jednostki dla akcji</string>
     <string name="units_short">U</string>
+    <string name="pref_display_settings">Wyświetlanie</string>
+    <string name="pref_graph_settings">Wykres</string>
+    <string name="pref_interface_settings">Interfejs</string>
+    <string name="pref_others_settings">Inne</string>
+    <string name="pref_complication_settings">Komplikacje</string>
     <string name="pref_show_date">Pokaż Datę</string>
     <string name="pref_show_iob">Pokaż IOB</string>
     <string name="pref_show_detailed_iob">Pokaż szczegółowe IOB</string>
