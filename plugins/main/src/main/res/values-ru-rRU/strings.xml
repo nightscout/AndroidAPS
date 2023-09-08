@@ -322,6 +322,8 @@
     <string name="resend_all_data">повторить отправку всех данных</string>
     <string name="open_settings_on_wear">Открыть настройки на Wear</string>
     <string name="cwf_infos_pref_locked">Список настроек, блокируемых циферблатом</string>
+    <string name="cwf_infos_pref_required">Список настроек, требующихся для циферблата</string>
+    <string name="cwf_infos_view_title">Список полей, входящих в циферблат</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
     <string name="old_data">старые данные</string>
