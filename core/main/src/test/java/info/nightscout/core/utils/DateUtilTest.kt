@@ -1,20 +1,43 @@
 package info.nightscout.core.utils
 
 import android.content.Context
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.AfterAll
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import java.util.Date
+import java.util.SimpleTimeZone
+import java.util.TimeZone
 
 class DateUtilTest : TestBase() {
 
     @Mock lateinit var context: Context
     @Mock lateinit var rh: ResourceHelper
+
+    companion object {
+
+        private lateinit var savedTimeZone: TimeZone
+
+        @BeforeAll
+        @JvmStatic
+        fun setDefaultTimezoneUtc() {
+            savedTimeZone = TimeZone.getDefault()
+            TimeZone.setDefault(SimpleTimeZone(0, "UTC"))
+        }
+
+        @AfterAll
+        @JvmStatic
+        fun restoreDefaultTimezone() {
+            TimeZone.setDefault(savedTimeZone)
+        }
+    }
 
     @Test
     fun fromISODateStringTest() {
@@ -40,7 +63,7 @@ class DateUtilTest : TestBase() {
     }
 
     @Test fun dateStringTest() {
-        Assertions.assertTrue(DateUtil(context).dateString(1513902750000L).contains("22"))
+        assertThat(DateUtil(context).dateString(1513902750000L)).contains("22")
     }
 
     @Test fun timeStringTest() {
@@ -48,15 +71,15 @@ class DateUtilTest : TestBase() {
     }
 
     @Test fun dateAndTimeStringTest() {
-        Assertions.assertTrue(DateUtil(context).dateAndTimeString(1513902750000L).contains("22"))
-        Assertions.assertTrue(DateUtil(context).dateAndTimeString(1513902750000L).contains("32"))
+        assertThat(DateUtil(context).dateAndTimeString(1513902750000L)).contains("22")
+        assertThat(DateUtil(context).dateAndTimeString(1513902750000L)).contains("32")
     }
 
     @Test fun dateAndTimeRangeStringTest() {
-        Assertions.assertTrue(DateUtil(context).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("22"))
-        Assertions.assertTrue(DateUtil(context).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("32"))
-        Assertions.assertTrue(DateUtil(context).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("22"))
-        Assertions.assertTrue(DateUtil(context).dateAndTimeRangeString(1513902750000L, 1513902750000L).contains("32"))
+        assertThat(DateUtil(context).dateAndTimeRangeString(1513902750000L, 1513902750000L)).contains("22")
+        assertThat(DateUtil(context).dateAndTimeRangeString(1513902750000L, 1513902750000L)).contains("32")
+        assertThat(DateUtil(context).dateAndTimeRangeString(1513902750000L, 1513902750000L)).contains("22")
+        assertThat(DateUtil(context).dateAndTimeRangeString(1513902750000L, 1513902750000L)).contains("32")
     }
 
     /*
