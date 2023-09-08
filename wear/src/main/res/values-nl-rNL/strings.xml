@@ -24,6 +24,11 @@
     <string name="pref_vibrate_on_bolus">Trillen bij bolus</string>
     <string name="pref_units_for_actions">Eenheden voor acties</string>
     <string name="units_short">E</string>
+    <string name="pref_display_settings">Scherm</string>
+    <string name="pref_graph_settings">Grafiek</string>
+    <string name="pref_interface_settings">Interface</string>
+    <string name="pref_others_settings">Overige</string>
+    <string name="pref_complication_settings">Complicatie</string>
     <string name="pref_show_date">Toon datum</string>
     <string name="pref_show_iob">Toon IOB</string>
     <string name="pref_show_detailed_iob">Toon gedetailleerde IOB</string>
@@ -41,6 +46,7 @@
     <string name="pref_show_ago">Toon tijd geleden</string>
     <string name="pref_dark" comment="Enables dark visual theme">Donker</string>
     <string name="pref_highlight_basals">Markeer basaalstanden</string>
+    <string name="pref_prediction_lines">Voorspellingen tonen</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Bijpassende verdeler</string>
     <string name="pref_chart_timeframe">Tijdsschaal grafiek</string>
     <string name="pref_1_hour">1 uur</string>
