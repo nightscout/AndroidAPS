@@ -8,10 +8,13 @@
     <string name="label_watchface_no_chart">AAPS(χωρίς_γράφημα)</string>
     <string name="label_watchface_circle">AAPS(Κυκλικό)</string>
     <string name="label_watchface_v2">AAPS(v2)</string>
+    <string name="label_watchface_cockpit">AAPS(Πιλοτήριο)</string>
+    <string name="label_watchface_steampunk">AAPS(Steampunk)</string>
     <string name="label_watchface_digital_style">AAPS(ψηφιακό)</string>
     <string name="label_watchface_custom">AAPS(προσαρμοσμένα_χαρακτηριστικά)</string>
     <string name="label_actions_tile">AAPS( Ενέργειες)</string>
     <string name="label_temp_target_tile">AAPS(προσωρινός_στόχος)</string>
+    <string name="label_quick_wizard_tile">AAPS(Quick Wizard)</string>
     <string name="label_warning_sync">Δεν υπάρχουν δεδομένα!</string>
     <string name="label_warning_old">Παλιά δεδομένα!</string>
     <string name="label_warning_since">Από %1$s</string>
@@ -29,17 +32,24 @@
     <string name="pref_show_detailed_delta">Εμφάνιση λεπτομερούς Delta</string>
     <string name="pref_show_avgdelta">Εμφάνιση AvgDelta</string>
     <string name="pref_show_phone_battery">Εμφάνιση ποσοστού μπαταρίας Τηλεφώνου</string>
+    <string name="pref_show_rig_battery">Εμφάνιση Μπαταρίας</string>
     <string name="pref_show_basal_rate">Εμφάνιση Βασικού Ρυθμού</string>
     <string name="pref_show_loop_status">Εμφάνιση Κατάστασης Βρόχου</string>
     <string name="pref_show_bg">Εμφάνιση γλυκόζης αίματος</string>
     <string name="pref_show_bgi">Εμφάνιση BGI</string>
     <string name="pref_show_direction_arrow">Εμφάνιση Βέλους Κατεύθυνσης</string>
+    <string name="pref_show_ago">Εμφάνιση Πριν</string>
     <string name="pref_dark" comment="Enables dark visual theme">Σκούρο</string>
+    <string name="pref_highlight_basals">Επισήμανση Βασικών</string>
+    <string name="pref_prediction_lines">Εμφάνιση προβλέψεων</string>
+    <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Ταίριασμα διαχωριστικού</string>
+    <string name="pref_chart_timeframe">Χρόνος Διαγράμματος</string>
     <string name="pref_1_hour">1 ώρα</string>
     <string name="pref_2_hours">2 ώρες</string>
     <string name="pref_3_hours">3 ώρες</string>
     <string name="pref_4_hours">4 ώρες</string>
     <string name="pref_5_hours">5 ώρες</string>
+    <string name="pref_input_design">Σχεδιασμός Εισαγωγής</string>
     <string name="pref_default">Προεπιλογή</string>
     <string name="pref_low">Χαμηλή</string>
     <string name="pref_high">Υψηλό</string>
