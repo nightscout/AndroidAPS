@@ -24,6 +24,11 @@
     <string name="pref_vibrate_on_bolus">Bolus\'ta Titreşim</string>
     <string name="pref_units_for_actions">Eylemler için Birimler</string>
     <string name="units_short">Ü</string>
+    <string name="pref_display_settings">Ekran</string>
+    <string name="pref_graph_settings">Grafik</string>
+    <string name="pref_interface_settings">Arayüz</string>
+    <string name="pref_others_settings">Diğer</string>
+    <string name="pref_complication_settings">Komplikasyon</string>
     <string name="pref_show_date">Tarihi Göster</string>
     <string name="pref_show_iob">IOB\'yi göster</string>
     <string name="pref_show_detailed_iob">Ayrıntılı AİNS göster</string>
