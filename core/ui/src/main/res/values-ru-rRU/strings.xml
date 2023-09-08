@@ -424,6 +424,7 @@
     <string name="autotune_ic_warning">Выбранный профиль имеет %1$d значений IC. Автоматически будет использоваться %2$.2f г/ед</string>
     <string name="autotune_isf_warning">Выбранный профиль имеет %1$d значений ISF. Автоматически будет использоваться %2$.1f%3$s/ед</string>
     <string name="autotune_error">Ошибка ввода данных, попробуйте запустить снова autotune или уменьшить количество дней</string>
+    <string name="autotune_error_more_days">Ошибка в данных, увеличьте количество дней</string>
     <string name="autotune_warning_during_run">Идет настройка автоматизации, ждите</string>
     <string name="autotune_warning_after_run">Перед использованием внимательно проверьте результаты!</string>
     <string name="autotune_partial_result">Частичный результат дня %1$d / %2$d с отладкой</string>
