@@ -21,7 +21,8 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        addPreferencesFromResource(R.xml.preferences)
+        val preferenceFile = intent.getIntExtra(getString(R.string.key_preference_id), R.xml.display_preferences)
+        addPreferencesFromResource(preferenceFile)
         PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this)
         val view = window.decorView as ViewGroup
         removeBackgroundRecursively(view)
@@ -37,11 +38,8 @@ class WatchfaceConfigurationActivity : WearPreferenceActivity(), SharedPreferenc
     }
 
     override fun onSharedPreferenceChanged(sp: SharedPreferences, key: String?) {
-        if (key == getString(R.string.key_heart_rate_sampling)) {
-            if (sp.getBoolean(key, false)) {
-                requestBodySensorPermission()
-            }
-        }
+        if (key == getString(R.string.key_heart_rate_sampling) && sp.getBoolean(key, false))
+            requestBodySensorPermission()
     }
 
     private fun requestBodySensorPermission() {

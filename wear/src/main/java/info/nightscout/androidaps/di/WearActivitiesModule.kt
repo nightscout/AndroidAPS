@@ -8,6 +8,7 @@ import info.nightscout.androidaps.interaction.TileConfigurationActivity
 import info.nightscout.androidaps.interaction.actions.*
 import info.nightscout.androidaps.interaction.menus.FillMenuActivity
 import info.nightscout.androidaps.interaction.menus.MainMenuActivity
+import info.nightscout.androidaps.interaction.menus.PreferenceMenuActivity
 import info.nightscout.androidaps.interaction.menus.StatusMenuActivity
 import info.nightscout.androidaps.interaction.utils.MenuListActivity
 
@@ -33,6 +34,7 @@ abstract class WearActivitiesModule {
 
     @ContributesAndroidInjector abstract fun contributesMenuListActivity(): MenuListActivity
     @ContributesAndroidInjector abstract fun contributesFillMenuActivity(): FillMenuActivity
+    @ContributesAndroidInjector abstract fun contributesPreferenceMenuActivity(): PreferenceMenuActivity
     @ContributesAndroidInjector abstract fun contributesMainMenuActivity(): MainMenuActivity
     @ContributesAndroidInjector abstract fun contributesStatusMenuActivity(): StatusMenuActivity
     @ContributesAndroidInjector abstract fun contributesQuickSnoozeActivity(): QuickSnoozeActivity

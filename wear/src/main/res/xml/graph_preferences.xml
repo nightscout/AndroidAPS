@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_highlight_basals"
+        android:summary="Better visible basal rate and temp basals"
+        android:title="@string/pref_highlight_basals"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <CheckBoxPreference
+        android:defaultValue="true"
+        android:key="@string/key_prediction_lines"
+        android:summary="show prediction lines"
+        android:title="@string/pref_prediction_lines"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <ListPreference
+        android:defaultValue="3"
+        android:entries="@array/chart_timeframe"
+        android:entryValues="@array/chart_timeframe_values"
+        android:key="@string/key_chart_time_frame"
+        android:summary="Chart Timeframe"
+        android:title="@string/pref_chart_timeframe" />
+
+</PreferenceScreen>
