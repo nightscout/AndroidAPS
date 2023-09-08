@@ -1,2 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="biometric_title">Απαιτείται πιστοποίηση</string>
+    <string name="biometric_description">Τοποθετήστε το δάχτυλό σας στον αναγνώστη δακτυλικών αποτυπωμάτων για να επαληθεύσετε την ταυτότητά σας</string>
+    <string name="settings_protection">Προστασία ρυθμίσεων</string>
+    <string name="application_protection">Προστασία εφαρμογής</string>
+    <string name="bolus_protection">Προστασία Bolus</string>
+    <string name="settings_password">Κωδικός πρόσβασης στις ρυθμίσεις</string>
+    <string name="settings_pin">PIN Ρυθμίσεων</string>
+    <string name="application_password">Κωδικός πρόσβασης Εφαρμογής</string>
+    <string name="application_pin">PIN Εφαρμογής</string>
+    <string name="bolus_password">Κωδικός πρόσβασης για Bolus</string>
+    <string name="bolus_pin">Bolus PIN</string>
+    <string name="protection_timeout_title">Διατήρηση κωδικού πρόσβασης και PIN [s]</string>
+    <string name="protection_timeout_summary">Χρόνος πριν ο κωδικός πρόσβασης ή το PIN πρέπει να εισαχθεί</string>
+    <string name="biometric">Βιομετρικά</string>
+    <string name="custom_password">Προσαρμοσμένος κωδικός</string>
+    <string name="custom_pin">Προσαρμοσμένο PIN</string>
+    <string name="noprotection">Καμία προστασία</string>
+    <string name="unsecure_fallback_biometric">Μη Ασφαλής Επανάκληση</string>
+    <string name="unsecure_fallback_descriotion_biometric">Για να είναι αποτελεσματική, η βιομετρική προστασία, χρειάζεται να οριστεί ένας κωδικός master για δυνατότητα επανάκλησης.\n\nΠαρακαλώ ρυθμίστε ένα κωδικό master!</string>
+    <string name="password_set">Ο κωδικός ορίστηκε!</string>
+    <string name="pin_set">Το PIN ορίστηκε!</string>
+    <string name="password_not_set">Ο κωδικός δεν ορίστηκε</string>
+    <string name="pin_not_set">Το PIN δεν ορίστηκε</string>
+    <string name="password_not_changed">Ο κωδικός δεν άλλαξε</string>
+    <string name="pin_not_changed">Το PIN δεν άλλαξε</string>
+    <string name="pin_cleared">Το PIN διαγράφηκε!</string>
+    <string name="password_hint">Εισάγετε τον κωδικό εδώ</string>
+    <string name="pin_hint">Εισάγετε το PIN εδώ</string>
+</resources>
