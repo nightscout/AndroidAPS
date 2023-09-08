@@ -10,4 +10,8 @@
     <!-- Omnipod Dash - Pod Activation Wizard -->
     <!-- Exceptions -->
     <string name="omnipod_common_history_bolus_value">%1$.2f U</string>
+    <string name="setting_basal_profile_might_have_failed">Η ρύθμιση του βασικού προφίλ μπορεί να έχει αποτύχει. Η χορήγηση μπορεί να έχει ανασταλεί! Παρακαλώ ανανεώστε την κατάσταση του Pod χειροκίνητα από την καρτέλα Omnipod και συνεχίστε την χορήγηση αν χρειαστεί.</string>
+    <string name="bolus_delivery_status_uncertain">Αβέβαιη κατάσταση παράδοσης Bolus. Ανανεώστε την κατάσταση του pod για να επιβεβαιώσετε ή αρνηθείτε.</string>
+    <string name="temp_basal_out_of_sync">Η κατάσταση του Προσωρινού Ρυθμού δεν είναι όπως αναμενόταν! Αν ο Προσωρινός Ρυθμός εκτελούνταν προηγουμένως, πλέον έχει ακυρωθεί. Παρακαλώ ελέγξτε το ιστορικό χορήγησης ινσουλίνης και του pod</string>
+    <string name="checking_delivery_status">Έλεγχος κατάστασης χορήγησης</string>
 </resources>
