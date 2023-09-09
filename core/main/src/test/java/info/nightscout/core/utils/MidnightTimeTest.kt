@@ -1,7 +1,7 @@
 package info.nightscout.core.utils
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.interfaces.utils.MidnightTime
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.util.Calendar
 
@@ -10,40 +10,40 @@ class MidnightTimeTest {
     @Test fun calc() {
         // We get real midnight
         val now = System.currentTimeMillis()
-        Assertions.assertTrue(now >= MidnightTime.calc())
+        assertThat(MidnightTime.calc()).isAtMost(now)
         val c = Calendar.getInstance()
         c.timeInMillis = MidnightTime.calc()
-        Assertions.assertEquals(c[Calendar.HOUR_OF_DAY].toLong(), 0)
-        Assertions.assertEquals(c[Calendar.MINUTE].toLong(), 0)
-        Assertions.assertEquals(c[Calendar.SECOND].toLong(), 0)
-        Assertions.assertEquals(c[Calendar.MILLISECOND].toLong(), 0)
+        assertThat(c[Calendar.HOUR_OF_DAY].toLong()).isEqualTo(0L)
+        assertThat(c[Calendar.MINUTE].toLong()).isEqualTo(0L)
+        assertThat(c[Calendar.SECOND].toLong()).isEqualTo(0L)
+        assertThat(c[Calendar.MILLISECOND].toLong()).isEqualTo(0L)
     }
 
     @Test fun calc_time() {
         // We get real midnight
         val now = System.currentTimeMillis()
         val midnight = MidnightTime.calc(now)
-        Assertions.assertTrue(now >= midnight)
+        assertThat(midnight).isAtMost(now)
         val c = Calendar.getInstance()
         c.timeInMillis = MidnightTime.calc(now)
-        Assertions.assertEquals(c[Calendar.HOUR_OF_DAY].toLong(), 0)
-        Assertions.assertEquals(c[Calendar.MINUTE].toLong(), 0)
-        Assertions.assertEquals(c[Calendar.SECOND].toLong(), 0)
-        Assertions.assertEquals(c[Calendar.MILLISECOND].toLong(), 0)
+        assertThat(c[Calendar.HOUR_OF_DAY].toLong()).isEqualTo(0L)
+        assertThat(c[Calendar.MINUTE].toLong()).isEqualTo(0L)
+        assertThat(c[Calendar.SECOND].toLong()).isEqualTo(0L)
+        assertThat(c[Calendar.MILLISECOND].toLong()).isEqualTo(0L)
         // Assure we get the same time from cache
-        Assertions.assertEquals(midnight, MidnightTime.calc(now))
+        assertThat(midnight).isEqualTo(MidnightTime.calc(now))
     }
 
     @Test fun resetCache() {
         val now = System.currentTimeMillis()
         MidnightTime.calc(now)
         MidnightTime.resetCache()
-        Assertions.assertEquals(0, MidnightTime.times.size().toLong())
+        assertThat(MidnightTime.times.size().toLong()).isEqualTo(0L)
     }
 
     @Test fun log() {
         val now = System.currentTimeMillis()
         MidnightTime.calc(now)
-        Assertions.assertTrue(MidnightTime.log().startsWith("Hits:"))
+        assertThat(MidnightTime.log()).startsWith("Hits:")
     }
 }
