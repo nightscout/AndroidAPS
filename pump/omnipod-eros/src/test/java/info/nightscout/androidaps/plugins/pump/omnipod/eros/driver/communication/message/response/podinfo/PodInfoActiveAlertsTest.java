@@ -1,7 +1,8 @@
 package info.nightscout.androidaps.plugins.pump.omnipod.eros.driver.communication.message.response.podinfo;
 
+import static com.google.common.truth.Truth.assertThat;
+
 import org.joda.time.Duration;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -15,7 +16,7 @@ class PodInfoActiveAlertsTest {
         PodInfoActiveAlerts podInfoActiveAlerts = new PodInfoActiveAlerts(encodedMessage);
 
         List<PodInfoActiveAlerts.AlertActivation> alertActivations = podInfoActiveAlerts.getAlertActivations();
-        Assertions.assertEquals(0, alertActivations.size());
+        assertThat(alertActivations).isEmpty();
     }
 
     @Test
@@ -24,10 +25,10 @@ class PodInfoActiveAlertsTest {
         PodInfoActiveAlerts podInfoActiveAlerts = new PodInfoActiveAlerts(encodedMessage);
 
         List<PodInfoActiveAlerts.AlertActivation> alertActivations = podInfoActiveAlerts.getAlertActivations();
-        Assertions.assertEquals(1, alertActivations.size());
+        assertThat(alertActivations).hasSize(1);
 
         PodInfoActiveAlerts.AlertActivation alertActivation = alertActivations.get(0);
         Duration expectedDuration = Duration.standardHours(72).plus(Duration.standardMinutes(1));
-        Assertions.assertTrue(expectedDuration.isEqual(alertActivation.getValueAsDuration()));
+        assertThat(expectedDuration).isEqualTo(alertActivation.getValueAsDuration());
     }
 }
