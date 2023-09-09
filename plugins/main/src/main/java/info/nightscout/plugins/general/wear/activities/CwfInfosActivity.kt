@@ -86,7 +86,7 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
         wearPlugin.savedCustomWatchface?.let {
             val cwfAuthorization = sp.getBoolean(info.nightscout.core.utils.R.string.key_wear_custom_watchface_autorization, false)
             val metadata = it.metadata
-            val drawable = it.resDatas[ResFileMap.CUSTOM_WATCHFACE]?.toDrawable(resources)
+            val drawable = it.resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources)
             binding.customWatchface.setImageDrawable(drawable)
             title = rh.gs(CwfMetadataKey.CWF_NAME.label, metadata[CwfMetadataKey.CWF_NAME])
             metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]?.let { authorVersion ->

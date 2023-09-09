@@ -50,11 +50,7 @@ enum class ResFileMap(val fileName: String) {
     ARROW_FLAT("ArrowFlat"),
     ARROW_FORTY_FIVE_DOWN("Arrow45Down"),
     ARROW_SINGLE_DOWN("ArrowSingleDown"),
-    ARROW_DOUBLE_DOWN("ArrowDoubleDown"),
-    FONT1("Font1"),
-    FONT2("Font2"),
-    FONT3("Font3"),
-    FONT4("Font4");
+    ARROW_DOUBLE_DOWN("ArrowDoubleDown");
 
     companion object {
 
@@ -134,7 +130,7 @@ data class ResData(val value: ByteArray, val format: ResFormat) {
     }
 }
 
-typealias CwfResDataMap = MutableMap<ResFileMap, ResData>
+typealias CwfResDataMap = MutableMap<String, ResData>
 typealias CwfMetadataMap = MutableMap<CwfMetadataKey, String>
 
 @Serializable
@@ -259,11 +255,7 @@ enum class JsonKeyValues(val key: String, val jsonKey: JsonKeys) {
     BOLD("bold", JsonKeys.FONTSTYLE),
     BOLD_ITALIC("bold_italic", JsonKeys.FONTSTYLE),
     ITALIC("italic", JsonKeys.FONTSTYLE),
-    BGCOLOR("bgColor", JsonKeys.COLOR),
-    FONT1("font1", JsonKeys.FONTCOLOR),
-    FONT2("font2", JsonKeys.FONTCOLOR),
-    FONT3("font3", JsonKeys.FONTCOLOR),
-    FONT4("font4", JsonKeys.FONTCOLOR)
+    BGCOLOR("bgColor", JsonKeys.COLOR)
 }
 
 enum class ViewType(@StringRes val comment: Int?) {
@@ -309,14 +301,15 @@ class ZipWatchfaceFormat {
                         val cwfResFileMap = ResFileMap.fromFileName(entryName)
                         val drawableFormat = ResFormat.fromFileName(entryName)
                         if (cwfResFileMap != ResFileMap.UNKNOWN && drawableFormat != ResFormat.UNKNOWN) {
-                            resDatas[cwfResFileMap] = ResData(byteArrayOutputStream.toByteArray(), drawableFormat)
-                        }
+                            resDatas[cwfResFileMap.fileName] = ResData(byteArrayOutputStream.toByteArray(), drawableFormat)
+                        } else if (drawableFormat != ResFormat.UNKNOWN)
+                            resDatas[entryName.substringBeforeLast(".")] = ResData(byteArrayOutputStream.toByteArray(), drawableFormat)
                     }
                     zipEntry = zipInputStream.nextEntry
                 }
 
                 // Valid CWF file must contains a valid json file with a name within metadata and a custom watchface image
-                return if (metadata.containsKey(CwfMetadataKey.CWF_NAME) && resDatas.containsKey(ResFileMap.CUSTOM_WATCHFACE))
+                return if (metadata.containsKey(CwfMetadataKey.CWF_NAME) && resDatas.containsKey(ResFileMap.CUSTOM_WATCHFACE.fileName))
                     CwfData(json.toString(4), metadata, resDatas)
                 else
                     null
@@ -338,7 +331,7 @@ class ZipWatchfaceFormat {
                 zipOutputStream.closeEntry()
 
                 for (resData in customWatchface.resDatas) {
-                    val fileEntry = ZipEntry("${resData.key.fileName}.${resData.value.format.extension}")
+                    val fileEntry = ZipEntry("${resData.key}.${resData.value.format.extension}")
                     zipOutputStream.putNextEntry(fileEntry)
                     zipOutputStream.write(resData.value.value)
                     zipOutputStream.closeEntry()
