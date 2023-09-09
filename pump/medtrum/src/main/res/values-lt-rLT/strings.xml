@@ -3,11 +3,13 @@
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_description">Medtrum Nano ir Medtrum 300U integracija</string>
     <string name="medtrum_pump_setting">Medtrum pompos nustatymai</string>
     <string name="pump_error">Pompos klaida: %1$s !! </string>
     <string name="pump_is_suspended">Pompa sustabdyta</string>
     <string name="pump_is_suspended_hour_max">Pompa sustabdyta dėl viršyto valandos insulino limito</string>
     <string name="pump_is_suspended_day_max">Pompa sustabdyta dėl viršyto paros insulino limito</string>
+    <string name="patch_not_active">Rezervuaras neaktyvus</string>
     <string name="pump_setting_failed">Naudotojo nustatymai neįrašyti!</string>
     <!-- overview fragment -->
     <string name="ble_status_label">BLE statusas</string>
@@ -22,9 +24,11 @@
     <string name="current_basal_rate"> %.2f v/val.</string>
     <string name="pump_type_label">Pompos tipas</string>
     <string name="fw_version_label">FW versija</string>
+    <string name="patch_no_label">Rezervuaro nr.</string>
     <string name="patch_expiry_label">Rezerv. gal. baigsis</string>
     <string name="refresh_label">Atnaujinti</string>
     <string name="reset_alarms_label">Atstatyti aliarmus</string>
+    <string name="change_patch_label">Keisti rezerv.</string>
     <string name="requested_by_user" comment="26 characters max for translation">Inicijuota naudotojo</string>
     <string name="expiry_not_enabled">Neįjungta</string>
     <!-- Alarm strings -->
