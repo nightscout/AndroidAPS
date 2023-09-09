@@ -25,4 +25,19 @@
     <string name="absorption_cutoff_title">Meal max absorption time [h]</string>
     <string name="absorption_cutoff_summary">Time at which any meal is considered absorbed. Remaining carbs will be cut off.</string>
 
+    <string name="dynamic_isf">Dynamic ISF</string>
+
+    <string name="dynamic_isf_enable" translatable="false">Use Dynamic ISF</string>
+    <string name="dynamic_isf_use_tdd" translatable="false">Use TDD-based ISF</string>
+    <string name="dynamic_isf_adjust_title" formatted="false">TDD-based ISF adjustment factor %</string>
+    <string name="dynamic_isf_adjust_summary" formatted="false">Adjustment factor for TDD-based ISF. Controls the portion of TDD used for calculation. Set more than 100% for more aggressive correction doses, and less than 100% for less aggressive corrections.</string>
+    <string name="dynamic_isf_velocity_title" formatted="false">BG-based Scaling velocity %</string>
+    <string name="dynamic_isf_velocity_summary" formatted="false">This controls how hard ISF will be changed with BG level change</string>
+    <string name="dynamic_isf_velocity_dialogMessage" formatted="false">This controls how hard ISF will be changed with BG level change: 0% means no scaling at all, constant ISF value for every BG level; 100% - regular DynamicISF scaling</string>
+    <string name="dynamic_isf_bg_cap_title" formatted="false">BG cap</string>
+    <string name="dynamic_isf_bg_cap_summary" formatted="false">BG value where DynISF scaling slows down to ⅓ of regular</string>
+    <string name="dynamic_isf_bg_cap_dialogMessage" formatted="false">This controls the BG level, after that the Dynamic ISF scaling starts to suffer from diminishing returns. Every BG point over this value will count as ⅓ in Dynamic ISF scaling formulae. Must help preventing overreacting on highs.</string>
+    <string name="dynamic_isf_obey_profile_title" formatted="false">Obey profile</string>
+    <string name="dynamic_isf_obey_profile_summary" formatted="false">Apply profile % changes to Dynamic ISF</string>
+    <string name="dynamic_isf_adjust_sensitivity">Adjust sensitivity and BG</string>
 </resources>

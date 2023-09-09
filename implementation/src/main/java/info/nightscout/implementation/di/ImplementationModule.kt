@@ -33,6 +33,7 @@ import info.nightscout.implementation.receivers.ReceiverStatusStoreImpl
 import info.nightscout.implementation.resources.IconsProviderImplementation
 import info.nightscout.implementation.resources.ResourceHelperImpl
 import info.nightscout.implementation.stats.DexcomTirCalculatorImpl
+import info.nightscout.implementation.stats.IsfCalculatorImpl
 import info.nightscout.implementation.stats.TddCalculatorImpl
 import info.nightscout.implementation.stats.TirCalculatorImpl
 import info.nightscout.implementation.storage.FileStorage
@@ -59,6 +60,7 @@ import info.nightscout.interfaces.pump.WarnColors
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.interfaces.stats.DexcomTirCalculator
+import info.nightscout.interfaces.stats.IsfCalculator
 import info.nightscout.interfaces.stats.TddCalculator
 import info.nightscout.interfaces.stats.TirCalculator
 import info.nightscout.interfaces.storage.Storage
@@ -106,6 +108,7 @@ abstract class ImplementationModule {
         @Binds fun bindTrendCalculatorInterface(trendCalculator: TrendCalculatorImpl): TrendCalculator
         @Binds fun bindTddCalculatorInterface(tddCalculator: TddCalculatorImpl): TddCalculator
         @Binds fun bindTirCalculatorInterface(tirCalculator: TirCalculatorImpl): TirCalculator
+        @Binds fun bindIsfCalculatorInterface(isfCalculator: IsfCalculatorImpl): IsfCalculator
         @Binds fun bindDexcomTirCalculatorInterface(dexcomTirCalculator: DexcomTirCalculatorImpl): DexcomTirCalculator
         @Binds fun bindPumpSyncInterface(pumpSyncImplementation: PumpSyncImplementation): PumpSync
         @Binds fun bindLocalAlertUtilsInterface(localAlertUtils: LocalAlertUtilsImpl): LocalAlertUtils

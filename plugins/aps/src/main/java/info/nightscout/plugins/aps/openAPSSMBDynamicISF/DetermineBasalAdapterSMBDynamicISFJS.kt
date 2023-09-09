@@ -14,7 +14,7 @@ import info.nightscout.interfaces.iob.MealData
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
-import info.nightscout.interfaces.utils.Round
+import info.nightscout.interfaces.stats.IsfCalculator
 import info.nightscout.plugins.aps.R
 import info.nightscout.plugins.aps.logger.LoggerCallback
 import info.nightscout.plugins.aps.openAPSSMB.DetermineBasalResultSMB
@@ -38,9 +38,7 @@ import org.mozilla.javascript.Undefined
 import java.io.IOException
 import java.lang.reflect.InvocationTargetException
 import java.nio.charset.StandardCharsets
-import java.security.InvalidParameterException
 import javax.inject.Inject
-import kotlin.math.ln
 
 class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scriptReader: ScriptReader, private val injector: HasAndroidInjector) : DetermineBasalAdapter {
 
@@ -50,6 +48,7 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
     @Inject lateinit var iobCobCalculator: IobCobCalculator
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var profileUtil: ProfileUtil
+    @Inject lateinit var isfCalculator: IsfCalculator
 
     private var profile = JSONObject()
     private var mGlucoseStatus = JSONObject()
@@ -100,6 +99,13 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
             rhino.evaluateString(scope, "var module = {\"parent\":Boolean(1)};", "JavaScript", 0, null)
             rhino.evaluateString(scope, "var round_basal = function round_basal(basal, profile) { return basal; };", "JavaScript", 0, null)
             rhino.evaluateString(scope, "require = function() {return round_basal;};", "JavaScript", 0, null)
+            rhino.evaluateString(scope,
+"""
+var getIsfByProfile = function (bg, profile) {
+    var sens_BG = Math.log((bg / profile.insulinDivisor) + 1);
+    var scaler = Math.log((profile.normalTarget / profile.insulinDivisor) + 1) / sens_BG;
+    return profile.sensNormalTarget * (1 - (1 - scaler) * profile.dynISFvelocity);
+}""", "JavaScript", 0, null)
 
             //generate functions "determine_basal" and "setTempBasal"
             rhino.evaluateString(scope, readFile("OpenAPSSMBDynamicISF/determine-basal.js"), "JavaScript", 0, null)
@@ -177,19 +183,8 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
         microBolusAllowed: Boolean,
         uamAllowed: Boolean,
         advancedFiltering: Boolean,
-        flatBGsDetected: Boolean,
-        tdd1D: Double?,
-        tdd7D: Double?,
-        tddLast24H: Double?,
-        tddLast4H: Double?,
-        tddLast8to4H: Double?
+        flatBGsDetected: Boolean
     ) {
-        tdd1D ?: throw InvalidParameterException()
-        tdd7D ?: throw InvalidParameterException()
-        tddLast24H ?: throw InvalidParameterException()
-        tddLast4H ?: throw InvalidParameterException()
-        tddLast8to4H ?: throw InvalidParameterException()
-
         val pump = activePlugin.activePump
         val pumpBolusStep = pump.pumpDescription.bolusStep
         this.profile.put("max_iob", maxIob)
@@ -280,23 +275,12 @@ class DetermineBasalAdapterSMBDynamicISFJS internal constructor(private val scri
             insulin.peak > 50 -> 65 // ultra rapid peak: 55
             else              -> 75 // rapid peak: 75
         }
+        val isf = isfCalculator.calculate(profile, insulinDivisor, glucoseStatus.glucose, tempTargetSet)
 
-        val tddWeightedFromLast8H = ((1.4 * tddLast4H) + (0.6 * tddLast8to4H)) * 3
-        var tdd = (tddWeightedFromLast8H * 0.33) + (tdd7D * 0.34) + (tdd1D * 0.33)
-        val dynISFadjust = SafeParse.stringToDouble(sp.getString(R.string.key_DynISFAdjust, "100")) / 100.0
-        tdd *= dynISFadjust
+        autosensData.put("ratio", isf.ratio)
 
-        val variableSensitivity = Round.roundTo(1800 / (tdd * (ln((glucoseStatus.glucose / insulinDivisor) + 1))), 0.1)
-
-        this.profile.put("variable_sens", variableSensitivity)
-        this.profile.put("insulinDivisor", insulinDivisor)
-        this.profile.put("TDD", tdd)
-
-
-        if (sp.getBoolean(R.string.key_adjust_sensitivity, false))
-            autosensData.put("ratio", tddLast24H / tdd7D)
-        else
-            autosensData.put("ratio", 1.0)
+        isf.putTo(this.profile)
+        this.profile.put("normalTarget", 99)
 
         this.microBolusAllowed = microBolusAllowed
         smbAlwaysAllowed = advancedFiltering

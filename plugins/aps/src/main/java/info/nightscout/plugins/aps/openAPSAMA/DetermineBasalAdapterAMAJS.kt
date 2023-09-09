@@ -162,12 +162,7 @@ class DetermineBasalAdapterAMAJS internal constructor(scriptReader: ScriptReader
         microBolusAllowed: Boolean,
         uamAllowed: Boolean,
         advancedFiltering: Boolean,
-        flatBGsDetected: Boolean,
-        tdd1D: Double?,
-        tdd7D: Double?,
-        tddLast24H: Double?,
-        tddLast4H: Double?,
-        tddLast8to4H: Double?
+        flatBGsDetected: Boolean
     ) {
         this.profile = JSONObject()
         this.profile.put("max_iob", maxIob)

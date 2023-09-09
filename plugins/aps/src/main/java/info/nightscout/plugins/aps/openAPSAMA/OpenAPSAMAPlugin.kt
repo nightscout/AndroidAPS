@@ -200,11 +200,6 @@ class OpenAPSAMAPlugin @Inject constructor(
                 profile, maxIob, maxBasal, minBg, maxBg, targetBg, activePlugin.activePump.baseBasalRate, iobArray, glucoseStatus, mealData,
                 lastAutosensResult.ratio,
                 isTempTarget,
-                tdd1D = null,
-                tdd7D = null,
-                tddLast4H = null,
-                tddLast8to4H = null,
-                tddLast24H = null,
             )
         } catch (e: JSONException) {
             fabricPrivacy.logException(e)

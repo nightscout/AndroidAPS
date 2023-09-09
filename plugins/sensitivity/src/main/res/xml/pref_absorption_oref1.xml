@@ -9,16 +9,16 @@
         android:title="@string/absorption_settings_title"
         app:initialExpandedChildrenCount="0">
 
-    <info.nightscout.core.validators.ValidatingEditTextPreference
+        <info.nightscout.core.validators.ValidatingEditTextPreference
             android:defaultValue="8.0"
-        android:dialogMessage="@string/openapsama_min_5m_carb_impact_summary"
-        android:inputType="numberDecimal"
+            android:dialogMessage="@string/openapsama_min_5m_carb_impact_summary"
+            android:inputType="numberDecimal"
             android:key="@string/key_openapsama_min_5m_carbimpact"
             android:maxLines="20"
             android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="@string/openapsama_min_5m_carb_impact"
-        validate:floatmaxNumber="12.0"
+            android:singleLine="true"
+            android:title="@string/openapsama_min_5m_carb_impact"
+            validate:floatmaxNumber="12.0"
             validate:floatminNumber="0.1"
             validate:testType="floatNumericRange" />
 
@@ -34,6 +34,72 @@
             validate:maxNumber="10"
             validate:minNumber="4"
             validate:testType="numericRange" />
+
+        <androidx.preference.PreferenceScreen
+            android:key="absorption_oref1_dynamic_isf"
+            android:title="@string/dynamic_isf">
+
+            <SwitchPreference
+                android:defaultValue="false"
+                android:key="@string/key_dynamic_isf_enable"
+                android:title="@string/dynamic_isf_enable" />
+
+            <info.nightscout.core.validators.ValidatingEditTextPreference
+                android:dependency="@string/key_dynamic_isf_enable"
+                android:defaultValue="100"
+                android:inputType="numberDecimal"
+                android:key="@string/key_dynamic_isf_velocity"
+                android:title="@string/dynamic_isf_velocity_title"
+                android:summary="@string/dynamic_isf_velocity_summary"
+                android:dialogMessage="@string/dynamic_isf_velocity_dialogMessage"
+                validate:floatmaxNumber="200"
+                validate:floatminNumber="0"
+                validate:testType="floatNumericRange"/>
+
+            <info.nightscout.core.validators.ValidatingEditTextPreference
+                android:dependency="@string/key_dynamic_isf_enable"
+                android:defaultValue="500"
+                android:inputType="numberDecimal"
+                android:key="@string/key_dynamic_isf_bg_cap"
+                android:title="@string/dynamic_isf_bg_cap_title"
+                android:summary="@string/dynamic_isf_bg_cap_summary"
+                android:dialogMessage="@string/dynamic_isf_bg_cap_dialogMessage"
+                validate:floatmaxNumber="500"
+                validate:floatminNumber="99"
+                validate:testType="bgRange"/>
+
+            <SwitchPreference
+                android:dependency="@string/key_dynamic_isf_enable"
+                android:defaultValue="false"
+                android:key="@string/key_dynamic_isf_obey_profile"
+                android:title="@string/dynamic_isf_obey_profile_title"
+                android:summary="@string/dynamic_isf_obey_profile_summary" />
+
+            <SwitchPreference
+                android:dependency="@string/key_dynamic_isf_enable"
+                android:defaultValue="true"
+                android:key="@string/key_dynamic_isf_use_tdd"
+                android:title="@string/dynamic_isf_use_tdd" />
+
+            <info.nightscout.core.validators.ValidatingEditTextPreference
+                android:dependency="@string/key_dynamic_isf_use_tdd"
+                android:defaultValue="100"
+                android:enabled="true"
+                android:dialogMessage="@string/dynamic_isf_adjust_summary"
+                android:inputType="numberDecimal"
+                android:key="@string/key_dynamic_isf_adjust"
+                android:title="@string/dynamic_isf_adjust_title"
+                validate:floatmaxNumber="300"
+                validate:floatminNumber="1"
+                validate:testType="floatNumericRange" />
+
+            <SwitchPreference
+                android:dependency="@string/key_dynamic_isf_enable"
+                android:defaultValue="false"
+                android:key="@string/key_dynamic_isf_adjust_sensitivity"
+                android:title="@string/dynamic_isf_adjust_sensitivity" />
+
+        </androidx.preference.PreferenceScreen>
 
         <androidx.preference.PreferenceScreen
             android:key="absorption_oref1_advanced"
