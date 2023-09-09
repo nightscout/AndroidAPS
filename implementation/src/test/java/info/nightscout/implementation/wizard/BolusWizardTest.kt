@@ -1,5 +1,6 @@
 package info.nightscout.implementation.wizard
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.wizard.BolusWizard
@@ -14,7 +15,6 @@ import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.sharedtests.TestBaseWithProfile
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -113,7 +113,7 @@ class BolusWizardTest : TestBaseWithProfile() {
                 useAlarm = false
             )
         val bolusForBg54 = bw.calculatedTotalInsulin
-        Assertions.assertEquals(bolusForBg42, bolusForBg54, 0.01)
+        assertThat(bolusForBg54).isWithin( 0.01).of(bolusForBg42)
     }
 
     @Test
@@ -159,7 +159,7 @@ class BolusWizardTest : TestBaseWithProfile() {
                 useAlarm = false
             )
         val bolusForBgInRange = bw.calculatedTotalInsulin
-        Assertions.assertTrue(bolusForHighBg > bolusForBgInRange)
+        assertThat(bolusForHighBg).isGreaterThan(bolusForBgInRange)
     }
 
     @Test
@@ -205,6 +205,6 @@ class BolusWizardTest : TestBaseWithProfile() {
                 useAlarm = false
             )
         val bolusForBgInRange = bw.calculatedTotalInsulin
-        Assertions.assertTrue(bolusForLowBg < bolusForBgInRange)
+        assertThat(bolusForLowBg).isLessThan(bolusForBgInRange)
     }
 }
