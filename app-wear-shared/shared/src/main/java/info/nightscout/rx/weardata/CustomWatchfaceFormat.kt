@@ -202,67 +202,60 @@ enum class ViewKeys(val key: String, @StringRes val comment: Int) {
     COVER_PLATE("cover_plate", R.string.cwf_comment_cover_plate),
     HOUR_HAND("hour_hand", R.string.cwf_comment_hour_hand),
     MINUTE_HAND("minute_hand", R.string.cwf_comment_minute_hand),
-    SECOND_HAND("second_hand", R.string.cwf_comment_second_hand);
+    SECOND_HAND("second_hand", R.string.cwf_comment_second_hand)
 }
 
-enum class JsonKeys(val key: String, val viewType: ViewType, @StringRes val comment: Int?) {
-    METADATA("metadata", ViewType.NONE, null),
-    ENABLESECOND("enableSecond", ViewType.NONE, null),
-    HIGHCOLOR("highColor", ViewType.NONE, null),
-    MIDCOLOR("midColor", ViewType.NONE, null),
-    LOWCOLOR("lowColor", ViewType.NONE, null),
-    LOWBATCOLOR("lowBatColor", ViewType.NONE, null),
-    CARBCOLOR("carbColor", ViewType.NONE, null),
-    BASALBACKGROUNDCOLOR("basalBackgroundColor", ViewType.NONE, null),
-    BASALCENTERCOLOR("basalCenterColor", ViewType.NONE, null),
-    GRIDCOLOR("gridColor", ViewType.NONE, null),
-    POINTSIZE("pointSize", ViewType.NONE, null),
-    WIDTH("width", ViewType.ALLVIEWS, null),
-    HEIGHT("height", ViewType.ALLVIEWS, null),
-    TOPMARGIN("topmargin", ViewType.ALLVIEWS, null),
-    LEFTMARGIN("leftmargin", ViewType.ALLVIEWS, null),
-    ROTATION("rotation", ViewType.TEXTVIEW, null),
-    VISIBILITY("visibility", ViewType.ALLVIEWS, null),
-    TEXTSIZE("textsize", ViewType.TEXTVIEW, null),
-    TEXTVALUE("textvalue", ViewType.TEXTVIEW, null),
-    GRAVITY("gravity", ViewType.TEXTVIEW, null),
-    FONT("font", ViewType.TEXTVIEW, null),
-    FONTSTYLE("fontStyle", ViewType.TEXTVIEW, null),
-    FONTCOLOR("fontColor", ViewType.TEXTVIEW, null),
-    COLOR("color", ViewType.IMAGEVIEW, null),
-    ALLCAPS("allCaps", ViewType.TEXTVIEW, null),
-    DAYNAMEFORMAT("dayNameFormat", ViewType.NONE, null),
-    MONTHFORMAT("monthFormat", ViewType.NONE, null)
+enum class JsonKeys(val key: String) {
+    METADATA("metadata"),
+    ENABLESECOND("enableSecond"),
+    HIGHCOLOR("highColor"),
+    MIDCOLOR("midColor"),
+    LOWCOLOR("lowColor"),
+    LOWBATCOLOR("lowBatColor"),
+    CARBCOLOR("carbColor"),
+    BASALBACKGROUNDCOLOR("basalBackgroundColor"),
+    BASALCENTERCOLOR("basalCenterColor"),
+    GRIDCOLOR("gridColor"),
+    POINTSIZE("pointSize"),
+    WIDTH("width"),
+    HEIGHT("height"),
+    TOPMARGIN("topmargin"),
+    LEFTMARGIN("leftmargin"),
+    ROTATION("rotation"),
+    VISIBILITY("visibility"),
+    TEXTSIZE("textsize"),
+    TEXTVALUE("textvalue"),
+    GRAVITY("gravity"),
+    FONT("font"),
+    FONTSTYLE("fontStyle"),
+    FONTCOLOR("fontColor"),
+    COLOR("color"),
+    ALLCAPS("allCaps"),
+    DAYNAMEFORMAT("dayNameFormat"),
+    MONTHFORMAT("monthFormat")
 }
 
-enum class JsonKeyValues(val key: String, val jsonKey: JsonKeys) {
-    GONE("gone", JsonKeys.VISIBILITY),
-    VISIBLE("visible", JsonKeys.VISIBILITY),
-    INVISIBLE("invisible", JsonKeys.VISIBILITY),
-    CENTER("center", JsonKeys.GRAVITY),
-    LEFT("left", JsonKeys.GRAVITY),
-    RIGHT("right", JsonKeys.GRAVITY),
-    SANS_SERIF("sans_serif", JsonKeys.FONT),
-    DEFAULT("default", JsonKeys.FONT),
-    DEFAULT_BOLD("default_bold", JsonKeys.FONT),
-    MONOSPACE("monospace", JsonKeys.FONT),
-    SERIF("serif", JsonKeys.FONT),
-    ROBOTO_CONDENSED_BOLD("roboto_condensed_bold", JsonKeys.FONT),
-    ROBOTO_CONDENSED_LIGHT("roboto_condensed_light", JsonKeys.FONT),
-    ROBOTO_CONDENSED_REGULAR("roboto_condensed_regular", JsonKeys.FONT),
-    ROBOTO_SLAB_LIGHT("roboto_slab_light", JsonKeys.FONT),
-    NORMAL("normal", JsonKeys.FONTSTYLE),
-    BOLD("bold", JsonKeys.FONTSTYLE),
-    BOLD_ITALIC("bold_italic", JsonKeys.FONTSTYLE),
-    ITALIC("italic", JsonKeys.FONTSTYLE),
-    BGCOLOR("bgColor", JsonKeys.COLOR)
-}
-
-enum class ViewType(@StringRes val comment: Int?) {
-    NONE(null),
-    TEXTVIEW(null),
-    IMAGEVIEW(null),
-    ALLVIEWS(null)
+enum class JsonKeyValues(val key: String) {
+    GONE("gone"),
+    VISIBLE("visible"),
+    INVISIBLE("invisible"),
+    CENTER("center"),
+    LEFT("left"),
+    RIGHT("right"),
+    SANS_SERIF("sans_serif"),
+    DEFAULT("default"),
+    DEFAULT_BOLD("default_bold"),
+    MONOSPACE("monospace"),
+    SERIF("serif"),
+    ROBOTO_CONDENSED_BOLD("roboto_condensed_bold"),
+    ROBOTO_CONDENSED_LIGHT("roboto_condensed_light"),
+    ROBOTO_CONDENSED_REGULAR("roboto_condensed_regular"),
+    ROBOTO_SLAB_LIGHT("roboto_slab_light"),
+    NORMAL("normal"),
+    BOLD("bold"),
+    BOLD_ITALIC("bold_italic"),
+    ITALIC("italic"),
+    BGCOLOR("bgColor")
 }
 
 class ZipWatchfaceFormat {
@@ -324,7 +317,7 @@ class ZipWatchfaceFormat {
             try {
                 val outputStream = FileOutputStream(file)
                 val zipOutputStream = ZipOutputStream(BufferedOutputStream(outputStream))
-                
+
                 val jsonEntry = ZipEntry(CWF_JSON_FILE)
                 zipOutputStream.putNextEntry(jsonEntry)
                 zipOutputStream.write(customWatchface.json.toByteArray())
@@ -355,5 +348,4 @@ class ZipWatchfaceFormat {
             return metadata
         }
     }
-
 }
