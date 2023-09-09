@@ -104,6 +104,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Mostrar el botón Suspender Entrega en la pestaña Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Detección de zona horaria activada</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Recordatorio de expiración activado</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Cuando está activado, el POD emite un pitido cuando se alcanza el tiempo especificado</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Recordatorio horas antes de la expiración (72 horas)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Alerta de expiración activada</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Cuando está activado, el POD emite un pitido cuando se alcanza el tiempo especificado y 1 hora antes de apagarse</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Alerta horas antes del apagado (80 horas)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Alerta de reservorio bajo habilitada</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Número de unidades</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Silenciar automáticamente las alertas de POD</string>
