@@ -63,7 +63,8 @@ enum class ResFormat(val extension: String) {
     SVG("svg"),
     JPG("jpg"),
     PNG("png"),
-    TTF("ttf");
+    TTF("ttf"),
+    OTF("otf");
 
     companion object {
 
@@ -102,7 +103,7 @@ data class ResData(val value: ByteArray, val format: ResFormat) {
     fun toTypeface(): Typeface? {
         try {
             return when (format) {
-                ResFormat.TTF -> {
+                ResFormat.TTF, ResFormat.OTF -> {
                     // Workaround with temporary File, Typeface.createFromFileDescriptor(null, value, 0, value.size) more simple not available
                     File.createTempFile("temp", format.extension).let { tempFile ->
                         FileOutputStream(tempFile).let { fileOutputStream ->

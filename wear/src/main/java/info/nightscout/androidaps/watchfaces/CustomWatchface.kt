@@ -554,7 +554,7 @@ private enum class FontMap(val key: String, var font: Typeface, @FontRes val fon
                 } ?: fontMap.font
             }
             resDataMap.filter { (_, resData) ->
-                resData.format == ResFormat.TTF
+                resData.format == ResFormat.TTF || resData.format == ResFormat.OTF
             }.forEach { (key, resData) ->
                 customFonts[key.lowercase()] = resData.toTypeface() ?:Typeface.DEFAULT
             }
