@@ -1,7 +1,7 @@
 package info.nightscout.core.utils
 
+import com.google.common.truth.Truth.assertThat
 import info.nightscout.shared.utils.T
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import kotlin.math.abs
 
@@ -9,33 +9,33 @@ import kotlin.math.abs
 class TTest {
 
     @Test fun toUnits() {
-        Assertions.assertEquals(1, T.msecs(1000).secs())
-        Assertions.assertEquals(1, T.secs(60).mins())
-        Assertions.assertEquals(1, T.mins(60).hours())
-        Assertions.assertEquals(1, T.hours(24).days())
-        Assertions.assertEquals(24, T.days(1).hours())
-        Assertions.assertEquals(60000, T.mins(1).msecs())
+        assertThat(T.msecs(1000).secs()).isEqualTo(1)
+        assertThat(T.secs(60).mins()).isEqualTo(1)
+        assertThat(T.mins(60).hours()).isEqualTo(1)
+        assertThat(T.hours(24).days()).isEqualTo(1)
+        assertThat(T.days(1).hours()).isEqualTo(24)
+        assertThat(T.mins(1).msecs()).isEqualTo(60000)
     }
 
     @Test fun now() {
-        Assertions.assertTrue(abs(T.now().msecs() - System.currentTimeMillis()) < 5000)
+        assertThat(abs(T.now().msecs() - System.currentTimeMillis())).isLessThan(5_000L)
     }
 
     @Test fun additions() {
         val nowMsecs = System.currentTimeMillis()
         val now = T.msecs(nowMsecs)
-        Assertions.assertEquals(now.plus(T.secs(5)).msecs(), nowMsecs + 5 * 1000)
-        Assertions.assertEquals(now.plus(T.mins(5)).msecs(), nowMsecs + 5 * 60 * 1000)
-        Assertions.assertEquals(now.plus(T.hours(5)).msecs(), nowMsecs + 5 * 60 * 60 * 1000)
-        Assertions.assertEquals(now.plus(T.days(5)).msecs(), nowMsecs + 5 * 24 * 60 * 60 * 1000)
+        assertThat(nowMsecs + 5 * 1000).isEqualTo(now.plus(T.secs(5)).msecs())
+        assertThat(nowMsecs + 5 * 60 * 1000).isEqualTo(now.plus(T.mins(5)).msecs())
+        assertThat(nowMsecs + 5 * 60 * 60 * 1000).isEqualTo(now.plus(T.hours(5)).msecs())
+        assertThat(nowMsecs + 5 * 24 * 60 * 60 * 1000).isEqualTo(now.plus(T.days(5)).msecs())
     }
 
     @Test fun subtractions() {
         val nowMsecs = System.currentTimeMillis()
         val now = T.msecs(nowMsecs)
-        Assertions.assertEquals(now.minus(T.secs(5)).msecs(), nowMsecs - 5 * 1000)
-        Assertions.assertEquals(now.minus(T.mins(5)).msecs(), nowMsecs - 5 * 60 * 1000)
-        Assertions.assertEquals(now.minus(T.hours(5)).msecs(), nowMsecs - 5 * 60 * 60 * 1000)
-        Assertions.assertEquals(now.minus(T.days(5)).msecs(), nowMsecs - 5 * 24 * 60 * 60 * 1000)
+        assertThat(nowMsecs - 5 * 1000).isEqualTo(now.minus(T.secs(5)).msecs())
+        assertThat(nowMsecs - 5 * 60 * 1000).isEqualTo(now.minus(T.mins(5)).msecs())
+        assertThat(nowMsecs - 5 * 60 * 60 * 1000).isEqualTo(now.minus(T.hours(5)).msecs())
+        assertThat(nowMsecs - 5 * 24 * 60 * 60 * 1000).isEqualTo(now.minus(T.days(5)).msecs())
     }
 }
