@@ -104,7 +104,7 @@ data class ResData(val value: ByteArray, val format: ResFormat) {
             return when (format) {
                 ResFormat.TTF -> {
                     // Workaround with temporary File, Typeface.createFromFileDescriptor(null, value, 0, value.size) more simple not available
-                    File.createTempFile("temp", ".ttf").let { tempFile ->
+                    File.createTempFile("temp", format.extension).let { tempFile ->
                         FileOutputStream(tempFile).let { fileOutputStream ->
                             fileOutputStream.write(value)
                             fileOutputStream.close()

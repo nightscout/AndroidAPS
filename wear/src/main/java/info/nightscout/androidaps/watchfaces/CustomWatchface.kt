@@ -547,6 +547,7 @@ private enum class FontMap(val key: String, var font: Typeface, @FontRes val fon
 
         private val customFonts = mutableMapOf<String, Typeface>()
         fun init(context: Context, resDataMap: CwfResDataMap) {
+            customFonts.clear()
             values().forEach { fontMap ->
                 customFonts[fontMap.key.lowercase()] = fontMap.fontRessources?.let { fontResource ->
                     ResourcesCompat.getFont(context, fontResource)
