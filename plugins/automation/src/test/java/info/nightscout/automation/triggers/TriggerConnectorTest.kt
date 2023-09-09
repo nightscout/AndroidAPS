@@ -1,8 +1,8 @@
 package info.nightscout.automation.triggers
 
+import com.google.common.truth.Truth.assertThat
 import org.json.JSONException
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
 class TriggerConnectorTest : TriggerTestBase() {
@@ -15,66 +15,65 @@ class TriggerConnectorTest : TriggerTestBase() {
         val t = TriggerConnector(injector)
         val t2 = TriggerConnector(injector)
         val t3 = TriggerConnector(injector)
-        Assertions.assertTrue(t.size() == 0)
+        assertThat(t.size()).isEqualTo(0)
         t.list.add(t2)
-        Assertions.assertTrue(t.size() == 1)
-        Assertions.assertEquals(t2, t.list[0])
+        assertThat(t.size()).isEqualTo(1)
+        assertThat(t.list).containsExactly(t2)
         t.list.add(t3)
-        Assertions.assertTrue(t.size() == 2)
-        Assertions.assertEquals(t2, t.list[0])
-        Assertions.assertEquals(t3, t.list[1])
-        Assertions.assertTrue(t.list.remove(t2))
-        Assertions.assertTrue(t.size() == 1)
-        Assertions.assertEquals(t3, t.list[0])
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.size()).isEqualTo(2)
+        assertThat(t.list).containsExactly(t2, t3).inOrder()
+        assertThat(t.list.remove(t2)).isTrue()
+        assertThat(t.size()).isEqualTo(1)
+        assertThat(t.list).containsExactly(t3)
+        assertThat(t.shouldRun()).isTrue()
     }
 
     @Test fun testListTriggerOR() {
         val t = TriggerConnector(injector, TriggerConnector.Type.OR)
         t.list.add(TriggerDummy(injector))
         t.list.add(TriggerDummy(injector))
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
         t.list.add(TriggerDummy(injector, true))
         t.list.add(TriggerDummy(injector))
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
     }
 
     @Test fun testListTriggerXOR() {
         val t = TriggerConnector(injector, TriggerConnector.Type.XOR)
         t.list.add(TriggerDummy(injector))
         t.list.add(TriggerDummy(injector))
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
         t.list.add(TriggerDummy(injector, true))
         t.list.add(TriggerDummy(injector))
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
         t.list.add(TriggerDummy(injector, true))
         t.list.add(TriggerDummy(injector))
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun testListTriggerAND() {
         val t = TriggerConnector(injector, TriggerConnector.Type.AND)
         t.list.add(TriggerDummy(injector, true))
         t.list.add(TriggerDummy(injector, true))
-        Assertions.assertTrue(t.shouldRun())
+        assertThat(t.shouldRun()).isTrue()
         t.list.add(TriggerDummy(injector, true))
         t.list.add(TriggerDummy(injector))
-        Assertions.assertFalse(t.shouldRun())
+        assertThat(t.shouldRun()).isFalse()
     }
 
     @Test fun toJSONTest() {
         val t = TriggerConnector(injector)
-        Assertions.assertEquals(empty, t.toJSON())
+        assertThat(t.toJSON()).isEqualTo(empty)
         t.list.add(TriggerConnector(injector))
-        Assertions.assertEquals(oneItem, t.toJSON())
+        assertThat(t.toJSON()).isEqualTo(oneItem)
     }
 
     @Test @Throws(JSONException::class) fun fromJSONTest() {
         val t = TriggerConnector(injector)
         t.list.add(TriggerConnector(injector))
         val t2 = TriggerDummy(injector).instantiate(JSONObject(t.toJSON())) as TriggerConnector
-        Assertions.assertEquals(1, t2.size().toLong())
-        Assertions.assertTrue(t2.list[0] is TriggerConnector)
+        assertThat(t2.size()).isEqualTo(1)
+        assertThat(t2.list[0]).isInstanceOf(TriggerConnector::class.java)
     }
 
 }
