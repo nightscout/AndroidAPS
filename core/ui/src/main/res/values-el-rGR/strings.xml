@@ -426,20 +426,68 @@
     <string name="autotune_error_more_days">Σφάλμα στα εισαχθέντα δεδομένα , αυξήστε τον αριθμό των ημερών</string>
     <string name="autotune_warning_during_run">Ο υπολογισμός Autotune ξεκίνησε, παρακαλώ να είστε υπομονετικοί</string>
     <string name="autotune_warning_after_run">Ελέγξτε προσεκτικά τα αποτελέσματα πριν τα χρησιμοποιήσετε!</string>
+    <string name="autotune_partial_result">Ημέρα μερικού αποτελέσματος %1$d / %2$d ρυθμίστηκε</string>
     <string name="autotune_result">Αποτέλεσμα: %1$s</string>
+    <string name="autotune_param">Παράμετρος</string>
+    <string name="autotune_percent">%</string>
     <string name="autotune_missing">Χαμένες</string>
+    <string name="autotune_profile_name">Προφίλ Autotune %1$s</string>
+    <string name="autotune_run">Εκτέλεση Autotune</string>
+    <string name="autotune_check_input_profile_button">Έλεγχος προφίλ εισόδου</string>
+    <string name="autotune_compare_profile">Σύγκριση προφίλ</string>
+    <string name="autotune_copy_localprofile_button">Αντιγραφή στο τοπικό προφίλ</string>
+    <string name="autotune_update_input_profile_button">Ενημέρωση προφίλ εισόδου</string>
+    <string name="autotune_revert_input_profile_button">Επαναφορά προφίλ εισόδου</string>
+    <string name="autotune_copy_local_profile_message">Δημιουργία ενός νέου τοπικού προφίλ από αυτό το Προφίλ Autotune;</string>
+    <string name="autotune_update_local_profile_message">Ενημέρωση του προφίλ %1$s με το Προφίλ Autotune;</string>
+    <string name="autotune_revert_local_profile_message">Επαναφορά προφίλ %1$s με Προφίλ Εισαγωγής;</string>
+    <string name="autotune_profile_invalid">Μη έγκυρο προφίλ</string>
+    <string name="autotune_run_without_autoswitch">Το Autotune έτρεξε χωρίς αλλαγή προφίλ</string>
+    <string name="autotune_run_with_autoswitch">Το Autotune έτρεξε έγινε αυτόματη αλλαγή προφίλ</string>
+    <string name="autotune_run_with_error">Σφάλμα κατά την τελευταία εκτέλεση του Autotune</string>
+    <string name="autotune_run_cancelled">Εντοπίστηκε μια άλλη εκτέλεση του Autotune, η εκτέλεση ακυρώθηκε</string>
     <!-- Alerts -->
     <string name="raise_notifications_as_android_notifications">Χρησιμοποιήστε ειδοποιήσεις συστήματος για ειδοποιήσεις και συναγερμούς</string>
     <string name="urgent_alarm">Συναγερμός έκτακτης ανάγκης</string>
     <string name="info">Πληροφορίες</string>
     <!-- BolusWizard -->
+    <string name="bolus_advisor">Σύμβουλος Bolus</string>
+    <string name="bolus_advisor_message">Έχετε υπεργλυκαιμία. Αντί να φάτε τώρα συνιστάτε να περιμένετε μια καλύτερη γλυκαιμία. Θέλετε να κάνετε ένα διορθωτικό bolus τώρα και να γίνει υπενθύμιση όταν έρθει η ώρα να φάτε; Σε αυτή την περίπτωση δε θα καταγραφούν καθόλου υδατάνθρακες και θα πρέπει να χρησιμοποιήσετε τον οδηγό ξανά μετά την υπενθύμιση.</string>
+    <string name="cobvsiob">COB vs IOB (ενεργοί υδατάνθρακες vs ενεργή ινσουλίνη)</string>
     <string name="slowabsorptiondetected"><![CDATA[<font color=\'%1$s\'>!!!!! Μικρή απορρόφηση υδατανθράκων ανιχνεύτηκε: %2$d%% της ώρας. Τσεκάρετε τους υπολογισμούς σας. COB μπορεί να υπερεκτιμήθηκε και να δόθηκε περισσότερη ινσουλίνη!!!!!</font>]]></string>
     <string name="partialboluswizard">Χορήγηση του αποτελέσματος αυτού του μέρους του υπολογισμού bolus [%]</string>
+    <string name="partialboluswizard_reset_time">Χρονικό όριο παλιάς γλυκαιμίας [min]</string>
+    <string name="bolus_constraint_applied_warn">Ορίστηκε περιορισμός Bolus: %1$.2f U σε %2$.2f U</string>
+    <string name="bolus_recorded_only">Το Bolus μόνο θα καταγραφεί (δε θα χορηγηθεί από την αντλία)</string>
+    <string name="advisoralarm">Εκτέλεση συναγερμού όταν έρθει η ώρα να φάτε</string>
     <string name="no_action_selected">Δεν έχει επιλεγεί καμία ενέργεια, δεν υπάρχει τίποτα να κάνει</string>
+    <string name="wizard_no_actual_bg">Δεν υπάρχει πρόσφατή γλυκόζη αίματος για να γίνει υπολογισμός!</string>
+    <string name="wizard_no_active_profile">Δεν ορίστηκε ενεργό προφίλ!</string>
+    <string name="wizard_no_cob">Άγνωστο COB! Λείπει Η ανάγνωση γλυκόζης αίματος ή έγινε πρόσφατα επανεκκίνηση της εφαρμογής;</string>
+    <string name="wizard_carbs_constraint">Παραβίαση περιορισμού υδατανθράκων!</string>
+    <string name="wizard_explain_calc">Υπολογισμός (IC: %1$.1f, ISF: %2$.1f)</string>
+    <string name="wizard_explain_carbs">Υδατάνθρακες: %1$.2fU</string>
+    <string name="wizard_explain_cob">COB: %1$.0fg %2$.2fU</string>
+    <string name="wizard_explain_bg">BG: %1$.2fU</string>
+    <string name="wizard_explain_iob">IOB: %1$.2fU</string>
+    <string name="wizard_explain_superbolus">Superbolus: %1$.2fU</string>
+    <string name="wizard_explain_trend">Τάση 15\': %1$.2fU</string>
+    <string name="wizard_explain_percent">Ποσοστό: %1$.2fU x %2$d%% ≈ %3$.2fU</string>
+    <string name="wizard_constraint_bolus_size">Παραβίαση περιορισμού ινσουλίνης!\nΔεν μπορούν να χορηγηθούν %1$.2fU</string>
+    <string name="wizard_explain_tt">Προσωρινός Στόχος: %1$s</string>
+    <string name="wizard_explain_tt_to">%1$s σε %2$s</string>
+    <string name="wizard_pump_not_available">Δεν υπάρχει διαθέσιμη αντλία!</string>
+    <string name="quickwizard">Γρήγορος Οδηγός</string>
     <!--    Preferences-->
+    <string name="child">Παιδί</string>
     <string name="teenage">Έφηβος</string>
     <string name="adult">Ενήλικας</string>
+    <string name="resistant_adult">Ενήλικας με ανοχή στην ινσουλίνη</string>
     <string name="pregnant">Κύηση</string>
+    <string name="patient_age_summary">Παρακαλώ επιλέξτε τύπο ασθενούς για να ορισθούν τα όρια ασφαλείας</string>
+    <string name="max_bolus_title">Μέγιστο επιτρεπτό bolus[U]</string>
+    <string name="max_carbs_title">Μέγιστο επιτρεπτό υδατανθράκων [g]</string>
+    <string name="patient_type">Τύπος ασθενή</string>
     <!--    Protection-->
     <string name="unlock_settings">Ξεκλείδωμα ρυθμίσεων</string>
     <!--    Pumps -->
@@ -453,6 +501,7 @@
     <string name="serial_number">Serial number</string>
     <string name="disconnected">Αποσυνδέθηκε</string>
     <string name="connecting">Συνδέεται</string>
+    <string name="clicked_connect_to_pump" comment="26 characters max for translation">Πατήθηκε σύνδεση στην αντλία</string>
     <string name="reservoir_value">%1$.0f / %2$d U</string>
     <string name="daily_units">Μονάδες ανά ημέρα </string>
     <string name="pump_icon">Εικονίδιο αντλίας</string>
