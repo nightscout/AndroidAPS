@@ -3,13 +3,13 @@
     <string name="dynisf_adjust_sensitivity">Настроить чувствительность относительно ГК</string>
     <string name="DynISFAdjust_title" formatted="false">Коэффициент регулировки динамического диапазона чувствительности ISF %</string>
     <string name="DynISFAdjust_summary" formatted="false">Коэффициент корректировки динамического диапазона чувствительности ISF. Установите более 100% для агрессивных доз коррекции и менее 100% для менее агрессивной коррекции.</string>
-    <string name="high_temptarget_raises_sensitivity_title">Высокая врем. цель temptarget повышает чувствительность</string>
+    <string name="high_temptarget_raises_sensitivity_title">Высокая ВЦ повышает чувствительность</string>
     <string name="high_temptarget_raises_sensitivity_summary"><![CDATA[Повысить чувствительность для temptargets > = 100]]></string>
-    <string name="low_temptarget_lowers_sensitivity_title">Низкая временная цель temptarget снижает чувствительность</string>
+    <string name="low_temptarget_lowers_sensitivity_title">Низкая ВЦ снижает чувствительность</string>
     <string name="low_temptarget_lowers_sensitivity_summary"><![CDATA[Понизить чувствительность для temptargets > = 100]]></string>
-    <string name="openapssmb">Супер микро болюс OpenAPS</string>
+    <string name="openapssmb">OpenAPS СМБ</string>
     <string name="openaps_smb_dynamic_isf">Динамический ISF</string>
-    <string name="smb_interval_summary">Как часто SMB будут подаваться в минутах</string>
+    <string name="smb_interval_summary">Как часто СМБ будут подаваться в минутах</string>
     <string name="resistance_lowers_target_title">Сопротивляемость понижает цель</string>
     <string name="resistance_lowers_target_summary">При обнаружении сопротивляемости целевой уровень гликемии понижается</string>
     <string name="sensitivity_raises_target_title">Чувствительность поднимает цель</string>
