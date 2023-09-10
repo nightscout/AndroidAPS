@@ -14,6 +14,7 @@
     <string name="display_settings">Ρυθμίσεις Εμφάνισης</string>
     <string name="low_mark">ΧΑΜΗΛΟ σημείο</string>
     <string name="high_mark">ΥΨΗΛΟ σημείο</string>
+    <string name="low_mark_comment">Χαμηλότερη τιμή της περιοχής εντός στόχου (μόνο εμφάνιση)</string>
     <string name="permission">Άδεια</string>
     <string name="askforpermission">Ζητείστε άδεια</string>
     <string name="storedsettingsfound">Βρέθηκαν αποθηκευμένες ρυθμίσεις</string>
@@ -93,6 +94,11 @@
     <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
     <string name="resettodefaults">Επαναφορά προεπιλογών</string>
     <!-- Maintenance -->
+    <string name="prefdecrypt_issue_wrong_pass">Σφάλμα αποκρυπτογράφησης, ο παρεχόμενος κωδικός πρόσβασης δεν είναι έγκυρος ή το αρχείο ρυθμίσεων τροποποιήθηκε! Μπορεί να συμβεί ότι το εισαγόμενο αρχείο εξήχθη με διαφορετικό Κύριο κωδικό πρόσβασης.</string>
+    <string name="prefdecrypt_issue_wrong_format">Λείπει η διαμόρφωση κρυπτογράφησης, η μορφή των ρυθμίσεων δεν είναι έγκυρη!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Μη υποστηριζόμενο ή μη καθορισμένος αλγόριθμος κρυπτογράφησης!</string>
     <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Επιλογή προσαρμοσμένης όψης ρολογιου</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Παρακαλώ κάντε επανεκίνηση στο τηλέφώνο ή restart στο AndroidAPS από τις Ρυθμίσεις Συστήματος, \nδιαφορετικά το AndroidAPS δεν θα έχει καταγραφή (επαληθεύστε ότι οι αλγόριθμοι δουλεύουν σωστά)!</string>
 </resources>
