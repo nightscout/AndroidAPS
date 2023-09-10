@@ -20,6 +20,12 @@
     <string name="multiwave_bolus">Συνδυαστικό bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U για %3$d λεπτά</string>
     <string name="insight_last_bolus">Τελευταία Δόση Bolus</string>
+    <string name="searching_for_devices">Αναζήτηση συσκευών…</string>
+    <string name="pairing_completed">Σύζευξη ολοκληρώθηκε</string>
+    <string name="code_compare">Ταιριάζουν οι εμφανιζόμενοι κωδικοί με αυτούς της αντλίας;</string>
+    <string name="insight_pairing">Σύζευξη Insight</string>
+    <string name="insight_local">Accu-Chek Insight</string>
+    <string name="insight_alert_formatter">%1$s: %2$s</string>
     <string name="tube_changed">Σωληνάκι αλλάχτηκε</string>
     <string name="insightpump_shortname">Sight</string>
     <string name="insight_alert_notification_channel">Ειδοποιήσεις Αντλίας Insight</string>
@@ -37,7 +43,7 @@
     <string name="short_status_tdd">TDD: %1$.2f</string>
     <string name="short_status_reservoir">Υπόλοιπο μονάδων:%1$.2fU</string>
     <string name="short_status_battery">Μπατ.:%1$d%%</string>
-    <string name="release_software_version">Απελευθέρωση έκδοση λογισμικού</string>
+    <string name="release_software_version">Έκδοση λογισμικού</string>
     <string name="ui_processor_software_version">Έκδοση λογισμικού επεξεργαστή UI</string>
     <string name="pc_processor_software_version">Έκδοση λογισμικού επεξεργαστή PC</string>
     <string name="md_tel_processor_software_version">Έκδοση λογισμικού επεξεργαστή MD tel</string>
