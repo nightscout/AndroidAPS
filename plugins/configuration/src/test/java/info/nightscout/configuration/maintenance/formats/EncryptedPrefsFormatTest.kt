@@ -1,5 +1,6 @@
 package info.nightscout.configuration.maintenance.formats
 
+import com.google.common.truth.TruthJUnit.assume
 import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.interfaces.maintenance.PrefFormatError
 import info.nightscout.interfaces.maintenance.PrefMetadata
@@ -9,8 +10,6 @@ import info.nightscout.interfaces.maintenance.PrefsMetadataKey
 import info.nightscout.interfaces.maintenance.PrefsStatus
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.sharedtests.TestBase
-import org.hamcrest.CoreMatchers
-import org.junit.Assume
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,6 +18,17 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import java.io.File
 
+// https://stackoverflow.com/questions/52344522/joseexception-couldnt-create-aes-gcm-nopadding-cipher-illegal-key-size
+// https://stackoverflow.com/questions/47708951/can-aes-256-work-on-android-devices-with-api-level-26
+// Java prior to Oracle Java 8u161 does not have policy for 256 bit AES - but Android support it
+// when test is run in Vanilla JVM without policy - Invalid key size exception is thrown
+private fun assumeAES256isSupported(cryptoUtil: CryptoUtil) {
+    cryptoUtil.lastException?.message?.let { exceptionMessage ->
+        assume().withMessage("Upgrade your testing environment Java (OpenJDK or Java 8u161) and JAVA_HOME - AES 256 is supported by Android so this exception should not happen!")
+            .that(exceptionMessage).doesNotContain("key size")
+    }
+}
+
 @Suppress("SpellCheckingInspection")
 open class EncryptedPrefsFormatTest : TestBase() {
 
@@ -26,16 +36,6 @@ open class EncryptedPrefsFormatTest : TestBase() {
     @Mock lateinit var file: MockedFile
 
     private var cryptoUtil: CryptoUtil = CryptoUtil(aapsLogger)
-
-    // https://stackoverflow.com/questions/52344522/joseexception-couldnt-create-aes-gcm-nopadding-cipher-illegal-key-size
-    // https://stackoverflow.com/questions/47708951/can-aes-256-work-on-android-devices-with-api-level-26
-    // Java prior to Oracle Java 8u161 does not have policy for 256 bit AES - but Android support it
-    // when test is run in Vanilla JVM without policy - Invalid key size exception is thrown
-    private fun assumeAES256isSupported(cryptoUtil: CryptoUtil) {
-        cryptoUtil.lastException?.message?.let { exceptionMessage ->
-            Assume.assumeThat("Upgrade your testing environment Java (OpenJDK or Java 8u161) and JAVA_HOME - AES 256 is supported by Android so this exception should not happen!", exceptionMessage, CoreMatchers.not(CoreMatchers.containsString("key size")))
-        }
-    }
 
     @BeforeEach
     fun mock() {
