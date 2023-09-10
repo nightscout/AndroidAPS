@@ -1,8 +1,8 @@
 package info.nightscout.androidaps.interaction.utils
 
 import com.google.common.truth.Truth.assertThat
+import info.nightscout.androidaps.FakeWearUtil
 import info.nightscout.androidaps.WearTestBase
-import info.nightscout.androidaps.testing.mockers.WearUtilMocker
 import org.junit.jupiter.api.Test
 
 /**
@@ -14,13 +14,13 @@ class WearUtilTest : WearTestBase() {
     @Test fun timestampAndTimeDiffsTest() {
 
         // smoke for mocks - since we freeze "now" to get stable tests
-        assertThat(wearUtil.timestamp()).isEqualTo(WearUtilMocker.REF_NOW)
-        assertThat(wearUtil.msTill(WearUtilMocker.REF_NOW)).isEqualTo(0L)
-        assertThat(wearUtil.msTill(WearUtilMocker.REF_NOW + 3456L)).isEqualTo(3456L)
-        assertThat(wearUtil.msTill(WearUtilMocker.REF_NOW - 6294L)).isEqualTo(-6294L)
-        assertThat(wearUtil.msTill(WearUtilMocker.REF_NOW)).isEqualTo(0L)
-        assertThat(wearUtil.msSince(WearUtilMocker.REF_NOW + 3456L)).isEqualTo(-3456L)
-        assertThat(wearUtil.msSince(WearUtilMocker.REF_NOW - 6294L)).isEqualTo(6294L)
+        assertThat(fakeWearUtil.timestamp()).isEqualTo(FakeWearUtil.REF_NOW)
+        assertThat(fakeWearUtil.msTill(FakeWearUtil.REF_NOW)).isEqualTo(0L)
+        assertThat(fakeWearUtil.msTill(FakeWearUtil.REF_NOW + 3456L)).isEqualTo(3456L)
+        assertThat(fakeWearUtil.msTill(FakeWearUtil.REF_NOW - 6294L)).isEqualTo(-6294L)
+        assertThat(fakeWearUtil.msTill(FakeWearUtil.REF_NOW)).isEqualTo(0L)
+        assertThat(fakeWearUtil.msSince(FakeWearUtil.REF_NOW + 3456L)).isEqualTo(-3456L)
+        assertThat(fakeWearUtil.msSince(FakeWearUtil.REF_NOW - 6294L)).isEqualTo(6294L)
     }
 
     @Test fun joinSetTest() {
@@ -33,7 +33,7 @@ class WearUtilTest : WearTestBase() {
         // THEN
         // we cannot guarantee order of items in joined string
         // but all items have to be there
-        assertThat(joined).hasLength(refSet.sumOf { it.length } + (refSet.size-1))
+        assertThat(joined).hasLength(refSet.sumOf { it.length } + (refSet.size - 1))
         assertThat("|$joined|").contains("|element1|")
         assertThat("|$joined|").contains("|second-elem|")
         assertThat("|$joined|").contains("|3rd|")
@@ -47,7 +47,7 @@ class WearUtilTest : WearTestBase() {
         val set = persistence.explodeSet(serializedSet, ":")
 
         // THEN
-        assertThat(set).containsExactly( "element1", "second-elem", "3rd")
+        assertThat(set).containsExactly("element1", "second-elem", "3rd")
     }
 
     @Test fun explodeSetEmptyElemsTest() {
@@ -69,7 +69,8 @@ class WearUtilTest : WearTestBase() {
             "3rd",
             "czwarty",
             "V",
-            "6")
+            "6"
+        )
 
         // WHEN
         val joinedSet = persistence.joinSet(refSet, "#")
@@ -97,14 +98,13 @@ class WearUtilTest : WearTestBase() {
         }
     */
     @Test fun rateLimitTest() {
-        wearUtilMocker.prepareMockNoReal()
         // WHEN
-        val firstCall = wearUtil.isBelowRateLimit("test-limit", 3)
-        val callAfterward = wearUtil.isBelowRateLimit("test-limit", 3)
-        wearUtilMocker.progressClock(500L)
-        val callTooSoon = wearUtil.isBelowRateLimit("test-limit", 3)
-        wearUtilMocker.progressClock(3100L)
-        val callAfterRateLimit = wearUtil.isBelowRateLimit("test-limit", 3)
+        val firstCall = fakeWearUtil.isBelowRateLimit("test-limit", 3)
+        val callAfterward = fakeWearUtil.isBelowRateLimit("test-limit", 3)
+        fakeWearUtil.progressClock(500L)
+        val callTooSoon = fakeWearUtil.isBelowRateLimit("test-limit", 3)
+        fakeWearUtil.progressClock(3100L)
+        val callAfterRateLimit = fakeWearUtil.isBelowRateLimit("test-limit", 3)
 
         // THEN
         assertThat(firstCall).isTrue()
