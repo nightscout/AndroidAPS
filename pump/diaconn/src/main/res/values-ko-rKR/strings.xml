@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">LGS OFF일 때, OFF 거절</string>
     <string name="diaconn_g8_errorcode_35">임시기저 설정중인 상태일 때, 임시기저 시작 명령 거절</string>
     <string name="diaconn_g8_errorcode_36">임시기저 설정이 안 된 상태일 때, 임시기저 중지 명령 거절</string>
+    <string name="diaconn_g8_cloudsend_summary">Diaconn Cloud에 펌프 로그 보내기</string>
+    <string name="diaconn_g8_cloudsend_title">Diaconn Cloud 동기화</string>
 </resources>
