@@ -114,4 +114,5 @@
     <string name="loop_smb_set_by_pump_label">SMB provedené pumpou</string>
     <string name="loop_open_mode_min_change">Minimální změna pro výzvu [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Otevřená smyčka vytvoří novou žádost o změnu pouze v případě, že změna je větší než tato hodnota. Výchozí hodnota je 20 %</string>
+    <string name="fallback_smb_no_tdd">Použit algoritmus SMB. Nedostatek dat o CDD.</string>
 </resources>
