@@ -1,9 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="dia_whatmeansdia">Ποια είναι η αλήθεια για το DIA;</string>
+    <string name="dia_label_exam">Διάρκεια Δράσης Ινσουλίνης (DIA)</string>
+    <string name="dia_profile">Θα πρέπει να ορίσετε την τιμή για DIA στο προφίλ σας.</string>
+    <string name="dia_minimumis5h">Η ελάχιστη επιτρεπόμενη τιμή είναι 5 ώρες.</string>
+    <string name="dia_hint1">https://wiki.aaps.app/el/latest/Configuration/Config-Builder.html#insulin</string>
+    <string name="dia_meaningisequaltodiapump">Εάν είστε ικανοποιημένοι με την τιμή DIA που χρησιμοποιούσατε στην αντλία σας πριν το AAPS και αυτή λειτουργούσε καλά, δεν υπάρχει ανάγκη να το αλλάξετε αυτό όταν ξεκινάτε το κύκλωμα.</string>
+    <string name="dia_valuemustbedetermined">Θα πρέπει να καθορίσετε για τον εαυτό σας την κατάλληλη τιμή για DIA.</string>
+    <string name="hypott_label">Προσωρινός Στόχος Υπογλυκαιμίας </string>
+    <string name="hypott_whenhypott">Ποιος είναι ο κύριος λόγος για να ορίσετε έναν προσωρινό στόχο υπογλυκαιμίας;</string>
+    <string name="hypott_wrongbasal">Για τη διόρθωση υπογλυκαιμιών που προκαλούνται από εσφαλμένες ρυθμίσεις βασικού ρυθμού.</string>
+    <string name="hypott_preventoversmb">Για να αποφευχθεί η υπερδιόρθωση από το AAPS σε αύξηση της γλυκόζης αίματος που προκαλείται από ταχέως ενεργούς υδατάνθρακες που χρησιμοποιούνται για την αντιμετώπιση μιας υπογλυκαιμίας.</string>
+    <string name="hypott_exercise">Για να διορθώσετε μια υπογλυκαιμία που προκαλείται ως αποτέλεσμα της άσκησης.</string>
+    <string name="hypott_0basal">Για να αποφευχθεί η χαμηλή γλυκόζη του αίματος, είναι ήδη ο προσωρινός βασικός ρυθμός στο 0% .</string>
+    <string name="hypott_hint1">https://wiki.aaps.app/el/latest/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Ποιο προφίλ μπορεί να χρησιμοποιηθεί και να διαμορφωθεί χωρίς σύνδεση;</string>
     <string name="offlineprofile_label">Θέμα: Προφίλ Εκτός Σύνδεσης</string>
     <string name="offlineprofile_nsprofile">Το προφίλ NS μπορεί να χρησιμοποιηθεί, αλλά όχι να ρυθμιστεί.</string>
+    <string name="offlineprofile_hint1">https://wiki.aaps.app/el/latest/Configuration/Config-Builder.html#profile</string>
+    <string name="pumpdisconnect_label">Λόγοι εφαρμογής του \"Αποσυνδέστε την αντλία\" στο AAPS</string>
+    <string name="pumpdisconnect_whattodo">Τι πρέπει να γίνετε όταν αποσυνδέετε την αντλία από το σώμα σας;</string>
+    <string name="pumpdisconnect_unnecessary">Αυτό δεν είναι απαραίτητο καθώς η ινσουλίνη δεν θα χορηγηθεί εάν η αντλία είναι φυσικά αποσυνδεδεμένη.</string>
     <string name="pumpdisconnect_missinginsulin">Αποτρέπει το AAPS από το να υπολογίσει την ινσουλίνη που δεν χορηγήθηκε ενώ η αντλία είναι φυσικά αποσυνδεδεμένη.</string>
     <string name="noisycgm_whattodo">Τι πρέπει να κάνετε αν τα δεδομένα του CGM έχουν θόρυβο;</string>
     <string name="suspendloop_doigetinsulin">Λαμβάνω ινσουλίνη όταν το κύκλωμα είναι απενεργοποιημένο/αναστολή;</string>
