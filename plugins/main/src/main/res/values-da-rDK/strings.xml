@@ -293,12 +293,9 @@
     <string name="wearcontrol_title">Kontrolleringer fra Ur</string>
     <string name="wearcontrol_summary">Sæt midlertidige mål og indtast behandlinger fra uret.</string>
     <string name="wear_wizard_settings_summary">Beregninger inkluderet i guide resultatet:</string>
-    <string name="wear_display_settings">Visningsindstillinger</string>
     <string name="wear_general_settings">Generelle indstillinger</string>
     <string name="wear_notifysmb_title">Giv besked ved SMB</string>
     <string name="wear_notifysmb_summary">Vis SMB på uret som en standard bolus.</string>
-    <string name="wear_predictions_summary">Vis forudsigelser på urskiven.</string>
-    <string name="wear_predictions_title">Forudsigelser</string>
     <string name="resend_all_data">Send alle data igen</string>
     <string name="open_settings_on_wear">Åbn indstillinger på ur</string>
     <!--    PersistentNotification-->

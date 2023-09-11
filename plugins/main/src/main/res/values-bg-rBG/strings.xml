@@ -308,12 +308,9 @@
     <string name="wearcontrol_title">Контролиране от часовник</string>
     <string name="wearcontrol_summary">Задаване временни цели и въвеждане Лечения от часовник Android wear</string>
     <string name="wear_wizard_settings_summary">Изчисления, включени в резултата на съветника:</string>
-    <string name="wear_display_settings">Настройки за визуализация</string>
     <string name="wear_general_settings">Основни настройки</string>
     <string name="wear_notifysmb_title">Уведомяване при SMB</string>
     <string name="wear_notifysmb_summary">Покажи SMB на часовника като стандартен болус.</string>
-    <string name="wear_predictions_summary">Показвай прогнозините КЗ на часовника.</string>
-    <string name="wear_predictions_title">Прогнозни КЗ</string>
     <string name="wear_custom_watchface_settings">Настройки на Watchface</string>
     <string name="wear_custom_watchface_authorization_title">Разрешаване на персонализиран Watchface</string>
     <string name="wear_custom_watchface_authorization_summary">Разрешете заредения Watchface да променя и заключва определени настройки за екрана на часовника, за да съответстват на дизайна</string>

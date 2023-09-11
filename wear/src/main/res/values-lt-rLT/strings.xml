@@ -24,6 +24,11 @@
     <string name="pref_vibrate_on_bolus">Vibruoti, kai leidžiamas bolusas</string>
     <string name="pref_units_for_actions">Veiksmų vienetai</string>
     <string name="units_short">v</string>
+    <string name="pref_display_settings">Ekranas</string>
+    <string name="pref_graph_settings">Grafikas</string>
+    <string name="pref_interface_settings">Sąsaja</string>
+    <string name="pref_others_settings">Kiti</string>
+    <string name="pref_complication_settings">Ekrano elementas</string>
     <string name="pref_show_date">Rodyti datą</string>
     <string name="pref_show_iob">Rodyti AIO</string>
     <string name="pref_show_detailed_iob">Rodyti detalų AIO</string>
@@ -41,6 +46,7 @@
     <string name="pref_show_ago">Laikas nuo pask. vertės</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tamsus</string>
     <string name="pref_highlight_basals">Paryškinti valandines bazes</string>
+    <string name="pref_prediction_lines">Rodyti prognozes</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Vienodos spalvos skirtukas</string>
     <string name="pref_chart_timeframe">Diagramos laikotarpis</string>
     <string name="pref_1_hour">1 val.</string>

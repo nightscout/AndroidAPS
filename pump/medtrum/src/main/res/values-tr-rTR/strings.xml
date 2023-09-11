@@ -3,7 +3,7 @@
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
-    <string name="medtrum_pump_description">Medtrum Nano için pompa entegrasyonu</string>
+    <string name="medtrum_pump_description">Medtrum Nano ve Medtrum 300U için pompa entegrasyonu</string>
     <string name="medtrum_pump_setting">Medtrum pompa ayarları</string>
     <string name="pump_error">Pompa hatası: %1$s !! </string>
     <string name="pump_is_suspended">Pompa durduruldu</string>

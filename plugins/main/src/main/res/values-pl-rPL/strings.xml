@@ -308,12 +308,9 @@
     <string name="wearcontrol_title">Sterowanie z zegarka</string>
     <string name="wearcontrol_summary">Ustawiaj wartości docelowe i wprowadzaj leczenie z zegarka.</string>
     <string name="wear_wizard_settings_summary">Obliczenia uwzględnione w wynikach kreatora:</string>
-    <string name="wear_display_settings">Ustawienia wyświetlania</string>
     <string name="wear_general_settings">Ustawienia ogólne</string>
     <string name="wear_notifysmb_title">Powiadom na SMB</string>
     <string name="wear_notifysmb_summary">Pokaż SMB na zegarku jak bolus standardowy.</string>
-    <string name="wear_predictions_summary">Pokaż prognozę poziomu na zegarku.</string>
-    <string name="wear_predictions_title">Prognozy</string>
     <string name="wear_custom_watchface_settings">Ustawienia niestandardowej tarczy</string>
     <string name="wear_custom_watchface_authorization_title">Uprawnienia niestandardowej tarczy</string>
     <string name="wear_custom_watchface_authorization_summary">Upoważnij załadowaną niestandardową tarczę zegarka, aby mogła zmieniać i zablokować niektóre ustawienia wyświetlacza zegarka w celu dopasowania ich do tarczy</string>

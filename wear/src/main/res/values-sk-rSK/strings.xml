@@ -41,6 +41,7 @@
     <string name="pref_show_ago">Zobraziť aktualizované pred</string>
     <string name="pref_dark" comment="Enables dark visual theme">Tmavý </string>
     <string name="pref_highlight_basals">Zvýrazniť bazály</string>
+    <string name="pref_prediction_lines">Zobraziť predikcie</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Zodpovedajúci oddeľovač</string>
     <string name="pref_chart_timeframe">Časové okno grafu</string>
     <string name="pref_1_hour">1 hodina</string>

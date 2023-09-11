@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- SMS Communicator & OTP Authenticator -->
+    <string name="smscommunicator">Comunicador SMS</string>
+    <string name="smscommunicator_shortname">SMS</string>
     <string name="description_sms_communicator">Controle remotamente o AndroidAPS usando comandos SMS.</string>
     <string name="smscommunicator_code_from_authenticator_for" comment="This is continuation of sentence: To [ACTION] reply with code">do aplicativo Autenticador para: %1$s seguido por PIN</string>
     <string name="smscommunicator_otp_pin">PIN adicional obrigatório no fim do token</string>
     <string name="smscommunicator_otp_pin_summary">Dígitos adicionais que devem ser memorizados e colados no final de cada Uma-Password-Única que seja gerada</string>
     <string name="smscommunicator_tab_otp_label">Configuração do Autenticador</string>
     <string name="smscommunicator_code_verify_label">Código para verificar:</string>
-    <string name="smscommunicator_code_verify_hint">CÓDIGO + PIN</string>
+    <string name="smscommunicator_code_verify_hint">CÓDIGO OPT + PIN</string>
     <string name="smscommunicator_code_verify_info">O código de verificação consiste em 6 dígitos exibidos pelo app Autenticador (conhecido como OTP) seguido por 3 ou mais dígitos do PIN obrigatório.</string>
-    <string name="smscommunicator_otp_reset_btn">Repor Autenticadores</string>
-    <string name="smscommunicator_otp_reset_title">Repor Chave Autenticador</string>
+    <string name="smscommunicator_otp_reset_btn">Redefinir Autenticadores</string>
+    <string name="smscommunicator_otp_reset_title">Redefinir chave do Autenticador</string>
     <string name="smscommunicator_otp_reset_prompt">Tem certeza de redefinir chave Authenticador? Ele tornará todos os Authenticators configurados atualmente como inválidos, e precisará de os configurar novamente.</string>
     <string name="smscommunicator_otp_reset_successful">Nova Chave do Autenticador foi gerada! Por favor, use o QRCode atualizado para os autenticadores.</string>
     <string name="smscommunicator_otp_export_title">Exportando senha OTP</string>
@@ -19,9 +21,13 @@
     <string name="smscommunicator_otp_step1_install_header">1. Instalar Autenticador</string>
     <string name="smscommunicator_otp_step2_provisioning_header">2. Escaneie o QR Code para configurar os códigos OTP do AAPS</string>
     <string name="smscommunicator_otp_step3_test_header">3. Teste Uma-Password-Única</string>
-    <string name="smscommunicator_otp_reset_header">Repor Autenticadores</string>
+    <string name="smscommunicator_otp_reset_header">Redefinir Autenticadores</string>
     <string name="smscommunicator_otp_install_info">Instalar uma app Autenticador que suporte Tokens RFC 6238 TOTP em cada telefone seguidor. Populares aplicativos gratuitos são:\n • Authy\n • o Google Authenticator\n • LastPass Autenticador\n • FreeOTP Autenticador</string>
     <string name="smscommunicator_otp_reset_warning">Ao redefinir o autenticador, você torna todos os autenticadores já provisionados inválidos. Você precisará configurá-los novamente!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">Tamanho inválido!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">PIN incorreto</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">OTP incorreto</string>
     <string name="sms_wrong_code">Código errado. Comando cancelado.</string>
     <string name="sms_timeout_while_waiting">Excedido o tempo limite de espera ao aguardar o término da última comunicação com a bomba</string>
     <string name="smscommunicator_allowednumbers">Números de telefone permitidos</string>
@@ -85,7 +91,7 @@
     <string name="smscommunicator_calibration_failed">xDrip+ não está recebendo calibrações</string>
     <string name="smscommunicator_message_body">Corpo da mensagem inválido</string>
     <string name="smscommunicator_report_pump_unreachable_summary">Enviar SMS se um evento de bomba inacessível for identificado</string>
-    <string name="smscommunicator_pump_unreachable">Reportar bomba inacessível</string>
+    <string name="smscommunicator_pump_unreachable">Relatar bomba inacessível</string>
     <string name="smscommunicator_set_lgs_reply_with_code">Para mudar o modo do Loop para LGS (Suspensão de Baixa Glicemia), responda com o código %1$s</string>
     <string name="smscommunicator_set_closed_loop_reply_with_code">Para mudar o modo do Loop para Loop Fechado, responda com o código %1$s</string>
     <string name="smscommunicator_current_loop_mode">Modo de loop atual: %1$s</string>
@@ -127,7 +133,7 @@
     <string name="description_profile_local">Defina um perfil que está disponível offline.</string>
     <string name="a11y_add_new_to_list">adicionar novo à lista</string>
     <string name="do_you_want_switch_profile">Deseja mudar de perfil e descartar as alterações feitas no perfil atual?</string>
-    <string name="save_or_reset_changes_first">Guardar ou repor as alterações atuais primeiro</string>
+    <string name="save_or_reset_changes_first">Salve ou redefina as alterações atuais primeiro</string>
     <string name="delete_current_profile">Eliminar perfil atual?</string>
     <string name="units_colon">Unidades:</string>
     <string name="missing_profile_name">Nome do perfil ausente</string>
@@ -303,12 +309,9 @@
     <string name="wearcontrol_title">Controles do Relógio</string>
     <string name="wearcontrol_summary">Definir Alvo-Temp and inserir Tratamentos do relógio.</string>
     <string name="wear_wizard_settings_summary">Resultado cálculos incluídos no Assistente:</string>
-    <string name="wear_display_settings">Mostrar Configurações</string>
     <string name="wear_general_settings">Configurações gerais</string>
     <string name="wear_notifysmb_title">Notificar no SMB</string>
     <string name="wear_notifysmb_summary">Mostrar SMB no relogio como bolus normal.</string>
-    <string name="wear_predictions_summary">Mostrar a predições na face do relogio.</string>
-    <string name="wear_predictions_title">Previsão</string>
     <string name="wear_custom_watchface_settings">Configurações personalizadas de Watchface</string>
     <string name="wear_custom_watchface_authorization_title">Autorização de Watchface Personalizada</string>
     <string name="wear_custom_watchface_authorization_summary">Autorizar watchface carregado e carregado para alterar e bloquear algumas configurações de relógio para o design do watchface</string>
@@ -320,6 +323,7 @@
     <string name="resend_all_data">Reenviar Todos os Dados</string>
     <string name="open_settings_on_wear">Abrir Definições em Wear</string>
     <string name="cwf_infos_pref_locked">Lista de preferências bloqueadas pela Watchface</string>
+    <string name="cwf_infos_pref_required">Lista de preferências solicitadas pela Watchface</string>
     <string name="cwf_infos_view_title">Lista de campos incluídos na Watchface</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Mostra uma notificação em curso com um breve resumo do que o seu loop está a fazer</string>

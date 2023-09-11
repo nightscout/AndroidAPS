@@ -308,12 +308,9 @@
     <string name="wearcontrol_title">Řízení z hodinek Wear</string>
     <string name="wearcontrol_summary">Nastavování dočasných cílů a vkládání ošetření na hodinkách Wear.</string>
     <string name="wear_wizard_settings_summary">Kalkulace použité ve výsledku wizardu:</string>
-    <string name="wear_display_settings">Nastavení zobrazení</string>
     <string name="wear_general_settings">Základní nastavení</string>
     <string name="wear_notifysmb_title">Oznámení při SMB</string>
     <string name="wear_notifysmb_summary">Ukazovat SMB na hodinkách jako normální bolus.</string>
-    <string name="wear_predictions_summary">Zobrazovat predikce na hodinkách.</string>
-    <string name="wear_predictions_title">Predikce</string>
     <string name="wear_custom_watchface_settings">Nastavení vlastního ciferníku</string>
     <string name="wear_custom_watchface_authorization_title">Autorizace vlastního ciferníku</string>
     <string name="wear_custom_watchface_authorization_summary">Autorizujte načtený vlastní ciferník, aby se změnila a uzamkla některá nastavení hodinek tak, aby vyhovovala designu ciferníku</string>

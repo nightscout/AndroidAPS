@@ -54,6 +54,7 @@
     <string name="two_hours">2ώρες</string>
     <string name="result_insulin_carbs">Αποτέλεσμα: %1$s %2$s</string>
     <string name="missing_carbs">Που υπολείπεται%1$d</string>
+    <string name="a11y_current_bg">τρέχουσα γλυκόζη αίματος</string>
     <string name="carb_time_label">Ώρα γεύματος</string>
     <!-- Treatments -->
     <string name="calculation_short">Υπολογ</string>

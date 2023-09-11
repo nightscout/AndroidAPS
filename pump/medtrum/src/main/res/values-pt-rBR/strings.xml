@@ -3,7 +3,6 @@
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
-    <string name="medtrum_pump_description">Integração com a bomba para Medtrum Nano</string>
     <string name="medtrum_pump_setting">Configurações da Bomba Medtrum</string>
     <string name="pump_error">Erro da Bomba: %1$s !! </string>
     <string name="pump_is_suspended">Bomba suspensa</string>

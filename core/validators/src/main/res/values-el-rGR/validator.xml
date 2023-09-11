@@ -2,6 +2,23 @@
 <resources>
     <string name="error_only_numeric_digits_allowed">Μόνο αριθμητικά ψηφία επιτρέπονται.</string>
     <string name="error_only_numeric_digits_range_allowed">Μόνο αριθμητικά ψηφία μέσα στο εύρος %1$s - %2$s επιτρέπονται. </string>
+    <string name="error_this_field_cannot_contain_special_character">Αυτό το πεδίο δεν μπορεί να περιέχει ειδικούς χαρακτήρες</string>
+    <string name="error_only_standard_letters_are_allowed">Επιτρέπονται μόνο τυπικά γράμματα</string>
     <string name="error_field_must_not_be_empty">Το πεδίο αυτό δεν πρέπει να είναι κενό</string>
+    <string name="error_email_address_not_valid">Μη έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου</string>
+    <string name="error_creditcard_number_not_valid">Μη έγκυρος αριθμός πιστωτικής κάρτας</string>
     <string name="error_phone_not_valid">Μη έγκυρος αριθμός τηλεφώνου</string>
+    <string name="error_domain_not_valid">Μη έγκυρο όνομα τομέα</string>
+    <string name="error_ip_not_valid">Μη έγκυρη διεύθυνση IP</string>
+    <string name="error_url_not_valid">Μη έγκυρη διεύθυνση Web</string>
+    <string name="error_notvalid_personname">Μη έγκυρο όνομα ή επώνυμο.</string>
+    <string name="error_notvalid_personfullname">Μη έγκυρο πλήρες όνομα.</string>
+    <string name="error_date_not_valid">Μη έγκυρη μορφοποίηση</string>
+    <string name="error_mustbe4digitnumber">Πρέπει να περιέχει 4 ψηφία</string>
+    <string name="error_mustbe6digitnumber">Πρέπει να περιέχει 6 ψηφία</string>
+    <string name="error_mustbe12hexadidits">Πρέπει να είναι 12 χαρακτήρες από τους ABCDEF0123456789</string>
+    <string name="error_mustbe8hexadidits">Πρέπει να είναι 8 χαρακτήρες από τους ABCDEF0123456789</string>
+    <string name="error_mustbe4hexadidits">Πρέπει να είναι 4 χαρακτήρες από τους ABCDEF0123456789</string>
+    <string name="error_not_a_minimum_length">Μη ελάχιστο μήκος</string>
+    <string name="error_pin_not_valid">Το Pin πρέπει να είναι 3 έως 6 ψηφία, όχι ίδια μεταξύ τους ή σε σειρά</string>
 </resources>

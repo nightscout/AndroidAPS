@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dia_whatmeansdia">O que é verdade sobre o DAI?</string>
+    <string name="dia_whatmeansdia">O que é verdadeiro sobre o DAI?</string>
     <string name="dia_label_exam">Duração da Atividade da Insulina (DAI)</string>
     <string name="dia_profile">Você deve definir o valor para a DAI no seu perfil.</string>
     <string name="dia_minimumis5h">A menor duração permitida é de 5 horas.</string>

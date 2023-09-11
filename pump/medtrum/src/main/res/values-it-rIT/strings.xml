@@ -3,7 +3,6 @@
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
-    <string name="medtrum_pump_description">Integrazione del microinfusore Medtrum Nano</string>
     <string name="medtrum_pump_setting">Impostazioni micro Medtrum</string>
     <string name="pump_error">Errore micro: %1$s!! </string>
     <string name="pump_is_suspended">Il micro è sospeso</string>

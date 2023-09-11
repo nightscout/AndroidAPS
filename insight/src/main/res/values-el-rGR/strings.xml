@@ -19,14 +19,20 @@
     <string name="tbr_formatter">%1$d%% για %2$d / %3$d λεπτά</string>
     <string name="multiwave_bolus">Συνδυαστικό bolus</string>
     <string name="eb_formatter">%1$.2f / %2$.2f U για %3$d λεπτά</string>
+    <string name="insight_last_bolus">Τελευταία Δόση Bolus</string>
     <string name="searching_for_devices">Αναζήτηση συσκευών…</string>
     <string name="pairing_completed">Σύζευξη ολοκληρώθηκε</string>
     <string name="code_compare">Ταιριάζουν οι εμφανιζόμενοι κωδικοί με αυτούς της αντλίας;</string>
     <string name="insight_pairing">Σύζευξη Insight</string>
     <string name="insight_local">Accu-Chek Insight</string>
     <string name="insight_alert_formatter">%1$s: %2$s</string>
-    <string name="tube_changed">Σωληνάκι αλλάχθηκε</string>
+    <string name="tube_changed">Σωληνάκι αλλάχτηκε</string>
     <string name="insightpump_shortname">Sight</string>
+    <string name="insight_alert_notification_channel">Ειδοποιήσεις Αντλίας Insight</string>
+    <string name="disable_vibration">Απενεργοποίηση δονήσεων κατά τη χειροκίνητη δόση bolus</string>
+    <string name="disable_vibration_summary">Για Δόση bolus και εκτεταμένη Δόση bolus (διαθέσιμο μόνο με firmware 3.x)</string>
+    <string name="disable_vibration_auto">Απενεργοποίηση δονήσεων κατά την αυτόματη δόση bolus</string>
+    <string name="disable_vibration_auto_summary">Για SMB(SuperMicroBolus) και προσωρινό βασικό ρυθμό με προσομοίωση TBR (διατίθεται μόνο με firmware Insight 3.x)</string>
     <string name="timeout_during_handshake">Τέλος χρόνου κατά τη διάρκεια handshake - επαναφορά bluetooth</string>
     <string name="pump_stopped">Η αντλία σταμάτησε</string>
     <string name="pump_started">Η αντλία ξεκίνησε</string>
@@ -35,8 +41,9 @@
     <string name="short_status_extended">Εκτεταμένο: %1$.2f / %2$.2f U για %3$d λεπτά</string>
     <string name="short_status_multiwave">Συνδυαστικό: %1$.2f / %2$.2f U για %3$d λεπτά</string>
     <string name="short_status_tdd">TDD: %1$.2f</string>
+    <string name="short_status_reservoir">Υπόλοιπο μονάδων:%1$.2fU</string>
     <string name="short_status_battery">Μπατ.:%1$d%%</string>
-    <string name="release_software_version">Απελευθέρωση έκδοση λογισμικού</string>
+    <string name="release_software_version">Έκδοση λογισμικού</string>
     <string name="ui_processor_software_version">Έκδοση λογισμικού επεξεργαστή UI</string>
     <string name="pc_processor_software_version">Έκδοση λογισμικού επεξεργαστή PC</string>
     <string name="md_tel_processor_software_version">Έκδοση λογισμικού επεξεργαστή MD tel</string>
@@ -59,4 +66,5 @@
     <string name="min_recovery_duration">Ελάχ. διάρκεια αποκατάστασης [s]</string>
     <string name="pump_alert">Συναγερμός αντλίας</string>
     <string name="pairing_information">Πληροφορίεςσύζευξης</string>
+    <string name="insight_refresh_button" comment="26 characters max for translation">Κουμπί Ανανέωσης Insight</string>
 </resources>
