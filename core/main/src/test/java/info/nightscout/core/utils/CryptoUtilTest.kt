@@ -1,9 +1,7 @@
 package info.nightscout.core.utils
 
+import com.google.common.truth.TruthJUnit.assume
 import info.nightscout.sharedtests.TestBase
-import org.hamcrest.CoreMatchers.containsString
-import org.hamcrest.CoreMatchers.not
-import org.junit.Assume.assumeThat
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
@@ -11,9 +9,10 @@ import org.junit.jupiter.api.Test
 // https://stackoverflow.com/questions/47708951/can-aes-256-work-on-android-devices-with-api-level-26
 // Java prior to Oracle Java 8u161 does not have policy for 256 bit AES - but Android support it
 // when test is run in Vanilla JVM without policy - Invalid key size exception is thrown
-fun assumeAES256isSupported(cryptoUtil: CryptoUtil) {
+private fun assumeAES256isSupported(cryptoUtil: CryptoUtil) {
     cryptoUtil.lastException?.message?.let { exceptionMessage ->
-        assumeThat("Upgrade your testing environment Java (OpenJDK or Java 8u161) and JAVA_HOME - AES 256 is supported by Android so this exception should not happen!", exceptionMessage, not(containsString("key size")))
+        assume().withMessage("Upgrade your testing environment Java (OpenJDK or Java 8u161) and JAVA_HOME - AES 256 is supported by Android so this exception should not happen!")
+            .that(exceptionMessage).doesNotContain("key size")
     }
 }
 
@@ -26,7 +25,8 @@ class CryptoUtilTest : TestBase() {
     fun testFixedSaltCrypto() {
         val salt = byteArrayOf(
             -33, -29, 16, -19, 99, -111, -3, 2, 116, 106, 47, 38, -54, 11, -77, 28,
-            111, -15, -65, -110, 4, -32, -29, -70, -95, -88, -53, 19, 87, -103, 123, -15)
+            111, -15, -65, -110, 4, -32, -29, -70, -95, -88, -53, 19, 87, -103, 123, -15
+        )
 
         val password = "thisIsFixedPassword"
         val payload = "FIXED-PAYLOAD"
@@ -83,10 +83,30 @@ class CryptoUtilTest : TestBase() {
         Assertions.assertTrue(cryptoUtil.checkPassword("givenSecret", cryptoUtil.hashPassword("givenSecret")))
         Assertions.assertFalse(cryptoUtil.checkPassword("givenSecret", cryptoUtil.hashPassword("otherSecret")))
 
-        Assertions.assertTrue(cryptoUtil.checkPassword("givenHashToCheck", "hmac:7fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:a0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"))
-        Assertions.assertFalse(cryptoUtil.checkPassword("givenMashToCheck", "hmac:7fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:a0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"))
-        Assertions.assertFalse(cryptoUtil.checkPassword("givenHashToCheck", "hmac:0fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:a0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"))
-        Assertions.assertFalse(cryptoUtil.checkPassword("givenHashToCheck", "hmac:7fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:b0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"))
+        Assertions.assertTrue(
+            cryptoUtil.checkPassword(
+                "givenHashToCheck",
+                "hmac:7fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:a0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"
+            )
+        )
+        Assertions.assertFalse(
+            cryptoUtil.checkPassword(
+                "givenMashToCheck",
+                "hmac:7fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:a0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"
+            )
+        )
+        Assertions.assertFalse(
+            cryptoUtil.checkPassword(
+                "givenHashToCheck",
+                "hmac:0fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:a0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"
+            )
+        )
+        Assertions.assertFalse(
+            cryptoUtil.checkPassword(
+                "givenHashToCheck",
+                "hmac:7fe5f9c7b4b97c5d32d5cfad9d07473543a9938dc07af48a46dbbb49f4f68c12:b0c7cee14312bbe31b51359a67f0d2dfdf46813f319180269796f1f617a64be1"
+            )
+        )
     }
 
 }
