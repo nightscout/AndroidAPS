@@ -148,6 +148,7 @@
     <string name="loop_smb_set_by_pump_label">SMB set by pump</string>
     <string name="loop_open_mode_min_change">Minimal request change [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop will popup new change request only if change is bigger than this value in %. Default value is 20%</string>
+    <string name="fallback_smb_no_tdd">Fallback to SMB. Not enough TDD data.</string>
 
 
 </resources>
