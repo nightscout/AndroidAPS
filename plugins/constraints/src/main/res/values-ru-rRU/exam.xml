@@ -8,7 +8,7 @@
     <string name="dia_meaningisequaltodiapump">Если вы удовлетворены значением длительности действия инсулина DIA, заданным в помпе до AAPS, то при запуске цикла изменять это значение не требуется.</string>
     <string name="dia_valuemustbedetermined">Следует самостоятельно определить DIA подходящее для вас.</string>
     <string name="hypott_label">Временная цель Гипо </string>
-    <string name="hypott_whenhypott">Какова основная причина для установки временной цели гипо?</string>
+    <string name="hypott_whenhypott">Какова основная причина для установки временной цели Гипо?</string>
     <string name="hypott_wrongbasal">Для коррекции гипо, вызванных неверными настройками базальной скорости.</string>
     <string name="hypott_preventoversmb">Чтобы не допустить чрезмерной коррекции подъема ГК, вызванного быстрыми углеводами, принятыми для устранения гипо.</string>
     <string name="hypott_exercise">Чтобы исправить гипо вызванное нагрузкой.</string>
@@ -19,12 +19,12 @@
     <string name="offlineprofile_nsprofile">Профилем NS можно пользоваться, но не настраивать.</string>
     <string name="offlineprofile_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#profile</string>
     <string name="pumpdisconnect_label">Причины применения опции «Отсоединить помпу» в AAPS</string>
-    <string name="pumpdisconnect_whattodo">Что следует делать при снятии помпы (отсоединении помпы от организма)?</string>
-    <string name="pumpdisconnect_unnecessary">This is unnecessary as insulin will not be delivered if the pump is physically disconnected.</string>
-    <string name="pumpdisconnect_missinginsulin">Это позволяет AAPS не учитывать инсулин, который не был подан во время физического отключения помпы.</string>
-    <string name="pumpdisconnect_notstop">Это не прекратит подачу инсулина если помпа остается подключенной.</string>
+    <string name="pumpdisconnect_whattodo">Что следует делать при снятии помпы (физическом отсоединении помпы от тела)?</string>
+    <string name="pumpdisconnect_unnecessary">Этого не требуется, т.к. инсулин не будет подаваться, когда помпа физически отсоединена от тела.</string>
+    <string name="pumpdisconnect_missinginsulin">В этом случае AAPS не будет учитывать инсулин, поданный во время физического отключения помпы от тела.</string>
+    <string name="pumpdisconnect_notstop">Это не прекратит подачу инсулина, если помпа остается подключенной к телу.</string>
     <string name="pumpdisconnect_openloop">Это переведет AAPS в режим открытого цикла.</string>
-    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/en/latest/Getting-Started/FAQ.html#other-settings</string>
+    <string name="pumpdisconnect_hint1">https://wiki.aaps.app/ru/latest/Getting-Started/FAQ.html#faq-disconnect-pump</string>
     <string name="objectives_label">Настройки AAPS</string>
     <string name="objectives2_label">Настройки AAPS</string>
     <string name="objectives_howtosave">Как эффективнее сохранять свои настройки?</string>
