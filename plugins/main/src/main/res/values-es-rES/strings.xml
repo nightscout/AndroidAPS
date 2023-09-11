@@ -309,12 +309,9 @@
     <string name="wearcontrol_title">Control desde el reloj</string>
     <string name="wearcontrol_summary">Establece objetivos temporales (OT) y añade tratamientos desde el reloj</string>
     <string name="wear_wizard_settings_summary">Cálculos incluidos en el resultado del asistente:</string>
-    <string name="wear_display_settings">Ajustes de pantalla</string>
     <string name="wear_general_settings">Configuración general</string>
     <string name="wear_notifysmb_title">Notificar los SMB</string>
     <string name="wear_notifysmb_summary">Mostrar los SMB en el reloj como un bolo estándar</string>
-    <string name="wear_predictions_summary">Mostrar las predicciones en la esfera</string>
-    <string name="wear_predictions_title">Predicciones</string>
     <string name="wear_custom_watchface_settings">Configuración personalizada de esferas</string>
     <string name="wear_custom_watchface_authorization_title">Autorización de esferas personalizadas</string>
     <string name="wear_custom_watchface_authorization_summary">Autorizar a la esfera personalizada a cambiar y bloquear algunos ajustes de la pantalla del reloj, para que se adapten al diseño de la esfera</string>

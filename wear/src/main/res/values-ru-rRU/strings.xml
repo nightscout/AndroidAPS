@@ -11,6 +11,7 @@
     <string name="label_watchface_cockpit">AAPS (кабина пилота)</string>
     <string name="label_watchface_steampunk">AAPS (Стимпанк)</string>
     <string name="label_watchface_digital_style">AAPS (ЦифровойСтиль)</string>
+    <string name="label_watchface_custom">AAPS (настраиваемый)</string>
     <string name="label_actions_tile">AAPS (Действия)</string>
     <string name="label_temp_target_tile">AAPS(ВремЦель)</string>
     <string name="label_quick_wizard_tile">AAPS(Мастер)</string>
@@ -36,6 +37,7 @@
     <string name="pref_show_ago">Показывать ретро события</string>
     <string name="pref_dark" comment="Enables dark visual theme">Тёмная</string>
     <string name="pref_highlight_basals">Выделить базалы</string>
+    <string name="pref_prediction_lines">Показывать прогноз</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Соответствующий делитель</string>
     <string name="pref_chart_timeframe">Временной диапазон графика</string>
     <string name="pref_1_hour">1 час</string>
@@ -143,6 +145,7 @@
     <string name="pref_simplify_ui_sum">Показывать только время и ГК</string>
     <string name="pref_vibrate_hourly">Почасовая вибрация</string>
     <string name="pref_show_weeknumber">Показывать номер недели</string>
+    <string name="custom_pref_show_seconds">Показывать секунды</string>
     <string name="digitalstyle_pref_your_style">Ваш стиль:</string>
     <string name="digitalstyle_style_none">без стиля</string>
     <string name="digitalstyle_style_minimal">минималистский</string>
@@ -190,6 +193,8 @@
     <string name="week_short">н</string>
     <string name="day_short">д</string>
     <string name="hour_short">ч</string>
+    <string name="hour_minute">%1$s%2$s</string>
+    <string name="hour_minute_second">%1$s%2$s%3$s</string>
     <string name="old">старые</string>
     <string name="old_warning">!старое!</string>
     <string name="error">!ошибка!</string>

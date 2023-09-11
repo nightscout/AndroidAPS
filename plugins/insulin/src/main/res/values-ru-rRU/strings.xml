@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Insulin -->
-    <string name="lyumjev">Lyumjev</string>
+    <string name="lyumjev">Люмжев</string>
     <string name="description_insulin_rapid">Предустановки для Humalog и Novorapid / Novolog</string>
-    <string name="description_insulin_ultra_rapid">Предустановки для Fiasp</string>
+    <string name="description_insulin_ultra_rapid">Предустановки для Фиаспа</string>
     <string name="description_insulin_lyumjev">Предустановки для Lyumjev</string>
     <string name="description_insulin_free_peak">Позволяет самостоятельно задавать пик активности инсулина - только для опытных пользователей</string>
     <string name="insulin_shortname">ИНС</string>
@@ -13,6 +13,6 @@
     <string name="rapid_acting_oref">Быстро действующий Oref</string>
     <string name="ultra_rapid_oref">Сверхбыстрый Oref</string>
     <string name="dia_too_short">Значение времени действия инс %1$f слишком мало - применено %2$f!</string>
-    <string name="fast_acting_insulin_comment">Новорапид, Хумалог</string>
+    <string name="fast_acting_insulin_comment">Новорапид, Новолог, Хумалог</string>
     <string name="ultra_fast_acting_insulin_comment">Фиасп</string>
 </resources>

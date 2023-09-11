@@ -104,6 +104,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Показывать кнопку Приостановить подачу на вкладке Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Включено обнаружение часового пояса</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Включено напоминание об истечении срока действия</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">После активации POD издаст звуковой сигнал в определенное время</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Напомнить за… часов до окончания срока работы (72 часа)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Включено напоминание об истечении срока работы</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">После активации POD издаст звуковой сигнал в определенное время и за час до отключения</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Оповещение за... часов до выключения (80 часов)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Предупреждение о низком уровне в резервуаре включено</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">К-во единиц</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Автоматически заглушать прочитанные оповещения</string>

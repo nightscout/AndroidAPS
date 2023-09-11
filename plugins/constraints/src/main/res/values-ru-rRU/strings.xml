@@ -3,7 +3,7 @@
     <!-- PhoneChecker -->
     <!-- DST Helper -->
     <string name="dst_in_24h_warning">Переход на летнее/зимнее время через 24 часа или менее</string>
-    <string name="dst_loop_disabled_warning">Изменение сезонного времени произошло меньше 3 часов назад-Закрытый цикл выключен</string>
+    <string name="dst_loop_disabled_warning">Переход на зимнее/летнее время произошел менее 3 часов назад - Закрытый цикл выключен</string>
     <!-- Storage constraint -->
     <string name="disk_full">Освободите по крайней мере %1$d MB из внутренней памяти! Цикл остановлен!</string>
     <!-- Version Checker -->
@@ -22,13 +22,13 @@
     <string name="a11y_bg_quality_flat">Неменяющиеся данные. Принимаю за неверные</string>
     <!-- Safety -->
     <string name="limitingextendedbolus">Ограничиваю пролонгированный болюс до %1$.1f ед. из-за %2$s</string>
-    <string name="limitingcarbs">Ограничение углеводов до %1$d г. из-за %2$s</string>
+    <string name="limitingcarbs">Ограничение углеводов до %1$d г из-за %2$s</string>
     <string name="pumpisnottempbasalcapable">Помпа не рассчитана на подачу временного базала</string>
     <string name="closedmodedisabledinpreferences">Режим замкнутого цикла отключен в настройках</string>
     <string name="closed_loop_disabled_on_dev_branch">Работает версия разработчика. Замкнутый цикл отключен.</string>
     <string name="closed_loop_disabled_with_eb">Замкнутый цикл отключен из-за работы Пролонгированного Болюса</string>
     <string name="smbalwaysdisabled">Опция супер микро болюс всегда и после углеводов отключена т. к. активный источник ГК не поддерживает комплексное фильтрование</string>
-    <string name="smbnotallowedinopenloopmode">В режиме незамкнутого цикла open loop супер микро болюс SMB не допускается</string>
+    <string name="smbnotallowedinopenloopmode">СМБ не работают в режиме открытого цикла</string>
     <string name="maxvalueinpreferences">максимальное значение в настройках</string>
     <string name="hardlimit">жесткий предел</string>
     <string name="treatmentssafety_title">Безопасность терапии</string>
@@ -36,7 +36,7 @@
     <string name="completed_well_done">Завершено, отлично!</string>
     <string name="not_completed_yet">Не завершено</string>
     <string name="time_elapsed">Прошло времени</string>
-    <string name="maxiobset">Максимум активного инсулина IOB установлен правильно</string>
+    <string name="maxiobset">Максимальное значение IOB установлено правильно</string>
     <string name="hasbgdata">ГК доступна из выбранного источника</string>
     <string name="synchaswritepermission">Служба синхронизации имеет разрешение на запись</string>
     <string name="loopenabled">Цикл активирован</string>
@@ -44,7 +44,7 @@
     <string name="closedmodeenabled">Режим замкнутого цикла включен</string>
     <string name="objectives_shortname">ЦЕЛИ</string>
     <string name="description_objectives">Обучающая программа</string>
-    <string name="doyouwantresetstart">Хотите сбросить начатую цель? Можете потерять достигнутое.</string>
+    <string name="doyouwantresetstart">Хотите сбросить начатую цель? Вы можете потерять весь прогресс по ней.</string>
     <string name="objectives_next_button">Далее</string>
     <string name="objectives_previous_button">Назад</string>
 </resources>

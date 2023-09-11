@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="units">Μονάδες</string>
+    <string name="setupwizard_units_prompt">Επιλέξτε τις μονάδες μέτρησης στις οποίες θέλετε να εμφανίζονται οι τιμές</string>
     <string name="next_button">Επόμενο</string>
     <string name="previous_button">Προηγ</string>
     <string name="nav_setupwizard">Οδηγός εγκατάστασης</string>
     <string name="setupwizard_finish">ΤΕΛΟΣ</string>
+    <string name="welcome">Καλώς ήρθατε</string>
     <string name="welcometosetupwizard">Καλώς ήρθατε στον οδηγό εγκατάστασης. Θα σας καθοδηγήσει μέσα από το πρόγραμμα εγκατάστασης\n</string>
     <string name="end_user_license_agreement">Άδεια χρήσης τελικού χρήστη</string>
     <string name="end_user_license_agreement_text">ΔΕΝ ΠΡΕΠΕΙ ΝΑ ΧΡΗΣΙΜΟΠΟΙΗΘΕΙ ΓΙΑ ΝΑ ΚΑΝΕΤΕ ΙΑΤΡΙΚΗ ΑΠΟΦΑΣΗ. ΔΕΝ ΥΠΑΡΧΕΙ ΕΓΓΥΗΣΗ ΓΙΑ ΤΟ ΠΡΟΓΡΑΜΜΑ, ΣΤΟ ΒΑΘΜΟ ΠΟΥ ΕΠΙΤΡΕΠΕΤΑΙ ΑΠΟ ΤΟ ΕΦΑΡΜΟΣΤΕΟ ΔΙΚΑΙΟ. ΕΚΤΟΣ ΟΠΟΙΑΣΔΗΠΟΤΕ ΔΙΑΒΑΘΜΙΣΜΕΝΗ ΚΑΤΑ ΤΗΝ ΕΓΓΡΑΦΗ ΤΩΝ ΚΑΤΟΧΟΙ ΠΝΕΥΜΑΤΙΚΩΝ ΔΙΚΑΙΩΜΑΤΩΝ ΚΑΙ/Ή ΑΛΛΑ ΜΕΡΗ ΠΑΡΕΧΟΝΤΑΙ ΤΟ ΠΡΟΓΡΑΜΜΑ \"ΩΣ ΕΧΕΙ\" ΧΩΡΙΣ ΕΓΓΥΗΣΗ ΟΠΟΙΟΥΔΗΠΟΤΕ ΕΙΔΟΥΣ, ΕΞΑΙΡΟΥΜΕΝΕΣ Ή ΣΙΩΠΗΡΕΣ, ΣΥΜΠΕΡΙΛΑΜΒΑΝΟΜΕΝΩΝ, ΕΝΔΕΙΚΤΙΚΑ, ΤΩΝ ΣΙΩΠΗΡΩΝ ΕΓΓΥΗΣΕΩΝ ΕΜΠΟΡΕΥΣΙΜΟΤΗΤΑΣ ΚΑΙ ΚΑΤΑΛΛΗΛΟΤΗΤΑΣ ΓΙΑ ΣΥΓΚΕΚΡΙΜΕΝΟ ΣΚΟΠΟ. Ο ΟΛΟΚΛΗΡΩΜΕΝΟΣ ΚΙΝΔΥΝΟΣ ΟΣΟΝ ΑΦΟΡΑ ΤΗΝ ΠΟΙΟΤΗΤΑ ΚΑΙ ΤΗΝ ΑΠΟΔΟΣΗ ΤΟΥ ΠΡΟΓΡΑΜΜΑΤΟΣ ΕΙΝΑΙ ΔΙΚΟ ΣΑΣ. ΕΑΝ ΤΟ ΠΡΟΓΡΑΜΜΑ ΔΕΝ ΕΙΝΑΙ ΕΛΑΤΤΩΜΑΤΙΚΟ, ΠΡΕΠΕΙ ΝΑ ΕΞΕΤΑΣΤΕ ΤΟ ΚΟΣΤΟΣ ΟΛΩΝ ΤΩΝ ΑΠΑΡΑΙΤΗΤΩΝ ΣΥΝΤΗΡΗΣΕΩΝ, ΕΠΙΣΚΕΥΩΝ Ή ΔΙΟΡΘΩΣΕΩΝ.</string>
@@ -12,6 +14,7 @@
     <string name="display_settings">Ρυθμίσεις Εμφάνισης</string>
     <string name="low_mark">ΧΑΜΗΛΟ σημείο</string>
     <string name="high_mark">ΥΨΗΛΟ σημείο</string>
+    <string name="low_mark_comment">Χαμηλότερη τιμή της περιοχής εντός στόχου (μόνο εμφάνιση)</string>
     <string name="permission">Άδεια</string>
     <string name="askforpermission">Ζητείστε άδεια</string>
     <string name="storedsettingsfound">Βρέθηκαν αποθηκευμένες ρυθμίσεις</string>
@@ -91,6 +94,11 @@
     <string name="nav_resetdb">Επαναφορά Βάσεων Δεδομένων</string>
     <string name="resettodefaults">Επαναφορά προεπιλογών</string>
     <!-- Maintenance -->
+    <string name="prefdecrypt_issue_wrong_pass">Σφάλμα αποκρυπτογράφησης, ο παρεχόμενος κωδικός πρόσβασης δεν είναι έγκυρος ή το αρχείο ρυθμίσεων τροποποιήθηκε! Μπορεί να συμβεί ότι το εισαγόμενο αρχείο εξήχθη με διαφορετικό Κύριο κωδικό πρόσβασης.</string>
+    <string name="prefdecrypt_issue_wrong_format">Λείπει η διαμόρφωση κρυπτογράφησης, η μορφή των ρυθμίσεων δεν είναι έγκυρη!</string>
+    <string name="prefdecrypt_issue_wrong_algorithm">Μη υποστηριζόμενο ή μη καθορισμένος αλγόριθμος κρυπτογράφησης!</string>
     <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Επιλογή προσαρμοσμένης όψης ρολογιου</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Παρακαλώ κάντε επανεκίνηση στο τηλέφώνο ή restart στο AndroidAPS από τις Ρυθμίσεις Συστήματος, \nδιαφορετικά το AndroidAPS δεν θα έχει καταγραφή (επαληθεύστε ότι οι αλγόριθμοι δουλεύουν σωστά)!</string>
 </resources>

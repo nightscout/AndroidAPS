@@ -308,12 +308,9 @@
     <string name="wearcontrol_title">Kontroller fra klokke</string>
     <string name="wearcontrol_summary">Sett midl. mål og angi behandlinger fra klokken.</string>
     <string name="wear_wizard_settings_summary">Beregninger inkludert i resultatet fra veiviseren:</string>
-    <string name="wear_display_settings">Visningsinnstillinger</string>
     <string name="wear_general_settings">Generelle innstillinger</string>
     <string name="wear_notifysmb_title">Varsle ved SMB</string>
     <string name="wear_notifysmb_summary">Vis SMB på klokken som en standard bolus.</string>
-    <string name="wear_predictions_summary">Vis blodsukkerprognoser på klokken.</string>
-    <string name="wear_predictions_title">Prognoser</string>
     <string name="wear_custom_watchface_settings">Innstillinger for tilpasset klokkebakgrunn</string>
     <string name="wear_custom_watchface_authorization_title">Godkjenning for tilpasset klokkebakgrunn</string>
     <string name="wear_custom_watchface_authorization_summary">Godkjenne at tilpasset klokkebakgrunn endrer AAPS- og klokkeinnstillinger i henhold til klokkebakgrunnens design</string>

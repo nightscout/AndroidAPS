@@ -49,6 +49,11 @@
     <string name="combo_tbr_count">Total RBTuri</string>
     <string name="bolusstopped">Bolus oprit</string>
     <string name="bolusstopping">Se oprește bolusul</string>
+    <string name="pump_commerror_label">Număr erori comunicație</string>
+    <string name="show_comm_error_count_title">Arată număr erori comunicație</string>
+    <string name="show_comm_error_count_summary">Arată numărul de erori în comunicarea cu Ruffy. Dacă numărul este mai mare de zero, asta indică în cele mai multe cazuri probleme de comunicare cu Ruffy (ar putea fi nevoie de restart).</string>
     <string name="combo_error_display_never">Niciodată</string>
+    <string name="combo_error_display_error">La eroare</string>
+    <string name="combo_error_display_always">Întotdeauna</string>
     <string name="unsafeusage">utilizare nesigură</string>
 </resources>

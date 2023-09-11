@@ -33,6 +33,8 @@
     <string name="enable_carbs_req_alert">Alertează dacă sunt necesari carbohidrați</string>
     <string name="open_navigation">Afișare navigație</string>
     <string name="close_navigation">Închidere navigație</string>
+    <string name="remove_items">Elimină obiecte</string>
+    <string name="sort_items">Sortează obiecte</string>
     <string name="error_adding_treatment_title">Date incomplete despre tratament</string>
     <string name="error_adding_treatment_message">Un tratament (insulină: %1$.2f, carbohidrați: %2$d, la: %3$s) nu a putut fi înregistrat. Reverificați și apoi adăugați manual înregistrarea corectă.</string>
     <string name="generated_ecarbs_note">eCarbohidrați: %1$d g (%2$d h), întârziere: %3$d m</string>
@@ -46,7 +48,13 @@
     <string name="clear_filter">Șterge filtru</string>
     <string name="cannula">Canula</string>
     <string name="email_address">Adresă de e-mail</string>
+    <string name="remove_bg_readings">Eliminați valorile glicemiei</string>
     <string name="identification_not_set">Identificarea nu este setată în modul dezvoltator</string>
+    <string name="a11y_dialog">dialog</string>
     <!-- WEAR OS-->
+    <string name="wear_unknown_action_string">Comandă de acțiune necunoscută:</string>
+    <string name="remove_selected_items">Șterge obiectele selectate</string>
+    <string name="count_selected">%1$d selectat(e)</string>
     <string name="sort_label">Sortează</string>
+    <string name="search">Caută</string>
 </resources>

@@ -3,7 +3,7 @@
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
-    <string name="medtrum_pump_description">Integración de bombas de insulina Medtrum Nano</string>
+    <string name="medtrum_pump_description">Integración de bombas de insulina Medtrum Nano y Medtrum 300U</string>
     <string name="medtrum_pump_setting">Ajustes de la bomba Medtrum</string>
     <string name="pump_error">Error de bomba: %1$s !! </string>
     <string name="pump_is_suspended">Bomba suspendida</string>

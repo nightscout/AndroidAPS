@@ -152,4 +152,6 @@
     <string name="diaconn_g8_errorcode_34">Starea LGS este inactiv, comanda de inactivare este refuzată.</string>
     <string name="diaconn_g8_errorcode_35">Pornirea bazalei temporare este respinsă atunci când se execută bazala temporară</string>
     <string name="diaconn_g8_errorcode_36">Oprirea bazalei temporare este respinsă atunci când bazala temporară nu rulează</string>
+    <string name="diaconn_g8_cloudsend_summary">Trimite jurnalele pompei către Diaconn Cloud.</string>
+    <string name="diaconn_g8_cloudsend_title">Sincronizare în Cloud Diaconn</string>
 </resources>

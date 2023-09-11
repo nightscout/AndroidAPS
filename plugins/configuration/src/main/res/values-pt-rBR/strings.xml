@@ -47,7 +47,7 @@
     <string name="readstatus">Ler estado</string>
     <string name="data_choices">Escolha de Dados</string>
     <string name="fabric_upload">Envio Fabric</string>
-    <string name="allow_automated_crash_reporting">Permitir que seja enviado automaticamente à equipa de desenvolvimento o report de crashes e das funções utilizadas, utilizando o serviço fabric.io.</string>
+    <string name="allow_automated_crash_reporting">Permitir que relatórios de falha automatizados e dados de uso de recursos sejam enviados aos desenvolvedores através do serviço fabric.io.</string>
     <string name="summary_email_for_crash_report">Esta identificação será anexada aos relatórios de erro para podermos contatá-lo em casos de urgência. É opcional.</string>
     <string name="identification">Identificação (e-mail, apelido FB ou Discord, etc)</string>
     <string name="request">Pedido</string>
@@ -127,7 +127,7 @@
     <string name="nav_logsettings">Definições de registo</string>
     <string name="miscellaneous">Adicionais</string>
     <string name="nav_resetdb">Redefinir banco de dados</string>
-    <string name="resettodefaults">Repor definições por defeito</string>
+    <string name="resettodefaults">Redefinir para padrões</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">exportado %1$s atrás</string>
     <string name="exported_at" comment="at placeholder we add export date">exportado em %1$s</string>

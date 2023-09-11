@@ -40,6 +40,7 @@
     <string name="metadata_wear_import_filename">Nom du fichier : %1$s</string>
     <string name="metadata_label_plugin_version">Version du plugin : %1$s</string>
     <string name="metadata_label_watchface_name_version">Nom : %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Infos : %1$s</string>
     <string name="pref_show_iob">Afficher IA</string>
     <string name="pref_show_detailed_iob">Afficher IA détaillée</string>
     <string name="pref_show_cob">Afficher GA</string>

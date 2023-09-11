@@ -3,7 +3,7 @@
     <!-- MedtrumPump -->
     <string name="medtrum">Medtrum</string>
     <string name="medtrum_pump_shortname">MT</string>
-    <string name="medtrum_pump_description">Integrácia pumpy Medtrum Nano</string>
+    <string name="medtrum_pump_description">Integrácia pumpy Medtrum Nano a Medtrum 300U</string>
     <string name="medtrum_pump_setting">Nastavenie pumpy Medtrum</string>
     <string name="pump_error">Chyba pumpy: %1$s!! </string>
     <string name="pump_is_suspended">Pumpa je pozastavená</string>
