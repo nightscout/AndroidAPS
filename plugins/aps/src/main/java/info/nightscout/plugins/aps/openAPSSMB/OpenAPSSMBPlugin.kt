@@ -237,6 +237,18 @@ open class OpenAPSSMBPlugin @Inject constructor(
         tddLast4H = tddCalculator.calculateDaily(-4, 0)?.totalAmount
         tddLast8to4H = tddCalculator.calculateDaily(-8, -4)?.totalAmount
 
+        if (tdd1D == null || tdd7D == null || tddLast4H == null || tddLast8to4H == null || tddLast24H == null) {
+            inputConstraints.copyReasons(
+                Constraint(false).also {
+                    it.set(aapsLogger, false, rh.gs(R.string.fallback_smb_no_tdd), this)
+                }
+            )
+            inputConstraints.copyReasons(
+                Constraint(false).apply { set(aapsLogger, true, "tdd1D=$tdd1D tdd7D=$tdd7D tddLast4H=$tddLast4H tddLast8to4H=$tddLast8to4H tddLast24H=$tddLast24H", this) }
+            )
+        }
+
+
         provideDetermineBasalAdapter().also { determineBasalAdapterSMBJS ->
             determineBasalAdapterSMBJS.setData(
                 profile, maxIob, maxBasal, minBg, maxBg, targetBg,
