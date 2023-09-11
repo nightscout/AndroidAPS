@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">연결되지 않음</string>
     <string name="pump_status_sleeping">수면</string>
     <string name="pump_status_waking_up">시작중</string>
     <string name="pump_status_active">활성</string>
