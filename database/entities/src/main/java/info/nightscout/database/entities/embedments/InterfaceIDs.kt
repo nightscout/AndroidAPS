@@ -1,6 +1,8 @@
 package info.nightscout.database.entities.embedments
 
-data class InterfaceIDs(
+import androidx.room.Ignore
+
+data class InterfaceIDs @Ignore constructor(
     var nightscoutSystemId: String? = null,
     var nightscoutId: String? = null,
     var pumpType: PumpType? = null, // if == USER pumpSerial & pumpId can be null
@@ -10,6 +12,9 @@ data class InterfaceIDs(
     var startId: Long? = null,
     var endId: Long? = null
 ) {
+
+    // Along with @Ignore main constructor eliminate kotlin 1.9 + room warning
+    constructor() : this(nightscoutSystemId = null, nightscoutId = null, pumpType = null, pumpSerial = null, temporaryId = null, pumpId = null, startId = null, endId = null)
 
     enum class PumpType {
         GENERIC_AAPS,

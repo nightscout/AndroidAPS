@@ -50,5 +50,5 @@ internal interface BolusCalculatorResultDao : TraceableDao<BolusCalculatorResult
     fun getCurrentFromHistoric(referenceId: Long): Maybe<BolusCalculatorResult>
 
     @Query("SELECT * FROM $TABLE_BOLUS_CALCULATOR_RESULTS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
-    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<BolusCalculatorResult>
+    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<BolusCalculatorResult>
 }

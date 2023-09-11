@@ -36,7 +36,7 @@ internal interface TotalDailyDoseDao : TraceableDao<TotalDailyDose> {
     fun getLastTotalDailyDoses(count: Int, exclude: InterfaceIDs.PumpType = InterfaceIDs.PumpType.CACHE): Single<List<TotalDailyDose>>
 
     @Query("SELECT * FROM $TABLE_TOTAL_DAILY_DOSES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
-    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TotalDailyDose>
+    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TotalDailyDose>
 
     @Query("DELETE FROM $TABLE_TOTAL_DAILY_DOSES WHERE timestamp >= :since AND pumpType = :pumpType")
     fun deleteNewerThan(since: Long, pumpType: InterfaceIDs.PumpType)

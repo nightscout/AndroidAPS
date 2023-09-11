@@ -68,6 +68,6 @@ internal interface ExtendedBolusDao : TraceableDao<ExtendedBolus> {
     fun getOldestRecord(): ExtendedBolus?
 
     @Query("SELECT * FROM $TABLE_EXTENDED_BOLUSES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
-    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<ExtendedBolus>
+    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<ExtendedBolus>
 
 }

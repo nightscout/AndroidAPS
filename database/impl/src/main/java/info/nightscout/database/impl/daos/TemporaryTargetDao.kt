@@ -49,5 +49,5 @@ internal interface TemporaryTargetDao : TraceableDao<TemporaryTarget> {
     fun getCurrentFromHistoric(referenceId: Long): Maybe<TemporaryTarget>
 
     @Query("SELECT * FROM $TABLE_TEMPORARY_TARGETS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
-    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TemporaryTarget>
+    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TemporaryTarget>
 }

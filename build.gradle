@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
     ext {
-        kotlin_version = '1.8.22'
+        kotlin_version = '1.9.10'
         core_version = '1.10.1'
         rxjava_version = '3.1.7'
         rxandroid_version = '3.0.2'

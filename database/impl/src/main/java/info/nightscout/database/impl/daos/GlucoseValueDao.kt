@@ -55,5 +55,5 @@ internal interface GlucoseValueDao : TraceableDao<GlucoseValue> {
     fun getCurrentFromHistoric(referenceId: Long): Maybe<GlucoseValue>
 
     @Query("SELECT * FROM $TABLE_GLUCOSE_VALUES WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
-    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<GlucoseValue>
+    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<GlucoseValue>
 }

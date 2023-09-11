@@ -19,6 +19,6 @@ interface VersionChangeDao {
     fun getMostRecentVersionChange(): VersionChange?
 
     @Query("SELECT * FROM $TABLE_VERSION_CHANGES WHERE timestamp > :since AND timestamp <= :until LIMIT :limit OFFSET :offset")
-    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<VersionChange>
+    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<VersionChange>
 
 }

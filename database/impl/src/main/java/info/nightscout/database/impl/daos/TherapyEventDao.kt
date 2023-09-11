@@ -61,5 +61,5 @@ internal interface TherapyEventDao : TraceableDao<TherapyEvent> {
     fun getCurrentFromHistoric(referenceId: Long): Maybe<TherapyEvent>
 
     @Query("SELECT * FROM $TABLE_THERAPY_EVENTS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
-    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TherapyEvent>
+    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<TherapyEvent>
 }

@@ -46,5 +46,5 @@ internal interface OfflineEventDao : TraceableDao<OfflineEvent> {
     fun getCurrentFromHistoric(referenceId: Long): Maybe<OfflineEvent>
 
     @Query("SELECT * FROM $TABLE_OFFLINE_EVENTS WHERE dateCreated > :since AND dateCreated <= :until LIMIT :limit OFFSET :offset")
-    suspend fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<OfflineEvent>
+    fun getNewEntriesSince(since: Long, until: Long, limit: Int, offset: Int): List<OfflineEvent>
 }
