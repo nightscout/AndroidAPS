@@ -16,15 +16,16 @@ import info.nightscout.core.profile.ProfileSealed
 import info.nightscout.database.ValueWrapper
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.ui.databinding.DialogProfileviewerBinding
@@ -38,11 +39,13 @@ class ProfileViewerDialog : DaggerDialogFragment() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var config: Config
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var hardLimits: HardLimits
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private var time: Long = 0
 
@@ -121,11 +124,10 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             }
 
             UiInteraction.Mode.DB_PROFILE      -> {
-                //val profileList = databaseHelper.getProfileSwitchData(time, true)
                 val profileList = repository.getAllProfileSwitches().blockingGet()
                 profile = if (profileList.isNotEmpty()) ProfileSealed.PS(profileList[0]) else null
                 profile2 = null
-                profileName = if (profileList.isNotEmpty()) profileList[0].getCustomizedName() else null
+                profileName = if (profileList.isNotEmpty()) profileList[0].getCustomizedName(decimalFormatter) else null
                 date = if (profileList.isNotEmpty()) dateUtil.dateAndTimeString(profileList[0].timestamp) else null
                 binding.dateLayout.visibility = View.VISIBLE
             }
@@ -268,8 +270,8 @@ class ProfileViewerDialog : DaggerDialogFragment() {
         val units = profileFunction.getUnits()
         val s = StringBuilder()
         for (hour in 0..23) {
-            val val1 = Profile.fromMgdlToUnits(profile1.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
-            val val2 = Profile.fromMgdlToUnits(profile2.getIsfMgdlTimeFromMidnight(hour * 60 * 60), units)
+            val val1 = profileUtil.fromMgdlToUnits(profile1.getIsfMgdlTimeFromMidnight(hour * 60 * 60))
+            val val2 = profileUtil.fromMgdlToUnits(profile2.getIsfMgdlTimeFromMidnight(hour * 60 * 60))
             if (val1 != prev1 || val2 != prev2) {
                 s.append(formatColors(dateUtil.formatHHMM(hour * 60 * 60), val1, val2, DecimalFormat("0.0"), units.asText + " " + rh.gs(info.nightscout.core.ui.R.string.profile_per_unit)))
                 s.append("<br>")
@@ -293,17 +295,9 @@ class ProfileViewerDialog : DaggerDialogFragment() {
             val val2l = profile2.getTargetLowMgdlTimeFromMidnight(hour * 60 * 60)
             val val2h = profile2.getTargetHighMgdlTimeFromMidnight(hour * 60 * 60)
             val txt1 =
-                dateUtil.formatHHMM(hour * 60 * 60) + " " + Profile.toUnitsString(val1l, val1l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(
-                    val1h,
-                    val1h * Constants.MGDL_TO_MMOLL,
-                    units
-                ) + " " + units.asText
+                dateUtil.formatHHMM(hour * 60 * 60) + " " + profileUtil.fromMgdlToStringInUnits(val1l) + " - " + profileUtil.fromMgdlToStringInUnits(val1h) + " " + units.asText
             val txt2 =
-                dateUtil.formatHHMM(hour * 60 * 60) + " " + Profile.toUnitsString(val2l, val2l * Constants.MGDL_TO_MMOLL, units) + " - " + Profile.toUnitsString(
-                    val2h,
-                    val2h * Constants.MGDL_TO_MMOLL,
-                    units
-                ) + " " + units.asText
+                dateUtil.formatHHMM(hour * 60 * 60) + " " + profileUtil.fromMgdlToStringInUnits(val2l) + " - " + profileUtil.fromMgdlToStringInUnits(val2h) + " " + units.asText
             if (val1l != prev1l || val1h != prev1h || val2l != prev2l || val2h != prev2h) {
                 s.append(formatColors(txt1, txt2))
                 s.append("<br>")

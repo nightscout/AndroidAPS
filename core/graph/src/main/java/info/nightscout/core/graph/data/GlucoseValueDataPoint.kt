@@ -5,24 +5,23 @@ import android.graphics.Paint
 import info.nightscout.database.entities.GlucoseValue
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 
 class GlucoseValueDataPoint(
     val data: GlucoseValue,
-    private val profileFunction: ProfileFunction,
-    private val rh: ResourceHelper
+    private val profileUtil: ProfileUtil,
+    private val rh: ResourceHelper,
 ) : DataPointWithLabelInterface {
 
     private fun valueToUnits(units: GlucoseUnit): Double =
         if (units == GlucoseUnit.MGDL) data.value else data.value * Constants.MGDL_TO_MMOLL
 
     override fun getX(): Double = data.timestamp.toDouble()
-    override fun getY(): Double = valueToUnits(profileFunction.getUnits())
+    override fun getY(): Double = valueToUnits(profileUtil.units)
 
     override fun setY(y: Double) {}
-    override val label: String = Profile.toCurrentUnitsString(profileFunction, data.value)
+    override val label: String = profileUtil.fromMgdlToStringInUnits(data.value)
     override val duration = 0L
     override val shape get() = if (isPrediction) PointsWithLabelGraphSeries.Shape.PREDICTION else PointsWithLabelGraphSeries.Shape.BG
     override val size = if (isPrediction) 1f else 0.6f
@@ -30,8 +29,8 @@ class GlucoseValueDataPoint(
 
     override fun color(context: Context?): Int {
         return when {
-            isPrediction                   -> predictionColor(context)
-            else                           -> rh.gac(context, info.nightscout.core.ui.R.attr.originalBgValueColor)
+            isPrediction -> predictionColor(context)
+            else         -> rh.gac(context, info.nightscout.core.ui.R.attr.originalBgValueColor)
         }
     }
 

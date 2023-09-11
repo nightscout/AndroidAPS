@@ -1,6 +1,7 @@
 package info.nightscout.plugins.general.smsCommunicator
 
 import android.telephony.SmsManager
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.entities.GlucoseValue
@@ -12,7 +13,6 @@ import info.nightscout.database.impl.transactions.Transaction
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
 import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.aps.Loop
@@ -35,7 +35,6 @@ import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
 import info.nightscout.sharedtests.TestBaseWithProfile
 import io.reactivex.rxjava3.core.Single
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.ArgumentMatchers
@@ -99,13 +98,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
             repository.runTransactionForResult(anyObject<InsertAndCancelCurrentTemporaryTargetTransaction>())
         ).thenReturn(Single.just(InsertAndCancelCurrentTemporaryTargetTransaction.TransactionResult().apply {
         }))
-        val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtilMocked)
+        val glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtilMocked, decimalFormatter)
 
         smsCommunicatorPlugin = SmsCommunicatorPlugin(
-            injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, fabricPrivacy, activePlugin, commandQueue,
+            injector, aapsLogger, rh, smsManager, aapsSchedulers, sp, constraintChecker, rxBus, profileFunction, profileUtil, fabricPrivacy, activePlugin, commandQueue,
             loop, iobCobCalculator, xDripBroadcast,
             otp, config, dateUtilMocked, uel,
-            glucoseStatusProvider, repository
+            glucoseStatusProvider, repository, decimalFormatter
         )
         smsCommunicatorPlugin.setPluginEnabled(PluginType.GENERAL, true)
         Mockito.doAnswer { invocation: InvocationOnMock ->
@@ -158,7 +157,6 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
 
         `when`(activePlugin.activeProfileSource).thenReturn(profileSource)
 
-        `when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
 
         `when`(otp.name()).thenReturn("User")
         `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.OK)
@@ -251,27 +249,27 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
     @Test
     fun processSettingsTest() {
         // called from constructor
-        Assertions.assertEquals("1234", smsCommunicatorPlugin.allowedNumbers[0])
-        Assertions.assertEquals("5678", smsCommunicatorPlugin.allowedNumbers[1])
-        Assertions.assertEquals(2, smsCommunicatorPlugin.allowedNumbers.size)
+        assertThat(smsCommunicatorPlugin.allowedNumbers[0]).isEqualTo("1234")
+        assertThat(smsCommunicatorPlugin.allowedNumbers[1]).isEqualTo("5678")
+        assertThat(smsCommunicatorPlugin.allowedNumbers).hasSize(2)
     }
 
     @Test
     fun isCommandTest() {
-        Assertions.assertTrue(smsCommunicatorPlugin.isCommand("BOLUS", ""))
+        assertThat(smsCommunicatorPlugin.isCommand("BOLUS", "")).isTrue()
         smsCommunicatorPlugin.messageToConfirm = null
-        Assertions.assertFalse(smsCommunicatorPlugin.isCommand("BLB", ""))
+        assertThat(smsCommunicatorPlugin.isCommand("BLB", "")).isFalse()
         smsCommunicatorPlugin.messageToConfirm = AuthRequest(injector, Sms("1234", "ddd"), "RequestText", "ccode", object : SmsAction(false) {
             override fun run() {}
         })
-        Assertions.assertTrue(smsCommunicatorPlugin.isCommand("BLB", "1234"))
-        Assertions.assertFalse(smsCommunicatorPlugin.isCommand("BLB", "2345"))
+        assertThat(smsCommunicatorPlugin.isCommand("BLB", "1234")).isTrue()
+        assertThat(smsCommunicatorPlugin.isCommand("BLB", "2345")).isFalse()
         smsCommunicatorPlugin.messageToConfirm = null
     }
 
     @Test fun isAllowedNumberTest() {
-        Assertions.assertTrue(smsCommunicatorPlugin.isAllowedNumber("5678"))
-        Assertions.assertFalse(smsCommunicatorPlugin.isAllowedNumber("56"))
+        assertThat(smsCommunicatorPlugin.isAllowedNumber("5678")).isTrue()
+        assertThat(smsCommunicatorPlugin.isAllowedNumber("56")).isFalse()
     }
 
     @Test fun processSmsTest() {
@@ -280,32 +278,32 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("12", "aText")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertTrue(sms.ignored)
-        Assertions.assertEquals("aText", smsCommunicatorPlugin.messages[0].text)
+        assertThat(sms.ignored).isTrue()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("aText")
 
         //UNKNOWN
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "UNKNOWN")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("UNKNOWN", smsCommunicatorPlugin.messages[0].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("UNKNOWN")
 
         //BG
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BG")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BG", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("IOB:"))
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("Last BG: 100"))
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("COB: 10(2)g"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BG")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("IOB:")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("Last BG: 100")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("COB: 10(2)g")
 
         // LOOP : test remote control disabled
         `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("Remote command is not allowed"))
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP STATUS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("Remote command is not allowed")
         `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
 
         //LOOP STATUS : disabled
@@ -313,8 +311,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Loop is disabled", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP STATUS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is disabled")
 
         //LOOP STATUS : suspended
         `when`(loop.minutesToEndOfSuspend()).thenReturn(10)
@@ -323,8 +321,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Suspended (10 m)", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP STATUS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Suspended (10 m)")
 
         //LOOP STATUS : enabled - APS mode - Closed
         `when`(loop.enabled).thenReturn(true)
@@ -333,51 +331,51 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP STATUS")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Loop is enabled - $modeClosed", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP STATUS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled - $modeClosed")
 
         //LOOP STATUS : enabled - APS mode - Open
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Loop is enabled - $modeOpen", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP STATUS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled - $modeOpen")
 
         //LOOP STATUS : enabled - APS mode - LGS
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.LGS.name)
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Loop is enabled - $modeLgs", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP STATUS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled - $modeLgs")
 
         //LOOP STATUS : enabled - APS mode - unknown
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn("some wrong value")
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP STATUS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Loop is enabled - $modeUnknown", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP STATUS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled - $modeUnknown")
 
         //LOOP : wrong format
         `when`(loop.enabled).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //LOOP DISABLE : already disabled
         `when`(loop.enabled).thenReturn(false)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP DISABLE")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP DISABLE", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Loop is disabled", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP DISABLE")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is disabled")
 
         //LOOP DISABLE : from enabled
         hasBeenRun = false
@@ -389,23 +387,23 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP DISABLE")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP DISABLE", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To disable loop reply with code "))
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP DISABLE")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To disable loop reply with code ")
         var passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Loop has been disabled Temp basal canceled", smsCommunicatorPlugin.messages[3].text)
-        //Assertions.assertTrue(hasBeenRun)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Loop has been disabled Temp basal canceled")
+        //assertThat(hasBeenRun).isTrue()
 
         //LOOP ENABLE : already enabled
         `when`(loop.enabled).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP ENABLE")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP ENABLE", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Loop is enabled", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP ENABLE")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Loop is enabled")
 
         //LOOP ENABLE : from disabled
         hasBeenRun = false
@@ -417,14 +415,14 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP ENABLE")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP ENABLE", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To enable loop reply with code "))
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP ENABLE")
+        assertThat(smsCommunicatorPlugin.messages[1].text.contains("To enable loop reply with code ")).isTrue()
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Loop has been enabled", smsCommunicatorPlugin.messages[3].text)
-        //Assertions.assertTrue(hasBeenRun)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Loop has been enabled")
+        //assertThat(hasBeenRun).isTrue()
 
         //LOOP RESUME : already enabled
         `when`(
@@ -434,29 +432,29 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP RESUME")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP RESUME", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To resume loop reply with code "))
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP RESUME")
+        assertThat(smsCommunicatorPlugin.messages[1].text.contains("To resume loop reply with code ")).isTrue()
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Loop resumed", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Loop resumed")
 
         //LOOP SUSPEND 1 2: wrong format
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP SUSPEND 1 2")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP SUSPEND 1 2", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP SUSPEND 1 2")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //LOOP SUSPEND 0 : wrong duration
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP SUSPEND 0")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP SUSPEND 0", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong duration", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP SUSPEND 0")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong duration")
 
         //LOOP SUSPEND 100 : suspend for 100 min + correct answer
         `when`(
@@ -466,41 +464,41 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP SUSPEND 100")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP SUSPEND 100", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To suspend loop for 100 minutes reply with code "))
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP SUSPEND 100")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To suspend loop for 100 minutes reply with code ")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Loop suspended Temp basal canceled", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Loop suspended Temp basal canceled")
 
         //LOOP SUSPEND 200 : limit to 180 min + wrong answer
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP SUSPEND 200")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP SUSPEND 200", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To suspend loop for 180 minutes reply with code "))
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP SUSPEND 200")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To suspend loop for 180 minutes reply with code ")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         // ignore from other number
         smsCommunicatorPlugin.processSms(Sms("5678", passCode))
         `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.ERROR_WRONG_OTP)
         smsCommunicatorPlugin.processSms(Sms("1234", "XXXX"))
         `when`(otp.checkOTP(ArgumentMatchers.anyString())).thenReturn(OneTimePasswordValidationResult.OK)
-        Assertions.assertEquals("XXXX", smsCommunicatorPlugin.messages[3].text)
-        Assertions.assertEquals("Wrong code. Command cancelled.", smsCommunicatorPlugin.messages[4].text)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("XXXX")
+        assertThat(smsCommunicatorPlugin.messages[4].text).isEqualTo("Wrong code. Command cancelled.")
         //then correct code should not work
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[5].text)
-        Assertions.assertEquals(6, smsCommunicatorPlugin.messages.size.toLong()) // processed as common message
+        assertThat(smsCommunicatorPlugin.messages[5].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages).hasSize(6) // processed as common message
 
         //LOOP BLABLA
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "LOOP BLABLA")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("LOOP BLABLA", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("LOOP BLABLA")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //LOOP CLOSED
         var smsCommand = "LOOP CLOSED"
@@ -510,13 +508,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", smsCommand)
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals(smsCommand, smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains(replyClosed))
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo(smsCommand)
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains(replyClosed)
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Current loop mode: $modeClosed", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Current loop mode: $modeClosed")
 
         //LOOP LGS
         smsCommand = "LOOP LGS"
@@ -525,13 +523,13 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", smsCommand)
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals(smsCommand, smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains(replyLgs))
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo(smsCommand)
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains(replyLgs)
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Current loop mode: $modeLgs", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Current loop mode: $modeLgs")
 
         //NSCLIENT RESTART
         `when`(loop.isEnabled()).thenReturn(true)
@@ -539,9 +537,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "NSCLIENT RESTART")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("NSCLIENT RESTART", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("NSCLIENT RESTART"))
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("NSCLIENT RESTART")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("NSCLIENT RESTART")
 
         //NSCLIENT BLA BLA
         `when`(loop.isEnabled()).thenReturn(true)
@@ -549,9 +547,9 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "NSCLIENT BLA BLA")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("NSCLIENT BLA BLA", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("NSCLIENT BLA BLA")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //NSCLIENT BLABLA
         `when`(loop.isEnabled()).thenReturn(true)
@@ -559,32 +557,32 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "NSCLIENT BLABLA")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("NSCLIENT BLABLA", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("NSCLIENT BLABLA")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //PUMP
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("PUMP", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Virtual Pump", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PUMP")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Virtual Pump")
 
         //PUMP CONNECT 1 2: wrong format
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP CONNECT 1 2")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("PUMP CONNECT 1 2", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PUMP CONNECT 1 2")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //PUMP CONNECT BLABLA
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP BLABLA")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("PUMP BLABLA", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PUMP BLABLA")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //PUMP CONNECT
         `when`(
@@ -595,116 +593,116 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP CONNECT")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("PUMP CONNECT", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To connect pump reply with code "))
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PUMP CONNECT")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To connect pump reply with code ")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Pump reconnected", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Pump reconnected")
 
         //PUMP DISCONNECT 1 2: wrong format
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP DISCONNECT 1 2")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("PUMP DISCONNECT 1 2", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PUMP DISCONNECT 1 2")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //PUMP DISCONNECT 0
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP DISCONNECT 0")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("Wrong duration", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong duration")
 
         //PUMP DISCONNECT 30
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP DISCONNECT 30")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("PUMP DISCONNECT 30", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To disconnect pump for"))
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PUMP DISCONNECT 30")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To disconnect pump for")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Pump disconnected", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Pump disconnected")
 
         //PUMP DISCONNECT 30
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PUMP DISCONNECT 200")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("PUMP DISCONNECT 200", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To disconnect pump for"))
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PUMP DISCONNECT 200")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To disconnect pump for")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Pump disconnected", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Pump disconnected")
 
         //HELP
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "HELP")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("HELP", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("PUMP"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("HELP")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("PUMP")
 
         //HELP PUMP
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "HELP PUMP")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("HELP PUMP", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("PUMP"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("HELP PUMP")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("PUMP")
 
         //SMS : wrong format
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "SMS")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("SMS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("SMS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //SMS STOP
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "SMS DISABLE")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("SMS DISABLE", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To disable the SMS Remote Service reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("SMS DISABLE")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To disable the SMS Remote Service reply with code")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[3].text.contains("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone."))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).contains("SMS Remote Service stopped. To reactivate it, use AAPS on master smartphone.")
 
         //TARGET : wrong format
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "TARGET")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertFalse(sms.ignored)
-        Assertions.assertEquals("TARGET", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(sms.ignored).isFalse()
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("TARGET")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //TARGET MEAL
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "TARGET MEAL")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("TARGET MEAL", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To set the Temp Target"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("TARGET MEAL")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To set the Temp Target")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[3].text.contains("set successfully"))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).contains("set successfully")
 
         //TARGET STOP/CANCEL
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "TARGET STOP")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("TARGET STOP", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To cancel Temp Target reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("TARGET STOP")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To cancel Temp Target reply with code")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[3].text.contains("Temp Target canceled successfully"))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).contains("Temp Target canceled successfully")
     }
 
     @Test fun processProfileTest() {
@@ -713,23 +711,23 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "PROFILE")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("PROFILE", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Remote command is not allowed", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
         `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
 
         //PROFILE
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("PROFILE", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //PROFILE LIST (no profile defined)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE LIST")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("PROFILE LIST", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Not configured", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE LIST")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Not configured")
 
         `when`(profileSource.profile).thenReturn(getValidProfileStore())
         `when`(profileFunction.getProfileName()).thenReturn(TESTPROFILENAME)
@@ -738,55 +736,55 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE STATUS")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("PROFILE STATUS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals(TESTPROFILENAME, smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE STATUS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo(TESTPROFILENAME)
 
         //PROFILE LIST
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE LIST")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("PROFILE LIST", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("1. $TESTPROFILENAME", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE LIST")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("1. $TESTPROFILENAME")
 
         //PROFILE 2 (non existing)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE 2")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("PROFILE 2", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE 2")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //PROFILE 1 0(wrong percentage)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE 1 0")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("PROFILE 1 0", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE 1 0")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //PROFILE 0(wrong index)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE 0")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("PROFILE 0", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE 0")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //PROFILE 1(OK)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE 1")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("PROFILE 1", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To switch profile to someProfile 100% reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE 1")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To switch profile to someProfile 100% reply with code")
 
         //PROFILE 1 90(OK)
         `when`(profileFunction.createProfileSwitch(anyObject(), Mockito.anyString(), Mockito.anyInt(), Mockito.anyInt(), Mockito.anyInt(), anyLong())).thenReturn(true)
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "PROFILE 1 90")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("PROFILE 1 90", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To switch profile to someProfile 90% reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("PROFILE 1 90")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To switch profile to someProfile 90% reply with code")
         val passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Profile switch created", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Profile switch created")
     }
 
     @Test fun processBasalTest() {
@@ -795,95 +793,95 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "BASAL")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BASAL", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Remote command is not allowed", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
         `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
 
         //BASAL
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BASAL", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //BASAL CANCEL
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL CANCEL")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BASAL CANCEL", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To stop temp basal reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL CANCEL")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To stop temp basal reply with code")
         var passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[3].text.contains("Temp basal canceled"))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).contains("Temp basal canceled")
 
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
         //BASAL a%
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL a%")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BASAL a%", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL a%")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //BASAL 10% 0
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL 10% 0")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BASAL 10% 0", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL 10% 0")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("TBR duration must be a multiple of 30 minutes and greater than 0.")
 
         //BASAL 20% 20
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL 20% 20")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BASAL 20% 20", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL 20% 20")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("TBR duration must be a multiple of 30 minutes and greater than 0.")
         `when`(constraintChecker.applyBasalPercentConstraints(anyObject(), anyObject())).thenReturn(Constraint(20))
 
         //BASAL 20% 30
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL 20% 30")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BASAL 20% 30", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To start basal 20% for 30 min reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL 20% 30")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To start basal 20% for 30 min reply with code")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Temp basal 20% for 30 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Temp basal 20% for 30 min started successfully\nVirtual Pump")
 
         //BASAL a
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL a")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BASAL a", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL a")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //BASAL 1 0
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL 1 0")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BASAL 1 0", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL 1 0")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("TBR duration must be a multiple of 30 minutes and greater than 0.")
         `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(Constraint(1.0))
 
         //BASAL 1 20
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL 1 20")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BASAL 1 20", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("TBR duration must be a multiple of 30 minutes and greater than 0.", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL 1 20")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("TBR duration must be a multiple of 30 minutes and greater than 0.")
         `when`(constraintChecker.applyBasalConstraints(anyObject(), anyObject())).thenReturn(Constraint(1.0))
 
         //BASAL 1 30
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BASAL 1 30")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BASAL 1 30", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To start basal 1.00U/h for 30 min reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BASAL 1 30")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To start basal 1.00U/h for 30 min reply with code")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Temp basal 1.00U/h for 30 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Temp basal 1.00U/h for 30 min started successfully\nVirtual Pump")
     }
 
     @Test fun processExtendedTest() {
@@ -892,53 +890,53 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "EXTENDED")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("EXTENDED", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Remote command is not allowed", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("EXTENDED")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
         `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
 
         //EXTENDED
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "EXTENDED")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("EXTENDED", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("EXTENDED")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //EXTENDED CANCEL
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "EXTENDED CANCEL")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("EXTENDED CANCEL", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To stop extended bolus reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("EXTENDED CANCEL")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To stop extended bolus reply with code")
         var passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[3].text.contains("Extended bolus canceled"))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).contains("Extended bolus canceled")
 
         //EXTENDED a%
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "EXTENDED a%")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("EXTENDED a%", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("EXTENDED a%")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
         `when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(Constraint(1.0))
 
         //EXTENDED 1 0
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "EXTENDED 1 0")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("EXTENDED 1 0", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("EXTENDED 1 0")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //EXTENDED 1 20
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "EXTENDED 1 20")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("EXTENDED 1 20", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To start extended bolus 1.00U for 20 min reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("EXTENDED 1 20")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To start extended bolus 1.00U for 20 min reply with code")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Extended bolus 1.00U for 20 min started successfully\nVirtual Pump", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Extended bolus 1.00U for 20 min started successfully\nVirtual Pump")
     }
 
     @Test fun processBolusTest() {
@@ -947,16 +945,16 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "BOLUS")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BOLUS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Remote command is not allowed", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
         `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
 
         //BOLUS
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BOLUS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(1.0))
         `when`(dateUtilMocked.now()).thenReturn(1000L)
         `when`(sp.getLong(R.string.key_smscommunicator_remote_bolus_min_distance, T.msecs(Constants.remoteBolusMinDistance).mins())).thenReturn(15L)
@@ -964,8 +962,8 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BOLUS 1", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Remote bolus not available. Try again later.", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote bolus not available. Try again later.")
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(0.0))
         `when`(dateUtilMocked.now()).thenReturn(Constants.remoteBolusMinDistance + 1002L)
 
@@ -973,15 +971,15 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 0")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BOLUS 0", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 0")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //BOLUS a
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS a")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BOLUS a", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS a")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
         `when`(constraintChecker.applyExtendedBolusConstraints(anyObject())).thenReturn(Constraint(1.0))
         `when`(constraintChecker.applyBolusConstraints(anyObject())).thenReturn(Constraint(1.0))
 
@@ -989,12 +987,12 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BOLUS 1", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To deliver bolus 1.00U reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To deliver bolus 1.00U reply with code")
         var passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[3].text.contains("Bolus 1.00U delivered successfully"))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).contains("Bolus 1.00U delivered successfully")
 
         //BOLUS 1 (Suspended pump)
         smsCommunicatorPlugin.lastRemoteBolusTime = 0
@@ -1002,28 +1000,28 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BOLUS 1", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Pump suspended", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Pump suspended")
         testPumpPlugin.pumpSuspended = false
 
         //BOLUS 1 a
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1 a")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BOLUS 1 a", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1 a")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         `when`(profileFunction.getProfile()).thenReturn(validProfile)
         //BOLUS 1 MEAL
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "BOLUS 1 MEAL")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("BOLUS 1 MEAL", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To deliver meal bolus 1.00U reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("BOLUS 1 MEAL")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To deliver meal bolus 1.00U reply with code")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Meal Bolus 1.00U delivered successfully\nVirtual Pump\nTarget 5.0 for 45 minutes", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Meal Bolus 1.00U delivered successfully\nVirtual Pump\nTarget 5.0 for 45 minutes")
     }
 
     @Test fun processCalTest() {
@@ -1032,34 +1030,34 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "CAL")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("CAL", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Remote command is not allowed", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CAL")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
         `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
 
         //CAL
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CAL")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("CAL", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CAL")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
 
         //CAL 0
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CAL 0")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("CAL 0", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CAL 0")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
         `when`(xDripBroadcast.sendCalibration(ArgumentMatchers.anyDouble())).thenReturn(true)
         //CAL 1
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CAL 1")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("CAL 1", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To send calibration 1.00 reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CAL 1")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To send calibration 1.00 reply with code")
         val passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertEquals("Calibration sent. Receiving must be enabled in xDrip.", smsCommunicatorPlugin.messages[3].text)
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).isEqualTo("Calibration sent. Receiving must be enabled in xDrip.")
     }
 
     @Test fun processCarbsTest() {
@@ -1070,80 +1068,80 @@ class SmsCommunicatorPluginTest : TestBaseWithProfile() {
         smsCommunicatorPlugin.messages = ArrayList()
         var sms = Sms("1234", "CARBS")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("CARBS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Remote command is not allowed", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Remote command is not allowed")
         `when`(sp.getBoolean(R.string.key_smscommunicator_remote_commands_allowed, false)).thenReturn(true)
 
         //CARBS
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CARBS")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("CARBS", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
         `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(Constraint(0))
 
         //CARBS 0
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CARBS 0")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("CARBS 0", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("Wrong format", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS 0")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("Wrong format")
         `when`(constraintChecker.applyCarbsConstraints(anyObject())).thenReturn(Constraint(1))
 
         //CARBS 1
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CARBS 1")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("CARBS 1", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To enter 1g at"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS 1")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To enter 1g at")
         var passCode: String = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[3].text.startsWith("Carbs 1g entered successfully"))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).startsWith("Carbs 1g entered successfully")
 
         //CARBS 1 a
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CARBS 1 a")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("CARBS 1 a", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("Wrong format"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS 1 a")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("Wrong format")
 
         //CARBS 1 00
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CARBS 1 00")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("CARBS 1 00", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("Wrong format"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS 1 00")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("Wrong format")
 
         //CARBS 1 12:01
         `when`(dateUtilMocked.timeString(anyLong())).thenReturn("12:01PM")
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CARBS 1 12:01")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("CARBS 1 12:01", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To enter 1g at 12:01PM reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS 1 12:01")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To enter 1g at 12:01PM reply with code")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[3].text.startsWith("Carbs 1g entered successfully"))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).startsWith("Carbs 1g entered successfully")
 
         //CARBS 1 3:01AM
         `when`(dateUtilMocked.timeString(anyLong())).thenReturn("03:01AM")
         smsCommunicatorPlugin.messages = ArrayList()
         sms = Sms("1234", "CARBS 1 3:01AM")
         smsCommunicatorPlugin.processSms(sms)
-        Assertions.assertEquals("CARBS 1 3:01AM", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[1].text.contains("To enter 1g at 03:01AM reply with code"))
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("CARBS 1 3:01AM")
+        assertThat(smsCommunicatorPlugin.messages[1].text).contains("To enter 1g at 03:01AM reply with code")
         passCode = smsCommunicatorPlugin.messageToConfirm?.confirmCode!!
         smsCommunicatorPlugin.processSms(Sms("1234", passCode))
-        Assertions.assertEquals(passCode, smsCommunicatorPlugin.messages[2].text)
-        Assertions.assertTrue(smsCommunicatorPlugin.messages[3].text.startsWith("Carbs 1g entered successfully"))
+        assertThat(smsCommunicatorPlugin.messages[2].text).isEqualTo(passCode)
+        assertThat(smsCommunicatorPlugin.messages[3].text).startsWith("Carbs 1g entered successfully")
     }
 
     @Test fun sendNotificationToAllNumbers() {
         smsCommunicatorPlugin.messages = ArrayList()
         smsCommunicatorPlugin.sendNotificationToAllNumbers("abc")
-        Assertions.assertEquals("abc", smsCommunicatorPlugin.messages[0].text)
-        Assertions.assertEquals("abc", smsCommunicatorPlugin.messages[1].text)
+        assertThat(smsCommunicatorPlugin.messages[0].text).isEqualTo("abc")
+        assertThat(smsCommunicatorPlugin.messages[1].text).isEqualTo("abc")
     }
 }

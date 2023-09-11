@@ -5,12 +5,14 @@ import dagger.android.HasAndroidInjector
 import info.nightscout.androidaps.plugins.pump.common.hw.rileylink.RileyLinkUtil
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.history.database.ErosHistoryDatabase
 import info.nightscout.androidaps.plugins.pump.omnipod.eros.manager.AapsOmnipodErosManager
+import info.nightscout.implementation.utils.DecimalFormatterImpl
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.pump.common.defs.TempBasalPair
 import info.nightscout.rx.TestAapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -38,11 +40,13 @@ class OmnipodErosPumpPluginTest : TestBase() {
     @Mock lateinit var pumpSync: PumpSync
     @Mock lateinit var erosHistoryDatabase: ErosHistoryDatabase
 
+    private lateinit var decimalFormatter: DecimalFormatter
     private var rxBusWrapper = RxBus(TestAapsSchedulers(), aapsLogger)
 
     @BeforeEach fun prepare() {
         `when`(rh.gs(ArgumentMatchers.anyInt(), ArgumentMatchers.anyLong()))
             .thenReturn("")
+        decimalFormatter = DecimalFormatterImpl(rh)
     }
 
     @Test fun testSetTempBasalPercent() {
@@ -53,7 +57,7 @@ class OmnipodErosPumpPluginTest : TestBase() {
             injector, aapsLogger, TestAapsSchedulers(), rxBusWrapper, null,
             rh, null, null, aapsOmnipodErosManager, commandQueue,
             null, null, null, null,
-            rileyLinkUtil, null, null, pumpSync, uiInteraction, erosHistoryDatabase
+            rileyLinkUtil, null, null, pumpSync, uiInteraction, erosHistoryDatabase, decimalFormatter
         )
         val pumpState = PumpSync.PumpState(null, null, null, null, "")
         `when`(pumpSync.expectedPumpState()).thenReturn(pumpState)

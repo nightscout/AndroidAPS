@@ -24,6 +24,10 @@
     <string name="smscommunicator_otp_reset_header">Сбросить авторизацию</string>
     <string name="smscommunicator_otp_install_info">На каждом отслеживающем телефоне установите приложение Authenticator, поддерживающее маркеры TOTP RFC 6238. Популярные бесплатные приложения: \n Authy\n Google Authenticator\n LastPass Authenticator\n FreeOTP Authenticator</string>
     <string name="smscommunicator_otp_reset_warning">После сброса аутентификатора вы делаете все созданные идентификаторы недействительными. Вам нужно будет снова создать их!</string>
+    <string name="smscommunicator_otp_verification_ok">OK</string>
+    <string name="smscommunicator_otp_verification_ivalid_size">НЕВЕРНЫЙ РАЗМЕР!</string>
+    <string name="smscommunicator_otp_verification_wrong_pin">НЕВЕРНЫЙ PIN-КОД</string>
+    <string name="smscommunicator_otp_verification_wrong_otp">НЕВЕРНЫЙ РАЗОВЫЙ КОД</string>
     <string name="sms_wrong_code">Неверный код. Команда отменена.</string>
     <string name="sms_timeout_while_waiting">Время ожидания окончания предыдущего соединения с помпой истекло</string>
     <string name="smscommunicator_allowednumbers">разрешенные телефонные номера</string>
@@ -239,6 +243,7 @@
     <string name="short_tabtitles">Сокращенные наименования вкладок</string>
     <string name="overview_show_notes_field_in_dialogs_title">Показать поле примечаний в диалогах терапии</string>
     <string name="deliverpartofboluswizard">Мастер болюса выполняет расчет, но подается только эта часть рекомендуемого инсулина. Полезно с алгоритмом SMB.</string>
+    <string name="deliver_part_of_boluswizard_reset_time">Подать полный болюс (100%), если гликемия старше</string>
     <string name="enable_bolus_advisor">Вкл помощник болюса</string>
     <string name="enable_bolus_advisor_summary">Воспользуйтесь напоминанием, чтобы начать есть позже, вместо того, чтобы задействовать помощник болюса на высоких значениях ГК (\"пре-болюс\")</string>
     <string name="enablesuperbolus">Активировать суперболюс в помощнике болюса</string>
@@ -303,14 +308,22 @@
     <string name="wearcontrol_title">Контроль с часов</string>
     <string name="wearcontrol_summary">Ставить временные цели и вводить терапию с часов.</string>
     <string name="wear_wizard_settings_summary">Расчеты включены в результат калькулятора: </string>
-    <string name="wear_display_settings">Параметры экрана</string>
     <string name="wear_general_settings">Общие настройки</string>
     <string name="wear_notifysmb_title">Сообщить о супер микро болюсе SMB</string>
     <string name="wear_notifysmb_summary">Показывать супер микро болюс SMB на часах как стандартный болюс.</string>
-    <string name="wear_predictions_summary">Показывать линию тренда на смарт-часах.</string>
-    <string name="wear_predictions_title">Прогнозирование</string>
+    <string name="wear_custom_watchface_settings">Настройка циферблатов</string>
+    <string name="wear_custom_watchface_authorization_title">Авторизация пользовательских циферблатов</string>
+    <string name="wear_custom_watchface_authorization_summary">Авторизовать загруженные пользовательские циферблаты для изменения и блокировки некоторых параметров отображения часов в соответствии с дизайном часов</string>
+    <string name="wear_custom_watchface">Пользовательский циферблат %1$s</string>
+    <string name="wear_load_watchface">Загрузить циферблат</string>
+    <string name="wear_infos_watchface">Циферблат Infos</string>
+    <string name="wear_export_watchface">Экспортировать шаблон</string>
+    <string name="wear_new_custom_watchface_exported">Пользовательский шаблон циферблата экспортирован</string>
     <string name="resend_all_data">повторить отправку всех данных</string>
     <string name="open_settings_on_wear">Открыть настройки на Wear</string>
+    <string name="cwf_infos_pref_locked">Список настроек, блокируемых циферблатом</string>
+    <string name="cwf_infos_pref_required">Список настроек, требующихся для циферблата</string>
+    <string name="cwf_infos_view_title">Список полей, входящих в циферблат</string>
     <!--    PersistentNotification-->
     <string name="description_persistent_notification">Показывает текущие уведомления и краткий обзор событий цикла</string>
     <string name="old_data">старые данные</string>

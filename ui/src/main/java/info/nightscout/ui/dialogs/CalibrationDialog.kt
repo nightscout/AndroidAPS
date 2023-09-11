@@ -14,9 +14,8 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.XDripBroadcast
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.logging.UserEntryLogger
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.utils.HtmlHelper
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.ui.databinding.DialogCalibrationBinding
 import java.text.DecimalFormat
@@ -27,7 +26,7 @@ class CalibrationDialog : DialogFragmentWithDate() {
 
     @Inject lateinit var injector: HasAndroidInjector
     @Inject lateinit var rh: ResourceHelper
-    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var xDripBroadcast: XDripBroadcast
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
@@ -55,11 +54,8 @@ class CalibrationDialog : DialogFragmentWithDate() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val units = profileFunction.getUnits()
-        val bg = Profile.fromMgdlToUnits(
-            glucoseStatusProvider.glucoseStatusData?.glucose
-                ?: 0.0, units
-        )
+        val units = profileUtil.units
+        val bg = profileUtil.fromMgdlToUnits(glucoseStatusProvider.glucoseStatusData?.glucose ?: 0.0)
         if (units == GlucoseUnit.MMOL)
             binding.bg.setParams(
                 savedInstanceState?.getDouble("bg")
@@ -81,11 +77,11 @@ class CalibrationDialog : DialogFragmentWithDate() {
 
     override fun submit(): Boolean {
         if (_binding == null) return false
-        val units = profileFunction.getUnits()
+        val units = profileUtil.units
         val unitLabel = if (units == GlucoseUnit.MMOL) rh.gs(info.nightscout.core.ui.R.string.mmol) else rh.gs(info.nightscout.core.ui.R.string.mgdl)
         val actions: LinkedList<String?> = LinkedList()
         val bg = binding.bg.value
-        actions.add(rh.gs(info.nightscout.core.ui.R.string.bg_label) + ": " + Profile.toCurrentUnitsString(profileFunction, bg) + " " + unitLabel)
+        actions.add(rh.gs(info.nightscout.core.ui.R.string.bg_label) + ": " + profileUtil.stringInCurrentUnitsDetect(bg) + " " + unitLabel)
         if (bg > 0) {
             activity?.let { activity ->
                 OKDialog.showConfirmation(activity, rh.gs(info.nightscout.core.ui.R.string.calibration), HtmlHelper.fromHtml(Joiner.on("<br/>").join(actions)), {

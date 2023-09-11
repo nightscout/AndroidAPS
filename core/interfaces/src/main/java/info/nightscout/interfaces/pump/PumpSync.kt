@@ -91,10 +91,10 @@ interface PumpSync {
                 if (isAbsolute) rate
                 else profile.getBasal(time) * rate / 100
 
-            fun toStringFull(dateUtil: DateUtil): String {
+            fun toStringFull(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String {
                 return when {
                     isAbsolute -> {
-                        DecimalFormatter.to2Decimal(rate) + "U/h @" +
+                        decimalFormatter.to2Decimal(rate) + "U/h @" +
                             dateUtil.timeString(timestamp) +
                             " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
                     }
@@ -130,10 +130,12 @@ interface PumpSync {
 
             val plannedRemainingMinutes: Long
                 get() = max(T.msecs(end - System.currentTimeMillis()).mins(), 0L)
+
             private fun getPassedDurationToTimeInMinutes(time: Long): Int =
                 ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()
-            fun toStringFull(dateUtil: DateUtil): String =
-                "E " + DecimalFormatter.to2Decimal(rate) + "U/h @" +
+
+            fun toStringFull(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String =
+                "E " + decimalFormatter.to2Decimal(rate) + "U/h @" +
                     dateUtil.timeString(timestamp) +
                     " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "min"
         }

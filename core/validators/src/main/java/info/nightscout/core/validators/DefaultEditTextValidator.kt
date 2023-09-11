@@ -34,8 +34,7 @@ import info.nightscout.core.validators.validators.PinStrengthValidator
 import info.nightscout.core.validators.validators.RegexpValidator
 import info.nightscout.core.validators.validators.Validator
 import info.nightscout.core.validators.validators.WebUrlValidator
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.shared.interfaces.ProfileUtil
 import javax.inject.Inject
 
 @Suppress("SpellCheckingInspection")
@@ -61,7 +60,7 @@ class DefaultEditTextValidator : EditTextValidator {
     private var floatminNumber = 0f
     private var floatmaxNumber = 0f
 
-    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
 
     @Suppress("unused")
     constructor(editTextView: EditText, context: Context) {
@@ -98,7 +97,6 @@ class DefaultEditTextValidator : EditTextValidator {
     }
 
     private fun setEditText(editText: EditText) {
-        //editTextView?.removeTextChangedListener(textWatcher)
         editTextView = editText
         editText.addTextChangedListener(getTextWatcher())
     }
@@ -110,7 +108,9 @@ class DefaultEditTextValidator : EditTextValidator {
                     testValidity()
                 }
 
-                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
+                override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) { /* not needed */
+                }
+
                 override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
                     if (!TextUtils.isEmpty(s) && isErrorShown) {
                         try {
@@ -156,9 +156,12 @@ class DefaultEditTextValidator : EditTextValidator {
             EditTextValidator.TEST_PERSONNAME          -> PersonNameValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_notvalid_personname) else testErrorString)
             EditTextValidator.TEST_PERSONFULLNAME      -> PersonFullNameValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_notvalid_personfullname) else testErrorString)
             EditTextValidator.TEST_MIN_LENGTH          -> MinDigitLengthValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_not_a_minimum_length) else testErrorString, minLength)
-            EditTextValidator.TEST_BG_RANGE            -> BgRangeValidator(if (TextUtils.isEmpty(testErrorString)) context.getString(R.string.error_only_numeric_digits_range_allowed,
-                Profile.fromMgdlToUnits(minMgdl.toDouble(), profileFunction.getUnits()).toString(), Profile.fromMgdlToUnits(maxMgdl.toDouble(), profileFunction.getUnits()).toString()) else
-                                                                                                                                                 testErrorString, minMgdl, maxMgdl, profileFunction)
+            EditTextValidator.TEST_BG_RANGE            -> BgRangeValidator(
+                if (TextUtils.isEmpty(testErrorString)) context.getString(
+                    R.string.error_only_numeric_digits_range_allowed,
+                    profileUtil.fromMgdlToUnits(minMgdl.toDouble()).toString(), profileUtil.fromMgdlToUnits(maxMgdl.toDouble()).toString()
+                ) else testErrorString, minMgdl, maxMgdl, profileUtil
+            )
 
             EditTextValidator.TEST_CUSTOM              -> {
                 // must specify the fully qualified class name & an error message

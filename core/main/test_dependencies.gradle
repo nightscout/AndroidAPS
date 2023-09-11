@@ -8,7 +8,6 @@ dependencies {
     testImplementation "joda-time:joda-time:$jodatime_version"
     testImplementation 'com.google.truth:truth:1.1.5'
     testImplementation "org.skyscreamer:jsonassert:1.5.0"
-    testImplementation "org.hamcrest:hamcrest-all:1.3"
 
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "androidx.test.ext:junit-ktx:$androidx_junit_version"

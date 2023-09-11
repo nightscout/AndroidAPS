@@ -40,6 +40,7 @@
     <string name="metadata_wear_import_filename">Bestandsnaam: %1$s</string>
     <string name="metadata_label_plugin_version">Plugin versie: %1$s</string>
     <string name="metadata_label_watchface_name_version">Naam: %1$s (%2$s)</string>
+    <string name="metadata_label_watchface_infos">Info: %1$s</string>
     <string name="pref_show_iob">Toon IOB</string>
     <string name="pref_show_detailed_iob">Toon gedetailleerde IOB</string>
     <string name="pref_show_cob">Toon COB</string>

@@ -7,9 +7,8 @@ import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.iob.GlucoseStatus
 import info.nightscout.interfaces.iob.InMemoryGlucoseValue
 import info.nightscout.interfaces.iob.IobCobCalculator
-import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
-import info.nightscout.sharedtests.TestBase
+import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -19,9 +18,8 @@ import org.mockito.Mockito
 /**
  * Created by mike on 26.03.2018.
  */
-class GlucoseStatusTest : TestBase() {
+class GlucoseStatusTest : TestBaseWithProfile() {
 
-    @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var iobCobCalculatorPlugin: IobCobCalculator
     @Mock lateinit var autosensDataStore: AutosensDataStore
 
@@ -32,7 +30,7 @@ class GlucoseStatusTest : TestBase() {
 
     @Test fun toStringShouldBeOverloaded() {
         val glucoseStatus = GlucoseStatus(glucose = 0.0, noise = 0.0, delta = 0.0, shortAvgDelta = 0.0, longAvgDelta = 0.0, date = 0)
-        Assertions.assertEquals(true, glucoseStatus.log().contains("Delta"))
+        Assertions.assertEquals(true, glucoseStatus.log(decimalFormatter).contains("Delta"))
     }
 
     @Test fun roundTest() {
@@ -42,7 +40,7 @@ class GlucoseStatusTest : TestBase() {
 
     @Test fun calculateValidGlucoseStatus() {
         Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateValidBgData())
-        val glucoseStatus = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
+        val glucoseStatus = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil, decimalFormatter).glucoseStatusData!!
         Assertions.assertEquals(214.0, glucoseStatus.glucose, 0.001)
         Assertions.assertEquals(-2.0, glucoseStatus.delta, 0.001)
         Assertions.assertEquals(-2.5, glucoseStatus.shortAvgDelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
@@ -73,7 +71,7 @@ class GlucoseStatusTest : TestBase() {
 
     @Test fun oneRecordShouldProduceZeroDeltas() {
         Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateOneCurrentRecordBgData())
-        val glucoseStatus: GlucoseStatus = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData!!
+        val glucoseStatus: GlucoseStatus = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil, decimalFormatter).glucoseStatusData!!
         Assertions.assertEquals(214.0, glucoseStatus.glucose, 0.001)
         Assertions.assertEquals(0.0, glucoseStatus.delta, 0.001)
         Assertions.assertEquals(0.0, glucoseStatus.shortAvgDelta, 0.001) // -2 -2.5 -3 deltas are relative to current value
@@ -83,19 +81,19 @@ class GlucoseStatusTest : TestBase() {
 
     @Test fun insufficientDataShouldReturnNull() {
         Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateInsufficientBgData())
-        val glucoseStatus: GlucoseStatus? = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData
+        val glucoseStatus: GlucoseStatus? = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil, decimalFormatter).glucoseStatusData
         Assertions.assertEquals(null, glucoseStatus)
     }
 
     @Test fun oldDataShouldReturnNull() {
         Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateOldBgData())
-        val glucoseStatus: GlucoseStatus? = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil).glucoseStatusData
+        val glucoseStatus: GlucoseStatus? = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil, decimalFormatter).glucoseStatusData
         Assertions.assertEquals(null, glucoseStatus)
     }
 
     @Test fun returnOldDataIfAllowed() {
         Mockito.`when`(autosensDataStore.getBucketedDataTableCopy()).thenReturn(generateOldBgData())
-        val glucoseStatus: GlucoseStatus? = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil).getGlucoseStatusData(true)
+        val glucoseStatus: GlucoseStatus? = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculatorPlugin, dateUtil, decimalFormatter).getGlucoseStatusData(true)
         Assertions.assertNotEquals(null, glucoseStatus)
     }
 

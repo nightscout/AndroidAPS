@@ -9,6 +9,7 @@ import info.nightscout.implementation.overview.OverviewDataImpl
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.DefaultValueHelper
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.plugins.iob.iobCobCalculator.IobCobCalculatorPlugin
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -33,7 +34,8 @@ class HistoryBrowserData @Inject constructor(
     profileFunction: ProfileFunction,
     repository: AppRepository,
     fabricPrivacy: FabricPrivacy,
-    calculationWorkflow: CalculationWorkflow
+    calculationWorkflow: CalculationWorkflow,
+    decimalFormatter: DecimalFormatter
 ) {
 
     var iobCobCalculator: IobCobCalculatorPlugin
@@ -50,7 +52,8 @@ class HistoryBrowserData @Inject constructor(
                 activePlugin,
                 defaultValueHelper,
                 profileFunction,
-                repository
+                repository,
+                decimalFormatter
             )
         iobCobCalculator =
             IobCobCalculatorPlugin(
@@ -66,7 +69,8 @@ class HistoryBrowserData @Inject constructor(
                 dateUtil,
                 repository,
                 overviewData,
-                calculationWorkflow
+                calculationWorkflow,
+                decimalFormatter
             )
     }
 }

@@ -8,7 +8,6 @@ import info.nightscout.androidaps.danar.DanaRPlugin
 import info.nightscout.androidaps.danar.comm.MessageBase
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.constraints.Constraints
-import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
@@ -17,11 +16,7 @@ import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryRecordDao
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.shared.interfaces.ResourceHelper
-import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
-import info.nightscout.sharedtests.TestBase
-import info.nightscout.sharedtests.TestPumpPlugin
+import info.nightscout.sharedtests.TestBaseWithProfile
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
@@ -29,15 +24,11 @@ import org.mockito.Mockito.anyBoolean
 import org.mockito.Mockito.`when`
 import org.mockito.kotlin.doNothing
 
-open class DanaRTestBase : TestBase() {
+open class DanaRTestBase : TestBaseWithProfile() {
 
-    @Mock lateinit var sp: SP
-    @Mock lateinit var activePlugin: ActivePlugin
-    @Mock lateinit var dateUtil: DateUtil
     @Mock lateinit var danaRPlugin: DanaRPlugin
     @Mock lateinit var danaRKoreanPlugin: DanaRKoreanPlugin
     @Mock lateinit var danaRv2Plugin: DanaRv2Plugin
-    @Mock lateinit var rh: ResourceHelper
     @Mock lateinit var configBuilder: ConfigBuilder
     @Mock lateinit var commandQueue: CommandQueue
     @Mock lateinit var detailedBolusInfoStorage: DetailedBolusInfoStorage
@@ -47,13 +38,9 @@ open class DanaRTestBase : TestBase() {
     @Mock lateinit var instantiator: Instantiator
     @Mock lateinit var uiInteraction: UiInteraction
 
-    private lateinit var testPumpPlugin: TestPumpPlugin
-
     @BeforeEach
     fun setup() {
-        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator)
-        testPumpPlugin = TestPumpPlugin(injector)
-        `when`(activePlugin.activePump).thenReturn(testPumpPlugin)
+        danaPump = DanaPump(aapsLogger, sp, dateUtil, instantiator, decimalFormatter)
         doNothing().`when`(danaRKoreanPlugin).setPluginEnabled(anyObject(), anyBoolean())
         doNothing().`when`(danaRPlugin).setPluginEnabled(anyObject(), anyBoolean())
         doNothing().`when`(danaRKoreanPlugin).setFragmentVisible(anyObject(), anyBoolean())

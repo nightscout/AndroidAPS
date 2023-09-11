@@ -14,13 +14,6 @@ class GlucoseValueExtensionKtTest : TestBaseWithProfile() {
     private val inMemoryGlucoseValue = InMemoryGlucoseValue(1000, 100.0, sourceSensor = GlucoseValue.SourceSensor.UNKNOWN)
     @Test
     fun valueToUnitsString() {
-        Assertions.assertEquals("100", glucoseValue.valueToUnitsString(GlucoseUnit.MGDL))
-        Assertions.assertEquals("5.6", glucoseValue.valueToUnitsString(GlucoseUnit.MMOL))
-    }
-    @Test
-    fun inMemoryValueToUnitsString() {
-        Assertions.assertEquals("100", inMemoryGlucoseValue.valueToUnitsString(GlucoseUnit.MGDL))
-        Assertions.assertEquals("5.6", inMemoryGlucoseValue.valueToUnitsString(GlucoseUnit.MMOL))
     }
     @Test
     fun inMemoryValueToUnits() {

@@ -47,6 +47,7 @@ class FillDialog : DialogFragmentWithDate() {
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var protectionCheck: ProtectionCheck
     @Inject lateinit var uiInteraction: UiInteraction
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private var queryingProtection = false
     private val disposable = CompositeDisposable()
@@ -76,12 +77,12 @@ class FillDialog : DialogFragmentWithDate() {
         val bolusStep = activePlugin.activePump.pumpDescription.bolusStep
         binding.fillInsulinAmount.setParams(
             savedInstanceState?.getDouble("fill_insulin_amount")
-                ?: 0.0, 0.0, maxInsulin, bolusStep, DecimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump), true, binding.okcancel.ok
+                ?: 0.0, 0.0, maxInsulin, bolusStep, decimalFormatter.pumpSupportedBolusFormat(activePlugin.activePump.pumpDescription.bolusStep), true, binding.okcancel.ok
         )
         val amount1 = sp.getDouble("fill_button1", 0.3)
         if (amount1 > 0) {
             binding.fillPresetButton1.visibility = View.VISIBLE
-            binding.fillPresetButton1.text = DecimalFormatter.toPumpSupportedBolus(amount1, activePlugin.activePump) // + "U");
+            binding.fillPresetButton1.text = decimalFormatter.toPumpSupportedBolus(amount1, activePlugin.activePump.pumpDescription.bolusStep) // + "U");
             binding.fillPresetButton1.setOnClickListener { binding.fillInsulinAmount.value = amount1 }
         } else {
             binding.fillPresetButton1.visibility = View.GONE
@@ -89,7 +90,7 @@ class FillDialog : DialogFragmentWithDate() {
         val amount2 = sp.getDouble("fill_button2", 0.0)
         if (amount2 > 0) {
             binding.fillPresetButton2.visibility = View.VISIBLE
-            binding.fillPresetButton2.text = DecimalFormatter.toPumpSupportedBolus(amount2, activePlugin.activePump) // + "U");
+            binding.fillPresetButton2.text = decimalFormatter.toPumpSupportedBolus(amount2, activePlugin.activePump.pumpDescription.bolusStep) // + "U");
             binding.fillPresetButton2.setOnClickListener { binding.fillInsulinAmount.value = amount2 }
         } else {
             binding.fillPresetButton2.visibility = View.GONE
@@ -97,7 +98,7 @@ class FillDialog : DialogFragmentWithDate() {
         val amount3 = sp.getDouble("fill_button3", 0.0)
         if (amount3 > 0) {
             binding.fillPresetButton3.visibility = View.VISIBLE
-            binding.fillPresetButton3.text = DecimalFormatter.toPumpSupportedBolus(amount3, activePlugin.activePump) // + "U");
+            binding.fillPresetButton3.text = decimalFormatter.toPumpSupportedBolus(amount3, activePlugin.activePump.pumpDescription.bolusStep) // + "U");
             binding.fillPresetButton3.setOnClickListener { binding.fillInsulinAmount.value = amount3 }
         } else {
             binding.fillPresetButton3.visibility = View.GONE
@@ -119,7 +120,10 @@ class FillDialog : DialogFragmentWithDate() {
         if (insulinAfterConstraints > 0) {
             actions.add(rh.gs(R.string.fill_warning))
             actions.add("")
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + DecimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump, rh).formatColor(context, rh, info.nightscout.core.ui.R.attr.insulinButtonColor))
+            actions.add(
+                rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + decimalFormatter.toPumpSupportedBolus(insulinAfterConstraints, activePlugin.activePump.pumpDescription.bolusStep)
+                    .formatColor(context, rh, info.nightscout.core.ui.R.attr.insulinButtonColor)
+            )
             if (abs(insulinAfterConstraints - insulin) > 0.01)
                 actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus_constraint_applied_warn, insulin, insulinAfterConstraints).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
         }

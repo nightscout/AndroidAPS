@@ -52,6 +52,7 @@ class IobCobOrefWorker @Inject internal constructor(
     @Inject lateinit var repository: AppRepository
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
     @Inject lateinit var instantiator: Instantiator
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     class IobCobOrefWorkerData(
         val injector: HasAndroidInjector,
@@ -186,7 +187,7 @@ class IobCobOrefWorker @Inject internal constructor(
                     autosensData.carbsFromBolus += recentCarbTreatment.amount
                     val isAAPSOrWeighted = activePlugin.activeSensitivity.isMinCarbsAbsorptionDynamic
                     autosensData.activeCarbsList.add(fromCarbs(recentCarbTreatment, isAAPSOrWeighted, profileFunction, aapsLogger, dateUtil, sp))
-                    autosensData.pastSensitivity += "[" + DecimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
+                    autosensData.pastSensitivity += "[" + decimalFormatter.to0Decimal(recentCarbTreatment.amount) + "g]"
                 }
 
                 // if we are absorbing carbs

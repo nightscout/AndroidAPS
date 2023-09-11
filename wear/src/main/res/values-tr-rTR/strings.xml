@@ -24,6 +24,11 @@
     <string name="pref_vibrate_on_bolus">Bolus\'ta Titreşim</string>
     <string name="pref_units_for_actions">Eylemler için Birimler</string>
     <string name="units_short">Ü</string>
+    <string name="pref_display_settings">Ekran</string>
+    <string name="pref_graph_settings">Grafik</string>
+    <string name="pref_interface_settings">Arayüz</string>
+    <string name="pref_others_settings">Diğer</string>
+    <string name="pref_complication_settings">Komplikasyon</string>
     <string name="pref_show_date">Tarihi Göster</string>
     <string name="pref_show_iob">IOB\'yi göster</string>
     <string name="pref_show_detailed_iob">Ayrıntılı AİNS göster</string>
@@ -41,6 +46,7 @@
     <string name="pref_show_ago">Önce Göster</string>
     <string name="pref_dark" comment="Enables dark visual theme">Koyu</string>
     <string name="pref_highlight_basals">Bazalları Vurgula</string>
+    <string name="pref_prediction_lines">Tahminleri göster</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Eşleşen bölücü</string>
     <string name="pref_chart_timeframe">Grafik Zaman Çerçevesi</string>
     <string name="pref_1_hour">1 saat</string>

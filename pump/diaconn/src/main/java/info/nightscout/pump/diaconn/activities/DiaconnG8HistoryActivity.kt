@@ -42,6 +42,7 @@ class DiaconnG8HistoryActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var rh: ResourceHelper
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private val disposable = CompositeDisposable()
 
@@ -126,10 +127,10 @@ class DiaconnG8HistoryActivity : TranslatedDaggerAppCompatActivity() {
         override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
             val record = historyList[position]
             holder.time.text = dateUtil.dateAndTimeString(record.timestamp)
-            holder.value.text = DecimalFormatter.to2Decimal(record.value)
+            holder.value.text = decimalFormatter.to2Decimal(record.value)
             holder.stringValue.text = record.stringValue
             holder.bolusType.text = record.bolusType
-            holder.duration.text = DecimalFormatter.to0Decimal(record.duration.toDouble())
+            holder.duration.text = decimalFormatter.to0Decimal(record.duration.toDouble())
             holder.alarm.text = record.alarm
             when (showingType) {
                 RecordTypes.RECORD_TYPE_ALARM     -> {
@@ -172,18 +173,7 @@ class DiaconnG8HistoryActivity : TranslatedDaggerAppCompatActivity() {
                     holder.alarm.visibility = View.GONE
                 }
 
-                RecordTypes.RECORD_TYPE_BASALHOUR -> {
-                    holder.time.visibility = View.VISIBLE
-                    holder.value.visibility = View.VISIBLE
-                    holder.stringValue.visibility = View.VISIBLE
-                    holder.bolusType.visibility = View.GONE
-                    holder.duration.visibility = View.GONE
-                    holder.dailyBasal.visibility = View.GONE
-                    holder.dailyBolus.visibility = View.GONE
-                    holder.dailyTotal.visibility = View.GONE
-                    holder.alarm.visibility = View.GONE
-                }
-
+                RecordTypes.RECORD_TYPE_BASALHOUR,
                 RecordTypes.RECORD_TYPE_REFILL    -> {
                     holder.time.visibility = View.VISIBLE
                     holder.value.visibility = View.VISIBLE

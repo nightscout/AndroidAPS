@@ -34,16 +34,16 @@ private fun TemporaryBasal.netExtendedRate(profile: Profile) = rate - profile.ge
 val TemporaryBasal.durationInMinutes
     get() = T.msecs(duration).mins()
 
-fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil): String {
+fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String {
     return when {
         type == TemporaryBasal.Type.FAKE_EXTENDED -> {
-            DecimalFormatter.to2Decimal(rate) + "U/h (" + DecimalFormatter.to2Decimal(netExtendedRate(profile)) + "E) @" +
+            decimalFormatter.to2Decimal(rate) + "U/h (" + decimalFormatter.to2Decimal(netExtendedRate(profile)) + "E) @" +
                 dateUtil.timeString(timestamp) +
                 " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
 
         isAbsolute                                -> {
-            DecimalFormatter.to2Decimal(rate) + "U/h @" +
+            decimalFormatter.to2Decimal(rate) + "U/h @" +
                 dateUtil.timeString(timestamp) +
                 " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + durationInMinutes + "'"
         }
@@ -56,9 +56,9 @@ fun TemporaryBasal.toStringFull(profile: Profile, dateUtil: DateUtil): String {
     }
 }
 
-fun TemporaryBasal.toStringShort(): String =
-    if (isAbsolute || type == TemporaryBasal.Type.FAKE_EXTENDED) DecimalFormatter.to2Decimal(rate) + "U/h"
-    else "${DecimalFormatter.to0Decimal(rate)}%"
+fun TemporaryBasal.toStringShort(decimalFormatter: DecimalFormatter): String =
+    if (isAbsolute || type == TemporaryBasal.Type.FAKE_EXTENDED) decimalFormatter.to2Decimal(rate) + "U/h"
+    else "${decimalFormatter.to0Decimal(rate)}%"
 
 fun TemporaryBasal.iobCalc(time: Long, profile: Profile, insulinInterface: Insulin): IobTotal {
     if (!isValid) return IobTotal(time)

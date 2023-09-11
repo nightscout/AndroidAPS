@@ -64,6 +64,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
     protected PumpSync pumpSync;
     protected UiInteraction uiInteraction;
     protected DanaHistoryDatabase danaHistoryDatabase;
+    protected DecimalFormatter decimalFormatter;
     protected AbstractDanaRPlugin(
             HasAndroidInjector injector,
             DanaPump danaPump,
@@ -78,7 +79,8 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             DateUtil dateUtil,
             PumpSync pumpSync,
             UiInteraction uiInteraction,
-            DanaHistoryDatabase danaHistoryDatabase
+            DanaHistoryDatabase danaHistoryDatabase,
+            DecimalFormatter decimalFormatter
     ) {
         super(new PluginDescription()
                         .mainType(PluginType.PUMP)
@@ -100,6 +102,7 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
         this.pumpSync = pumpSync;
         this.uiInteraction = uiInteraction;
         this.danaHistoryDatabase = danaHistoryDatabase;
+        this.decimalFormatter = decimalFormatter;
     }
 
     @Override protected void onStart() {
@@ -496,19 +499,19 @@ public abstract class AbstractDanaRPlugin extends PumpPluginBase implements Pump
             ret += "LastConn: " + agoMin + " min ago\n";
         }
         if (danaPump.getLastBolusTime() != 0) {
-            ret += "LastBolus: " + DecimalFormatter.INSTANCE.to2Decimal(danaPump.getLastBolusAmount()) + "U @" + android.text.format.DateFormat.format("HH:mm", danaPump.getLastBolusTime()) + "\n";
+            ret += "LastBolus: " + decimalFormatter.to2Decimal(danaPump.getLastBolusAmount()) + "U @" + android.text.format.DateFormat.format("HH:mm", danaPump.getLastBolusTime()) + "\n";
         }
         PumpSync.PumpState pumpState = pumpSync.expectedPumpState();
         if (pumpState.getTemporaryBasal() != null) {
-            ret += "Temp: " + pumpState.getTemporaryBasal().toStringFull(dateUtil) + "\n";
+            ret += "Temp: " + pumpState.getTemporaryBasal().toStringFull(dateUtil, decimalFormatter) + "\n";
         }
         if (pumpState.getExtendedBolus() != null) {
-            ret += "Extended: " + pumpState.getExtendedBolus().toStringFull(dateUtil) + "\n";
+            ret += "Extended: " + pumpState.getExtendedBolus().toStringFull(dateUtil, decimalFormatter) + "\n";
         }
         if (!veryShort) {
-            ret += "TDD: " + DecimalFormatter.INSTANCE.to0Decimal(danaPump.getDailyTotalUnits()) + " / " + danaPump.getMaxDailyTotalUnits() + " U\n";
+            ret += "TDD: " + decimalFormatter.to0Decimal(danaPump.getDailyTotalUnits()) + " / " + danaPump.getMaxDailyTotalUnits() + " U\n";
         }
-        ret += "Reserv: " + DecimalFormatter.INSTANCE.to0Decimal(danaPump.getReservoirRemainingUnits()) + "U\n";
+        ret += "Reserv: " + decimalFormatter.to0Decimal(danaPump.getReservoirRemainingUnits()) + "U\n";
         ret += "Batt: " + danaPump.getBatteryRemaining() + "\n";
         return ret;
     }

@@ -79,7 +79,8 @@ class DanaRSPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     private val dateUtil: DateUtil,
     private val uiInteraction: UiInteraction,
-    private val danaHistoryDatabase: DanaHistoryDatabase
+    private val danaHistoryDatabase: DanaHistoryDatabase,
+    private val decimalFormatter: DecimalFormatter
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -617,7 +618,7 @@ class DanaRSPlugin @Inject constructor(
             ret += "LastConn: $agoMin minAgo\n"
         }
         if (danaPump.lastBolusTime != 0L)
-            ret += "LastBolus: ${DecimalFormatter.to2Decimal(danaPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", danaPump.lastBolusTime)}"
+            ret += "LastBolus: ${decimalFormatter.to2Decimal(danaPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", danaPump.lastBolusTime)}"
 
         if (danaPump.isTempBasalInProgress)
             ret += "Temp: ${danaPump.temporaryBasalToString()}"
@@ -626,9 +627,9 @@ class DanaRSPlugin @Inject constructor(
             ret += "Extended: ${danaPump.extendedBolusToString()}\n"
 
         if (!veryShort) {
-            ret += "TDD: ${DecimalFormatter.to0Decimal(danaPump.dailyTotalUnits)} / ${danaPump.maxDailyTotalUnits} U"
+            ret += "TDD: ${decimalFormatter.to0Decimal(danaPump.dailyTotalUnits)} / ${danaPump.maxDailyTotalUnits} U"
         }
-        ret += "Reserv: ${DecimalFormatter.to0Decimal(danaPump.reservoirRemainingUnits)} U"
+        ret += "Reserv: ${decimalFormatter.to0Decimal(danaPump.reservoirRemainingUnits)} U"
         ret += "Batt: ${danaPump.batteryRemaining}"
         return ret
     }

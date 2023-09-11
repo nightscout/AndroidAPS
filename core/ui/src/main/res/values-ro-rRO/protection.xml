@@ -6,15 +6,26 @@
     <string name="application_protection">Protecție aplicație</string>
     <string name="bolus_protection">Protecție bolus</string>
     <string name="settings_password">Parolă setări</string>
+    <string name="settings_pin">Setări PIN</string>
     <string name="application_password">Parolă aplicație</string>
+    <string name="application_pin">PIN Aplicație</string>
     <string name="bolus_password">Parolă bolus</string>
+    <string name="bolus_pin">PIN Bolus</string>
+    <string name="protection_timeout_title">Reținerea parolei și a PIN-ului [s]</string>
+    <string name="protection_timeout_summary">Timpul până la introducerea parolei sau a PIN-ului</string>
     <string name="biometric">Biometric</string>
     <string name="custom_password">Parolă personalizată</string>
+    <string name="custom_pin">PIN particularizat</string>
     <string name="noprotection">Fără protecţie</string>
     <string name="unsecure_fallback_biometric">Trecere la modul nesecurizat biometric</string>
     <string name="unsecure_fallback_descriotion_biometric">Pentru a fi eficientă, protecţia biometrică are nevoie de o parolă principală pentru regresie.\n\nVă rugăm să setaţi o parolă principală!</string>
     <string name="password_set">Parola a fost setată!</string>
+    <string name="pin_set">PIN setat!</string>
     <string name="password_not_set">Parola nu a fost setată</string>
+    <string name="pin_not_set">Cod PIN nesetat</string>
     <string name="password_not_changed">Parola nu a fost modificată</string>
+    <string name="pin_not_changed">PIN nemodificat</string>
+    <string name="pin_cleared">PIN șters!</string>
     <string name="password_hint">Introduceți parola aici</string>
+    <string name="pin_hint">Introduceți codul PIN aici</string>
 </resources>

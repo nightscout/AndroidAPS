@@ -104,6 +104,11 @@
     <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Montrer le bouton \"Suspendre\" dans l\'onglet Omnipod</string>
     <string name="omnipod_common_preferences_time_change_enabled">Changement d\'heure ou fuseau horaire Activé</string>
     <string name="omnipod_common_preferences_expiration_reminder_enabled">Rappel d\'expiration activé</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Lorsque cette option est activée, le pod sonnera quand le temps spécifié est atteint</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Rappel nombre d\'heures avant l\'expiration (72 heures)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Alerte d\'expiration activée</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Lorsque cette option est activée, le pod sonnera lorsque le temps spécifié est atteint et 1 heure avant l\'arrêt définitif</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Alerte nombre d\'heures avant l\'arrêt (80 heures)</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Alerte Réservoir bas activée</string>
     <string name="omnipod_common_preferences_low_reservoir_alert_units">Nombre d\'unités</string>
     <string name="omnipod_common_preferences_automatically_silence_alerts">Rendre automatiquement silencieuses les alertes Pod</string>

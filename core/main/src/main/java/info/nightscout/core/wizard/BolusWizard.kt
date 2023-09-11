@@ -35,12 +35,14 @@ import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -60,6 +62,7 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var sp: SP
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var constraintChecker: Constraints
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
@@ -72,15 +75,14 @@ class BolusWizard @Inject constructor(
     @Inject lateinit var glucoseStatusProvider: GlucoseStatusProvider
     @Inject lateinit var uiInteraction: UiInteraction
     @Inject lateinit var persistenceLayer: PersistenceLayer
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
-
-    var timeStamp : Long
+    var timeStamp: Long
 
     init {
         injector.androidInjector().inject(this)
         timeStamp = dateUtil.now()
     }
-
 
     // Intermediate
     var sens = 0.0
@@ -197,12 +199,12 @@ class BolusWizard @Inject constructor(
         this.totalPercentage = totalPercentage
 
         // Insulin from BG
-        sens = Profile.fromMgdlToUnits(profile.getIsfMgdl(), profileFunction.getUnits())
-        targetBGLow = Profile.fromMgdlToUnits(profile.getTargetLowMgdl(), profileFunction.getUnits())
-        targetBGHigh = Profile.fromMgdlToUnits(profile.getTargetHighMgdl(), profileFunction.getUnits())
+        sens = profileUtil.fromMgdlToUnits(profile.getIsfMgdl())
+        targetBGLow = profileUtil.fromMgdlToUnits(profile.getTargetLowMgdl())
+        targetBGHigh = profileUtil.fromMgdlToUnits(profile.getTargetHighMgdl())
         if (useTT && tempTarget != null) {
-            targetBGLow = Profile.fromMgdlToUnits(tempTarget.lowTarget, profileFunction.getUnits())
-            targetBGHigh = Profile.fromMgdlToUnits(tempTarget.highTarget, profileFunction.getUnits())
+            targetBGLow = profileUtil.fromMgdlToUnits(tempTarget.lowTarget)
+            targetBGHigh = profileUtil.fromMgdlToUnits(tempTarget.highTarget)
         }
         if (useBg && bg > 0) {
             bgDiff = when {
@@ -218,7 +220,7 @@ class BolusWizard @Inject constructor(
         glucoseStatus?.let {
             if (useTrend) {
                 trend = it.shortAvgDelta
-                insulinFromTrend = Profile.fromMgdlToUnits(trend, profileFunction.getUnits()) * 3 / sens
+                insulinFromTrend = profileUtil.fromMgdlToUnits(trend) * 3 / sens
             }
         }
 
@@ -281,19 +283,19 @@ class BolusWizard @Inject constructor(
         val unit = profileFunction.getUnits()
         return BolusCalculatorResult(
             timestamp = dateUtil.now(),
-            targetBGLow = Profile.toMgdl(targetBGLow, unit),
-            targetBGHigh = Profile.toMgdl(targetBGHigh, unit),
-            isf = Profile.toMgdl(sens, unit),
+            targetBGLow = profileUtil.convertToMgdl(targetBGLow, unit),
+            targetBGHigh = profileUtil.convertToMgdl(targetBGHigh, unit),
+            isf = profileUtil.convertToMgdl(sens, unit),
             ic = ic,
             bolusIOB = insulinFromBolusIOB,
             wasBolusIOBUsed = includeBolusIOB,
             basalIOB = insulinFromBasalIOB,
             wasBasalIOBUsed = includeBasalIOB,
-            glucoseValue = Profile.toMgdl(bg, unit),
+            glucoseValue = profileUtil.convertToMgdl(bg, unit),
             wasGlucoseUsed = useBg && bg > 0,
             glucoseDifference = bgDiff,
             glucoseInsulin = insulinFromBG,
-            glucoseTrend = Profile.fromMgdlToUnits(trend, unit),
+            glucoseTrend = profileUtil.fromMgdlToUnits(trend, unit),
             wasTrendUsed = useTrend,
             trendInsulin = insulinFromTrend,
             cob = cob,
@@ -318,8 +320,10 @@ class BolusWizard @Inject constructor(
         val actions: LinkedList<String> = LinkedList()
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, insulinAfterConstraints).formatColor
-                (context, rh, info.nightscout.core.ui.R.attr.bolusColor) + pct)
+            actions.add(
+                rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, insulinAfterConstraints).formatColor
+                    (context, rh, info.nightscout.core.ui.R.attr.bolusColor) + pct
+            )
         }
         if (carbs > 0 && !advisor) {
             var timeShift = ""
@@ -328,19 +332,30 @@ class BolusWizard @Inject constructor(
             } else if (carbTime < 0) {
                 timeShift += " (" + rh.gs(info.nightscout.core.ui.R.string.mins, carbTime) + ")"
             }
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_carbs, carbs).formatColor(context, rh, info.nightscout.core.ui.R.attr.carbsColor) + timeShift)
+            actions.add(
+                rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_carbs, carbs)
+                    .formatColor(context, rh, info.nightscout.core.ui.R.attr.carbsColor) + timeShift
+            )
         }
         if (insulinFromCOB > 0) {
             actions.add(
-                rh.gs(info.nightscout.core.ui.R.string.cobvsiob) + ": " + rh.gs(info.nightscout.core.ui.R.string.formatsignedinsulinunits, insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG).formatColor(context, rh, info.nightscout.core.ui.R.attr
-                    .cobAlertColor)
+                rh.gs(info.nightscout.core.ui.R.string.cobvsiob) + ": " + rh.gs(
+                    info.nightscout.core.ui.R.string.formatsignedinsulinunits,
+                    insulinFromBolusIOB + insulinFromBasalIOB + insulinFromCOB + insulinFromBG
+                ).formatColor(
+                    context, rh, info.nightscout.core.ui.R.attr
+                        .cobAlertColor
+                )
             )
             val absorptionRate = iobCobCalculator.ads.slowAbsorptionPercentage(60)
             if (absorptionRate > .25)
                 actions.add(rh.gs(info.nightscout.core.ui.R.string.slowabsorptiondetected, rh.gac(context, info.nightscout.core.ui.R.attr.cobAlertColor), (absorptionRate * 100).toInt()))
         }
         if (abs(insulinAfterConstraints - calculatedTotalInsulin) > activePlugin.activePump.pumpDescription.pumpType.determineCorrectBolusStepSize(insulinAfterConstraints))
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
+            actions.add(
+                rh.gs(info.nightscout.core.ui.R.string.bolus_constraint_applied_warn, calculatedTotalInsulin, insulinAfterConstraints)
+                    .formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor)
+            )
         if (config.NSCLIENT && insulinAfterConstraints > 0)
             actions.add(rh.gs(info.nightscout.core.ui.R.string.bolus_recorded_only).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
         if (useAlarm && !advisor && carbs > 0 && carbTime > 0)
@@ -362,10 +377,10 @@ class BolusWizard @Inject constructor(
                 automation.removeAutomationEventBolusReminder()
             if (carbs > 0.0)
                 automation.removeAutomationEventEatReminder()
-            if (sp.getBoolean(info.nightscout.core.ui.R.string.key_usebolusadvisor, false) && Profile.toMgdl(bg, profile.units) > 180 && carbs > 0 && carbTime >= 0)
+            if (sp.getBoolean(info.nightscout.core.ui.R.string.key_usebolusadvisor, false) && profileUtil.convertToMgdl(bg, profile.units) > 180 && carbs > 0 && carbTime >= 0)
                 OKDialog.showYesNoCancel(ctx, rh.gs(info.nightscout.core.ui.R.string.bolus_advisor), rh.gs(info.nightscout.core.ui.R.string.bolus_advisor_message),
-                                                                         { bolusAdvisorProcessing(ctx) },
-                                                                         { commonProcessing(ctx) }
+                                         { bolusAdvisorProcessing(ctx) },
+                                         { commonProcessing(ctx) }
                 )
             else
                 commonProcessing(ctx)
@@ -382,7 +397,7 @@ class BolusWizard @Inject constructor(
                 insulin = insulinAfterConstraints
                 carbs = 0.0
                 context = ctx
-                mgdlGlucose = Profile.toMgdl(bg, profile.units)
+                mgdlGlucose = profileUtil.convertToMgdl(bg, profile.units)
                 glucoseType = DetailedBolusInfo.MeterType.MANUAL
                 carbTime = 0
                 bolusCalculatorResult = createBolusCalculatorResult()
@@ -412,8 +427,12 @@ class BolusWizard @Inject constructor(
         var message = rh.gs(info.nightscout.core.ui.R.string.wizard_explain_calc, ic, sens)
         message += "\n" + rh.gs(info.nightscout.core.ui.R.string.wizard_explain_carbs, insulinFromCarbs)
         if (useTT && tempTarget != null) {
-            val tt = if (tempTarget?.lowTarget == tempTarget?.highTarget) tempTarget?.lowValueToUnitsToString(profile.units)
-            else rh.gs(info.nightscout.core.ui.R.string.wizard_explain_tt_to, tempTarget?.lowValueToUnitsToString(profile.units), tempTarget?.highValueToUnitsToString(profile.units))
+            val tt = if (tempTarget?.lowTarget == tempTarget?.highTarget) tempTarget?.lowValueToUnitsToString(profile.units, decimalFormatter)
+            else rh.gs(
+                info.nightscout.core.ui.R.string.wizard_explain_tt_to,
+                tempTarget?.lowValueToUnitsToString(profile.units, decimalFormatter),
+                tempTarget?.highValueToUnitsToString(profile.units, decimalFormatter)
+            )
             message += "\n" + rh.gs(info.nightscout.core.ui.R.string.wizard_explain_tt, tt)
         }
         if (useCob) message += "\n" + rh.gs(info.nightscout.core.ui.R.string.wizard_explain_cob, cob, insulinFromCOB)
@@ -464,16 +483,16 @@ class BolusWizard @Inject constructor(
                     insulin = insulinAfterConstraints
                     carbs = this@BolusWizard.carbs.toDouble()
                     context = ctx
-                    mgdlGlucose = Profile.toMgdl(bg, profile.units)
+                    mgdlGlucose = profileUtil.convertToMgdl(bg, profile.units)
                     glucoseType = DetailedBolusInfo.MeterType.MANUAL
                     carbsTimestamp = dateUtil.now() + T.mins(this@BolusWizard.carbTime.toLong()).msecs()
                     bolusCalculatorResult = createBolusCalculatorResult()
                     notes = this@BolusWizard.notes
                     if (insulin > 0 || carbs > 0) {
                         val action = when {
-                            insulinAfterConstraints.equals(0.0) -> Action.CARBS
-                            carbs.equals(0.0)                   -> Action.BOLUS
-                            else                                -> Action.TREATMENT
+                            insulinAfterConstraints == 0.0 -> Action.CARBS
+                            carbs == 0.0                   -> Action.BOLUS
+                            else                           -> Action.TREATMENT
                         }
                         uel.log(action, if (quickWizard) Sources.QuickWizard else Sources.WizardDialog,
                                 notes,

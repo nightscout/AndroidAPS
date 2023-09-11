@@ -47,6 +47,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
     @Inject FabricPrivacy fabricPrivacy;
     @Inject DateUtil dateUtil;
     @Inject AapsSchedulers aapsSchedulers;
+    @Inject DecimalFormatter decimalFormatter;
 
     private final CompositeDisposable disposable = new CompositeDisposable();
 
@@ -289,7 +290,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
         if (cartridgeStatus == null) return;
         String status;
         if (cartridgeStatus.isInserted())
-            status = DecimalFormatter.INSTANCE.to2Decimal(cartridgeStatus.getRemainingAmount()) + "U";
+            status = decimalFormatter.to2Decimal(cartridgeStatus.getRemainingAmount()) + "U";
         else status = rh.gs(R.string.not_inserted);
         statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.reservoir_label), status));
     }
@@ -297,16 +298,16 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
     private void getTDDItems(List<View> statusItems) {
         if (localInsightPlugin.getTotalDailyDose() == null) return;
         TotalDailyDose tdd = localInsightPlugin.getTotalDailyDose();
-        statusItems.add(getStatusItem(rh.gs(R.string.tdd_bolus), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBolus())));
-        statusItems.add(getStatusItem(rh.gs(R.string.tdd_basal), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBasal())));
-        statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.tdd_total), DecimalFormatter.INSTANCE.to2Decimal(tdd.getBolusAndBasal())));
+        statusItems.add(getStatusItem(rh.gs(R.string.tdd_bolus), decimalFormatter.to2Decimal(tdd.getBolus())));
+        statusItems.add(getStatusItem(rh.gs(R.string.tdd_basal), decimalFormatter.to2Decimal(tdd.getBasal())));
+        statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.tdd_total), decimalFormatter.to2Decimal(tdd.getBolusAndBasal())));
     }
 
     private void getBaseBasalRateItem(List<View> statusItems) {
         if (localInsightPlugin.getActiveBasalRate() == null) return;
         ActiveBasalRate activeBasalRate = localInsightPlugin.getActiveBasalRate();
         statusItems.add(getStatusItem(rh.gs(info.nightscout.core.ui.R.string.base_basal_rate_label),
-                DecimalFormatter.INSTANCE.to2Decimal(activeBasalRate.getActiveBasalRate()) + " U/h (" + activeBasalRate.getActiveBasalProfileName() + ")"));
+                decimalFormatter.to2Decimal(activeBasalRate.getActiveBasalRate()) + " U/h (" + activeBasalRate.getActiveBasalProfileName() + ")"));
     }
 
     private void getTBRItem(List<View> statusItems) {

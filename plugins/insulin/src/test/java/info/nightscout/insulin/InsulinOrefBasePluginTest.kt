@@ -1,5 +1,6 @@
 package info.nightscout.insulin
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.entities.Bolus
@@ -13,7 +14,6 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.shared.interfaces.ResourceHelper
 import org.json.JSONObject
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -81,12 +81,12 @@ class InsulinOrefBasePluginTest {
 
     @Test
     fun testGetDia() {
-        Assertions.assertEquals(5.0, sut.dia, 0.0)
+        assertThat(sut.dia).isEqualTo(5.0)
         testUserDefinedDia = 5.0 + 1
-        Assertions.assertEquals(5.0 + 1, sut.dia, 0.0)
+        assertThat(sut.dia).isEqualTo(5.0 + 1)
         testUserDefinedDia = 5.0 - 1
-        Assertions.assertEquals(5.0, sut.dia, 0.0)
-        Assertions.assertTrue(shortDiaNotificationSend)
+        assertThat(sut.dia).isEqualTo(5.0)
+        assertThat(shortDiaNotificationSend).isTrue()
     }
 
     @Test
@@ -98,22 +98,22 @@ class InsulinOrefBasePluginTest {
         // check directly after bolus
         treatment.timestamp = time
         treatment.amount = 10.0
-        Assertions.assertEquals(10.0, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
+        assertThat(sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib).isWithin(0.01).of(10.0)
         // check after 1 hour
         treatment.timestamp = time - 1 * 60 * 60 * 1000 // 1 hour
         treatment.amount = 10.0
-        Assertions.assertEquals(3.92, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
+        assertThat(sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib).isWithin(0.01).of(3.92)
         // check after 2 hour
         treatment.timestamp = time - 2 * 60 * 60 * 1000 // 2 hours
         treatment.amount = 10.0
-        Assertions.assertEquals(0.77, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
+        assertThat(sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib).isWithin(0.01).of(0.77)
         // check after 3 hour
         treatment.timestamp = time - 3 * 60 * 60 * 1000 // 3 hours
         treatment.amount = 10.0
-        Assertions.assertEquals(0.10, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
+        assertThat(sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib).isWithin(0.01).of(0.10)
         // check after dia
         treatment.timestamp = time - 4 * 60 * 60 * 1000 // 4 hours
         treatment.amount = 10.0
-        Assertions.assertEquals(0.0, sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib, 0.1)
+        assertThat(sut.iobCalcForTreatment(treatment, time, Constants.defaultDIA).iobContrib).isWithin(0.01).of(0.0)
     }
 }

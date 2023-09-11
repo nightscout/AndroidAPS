@@ -15,9 +15,8 @@ import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.overview.OverviewMenus
-import info.nightscout.interfaces.profile.DefaultValueHelper
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.T
 import kotlinx.coroutines.Dispatchers
@@ -41,8 +40,7 @@ class PreparePredictionsWorker(
     @Inject lateinit var loop: Loop
     @Inject lateinit var overviewMenus: OverviewMenus
     @Inject lateinit var dataWorkerStorage: DataWorkerStorage
-    @Inject lateinit var defaultValueHelper: DefaultValueHelper
-    @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var rh: ResourceHelper
 
     class PreparePredictionsData(
@@ -80,7 +78,7 @@ class PreparePredictionsWorker(
 
         val bgListArray: MutableList<DataPointWithLabelInterface> = ArrayList()
         val predictions: MutableList<GlucoseValueDataPoint>? = apsResult?.predictions
-            ?.map { bg -> GlucoseValueDataPoint(bg, profileFunction, rh) }
+            ?.map { bg -> GlucoseValueDataPoint(bg, profileUtil, rh) }
             ?.toMutableList()
         if (predictions != null) {
             predictions.sortWith { o1: GlucoseValueDataPoint, o2: GlucoseValueDataPoint -> o1.x.compareTo(o2.x) }

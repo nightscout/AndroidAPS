@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="eopatch">EOPatch2</string>
     <string name="category_alerts">Alerte</string>
     <string name="eopatch_status">Stare</string>
     <string name="eopatch_base_basal_rate">Rată bazală implicită</string>

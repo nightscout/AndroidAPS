@@ -10,9 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import info.nightscout.core.ui.activities.TranslatedDaggerAppCompatActivity
 import info.nightscout.core.utils.fabric.FabricPrivacy
-import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.plugin.ActivePlugin
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.Callback
@@ -30,6 +28,7 @@ import info.nightscout.rx.events.EventDanaRSyncStatus
 import info.nightscout.rx.events.EventPumpStatusChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
@@ -43,12 +42,14 @@ class DanaHistoryActivity : TranslatedDaggerAppCompatActivity() {
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var aapsLogger: AAPSLogger
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var fabricPrivacy: FabricPrivacy
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var danaHistoryRecordDao: DanaHistoryRecordDao
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var aapsSchedulers: AapsSchedulers
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private val disposable = CompositeDisposable()
 
@@ -71,9 +72,9 @@ class DanaHistoryActivity : TranslatedDaggerAppCompatActivity() {
             .toObservable(EventDanaRSyncStatus::class.java)
             .observeOn(aapsSchedulers.main)
             .subscribe({
-                aapsLogger.debug(LTag.PUMP, "EventDanaRSyncStatus: " + it.message)
-                binding.status.text = it.message
-            }, fabricPrivacy::logException)
+                           aapsLogger.debug(LTag.PUMP, "EventDanaRSyncStatus: " + it.message)
+                           binding.status.text = it.message
+                       }, fabricPrivacy::logException)
         swapAdapter(showingType)
     }
 
@@ -147,7 +148,7 @@ class DanaHistoryActivity : TranslatedDaggerAppCompatActivity() {
         override fun onBindViewHolder(holder: HistoryViewHolder, position: Int) {
             val record = historyList[position]
             holder.binding.time.text = dateUtil.dateAndTimeString(record.timestamp)
-            holder.binding.value.text = DecimalFormatter.to2Decimal(record.value)
+            holder.binding.value.text = decimalFormatter.to2Decimal(record.value)
             holder.binding.stringValue.text = record.stringValue
             holder.binding.bolusType.text = record.bolusType
             holder.binding.duration.text = record.duration.toString()
@@ -194,7 +195,7 @@ class DanaHistoryActivity : TranslatedDaggerAppCompatActivity() {
                 }
 
                 RecordTypes.RECORD_TYPE_GLUCOSE                                                                                                                                                            -> {
-                    holder.binding.value.text = Profile.toUnitsString(record.value, record.value * Constants.MGDL_TO_MMOLL, profileFunction.getUnits())
+                    holder.binding.value.text = profileUtil.fromMgdlToStringInUnits(record.value)
                     holder.binding.time.visibility = View.VISIBLE
                     holder.binding.value.visibility = View.VISIBLE
                     holder.binding.stringValue.visibility = View.GONE

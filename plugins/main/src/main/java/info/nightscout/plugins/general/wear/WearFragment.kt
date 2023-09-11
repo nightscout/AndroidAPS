@@ -111,7 +111,7 @@ class WearFragment : DaggerFragment() {
         wearPlugin.savedCustomWatchface?.let {
             wearPlugin.checkCustomWatchfacePreferences()
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, it.metadata[CwfMetadataKey.CWF_NAME])
-            binding.coverChart.setImageDrawable(it.resDatas[ResFileMap.CUSTOM_WATCHFACE]?.toDrawable(resources))
+            binding.coverChart.setImageDrawable(it.resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources))
             binding.infosCustom.visibility = View.VISIBLE
         } ?:apply {
             binding.customName.text = rh.gs(R.string.wear_custom_watchface, "")

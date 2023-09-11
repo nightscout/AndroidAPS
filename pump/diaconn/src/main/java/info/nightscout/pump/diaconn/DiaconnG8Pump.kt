@@ -17,7 +17,8 @@ import kotlin.math.roundToInt
 @Singleton
 class DiaconnG8Pump @Inject constructor(
     private val aapsLogger: AAPSLogger,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val decimalFormatter: DecimalFormatter
 ) {
 
     var isPumpLogUploadFailed: Boolean = false
@@ -136,9 +137,9 @@ class DiaconnG8Pump @Inject constructor(
 
     fun extendedBolusToString(): String {
         if (!isExtendedInProgress) return ""
-        //return "E "+ DecimalFormatter.to2Decimal(extendedBolusDeliveredSoFar) +"/" + DecimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
+        //return "E "+ decimalFormatter.to2Decimal(extendedBolusDeliveredSoFar) +"/" + decimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
         //     " " + extendedBolusPassedMinutes + "/" + extendedBolusMinutes + "'"
-        return "E "+ DecimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
+        return "E " + decimalFormatter.to2Decimal(extendedBolusAbsoluteRate) + "U/h @" +
             dateUtil.timeString(extendedBolusStart) +
             " " + extendedBolusPassedMinutes + "/" + extendedBolusDurationInMinutes + "'"
     }

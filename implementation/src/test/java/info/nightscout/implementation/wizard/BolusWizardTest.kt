@@ -1,10 +1,10 @@
 package info.nightscout.implementation.wizard
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.wizard.BolusWizard
 import info.nightscout.implementation.iob.GlucoseStatusProviderImpl
-import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.AutosensDataStore
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.constraints.Constraint
@@ -15,7 +15,6 @@ import info.nightscout.interfaces.pump.defs.PumpDescription
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.sharedtests.TestBaseWithProfile
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
 import org.mockito.Mockito
@@ -43,7 +42,8 @@ class BolusWizardTest : TestBaseWithProfile() {
                 it.loop = loop
                 it.dateUtil = dateUtil
                 it.iobCobCalculator = iobCobCalculator
-                it.glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger = aapsLogger, iobCobCalculator = iobCobCalculator, dateUtil = dateUtil)
+                it.glucoseStatusProvider = GlucoseStatusProviderImpl(aapsLogger, iobCobCalculator, dateUtil, decimalFormatter)
+                it.profileUtil = profileUtil
             }
         }
     }
@@ -56,7 +56,6 @@ class BolusWizardTest : TestBaseWithProfile() {
         Mockito.`when`(profile.getIsfMgdl()).thenReturn(insulinSensitivityFactor)
         Mockito.`when`(profile.getIc()).thenReturn(insulinToCarbRatio)
 
-        Mockito.`when`(profileFunction.getUnits()).thenReturn(GlucoseUnit.MGDL)
         Mockito.`when`(iobCobCalculator.calculateIobFromBolus()).thenReturn(IobTotal(System.currentTimeMillis()))
         Mockito.`when`(iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended()).thenReturn(IobTotal(System.currentTimeMillis()))
         testPumpPlugin.pumpDescription = PumpDescription().also {
@@ -114,7 +113,7 @@ class BolusWizardTest : TestBaseWithProfile() {
                 useAlarm = false
             )
         val bolusForBg54 = bw.calculatedTotalInsulin
-        Assertions.assertEquals(bolusForBg42, bolusForBg54, 0.01)
+        assertThat(bolusForBg54).isWithin( 0.01).of(bolusForBg42)
     }
 
     @Test
@@ -160,7 +159,7 @@ class BolusWizardTest : TestBaseWithProfile() {
                 useAlarm = false
             )
         val bolusForBgInRange = bw.calculatedTotalInsulin
-        Assertions.assertTrue(bolusForHighBg > bolusForBgInRange)
+        assertThat(bolusForHighBg).isGreaterThan(bolusForBgInRange)
     }
 
     @Test
@@ -206,6 +205,6 @@ class BolusWizardTest : TestBaseWithProfile() {
                 useAlarm = false
             )
         val bolusForBgInRange = bw.calculatedTotalInsulin
-        Assertions.assertTrue(bolusForLowBg < bolusForBgInRange)
+        assertThat(bolusForLowBg).isLessThan(bolusForBgInRange)
     }
 }

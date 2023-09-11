@@ -9,13 +9,18 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.EffectiveProfileSwitch
 import info.nightscout.database.entities.embedments.InsulinConfiguration
 import info.nightscout.implementation.profile.ProfileStoreObject
+import info.nightscout.implementation.profile.ProfileUtilImpl
+import info.nightscout.implementation.utils.DecimalFormatterImpl
 import info.nightscout.interfaces.Config
+import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileStore
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
 import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -41,6 +46,8 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var sp: SP
 
     lateinit var dateUtil: DateUtil
+    lateinit var profileUtil: ProfileUtil
+    lateinit var decimalFormatter: DecimalFormatter
     lateinit var hardLimits: HardLimits
     val rxBus = RxBus(aapsSchedulers, aapsLogger)
 
@@ -76,9 +83,12 @@ open class TestBaseWithProfile : TestBase() {
             "{\"time\":\"2:00\",\"value\":\"3.4\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}]," +
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
         dateUtil = Mockito.spy(DateUtil(context))
+        decimalFormatter = DecimalFormatterImpl(rh)
+        profileUtil = ProfileUtilImpl(sp, decimalFormatter)
         testPumpPlugin = TestPumpPlugin(profileInjector)
         Mockito.`when`(dateUtil.now()).thenReturn(now)
         Mockito.`when`(activePlugin.activePump).thenReturn(testPumpPlugin)
+        Mockito.`when`(sp.getString(info.nightscout.core.utils.R.string.key_units, GlucoseUnit.MGDL.asText)).thenReturn(GlucoseUnit.MGDL.asText)
         hardLimits = HardLimitsMock(sp, rh)
         validProfile = ProfileSealed.Pure(pureProfileFromJson(JSONObject(validProfileJSON), dateUtil)!!)
         effectiveProfileSwitch = EffectiveProfileSwitch(

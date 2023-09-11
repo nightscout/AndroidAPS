@@ -36,6 +36,7 @@ import info.nightscout.interfaces.iob.IobTotal
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventTempBasalChange
@@ -69,6 +70,7 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
     @Inject lateinit var aapsSchedulers: AapsSchedulers
     @Inject lateinit var uel: UserEntryLogger
     @Inject lateinit var repository: AppRepository
+    @Inject lateinit var decimalFormatter: DecimalFormatter
 
     private var _binding: TreatmentsTempbasalsFragmentBinding? = null
 
@@ -263,8 +265,13 @@ class TreatmentsTemporaryBasalsFragment : DaggerFragment(), MenuProvider {
             val isFakeExtended = tempBasal.type == TemporaryBasal.Type.FAKE_EXTENDED
             val profile = profileFunction.getProfile(dateUtil.now())
             if (profile != null)
-                return "${if (isFakeExtended) rh.gs(info.nightscout.core.ui.R.string.extended_bolus) else rh.gs(info.nightscout.core.ui.R.string.tempbasal_label)}: ${tempBasal.toStringFull(profile, 
-                                                                                                                                                                                            dateUtil)}\n" +
+                return "${if (isFakeExtended) rh.gs(info.nightscout.core.ui.R.string.extended_bolus) else rh.gs(info.nightscout.core.ui.R.string.tempbasal_label)}: ${
+                    tempBasal.toStringFull(
+                        profile,
+                        dateUtil,
+                        decimalFormatter
+                    )
+                }\n" +
                     "${rh.gs(info.nightscout.core.ui.R.string.date)}: ${dateUtil.dateAndTimeString(tempBasal.timestamp)}"
         }
         return rh.gs(info.nightscout.core.ui.R.string.confirm_remove_multiple_items, selectedItems.size())

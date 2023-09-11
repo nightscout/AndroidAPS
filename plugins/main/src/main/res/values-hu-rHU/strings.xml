@@ -55,9 +55,7 @@
     <!--    Iob-->
     <!--    Wear-->
     <string name="wear_settings">Wear beállítások</string>
-    <string name="wear_display_settings">Megjelenítési beállítások</string>
     <string name="wear_general_settings">Általános beállítások</string>
-    <string name="wear_predictions_title">Előrejelzések</string>
     <!--    PersistentNotification-->
     <string name="old_data">RÉGI ADAT</string>
 </resources>

@@ -103,4 +103,7 @@
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">STOP APĂSAT</string>
     <!--QuickWizard-->
+    <string name="overview_editquickwizard_usepercentage">Calculul procentajului</string>
+    <string name="app_default">Implicit pentru aplicație</string>
+    <string name="a11y_drag_and_drop_handle">mâner de glisare și plasare</string>
 </resources>

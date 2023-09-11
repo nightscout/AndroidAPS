@@ -28,6 +28,7 @@ import info.nightscout.plugins.sync.nsclient.extensions.isEffectiveProfileSwitch
 import info.nightscout.plugins.sync.nsclient.extensions.temporaryBasalFromJson
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.LTag
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
 import kotlinx.coroutines.Dispatchers
@@ -46,6 +47,7 @@ class NSClientAddUpdateWorker(
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var storeDataForDb: StoreDataForDb
+    @Inject lateinit var profileUtil: ProfileUtil
 
     override suspend fun doWorkAndLog(): Result {
         val treatments = dataWorkerStorage.pickupJSONArray(inputData.getLong(DataWorkerStorage.STORE_KEY, -1))
@@ -100,7 +102,7 @@ class NSClientAddUpdateWorker(
                 insulin > 0 || carbs > 0                                                    -> Any()
                 eventType == TherapyEvent.Type.TEMPORARY_TARGET.text                        ->
                     if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_receive_temp_target, false) || config.NSCLIENT) {
-                        TemporaryTarget.fromJson(json)?.let { temporaryTarget ->
+                        TemporaryTarget.fromJson(json, profileUtil)?.let { temporaryTarget ->
                             storeDataForDb.temporaryTargets.add(temporaryTarget)
                         } ?: aapsLogger.error("Error parsing TT json $json")
                     }

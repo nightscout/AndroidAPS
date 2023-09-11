@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/key_heart_rate_sampling"
+        android:summary="Enable heart rate sampling."
+        android:title="@string/pref_heartRateSampling"
+        app:wear_iconOff="@drawable/settings_off"
+        app:wear_iconOn="@drawable/settings_on" />
+
+    <info.nightscout.androidaps.interaction.utils.VersionPreference
+        android:defaultValue="1"
+        android:entries="@array/input_design"
+        android:entryValues="@array/input_design_values"
+        android:key="version_number"
+        android:summary="Input Design"
+        android:title="@string/pref_version" />
+</PreferenceScreen>

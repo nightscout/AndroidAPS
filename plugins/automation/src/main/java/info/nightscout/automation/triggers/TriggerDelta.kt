@@ -12,7 +12,6 @@ import info.nightscout.automation.elements.LayoutBuilder
 import info.nightscout.automation.elements.StaticLabel
 import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.utils.JsonHelper
 import info.nightscout.rx.logging.LTag
 import org.json.JSONObject
@@ -78,7 +77,7 @@ class TriggerDelta(injector: HasAndroidInjector) : Trigger(injector) {
             DeltaType.LONG_AVERAGE  -> glucoseStatus.longAvgDelta
             else                    -> glucoseStatus.delta
         }
-        if (comparator.value.check(calculatedDelta, Profile.toMgdl(delta.value, units))) {
+        if (comparator.value.check(calculatedDelta, profileUtil.convertToMgdl(delta.value, units))) {
             aapsLogger.debug(LTag.AUTOMATION, "Ready for execution: delta is " + calculatedDelta + " " + friendlyDescription())
             return true
         }

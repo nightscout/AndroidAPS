@@ -6,6 +6,7 @@
     <string name="previous_button">Anterior</string>
     <string name="nav_setupwizard">Asistent de configurare</string>
     <string name="setupwizard_finish">TERMINARE</string>
+    <string name="welcome">Bun venit</string>
     <string name="welcometosetupwizard">Ați pornit asistentul pentru setări. Acesta vă va ajuta pentru configurarea setărilor\n</string>
     <string name="end_user_license_agreement">Licență utilizator final</string>
     <string name="end_user_license_agreement_text">NU FOLOSIȚI PENTRU LUAREA DE DECIZII MEDICALE. NU EXISTĂ RĂSPUNDERE LEGALĂ SAU GARANȚIE PENTRU ACEST PROGRAM, ÎN LIMITA APLICABILĂ A LEGII. CU EXCEPTIA CAZURILOR SPECIAL MENȚIONATE, AUTORUL ȘI/SAU ALTE PERSOANE IMPLICATE PUN LA DISPOZIȚIE ACEST PROGRAM FĂRĂ NICIO GARANȚIE, IMPLICITĂ SAU EXPLICITĂ, INCLUZÂND, DAR FĂRĂ A SE LIMITA LA, GARANȚIILE LEGATE DE VĂNZAREA SAU POTRIVIREA PENTRU UN ANUME SCOP. ÎNTREGUL RISC LEGAT DE CALITATEA ȘI PERFORMANȚA ACESTUI PROGRAM CAD ÎN RESPONSABILITATEA DUMNEAVOASTRĂ. DACĂ PROGRAMUL SE DOVEDEȘTE A FI DEFECT, DUMNEAVOASTRĂ VĂ ASUMAȚI ÎNTREAGA RĂSPUNDERE, PRECUM ȘI TOATE COSTURILE LEGATE DE SERVICE, REPARAȚII SAU CORECȚII.</string>
@@ -20,10 +21,12 @@
     <string name="need_location_permission">Aplicația are nevoie sa acceseze locația pentru scanare Bluetooth și identificare WiFi</string>
     <string name="need_storage_permission">Aplicația are nevoie de permisiunea de a accesa unitatea de stocare pentru a scrie fișierele registru și pentru a exporta setările</string>
     <string name="askforpermission">Solicitați permisiunea</string>
+    <string name="need_whitelisting">%1$s necesită excluderea din lista de optimizare a bateriei pentru o funcționare corespunzătoare</string>
     <string name="storedsettingsfound">Au fost găsite setări stocate</string>
     <string name="master_password_summary">Parola master (principală) este folosită pentru criptarea copiilor de rezervă și pentru a suprascrie securitatea în aplicație. Rețineți-o sau păstrați-o într-un loc sigur.</string>
     <string name="current_master_password">Parola principală curentă</string>
     <string name="common_values">Folosește valorile corespunzătoarea celor mai mari mese pe care le ai de obicei\n</string>
+    <string name="syncinfotext">Sincronizează datele în cloud. Puteți sări peste această parte acum, dar nu veți putea trece de obiective până când nu veți configura un cont Nightscout sau Tidepool.</string>
     <string name="status">Stare:</string>
     <string name="patient_name">Numele pacientului</string>
     <string name="patient_name_summary">Vă rugăm să furnizați numele sau porecla pacientului pentru a diferenția între configurări</string>
@@ -33,7 +36,9 @@
     <string name="profile">Profil</string>
     <string name="doprofileswitch">Schimbă profilul</string>
     <string name="exitwizard">Ignoră asistentul pentru setări</string>
+    <string name="setupwizard_loop_description">Apăsați butonul pentru a permite AndroidAPS să sugereze/facă schimbări ale bazalei</string>
     <string name="setupwizard_sensitivity_description">Pluginul Sensibilitate este folosit pentru estimarea sensibilității și calcularea COB. Pentru mai multe info vizitați:</string>
+    <string name="setupwizard_sensitivity_url">https://wiki.aaps.app/en/latest/Configuration/Sensitivity-detection-and-COB.html</string>
     <string name="setupwizard_aps_description">Alegeți unul dintre algoritmii disponibili. Algoritmii sunt aranjați de la cel mai vechi spre cel mai nou. Algoritmii mai noi sunt, de obicei, mai puternici și mai agresivi. De aceeea, dacă sunteți la început, ar fi indicat să porniți cu AMA și nu cu cel mai nou. Este important să parcurgeți documentația OpenAPS și să îl configurați corect înainte de a folosi aplicația.</string>
     <string name="setupwizard_pump_waiting_for_riley_link_connection">Vă rugăm configuraţi RileyLink mai jos. După selectarea unui RileyLink, va fi posibil să continuaţi setarea odată ce starea RieyLink este \"Connected\". Acest lucru ar putea dura un minut.\n</string>
     <string name="setupwizard_pump_pump_not_initialized"><b>Notă:</b> Puteți continua configurarea imediat ce pompa a fost inițializată.\n</string>
@@ -48,24 +53,35 @@
     <string name="request">Cerință</string>
     <string name="apsmode_title">Mod APS</string>
     <string name="setupwizard_preferred_aps_mode">Modul APS preferat</string>
+    <string name="error_asking_for_permissions">Eroare în solicitarea permisiunilor</string>
     <string name="alert_dialog_permission_battery_optimization_failed">Acest dispozitiv nu permite folosirea excluderii din lista de optimizare a bateriei - se poate să întâmpinați probleme de performanță.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Configurator</string>
     <string name="configbuilder_pump">Pompă</string>
+    <string name="configbuilder_pump_description">Ce pompă dorești să folosești cu AAPS?</string>
     <string name="configbuilder_profile">Profil</string>
+    <string name="configbuilder_profile_description">Care profil ar trebui să fie folosit de AAPS?</string>
     <string name="configbuilder_aps">APS</string>
     <string name="configbuilder_aps_description">Ce algoritm APS doriți să decidă ajustările de insulină?</string>
     <string name="configbuilder_general">General</string>
     <string name="configbuilder_general_description">Există pluginuri generale pe care le-ați putea găsi utile.</string>
     <string name="configbuilder_sync">Sincronizare</string>
+    <string name="configbuilder_sync_description">Plugin-uri de încărcare și sincronizare date.</string>
     <string name="configbuilder_constraints_description">Ce constrângeri sunt aplicate?</string>
     <string name="configbuilder_loop">Buclă</string>
+    <string name="configbuilder_loop_description">Utilizaţi acest lucru pentru a activa integrarea buclei AAPS.</string>
     <string name="configbuilder_insulin_description">Ce tip de insulină folosiți?</string>
     <string name="configbuilder_bgsource">Sursă glicemie</string>
+    <string name="configbuilder_bgsource_description">De unde ar trebui AAPS să primească datele?</string>
+    <string name="configbuilder_smoothing">Uniformizare</string>
+    <string name="configbuilder_smoothing_description">Alege algoritmul de uniformizare</string>
     <string name="configbuilder_sensitivity">Detectare sensibilitate</string>
     <string name="configbuilder_sensitivity_description">Ce algoritm de detecție a sensibilității doriți să folosiți?</string>
     <string name="config_builder_shortname">CONF</string>
     <string name="description_config_builder">Folosit pentru configurarea facilităţilor active</string>
+    <string name="allow_hardware_pump_text">Atenție: Dacă activați și conectați o pompă fizică, AAPS va copia setările ratei bazale din profilul din aplicație în pompă. Profilul existent în pompă va fi suprascris cu cel din AAPS. Asigurați-vă că sunt corecte setările ratei bazale în profilul din AAPS. Dacă aveți dubii sau nu doriți suprascrierea setărilor bazalelor existente în pompă, apăsați butonul de anulare și repetați acțiunea mai târziu.</string>
+    <string name="a11y_open_settings">Deschideți setările</string>
+    <string name="nsclient_version_does_not_match">Versiunea AAPSClient nu se potrivește cu versiunea AAPS. Vă rugăm să actualizați.</string>
     <!--ImportExport-->
     <string name="nav_preferences">Preferințe</string>
     <string name="password_preferences_encrypt_prompt">Vi se va solicita parola principală, care va fi utilizată pentru criptare la exportarea setărilor.</string>
@@ -98,6 +114,7 @@
     <string name="maintenance">Mentenanță</string>
     <string name="maintenance_shortname">MENTN</string>
     <string name="description_maintenance">Pune la dispoziție funcții pentru mentenanță (ex: trimitere de loguri, ștergere de loguri).</string>
+    <string name="database_cleanup">Curățarea bazei de date</string>
     <string name="reset_db_confirm">Sigur resetați bazele de date?</string>
     <string name="maintenance_settings">Setări de întreținere</string>
     <string name="maintenance_email">Destinatar email</string>
@@ -136,5 +153,7 @@
     <string name="prefdecrypt_issue_wrong_format">Lipseşte configuraţia de criptare, formatul setărilor este invalid!</string>
     <string name="prefdecrypt_issue_wrong_algorithm">Algoritm de criptare nesuportat sau nespecificat!</string>
     <!-- Custom Watchface -->
+    <string name="wear_import_custom_watchface_title">Selectare aspect ceas personalizat</string>
     <!-- Permissions -->
+    <string name="alert_dialog_storage_permission_text">Restartați telefonul sau reporniți aplicația AAPS din System Settings \naltfel AAPS nu va putea înregistra loguri (importante pentru verificarea corectitudinii funcționării algoritmilor)!</string>
 </resources>

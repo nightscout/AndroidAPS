@@ -76,7 +76,8 @@ class DanaRsPacketNotifyDeliveryRateDisplayTest : DanaRSTestBase() {
                 fabricPrivacy,
                 dateUtil,
                 uiInteraction,
-                danaHistoryDatabase
+                danaHistoryDatabase,
+                decimalFormatter
             )
         danaPump.bolusingTreatment = EventOverviewBolusProgress.Treatment(0.0, 0, true, 0)
     }

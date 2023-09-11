@@ -38,4 +38,15 @@
     <string name="omnipod_dash_not_enough_insulin">Nu a rămas suficientă insulină în rezervor</string>
     <string name="unconfirmed_command" comment="26 characters max for translation">Comandă neconfirmată</string>
     <string name="requested_by_user" comment="26 characters max for translation">Solicitat de utilizator</string>
+    <string name="profile_set_ok">Setare profil OK</string>
+    <string name="suspend_delivery_is_unconfirmed">Suspendarea livrării nu se poate confirma! Verificați manual statusul podului din tab-ul Omnipod și reîncercați livrarea dacă este necesar.</string>
+    <string name="insulin_delivery_suspended">Administrarea insulinei este suspendată</string>
+    <string name="timezone_on_pod_is_different_from_the_timezone">Fusul orar al pod-ului este diferit de fusul orar de pe telefon. Rata bazală este incorectă. Comutați profilul pentru a remedia</string>
+    <string name="failed_to_set_the_new_basal_profile">Setarea profilului bazalei a eșuat. Livrare suspendată</string>
+    <string name="setting_basal_profile_might_have_failed">Setarea profilului bazal s-ar putea să fi eșuat. Livrarea ar putea fi suspendată! Vă rugăm să reîmprospătați manual starea Pod-ului din secțiunea Omnipod și să continuați livrarea dacă este necesar.</string>
+    <string name="bolus_delivery_status_uncertain">Starea livrării bolusului este incertă. Reîncarcă starea pod-ului pentru a confirma sau a refuza.</string>
+    <string name="checking_delivery_status">Verificare stare livrare</string>
+    <string name="setting_temp_basal_might_have_basal_failed">Setarea bazalei temporare s-ar putea sa fi eșuat. Dacă o bazală temporară era activă anterior, a fost anulată. Reîmprospătați manual starea Pod-ului din secțiunea Omnipod.</string>
+    <string name="unconfirmed_resumedelivery_command_please_refresh_pod_status">Comanda resumeDelivery neconfirmată. Vă rugăm să reîmprospătați starea pod</string>
+    <string name="cancelling_temp_basal_might_have_failed">Anularea bazalei temporare a eșuat. Dacă o bazală temporară era activă anterior, este posibil să fie de asemenea anulată. Reîmprospătați manual starea Pod-ului din secțiunea Omnipod.</string>
 </resources>

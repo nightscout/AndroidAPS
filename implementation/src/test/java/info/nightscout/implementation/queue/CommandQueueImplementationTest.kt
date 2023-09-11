@@ -28,6 +28,7 @@ import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CustomCommand
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.logging.AAPSLogger
@@ -73,11 +74,12 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         fabricPrivacy: FabricPrivacy,
         androidPermission: AndroidPermission,
         uiInteraction: UiInteraction,
-        persistenceLayer: PersistenceLayer
+        persistenceLayer: PersistenceLayer,
+        decimalFormatter: DecimalFormatter
     ) : CommandQueueImplementation(
         injector, aapsLogger, rxBus, aapsSchedulers, rh, constraintChecker, profileFunction,
         activePlugin, context, sp, config, dateUtil, repository, fabricPrivacy,
-        androidPermission, uiInteraction, persistenceLayer
+        androidPermission, uiInteraction, persistenceLayer, decimalFormatter
     ) {
 
         override fun notifyAboutNewCommand(): Boolean = true
@@ -120,7 +122,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
             config, dateUtil, repository,
-            fabricPrivacy, androidPermission, uiInteraction, persistenceLayer
+            fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
         )
         testPumpPlugin = TestPumpPlugin(injector)
 
@@ -157,7 +159,7 @@ class CommandQueueImplementationTest : TestBaseWithProfile() {
         val commandQueue = CommandQueueImplementation(
             injector, aapsLogger, rxBus, aapsSchedulers, rh,
             constraintChecker, profileFunction, activePlugin, context, sp,
-            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer
+            config, dateUtil, repository, fabricPrivacy, androidPermission, uiInteraction, persistenceLayer, decimalFormatter
         )
         val handler = mock(Handler::class.java)
         `when`(handler.post(anyObject())).thenAnswer { invocation: InvocationOnMock ->

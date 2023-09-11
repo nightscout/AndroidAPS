@@ -29,6 +29,7 @@ import info.nightscout.interfaces.pump.actions.CustomAction
 import info.nightscout.interfaces.queue.Callback
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.plugins.R
 import info.nightscout.plugins.databinding.ActionsFragmentBinding
 import info.nightscout.plugins.general.overview.ui.StatusLightHandler
@@ -57,6 +58,7 @@ class ActionsFragment : DaggerFragment() {
     @Inject lateinit var sp: SP
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var decimalFormatter: DecimalFormatter
     @Inject lateinit var rh: ResourceHelper
     @Inject lateinit var statusLightHandler: StatusLightHandler
     @Inject lateinit var fabricPrivacy: FabricPrivacy
@@ -243,7 +245,7 @@ class ActionsFragment : DaggerFragment() {
                 binding.extendedBolus.visibility = View.GONE
                 binding.extendedBolusCancel.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                binding.extendedBolusCancel.text = rh.gs(info.nightscout.core.ui.R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil)
+                binding.extendedBolusCancel.text = rh.gs(info.nightscout.core.ui.R.string.cancel) + " " + activeExtendedBolus.value.toStringMedium(dateUtil, decimalFormatter)
             } else {
                 binding.extendedBolus.visibility = View.VISIBLE
                 binding.extendedBolusCancel.visibility = View.GONE
@@ -259,7 +261,7 @@ class ActionsFragment : DaggerFragment() {
                 binding.setTempBasal.visibility = View.GONE
                 binding.cancelTempBasal.visibility = View.VISIBLE
                 @Suppress("SetTextI18n")
-                binding.cancelTempBasal.text = rh.gs(info.nightscout.core.ui.R.string.cancel) + " " + activeTemp.toStringShort()
+                binding.cancelTempBasal.text = rh.gs(info.nightscout.core.ui.R.string.cancel) + " " + activeTemp.toStringShort(decimalFormatter)
             } else {
                 binding.setTempBasal.visibility = View.VISIBLE
                 binding.cancelTempBasal.visibility = View.GONE

@@ -41,8 +41,8 @@ import info.nightscout.interfaces.ui.UiInteraction
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.TimeChangeType
 import info.nightscout.pump.medtrum.comm.enums.MedtrumPumpState
-import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
 import info.nightscout.pump.medtrum.services.MedtrumService
+import info.nightscout.pump.medtrum.ui.MedtrumOverviewFragment
 import info.nightscout.pump.medtrum.util.MedtrumSnUtil
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
@@ -76,7 +76,8 @@ import kotlin.math.abs
     private val medtrumPump: MedtrumPump,
     private val uiInteraction: UiInteraction,
     private val pumpSync: PumpSync,
-    private val temporaryBasalStorage: TemporaryBasalStorage
+    private val temporaryBasalStorage: TemporaryBasalStorage,
+    private val decimalFormatter: DecimalFormatter
 ) : PumpPluginBase(
     PluginDescription()
         .mainType(PluginType.PUMP)
@@ -494,12 +495,12 @@ import kotlin.math.abs
             ret += "LastConn: $agoMin minAgo\n"
         }
         if (medtrumPump.lastBolusTime != 0L)
-            ret += "LastBolus: ${DecimalFormatter.to2Decimal(medtrumPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", medtrumPump.lastBolusTime)}\n"
+            ret += "LastBolus: ${decimalFormatter.to2Decimal(medtrumPump.lastBolusAmount)}U @${DateFormat.format("HH:mm", medtrumPump.lastBolusTime)}\n"
 
         if (medtrumPump.tempBasalInProgress)
             ret += "Temp: ${medtrumPump.temporaryBasalToString()}\n"
 
-        ret += "Res: ${DecimalFormatter.to0Decimal(medtrumPump.reservoir)}U\n"
+        ret += "Res: ${decimalFormatter.to0Decimal(medtrumPump.reservoir)}U\n"
         return ret
     }
 

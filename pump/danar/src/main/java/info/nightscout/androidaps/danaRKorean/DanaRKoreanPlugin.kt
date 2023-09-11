@@ -22,6 +22,7 @@ import info.nightscout.interfaces.pump.PumpSync.TemporaryBasalType
 import info.nightscout.interfaces.pump.defs.PumpType
 import info.nightscout.interfaces.queue.CommandQueue
 import info.nightscout.interfaces.ui.UiInteraction
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.Round
 import info.nightscout.pump.dana.DanaPump
 import info.nightscout.pump.dana.database.DanaHistoryDatabase
@@ -59,8 +60,25 @@ class DanaRKoreanPlugin @Inject constructor(
     private val fabricPrivacy: FabricPrivacy,
     pumpSync: PumpSync,
     uiInteraction: UiInteraction,
-    danaHistoryDatabase: DanaHistoryDatabase
-) : AbstractDanaRPlugin(injector, danaPump, rh, constraintChecker, aapsLogger, aapsSchedulers, commandQueue, rxBus, activePlugin, sp, dateUtil, pumpSync, uiInteraction, danaHistoryDatabase) {
+    danaHistoryDatabase: DanaHistoryDatabase,
+    decimalFormatter: DecimalFormatter
+) : AbstractDanaRPlugin(
+    injector,
+    danaPump,
+    rh,
+    constraintChecker,
+    aapsLogger,
+    aapsSchedulers,
+    commandQueue,
+    rxBus,
+    activePlugin,
+    sp,
+    dateUtil,
+    pumpSync,
+    uiInteraction,
+    danaHistoryDatabase,
+    decimalFormatter
+) {
 
     init {
         pluginDescription.description(info.nightscout.pump.dana.R.string.description_pump_dana_r_korean)

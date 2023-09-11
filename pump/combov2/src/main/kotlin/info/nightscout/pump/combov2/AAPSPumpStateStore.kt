@@ -11,9 +11,6 @@ import info.nightscout.comboctl.base.toBluetoothAddress
 import info.nightscout.comboctl.base.toCipher
 import info.nightscout.comboctl.base.toNonce
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.sharedPreferences.SPDelegateInt
-import info.nightscout.shared.sharedPreferences.SPDelegateLong
-import info.nightscout.shared.sharedPreferences.SPDelegateString
 import kotlinx.datetime.Instant
 import kotlinx.datetime.UtcOffset
 import kotlin.reflect.KClassifier

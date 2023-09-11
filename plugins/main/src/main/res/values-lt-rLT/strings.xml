@@ -308,12 +308,9 @@
     <string name="wearcontrol_title">Laikrodžio valdikliai</string>
     <string name="wearcontrol_summary">Nustatyti Laikinus Tikslus ir įvesti terapinius įrašus iš laikrodžio.</string>
     <string name="wear_wizard_settings_summary">Skaičiavimai, įtraukti į Patarėjo rezultatą:</string>
-    <string name="wear_display_settings">Ekrano nustatymai</string>
     <string name="wear_general_settings">Bendrieji nustatymai</string>
     <string name="wear_notifysmb_title">Pranešti apie SMB</string>
     <string name="wear_notifysmb_summary">Rodyti SMB laikrodyje kaip standartinį bolusą.</string>
-    <string name="wear_predictions_summary">Rodyti prognozes laikrodyje.</string>
-    <string name="wear_predictions_title">Prognozė</string>
     <string name="wear_custom_watchface_settings">Pasirinktiniai laikrodžio ekrano nustatymai</string>
     <string name="wear_custom_watchface_authorization_title">Pasirinktinė laikrodžio ekrano autorizacija</string>
     <string name="wear_custom_watchface_authorization_summary">Leisti įkeltam pasirinktiniam ekranui keisti ir užrakinti kai kuriuos laikrodžio nustatymus, kad jie atitiktų ekrano dizainą</string>

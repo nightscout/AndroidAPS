@@ -110,101 +110,6 @@
         app:wear_iconOff="@drawable/settings_off"
         app:wear_iconOn="@drawable/settings_on" />
 
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/key_highlight_basals"
-        android:summary="Better visible basal rate and temp basals"
-        android:title="@string/pref_highlight_basals"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/key_prediction_lines"
-        android:summary="show prediction lines"
-        android:title="@string/pref_prediction_lines"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
-
-    <ListPreference
-        android:defaultValue="3"
-        android:entries="@array/chart_timeframe"
-        android:entryValues="@array/chart_timeframe_values"
-        android:key="@string/key_chart_time_frame"
-        android:summary="Chart Timeframe"
-        android:title="@string/pref_chart_timeframe" />
-
-    <ListPreference
-        android:defaultValue="1"
-        android:entries="@array/input_design"
-        android:entryValues="@array/input_design_values"
-        android:key="@string/key_input_design"
-        android:summary="Input Design"
-        android:title="@string/pref_input_design" />
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="showWizard"
-        android:summary="Calculator from watch possible"
-        android:title="@string/pref_wizard_in_menu"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="vibrateOnBolus"
-        android:title="@string/pref_vibrate_on_bolus"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
-
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="primefill"
-        android:summary="Prime/Fill from watch possible"
-        android:title="@string/pref_prime_in_menu"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="@string/key_single_target"
-        android:summary="Single temp-target instead of a range."
-        android:title="@string/pref_single_target"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
-
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/key_wizard_percentage"
-        android:summary="Percentage correction."
-        android:title="@string/pref_wizard_percentage"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
-
-    <ListPreference
-        android:defaultValue="default"
-        android:entries="@array/complication_tap_action"
-        android:entryValues="@array/complication_tap_action_values"
-        android:key="@string/key_complication_tap_action"
-        android:summary="What dialog to show after tap on complication"
-        android:title="@string/pref_complication_tap_action" />
-
-    <CheckBoxPreference
-        android:defaultValue="true"
-        android:key="complication_unicode"
-        android:summary="Use unicode special characters in complications."
-        android:title="@string/pref_unicode_in_complications"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
-
-    <info.nightscout.androidaps.interaction.utils.VersionPreference
-        android:defaultValue="1"
-        android:entries="@array/input_design"
-        android:entryValues="@array/input_design_values"
-        android:key="version_number"
-        android:summary="Input Design"
-        android:title="@string/pref_version" />
-
     <info.nightscout.androidaps.interaction.utils.WatchfaceSettingsPreference
         android:defaultValue="1"
         android:entries="@array/input_design"
@@ -212,12 +117,4 @@
         android:key="more_settings"
         android:summary="Input Design"
         android:title="@string/pref_moreWatchfaceSettings" />
-
-    <CheckBoxPreference
-        android:defaultValue="false"
-        android:key="@string/key_heart_rate_sampling"
-        android:summary="Enable heart rate sampling."
-        android:title="@string/pref_heartRateSampling"
-        app:wear_iconOff="@drawable/settings_off"
-        app:wear_iconOn="@drawable/settings_on" />
 </PreferenceScreen>

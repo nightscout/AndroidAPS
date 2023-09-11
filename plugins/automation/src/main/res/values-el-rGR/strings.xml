@@ -6,6 +6,7 @@
     <string name="automation_missing_task_name">Παρακαλώ εισάγετε όνομα εργασίας.</string>
     <string name="automation_missing_trigger">Προσδιορίστε τουλάχιστον ένα σύστημα ενεργοποίηση.</string>
     <string name="automation_missing_action">Προσδιορίστε τουλάχιστον μία ενέργεια.</string>
+    <string name="alarm_message">Συναγερμός: %1$s</string>
     <string name="alarm_short">Συναγερμός:</string>
     <string name="message_short">Μην:</string>
     <string name="alreadyenabled">Ήδη ενεργοποιημένο</string>
@@ -19,10 +20,12 @@
     <string name="automation_trigger_pump_last_connection_label">Τελευταία σύνδεση με αντλία</string>
     <string name="automation_trigger_pump_last_connection_description">Τελευταία σύνδεση με αντλία [λεπτά πριν]</string>
     <string name="automation_trigger_pump_last_connection_compared">Τελευταία σύνδεση με αντλία %1$s %2$s λεπτά πριν</string>
+    <string name="alreadyset">Ήδη καθορισμένο</string>
     <string name="profilepercentage">Προφίλ ποσοστό</string>
     <string name="startprofileforever">Έναρξη προφίλ %1$d%%</string>
     <string name="percent_u">Ποσοστό [%]:</string>
     <string name="sendsmsactionlabel">Στείλτε SMS: %1$s</string>
+    <string name="sendsmsactiondescription">Αποστολή SMS σε όλους τους αριθμούς</string>
     <string name="sendsmsactiontext">Στείλτε SMS με κείμενο</string>
     <string name="starttemptarget">Έναρξη προσ. στόχου</string>
     <string name="islesser">είναι λιγότερο από</string>
@@ -34,6 +37,9 @@
     <string name="glucoseisnotavailable">Γλυκόζη δεν είναι διαθέσιμη</string>
     <string name="glucosecomparedmgdl">Γλυκόζη %1$s %2$.0f %3$s</string>
     <string name="glucosecomparedmmol">Γλυκόζη %1$s %2$.1f %3$s</string>
+    <string name="notemptarget">Δεν υπάρχει Προσωρινός Στόχος</string>
+    <string name="temptargetcomparedmgdl">Προσωρινός Στόχος %1$s %2$.0f %3$s</string>
+    <string name="temptargetcomparedmmol">Προσωρινός Στόχος %1$s %2$.1f %3$s</string>
     <string name="percentagecompared">Προφίλ %% %1$s %2$d</string>
     <string name="iobcompared">ΙΟΒ %1$s %2$.1f</string>
     <string name="or">ή</string>
@@ -43,10 +49,17 @@
     <string name="use_gps_location">Χρήση τοποθεσίας GPS</string>
     <string name="use_passive_location">Χρήση προσαρμοσμένης τοποθεσίας</string>
     <string name="locationservice">Υπηρεσίες τοποθεσίας</string>
+    <string name="onconnect">Κατά τη σύνδεση</string>
+    <string name="ondisconnect">Κατά την αποσύνδεση</string>
     <string name="short_avgdelta">Βραχυπρόθεσμος Μέσος Όρος</string>
     <string name="long_avgdelta">Μακροπρόθεσμος Μέσος Όρος</string>
     <string name="delta">Διαφορά</string>
     <string name="locationis">%1$s %2$s</string>
+    <string name="location_mode">Όταν </string>
+    <string name="location_inside">Όταν βρίσκεστε εντός της περιοχής</string>
+    <string name="location_outside">Όταν βρίσκεστε εκτός της περιοχής</string>
+    <string name="location_going_in">Όταν εισέρχεστε στην περιοχή που ονομάζεται</string>
+    <string name="location_going_out">Όταν φεύγετε από την περιοχή που ονομάζεται</string>
     <string name="time_range">Εύρος χρόνου</string>
     <string name="timerange_value">Ο χρόνος είναι μεταξύ %1$s και %2$s</string>
     <string name="between">Ανάμεσα </string>
@@ -61,6 +74,8 @@
     <string name="add_short">Προσθ</string>
     <string name="copy_short">Αντιγραφή</string>
     <string name="temptargetcompared">Προσ. στόχος %1$s</string>
+    <string name="btdevicecompared">Σύνδεση Bluetooth στη συσκευή %1$s %2$s</string>
+    <string name="btdevice">Σύνδεση σε συσκευή Bluetooth </string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
     <string name="autosenslabel">Autosens %</string>
@@ -72,10 +87,13 @@
     <string name="latitude_short">Lat:</string>
     <string name="longitude_short">Lon:</string>
     <string name="glucose_u">Γλυκόζη [%1$s]:</string>
+    <string name="target_u">Στόχος [%1$s]:</string>
     <string name="lastboluslabel">Τελευταίο Bolus</string>
     <string name="lastboluscompared">Τελευταίο bolus %1$s %2$s λεπτά πριν</string>
     <string name="triggercoblabel">COB</string>
     <string name="cobcompared">COB %1$s %2$.0f</string>
+    <string name="triggerHeartRate">Καρδιακός ρυθμός</string>
+    <string name="triggerHeartRateDesc">ΚΡ %1$s %2$.0f</string>
     <string name="iob_u">ΙΟΒ [U]:</string>
     <string name="distance_short">Αποστ [m]:</string>
     <string name="recurringTime">Χρόνος επαναλαμβανόμενων</string>
@@ -85,8 +103,32 @@
     <string name="action">Ενέργεια:</string>
     <string name="taskname">Όνομα εργασίας</string>
     <string name="edit_short">Επεξεργασία</string>
+    <string name="please_choose_an_action_type">Επιλέξτε έναν τύπο δράσης</string>
+    <string name="please_choose_a_trigger_type">Επιλέξτε έναν τύπο ενεργοποίησης</string>
+    <string name="please_choose_a_operation_type">Επιλέξτε έναν τύπο λειτουργίας</string>
     <string name="triggers">Ενεργοποιήσεις:</string>
     <string name="preconditions">Προϋποθέσεις:</string>
+    <string name="automation_event">Συμβάν αυτοματισμού</string>
+    <string name="reorder_label">Αναδιάταξη</string>
+    <string name="user_action">Ενέργεια χρήστη</string>
+    <string name="remove_automation">Αφαίρεση αυτοματισμού</string>
+    <string name="sort_automation">Ταξινόμηση αυτοματισμού</string>
+    <string name="remove_selected_items">Αφαίρεση επιλεγμένων στοιχείων</string>
+    <string name="count_selected">Επιλέχθηκαν %1$d</string>
+    <string name="system_automation">Αυτοματισμός συστήματος</string>
+    <string name="run_automations">Εκτέλεση αυτοματισμών</string>
+    <string name="add_automation">Προσθήκη κανόνα</string>
+    <string name="stop_processing">Διακοπή επεξεργασίας</string>
     <!-- WeekdayPicker -->
+    <string name="monday_short">Δ</string>
+    <string name="tuesday_short">Τρ</string>
+    <string name="wednesday_short">Τε</string>
+    <string name="thursday_short">Πε</string>
+    <string name="friday_short">Πα</string>
+    <string name="saturday_short">Σ</string>
+    <string name="sunday_short">Κ</string>
     <!--    Reminders-->
+    <string name="time_to_eat">Ώρα για φαγητόt!\nΤρέξτε τον οδηγό Bolus και κάντε υπολογίστε ξανά.</string>
+    <string name="time_to_bolus">Ώρα για bolus!\nΤρέξτε τον οδηγό Bolus και κάντε υπολογισμό ξανά.</string>
+    <string name="error_setting_reminder">Σφάλμα κατά τη ρύθμιση μελλοντικού συναγερμού</string>
 </resources>

@@ -7,6 +7,7 @@ import info.nightscout.core.iob.log
 import info.nightscout.interfaces.iob.GlucoseStatus
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
+import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.utils.DateUtil
@@ -18,7 +19,8 @@ import kotlin.math.roundToLong
 class GlucoseStatusProviderImpl @Inject constructor(
     private val aapsLogger: AAPSLogger,
     private val iobCobCalculator: IobCobCalculator,
-    private val dateUtil: DateUtil
+    private val dateUtil: DateUtil,
+    private val decimalFormatter: DecimalFormatter
 ) : GlucoseStatusProvider {
 
     override val glucoseStatusData: GlucoseStatus?
@@ -100,7 +102,7 @@ class GlucoseStatusProviderImpl @Inject constructor(
             shortAvgDelta = shortAverageDelta,
             delta = delta,
             longAvgDelta = average(longDeltas),
-        ).also { aapsLogger.debug(LTag.GLUCOSE, it.log()) }.asRounded()
+        ).also { aapsLogger.debug(LTag.GLUCOSE, it.log(decimalFormatter)) }.asRounded()
     }
 
     /* Real BG (previous) version

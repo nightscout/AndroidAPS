@@ -1,5 +1,6 @@
-package info.nightscout.shared.sharedPreferences
+package info.nightscout.pump.combov2
 
+import info.nightscout.shared.sharedPreferences.SP
 import kotlin.properties.ReadWriteProperty
 import kotlin.reflect.KProperty
 

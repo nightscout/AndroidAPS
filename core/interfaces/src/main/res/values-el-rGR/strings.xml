@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Maintenance -->
+    <string name="metadata_label_format">Μορφή αρχείου</string>
+    <string name="metadata_label_created_at">Δημιουργήθηκε στις</string>
+    <string name="metadata_label_aaps_version">Έκδοση AAPS</string>
+    <string name="metadata_label_aaps_flavour">Δημιουργία Παραλλαγής</string>
+    <string name="metadata_label_device_name">Εξαγωγή ονόματος συσκευής ασθενούς </string>
+    <string name="metadata_label_device_model">Εξαγωγή μοντέλου συσκευής</string>
+    <string name="metadata_label_encryption">Κρυπτογράφηση αρχείων</string>
+    <string name="metadata_format_new">Νέα κρυπτογραφημένη μορφή</string>
+    <string name="metadata_format_debug">Νέα μορφή εντοπισμού σφαλμάτων (μη κρυπτογραφημένη)</string>
+    <string name="metadata_format_other">Άγνωστη μορφή εξαγωγής</string>
     <!--    PumpType-->
     <string name="def_extended_note">* Υποστηρίζονται μόνο διακριτές τιμές και όχι εύρος τιμών για βασικό/bolus στην εικονική αντλία.</string>
     <!-- PumpPluginBase -->
+    <string name="pump_driver_changed" comment="26 characters max for translation">Ο οδηγός της αντλίας άλλαξε.</string>
     <!--    DecimalFormatter-->
     <string name="format_insulin_units1">%1$.1f U</string>
     <string name="format_insulin_units">%1$.2f U</string>

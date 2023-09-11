@@ -308,12 +308,9 @@
     <string name="wearcontrol_title">Controlli da smartwatch</string>
     <string name="wearcontrol_summary">Imposta Temp-Target e inserisci trattamenti dallo smartwatch.</string>
     <string name="wear_wizard_settings_summary">Calcoli inclusi nel risultato del Calcolatore:</string>
-    <string name="wear_display_settings">Impostazioni di visualizzazione</string>
     <string name="wear_general_settings">Impostazioni generali</string>
     <string name="wear_notifysmb_title">Notifica SMB</string>
     <string name="wear_notifysmb_summary">Mostra SMB sullo smartwatch come un bolo standard.</string>
-    <string name="wear_predictions_summary">Mostra le predizioni sulla watchface.</string>
-    <string name="wear_predictions_title">Predizioni</string>
     <string name="wear_custom_watchface_settings">Impostazioni watchface personalizzata</string>
     <string name="wear_custom_watchface_authorization_title">Autorizzazione watchface personalizzata</string>
     <string name="wear_custom_watchface_authorization_summary">Autorizza la watchface personalizzata caricata a cambiare e bloccare alcune delle impostazioni di visualizzazione dell\'orologio per adattarsi al design della watchface</string>

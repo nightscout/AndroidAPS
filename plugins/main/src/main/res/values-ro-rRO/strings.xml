@@ -264,12 +264,9 @@
     <string name="wearcontrol_title">Controlare din ceas</string>
     <string name="wearcontrol_summary">Setare Ținte-Temporare și se introduc Tratamente din ceas.</string>
     <string name="wear_wizard_settings_summary">Calcule incluse în rezultatul asistentului:</string>
-    <string name="wear_display_settings">Setări afișare</string>
     <string name="wear_general_settings">Setări generale</string>
     <string name="wear_notifysmb_title">Notifică despre SMB</string>
     <string name="wear_notifysmb_summary">Arată SMB pe ceas ca și un bolus standard.</string>
-    <string name="wear_predictions_summary">Arată previziunile pe ceas.</string>
-    <string name="wear_predictions_title">Predicții</string>
     <string name="resend_all_data">Retrimite toate datele</string>
     <string name="open_settings_on_wear">Deschide setările pe Wear</string>
     <!--    PersistentNotification-->

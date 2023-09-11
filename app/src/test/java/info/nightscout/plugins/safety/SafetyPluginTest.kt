@@ -1,5 +1,6 @@
 package info.nightscout.plugins.safety
 
+import com.google.common.truth.Truth.assertThat
 import dagger.android.AndroidInjector
 import dagger.android.HasAndroidInjector
 import info.nightscout.database.impl.AppRepository
@@ -21,7 +22,6 @@ import info.nightscout.plugins.constraints.safety.SafetyPlugin
 import info.nightscout.pump.virtual.VirtualPumpPlugin
 import info.nightscout.sharedtests.TestBaseWithProfile
 import info.nightscout.source.GlimpPlugin
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.mockito.Mock
@@ -72,7 +72,7 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(activePlugin.activePump).thenReturn(virtualPumpPlugin)
         `when`(virtualPumpPlugin.pumpDescription).thenReturn(pumpDescription)
         `when`(config.APS).thenReturn(true)
-        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, rxBus, constraintChecker, activePlugin, hardLimits, config, iobCobCalculator, dateUtil, uiInteraction)
+        safetyPlugin = SafetyPlugin(injector, aapsLogger, rh, sp, constraintChecker, activePlugin, hardLimits, config, iobCobCalculator, dateUtil, uiInteraction, decimalFormatter)
         openAPSAMAPlugin = OpenAPSAMAPlugin(
             injector, aapsLogger, rxBus, constraintChecker, rh, profileFunction, context, activePlugin, iobCobCalculator, hardLimits, profiler, fabricPrivacy,
             dateUtil, repository, glucoseStatusProvider, sp
@@ -88,8 +88,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
         pumpDescription.isTempBasalCapable = false
         var c = Constraint(true)
         c = safetyPlugin.isLoopInvocationAllowed(c)
-        Assertions.assertEquals("Safety: Pump is not temp basal capable", c.getReasons(aapsLogger))
-        Assertions.assertEquals(false, c.value())
+        assertThat(c.getReasons(aapsLogger)).isEqualTo("Safety: Pump is not temp basal capable")
+        assertThat(c.value()).isFalse()
     }
 
     @Test
@@ -98,8 +98,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(config.isEngineeringModeOrRelease()).thenReturn(false)
         var c = Constraint(true)
         c = safetyPlugin.isClosedLoopAllowed(c)
-        Assertions.assertTrue(c.getReasons(aapsLogger).contains("Running dev version. Closed loop is disabled."))
-        Assertions.assertEquals(false, c.value())
+        assertThat(c.getReasons(aapsLogger)).contains("Running dev version. Closed loop is disabled.")
+        assertThat(c.value()).isFalse()
     }
 
     @Test
@@ -107,8 +107,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_aps_mode, ApsMode.OPEN.name)).thenReturn(ApsMode.OPEN.name)
         var c = Constraint(true)
         c = safetyPlugin.isClosedLoopAllowed(c)
-        Assertions.assertTrue(c.getReasons(aapsLogger).contains("Closed loop mode disabled in preferences"))
-        Assertions.assertEquals(false, c.value())
+        assertThat(c.getReasons(aapsLogger)).contains("Closed loop mode disabled in preferences")
+        assertThat(c.value()).isFalse()
     }
 
     @Test
@@ -117,8 +117,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(constraintChecker.isClosedLoopAllowed(anyObject())).thenReturn(Constraint(true))
         var c = Constraint(true)
         c = openAPSSMBPlugin.isSMBModeEnabled(c)
-        Assertions.assertTrue(c.getReasons(aapsLogger).contains("SMB disabled in preferences"))
-        Assertions.assertEquals(false, c.value())
+        assertThat(c.getReasons(aapsLogger)).contains("SMB disabled in preferences")
+        assertThat(c.value()).isFalse()
     }
 
     @Test
@@ -127,8 +127,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(constraintChecker.isClosedLoopAllowed(anyObject())).thenReturn(Constraint(false))
         var c = Constraint(true)
         c = safetyPlugin.isSMBModeEnabled(c)
-        Assertions.assertTrue(c.getReasons(aapsLogger).contains("SMB not allowed in open loop mode"))
-        Assertions.assertEquals(false, c.value())
+        assertThat(c.getReasons(aapsLogger)).contains("SMB not allowed in open loop mode")
+        assertThat(c.value()).isFalse()
     }
 
     @Test
@@ -136,8 +136,8 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(activePlugin.activeBgSource).thenReturn(glimpPlugin)
         var c = Constraint(true)
         c = safetyPlugin.isAdvancedFilteringEnabled(c)
-        Assertions.assertEquals("Safety: SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering", c.getReasons(aapsLogger))
-        Assertions.assertEquals(false, c.value())
+        assertThat(c.getReasons(aapsLogger)).isEqualTo("Safety: SMB always and after carbs disabled because active BG source doesn\\'t support advanced filtering")
+        assertThat(c.value()).isFalse()
     }
 
     @Test
@@ -148,13 +148,12 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         val c = Constraint(Constants.REALLYHIGHBASALRATE)
         safetyPlugin.applyBasalConstraints(c, validProfile)
-        Assertions.assertEquals(2.0, c.value(), 0.01)
-        Assertions.assertEquals(
+        assertThat(c.value()).isWithin(0.01).of(2.0)
+        assertThat(c.getReasons(aapsLogger)).isEqualTo(
             """
     Safety: Limiting max basal rate to 2.00 U/h because of hard limit
-    """.trimIndent(), c.getReasons(aapsLogger)
-        )
-        Assertions.assertEquals("Safety: Limiting max basal rate to 2.00 U/h because of hard limit", c.getMostLimitedReasons(aapsLogger))
+    """.trimIndent())
+        assertThat(c.getMostLimitedReasons(aapsLogger)).isEqualTo("Safety: Limiting max basal rate to 2.00 U/h because of hard limit")
     }
 
     @Test
@@ -162,8 +161,9 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         val d = Constraint(-0.5)
         safetyPlugin.applyBasalConstraints(d, validProfile)
-        Assertions.assertEquals(0.0, d.value(), 0.01)
-        Assertions.assertEquals("Safety: Limiting max basal rate to 0.00 U/h because of it must be positive value", d.getReasons(aapsLogger))
+        assertThat(d.value()).isWithin(0.01).of(0.0)
+        assertThat(d.getReasons(aapsLogger)).isEqualTo(
+        "Safety: Limiting max basal rate to 0.00 U/h because of it must be positive value")
     }
 
     @Test
@@ -175,16 +175,17 @@ class SafetyPluginTest : TestBaseWithProfile() {
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         val i = Constraint(Constants.REALLYHIGHPERCENTBASALRATE)
         safetyPlugin.applyBasalPercentConstraints(i, validProfile)
-        Assertions.assertEquals(200, i.value())
-        Assertions.assertEquals(
+        assertThat(i.value()).isEqualTo(200)
+        assertThat(i.getReasons(aapsLogger)).isEqualTo(
             """
 Safety: Percent rate 1111111% recalculated to 11111.11 U/h with current basal 1.00 U/h
 Safety: Limiting max basal rate to 2.00 U/h because of hard limit
 Safety: Limiting max percent rate to 200% because of pump limit
 Safety: Limiting max basal rate to 500.00 U/h because of pump limit
-    """.trimIndent(), i.getReasons(aapsLogger)
+    """.trimIndent()
         )
-        Assertions.assertEquals("Safety: Limiting max percent rate to 200% because of pump limit", i.getMostLimitedReasons(aapsLogger))
+        assertThat(i.getMostLimitedReasons(aapsLogger)).isEqualTo(
+        "Safety: Limiting max percent rate to 200% because of pump limit")
     }
 
     @Test
@@ -197,15 +198,14 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         openAPSSMBPlugin.setPluginEnabled(PluginType.APS, true)
         val i = Constraint(Constants.REALLYHIGHBASALRATE)
         openAPSSMBPlugin.applyBasalConstraints(i, validProfile)
-        Assertions.assertEquals(1.0, i.value(), 0.01)
-        Assertions.assertEquals(
+        assertThat(i.value()).isWithin(0.01).of(1.0)
+        assertThat(i.getReasons(aapsLogger)).isEqualTo(
             """
             OpenAPSSMB: Limiting max basal rate to 1.00 U/h because of max value in preferences
             OpenAPSSMB: Limiting max basal rate to 4.00 U/h because of max basal multiplier
             OpenAPSSMB: Limiting max basal rate to 3.00 U/h because of max daily basal multiplier
-            """.trimIndent(), i.getReasons(aapsLogger)
-        )
-        Assertions.assertEquals("OpenAPSSMB: Limiting max basal rate to 1.00 U/h because of max value in preferences", i.getMostLimitedReasons(aapsLogger))
+            """.trimIndent())
+        assertThat(i.getMostLimitedReasons(aapsLogger)).isEqualTo("OpenAPSSMB: Limiting max basal rate to 1.00 U/h because of max value in preferences")
     }
 
     @Test
@@ -213,15 +213,14 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         val i = Constraint(-22)
         safetyPlugin.applyBasalPercentConstraints(i, validProfile)
-        Assertions.assertEquals(0, i.value())
-        Assertions.assertEquals(
+        assertThat(i.value()).isEqualTo(0)
+        assertThat(i.getReasons(aapsLogger)).isEqualTo(
             """
     Safety: Percent rate -22% recalculated to -0.22 U/h with current basal 1.00 U/h
     Safety: Limiting max basal rate to 0.00 U/h because of it must be positive value
     Safety: Limiting max percent rate to 0% because of pump limit
-    """.trimIndent(), i.getReasons(aapsLogger)
-        )
-        Assertions.assertEquals("Safety: Limiting max percent rate to 0% because of pump limit", i.getMostLimitedReasons(aapsLogger))
+    """.trimIndent())
+        assertThat(i.getMostLimitedReasons(aapsLogger)).isEqualTo("Safety: Limiting max percent rate to 0% because of pump limit")
     }
 
     @Test
@@ -230,14 +229,13 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         var d = Constraint(Constants.REALLYHIGHBOLUS)
         d = safetyPlugin.applyBolusConstraints(d)
-        Assertions.assertEquals(3.0, d.value(), 0.01)
-        Assertions.assertEquals(
+        assertThat(d.value()).isWithin(0.01).of(3.0)
+        assertThat(d.getReasons(aapsLogger)).isEqualTo(
             """
     Safety: Limiting bolus to 3.0 U because of max value in preferences
     Safety: Limiting bolus to 5.0 U because of hard limit
-    """.trimIndent(), d.getReasons(aapsLogger)
-        )
-        Assertions.assertEquals("Safety: Limiting bolus to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
+    """.trimIndent())
+        assertThat(d.getMostLimitedReasons(aapsLogger)).isEqualTo("Safety: Limiting bolus to 3.0 U because of max value in preferences")
     }
 
     @Test
@@ -246,9 +244,9 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         `when`(sp.getString(info.nightscout.core.utils.R.string.key_age, "")).thenReturn("child")
         var d = Constraint(-22.0)
         d = safetyPlugin.applyBolusConstraints(d)
-        Assertions.assertEquals(0.0, d.value(), 0.01)
-        Assertions.assertEquals("Safety: Limiting bolus to 0.0 U because of it must be positive value", d.getReasons(aapsLogger))
-        Assertions.assertEquals("Safety: Limiting bolus to 0.0 U because of it must be positive value", d.getMostLimitedReasons(aapsLogger))
+        assertThat(d.value()).isWithin(0.01).of(0.0)
+        assertThat(d.getReasons(aapsLogger)).isEqualTo("Safety: Limiting bolus to 0.0 U because of it must be positive value")
+        assertThat(d.getMostLimitedReasons(aapsLogger)).isEqualTo("Safety: Limiting bolus to 0.0 U because of it must be positive value")
     }
 
     @Test
@@ -259,13 +257,13 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         // Negative carbs not allowed
         var i = Constraint(-22)
         safetyPlugin.applyCarbsConstraints(i)
-        Assertions.assertEquals(0, i.value())
-        Assertions.assertEquals("Safety: Limiting carbs to 0 g because of it must be positive value", i.getReasons(aapsLogger))
+        assertThat(i.value()).isEqualTo(0)
+        assertThat(i.getReasons(aapsLogger)).isEqualTo("Safety: Limiting carbs to 0 g because of it must be positive value")
 
         // Apply all limits
         i = safetyPlugin.applyCarbsConstraints(Constraint(Constants.REALLYHIGHCARBS))
-        Assertions.assertEquals(48, i.value())
-        Assertions.assertEquals("Safety: Limiting carbs to 48 g because of max value in preferences", i.getReasons(aapsLogger))
+        assertThat(i.value()).isEqualTo(48)
+        assertThat(i.getReasons(aapsLogger)).isEqualTo("Safety: Limiting carbs to 48 g because of max value in preferences")
     }
 
     @Test
@@ -282,22 +280,22 @@ Safety: Limiting max basal rate to 500.00 U/h because of pump limit
         // Apply all limits
         var d = Constraint(Constants.REALLYHIGHIOB)
         d = safetyPlugin.applyMaxIOBConstraints(d)
-        Assertions.assertEquals(HardLimits.MAX_IOB_LGS, d.value(), 0.01)
-        Assertions.assertEquals("Safety: Limiting IOB to 0.0 U because of Low Glucose Suspend", d.getReasons(aapsLogger))
-        Assertions.assertEquals("Safety: Limiting IOB to 0.0 U because of Low Glucose Suspend", d.getMostLimitedReasons(aapsLogger))
+        assertThat(d.value()).isWithin(0.01).of(HardLimits.MAX_IOB_LGS)
+        assertThat(d.getReasons(aapsLogger)).isEqualTo("Safety: Limiting IOB to 0.0 U because of Low Glucose Suspend")
+        assertThat(d.getMostLimitedReasons(aapsLogger)).isEqualTo("Safety: Limiting IOB to 0.0 U because of Low Glucose Suspend")
 
         // Apply all limits
         d = Constraint(Constants.REALLYHIGHIOB)
         val a = openAPSAMAPlugin.applyMaxIOBConstraints(d)
-        Assertions.assertEquals(1.5, a.value(), 0.01)
-        Assertions.assertEquals("OpenAPSAMA: Limiting IOB to 1.5 U because of max value in preferences\nOpenAPSAMA: Limiting IOB to 7.0 U because of hard limit", d.getReasons(aapsLogger))
-        Assertions.assertEquals("OpenAPSAMA: Limiting IOB to 1.5 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
+        assertThat(a.value()).isWithin(0.01).of(1.5)
+        assertThat(d.getReasons(aapsLogger)).isEqualTo("OpenAPSAMA: Limiting IOB to 1.5 U because of max value in preferences\nOpenAPSAMA: Limiting IOB to 7.0 U because of hard limit")
+        assertThat(d.getMostLimitedReasons(aapsLogger)).isEqualTo("OpenAPSAMA: Limiting IOB to 1.5 U because of max value in preferences")
 
         // Apply all limits
         d = Constraint(Constants.REALLYHIGHIOB)
         val s = openAPSSMBPlugin.applyMaxIOBConstraints(d)
-        Assertions.assertEquals(3.0, s.value(), 0.01)
-        Assertions.assertEquals("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences\nOpenAPSSMB: Limiting IOB to 22.0 U because of hard limit", d.getReasons(aapsLogger))
-        Assertions.assertEquals("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences", d.getMostLimitedReasons(aapsLogger))
+        assertThat(s.value()).isWithin(0.01).of(3.0)
+        assertThat(d.getReasons(aapsLogger)).isEqualTo("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences\nOpenAPSSMB: Limiting IOB to 22.0 U because of hard limit")
+        assertThat(d.getMostLimitedReasons(aapsLogger)).isEqualTo("OpenAPSSMB: Limiting IOB to 3.0 U because of max value in preferences")
     }
 }

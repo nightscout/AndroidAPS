@@ -2,9 +2,9 @@ package info.nightscout.ui.defaultProfile
 
 import info.nightscout.core.extensions.pureProfileFromJson
 import info.nightscout.interfaces.GlucoseUnit
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.PureProfile
 import info.nightscout.interfaces.utils.Round
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.utils.DateUtil
 import org.json.JSONArray
 import org.json.JSONObject
@@ -17,7 +17,10 @@ import kotlin.math.abs
 
 @Suppress("LocalVariableName")
 @Singleton
-class DefaultProfile @Inject constructor(val dateUtil: DateUtil) {
+class DefaultProfile @Inject constructor(
+    private val dateUtil: DateUtil,
+    private val profileUtil: ProfileUtil
+) {
 
     private var oneToFive: TreeMap<Double, Array<Double>> = TreeMap()
     private var sixToEleven: TreeMap<Double, Array<Double>> = TreeMap()
@@ -32,21 +35,21 @@ class DefaultProfile @Inject constructor(val dateUtil: DateUtil) {
             val ic = Round.roundTo(250.0 / _tdd, 1.0)
             profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -4.0, -1.0, -2.0, -4.0, 0.0, -4.0)))
             val isf = Round.roundTo(200.0 / _tdd, 0.1)
-            profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -2.0, -0.0, -0.0, -2.0, 0.0, -2.0),units))
+            profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -2.0, -0.0, -0.0, -2.0, 0.0, -2.0), units))
         } else if (age in 6..11) {
             val _tdd = if (tdd == 0.0) 0.8 * weight else tdd
             closest(sixToEleven, _tdd * 0.4)?.let { array -> profile.put("basal", arrayToJson(array)) }
             val ic = Round.roundTo(375.0 / _tdd, 1.0)
             profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -3.0, 0.0, -1.0, -3.0, 0.0, -2.0)))
             val isf = Round.roundTo(170.0 / _tdd, 0.1)
-            profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -1.0, -0.0, -0.0, -1.0, 0.0, -1.0),units))
+            profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.0, -1.0, -0.0, -0.0, -1.0, 0.0, -1.0), units))
         } else if (age in 12..18) {
             val _tdd = if (tdd == 0.0) 1.0 * weight else tdd
             closest(twelveToSeventeen, _tdd * 0.5)?.let { array -> profile.put("basal", arrayToJson(array)) }
             val ic = Round.roundTo(500.0 / _tdd, 1.0)
             profile.put("carbratio", singleValueArray(ic, arrayOf(0.0, -1.0, 0.0, 0.0, -1.0, 0.0, -1.0)))
             val isf = Round.roundTo(100.0 / _tdd, 0.1)
-            profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2),units))
+            profile.put("sens", singleValueArrayFromMmolToUnits(isf, arrayOf(0.2, 0.0, 0.2, 0.2, 0.0, 0.2, 0.2), units))
         } else if (age > 18) {
             return null
         }
@@ -54,31 +57,49 @@ class DefaultProfile @Inject constructor(val dateUtil: DateUtil) {
         profile.put("carbs_hr", 20) // not used
         profile.put("delay", 5.0) // not used
         profile.put("timezone", TimeZone.getDefault().id)
-        profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
-        profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", Profile.fromMgdlToUnits(108.0, units))))
+        profile.put("target_high", JSONArray().put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMgdlToUnits(108.0, units))))
+        profile.put("target_low", JSONArray().put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMgdlToUnits(108.0, units))))
         profile.put("units", units.asText)
         return pureProfileFromJson(profile, dateUtil)
     }
 
     init {
-        oneToFive[1.00] = arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050)
-        oneToFive[1.13] = arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050)
-        oneToFive[1.25] = arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.050, 0.050, 0.050, 0.075, 0.075, 0.100, 0.050, 0.050)
-        oneToFive[1.38] = arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.050, 0.050, 0.050, 0.075, 0.075, 0.100, 0.050, 0.050)
-        oneToFive[1.50] = arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.050, 0.050, 0.050, 0.075, 0.100, 0.100, 0.050, 0.050)
-        oneToFive[1.75] = arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.100, 0.050, 0.050, 0.050, 0.060, 0.060, 0.075, 0.075, 0.050, 0.050, 0.050, 0.100, 0.125, 0.100, 0.050, 0.050)
-        oneToFive[2.00] = arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.100, 0.075, 0.050, 0.050, 0.065, 0.065, 0.075, 0.075, 0.050, 0.050, 0.050, 0.100, 0.125, 0.100, 0.050, 0.050)
-        oneToFive[2.25] = arrayOf(0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.100, 0.100, 0.100, 0.075, 0.060, 0.060, 0.070, 0.070, 0.100, 0.100, 0.050, 0.050, 0.050, 0.125, 0.150, 0.125, 0.065, 0.050)
-        oneToFive[2.50] = arrayOf(0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.100, 0.125, 0.125, 0.100, 0.065, 0.065, 0.075, 0.075, 0.125, 0.125, 0.060, 0.060, 0.060, 0.150, 0.150, 0.150, 0.070, 0.060)
-        oneToFive[2.75] = arrayOf(0.075, 0.075, 0.075, 0.100, 0.100, 0.100, 0.125, 0.150, 0.125, 0.100, 0.070, 0.070, 0.080, 0.080, 0.150, 0.150, 0.070, 0.070, 0.070, 0.175, 0.175, 0.175, 0.080, 0.070)
-        oneToFive[3.25] = arrayOf(0.100, 0.100, 0.100, 0.125, 0.125, 0.125, 0.150, 0.150, 0.150, 0.100, 0.080, 0.080, 0.100, 0.100, 0.175, 0.175, 0.075, 0.075, 0.075, 0.200, 0.200, 0.200, 0.090, 0.080)
-        oneToFive[3.75] = arrayOf(0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.175, 0.175, 0.175, 0.100, 0.085, 0.085, 0.110, 0.110, 0.185, 0.185, 0.080, 0.080, 0.080, 0.225, 0.225, 0.225, 0.100, 0.090)
-        oneToFive[4.25] = arrayOf(0.125, 0.125, 0.130, 0.140, 0.140, 0.140, 0.200, 0.200, 0.200, 0.125, 0.090, 0.090, 0.120, 0.120, 0.200, 0.200, 0.100, 0.100, 0.100, 0.250, 0.250, 0.250, 0.125, 0.100)
-        oneToFive[4.75] = arrayOf(0.125, 0.130, 0.135, 0.150, 0.150, 0.150, 0.200, 0.225, 0.200, 0.125, 0.100, 0.100, 0.125, 0.125, 0.250, 0.200, 0.110, 0.125, 0.125, 0.275, 0.275, 0.275, 0.130, 0.125)
-        oneToFive[5.25] = arrayOf(0.150, 0.150, 0.150, 0.170, 0.170, 0.170, 0.225, 0.225, 0.225, 0.130, 0.125, 0.125, 0.140, 0.140, 0.250, 0.250, 0.150, 0.150, 0.150, 0.300, 0.300, 0.300, 0.150, 0.150)
-        oneToFive[6.00] = arrayOf(0.170, 0.170, 0.175, 0.200, 0.200, 0.200, 0.250, 0.250, 0.250, 0.150, 0.125, 0.125, 0.150, 0.150, 0.275, 0.275, 0.170, 0.150, 0.150, 0.350, 0.350, 0.350, 0.175, 0.150)
-        oneToFive[6.75] = arrayOf(0.200, 0.200, 0.200, 0.225, 0.225, 0.225, 0.275, 0.275, 0.275, 0.200, 0.130, 0.130, 0.175, 0.175, 0.300, 0.300, 0.170, 0.175, 0.175, 0.375, 0.375, 0.375, 0.200, 0.175)
-        oneToFive[7.50] = arrayOf(0.225, 0.230, 0.235, 0.250, 0.250, 0.250, 0.300, 0.300, 0.300, 0.250, 0.150, 0.150, 0.200, 0.200, 0.325, 0.325, 0.200, 0.200, 0.200, 0.400, 0.450, 0.400, 0.350, 0.200)
+        oneToFive[1.00] =
+            arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050)
+        oneToFive[1.13] =
+            arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050)
+        oneToFive[1.25] =
+            arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.050, 0.050, 0.050, 0.075, 0.075, 0.100, 0.050, 0.050)
+        oneToFive[1.38] =
+            arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.050, 0.050, 0.050, 0.075, 0.075, 0.100, 0.050, 0.050)
+        oneToFive[1.50] =
+            arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.075, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.050, 0.050, 0.050, 0.075, 0.100, 0.100, 0.050, 0.050)
+        oneToFive[1.75] =
+            arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.100, 0.050, 0.050, 0.050, 0.060, 0.060, 0.075, 0.075, 0.050, 0.050, 0.050, 0.100, 0.125, 0.100, 0.050, 0.050)
+        oneToFive[2.00] =
+            arrayOf(0.050, 0.050, 0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.100, 0.075, 0.050, 0.050, 0.065, 0.065, 0.075, 0.075, 0.050, 0.050, 0.050, 0.100, 0.125, 0.100, 0.050, 0.050)
+        oneToFive[2.25] =
+            arrayOf(0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.100, 0.100, 0.100, 0.075, 0.060, 0.060, 0.070, 0.070, 0.100, 0.100, 0.050, 0.050, 0.050, 0.125, 0.150, 0.125, 0.065, 0.050)
+        oneToFive[2.50] =
+            arrayOf(0.050, 0.050, 0.050, 0.050, 0.075, 0.075, 0.100, 0.125, 0.125, 0.100, 0.065, 0.065, 0.075, 0.075, 0.125, 0.125, 0.060, 0.060, 0.060, 0.150, 0.150, 0.150, 0.070, 0.060)
+        oneToFive[2.75] =
+            arrayOf(0.075, 0.075, 0.075, 0.100, 0.100, 0.100, 0.125, 0.150, 0.125, 0.100, 0.070, 0.070, 0.080, 0.080, 0.150, 0.150, 0.070, 0.070, 0.070, 0.175, 0.175, 0.175, 0.080, 0.070)
+        oneToFive[3.25] =
+            arrayOf(0.100, 0.100, 0.100, 0.125, 0.125, 0.125, 0.150, 0.150, 0.150, 0.100, 0.080, 0.080, 0.100, 0.100, 0.175, 0.175, 0.075, 0.075, 0.075, 0.200, 0.200, 0.200, 0.090, 0.080)
+        oneToFive[3.75] =
+            arrayOf(0.125, 0.125, 0.125, 0.125, 0.125, 0.125, 0.175, 0.175, 0.175, 0.100, 0.085, 0.085, 0.110, 0.110, 0.185, 0.185, 0.080, 0.080, 0.080, 0.225, 0.225, 0.225, 0.100, 0.090)
+        oneToFive[4.25] =
+            arrayOf(0.125, 0.125, 0.130, 0.140, 0.140, 0.140, 0.200, 0.200, 0.200, 0.125, 0.090, 0.090, 0.120, 0.120, 0.200, 0.200, 0.100, 0.100, 0.100, 0.250, 0.250, 0.250, 0.125, 0.100)
+        oneToFive[4.75] =
+            arrayOf(0.125, 0.130, 0.135, 0.150, 0.150, 0.150, 0.200, 0.225, 0.200, 0.125, 0.100, 0.100, 0.125, 0.125, 0.250, 0.200, 0.110, 0.125, 0.125, 0.275, 0.275, 0.275, 0.130, 0.125)
+        oneToFive[5.25] =
+            arrayOf(0.150, 0.150, 0.150, 0.170, 0.170, 0.170, 0.225, 0.225, 0.225, 0.130, 0.125, 0.125, 0.140, 0.140, 0.250, 0.250, 0.150, 0.150, 0.150, 0.300, 0.300, 0.300, 0.150, 0.150)
+        oneToFive[6.00] =
+            arrayOf(0.170, 0.170, 0.175, 0.200, 0.200, 0.200, 0.250, 0.250, 0.250, 0.150, 0.125, 0.125, 0.150, 0.150, 0.275, 0.275, 0.170, 0.150, 0.150, 0.350, 0.350, 0.350, 0.175, 0.150)
+        oneToFive[6.75] =
+            arrayOf(0.200, 0.200, 0.200, 0.225, 0.225, 0.225, 0.275, 0.275, 0.275, 0.200, 0.130, 0.130, 0.175, 0.175, 0.300, 0.300, 0.170, 0.175, 0.175, 0.375, 0.375, 0.375, 0.200, 0.175)
+        oneToFive[7.50] =
+            arrayOf(0.225, 0.230, 0.235, 0.250, 0.250, 0.250, 0.300, 0.300, 0.300, 0.250, 0.150, 0.150, 0.200, 0.200, 0.325, 0.325, 0.200, 0.200, 0.200, 0.400, 0.450, 0.400, 0.350, 0.200)
 
         sixToEleven[5.26] = arrayOf(0.18, 0.18, 0.18, 0.20, 0.20, 0.23, 0.25, 0.25, 0.25, 0.18, 0.15, 0.13, 0.15, 0.15, 0.25, 0.25, 0.20, 0.15, 0.18, 0.25, 0.25, 0.25, 0.23, 0.20)
         sixToEleven[5.61] = arrayOf(0.18, 0.20, 0.20, 0.23, 0.23, 0.25, 0.28, 0.28, 0.25, 0.20, 0.15, 0.13, 0.15, 0.18, 0.25, 0.25, 0.20, 0.15, 0.18, 0.28, 0.25, 0.25, 0.23, 0.20)
@@ -157,13 +178,13 @@ class DefaultProfile @Inject constructor(val dateUtil: DateUtil) {
 
     private fun singleValueArrayFromMmolToUnits(value: Double, sample: Array<Double>, units: GlucoseUnit): JSONArray {
         val array = JSONArray()
-        array.put(JSONObject().put("time", "00:00").put("value", Profile.fromMmolToUnits(value + sample[0], units)).put("timeAsSeconds", 0 * 3600))
-        array.put(JSONObject().put("time", "06:00").put("value", Profile.fromMmolToUnits(value + sample[1], units)).put("timeAsSeconds", 6 * 3600))
-        array.put(JSONObject().put("time", "09:00").put("value", Profile.fromMmolToUnits(value + sample[2], units)).put("timeAsSeconds", 9 * 3600))
-        array.put(JSONObject().put("time", "11:00").put("value", Profile.fromMmolToUnits(value + sample[3], units)).put("timeAsSeconds", 11 * 3600))
-        array.put(JSONObject().put("time", "14:00").put("value", Profile.fromMmolToUnits(value + sample[4], units)).put("timeAsSeconds", 14 * 3600))
-        array.put(JSONObject().put("time", "16:00").put("value", Profile.fromMmolToUnits(value + sample[5], units)).put("timeAsSeconds", 16 * 3600))
-        array.put(JSONObject().put("time", "19:00").put("value", Profile.fromMmolToUnits(value + sample[6], units)).put("timeAsSeconds", 19 * 3600))
+        array.put(JSONObject().put("time", "00:00").put("value", profileUtil.fromMmolToUnits(value + sample[0], units)).put("timeAsSeconds", 0 * 3600))
+        array.put(JSONObject().put("time", "06:00").put("value", profileUtil.fromMmolToUnits(value + sample[1], units)).put("timeAsSeconds", 6 * 3600))
+        array.put(JSONObject().put("time", "09:00").put("value", profileUtil.fromMmolToUnits(value + sample[2], units)).put("timeAsSeconds", 9 * 3600))
+        array.put(JSONObject().put("time", "11:00").put("value", profileUtil.fromMmolToUnits(value + sample[3], units)).put("timeAsSeconds", 11 * 3600))
+        array.put(JSONObject().put("time", "14:00").put("value", profileUtil.fromMmolToUnits(value + sample[4], units)).put("timeAsSeconds", 14 * 3600))
+        array.put(JSONObject().put("time", "16:00").put("value", profileUtil.fromMmolToUnits(value + sample[5], units)).put("timeAsSeconds", 16 * 3600))
+        array.put(JSONObject().put("time", "19:00").put("value", profileUtil.fromMmolToUnits(value + sample[6], units)).put("timeAsSeconds", 19 * 3600))
         return array
     }
 }

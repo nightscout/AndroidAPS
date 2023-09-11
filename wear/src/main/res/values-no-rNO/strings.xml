@@ -24,6 +24,11 @@
     <string name="pref_vibrate_on_bolus">Vibrer ved bolus</string>
     <string name="pref_units_for_actions">Enheter for handlinger</string>
     <string name="units_short">E</string>
+    <string name="pref_display_settings">Skjerm</string>
+    <string name="pref_graph_settings">Graf</string>
+    <string name="pref_interface_settings">Grensesnitt</string>
+    <string name="pref_others_settings">Annet</string>
+    <string name="pref_complication_settings">Urskive</string>
     <string name="pref_show_date">Vis dato</string>
     <string name="pref_show_iob">Vis IOB</string>
     <string name="pref_show_detailed_iob">Vis detaljert IOB</string>
@@ -41,6 +46,7 @@
     <string name="pref_show_ago">Vis siden</string>
     <string name="pref_dark" comment="Enables dark visual theme">Mørkt</string>
     <string name="pref_highlight_basals">Marker basaler</string>
+    <string name="pref_prediction_lines">Vis prognoser</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Matchende avdeler</string>
     <string name="pref_chart_timeframe">Tidsspenn for diagram</string>
     <string name="pref_1_hour">1 time</string>

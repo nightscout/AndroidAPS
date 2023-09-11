@@ -30,7 +30,6 @@ import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.Instantiator
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.ui.UiInteraction
@@ -47,6 +46,7 @@ import info.nightscout.rx.events.EventLocalProfileChanged
 import info.nightscout.shared.SafeParse
 import info.nightscout.shared.extensions.runOnUiThread
 import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -59,6 +59,7 @@ import javax.inject.Inject
 class AutotuneFragment : DaggerFragment() {
 
     @Inject lateinit var profileFunction: ProfileFunction
+    @Inject lateinit var profileUtil: ProfileUtil
     @Inject lateinit var autotunePlugin: AutotunePlugin
     @Inject lateinit var autotuneFS: AutotuneFS
     @Inject lateinit var sp: SP
@@ -389,7 +390,7 @@ class AutotuneFragment : DaggerFragment() {
                     nl = "\n"
                 }
                 if (profile.isfSize > 1) {
-                    warning += nl + rh.gs(info.nightscout.core.ui.R.string.autotune_isf_warning, profile.isfSize, Profile.fromMgdlToUnits(profile.isf, profileFunction.getUnits()), profileFunction.getUnits().asText)
+                    warning += nl + rh.gs(info.nightscout.core.ui.R.string.autotune_isf_warning, profile.isfSize, profileUtil.fromMgdlToUnits(profile.isf), profileFunction.getUnits().asText)
                 }
             }
         }

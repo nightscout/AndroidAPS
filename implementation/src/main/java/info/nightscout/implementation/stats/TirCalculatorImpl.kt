@@ -10,11 +10,10 @@ import android.widget.TableLayout
 import android.widget.TextView
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Constants
-import info.nightscout.interfaces.profile.Profile
-import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.stats.TIR
 import info.nightscout.interfaces.stats.TirCalculator
 import info.nightscout.interfaces.utils.MidnightTime
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import info.nightscout.shared.utils.T
@@ -24,7 +23,7 @@ import javax.inject.Singleton
 @Singleton
 class TirCalculatorImpl @Inject constructor(
     private val rh: ResourceHelper,
-    private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
     private val dateUtil: DateUtil,
     private val repository: AppRepository
 ) : TirCalculator {
@@ -88,7 +87,7 @@ class TirCalculatorImpl @Inject constructor(
             layout.layoutParams = TableLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
             layout.addView(
                 TextView(context).apply {
-                    text = rh.gs(info.nightscout.core.ui.R.string.tir) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTirMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTirMgdl) + ")"
+                    text = rh.gs(info.nightscout.core.ui.R.string.tir) + " (" + profileUtil.stringInCurrentUnitsDetect(lowTirMgdl) + "-" + profileUtil.stringInCurrentUnitsDetect(highTirMgdl) + ")"
                     setTypeface(typeface, Typeface.BOLD)
                     gravity = Gravity.CENTER_HORIZONTAL
                     setTextAppearance(android.R.style.TextAppearance_Material_Medium)
@@ -97,7 +96,7 @@ class TirCalculatorImpl @Inject constructor(
             for (i in 0 until tir7.size()) layout.addView(tir7.valueAt(i).toTableRow(context, rh, dateUtil))
             layout.addView(
                 TextView(context).apply {
-                    text = rh.gs(info.nightscout.core.ui.R.string.average) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTirMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTirMgdl) + ")"
+                    text = rh.gs(info.nightscout.core.ui.R.string.average) + " (" + profileUtil.stringInCurrentUnitsDetect(lowTirMgdl) + "-" + profileUtil.stringInCurrentUnitsDetect(highTirMgdl) + ")"
                     setTypeface(typeface, Typeface.BOLD)
                     gravity = Gravity.CENTER_HORIZONTAL
                     setTextAppearance(android.R.style.TextAppearance_Material_Medium)
@@ -106,7 +105,7 @@ class TirCalculatorImpl @Inject constructor(
             layout.addView(averageTir30.toTableRow(context, rh, tir30.size()))
             layout.addView(
                 TextView(context).apply {
-                    text = rh.gs(info.nightscout.core.ui.R.string.average) + " (" + Profile.toCurrentUnitsString(profileFunction, lowTitMgdl) + "-" + Profile.toCurrentUnitsString(profileFunction, highTitMgdl) + ")"
+                    text = rh.gs(info.nightscout.core.ui.R.string.average) + " (" + profileUtil.stringInCurrentUnitsDetect(lowTitMgdl) + "-" + profileUtil.stringInCurrentUnitsDetect(highTitMgdl) + ")"
                     setTypeface(typeface, Typeface.BOLD)
                     gravity = Gravity.CENTER_HORIZONTAL
                     setTextAppearance(android.R.style.TextAppearance_Material_Medium)

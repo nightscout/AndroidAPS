@@ -24,13 +24,13 @@ class TemporaryTargetExtensionKtTest : TestBaseWithProfile() {
     )
     @Test
     fun lowValueToUnitsToString() {
-        Assertions.assertEquals("110", temporaryTarget.lowValueToUnitsToString(GlucoseUnit.MGDL))
-        Assertions.assertEquals("6.1", temporaryTarget.lowValueToUnitsToString(GlucoseUnit.MMOL))
+        Assertions.assertEquals("110", temporaryTarget.lowValueToUnitsToString(GlucoseUnit.MGDL, decimalFormatter))
+        Assertions.assertEquals("6.1", temporaryTarget.lowValueToUnitsToString(GlucoseUnit.MMOL, decimalFormatter))
     }
     @Test
     fun highValueToUnitsToString() {
-        Assertions.assertEquals("120", temporaryTarget.highValueToUnitsToString(GlucoseUnit.MGDL))
-        Assertions.assertEquals("6.7", temporaryTarget.highValueToUnitsToString(GlucoseUnit.MMOL))
+        Assertions.assertEquals("120", temporaryTarget.highValueToUnitsToString(GlucoseUnit.MGDL, decimalFormatter))
+        Assertions.assertEquals("6.7", temporaryTarget.highValueToUnitsToString(GlucoseUnit.MMOL, decimalFormatter))
     }
     @Test
     fun target() {

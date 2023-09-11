@@ -36,7 +36,7 @@
     <string name="combo_invalid_setup">Configuração da bomba inválida, verifique a documentação e se o menu de informações rápidas está nomeado de QUICK INFO utilizando o programa de configuração 360.</string>
     <string name="combo_actvity_reading_basal_profile">Lendo perfil basal</string>
     <string name="combo_bolus_rejected_due_to_pump_history_change">O histórico da bomba foi alterado após o cálculo do bolo ter sido realizado. O bolus não foi aplicado. Por favor, verifique se bolus ainda é necessário.</string>
-    <string name="combo_error_updating_treatment_record">O bolus foi aplicado, mas não foi possível adicionar ao histórico. Isto é possível se dois bolus do mesmo valor baixo foram aplicados nos últimos dois minutos. Por favor verifique o histórico da bomba e use o Careportal para adicionar os dados em falta caso necessário. Cuidado para não adicionar dados com o mesmo valor no mesmo minuto.</string>
+    <string name="combo_error_updating_treatment_record">Bolus foi entregue com sucesso, mas a adição da entrada em Tratamento falhou. Isso pode acontecer se dois pequenos bolus do mesmo tamanho forem administrados nos últimos dois minutos. Verifique o histórico da bomba e as entradas de tratamento e use o Careportal para adicionar entradas ausentes. Certifique-se de não adicionar nenhuma entrada para o mesmo minuto e o mesmo valor.</string>
     <string name="combo_high_temp_rejected_due_to_pump_history_changes">Rejeitando basal temporária porque o cálculo não considerou o histórico da bomba alterado recentemente</string>
     <string name="combo_activity_checking_pump_state">Atualizando estado da bomba</string>
     <string name="combo_warning_pump_basal_rate_changed">A taxa basal na bomba mudou e será atualizada em breve</string>

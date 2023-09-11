@@ -301,7 +301,7 @@ class CustomWatchface : BaseWatchFace() {
         val metadataMap = ZipWatchfaceFormat.loadMetadata(json)
         val drawableDataMap: CwfResDataMap = mutableMapOf()
         getResourceByteArray(info.nightscout.shared.R.drawable.watchface_custom)?.let {
-            drawableDataMap[ResFileMap.CUSTOM_WATCHFACE] = ResData(it, ResFormat.PNG)
+            drawableDataMap[ResFileMap.CUSTOM_WATCHFACE.fileName] = ResData(it, ResFormat.PNG)
         }
         return EventData.ActionSetCustomWatchface(CwfData(json.toString(4), metadataMap, drawableDataMap))
     }
@@ -489,10 +489,10 @@ class CustomWatchface : BaseWatchFace() {
 
         fun drawable(resources: Resources, drawableDataMap: CwfResDataMap, sgvLevel: Long): Drawable? = customDrawable?.let { cd ->
             when (sgvLevel) {
-                1L   -> { drawableDataMap[customHigh]?.toDrawable(resources) ?: drawableDataMap[cd]?.toDrawable(resources) }
-                0L   -> { drawableDataMap[cd]?.toDrawable(resources) }
-                -1L  -> { drawableDataMap[customLow]?.toDrawable(resources) ?: drawableDataMap[cd]?.toDrawable(resources) }
-                else -> drawableDataMap[cd]?.toDrawable(resources)
+                1L   -> { customHigh?.let {drawableDataMap[customHigh.fileName]}?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources) }
+                0L   -> { drawableDataMap[cd.fileName]?.toDrawable(resources) }
+                -1L  -> { customLow?.let {drawableDataMap[customLow.fileName]}?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources) }
+                else -> drawableDataMap[cd.fileName]?.toDrawable(resources)
             }
         }
     }
@@ -514,7 +514,7 @@ private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int,
 
         fun drawable(direction: String?, resources: Resources, drawableDataMap: CwfResDataMap): Drawable {
             val arrow = values().firstOrNull { it.symbol == direction } ?:NONE
-            return drawableDataMap[arrow.customDrawable]?.toDrawable(resources)  ?:resources.getDrawable(arrow.icon)
+            return arrow.customDrawable?. let {drawableDataMap[arrow.customDrawable.fileName]}?.toDrawable(resources)  ?:resources.getDrawable(arrow.icon)
         }
 
     }
@@ -532,36 +532,35 @@ private enum class GravityMap(val key: String, val gravity: Int) {
     }
 }
 
-private enum class FontMap(val key: String, var font: Typeface, @FontRes val fontRessources: Int?, val customFont: ResFileMap?) {
-    SANS_SERIF(JsonKeyValues.SANS_SERIF.key, Typeface.SANS_SERIF, null, null),
-    DEFAULT(JsonKeyValues.DEFAULT.key, Typeface.DEFAULT, null, null),
-    DEFAULT_BOLD(JsonKeyValues.DEFAULT_BOLD.key, Typeface.DEFAULT_BOLD, null, null),
-    MONOSPACE(JsonKeyValues.MONOSPACE.key, Typeface.MONOSPACE, null, null),
-    SERIF(JsonKeyValues.SERIF.key, Typeface.SERIF, null, null),
-    ROBOTO_CONDENSED_BOLD(JsonKeyValues.ROBOTO_CONDENSED_BOLD.key, Typeface.DEFAULT, R.font.roboto_condensed_bold, null),
-    ROBOTO_CONDENSED_LIGHT(JsonKeyValues.ROBOTO_CONDENSED_LIGHT.key, Typeface.DEFAULT, R.font.roboto_condensed_light, null),
-    ROBOTO_CONDENSED_REGULAR(JsonKeyValues.ROBOTO_CONDENSED_REGULAR.key, Typeface.DEFAULT, R.font.roboto_condensed_regular, null),
-    ROBOTO_SLAB_LIGHT(JsonKeyValues.ROBOTO_SLAB_LIGHT.key, Typeface.DEFAULT, R.font.roboto_slab_light, null),
-    FONT1(JsonKeyValues.FONT1.key, Typeface.DEFAULT, null, ResFileMap.FONT1),
-    FONT2(JsonKeyValues.FONT2.key, Typeface.DEFAULT, null, ResFileMap.FONT2),
-    FONT3(JsonKeyValues.FONT3.key, Typeface.DEFAULT, null, ResFileMap.FONT3),
-    FONT4(JsonKeyValues.FONT4.key, Typeface.DEFAULT, null, ResFileMap.FONT4);
+private enum class FontMap(val key: String, var font: Typeface, @FontRes val fontRessources: Int?) {
+    SANS_SERIF(JsonKeyValues.SANS_SERIF.key, Typeface.SANS_SERIF, null),
+    DEFAULT(JsonKeyValues.DEFAULT.key, Typeface.DEFAULT, null),
+    DEFAULT_BOLD(JsonKeyValues.DEFAULT_BOLD.key, Typeface.DEFAULT_BOLD, null),
+    MONOSPACE(JsonKeyValues.MONOSPACE.key, Typeface.MONOSPACE, null),
+    SERIF(JsonKeyValues.SERIF.key, Typeface.SERIF, null),
+    ROBOTO_CONDENSED_BOLD(JsonKeyValues.ROBOTO_CONDENSED_BOLD.key, Typeface.DEFAULT, R.font.roboto_condensed_bold),
+    ROBOTO_CONDENSED_LIGHT(JsonKeyValues.ROBOTO_CONDENSED_LIGHT.key, Typeface.DEFAULT, R.font.roboto_condensed_light),
+    ROBOTO_CONDENSED_REGULAR(JsonKeyValues.ROBOTO_CONDENSED_REGULAR.key, Typeface.DEFAULT, R.font.roboto_condensed_regular),
+    ROBOTO_SLAB_LIGHT(JsonKeyValues.ROBOTO_SLAB_LIGHT.key, Typeface.DEFAULT, R.font.roboto_slab_light);
 
     companion object {
 
-        fun init(context: Context, resDataMap: CwfResDataMap) = values().forEach { fontMap ->
-            fontMap.customFont?.let { customFont ->
-                fontMap.font = Typeface.DEFAULT
-                resDataMap[customFont]?.toTypeface()?.let { resData ->
-                    fontMap.font = resData
-                }
-            } ?: run {
-                fontMap.font = fontMap.fontRessources?.let { fontResource ->
+        private val customFonts = mutableMapOf<String, Typeface>()
+        fun init(context: Context, resDataMap: CwfResDataMap) {
+            customFonts.clear()
+            values().forEach { fontMap ->
+                customFonts[fontMap.key.lowercase()] = fontMap.fontRessources?.let { fontResource ->
                     ResourcesCompat.getFont(context, fontResource)
                 } ?: fontMap.font
             }
+            resDataMap.filter { (_, resData) ->
+                resData.format == ResFormat.TTF || resData.format == ResFormat.OTF
+            }.forEach { (key, resData) ->
+                customFonts[key.lowercase()] = resData.toTypeface() ?:Typeface.DEFAULT
+            }
         }
-        fun font(key: String) = values().firstOrNull { it.key == key }?.font ?: DEFAULT.font
+
+        fun font(key: String) = customFonts[key.lowercase()] ?: DEFAULT.font
         fun key() = DEFAULT.key
     }
 }

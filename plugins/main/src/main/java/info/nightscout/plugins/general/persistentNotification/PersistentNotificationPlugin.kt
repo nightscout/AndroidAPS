@@ -8,12 +8,10 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.RemoteInput
 import dagger.android.HasAndroidInjector
 import info.nightscout.core.extensions.toStringShort
-import info.nightscout.core.extensions.valueToUnitsString
 import info.nightscout.core.iob.generateCOBString
 import info.nightscout.core.iob.round
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.NotificationHolder
 import info.nightscout.interfaces.iob.GlucoseStatusProvider
 import info.nightscout.interfaces.iob.IobCobCalculator
@@ -21,7 +19,6 @@ import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.plugin.PluginBase
 import info.nightscout.interfaces.plugin.PluginDescription
 import info.nightscout.interfaces.plugin.PluginType
-import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.ui.IconsProvider
 import info.nightscout.interfaces.utils.DecimalFormatter
@@ -33,6 +30,7 @@ import info.nightscout.rx.events.EventInitializationChanged
 import info.nightscout.rx.events.EventPreferenceChange
 import info.nightscout.rx.events.EventRefreshOverview
 import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -47,6 +45,7 @@ class PersistentNotificationPlugin @Inject constructor(
     rh: ResourceHelper,
     private val aapsSchedulers: AapsSchedulers,
     private val profileFunction: ProfileFunction,
+    private val profileUtil: ProfileUtil,
     private val fabricPrivacy: FabricPrivacy,
     private val activePlugins: ActivePlugin,
     private val iobCobCalculator: IobCobCalculator,
@@ -56,7 +55,8 @@ class PersistentNotificationPlugin @Inject constructor(
     private val dummyServiceHelper: DummyServiceHelper,
     private val iconsProvider: IconsProvider,
     private val glucoseStatusProvider: GlucoseStatusProvider,
-    private val config: Config
+    private val config: Config,
+    private val decimalFormatter: DecimalFormatter
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.GENERAL)
@@ -121,15 +121,14 @@ class PersistentNotificationPlugin @Inject constructor(
         var unreadConversationBuilder: NotificationCompat.CarExtender.UnreadConversation.Builder? = null
         if (profileFunction.isProfileValid("Notification")) {
             var line1aa: String
-            val units = profileFunction.getUnits()
             val lastBG = iobCobCalculator.ads.lastBg()
             val glucoseStatus = glucoseStatusProvider.glucoseStatusData
             if (lastBG != null) {
-                line1aa = lastBG.valueToUnitsString(units)
+                line1aa = profileUtil.fromMgdlToStringInUnits(lastBG.value)
                 line1 = line1aa
                 if (glucoseStatus != null) {
-                    line1 += ("  Δ" + Profile.toSignedUnitsString(glucoseStatus.delta, glucoseStatus.delta * Constants.MGDL_TO_MMOLL, units)
-                        + " avgΔ" + Profile.toSignedUnitsString(glucoseStatus.shortAvgDelta, glucoseStatus.shortAvgDelta * Constants.MGDL_TO_MMOLL, units))
+                    line1 += ("  Δ" + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.delta)
+                        + " avgΔ" + profileUtil.fromMgdlToSignedStringInUnits(glucoseStatus.shortAvgDelta))
                     line1aa += "  " + lastBG.trendArrow.symbol
                 } else {
                     line1 += " " +
@@ -143,22 +142,28 @@ class PersistentNotificationPlugin @Inject constructor(
             }
             val activeTemp = iobCobCalculator.getTempBasalIncludingConvertedExtended(System.currentTimeMillis())
             if (activeTemp != null) {
-                line1 += "  " + activeTemp.toStringShort()
-                line1aa += "  " + activeTemp.toStringShort() + "."
+                line1 += "  " + activeTemp.toStringShort(decimalFormatter)
+                line1aa += "  " + activeTemp.toStringShort(decimalFormatter) + "."
             }
             //IOB
             val bolusIob = iobCobCalculator.calculateIobFromBolus().round()
             val basalIob = iobCobCalculator.calculateIobFromTempBasalsIncludingConvertedExtended().round()
             line2 =
-                rh.gs(info.nightscout.core.ui.R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + rh.gs(info.nightscout.core.ui.R.string.cob) + ": " + iobCobCalculator.getCobInfo(
+                rh.gs(info.nightscout.core.ui.R.string.treatments_iob_label_string) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U " + rh.gs(
+                    info.nightscout.core.ui.R
+                        .string.cob
+                ) + ": " + iobCobCalculator.getCobInfo(
                     "PersistentNotificationPlugin"
-                ).generateCOBString()
+                ).generateCOBString(decimalFormatter)
             val line2aa =
-                rh.gs(info.nightscout.core.ui.R.string.treatments_iob_label_string) + " " + DecimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + rh.gs(info.nightscout.core.ui.R.string.cob) + ": " + iobCobCalculator.getCobInfo(
+                rh.gs(info.nightscout.core.ui.R.string.treatments_iob_label_string) + " " + decimalFormatter.to2Decimal(bolusIob.iob + basalIob.basaliob) + "U. " + rh.gs(
+                    info.nightscout.core.ui.R
+                        .string.cob
+                ) + ": " + iobCobCalculator.getCobInfo(
                     "PersistentNotificationPlugin"
-                ).generateCOBString() + "."
-            line3 = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h"
-            var line3aa = DecimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h."
+                ).generateCOBString(decimalFormatter) + "."
+            line3 = decimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h"
+            var line3aa = decimalFormatter.to2Decimal(pump.baseBasalRate) + " U/h."
             line3 += " - " + profileFunction.getProfileName()
             line3aa += " - " + profileFunction.getProfileName() + "."
             /// For Android Auto

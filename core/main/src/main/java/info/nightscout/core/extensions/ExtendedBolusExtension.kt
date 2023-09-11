@@ -23,12 +23,12 @@ fun ExtendedBolus.isInProgress(dateUtil: DateUtil): Boolean =
 val ExtendedBolus.plannedRemainingMinutes: Int
     get() = max(round((end - System.currentTimeMillis()) / 1000.0 / 60).toInt(), 0)
 
-fun ExtendedBolus.toStringFull(dateUtil: DateUtil): String =
-    "E " + DecimalFormatter.to2Decimal(rate) + "U/h @" + dateUtil.timeString(timestamp) +
+fun ExtendedBolus.toStringFull(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String =
+    "E " + decimalFormatter.to2Decimal(rate) + "U/h @" + dateUtil.timeString(timestamp) +
         " " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "min"
 
-fun ExtendedBolus.toStringMedium(dateUtil: DateUtil): String =
-    DecimalFormatter.to2Decimal(rate) + "U/h " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "'"
+fun ExtendedBolus.toStringMedium(dateUtil: DateUtil, decimalFormatter: DecimalFormatter): String =
+    decimalFormatter.to2Decimal(rate) + "U/h " + getPassedDurationToTimeInMinutes(dateUtil.now()) + "/" + T.msecs(duration).mins() + "'"
 
 fun ExtendedBolus.getPassedDurationToTimeInMinutes(time: Long): Int =
     ((min(time, end) - timestamp) / 60.0 / 1000).roundToInt()
