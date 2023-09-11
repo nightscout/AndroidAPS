@@ -91,7 +91,6 @@ class WearFragment : DaggerFragment() {
                        }, fabricPrivacy::logException)
         if (wearPlugin.savedCustomWatchface == null)
             rxBus.send(EventMobileToWear(EventData.ActionrequestCustomWatchface(false)))
-        //EventMobileDataToWear
         updateGui()
     }
 
