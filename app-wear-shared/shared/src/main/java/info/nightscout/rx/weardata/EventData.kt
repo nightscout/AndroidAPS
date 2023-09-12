@@ -159,7 +159,8 @@ sealed class EventData : Event() {
     @Serializable
     data class ActionGetCustomWatchface(
         val customWatchface: ActionSetCustomWatchface,
-        val exportFile: Boolean = false
+        val exportFile: Boolean = false,
+        val withDate: Boolean = true
     ) : EventData()
 
     @Serializable

@@ -1266,8 +1266,7 @@ class DataHandlerMobile @Inject constructor(
         aapsLogger.debug(LTag.WEAR, "Custom Watchface received from ${command.sourceNodeId}: ${customWatchface.customWatchfaceData.json}")
         rxBus.send(EventWearUpdateGui(customWatchface.customWatchfaceData, command.exportFile))
         if (command.exportFile)
-            importExportPrefs.exportCustomWatchface(customWatchface.customWatchfaceData)
-
+            importExportPrefs.exportCustomWatchface(customWatchface.customWatchfaceData, command.withDate)
     }
 
 }

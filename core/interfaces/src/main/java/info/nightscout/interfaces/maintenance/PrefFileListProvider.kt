@@ -11,7 +11,7 @@ interface PrefFileListProvider {
     fun ensureExtraDirExists(): File
     fun newExportFile(): File
     fun newExportCsvFile(): File
-    fun newCwfFile(filename: String): File
+    fun newCwfFile(filename: String, withDate: Boolean = true): File
     fun listPreferenceFiles(loadMetadata: Boolean = false): MutableList<PrefsFile>
     fun listCustomWatchfaceFiles(): MutableList<CwfData>
     fun checkMetadata(metadata: Map<PrefsMetadataKey, PrefMetadata>): Map<PrefsMetadataKey, PrefMetadata>
