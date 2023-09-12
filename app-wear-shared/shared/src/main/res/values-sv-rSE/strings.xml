@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--    DateUtil-->
-    <string name="minago">%1$dm sedan</string>
-    <string name="minago_long">%1$d minuter sedan</string>
     <string name="hoursago">%1$.1f tim sedan</string>
     <string name="days_ago">%1$.1f dagar sedan</string>
     <string name="days_ago_round">%1$.0f dagar sedan</string>
