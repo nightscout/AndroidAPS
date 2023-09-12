@@ -112,6 +112,7 @@ class MedtrumService : DaggerService(), BLECommCallback {
                                aapsLogger.debug(LTag.PUMPCOMM, "Serial number changed, reporting new pump!")
                                medtrumPump.loadUserSettingsFromSP()
                                medtrumPump.deviceType = MedtrumSnUtil().getDeviceTypeFromSerial(medtrumPump.pumpSN)
+                               medtrumPump.resetPatchParameters()
                                pumpSync.connectNewPump()
                                medtrumPump.setFakeTBRIfNeeded()
                            }
@@ -534,6 +535,9 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 )
                 medtrumPump.setFakeTBRIfNeeded()
                 medtrumPump.clearAlarmState()
+
+                // Reset sequence numbers, make sure AAPS history can be synced properly on next activation
+                medtrumPump.resetPatchParameters()
             }
 
             MedtrumPumpState.IDLE,
