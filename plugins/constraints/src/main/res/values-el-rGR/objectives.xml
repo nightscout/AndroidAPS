@@ -7,19 +7,38 @@
     <string name="objectivenotfinished">Ο στόχος %1$d δεν ολοκληρώθηκε</string>
     <string name="objectives_0_objective">Δημιουργία παρακολούθησης και ανάλυση βασικού ρυθμού και αναλογιών</string>
     <string name="objectives_0_gate">Επιβεβαιώστε ότι η BG φαίνεται στο Nightscout και τα δεδομένα της αντλίας φορτώθηκαν</string>
+    <string name="objectives_0_learned">Κάνατε τη βασική εγκατάσταση του AAPS. Το Nightscout δεν είναι απαραίτητο για τη λειτουργία του AAPS, αλλά είναι πολύ χρήσιμο για την πεοβολή αναφορών ή την παρακολούθηση άλλων ασθενών. Δεν είναι απαραίτητο να είστε συνεχώς συνδεδεμένοι με το NS αν χρησιμοποιείτε το NS μόνο για τον εαυτό σας. Μπορείτε να το ρυθμίσετε ώστε να ανεβάζετε σας για παράδειγμα μόνο στο σπίτι με wifi και για να εξοικονομήσετε μπαταρία.</string>
     <string name="objectives_openloop_objective">Ξεκινήστε σε ανοιχτό κύκλωμα</string>
     <string name="objectives_openloop_gate">Τρέξτε σε ανοιχτό κύκλωμα μερικές ημέρες και χειροκίνητα κάντε πολλούς προσωρινούς ρυθμούς. Φτιάξτε και χρησιμοποιήστε προσωρινούς και στανταρντ προσωρινούς στόχους (π.χ. για άσκηση ή θεραπεία υπογλυκαιμίας)</string>
+    <string name="objectives_openloop_learned">Το ανοιχτό κύκλωμα μπορεί να χρησιμοποιηθεί για προτάσεις εάν δεν έχετε συμβατή αντλία ή δεν είστε έτοιμοι να κάνετε κλειστό κύκλωμα.</string>
     <string name="objectives_maxbasal_objective">Κατανοήστε το ανοιχτό κύκλωμα, περιλαμβάνοντας τις προτάσεις για Προσωρινό ρυθμό</string>
     <string name="objectives_maxbasal_gate">Βάση της εμπειρίας σας, αποφασίστε ποιο είναι το μέγιστο βασικής δόσης και αποθηκεύστε το στην αντλία και στις Επιλογές</string>
+    <string name="objectives_maxbasal_learned">Προσέξτε τα χαρακτηριστικά ασφαλείας και προσαρμόστε τις παραμέτρους ασφαλείας όταν αυτό είναι απαραίτητο.</string>
     <string name="objectives_maxiobzero_objective">Ξεκινήστε να κλείσετε το κύκλωμα με Σταμάτημα Χαμηλής Γλυκόζης (Low Glucose Suspend)</string>
     <string name="objectives_maxiobzero_gate">Τρέξτε σε κλειστό κύκλωμα με μέγιστο IOB = 0 για μερικές ημέρες χωρίς πολλά LGS - υπογλυκαιμίες</string>
+    <string name="objectives_maxiobzero_learned">Η ρύθμιση του MaxIOB στο μηδέν σας αποτρέπει από την υπογλυκαιμία και δεν θα προσθέσει περισσότερη ινσουλίνη πάνω από τον βασικό ρυθμό (εκτός από την περίπτωση του αρνητικού IOB)</string>
     <string name="objectives_maxiob_objective">Ρυθμίζοντας το κλειστό κύκλωμα, αυξήστε το μέγιστο IOB πάνω από 0 και σταδιακά μειώστε τους στόχους BG</string>
     <string name="objectives_maxiob_gate">Τρέξτε το για λίγες ημέρες, και τουλάχιστον μία νύχτα χωρίς χαμηλό συναγερμό BG, πριν χαμηλώσετε τα όρια</string>
+    <string name="objectives_maxiob_learned">Ενημερώστε το MaxIOB καθώς μεγαλώνει ένα παιδί. Μην επιτρέψετε στο σύστημα να σας δώσει περισσότερη ινσουλίνη απ \'ότι μπορείτε να καλύψετε με τροφή = μια πραγματικά υψηλή τιμή είναι κακή ιδέα.</string>
     <string name="objectives_autosens_objective">Ρυθμίστε τον βασικό ρυθμό και τις αναλογίες αν χρειάζεται, και μετά ενεργοποιήστε το auto-sens</string>
     <string name="objectives_autosens_gate">1 επιτυχής εβδομάδα ημερήσιου κυκλώματος με κανονική εισαγωγή υδατανθράκων</string>
+    <string name="objectives_autosens_learned">Εάν το αποτέλεσμα του autosens σας δεν ταλαντεύεται περίπου στο 100%, τότε το προφίλ σας είναι πιθανώς λάθος.</string>
     <string name="objectives_smb_objective">Ενεργοποιώντας επιπρόσθετα χαρακτηριστικά για χρήση κατά την ημέρα, όπως το SMB</string>
+    <string name="objectives_smb_gate">Πρέπει να διαβάσετε τον οδηγό wiki και να αυξήσετε το maxIOB για να μπορέσει να λειτουργήσει σωστά το SMB! Μια καλή αρχή είναι maxIOB= μέσο bolus γεύματος + 3x το μέγιστο ημερήσιο του βασικού ρυθμού</string>
+    <string name="objectives_smb_learned">Η χρήση SMB είναι ο στόχος σας. Ο αλγόριθμος Oref1 σχεδιάστηκε για να σας βοηθήσει και με τα bolus. Δεν θα πρέπει να δώσετε πλήρες bolus για το φαγητό σας, αλλά μόνο ένα μέρος του και αφήστε το AAPS να σας δώσει τα υπόλοιπα αν χρειαστεί. Με αυτόν τον τρόπο έχετε περισσότερο χώρο για εσφαλμένους υδατάνθρακες. Γνωρίζατε ότι μπορείτε να χορηγήσετε μόνο ένα ποσοστό του αποτελέσματος υπολογισμού του bolus για να μειώθει το μέγεθος του bolus;</string>
+    <string name="objectives_dyn_isf_objective">Ενεργοποίηση πρόσθετων λειτουργιών για χρήση κατά την ημέρα, όπως το πρόσθετο Δυναμικής ευαισθησίας</string>
+    <string name="objectives_dyn_isf_gate">Βεβαιωθείτε ότι το SMB λειτουργεί σωστά. Ενεργοποιήστε το πρόσθετο DynamicISF και προσδιορίστε την κατάλληλη βαθμονόμηση για τον οργανισμό σας. Είναι σκόπιμο να ξεκινήσετε με μια τιμή χαμηλότερη από 100% για μεγαλύτερη ασφάλεια.</string>
+    <string name="objectives_dyn_isf_learned">Το πρόσθετο Δυναμικής Ευαισθησίας βασίζεται στην ιδέα ότι η συνολική πρόσληψη ινσουλίνης και τα τρέχοντα επίπεδα γλυκόζης επηρεάζουν την πραγματική ευαισθησία. Το πρόσθετο DynamicISF μπορεί να ρυθμίσει τον Παράγοντα Ευαισθησίας Ινσουλίνης (ISF) που χρησιμοποιείται με βάση αυτό τον αλγόριθμο για εσάς.</string>
+    <string name="objectives_auto_objective">Ενεργοποίηση αυτοματισμού</string>
+    <string name="objectives_auto_gate">Διαβάστε τη βιβλιογραφία σχετικά με το πώς λειτουργεί ο αυτοματισμός. Ρυθμίστε τους πρώτους απλούς κανόνες σας. Αντί για δράση αφήστε το AAPS να εμφανίζει μόνο ειδοποιήσεις. Όταν είστε σίγουροι ότι ο αυτοματισμός ενεργοποιείται την κατάλληλη στιγμή αντικαταστήστε την ειδοποίηση με πραγματική ενέργεια. (https://wiki.aaps.app/el/latest/Usage/Automation.html)</string>
+    <string name="objectives_auto_learned">Ο αυτοματισμός μπορεί να είναι καλός υπηρέτης, αλλά ένας κακός δάσκαλος. Μην τον υπερχρησιμοποιείτε. Μην προσπαθήσετε να αντικαταστήσετε τον υποκείμενο αλγόριθμο. Ελέγξτε τον κανόνα με χρήση μηνυμάτων πριν από τη χρήση. Εξαρτάται από τη σειρά.</string>
+    <string name="objectives_bgavailableinns">Το BG είναι διαθέσιμο στο NS ή στο Tidepool</string>
+    <string name="objectives_pumpstatusavailableinns">Η κατάσταση της αντλίας είναι διαθέσιμη στο NS ή στο Tidepool</string>
     <string name="objectives_manualenacts">Ξεκινήστε χειροκίνητα</string>
     <string name="accomplished">Επιτεύχθηκε: %1$s</string>
+    <string name="objectives_usage_objective">Μάθετε πως να χειρίζεστε το AAPS</string>
+    <string name="objectives_usage_gate">Εκτελέστε διάφορες ενέργειες στο AAPS</string>
+    <string name="objectives_usage_learned">Μάθατε πώς να χειριστείτε τα βασικά στοιχεία του AAPS. Τα κύρια στοιχεία ελέγχου είναι στην οθόνη Επισκόπηση προσβάσιμη με κλικ ή παρατεταμένο κλικ, περισσότερα στοιχεία ελέγχου είναι στην οθόνη Ενέργειας. Θα πρέπει να ξέρετε πώς να τοποθετήσετε μια οθόνη plugin στην κορυφή στο κυλιόμενο μενού ή να το αφήστε να εμφανίζετε στην επάνω αριστερή λίστα των ενεργών plugins.</string>
     <string name="objectives_useprofileswitch">Θέστε το προφίλ στο 90% για 10 λεπτά (Παρατεταμένο πάτημα του προφίλ στην Επισκόπηση)</string>
     <string name="objectives_usedisconnectpump">Προσομοίωση ένδειξης. Αποσυνδέστε την αντλία για 1 ώρα (Παρατεταμένο στο Ανοιχτό Κύκλωμα)</string>
     <string name="objectives_usereconnectpump">... και επανασυνδέστε με τον ίδιο τρόπο</string>
@@ -28,12 +47,42 @@
     <string name="objectives_useloop">Εμφάνιση περιεχομένου της προσθήκης Κύκλωμα</string>
     <string name="objectives_usescale">Χρησιμοποιήστε τη λειτουργία κλίμακας πατώντας παρατεταμένα το διάγραμμα BG</string>
     <string name="objectives_exam_objective">Αποδείξτε τις γνώσεις σας</string>
+    <string name="objectives_exam_gate">Σκεφτείτε τις ερωτήσεις. Σας δίνονται τέσσερις πιθανές απαντήσεις για κάθε ερώτηση. Μπορεί να υπάρχουν περισσότερες από μία σωστές απαντήσεις. Παρακαλώ ελέγξτε όλες εκείνες που είναι σωστές και επιλέξτε VERIFY.</string>
+    <string name="objectives_exam_learned_prerequisites">Δε χρειάζεται να είστε προγραμματιστής αλλά χρειάζεστε NS για να περάσετε τους Στόχους, συμβατή αντλία και υπολογιστή για την κατασκευή του AAPS για πρώτη φορά και για κάθε ενημέρωση.</string>
+    <string name="objectives_exam_learned_prerequisites2">Το AAPS μπορεί να εκτελεστεί εκτός σύνδεσης.</string>
+    <string name="objectives_exam_learned_basaltest">Το προφίλ πρέπει να αναθεωρηθεί και να ενημερωθεί. Καλύτερο προφίλ = καλύτερα αποτελέσματα.</string>
+    <string name="objectives_exam_learned_dia">Το DIA στο κύκλωμα έχει διαφορετικό νόημα (χρόνος μέχρι να απορροφηθεί όλη η ινσουλίνη) από ό, τι στην κλασική θεραπεία με αντλία (χρόνος μέχρι να απορροφηθεί η μεγαλύτερη ποσότητα ινσουλίνης).</string>
+    <string name="objectives_exam_learned_isf">Μάθατε την έννοια της τιμής ISF και πώς επηρεάζει την ποσότητα ινσουλίνης που θα χρησιμοποιείται για τη διόρθωση του BG.</string>
+    <string name="objectives_exam_learned_ic">Μάθατε την έννοια της τιμής IC και πώς επηρεάζει την ποσότητα ινσουλίνης που απαιτείται για την κάλυψη των υδατανθράκων.</string>
+    <string name="objectives_exam_learned_hypott">Ο προσωρινός στόχος υπογλυκαιμίας χρησιμοποιείται μόνο για να αποτρέψει την υπερβολική διόρθωση μετά από υπογλυκαιμία, όταν υπάρχει συνήθως συγκεντρωμένη αρνητική IOB. Επιπρόσθετα μέτρα θα πρέπει να ληφθούν για να αποτραπεί αυτή η κατάσταση ξανά στο μέλλον.</string>
+    <string name="objectives_exam_learned_profileswitch">Η χρήση ποσοστού δεν επηρεάζει τους στόχους BGs αλλά το βασικό ρυθμό, το ISF και το IC προσαρμόζονται ώστε να παρέχεται περισσότερη ινσουλίνη (πάνω από 100%%) ή λιγότερη ινσουλίνη (κάτω από 100%%).</string>
+    <string name="objectives_exam_learned_profileswitchtime">Με τη χρήση χρονικής μετατόπισης στο προφίλ μπορείτε να προσαρμόσετε το κιρκαδικό προφίλ σε παρατυπίες όπως το να ξυπνήσετε αργά.</string>
+    <string name="objectives_exam_learned_profileswitch4">Η επεξεργασία του ίδιου του προφίλ δεν είναι αρκετή για να κάνει μια αλλαγή. Πρέπει να κάνετε και μια αλλαγή προφίλ για να ενεργοποιήσετε τις αλλαγές.</string>
+    <string name="objectives_exam_learned_exercise">Θα πρέπει να μειώσετε την ποσότητα ινσουλίνης στον οργανισμό τουλάχιστον 1 ώρα πριν αρχίσετε να ασκείστε ρυθμίζοντας το προφίλ σας κάτω από 100%.</string>
+    <string name="objectives_exam_learned_exercise2">Η ρύθμιση ενός υψηλότερου προσωρινού στόχου τουλάχιστον 1 ώρα πριν από την άσκηση βοηθά επίσης στη μείωση της ποσότητας ινσουλίνης στον οργανισμό.</string>
+    <string name="objectives_exam_learned_noisycgm">Όταν δεν μπορείτε να εμπιστευθείτε τις τιμές CGM δεν πρέπει να χρησιμοποιείτε το κύκλωμα χωρίς παρακολούθηση.</string>
+    <string name="objectives_exam_learned_pumpdisconnect">Το AAPS πρέπει να γνωρίζει όταν η αντλία δεν είναι συνδεδεμένη για να υπολογίζει σωστά το IOB.</string>
+    <string name="objectives_exam_learned_insulin">Το να ενημερώσετε το AAPS με το ποια ινσουλίνη είναι στην αντλία είναι απαραίτητο επειδή επηρεάζει τον υπολογισμό του IOB.</string>
+    <string name="objectives_exam_learned_sensitivity">Η ανίχνευση ευαισθησίας είναι μέρος του αλγορίθμου που επιτρέπει την προσαρμογή της δοσολογίας της ινσουλίνης σε διαφορετικές καταστάσεις.</string>
+    <string name="objectives_exam_learned_objectives">Η πρόοδός σας στους Στόχους αποθηκεύεται μαζί με άλλες ρυθμίσεις και θα πρέπει να κρατάτε σχετικό αντίγραφο ασφαλείας.</string>
+    <string name="objectives_exam_learned_objectives2">Κρατήστε πάντα τις εξαγόμενες ρυθμίσεις και δημιουργημένο APK και έξω από το τηλέφωνο. Το τηλέφωνο μπορεί να χαθεί, να χαλάσει κλπ. Ένα καλό μέρος μπορεί να είναι οποιοδήποτε cloud προσβάσιμο από το τηλέφωνο. Σε αυτή την περίπτωση μπορείτε να επαναφέρετε το AAPS σε μια άλλη συσκευή μέσα σε λίγα λεπτά. Η καλή πρακτική είναι, επίσης, να αποθηκεύετε τον χρησιμοποιούμενοι master password σε ένα ασφαλές μέρος. Χωρίς αυτόν τα αντίγραφα ασφαλείας είναι άχρηστα. Το ίδιο ισχύει για την υπογραφή κλειδιών (. ks file) και τους κωδικούς πρόσβασης που χρησιμοποιούνται για την κατασκευή AAPS. Τα υπόλοιπα δεν είναι σημαντικά - μπορεί κάποιος να κατεβάσει οποιαδήποτε στιγμή από το διαδίκτυο και πάλι.</string>
+    <string name="objectives_exam_learned_wrongcarbs">Αν κάνατε λάθος εισαγωγή στο AAPS ή δεν ταιριάζει με την πραγματικότητα, επιλύστε το το συντομότερο δυνατό. Θα μπορούσε να οδηγήσει σε υπερδοσολογία. Το AAPS θα πρέπει πάντα να ενημερώνεται με τον καλύτερο δυνατό τρόπο για τους υδατάνθρακες, την ινσουλίνη κλπ.</string>
+    <string name="objectives_exam_learned_iob">Αν αναλύσετε αν το AAPS λειτουργεί καλά για εσάς βλέποντας το γράφημα του IOB μπορείτε να πάρετε πολλές χρήσιμες πληροφορίες.</string>
+    <string name="objectives_exam_learned_cob">Ο υπολογισμός COB εξαρτάται από τη σχέση μεταξύ ISF και IC. Η αύξηση του ISF ή η μείωση του IC θα οδηγήσει σε μεγαλύτερους χρόνους απορρόφησης. Αλλά με ποσοστιαία αλλαγή του προφίλ και οι δύο τιμές θα αλλάξουν ταυτόχρονα και ο χρόνος απορρόφησης δε θα επηρεαστεί.</string>
+    <string name="objectives_exam_learned_breadgrams">Μόνο γραμμάρια επιτρέπονται για την εισαγωγή υδατανθράκων.</string>
+    <string name="objectives_exam_learned_ecarbs">Οι E-υδατάνθρακες είναι μια αντικατάσταση για το εκτεταμένο bolus στον κόσμο της αντλίας.</string>
+    <string name="objectives_exam_learned_nsclient">Η απομακρυσμένη παρακολούθηση και έλεγχος είναι δυνατή, αλλά δεν πρέπει να είναι όλες οι δυνατότητες διαθέσιμες εξ αποστάσεως.</string>
     <string name="answerdisabledto">Οι απαντήσεις εμφανίζονται στο: %1$s</string>
     <string name="wronganswer">Λάθος απάντηση!</string>
     <string name="unfinshed_button">Επόμενο ημιτελές</string>
     <string name="requestcode">Κωδικός αιτήματος: %1$s</string>
     <string name="objectives_hint">(ελέγξτε όλες τις σωστές απαντήσεις)</string>
+    <string name="disconnectpump_hint" formatted="false">https://wiki.aaps.app/el/latest/Getting-Started/FAQ.html#what-to-do-when-taking-a-shower-or-bath</string>
+    <string name="usetemptarget_hint" formatted="false">https://wiki.aaps.app/el/latest/Getting-Started/Screenshots.html#the-homescreen</string>
+    <string name="useaction_hint" formatted="false">https://wiki.aaps.app/el/latest/Configuration/Config-Builder.html</string>
+    <string name="usescale_hint" formatted="false">https://wiki.aaps.app/el/latest/Getting-Started/Screenshots.html#the-homescreen</string>
     <string name="notconnected">Δεν είστε συνδεδεμένοι στο internet</string>
     <string name="failedretrievetime">Απέτυχε η ανάκτηση ώρας</string>
     <string name="requirementnotmet">Αντικειμενικές προϋποθέσεις δεν πληρούνται</string>
+    <string name="what_i_ve_learned">Τι έχω μάθει:</string>
 </resources>
