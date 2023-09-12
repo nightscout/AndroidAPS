@@ -2,8 +2,8 @@
 <resources>
     <!-- RL keys -->
     <!-- RL BLE Config -->
-    <string name="riley_link_ble_config_button_scan_start">Scan</string>
-    <string name="riley_link_ble_config_scan_stop">Stop</string>
+    <string name="riley_link_ble_config_button_scan_start">Σάρωση</string>
+    <string name="riley_link_ble_config_scan_stop">Διακοπή</string>
     <string name="riley_link_ble_config_scan_selected">Επιλεγμένο</string>
     <string name="riley_link_ble_config_scan_title">RileyLink Scan</string>
     <string name="riley_link_ble_config_scan_scanning">Σάρωση</string>
