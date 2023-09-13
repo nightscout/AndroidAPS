@@ -64,7 +64,7 @@ class LoadBgWorker(
                         // Objective0
                         sp.putBoolean(info.nightscout.core.utils.R.string.key_objectives_bg_is_available_in_ns, true)
                         // Schedule processing of fetched data and continue of loading
-                        continueLoading = !(sgvs.size != NSClientV3Plugin.RECORDS_TO_LOAD || response.code == 304)
+                        continueLoading = response.code != 304
                         nsIncomingDataProcessor.processSgvs(sgvs)
                     } else {
                         // End first load
