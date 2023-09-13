@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- NSClient -->
+    <string name="ns_cellular">Χρήση σύνδεσης κινητής τηλεφωνίας</string>
+    <string name="ns_wifi">Χρήση σύνδεσης Wi-Fi</string>
     <string name="ns_wifi_ssids">WiFi SSID</string>
+    <string name="ns_charging">Κατά τη διάρκεια της φόρτισης</string>
+    <string name="ns_battery">Κατά την χρήση μπαταρίας</string>
     <string name="connection_settings_title">Ρυθμίσεις σύνδεσης</string>
     <string name="ns_wifi_allowed_ssids">Επιτρέπονται SSID (διαχωρίζονται με ελληνικό ερωτηματικό)</string>
     <string name="ns_allow_roaming">Επιτρέψτε τη σύνδεση περιαγωγής</string>
     <string name="ns_create_announcements_from_errors_title">Δημιουργήστε ειδοποιήσεις σφαλμάτων</string>
+    <string name="ns_create_announcements_from_carbs_req_title">Δημιουργία ανακοινώσεων από τις ειδοποιήσεις απαιτούμενων υδατανθράκων</string>
     <string name="ns_create_announcements_from_errors_summary">Δημιουργήστε μια ειδοποίηση Ns για σφάλματα διαλόγων και τοπικούς συναγερμούς (που φαίνονται στο Careportal κάτω από τις Θεραπείες)</string>
+    <string name="ns_create_announcements_from_carbs_req_summary">Δημιουργία ανακοινώσεων Nightscout για τις ειδοποιήσεις απαιτούμενων υδατανθράκων</string>
     <string name="description_ns_client">Συγχρονίζει τα δεδομένα σας με το Nightscout</string>
+    <string name="description_ns_client_v3">Συγχρονίζει τα δεδομένα σας με το Nightscout χρησιμοποιώντας v3 API</string>
+    <string name="blocked_by_charging">Αποκλεισμός από τις επιλογές φόρτισης</string>
+    <string name="blocked_by_connectivity">Αποκλεισμός από τις επιλογές συνδεσιμότητας</string>
     <string name="unsupported_ns_version">Μη υποστηριζόμενη έκδοση Nightscout</string>
     <string name="openaps_short">OAPS</string>
     <string name="uploader_short">UPLD</string>
     <string name="ns_malfunction">Δυσλειτουργία NSClient. Εξετάστε την επανεκκίνηση του NS και του NSClient.</string>
     <!-- NSClient -->
     <string name="no_write_permission">Ο NSCLIENT δεν έχει άδεια εγγραφής. Λάθος κωδικός API;</string>
+    <string name="ns_client_v3">NSClientV3</string>
+    <string name="ns_client_v3_short_name">NSV3</string>
     <string name="ns_client">NSClient</string>
     <string name="ns_client_short_name">NSCI</string>
     <string name="ns_client_url">URL:</string>
@@ -24,16 +35,48 @@
     <string name="ns_client_secret_title">Μυστικός κωδικός NS API secret</string>
     <string name="ns_client_secret_dialog_title">Μυστικός κωδικός NS API secret</string>
     <string name="ns_client_secret_dialog_message">Βάλτε 12ψήφιο μυστικό κωδικό</string>
+    <string name="nsclient_token_title">Διακριτικό πρόσβασης NS</string>
+    <string name="nsclient_token_dialog_title">Διακριτικό πρόσβασης NS</string>
+    <string name="nsclient_token_dialog_message">Διακριτικό πρόσβασης που δημιουργείται στη σελίδα διαχείρισης του NS (ελάχιστο 17 χαρακτήρες)</string>
     <string name="deliver_now">Έγχυση τώρα</string>
     <string name="clear_queue">Διαγραφή σειράς</string>
     <string name="show_queue">Δείξε σειρά</string>
     <string name="queue">Σειρά:</string>
     <string name="status">Κατάσταση:</string>
     <string name="clear_log">Διαγραφή αρχείου καταγραφής</string>
+    <string name="full_sync">Πλήρης συγχρονισμός</string>
+    <string name="full_sync_comment">Πλήρης συγχρονισμός; Μπορεί να χρειαστούν πολλές ώρες και μέχρι να ολοκληρωθεί δε θα δείτε νέα δεδομένα στο NS.</string>
+    <string name="ns_sync_options">Συγχρονισμός</string>
+    <string name="ns_upload_summary">Προφίλ, boluses, υδατάνθρακες, προσωρινοί βασικοί μεταφορτώνονται στο NS</string>
+    <string name="ns_upload">Ανέβασμα δεδομένων στο NS</string>
+    <string name="ns_receive_profile_store">Λήψη αποθήκευσης προφίλ</string>
+    <string name="ns_receive_profile_store_summary">Συγχρονισμός προφίλ από τον επεξεργαστή προφίλ NS</string>
+    <string name="ns_receive_temp_target">Λήψη προσωρινών στόχων</string>
+    <string name="ns_receive_temp_target_summary">Αποδοχή προσωρινών στόχων που εισήχθησαν μέσω NS ή NSClient</string>
+    <string name="ns_receive_profile_switch">Λήψη αλλαγών προφίλ</string>
+    <string name="ns_receive_profile_switch_summary">Αποδοχή αλλαγών προφίλ που εισήχθησαν μέσω NS ή NSClient</string>
+    <string name="ns_receive_offline_event">Λήψη συμβάντων APS εκτός σύνδεσης</string>
+    <string name="ns_receive_offline_event_summary">Αποδοχή συμβάντων APS εκτός σύνδεσης που εισήχθησαν μέσω NS ή NSClient</string>
+    <string name="ns_receive_tbr_eb">Λήψη TBR και EB</string>
+    <string name="ns_receive_tbr_eb_summary">Αποδοχή TBR και EB που εισήχθησαν μέσω άλλης διεργασίας</string>
+    <string name="ns_receive_insulin">Λήψη ινσουλίνης</string>
+    <string name="ns_receive_insulin_summary">Αποδοχή ινσουλίνης που εισάγεται μέσω NS ή NSClient (δεν χορηγείτε, υπολογίζεται μόνο στο IOB)</string>
+    <string name="ns_receive_carbs">Λήψη υδατανθράκων</string>
+    <string name="ns_receive_carbs_summary">Αποδοχή υδατανθράκων που εισήχθησαν μέσω NS ή NSClient</string>
+    <string name="ns_receive_therapy_events">Λήψη συμβαμάτων θεραπείας</string>
+    <string name="ns_receive_therapy_events_summary">Αποδοχή συμβάντων θεραπείας (καθετήρας, ινσουλίνη, αλλαγή μπαταρίας κλπ) που εισήχθησαν μέσω της NS ή NSClient</string>
+    <string name="ns_receive_cgm">Λήψη δεδομένων CGM</string>
+    <string name="ns_receive_cgm_summary">Αποδοχή δεδομένων CGM από NS</string>
+    <string name="ns_sync_slow">Επιβράδυνση ανεβάσματος δεδομένων</string>
     <string name="ns_alarm_options">Επιλογές συναγερμού</string>
+    <string name="ns_alarms">Δημιουργία ειδοποιήσεων από συναγερμούς του NS</string>
+    <string name="ns_announcements">Δημιουργία ειδοποιήσεων από ανακοινώσεις του NS</string>
     <string name="ns_alarm_stale_data_value_label">Οριακή τιμή για παλιά δεδομένα [min]</string>
     <string name="ns_alarm_urgent_stale_data_value_label">Επείγουσα οριακή τιμή για παλιά δεδομένα [min]</string>
     <string name="ns_log_app_started_event">Η εφαρμογή καταγραφής ξεκινά από το NS</string>
+    <string name="copy_existing_values">Αντιγραφή ρυθμίσεων NS (αν υπάρχουν);</string>
+    <string name="ns_use_ws_title">Σύνδεση σε websockets</string>
+    <string name="ns_use_ws_summary">Ενεργοποίηση σημαίνει: ταχύτερες ενημερώσεις, λήψη ειδοποιήσεων και ανακοινώσεις και υψηλότερη κατανάλωση μπαταρίας παρόμοια με την v1. Όλοι οι άλλοι μεταφορτωτές στο NS πρέπει να χρησιμοποιούν το πρωτόκολλο v3.</string>
     <!-- Tidepool -->
     <string name="summary_tidepool_username">Το όνομα χρήστη του Tidepool, συνήθως το mail σας</string>
     <string name="title_tidepool_username">Όνομα Χρήστη</string>
@@ -50,7 +93,27 @@
     <string name="tidepool_upload_tbr">Αποστολή προσωρινών ρυθμών</string>
     <string name="tidepool_upload_profile">Αποστολή αλλαγών προφίλ, προσωρινών στόχων</string>
     <string name="tidepool_upload_bg">Αποστολή BG βαθμονομήσεων</string>
+    <string name="remove_all">Αφαίρεση όλων</string>
+    <string name="reset_start">Επαναφορά έναρξης</string>
+    <string name="upload_now">Ανέβασμα τώρα</string>
+    <string name="not_connected">Μη συνδεδεμένο</string>
+    <string name="read_only">Μόνο για ανάγνωση</string>
+    <string name="working">Σε επεξεργασία</string>
     <!-- xDrip status line -->
     <!-- Xdrip StatusLine -->
+    <string name="xdrip">xDrip+</string>
+    <string name="xdrip_shortname">XD</string>
+    <string name="description_xdrip">Αποστολή δεδομένων στο xDrip+</string>
+    <string name="xdrip_status_detailed_iob_title">Εμφάνιση λεπτομερούς IOB</string>
+    <string name="xdrip_status_detailed_iob_summary">Σπάστε το IOB σε bolus και IOB βασικού ρυθμού στο watchface</string>
+    <string name="xdrip_status_show_bgi_title">Εμφάνιση BGI</string>
+    <string name="xdrip_status_show_bgi_summary">Προσθήκη BGI στη γραμμή κατάστασης</string>
+    <string name="xdrip_status_settings">Γραμμή Κατάστασης xDrip+ Για Προχωρημένους</string>
+    <string name="disabled_loop">Κύκλωμα απενεργοποιημένο</string>
+    <string name="xdrip_send_status_title">Αποστολή γραμμής κατάστασης στο xDrip+</string>
+    <string name="xdrip_not_installed">xDrip+ μη εγκατεστημένο</string>
+    <string name="calibration_sent">Το καλιμπράρισμα εστάλει στο xDrip+</string>
+    <string name="xdrip_local_broadcasts_summary">Αποστολή δεδομένων γλυκόζης και θεραπειών στο xDrip +. Η πηγή δεδομένων \"συγχρονισμός xDrip+ Ακόλουθος\" πρέπει να επιλεγεί και η αποδοχή δεδομένων πρέπει να ενεργοποιηθεί στις Ρυθμίσεις - Ρυθμίσεις Inter-app - Αποδοχή Γλυκόζης/Θεραπειών</string>
+    <string name="xdrip_local_broadcasts_title">Ενεργοποίηση εκπομπών στο xDrip+.</string>
     <!--    DataBroadcast-->
 </resources>
