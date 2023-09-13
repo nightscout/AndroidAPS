@@ -63,5 +63,21 @@
     <string name="string_alarm">Συναγερμός</string>
     <string name="string_connecting">Συνδέεται</string>
     <string name="string_caution_not_remove_needle_cap">[Προσοχή] ΜΗΝ αφαιρέσετε το καπάκι της βελόνας και την αυτοκόλλητη υποστήριξη μέχρι να λάβετε σχετικές οδηγίες.</string>
+    <string name="string_are_you_sure_to_discard_current_patch">Είστε βέβαιοι να απορρίψετε το τρέχον Patch;</string>
+    <string name="string_unconfirmed_bolus_info_discard_confirm_message">Λόγω ανεπιβεβαίωτων πληροφοριών bolus, ο υπολογιστής Bolus δεν μπορεί να χρησιμοποιηθεί μέχρι τις %s.\n\nΕίστε σίγουροι ότι θέλετε να απορρίψετε το τρέχον Patch;</string>
+    <string name="needle_insertion_error_1">Σφάλμα εισαγωγής βελόνας.</string>
+    <string name="needle_insertion_error_2">Ελέγξτε την κατεύθυνση της οπής αριστερά μετά την ευθεία στροφή του μοχλού και στη συνέχεια πατήστε \'Επανάληψη\'.</string>
+    <string name="needle_insertion_error_3">Πατήστε \'Απόρριψη\' για να απενεργοποιήσετε το Patch.</string>
+    <string name="string_suspend_time_insulin_delivery_title">Χρόνος Αναστολής Βασικού</string>
+    <string name="string_resume_insulin_delivery_title">Συνέχιση χορήγησης ινσουλίνης</string>
+    <string name="string_resume_insulin_delivery_message">Τέλος αναστολής χορήγησης ινσουλίνης.\nΠατήστε \'Επιβεβαίωση\' για να συνεχίσει η χορήγηση ινσουλίνης.\n\n[Προσοχή]\nΗ χορήγηση ινσουλίνης δε θα συνεχίσει μέχρι να πατήσετε \'Επιβεβαίωση\'.\nΑν δεν πατήσετε \'Επιβεβαίωση\', μπορεί να πάθετε υπεργλυκαιμία.</string>
+    <string name="string_suspended_insulin_delivery_message">Αναστολή χορήγησης ινσουλίνης.</string>
+    <string name="string_resumed_insulin_delivery_message">Η χορήγηση ινσουλίνης συνεχίζεται.</string>
+    <string name="finish">Τέλος</string>
+    <string name="string_temp_basal_remained_hhmm">υπολειπόμενος χρόνος: %1$s:%2$s</string>
     <string name="next">Επόμενο</string>
+    <string name="patch_connection_fail">Προσπαθήστε ξανά μετά τον έλεγχο επικοινωνίας Patch.</string>
+    <string name="string_pause_failed">Η αναστολή απέτυχε.</string>
+    <string name="string_resume_failed">Η συνέχιση απέτυχε.</string>
+    <string name="date_format_yyyy_m_d_e_a_hh_mm_comma">EEE, μ MMM, εεεε ωω:λλ α</string>
 </resources>
