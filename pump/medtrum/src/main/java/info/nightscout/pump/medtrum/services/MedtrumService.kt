@@ -145,8 +145,6 @@ class MedtrumService : DaggerService(), BLECommCallback {
                 handleConnectionStateChange(connectionState)
             }
         }
-
-        medtrumPump.loadUserSettingsFromSP()
     }
 
     override fun onDestroy() {
