@@ -225,9 +225,21 @@ class MedtrumPump @Inject constructor(
     var patchAge = 0L // Time in seconds?! // As reported by pump, not used (yet)
 
     // bolus status
-    var bolusStartTime = 0L // Time in ms!
+    private var _bolusStartTime = 0L // Time in ms!
+    var bolusStartTime: Long
+        get() = _bolusStartTime
+        set(value) {
+            _bolusStartTime = value
+            sp.putLong(R.string.key_bolus_start_time, value)
+        }
+    private var _bolusAmountToBeDelivered = 0.0 // amount to be delivered
+    var bolusAmountToBeDelivered: Double
+        get() = _bolusAmountToBeDelivered
+        set(value) {
+            _bolusAmountToBeDelivered = value
+            sp.putDouble(R.string.key_bolus_amount_to_be_delivered, value)
+        }
     var bolusingTreatment: EventOverviewBolusProgress.Treatment? = null // actually delivered treatment
-    var bolusAmountToBeDelivered = 0.0 // amount to be delivered
     var bolusProgressLastTimeStamp: Long = 0 // timestamp of last bolus progress message
     var bolusStopped = false // bolus stopped by user
     var bolusDone = false // Bolus completed or stopped on pump
@@ -281,6 +293,8 @@ class MedtrumPump @Inject constructor(
         _swVersion = sp.getString(R.string.key_sw_version, "")
         _patchStartTime = sp.getLong(R.string.key_patch_start_time, 0L)
         _pumpTimeZoneOffset = sp.getInt(R.string.key_pump_time_zone_offset, 0)
+        _bolusStartTime = sp.getLong(R.string.key_bolus_start_time, 0L)
+        _bolusAmountToBeDelivered = sp.getDouble(R.string.key_bolus_amount_to_be_delivered, 0.0)
 
         loadActiveAlarms()
 
