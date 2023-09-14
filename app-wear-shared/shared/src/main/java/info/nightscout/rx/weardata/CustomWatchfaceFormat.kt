@@ -12,7 +12,6 @@ import info.nightscout.shared.R
 import kotlinx.serialization.Serializable
 import org.json.JSONObject
 import java.io.BufferedOutputStream
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -77,7 +76,7 @@ enum class ResFormat(val extension: String) {
 @Serializable
 data class ResData(val value: ByteArray, val format: ResFormat) {
 
-    fun toDrawable(resources: Resources): Drawable? {
+    fun toDrawable(resources: Resources, width: Int? = null, height: Int? = null): Drawable? {
         try {
             return when (format) {
                 ResFormat.PNG, ResFormat.JPG -> {
@@ -86,7 +85,9 @@ data class ResData(val value: ByteArray, val format: ResFormat) {
                 }
 
                 ResFormat.SVG                -> {
-                    val svg = SVG.getFromInputStream(ByteArrayInputStream(value))
+                    val svg = SVG.getFromString(String(value))
+                    svg.documentWidth = width?.toFloat() ?: svg.documentWidth
+                    svg.documentHeight = height?.toFloat() ?: svg.documentHeight
                     val picture = svg.renderToPicture()
                     PictureDrawable(picture).apply {
                         setBounds(0, 0, svg.documentWidth.toInt(), svg.documentHeight.toInt())
@@ -233,7 +234,8 @@ enum class JsonKeys(val key: String) {
     COLOR("color"),
     ALLCAPS("allCaps"),
     DAYNAMEFORMAT("dayNameFormat"),
-    MONTHFORMAT("monthFormat")
+    MONTHFORMAT("monthFormat"),
+    BACKGROUND("background")
 }
 
 enum class JsonKeyValues(val key: String) {

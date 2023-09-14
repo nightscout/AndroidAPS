@@ -196,6 +196,7 @@ class CustomWatchface : BaseWatchFace() {
                                     view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
                                     if (viewJson.has(TEXTVALUE.key))
                                         view.text = viewJson.optString(TEXTVALUE.key)
+                                    view.background = resDataMap[viewJson.optString(BACKGROUND.key)]?.toDrawable(resources, width, height)
                                 }
 
                                 is ImageView -> {
