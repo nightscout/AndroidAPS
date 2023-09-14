@@ -115,6 +115,8 @@ class MedtrumPump @Inject constructor(
             sp.putLong(R.string.key_session_token, value)
         }
 
+    // Note: This is not always incremented by the pump, so it is not a reliable indicator for activation unless we reset it on deactivation
+    // see resetPatchParameters()
     private var _patchId = 0L
     var patchId: Long
         get() = _patchId
@@ -536,6 +538,12 @@ class MedtrumPump @Inject constructor(
             AlarmState.NO_CALIBRATION       -> R.string.alarm_no_calibration
         }
         return rh.gs(stringId)
+    }
+
+    fun resetPatchParameters() {
+        patchId = 0
+        syncedSequenceNumber = 1
+        currentSequenceNumber = 1
     }
 
     fun handleNewPatch(newPatchId: Long, sequenceNumber: Int, newStartTime: Long) {

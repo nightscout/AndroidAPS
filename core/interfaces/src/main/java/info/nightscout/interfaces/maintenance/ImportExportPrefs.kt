@@ -11,7 +11,7 @@ interface ImportExportPrefs {
     fun importSharedPreferences(fragment: Fragment)
     fun importCustomWatchface(activity: FragmentActivity)
     fun importCustomWatchface(fragment: Fragment)
-    fun exportCustomWatchface(customWatchface: CwfData)
+    fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean = true)
     fun prefsFileExists(): Boolean
     fun verifyStoragePermissions(fragment: Fragment, onGranted: Runnable)
     fun exportSharedPreferences(f: Fragment)

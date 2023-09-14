@@ -315,9 +315,9 @@ class ImportExportPrefsImpl @Inject constructor(
         }
     }
 
-    override fun exportCustomWatchface(customWatchface: CwfData) {
+    override fun exportCustomWatchface(customWatchface: CwfData, withDate: Boolean) {
         prefFileList.ensureExportDirExists()
-        val newFile = prefFileList.newCwfFile(customWatchface.metadata[CwfMetadataKey.CWF_FILENAME] ?:"")
+        val newFile = prefFileList.newCwfFile(customWatchface.metadata[CwfMetadataKey.CWF_FILENAME] ?:"", withDate)
         ZipWatchfaceFormat.saveCustomWatchface(newFile, customWatchface)
     }
 

@@ -26,6 +26,7 @@ import info.nightscout.rx.weardata.CwfMetadataMap
 import info.nightscout.rx.weardata.JsonKeyValues
 import info.nightscout.rx.weardata.JsonKeys
 import info.nightscout.rx.weardata.ViewKeys
+import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -92,7 +93,8 @@ class CwfInfosActivity : TranslatedDaggerAppCompatActivity() {
             metadata[CwfMetadataKey.CWF_AUTHOR_VERSION]?.let { authorVersion ->
                 title = "${metadata[CwfMetadataKey.CWF_NAME]} ($authorVersion)"
             }
-            binding.filelistName.text = rh.gs(CwfMetadataKey.CWF_FILENAME.label, metadata[CwfMetadataKey.CWF_FILENAME] ?: "")
+            val fileName = metadata[CwfMetadataKey.CWF_FILENAME]?.let { "$it${ZipWatchfaceFormat.CWF_EXTENTION}"} ?:""
+            binding.filelistName.text = rh.gs(CwfMetadataKey.CWF_FILENAME.label, fileName)
             binding.author.text = rh.gs(CwfMetadataKey.CWF_AUTHOR.label, metadata[CwfMetadataKey.CWF_AUTHOR] ?: "")
             binding.createdAt.text = rh.gs(CwfMetadataKey.CWF_CREATED_AT.label, metadata[CwfMetadataKey.CWF_CREATED_AT] ?: "")
             binding.cwfVersion.text = rh.gs(CwfMetadataKey.CWF_VERSION.label, metadata[CwfMetadataKey.CWF_VERSION] ?: "")

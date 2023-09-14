@@ -265,13 +265,12 @@ class ZipWatchfaceFormat {
         const val CWF_EXTENTION = ".zip"
         const val CWF_JSON_FILE = "CustomWatchface.json"
 
-        fun loadCustomWatchface(cwfFile: File, authorization: Boolean): CwfData? {
+        fun loadCustomWatchface(zipInputStream: ZipInputStream, zipName: String, authorization: Boolean): CwfData? {
             var json = JSONObject()
             var metadata: CwfMetadataMap = mutableMapOf()
             val resDatas: CwfResDataMap = mutableMapOf()
 
             try {
-                val zipInputStream = ZipInputStream(cwfFile.inputStream())
                 var zipEntry: ZipEntry? = zipInputStream.nextEntry
                 while (zipEntry != null) {
                     val entryName = zipEntry.name
@@ -289,7 +288,7 @@ class ZipWatchfaceFormat {
                         val jsonString = byteArrayOutputStream.toByteArray().toString(Charsets.UTF_8)
                         json = JSONObject(jsonString)
                         metadata = loadMetadata(json)
-                        metadata[CwfMetadataKey.CWF_FILENAME] = cwfFile.name
+                        metadata[CwfMetadataKey.CWF_FILENAME] = zipName.substringBeforeLast(".")
                         metadata[CwfMetadataKey.CWF_AUTHORIZATION] = authorization.toString()
                     } else {
                         val cwfResFileMap = ResFileMap.fromFileName(entryName)

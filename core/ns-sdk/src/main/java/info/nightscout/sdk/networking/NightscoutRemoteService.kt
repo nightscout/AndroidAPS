@@ -41,7 +41,7 @@ internal interface NightscoutRemoteService {
     @GET("v3/entries?sort\$desc=date&type=sgv")
     suspend fun getSgvs(): Response<NSResponse<List<RemoteEntry>>>
 
-    @GET("v3/entries")
+    @GET("v3/entries?sort=date")
     suspend fun getSgvsNewerThan(@Query(value = "date\$gt", encoded = true) date: Long, @Query("limit") limit: Int): Response<NSResponse<List<RemoteEntry>>>
 
     @GET("v3/entries/history/{from}")
@@ -56,7 +56,7 @@ internal interface NightscoutRemoteService {
     @DELETE("v3/entries/{identifier}")
     suspend fun deleteEntry(@Path("identifier") identifier: String): Response<NSResponse<RemoteCreateUpdateResponse>>
 
-    @GET("v3/treatments")
+    @GET("v3/treatments?sort=date")
     suspend fun getTreatmentsNewerThan(@Query(value = "created_at\$gt", encoded = true) createdAt: String, @Query("limit") limit: Int): Response<NSResponse<List<RemoteTreatment>>>
 
     @GET("v3/treatments/history/{from}")

@@ -27,6 +27,7 @@ import info.nightscout.rx.weardata.CwfMetadataKey.CWF_NAME
 import info.nightscout.rx.weardata.CwfMetadataKey.CWF_VERSION
 import info.nightscout.rx.weardata.CwfMetadataMap
 import info.nightscout.rx.weardata.EventData
+import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.extensions.toVisibility
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
@@ -91,7 +92,8 @@ class CustomWatchfaceImportListActivity: TranslatedDaggerAppCompatActivity()  {
             val metadata = customWatchfaceFile.metadata
             val drawable = customWatchfaceFile.resDatas[ResFileMap.CUSTOM_WATCHFACE.fileName]?.toDrawable(resources)
             with(holder.customWatchfaceImportListItemBinding) {
-                filelistName.text = rh.gs(info.nightscout.shared.R.string.metadata_wear_import_filename, metadata[CWF_FILENAME])
+                val fileName = metadata[CWF_FILENAME]?.let { "$it${ZipWatchfaceFormat.CWF_EXTENTION}"} ?:""
+                filelistName.text = rh.gs(info.nightscout.shared.R.string.metadata_wear_import_filename, fileName)
                 filelistName.tag = customWatchfaceFile
                 customWatchface.setImageDrawable(drawable)
                 customName.text = rh.gs(CWF_NAME.label, metadata[CWF_NAME])
