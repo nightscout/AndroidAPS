@@ -199,6 +199,10 @@ import javax.inject.Inject
             .toObservable(EventOfflineChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ resend("EventOfflineChange") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventProfileStoreChanged::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ resend("EventProfileStoreChanged") }, fabricPrivacy::logException)
     }
 
     override fun onDestroy() {
