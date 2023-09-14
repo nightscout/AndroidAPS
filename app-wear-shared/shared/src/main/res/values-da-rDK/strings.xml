@@ -87,4 +87,7 @@
     <string name="cwf_comment_timestamp">Minutter siden sidst modtaget BS</string>
     <string name="cwf_comment_sgv">BS-værdi</string>
     <string name="cwf_comment_cover_plate">Dækbillede foran tekst (opkald...)</string>
+    <string name="cwf_comment_hour_hand">Billede af timeviser (Analogur)</string>
+    <string name="cwf_comment_minute_hand">Billede af minutviser (Analogur)</string>
+    <string name="cwf_comment_second_hand">Billede af sekundviser (Analogur)</string>
 </resources>
