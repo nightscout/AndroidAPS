@@ -72,7 +72,9 @@ import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventOfflineChange
 import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.events.EventSWSyncStatus
+import info.nightscout.rx.events.EventTempTargetChange
 import info.nightscout.rx.events.EventTherapyEventChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -228,6 +230,14 @@ class NSClientV3Plugin @Inject constructor(
             .toObservable(EventNewHistoryData::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ executeUpload("NEW_DATA", forceNew = false) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventTempTargetChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ executeUpload("EventTempTargetChange", forceNew = false) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventProfileSwitchChanged::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ executeUpload("EventProfileSwitchChanged", forceNew = false) }, fabricPrivacy::logException)
         disposable += rxBus
             .toObservable(EventDeviceStatusChange::class.java)
             .observeOn(aapsSchedulers.io)
