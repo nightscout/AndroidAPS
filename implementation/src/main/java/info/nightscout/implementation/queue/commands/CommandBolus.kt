@@ -39,7 +39,7 @@ class CommandBolus(
 
     override fun log(): String {
         return (if (detailedBolusInfo.insulin > 0) "BOLUS " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, detailedBolusInfo.insulin) else "") +
-            if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(info.nightscout.core.graph.R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
+            if (detailedBolusInfo.carbs > 0) "CARBS " + rh.gs(info.nightscout.core.main.R.string.format_carbs, detailedBolusInfo.carbs.toInt()) else ""
     }
 
     override fun cancel() {

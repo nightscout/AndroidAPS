@@ -19,7 +19,6 @@ dependencies {
     implementation project(':database:entities')
     implementation project(':database:impl')
     implementation project(':core:main')
-    implementation project(':core:graph')
     implementation project(':core:graphview')
     implementation project(':core:interfaces')
     implementation project(':core:ui')

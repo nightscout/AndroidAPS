@@ -19,7 +19,7 @@ import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventDeviceStatusChange
 import info.nightscout.rx.events.EventEffectiveProfileSwitchChanged
 import info.nightscout.rx.events.EventExtendedBolusChange
-import info.nightscout.rx.events.EventFoodChanged
+import info.nightscout.rx.events.EventFoodDatabaseChanged
 import info.nightscout.rx.events.EventNewBG
 import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventOfflineChange
@@ -101,7 +101,7 @@ class CompatDBHelper @Inject constructor(
             }
             it.filterIsInstance<Food>().firstOrNull()?.let { food ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventFoodDatabaseChanged $food")
-                rxBus.send(EventFoodChanged())
+                rxBus.send(EventFoodDatabaseChanged())
             }
             it.filterIsInstance<ProfileSwitch>().firstOrNull()?.let { ps ->
                 aapsLogger.debug(LTag.DATABASE, "Firing EventProfileSwitchChanged $ps")

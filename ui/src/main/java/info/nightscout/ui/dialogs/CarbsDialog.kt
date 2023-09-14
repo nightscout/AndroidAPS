@@ -278,7 +278,7 @@ class CarbsDialog : DialogFragmentWithDate() {
         if (duration > 0)
             actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + duration + rh.gs(info.nightscout.shared.R.string.shorthour))
         if (carbsAfterConstraints > 0) {
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + "<font color='" + rh.gac(context, info.nightscout.core.ui.R.attr.carbsColor) + "'>" + rh.gs(info.nightscout.core.graph.R.string.format_carbs, carbsAfterConstraints) + "</font>")
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + "<font color='" + rh.gac(context, info.nightscout.core.ui.R.attr.carbsColor) + "'>" + rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraints) + "</font>")
             if (carbsAfterConstraints != carbs)
                 actions.add("<font color='" + rh.gac(context, info.nightscout.core.ui.R.attr.warningColor) + "'>" + rh.gs(R.string.carbs_constraint_applied) + "</font>")
         }

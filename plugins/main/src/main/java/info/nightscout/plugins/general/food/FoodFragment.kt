@@ -28,7 +28,7 @@ import info.nightscout.plugins.databinding.FoodFragmentBinding
 import info.nightscout.plugins.databinding.FoodItemBinding
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
-import info.nightscout.rx.events.EventFoodChanged
+import info.nightscout.rx.events.EventFoodDatabaseChanged
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.extensions.toVisibility
@@ -92,7 +92,7 @@ class FoodFragment : DaggerFragment() {
     override fun onResume() {
         super.onResume()
         disposable += rxBus
-            .toObservable(EventFoodChanged::class.java)
+            .toObservable(EventFoodDatabaseChanged::class.java)
             .observeOn(aapsSchedulers.main)
             .debounce(1L, TimeUnit.SECONDS)
             .subscribe({ swapAdapter() }, fabricPrivacy::logException)
