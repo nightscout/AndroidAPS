@@ -69,6 +69,8 @@ open class OpenAPSSMBPlugin @Inject constructor(
     aapsLogger, rh, injector
 ), APS, Constraints {
 
+    var dynIsfEnabled: Constraint<Boolean> = Constraint(false)
+
     // last values
     override var lastAPSRun: Long = 0
     override var lastAPSResult: DetermineBasalResultSMB? = null
