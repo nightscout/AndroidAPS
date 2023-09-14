@@ -3,16 +3,31 @@
     <string name="bolus_constraint_applied">Ενεργός Περιορισμός Bolus</string>
     <string name="carbs_constraint_applied">Ενεργός περιορισμός Υδατανθράκων</string>
     <string name="temp_target_short">TT</string>
+    <string name="dialog_canceled">Το παράθυρο διαλόγου ακυρώθηκε</string>
     <string name="start_activity_tt">Εκκίνηση δραστηριότητας TT</string>
     <string name="start_eating_soon_tt">Εκκίνηση Τρώω σύντομα ΤΤ</string>
     <string name="start_hypo_tt">Εκκίνηση TT Υπογλυκαιμίας</string>
     <string name="time_offset">Χρονική μετατόπιση</string>
     <string name="unit_minute_short">min</string>
+    <string name="remind_to_bolus_later">Υπενθύμιση για Δόση bolus αργότερα</string>
+    <string name="a11y_carb_reminder">ορισμός υπενθύμισης</string>
     <!--    Widget-->
+    <string name="configure">Ρύθμιση διαφάνειας</string>
     <string name="widget_description">AAPS widget</string>
     <!--     Activities-->
+    <string name="activity_monitor">Παρακολούθηση δραστηριότητας</string>
+    <string name="do_you_want_reset_stats">Θέλετε να επαναφέρετε τα στατιστικά δραστηριότητας;</string>
+    <string name="do_you_want_reset_tdd_stats">Θέλετε να επαναφέρετε τα στατιστικά TDD(Ημερήσια Συνολική Δόση) ;</string>
     <string name="statistics">Στατιστικά</string>
+    <string name="calculation_in_progress">Υπολογισμός σε εξέλιξη</string>
+    <string name="invalid_age">Μη έγκυρη καταχώρηση ηλικίας</string>
+    <string name="invalid_weight">Μη έγκυρη καταχώρηση βάρους</string>
+    <string name="id">Ταυτότητα ID:</string>
+    <string name="submit">Υποβολή</string>
+    <string name="age">Ηλικία</string>
     <string name="weight_label">Βάρος</string>
+    <string name="most_common_profile">Πιο κοινό προφίλ:</string>
+    <string name="survey_comment">Σημείωση: Μόνο δεδομένα που είναι ορατά σε αυτήν την οθόνη θα φορτωθούν ανώνυμα. Το ID αντιστοιχιστεί σε αυτή την εγκατάσταση του AAPS. Μπορείτε να υποβάλετε και πάλι δεδομένα αν το κύριο προφίλ σας αλλάξει αλλά αφήστε το να τρέχει τουλάχιστον για μια εβδομάδα για να υπάχρει ορατό αποτέλεσμα για τον χρόνο εντός στόχου. Η βοήθειά σας εκτιμάται.</string>
     <string name="glucose_type">Τύπος Γλυκόζης</string>
     <string name="bg_other">Άλλο</string>
     <string name="bg_meter">Μετρητής</string>
@@ -29,6 +44,7 @@
     <!-- InsulinDialog -->
     <string name="do_not_bolus_record_only">Μην κάνετε bolus, μόνο να καταγράφετε</string>
     <!-- ProfileSwitchDialog -->
+    <string name="reuse_profile_pct_hours">Επαναχρησιμοποίηση %1$d%% %2$dh</string>
     <string name="timeshift_label">Αλλαγή της ώρας</string>
     <string name="percentage_label">Ποσοστό</string>
     <!-- LoopDialog -->
@@ -51,12 +67,17 @@
     <string name="duration3h">3 ώρες</string>
     <string name="duration10h">10 ώρες</string>
     <!-- WizardDialog -->
+    <string name="a11_correction_percentage">διόρθωση αποτελέσματος με %</string>
+    <string name="a11_correction_units">διόρθωση αποτελέσματος με μονάδες</string>
     <string name="two_hours">2ώρες</string>
     <string name="result_insulin_carbs">Αποτέλεσμα: %1$s %2$s</string>
     <string name="missing_carbs">Που υπολείπεται%1$d</string>
     <string name="a11y_current_bg">τρέχουσα γλυκόζη αίματος</string>
     <string name="carb_time_label">Ώρα γεύματος</string>
+    <string name="a11y_set_carb_timer">ορισμός ειδοποίησης χρονομέτρου υδατανθράκων</string>
+    <string name="show_calculation">Εμφάνιση υπολογισμού</string>
     <!-- Treatments -->
+    <string name="no_records_available">Δεν υπάρχουν διαθέσιμες εγγραφές</string>
     <string name="calculation_short">Υπολογ</string>
     <string name="treatments_iob_label_string">IOB:</string>
     <string name="treatments_insulin_label_string">Ινσουλίνη:</string>
@@ -70,12 +91,66 @@
     <string name="treatments_wizard_correction_label">Διόρθωση</string>
     <string name="meal_bolus">Γεύμα</string>
     <string name="prime">Πλήρωση</string>
+    <string name="profile_changes">Αλλαγές προφίλ</string>
+    <string name="tempt_targets">Προσωρινοί Στόχοι</string>
+    <string name="carbs_and_bolus">Υδατάνθρακες και bolus</string>
+    <string name="show_invalidated_records">Εμφάνιση ακυρωμένων / καταργημένων εγγραφών</string>
+    <string name="hide_invalidated_records">Απόκρυψη ακυρωμένων / καταργημένων εγγραφών</string>
+    <string name="refresh_from_nightscout">Ανανέωση από το Nightscout</string>
     <string name="refresheventsfromnightscout">Ανανέωση από NS</string>
+    <string name="show_invalidated">Εμφάνιση ακυρωμένων</string>
+    <string name="hide_invalidated">Απόκρυψη ακυρωμένων</string>
+    <string name="careportal_remove_started_events">Αφαίρεση καταχωρήσεων έναρξης AAPS</string>
+    <string name="hide_loop">Απόκρυψη κυκλώματος</string>
+    <string name="show_loop">Εμφάνιση κυκλώματος</string>
+    <string name="user_entry">Καταχώρηση χρήστη</string>
+    <string name="clone_label">Κλώνος</string>
+    <string name="show_loop_records">Εμφάνιση εγγραφών κυκλώματος</string>
+    <string name="show_hide_records">Απόκρυψη εγγραφών κυκλώματος</string>
     <!-- ProfileHelperActivity -->
+    <string name="profile1">Προφίλ 1</string>
+    <string name="profile2">Προφίλ 2</string>
+    <string name="profile_type">Τύπος προφίλ</string>
+    <string name="basal_pct_from_tdd_label">% Ποσοστό βασικού ρυθμού basal</string>
     <string name="selected_profile">Επιλεγμένο:</string>
+    <string name="compare_profile">Σύγκριση προφίλ</string>
+    <string name="nav_profile_helper">Βοηθός ρύθμισης προφίλ</string>
+    <string name="motol_default_profile">Προεπιλεγμένο προφίλ</string>
+    <string name="current_profile">Τρέχον προφίλ</string>
+    <string name="available_profile">Διαθέσιμα προφίλ</string>
+    <string name="format_with_tdd">Ηλικία: %1$d TDD: %2$.0f U</string>
+    <string name="format_with_tdd_and_pct">Ηλικία: %1$d TDD: %2$.0f U %3$d%%</string>
+    <string name="format_with_weight">Ηλικία: %1$d Βάρος: %2$.0f Kg</string>
+    <string name="dpv_default_profile">Προεπιλεγμένο προφίλ DPV</string>
+    <string name="invalid_pct">Μη Έγκυρη Καταχώρηση %</string>
     <!-- Other dialogs -->
     <string name="basal_rate">Βασικός Ρυθμός</string>
     <!--    BolusProgressDialog-->
     <string name="stop_pressed">Πιέστε STOP</string>
     <!--QuickWizard-->
+    <string name="a11y_only_on_watch">μόνο στο ρολόι</string>
+    <string name="a11y_only_on_phone">μόνο στο τηλέφωνο</string>
+    <string name="quickwizard_settings">Ρυθμίσεις QuickWizard</string>
+    <string name="overview_edit_quickwizard_button_text">Κείμενο κουμπιού:</string>
+    <string name="overview_edit_quickwizard_carbs">Υδατάνθρακες:</string>
+    <string name="overview_edit_quickwizard_valid">Έγκυρο:</string>
+    <string name="overview_edit_quickwizard_list_activity_add">Προσθήκη</string>
+    <string name="overview_quickwizard_item_edit_button">Επεξεργασία</string>
+    <string name="overview_edit_quickwizard_show_on_device">Εμφάνιση καταχώρησης στη συσκευή:</string>
+    <string name="overview_edit_quickwizard_use_bg">Υπολογισμός γλυκόζης αίματος BG</string>
+    <string name="overview_edit_quickwizard_use_bolus_iob">Υπολογισμός του IOB bolus (ενεργής Ινσουλίνης)</string>
+    <string name="overview_edit_quickwizard_use_basal_iob">Υπολογισμός βασικού IOB</string>
+    <string name="overview_edit_quickwizard_use_trend">Υπολογισμός τάσης</string>
+    <string name="overview_edit_quickwizard_use_superbolus">Υπολογισμός superbolus</string>
+    <string name="overview_edit_quickwizard_percentage">Ποσοστό</string>
+    <string name="device_all">Όλα</string>
+    <string name="device_phone">Τηλέφωνο</string>
+    <string name="device_watch">Ρολόι</string>
+    <string name="positive_only">Θετική μόνο</string>
+    <string name="negative_only">Αρνητική μόνο</string>
+    <string name="overview_editquickwizard_usecob">Υπολογισμός COB (ενεργοί υδατάνθρακες)</string>
+    <string name="overview_editquickwizard_usetemptarget">Υπολογισμός προσωρινού στόχου</string>
+    <string name="overview_editquickwizard_usepercentage">Υπολογισμός ποσοστού</string>
+    <string name="app_default">Προεπιλογή εφαρμογής</string>
+    <string name="a11y_drag_and_drop_handle">διαχείριση μεταφοράς και απόθεσης</string>
 </resources>

@@ -90,5 +90,9 @@
     <string name="set_neutral_temps_title">기본 임시 basal 설정</string>
     <string name="set_neutral_temps_summary">활성화되면, 매 한 시간 전에 임시 basal을 취소할 것입니다. 이 기능은 일부 펌프에서 한 시간마다 울리는 소리/진동 경고를 멈추게 합니다.</string>
     <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d 분 남음)</string>
+    <string name="invalid_history_data">잘못된 펌프 기록 데이터가 탐지되었습니다. 새 이슈를 열고 로그를 제공합니다.</string>
+    <string name="riley_statistics">RL Stats</string>
     <string name="medtronic_history_type">종류:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">새로고침 클릭</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">스케쥴 상태 새로고침</string>
 </resources>

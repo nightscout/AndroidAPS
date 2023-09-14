@@ -114,4 +114,5 @@
     <string name="loop_smb_set_by_pump_label">SMB ustawiony przez pompę</string>
     <string name="loop_open_mode_min_change">Minimalna sugerowana zmiana [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Otwarta pętla wyświetli żądanie zmiany tylko w przypadku, gdy obliczona zmiana będzie większa (procentowo) niż to ustawienie. Wartość domyślna to 20%</string>
+    <string name="fallback_smb_no_tdd">Powrót do SMB. Za mało danych o TDD (DDI).</string>
 </resources>

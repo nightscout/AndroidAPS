@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Δεν επικοινωνήθηκε ποτέ</string>
     <string name="pump_status_sleeping">Sleeping</string>
     <string name="pump_status_waking_up">Ξύπνημα</string>
     <string name="pump_status_active">Ενεργή</string>

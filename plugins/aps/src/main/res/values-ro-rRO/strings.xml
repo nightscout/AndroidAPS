@@ -91,4 +91,5 @@
     <string name="ignore30m">Ignorați 30min</string>
     <string name="basal_set_correctly">Bazala setată corect</string>
     <string name="loop_aps_label">APS</string>
+    <string name="fallback_smb_no_tdd">Revenire la SMB. Nu există suficiente date TDD.</string>
 </resources>

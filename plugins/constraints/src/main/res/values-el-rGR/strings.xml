@@ -2,28 +2,52 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">Η αλλαγή της θερινής ώρας θα γίνει σε 24 ώρες ή λιγότερο</string>
+    <string name="dst_loop_disabled_warning">Η αλλαγή της θερινής ώρας θα γίνει σε λιγότερο από 3 ώρες - Το κλειστό κύκλωμα απενεργοποιήθηκε</string>
     <!-- Storage constraint -->
+    <string name="disk_full">Ελευθερώστε τουλάχιστον %1$d MB στην εσωτερική μνήμη! Το κύκλωμα απενεργοποιήθηκε!</string>
     <!-- Version Checker -->
+    <string name="old_version">παλαιά έκδοση</string>
+    <string name="very_old_version">πολύ παλιά έκδοση</string>
+    <string name="application_expired">Η εφαρμογή έχει λήξει</string>
+    <string name="new_version_warning">Νέα έκδοση δεν έχει ελεγχθεί για τουλάχιστον %1$d ημέρες! Επιστροφή στο LGS μετά από %2$d ημέρες, το κύκλωμα θα απενεργοποιηθεί μετά από %3$d ημέρες. Επαναφορά συνδεσιμότητας στο διαδίκτυο!</string>
+    <string name="running_invalid_version">Διαπιστώσαμε ότι εκτελείτε μη έγκυρη έκδοση. Κύκλωμα απενεργοποιήθηκε!</string>
+    <string name="versionavailable">Έκδοση %1$s διαθέσιμη</string>
+    <string name="version_expire">Η έκδοση %1$s λήγει σε %2$s</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">Χρησιμοποιούνται επανυπολογισμένα δεδομένα</string>
+    <string name="bg_too_close">Γλυκόζη αίματος πολύ κοντά:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">επανυπολογισμένη</string>
+    <string name="a11y_bg_quality_doubles">διπλές καταχωρήσεις</string>
+    <string name="a11y_bg_quality_flat">Επίπεδα δεδομένα. Θεωρούνται λανθασμένα</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">Περιορίζεται το εκτεταμένο bolus σε %1$.1f U λόγω %2$s</string>
     <string name="limitingcarbs">Περιορίζονται οι υδατάνθρακες σε %1$d g λόγω %2$s</string>
     <string name="pumpisnottempbasalcapable">Η αντλία δεν υποστηρίζει προσωρινό βασικό ρυθμό</string>
     <string name="closedmodedisabledinpreferences">Το κλειστό κύκλωμα είναι απενεργοποιημένο στις Επιλογές</string>
     <string name="closed_loop_disabled_on_dev_branch">Εκτελείται έκδοση Dev. Το κλειστό κύκλωμα είναι απενεργοποιημένο.</string>
+    <string name="closed_loop_disabled_with_eb">Το κλειστό κύκλωμα απενεργοποιήθηκε λόγω εκτέλεσης εκτεταμένου bolus</string>
     <string name="smbalwaysdisabled">Το SMB πάντα και μετά το γεύμα απενεργοποιείται επειδή η ενεργή πηγή BG δεν υποστηρίζει προηγμένο φιλτράρισμα</string>
     <string name="smbnotallowedinopenloopmode">To SMB δεν επιτρέπεται σε λειτουργία ανοιχτού κυκλώματος</string>
     <string name="maxvalueinpreferences">μέγιστη τιμή στις Επιλογές</string>
     <string name="hardlimit">σταθερό όριο</string>
     <string name="treatmentssafety_title">Ασφάλεια Θεραπειών</string>
     <!-- Objectives -->
+    <string name="completed_well_done">Ολοκληρώθηκε, συγχαρητήρια!</string>
     <string name="not_completed_yet">Δεν ολοκληρώθηκε ακόμη</string>
     <string name="time_elapsed">Ο χρόνος που πέρασε</string>
     <string name="maxiobset">Το μέγιστο IOB έχει ρυθμιστεί σωστά</string>
     <string name="hasbgdata">BG διαθέσιμη από επιλεγμένη πηγή</string>
+    <string name="synchaswritepermission">Η υπηρεσία συγχρονισμού έχει άδεια εγγραφής</string>
     <string name="loopenabled">Κύκλωμα ενεργοποιημένο</string>
     <string name="apsselected">Επιλέχθηκε APS</string>
     <string name="closedmodeenabled">Ενεργοποιήθηκε η κλειστή λειτουργία</string>
     <string name="objectives_shortname">ΣΤΟΧΟΙ</string>
     <string name="description_objectives">Πρόγραμμα εκμάθησης</string>
+    <string name="doyouwantresetstart">Θέλετε έναρξη επαναφοράς στόχου? Μπορεί να χάσετε την πρόοδό σας.</string>
+    <string name="objectives_next_button">Επόμενο</string>
+    <string name="objectives_previous_button">Προηγούμενο</string>
+    <string name="objectives_button_unfinish">Επαναφορά ολοκληρωμένης κατάστασης</string>
+    <string name="objectives_button_unstart">Επαναφορά κατάστασης εκκίνησης</string>
 </resources>

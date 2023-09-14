@@ -1,15 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Source -->
+    <string name="ns_client_bg">NSClient BG</string>
+    <string name="ns_client_bg_short">NS BG</string>
     <string name="description_source_ns_client">Λήψη δεδομένων BG από Nightscout</string>
+    <string name="source_xdrip">xDrip+ -</string>
+    <string name="description_source_xdrip">Λάβετε τιμές BG από το xDrip+.</string>
+    <string name="dexcom_app_patched">BYODA</string>
+    <string name="dexcom_short">BYODA</string>
+    <string name="description_source_dexcom">Λάβετε τις τιμές BG από την εφαρμογή \'Build Your Own Dexcom App\'.</string>
     <string name="eversense">Eversense App (τροποποιημένη)</string>
     <string name="description_source_eversense">Λάβετε τις τιμές BG από την εφαρμογή του Eversense.</string>
+    <string name="glimp">Glimp</string>
     <string name="description_source_glimp">Λάβετε τις τιμές BG από το Glimp.</string>
+    <string name="mm640g">MM640g</string>
     <string name="description_source_mm640g">Λάβετε τις τιμές BG από το 600SeriesAndroidUploader.</string>
     <string name="poctech">Poctech</string>
     <string name="description_source_poctech">Λάβετε τις τιμές BG από την εφαρμογή Poctech</string>
+    <string name="glunovo">Glunovo</string>
+    <string name="description_source_glunovo">Λάβετε τιμές από την εφαρμογή Glunovo</string>
+    <string name="intelligo">Intelligo</string>
+    <string name="description_source_intelligo">Λάβετε τιμές από την εφαρμογή Intelligo</string>
     <string name="tomato">Tomato (MiaoMiao)</string>
     <string name="tomato_short">Tomato</string>
     <string name="description_source_tomato">Λάβετε τιμές BG από Tomato app (MiaoMiao)</string>
+    <string name="aidex">GlucoRx Aidex</string>
+    <string name="aidex_short">Aidex</string>
+    <string name="description_source_aidex">Λάβετε τιμές BG από το GlucoRx Aidex CGMS.</string>
+    <string name="random_bg">Τυχαίες τιμές BG</string>
+    <string name="description_source_random_bg">Δημιουργία τυχαίων δεδομένων BG (λειτουργία επίδειξης μόνο)</string>
+    <string name="random_bg_short">BG</string>
+    <string name="do_xdrip_upload_title">Αποστολή δεδομένων BG στο xDrip+</string>
+    <string name="do_xdrip_upload_summary">Στο xDrip+ επιλέξτε πηγή δεδομένων 640g/Eversense</string>
     <string name="bgsource_upload">Ανέβασμα ρυθμίσεων BG</string>
+    <string name="dexcom_log_ns_sensor_change_title">Καταγραφή αλλαγής αισθητήρα σε NS</string>
+    <string name="dexcom_log_ns_sensor_change_summary">Δημιουργία συμβάντος \"Αλλαγή αισθητήρα\" στο NS αυτόματα κατά την έναρξη του αισθητήρα</string>
+    <string name="direction">κατεύθυνση</string>
 </resources>

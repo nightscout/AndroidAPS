@@ -126,14 +126,14 @@
     <string name="wrongcarbs_label">Tópico: Erros de Entrada de Carboidratos</string>
     <string name="wrongcarbs_whattodo">O que deve fazer se tiver feito uma entrada incorreta de carboidratos?</string>
     <string name="wrongcarbs_treatmentstab">Exclua a entrada incorreta em Tratamentos e insira o novo valor de carboidratos correto.</string>
-    <string name="wrongcarbs_addinsulin">Dê um bolus com insulina usando o menu ações -> purgar/preencher.</string>
+    <string name="wrongcarbs_addinsulin">Dê um bolus com insulina usando o menu ações -&gt; purgar/preencher.</string>
     <string name="wrongcarbs_donothing">Não faça nada. O AAPS vai fazer os ajustes apropriados.</string>
     <string name="wrongcarbs_bolus">Dê um Bolus com insulina usando o botão Insulina (bolus) no menu Visão Geral.</string>
     <string name="wronginsulin_label">Tópico: Erros de entrada/administração de insulina</string>
     <string name="wronginsulin_whattodo">O que fazer se você não recebeu a insulina contabilizada no histórico da bomba, por exemplo, devido a uma obstrução, um cateter falho ou esquecimento de recolocar a bomba após um banho?</string>
     <string name="wronginsulin_careportal">Exclua dados de insulina do Nightscout Careportal para removê-los do histórico da bomba.</string>
     <string name="wronginsulin_compare">Compare os valores no AndroidAPS e no histórico da bomba de insulina (se a bomba tiver essa opção).</string>
-    <string name="wronginsulin_prime">Dê uma porção do bolus calculado não administrado por meio de seringa/caneta ou usando o menu ações -> purgar/preencher.</string>
+    <string name="wronginsulin_prime">Dê uma porção do bolus calculado não administrado por meio de seringa/caneta ou usando o menu ações -&gt; purgar/preencher.</string>
     <string name="wronginsulin_donothing">Não faça nada e permita o AAPS corrigir qualquer elevação no nível de glicose.</string>
     <string name="cob_label">Carboidratos Ativos (CA)</string>
     <string name="cob_question">Como a alteração do valor FS afeta o cálculo de CA no AAPS?</string>

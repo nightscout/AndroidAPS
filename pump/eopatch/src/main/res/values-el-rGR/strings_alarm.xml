@@ -1,2 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">Το ρεζερβουάρ είναι άδειο\n\nΤο Patch απενεργοποιήθηκε και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a003">Το Patch έληξε το\n\nΤο Patch απενεργοποιήθηκε και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a004">Έμφραξη\nΤο Patch απενεργοποιήθηκε και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a005">Πρόβλημα στον αυτοέλεγχο εκκίνησης\nΤο Patch απενεργοποιήθηκε και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a007">Μη έγκυρη θερμοκρασία\nΗ χορήγηση ινσουλίνης ή η διαδικασία \'Ενεργοποίηση Patch\' σταμάτησε. Αποφύγετε τις ακραίες θερμοκρασίες.</string>
+    <string name="string_a016">Σφάλμα εισαγωγής βελόνας\nΕλέγξτε τη θέση της λαβής και πατήστε \'Επανάληψη\'.</string>
+    <string name="string_a018">Σφάλμα μπαταρίας Patch\nΤο Patch έχει απενεργοποιηθεί και\nη χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a019">Σφάλμα μπαταρίας Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a020">Σφάλμα ενεργοποίησης Patch\nΗ διαδικασία \'Ενεργοποίηση Patch\' έχει λήξει. Πατήστε \'Επιβεβαίωση\' για να απενεργοποιήσετε το τρέχον Patch. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a022">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a023">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και\nη χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a034">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a041">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a042">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a043">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a044">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a106">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a107">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a108">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a116">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a117">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_a118">Σφάλμα Patch\nΤο Patch έχει απενεργοποιηθεί και η χορήγηση ινσουλίνης σταμάτησε. Αλλάξτε το Patch τώρα.</string>
+    <string name="string_b000">Η διάρκειας ζωής του Patch θα τελειώσει στις %s. Να είστε έτοιμοι να αλλάξετε το Patch.</string>
+    <string name="string_b001">Τέλος αναστολής ινσουλίνης\nΠατήστε \'Συνέχεια\' για να αρχίσει ξανά η χορήγηση ινσουλίνης.</string>
+    <string name="string_b003">Χαμηλή δεξαμενή\nΑντικαταστήστε το Patch σύντομα.</string>
+    <string name="string_b005">Η διάρκεια ζωής του Patch έχει λήξει\nΑλλάξτε το Patch τώρα.</string>
+    <string name="string_b006">Το Patch θα λήξει σύντομα\nΑλλάξτε το Patch τώρα.</string>
+    <string name="string_b012">Μη ολοκληρωμένη ενεργοποίηση Patch\nΟλοκληρώστε η διαδικασία \'Ενεργοποίηση Patch\'.</string>
+    <string name="string_b018">Χαμηλή μπαταρία Patch\nΝα είστε έτοιμοι να αλλάξετε Patch.</string>
+</resources>
