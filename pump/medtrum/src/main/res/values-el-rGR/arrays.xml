@@ -1,2 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string-array name="alarmSettings">
+        <item>Φως, δόνηση και ηχητικό σήμα</item>
+        <item>Φως και δόνηση</item>
+        <item>Φως και ηχητικό σήμα</item>
+        <item>Φως</item>
+        <item>Δόνηση και ηχητικό σήμα</item>
+        <item>Δόνηση</item>
+        <item>Ηχητικό σήμα</item>
+        <item>Αθόρυβο</item>
+    </string-array>
+</resources>
