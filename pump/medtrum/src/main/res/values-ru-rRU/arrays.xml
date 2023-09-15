@@ -2,12 +2,12 @@
 <resources>
     <string-array name="alarmSettings">
         <item>Подсветка, вибрация и звук</item>
-        <item>Light and vibrate</item>
-        <item>Light and beep</item>
-        <item>Light</item>
-        <item>Vibrate and beep</item>
-        <item>Vibrate</item>
-        <item>Beep</item>
-        <item>Silent</item>
+        <item>Подсветка и вибрация</item>
+        <item>Подсветка и звук</item>
+        <item>Подсветка</item>
+        <item>Вибрация и звук</item>
+        <item>Вибрация</item>
+        <item>Звук</item>
+        <item>Бесшумно</item>
     </string-array>
 </resources>
