@@ -1,7 +1,6 @@
 package info.nightscout.androidaps.interaction.utils
 
 import com.google.common.truth.Truth.assertThat
-import info.nightscout.androidaps.FakeWearUtil
 import info.nightscout.androidaps.WearTestBase
 import org.junit.jupiter.api.Test
 
@@ -14,13 +13,13 @@ class WearUtilTest : WearTestBase() {
     @Test fun timestampAndTimeDiffsTest() {
 
         // smoke for mocks - since we freeze "now" to get stable tests
-        assertThat(fakeWearUtil.timestamp()).isEqualTo(FakeWearUtil.REF_NOW)
-        assertThat(fakeWearUtil.msTill(FakeWearUtil.REF_NOW)).isEqualTo(0L)
-        assertThat(fakeWearUtil.msTill(FakeWearUtil.REF_NOW + 3456L)).isEqualTo(3456L)
-        assertThat(fakeWearUtil.msTill(FakeWearUtil.REF_NOW - 6294L)).isEqualTo(-6294L)
-        assertThat(fakeWearUtil.msTill(FakeWearUtil.REF_NOW)).isEqualTo(0L)
-        assertThat(fakeWearUtil.msSince(FakeWearUtil.REF_NOW + 3456L)).isEqualTo(-3456L)
-        assertThat(fakeWearUtil.msSince(FakeWearUtil.REF_NOW - 6294L)).isEqualTo(6294L)
+        assertThat(wearUtil.timestamp()).isEqualTo(REF_NOW)
+        assertThat(wearUtil.msTill(REF_NOW)).isEqualTo(0L)
+        assertThat(wearUtil.msTill(REF_NOW + 3456L)).isEqualTo(3456L)
+        assertThat(wearUtil.msTill(REF_NOW - 6294L)).isEqualTo(-6294L)
+        assertThat(wearUtil.msTill(REF_NOW)).isEqualTo(0L)
+        assertThat(wearUtil.msSince(REF_NOW + 3456L)).isEqualTo(-3456L)
+        assertThat(wearUtil.msSince(REF_NOW - 6294L)).isEqualTo(6294L)
     }
 
     @Test fun joinSetTest() {
@@ -99,12 +98,12 @@ class WearUtilTest : WearTestBase() {
     */
     @Test fun rateLimitTest() {
         // WHEN
-        val firstCall = fakeWearUtil.isBelowRateLimit("test-limit", 3)
-        val callAfterward = fakeWearUtil.isBelowRateLimit("test-limit", 3)
-        fakeWearUtil.progressClock(500L)
-        val callTooSoon = fakeWearUtil.isBelowRateLimit("test-limit", 3)
-        fakeWearUtil.progressClock(3100L)
-        val callAfterRateLimit = fakeWearUtil.isBelowRateLimit("test-limit", 3)
+        val firstCall = wearUtil.isBelowRateLimit("test-limit", 3)
+        val callAfterward = wearUtil.isBelowRateLimit("test-limit", 3)
+        progressClock(500L)
+        val callTooSoon = wearUtil.isBelowRateLimit("test-limit", 3)
+        progressClock(3100L)
+        val callAfterRateLimit = wearUtil.isBelowRateLimit("test-limit", 3)
 
         // THEN
         assertThat(firstCall).isTrue()

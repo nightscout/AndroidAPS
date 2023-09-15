@@ -22,7 +22,7 @@ class DisplayFormatTest : WearTestBase() {
     fun mock() {
         rawDataMocker = RawDataMocker()
         displayFormat = DisplayFormat()
-        displayFormat.wearUtil = fakeWearUtil
+        displayFormat.wearUtil = wearUtil
         displayFormat.sp = sp
         displayFormat.context = context
         Mockito.`when`(sp.getBoolean("complication_unicode", true)).thenReturn(true)

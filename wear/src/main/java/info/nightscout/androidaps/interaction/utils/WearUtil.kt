@@ -7,6 +7,7 @@ import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.datetime.Clock
 
 /**
  * Created by andy on 3/5/19.
@@ -17,6 +18,7 @@ import javax.inject.Singleton
 open class WearUtil @Inject constructor(
     private val context: Context,
     private val aapsLogger: AAPSLogger,
+    private val clock: Clock,
 ) {
 
     private val debugWakelocks = false
@@ -26,7 +28,7 @@ open class WearUtil @Inject constructor(
     // Time related util methods
     //==============================================================================================
     open fun timestamp(): Long {
-        return System.currentTimeMillis()
+        return clock.now().toEpochMilliseconds()
     }
 
     open fun msSince(`when`: Long): Long {
