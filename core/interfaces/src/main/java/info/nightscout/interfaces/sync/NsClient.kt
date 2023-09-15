@@ -21,6 +21,8 @@ interface NsClient : Sync {
 
     /**
      * Initiate new round of upload/download
+     *
+     * @param reason identification of caller
      */
     fun resend(reason: String)
 

@@ -60,17 +60,68 @@
     <string name="omnipod_common_overview_base_basal_rate">Βάση Βασικού Ρυθμού</string>
     <string name="omnipod_common_overview_reservoir">Αμπούλα</string>
     <string name="omnipod_common_overview_pod_active_alerts">Ειδοποιήσεις Ενεργού Pod</string>
+    <string name="omnipod_common_overview_firmware_version">Έκδοση Υλικολογισμικού</string>
+    <string name="omnipod_common_overview_time_on_pod">Ώρα στο Pod</string>
+    <string name="omnipod_common_overview_temp_basal_value">%1$.2fU/h @%2$s (%3$d/%4$d λεπτά)</string>
+    <string name="omnipod_common_overview_reservoir_value">%1$.2f U απομένουν</string>
+    <string name="omnipod_common_overview_reservoir_value_over50">Απομένουν πάνω από 50 U</string>
     <string name="omnipod_common_overview_errors">Σφάλματα</string>
     <!-- Omnipod - Wizard Base -->
     <string name="omnipod_common_wizard_button_cancel">Ακύρωση</string>
+    <string name="omnipod_common_wizard_button_finish">Τέλος</string>
     <string name="omnipod_common_wizard_button_next">Επόμενο</string>
+    <string name="omnipod_common_wizard_button_retry">Επανάληψη</string>
+    <string name="omnipod_common_wizard_button_deactivate_pod">Απενεργοποίηση Pod</string>
+    <string name="omnipod_common_wizard_button_discard_pod">Απόρριψη Pod</string>
+    <string name="omnipod_common_wizard_exit_confirmation_text">Δεν έχετε ολοκληρώσει όλα τα βήματα ακόμα. Είστε βέβαιοι ότι θέλετε να βγείτε;</string>
     <string name="omnipod_common_wizard_exit_confirmation_title">Έξοδος</string>
     <!-- Omnipod - Pod Activation Wizard -->
+    <string name="omnipod_common_pod_activation_wizard_start_pod_activation_title">Γέμισμα Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_initialize_pod_title">Αρχικοποίηση Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_title">Τοποθέτηση Pod</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_text">Προετοιμάστε το σημείο έγχυσης. Αφαιρέστε το καπάκι της βελόνας και τα προστατευτικά των αυτοκολλήτων και κολλήστε το Pod στο σημείο έγχυσης.\n\nΑν ο καθετήρας είναι εμφανής, παρακαλώ πιέστε <b>Ακύρωση</b> και απορρίψτε το Pod σας.\n\nΠιέστε <b>Επόμενο</b> για να εισάγετε τον καθετήρα και να ξεκινήσει η έγχυση.</string>
+    <string name="omnipod_common_pod_activation_wizard_attach_pod_confirm_insert_cannula_text">Όταν πιέσετε <b>OK</b>, θα γίνει εισαγωγή του καθετήρα. Σιγουρευτείτε ότι έχετε κολλήσει το Pod στο σημείο έγχυσης.</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_title">Εισαγωγή Καθετήρα</string>
+    <string name="omnipod_common_pod_activation_wizard_insert_cannula_text">Προσπαθήστε να ορίσετε το αρχικό χρονοδιάγραμμα βασικού ρυθμού και κάνετε εισαγωγή του καθετήρα.\n\nΌταν ο καθετήρας εισαχθεί με επιτυχία, μπορείτε να πατήσετε <b>Επόμενο</b>.</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_title">Pod Ενεργοποιημένο</string>
+    <string name="omnipod_common_pod_activation_wizard_pod_activated_text">Το νέο Pod είναι τώρα ενεργό.\n\nΟ βασικός ρυθμός σας έχει προγραμματιστεί και έχει γίνει εισαγωγή του καθετήρα.\n\nΠαρακαλώ επιβεβαιώστε ότι ο καθετήρας έχει εισαχθεί σωστά και αλλάξτε το Pod αν πιστεύετε διαφορετικά.</string>
     <!-- Omnipod - Pod Deactivation Wizard -->
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_title">Απενεργοποίηση Pod</string>
+    <string name="omnipod_common_pod_deactivation_wizard_start_pod_deactivation_text">Πατήστε <b>Επόμενο</b> για να απενεργοποιήσετε το Pod.\n\n<b>Σημείωση:</b> Αυτό θα αναστείλει όλη τη χορήγηση ινσουλίνης και θα απενεργοποιήσει το Pod.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_title">Απενεργοποίηση Pod</string>
+    <string name="omnipod_common_pod_deactivation_wizard_deactivating_pod_text">Γίνετε απενεργοποίηση του Pod.\n\nΌταν ολοκληρωθεί επιτυχώς η απενεργοποίηση, μπορείτε να πατήσετε το <b>Next</b>.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_title">Pod Απενεργοποιημένο</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_deactivated_text">Το Pod σας έχει απενεργοποιηθεί.\n\nΠαρακαλώ αφαιρέστε το Pod από το σώμα σας και ανακυκλώστε το.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_title">Το Pod Απορρίφθηκε</string>
+    <string name="omnipod_common_pod_deactivation_wizard_pod_discarded_text">Το Pod έχει απορριφθεί. Η παροχή ινσουλίνης δεν έχει ανασταλεί επειδή το Pod δεν έχει απενεργοποιηθεί σωστά!\n\nΠαρακαλώ αφαιρέστε το Pod από το σώμα σας και ανακυκλώστε το.</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod_confirmation">Αν απορρίψετε το Pod, δεν θα μπορείτε πλέον να επικοινωνήσετε μαζί του. Θα πρέπει να το κάνετε αυτό μόνο όταν όλη η επικοινωνία με το Pod αποτυγχάνει επίμονα. Είστε σίγουροι ότι θέλετε να απορρίψετε το Pod;</string>
+    <string name="omnipod_common_pod_deactivation_wizard_discard_pod">Απόρριψη Pod</string>
     <!-- Omnipod - Preferences -->
+    <string name="omnipod_common_preferences_bolus_beeps_enabled">Ηχητικά σήματα Bolus ενεργοποιημένα</string>
+    <string name="omnipod_common_preferences_basal_beeps_enabled">Ηχητικά σήματα βασικού ενεργοποιημένα</string>
+    <string name="omnipod_common_preferences_smb_beeps_enabled">Ηχητικά σήματα SMB ενεργοποιημένα</string>
+    <string name="omnipod_common_preferences_tbr_beeps_enabled">Ηχητικά σήματα TBR ενεργοποιημένα</string>
+    <string name="omnipod_common_preferences_suspend_delivery_button_enabled">Εμφάνιση κουμπιού Αναστολής Έγχυσης στην καρτέλα Omnipod</string>
+    <string name="omnipod_common_preferences_time_change_enabled">DST/Ανίχνευση ζώνης ώρας ενεργοποιημένη</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled">Ενεργοποιημένη υπενθύμιση λήξης</string>
+    <string name="omnipod_common_preferences_expiration_reminder_enabled_summary">Όταν ενεργοποιηθεί το pod, θα ηχήσει, όταν φτάσει η καθορισμένη ώρα</string>
+    <string name="omnipod_common_preferences_expiration_reminder_hours_before_expiry">Υπενθύμιση σε ώρες πριν από τη λήξη (72 ώρες)</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled">Ειδοποίηση λήξης ενεργοποιήθηκε</string>
+    <string name="omnipod_common_preferences_expiration_alarm_enabled_summary">Όταν είναι ενεργοποιημένο το pod θα ηχήσει όταν φτάσει η προκαθορισμένη ώρα και 1 ώρα πριν τον τερματισμό</string>
+    <string name="omnipod_common_preferences_expiration_alarm_hours_before_shutdown">Ειδοποίηση σε ώρες πριν από τη διακοπή λειτουργίας (80 Ώρες)</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_enabled">Ειδοποίηση χαμηλής δεξαμενής ενεργοποιημένη</string>
+    <string name="omnipod_common_preferences_low_reservoir_alert_units">Αριθμός μονάδων</string>
+    <string name="omnipod_common_preferences_automatically_silence_alerts">Αυτόματη σίγαση ειδοποιήσεων Pod</string>
     <string name="omnipod_common_preferences_category_other">Άλλο</string>
+    <string name="omnipod_common_preferences_category_alerts">Ειδοποιήσεις</string>
+    <string name="omnipod_common_preferences_category_confirmation_beeps">Ήχοι Επιβεβαίωσης</string>
     <string name="omnipod_common_preferences_category_notifications">Ειδοποιήσεις</string>
+    <string name="omnipod_common_preferences_notification_uncertain_tbr_sound_enabled">Ήχος για αβέβαιες ειδοποιήσεις TBR ενεργοποιημένος</string>
+    <string name="omnipod_common_preferences_notification_uncertain_smb_sound_enabled">Ήχος για
+        αβέβαιες ειδοποιήσεις SMB ενεργοποιημένος</string>
+    <string name="omnipod_common_preferences_notification_uncertain_bolus_sound_enabled">Ήχος για αβέβαιες ειδοποιήσεις bolus ενεργοποιημένος</string>
     <!-- Omnipod - Pod Status -->
+    <string name="omnipod_common_pod_status_no_active_pod">Χωρίς Ενεργό Pod</string>
     <string name="omnipod_common_pod_status_waiting_for_activation">Ρύθμιση σε εξέλιξη (αναμονή για ενεργοποίηση Pod)</string>
     <string name="omnipod_common_pod_status_waiting_for_cannula_insertion">Ρύθμιση σε εξέλιξη (αναμονή εισαγωγής καθετήρα)</string>
     <string name="omnipod_common_pod_status_running">Εκτελείτε</string>
@@ -105,9 +156,20 @@
     <string name="omnipod_common_cmd_beep_config">Ρύθμιση Ήχων</string>
     <string name="omnipod_common_cmd_play_test_beep">Αναπαραγωγή Δοκιμαστικού Ήχου</string>
     <!-- Omnipod - Alerts -->
+    <string name="omnipod_common_alert_finish_pairing_reminder">Υπενθύμιση ολοκλήρωσης σύζευξης</string>
     <string name="omnipod_common_alert_finish_setup_reminder_reminder">Υπενθύμιση ολοκλήρωσης εγκατάστασης</string>
     <string name="omnipod_common_alert_expiration">Το Pod θα λήξει σύντομα</string>
+    <string name="omnipod_common_alert_expiration_advisory">Το Pod θα λήξει σύντομα</string>
+    <string name="omnipod_common_alert_shutdown_imminent">Άμεσος τερματισμός</string>
+    <string name="omnipod_common_alert_low_reservoir">Χαμηλή Δεξαμενή</string>
+    <string name="omnipod_common_alert_unknown_alert">Άγνωστη Ειδοποίηση</string>
     <!-- Omnipod - Short status -->
+    <string name="omnipod_common_short_status_no_active_pod">Δεν Υπάρχει Ενεργό Pod</string>
+    <string name="omnipod_common_short_status_last_connection">Τελευταία Σύνδεση: %1$d λεπτά πριν</string>
+    <string name="omnipod_common_short_status_last_bolus">Τελευταίο Bolus: %1$s @ %2$s</string>
+    <string name="omnipod_common_short_status_temp_basal">Προσωρινός Ρυθμός: %1$s</string>
+    <string name="omnipod_common_short_status_extended_bolus">Εκτεταμένο bolus: %1$s</string>
+    <string name="omnipod_common_short_status_reservoir">Δεξαμενή: %1$sU</string>
     <!-- Omnipod - Other -->
     <string name="omnipod_common_yes">Ναι</string>
     <string name="omnipod_common_no">Όχι</string>
@@ -115,6 +177,10 @@
     <string name="omnipod_common_cancel">Ακύρωση</string>
     <string name="omnipod_common_warning">Προειδοποίηση</string>
     <!-- Omnipod - Times -->
+    <string name="omnipod_common_moments_ago">Στιγμές πριν</string>
+    <string name="omnipod_common_less_than_a_minute_ago">Λιγότερο από 1 λεπτό πριν</string>
+    <string name="omnipod_common_composite_time">%1$s και %2$s</string>
+    <string name="omnipod_common_time_ago">%1$s πριν</string>
     <plurals name="omnipod_common_minutes">
         <item quantity="one">%1$d minute</item>
         <item quantity="other">%1$d λεπτά</item>
@@ -126,5 +192,9 @@
     <plurals name="omnipod_common_days">
         <item quantity="one">%1$d ημέρες</item>
         <item quantity="other">%1$d ημέρες</item>
+    </plurals>
+    <plurals name="omnipod_common_pod_alerts">
+        <item quantity="one">Ειδοποίηση Pod: %1$s</item>
+        <item quantity="other">Ειδοποιήσεις Pod: %1$s</item>
     </plurals>
 </resources>

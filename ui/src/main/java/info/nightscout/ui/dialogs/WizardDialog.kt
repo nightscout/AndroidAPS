@@ -516,7 +516,8 @@ class WizardDialog : DaggerDialogFragment() {
 
             if (wizard.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0.0) {
                 val insulinText = if (wizard.calculatedTotalInsulin > 0.0) rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.calculatedTotalInsulin).formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor) else ""
-                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(info.nightscout.core.graph.R.string.format_carbs, carbsAfterConstraint).formatColor(context, rh, info.nightscout.core.ui.R.attr.carbsColor) else ""
+                val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraint).formatColor(context, rh, info.nightscout.core.ui.R.attr
+                    .carbsColor) else ""
                 binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.result_insulin_carbs, insulinText, carbsText))
                 binding.okcancel.ok.visibility = View.VISIBLE
             } else {

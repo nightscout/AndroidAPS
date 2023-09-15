@@ -49,6 +49,11 @@
     <string name="combo_tbr_count">임시기초주입 수</string>
     <string name="bolusstopped">Bolus 중지됨</string>
     <string name="bolusstopping">Bolus 중지중</string>
+    <string name="pump_commerror_label">통신 오류 수</string>
+    <string name="show_comm_error_count_title">통신 오류 수 보여주기</string>
+    <string name="show_comm_error_count_summary">Ruffy와 통신할 때 오류 수를 표시합니다. 대부분의 경우 0보다 높은 숫자는 Ruffy 통신 문제를 의미합니다 (재시작이 필요할 수 있습니다).</string>
     <string name="combo_error_display_never">절대</string>
+    <string name="combo_error_display_error">오류 발생시</string>
+    <string name="combo_error_display_always">항상</string>
     <string name="unsafeusage">위험한 사용</string>
 </resources>

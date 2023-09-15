@@ -72,7 +72,10 @@ import info.nightscout.rx.events.EventNSClientNewLog
 import info.nightscout.rx.events.EventNewHistoryData
 import info.nightscout.rx.events.EventOfflineChange
 import info.nightscout.rx.events.EventPreferenceChange
+import info.nightscout.rx.events.EventProfileStoreChanged
+import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.events.EventSWSyncStatus
+import info.nightscout.rx.events.EventTempTargetChange
 import info.nightscout.rx.events.EventTherapyEventChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
@@ -170,7 +173,7 @@ class NSClientV3Plugin @Inject constructor(
     private val isAllowed get() = receiverDelegate.allowed
     private val blockingReason get() = receiverDelegate.blockingReason
 
-    val maxAge = T.days(77).msecs()
+    val maxAge = T.days(100).msecs()
     internal var newestDataOnServer: LastModified? = null // timestamp of last modification for every collection provided by server
     internal var lastLoadedSrvModified = LastModified(LastModified.Collections()) // max srvLastModified timestamp of last fetched data for every collection
     internal var firstLoadContinueTimestamp = LastModified(LastModified.Collections()) // timestamp of last fetched data for every collection during initial load
@@ -229,6 +232,14 @@ class NSClientV3Plugin @Inject constructor(
             .observeOn(aapsSchedulers.io)
             .subscribe({ executeUpload("NEW_DATA", forceNew = false) }, fabricPrivacy::logException)
         disposable += rxBus
+            .toObservable(EventTempTargetChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ executeUpload("EventTempTargetChange", forceNew = false) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventProfileSwitchChanged::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ executeUpload("EventProfileSwitchChanged", forceNew = false) }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventDeviceStatusChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ executeUpload("EventDeviceStatusChange", forceNew = false) }, fabricPrivacy::logException)
@@ -240,6 +251,10 @@ class NSClientV3Plugin @Inject constructor(
             .toObservable(EventOfflineChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ executeUpload("EventOfflineChange", forceNew = false) }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventProfileStoreChanged::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ executeUpload("EventProfileStoreChanged", forceNew = false) }, fabricPrivacy::logException)
 
         runLoop = Runnable {
             var refreshInterval = T.mins(5).msecs()
@@ -580,7 +595,10 @@ class NSClientV3Plugin @Inject constructor(
      **********************/
 
     override fun resend(reason: String) {
-        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true))
+        // If WS is enabled, download is triggered by changes in NS. Thus uploadOnly
+        // Exception is after reset to full sync (initialLoadFinished == false), where
+        // older data must be loaded directly and then continue over WS
+        if (sp.getBoolean(info.nightscout.core.utils.R.string.key_ns_use_ws, true) && initialLoadFinished)
             executeUpload("START $reason", forceNew = true)
         else
             executeLoop("START $reason", forceNew = true)

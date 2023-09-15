@@ -326,6 +326,7 @@
     <string name="uel_error_dialog_mute">ΠΑΡΑΘΥΡΟ ΣΦΑΛΜΑΤΟΣ ΣΙΓΑΣΗ </string>
     <string name="uel_error_dialog_mute_5min">ΠΑΡΑΘΥΡΟ ΣΦΑΛΜΑΤΟΣ ΣΙΓΑΣΗ 5ΛΕΠΤΑ</string>
     <string name="uel_objective_started">ΕΝΑΡΞΗ ΣΤΟΧΟΥ</string>
+    <string name="uel_objective_unstarted">Ο ΣΤΟΧΟΣ ΔΕΝ ΕΧΕΙ ΞΕΚΙΝΗΣΕΙ</string>
     <string name="uel_objectives_skipped">ΠΑΡΑΛΗΨΗ ΣΤΟΧΟΥ</string>
     <string name="uel_stat_reset">ΕΠΑΝΑΦΟΡΑ ΣΤΑΤΙΣΤΙΚΩΝ</string>
     <string name="uel_delete_logs">ΔΙΑΓΡΑΦΗ ΚΑΤΑΓΡΑΦΩΝ</string>

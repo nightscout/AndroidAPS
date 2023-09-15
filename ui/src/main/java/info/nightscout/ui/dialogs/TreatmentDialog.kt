@@ -157,7 +157,8 @@ class TreatmentDialog : DialogFragmentWithDate() {
                 )
         }
         if (carbsAfterConstraints > 0) {
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(info.nightscout.core.graph.R.string.format_carbs, carbsAfterConstraints).formatColor(context, rh, info.nightscout.core.ui.R.attr.carbsColor))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraints).formatColor(context, rh, info.nightscout
+                .core.ui.R.attr.carbsColor))
             if (carbsAfterConstraints != carbs)
                 actions.add(rh.gs(R.string.carbs_constraint_applied).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))
         }

@@ -1,19 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="combov2_plugin_name">아큐-첵 콤보</string>
+    <string name="combov2_plugin_description">Accu-Chek Combo pump를 위한 기본 펌프 통합</string>
+    <string name="combov2_could_not_connect">펌프에 연결할 수 없음</string>
+    <string name="combov2_not_paired">펌프에 페어링되지 않음</string>
+    <string name="combov2_pump_terminated_connection">펌프 연결 종료됨</string>
+    <string name="combov2_warning">Combo 경고</string>
+    <string name="combov2_error">Combo 오류</string>
+    <string name="combov2_warning_4">업데이트를 위해 hotline에 연락하세요</string>
+    <string name="combov2_warning_10">블루투스 실패; 페어링 다시 실행</string>
+    <string name="combov2_error_1">인슐린 없음</string>
     <string name="combov2_error_2">배터리 방전됨</string>
     <string name="combov2_error_4">막힘</string>
+    <string name="combov2_error_5">백업 펌프 작동 종료</string>
     <string name="combov2_error_6">기계적인 오류</string>
+    <string name="combov2_error_7">전자공학적 오류</string>
+    <string name="combov2_error_8">전원 차단</string>
+    <string name="combov2_error_9">백업 펌프 작업 종료</string>
+    <string name="combov2_error_10">레저버 오류</string>
+    <string name="combov2_error_11">주입 세트가 프라이밍 되지 않음</string>
+    <string name="combov2_extended_bolus_not_supported">확장 bolus 지원되지 않음</string>
+    <string name="combov2_title">Accu-Check Combo v2</string>
+    <string name="combov2_pair_with_pump_title">펌프와 페어링</string>
+    <string name="combov2_unpair_pump_title">펌프와 페어링 해제</string>
+    <string name="combov2_driver_state_label">드라이버 상태</string>
+    <string name="combov2_current_activity_label">현재 활동</string>
     <string name="bluetooth_address">블루투스 주소</string>
+    <string name="combov2_start_pairing">페어링 시작</string>
+    <string name="combov2_pairing_in_progress">Combo 페어링 진행 중</string>
+    <string name="combov2_pairing_start_steps">Combo와 페어링을 수행하기 위한 단계:\n\n
+1. 펌프에서 블루투스 설정으로 이동합니다.\n
+2. 장치가 이미 페어링된 것으로 표시되는지 확인합니다; 만약 그렇다면, \"장치 삭제\" 펌프 화면으로 이동하여 기기의 삭제/페어링 해제합니다.\n
+3. \"장치 추가\" 펌프 화면으로 이동하여, 펌프 페어링을 시작합니다.\n
+4. AndroidAPS에서 페어링을 시작하려면 아래의 \"페어링 시작\" 버튼을 클릭합니다.\n</string>
+    <string name="combov2_steps_if_no_connection_during_pairing">잠시 후에, 펌프 화면에서 핸드폰의 이름이 표시됩니다; 확인을 위해 CHECK를 누르세요.\n\n
+페어링이 성공적으로 완료되면, 펌프에서 완료된 페어링을 확인하고 CHECK 버튼을 두번 눌러 메인 펌프화면으로 돌아오세요.\n\n
+만약 ~5분 이상 연결이 되지 않으면:\n\n
+1. \"뒤로\" 또는 \"페어링 취소\" 버튼을 누르세요.\n
+2. Combo에서 페어링을 취소하세요 (페어링을 취소하기 위해 \"UP\"과 \"MENU\" 버튼을 동시에 함께 누릅니다).\n
+3. 페어링을 다시 시도합니다.</string>
+    <string name="combov2_enter_pin">PIN 입력</string>
+    <string name="combov2_cancel_pairing">페어링 취소</string>
+    <string name="combov2_pin_hint">10-숫자 PIN</string>
+    <string name="combov2_pairing_finished_successfully">Combo와 성공적으로 페어링됨</string>
+    <string name="combov2_pairing_cancelled">사용자에 의해 Combo와의 페어링 취소됨</string>
+    <string name="combov2_pairing_combo_scan_timeout_reached">Combo 스캔 시간 초과함</string>
+    <string name="combov2_pairing_failed_due_to_error">오류로 인해 페어링 실패함: %1$s</string>
+    <string name="combov2_pairing_aborted_unknown_reasons">알 수 없는 이유로 페어링 중단됨</string>
+    <string name="combov2_pairing_invalid_pin_length">"유효하지 않은 페어링 PIN 길이: %1$d자리 숫자 필요함, %2$d자리임"</string>
+    <string name="combov2_scanning_for_pump">펌프 스캔 중</string>
+    <string name="combov2_establishing_bt_connection">블루투스 연결 설정 중 (시도 횟수. %1$d)</string>
+    <string name="combov2_pairing_performing_handshake">펌프와 동기화하기</string>
+    <string name="combov2_pairing_pump_requests_pin">펌프가 10자리 숫자 PIN을 요청함</string>
+    <string name="combov2_pairing_finishing">페어링 완료</string>
+    <string name="combov2_no_connection_for_n_mins">%1$d분 동안 연결되지 않음</string>
+    <string name="combov2_less_than_one_minute_ago">1분 미만 전</string>
+    <string name="combov2_setting_current_pump_time">현재 펌프 시간 설정</string>
+    <string name="combov2_setting_current_pump_date">현재 펌프 날짜 설정</string>
+    <string name="combov2_not_initialized">초기화되지 않음</string>
+    <string name="combov2_checking_pump">펌프 점검</string>
+    <string name="combov2_ready">준비</string>
     <string name="combov2_suspended">중지됨</string>
+    <string name="combov2_pump_is_suspended">펌프 중지됨</string>
+    <string name="combov2_executing_command">명령 실행 중</string>
+    <string name="combov2_getting_basal_profile_cmddesc">Basal 프로파일 가져오기</string>
     <string name="combov2_setting_basal_profile_cmddesc">Basal 프로파일 설정</string>
+    <string name="combov2_setting_tbr_cmddesc">%2$d분 동안 %1$d%% TBR 설정</string>
+    <string name="combov2_cancelling_tbr">진행 중인 TBR 취소</string>
+    <string name="combov2_delivering_bolus_cmddesc">%1$.1f U bolus 주입 중</string>
+    <string name="combov2_fetching_tdd_history_cmddesc">TDD 기록 가져오기</string>
+    <string name="combov2_updating_pump_datetime_cmddesc">펌프 날짜시간 업데이트</string>
+    <string name="combov2_updating_pump_status_cmddesc">펌프 상태 업데이트</string>
+    <string name="combov2_pairing_pin_failure">PIN이 맞지 않습니다. 오타가 있는지 확인하세요. 이런 현상이 계속되면, 페어링을 취소하고 재시도하세요.</string>
+    <string name="combov2_discovery_duration">검색 기간(초)</string>
+    <string name="combov2_verbose_logging">상세한 Combo logging 활성화</string>
+    <string name="combov2_getting_basal_profile">Basal 프로파일 가져오기; %1$d의 요소 확인됨</string>
+    <string name="combov2_setting_basal_profile">Basal 프로파일 설정; %1$d의 요소 작성됨</string>
+    <string name="combov2_delivering_bolus">Bolus 주입 중 (%2$.1f U 중 %1$.1f 주입됨)</string>
+    <string name="combov2_cannot_deliver_pump_suspended">처치를 진행할 수 없음 - 펌프가 중지됨</string>
+    <string name="combov2_insufficient_insulin_in_reservoir">레저버에 인슐린 부족함</string>
     <string name="combov2_bolus_cancelled">Bolus 취소</string>
     <string name="combov2_bolus_delivery_failed">Bolus 주입이 실패하였습니다. 주입된 Bolus가 없는 것으로 보입니다. 이중으로 Bolus가 주입되는 것을 방지하기 위해 펌프를 확인한 다음 다시 Bolus를 주입하세요. 버그를 방지하기 위해 Bolus 주입이 자동으로 재시도되지 않습니다.</string>
+    <string name="combov2_bolus_not_delivered">Bolus가 주입되지 않음</string>
+    <string name="combov2_cannot_access_pump_data">펌프 데이터에 접근할 수 없음; 펌프를 다시 페어링해야 함</string>
+    <string name="combov2_unaccounted_bolus_detected_cancelling_bolus">설명되지 않는 bolus 주입이 감지됨. 안정상의 이유로 bolus를 취소함.</string>
+    <string name="combov2_incorrect_active_basal_profile">활성 basal 프로파일 잘못 선택됨; 프로파일 %1$d이 아닌 프로파일 1이 활성 프로파일이어야 함</string>
+    <string name="combov2_unrecognized_alert">인식할 수 없는 Combo 경고</string>
+    <string name="combov2_combo_alert">Combo 경고</string>
     <string name="combov2_current_tbr">%1$d%% (%2$d분 남음)</string>
+    <string name="combov2_current_tbr_less_than_1min">%1$d%% (1분 미만 남음)</string>
+    <string name="combov2_load_tdds_cancelled">TDD 입력 취소됨</string>
+    <string name="combov2_retrieving_tdds_failed">TDD 검색 실패함</string>
     <string name="combov2_battery_low_warning">펌프배터리가 부족합니다.</string>
+    <string name="combov2_reservoir_low_warning">펌프 레저버 양 적음</string>
+    <string name="combov2_setting_tbr_succeeded">TBR 설정 성공함</string>
+    <string name="combov2_setting_tbr_failed">TBR 설정 실패함</string>
+    <string name="combov2_set_emulated_100_tbr">에뮬레이트된 100% TBR 설정</string>
+    <string name="combov2_letting_emulated_100_tbr_finish">현재 에뮬레이션된 100% TBR 완료를 하게합니다.</string>
+    <string name="combov2_ignoring_redundant_100_tbr">중복된 100% TBR 요청 무시</string>
+    <string name="combov2_hit_unexpected_tbr_limit">TBR을 조정하는 동안 예상치 못한 한도에 도달했습니다: 목표 퍼센트 %1$d%%이었고, %2$d%% 한도에 도달했습니다.</string>
+    <string name="combov2_cannot_set_absolute_tbr_if_basal_zero">기본 Basal양이 0인 경우 절대 TBR을 설정할 수 없습니다.</string>
+    <string name="combov2_pair_with_pump_summary">AndroidAPS와 Android를 현재 페어링되지 않은 Accu-Chek Combo 펌프와 페어링하세요.</string>
+    <string name="combov2_unpair_pump_summary">AndroidAPS와 Android를 현재 페어링된 Accu-Chek Combo 펌프와 페어링 해제하세요.</string>
+    <string name="combov2_unknown_tbr_detected">알 수 없는 TBR이 감지되어 중단됨; 퍼센트: %1$d%%; 남은 시간: %2$s</string>
+    <string name="combov2_connection_error">연결 오류: %1$s</string>
     <string name="combov2_short_status_last_connection">마지막 연결: %1$d 분 전</string>
+    <string name="combov2_short_status_alert">경고: %s</string>
+    <string name="combov2_short_status_last_bolus">마지막 bolus: %1$sU @ %2$s</string>
     <string name="combov2_short_status_temp_basal">임시: %s</string>
     <string name="combov2_short_status_reservoir">잔여 인슐린 양: %d U</string>
     <string name="combov2_short_status_battery_state_empty">비어 있음</string>
     <string name="combov2_short_status_battery_state_low">소</string>
+    <string name="combov2_short_status_battery_state_full">전체</string>
+    <string name="combov2_short_status_battery_state">배터리: %s</string>
+    <string name="combov2_automatic_reservoir_entry">인슐린 레저버 교체를 자동으로 감지하고, 자동으로 입력함</string>
+    <string name="combov2_automatic_battery_entry">배터리 교체를 자동으로 감지하고, 자동으로 입력함</string>
+    <string name="combov2_note_reservoir_change">인슐린 레저버 교체가 combov2 드라이버에 의해 자동으로 입력됨</string>
+    <string name="combov2_note_battery_change">배터리 교체가 combov2 드라이버에 의해 자동으로 입력됨</string>
+    <string name="combov2_timezone_changed">시간대가 변경됨</string>
+    <string name="combov2_datetime_changed">날짜와/또는 시간 변경됨</string>
+    <string name="combov2_dst_started">서머타임제(DST)가 시작됨</string>
+    <string name="combov2_dst_ended">서머타임제(DST)가 종료됨</string>
+    <string name="combov2_cannot_connect_pump_error_observed">펌프에서 오류가 보고되어 펌프에 연결할 수 없습니다. 사용자는 오류를 처리하고 5분 동안 기다리거나 드라이버 탭에서 새로고침 버튼을 눌러야 합니다.</string>
+    <string name="combov2_refresh_pump_status_after_error">펌프가 오류를 보고한 뒤 펌프 상태를 새로 고침</string>
+    <string name="combov2_go_back">뒤로 가기</string>
+    <string name="combov2_cannot_pair_driver_not_initialized_explanation">드라이버가 초기화되지 않아 페어링을 실행할 수 없습니다. 이는 일반적으로 필요한 블루투스 권한을 허용하지 않아 발생합니다. 돌아가서, 블루투스 권한을 허용한 뒤, 페어링을 다시 시도해보세요.</string>
+    <string name="combov2_bluetooth_disabled">드라이버를 시작할 수 없음- 블루투스가 비활성화됨</string>
+    <string name="combov2_bluetooth_not_supported">드라이버가 실행되지 않음 - 이 장치는 블루투스를 지원하지 않음</string>
 </resources>

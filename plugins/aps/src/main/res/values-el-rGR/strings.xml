@@ -114,4 +114,5 @@
     <string name="loop_smb_set_by_pump_label">SMB καθορισμένο από την αντλία</string>
     <string name="loop_open_mode_min_change">Ελάχιστο αίτημα για αλλαγή [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Το Ανοιχτό κύκλωμα θα εμφανίσει νέο μήνυμα αλλαγής μόνο αν η αλλαγή είναι μεγαλύτερη από αυτήν την τιμή σε %. Προεπιλεγμένη τιμή 20%</string>
+    <string name="fallback_smb_no_tdd">Επιστροφή στο SMB. Δεν υπάρχουν αρκετά δεδομένα TDD.</string>
 </resources>

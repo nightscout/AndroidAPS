@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="danars_pairing">Σύζευξη</string>
     <string name="danars_no_device_available">Δεν βρέθηκε συσκευή ακόμα</string>
     <string name="danars_pairingok">Σύζευξη ΟΚ</string>
     <string name="danars_pairingtimedout">Τέλος χρόνου σύζευξης</string>
     <string name="danars_waitingforpairing">Περιμένετε για σύζευξη με αντλία</string>
+    <string name="danarspump">Dana-i/RS</string>
     <string name="danarspump_shortname">Dana</string>
+    <string name="description_pump_dana_rs">Ενσωμάτωση των αντιών DANA Diabecare RS και Dana-i</string>
     <string name="maxbolusviolation">Υπέρβαση μέγιστου bolus</string>
     <string name="commanderror">Σφάλμα εντολής</string>
     <string name="speederror">Σφάλμα ταχύτητας</string>
@@ -12,6 +15,8 @@
     <string name="boluserrorcode">Απαιτείται: %1$.2fU Παραδόθηκε: %2$.2fU Κωδικός σφάλματος: %3$s</string>
     <string name="danar_valuenotsetproperly">Η τιμή δεν μπήκε σωστά</string>
     <string name="danar_setbasalstep001">Ρυθμίστε το βήμα βασικού στο 0.01 U/h</string>
+    <string name="resetpairing">Επαναφορά στοιχείων σύζευξης;</string>
+    <string name="dana_model">%1$s\nΜοντέλο: %2$02X\nΠρωτόκολλο: %3$02X\nΚωδικός: %4$02X</string>
     <string name="processinghistory">Επεξεργασία συμβάντος</string>
     <string name="danar_enableextendedbolus">Ενεργοποιήστε εκτεταμμένο bolus στην αντλία</string>
     <string name="overview_bolusprogress_delivered">Παραδόθηκε</string>
@@ -19,12 +24,18 @@
     <string name="unsupportedfirmware">Μη υποστηριζόμενη έκδοση στην αντλία</string>
     <string name="pumperror">Σφάλμα Αντλίας</string>
     <string name="lowbattery">Χαμηλή Μπαταρία</string>
+    <string name="basalcompare">Παροχή μικρότερης δόσης από τον προκαθορισμένο βασικό ρυθμό</string>
     <string name="pumpshutdown">Αντλία κλειστή</string>
     <string name="batterydischarged">Μπαταρία αντλίας Αποφορτίστηκε</string>
     <string name="occlusion">Έμφραξη</string>
     <string name="emptyreservoir">Άδεια αμπούλα</string>
+    <string name="checkshaft">Έλεγχος άξονα</string>
+    <string name="basalmax">Μέγιστο βασικού</string>
+    <string name="dailymax">Ημερήσιο μέγιστο</string>
     <string name="bloodsugarmeasurementalert">Ειδοποίηση υψηλής τιμής σακχάρου</string>
     <string name="remaininsulinalert">Υπόλοιπο Ινσουλίνης</string>
+    <string name="missedbolus">Χαμένο bolus</string>
+    <string name="invalidpairing">Μη έγκυρες πληροφορίες σύζευξης. Αίτηση νέας σύζευξης</string>
     <string name="gettingpumpstatus">Φόρτωση κατάστασης αντλίας</string>
     <string name="gettingextendedbolusstatus">Κατάσταση εκτεταμένου bolus</string>
     <string name="gettingbolusstatus">Κατάσταση bolus</string>
@@ -65,6 +76,8 @@
     <string name="danar_screen_timeout">Χρόνος ενεργής οθόνης [seconds]</string>
     <string name="danar_backlight">Χρόνος οπίσθιου φωτισµού [seconds]</string>
     <string name="danar_glucose_units">Μονάδες γλυκόζης</string>
+    <string name="danar_shutdown">Τερματισμός [hours]</string>
+    <string name="danar_low_reservoir">Χαμηλή δεξαμενή [Units]</string>
     <string name="danar_save_user_options">Αποθήκευση ρυθμίσεων στην αντλία</string>
     <string name="description_pump_dana_r">Ολοκλήρωση αντλίας για τις αντλίες Dana Diabecare R</string>
     <string name="description_pump_dana_r_korean">Ολοκλήρωση αντλίας για τις εγχώριες αντλίες Dana Diabecare R</string>
@@ -82,11 +95,26 @@
     <string name="danar_bluetooth_status">Κατάσταση Bluetooth</string>
     <string name="danar_iob_label">IOB αντλίας</string>
     <string name="firmware_label">Έκδοση</string>
+    <string name="danar_pump_settings">Ρυθμίσεις αντλίας Dana</string>
+    <string name="time_format_12h">12ω</string>
+    <string name="time_format_24h">24ω</string>
     <string name="option_on">Ενεργό</string>
     <string name="option_off">Ανενεργό</string>
     <string name="danar_bt_name_title">DanaR συσκευή Bluetooth</string>
+    <string name="danars_password_title">Κωδικός πρόσβασης αντλίας (μόνο v1)</string>
     <string name="danar_password_title">Κωδικός αντλίας</string>
     <string name="danar_useextended_title">Χρησιμοποιήστε Εκτεταμένο bolus για &gt;200%%</string>
     <string name="bolusspeed">Ταχύτητα Bolus</string>
     <string name="selectedpump">Επιλεγμένη αντλία</string>
+    <string name="rs_loginsulinchange_title">Καταγραφή αλλαγής δεξαμενής</string>
+    <string name="rs_loginsulinchange_summary">Προσθήκη συμβάντος \"Αλλαγή ινσουλίνης\" στο careportal όταν ανιχνευθεί στο ιστορικό</string>
+    <string name="rs_logcanulachange_title">Καταγραφή αλλαγής κάνουλας</string>
+    <string name="rs_logcanulachange_summary">Προσθήκη συμβάντος \"Αλλαγή Σημείου\" στο careportal όταν ανιχνευθεί στο ιστορικό</string>
+    <string name="pin1">PIN1</string>
+    <string name="pin2">PIN2</string>
+    <string name="press_ok_on_the_pump">Πατήστε OK στην αντλία\nκαι εισάγετε τους 2 αριθμούς που βλέπετε\nΚρατήστε την οθόνη στην αντλία ενεργή, πατώντας το κουμπί μείον μέχρι να ολοκληρώσετε την εισαγωγή των αριθμών.</string>
+    <string name="num1pin">1: (12 ψηφία)</string>
+    <string name="num2pin">2: (8 ψηφία)</string>
+    <string name="basal_bolus_step">Βήμα βασικού/bolus</string>
+    <string name="carbs_store_error">Οι υδατάνθρακες πιθανώς δεν αποθηκεύτηκαν σωστά. Ελέγξτε και αποθηκεύστε ξανά χειροκίνητα αν χρειαστεί.</string>
 </resources>

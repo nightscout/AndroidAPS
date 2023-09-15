@@ -24,6 +24,11 @@
     <string name="pref_vibrate_on_bolus">Vibra durante bolo</string>
     <string name="pref_units_for_actions">Unità per azioni</string>
     <string name="units_short">U</string>
+    <string name="pref_display_settings">Schermo</string>
+    <string name="pref_graph_settings">Grafico</string>
+    <string name="pref_interface_settings">Interfaccia</string>
+    <string name="pref_others_settings">Altri</string>
+    <string name="pref_complication_settings">Complicazione</string>
     <string name="pref_show_date">Mostra data</string>
     <string name="pref_show_iob">Mostra IOB</string>
     <string name="pref_show_detailed_iob">Mostra IOB dettagliato</string>
@@ -41,6 +46,7 @@
     <string name="pref_show_ago">Mostra Indietro</string>
     <string name="pref_dark" comment="Enables dark visual theme">Scuro</string>
     <string name="pref_highlight_basals">Evidenzia basali</string>
+    <string name="pref_prediction_lines">Visualizza previsioni</string>
     <string name="pref_matching_divider" comment="To make divider match its background with background of whole watchface">Matching divider</string>
     <string name="pref_chart_timeframe">Timeframe Grafico</string>
     <string name="pref_1_hour">1 ora</string>

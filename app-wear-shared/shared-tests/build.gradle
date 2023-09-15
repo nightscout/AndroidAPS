@@ -25,7 +25,7 @@ dependencies {
     implementation project(':implementation')
 
     api "org.mockito:mockito-junit-jupiter:$mockito_version"
-    api "org.mockito.kotlin:mockito-kotlin:4.1.0"
+    api "org.mockito.kotlin:mockito-kotlin:5.1.0"
     api "org.junit.jupiter:junit-jupiter-api:$junit_jupiter_version"
 
     api "com.google.dagger:dagger:$dagger_version"
