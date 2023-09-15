@@ -23,6 +23,10 @@
     <string name="msg_warning_old">Данные AAPS отстают на %1$s! Проверьте сенсор, xDrip+, NS, конфигурацию AAPS, другое!</string>
     <string name="pref_vibrate_on_bolus">Вибрировать при болюсе</string>
     <string name="pref_units_for_actions">Единицы для начала действий</string>
+    <string name="pref_graph_settings">График</string>
+    <string name="pref_interface_settings">Интерфейс</string>
+    <string name="pref_others_settings">Другое</string>
+    <string name="pref_complication_settings">Дополнения</string>
     <string name="pref_show_date">Показать дату</string>
     <string name="pref_show_iob">Показать акт инс IOB</string>
     <string name="pref_show_cob">Показать акт угл COB</string>
