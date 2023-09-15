@@ -3,15 +3,15 @@
     <string name="dia_whatmeansdia">Что верно о длительности работы инсулина DIA?</string>
     <string name="dia_label_exam">Время действия инсулина (DIA)</string>
     <string name="dia_profile">Следует задать значение DIA в вашем профиле.</string>
-    <string name="dia_minimumis5h">Минимально допустимое значение-5 часов.</string>
+    <string name="dia_minimumis5h">Минимально допустимое значение - 5 часов.</string>
     <string name="dia_hint1">https://wiki.aaps.app/en/latest/Configuration/Config-Builder.html#insulin</string>
     <string name="dia_meaningisequaltodiapump">Если вы удовлетворены значением длительности действия инсулина DIA, заданным в помпе до AAPS, то при запуске цикла изменять это значение не требуется.</string>
     <string name="dia_valuemustbedetermined">Следует самостоятельно определить DIA подходящее для вас.</string>
     <string name="hypott_label">Временная цель Гипо </string>
     <string name="hypott_whenhypott">Какова основная причина для установки временной цели Гипо?</string>
-    <string name="hypott_wrongbasal">Для коррекции гипо, вызванных неверными настройками базальной скорости.</string>
+    <string name="hypott_wrongbasal">Для коррекции гипо, вызванного неверными настройками базальной скорости.</string>
     <string name="hypott_preventoversmb">Чтобы не допустить чрезмерной коррекции подъема ГК, вызванного быстрыми углеводами, принятыми для устранения гипо.</string>
-    <string name="hypott_exercise">Чтобы исправить гипо вызванное нагрузкой.</string>
+    <string name="hypott_exercise">Чтобы исправить гипо, вызванное физической нагрузкой.</string>
     <string name="hypott_0basal">Чтобы предотвратить снижение уровня глюкозы в крови, если временная базальная скорость уже 0%.</string>
     <string name="hypott_hint1">https://wiki.aaps.app/en/latest/Usage/temptarget.html</string>
     <string name="offlineprofile_whatprofile">Какой профиль можно применить и настроить в автономном режиме?</string>
@@ -27,7 +27,7 @@
     <string name="pumpdisconnect_hint1">https://wiki.aaps.app/ru/latest/Getting-Started/FAQ.html#faq-disconnect-pump</string>
     <string name="objectives_label">Настройки AAPS</string>
     <string name="objectives2_label">Настройки AAPS</string>
-    <string name="objectives_howtosave">Как эффективнее сохранять свои настройки?</string>
+    <string name="objectives_howtosave">Какие практики наиболее эффективны для сохранения настроек?</string>
     <string name="objectives_notesettings">Экспорт настроек не нужен, если они у вас где-то записаны.</string>
     <string name="objectives_afterobjective">Экспортируйте настройки после прохождения цели.</string>
     <string name="objectives_afterchange">Экспортируйте настройки после изменения любого параметра.</string>
