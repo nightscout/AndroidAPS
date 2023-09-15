@@ -161,7 +161,8 @@ enum class CwfMetadataKey(val key: String, @StringRes val label: Int, val isPref
     CWF_PREF_WATCH_SHOW_DIRECTION("key_show_direction", R.string.pref_show_direction_arrow, true),
     CWF_PREF_WATCH_SHOW_AGO("key_show_ago", R.string.pref_show_ago, true),
     CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.pref_show_bg, true),
-    CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.pref_show_loop_status, true);
+    CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.pref_show_loop_status, true),
+    CWF_PREF_WATCH_SHOW_WEEK_NUMBER("key_show_week_number", R.string.pref_show_week_number, true);
 
     companion object {
 
@@ -196,6 +197,7 @@ enum class ViewKeys(val key: String, @StringRes val comment: Int) {
     TIMEPERIOD("timePeriod", R.string.cwf_comment_timePeriod),
     DAY_NAME("day_name", R.string.cwf_comment_day_name),
     DAY("day", R.string.cwf_comment_day),
+    WEEKNUMBER("week_number",R.string.cwf_comment_week_number),
     MONTH("month", R.string.cwf_comment_month),
     LOOP("loop", R.string.cwf_comment_loop),
     DIRECTION("direction", R.string.cwf_comment_direction),

@@ -438,6 +438,7 @@ class CustomWatchface : BaseWatchFace() {
         TIMEPERIOD(ViewKeys.TIMEPERIOD.key, R.id.timePeriod, null, null, null, null, null),
         DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name, null, null, null, null, null),
         DAY(ViewKeys.DAY.key, R.id.day, null, null, null, null, null),
+        WEEKNUMBER(ViewKeys.WEEKNUMBER.key, R.id.week_number, R.string.key_show_week_number, null, null, null, null),
         MONTH(ViewKeys.MONTH.key, R.id.month, null, null, null, null, null),
         LOOP(ViewKeys.LOOP.key, R.id.loop, R.string.key_show_external_status, null, null, null, null),
         DIRECTION(ViewKeys.DIRECTION.key, R.id.direction2, R.string.key_show_direction, null, null, null, null),
@@ -595,7 +596,8 @@ private enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
     SHOW_AGO(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
     SHOW_BG(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg),
     SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi),
-    SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status)
+    SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status),
+    SHOW_WEEK_NUMBER(CwfMetadataKey.CWF_PREF_WATCH_SHOW_WEEK_NUMBER.key, R.string.key_show_week_number)
 }
 
 

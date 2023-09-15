@@ -282,7 +282,7 @@
         android:textStyle="bold"
         android:textColor="@color/white"
         android:visibility="visible"
-        tools:text="day." />
+        tools:text="day" />
 
     <TextView
         android:id="@+id/day"
@@ -295,6 +295,19 @@
         android:textSize="24px"
         android:textColor="@color/white"
         tools:text="01" />
+
+    <TextView
+        android:id="@+id/week_number"
+        android:layout_width="0px"
+        android:layout_height="0px"
+        android:layout_marginTop="0px"
+        android:layout_marginLeft="0px"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:textSize="24px"
+        android:visibility="gone"
+        tools:text="ww" />
 
     <TextView
         android:id="@+id/month"
