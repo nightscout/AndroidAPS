@@ -34,9 +34,9 @@
     <string name="openapsma_iob_data_label">Данные IOB (активн инс)</string>
     <string name="openapsma_profile_label">Профиль</string>
     <string name="openapsma_meal_data_label">Данные приема пищи</string>
-    <string name="openapsma_request_label">Запрос</string>
-    <string name="constraints">Ограничения</string>
-    <string name="openapsma_autosensdata_label">Данные autosens</string>
+    <string name="openapsma_request_label">запрос</string>
+    <string name="constraints">ограничения</string>
+    <string name="openapsma_autosensdata_label">данные autosens</string>
     <string name="openapsma_script_debug_data_label">Отладка скрипта</string>
     <string name="openapsama_use_autosens">Пользоваться функцией Autosens</string>
     <string name="openapsma_max_basal_title">Максимальное значение ед./ч для скорости временного базала</string>
@@ -109,9 +109,9 @@
     <string name="loop_tbr_request_time_label">Время запроса временной базальной скорости</string>
     <string name="loop_tbr_execution_time_label">Время выполнения временной базальной скорости</string>
     <string name="loop_tbr_set_by_pump_label">Временный базал задан помпой</string>
-    <string name="loop_smb_request_time_label">Время запроса СМБ</string>
-    <string name="loop_smb_execution_time_label">Время выполнения СМБ</string>
-    <string name="loop_smb_set_by_pump_label">СМБ задан помпой</string>
+    <string name="loop_smb_request_time_label">Время запроса микроболюса SMB</string>
+    <string name="loop_smb_execution_time_label">Время выполнения микроболюса SMB</string>
+    <string name="loop_smb_set_by_pump_label">Супер микро болюс SMB задан помпой</string>
     <string name="loop_open_mode_min_change">Минимальный запрос на изменения [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Алгоритм ИПЖ выдаст всплывающее окно с запросом на новые изменения, только если изменение больше, чем это значение в %. Значение по умолчанию — 20%</string>
 </resources>
