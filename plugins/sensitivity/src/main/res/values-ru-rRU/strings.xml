@@ -14,7 +14,7 @@
     <string name="openapsama_autosens_period">Интервал для autosens [h] (ч)</string>
     <string name="openapsama_autosens_period_summary">Время в часах в прошлом для определения чувствительности (время усвоения углеводов исключается)</string>
     <string name="openapsama_autosens_max_summary">Значение по умолчанию: 1,2\n Это множитель для autosens ( и вскоре autotune) с лимитом 20%% который определяет лимит верхнего значения autosens, который в свою очередь предопределяет верхнюю границу базала, границы изменения чувствительности к инсулину ISF и нижние границы целевой ГК.</string>
-    <string name="openapsama_autosens_min_summary">По умолчанию: 0.7 Еще один параметр безопасности autosens, определяющий как низко он может опускать базал и как высоко поднимать ISF (чувств к инс) и целевые СК.</string>
+    <string name="openapsama_autosens_min_summary">по умолчанию:0.7 Еще один параметр безопасности autosens, определяющий как низко он может опускать базал и как высоко поднимать ISF (чувств к инс) и целевые СК</string>
     <string name="openapsama_autosens_max">Макс коэффициент авто чувствительности autosens</string>
     <string name="openapsama_autosens_min">Мин. коэффициент авто чувствительности autosens</string>
     <string name="openapsama_min_5m_carb_impact_summary">Значение по умолчанию: 3.0 (AMA) или 8.0 (SMB). Эта настройка на усвоение углеводов за 5 мин. По умолчанию ожидается 3мг/дл/5мин. Влияет на скорость учета поглощения углеводов COB и усвоения в расчетах прогнозируемой гликемии, когда ГК падает быстрее или не растет так как ожидается.</string>
