@@ -1,7 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MedtrumPump -->
+    <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_setting">Настройки Medtrum</string>
+    <string name="pump_error">Ошибка помпы: %1$s !! </string>
     <!-- overview fragment -->
+    <string name="ble_status_label">Статус BT</string>
+    <string name="last_connection_label">Последнее подключение</string>
+    <string name="pump_state_label">Статус помпы</string>
+    <string name="reservoir_level"> %.2f ед</string>
+    <string name="battery_voltage"> %.2f V</string>
+    <string name="basal_type_label">Тип базала</string>
+    <string name="basal_rate_label">Базальная скорость</string>
+    <string name="pump_type_label">Тип помпы</string>
+    <string name="fw_version_label">Версия ПО</string>
     <!-- Alarm strings -->
     <!-- wizard-->
     <!-- settings-->
