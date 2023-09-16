@@ -55,6 +55,7 @@
     <string name="pref_show_bgi">Toon BGI</string>
     <string name="pref_show_direction_arrow">Toon richtingspijl</string>
     <string name="pref_show_ago">Toon tijd geleden</string>
+    <string name="pref_show_week_number">Weeknummer weergeven</string>
     <string name="default_custom_watchface_comment">Standaard watchface, u kunt op de EXPORT WATCHFACE knop klikken om een sjabloon te genereren</string>
     <string name="wear_default_watchface">Standaard watchface</string>
     <string name="cwf_comment_background">Achtergrondafbeelding</string>
@@ -81,6 +82,7 @@
     <string name="cwf_comment_timePeriod">AM of PM</string>
     <string name="cwf_comment_day_name">Naam van de dag van de week</string>
     <string name="cwf_comment_day">Dag (DD)</string>
+    <string name="cwf_comment_week_number">Weeknummer (ww)</string>
     <string name="cwf_comment_month">Maand (kort)</string>
     <string name="cwf_comment_loop">Loop status en tijd geleden</string>
     <string name="cwf_comment_direction">Richtingspijl</string>
