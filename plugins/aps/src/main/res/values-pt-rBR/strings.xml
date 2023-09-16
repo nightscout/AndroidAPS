@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="dynisf_adjust_sensitivity">Ajustar sensibilidade e Glicemia</string>
+    <string name="dynisf_adjust_sensitivity">Ajustar sensibilidade e GLIC</string>
     <string name="DynISFAdjust_title" formatted="false">Fator de Ajuste FSI dinâmico %</string>
     <string name="DynISFAdjust_summary" formatted="false">Fator de ajuste para FSI dinâmico. Defina mais de 100%% para doses de correção mais agressivas e menos de 100%% para correções menos agressivas.</string>
     <string name="high_temptarget_raises_sensitivity_title">Alto alvotempo aumenta sensibilidade</string>
@@ -76,7 +76,7 @@
     <string name="carbs_req_threshold">Qual o mínimo de carboidratos necessários para correção para gerar um alerta</string>
     <string name="carbs_req_threshold_summary">Gramas mínimas de carboidratos para exibir um alerta de sugestão de carboidratos. Sugestões de carboidratos abaixo deste número não acionarão uma notificação.</string>
     <string name="lgs_threshold_summary">Valor a partir do qual a insulina é suspensa. O valor padrão usa como base o alvo padrão. O usuário pode definir o valor entre 60mg/dl (3.3mmol/l) e 100mg/dl(5.5 mmol/l). Valores abaixo de 65/3.6 resulta em uso do modelo padrão.</string>
-    <string name="lgs_threshold_title">Glicemia abaixo do valor irá levar a suspensão para evitar hipoglicemias</string>
+    <string name="lgs_threshold_title">Nível de glicose (BG) está abaixo do ponto em que ocorre a suspensão causada por hipoglicemia.</string>
     <string name="increasing_max_basal">Aumentar o valor máximo de basal porque a configuração é inferior à sua basal máxima no perfil</string>
     <string name="max_basal_multiplier">multiplicador de basal máx</string>
     <string name="max_daily_basal_multiplier">multiplicador de basal máx diária</string>
