@@ -53,6 +53,7 @@ import info.nightscout.ui.R
 import info.nightscout.ui.databinding.TreatmentsBolusCarbsFragmentBinding
 import info.nightscout.ui.databinding.TreatmentsBolusCarbsItemBinding
 import info.nightscout.ui.dialogs.WizardInfoDialog
+import info.nightscout.ui.extensions.isPumpHistory
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
@@ -219,7 +220,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                 holder.binding.bolusTime.text = dateUtil.timeString(bolus.timestamp)
                 holder.binding.insulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, bolus.amount)
                 holder.binding.bolusNs.visibility = (bolus.interfaceIDs.nightscoutId != null).toVisibility()
-                holder.binding.bolusPump.visibility = (bolus.interfaceIDs.pumpId != null).toVisibility()
+                holder.binding.bolusPump.visibility = bolus.interfaceIDs.isPumpHistory().toVisibility()
                 holder.binding.bolusInvalid.visibility = bolus.isValid.not().toVisibility()
                 val iob = bolus.iobCalc(activePlugin, System.currentTimeMillis(), profile.dia)
                 if (iob.iobContrib > 0.01) {
@@ -260,7 +261,7 @@ class TreatmentsBolusCarbsFragment : DaggerFragment(), MenuProvider {
                 holder.binding.carbs.text = rh.gs(info.nightscout.core.graph.R.string.format_carbs, carbs.amount.toInt())
                 holder.binding.carbsDuration.text = if (carbs.duration > 0) rh.gs(info.nightscout.core.ui.R.string.format_mins, T.msecs(carbs.duration).mins().toInt()) else ""
                 holder.binding.carbsNs.visibility = (carbs.interfaceIDs.nightscoutId != null).toVisibility()
-                holder.binding.carbsPump.visibility = (carbs.interfaceIDs.pumpId != null).toVisibility()
+                holder.binding.carbsPump.visibility = carbs.interfaceIDs.isPumpHistory().toVisibility()
                 holder.binding.carbsInvalid.visibility = carbs.isValid.not().toVisibility()
                 holder.binding.cbCarbsRemove.visibility = (ml.carbs.isValid && actionHelper.isRemoving).toVisibility()
                 if (actionHelper.isRemoving) {
