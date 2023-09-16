@@ -164,8 +164,8 @@ class CustomWatchface : BaseWatchFace() {
                     .takeIf { it.matches(Regex("E{1,4}")) } ?: "E"
                 monthFormat = json.optString(MONTHFORMAT.key, "MMM")
                     .takeIf { it.matches(Regex("M{1,4}")) } ?: "MMM"
-                binding.dayName.text = dateUtil.dayNameString(dayNameFormat) // Update daynName and month according to format on cwf loading
-                binding.month.text = dateUtil.monthString(monthFormat)
+                binding.dayName.text = dateUtil.dayNameString(dayNameFormat).substringBeforeLast(".") // Update daynName and month according to format on cwf loading
+                binding.month.text = dateUtil.monthString(monthFormat).substringBeforeLast(".")
                 bgColor = when (singleBg.sgvLevel) {
                     1L   -> highColor
                     0L   -> midColor
@@ -196,6 +196,7 @@ class CustomWatchface : BaseWatchFace() {
                                     view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
                                     if (viewJson.has(TEXTVALUE.key))
                                         view.text = viewJson.optString(TEXTVALUE.key)
+                                    view.background = resDataMap[viewJson.optString(BACKGROUND.key)]?.toDrawable(resources, width, height)
                                 }
 
                                 is ImageView -> {
@@ -437,6 +438,7 @@ class CustomWatchface : BaseWatchFace() {
         TIMEPERIOD(ViewKeys.TIMEPERIOD.key, R.id.timePeriod, null, null, null, null, null),
         DAY_NAME(ViewKeys.DAY_NAME.key, R.id.day_name, null, null, null, null, null),
         DAY(ViewKeys.DAY.key, R.id.day, null, null, null, null, null),
+        WEEKNUMBER(ViewKeys.WEEKNUMBER.key, R.id.week_number, R.string.key_show_week_number, null, null, null, null),
         MONTH(ViewKeys.MONTH.key, R.id.month, null, null, null, null, null),
         LOOP(ViewKeys.LOOP.key, R.id.loop, R.string.key_show_external_status, null, null, null, null),
         DIRECTION(ViewKeys.DIRECTION.key, R.id.direction2, R.string.key_show_direction, null, null, null, null),
@@ -594,7 +596,8 @@ private enum class PrefMap(val key: String, @StringRes val prefKey: Int) {
     SHOW_AGO(CwfMetadataKey.CWF_PREF_WATCH_SHOW_AGO.key, R.string.key_show_ago),
     SHOW_BG(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BG.key, R.string.key_show_bg),
     SHOW_BGI(CwfMetadataKey.CWF_PREF_WATCH_SHOW_BGI.key, R.string.key_show_bgi),
-    SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status)
+    SHOW_LOOP_STATUS(CwfMetadataKey.CWF_PREF_WATCH_SHOW_LOOP_STATUS.key, R.string.key_show_external_status),
+    SHOW_WEEK_NUMBER(CwfMetadataKey.CWF_PREF_WATCH_SHOW_WEEK_NUMBER.key, R.string.key_show_week_number)
 }
 
 

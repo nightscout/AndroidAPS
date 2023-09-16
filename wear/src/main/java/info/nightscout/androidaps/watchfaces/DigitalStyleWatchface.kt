@@ -113,11 +113,6 @@ class DigitalStyleWatchface : BaseWatchFace() {
             binding.minute.textSize = 26f
             binding.hour.letterSpacing = 0.toFloat()
             binding.minute.letterSpacing = 0.toFloat()
-
-            /* display week number */
-            val mWeekNumber = layoutView?.findViewById<TextView>(R.id.week_number)
-            mWeekNumber?.visibility = sp.getBoolean(R.string.key_show_week_number, false).toVisibility()
-            mWeekNumber?.text = "(" + dateUtil.weekString() + ")"
         }
     }
 
