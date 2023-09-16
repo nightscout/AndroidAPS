@@ -27,7 +27,7 @@
     <string name="current_master_password">Текущий главный пароль</string>
     <string name="common_values">Введите максимальные значения вашего приема пищи \n</string>
     <string name="syncinfotext">Синхронизировать данные в облако. Сейчас можно пропустить эту часть, но без клиента Nightscout или Tidepool не получится пройти все цели.</string>
-    <string name="status">Состояние:</string>
+    <string name="status">состояние:</string>
     <string name="patient_name">Имя пациента</string>
     <string name="patient_name_summary">Укажите имя или псевдоним пациента, чтобы распознавать разные настройки</string>
     <string name="privacy_settings">Настройки конфиденцальности</string>
@@ -57,9 +57,9 @@
     <string name="alert_dialog_permission_battery_optimization_failed">Это устройство не поддерживает меню оптимизации батареи - могут быть проблемы с производительностью.</string>
     <!--    ConfigBuilder-->
     <string name="config_builder">Конфигуратор</string>
-    <string name="configbuilder_pump">Помпа</string>
+    <string name="configbuilder_pump">помпа</string>
     <string name="configbuilder_pump_description">Какой помпой вы хотели бы пользоваться с AAPS?</string>
-    <string name="configbuilder_profile">Профиль</string>
+    <string name="configbuilder_profile">профиль</string>
     <string name="configbuilder_profile_description">Какой профиль следует использовать в AAPS?</string>
     <string name="configbuilder_aps">система ИПЖ</string>
     <string name="configbuilder_aps_description">Какой алгоритм ИПЖ должен выполнять подстройку терапии?</string>
@@ -68,14 +68,14 @@
     <string name="configbuilder_sync">Синхронизация</string>
     <string name="configbuilder_sync_description">Модули загрузки и синхронизации данных.</string>
     <string name="configbuilder_constraints_description">Какие ограничения применяются?</string>
-    <string name="configbuilder_loop">Замкнутый цикл</string>
+    <string name="configbuilder_loop">замкнутый цикл</string>
     <string name="configbuilder_loop_description">Используйте, чтобы активировать интеграцию AAPS в цикл ИПЖ.</string>
     <string name="configbuilder_insulin_description">Какой тип инсулина вы используете?</string>
-    <string name="configbuilder_bgsource">Источник СК</string>
+    <string name="configbuilder_bgsource">источник СК</string>
     <string name="configbuilder_bgsource_description">Откуда должен получать данные AAPS?</string>
     <string name="configbuilder_smoothing">Сглаживание</string>
     <string name="configbuilder_smoothing_description">Выберите алгоритм сглаживания</string>
-    <string name="configbuilder_sensitivity">Модули чувствительности</string>
+    <string name="configbuilder_sensitivity">определение чувствительности</string>
     <string name="configbuilder_sensitivity_description">Какой алгоритм чувствительности следует использовать?</string>
     <string name="config_builder_shortname">КОНФ</string>
     <string name="description_config_builder">Применяется для настройки активных плагинов</string>
@@ -96,17 +96,17 @@
     <string name="check_preferences_before_import">Проверьте настройки перед импортом:</string>
     <string name="check_preferences_cannot_import">Не удается импортировать настройки!</string>
     <string name="check_preferences_dangerous_import">Не следует импортировать настройки!</string>
-    <string name="nav_export">Экспорт настроек</string>
-    <string name="export_to">Экспортировать настройки в</string>
-    <string name="import_from">Импортировать настройки из</string>
-    <string name="setting_imported">Настройки импортированы</string>
+    <string name="nav_export">экспорт настроек</string>
+    <string name="export_to">экспортировать настройки в</string>
+    <string name="import_from">импортировать настройки из</string>
+    <string name="setting_imported">настройки импортированы</string>
     <string name="old_master_password">Старый главный пароль</string>
     <string name="different_password_used">Этот файл был экспортирован и зашифрован с использованием другого главного пароля. Укажите старый главный пароль для расшифровки файла.</string>
     <string name="master_password_will_be_replaced">В результате успешного импорта текущий главный пароль БУДЕТ ЗАМЕНЁН на старый главный пароль!</string>
-    <string name="exported">Настройки экспортированы</string>
-    <string name="filenotfound">Файл не найден</string>
+    <string name="exported">настройки экспортированы</string>
+    <string name="filenotfound">файл не найден</string>
     <string name="goto_main_try_again">Вернитесь на главный экран и повторите попытку.</string>
-    <string name="restartingapp">Выход из приложения для применения настроек.</string>
+    <string name="restartingapp">выход из приложения для применения настроек</string>
     <string name="ue_exported">Записи пользователя экспортированы</string>
     <string name="protection">Защита</string>
     <string name="master_password_missing">Не задан главный пароль!\n\nЗадайте главный пароль в настройках (%1$s &#8594; %2$s)</string>
@@ -126,7 +126,7 @@
     <string name="log_files">Файлы журналов</string>
     <string name="nav_logsettings">Настройки журнала</string>
     <string name="miscellaneous">Разное</string>
-    <string name="nav_resetdb">Обнулить базы</string>
+    <string name="nav_resetdb">обнулить базы</string>
     <string name="resettodefaults">Восстановить значения по умолчанию</string>
     <!-- Maintenance -->
     <string name="exported_ago" comment="at placeholder we add pluralized number of hours/minutes">экспортировано %1$s назад</string>
