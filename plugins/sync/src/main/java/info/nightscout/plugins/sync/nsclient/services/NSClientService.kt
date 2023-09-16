@@ -184,6 +184,14 @@ import javax.inject.Inject
             .observeOn(aapsSchedulers.io)
             .subscribe({ resend("EventDeviceStatusChange") }, fabricPrivacy::logException)
         disposable += rxBus
+            .toObservable(EventTempTargetChange::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ resend("EventTempTargetChange") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventProfileSwitchChanged::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ resend("EventProfileSwitchChanged") }, fabricPrivacy::logException)
+        disposable += rxBus
             .toObservable(EventTherapyEventChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ resend("EventTherapyEventChange") }, fabricPrivacy::logException)
@@ -191,6 +199,10 @@ import javax.inject.Inject
             .toObservable(EventOfflineChange::class.java)
             .observeOn(aapsSchedulers.io)
             .subscribe({ resend("EventOfflineChange") }, fabricPrivacy::logException)
+        disposable += rxBus
+            .toObservable(EventProfileStoreChanged::class.java)
+            .observeOn(aapsSchedulers.io)
+            .subscribe({ resend("EventProfileStoreChanged") }, fabricPrivacy::logException)
     }
 
     override fun onDestroy() {

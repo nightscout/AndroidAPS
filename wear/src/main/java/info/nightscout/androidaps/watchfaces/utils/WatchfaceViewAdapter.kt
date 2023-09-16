@@ -73,6 +73,7 @@ class WatchfaceViewAdapter(
     val mainMenuTap = ds?.mainMenuTap ?: sP?.mainMenuTap
     val chartZoomTap = ds?.chartZoomTap ?: sP?.chartZoomTap
     val dateTime = ds?.dateTime ?: a2?.dateTime
+    val weekNumber = ds?.weekNumber ?: cU?.weekNumber
     // val minuteHand = sP?.minuteHand
     // val secondaryLayout = aL?.secondaryLayout ?: a2?.secondaryLayout ?: aa?.secondaryLayout ?: ds?.secondaryLayout ?: sP?.secondaryLayout
     // val tertiaryLayout = a2?.tertiaryLayout ?: sP?.tertiaryLayout

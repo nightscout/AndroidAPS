@@ -62,6 +62,7 @@
     <string name="pref_show_bgi">Show BGI</string>
     <string name="pref_show_direction_arrow">Show Direction Arrow</string>
     <string name="pref_show_ago">Show Ago</string>
+    <string name="pref_show_week_number">Show Week number</string>
     <string name="default_custom_watchface_comment">Default watchface, you can click on EXPORT WATCHFACE button to generate a template</string>
     <string name="wear_default_watchface">Default Watchface</string>
     <string name="cwf_comment_background">Background image</string>
@@ -88,12 +89,13 @@
     <string name="cwf_comment_timePeriod">AM or PM</string>
     <string name="cwf_comment_day_name">Name of day of the week</string>
     <string name="cwf_comment_day">Day (DD)</string>
+    <string name="cwf_comment_week_number">Week number (ww)</string>
     <string name="cwf_comment_month">Month name (short)</string>
     <string name="cwf_comment_loop">Loop status and ago</string>
     <string name="cwf_comment_direction">Direction arrow</string>
     <string name="cwf_comment_timestamp">Mintutes ago for last received BG</string>
     <string name="cwf_comment_sgv">BG value</string>
-    <string name="cwf_comment_cover_plate">Cover image in front of text (dials...)</string>
+    <string name="cwf_comment_cover_plate">Cover image in front of text (dials…)</string>
     <string name="cwf_comment_hour_hand">Image of hour hand (Analog Watch)</string>
     <string name="cwf_comment_minute_hand">Image of minute hand (Analog Watch)</string>
     <string name="cwf_comment_second_hand">Image of second hand (Analog Watch)</string>

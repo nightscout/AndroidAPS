@@ -37,8 +37,8 @@ files:
     translation: /plugins/sync/src/main/res/values-%android_code%/oh_strings.xml
   - source: /plugins/constraints/src/main/res/values/strings.xml
     translation: /plugins/constraints/src/main/res/values-%android_code%/strings.xml
-  - source: /core/graph/src/main/res/values/strings.xml
-    translation: /core/graph/src/main/res/values-%android_code%/strings.xml
+  - source: /core/main/src/main/res/values/strings.xml
+    translation: /core/main/src/main/res/values-%android_code%/strings.xml
   - source: /core/interfaces/src/main/res/values/strings.xml
     translation: /core/interfaces/src/main/res/values-%android_code%/strings.xml
   - source: /core/utils/src/main/res/values/strings.xml

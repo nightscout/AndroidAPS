@@ -21,7 +21,11 @@
     <string name="medtronic_pump_battery_no">Μη επιλεγμένη (Simple View)</string>
     <string name="medtronic_pump_battery_alkaline">Αλκαλική (Extended view)</string>
     <string name="medtronic_pump_battery_lithium">Λιθίου (Extended view)</string>
+    <string name="medtronic_pump_battery_nizn">NiZn (Εκτενής προβολή)</string>
+    <string name="medtronic_pump_battery_nimh">NiMH (Εκτενής προβολή)</string>
+    <string name="medtronic_bolus_debugging">Εντοπισμός Σφαλμάτων Bolus/Θεραπειών</string>
     <!-- MDT Fragment -->
+    <string name="rl_battery_label">Μπαταρία RileyLink</string>
     <!-- MDT Errors -->
     <string name="medtronic_errors">Σφάλματα</string>
     <string name="medtronic_error_serial_not_set">Δεν ορίστηκε # Serial.</string>
@@ -32,6 +36,7 @@
     <string name="medtronic_error_pump_frequency_invalid">Συχνότητα Αντλίας δεν υποστηρίζεται.</string>
     <string name="medtronic_error_rileylink_address_invalid">Διεύθυνση RileyLink μη έγκυρη.</string>
     <string name="medtronic_error_pump_type_set_differs_from_detected">Ο τύπος αντλίας που ανιχνεύτηκε δεν είναι ο ίδιος με αυτόν που ορίστηκε.</string>
+    <string name="medtronic_error_pump_basal_profiles_not_enabled">Η ρύθμιση των βασικών προφίλ/μοτίβων δεν είναι ενεργοποιημένη στην αντλία. Ενεργοποιήστε την στην αντλία.</string>
     <string name="medtronic_error_pump_incorrect_basal_profile_selected">Το βασικό προφίλ που ορίστηκε στην αντλία είναι λάθoς (πρέπει να είναι STD).</string>
     <string name="medtronic_error_pump_wrong_tbr_type_set">Λάθος τύπος TBR ορίστηκε στην αντλία (πρέπει να είναι Absolute).</string>
     <string name="medtronic_error_pump_wrong_max_bolus_set">Λάθος μέγιστο bolus ορίστηκε στην αντλία (πρέπει να είναι %1$.2f).</string>
@@ -60,13 +65,17 @@
     <string name="medtronic_cmd_desc_get_history">Βλέπε Ιστορικό - Σελίδα %1$d (%2$d/16)</string>
     <string name="medtronic_cmd_desc_get_history_request">Βλέπε Ιστορικό - Σελίδα %1$d</string>
     <string name="medtronic_cmd_desc_get_time">Πάρτε Ώρα Αντλίας</string>
+    <string name="medtronic_cmd_desc_set_time">Ορισμός Ώρας Αντλίας</string>
+    <string name="medtronic_cmd_desc_get_battery_status">Λήψη Κατάστασης Μπαταρίας</string>
     <string name="medtronic_cmd_desc_get_settings">Λάβετε ρυθμίσεις</string>
     <string name="medtronic_cmd_desc_get_model">Λάβετε Μοντέλο Αντλίας</string>
     <string name="medtronic_cmd_desc_get_basal_profile">Λάβετε Βασικό Προφίλ</string>
     <string name="medtronic_cmd_desc_set_basal_profile">Βάλτε Βασικό Προφίλ</string>
     <string name="medtronic_cmd_desc_get_tbr">Λάβετε Προσωρινό Ρυθμό</string>
     <string name="medtronic_cmd_desc_set_tbr">Βάλτε Προσωρινό Ρυθμό</string>
+    <string name="medtronic_cmd_desc_cancel_tbr">Ακύρωση Προσωρινού Βασικού</string>
     <string name="medtronic_cmd_desc_set_bolus">Βάλτε Bolus</string>
+    <string name="medtronic_cmd_desc_get_remaining_insulin">Λήψη Ινσουλίνης Που Απομένει</string>
     <string name="medtronic_pump_status_pump_unreachable">Η αντλία δεν είναι διαθέσιμη</string>
     <string name="medtronic_warning">Προειδοποίηση</string>
     <!-- medtronic_warning -->
@@ -78,4 +87,12 @@
     <string name="common_on">Ενεργό</string>
     <string name="common_off">Ανενεργό</string>
     <string name="pump_time_updated">Η ώρα στην αντλία άλλαξε</string>
+    <string name="set_neutral_temps_title">Ορισμός ουδέτερου προσωρινού ρυθμού</string>
+    <string name="set_neutral_temps_summary">Αν ενεργοποιηθεί, θα ακυρωθεί ο προσωρινός βασικός πριν από το τέλος κάθε ώρας. Αυτή η μέθοδος μπορεί να βοηθήσει στη διακοπή κάποιου ωριαίου μπιπ/δόνησης ορισμένων αντλιών.</string>
+    <string name="mdt_tbr_remaining">%1$.1f U/h (%2$d λεπτά απομένουν)</string>
+    <string name="invalid_history_data">Ανιχνεύθηκαν μη έγκυρα δεδομένα ιστορικού αντλίας. Ανοίξτε νέο θέμα και αποστείλετε τα αρχεία καταγραφής.</string>
+    <string name="riley_statistics">Στατιστικά RL</string>
+    <string name="medtronic_history_type">Τύπος:</string>
+    <string name="clicked_refresh" comment="26 characters max for translation">Πατήθηκε η ανανέωση</string>
+    <string name="scheduled_status_refresh" comment="26 characters max for translation">Προγραμματισμένη Ανανέωση Κατάστασης</string>
 </resources>

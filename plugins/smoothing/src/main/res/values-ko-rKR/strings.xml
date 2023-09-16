@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="smoothing_shortname">평활화</string>
+    <string name="exponential_smoothing_name">지수 평활화</string>
+    <string name="description_exponential_smoothing">"2차 지수 평활화 알고리즘"</string>
+    <string name="avg_smoothing_name">평균 평활화</string>
+    <string name="description_avg_smoothing">"평균 평활화 알고리즘, 최신 값은 영향을 받지 않습니다."</string>
+    <string name="no_smoothing_name">평활화 없음</string>
+    <string name="description_no_smoothing">"입력된 포도당 데이터에 평활화를 수행하지 않았습니다. BYODA G6의 데이터를 이미 필터링한 경우 이를 사용합니다."</string>
+</resources>

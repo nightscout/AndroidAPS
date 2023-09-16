@@ -17,7 +17,7 @@ import com.jjoe64.graphview.series.BaseSeries;
 
 import java.util.Iterator;
 
-import info.nightscout.core.graph.R;
+import info.nightscout.core.main.R;
 
 /**
  * Series that plots the data as points.

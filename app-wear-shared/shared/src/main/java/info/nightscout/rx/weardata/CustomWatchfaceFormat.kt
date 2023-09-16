@@ -12,7 +12,6 @@ import info.nightscout.shared.R
 import kotlinx.serialization.Serializable
 import org.json.JSONObject
 import java.io.BufferedOutputStream
-import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -77,7 +76,7 @@ enum class ResFormat(val extension: String) {
 @Serializable
 data class ResData(val value: ByteArray, val format: ResFormat) {
 
-    fun toDrawable(resources: Resources): Drawable? {
+    fun toDrawable(resources: Resources, width: Int? = null, height: Int? = null): Drawable? {
         try {
             return when (format) {
                 ResFormat.PNG, ResFormat.JPG -> {
@@ -86,7 +85,9 @@ data class ResData(val value: ByteArray, val format: ResFormat) {
                 }
 
                 ResFormat.SVG                -> {
-                    val svg = SVG.getFromInputStream(ByteArrayInputStream(value))
+                    val svg = SVG.getFromString(String(value))
+                    svg.documentWidth = width?.toFloat() ?: svg.documentWidth
+                    svg.documentHeight = height?.toFloat() ?: svg.documentHeight
                     val picture = svg.renderToPicture()
                     PictureDrawable(picture).apply {
                         setBounds(0, 0, svg.documentWidth.toInt(), svg.documentHeight.toInt())
@@ -160,7 +161,8 @@ enum class CwfMetadataKey(val key: String, @StringRes val label: Int, val isPref
     CWF_PREF_WATCH_SHOW_DIRECTION("key_show_direction", R.string.pref_show_direction_arrow, true),
     CWF_PREF_WATCH_SHOW_AGO("key_show_ago", R.string.pref_show_ago, true),
     CWF_PREF_WATCH_SHOW_BG("key_show_bg", R.string.pref_show_bg, true),
-    CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.pref_show_loop_status, true);
+    CWF_PREF_WATCH_SHOW_LOOP_STATUS("key_show_loop_status", R.string.pref_show_loop_status, true),
+    CWF_PREF_WATCH_SHOW_WEEK_NUMBER("key_show_week_number", R.string.pref_show_week_number, true);
 
     companion object {
 
@@ -195,6 +197,7 @@ enum class ViewKeys(val key: String, @StringRes val comment: Int) {
     TIMEPERIOD("timePeriod", R.string.cwf_comment_timePeriod),
     DAY_NAME("day_name", R.string.cwf_comment_day_name),
     DAY("day", R.string.cwf_comment_day),
+    WEEKNUMBER("week_number",R.string.cwf_comment_week_number),
     MONTH("month", R.string.cwf_comment_month),
     LOOP("loop", R.string.cwf_comment_loop),
     DIRECTION("direction", R.string.cwf_comment_direction),
@@ -233,7 +236,8 @@ enum class JsonKeys(val key: String) {
     COLOR("color"),
     ALLCAPS("allCaps"),
     DAYNAMEFORMAT("dayNameFormat"),
-    MONTHFORMAT("monthFormat")
+    MONTHFORMAT("monthFormat"),
+    BACKGROUND("background")
 }
 
 enum class JsonKeyValues(val key: String) {

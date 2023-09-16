@@ -5,6 +5,7 @@ import info.nightscout.database.entities.Bolus
 import info.nightscout.database.entities.BolusCalculatorResult
 import info.nightscout.database.entities.Carbs
 import info.nightscout.database.entities.TherapyEvent
+import info.nightscout.database.entities.embedments.InterfaceIDs
 import info.nightscout.interfaces.pump.defs.PumpType
 
 class DetailedBolusInfo {
@@ -97,6 +98,9 @@ class DetailedBolusInfo {
             glucoseType = glucoseType?.toDbMeterType()
         )
 
+    /**
+     * Used for create record going directly to db (record only)
+     */
     fun createBolus(): Bolus =
         if (insulin != 0.0)
             Bolus(
@@ -104,6 +108,7 @@ class DetailedBolusInfo {
                 amount = insulin,
                 type = bolusType.toDBbBolusType(),
                 notes = notes,
+                interfaceIDs_backing = InterfaceIDs(pumpId = timestamp)
             )
         else throw IllegalStateException("insulin == 0.0")
 
@@ -113,7 +118,7 @@ class DetailedBolusInfo {
                 timestamp = carbsTimestamp ?: timestamp,
                 amount = carbs,
                 duration = carbsDuration,
-                notes = notes,
+                notes = notes
             )
         else throw IllegalStateException("carbs == 0.0")
 

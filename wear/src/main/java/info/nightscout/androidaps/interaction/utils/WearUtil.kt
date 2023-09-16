@@ -5,9 +5,9 @@ import android.os.PowerManager
 import info.nightscout.annotations.OpenForTesting
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
-
 import javax.inject.Inject
 import javax.inject.Singleton
+import kotlinx.datetime.Clock
 
 /**
  * Created by andy on 3/5/19.
@@ -16,25 +16,26 @@ import javax.inject.Singleton
 @Singleton
 @OpenForTesting
 open class WearUtil @Inject constructor(
-    open val context: Context,
-    open val aapsLogger: AAPSLogger
+    private val context: Context,
+    private val aapsLogger: AAPSLogger,
+    private val clock: Clock,
 ) {
 
     private val debugWakelocks = false
-    open val rateLimits: MutableMap<String, Long> = HashMap()
+    private val rateLimits: MutableMap<String, Long> = HashMap()
 
     //==============================================================================================
     // Time related util methods
     //==============================================================================================
     open fun timestamp(): Long {
-        return System.currentTimeMillis()
+        return clock.now().toEpochMilliseconds()
     }
 
-    fun msSince(`when`: Long): Long {
+    open fun msSince(`when`: Long): Long {
         return timestamp() - `when`
     }
 
-    fun msTill(`when`: Long): Long {
+    open fun msTill(`when`: Long): Long {
         return `when` - timestamp()
     }
 

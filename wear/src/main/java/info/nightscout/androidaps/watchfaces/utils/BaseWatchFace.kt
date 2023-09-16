@@ -373,11 +373,13 @@ abstract class BaseWatchFace : WatchFace() {
         binding.hour?.text = dateUtil.hourString()
         binding.minute?.text = dateUtil.minuteString()
         binding.dateTime?.visibility = sp.getBoolean(R.string.key_show_date, false).toVisibility()
-        binding.dayName?.text = dateUtil.dayNameString(dayNameFormat)
+        binding.dayName?.text = dateUtil.dayNameString(dayNameFormat).substringBeforeLast(".")
         binding.day?.text = dateUtil.dayString()
-        binding.month?.text = dateUtil.monthString(monthFormat)
+        binding.month?.text = dateUtil.monthString(monthFormat).substringBeforeLast(".")
         binding.timePeriod?.visibility = android.text.format.DateFormat.is24HourFormat(this).not().toVisibility()
         binding.timePeriod?.text = dateUtil.amPm()
+        binding.weekNumber?.visibility = sp.getBoolean(R.string.key_show_week_number, false).toVisibility()
+        binding.weekNumber?.text = "(" + dateUtil.weekString() + ")"
         if (showSecond)
             setSecond()
     }

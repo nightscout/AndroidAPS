@@ -2,11 +2,27 @@
 <resources>
     <!-- PhoneChecker -->
     <!-- DST Helper -->
+    <string name="dst_in_24h_warning">24시간 미만의 썸머타임 변경</string>
+    <string name="dst_loop_disabled_warning">썸머타임 변경이 3시간 미만입니다 - Closed Loop 비활성됨</string>
     <!-- Storage constraint -->
+    <string name="disk_full">내부 저장 공간을 최소 %1$d MB 이상 비우세요! 루프가 비활성화되었습니다!</string>
     <!-- Version Checker -->
+    <string name="old_version">오래된 버전</string>
+    <string name="very_old_version">아주 오래된 버전</string>
+    <string name="application_expired">어플리케이션이 만료되었습니다</string>
+    <string name="new_version_warning">새로운 버전이 최소 %1$d 동안 확인되지 않았습니다! %2$d 일 후 LGS로 대비하고, %3$d 일 후 loop가 비활성화됩니다. 인터넷 연결을 복원하십시오!</string>
+    <string name="running_invalid_version">유효하지 않은 버전을 이용 중입니다. Loop가 비활성화 되었습니다!</string>
+    <string name="versionavailable">%1$s 버전이 사용 가능합니다.</string>
+    <string name="version_expire">버전 %1$s이 %2$s에 만료됩니다</string>
     <!-- Signature verifier -->
     <!-- BG Quality -->
+    <string name="recalculated_data_used">다시 계산된 자료가 사용되었습니다</string>
+    <string name="bg_too_close">BG가 너무 가깝습니다:\n%1$s\n%2$s</string>
+    <string name="a11y_bg_quality_recalculated">다시 계산</string>
+    <string name="a11y_bg_quality_doubles">이중 입력</string>
+    <string name="a11y_bg_quality_flat">플랫 자료입니다. 잘못 입력된 것으로 간주됩니다</string>
     <!-- Safety -->
+    <string name="limitingextendedbolus">%2$s 때문에 확장 bolus를 %1$.1f U로 제한합니다</string>
     <string name="limitingcarbs">%2$s로 인해 탄수화물이 %1$d g로 제한됩니다.</string>
     <string name="pumpisnottempbasalcapable">이 펌프 임시Basal을 지원하지 않습니다.</string>
     <string name="closedmodedisabledinpreferences">설정에서 Closed Loop 모드가 비활성화되었습니다.</string>
@@ -18,14 +34,20 @@
     <string name="hardlimit">하드한계</string>
     <string name="treatmentssafety_title">관리 안전설정</string>
     <!-- Objectives -->
+    <string name="completed_well_done">완료되었습니다, 잘 하셨습니다!</string>
     <string name="not_completed_yet">아직 완료되지 않았습니다.</string>
     <string name="time_elapsed">경과 시간</string>
     <string name="maxiobset">최대 IOB가 바르게 설정됨</string>
     <string name="hasbgdata">선택한 소스에서 혈당이 들어옵니다.</string>
+    <string name="synchaswritepermission">동기화 서비스에 쓰기 권한이 있습니다</string>
     <string name="loopenabled">Loop 활성화됨</string>
     <string name="apsselected">APS 선택됨</string>
     <string name="closedmodeenabled">Closed 모드가 활성화됨</string>
     <string name="objectives_shortname">OBJ</string>
     <string name="description_objectives">프로그램 배우기</string>
     <string name="doyouwantresetstart">목표를 초기화하시겠습니까? 진행상황이 삭제됩니다.</string>
+    <string name="objectives_next_button">다음</string>
+    <string name="objectives_previous_button">이전</string>
+    <string name="objectives_button_unfinish">재설정 완료 상태</string>
+    <string name="objectives_button_unstart">재설정 시작 상태</string>
 </resources>

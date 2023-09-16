@@ -114,4 +114,5 @@
     <string name="loop_smb_set_by_pump_label">SMB ingesteld door pomp</string>
     <string name="loop_open_mode_min_change">Minimale aanvraag wijziging [%]</string>
     <string name="loop_open_mode_min_change_summary" formatted="false">Open Loop zal alleen een wijzigingsverzoek tonen als de verandering groter is dan deze waarde in %. De standaard waarde is 20%</string>
+    <string name="fallback_smb_no_tdd">Terugvallen naar SMB. Niet genoeg TDD gegevens.</string>
 </resources>
