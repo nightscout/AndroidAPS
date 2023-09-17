@@ -63,13 +63,6 @@
     <string name="time_range">Диапазон времени</string>
     <string name="timerange_value">Время между %1$s и %2$s</string>
     <string name="between">Между </string>
-    <string name="weekday_sunday_short">Вс</string>
-    <string name="weekday_saturday_short">Сб</string>
-    <string name="weekday_friday_short">Пт</string>
-    <string name="weekday_thursday_short">Чт</string>
-    <string name="weekday_wednesday_short">Ср</string>
-    <string name="weekday_tuesday_short">Вт</string>
-    <string name="weekday_monday_short">Пн</string>
     <string name="delete_short">Удалить</string>
     <string name="add_short">ДОБАВИТЬ</string>
     <string name="copy_short">КОПИРОВАТЬ</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">Запустить автоматизацию</string>
     <string name="add_automation">Добавить правило</string>
     <string name="stop_processing">Остановить обработку</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">Пн</string>
-    <string name="tuesday_short">Вт</string>
-    <string name="wednesday_short">Ср</string>
-    <string name="thursday_short">Чт</string>
-    <string name="friday_short">Пт</string>
-    <string name="saturday_short">Сб</string>
-    <string name="sunday_short">Вс</string>
     <!--    Reminders-->
     <string name="time_to_eat">Пора есть!\n Запустите помощник болюса снова для подсчета.</string>
     <string name="time_to_bolus">Пора дать болюс!\nЗапустите помощник болюса и повторите расчет.</string>
