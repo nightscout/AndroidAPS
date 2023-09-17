@@ -143,4 +143,6 @@
         <item quantity="other">%1$d óra</item>
     </plurals>
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
 </resources>
