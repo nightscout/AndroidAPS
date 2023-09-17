@@ -165,7 +165,7 @@ class ProfileViewerDialog : DaggerDialogFragment() {
                 binding.date.text = date
                 binding.ic.text = it.getIcList(rh, dateUtil)
                 binding.isf.text = it.getIsfList(rh, dateUtil)
-                binding.basal.text = "∑ " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, it.baseBasalSum()) + "\n" + it.getBasalList(rh, dateUtil)
+                binding.basal.text = "∑ " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, it.baseBasalSum()) + "\n" + it.getBasalList(rh, dateUtil)
                 binding.target.text = it.getTargetList(rh, dateUtil)
                 binding.basalGraph.show(it)
                 binding.isfGraph.show(it)

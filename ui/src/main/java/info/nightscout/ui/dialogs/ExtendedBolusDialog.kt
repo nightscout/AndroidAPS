@@ -95,7 +95,7 @@ class ExtendedBolusDialog : DialogFragmentWithDate() {
         val durationInMinutes = binding.duration.value.toInt()
         val actions: LinkedList<String> = LinkedList()
         val insulinAfterConstraint = constraintChecker.applyExtendedBolusConstraints(Constraint(insulin)).value()
-        actions.add(rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, insulinAfterConstraint))
+        actions.add(rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, insulinAfterConstraint))
         actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_mins, durationInMinutes))
         if (abs(insulinAfterConstraint - insulin) > 0.01)
             actions.add(rh.gs(info.nightscout.core.ui.R.string.constraint_applied).formatColor(context, rh, info.nightscout.core.ui.R.attr.warningColor))

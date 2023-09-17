@@ -321,7 +321,7 @@ class BolusWizard @Inject constructor(
         if (insulinAfterConstraints > 0) {
             val pct = if (percentageCorrection != 100) " ($percentageCorrection%)" else ""
             actions.add(
-                rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, insulinAfterConstraints).formatColor
+                rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, insulinAfterConstraints).formatColor
                     (context, rh, info.nightscout.core.ui.R.attr.bolusColor) + pct
             )
         }

@@ -168,7 +168,7 @@ class DiaconnG8Fragment : DaggerFragment() {
             val agoHours = agoMsec.toDouble() / 60.0 / 60.0 / 1000.0
             if (agoHours < 6)
             // max 6h back
-                binding.lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, pump.lastBolusAmount)
+                binding.lastbolus.text = dateUtil.timeString(pump.lastBolusTime) + " " + dateUtil.sinceString(pump.lastBolusTime, rh) + " " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, pump.lastBolusAmount)
             else
                 binding.lastbolus.text = ""
         }

@@ -179,9 +179,9 @@ class DanaHistoryActivity : TranslatedDaggerAppCompatActivity() {
                 }
 
                 RecordTypes.RECORD_TYPE_DAILY                                                                                                                                                              -> {
-                    holder.binding.dailyBasal.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, record.dailyBasal)
-                    holder.binding.dailyBolus.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, record.dailyBolus)
-                    holder.binding.dailyTotal.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
+                    holder.binding.dailyBasal.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.dailyBasal)
+                    holder.binding.dailyBolus.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.dailyBolus)
+                    holder.binding.dailyTotal.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, record.dailyBolus + record.dailyBasal)
                     holder.binding.time.text = dateUtil.dateString(record.timestamp)
                     holder.binding.time.visibility = View.VISIBLE
                     holder.binding.value.visibility = View.GONE

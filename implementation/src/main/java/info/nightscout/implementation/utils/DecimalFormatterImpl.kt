@@ -27,7 +27,7 @@ class DecimalFormatterImpl @Inject constructor(
     override fun to3Decimal(value: Double, unit: String): String = format3dec.format(value) + unit
     override fun toPumpSupportedBolus(value: Double, bolusStep: Double): String = if (bolusStep <= 0.051) to2Decimal(value) else to1Decimal(value)
     override fun toPumpSupportedBolusWithUnits(value: Double, bolusStep: Double): String =
-        if (bolusStep <= 0.051) rh.gs(R.string.format_insulin_units, value) else rh.gs(R.string.format_insulin_units1, value)
+        if (bolusStep <= 0.051) rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, value) else rh.gs(info.nightscout.core.ui.R.string.format_insulin_units1, value)
 
     override fun pumpSupportedBolusFormat(bolusStep: Double): DecimalFormat = if (bolusStep <= 0.051) DecimalFormat("0.00") else DecimalFormat("0.0")
 }

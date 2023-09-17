@@ -407,7 +407,7 @@ class WizardDialog : DaggerDialogFragment() {
 
             binding.ttCheckbox.isEnabled = tempTarget is ValueWrapper.Existing
             binding.ttCheckboxIcon.visibility = binding.ttCheckbox.isEnabled.toVisibility()
-            binding.iobInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, -bolusIob.iob - basalIob.basaliob)
+            binding.iobInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, -bolusIob.iob - basalIob.basaliob)
 
             calculateInsulin()
         }
@@ -482,18 +482,18 @@ class WizardDialog : DaggerDialogFragment() {
 
         wizard?.let { wizard ->
             binding.bg.text = rh.gs(R.string.format_bg_isf, valueToUnitsToString(profileUtil.convertToMgdl(bg, profileFunction.getUnits()), profileFunction.getUnits().asText), wizard.sens)
-            binding.bgInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromBG)
+            binding.bgInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromBG)
 
             binding.carbs.text = rh.gs(R.string.format_carbs_ic, carbs.toDouble(), wizard.ic)
-            binding.carbsInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromCarbs)
+            binding.carbsInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromCarbs)
 
-            binding.iobInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromBolusIOB + wizard.insulinFromBasalIOB)
+            binding.iobInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromBolusIOB + wizard.insulinFromBasalIOB)
 
-            binding.correctionInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromCorrection)
+            binding.correctionInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromCorrection)
 
             // Superbolus
             binding.sb.text = if (binding.sbCheckbox.isChecked) rh.gs(R.string.two_hours) else ""
-            binding.sbInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromSuperBolus)
+            binding.sbInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromSuperBolus)
 
             // Trend
             if (binding.bgTrendCheckbox.isChecked && wizard.glucoseStatus != null) {
@@ -503,19 +503,19 @@ class WizardDialog : DaggerDialogFragment() {
             } else {
                 binding.bgTrend.text = ""
             }
-            binding.bgTrendInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromTrend)
+            binding.bgTrendInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromTrend)
 
             // COB
             if (binding.cobCheckbox.isChecked) {
                 binding.cob.text = rh.gs(R.string.format_cob_ic, cob, wizard.ic)
-                binding.cobInsulin.text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.insulinFromCOB)
+                binding.cobInsulin.text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.insulinFromCOB)
             } else {
                 binding.cob.text = ""
                 binding.cobInsulin.text = ""
             }
 
             if (wizard.calculatedTotalInsulin > 0.0 || carbsAfterConstraint > 0.0) {
-                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, wizard.calculatedTotalInsulin).formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor) else ""
+                val insulinText = if (wizard.calculatedTotalInsulin > 0.0) rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, wizard.calculatedTotalInsulin).formatColor(context, rh, info.nightscout.core.ui.R.attr.bolusColor) else ""
                 val carbsText = if (carbsAfterConstraint > 0.0) rh.gs(info.nightscout.core.main.R.string.format_carbs, carbsAfterConstraint).formatColor(context, rh, info.nightscout.core.ui.R.attr
                     .carbsColor) else ""
                 binding.total.text = HtmlHelper.fromHtml(rh.gs(R.string.result_insulin_carbs, insulinText, carbsText))

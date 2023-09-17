@@ -131,8 +131,8 @@ class MedtrumOverviewViewModel @Inject constructor(
                 if (!medtrumPump.bolusDone && medtrumPlugin.isInitialized()) {
                     _activeBolusStatus.postValue(
                         dateUtil.timeString(medtrumPump.bolusStartTime) + " " + dateUtil.sinceString(medtrumPump.bolusStartTime, rh)
-                            + " " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, bolusAmount) + " / " + rh.gs(
-                            info.nightscout.interfaces.R.string.format_insulin_units, medtrumPump.bolusAmountToBeDelivered
+                            + " " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, bolusAmount) + " / " + rh.gs(
+                            info.nightscout.core.ui.R.string.format_insulin_units, medtrumPump.bolusAmountToBeDelivered
                         )
                     )
                 }
@@ -186,7 +186,7 @@ class MedtrumOverviewViewModel @Inject constructor(
             // max 6h back
                 _lastBolus.postValue(
                     dateUtil.timeString(medtrumPump.lastBolusTime) + " " + dateUtil.sinceString(medtrumPump.lastBolusTime, rh) + " " + rh.gs(
-                        info.nightscout.interfaces.R.string.format_insulin_units, medtrumPump.lastBolusAmount
+                        info.nightscout.core.ui.R.string.format_insulin_units, medtrumPump.lastBolusAmount
                     )
                 )
             else _lastBolus.postValue("")

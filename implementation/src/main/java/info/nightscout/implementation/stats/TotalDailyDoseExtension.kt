@@ -37,9 +37,9 @@ fun TotalDailyDose.toTableRow(context: Context, rh: ResourceHelper, dateUtil: Da
             row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
             row.gravity = Gravity.CENTER_HORIZONTAL
             row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0 }; text = dateUtil.dateStringShort(timestamp) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units1, total) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units1, bolusAmount) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units1, basalAmount) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units1, total) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units1, bolusAmount) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units1, basalAmount) })
             row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 4 }; text = rh.gs(info.nightscout.core.ui.R.string.formatPercent, basalPct) })
             if (includeCarbs)
                 row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 5 }; text = rh.gs(info.nightscout.core.main.R.string.format_carbs, carbs
@@ -55,9 +55,9 @@ fun TotalDailyDose.toTableRow(context: Context, rh: ResourceHelper, days: Int, i
             row.layoutParams = TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT, TableRow.LayoutParams.WRAP_CONTENT)
             row.gravity = Gravity.CENTER_HORIZONTAL
             row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 0 }; text = "%02d".format(days) + " " + rh.gs(info.nightscout.shared.R.string.days) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units1, total) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units1, bolusAmount) })
-            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text = rh.gs(info.nightscout.interfaces.R.string.format_insulin_units1, basalAmount) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 1 }; text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units1, total) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 2 }; text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units1, bolusAmount) })
+            row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 3 }; text = rh.gs(info.nightscout.core.ui.R.string.format_insulin_units1, basalAmount) })
             row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 4 }; text = rh.gs(info.nightscout.core.ui.R.string.formatPercent, basalPct) })
             if (includeCarbs)
                 row.addView(TextView(context).apply { gravity = Gravity.CENTER_HORIZONTAL; layoutParams = lp.apply { column = 5 }; text = rh.gs(info.nightscout.core.main.R.string.format_carbs, carbs

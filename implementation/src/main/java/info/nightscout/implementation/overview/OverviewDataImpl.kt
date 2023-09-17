@@ -245,12 +245,12 @@ class OverviewDataImpl @Inject constructor(
         }
 
     override fun iobText(iobCobCalculator: IobCobCalculator): String =
-        rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, bolusIob(iobCobCalculator).iob + basalIob(iobCobCalculator).basaliob)
+        rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, bolusIob(iobCobCalculator).iob + basalIob(iobCobCalculator).basaliob)
 
     override fun iobDialogText(iobCobCalculator: IobCobCalculator): String =
-        rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, bolusIob(iobCobCalculator).iob + basalIob(iobCobCalculator).basaliob) + "\n" +
-            rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, bolusIob(iobCobCalculator).iob) + "\n" +
-            rh.gs(info.nightscout.core.ui.R.string.basal) + ": " + rh.gs(info.nightscout.interfaces.R.string.format_insulin_units, basalIob(iobCobCalculator).basaliob)
+        rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, bolusIob(iobCobCalculator).iob + basalIob(iobCobCalculator).basaliob) + "\n" +
+            rh.gs(info.nightscout.core.ui.R.string.bolus) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, bolusIob(iobCobCalculator).iob) + "\n" +
+            rh.gs(info.nightscout.core.ui.R.string.basal) + ": " + rh.gs(info.nightscout.core.ui.R.string.format_insulin_units, basalIob(iobCobCalculator).basaliob)
 
     /*
      * TEMP TARGET
