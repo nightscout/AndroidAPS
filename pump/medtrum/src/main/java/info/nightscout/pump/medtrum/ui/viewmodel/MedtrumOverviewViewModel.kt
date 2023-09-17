@@ -119,9 +119,7 @@ class MedtrumOverviewViewModel @Inject constructor(
             medtrumPump.pumpStateFlow.collect { state ->
                 aapsLogger.debug(LTag.PUMP, "MedtrumViewModel pumpStateFlow: $state")
                 _canDoResetAlarms.postValue(
-                    medtrumPump.pumpState in listOf(
-                        MedtrumPumpState.PAUSED, MedtrumPumpState.HOURLY_MAX_SUSPENDED, MedtrumPumpState.DAILY_MAX_SUSPENDED
-                    )
+                    medtrumPump.pumpState.isSuspendedByPump()
                 )
 
                 updateGUI()

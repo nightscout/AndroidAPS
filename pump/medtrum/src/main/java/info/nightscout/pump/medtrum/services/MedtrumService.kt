@@ -281,13 +281,8 @@ class MedtrumService : DaggerService(), BLECommCallback {
     }
 
     fun clearAlarms(): Boolean {
-        var result = true
-        if (medtrumPump.pumpState in listOf(
-                MedtrumPumpState.PAUSED,
-                MedtrumPumpState.HOURLY_MAX_SUSPENDED,
-                MedtrumPumpState.DAILY_MAX_SUSPENDED
-            )
-        ) {
+        var result = loadEvents() // Make sure we have all events before clearing alarms
+        if (result && medtrumPump.pumpState.isSuspendedByPump()) {
             when (medtrumPump.pumpState) {
                 MedtrumPumpState.HOURLY_MAX_SUSPENDED -> {
                     result = sendPacketAndGetResponse(ClearPumpAlarmPacket(injector, ALARM_HOURLY_MAX_CLEAR_CODE))

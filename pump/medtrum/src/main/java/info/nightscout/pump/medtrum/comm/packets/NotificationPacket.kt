@@ -109,7 +109,6 @@ class NotificationPacket(val injector: HasAndroidInjector) {
 
         if (fieldMask and MASK_EXTENDED_BOLUS != 0) {
             aapsLogger.error(LTag.PUMPCOMM, "Extended bolus notification received, extended bolus not supported!")
-            // TODO Handle error and stop pump if this happens?
             offset += 3
         }
 

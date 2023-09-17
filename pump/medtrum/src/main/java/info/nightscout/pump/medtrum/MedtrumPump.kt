@@ -315,7 +315,7 @@ class MedtrumPump @Inject constructor(
         }
 
         loadUserSettingsFromSP()
-    }    
+    }
 
     fun loadUserSettingsFromSP() {
         desiredPatchExpiration = sp.getBoolean(R.string.key_patch_expiration, false)
@@ -421,7 +421,7 @@ class MedtrumPump @Inject constructor(
                 )
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
-                    "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " + "Rate: $basalRate Duration: ${duration} temporaryBasalInfo: $temporaryBasalInfo, expectedTemporaryBasal: $expectedTemporaryBasal"
+                    "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) " + "Rate: $basalRate Duration: ${duration} temporaryBasalInfo: $temporaryBasalInfo, expectedTemporaryBasal: $expectedTemporaryBasal"
                 )
             }
 
@@ -438,7 +438,7 @@ class MedtrumPump @Inject constructor(
                 )
                 aapsLogger.debug(
                     LTag.PUMPCOMM,
-                    "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) expectedTemporaryBasal: $expectedTemporaryBasal"
+                    "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START ($basalType) ${dateUtil.dateAndTimeString(basalStartTime)} ($basalStartTime) expectedTemporaryBasal: $expectedTemporaryBasal"
                 )
             }
 
@@ -507,7 +507,7 @@ class MedtrumPump @Inject constructor(
         )
         aapsLogger.debug(
             LTag.PUMPCOMM,
-            "handleBasalStatusUpdate: ${if (newRecord) "**NEW** " else ""}EVENT TEMP_START (FAKE)"
+            "handleBasalStatusUpdate: ${newRecordInfo(newRecord)}EVENT TEMP_START (FAKE)"
         )
     }
 
@@ -596,5 +596,9 @@ class MedtrumPump @Inject constructor(
                 .mapNotNull { AlarmState.values().find { alarm -> alarm.name == it } }
                 .let { EnumSet.copyOf(it) }
         }
+    }
+
+    private fun newRecordInfo(newRecord: Boolean): String {
+        return "${if (newRecord) "**NEW** " else ""}"
     }
 }

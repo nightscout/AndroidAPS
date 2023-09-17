@@ -255,7 +255,11 @@ import kotlin.math.abs
 
     override fun isConnected(): Boolean {
         // This is a workaround to prevent AAPS to trigger connects when we have no patch activated
-        return if (!isInitialized()) true else medtrumService?.isConnected ?: false
+        return if (!isInitialized()) {
+            true
+        } else {
+            medtrumService?.isConnected ?: false
+        }
     }
 
     override fun isConnecting(): Boolean = medtrumService?.isConnecting ?: false
@@ -544,31 +548,19 @@ import kotlin.math.abs
 
     // Medtrum interface
     override fun loadEvents(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.loadEvents() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
 
     override fun setUserOptions(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.setUserSettings() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
 
     override fun clearAlarms(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.clearAlarms() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
@@ -579,11 +571,7 @@ import kotlin.math.abs
     }
 
     override fun updateTime(): PumpEnactResult {
-        if (!isInitialized()) {
-            val result = PumpEnactResult(injector).success(false)
-            result.comment = "pump not initialized"
-            return result
-        }
+        if (!isInitialized()) return PumpEnactResult(injector).success(false).enacted(false)
         val connectionOK = medtrumService?.updateTimeIfNeeded() ?: false
         return PumpEnactResult(injector).success(connectionOK)
     }
