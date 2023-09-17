@@ -8,7 +8,7 @@ import android.widget.LinearLayout
 import android.widget.Spinner
 import info.nightscout.shared.interfaces.ResourceHelper
 
-class InputDropdownMenu(private val rh: ResourceHelper) : Element() {
+class InputDropdownMenu(private val rh: ResourceHelper) : Element {
 
     private var itemList: ArrayList<CharSequence> = ArrayList()
     var value: String = ""

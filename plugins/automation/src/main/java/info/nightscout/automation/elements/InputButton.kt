@@ -4,7 +4,7 @@ import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
 
-class InputButton() : Element() {
+class InputButton() : Element {
 
     var text: String? = null
     var runnable: Runnable? = null

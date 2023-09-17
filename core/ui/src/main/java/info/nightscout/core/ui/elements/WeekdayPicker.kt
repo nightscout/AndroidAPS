@@ -1,13 +1,13 @@
-package info.nightscout.automation.ui
+package info.nightscout.core.ui.elements
 
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Checkable
 import androidx.appcompat.widget.AppCompatCheckedTextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import info.nightscout.automation.databinding.WeekdayPickerBinding
-import info.nightscout.shared.extensions.toVisibility
+import info.nightscout.core.ui.databinding.WeekdayPickerBinding
 import java.util.Calendar
 
 class WeekdayPicker constructor(
@@ -24,6 +24,8 @@ class WeekdayPicker constructor(
         determineBeginOfWeek()
         setupClickListeners()
     }
+
+    fun Boolean.toVisibility() = if (this) View.VISIBLE else View.GONE
 
     private fun determineBeginOfWeek() {
         (Calendar.getInstance().firstDayOfWeek == Calendar.SUNDAY).let {

@@ -9,7 +9,7 @@ import android.widget.Spinner
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.shared.interfaces.ResourceHelper
 
-class InputProfileName(private val rh: ResourceHelper, private val activePlugin: ActivePlugin, val name: String = "", private val addActive: Boolean = false) : Element() {
+class InputProfileName(private val rh: ResourceHelper, private val activePlugin: ActivePlugin, val name: String = "", private val addActive: Boolean = false) : Element {
 
     var value: String = name
 

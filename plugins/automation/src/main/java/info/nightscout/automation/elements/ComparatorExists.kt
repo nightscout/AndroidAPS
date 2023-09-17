@@ -9,7 +9,7 @@ import android.widget.Spinner
 import androidx.annotation.StringRes
 import info.nightscout.shared.interfaces.ResourceHelper
 
-class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Compare.EXISTS) : Element() {
+class ComparatorExists(private val rh: ResourceHelper, var value: Compare = Compare.EXISTS) : Element {
 
     enum class Compare {
         EXISTS, NOT_EXISTS;

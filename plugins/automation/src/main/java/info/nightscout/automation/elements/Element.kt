@@ -2,8 +2,7 @@ package info.nightscout.automation.elements
 
 import android.widget.LinearLayout
 
-abstract class Element {
+interface Element {
 
-    abstract fun addToLayout(root: LinearLayout)
-
+    fun addToLayout(root: LinearLayout)
 }

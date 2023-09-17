@@ -65,13 +65,6 @@
     <string name="time_range">Time range</string>
     <string name="timerange_value">Time is between %1$s and %2$s</string>
     <string name="between">Between </string>
-    <string name="weekday_sunday_short">Sun</string>
-    <string name="weekday_saturday_short">Sat</string>
-    <string name="weekday_friday_short">Fri</string>
-    <string name="weekday_thursday_short">Thu</string>
-    <string name="weekday_wednesday_short">Wed</string>
-    <string name="weekday_tuesday_short">Tue</string>
-    <string name="weekday_monday_short">Mon</string>
     <string name="delete_short">DEL</string>
     <string name="add_short">ADD</string>
     <string name="copy_short">COPY</string>
@@ -122,15 +115,6 @@
     <string name="run_automations">Run automations</string>
     <string name="add_automation">Add rule</string>
     <string name="stop_processing">Stop processing</string>
-
-    <!-- WeekdayPicker -->
-    <string name="monday_short">M</string>
-    <string name="tuesday_short">T</string>
-    <string name="wednesday_short">W</string>
-    <string name="thursday_short">T</string>
-    <string name="friday_short">F</string>
-    <string name="saturday_short">S</string>
-    <string name="sunday_short">S</string>
 
     <!--    Reminders-->
     <string name="time_to_eat">Time to eat!\nRun Bolus wizard and do calculation again.</string>

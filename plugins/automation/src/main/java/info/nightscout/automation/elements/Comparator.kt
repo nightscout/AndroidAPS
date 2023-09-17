@@ -10,7 +10,7 @@ import androidx.annotation.StringRes
 import info.nightscout.automation.R
 import info.nightscout.shared.interfaces.ResourceHelper
 
-class Comparator(private val rh: ResourceHelper) : Element() {
+class Comparator(private val rh: ResourceHelper) : Element {
 
     enum class Compare {
         IS_LESSER,

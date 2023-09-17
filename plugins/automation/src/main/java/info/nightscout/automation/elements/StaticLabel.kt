@@ -7,7 +7,7 @@ import android.widget.TextView
 import info.nightscout.automation.triggers.Trigger
 import info.nightscout.shared.interfaces.ResourceHelper
 
-class StaticLabel(private val rh: ResourceHelper) : Element() {
+class StaticLabel(private val rh: ResourceHelper) : Element {
 
     var label = ""
     var trigger: Trigger? = null

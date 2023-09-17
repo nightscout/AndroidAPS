@@ -11,7 +11,7 @@ import androidx.annotation.StringRes
 import info.nightscout.database.entities.TherapyEvent
 import info.nightscout.shared.interfaces.ResourceHelper
 
-class InputCarePortalMenu(private val rh: ResourceHelper) : Element() {
+class InputCarePortalMenu(private val rh: ResourceHelper) : Element {
 
     enum class EventType(val therapyEventType: TherapyEvent.Type) {
         NOTE(TherapyEvent.Type.NOTE),

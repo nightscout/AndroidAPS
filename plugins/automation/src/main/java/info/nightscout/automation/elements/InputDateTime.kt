@@ -17,7 +17,7 @@ import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.utils.DateUtil
 import java.util.Calendar
 
-class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUtil, var value: Long = dateUtil.now()) : Element() {
+class InputDateTime(private val rh: ResourceHelper, private val dateUtil: DateUtil, var value: Long = dateUtil.now()) : Element {
 
     override fun addToLayout(root: LinearLayout) {
         val px = rh.dpToPx(10)
