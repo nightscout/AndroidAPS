@@ -2,7 +2,7 @@ package info.nightscout.plugins.sync.nsclientV3.extensions
 
 import info.nightscout.database.entities.DeviceStatus
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.configBuilder.RunningConfiguration
+import info.nightscout.sdk.interfaces.RunningConfiguration
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.profile.Instantiator
 import info.nightscout.plugins.sync.nsclient.data.NSDeviceStatusHandler

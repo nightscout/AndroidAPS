@@ -22,7 +22,7 @@ dependencies {
     // (ResourceHelper, AAPSLogger interface)
     implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
-    implementation project(':core:ns-sdk')
+ //   implementation project(':core:ns-sdk')
 
     api "androidx.appcompat:appcompat:$appcompat_version"
 

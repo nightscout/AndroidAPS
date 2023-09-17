@@ -35,7 +35,6 @@ import info.nightscout.interfaces.Constants
 import info.nightscout.interfaces.aps.APSResult
 import info.nightscout.interfaces.aps.Loop
 import info.nightscout.interfaces.aps.Loop.LastRun
-import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator
@@ -48,7 +47,6 @@ import info.nightscout.interfaces.plugin.PluginType
 import info.nightscout.interfaces.profile.Profile
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.pump.DetailedBolusInfo
-import info.nightscout.interfaces.pump.Pump
 import info.nightscout.interfaces.pump.PumpEnactResult
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.VirtualPump
@@ -72,6 +70,7 @@ import info.nightscout.rx.events.EventTempTargetChange
 import info.nightscout.rx.logging.AAPSLogger
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.EventData
+import info.nightscout.sdk.interfaces.RunningConfiguration
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
 import info.nightscout.shared.utils.DateUtil
@@ -106,7 +105,7 @@ class LoopPlugin @Inject constructor(
     private val uel: UserEntryLogger,
     private val repository: AppRepository,
     private val runningConfiguration: RunningConfiguration,
-    private val uiInteraction: UiInteraction
+    private val uiInteraction: UiInteraction,
 ) : PluginBase(
     PluginDescription()
         .mainType(PluginType.LOOP)
@@ -300,13 +299,7 @@ class LoopPlugin @Inject constructor(
                 lastRun.lastTBRRequest = 0
                 lastRun.lastSMBEnact = 0
                 lastRun.lastSMBRequest = 0
-                buildDeviceStatus(
-                    dateUtil, this, iobCobCalculator, profileFunction,
-                    activePlugin.activePump, receiverStatusStore, runningConfiguration,
-                    config.VERSION_NAME + "-" + config.BUILD_VERSION
-                )?.also {
-                    repository.insert(it)
-                }
+                buildAndStoreDeviceStatus()
 
                 if (isSuspended) {
                     aapsLogger.debug(LTag.APS, rh.gs(info.nightscout.core.ui.R.string.loopsuspended))
@@ -524,13 +517,7 @@ class LoopPlugin @Inject constructor(
                             lastRun.lastTBRRequest = lastRun.lastAPSRun
                             lastRun.lastTBREnact = dateUtil.now()
                             lastRun.lastOpenModeAccept = dateUtil.now()
-                            buildDeviceStatus(
-                                dateUtil, this@LoopPlugin, iobCobCalculator, profileFunction,
-                                activePlugin.activePump, receiverStatusStore, runningConfiguration,
-                                config.VERSION_NAME + "-" + config.BUILD_VERSION
-                            )?.also {
-                                repository.insert(it)
-                            }
+                            buildAndStoreDeviceStatus()
                             sp.incInt(info.nightscout.core.utils.R.string.key_ObjectivesmanualEnacts)
                         }
                         rxBus.send(EventAcceptOpenLoopChange())
@@ -734,20 +721,12 @@ class LoopPlugin @Inject constructor(
         })
     }
 
-    override fun buildDeviceStatus(
-        dateUtil: DateUtil,
-        loop: Loop,
-        iobCobCalculatorPlugin: IobCobCalculator,
-        profileFunction: ProfileFunction,
-        pump: Pump,
-        receiverStatusStore: ReceiverStatusStore,
-        runningConfiguration: RunningConfiguration,
-        version: String
-    ): DeviceStatus? {
-        val profile = profileFunction.getProfile() ?: return null
+    override fun buildAndStoreDeviceStatus() {
+        val version = config.VERSION_NAME + "-" + config.BUILD_VERSION
+        val profile = profileFunction.getProfile() ?: return
         val profileName = profileFunction.getProfileName()
 
-        val lastRun = loop.lastRun
+        val lastRun = lastRun
         var apsResult: JSONObject? = null
         var iob: JSONObject? = null
         var enacted: JSONObject? = null
@@ -774,22 +753,24 @@ class LoopPlugin @Inject constructor(
                 enacted?.put("smb", lastRun.tbrSetByPump?.bolusDelivered)
             }
         } else {
-            val calcIob = iobCobCalculatorPlugin.calculateIobArrayInDia(profile)
+            val calcIob = iobCobCalculator.calculateIobArrayInDia(profile)
             if (calcIob.isNotEmpty()) {
                 iob = calcIob[0].json(dateUtil)
                 iob.put("time", dateUtil.toISOString(dateUtil.now()))
             }
         }
-        return DeviceStatus(
-            timestamp = dateUtil.now(),
-            suggested = apsResult?.toString(),
-            iob = iob?.toString(),
-            enacted = enacted?.toString(),
-            device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL,
-            pump = pump.getJSONStatus(profile, profileName, version).toString(),
-            uploaderBattery = receiverStatusStore.batteryLevel,
-            isCharging = receiverStatusStore.isCharging,
-            configuration = runningConfiguration.configuration().toString()
+        repository.insert(
+            DeviceStatus(
+                timestamp = dateUtil.now(),
+                suggested = apsResult?.toString(),
+                iob = iob?.toString(),
+                enacted = enacted?.toString(),
+                device = "openaps://" + Build.MANUFACTURER + " " + Build.MODEL,
+                pump = activePlugin.activePump.getJSONStatus(profile, profileName, version).toString(),
+                uploaderBattery = receiverStatusStore.batteryLevel,
+                isCharging = receiverStatusStore.isCharging,
+                configuration = runningConfiguration.configuration().toString()
+            )
         )
     }
 

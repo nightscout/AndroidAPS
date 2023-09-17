@@ -9,7 +9,7 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.configBuilder.RunningConfiguration
+import info.nightscout.sdk.interfaces.RunningConfiguration
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
@@ -69,7 +69,7 @@ ActionsTestBase : TestBaseWithProfile() {
             profileFunction: ProfileFunction,
             pump: Pump,
             receiverStatusStore: ReceiverStatusStore,
-            runningConfiguration: RunningConfiguration,
+            runningConfiguration: info.nightscout.sdk.interfaces.RunningConfiguration,
             version: String
         ): DeviceStatus? = null
 

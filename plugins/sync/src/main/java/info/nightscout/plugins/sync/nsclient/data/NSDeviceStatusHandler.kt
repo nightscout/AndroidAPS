@@ -2,7 +2,7 @@ package info.nightscout.plugins.sync.nsclient.data
 
 import info.nightscout.annotations.OpenForTesting
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.configBuilder.RunningConfiguration
+import info.nightscout.sdk.interfaces.RunningConfiguration
 import info.nightscout.interfaces.nsclient.ProcessedDeviceStatusData
 import info.nightscout.interfaces.utils.HtmlHelper
 import info.nightscout.interfaces.utils.JsonHelper

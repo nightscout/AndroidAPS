@@ -1,4 +1,4 @@
-package info.nightscout.interfaces.configBuilder
+package info.nightscout.sdk.interfaces
 
 import info.nightscout.sdk.localmodel.devicestatus.NSDeviceStatus
 import org.json.JSONObject

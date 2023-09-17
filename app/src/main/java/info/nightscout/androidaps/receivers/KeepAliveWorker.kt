@@ -10,7 +10,6 @@ import androidx.work.WorkQuery
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
 import com.google.common.util.concurrent.ListenableFuture
-import info.nightscout.androidaps.BuildConfig
 import info.nightscout.androidaps.R
 import info.nightscout.configuration.maintenance.MaintenancePlugin
 import info.nightscout.core.profile.ProfileSealed
@@ -19,13 +18,11 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.Config
 import info.nightscout.interfaces.LocalAlertUtils
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.interfaces.configBuilder.RunningConfiguration
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.plugin.ActivePlugin
 import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.queue.Command
 import info.nightscout.interfaces.queue.CommandQueue
-import info.nightscout.interfaces.receivers.ReceiverStatusStore
 import info.nightscout.rx.bus.RxBus
 import info.nightscout.rx.events.EventProfileSwitchChanged
 import info.nightscout.rx.logging.LTag
@@ -51,8 +48,6 @@ class KeepAliveWorker(
     @Inject lateinit var dateUtil: DateUtil
     @Inject lateinit var activePlugin: ActivePlugin
     @Inject lateinit var profileFunction: ProfileFunction
-    @Inject lateinit var runningConfiguration: RunningConfiguration
-    @Inject lateinit var receiverStatusStore: ReceiverStatusStore
     @Inject lateinit var rxBus: RxBus
     @Inject lateinit var commandQueue: CommandQueue
     @Inject lateinit var maintenancePlugin: MaintenancePlugin
@@ -155,13 +150,7 @@ class KeepAliveWorker(
         else if (dateUtil.isOlderThan(activePlugin.activeAPS.lastAPSRun, 5)) shouldUploadStatus = true
         if (dateUtil.isOlderThan(lastIobUpload, IOB_UPDATE_FREQUENCY_IN_MINUTES) && shouldUploadStatus) {
             lastIobUpload = dateUtil.now()
-            loop.buildDeviceStatus(
-                dateUtil, loop, iobCobCalculator, profileFunction,
-                activePlugin.activePump, receiverStatusStore, runningConfiguration,
-                BuildConfig.VERSION_NAME + "-" + BuildConfig.BUILDVERSION
-            )?.also {
-                repository.insert(it)
-            }
+            loop.buildAndStoreDeviceStatus()
         }
     }
 
@@ -193,8 +182,8 @@ class KeepAliveWorker(
             // do nothing if pump is disconnected
         } else if (runningProfile == null || ((!pump.isThisProfileSet(requestedProfile) || !requestedProfile.isEqual(runningProfile)
                 || (runningProfile is ProfileSealed.EPS && runningProfile.value.originalEnd < dateUtil.now() && runningProfile.value.originalDuration != 0L))
-                && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE)))
-        {
+                && !commandQueue.isRunning(Command.CommandType.BASAL_PROFILE))
+        ) {
             rxBus.send(EventProfileSwitchChanged())
         } else if (isStatusOutdated && !pump.isBusy()) {
             lastReadStatus = now

@@ -8,7 +8,7 @@ import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.ApsMode
 import info.nightscout.interfaces.Config
-import info.nightscout.interfaces.configBuilder.RunningConfiguration
+import info.nightscout.sdk.interfaces.RunningConfiguration
 import info.nightscout.interfaces.constraints.Constraints
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
