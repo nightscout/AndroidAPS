@@ -586,4 +586,6 @@
     <string name="cleanup_db_confirm">Chcete vyčistit databázi?\nOdstraní sledované změny a historická data starší než 3 měsíce.</string>
     <string name="cleanup_db_confirm_sync">Chcete vyčistit databázi?\nOdstraní sledované změny a historická data starší než 3 měsíce.\nVýrazně to urychlí plnou synchronizaci.</string>
     <string name="cleared_entries">Vymazané záznamy</string>
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
 </resources>
