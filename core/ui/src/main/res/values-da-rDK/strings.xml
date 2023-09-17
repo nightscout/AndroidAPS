@@ -535,4 +535,6 @@
         <item quantity="other">%1$d minutter</item>
     </plurals>
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
 </resources>
