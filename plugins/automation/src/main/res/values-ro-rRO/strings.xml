@@ -63,13 +63,6 @@
     <string name="time_range">Interval de timp</string>
     <string name="timerange_value">Timpul este între %1$s și %2$s</string>
     <string name="between">Între </string>
-    <string name="weekday_sunday_short">Dum</string>
-    <string name="weekday_saturday_short">Sâm</string>
-    <string name="weekday_friday_short">Vin</string>
-    <string name="weekday_thursday_short">Joi</string>
-    <string name="weekday_wednesday_short">Mie</string>
-    <string name="weekday_tuesday_short">Mar</string>
-    <string name="weekday_monday_short">Lun</string>
     <string name="delete_short">ȘTRG</string>
     <string name="add_short">ADAU</string>
     <string name="copy_short">COPI</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">Rulează automatizările</string>
     <string name="add_automation">Adaugă regulă</string>
     <string name="stop_processing">Oprire procesare</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">L</string>
-    <string name="tuesday_short">Ma</string>
-    <string name="wednesday_short">Mi</string>
-    <string name="thursday_short">J</string>
-    <string name="friday_short">V</string>
-    <string name="saturday_short">S</string>
-    <string name="sunday_short">D</string>
     <!--    Reminders-->
     <string name="time_to_eat">E timpul pentru a mânca!\nRulează asistentul de bolusare și refă calculele.</string>
     <string name="time_to_bolus">Timpul sa faci bolus!\nRuleaza Calculatorul de Bolus pentru a face calculele din nou.</string>
