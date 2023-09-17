@@ -258,7 +258,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                                 // Never seen a packet like this from a pump, even when suspended by app, but leave it in just in case
                                 val duration = (basalEndTime - basalStartTime)
                                 val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
-                                    timestamp = basalEndTime,
+                                    timestamp = basalStartTime,
                                     rate = 0.0,
                                     duration = duration,
                                     isAbsolute = true,
