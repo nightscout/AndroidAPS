@@ -5,6 +5,7 @@ import info.nightscout.interfaces.pump.DetailedBolusInfoStorage
 import info.nightscout.interfaces.pump.PumpSync
 import info.nightscout.interfaces.pump.TemporaryBasalStorage
 import info.nightscout.pump.medtrum.MedtrumPump
+import info.nightscout.pump.medtrum.comm.enums.BasalEndReason
 import info.nightscout.pump.medtrum.comm.enums.CommandType.GET_RECORD
 import info.nightscout.pump.medtrum.comm.enums.BasalType
 import info.nightscout.pump.medtrum.comm.enums.BolusType
@@ -15,6 +16,7 @@ import info.nightscout.pump.medtrum.extension.toLong
 import info.nightscout.pump.medtrum.util.MedtrumTimeUtil
 import info.nightscout.rx.logging.LTag
 import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.T
 import javax.inject.Inject
 
 class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int) : MedtrumPacket(injector) {
@@ -74,15 +76,13 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
             val recordUnknown = data.copyOfRange(RESP_RECORD_UNKNOWN_START, RESP_RECORD_UNKNOWN_END).toInt()
             val recordType = data.copyOfRange(RESP_RECORD_TYPE_START, RESP_RECORD_TYPE_END).toInt()
             val recordSerial = data.copyOfRange(RESP_RECORD_SERIAL_START, RESP_RECORD_SERIAL_END).toLong()
-            val recordPatchId = data.copyOfRange(RESP_RECORD_PATCH_ID_START, RESP_RECORD_PATCH_ID_END).toInt()
+            val recordPatchId = data.copyOfRange(RESP_RECORD_PATCH_ID_START, RESP_RECORD_PATCH_ID_END).toLong()
             val recordSequence = data.copyOfRange(RESP_RECORD_SEQUENCE_START, RESP_RECORD_SEQUENCE_END).toInt()
 
             aapsLogger.debug(
                 LTag.PUMPCOMM,
                 "GetRecordPacket HandleResponse: Record header: $recordHeader, unknown: $recordUnknown, type: $recordType, serial: $recordSerial, patchId: $recordPatchId, " + "sequence: $recordSequence"
             )
-
-            medtrumPump.syncedSequenceNumber = recordSequence // Assume sync upwards
 
             if (recordHeader == VALID_HEADER) {
                 when (recordType) {
@@ -95,7 +95,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                         val bolusNormalAmount = data.copyOfRange(RESP_RECORD_DATA_START + 8, RESP_RECORD_DATA_START + 10).toInt() * 0.05
                         val bolusNormalDelivered = data.copyOfRange(RESP_RECORD_DATA_START + 10, RESP_RECORD_DATA_START + 12).toInt() * 0.05
                         val bolusExtendedAmount = data.copyOfRange(RESP_RECORD_DATA_START + 12, RESP_RECORD_DATA_START + 14).toInt() * 0.05
-                        val bolusExtendedDuration = data.copyOfRange(RESP_RECORD_DATA_START + 14, RESP_RECORD_DATA_START + 16).toLong() * 1000
+                        val bolusExtendedDuration = T.mins(data.copyOfRange(RESP_RECORD_DATA_START + 14, RESP_RECORD_DATA_START + 16).toLong()).msecs()
                         val bolusExtendedDelivered = data.copyOfRange(RESP_RECORD_DATA_START + 16, RESP_RECORD_DATA_START + 18).toInt() * 0.05
                         val bolusCarb = data.copyOfRange(RESP_RECORD_DATA_START + 18, RESP_RECORD_DATA_START + 20).toInt()
                         val bolusGlucose = data.copyOfRange(RESP_RECORD_DATA_START + 20, RESP_RECORD_DATA_START + 22).toInt()
@@ -213,7 +213,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                         val basalStartTime = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_RECORD_DATA_START, RESP_RECORD_DATA_START + 4).toLong())
                         val basalEndTime = medtrumTimeUtil.convertPumpTimeToSystemTimeMillis(data.copyOfRange(RESP_RECORD_DATA_START + 4, RESP_RECORD_DATA_START + 8).toLong())
                         val basalType = enumValues<BasalType>()[data.copyOfRange(RESP_RECORD_DATA_START + 8, RESP_RECORD_DATA_START + 9).toInt()]
-                        val basalEndReason = data.copyOfRange(RESP_RECORD_DATA_START + 9, RESP_RECORD_DATA_START + 10).toInt()
+                        val basalEndReason = enumValues<BasalEndReason>()[data.copyOfRange(RESP_RECORD_DATA_START + 9, RESP_RECORD_DATA_START + 10).toInt()]
                         val basalRate = data.copyOfRange(RESP_RECORD_DATA_START + 10, RESP_RECORD_DATA_START + 12).toInt() * 0.05
                         val basalDelivered = data.copyOfRange(RESP_RECORD_DATA_START + 12, RESP_RECORD_DATA_START + 14).toInt() * 0.05
                         val basalPercent = data.copyOfRange(RESP_RECORD_DATA_START + 14, RESP_RECORD_DATA_START + 16).toInt()
@@ -230,7 +230,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                             }
 
                             BasalType.ABSOLUTE_TEMP, BasalType.RELATIVE_TEMP -> {
-                                aapsLogger.debug(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BASAL_RECORD: Absolute temp basal")
+                                aapsLogger.debug(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BASAL_RECORD: temp basal")
                                 var duration = (basalEndTime - basalStartTime)
                                 // Work around for pumpSync not accepting 0 duration.
                                 // sometimes we get 0 duration for very short basal because the pump only reports time in seconds
@@ -255,6 +255,7 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
 
                             in BasalType.SUSPEND_LOW_GLUCOSE..BasalType.STOP -> {
                                 aapsLogger.debug(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BASAL_RECORD: Suspend basal")
+                                // Never seen a packet like this from a pump, even when suspended by app, but leave it in just in case
                                 val duration = (basalEndTime - basalStartTime)
                                 val newRecord = pumpSync.syncTemporaryBasalWithPumpId(
                                     timestamp = basalEndTime,
@@ -276,6 +277,13 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
                             else                                             -> {
                                 aapsLogger.error(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: BASAL_RECORD: Unknown basal type: $basalType")
                             }
+                        }
+
+                        if (basalEndReason.isSuspendedByPump()) {
+                            // Pump doesn't seem to sync suspend explicitly, so we need to do it here
+                            // Sync suspend using handleBasalStatusUpdate to make sure other variables are updated as well
+                            aapsLogger.warn(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: Got suspended end reason, syncing suspend")
+                            medtrumPump.handleBasalStatusUpdate(BasalType.fromBasalEndReason(basalEndReason), 0.0, recordSequence, recordPatchId, basalEndTime)
                         }
                     }
 
@@ -355,6 +363,9 @@ class GetRecordPacket(injector: HasAndroidInjector, private val recordIndex: Int
             } else {
                 aapsLogger.error(LTag.PUMPCOMM, "GetRecordPacket HandleResponse: Invalid record header")
             }
+
+            // Update sequence number
+            medtrumPump.syncedSequenceNumber = recordSequence // Assume sync upwards
         }
 
         return success
