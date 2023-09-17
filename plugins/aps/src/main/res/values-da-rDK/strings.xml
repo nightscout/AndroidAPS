@@ -98,4 +98,7 @@
     <string name="ignore30m">Ignorér 30m</string>
     <string name="basal_set_correctly">Basal sat korrekt </string>
     <string name="loop_aps_label">APS</string>
+    <string name="loop_tbr_set_by_pump_label">Midlertidig basal sat af pumpe</string>
+    <string name="loop_smb_set_by_pump_label">SMB indstillet af pumpe</string>
+    <string name="loop_open_mode_min_change">Minimal anmodningsændring [%]</string>
 </resources>
