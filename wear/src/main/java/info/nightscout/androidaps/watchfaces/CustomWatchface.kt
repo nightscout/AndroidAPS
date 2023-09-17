@@ -5,13 +5,17 @@ package info.nightscout.androidaps.watchfaces
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.Resources
+import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.ColorFilter
 import android.graphics.ColorMatrix
 import android.graphics.ColorMatrixColorFilter
 import android.graphics.Point
+import android.graphics.Rect
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
+import android.support.wearable.complications.ComplicationData
+import android.support.wearable.complications.rendering.ComplicationDrawable
 import android.support.wearable.watchface.WatchFaceStyle
 import android.util.TypedValue
 import android.view.Gravity
@@ -28,6 +32,7 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.view.forEach
+import androidx.core.view.isVisible
 import androidx.viewbinding.ViewBinding
 import info.nightscout.androidaps.R
 import info.nightscout.androidaps.databinding.ActivityCustomBinding
@@ -67,6 +72,7 @@ class CustomWatchface : BaseWatchFace() {
 
     override fun onCreate() {
         super.onCreate()
+        ComplicationMap.init(applicationContext)
         FontMap.init(context, resDataMap)
     }
 
@@ -140,6 +146,34 @@ class CustomWatchface : BaseWatchFace() {
         binding.secondHand.visibility = (binding.secondHand.visibility == View.VISIBLE && showSecond).toVisibility()
     }
 
+    override fun onDraw(canvas: Canvas) {
+        super.onDraw(canvas)
+        ComplicationMap.draw(canvas, System.currentTimeMillis())
+    }
+    override fun onComplicationDataUpdate(complicationId: Int, data: ComplicationData) {
+        aapsLogger.debug("XXXXX $complicationId : $data")
+        ComplicationMap.fromComplicationId(complicationId)?.drawable?.also {
+            it.setComplicationData(data)
+            invalidate()
+        }
+    }
+
+    override fun onTapCommand(tapType: Int, x: Int, y: Int, eventTime: Long) {
+        when (tapType) {
+            TAP_TYPE_TAP -> {
+                // Vérifiez si l'utilisateur a tapé sur une complication
+                val complication = ComplicationMap.getComplication(x, y)
+                if (complication != null) {
+                    complication.drawable?.onTap(x, y)
+                } else {
+                    super.onTapCommand(tapType, x, y, eventTime)
+                }
+            }
+            else -> super.onTapCommand(tapType, x, y, eventTime)
+        }
+    }
+
+    @SuppressLint("UseCompatLoadingForDrawables")
     private fun setWatchfaceStyle() {
         val customWatchface = persistence.readCustomWatchface() ?: persistence.readCustomWatchface(true)
         customWatchface?.let {
@@ -190,6 +224,18 @@ class CustomWatchface : BaseWatchFace() {
                                     id.customizeImageView(view, viewJson, resDataMap, singleBg, resources, ::getColor, ::changeDrawableColor)
                                 }
 
+                                is FrameLayout -> {
+                                    ComplicationMap.fromId(view.id)?.also { complication ->
+                                        if (view.isVisible) {
+                                            Rect(view.left, view.top, view.right, view.bottom).also {
+                                                complication.drawable?.bounds = it
+                                            }
+                                            complication.complicationId = sp.getInt(complication.pref, -1)
+                                        } else {
+                                            complication.complicationId = null
+                                        }
+                                    }
+                                }
                             }
                         } ?: apply {
                             view.visibility = View.GONE
@@ -199,6 +245,7 @@ class CustomWatchface : BaseWatchFace() {
                         }
                     }
                 }
+                setActiveComplications(ComplicationMap.getActiveComplicationIds())
                 manageSpecificViews()
             } catch (e: Exception) {
                 aapsLogger.debug(LTag.WEAR, "Crash during Custom watch load")
@@ -243,33 +290,49 @@ class CustomWatchface : BaseWatchFace() {
         binding.mainLayout.forEach { view ->
             val params = view.layoutParams as FrameLayout.LayoutParams
             ViewMap.fromId(view.id)?.let {
-                if (view is TextView) {
-                    json.put(
-                        it.key,
-                        JSONObject()
-                            .put(WIDTH.key, (params.width / zoomFactor).toInt())
-                            .put(HEIGHT.key, (params.height / zoomFactor).toInt())
-                            .put(TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
-                            .put(LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
-                            .put(ROTATION.key, view.rotation.toInt())
-                            .put(VISIBILITY.key, getVisibility(view.visibility))
-                            .put(TEXTSIZE.key, view.textSize.toInt())
-                            .put(GRAVITY.key, GravityMap.key(view.gravity))
-                            .put(FONT.key, FontMap.key())
-                            .put(FONTSTYLE.key, StyleMap.key(view.typeface.style))
-                            .put(FONTCOLOR.key, String.format("#%06X", 0xFFFFFF and view.currentTextColor))
-                    )
-                }
-                if (view is ImageView || view is lecho.lib.hellocharts.view.LineChartView) {
-                    json.put(
-                        it.key,
-                        JSONObject()
-                            .put(WIDTH.key, (params.width / zoomFactor).toInt())
-                            .put(HEIGHT.key, (params.height / zoomFactor).toInt())
-                            .put(TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
-                            .put(LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
-                            .put(VISIBILITY.key, getVisibility(view.visibility))
-                    )
+                when (view) {
+                    is TextView                                 -> {
+                        json.put(
+                            it.key,
+                            JSONObject()
+                                .put(WIDTH.key, (params.width / zoomFactor).toInt())
+                                .put(HEIGHT.key, (params.height / zoomFactor).toInt())
+                                .put(TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
+                                .put(LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
+                                .put(ROTATION.key, view.rotation.toInt())
+                                .put(VISIBILITY.key, getVisibility(view.visibility))
+                                .put(TEXTSIZE.key, view.textSize.toInt())
+                                .put(GRAVITY.key, GravityMap.key(view.gravity))
+                                .put(FONT.key, FontMap.key())
+                                .put(FONTSTYLE.key, StyleMap.key(view.typeface.style))
+                                .put(FONTCOLOR.key, String.format("#%06X", 0xFFFFFF and view.currentTextColor))
+                        )
+                    }
+
+                    is ImageView,
+                    is lecho.lib.hellocharts.view.LineChartView -> {
+                        json.put(
+                            it.key,
+                            JSONObject()
+                                .put(WIDTH.key, (params.width / zoomFactor).toInt())
+                                .put(HEIGHT.key, (params.height / zoomFactor).toInt())
+                                .put(TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
+                                .put(LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
+                                .put(VISIBILITY.key, getVisibility(view.visibility))
+                        )
+                    }
+
+                    is FrameLayout                              -> {
+                        json.put(
+                            it.key,
+                            JSONObject()
+                                .put(WIDTH.key, (params.width / zoomFactor).toInt())
+                                .put(HEIGHT.key, (params.height / zoomFactor).toInt())
+                                .put(TOPMARGIN.key, (params.topMargin / zoomFactor).toInt())
+                                .put(LEFTMARGIN.key, (params.leftMargin / zoomFactor).toInt())
+                                .put(VISIBILITY.key, getVisibility(view.visibility))
+                        )
+                    }
                 }
             }
         }
@@ -348,6 +411,7 @@ class CustomWatchface : BaseWatchFace() {
                 defaultColor
             }
 
+
     private fun manageSpecificViews() {
         //Background should fill all the watchface and must be visible
         val params = FrameLayout.LayoutParams((TEMPLATE_RESOLUTION * zoomFactor).toInt(), (TEMPLATE_RESOLUTION * zoomFactor).toInt())
@@ -360,6 +424,45 @@ class CustomWatchface : BaseWatchFace() {
         setSecond() // Update second visibility for time view
         // Update timePeriod visibility
         binding.timePeriod.visibility = (binding.timePeriod.visibility == View.VISIBLE && android.text.format.DateFormat.is24HourFormat(this).not()).toVisibility()
+    }
+
+    private enum class ComplicationMap(
+        val key: String,
+        @IdRes val id: Int,
+        @StringRes val pref: Int,
+        var drawable: ComplicationDrawable?,
+        var complicationId: Int?
+    ) {
+
+        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1, R.string.key_complication_1, null, null),
+        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2, R.string.key_complication_2, null, null),
+        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3, R.string.key_complication_3, null, null);
+
+        companion object {
+
+            fun init(context: Context) {
+                values().forEach {
+                    it.drawable = ComplicationDrawable(context)
+                }
+            }
+
+            fun draw(canvas: Canvas, now: Long) {
+                values().forEach {
+                    it.drawable?.draw(canvas, now)
+                }
+            }
+
+            fun fromId(id: Int): ComplicationMap? = values().firstOrNull { it.id == id }
+            fun fromComplicationId(id: Int): ComplicationMap? = values().firstOrNull { it.complicationId == id }
+
+            fun getActiveComplicationIds(): IntArray {
+                val ids = values().filter { it.complicationId != null && it.complicationId != -1 }.mapNotNull { it.complicationId }
+                return IntArray(ids.size) { index -> ids[index] }
+            }
+
+            fun getComplication(x: Int, y: Int): ComplicationMap? = values().firstOrNull { it.drawable?.bounds?.contains(x, y) == true }
+
+        }
     }
 
     private enum class ViewMap(
@@ -391,6 +494,9 @@ class CustomWatchface : BaseWatchFace() {
             ResFileMap.COVER_CHART_HIGH,
             ResFileMap.COVER_CHART_LOW
         ),
+        COMPLICATION1(ViewKeys.COMPLICATION1.key, R.id.complication1, null, null, null, null, null),
+        COMPLICATION2(ViewKeys.COMPLICATION2.key, R.id.complication2, null, null, null, null, null),
+        COMPLICATION3(ViewKeys.COMPLICATION3.key, R.id.complication3, null, null, null, null, null),
         FREETEXT1(ViewKeys.FREETEXT1.key, R.id.freetext1, null, null, null, null, null),
         FREETEXT2(ViewKeys.FREETEXT2.key, R.id.freetext2, null, null, null, null, null),
         FREETEXT3(ViewKeys.FREETEXT3.key, R.id.freetext3, null, null, null, null, null),

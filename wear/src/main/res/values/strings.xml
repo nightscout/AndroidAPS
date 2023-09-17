@@ -154,6 +154,9 @@
     <string name="pref_simplify_ui_sum">Only show time and BG</string>
     <string name="pref_vibrate_hourly">Vibrate hourly</string>
     <string name="pref_show_weeknumber">Show Week number</string>
+    <string name="pref_complication_1">Complication 1</string>
+    <string name="pref_complication_2">Complication 2</string>
+    <string name="pref_complication_3">Complication 3</string>
     <string name="custom_pref_show_seconds">Show seconds</string>
     <string name="digitalstyle_pref_your_style">Your style:</string>
     <string name="digitalstyle_style_none">no style</string>
@@ -233,6 +236,9 @@
     <string name="key_high_color" translatable="false">highcolor</string>
     <string name="key_mid_color" translatable="false">midcolor</string>
     <string name="key_low_color" translatable="false">lowcolor</string>
+    <string name="key_complication_1" translatable="false">complication_1</string>
+    <string name="key_complication_2" translatable="false">complication_2</string>
+    <string name="key_complication_3" translatable="false">complication_3</string>
     <string name="increment">increment</string>
     <string name="decrement">decrement</string>
     <string name="first_char_high">H</string>

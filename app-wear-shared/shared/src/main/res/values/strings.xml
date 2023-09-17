@@ -68,6 +68,7 @@
     <string name="cwf_comment_background">Background image</string>
     <string name="cwf_comment_chart">Graphs (BG, basal, prediction lines...)</string>
     <string name="cwf_comment_cover_chart">Image in front of graph and behind text fields</string>
+    <string name="cwf_comment_complication">Container for complication</string>
     <string name="cwf_comment_freetext1">Free text 1</string>
     <string name="cwf_comment_freetext2">Free text 2</string>
     <string name="cwf_comment_freetext3">Free text 3</string>
