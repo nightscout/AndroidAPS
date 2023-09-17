@@ -19,4 +19,5 @@
     <string name="detailed_14_days">Detaljerede 14 dage</string>
     <string name="day_tir">Dags TIR</string>
     <string name="night_tir">Nat TIR</string>
+    <string name="carbs_short" comment="max 6 characters">Kulhydrater</string>
 </resources>
