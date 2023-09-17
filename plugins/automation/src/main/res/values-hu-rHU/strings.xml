@@ -5,13 +5,6 @@
     <string name="alarm_short">Riasztás:</string>
     <string name="or">vagy</string>
     <string name="locationis">%1$s %2$s</string>
-    <string name="weekday_sunday_short">Vas</string>
-    <string name="weekday_saturday_short">Szo</string>
-    <string name="weekday_friday_short">Pé</string>
-    <string name="weekday_thursday_short">Csü</string>
-    <string name="weekday_wednesday_short">Sze</string>
-    <string name="weekday_tuesday_short">Ke</string>
-    <string name="weekday_monday_short">Hé</string>
     <string name="temptargetcompared">Átmeneti cél %1$s</string>
     <string name="wifissidcompared">WiFi SSID %1$s %2$s</string>
     <string name="autosenscompared">Autosens %1$s %2$s %%</string>
@@ -25,6 +18,5 @@
     <string name="condition">Feltétel:</string>
     <string name="taskname">Feladat neve</string>
     <string name="edit_short">SZERK</string>
-    <!-- WeekdayPicker -->
     <!--    Reminders-->
 </resources>
