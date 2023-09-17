@@ -63,13 +63,6 @@
     <string name="time_range">Tidsintervall</string>
     <string name="timerange_value">Tid er mellom %1$s og %2$s</string>
     <string name="between">Mellom </string>
-    <string name="weekday_sunday_short">Søn</string>
-    <string name="weekday_saturday_short">Lør</string>
-    <string name="weekday_friday_short">Fre</string>
-    <string name="weekday_thursday_short">Tors</string>
-    <string name="weekday_wednesday_short">Ons</string>
-    <string name="weekday_tuesday_short">Tirs</string>
-    <string name="weekday_monday_short">Man</string>
     <string name="delete_short">SLETT</string>
     <string name="add_short">LEGG TIL</string>
     <string name="copy_short">KOPIER</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">Kjør automatiseringer</string>
     <string name="add_automation">Legg til regel</string>
     <string name="stop_processing">Stopp prosessering</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">M</string>
-    <string name="tuesday_short">T</string>
-    <string name="wednesday_short">O</string>
-    <string name="thursday_short">T</string>
-    <string name="friday_short">F</string>
-    <string name="saturday_short">L</string>
-    <string name="sunday_short">S</string>
     <!--    Reminders-->
     <string name="time_to_eat">Nå må du spise!\nBruk bolusveiviser og gjør beregning på nytt.</string>
     <string name="time_to_bolus">Tid for bolus!\nStart bolusveiviser og gjør beregning på nytt.</string>
