@@ -318,4 +318,6 @@
         <item quantity="other">%1$d dana</item>
     </plurals>
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
 </resources>
