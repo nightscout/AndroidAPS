@@ -433,4 +433,6 @@
         <item quantity="other">%1$d minuts</item>
     </plurals>
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
 </resources>
