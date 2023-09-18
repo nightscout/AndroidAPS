@@ -89,7 +89,7 @@ class DateUtilTest : TestBase() {
     }
     */
     @Test fun timeFrameStringTest() {
-        `when`(rh.gs(info.nightscout.shared.R.string.shorthour)).thenReturn("h")
+        `when`(rh.gs(info.nightscout.interfaces.R.string.shorthour)).thenReturn("h")
         Assertions.assertEquals("(1h 1')", DateUtil(context).timeFrameString(T.hours(1).msecs() + T.mins(1).msecs(), rh))
     }
 }

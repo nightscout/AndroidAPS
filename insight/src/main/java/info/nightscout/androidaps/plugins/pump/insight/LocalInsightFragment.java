@@ -221,7 +221,7 @@ public class LocalInsightFragment extends DaggerFragment implements View.OnClick
                 string = info.nightscout.core.ui.R.string.connecting;
                 break;
             case CONNECTED:
-                string = info.nightscout.shared.R.string.connected;
+                string = info.nightscout.interfaces.R.string.connected;
                 break;
             case RECOVERING:
                 string = R.string.recovering;

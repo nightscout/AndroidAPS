@@ -77,8 +77,8 @@ class DataLayerListenerServiceMobile : WearableListenerService() {
 
     private val disposable = CompositeDisposable()
 
-    private val rxPath get() = getString(info.nightscout.shared.R.string.path_rx_bridge)
-    private val rxDataPath get() = getString(info.nightscout.shared.R.string.path_rx_data_bridge)
+    private val rxPath get() = getString(info.nightscout.interfaces.R.string.path_rx_bridge)
+    private val rxDataPath get() = getString(info.nightscout.interfaces.R.string.path_rx_data_bridge)
     @ExperimentalSerializationApi
     override fun onCreate() {
         AndroidInjection.inject(this)

@@ -276,7 +276,7 @@ class CarbsDialog : DialogFragmentWithDate() {
             actions.add(rh.gs(info.nightscout.core.ui.R.string.alarminxmin, timeOffset).formatColor(context, rh, info.nightscout.core.ui.R.attr.infoColor))
         val duration = binding.duration.value.toInt()
         if (duration > 0)
-            actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + duration + rh.gs(info.nightscout.shared.R.string.shorthour))
+            actions.add(rh.gs(info.nightscout.core.ui.R.string.duration) + ": " + duration + rh.gs(info.nightscout.interfaces.R.string.shorthour))
         if (carbsAfterConstraints > 0) {
             actions.add(
                 rh.gs(info.nightscout.core.ui.R.string.carbs) + ": " + "<font color='" + rh.gac(

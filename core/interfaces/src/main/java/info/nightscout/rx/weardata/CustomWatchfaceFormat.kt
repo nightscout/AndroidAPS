@@ -8,7 +8,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
 import androidx.annotation.StringRes
 import com.caverock.androidsvg.SVG
-import info.nightscout.shared.R
+import info.nightscout.interfaces.R
 import kotlinx.serialization.Serializable
 import org.json.JSONObject
 import java.io.BufferedOutputStream

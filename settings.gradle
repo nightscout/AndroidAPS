@@ -1,6 +1,5 @@
 include ':app'
 include ':wear'
-include ':app-wear-shared:shared'
 include ':app-wear-shared:shared-impl'
 include ':app-wear-shared:shared-tests'
 include ':core:main'

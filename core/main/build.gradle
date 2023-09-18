@@ -13,7 +13,6 @@ apply from: "${project.rootDir}/core/main/test_dependencies.gradle"
 apply from: "${project.rootDir}/core/main/jacoco_global.gradle"
 
 dependencies {
-    implementation project(':app-wear-shared:shared')
     implementation project(':database:entities')
     implementation project(':core:graphview')
     implementation project(':core:interfaces')

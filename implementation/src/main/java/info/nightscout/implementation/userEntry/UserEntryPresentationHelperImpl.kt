@@ -170,8 +170,8 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         csvString(info.nightscout.core.ui.R.string.insulin_unit_shortname),
         csvString(info.nightscout.core.ui.R.string.profile_ins_units_per_hour),
         csvString(info.nightscout.core.ui.R.string.shortpercent),
-        csvString(info.nightscout.shared.R.string.shorthour),
-        csvString(info.nightscout.shared.R.string.shortminute),
+        csvString(info.nightscout.interfaces.R.string.shorthour),
+        csvString(info.nightscout.interfaces.R.string.shortminute),
         csvString(info.nightscout.core.ui.R.string.ue_none)
     ) + "\n"
 

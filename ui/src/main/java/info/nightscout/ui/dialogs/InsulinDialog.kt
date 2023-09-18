@@ -137,35 +137,35 @@ class InsulinDialog : DialogFragmentWithDate() {
                 .okcancel.ok, textWatcher
         )
 
-        val plus05Text = sp.getDouble(rh.gs(info.nightscout.shared.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus05Text = sp.getDouble(rh.gs(info.nightscout.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus05.text = plus05Text
         binding.plus05.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus05Text
         binding.plus05.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(info.nightscout.shared.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT)
+                    + sp.getDouble(rh.gs(info.nightscout.interfaces.R.string.key_insulin_button_increment_1), INSULIN_PLUS1_DEFAULT)
             )
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus10Text = sp.getDouble(rh.gs(info.nightscout.shared.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus10Text = sp.getDouble(rh.gs(info.nightscout.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus10.text = plus10Text
         binding.plus10.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus10Text
         binding.plus10.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(info.nightscout.shared.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT)
+                    + sp.getDouble(rh.gs(info.nightscout.interfaces.R.string.key_insulin_button_increment_2), INSULIN_PLUS2_DEFAULT)
             )
             validateInputs()
             binding.amount.announceValue()
         }
-        val plus20Text = sp.getDouble(rh.gs(info.nightscout.shared.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
+        val plus20Text = sp.getDouble(rh.gs(info.nightscout.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT).toSignedString(activePlugin.activePump, decimalFormatter)
         binding.plus20.text = plus20Text
         binding.plus20.contentDescription = rh.gs(info.nightscout.core.ui.R.string.overview_insulin_label) + " " + plus20Text
         binding.plus20.setOnClickListener {
             binding.amount.value = max(
                 0.0, binding.amount.value
-                    + sp.getDouble(rh.gs(info.nightscout.shared.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT)
+                    + sp.getDouble(rh.gs(info.nightscout.interfaces.R.string.key_insulin_button_increment_3), INSULIN_PLUS3_DEFAULT)
             )
             validateInputs()
             binding.amount.announceValue()

@@ -207,7 +207,7 @@ class DanaFragment : DaggerFragment() {
         if (pump.lastConnection != 0L) {
             val agoMilliseconds = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMilliseconds.toDouble() / 60.0 / 1000.0).toInt()
-            binding.lastConnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(info.nightscout.shared.R.string.minago, agoMin) + ")"
+            binding.lastConnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(info.nightscout.interfaces.R.string.minago, agoMin) + ")"
             warnColors.setColor(binding.lastConnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {

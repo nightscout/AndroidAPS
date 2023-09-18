@@ -346,7 +346,7 @@ class DanaRSService : DaggerService() {
                 rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.pump.dana.R.string.gettingbolusstatus)))
                 sendMessage(DanaRSPacketBolusGetStepBolusInformation(injector)) // last bolus
                 bolusingEvent.percent = 100
-                rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.shared.R.string.disconnecting)))
+                rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.interfaces.R.string.disconnecting)))
             }
         })
         return !start.failed

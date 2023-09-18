@@ -1,7 +1,7 @@
 package info.nightscout.rx.events
 
 import android.content.Context
-import info.nightscout.shared.R
+import info.nightscout.interfaces.R
 
 class EventPumpStatusChanged : EventStatus {
 

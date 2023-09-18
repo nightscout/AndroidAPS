@@ -538,7 +538,7 @@ class DiaconnG8Service : DaggerService() {
                 if(!diaconnG8Pump.isPumpVersionGe3_53) {
                     bolusingEvent.percent = 100
                 }
-                rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.shared.R.string.disconnecting)))
+                rxBus.send(EventPumpStatusChanged(rh.gs(info.nightscout.interfaces.R.string.disconnecting)))
             }
         })
         return !start.failed

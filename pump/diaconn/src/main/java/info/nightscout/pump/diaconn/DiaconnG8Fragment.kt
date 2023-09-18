@@ -160,7 +160,7 @@ class DiaconnG8Fragment : DaggerFragment() {
         if (pump.lastConnection != 0L) {
             val agoMsec = System.currentTimeMillis() - pump.lastConnection
             val agoMin = (agoMsec.toDouble() / 60.0 / 1000.0).toInt()
-            binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(info.nightscout.shared.R.string.minago, agoMin) + ")"
+            binding.lastconnection.text = dateUtil.timeString(pump.lastConnection) + " (" + rh.gs(info.nightscout.interfaces.R.string.minago, agoMin) + ")"
             warnColors.setColor(binding.lastconnection, agoMin.toDouble(), 16.0, 31.0)
         }
         if (pump.lastBolusTime != 0L) {

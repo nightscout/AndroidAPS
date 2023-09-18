@@ -246,13 +246,13 @@ class CustomWatchface : BaseWatchFace() {
 
     private fun defaultWatchface(): EventData.ActionSetCustomWatchface {
         val metadata = JSONObject()
-            .put(CwfMetadataKey.CWF_NAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
-            .put(CwfMetadataKey.CWF_FILENAME.key, getString(info.nightscout.shared.R.string.wear_default_watchface))
+            .put(CwfMetadataKey.CWF_NAME.key, getString(info.nightscout.interfaces.R.string.wear_default_watchface))
+            .put(CwfMetadataKey.CWF_FILENAME.key, getString(info.nightscout.interfaces.R.string.wear_default_watchface))
             .put(CwfMetadataKey.CWF_AUTHOR.key, "Philoul")
             .put(CwfMetadataKey.CWF_CREATED_AT.key, dateUtil.dateString(dateUtil.now()))
             .put(CwfMetadataKey.CWF_AUTHOR_VERSION.key, CUSTOM_VERSION)
             .put(CwfMetadataKey.CWF_VERSION.key, CUSTOM_VERSION)
-            .put(CwfMetadataKey.CWF_COMMENT.key, getString(info.nightscout.shared.R.string.default_custom_watchface_comment))
+            .put(CwfMetadataKey.CWF_COMMENT.key, getString(info.nightscout.interfaces.R.string.default_custom_watchface_comment))
         val json = JSONObject()
             .put(METADATA.key, metadata)
             .put(HIGHCOLOR.key, String.format("#%06X", 0xFFFFFF and highColor))
