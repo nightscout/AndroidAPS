@@ -64,6 +64,7 @@
     <string name="pump_settings_error_wrong_max_basal_set">Pompada Yanlış Maksimum Bazal ayarlanmış (%1$.2f olmalıdır).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tip:</string>
+    <!-- PumpDeviceState -->
     <plurals name="duration_days">
         <item quantity="one">%1$d gün</item>
         <item quantity="other">%1$d gün</item>
