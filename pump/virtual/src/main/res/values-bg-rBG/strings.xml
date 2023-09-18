@@ -8,4 +8,5 @@
     <string name="description_pump_virtual">За помпи, който все още не работят с AndroidAPS(Open Loop)</string>
     <string name="virtual_pump_label">ВИРТУАЛНА ПОМПА</string>
     <string name="virtualpump_settings">Настойки Виртуална Помпа</string>
+    <!--    PumpType-->
 </resources>
