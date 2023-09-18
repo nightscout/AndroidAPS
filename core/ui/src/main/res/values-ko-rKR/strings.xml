@@ -579,4 +579,5 @@
     <string name="cleared_entries">입력된 내용 제거됨</string>
     <!--    Weekday-->
     <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
 </resources>
