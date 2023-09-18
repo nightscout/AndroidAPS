@@ -216,7 +216,6 @@ dependencies {
     implementation project(':insight')
     implementation project(':pump:medtronic')
     implementation project(':pump:pump-common')
-    implementation project(':pump:pump-core')
     implementation project(':pump:omnipod-common')
     implementation project(':pump:omnipod-eros')
     implementation project(':pump:omnipod-dash')

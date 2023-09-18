@@ -34,7 +34,6 @@ dependencies {
     implementation project(':core:ui')
     implementation project(':core:validators')
     implementation project(':pump:pump-common')
-    implementation project(':pump:pump-core')
     implementation project(':pump:rileylink')
     implementation project(':pump:omnipod-common')
 

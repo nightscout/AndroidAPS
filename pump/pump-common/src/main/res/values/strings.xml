@@ -77,6 +77,16 @@
     <string name="pump_history_type">Type:</string>
 
 
+    <!-- PumpDeviceState -->
+    <string name="pump_status_never_contacted">Never contacted</string>
+    <string name="pump_status_sleeping">Sleeping</string>
+    <string name="pump_status_waking_up">Waking up</string>
+    <string name="pump_status_active">Active</string>
+    <string name="pump_status_error_comm">Error with communication</string>
+    <string name="pump_status_timeout_comm">Timeout on communication</string>
+    <string name="pump_status_pump_unreachable">Pump unreachable</string>
+    <string name="pump_status_invalid_config">Invalid configuration</string>
+
     <plurals name="duration_days">
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>

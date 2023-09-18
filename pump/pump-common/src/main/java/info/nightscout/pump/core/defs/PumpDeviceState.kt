@@ -1,6 +1,6 @@
 package info.nightscout.pump.core.defs
 
-import info.nightscout.pump.core.R
+import info.nightscout.pump.common.R
 
 enum class PumpDeviceState(var resourceId: Int) {
 
