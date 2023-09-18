@@ -55,6 +55,7 @@
     <string name="pref_show_bgi">Εμφάνιση BGI</string>
     <string name="pref_show_direction_arrow">Εμφάνιση Βέλους Κατεύθυνσης</string>
     <string name="pref_show_ago">Εμφάνιση Πριν</string>
+    <string name="pref_show_week_number">Εμφάνιση αριθμού Εβδομάδας</string>
     <string name="default_custom_watchface_comment">Προεπιλεγμένη πρόσοψη ρολογιού, μπορείτε να κάνετε κλικ στο κουμπί ΕΞΑΓΩΓΗ ΠΡΟΣΟΨΗΣ για να δημιουργήσετε ένα πρότυπο</string>
     <string name="wear_default_watchface">Προεπιλεγμένη πρόσοψη ρολογιού</string>
     <string name="cwf_comment_background">Εικόνα φόντου</string>
@@ -81,6 +82,7 @@
     <string name="cwf_comment_timePeriod">ΠΜ ή ΜΜ</string>
     <string name="cwf_comment_day_name">Όνομα της ημέρας της εβδομάδας</string>
     <string name="cwf_comment_day">Ημέρα (DD)</string>
+    <string name="cwf_comment_week_number">Αριθμός Εβδομάδας (ww)</string>
     <string name="cwf_comment_month">Όνομα μήνα (σύντομο)</string>
     <string name="cwf_comment_loop">Κατάσταση κυκλώματος και πριν</string>
     <string name="cwf_comment_direction">Βέλος κατεύθυνσης</string>
