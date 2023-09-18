@@ -36,9 +36,9 @@ import info.nightscout.core.utils.HtmlHelper
 import info.nightscout.core.utils.fabric.FabricPrivacy
 import info.nightscout.database.entities.UserEntry.Action
 import info.nightscout.database.entities.UserEntry.Sources
-import info.nightscout.interfaces.dragHelpers.ItemTouchHelperAdapter
-import info.nightscout.interfaces.dragHelpers.OnStartDragListener
-import info.nightscout.interfaces.dragHelpers.SimpleItemTouchHelperCallback
+import info.nightscout.core.ui.dragHelpers.ItemTouchHelperAdapter
+import info.nightscout.core.ui.dragHelpers.OnStartDragListener
+import info.nightscout.core.ui.dragHelpers.SimpleItemTouchHelperCallback
 import info.nightscout.interfaces.logging.UserEntryLogger
 import info.nightscout.rx.AapsSchedulers
 import info.nightscout.rx.bus.RxBus
