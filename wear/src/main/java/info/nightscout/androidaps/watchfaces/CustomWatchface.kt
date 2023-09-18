@@ -35,15 +35,15 @@ import info.nightscout.androidaps.watchfaces.utils.BaseWatchFace
 import info.nightscout.rx.logging.LTag
 import info.nightscout.rx.weardata.CUSTOM_VERSION
 import info.nightscout.rx.weardata.CwfData
-import info.nightscout.rx.weardata.ResFileMap
-import info.nightscout.rx.weardata.CwfResDataMap
 import info.nightscout.rx.weardata.CwfMetadataKey
 import info.nightscout.rx.weardata.CwfMetadataMap
-import info.nightscout.rx.weardata.ResData
-import info.nightscout.rx.weardata.ResFormat
+import info.nightscout.rx.weardata.CwfResDataMap
 import info.nightscout.rx.weardata.EventData
 import info.nightscout.rx.weardata.JsonKeyValues
 import info.nightscout.rx.weardata.JsonKeys.*
+import info.nightscout.rx.weardata.ResData
+import info.nightscout.rx.weardata.ResFileMap
+import info.nightscout.rx.weardata.ResFormat
 import info.nightscout.rx.weardata.ViewKeys
 import info.nightscout.rx.weardata.ZipWatchfaceFormat
 import info.nightscout.shared.extensions.toVisibility
@@ -208,7 +208,7 @@ class CustomWatchface : BaseWatchFace() {
                                             it.clearColorFilter()
                                         view.setImageDrawable(it)
                                     } ?: apply {
-                                        view.setImageDrawable(id.defaultDrawable?.let {resources.getDrawable(it)})
+                                        view.setImageDrawable(id.defaultDrawable?.let { resources.getDrawable(it) })
                                         if (viewJson.has(COLOR.key))
                                             view.setColorFilter(getColor(viewJson.optString(COLOR.key)))
                                         else
@@ -217,7 +217,7 @@ class CustomWatchface : BaseWatchFace() {
                                 }
 
                             }
-                        } ?:apply {
+                        } ?: apply {
                             view.visibility = View.GONE
                             if (view is TextView) {
                                 view.text = ""
@@ -301,7 +301,7 @@ class CustomWatchface : BaseWatchFace() {
         }
         val metadataMap = ZipWatchfaceFormat.loadMetadata(json)
         val drawableDataMap: CwfResDataMap = mutableMapOf()
-        getResourceByteArray(info.nightscout.shared.R.drawable.watchface_custom)?.let {
+        getResourceByteArray(info.nightscout.shared.impl.R.drawable.watchface_custom)?.let {
             drawableDataMap[ResFileMap.CUSTOM_WATCHFACE.fileName] = ResData(it, ResFormat.PNG)
         }
         return EventData.ActionSetCustomWatchface(CwfData(json.toString(4), metadataMap, drawableDataMap))
@@ -394,7 +394,7 @@ class CustomWatchface : BaseWatchFace() {
         @StringRes val pref: Int?,
         @IdRes val defaultDrawable: Int?,
         val customDrawable: ResFileMap?,
-        val customHigh:ResFileMap?,
+        val customHigh: ResFileMap?,
         val customLow: ResFileMap?
     ) {
 
@@ -402,7 +402,7 @@ class CustomWatchface : BaseWatchFace() {
             ViewKeys.BACKGROUND.key,
             R.id.background,
             null,
-            info.nightscout.shared.R.drawable.background,
+            info.nightscout.shared.impl.R.drawable.background,
             ResFileMap.BACKGROUND,
             ResFileMap.BACKGROUND_HIGH,
             ResFileMap.BACKGROUND_LOW
@@ -448,7 +448,7 @@ class CustomWatchface : BaseWatchFace() {
             ViewKeys.COVER_PLATE.key,
             R.id.cover_plate,
             null,
-            info.nightscout.shared.R.drawable.simplified_dial,
+            info.nightscout.shared.impl.R.drawable.simplified_dial,
             ResFileMap.COVER_PLATE,
             ResFileMap.COVER_PLATE_HIGH,
             ResFileMap.COVER_PLATE_LOW
@@ -457,7 +457,7 @@ class CustomWatchface : BaseWatchFace() {
             ViewKeys.HOUR_HAND.key,
             R.id.hour_hand,
             null,
-            info.nightscout.shared.R.drawable.hour_hand,
+            info.nightscout.shared.impl.R.drawable.hour_hand,
             ResFileMap.HOUR_HAND,
             ResFileMap.HOUR_HAND_HIGH,
             ResFileMap.HOUR_HAND_LOW
@@ -466,7 +466,7 @@ class CustomWatchface : BaseWatchFace() {
             ViewKeys.MINUTE_HAND.key,
             R.id.minute_hand,
             null,
-            info.nightscout.shared.R.drawable.minute_hand,
+            info.nightscout.shared.impl.R.drawable.minute_hand,
             ResFileMap.MINUTE_HAND,
             ResFileMap.MINUTE_HAND_HIGH,
             ResFileMap.MINUTE_HAND_LOW
@@ -475,7 +475,7 @@ class CustomWatchface : BaseWatchFace() {
             ViewKeys.SECOND_HAND.key,
             R.id.second_hand,
             R.string.key_show_seconds,
-            info.nightscout.shared.R.drawable.second_hand,
+            info.nightscout.shared.impl.R.drawable.second_hand,
             ResFileMap.SECOND_HAND,
             ResFileMap.SECOND_HAND_HIGH,
             ResFileMap.SECOND_HAND_LOW
@@ -491,16 +491,25 @@ class CustomWatchface : BaseWatchFace() {
 
         fun drawable(resources: Resources, drawableDataMap: CwfResDataMap, sgvLevel: Long): Drawable? = customDrawable?.let { cd ->
             when (sgvLevel) {
-                1L   -> { customHigh?.let {drawableDataMap[customHigh.fileName]}?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources) }
-                0L   -> { drawableDataMap[cd.fileName]?.toDrawable(resources) }
-                -1L  -> { customLow?.let {drawableDataMap[customLow.fileName]}?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources) }
+                1L   -> {
+                    customHigh?.let { drawableDataMap[customHigh.fileName] }?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources)
+                }
+
+                0L   -> {
+                    drawableDataMap[cd.fileName]?.toDrawable(resources)
+                }
+
+                -1L  -> {
+                    customLow?.let { drawableDataMap[customLow.fileName] }?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources)
+                }
+
                 else -> drawableDataMap[cd.fileName]?.toDrawable(resources)
             }
         }
     }
 }
 
-private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int,val customDrawable: ResFileMap?) {
+private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int, val customDrawable: ResFileMap?) {
     NONE("??", R.drawable.ic_invalid, ResFileMap.ARROW_NONE),
     TRIPLE_UP("X", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP),
     DOUBLE_UP("\u21c8", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP),
@@ -515,8 +524,8 @@ private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int,
     companion object {
 
         fun drawable(direction: String?, resources: Resources, drawableDataMap: CwfResDataMap): Drawable {
-            val arrow = values().firstOrNull { it.symbol == direction } ?:NONE
-            return arrow.customDrawable?. let {drawableDataMap[arrow.customDrawable.fileName]}?.toDrawable(resources)  ?:resources.getDrawable(arrow.icon)
+            val arrow = values().firstOrNull { it.symbol == direction } ?: NONE
+            return arrow.customDrawable?.let { drawableDataMap[arrow.customDrawable.fileName] }?.toDrawable(resources) ?: resources.getDrawable(arrow.icon)
         }
 
     }
@@ -558,7 +567,7 @@ private enum class FontMap(val key: String, var font: Typeface, @FontRes val fon
             resDataMap.filter { (_, resData) ->
                 resData.format == ResFormat.TTF || resData.format == ResFormat.OTF
             }.forEach { (key, resData) ->
-                customFonts[key.lowercase()] = resData.toTypeface() ?:Typeface.DEFAULT
+                customFonts[key.lowercase()] = resData.toTypeface() ?: Typeface.DEFAULT
             }
         }
 

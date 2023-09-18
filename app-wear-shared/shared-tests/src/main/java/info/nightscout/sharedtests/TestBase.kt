@@ -2,8 +2,7 @@ package info.nightscout.sharedtests
 
 import android.annotation.SuppressLint
 import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.TestAapsSchedulers
-import info.nightscout.rx.logging.AAPSLoggerTest
+import info.nightscout.sharedtests.rx.TestAapsSchedulers
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatcher

@@ -19,11 +19,11 @@ import info.nightscout.interfaces.profile.ProfileFunction
 import info.nightscout.interfaces.profile.ProfileStore
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.interfaces.utils.HardLimits
-import info.nightscout.rx.bus.RxBus
+import info.nightscout.shared.impl.rx.bus.RxBusImpl
 import info.nightscout.shared.interfaces.ProfileUtil
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.shared.sharedPreferences.SP
-import info.nightscout.shared.utils.DateUtil
+import info.nightscout.shared.utils.DateUtilImpl
 import org.json.JSONObject
 import org.junit.jupiter.api.BeforeEach
 import org.mockito.ArgumentMatchers.anyDouble
@@ -45,11 +45,11 @@ open class TestBaseWithProfile : TestBase() {
     @Mock lateinit var context: Context
     @Mock lateinit var sp: SP
 
-    lateinit var dateUtil: DateUtil
+    lateinit var dateUtil: DateUtilImpl
     lateinit var profileUtil: ProfileUtil
     lateinit var decimalFormatter: DecimalFormatter
     lateinit var hardLimits: HardLimits
-    val rxBus = RxBus(aapsSchedulers, aapsLogger)
+    val rxBus = RxBusImpl(aapsSchedulers, aapsLogger)
 
     val profileInjector = HasAndroidInjector {
         AndroidInjector {
@@ -82,7 +82,7 @@ open class TestBaseWithProfile : TestBase() {
         invalidProfileJSON = "{\"dia\":\"1\",\"carbratio\":[{\"time\":\"00:00\",\"value\":\"30\"}],\"carbs_hr\":\"20\",\"delay\":\"20\",\"sens\":[{\"time\":\"00:00\",\"value\":\"3\"}," +
             "{\"time\":\"2:00\",\"value\":\"3.4\"}],\"timezone\":\"UTC\",\"basal\":[{\"time\":\"00:00\",\"value\":\"1\"}],\"target_low\":[{\"time\":\"00:00\",\"value\":\"4.5\"}]," +
             "\"target_high\":[{\"time\":\"00:00\",\"value\":\"7\"}],\"startDate\":\"1970-01-01T00:00:00.000Z\",\"units\":\"mmol\"}"
-        dateUtil = Mockito.spy(DateUtil(context))
+        dateUtil = Mockito.spy(DateUtilImpl(context))
         decimalFormatter = DecimalFormatterImpl(rh)
         profileUtil = ProfileUtilImpl(sp, decimalFormatter)
         testPumpPlugin = TestPumpPlugin(profileInjector)

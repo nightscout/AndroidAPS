@@ -1,4 +1,7 @@
-package info.nightscout.rx.logging
+package info.nightscout.sharedtests
+
+import info.nightscout.rx.logging.AAPSLogger
+import info.nightscout.rx.logging.LTag
 
 /**
  * Created by adrian on 2019-12-27.

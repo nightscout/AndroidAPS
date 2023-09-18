@@ -17,5 +17,6 @@ android {
 
 dependencies {
     implementation project(':app-wear-shared:shared')
+    implementation project(':app-wear-shared:shared-impl')
     api "com.google.android.material:material:$material_version"
 }

@@ -4,8 +4,8 @@ import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorManager
 import info.nightscout.rx.AapsSchedulers
-import info.nightscout.rx.logging.AAPSLoggerTest
 import info.nightscout.rx.weardata.EventData.ActionHeartRate
+import info.nightscout.sharedtests.AAPSLoggerTest
 import io.reactivex.rxjava3.core.Scheduler
 import io.reactivex.rxjava3.disposables.Disposable
 import org.junit.jupiter.api.AfterEach
@@ -22,8 +22,9 @@ import org.mockito.Mockito.`when`
 import java.util.concurrent.TimeUnit
 
 internal class HeartRateListenerTest {
+
     private val aapsLogger = AAPSLoggerTest()
-    private val aapsSchedulers = object: AapsSchedulers {
+    private val aapsSchedulers = object : AapsSchedulers {
         override val main: Scheduler = mock(Scheduler::class.java)
         override val io: Scheduler = mock(Scheduler::class.java)
         override val cpu: Scheduler = mock(Scheduler::class.java)
@@ -35,11 +36,15 @@ internal class HeartRateListenerTest {
 
     private fun create(timestampMillis: Long): HeartRateListener {
         val ctx = mock(Context::class.java)
-        `when`(aapsSchedulers.io.schedulePeriodicallyDirect(
-            any(), eq(60_000L), eq(60_000L), eq(TimeUnit.MILLISECONDS))).thenReturn(schedule)
+        `when`(
+            aapsSchedulers.io.schedulePeriodicallyDirect(
+                any(), eq(60_000L), eq(60_000L), eq(TimeUnit.MILLISECONDS)
+            )
+        ).thenReturn(schedule)
         val listener = HeartRateListener(ctx, aapsLogger, aapsSchedulers, timestampMillis)
         verify(aapsSchedulers.io).schedulePeriodicallyDirect(
-            any(), eq(60_000L), eq(60_000L), eq(TimeUnit.MILLISECONDS))
+            any(), eq(60_000L), eq(60_000L), eq(TimeUnit.MILLISECONDS)
+        )
         listener.sendHeartRate = { hr -> heartRates.add(hr) }
         return listener
     }
@@ -49,10 +54,11 @@ internal class HeartRateListenerTest {
         timestamp: Long,
         heartRate: Int,
         sensorType: Int? = Sensor.TYPE_HEART_RATE,
-        accuracy: Int = SensorManager.SENSOR_STATUS_ACCURACY_HIGH) {
+        accuracy: Int = SensorManager.SENSOR_STATUS_ACCURACY_HIGH
+    ) {
         listener.onSensorChanged(sensorType, accuracy, timestamp, floatArrayOf(heartRate.toFloat()))
     }
-    
+
     @BeforeEach
     fun before() {
         heartRates.clear()
@@ -66,7 +72,7 @@ internal class HeartRateListenerTest {
         Mockito.verifyNoInteractions(aapsSchedulers.newThread)
         verify(schedule).dispose()
     }
-    
+
     @Test
     fun onSensorChanged() {
         val start = System.currentTimeMillis()
@@ -95,7 +101,7 @@ internal class HeartRateListenerTest {
         sendSensorEvent(listener, start, 80)
         assertEquals(0, heartRates.size)
         assertEquals(80, listener.currentHeartRateBpm)
-        sendSensorEvent(listener, start + d1,100)
+        sendSensorEvent(listener, start + d1, 100)
         assertEquals(0, heartRates.size)
         assertEquals(100, listener.currentHeartRateBpm)
 
@@ -117,7 +123,7 @@ internal class HeartRateListenerTest {
         listener.send(start + d1)
         assertEquals(1, heartRates.size)
 
-        sendSensorEvent(listener, start + d1,100)
+        sendSensorEvent(listener, start + d1, 100)
         assertEquals(1, heartRates.size)
         listener.send(start + d2)
         assertEquals(2, heartRates.size)
