@@ -8,4 +8,5 @@
     <string name="description_pump_virtual">Integration för pumpar som ännu inte stöds av AndroidAPS (Open loop)</string>
     <string name="virtual_pump_label">VIRTUELL PUMP</string>
     <string name="virtualpump_settings">Inställningar för Virtuell pump</string>
+    <!--    PumpType-->
 </resources>
