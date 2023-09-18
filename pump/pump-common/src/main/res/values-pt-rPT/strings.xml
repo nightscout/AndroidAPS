@@ -40,6 +40,7 @@
     <string name="pump_settings_error_wrong_max_basal_set">Índice Basal máximo definido na Bomba está incorrecto (deve ser %1$.2f).</string>
     <!-- Pump History -->
     <string name="pump_history_type">Tipo:</string>
+    <!-- PumpDeviceState -->
     <plurals name="duration_days">
         <item quantity="one">%1$d dia</item>
         <item quantity="other">%1$d dias</item>
