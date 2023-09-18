@@ -11,11 +11,6 @@
     <string name="metadata_format_new">Nieuwe versleutelde indeling</string>
     <string name="metadata_format_debug">Nieuwe debug indeling (onversleuteld)</string>
     <string name="metadata_format_other">Onbekende export indeling</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Alleen absolute waardes (geen van-tot bereik) worden ondersteund voor basaal / bolus in virtuele pomp.</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pomp stuurprogramma gewijzigd.</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f E</string>
-    <string name="format_insulin_units">%1$.2f E</string>
 </resources>
