@@ -1,2 +1,32 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
-<resources></resources>
+<resources>
+    <string name="string_a002">Tomt reservoir\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a003">Patch udløbet\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a004">Okklusion\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a005">Fejl i tændinsselvtest\nPatch er blevet deaktiveret. Skift Patch nu.</string>
+    <string name="string_a007">Upassende temperatur\nInsulintilførsel eller \'Aktivér Patch\'-proces stoppet. Undgå ekstreme temperature med det samme.</string>
+    <string name="string_a016">Nålindsættelsesfejl\nTjek knappens position og tryk \'Prøv igen\'.</string>
+    <string name="string_a018">Patch batterifejl\nPach er blevet deaktiveret og\ninsulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a019">Patch batterifejl\nPach er blevet deaktiveret og\ninsulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a020">Patch aktiveringsfejl\n\'Aktivér Patch\'-proces er udløbet. Tryk på \'Bekræft\' for at deaktivere nuværende Patch. Skift Patch nu.</string>
+    <string name="string_a022">Patch-Fejl\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a023">Patch-Fejl\nPatch er blevet deaktiveret og \ninsulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a034">Patch-Fejl\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a041">Patch-Fejl\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a042">Patch-Fejl\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a043">Patch-Fejl\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a044">Patch-Fejl\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a106">Patch-Fejl\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a107">Patch-Fejl\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a108">Patch-Fejl\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a116">Patch-Fejl\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a117">Patch-Fejl\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_a118">Patch-Fejl\nPatch er blevet deaktiveret og insulintilførsel er stoppet. Skift Patch nu.</string>
+    <string name="string_b000">Patch-driftstid vil udløbe %s. Vær klar til at ændre Patch.</string>
+    <string name="string_b001">Afslutning af insulinsuspensionen\nTryk på \'Fortsæt\' for at genstarte insulintilførslen.</string>
+    <string name="string_b003">Lavt reservoir\nUdskift Patch snart.</string>
+    <string name="string_b005">Patch driftslevetid udløbet\nSkift Patch nu.</string>
+    <string name="string_b006">Patch udløber snart\nSkift Patch nu.</string>
+    <string name="string_b012">Ufuldstændig Patch-aktivering\nGennemfør \'Aktivér Patch\'-proces.</string>
+    <string name="string_b018">Patch-batteri lavt\nVær klar til at ændre Patch.</string>
+</resources>
