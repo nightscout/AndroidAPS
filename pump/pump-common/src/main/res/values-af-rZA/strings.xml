@@ -36,6 +36,7 @@
     <string name="pump_settings_error_wrong_max_bolus_set">Verkeerde Maks Bolus gestel op Pomp(moet %1$.2f wees).</string>
     <string name="pump_settings_error_wrong_max_basal_set">Verkeerde Maks Basale op Pomp (moet %1$.2f %1$.2f wees),.</string>
     <!-- Pump History -->
+    <!-- PumpDeviceState -->
     <plurals name="duration_days">
         <item quantity="one">%1$d dae</item>
         <item quantity="other">%1$d dae</item>
