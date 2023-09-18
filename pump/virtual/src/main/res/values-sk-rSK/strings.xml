@@ -9,4 +9,5 @@
     <string name="virtual_pump_label">Virtuálna pumpa</string>
     <string name="virtualpump_settings">Nastavenie virtuálnej pumpy</string>
     <!--    PumpType-->
+    <string name="def_extended_note">* Iba diskrétne hodnoty a nie rozsahy, sú podporované pre bazál/bolus vo virtuálnej pumpe.</string>
 </resources>
