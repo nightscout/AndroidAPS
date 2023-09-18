@@ -55,7 +55,7 @@
     <string name="objectives_exam_learned_isf">ISF 값의 의미와 인슐린 양이 어떻게 BG 보정에 영향을 미치는지 배웠습니다.</string>
     <string name="objectives_exam_learned_ic">IC 값의 의미와 이것이 탄수화물을 커버하는 데 필요한 인슐린의 양에 어떻게 영향을 미치는지 배웠습니다.</string>
     <string name="objectives_exam_learned_hypott">일반적으로 음성 IOB가 쌓여 있는 경우, 피하 주사 후 피하 주사 보정을 방지하기 위해 피하 주사 임시 대상이 사용됩니다. 향후 이러한 상황을 다시 방지하기 위해 추가 조치를 평가해야 합니다.</string>
-    <string name="objectives_exam_learned_profileswitch">백분율을 사용하는 것은 표적 BG에 영향을 미치지 않지만 basal, ISF 그리고 IC는 더 많은 인슐린 (100% 이상) 또는 더 적은 인슐린 (100% 미만)을 제공하도록 조정됩니다.</string>
+    <string name="objectives_exam_learned_profileswitch">백분율을 사용하는 것은 표적 BG에 영향을 미치지 않지만 basal, ISF 그리고 IC는 더 많은 인슐린 (100%% 이상) 또는 더 적은 인슐린 (100%% 미만)을 제공하도록 조정됩니다.</string>
     <string name="objectives_exam_learned_profileswitchtime">프로파일 스위치의 시간 이동을 사용하여 일일 프로파일을 늦은 기상과 같은 불규칙성에 적응시킬 수 있습니다.</string>
     <string name="objectives_exam_learned_profileswitch4">프로파일 편집 자체만으로는 변경할 수 없습니다. 변경한 내용을 활성화하려면 프로파일 전환을 진행해야 합니다.</string>
     <string name="objectives_exam_learned_exercise">프로파일을 100% 이하로 선택하여 운동을 시작하기 최소 1시간 전에 체내 인슐린 양을 줄여야합니다.</string>
