@@ -8,4 +8,5 @@
     <string name="description_pump_virtual">Intégration pour les pompes qui n’ont pas encore de pilote (Boucle Ouverte)</string>
     <string name="virtual_pump_label">POMPE VIRTUELLE</string>
     <string name="virtualpump_settings">Paramètres pompe virtuelle</string>
+    <!--    PumpType-->
 </resources>
