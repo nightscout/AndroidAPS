@@ -145,4 +145,5 @@
     <!-- Custom Watchface -->
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Genstart venligst din telefon eller genstart AAPS fra Systemindstillinger \nellers vil AndroidAPS ikke have logning (vigtigt at spore og kontrollere, at algoritmerne fungerer korrekt)!</string>
+    <!-- Maintenance -->
 </resources>
