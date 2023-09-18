@@ -36,7 +36,7 @@ class ActionRunAutotune(injector: HasAndroidInjector) : Action(injector) {
 
     override fun friendlyName(): Int = info.nightscout.core.ui.R.string.autotune_run
     override fun shortDescription(): String = resourceHelper.gs(info.nightscout.core.ui.R.string.autotune_profile_name, inputProfileName.value)
-    @DrawableRes override fun icon(): Int = info.nightscout.interfaces.R.drawable.ic_actions_profileswitch
+    @DrawableRes override fun icon(): Int = info.nightscout.core.ui.R.drawable.ic_actions_profileswitch
 
     override fun doAction(callback: Callback) {
         val autoSwitch = sp.getBoolean(info.nightscout.core.utils.R.string.key_autotune_auto, false)

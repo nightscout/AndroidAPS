@@ -35,7 +35,7 @@ class ActionProfileSwitchPercent(injector: HasAndroidInjector) : Action(injector
         if (duration.value == 0) rh.gs(R.string.startprofileforever, pct.value.toInt())
         else rh.gs(info.nightscout.core.ui.R.string.startprofile, pct.value.toInt(), duration.value)
 
-    @DrawableRes override fun icon(): Int = info.nightscout.interfaces.R.drawable.ic_actions_profileswitch
+    @DrawableRes override fun icon(): Int = info.nightscout.core.ui.R.drawable.ic_actions_profileswitch
 
     init {
         precondition = TriggerProfilePercent(injector, 100.0, Comparator.Compare.IS_EQUAL)

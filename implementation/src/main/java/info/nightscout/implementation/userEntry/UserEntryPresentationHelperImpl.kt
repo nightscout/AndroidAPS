@@ -49,7 +49,7 @@ class UserEntryPresentationHelperImpl @Inject constructor(
         Sources.QuickWizard         -> R.drawable.ic_quick_wizard
         Sources.ExtendedBolusDialog -> R.drawable.ic_actions_start_extended_bolus
         Sources.TTDialog            -> R.drawable.ic_temptarget_high
-        Sources.ProfileSwitchDialog -> info.nightscout.interfaces.R.drawable.ic_actions_profileswitch
+        Sources.ProfileSwitchDialog -> info.nightscout.core.ui.R.drawable.ic_actions_profileswitch
         Sources.LoopDialog          -> R.drawable.ic_loop_closed
         Sources.TempBasalDialog     -> R.drawable.ic_actions_start_temp_basal
         Sources.CalibrationDialog   -> R.drawable.ic_calibration
