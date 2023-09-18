@@ -240,7 +240,9 @@ enum class JsonKeys(val key: String) {
     ALLCAPS("allCaps"),
     DAYNAMEFORMAT("dayNameFormat"),
     MONTHFORMAT("monthFormat"),
-    BACKGROUND("background")
+    BACKGROUND("background"),
+    FONTTITLE("fontTitle"),
+    FONTTITLECOLOR("fontTitleColor")
 }
 
 enum class JsonKeyValues(val key: String) {

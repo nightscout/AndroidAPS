@@ -150,6 +150,7 @@ class CustomWatchface : BaseWatchFace() {
         super.onDraw(canvas)
         ComplicationMap.draw(canvas, System.currentTimeMillis())
     }
+
     override fun onComplicationDataUpdate(complicationId: Int, data: ComplicationData) {
         aapsLogger.debug("XXXXX $complicationId : $data")
         ComplicationMap.fromComplicationId(complicationId)?.drawable?.also {
@@ -169,7 +170,8 @@ class CustomWatchface : BaseWatchFace() {
                     super.onTapCommand(tapType, x, y, eventTime)
                 }
             }
-            else -> super.onTapCommand(tapType, x, y, eventTime)
+
+            else         -> super.onTapCommand(tapType, x, y, eventTime)
         }
     }
 
@@ -225,16 +227,7 @@ class CustomWatchface : BaseWatchFace() {
                                 }
 
                                 is FrameLayout -> {
-                                    ComplicationMap.fromId(view.id)?.also { complication ->
-                                        if (view.isVisible) {
-                                            Rect(view.left, view.top, view.right, view.bottom).also {
-                                                complication.drawable?.bounds = it
-                                            }
-                                            complication.complicationId = sp.getInt(complication.pref, -1)
-                                        } else {
-                                            complication.complicationId = null
-                                        }
-                                    }
+                                    ComplicationMap.fromId(view.id)?.also { it.customizeComplication(view, viewJson, sp, ::getColor) }
                                 }
                             }
                         } ?: apply {
@@ -462,6 +455,26 @@ class CustomWatchface : BaseWatchFace() {
 
             fun getComplication(x: Int, y: Int): ComplicationMap? = values().firstOrNull { it.drawable?.bounds?.contains(x, y) == true }
 
+        }
+
+        fun customizeComplication(view: View, viewJson: JSONObject, sp: SP, getColor: (String) -> Int) {
+            if (view.isVisible)
+                drawable?.also {
+                    Rect(view.left, view.top, view.right, view.bottom).also { rect ->
+                        it.bounds = rect
+                    }
+                    complicationId = sp.getInt(pref, -1)
+                    it.setTextTypefaceActive(FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)))
+                    it.setTitleTypefaceActive(FontMap.font(viewJson.optString(FONTTITLE.key, FontMap.DEFAULT.key)))
+                    if (viewJson.has(FONTCOLOR.key))
+                        it.setTextColorActive(getColor(viewJson.optString(FONTCOLOR.key)))
+                    if (viewJson.has(FONTTITLECOLOR.key))
+                        it.setTitleColorActive(getColor(viewJson.optString(FONTTITLECOLOR.key)))
+                    if (viewJson.has(COLOR.key))
+                        it.setIconColorActive(getColor(viewJson.optString(COLOR.key)))
+                }
+            else
+                complicationId = null
         }
     }
 
