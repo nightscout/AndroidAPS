@@ -11,11 +11,6 @@
     <string name="metadata_format_new">Nový zašifrovaný formát</string>
     <string name="metadata_format_debug">Nový formát pro ladění (nešifrovaný)</string>
     <string name="metadata_format_other">Neznámý formát souboru</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Pouze diskrétní hodnoty a ne rozsahy jsou podporovány pro bazál/bolus ve virtuální pumpě.</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Změněn ovladač pumpy.</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
 </resources>
