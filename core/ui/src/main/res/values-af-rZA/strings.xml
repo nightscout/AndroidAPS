@@ -270,4 +270,7 @@
         <item quantity="other">%1$d minute</item>
     </plurals>
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
 </resources>

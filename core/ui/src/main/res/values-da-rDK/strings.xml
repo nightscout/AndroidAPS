@@ -535,4 +535,23 @@
         <item quantity="other">%1$d minutter</item>
     </plurals>
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <string name="weekday_sunday_short">Søn</string>
+    <string name="weekday_saturday_short">Lør</string>
+    <string name="weekday_friday_short">Fre</string>
+    <string name="weekday_thursday_short">Tor</string>
+    <string name="weekday_wednesday_short">Ons</string>
+    <string name="weekday_tuesday_short">Tir</string>
+    <string name="weekday_monday_short">Man</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">M</string>
+    <string name="tuesday_short">T</string>
+    <string name="wednesday_short">O</string>
+    <string name="thursday_short">T</string>
+    <string name="friday_short">F</string>
+    <string name="saturday_short">L</string>
+    <string name="sunday_short">S</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f IE</string>
+    <string name="format_insulin_units">%1$.2f IE</string>
 </resources>

@@ -10,6 +10,7 @@
     <string name="old_version">старая версия</string>
     <string name="very_old_version">очень старая версия</string>
     <string name="application_expired">Истек срок действия приложения</string>
+    <string name="new_version_warning">Вы не проверяли наличие новой версии по крайней мере %1$d дней! Через %2$d дней будет включен режим LGS (приостановка на низкой ГК), цикл будет отключён через %3$d дней. Восстановите интернет-соединение!</string>
     <string name="running_invalid_version">Мы обнаружили, что вы используете недопустимую версию. Цикл отключен!</string>
     <string name="versionavailable">Доступна версия %1$s</string>
     <string name="version_expire">Версия: %1$s истекает %2$s</string>

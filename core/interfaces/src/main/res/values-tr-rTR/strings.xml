@@ -11,11 +11,6 @@
     <string name="metadata_format_new">Yeni şifrelenmiş format</string>
     <string name="metadata_format_debug">Yeni hata ayıklama formatı (şifrelenmemiş)</string>
     <string name="metadata_format_other">Bilinmeyen dışa aktarma formatı</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Sanal pompada bazal/bolus ayrıntı düzeyi için yalnızca ayrık değerler desteklenir. Aralıklar değil.</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pompa sürücüsü değişti.</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f Ü</string>
-    <string name="format_insulin_units">%1$.2f Ü</string>
 </resources>

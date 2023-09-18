@@ -63,13 +63,6 @@
     <string name="time_range">Tijdsinterval</string>
     <string name="timerange_value">Tijd ligt tussen %1$s en %2$s</string>
     <string name="between">Tussen </string>
-    <string name="weekday_sunday_short">Zo</string>
-    <string name="weekday_saturday_short">Za</string>
-    <string name="weekday_friday_short">Vr</string>
-    <string name="weekday_thursday_short">Do</string>
-    <string name="weekday_wednesday_short">Woe</string>
-    <string name="weekday_tuesday_short">Di</string>
-    <string name="weekday_monday_short">Ma</string>
     <string name="delete_short">DEL</string>
     <string name="add_short">TOEV</string>
     <string name="copy_short">COPY</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">Automatisering uitvoeren</string>
     <string name="add_automation">Regel toevoegen</string>
     <string name="stop_processing">Stop met verwerken</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">M</string>
-    <string name="tuesday_short">T</string>
-    <string name="wednesday_short">W</string>
-    <string name="thursday_short">T</string>
-    <string name="friday_short">F</string>
-    <string name="saturday_short">S</string>
-    <string name="sunday_short">S</string>
     <!--    Reminders-->
     <string name="time_to_eat">Tijd om te eten!\nStart de Bolus wizard en doe de berekening opnieuw.</string>
     <string name="time_to_bolus">Tijd om te bolussen!\nVoer de boluswizard uit en maak de berekening opnieuw.</string>

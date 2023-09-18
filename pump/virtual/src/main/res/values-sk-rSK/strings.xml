@@ -8,4 +8,5 @@
     <string name="description_pump_virtual">Ovládač pumpy pre užívateľov bez podporovanej pumpy (Otvorený okruh)</string>
     <string name="virtual_pump_label">Virtuálna pumpa</string>
     <string name="virtualpump_settings">Nastavenie virtuálnej pumpy</string>
+    <!--    PumpType-->
 </resources>

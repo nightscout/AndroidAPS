@@ -8,4 +8,5 @@
     <string name="description_pump_virtual">Integración de bombas de insulina que aún no tienen ningún controlador disponible (bucle abierto)</string>
     <string name="virtual_pump_label">BOMBA VIRTUAL</string>
     <string name="virtualpump_settings">Ajustes de bomba virtual</string>
+    <!--    PumpType-->
 </resources>

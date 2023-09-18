@@ -580,4 +580,23 @@
     <string name="cleanup_db_confirm">Veritabanını temizlemek istiyor musunuz?\nİzlenen değişiklikleri ve 3 aydan eski geçmiş verileri kaldıracak.</string>
     <string name="cleanup_db_confirm_sync">Veritabanını temizlemek istiyor musunuz?\nBu, izlenen değişiklikleri ve 3 aydan daha eski geçmiş verileri kaldıracaktır.\nBunu yapmak, tam senkronizasyonu önemli ölçüde hızlandıracaktır.</string>
     <string name="cleared_entries">Temizlenen girdiler</string>
+    <!--    Weekday-->
+    <string name="weekday_sunday_short">Pzr</string>
+    <string name="weekday_saturday_short">Cts</string>
+    <string name="weekday_friday_short">Cum</string>
+    <string name="weekday_thursday_short">Prş</string>
+    <string name="weekday_wednesday_short">Çrş</string>
+    <string name="weekday_tuesday_short">Salı</string>
+    <string name="weekday_monday_short">Pts</string>
+    <!-- WeekdayPicker -->
+    <string name="monday_short">P</string>
+    <string name="tuesday_short">S</string>
+    <string name="wednesday_short">Ç</string>
+    <string name="thursday_short">P</string>
+    <string name="friday_short">C</string>
+    <string name="saturday_short">C</string>
+    <string name="sunday_short">P</string>
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f Ü</string>
+    <string name="format_insulin_units">%1$.2f Ü</string>
 </resources>

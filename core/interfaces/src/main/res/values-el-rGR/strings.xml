@@ -11,11 +11,6 @@
     <string name="metadata_format_new">Νέα κρυπτογραφημένη μορφή</string>
     <string name="metadata_format_debug">Νέα μορφή εντοπισμού σφαλμάτων (μη κρυπτογραφημένη)</string>
     <string name="metadata_format_other">Άγνωστη μορφή εξαγωγής</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Υποστηρίζονται μόνο διακριτές τιμές και όχι εύρος τιμών για βασικό/bolus στην εικονική αντλία.</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Ο οδηγός της αντλίας άλλαξε.</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
 </resources>

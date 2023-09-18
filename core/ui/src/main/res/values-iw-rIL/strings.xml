@@ -372,7 +372,6 @@
     <string name="value_out_of_hard_limits">»הערך %1$s« %2$.2f מחוץ לתחום הקשיח</string>
     <string name="basal_value">ערך בזאלי</string>
     <!-- Command Queue + readStatus reasons -->
-    <string name="bolus_u_min">בולוס %1$.2f יח\'</string>
     <string name="carbs_g">פחמימות %1$d גרם</string>
     <string name="extended_bolus_u_min">בולוס מושהה %1$.2f יח\' %2$d דק\'</string>
     <string name="load_events">טען אירועים</string>
@@ -585,4 +584,7 @@
     <string name="cleanup_db_confirm">אתם בטוחים שברצונכם לנקות את מסד הנתונים? \nפעולה זו תמחק את הנתונים הישנים מ-3 החודשים האחרונים.</string>
     <string name="cleanup_db_confirm_sync">האם ברצונכם לנקות את מסד הנתונים?\nשינויים הנמצאים במעקב ונתונים היסטוריים הישנים מ-3 חודשים יימחקו.\nפעולה זו תזרז משמעותית את מהירות הסינכרון המלא.</string>
     <string name="cleared_entries">רשומות שנמחקו</string>
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
 </resources>

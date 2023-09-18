@@ -8,4 +8,6 @@
     <string name="description_pump_virtual">Ολοκλήρωση αντλίας για αντλίες που δεν έχουν κανέναν οδηγό ακόμα (Ανοιχτό Κύκλωμα)</string>
     <string name="virtual_pump_label">ΕΙΚΟΝΙΚΗ ΑΝΤΛΙΑ</string>
     <string name="virtualpump_settings">Ρυθμίσεις Εικονικής αντλίας</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Υποστηρίζονται μόνο διακριτές τιμές και όχι εύρος τιμών για βασικό/bolus στην εικονική αντλία.</string>
 </resources>

@@ -8,4 +8,5 @@
     <string name="description_pump_virtual">שימוש במשאבות אשר עדיין אין להם מנהל התקן כלשהו (לולאה פתוחה)</string>
     <string name="virtual_pump_label">משאבה וירטואלית</string>
     <string name="virtualpump_settings">הגדרות משאבה וירטואלית</string>
+    <!--    PumpType-->
 </resources>

@@ -577,4 +577,7 @@
     <string name="cleanup_db_confirm">데이터베이스를 정리하시겠습니까?\n3개월 이상 경과한 추적된 변경 내용 및 기록 데이터가 제거됩니다.</string>
     <string name="cleanup_db_confirm_sync">데이터베이스를 정리하시겠습니까?\n3개월 이상 경과한 추적된 변경 내용 및 기록 데이터가 제거됩니다.\n이 작업을 수행하면 전체 동기화 속도가 크게 향상됩니다.</string>
     <string name="cleared_entries">입력된 내용 제거됨</string>
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
 </resources>

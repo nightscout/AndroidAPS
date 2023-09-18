@@ -580,4 +580,7 @@
     <string name="cleanup_db_confirm">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.</string>
     <string name="cleanup_db_confirm_sync">Vuoi pulire il database?\nIl processo rimuoverà i cambiamenti tracciati e i dati dello storico più vecchi di 3 mesi.\nFarlo velocizzerà considerevolmente la sincronizzazione completa.</string>
     <string name="cleared_entries">Elementi cancellati</string>
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
 </resources>

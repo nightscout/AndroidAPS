@@ -586,4 +586,7 @@
     <string name="cleanup_db_confirm">Czy chcesz wyczyścić bazę danych?\nTa operacja usunie odnotowane zmiany i dane historyczne starsze niż 3 miesiące.</string>
     <string name="cleanup_db_confirm_sync">Czy chcesz wyczyścić bazę danych?\nTa operacja usunie odnotowane zmiany i dane historyczne starsze niż 3 miesiące.\nWyczyszczenie bazy dramatycznie przyśpieszy pełną synchronizację.</string>
     <string name="cleared_entries">Usunięte wpisy</string>
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
 </resources>

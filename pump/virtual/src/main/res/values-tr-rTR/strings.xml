@@ -8,4 +8,6 @@
     <string name="description_pump_virtual">Henüz herhangi bir sürücüye sahip olmayan pompalar için pompa entegrasyonu (Açık Döngü)</string>
     <string name="virtual_pump_label">SANAL POMPA</string>
     <string name="virtualpump_settings">Sanal pompa ayarları</string>
+    <!--    PumpType-->
+    <string name="def_extended_note">* Sanal pompada bazal/bolus ayrıntı düzeyi için yalnızca ayrık değerler desteklenir. Aralıklar değil.</string>
 </resources>

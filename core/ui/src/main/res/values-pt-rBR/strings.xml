@@ -580,4 +580,7 @@
     <string name="cleanup_db_confirm">Você deseja limpar o banco de dados?\nIrá remover alterações registradas e histórico de dados com mais de 3 meses.</string>
     <string name="cleanup_db_confirm_sync">Você deseja limpar a base de dados?\nIrá remover alterações rastreadas e dados históricos com mais de 3 meses.\nFazer isso irá acelerar a sincronização completa drasticamente.</string>
     <string name="cleared_entries">Entradas apagadas</string>
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
 </resources>

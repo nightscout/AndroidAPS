@@ -55,6 +55,7 @@
     <string name="pref_show_bgi">KŞ Etkisi Göster</string>
     <string name="pref_show_direction_arrow">Yön Oku Göster</string>
     <string name="pref_show_ago">Önce Göster</string>
+    <string name="pref_show_week_number">Hafta sayısını göster</string>
     <string name="default_custom_watchface_comment">Varsayılan saat arayüzü; bir şablon oluşturmak için SAAT ARAYÜZÜNÜ DIŞA AKTAR butonuna tıklayabilirsiniz</string>
     <string name="wear_default_watchface">Varsayılan saat arayüzü</string>
     <string name="cwf_comment_background">Arka plan görüntüsü</string>
@@ -81,6 +82,7 @@
     <string name="cwf_comment_timePeriod">AM veya PM</string>
     <string name="cwf_comment_day_name">Haftanın gününün adı</string>
     <string name="cwf_comment_day">Gün (GG)</string>
+    <string name="cwf_comment_week_number">Hafta sayısı</string>
     <string name="cwf_comment_month">Ay adı (kısa)</string>
     <string name="cwf_comment_loop">Döngü durumu ve öncesi</string>
     <string name="cwf_comment_direction">Yön Okları</string>

@@ -63,13 +63,6 @@
     <string name="time_range">Intervalo de tempo</string>
     <string name="timerange_value">O tempo está entre %1$s e %2$s</string>
     <string name="between">Entre </string>
-    <string name="weekday_sunday_short">Dom</string>
-    <string name="weekday_saturday_short">Sáb</string>
-    <string name="weekday_friday_short">Sex</string>
-    <string name="weekday_thursday_short">Qui</string>
-    <string name="weekday_wednesday_short">Qua</string>
-    <string name="weekday_tuesday_short">Ter</string>
-    <string name="weekday_monday_short">Seg</string>
     <string name="delete_short">APAGAR</string>
     <string name="add_short">ADICIONAR</string>
     <string name="copy_short">COPIAR</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">Executar automações</string>
     <string name="add_automation">Adicionar regra</string>
     <string name="stop_processing">Parar processamento</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">2a</string>
-    <string name="tuesday_short">3a</string>
-    <string name="wednesday_short">4a</string>
-    <string name="thursday_short">5a</string>
-    <string name="friday_short">6a</string>
-    <string name="saturday_short">Sáb</string>
-    <string name="sunday_short">Dom</string>
     <!--    Reminders-->
     <string name="time_to_eat">Hora de comer!\nAbra o assistente de bolus e faça o cálculo novamente.</string>
     <string name="time_to_bolus">Hora do bolus!\nAbra o assistente de bolus e faça o cálculo novamente.</string>

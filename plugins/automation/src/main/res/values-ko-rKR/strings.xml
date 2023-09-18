@@ -63,13 +63,6 @@
     <string name="time_range">시간 범위</string>
     <string name="timerange_value">시간은 %1$s 와 %2$s사이입니다</string>
     <string name="between">사이 </string>
-    <string name="weekday_sunday_short">일</string>
-    <string name="weekday_saturday_short">토</string>
-    <string name="weekday_friday_short">금</string>
-    <string name="weekday_thursday_short">목</string>
-    <string name="weekday_wednesday_short">수</string>
-    <string name="weekday_tuesday_short">화</string>
-    <string name="weekday_monday_short">월</string>
     <string name="delete_short">삭제</string>
     <string name="add_short">추가</string>
     <string name="copy_short">복사</string>
@@ -119,14 +112,6 @@
     <string name="run_automations">자동 설정 실행하기</string>
     <string name="add_automation">규칙 추가하기</string>
     <string name="stop_processing">처리 중단하기</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">월</string>
-    <string name="tuesday_short">화</string>
-    <string name="wednesday_short">수</string>
-    <string name="thursday_short">목</string>
-    <string name="friday_short">금</string>
-    <string name="saturday_short">토</string>
-    <string name="sunday_short">일</string>
     <!--    Reminders-->
     <string name="time_to_eat">식사할 시간입니다! \nBolus 마법사를 켜고 다시 계산하십시오.</string>
     <string name="time_to_bolus">Bolus 주입할 시간입니다! \nBolus 마법사를 켜고 다시 계산하십시오</string>

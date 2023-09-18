@@ -11,11 +11,6 @@
     <string name="metadata_format_new">Nyt krypteret format</string>
     <string name="metadata_format_debug">Nyt debug format (ukrypteret)</string>
     <string name="metadata_format_other">Ukendt eksportformat</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* Kun konkrete værdier, ingen intervaller, er understøttet som granularitet for basal/bolus i virtuel pumpe.</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Pumpe driver ændret.</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f IE</string>
-    <string name="format_insulin_units">%1$.2f IE</string>
 </resources>

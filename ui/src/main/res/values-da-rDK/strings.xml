@@ -152,4 +152,5 @@
     <string name="overview_editquickwizard_usetemptarget">Midlertidigt mål beregning</string>
     <string name="overview_editquickwizard_usepercentage">Beregning i procent</string>
     <string name="app_default">Program standard</string>
+    <string name="a11y_drag_and_drop_handle">træk og slip-håndtag</string>
 </resources>

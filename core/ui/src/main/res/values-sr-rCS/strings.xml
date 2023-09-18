@@ -70,4 +70,7 @@
     <!-- SmsCommunicator -->
     <!-- About -->
     <!--    Maintenance-->
+    <!--    Weekday-->
+    <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
 </resources>

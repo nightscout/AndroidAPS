@@ -63,13 +63,6 @@
     <string name="time_range">时间范围</string>
     <string name="timerange_value">时间在 %1$s 和 %2$s 之间</string>
     <string name="between">在...之间</string>
-    <string name="weekday_sunday_short">星期日</string>
-    <string name="weekday_saturday_short">星期六</string>
-    <string name="weekday_friday_short">星期五</string>
-    <string name="weekday_thursday_short">星期四</string>
-    <string name="weekday_wednesday_short">星期三</string>
-    <string name="weekday_tuesday_short">星期二</string>
-    <string name="weekday_monday_short">星期一</string>
     <string name="delete_short">删除</string>
     <string name="add_short">添加</string>
     <string name="copy_short">复制</string>
@@ -116,14 +109,6 @@
     <string name="system_automation">系统自动化</string>
     <string name="run_automations">运行自动化</string>
     <string name="add_automation">添加规则</string>
-    <!-- WeekdayPicker -->
-    <string name="monday_short">周一</string>
-    <string name="tuesday_short">周二</string>
-    <string name="wednesday_short">周三</string>
-    <string name="thursday_short">周四</string>
-    <string name="friday_short">周五</string>
-    <string name="saturday_short">周六</string>
-    <string name="sunday_short">周日</string>
     <!--    Reminders-->
     <string name="time_to_bolus">输注胰岛素时间到了！\n请运行大剂量向导，然后再次进行计算。</string>
 </resources>
