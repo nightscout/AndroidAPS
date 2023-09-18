@@ -1,13 +1,13 @@
 package info.nightscout.configuration.maintenance.formats
 
 import com.google.common.truth.TruthJUnit.assume
+import info.nightscout.configuration.maintenance.PrefsMetadataKeyImpl
 import info.nightscout.core.utils.CryptoUtil
 import info.nightscout.interfaces.maintenance.PrefFormatError
 import info.nightscout.interfaces.maintenance.PrefMetadata
 import info.nightscout.interfaces.maintenance.Prefs
 import info.nightscout.interfaces.maintenance.PrefsFormat
-import info.nightscout.interfaces.maintenance.PrefsMetadataKey
-import info.nightscout.interfaces.maintenance.PrefsStatus
+import info.nightscout.interfaces.maintenance.PrefsStatusImpl
 import info.nightscout.shared.interfaces.ResourceHelper
 import info.nightscout.sharedtests.TestBase
 import org.junit.jupiter.api.Assertions
@@ -66,9 +66,9 @@ open class EncryptedPrefsFormatTest : TestBase() {
         Assertions.assertEquals(prefs.values["key1"], "A")
         Assertions.assertEquals(prefs.values["keyB"], "2")
 
-        Assertions.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, PrefsStatus.OK)
-        Assertions.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, PrefsFormat.FORMAT_KEY_ENC)
-        Assertions.assertEquals(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.OK)
+        Assertions.assertEquals(prefs.metadata[PrefsMetadataKeyImpl.FILE_FORMAT]?.status, PrefsStatusImpl.OK)
+        Assertions.assertEquals(prefs.metadata[PrefsMetadataKeyImpl.FILE_FORMAT]?.value, PrefsFormat.FORMAT_KEY_ENC)
+        Assertions.assertEquals(prefs.metadata[PrefsMetadataKeyImpl.ENCRYPTION]?.status, PrefsStatusImpl.OK)
     }
 
     @Test
@@ -81,7 +81,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
                 "keyB" to "2"
             ),
             mapOf(
-                PrefsMetadataKey.ENCRYPTION to PrefMetadata(PrefsFormat.FORMAT_KEY_ENC, PrefsStatus.OK)
+                PrefsMetadataKeyImpl.ENCRYPTION to PrefMetadata(PrefsFormat.FORMAT_KEY_ENC, PrefsStatusImpl.OK)
             )
         )
         encryptedFormat.savePreferences(getMockedFile(), prefs, "sikret")
@@ -98,7 +98,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
                 "testpref2" to "another"
             ),
             mapOf(
-                PrefsMetadataKey.ENCRYPTION to PrefMetadata(PrefsFormat.FORMAT_KEY_ENC, PrefsStatus.OK)
+                PrefsMetadataKeyImpl.ENCRYPTION to PrefMetadata(PrefsFormat.FORMAT_KEY_ENC, PrefsStatusImpl.OK)
             )
         )
         encryptedFormat.savePreferences(getMockedFile(), prefsIn, "tajemnica")
@@ -110,9 +110,9 @@ open class EncryptedPrefsFormatTest : TestBase() {
         Assertions.assertEquals(prefsOut.values["testpref1"], "--1--")
         Assertions.assertEquals(prefsOut.values["testpref2"], "another")
 
-        Assertions.assertEquals(prefsOut.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, PrefsStatus.OK)
-        Assertions.assertEquals(prefsOut.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, PrefsFormat.FORMAT_KEY_ENC)
-        Assertions.assertEquals(prefsOut.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.OK)
+        Assertions.assertEquals(prefsOut.metadata[PrefsMetadataKeyImpl.FILE_FORMAT]?.status, PrefsStatusImpl.OK)
+        Assertions.assertEquals(prefsOut.metadata[PrefsMetadataKeyImpl.FILE_FORMAT]?.value, PrefsFormat.FORMAT_KEY_ENC)
+        Assertions.assertEquals(prefsOut.metadata[PrefsMetadataKeyImpl.ENCRYPTION]?.status, PrefsStatusImpl.OK)
     }
 
     @Test
@@ -135,9 +135,9 @@ open class EncryptedPrefsFormatTest : TestBase() {
 
         Assertions.assertEquals(prefs.values.size, 0)
 
-        Assertions.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, PrefsStatus.OK)
-        Assertions.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.value, PrefsFormat.FORMAT_KEY_ENC)
-        Assertions.assertEquals(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.ERROR)
+        Assertions.assertEquals(prefs.metadata[PrefsMetadataKeyImpl.FILE_FORMAT]?.status, PrefsStatusImpl.OK)
+        Assertions.assertEquals(prefs.metadata[PrefsMetadataKeyImpl.FILE_FORMAT]?.value, PrefsFormat.FORMAT_KEY_ENC)
+        Assertions.assertEquals(prefs.metadata[PrefsMetadataKeyImpl.ENCRYPTION]?.status, PrefsStatusImpl.ERROR)
     }
 
     @Test
@@ -166,7 +166,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
         Assertions.assertEquals(prefs.values.size, 2)
 
         // but checksum fails on metadata, so overall security fails
-        Assertions.assertEquals(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.ERROR)
+        Assertions.assertEquals(prefs.metadata[PrefsMetadataKeyImpl.ENCRYPTION]?.status, PrefsStatusImpl.ERROR)
     }
 
     @Test
@@ -188,7 +188,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
         val prefs = encryptedFormat.loadPreferences(getMockedFile(), "sikret")
 
         Assertions.assertEquals(prefs.values.size, 0)
-        Assertions.assertEquals(prefs.metadata[PrefsMetadataKey.ENCRYPTION]?.status, PrefsStatus.ERROR)
+        Assertions.assertEquals(prefs.metadata[PrefsMetadataKeyImpl.ENCRYPTION]?.status, PrefsStatusImpl.ERROR)
     }
 
     @Test
@@ -203,7 +203,7 @@ open class EncryptedPrefsFormatTest : TestBase() {
         val prefs = encryptedFormat.loadPreferences(getMockedFile(), "sikret")
 
         Assertions.assertEquals(prefs.values.size, 0)
-        Assertions.assertEquals(prefs.metadata[PrefsMetadataKey.FILE_FORMAT]?.status, PrefsStatus.ERROR)
+        Assertions.assertEquals(prefs.metadata[PrefsMetadataKeyImpl.FILE_FORMAT]?.status, PrefsStatusImpl.ERROR)
     }
 
     @Test
