@@ -11,11 +11,6 @@
     <string name="metadata_format_new">新的加密格式</string>
     <string name="metadata_format_debug">新调试格式 (未加密)</string>
     <string name="metadata_format_other">未知的导出格式</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">*在虚拟泵中，基础率/大剂量仅支持离散值，不支持范围值。</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">泵驱动程序已变更</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f U</string>
-    <string name="format_insulin_units">%1$.2f U</string>
 </resources>
