@@ -93,7 +93,7 @@ class ResourceHelperImpl @Inject constructor(var context: Context, private val f
         return (dp * scale + 0.5f).toInt()
     }
 
-    override fun shortTextMode(): Boolean = !gb(info.nightscout.shared.R.bool.isTablet)
+    override fun shortTextMode(): Boolean = !gb(info.nightscout.core.ui.R.bool.isTablet)
 
     override fun gac(context: Context?, attributeId: Int): Int =
         (ContextThemeWrapper(context ?: this.context, info.nightscout.core.ui.R.style.AppTheme)).getThemeColor(attributeId)
