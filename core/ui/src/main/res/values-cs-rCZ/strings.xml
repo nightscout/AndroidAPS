@@ -603,4 +603,6 @@
     <string name="saturday_short">So</string>
     <string name="sunday_short">Ne</string>
     <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 </resources>
