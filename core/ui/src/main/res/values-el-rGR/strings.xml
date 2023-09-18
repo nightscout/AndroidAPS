@@ -582,4 +582,5 @@
     <string name="cleared_entries">Έγινε εκκαθάριση των καταχωρήσεων</string>
     <!--    Weekday-->
     <!-- WeekdayPicker -->
+    <!--    DecimalFormatterImpl -->
 </resources>
