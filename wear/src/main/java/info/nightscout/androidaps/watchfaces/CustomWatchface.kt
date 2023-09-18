@@ -184,40 +184,16 @@ class CustomWatchface : BaseWatchFace() {
                             view.layoutParams = params
                             view.visibility = setVisibility(viewJson.optString(VISIBILITY.key, JsonKeyValues.GONE.key), id.visibility(sp))
                             when (view) {
-                                is TextView  -> {
-                                    view.rotation = viewJson.optInt(ROTATION.key).toFloat()
-                                    view.setTextSize(TypedValue.COMPLEX_UNIT_PX, (viewJson.optInt(TEXTSIZE.key, 22) * zoomFactor).toFloat())
-                                    view.gravity = GravityMap.gravity(viewJson.optString(GRAVITY.key, GravityMap.CENTER.key))
-                                    view.setTypeface(
-                                        FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)),
-                                        StyleMap.style(viewJson.optString(FONTSTYLE.key, StyleMap.NORMAL.key))
-                                    )
-                                    view.setTextColor(getColor(viewJson.optString(FONTCOLOR.key)))
-                                    view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
-                                    if (viewJson.has(TEXTVALUE.key))
-                                        view.text = viewJson.optString(TEXTVALUE.key)
-                                    view.background = resDataMap[viewJson.optString(BACKGROUND.key)]?.toDrawable(resources, width, height)
+                                is TextView    -> {
+                                    id.customizeTextView(view, viewJson, resDataMap, zoomFactor, resources, ::getColor)
                                 }
 
-                                is ImageView -> {
-                                    view.clearColorFilter()
-                                    id.drawable(resources, resDataMap, singleBg.sgvLevel)?.let {
-                                        if (viewJson.has(COLOR.key))        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
-                                            it.colorFilter = changeDrawableColor(getColor(viewJson.optString(COLOR.key)))
-                                        else
-                                            it.clearColorFilter()
-                                        view.setImageDrawable(it)
-                                    } ?: apply {
-                                        view.setImageDrawable(id.defaultDrawable?.let {resources.getDrawable(it)})
-                                        if (viewJson.has(COLOR.key))
-                                            view.setColorFilter(getColor(viewJson.optString(COLOR.key)))
-                                        else
-                                            view.clearColorFilter()
-                                    }
+                                is ImageView   -> {
+                                    id.customizeImageView(view, viewJson, resDataMap, singleBg, resources, ::getColor, ::changeDrawableColor)
                                 }
 
                             }
-                        } ?:apply {
+                        } ?: apply {
                             view.visibility = View.GONE
                             if (view is TextView) {
                                 view.text = ""
@@ -394,7 +370,7 @@ class CustomWatchface : BaseWatchFace() {
         @StringRes val pref: Int?,
         @IdRes val defaultDrawable: Int?,
         val customDrawable: ResFileMap?,
-        val customHigh:ResFileMap?,
+        val customHigh: ResFileMap?,
         val customLow: ResFileMap?
     ) {
 
@@ -491,16 +467,56 @@ class CustomWatchface : BaseWatchFace() {
 
         fun drawable(resources: Resources, drawableDataMap: CwfResDataMap, sgvLevel: Long): Drawable? = customDrawable?.let { cd ->
             when (sgvLevel) {
-                1L   -> { customHigh?.let {drawableDataMap[customHigh.fileName]}?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources) }
+                1L   -> { customHigh?.let { drawableDataMap[customHigh.fileName] }?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources) }
                 0L   -> { drawableDataMap[cd.fileName]?.toDrawable(resources) }
-                -1L  -> { customLow?.let {drawableDataMap[customLow.fileName]}?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources) }
+                -1L  -> { customLow?.let {drawableDataMap[customLow.fileName] }?.toDrawable(resources) ?: drawableDataMap[cd.fileName]?.toDrawable(resources) }
                 else -> drawableDataMap[cd.fileName]?.toDrawable(resources)
+            }
+        }
+
+        fun customizeTextView(view: TextView, viewJson: JSONObject, resDataMap: CwfResDataMap, zoomFactor: Double, resources: Resources, getColor: (String) -> Int) {
+            view.rotation = viewJson.optInt(ROTATION.key).toFloat()
+            view.setTextSize(TypedValue.COMPLEX_UNIT_PX, (viewJson.optInt(TEXTSIZE.key, 22) * zoomFactor).toFloat())
+            view.gravity = GravityMap.gravity(viewJson.optString(GRAVITY.key, GravityMap.CENTER.key))
+            view.setTypeface(
+                FontMap.font(viewJson.optString(FONT.key, FontMap.DEFAULT.key)),
+                StyleMap.style(viewJson.optString(FONTSTYLE.key, StyleMap.NORMAL.key))
+            )
+            view.setTextColor(getColor(viewJson.optString(FONTCOLOR.key)))
+            view.isAllCaps = viewJson.optBoolean(ALLCAPS.key)
+            if (viewJson.has(TEXTVALUE.key))
+                view.text = viewJson.optString(TEXTVALUE.key)
+            view.background = resDataMap[viewJson.optString(BACKGROUND.key)]?.toDrawable(resources, view.width, view.height)
+        }
+
+        fun customizeImageView(
+            view: ImageView,
+            viewJson: JSONObject,
+            resDataMap: CwfResDataMap,
+            singleBg: EventData.SingleBg,
+            resources: Resources,
+            getColor: (String) -> Int,
+            changeDrawableColor: (Int) -> ColorFilter
+        ) {
+            view.clearColorFilter()
+            drawable(resources, resDataMap, singleBg.sgvLevel)?.let {
+                if (viewJson.has(COLOR.key))        // Note only works on bitmap (png or jpg) or xml included into res, not for svg files
+                    it.colorFilter = changeDrawableColor(getColor(viewJson.optString(COLOR.key)))
+                else
+                    it.clearColorFilter()
+                view.setImageDrawable(it)
+            } ?: apply {
+                view.setImageDrawable(defaultDrawable?.let { resources.getDrawable(it) })
+                if (viewJson.has(COLOR.key))
+                    view.setColorFilter(getColor(viewJson.optString(COLOR.key)))
+                else
+                    view.clearColorFilter()
             }
         }
     }
 }
 
-private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int,val customDrawable: ResFileMap?) {
+private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int, val customDrawable: ResFileMap?) {
     NONE("??", R.drawable.ic_invalid, ResFileMap.ARROW_NONE),
     TRIPLE_UP("X", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP),
     DOUBLE_UP("\u21c8", R.drawable.ic_doubleup, ResFileMap.ARROW_DOUBLE_UP),
@@ -515,8 +531,8 @@ private enum class TrendArrowMap(val symbol: String, @DrawableRes val icon: Int,
     companion object {
 
         fun drawable(direction: String?, resources: Resources, drawableDataMap: CwfResDataMap): Drawable {
-            val arrow = values().firstOrNull { it.symbol == direction } ?:NONE
-            return arrow.customDrawable?. let {drawableDataMap[arrow.customDrawable.fileName]}?.toDrawable(resources)  ?:resources.getDrawable(arrow.icon)
+            val arrow = values().firstOrNull { it.symbol == direction } ?: NONE
+            return arrow.customDrawable?.let { drawableDataMap[arrow.customDrawable.fileName] }?.toDrawable(resources) ?: resources.getDrawable(arrow.icon)
         }
 
     }
@@ -558,7 +574,7 @@ private enum class FontMap(val key: String, var font: Typeface, @FontRes val fon
             resDataMap.filter { (_, resData) ->
                 resData.format == ResFormat.TTF || resData.format == ResFormat.OTF
             }.forEach { (key, resData) ->
-                customFonts[key.lowercase()] = resData.toTypeface() ?:Typeface.DEFAULT
+                customFonts[key.lowercase()] = resData.toTypeface() ?: Typeface.DEFAULT
             }
         }
 
