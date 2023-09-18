@@ -156,4 +156,5 @@
     <string name="wear_import_custom_watchface_title">Selecionar Watchface Personalizada</string>
     <!-- Permissions -->
     <string name="alert_dialog_storage_permission_text">Por favor, reinicie o telefone ou reinicie a AAPS nas Configurações do Sistema \ncaso contrário a android APS não terá registo (isto é importante para analisar e verificar se os algoritmos estão funcionando corretamente)!</string>
+    <!-- Maintenance -->
 </resources>
