@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'kotlin-allopen'
+    id 'kotlin-parcelize'
 }
 
 apply from: "${project.rootDir}/core/main/android_dependencies.gradle"

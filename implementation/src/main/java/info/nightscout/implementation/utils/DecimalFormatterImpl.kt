@@ -1,6 +1,5 @@
 package info.nightscout.implementation.utils
 
-import info.nightscout.interfaces.R
 import info.nightscout.interfaces.utils.DecimalFormatter
 import info.nightscout.shared.interfaces.ResourceHelper
 import java.text.DecimalFormat

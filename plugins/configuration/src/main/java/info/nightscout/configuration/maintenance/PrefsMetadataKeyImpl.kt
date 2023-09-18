@@ -1,14 +1,13 @@
-package info.nightscout.interfaces.maintenance
+package info.nightscout.configuration.maintenance
 
 import android.content.Context
-import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import info.nightscout.interfaces.R
-import kotlinx.parcelize.Parcelize
-import java.io.File
+import info.nightscout.configuration.R
+import info.nightscout.interfaces.maintenance.PrefsFormat
+import info.nightscout.interfaces.maintenance.PrefsMetadataKey
 
-enum class PrefsMetadataKey(val key: String, @DrawableRes val icon: Int, @StringRes val label: Int) {
+enum class PrefsMetadataKeyImpl(override val key: String, @DrawableRes override val icon: Int, @StringRes override val label: Int) : PrefsMetadataKey {
 
     FILE_FORMAT("format", R.drawable.ic_meta_format, R.string.metadata_label_format),
     CREATED_AT("created_at", R.drawable.ic_meta_date, R.string.metadata_label_created_at),
@@ -35,48 +34,16 @@ enum class PrefsMetadataKey(val key: String, @DrawableRes val icon: Int, @String
 
     }
 
-    fun formatForDisplay(context: Context, value: String): String {
+    override fun formatForDisplay(context: Context, value: String): String {
         return when (this) {
             FILE_FORMAT -> when (value) {
                 PrefsFormat.FORMAT_KEY_ENC   -> context.getString(R.string.metadata_format_new)
                 PrefsFormat.FORMAT_KEY_NOENC -> context.getString(R.string.metadata_format_debug)
                 else                         -> context.getString(R.string.metadata_format_other)
             }
+
             CREATED_AT  -> value.replace("T", " ").replace("Z", " (UTC)")
             else        -> value
         }
     }
-
 }
-
-@Parcelize
-data class PrefMetadata(var value: String, var status: PrefsStatus, var info: String? = null) : Parcelable
-
-typealias PrefMetadataMap = Map<PrefsMetadataKey, PrefMetadata>
-
-data class Prefs(val values: Map<String, String>, var metadata: PrefMetadataMap)
-
-interface PrefsFormat {
-    companion object {
-
-        const val FORMAT_KEY_ENC = "aaps_encrypted"
-        const val FORMAT_KEY_NOENC = "aaps_structured"
-    }
-
-    fun savePreferences(file: File, prefs: Prefs, masterPassword: String? = null)
-    fun loadPreferences(file: File, masterPassword: String? = null): Prefs
-    fun loadMetadata(contents: String? = null): PrefMetadataMap
-    fun isPreferencesFile(file: File, preloadedContents: String? = null): Boolean
-}
-
-enum class PrefsStatus(@DrawableRes val icon: Int) {
-    OK(R.drawable.ic_meta_ok),
-    WARN(R.drawable.ic_meta_warning),
-    ERROR(R.drawable.ic_meta_error),
-    UNKNOWN(R.drawable.ic_meta_error),
-    DISABLED(R.drawable.ic_meta_error)
-}
-
-class PrefFileNotFoundError(message: String) : Exception(message)
-class PrefIOError(message: String) : Exception(message)
-class PrefFormatError(message: String) : Exception(message)
