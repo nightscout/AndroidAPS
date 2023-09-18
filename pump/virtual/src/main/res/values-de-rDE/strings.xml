@@ -8,4 +8,5 @@
     <string name="description_pump_virtual">Pumpenintegration für Pumpen, die noch nicht über einen Treiber verfügen (Open Loop)</string>
     <string name="virtual_pump_label">VIRTUELLE PUMPE</string>
     <string name="virtualpump_settings">Einstellungen der virtuellen Pumpe</string>
+    <!--    PumpType-->
 </resources>
