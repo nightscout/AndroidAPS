@@ -1,9 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- MedtrumPump -->
+    <string name="medtrum">Medtrum</string>
+    <string name="medtrum_pump_shortname">MT</string>
+    <string name="medtrum_pump_description">Pumpeintegration for Medtrum Nano og Medtrum 300IE</string>
+    <string name="medtrum_pump_setting">Medtrum pumpeindstillinger</string>
+    <string name="pump_error">Pumpefejl: %1$s!! </string>
+    <string name="pump_is_suspended">Pumpe er pauseret</string>
+    <string name="pump_is_suspended_hour_max">Pumpen er pauseret på grund af overskredet insulin pr. time</string>
+    <string name="pump_is_suspended_day_max">Pumpen er pauseret på grund af overskredet insulin pr. dag</string>
+    <string name="patch_not_active">Patch ikke aktiveret</string>
+    <string name="pump_setting_failed">Indstilling af brugerindstillinger til pumpe mislykkedes!</string>
     <!-- overview fragment -->
+    <string name="ble_status_label">BLE Status</string>
+    <string name="last_connection_label">Sidst forbundet</string>
+    <string name="active_bolus_label">Aktiv bolus</string>
+    <string name="pump_state_label">Pumpe tilstand</string>
+    <string name="active_alarms_label">Aktive alarmer</string>
+    <string name="reservoir_level"> %.2f IE</string>
+    <string name="battery_voltage"> %.2f V</string>
+    <string name="basal_type_label">Basaltype</string>
+    <string name="basal_rate_label">Basalrate</string>
+    <string name="current_basal_rate"> %.2f IE/t</string>
+    <string name="pump_type_label">Pumpetype</string>
+    <string name="fw_version_label">Firmwareversion</string>
+    <string name="patch_no_label">Patch nr.</string>
+    <string name="patch_expiry_label">Patch udløber</string>
+    <string name="refresh_label">Genindlæs</string>
+    <string name="reset_alarms_label">Nulstil alarmer</string>
+    <string name="change_patch_label">Skift Patch</string>
+    <string name="requested_by_user" comment="26 characters max for translation">Anmodet af bruger</string>
+    <string name="expiry_not_enabled">Ikke aktiveret</string>
     <!-- Alarm strings -->
+    <string name="alarm_none">None</string>
+    <string name="alarm_pump_low_battery">Pumpe lavt batteri</string>
+    <string name="alarm_pump_low_reservoir">Pumpe lavt reservoir</string>
+    <string name="alarm_pump_expires_soon">Pumpe udløber snart</string>
+    <string name="alarm_low_bg_suspended">Lavt BG suspenderet</string>
+    <string name="alarm_low_bg_suspended2">Lavt BG suspenderet 2</string>
+    <string name="alarm_auto_suspended">Auto suspenderet</string>
+    <string name="alarm_hourly_max_suspended">timemaksimum suspenderet</string>
+    <string name="alarm_daily_max_suspended">dagsmaksimum suspenderet</string>
+    <string name="alarm_suspended">Suspenderet</string>
+    <string name="alarm_paused">Pauseret</string>
+    <string name="alarm_occlusion">Okklusion</string>
+    <string name="alarm_expired">Udløbet</string>
+    <string name="alarm_reservoir_empty">Reservoir tomt</string>
+    <string name="alarm_patch_fault">Patch-fejl</string>
+    <string name="alarm_patch_fault2">Patch-fejl 2</string>
+    <string name="alarm_base_fault">Basisfejl</string>
+    <string name="alarm_battery_out">Batteri udløbet</string>
+    <string name="alarm_no_calibration">Ingen kalibrering</string>
+    <string name="pump_time_update_failed">Mislykkedes i at opdatere pumpetidszone, udskyd beskeden og opdatér manuelt.</string>
     <!-- wizard-->
+    <string name="retry">Forsøg igen</string>
     <!-- settings-->
+    <string name="patch_expiration_title">Patch Udløber</string>
+    <string name="patch_expiration_summary">Efter aktivering udløber patchen efter 3 dage med en nådeperiode på 8 timer herefter.</string>
+    <string name="hourly_max_insulin_title">Maksimal Insulin pr. Time</string>
+    <string name="hourly_max_insulin_summary">Specificér det maksimale tilladte antal enheder insulin per time. Hvis denne overskrides, pauseres pumpen.</string>
+    <string name="daily_max_insulin_title">Maksimal Insulin pr. Dag</string>
+    <string name="daily_max_insulin_summary">Specificér det maksimale tilladte antal enheder insulin per Dag. Hvis denne overskrides, pauseres pumpen.</string>
     <!-- treatment state-->
+    <string name="getting_pump_status">Henter pumpestatus</string>
+    <string name="getting_bolus_status">Henter bolusstatus</string>
+    <string name="getting_temp_basal_status">Henter midlertidig basalstatus</string>
+    <string name="setting_pump_settings">Indstiller brugerindstillinger</string>
 </resources>
