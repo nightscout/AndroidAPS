@@ -11,11 +11,6 @@
     <string name="metadata_format_new">Новый зашифрованный формат</string>
     <string name="metadata_format_debug">Новый формат отладки (незашифрованный)</string>
     <string name="metadata_format_other">Неизвестный формат экспорта</string>
-    <!--    PumpType-->
-    <string name="def_extended_note">* В виртуальной помпе поддерживаются только дискретные величины для обработки базала/болюса.</string>
     <!-- PumpPluginBase -->
     <string name="pump_driver_changed" comment="26 characters max for translation">Драйвер помпы изменен.</string>
-    <!--    DecimalFormatter-->
-    <string name="format_insulin_units1">%1$.1f ед</string>
-    <string name="format_insulin_units">%1$.2f ед</string>
 </resources>
