@@ -64,6 +64,7 @@
     <string name="pump_settings_error_wrong_max_basal_set">펌프에 잘못된 최대 Basal이 설정되었습니다 (%1$.2f 이어야 합니다).</string>
     <!-- Pump History -->
     <string name="pump_history_type">종류:</string>
+    <!-- PumpDeviceState -->
     <plurals name="duration_days">
         <item quantity="other">%1$d 일</item>
     </plurals>
