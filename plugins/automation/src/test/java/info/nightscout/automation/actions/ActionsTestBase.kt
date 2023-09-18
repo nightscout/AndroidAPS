@@ -9,7 +9,6 @@ import info.nightscout.database.impl.AppRepository
 import info.nightscout.interfaces.ConfigBuilder
 import info.nightscout.interfaces.GlucoseUnit
 import info.nightscout.interfaces.aps.Loop
-import info.nightscout.sdk.interfaces.RunningConfiguration
 import info.nightscout.interfaces.constraints.Constraint
 import info.nightscout.interfaces.iob.IobCobCalculator
 import info.nightscout.interfaces.logging.UserEntryLogger
@@ -62,16 +61,7 @@ ActionsTestBase : TestBaseWithProfile() {
         override fun goToZeroTemp(durationInMinutes: Int, profile: Profile, reason: OfflineEvent.Reason) {}
         override fun suspendLoop(durationInMinutes: Int) {}
         override fun disableCarbSuggestions(durationMinutes: Int) {}
-        override fun buildDeviceStatus(
-            dateUtil: DateUtil,
-            loop: Loop,
-            iobCobCalculatorPlugin: IobCobCalculator,
-            profileFunction: ProfileFunction,
-            pump: Pump,
-            receiverStatusStore: ReceiverStatusStore,
-            runningConfiguration: info.nightscout.sdk.interfaces.RunningConfiguration,
-            version: String
-        ): DeviceStatus? = null
+        override fun buildAndStoreDeviceStatus() {}
 
         override fun setPluginEnabled(type: PluginType, newState: Boolean) {}
     }
