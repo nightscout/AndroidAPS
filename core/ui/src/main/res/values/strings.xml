@@ -648,5 +648,8 @@
     <string name="saturday_short">S</string>
     <string name="sunday_short">S</string>
 
+    <!--    DecimalFormatterImpl -->
+    <string name="format_insulin_units1">%1$.1f U</string>
+    <string name="format_insulin_units">%1$.2f U</string>
 
 </resources>
